@@ -11,6 +11,7 @@
 - Instant: ready in 50ms, guaranteed to stay below the HCI threshold of 100ms.
 - Efficient: chunked incremental markdown rendering keeps long messages generating smoothly.
 - Relaxing: line-based streaming makes it easy to follow the endless river of prose.
+- Integrated: provider usage data and limits allow dynamically swapping out based on availability.
 - Configurable: arrange segments in any layout, and configure custom providers.
 
 ## Code
