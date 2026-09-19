@@ -2,7 +2,11 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
-- Polish simulation
+## [0.7.1] - 2026-09-19
+
+### Changes
+
+- Tweak the simulator
 
 ## [0.7.0] - 2026-09-19
 
