@@ -42,6 +42,35 @@ func TestRawRefusesAScreenThatIsNotATerminal(t *testing.T) {
 	}
 }
 
+func TestSuppressEchoRestoresTheTerminalState(t *testing.T) {
+	terminal := pty(t)
+	before, err := unix.IoctlGetTermios(int(terminal.Fd()), unix.TCGETS)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	restore, err := SuppressEcho(terminal)
+	if err != nil {
+		t.Fatal(err)
+	}
+	during, err := unix.IoctlGetTermios(int(terminal.Fd()), unix.TCGETS)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if during.Lflag&unix.ECHO != 0 {
+		t.Error("terminal echo was not suppressed")
+	}
+
+	restore()
+	after, err := unix.IoctlGetTermios(int(terminal.Fd()), unix.TCGETS)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(after, before) {
+		t.Error("suppressing echo did not restore the terminal state")
+	}
+}
+
 func TestRawRestoresTheTerminalState(t *testing.T) {
 	terminal := pty(t)
 	before, err := term.GetState(int(terminal.Fd()))

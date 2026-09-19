@@ -12,6 +12,8 @@ import (
 	"testing"
 	"time"
 
+	"golang.org/x/sys/unix"
+
 	"crdx.org/io/cmd/oh/config"
 	"crdx.org/io/cmd/oh/link"
 	"crdx.org/io/cmd/oh/menu"
@@ -266,7 +268,10 @@ func TestTheRuleIsDrawnOneCharacterAtATime(t *testing.T) {
 			writes = append(writes, string(piece))
 			return len(piece), nil
 		}),
-		pause: func(time.Duration) { pauses++ },
+		pause: func(time.Duration) bool {
+			pauses++
+			return false
+		},
 	}
 
 	if err := harry.typeOut(painted, ruleInterval); err != nil {
@@ -293,7 +298,10 @@ func TestTheOpeningIsTypedInTheRhythmOfSomebodyWakingUp(t *testing.T) {
 
 	harry := wizard{
 		output: &output,
-		pause:  func(interval time.Duration) { waits = append(waits, interval) },
+		pause: func(interval time.Duration) bool {
+			waits = append(waits, interval)
+			return false
+		},
 	}
 
 	if err := harry.openScreen(); err != nil {
@@ -316,6 +324,114 @@ func TestTheOpeningIsTypedInTheRhythmOfSomebodyWakingUp(t *testing.T) {
 	if !slices.Equal(waits, want) {
 		t.Errorf("the opening waited\n%v\nwant\n%v", waits, want)
 	}
+}
+
+func TestEnterEndsTheOpeningAnimationAtOnce(t *testing.T) {
+	var output bytes.Buffer
+	pauses := 0
+
+	harry := wizard{
+		output: &output,
+		pause: func(time.Duration) bool {
+			pauses++
+			return true
+		},
+	}
+
+	if err := harry.openScreen(); err != nil {
+		t.Fatal(err)
+	}
+
+	rule := strings.Repeat(openingRule, style.Width(spoken(introduction, "")))
+	lines := strings.Split(style.Plain(output.String()), "\n")
+	if want := []string{spoken(greeting, greetingAside), introduction, rule, "", ""}; !slices.Equal(lines, want) {
+		t.Errorf("the completed opening drew %q, want %q", lines, want)
+	}
+	if pauses != 1 {
+		t.Errorf("the completed opening paused %d times, want 1", pauses)
+	}
+}
+
+func TestEnterIsConsumedBeforeTheMenuStarts(t *testing.T) {
+	input, sent, err := os.Pipe()
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		_ = input.Close()
+		_ = sent.Close()
+	})
+
+	pause, stop := enterPause(input)
+	if _, err := sent.WriteString("\nq"); err != nil {
+		t.Fatal(err)
+	}
+	if !pause(time.Second) {
+		t.Fatal("Enter did not end the opening pause")
+	}
+	stop()
+
+	var remaining [1]byte
+	if _, err := input.Read(remaining[:]); err != nil {
+		t.Fatal(err)
+	}
+	if remaining[0] != 'q' {
+		t.Errorf("the menu received %q after Enter, want q", remaining[0])
+	}
+}
+
+func TestEnterDoesNotEchoWhileEndingTheOpeningPause(t *testing.T) {
+	terminal, input := onboardingPTY(t)
+	pause, stop, err := typingPause(input, input)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := terminal.WriteString("\r"); err != nil {
+		t.Fatal(err)
+	}
+	if !pause(time.Second) {
+		t.Fatal("Enter did not end the opening pause")
+	}
+	stop()
+
+	descriptors := []unix.PollFd{{Fd: int32(terminal.Fd()), Events: unix.POLLIN}} //nolint:gosec // Unix file descriptors fit PollFd
+	ready, err := unix.Poll(descriptors, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if ready != 0 {
+		var terminalOutput [16]byte
+		count, err := terminal.Read(terminalOutput[:])
+		if err != nil {
+			t.Fatal(err)
+		}
+		t.Errorf("Enter echoed %q into the opening", terminalOutput[:count])
+	}
+}
+
+func onboardingPTY(t *testing.T) (*os.File, *os.File) {
+	t.Helper()
+
+	terminal, err := os.OpenFile("/dev/ptmx", os.O_RDWR|unix.O_NOCTTY, 0)
+	if err != nil {
+		t.Skipf("no pseudo-terminal to test against: %v", err)
+	}
+	t.Cleanup(func() { _ = terminal.Close() })
+
+	if err := unix.IoctlSetPointerInt(int(terminal.Fd()), unix.TIOCSPTLCK, 0); err != nil {
+		t.Fatal(err)
+	}
+	number, err := unix.IoctlGetInt(int(terminal.Fd()), unix.TIOCGPTN)
+	if err != nil {
+		t.Fatal(err)
+	}
+	input, err := os.OpenFile(fmt.Sprintf("/dev/pts/%d", number), os.O_RDWR|unix.O_NOCTTY, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = input.Close() })
+
+	return terminal, input
 }
 
 func typingWaits(text string, interval time.Duration) []time.Duration {
@@ -357,7 +473,13 @@ func TestOnlyTheAsideIsDrawnInItalics(t *testing.T) {
 }
 
 func TestTypingWaitsForNobodyWhereTheScreenIsNotATerminal(t *testing.T) {
-	if typingPause(&bytes.Buffer{}) != nil {
+	pause, stop, err := typingPause(nil, &bytes.Buffer{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer stop()
+
+	if pause != nil {
 		t.Error("expected no waiting when the typing cannot be watched")
 	}
 }

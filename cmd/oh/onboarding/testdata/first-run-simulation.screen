@@ -7,8 +7,6 @@ Choose your provider:
   ChatGPT      OAuth
   Anthropic    OAuth
   OpenCode Go  Key
-› Simulation   No sign in
-
-The agent tries its best to figure out what you mean, with doctor ELIZA as fallback.
+› Simulator    The doctor will see you now
 
 ✓ Thanks. Transferring you…

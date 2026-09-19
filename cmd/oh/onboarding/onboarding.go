@@ -38,7 +38,7 @@ const (
 	chatGPTName    = "ChatGPT"
 	anthropicName  = "Anthropic"
 	openCodeGoName = "OpenCode Go"
-	simulationName = "Simulation"
+	simulatorName  = "Simulator"
 
 	simulationIdentifier = "simulation"
 
@@ -77,7 +77,6 @@ const (
 	openingBrowser   = "Opening your browser to shake hands with %s…"
 	signedIn         = "Signed in to %s"
 	signInFailure    = "Unable to sign in: %s"
-	simulationNote   = "The agent tries its best to figure out what you mean, with doctor ELIZA as fallback."
 )
 
 type provider struct {
@@ -92,7 +91,7 @@ var providers = []provider{
 	{name: openCodeGoName, identifier: model.OpencodeGoProvider, note: "Key"},
 }
 
-var simulation = provider{name: simulationName, identifier: simulationIdentifier, note: "No sign in"}
+var simulation = provider{name: simulatorName, identifier: simulationIdentifier, note: "The doctor will see you now"}
 
 type Options struct {
 	Input          *os.File
@@ -120,12 +119,17 @@ func PrepareConfig(options Options) (config.Config, bool, error) {
 	}
 
 	modelCachePath := location.GetModelCachePath(options.EndpointURL != "")
+	pause, stopPausing, err := typingPause(options.Input, options.Output)
+	if err != nil {
+		return settings, false, err
+	}
 	harry := wizard{
 		isSimulationOffered: true,
 		defaults:            settings.Model.GetDefaults(),
 
-		output: options.Output,
-		pause:  typingPause(options.Output),
+		output:      options.Output,
+		pause:       pause,
+		stopPausing: stopPausing,
 		choose: func(prompt string, labels []string) (int, error) {
 			return menu.ChooseIndex(options.Input, options.Output, prompt, labels)
 		},
@@ -184,12 +188,14 @@ type wizard struct {
 	choose          func(string, []string) (int, error)
 	login           func(provider, func(string)) error
 	openBrowser     func(string) error
-	pause           func(time.Duration)
+	pause           func(time.Duration) bool
+	stopPausing     func()
 	refreshModels   func() error
 	getModels       func() []model.Choice
 	setInitialModel func(string) error
 	defaults        model.Defaults
 
+	isOpeningSkipped    bool
 	isSimulationOffered bool
 	isSimulationChosen  bool
 }
@@ -206,11 +212,6 @@ func (self *wizard) castSpell() error {
 
 	if chosenProvider.identifier == simulationIdentifier {
 		self.isSimulationChosen = true
-
-		if _, err := fmt.Fprintf(self.output, "\n%s\n", style.Subtle(simulationNote)); err != nil {
-			return err
-		}
-
 		return self.sayFarewell()
 	}
 
@@ -253,6 +254,10 @@ func (self *wizard) sayFarewell() error {
 }
 
 func (self *wizard) openScreen() error {
+	if self.stopPausing != nil {
+		defer self.stopPausing()
+	}
+
 	width := max(style.Width(spoken(greeting, greetingAside)), style.Width(spoken(introduction, "")))
 
 	if err := self.speakOut(greeting, greetingAside); err != nil {
@@ -307,12 +312,17 @@ func restAfter(character rune) time.Duration {
 }
 
 func (self *wizard) rest(interval time.Duration) {
-	if self.pause != nil {
-		self.pause(interval)
+	if !self.isOpeningSkipped && self.pause != nil && self.pause(interval) {
+		self.isOpeningSkipped = true
 	}
 }
 
 func (self *wizard) typeOut(text string, interval time.Duration) error {
+	if self.isOpeningSkipped {
+		_, err := io.WriteString(self.output, text)
+		return err
+	}
+
 	runes := []rune(text)
 
 	for at := 0; at < len(runes); {
@@ -332,6 +342,10 @@ func (self *wizard) typeOut(text string, interval time.Duration) error {
 		if hasCharacter {
 			self.rest(interval + restAfter(runes[end-1]))
 		}
+		if self.isOpeningSkipped {
+			_, err := io.WriteString(self.output, string(runes[end:]))
+			return err
+		}
 
 		at = end
 	}
@@ -339,12 +353,62 @@ func (self *wizard) typeOut(text string, interval time.Duration) error {
 	return nil
 }
 
-func typingPause(output io.Writer) func(time.Duration) {
-	if !tty.Is(output) {
-		return nil
+func typingPause(input *os.File, output io.Writer) (func(time.Duration) bool, func(), error) {
+	if !tty.Is(input) || !tty.Is(output) {
+		return nil, func() {}, nil
 	}
 
-	return time.Sleep
+	restoreEcho, err := tty.SuppressEcho(input)
+	if err != nil {
+		return nil, nil, err
+	}
+	pause, stopReading := enterPause(input)
+	stop := func() {
+		stopReading()
+		restoreEcho()
+	}
+
+	return pause, stop, nil
+}
+
+func enterPause(input *os.File) (func(time.Duration) bool, func()) {
+	reader := tty.NewReader(input)
+	enterPress := make(chan struct{})
+	readingCompletion := make(chan struct{})
+
+	go func() {
+		defer close(readingCompletion)
+		var character [1]byte
+		for {
+			count, err := reader.Read(character[:])
+			if err != nil {
+				return
+			}
+			if count == 1 && (character[0] == '\r' || character[0] == '\n') {
+				close(enterPress)
+				return
+			}
+		}
+	}()
+
+	pause := func(interval time.Duration) bool {
+		timer := time.NewTimer(interval)
+		defer timer.Stop()
+
+		select {
+		case <-enterPress:
+			return true
+		case <-timer.C:
+			return false
+		}
+	}
+	stop := func() {
+		reader.Stop()
+		<-readingCompletion
+		reader.Close()
+	}
+
+	return pause, stop
 }
 
 func modelLabels(choices []model.Choice) []string {

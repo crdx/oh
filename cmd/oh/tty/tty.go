@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 
+	"golang.org/x/sys/unix"
 	"golang.org/x/term"
 
 	"crdx.org/io/cmd/oh/key"
@@ -31,6 +32,25 @@ func Keyboard(input *os.File) (*os.File, func()) {
 	}
 
 	return terminal, func() { _ = terminal.Close() }
+}
+
+func SuppressEcho(terminal *os.File) (func(), error) {
+	if !Is(terminal) {
+		return nil, ErrNotTerminal
+	}
+
+	state, err := unix.IoctlGetTermios(int(terminal.Fd()), unix.TCGETS)
+	if err != nil {
+		return nil, err
+	}
+
+	withoutEcho := *state
+	withoutEcho.Lflag &^= unix.ECHO
+	if err := unix.IoctlSetTermios(int(terminal.Fd()), unix.TCSETS, &withoutEcho); err != nil {
+		return nil, err
+	}
+
+	return func() { _ = unix.IoctlSetTermios(int(terminal.Fd()), unix.TCSETS, state) }, nil
 }
 
 func Raw(terminal *os.File, screen io.Writer) (func(), error) {
