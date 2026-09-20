@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"crdx.org/io/tool"
+	"crdx.org/io/pkg/tool"
 )
 
 const MaxSearchBytes = 16 * 1024

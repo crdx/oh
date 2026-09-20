@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/agent"
 	"crdx.org/io/internal/req"
+	"crdx.org/io/pkg/agent"
 )
 
 func refusingServer(t *testing.T, status int, body string) string {

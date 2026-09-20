@@ -13,7 +13,7 @@ import (
 	"testing"
 
 	"crdx.org/io/internal/util/imageutil"
-	"crdx.org/io/tool"
+	"crdx.org/io/pkg/tool"
 )
 
 func pngOf(t *testing.T, subject image.Image) tool.Image {

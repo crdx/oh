@@ -14,14 +14,14 @@ ADDRESS   := "localhost:8117"
 ENDPOINT  := "http://" + ADDRESS + "/v1/codex/responses"
 WIDTH     := "100"
 HEIGHT    := "24"
-TEST_INPUTS := justfile_directory() / "cmd/oh/testdata/input"
+TEST_INPUTS := justfile_directory() / "testdata/input"
 
 # what the scenarios read, write and search, laid out again for every capture and every replay
-WORKSPACE_FIXTURE := justfile_directory() / "cmd/oh/testdata/input/workspace"
+WORKSPACE_FIXTURE := justfile_directory() / "testdata/input/workspace"
 
 # build the visual pass: the harness's output layer over a fake model
 build:
-    go test -c -o {{ BIN }} ./cmd/oh/
+    go test -c -o {{ BIN }} ./
 
 # start the pane and run one turn against the fake model
 up pass="TestVisual": build down
@@ -37,7 +37,7 @@ pick: build down
 
 # build the harness and the stand-in endpoint
 harness:
-    go build -o {{ OH }} ./cmd/oh/
+    go build -o {{ OH }} ./
     go build -o {{ SIM }} ./cmd/simulate/
 
 # run the harness for real against a scenario, in a workspace of its own
@@ -191,7 +191,7 @@ capture: harness
 
 # draw every captured journal again and write what it drew to the golden files
 goldens:
-    go test ./cmd/oh/ -update -count=1
+    go test ./ -update -count=1
 
 # attach to the interactive rig session
 attach:

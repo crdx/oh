@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"crdx.org/io/agent"
 	"crdx.org/io/internal/req"
+	"crdx.org/io/pkg/agent"
 )
 
 const Endpoint = "https://models.dev/api.json"

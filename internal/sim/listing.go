@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"crdx.org/io/agent"
+	"crdx.org/io/pkg/agent"
 )
 
 const (

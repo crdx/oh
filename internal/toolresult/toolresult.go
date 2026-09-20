@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/url"
 
-	"crdx.org/io/agent"
-	"crdx.org/io/session"
+	"crdx.org/io/pkg/agent"
+	"crdx.org/io/pkg/session"
 )
 
 const (

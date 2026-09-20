@@ -1,124 +1,51 @@
-# io
+# oh
 
-**io** is a collection of agent and world-building primitives written in Go.
+**oh** is a command-line coding harness with a focus on security, speed, and reliability.
 
-## Packages
+<!-- The user, model, and environment must have the same knowledge. -->
 
-- `agent`: conversation loop, with streaming, batching, and cancellation
-- `tool`: tools, schemas, middleware, and concurrency
-- `toolbox`: implementation of standard tools, plus extras
-- `session`: session saving and resumption, as an append-only journal
-- `wire/anthropic/messages`: the Anthropic Messages protocol
-- `wire/openai/chatcompletions`: the OpenAI-compatible Chat Completions protocol
-- `wire/openai/responses`: the OpenAI Responses protocol
-- `provider/anthropic`: the Claude subscription service
-- `provider/codex`: the ChatGPT Codex service
-- `provider/opencodego`: the OpenCode Go service
-- `provider/ollama`: local and network Ollama servers
-- ... and more, soon
+- Secure: agents get unrestricted bash because the Linux kernel's sandboxing features are awesome.
+- Robust: a plethora of golden and non-golden tests ensure that changes can be trusted.
+- Pleasant: no unexpected repaints so you're not forcibly scrolled to the bottom while you're trying to read.
+- Refreshing: configuration options and UI segments reload automatically.
+- Modern: inline images, hyperlinks, window titles, synced repaints, and paste support.
+- Consistent: a replayed session renders byte-identically to a live session.
+- Efficient: chunked incremental markdown rendering keeps long messages generating smoothly.
+- Relaxing: line-based streaming makes it easy to follow the endless river of prose.
+- Integrated: provider usage data and limits allow dynamically swapping out based on availability.
 
-## Installation
+## Install
 
 ```sh
-go get crdx.org/io
+go install crdx.org/oh@latest
 ```
 
-## Authentication
+## Run Demo
 
-Implementors glue the auth flow together themselves. The **oh** implementation handles it with `-L`:
-
-```bash
-go run ./cmd/oh -L codex
-go run ./cmd/oh -L opencode-go
-go run ./cmd/oh -L anthropic
+```sh
+go run crdx.org/oh --demo
 ```
 
-Omit the provider to choose interactively.
+## Primitives
 
-## Usage
+- `pkg/agent`: conversation loop, with streaming, batching, and cancellation
+- `pkg/ask`: confirmations and choices mediated by an interface
+- `pkg/tool`: tools, schemas, middleware, and concurrency
+- `pkg/toolbox`: implementation of standard tools, plus extras
+- `pkg/session`: session saving and resumption as an append-only journal
+- `pkg/wire/anthropic/messages`: the Anthropic Messages protocol
+- `pkg/wire/openai/chatcompletions`: the OpenAI-compatible Chat Completions protocol
+- `pkg/wire/openai/responses`: the OpenAI Responses protocol
+- `pkg/provider/anthropic`: the Claude subscription service
+- `pkg/provider/codex`: the ChatGPT Codex service
+- `pkg/provider/opencodego`: the OpenCode Go service
+- `pkg/provider/ollama`: local and network Ollama servers
 
-```go
-type WeatherParams struct {
-    City string
-}
-
-weather := tool.Implement(
-    tool.Definition{
-        Name:        "weather",
-        Description: "report weather in a city",
-        Schema:      tool.Schema{tool.String("city", "the city to look up")},
-    },
-    func(args WeatherParams) (string, string) { return args.City, "" },
-).Plain(func(_ context.Context, _ WeatherParams) (string, error) {
-    return "Take a guess.", nil
-})
-
-client, _ := codex.Auth("gpt-5.6-sol", "high")
-
-assistant := agent.New("You are a helpful weatherperson", client, []tool.Tool{weather})
-
-answer, _ := assistant.Send(ctx, "what is the weather in London?")
-fmt.Println(answer) // => "It's probably raining."
-```
-
-`Send` blocks until the turn is over. Cancelling the context ends the request the turn is waiting on.
-
-`Stream` is the same turn as transient prose deltas and completed events. Deltas are suitable for live rendering; only events belong in durable history.
-
-```go
-for update, err := range assistant.Stream(ctx, "what is the weather in London?", nil) {
-    if err != nil {
-        return err
-    }
-
-    switch {
-    case update.Delta != nil:
-        if update.Delta.Kind == agent.ModelMessageEvent {
-            fmt.Print(update.Delta.Text)
-        }
-    case update.Event != nil && update.Event.Kind == agent.ToolCallRequestEvent:
-        fmt.Println("call", update.Event.Name, update.Event.Arguments)
-    case update.Event != nil && update.Event.Kind == agent.ToolCallResultEvent:
-        fmt.Println("result", update.Event.Text)
-    }
-}
-```
-
-`Send` collects the completed `ModelMessageEvent` blocks and returns their text.
-
-## Implementations
-
-### oh
-
-A [coding harness](https://crdx.org/oh).
-
-### simulate
-
-Stand in for every provider endpoint at once, playing scenarios defined in TOML files.
-
-```bash
-go run ./cmd/simulate --scenario internal/sim/scenarios/success.toml
-```
-
-The simulator deals in wire formats, not providers. A provider speaks one of them, and more than one provider can speak the same one.
-
-| Wire format      | Served at              | Spoken by               |
-|------------------|------------------------|-------------------------|
-| Responses        | `/v1/codex/responses`  | `codex`                 |
-| Chat Completions | `/v1/chat/completions` | `opencode-go`, `ollama` |
-| Messages         | `/v1/messages`         | `anthropic`             |
-
-## Examples
-
-| Command         | Shows                                             |
-|-----------------|---------------------------------------------------|
-| `cmd/weather`   | A tool that answers questions about the weather   |
-| `cmd/streaming` | A prompt loop printing each event as it arrives   |
-| `cmd/simple`    | The same loop, with text fragments glued together |
+Additional information about these can be found in [pkg/README.md][pkg/README.md].
 
 ## Contributions
 
-Open an [issue](https://github.com/crdx/io/issues) or send a [pull request](https://github.com/crdx/io/pulls).
+Open an [issue](https://github.com/crdx/oh/issues) or send a [pull request](https://github.com/crdx/oh/pulls).
 
 ## Licence
 

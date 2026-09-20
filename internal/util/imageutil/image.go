@@ -13,7 +13,7 @@ import (
 	"golang.org/x/image/draw"
 	_ "golang.org/x/image/webp"
 
-	"crdx.org/io/tool"
+	"crdx.org/io/pkg/tool"
 )
 
 const MaxEdge = 1568

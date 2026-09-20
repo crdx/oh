@@ -21,13 +21,17 @@ func main() {
 	runner.Main("stdstream", analyse)
 }
 
-func isApplication(filename string) bool {
+func isApplication(filename string, packageName string) bool {
+	if packageName == "main" {
+		return true
+	}
+
 	root, _, _ := strings.Cut(filepath.ToSlash(filename), "/")
 	return slices.Contains(applicationRoots, root)
 }
 
 func analyse(file runner.File) []runner.Diagnostic {
-	if isApplication(file.Name) {
+	if isApplication(file.Name, file.Syntax.Name.Name) {
 		return nil
 	}
 

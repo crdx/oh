@@ -15,6 +15,9 @@ func TestAnalyse(t *testing.T) {
 		"a writer taken as a parameter": {
 			source: "package example\n\nimport \"io\"\n\nfunc write(writer io.Writer) { _ = writer }\n",
 		},
+		"a main package": {
+			source: "package main\n\nimport \"os\"\n\nfunc write() { _ = os.Stdout }\n",
+		},
 		"the process's output": {
 			source:   "package example\n\nimport \"os\"\n\nfunc write() { _ = os.Stdout }\n",
 			expected: []string{"example.go:5:20: a library package minds its own business"},
@@ -79,20 +82,24 @@ func TestAnalyseRejectsInvalidGo(t *testing.T) {
 }
 
 func TestOnlyLibraryPackagesAreClaimed(t *testing.T) {
-	tests := map[string]bool{
-		"toolbox/notify/notify.go":           false,
-		"agent/agent.go":                     false,
-		"wire/openai/responses/responses.go": false,
-		"cmd/oh/main.go":                     true,
-		"cmd/oh/ctl/console/console.go":      true,
-		"internal/sandbox/exec.go":           true,
-		"internal/lint/stdstream/main.go":    true,
-		"notify.go":                          false,
+	tests := map[string]struct {
+		packageName string
+		expected    bool
+	}{
+		"pkg/toolbox/notify/notify.go":           {packageName: "notify"},
+		"pkg/agent/agent.go":                     {packageName: "agent"},
+		"pkg/wire/openai/responses/responses.go": {packageName: "responses"},
+		"main.go":                                {packageName: "main", expected: true},
+		"cmd/simulate/main.go":                   {packageName: "main", expected: true},
+		"internal/app/ctl/console/console.go":    {packageName: "console", expected: true},
+		"internal/sandbox/exec.go":               {packageName: "sandbox", expected: true},
+		"internal/lint/stdstream/main.go":        {packageName: "main", expected: true},
+		"notify.go":                              {packageName: "notify"},
 	}
 
-	for filename, expected := range tests {
-		if actual := isApplication(filename); actual != expected {
-			t.Errorf("got isApplication(%q) = %v, want %v", filename, actual, expected)
+	for filename, test := range tests {
+		if actual := isApplication(filename, test.packageName); actual != test.expected {
+			t.Errorf("got isApplication(%q, %q) = %v, want %v", filename, test.packageName, actual, test.expected)
 		}
 	}
 }

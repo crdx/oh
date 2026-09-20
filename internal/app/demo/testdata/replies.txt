@@ -1,0 +1,13 @@
+abilities
+
+I know how to do three things, and only by the words you use:
+
+- **read** a path you name, as in `read main.go`
+- **list** what is here, as in `what files are here`
+- **search** for a word, as in `grep for wizard`
+
+Anything else and you'll be answered by the DOCTOR script Weizenbaum published in 1966, which listens rather better than I do.
+
+missing path
+
+Name a path and I'll read it, as in `read main.go`.

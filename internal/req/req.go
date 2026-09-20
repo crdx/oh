@@ -14,9 +14,9 @@ import (
 	"strings"
 	"time"
 
-	"crdx.org/io/agent"
 	"crdx.org/io/internal/transient"
 	"crdx.org/io/internal/util"
+	"crdx.org/io/pkg/agent"
 )
 
 const bodyLimit = 64 * 1024

@@ -38,7 +38,7 @@ sandbox *args:
         echo -e "${GREEN}this machine can map a namespace, so the sandbox tests ran for real${NC}"
         exit 0
     fi
-    PACKAGES=(./internal/sandbox ./internal/jobs ./cmd/oh/shell ./toolbox/bash)
+    PACKAGES=(./internal/sandbox ./internal/jobs ./internal/app/shell ./pkg/toolbox/bash)
     if [[ $# -gt 0 ]]; then
         PACKAGES=("$@")
     fi
@@ -101,26 +101,27 @@ golden:
 
     # isolate shards because the generator harness mutates process-wide state
     for PATTERN in '[A-D]' '[E-L]' '[M-R]' '[S-Z]'; do
-        generate_goldens ./cmd/oh -run "^TestGolden${PATTERN}"
+        generate_goldens . -run "^TestGolden${PATTERN}"
     done
 
     generate_goldens \
-        ./cmd/oh/cli \
-        ./cmd/oh/commands \
-        ./cmd/oh/editor \
-        ./cmd/oh/menu \
-        ./cmd/oh/model \
-        ./cmd/oh/model/picker \
-        ./cmd/oh/onboarding \
-        ./cmd/oh/preview \
-        ./cmd/oh/segment/subUsage \
-        ./cmd/oh/sessions \
-        ./cmd/oh/sessions/picker \
-        ./cmd/oh/shell \
-        ./cmd/oh/toolresult \
-        ./cmd/oh/usage \
-        ./cmd/oh/ctl/... \
-        ./toolbox/bash \
+        ./internal/app/cli \
+        ./internal/app/commands \
+        ./internal/app/demo \
+        ./internal/app/editor \
+        ./internal/app/menu \
+        ./internal/app/model \
+        ./internal/app/model/picker \
+        ./internal/app/onboarding \
+        ./internal/app/preview \
+        ./internal/app/segment/subUsage \
+        ./internal/app/sessions \
+        ./internal/app/sessions/picker \
+        ./internal/app/shell \
+        ./internal/app/toolresult \
+        ./internal/app/usage \
+        ./internal/app/ctl/... \
+        ./pkg/toolbox/bash \
         -run '^TestGolden'
 
     STATUS=0
@@ -168,7 +169,7 @@ refs:
     set -euo pipefail
     GREEN='\e[32m'
     NC='\e[0m'
-    for SOURCES in wire/*/*/reference/sources.txt; do
+    for SOURCES in pkg/wire/*/*/reference/sources.txt; do
         DIRECTORY="$(dirname "$SOURCES")"
         while read -r NAME ADDRESS; do
             if [[ -z "$NAME" || "$NAME" == \#* ]]; then
@@ -181,10 +182,10 @@ refs:
     done
 
 oh *args:
-    go run ./cmd/oh "$@"
+    go run . "$@"
 
 ohm *args:
-    go run ./cmd/oh -crx "$@"
+    go run . -crx "$@"
 
 [private]
 mega:

@@ -7,9 +7,9 @@ import (
 	"os"
 	"strings"
 
-	"crdx.org/io/agent"
-	"crdx.org/io/provider/codex"
-	"crdx.org/io/tool"
+	"crdx.org/io/pkg/agent"
+	"crdx.org/io/pkg/provider/codex"
+	"crdx.org/io/pkg/tool"
 )
 
 func main() {

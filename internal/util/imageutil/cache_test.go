@@ -7,7 +7,7 @@ import (
 	"image/png"
 	"testing"
 
-	"crdx.org/io/tool"
+	"crdx.org/io/pkg/tool"
 )
 
 func TestBoundedImageCacheEvictsTheLeastRecentlyUsedImage(t *testing.T) {
