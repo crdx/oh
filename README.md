@@ -23,7 +23,7 @@ go install crdx.org/oh@latest
 ## Run Demo
 
 ```sh
-go run crdx.org/oh --demo
+go run crdx.org/oh@latest --demo
 ```
 
 ## Primitives
