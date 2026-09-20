@@ -305,7 +305,7 @@ func notifySection(data harnessContextTemplateData) string {
 	}
 
 	return "# Notifications\n\n" + strings.Join([]string{
-		"- The notify tool alerts the user via a desktop notification.",
+		"- The notify tool alerts the user via a desktop notification when the terminal is not focused.",
 		"- Use it to get the user's attention, or tell the user what work you've done.",
 		"- Ensure you call the tool *before* you output your response and end your turn.",
 		"- Do not send any for regular back-and-forth conversation where the user is clearly engaged.",

@@ -27,6 +27,7 @@ type terminalTitler interface {
 
 type Terminal struct {
 	title         terminalTitler
+	focus         *focus
 	workspaceName string
 	sessionTitle  string
 	mode          caps.Set
@@ -36,22 +37,25 @@ type Terminal struct {
 func New(writer io.Writer, workspace *work.Space) Terminal {
 	return Terminal{
 		title:         newTitle(writer),
+		focus:         newFocus(),
 		workspaceName: workspace.GetName(),
 	}
 }
 
 func (self *Terminal) Begin(mode caps.Set) func() {
+	restoreFocus := self.beginFocus()
 	self.mode = mode
 	if self.title == nil {
-		return func() {}
+		return restoreFocus
 	}
 
 	self.isBegun = true
-	restore := self.title.Begin(self.titleText())
+	restoreTitle := self.title.Begin(self.titleText())
 
 	return func() {
 		self.isBegun = false
-		restore()
+		restoreTitle()
+		restoreFocus()
 	}
 }
 

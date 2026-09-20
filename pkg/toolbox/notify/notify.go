@@ -14,6 +14,7 @@ import (
 
 const (
 	applicationName = "oh"
+	focusedResult   = "notification not sent because the terminal is focused"
 	iconChoices     = "success, info, warning, error, question, progress"
 )
 
@@ -58,11 +59,11 @@ type Args struct {
 	Icon    string `json:"icon"`
 }
 
-func New(writeEscape EscapeWriter) tool.Tool {
+func New(writeEscape EscapeWriter, isTerminalFocused func() bool) tool.Tool {
 	return tool.Implement(
 		tool.Definition{
 			Name:        "notify",
-			Description: "send a desktop notification to alert the user",
+			Description: "send a desktop notification when the terminal is not focused",
 			Schema: tool.Schema{
 				tool.String("title", "notification title, as plain text"),
 				tool.String("message", "notification text, as plain text: write < and & as themselves, never as HTML entities"),
@@ -73,7 +74,7 @@ func New(writeEscape EscapeWriter) tool.Tool {
 	).
 		Validate(validate).
 		Plain(func(ctx context.Context, args Args) (string, error) {
-			return run(ctx, writeEscape, args)
+			return run(ctx, writeEscape, isTerminalFocused, args)
 		})
 }
 
@@ -126,9 +127,34 @@ func Send(ctx context.Context, writeEscape EscapeWriter, args Args) error {
 	return nil
 }
 
-func run(ctx context.Context, writeEscape EscapeWriter, args Args) (string, error) {
-	if err := Send(ctx, writeEscape, args); err != nil {
+func SendIfUnfocused(
+	ctx context.Context,
+	writeEscape EscapeWriter,
+	isTerminalFocused func() bool,
+	args Args,
+) (bool, error) {
+	if err := validate(args); err != nil {
+		return false, err
+	}
+	if isTerminalFocused != nil && isTerminalFocused() {
+		return false, nil
+	}
+
+	return true, Send(ctx, writeEscape, args)
+}
+
+func run(
+	ctx context.Context,
+	writeEscape EscapeWriter,
+	isTerminalFocused func() bool,
+	args Args,
+) (string, error) {
+	wasSent, err := SendIfUnfocused(ctx, writeEscape, isTerminalFocused, args)
+	if err != nil {
 		return "", err
+	}
+	if !wasSent {
+		return focusedResult, nil
 	}
 
 	return "notification sent", nil

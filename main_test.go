@@ -105,6 +105,7 @@ import (
 	"crdx.org/io/internal/app/store"
 	"crdx.org/io/internal/app/store/transcript"
 	"crdx.org/io/internal/app/style"
+	"crdx.org/io/internal/app/terminal"
 	"crdx.org/io/internal/app/tty"
 	"crdx.org/io/internal/app/turn"
 	"crdx.org/io/internal/app/usage"
@@ -551,6 +552,36 @@ func TestAQuestionIgnoresOtherKeys(t *testing.T) {
 	}
 	if self.question.request == nil {
 		t.Error("an unrelated key cleared the question")
+	}
+}
+
+func TestFocusChangesAreTrackedWhileAQuestionStands(t *testing.T) {
+	broker := ask.New()
+	closeBroker := broker.Open()
+	defer closeBroker()
+
+	result := make(chan error, 1)
+	go func() { result <- ask.Confirm(t.Context(), broker, ask.Confirmation{Label: "Continue?"}) }()
+	<-broker.Changes()
+
+	trackedTerminal := terminal.New(io.Discard, work.At("/workspace"))
+	restoreTerminal := trackedTerminal.Begin(caps.Read)
+	defer restoreTerminal()
+
+	self := &App{question: questionState{broker: broker}, terminal: trackedTerminal}
+	self.onQuestionChange()
+	self.handleKeypressAndShowInput(nil, nil, key.Key{Code: key.FocusOut})
+	if self.terminal.IsFocused() {
+		t.Error("focus out did not reach the terminal while a question stood")
+	}
+	self.handleKeypressAndShowInput(nil, nil, key.Key{Code: key.FocusIn})
+	if !self.terminal.IsFocused() {
+		t.Error("focus in did not reach the terminal while a question stood")
+	}
+
+	self.answerQuestion(key.Key{Code: key.Rune, Value: 'y'})
+	if err := <-result; err != nil {
+		t.Fatalf("the question was answered with %v", err)
 	}
 }
 
@@ -7310,7 +7341,7 @@ func newRig(t *testing.T, openScreen func(*strings.Builder, string) *output.Scre
 			sandbox.Direct(),
 			true,
 		),
-		notify.New(screen.WriteEscape),
+		notify.New(screen.WriteEscape, func() bool { return false }),
 		job.New(
 			jobs.New(sandbox.Direct()),
 			files,
@@ -13576,7 +13607,7 @@ func newSessionGoldenTools(
 		}
 
 		if specification.Name == notifyToolName {
-			tools = append(tools, notify.New(func(string) bool { return true }))
+			tools = append(tools, notify.New(func(string) bool { return true }, func() bool { return false }))
 			continue
 		}
 

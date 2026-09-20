@@ -15,27 +15,31 @@ const detailWidth = 80
 func SendTurnError(
 	ctx context.Context,
 	writeEscape notify.EscapeWriter,
+	isTerminalFocused func() bool,
 	workspace *work.Space,
 	failure error,
 ) error {
-	return notify.Send(ctx, writeEscape, notify.Args{
+	_, err := notify.SendIfUnfocused(ctx, writeEscape, isTerminalFocused, notify.Args{
 		Title:   title(workspace),
 		Message: failure.Error(),
 		Icon:    "error",
 	})
+	return err
 }
 
 func SendQuestion(
 	ctx context.Context,
 	writeEscape notify.EscapeWriter,
+	isTerminalFocused func() bool,
 	workspace *work.Space,
 	question ask.Question,
 ) error {
-	return notify.Send(ctx, writeEscape, notify.Args{
+	_, err := notify.SendIfUnfocused(ctx, writeEscape, isTerminalFocused, notify.Args{
 		Title:   title(workspace),
 		Message: questionMessage(question),
 		Icon:    "question",
 	})
+	return err
 }
 
 func title(workspace *work.Space) string {

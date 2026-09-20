@@ -795,6 +795,9 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		screen.SetTextSizingSupported(textsizing.Detect(keyboard, os.Stdout))
 	}
 
+	var app *App
+	isTerminalFocused := func() bool { return app != nil && app.terminal.IsFocused() }
+
 	snapshots := file.NewSnapshots()
 	toolboxTools := toolbox.Rummage(files, snapshots)
 	askBroker := ask.New()
@@ -831,7 +834,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		toolboxTools = append(toolboxTools, expose.New(hostToSandbox.ForModel()))
 	}
 	if notify.IsAvailable() {
-		toolboxTools = append(toolboxTools, notify.New(screen.WriteEscape))
+		toolboxTools = append(toolboxTools, notify.New(screen.WriteEscape, isTerminalFocused))
 	}
 	toolboxTools = append(toolboxTools, title.New())
 	toolboxTools = append(
@@ -887,7 +890,6 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		args.Message = forkSource.GetMessageWithChatAt(args.Message, transcriptPath)
 	}
 
-	var app *App
 	systemCommands, err := commands.New(commands.Options{
 		ConfigDir:        location.GetConfigDir(),
 		ConfigFile:       configPath,
@@ -1003,12 +1005,14 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		app.pendingNotices.add(restoredConditions.Change)
 	}
 	app.onFailure = func(failure error) {
-		_ = notification.SendTurnError(context.Background(), screen.WriteEscape, workspace, failure)
+		_ = notification.SendTurnError(
+			context.Background(), screen.WriteEscape, isTerminalFocused, workspace, failure,
+		)
 	}
 	app.onQuestion = func(question ask.Question) {
 		go func() {
 			_ = notification.SendQuestion(
-				context.Background(), screen.WriteEscape, workspace, question,
+				context.Background(), screen.WriteEscape, isTerminalFocused, workspace, question,
 			)
 		}()
 	}

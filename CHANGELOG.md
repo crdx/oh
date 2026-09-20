@@ -2,6 +2,10 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+### Changes
+
+- Suppress desktop notifications while the terminal is focused
+
 ## [0.7.1] - 2026-09-19
 
 ### Changes

@@ -17,6 +17,8 @@ import (
 
 func discardEscape(string) bool { return true }
 
+func neverFocused() bool { return false }
+
 func TestAvailabilityFollowsTheNotificationCommandOnPath(t *testing.T) {
 	bin := t.TempDir()
 	t.Setenv("PATH", bin)
@@ -47,6 +49,26 @@ func TestAvailabilityFollowsTheNotificationCommandOnPath(t *testing.T) {
 	}
 }
 
+func TestFocusedTerminalSuppressesNotification(t *testing.T) {
+	t.Setenv("PATH", t.TempDir())
+	t.Setenv("KITTY_WINDOW_ID", "")
+
+	call, err := notify.New(discardEscape, func() bool { return true }).Parse(
+		`{"title":"Build","message":"The build is finished","icon":"success"}`,
+	)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	result, err := call.Exec(t.Context())
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if want := "notification not sent because the terminal is focused"; result.Output != want {
+		t.Errorf("got output %q, want %q", result.Output, want)
+	}
+}
+
 func TestNotificationMapsEveryIconForNotifySend(t *testing.T) {
 	bin := t.TempDir()
 	capturePath := filepath.Join(t.TempDir(), "arguments")
@@ -73,7 +95,7 @@ func TestNotificationMapsEveryIconForNotifySend(t *testing.T) {
 				`{"title":"Build","message":"The build is finished","icon":%q}`,
 				icon,
 			)
-			call, err := notify.New(discardEscape).Parse(arguments)
+			call, err := notify.New(discardEscape, neverFocused).Parse(arguments)
 			if err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}
@@ -129,7 +151,7 @@ func TestNotificationUsesKittysNotificationKittenInsideKitty(t *testing.T) {
 		return true
 	}
 
-	call, err := notify.New(writeEscape).Parse(`{"title":"Build","message":"The build is finished","icon":"error"}`)
+	call, err := notify.New(writeEscape, neverFocused).Parse(`{"title":"Build","message":"The build is finished","icon":"error"}`)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -178,7 +200,7 @@ func TestNotificationReportsATerminalThatCannotRaiseIt(t *testing.T) {
 
 	arguments := `{"title":"Build","message":"The build is finished","icon":"error"}`
 
-	call, err := notify.New(func(string) bool { return false }).Parse(arguments)
+	call, err := notify.New(func(string) bool { return false }, neverFocused).Parse(arguments)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -187,7 +209,7 @@ func TestNotificationReportsATerminalThatCannotRaiseIt(t *testing.T) {
 		t.Errorf("expected an undeliverable notification to be reported, got %v", err)
 	}
 
-	call, err = notify.New(nil).Parse(arguments)
+	call, err = notify.New(nil, neverFocused).Parse(arguments)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -198,13 +220,13 @@ func TestNotificationReportsATerminalThatCannotRaiseIt(t *testing.T) {
 }
 
 func TestNotificationTitleIsRequired(t *testing.T) {
-	if _, err := notify.New(discardEscape).Parse(`{"title":"  ","message":"hello","icon":"info"}`); err == nil {
+	if _, err := notify.New(discardEscape, neverFocused).Parse(`{"title":"  ","message":"hello","icon":"info"}`); err == nil {
 		t.Error("expected a blank title to be refused")
 	}
 }
 
 func TestNotificationMessageIsRequired(t *testing.T) {
-	if _, err := notify.New(discardEscape).Parse(`{"title":"Greeting","message":"  ","icon":"info"}`); err == nil {
+	if _, err := notify.New(discardEscape, neverFocused).Parse(`{"title":"Greeting","message":"  ","icon":"info"}`); err == nil {
 		t.Error("expected a blank message to be refused")
 	}
 }
@@ -212,7 +234,7 @@ func TestNotificationMessageIsRequired(t *testing.T) {
 func TestNotificationIconIsConstrained(t *testing.T) {
 	for _, icon := range []string{"", "good", "dialog-warning"} {
 		arguments := fmt.Sprintf(`{"title":"Greeting","message":"hello","icon":%q}`, icon)
-		if _, err := notify.New(discardEscape).Parse(arguments); err == nil {
+		if _, err := notify.New(discardEscape, neverFocused).Parse(arguments); err == nil {
 			t.Errorf("expected icon %q to be refused", icon)
 		} else if !strings.Contains(err.Error(), "success, info, warning, error, question, progress") {
 			t.Errorf("expected every choice in the error, got %q", err)
@@ -224,7 +246,7 @@ func TestNotificationReportsNotifySendFailure(t *testing.T) {
 	t.Setenv("PATH", t.TempDir())
 	t.Setenv("KITTY_WINDOW_ID", "")
 
-	call, err := notify.New(discardEscape).Parse(`{"title":"Greeting","message":"hello","icon":"info"}`)
+	call, err := notify.New(discardEscape, neverFocused).Parse(`{"title":"Greeting","message":"hello","icon":"info"}`)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -245,7 +267,7 @@ func TestCancelledNotificationStopsNotifySend(t *testing.T) {
 	t.Setenv("PATH", bin)
 	t.Setenv("KITTY_WINDOW_ID", "")
 
-	call, err := notify.New(discardEscape).Parse(`{"title":"Greeting","message":"hello","icon":"info"}`)
+	call, err := notify.New(discardEscape, neverFocused).Parse(`{"title":"Greeting","message":"hello","icon":"info"}`)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -268,7 +290,7 @@ func TestCancelledNotificationStopsNotifySend(t *testing.T) {
 
 func TestIconParameterDescriptionListsEveryChoice(t *testing.T) {
 	var description string
-	for _, parameter := range notify.New(discardEscape).Schema() {
+	for _, parameter := range notify.New(discardEscape, neverFocused).Schema() {
 		if parameter.Name == "icon" {
 			description = parameter.Description
 		}

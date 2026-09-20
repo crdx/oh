@@ -13,6 +13,8 @@ import (
 	"crdx.org/io/pkg/ask"
 )
 
+func neverFocused() bool { return false }
+
 func fakeNotifySend(t *testing.T) string {
 	t.Helper()
 
@@ -48,6 +50,7 @@ func TestTurnErrorNotificationNamesTheWorkspaceAndShowsTheFailure(t *testing.T) 
 	if err := notification.SendTurnError(
 		t.Context(),
 		nil,
+		neverFocused,
 		work.At("/workspace/io"),
 		errors.New("access denied"),
 	); err != nil {
@@ -78,6 +81,7 @@ func TestQuestionNotificationNamesTheWorkspaceAndAsksTheQuestion(t *testing.T) {
 	if err := notification.SendQuestion(
 		t.Context(),
 		nil,
+		neverFocused,
 		work.At("/workspace/io"),
 		question,
 	); err != nil {
@@ -116,6 +120,7 @@ func TestQuestionNotificationShortensWhatItCannotShow(t *testing.T) {
 			if err := notification.SendQuestion(
 				t.Context(),
 				nil,
+				neverFocused,
 				work.At("/workspace/io"),
 				question,
 			); err != nil {

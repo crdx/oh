@@ -285,6 +285,10 @@ func restoreTerminalState(screen *output.Screen, isPersisted bool, restorers ...
 }
 
 func (self *App) handleKeypressAndShowInput(inputLine *edit.Input, history *edit.History, keypress key.Key) bool {
+	if self.terminal.ObserveFocus(keypress.Code) {
+		return true
+	}
+
 	if self.isAwaitingAnswer() {
 		self.screen.Sync(func() {
 			self.answerQuestion(keypress)
