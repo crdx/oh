@@ -9,9 +9,9 @@ Both are up.
 
 
  🤖 Jobs docs and watch stopped when the
-    session closed. Restart docs with
-    job(action="start", name="docs") if
-    it is still needed.
+    session closed. Restart each with
+    job(action="start", name=…) if still
+    needed.
 
 
 
@@ -204,13 +204,13 @@ r
 
 t
 
-d
+e
 
-o
+a
 
 c
 
-s
+h
 
 w
 
@@ -268,31 +268,13 @@ e
 
 =
 
-"
-
-d
-
-o
-
-c
-
-s
-
-"
+…
 
 )
 
 i
 
 f
-
-i
-
-t
-
-i
-
-s
 
 s
 
@@ -396,8 +378,8 @@ job docs $ python3 -m http.server 8080 ✓ 1L
 Both are up.
 
 
- 🤖 Jobs docs and watch stopped when the session closed. Restart docs with job(action="start",
-    name="docs") if it is still needed.
+ 🤖 Jobs docs and watch stopped when the session closed. Restart each with job(action="start",
+    name=…) if still needed.
 
 
 
@@ -429,15 +411,13 @@ Both are up.
     session
     closed.
     Restart
-    docs
+    each
     with
     job(acti
     on="star
     t",
-    name="do
-    cs") if
-    it is
-    still
+    name=…)
+    if still
     needed.
 
 
@@ -464,8 +444,8 @@ job docs $ python3 -m http.server 8080 ✓ 1L
 Both are up.
 
 
- 🤖 Jobs docs and watch stopped when the session closed. Restart docs with job(action="start",
-    name="docs") if it is still needed.
+ 🤖 Jobs docs and watch stopped when the session closed. Restart each with job(action="start",
+    name=…) if still needed.
 
 
 

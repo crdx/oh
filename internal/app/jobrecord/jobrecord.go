@@ -81,12 +81,14 @@ func EndedWithSessionNotice(event agent.Event) (string, bool) {
 	}
 
 	subject := "Job " + formattedNames[0]
+	pronoun := "it"
+
 	if len(formattedNames) > 1 {
 		subject = "Jobs " + strings.Join(formattedNames[:len(formattedNames)-1], ", ") +
 			" and " + formattedNames[len(formattedNames)-1]
+		pronoun = "each"
 	}
 
 	return subject + " stopped when the session closed. " +
-		"Restart " + formattedNames[0] + " with `job(action=\"start\", name=\"" + names[0] + "\")` " +
-		"if it is still needed.", true
+		"Restart " + pronoun + " with `job(action=\"start\", name=…)` if still needed.", true
 }

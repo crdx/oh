@@ -2,9 +2,13 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+### Changes
+
+- Shorten and simplify the restart job hint message
+
 ## [0.8.0] - 2026-09-20
 
-### Maintenance
+### Changes
 
 - Rename the Go module to `crdx.org/oh`
 

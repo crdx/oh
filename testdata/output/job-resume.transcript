@@ -28,7 +28,7 @@ Both are up.
 ## jobs_ended_with_session · +5s
 
 ```
-Jobs `docs` and `watch` stopped when the session closed. Restart `docs` with `job(action="start", name="docs")` if it is still needed.
+Jobs `docs` and `watch` stopped when the session closed. Restart each with `job(action="start", name=…)` if still needed.
 ```
 
 ## User · +6s

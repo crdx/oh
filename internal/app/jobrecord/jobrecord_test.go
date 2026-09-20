@@ -77,16 +77,16 @@ func TestSeveralEndedJobsAreNamedInThePlural(t *testing.T) {
 }
 
 func TestAnEndedJobNoticeAgreesWithItsOwnNumber(t *testing.T) {
-	const tail = " stopped when the session closed. " +
-		"Restart `docs` with `job(action=\"start\", name=\"docs\")` if it is still needed."
+	const closed = " stopped when the session closed. Restart "
+	const remedy = " with `job(action=\"start\", name=…)` if still needed."
 
 	for _, test := range []struct {
 		names   []string
 		expects string
 	}{
-		{[]string{"docs"}, "Job `docs`" + tail},
-		{[]string{"docs", "watch"}, "Jobs `docs` and `watch`" + tail},
-		{[]string{"docs", "build", "watch"}, "Jobs `docs`, `build` and `watch`" + tail},
+		{[]string{"docs"}, "Job `docs`" + closed + "it" + remedy},
+		{[]string{"docs", "watch"}, "Jobs `docs` and `watch`" + closed + "each" + remedy},
+		{[]string{"docs", "build", "watch"}, "Jobs `docs`, `build` and `watch`" + closed + "each" + remedy},
 	} {
 		notice, isSaid := jobrecord.EndedWithSessionNotice(jobrecord.EndedWithSessionEvent(test.names))
 		if !isSaid {

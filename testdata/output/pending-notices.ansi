@@ -1,7 +1,7 @@
 === 1 a restored job standing ===
 \e[?2026h\e[?25l\e[?7l\r\e[K\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m ⏳ Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when the session closed. Restart \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m with \e[38;2;192;128;80mjob(action="start", name="docs")\e[0m\e[48;2;48;58;67m if \e[0m\r
-\r\e[K\e[48;2;48;58;67m    it is still needed.                                                                             \e[0m\r
+\r\e[K\e[48;2;48;58;67m ⏳ Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when the session closed. Restart it with \e[38;2;192;128;80mjob(action="start", name=…)\e[0m\e[48;2;48;58;67m if still  \e[0m\r
+\r\e[K\e[48;2;48;58;67m    needed.                                                                                         \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
@@ -13,15 +13,15 @@
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l
 === 2 a restored job flushed ===
 \e[?2026h\e[?25l\e[?7l\r\e[K\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m ⏳ Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when the session closed. Restart \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m with \e[38;2;192;128;80mjob(action="start", name="docs")\e[0m\e[48;2;48;58;67m if \e[0m\r
-\r\e[K\e[48;2;48;58;67m    it is still needed.                                                                             \e[0m\r
+\r\e[K\e[48;2;48;58;67m ⏳ Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when the session closed. Restart it with \e[38;2;192;128;80mjob(action="start", name=…)\e[0m\e[48;2;48;58;67m if still  \e[0m\r
+\r\e[K\e[48;2;48;58;67m    needed.                                                                                         \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[1A\e[J\e[2A\e[100C\e[3A\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when the session closed. Restart \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m with \e[38;2;192;128;80mjob(action="start", name="docs")\e[0m\e[48;2;48;58;67m if \e[0m\r
-\r\e[K\e[48;2;48;58;67m    it is still needed.                                                                             \e[0m\r
+\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when the session closed. Restart it with \e[38;2;192;128;80mjob(action="start", name=…)\e[0m\e[48;2;48;58;67m if still  \e[0m\r
+\r\e[K\e[48;2;48;58;67m    needed.                                                                                         \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
@@ -139,8 +139,8 @@
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l
 === 7 a restored job and one return ===
 \e[?2026h\e[?25l\e[?7l\r\e[K\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m ⏳ Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when the session closed. Restart \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m with \e[38;2;192;128;80mjob(action="start", name="docs")\e[0m\e[48;2;48;58;67m if \e[0m\r
-\r\e[K\e[48;2;48;58;67m    it is still needed.                                                                             \e[0m\r
+\r\e[K\e[48;2;48;58;67m ⏳ Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when the session closed. Restart it with \e[38;2;192;128;80mjob(action="start", name=…)\e[0m\e[48;2;48;58;67m if still  \e[0m\r
+\r\e[K\e[48;2;48;58;67m    needed.                                                                                         \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r

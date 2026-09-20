@@ -10,7 +10,7 @@
 {"kind":"event","event":{"kind":"user_message","text":"is the preview still up"}}
 {"kind":"event","event":{"kind":"model_message","text":"It went down with the session, and I have left it down."}}
 {"kind":"event","event":{"kind":"job_listing","state":[{"name":"docs","command":"just docs","state":"ended with the session","started_at":"2026-08-23T14:32:09Z"},{"name":"watch","command":"just watch","state":"ended with the session","started_at":"2026-08-23T14:32:09Z"}]}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Jobs `docs` and `watch` stopped when the session closed. Restart `docs` with `job(action=\"start\", name=\"docs\")` if it is still needed."}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Jobs `docs` and `watch` stopped when the session closed. Restart each with `job(action=\"start\", name=…)` if still needed."}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"is the preview still up"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"It went down with the session, and I have left it down."}]}}
 {"kind":"turn_completion","turn":{}}

@@ -1,7 +1,7 @@
 === 1 a restored job standing ===
                                                                            double-enter to send now
- ⏳ Job docs stopped when the session closed. Restart docs with job(action="start", name="docs") if
-    it is still needed.
+ ⏳ Job docs stopped when the session closed. Restart it with job(action="start", name=…) if still
+    needed.
 
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -9,8 +9,8 @@
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 2 a restored job flushed ===
 
- 🤖 Job docs stopped when the session closed. Restart docs with job(action="start", name="docs") if
-    it is still needed.
+ 🤖 Job docs stopped when the session closed. Restart it with job(action="start", name=…) if still
+    needed.
 
 
 Model returned no reply.
@@ -58,8 +58,8 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 7 a restored job and one return ===
                                                                            double-enter to send now
- ⏳ Job docs stopped when the session closed. Restart docs with job(action="start", name="docs") if
-    it is still needed.
+ ⏳ Job docs stopped when the session closed. Restart it with job(action="start", name=…) if still
+    needed.
 
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
