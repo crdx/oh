@@ -7,7 +7,7 @@ import (
 	"slices"
 	"testing"
 
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/pkg/agent"
 )
 
 func listModels(t *testing.T, document string) ([]agent.Model, string) {

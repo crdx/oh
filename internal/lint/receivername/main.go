@@ -3,7 +3,7 @@ package main
 import (
 	"go/ast"
 
-	"crdx.org/io/internal/lint/runner"
+	"crdx.org/oh/internal/lint/runner"
 )
 
 const expectedReceiverName = "self"

@@ -8,7 +8,7 @@ import (
 	"sync"
 	"testing"
 
-	"crdx.org/io/internal/app/config"
+	"crdx.org/oh/internal/app/config"
 )
 
 func TestSetInitialModelCreatesAConfig(t *testing.T) {

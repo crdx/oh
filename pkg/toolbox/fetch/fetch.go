@@ -13,9 +13,9 @@ import (
 
 	"golang.org/x/net/html"
 
-	"crdx.org/io/internal/html2md"
-	"crdx.org/io/internal/util"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/html2md"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/pkg/tool"
 )
 
 const (

@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/stop"
+	"crdx.org/oh/internal/stop"
 )
 
 func TestOnlyTheNamedEnvironmentIsPassedOn(t *testing.T) {

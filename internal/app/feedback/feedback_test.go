@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/util/strutil"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/util/strutil"
+	"crdx.org/oh/pkg/agent"
 )
 
 const testDismissAfter = 4 * time.Second

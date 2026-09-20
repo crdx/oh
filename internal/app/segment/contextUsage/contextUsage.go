@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strconv"
 
-	"crdx.org/io/internal/app/segment"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/util"
+	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/util"
 )
 
 const (

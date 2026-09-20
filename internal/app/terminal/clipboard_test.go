@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"crdx.org/io/internal/app/terminal"
+	"crdx.org/oh/internal/app/terminal"
 )
 
 func TestCopyWritesAnOSC52ClipboardSequence(t *testing.T) {

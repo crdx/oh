@@ -6,10 +6,10 @@ import (
 	"slices"
 	"strings"
 
-	"crdx.org/io/internal/app/caps"
-	"crdx.org/io/internal/app/model"
-	"crdx.org/io/internal/app/sessions"
-	"crdx.org/io/internal/app/work"
+	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/internal/app/sessions"
+	"crdx.org/oh/internal/app/work"
 )
 
 const completeFlag = "--complete"

@@ -7,10 +7,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"crdx.org/io/internal/file"
+	"crdx.org/oh/internal/file"
 
-	"crdx.org/io/internal/util"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/pkg/tool"
 )
 
 type Args struct {

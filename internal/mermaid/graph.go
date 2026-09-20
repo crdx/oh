@@ -4,7 +4,7 @@ import (
 	"errors"
 	"slices"
 
-	"crdx.org/io/internal/mermaid/orderedmap"
+	"crdx.org/oh/internal/mermaid/orderedmap"
 )
 
 type genericCoord struct {

@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/slash"
-	"crdx.org/io/internal/app/snippets"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/slash"
+	"crdx.org/oh/internal/app/snippets"
+	"crdx.org/oh/pkg/agent"
 )
 
 type snippetContext struct {

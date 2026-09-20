@@ -15,10 +15,10 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/util/imageutil"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/tool"
-	"crdx.org/io/pkg/wire/openai/chatcompletions"
+	"crdx.org/oh/internal/util/imageutil"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/wire/openai/chatcompletions"
 )
 
 func scriptedServer(t *testing.T, bodies *[]string, payloads ...string) *httptest.Server {

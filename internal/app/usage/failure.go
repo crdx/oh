@@ -3,7 +3,7 @@ package usage
 import (
 	"errors"
 
-	"crdx.org/io/internal/req"
+	"crdx.org/oh/internal/req"
 )
 
 func FailureStatus(err error) (int, bool) {

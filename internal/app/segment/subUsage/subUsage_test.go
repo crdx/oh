@@ -10,11 +10,11 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/segment"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/usage"
-	"crdx.org/io/internal/req"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/usage"
+	"crdx.org/oh/internal/req"
+	"crdx.org/oh/pkg/agent"
 )
 
 type noOptions struct{}

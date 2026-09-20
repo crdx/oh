@@ -8,23 +8,23 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/file"
-	"crdx.org/io/internal/jobs"
-	internaltoolresult "crdx.org/io/internal/toolresult"
-	"crdx.org/io/internal/util/strutil"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/toolbox/bash"
-	"crdx.org/io/pkg/toolbox/edit"
-	"crdx.org/io/pkg/toolbox/fetch"
-	"crdx.org/io/pkg/toolbox/find"
-	"crdx.org/io/pkg/toolbox/grep"
-	"crdx.org/io/pkg/toolbox/job"
-	"crdx.org/io/pkg/toolbox/lookup"
-	"crdx.org/io/pkg/toolbox/ls"
-	"crdx.org/io/pkg/toolbox/notify"
-	"crdx.org/io/pkg/toolbox/read"
-	"crdx.org/io/pkg/toolbox/title"
-	"crdx.org/io/pkg/toolbox/write"
+	"crdx.org/oh/internal/file"
+	"crdx.org/oh/internal/jobs"
+	internaltoolresult "crdx.org/oh/internal/toolresult"
+	"crdx.org/oh/internal/util/strutil"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/toolbox/bash"
+	"crdx.org/oh/pkg/toolbox/edit"
+	"crdx.org/oh/pkg/toolbox/fetch"
+	"crdx.org/oh/pkg/toolbox/find"
+	"crdx.org/oh/pkg/toolbox/grep"
+	"crdx.org/oh/pkg/toolbox/job"
+	"crdx.org/oh/pkg/toolbox/lookup"
+	"crdx.org/oh/pkg/toolbox/ls"
+	"crdx.org/oh/pkg/toolbox/notify"
+	"crdx.org/oh/pkg/toolbox/read"
+	"crdx.org/oh/pkg/toolbox/title"
+	"crdx.org/oh/pkg/toolbox/write"
 )
 
 func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
@@ -83,7 +83,7 @@ func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
 		{
 			name: "shell success",
 			exchange: resultExchange("bash", bash.Args{Command: "go test ./...\nprintf 'done\\n'"}, agent.SuccessStatus,
-				"ok  crdx.org/io\ndone\n"),
+				"ok  crdx.org/oh\ndone\n"),
 		},
 		{
 			name: "shell failure",
@@ -228,7 +228,7 @@ func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
 		{
 			name: "job wait on a job that finished",
 			exchange: resultExchange("job", job.Args{Action: "wait", Name: "check"}, agent.SuccessStatus,
-				"check: complete after 37s\nok  crdx.org/io\nlint1  \u2713\n"),
+				"check: complete after 37s\nok  crdx.org/oh\nlint1  \u2713\n"),
 		},
 		{
 			name: "job wait on several jobs until any finishes",
@@ -249,7 +249,7 @@ func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
 				Names:   []string{"build", "lint"},
 				WaitFor: "all",
 			}, agent.SuccessStatus,
-				"build: complete after 37s\nok  crdx.org/io\n\n"+
+				"build: complete after 37s\nok  crdx.org/oh\n\n"+
 					"lint: complete after 22s\nall checks passed\n"),
 		},
 		{

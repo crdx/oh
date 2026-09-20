@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/key"
-	"crdx.org/io/internal/app/paste"
+	"crdx.org/oh/internal/app/key"
+	"crdx.org/oh/internal/app/paste"
 )
 
 func opened(password string, location string) *key.ClipboardReport {

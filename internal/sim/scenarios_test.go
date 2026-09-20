@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"crdx.org/io/internal/sim"
+	"crdx.org/oh/internal/sim"
 )
 
 func TestEveryScenarioThatShipsCanBeRead(t *testing.T) {

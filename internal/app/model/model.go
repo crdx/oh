@@ -17,13 +17,13 @@ import (
 	"strings"
 	"time"
 
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/modelsdev"
-	"crdx.org/io/internal/util"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/provider/anthropic"
-	"crdx.org/io/pkg/provider/codex"
-	"crdx.org/io/pkg/provider/opencodego"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/modelsdev"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/provider/anthropic"
+	"crdx.org/oh/pkg/provider/codex"
+	"crdx.org/oh/pkg/provider/opencodego"
 )
 
 const refreshMessage = "Refreshing the model list..."

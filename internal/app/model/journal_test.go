@@ -3,7 +3,7 @@ package model
 import (
 	"testing"
 
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/pkg/agent"
 )
 
 func TestFastModeStateRoundTrips(t *testing.T) {

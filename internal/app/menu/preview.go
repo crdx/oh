@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"strings"
 
-	"crdx.org/io/internal/app/ansi"
-	"crdx.org/io/internal/app/edit"
-	"crdx.org/io/internal/app/input"
-	"crdx.org/io/internal/app/key"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/width"
+	"crdx.org/oh/internal/app/ansi"
+	"crdx.org/oh/internal/app/edit"
+	"crdx.org/oh/internal/app/input"
+	"crdx.org/oh/internal/app/key"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/width"
 )
 
 const (

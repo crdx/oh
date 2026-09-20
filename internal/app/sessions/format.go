@@ -3,7 +3,7 @@ package sessions
 import (
 	"fmt"
 
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/pkg/session"
 )
 
 func ValidateFormats(directory string) error {

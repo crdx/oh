@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/req"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/provider/anthropic"
+	"crdx.org/oh/internal/req"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/provider/anthropic"
 )
 
 type countingObserver struct {

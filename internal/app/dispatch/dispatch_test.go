@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"crdx.org/io/internal/app/dispatch"
-	"crdx.org/io/internal/app/slash"
+	"crdx.org/oh/internal/app/dispatch"
+	"crdx.org/oh/internal/app/slash"
 )
 
 func TestHandleTreatsAValidPathAsAnOrdinaryMessage(t *testing.T) {

@@ -17,8 +17,8 @@ import (
 	"time"
 
 	"crdx.org/hereduck"
-	"crdx.org/io/internal/sandbox"
-	"crdx.org/io/internal/sandbox/keeper"
+	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/sandbox/keeper"
 )
 
 const (

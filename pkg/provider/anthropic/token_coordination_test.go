@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/auth"
+	"crdx.org/oh/internal/auth"
 )
 
 func getCredentialStore(t *testing.T, path string) *credentialStore {

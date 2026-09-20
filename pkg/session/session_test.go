@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/session"
 )
 
 func TestTheHeadCarriesTheNameAndTheIdentifier(t *testing.T) {

@@ -6,8 +6,8 @@ import (
 	"sync"
 	"unicode"
 
-	"crdx.org/io/internal/app/ansi"
-	"crdx.org/io/internal/app/tty"
+	"crdx.org/oh/internal/app/ansi"
+	"crdx.org/oh/internal/app/tty"
 )
 
 const (

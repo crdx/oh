@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/usage"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/usage"
+	"crdx.org/oh/pkg/agent"
 )
 
 const (

@@ -10,10 +10,10 @@ import (
 
 	"golang.org/x/term"
 
-	"crdx.org/io/internal/app/ansi"
-	"crdx.org/io/internal/app/key"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/tty"
+	"crdx.org/oh/internal/app/ansi"
+	"crdx.org/oh/internal/app/key"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tty"
 )
 
 const (

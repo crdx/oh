@@ -13,8 +13,8 @@ import (
 
 	"github.com/BurntSushi/toml"
 
-	"crdx.org/io/internal/app/config"
-	"crdx.org/io/internal/format"
+	"crdx.org/oh/internal/app/config"
+	"crdx.org/oh/internal/format"
 )
 
 type ConfigOptions struct {

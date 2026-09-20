@@ -9,11 +9,11 @@ import (
 	"strings"
 	"time"
 
-	"crdx.org/io/internal/stop"
-	"crdx.org/io/internal/util"
-	"crdx.org/io/internal/util/strutil"
-	"crdx.org/io/internal/waiting"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/stop"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/internal/util/strutil"
+	"crdx.org/oh/internal/waiting"
+	"crdx.org/oh/pkg/tool"
 )
 
 func New(systemPrompt string, provider Provider, tools []tool.Tool) *Agent {

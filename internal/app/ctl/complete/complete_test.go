@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/location"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/internal/app/location"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/session"
 )
 
 var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")

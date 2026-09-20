@@ -3,7 +3,7 @@ package util_test
 import (
 	"testing"
 
-	"crdx.org/io/internal/util"
+	"crdx.org/oh/internal/util"
 )
 
 func TestFormatCountScalesOnlyBeyondAThousand(t *testing.T) {

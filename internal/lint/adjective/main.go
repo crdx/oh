@@ -8,7 +8,7 @@ import (
 	"strings"
 	"unicode"
 
-	"crdx.org/io/internal/lint/runner"
+	"crdx.org/oh/internal/lint/runner"
 )
 
 var irregularParticiples = []string{

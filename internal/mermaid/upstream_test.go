@@ -3,7 +3,7 @@ package mermaid
 import (
 	"strings"
 
-	"crdx.org/io/internal/mermaid/diagram"
+	"crdx.org/oh/internal/mermaid/diagram"
 )
 
 func upstreamASCIIFlowchartConfig() *diagram.Config {

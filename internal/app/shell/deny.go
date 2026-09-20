@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"slices"
 
-	"crdx.org/io/internal/util"
+	"crdx.org/oh/internal/util"
 )
 
 var ErrDenied = errors.New("the path is denied by sandbox.deny")

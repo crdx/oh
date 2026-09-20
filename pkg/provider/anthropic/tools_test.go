@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/provider/anthropic"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/provider/anthropic"
+	"crdx.org/oh/pkg/tool"
 )
 
 func TestAToolIsOfferedWithAnInputSchema(t *testing.T) {

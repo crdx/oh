@@ -6,8 +6,8 @@ import (
 	"slices"
 	"strings"
 
-	"crdx.org/io/internal/app/key"
-	"crdx.org/io/internal/util"
+	"crdx.org/oh/internal/app/key"
+	"crdx.org/oh/internal/util"
 )
 
 const (

@@ -3,8 +3,8 @@ package usage
 import (
 	"time"
 
-	"crdx.org/io/internal/state"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/state"
+	"crdx.org/oh/pkg/agent"
 )
 
 type cache struct {

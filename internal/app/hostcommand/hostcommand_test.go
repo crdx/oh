@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/hostcommand"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/hostcommand"
+	"crdx.org/oh/pkg/agent"
 )
 
 func TestACommandRunsInTheDirectoryItWasGiven(t *testing.T) {

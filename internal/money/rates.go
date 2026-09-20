@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"crdx.org/io/internal/req"
+	"crdx.org/oh/internal/req"
 )
 
 const Endpoint = "https://api.frankfurter.dev/v1/latest"

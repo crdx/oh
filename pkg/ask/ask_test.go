@@ -8,8 +8,8 @@ import (
 	"testing/synctest"
 	"time"
 
-	"crdx.org/io/internal/waiting"
-	"crdx.org/io/pkg/ask"
+	"crdx.org/oh/internal/waiting"
+	"crdx.org/oh/pkg/ask"
 )
 
 func TestAQuestionIsUnavailableOutsideInteractiveMode(t *testing.T) {

@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/width"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/width"
 )
 
 func fixedTable() *Table {

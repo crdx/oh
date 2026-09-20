@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/file"
-	"crdx.org/io/pkg/tool"
-	"crdx.org/io/pkg/toolbox/find"
+	"crdx.org/oh/internal/file"
+	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/toolbox/find"
 )
 
 func testRoot(t *testing.T, paths ...string) *file.Root {

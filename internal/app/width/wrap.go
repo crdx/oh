@@ -4,7 +4,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"crdx.org/io/internal/app/escape"
+	"crdx.org/oh/internal/app/escape"
 )
 
 const reset = "\x1b[0m"

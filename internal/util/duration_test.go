@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/util"
+	"crdx.org/oh/internal/util"
 )
 
 func TestCompactDurationDropsAnEmptySmallerUnit(t *testing.T) {

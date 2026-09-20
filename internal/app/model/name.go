@@ -5,7 +5,7 @@ import (
 	"strings"
 	"unicode"
 
-	"crdx.org/io/internal/util"
+	"crdx.org/oh/internal/util"
 )
 
 var spellings = map[string]string{

@@ -9,15 +9,15 @@ import (
 	"sync"
 	"time"
 
-	"crdx.org/io/internal/req"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/internal/req"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/session"
 
-	"crdx.org/io/internal/app/conditions"
-	"crdx.org/io/internal/app/hostcommand"
-	"crdx.org/io/internal/app/model"
-	"crdx.org/io/internal/app/store/transcript"
-	"crdx.org/io/internal/app/store/wire"
+	"crdx.org/oh/internal/app/conditions"
+	"crdx.org/oh/internal/app/hostcommand"
+	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/internal/app/store/transcript"
+	"crdx.org/oh/internal/app/store/wire"
 )
 
 type Meta struct {

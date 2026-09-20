@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"crdx.org/io/internal/util/strutil"
+	"crdx.org/oh/internal/util/strutil"
 )
 
 const minimumCodeBlockPasteLines = 6

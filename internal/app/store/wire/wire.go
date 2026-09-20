@@ -16,7 +16,7 @@ import (
 	"sync"
 	"time"
 
-	"crdx.org/io/internal/req"
+	"crdx.org/oh/internal/req"
 )
 
 const redacted = "[REDACTED]"

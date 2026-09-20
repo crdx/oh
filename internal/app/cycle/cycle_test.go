@@ -6,7 +6,7 @@ import (
 	"slices"
 	"testing"
 
-	"crdx.org/io/internal/app/cycle"
+	"crdx.org/oh/internal/app/cycle"
 )
 
 func TestHooksDispatchInRegistrationOrderAndIgnoreReportedErrors(t *testing.T) {

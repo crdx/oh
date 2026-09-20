@@ -4,7 +4,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"crdx.org/io/internal/xdg"
+	"crdx.org/oh/internal/xdg"
 )
 
 func TestStatePathUsesAnAbsoluteXDGStateHome(t *testing.T) {

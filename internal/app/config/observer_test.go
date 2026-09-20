@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/output"
+	"crdx.org/oh/internal/app/output"
 )
 
 const watchTestTimeout = 2 * time.Second

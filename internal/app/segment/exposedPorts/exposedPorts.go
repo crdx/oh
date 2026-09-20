@@ -5,11 +5,11 @@ import (
 	"strconv"
 	"strings"
 
-	"crdx.org/io/internal/app/link"
-	"crdx.org/io/internal/app/portgrant"
-	"crdx.org/io/internal/app/segment"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/width"
+	"crdx.org/oh/internal/app/link"
+	"crdx.org/oh/internal/app/portgrant"
+	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/width"
 )
 
 const (

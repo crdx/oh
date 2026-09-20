@@ -5,13 +5,13 @@ import (
 	"time"
 	"unicode"
 
-	"crdx.org/io/internal/app/call"
-	"crdx.org/io/internal/app/markdown"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/width"
-	"crdx.org/io/internal/util"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/ask"
+	"crdx.org/oh/internal/app/call"
+	"crdx.org/oh/internal/app/markdown"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/width"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/ask"
 )
 
 const (

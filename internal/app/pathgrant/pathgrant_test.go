@@ -8,11 +8,11 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/caps"
-	"crdx.org/io/internal/app/shell"
-	"crdx.org/io/internal/app/work"
-	"crdx.org/io/internal/file"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/shell"
+	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/internal/file"
+	"crdx.org/oh/pkg/agent"
 )
 
 func openTestWorkspace(t *testing.T) *work.Space {

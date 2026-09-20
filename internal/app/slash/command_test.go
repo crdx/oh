@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/slash"
+	"crdx.org/oh/internal/app/slash"
 )
 
 func TestRegistryFindsACommandAndItsArguments(t *testing.T) {

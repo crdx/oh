@@ -4,8 +4,8 @@ import (
 	"strings"
 	"time"
 
-	"crdx.org/io/internal/app/model"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/pkg/agent"
 )
 
 const (

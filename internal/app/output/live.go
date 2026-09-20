@@ -4,8 +4,8 @@ import (
 	"slices"
 	"strings"
 
-	"crdx.org/io/internal/app/ansi"
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/ansi"
+	"crdx.org/oh/internal/app/style"
 )
 
 const clearRow = ansi.EraseLine

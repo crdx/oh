@@ -9,7 +9,7 @@ import (
 	"image/png"
 	"testing"
 
-	"crdx.org/io/internal/util/imageutil"
+	"crdx.org/oh/internal/util/imageutil"
 )
 
 func TestStoredAnthropicImageIsBounded(t *testing.T) {

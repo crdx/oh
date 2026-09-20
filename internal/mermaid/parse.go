@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"crdx.org/io/internal/mermaid/orderedmap"
+	"crdx.org/oh/internal/mermaid/orderedmap"
 )
 
 type graphProperties struct {

@@ -8,8 +8,8 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"crdx.org/io/internal/util"
-	"crdx.org/io/internal/util/pathutil"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/internal/util/pathutil"
 
 	"golang.org/x/sys/unix"
 )

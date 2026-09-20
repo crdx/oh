@@ -13,20 +13,20 @@ import (
 
 	"github.com/BurntSushi/toml"
 
-	"crdx.org/io/internal/app/caps"
-	"crdx.org/io/internal/app/editor"
-	"crdx.org/io/internal/app/experimental"
-	"crdx.org/io/internal/app/model"
-	"crdx.org/io/internal/app/output"
-	"crdx.org/io/internal/app/permission"
-	"crdx.org/io/internal/app/segment"
-	"crdx.org/io/internal/app/shell"
-	"crdx.org/io/internal/app/slash"
-	"crdx.org/io/internal/app/snippets"
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/editor"
+	"crdx.org/oh/internal/app/experimental"
+	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/internal/app/output"
+	"crdx.org/oh/internal/app/permission"
+	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/shell"
+	"crdx.org/oh/internal/app/slash"
+	"crdx.org/oh/internal/app/snippets"
+	"crdx.org/oh/internal/app/style"
 
-	"crdx.org/io/internal/format"
-	"crdx.org/io/internal/util/pathutil"
+	"crdx.org/oh/internal/format"
+	"crdx.org/oh/internal/util/pathutil"
 )
 
 //go:embed defaults.toml

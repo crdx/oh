@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"strings"
 
-	"crdx.org/io/internal/app/access"
-	"crdx.org/io/internal/app/markdown"
-	"crdx.org/io/internal/jobs"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/access"
+	"crdx.org/oh/internal/app/markdown"
+	"crdx.org/oh/internal/jobs"
+	"crdx.org/oh/pkg/agent"
 )
 
 const Listing agent.Kind = "job_listing"

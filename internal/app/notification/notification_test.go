@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/notification"
-	"crdx.org/io/internal/app/work"
-	"crdx.org/io/pkg/ask"
+	"crdx.org/oh/internal/app/notification"
+	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/pkg/ask"
 )
 
 func neverFocused() bool { return false }

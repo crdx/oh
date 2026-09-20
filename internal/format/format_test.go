@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/format"
+	"crdx.org/oh/internal/format"
 )
 
 func TestAFormatThisBuildWritesIsAccepted(t *testing.T) {

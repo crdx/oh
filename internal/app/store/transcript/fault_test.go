@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/pkg/agent"
 )
 
 func TestAppendFailureIsReturned(t *testing.T) {

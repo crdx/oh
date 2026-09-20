@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/edit"
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/edit"
+	"crdx.org/oh/internal/app/style"
 )
 
 func TestTheRuleIsExactlyAsWideAsTheScreen(t *testing.T) {

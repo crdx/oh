@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"crdx.org/io/internal/file"
+	"crdx.org/oh/internal/file"
 )
 
 func TestAStoredReadSnapshotAllowsTheSameEditAfterResume(t *testing.T) {

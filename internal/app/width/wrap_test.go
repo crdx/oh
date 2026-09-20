@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/escape"
+	"crdx.org/oh/internal/app/escape"
 )
 
 func TestWrappingBreaksAtSpacesAndMidWordWhereThereAreNone(t *testing.T) {

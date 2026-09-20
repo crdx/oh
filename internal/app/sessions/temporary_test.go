@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/location"
+	"crdx.org/oh/internal/app/location"
 )
 
 func TestPrepareTemporaryDirectoryCreatesTheSessionDirectoryPrivately(t *testing.T) {

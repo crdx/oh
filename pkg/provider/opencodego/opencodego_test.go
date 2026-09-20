@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/provider/opencodego"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/provider/opencodego"
 )
 
 func newClient(t *testing.T, url string) *opencodego.Client {

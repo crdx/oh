@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/stop"
-	"crdx.org/io/pkg/toolbox/notify"
+	"crdx.org/oh/internal/stop"
+	"crdx.org/oh/pkg/toolbox/notify"
 )
 
 func discardEscape(string) bool { return true }

@@ -9,8 +9,8 @@ import (
 	"strings"
 	"sync"
 
-	"crdx.org/io/internal/app/access"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/access"
+	"crdx.org/oh/pkg/agent"
 )
 
 const (

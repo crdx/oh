@@ -1,7 +1,7 @@
 package dynamic
 
 import (
-	"crdx.org/io/internal/app/graphics"
+	"crdx.org/oh/internal/app/graphics"
 )
 
 type Picture struct {

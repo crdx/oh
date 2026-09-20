@@ -7,11 +7,11 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/jobs"
-	"crdx.org/io/internal/sandbox"
-	"crdx.org/io/pkg/tool"
-	"crdx.org/io/pkg/toolbox/bash"
-	"crdx.org/io/pkg/toolbox/job"
+	"crdx.org/oh/internal/jobs"
+	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/toolbox/bash"
+	"crdx.org/oh/pkg/toolbox/job"
 )
 
 func run(t *testing.T, manager *jobs.Manager, arguments any) (string, error) {

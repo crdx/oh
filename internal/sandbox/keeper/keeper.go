@@ -16,9 +16,9 @@ import (
 	"syscall"
 	"time"
 
-	"crdx.org/io/internal/sandbox/testnamespace"
+	"crdx.org/oh/internal/sandbox/testnamespace"
 
-	"crdx.org/io/internal/util"
+	"crdx.org/oh/internal/util"
 
 	"golang.org/x/sys/unix"
 )

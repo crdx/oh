@@ -10,9 +10,9 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/pictures"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/app/pictures"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tool"
 )
 
 func drawnPNG(t *testing.T, width int, height int) []byte {

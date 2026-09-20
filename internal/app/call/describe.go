@@ -5,12 +5,12 @@ import (
 	"strings"
 	"time"
 
-	"crdx.org/io/internal/app/skill"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/work"
-	"crdx.org/io/internal/util/strutil"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/app/skill"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/internal/util/strutil"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tool"
 )
 
 const (

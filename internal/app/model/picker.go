@@ -7,9 +7,9 @@ import (
 	"slices"
 	"strings"
 
-	"crdx.org/io/internal/app/model/picker"
-	"crdx.org/io/internal/app/tty"
-	"crdx.org/io/internal/money"
+	"crdx.org/oh/internal/app/model/picker"
+	"crdx.org/oh/internal/app/tty"
+	"crdx.org/oh/internal/money"
 )
 
 var ErrNotLoggedIn = errors.New("not logged in to any provider: run oh -L to sign in")

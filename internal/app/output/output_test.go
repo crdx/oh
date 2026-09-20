@@ -8,11 +8,11 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/escape"
-	"crdx.org/io/internal/app/link"
-	"crdx.org/io/internal/app/output"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/util/strutil"
+	"crdx.org/oh/internal/app/escape"
+	"crdx.org/oh/internal/app/link"
+	"crdx.org/oh/internal/app/output"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/util/strutil"
 )
 
 func TestTextSizingSupportIsRemembered(t *testing.T) {

@@ -9,10 +9,10 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/file"
-	"crdx.org/io/internal/stop"
-	"crdx.org/io/pkg/tool"
-	"crdx.org/io/pkg/toolbox/grep"
+	"crdx.org/oh/internal/file"
+	"crdx.org/oh/internal/stop"
+	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/toolbox/grep"
 )
 
 func testRoot(t *testing.T, files map[string]string) *file.Root {

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"crdx.org/io/internal/util"
+	"crdx.org/oh/internal/util"
 )
 
 func TestJSONScalar(t *testing.T) {

@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/auth"
-	"crdx.org/io/pkg/provider/opencodego"
+	"crdx.org/oh/internal/auth"
+	"crdx.org/oh/pkg/provider/opencodego"
 )
 
 func TestStoredKeyReadsOpenCodeGoCredentials(t *testing.T) {

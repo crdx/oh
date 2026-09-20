@@ -7,11 +7,11 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/config"
-	"crdx.org/io/internal/app/segment"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/work"
-	"crdx.org/io/internal/util/strutil"
+	"crdx.org/oh/internal/app/config"
+	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/internal/util/strutil"
 )
 
 type fixedSegment string

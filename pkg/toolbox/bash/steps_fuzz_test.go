@@ -6,7 +6,7 @@ import (
 
 	"mvdan.cc/sh/v3/syntax"
 
-	"crdx.org/io/pkg/toolbox/bash"
+	"crdx.org/oh/pkg/toolbox/bash"
 )
 
 func FuzzStepsMeanWhatTheModelSent(fuzzer *testing.F) {

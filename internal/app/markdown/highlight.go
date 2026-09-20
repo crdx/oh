@@ -11,7 +11,7 @@ import (
 	"github.com/alecthomas/chroma/v2/lexers"
 	"mvdan.cc/sh/v3/syntax"
 
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/style"
 )
 
 func Emphasise(line string, language string) string {

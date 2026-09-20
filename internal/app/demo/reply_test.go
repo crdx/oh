@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/sim"
+	"crdx.org/oh/internal/sim"
 )
 
 func userTurn(said string) sim.Request {

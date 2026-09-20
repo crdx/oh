@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"crdx.org/io/internal/util"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/pkg/agent"
 )
 
 type Event struct {

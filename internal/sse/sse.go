@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"crdx.org/io/internal/transient"
+	"crdx.org/oh/internal/transient"
 )
 
 var ErrTruncated error = truncation{}

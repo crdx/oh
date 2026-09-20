@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/req"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/req"
+	"crdx.org/oh/pkg/agent"
 )
 
 var collectedAt = time.Date(2026, 1, 2, 12, 0, 0, 0, time.UTC)

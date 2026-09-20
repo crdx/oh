@@ -3,7 +3,7 @@ package agent_test
 import (
 	"testing"
 
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/pkg/agent"
 )
 
 func TestEachModelFallsIntoAPriceTier(t *testing.T) {

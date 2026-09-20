@@ -11,7 +11,7 @@ import (
 	"strings"
 	"sync"
 
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/style"
 )
 
 type Command []string

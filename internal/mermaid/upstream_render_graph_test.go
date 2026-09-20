@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/mermaid/runewidth"
+	"crdx.org/oh/internal/mermaid/runewidth"
 )
 
 func TestRenderGraphHandlesLongChainWithoutPanic(t *testing.T) {

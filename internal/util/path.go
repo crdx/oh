@@ -1,6 +1,6 @@
 package util
 
-import "crdx.org/io/internal/file"
+import "crdx.org/oh/internal/file"
 
 func RootName(root *file.Root, path string) (string, error) {
 	resolvedRoot, name, err := root.Resolve(path)

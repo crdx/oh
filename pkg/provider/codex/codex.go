@@ -1,8 +1,8 @@
 package codex
 
 import (
-	"crdx.org/io/pkg/tool"
-	"crdx.org/io/pkg/wire/openai/responses"
+	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/wire/openai/responses"
 )
 
 const (

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"crdx.org/io/internal/app/escape"
+	"crdx.org/oh/internal/app/escape"
 	"github.com/rivo/uniseg"
 )
 

@@ -12,10 +12,10 @@ import (
 	"testing/synctest"
 	"time"
 
-	"crdx.org/io/internal/stop"
-	"crdx.org/io/internal/waiting"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/stop"
+	"crdx.org/oh/internal/waiting"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tool"
 )
 
 type callProvider struct {

@@ -5,9 +5,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"crdx.org/io/internal/app/caps"
-	"crdx.org/io/internal/app/shell"
-	"crdx.org/io/internal/file"
+	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/shell"
+	"crdx.org/oh/internal/file"
 )
 
 func TestHomeMountIsReadableByFileTools(t *testing.T) {

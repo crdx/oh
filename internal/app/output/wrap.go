@@ -3,9 +3,9 @@ package output
 import (
 	"strings"
 
-	"crdx.org/io/internal/app/ansi"
-	"crdx.org/io/internal/app/escape"
-	"crdx.org/io/internal/app/width"
+	"crdx.org/oh/internal/app/ansi"
+	"crdx.org/oh/internal/app/escape"
+	"crdx.org/oh/internal/app/width"
 )
 
 const (

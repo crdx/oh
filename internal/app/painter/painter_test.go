@@ -10,15 +10,15 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/caps"
-	"crdx.org/io/internal/app/link"
-	"crdx.org/io/internal/app/markdown"
-	"crdx.org/io/internal/app/output"
-	"crdx.org/io/internal/app/pathgrant"
-	"crdx.org/io/internal/app/startup"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/width"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/link"
+	"crdx.org/oh/internal/app/markdown"
+	"crdx.org/oh/internal/app/output"
+	"crdx.org/oh/internal/app/pathgrant"
+	"crdx.org/oh/internal/app/startup"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/width"
+	"crdx.org/oh/pkg/agent"
 )
 
 func TestStartupDrawingUsesTheScreensTextSizingSupport(t *testing.T) {

@@ -7,11 +7,11 @@ import (
 	"syscall"
 	"time"
 
-	"crdx.org/io/internal/app/key"
-	"crdx.org/io/internal/app/tty"
-	"crdx.org/io/internal/app/turn"
-	"crdx.org/io/internal/jobs"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/key"
+	"crdx.org/oh/internal/app/tty"
+	"crdx.org/oh/internal/app/turn"
+	"crdx.org/oh/internal/jobs"
+	"crdx.org/oh/pkg/agent"
 )
 
 const (

@@ -5,9 +5,9 @@ import (
 	"strings"
 	"time"
 
-	"crdx.org/io/internal/req"
-	"crdx.org/io/pkg/tool"
-	"crdx.org/io/pkg/wire/openai/chatcompletions"
+	"crdx.org/oh/internal/req"
+	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/wire/openai/chatcompletions"
 )
 
 const (

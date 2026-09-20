@@ -7,7 +7,7 @@ import (
 
 	"golang.org/x/sys/unix"
 
-	"crdx.org/io/internal/util"
+	"crdx.org/oh/internal/util"
 )
 
 const signalled = 128

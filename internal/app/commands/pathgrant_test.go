@@ -4,9 +4,9 @@ import (
 	"slices"
 	"testing"
 
-	"crdx.org/io/internal/app/pathgrant"
-	"crdx.org/io/internal/app/slash"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/pathgrant"
+	"crdx.org/oh/internal/app/slash"
+	"crdx.org/oh/pkg/agent"
 )
 
 func fixturePathGrants() (PathGrants, *[]pathgrant.Grant) {

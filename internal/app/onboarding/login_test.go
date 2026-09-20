@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/pkg/provider/opencodego"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/pkg/provider/opencodego"
 )
 
 func TestTheKeyPromptLeavesTheEchoToTheTerminal(t *testing.T) {

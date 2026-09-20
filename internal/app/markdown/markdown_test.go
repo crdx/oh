@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/link"
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/link"
+	"crdx.org/oh/internal/app/style"
 )
 
 const answer = `# Findings

@@ -7,9 +7,9 @@ import (
 	"regexp"
 	"strings"
 
-	"crdx.org/io/internal/app/escape"
-	"crdx.org/io/internal/sandbox"
-	"crdx.org/io/internal/util/pathutil"
+	"crdx.org/oh/internal/app/escape"
+	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/util/pathutil"
 )
 
 const (

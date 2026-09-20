@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/table"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/table"
 )
 
 const (

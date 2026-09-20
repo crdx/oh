@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"crdx.org/io/internal/auth"
+	"crdx.org/oh/internal/auth"
 )
 
 type Credentials = auth.AnthropicCredentials

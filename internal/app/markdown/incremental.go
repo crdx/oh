@@ -4,7 +4,7 @@ import (
 	"slices"
 	"strings"
 
-	"crdx.org/io/internal/app/link"
+	"crdx.org/oh/internal/app/link"
 )
 
 type IncrementalRenderer struct {

@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/provider/codex"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/provider/codex"
 )
 
 var (

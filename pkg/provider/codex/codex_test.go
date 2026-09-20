@@ -18,10 +18,10 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/util/imageutil"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/provider/codex"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/util/imageutil"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/provider/codex"
+	"crdx.org/oh/pkg/tool"
 )
 
 type WeatherParams struct {

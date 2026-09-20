@@ -4,7 +4,7 @@ import (
 	"errors"
 	"os"
 
-	"crdx.org/io/internal/auth"
+	"crdx.org/oh/internal/auth"
 )
 
 func CredentialsPath() string {

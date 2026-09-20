@@ -3,9 +3,9 @@ package backend
 import (
 	"os"
 
-	"crdx.org/io/pkg/provider/ollama"
+	"crdx.org/oh/pkg/provider/ollama"
 
-	"crdx.org/io/internal/app/model"
+	"crdx.org/oh/internal/app/model"
 )
 
 func connectOllama(choice model.Choice, effort string, endpoints EndpointSettings) (*Connection, error) {

@@ -15,16 +15,16 @@ import (
 	"github.com/BurntSushi/toml"
 	"golang.org/x/sys/unix"
 
-	"crdx.org/io/internal/app/caps"
-	"crdx.org/io/internal/app/model"
-	"crdx.org/io/internal/app/output"
-	"crdx.org/io/internal/app/permission"
-	"crdx.org/io/internal/app/segment"
-	"crdx.org/io/internal/app/segment/scrollOverflow"
-	"crdx.org/io/internal/app/segment/workspaceDir"
-	"crdx.org/io/internal/app/snippets"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/work"
+	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/internal/app/output"
+	"crdx.org/oh/internal/app/permission"
+	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/segment/scrollOverflow"
+	"crdx.org/oh/internal/app/segment/workspaceDir"
+	"crdx.org/oh/internal/app/snippets"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/work"
 )
 
 func TestConfiguredSkillDirectoriesResolvesAbsoluteRelativeAndHomePaths(t *testing.T) {

@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/model/picker"
-	"crdx.org/io/internal/money"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/model/picker"
+	"crdx.org/oh/internal/money"
+	"crdx.org/oh/pkg/agent"
 )
 
 func TestTheEffortsOfferedRunFromLeastToMost(t *testing.T) {

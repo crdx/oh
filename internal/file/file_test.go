@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/file"
+	"crdx.org/oh/internal/file"
 )
 
 func testRoot(t *testing.T, writable *bool) (*file.Root, string) {

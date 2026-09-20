@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/util"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/util"
 )
 
 const (

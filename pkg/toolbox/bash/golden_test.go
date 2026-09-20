@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/sandbox"
+	"crdx.org/oh/internal/sandbox"
 )
 
 var updateGoldens = flag.Bool("update", false, "write what was reported back to the golden files")

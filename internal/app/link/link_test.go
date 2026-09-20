@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/sandbox"
+	"crdx.org/oh/internal/sandbox"
 )
 
 func TestURLLinkKeepsTheCompleteAddressVisible(t *testing.T) {

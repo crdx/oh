@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/output"
+	"crdx.org/oh/internal/app/output"
 )
 
 func TestShortTextIsDrawnForEveryDeltaThatArrives(t *testing.T) {

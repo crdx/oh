@@ -12,8 +12,8 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"crdx.org/io/internal/sandbox/keeper"
-	"crdx.org/io/internal/sandbox/testnamespace"
+	"crdx.org/oh/internal/sandbox/keeper"
+	"crdx.org/oh/internal/sandbox/testnamespace"
 )
 
 type Output interface {

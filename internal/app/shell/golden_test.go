@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/caps"
-	"crdx.org/io/internal/file"
-	"crdx.org/io/internal/sandbox"
+	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/file"
+	"crdx.org/oh/internal/sandbox"
 )
 
 func TestGoldenShellPoliciesHandleFilesystemChanges(t *testing.T) {

@@ -9,13 +9,13 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/pathgrant"
-	"crdx.org/io/internal/app/slash"
-	"crdx.org/io/internal/app/snippets"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/jobs"
-	"crdx.org/io/internal/util/strutil"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/pathgrant"
+	"crdx.org/oh/internal/app/slash"
+	"crdx.org/oh/internal/app/snippets"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/jobs"
+	"crdx.org/oh/internal/util/strutil"
+	"crdx.org/oh/pkg/agent"
 )
 
 func TestGoldenCompletionMatchesGolden(t *testing.T) {

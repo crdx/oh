@@ -10,10 +10,10 @@ import (
 	"testing/synctest"
 	"time"
 
-	"crdx.org/io/internal/jobs"
-	"crdx.org/io/internal/sandbox"
-	"crdx.org/io/internal/stop"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/jobs"
+	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/stop"
+	"crdx.org/oh/pkg/tool"
 )
 
 func TestAWaitReportsTheJobAndItsOutputOnceItHasEnded(t *testing.T) {

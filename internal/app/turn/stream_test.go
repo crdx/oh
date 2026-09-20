@@ -8,9 +8,9 @@ import (
 	"testing/synctest"
 	"time"
 
-	"crdx.org/io/internal/stop"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/stop"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tool"
 )
 
 type streamProvider struct {

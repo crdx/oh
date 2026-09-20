@@ -10,7 +10,7 @@ import (
 	"text/template"
 	"text/template/parse"
 
-	"crdx.org/io/internal/app/slash"
+	"crdx.org/oh/internal/app/slash"
 )
 
 const (

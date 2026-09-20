@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"crdx.org/io/internal/app/segment"
-	"crdx.org/io/internal/app/spinner"
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/spinner"
+	"crdx.org/oh/internal/app/style"
 )
 
 var _ segment.Refresher = state{}

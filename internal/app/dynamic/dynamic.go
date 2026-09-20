@@ -5,11 +5,11 @@ import (
 	"sync"
 	"time"
 
-	"crdx.org/io/internal/app/spinner"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/width"
-	"crdx.org/io/internal/util"
-	"crdx.org/io/internal/util/strutil"
+	"crdx.org/oh/internal/app/spinner"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/width"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/internal/util/strutil"
 )
 
 const (

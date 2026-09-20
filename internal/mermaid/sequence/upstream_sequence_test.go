@@ -5,7 +5,7 @@ import (
 	"testing"
 	"unicode/utf8"
 
-	"crdx.org/io/internal/mermaid/diagram"
+	"crdx.org/oh/internal/mermaid/diagram"
 )
 
 func TestParse(t *testing.T) {

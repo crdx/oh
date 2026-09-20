@@ -5,8 +5,8 @@ import (
 	"slices"
 	"testing"
 
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tool"
 )
 
 type interjectionProvider struct {

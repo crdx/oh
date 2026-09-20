@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"crdx.org/io/internal/app/segment"
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/style"
 )
 
 var _ segment.Refresher = &state{}

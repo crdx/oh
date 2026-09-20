@@ -3,8 +3,8 @@ package interrupt
 import (
 	"errors"
 
-	"crdx.org/io/internal/stop"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/stop"
+	"crdx.org/oh/pkg/agent"
 )
 
 type Cause string

@@ -1,6 +1,6 @@
 package runewidth
 
-import "crdx.org/io/internal/app/width"
+import "crdx.org/oh/internal/app/width"
 
 func StringWidth(text string) int {
 	return width.Of(text)

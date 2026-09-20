@@ -18,8 +18,8 @@ import (
 	"syscall"
 	"time"
 
-	"crdx.org/io/internal/format"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/format"
+	"crdx.org/oh/pkg/agent"
 )
 
 const (

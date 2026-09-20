@@ -4,8 +4,8 @@ import (
 	"math"
 	"testing"
 
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/session"
 )
 
 func contextUsageAt(events []agent.Event, contextWindowTokens int) (int, int) {

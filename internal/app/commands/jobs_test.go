@@ -6,11 +6,11 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/caps"
-	"crdx.org/io/internal/app/slash"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/jobs"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/slash"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/jobs"
+	"crdx.org/oh/pkg/agent"
 )
 
 func fixtureJobs() (Jobs, *[]string) {

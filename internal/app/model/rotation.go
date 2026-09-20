@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"crdx.org/io/internal/roundrobin"
-	"crdx.org/io/internal/state"
+	"crdx.org/oh/internal/roundrobin"
+	"crdx.org/oh/internal/state"
 )
 
 type Selection struct {

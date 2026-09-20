@@ -1,6 +1,6 @@
 package chatcompletions_test
 
-import "crdx.org/io/internal/req"
+import "crdx.org/oh/internal/req"
 
 type countingObserver struct {
 	requests int

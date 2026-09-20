@@ -7,8 +7,8 @@ import (
 	"io"
 	"slices"
 
-	"crdx.org/io/internal/sse"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/sse"
+	"crdx.org/oh/pkg/agent"
 )
 
 const donePayload = "[DONE]"

@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/req"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/req"
+	"crdx.org/oh/pkg/agent"
 )
 
 func tricklingServer(t *testing.T, gap time.Duration, count int) string {

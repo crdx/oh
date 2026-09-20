@@ -3,7 +3,7 @@ package chatcompletions_test
 import (
 	"testing"
 
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/pkg/agent"
 )
 
 func TestSendReportsARequestThatCouldNotBeOpened(t *testing.T) {

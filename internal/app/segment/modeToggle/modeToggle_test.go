@@ -4,10 +4,10 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/caps"
-	"crdx.org/io/internal/app/segment"
-	"crdx.org/io/internal/app/segment/modeToggle"
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/segment/modeToggle"
+	"crdx.org/oh/internal/app/style"
 )
 
 func TestEveryCapabilitySetKeepsTheSameLetters(t *testing.T) {

@@ -12,14 +12,14 @@ import (
 
 	"crdx.org/duckopt/v2"
 
-	"crdx.org/io/internal/app/config"
-	"crdx.org/io/internal/app/ctl/console"
-	"crdx.org/io/internal/app/location"
-	"crdx.org/io/internal/app/metrics"
-	"crdx.org/io/internal/app/model"
-	"crdx.org/io/internal/money"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/internal/app/config"
+	"crdx.org/oh/internal/app/ctl/console"
+	"crdx.org/oh/internal/app/location"
+	"crdx.org/oh/internal/app/metrics"
+	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/internal/money"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/session"
 )
 
 const usage = `oh --ctl analyse — analyse stored sessions

@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/graphics"
-	"crdx.org/io/internal/app/width"
+	"crdx.org/oh/internal/app/graphics"
+	"crdx.org/oh/internal/app/width"
 )
 
 func blockWithPicture(t *testing.T, picture Picture) *Block {

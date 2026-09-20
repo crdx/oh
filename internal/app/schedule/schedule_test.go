@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/schedule"
+	"crdx.org/oh/internal/app/schedule"
 )
 
 func TestSoonestIgnoresZeroTimesAndPicksTheEarliest(t *testing.T) {

@@ -4,12 +4,12 @@ import (
 	"fmt"
 
 	"crdx.org/duckopt/v2"
-	"crdx.org/io/internal/app/ctl/console"
-	"crdx.org/io/internal/app/location"
-	"crdx.org/io/internal/app/store"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/util"
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/internal/app/ctl/console"
+	"crdx.org/oh/internal/app/location"
+	"crdx.org/oh/internal/app/store"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/pkg/session"
 )
 
 const usage = `oh --ctl regenerate — write stored transcripts again

@@ -10,7 +10,7 @@ import (
 	"sync"
 	"syscall"
 
-	"crdx.org/io/internal/util/pathutil"
+	"crdx.org/oh/internal/util/pathutil"
 )
 
 var ErrReadOnly = errors.New("the filesystem is read-only")

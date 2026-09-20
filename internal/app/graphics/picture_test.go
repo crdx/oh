@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/width"
+	"crdx.org/oh/internal/app/width"
 )
 
 func TestAPictureIsPlacedAsOneRowOfCellsForEachRowItOccupies(t *testing.T) {

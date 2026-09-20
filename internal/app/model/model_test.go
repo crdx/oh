@@ -15,8 +15,8 @@ import (
 	"time"
 	"unicode"
 
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/pkg/agent"
 )
 
 func writeModelCache(t *testing.T, cache modelCache) {

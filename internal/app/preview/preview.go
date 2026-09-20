@@ -3,12 +3,12 @@ package preview
 import (
 	"strings"
 
-	"crdx.org/io/internal/app/dynamic"
-	"crdx.org/io/internal/app/output"
-	"crdx.org/io/internal/app/painter"
-	"crdx.org/io/internal/app/store"
-	"crdx.org/io/internal/app/work"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/dynamic"
+	"crdx.org/oh/internal/app/output"
+	"crdx.org/oh/internal/app/painter"
+	"crdx.org/oh/internal/app/store"
+	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/pkg/agent"
 )
 
 const minimumRoom = 20

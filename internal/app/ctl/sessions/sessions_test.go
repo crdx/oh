@@ -8,15 +8,15 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/location"
-	"crdx.org/io/internal/app/sessions/picker"
-	"crdx.org/io/internal/app/store"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/width"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/internal/app/location"
+	"crdx.org/oh/internal/app/sessions/picker"
+	"crdx.org/oh/internal/app/store"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/width"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/session"
 
-	ohSessions "crdx.org/io/internal/app/sessions"
+	ohSessions "crdx.org/oh/internal/app/sessions"
 )
 
 func TestARunningSessionIsReportedAsRunningAndAnEndedOneAsEnded(t *testing.T) {

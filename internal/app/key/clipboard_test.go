@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/key"
+	"crdx.org/oh/internal/app/key"
 )
 
 func decodeOne(t *testing.T, input string) key.Key {

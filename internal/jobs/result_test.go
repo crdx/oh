@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/sandbox"
+	"crdx.org/oh/internal/sandbox"
 )
 
 type resultRunner struct {

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"crdx.org/io/internal/stop"
+	"crdx.org/oh/internal/stop"
 )
 
 func TestAReasonIsReadBackFromTheContext(t *testing.T) {

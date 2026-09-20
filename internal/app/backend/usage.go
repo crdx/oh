@@ -1,12 +1,12 @@
 package backend
 
 import (
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/provider/anthropic"
-	"crdx.org/io/pkg/provider/codex"
-	"crdx.org/io/pkg/provider/opencodego"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/provider/anthropic"
+	"crdx.org/oh/pkg/provider/codex"
+	"crdx.org/oh/pkg/provider/opencodego"
 
-	"crdx.org/io/internal/app/model"
+	"crdx.org/oh/internal/app/model"
 )
 
 const (

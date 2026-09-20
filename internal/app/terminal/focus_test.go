@@ -4,10 +4,10 @@ import (
 	"io"
 	"testing"
 
-	"crdx.org/io/internal/app/caps"
-	"crdx.org/io/internal/app/key"
-	"crdx.org/io/internal/app/terminal"
-	"crdx.org/io/internal/app/work"
+	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/key"
+	"crdx.org/oh/internal/app/terminal"
+	"crdx.org/oh/internal/app/work"
 )
 
 func TestFocusFollowsTheInteractiveTerminal(t *testing.T) {

@@ -6,14 +6,14 @@ import (
 	"slices"
 	"strings"
 
-	"crdx.org/io/internal/app/menu"
-	"crdx.org/io/internal/app/segment/fastMode"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/table"
-	"crdx.org/io/internal/app/width"
-	"crdx.org/io/internal/money"
-	"crdx.org/io/internal/util"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/menu"
+	"crdx.org/oh/internal/app/segment/fastMode"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/table"
+	"crdx.org/oh/internal/app/width"
+	"crdx.org/oh/internal/money"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/pkg/agent"
 )
 
 const (

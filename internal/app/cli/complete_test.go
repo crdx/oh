@@ -8,8 +8,8 @@ import (
 	"slices"
 	"testing"
 
-	"crdx.org/io/internal/app/model"
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/pkg/session"
 )
 
 func writeStoredSession(t *testing.T, directory string, workspaceDir string, name string, started string) {

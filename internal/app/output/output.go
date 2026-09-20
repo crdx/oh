@@ -6,11 +6,11 @@ import (
 	"strings"
 	"sync"
 
-	"crdx.org/io/internal/app/escape"
-	"crdx.org/io/internal/app/link"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/tty"
-	"crdx.org/io/internal/app/width"
+	"crdx.org/oh/internal/app/escape"
+	"crdx.org/oh/internal/app/link"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/tty"
+	"crdx.org/oh/internal/app/width"
 
 	"golang.org/x/term"
 )

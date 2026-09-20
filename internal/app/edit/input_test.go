@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/key"
+	"crdx.org/oh/internal/app/key"
 )
 
 func inputFromKeys(t *testing.T, text string) *Input {

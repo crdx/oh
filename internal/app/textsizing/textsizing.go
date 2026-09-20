@@ -13,7 +13,7 @@ import (
 	"golang.org/x/sys/unix"
 	"golang.org/x/term"
 
-	"crdx.org/io/internal/app/tty"
+	"crdx.org/oh/internal/app/tty"
 )
 
 const (

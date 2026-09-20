@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"crdx.org/io/internal/app/access"
-	"crdx.org/io/internal/file"
+	"crdx.org/oh/internal/app/access"
+	"crdx.org/oh/internal/file"
 )
 
 type Set uint8

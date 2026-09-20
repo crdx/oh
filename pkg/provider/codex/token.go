@@ -6,9 +6,9 @@ import (
 	"sync"
 	"time"
 
-	"crdx.org/io/internal/auth"
-	"crdx.org/io/internal/req"
-	"crdx.org/io/pkg/wire/openai/responses"
+	"crdx.org/oh/internal/auth"
+	"crdx.org/oh/internal/req"
+	"crdx.org/oh/pkg/wire/openai/responses"
 )
 
 const refreshWindow = 5 * time.Minute

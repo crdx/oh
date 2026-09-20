@@ -6,8 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"crdx.org/io/internal/sandbox"
-	"crdx.org/io/internal/util/pathutil"
+	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/util/pathutil"
 )
 
 var ErrShadowed = errors.New("workspace cannot use /tmp because the sandbox shadows it with private scratch space")

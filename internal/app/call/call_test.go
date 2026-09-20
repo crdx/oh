@@ -5,11 +5,11 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/markdown"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/width"
-	"crdx.org/io/internal/util"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/app/markdown"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/width"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/pkg/tool"
 )
 
 func elided(t *testing.T, label Label, room int) Label {

@@ -12,14 +12,14 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/caps"
-	"crdx.org/io/internal/req"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/req"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/session"
 
-	"crdx.org/io/internal/app/conditions"
-	"crdx.org/io/internal/app/hostcommand"
-	"crdx.org/io/internal/app/store"
+	"crdx.org/oh/internal/app/conditions"
+	"crdx.org/oh/internal/app/hostcommand"
+	"crdx.org/oh/internal/app/store"
 )
 
 func write(t *testing.T, directory string) string {

@@ -3,11 +3,11 @@ package commands
 import (
 	"strings"
 
-	"crdx.org/io/internal/app/call"
-	"crdx.org/io/internal/app/slash"
-	"crdx.org/io/internal/jobs"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/toolbox/bash"
+	"crdx.org/oh/internal/app/call"
+	"crdx.org/oh/internal/app/slash"
+	"crdx.org/oh/internal/jobs"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/toolbox/bash"
 )
 
 type Jobs struct {

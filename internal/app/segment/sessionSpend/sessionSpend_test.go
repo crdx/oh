@@ -3,10 +3,10 @@ package sessionSpend_test
 import (
 	"testing"
 
-	"crdx.org/io/internal/app/segment"
-	"crdx.org/io/internal/app/segment/sessionSpend"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/money"
+	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/segment/sessionSpend"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/money"
 )
 
 type noOptions struct{}

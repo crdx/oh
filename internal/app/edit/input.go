@@ -5,7 +5,7 @@ import (
 	"time"
 	"unicode"
 
-	"crdx.org/io/internal/app/key"
+	"crdx.org/oh/internal/app/key"
 )
 
 type Action int

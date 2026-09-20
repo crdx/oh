@@ -8,8 +8,8 @@ import (
 	"os"
 	"time"
 
-	"crdx.org/io/internal/app/backend"
-	"crdx.org/io/internal/app/location"
+	"crdx.org/oh/internal/app/backend"
+	"crdx.org/oh/internal/app/location"
 )
 
 func Show(ctx context.Context, output io.Writer, options Options) error {

@@ -9,15 +9,15 @@ import (
 	"slices"
 	"strings"
 
-	"crdx.org/io/internal/app/location"
-	"crdx.org/io/internal/app/menu"
-	"crdx.org/io/internal/app/model"
-	"crdx.org/io/internal/app/preview"
-	"crdx.org/io/internal/app/sessions/picker"
-	"crdx.org/io/internal/app/store"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/work"
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/internal/app/location"
+	"crdx.org/oh/internal/app/menu"
+	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/internal/app/preview"
+	"crdx.org/oh/internal/app/sessions/picker"
+	"crdx.org/oh/internal/app/store"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/pkg/session"
 )
 
 func Choose(directory string, workspace *work.Space, terminal *os.File, screen io.Writer) (string, error) {

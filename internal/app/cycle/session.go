@@ -1,6 +1,6 @@
 package cycle
 
-import "crdx.org/io/internal/app/model"
+import "crdx.org/oh/internal/app/model"
 
 const sourceSessionOption = "--from"
 

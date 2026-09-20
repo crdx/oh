@@ -7,8 +7,8 @@ import (
 	"sync/atomic"
 	"unicode/utf8"
 
-	"crdx.org/io/internal/util"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/pkg/tool"
 )
 
 type Saver func(output string) (string, error)

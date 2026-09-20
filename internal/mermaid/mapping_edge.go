@@ -1,6 +1,6 @@
 package mermaid
 
-import "crdx.org/io/internal/mermaid/runewidth"
+import "crdx.org/oh/internal/mermaid/runewidth"
 
 type edge struct {
 	from            *node

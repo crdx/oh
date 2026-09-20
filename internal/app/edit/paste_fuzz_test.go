@@ -5,7 +5,7 @@ import (
 	"testing"
 	"unicode"
 
-	"crdx.org/io/internal/app/key"
+	"crdx.org/oh/internal/app/key"
 )
 
 const fuzzedPasteLength = 512

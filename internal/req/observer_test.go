@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/req"
+	"crdx.org/oh/internal/req"
 )
 
 type observedExchange struct {

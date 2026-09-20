@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"time"
 
-	"crdx.org/io/internal/sandbox/loopback"
+	"crdx.org/oh/internal/sandbox/loopback"
 
 	"golang.org/x/sys/unix"
 )

@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"crdx.org/io/internal/file"
-	"crdx.org/io/pkg/toolbox/ls"
+	"crdx.org/oh/internal/file"
+	"crdx.org/oh/pkg/toolbox/ls"
 )
 
 func testRoot(t *testing.T) (*file.Root, string) {

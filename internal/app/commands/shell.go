@@ -1,8 +1,8 @@
 package commands
 
 import (
-	"crdx.org/io/internal/app/hostcommand"
-	"crdx.org/io/internal/app/slash"
+	"crdx.org/oh/internal/app/hostcommand"
+	"crdx.org/oh/internal/app/slash"
 )
 
 const (

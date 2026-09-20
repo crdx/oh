@@ -4,8 +4,8 @@ import (
 	"slices"
 	"testing"
 
-	"crdx.org/io/internal/app/column"
-	"crdx.org/io/internal/app/width"
+	"crdx.org/oh/internal/app/column"
+	"crdx.org/oh/internal/app/width"
 )
 
 func TestValuesAreLinedUpInColumnsThatFit(t *testing.T) {

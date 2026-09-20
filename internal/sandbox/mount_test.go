@@ -9,8 +9,8 @@ import (
 	"syscall"
 	"testing"
 
-	"crdx.org/io/internal/sandbox/testnamespace"
-	"crdx.org/io/internal/util/pathutil"
+	"crdx.org/oh/internal/sandbox/testnamespace"
+	"crdx.org/oh/internal/util/pathutil"
 )
 
 func TestTheNamespaceProbeCannotRunTestsIfInitIsMissing(t *testing.T) {

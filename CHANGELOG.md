@@ -2,6 +2,10 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+### Maintenance
+
+- Rename the Go module to `crdx.org/oh`
+
 ## [0.7.2] - 2026-09-20
 
 ### Changes

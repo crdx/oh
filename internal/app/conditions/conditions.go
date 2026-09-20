@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"strings"
 
-	"crdx.org/io/internal/app/access"
-	"crdx.org/io/internal/sandbox"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/access"
+	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/pkg/agent"
 )
 
 type Conditions struct {

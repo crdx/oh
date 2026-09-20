@@ -17,8 +17,8 @@ import (
 	"github.com/BurntSushi/toml"
 	"golang.org/x/sys/unix"
 
-	"crdx.org/io/internal/app/segment"
-	"crdx.org/io/internal/util"
+	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/util"
 )
 
 type snapshot struct {

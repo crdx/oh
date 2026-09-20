@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/bar"
-	"crdx.org/io/internal/app/config"
-	"crdx.org/io/internal/app/segment"
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/bar"
+	"crdx.org/oh/internal/app/config"
+	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/style"
 )
 
 func FuzzABarIsBuiltAndDrawnWithoutFallingOver(fuzzer *testing.F) {

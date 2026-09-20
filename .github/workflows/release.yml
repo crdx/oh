@@ -42,4 +42,4 @@ jobs:
             - name: Warm Go proxy
               run: GOPROXY=proxy.golang.org go list -m "${MODULE_PATH}@${GITHUB_REF_NAME}"
               env:
-                  MODULE_PATH: crdx.org/io
+                  MODULE_PATH: crdx.org/oh

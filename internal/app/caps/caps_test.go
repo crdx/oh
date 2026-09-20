@@ -7,7 +7,7 @@ import (
 	"sync"
 	"testing"
 
-	"crdx.org/io/internal/file"
+	"crdx.org/oh/internal/file"
 )
 
 var (

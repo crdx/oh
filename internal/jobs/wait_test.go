@@ -8,7 +8,7 @@ import (
 	"testing/synctest"
 	"time"
 
-	"crdx.org/io/internal/sandbox"
+	"crdx.org/oh/internal/sandbox"
 )
 
 func TestWaitingOnAFinishedJobReturnsAtOnce(t *testing.T) {

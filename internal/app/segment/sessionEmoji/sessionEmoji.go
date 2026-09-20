@@ -1,8 +1,8 @@
 package sessionEmoji
 
 import (
-	"crdx.org/io/internal/app/segment"
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/pkg/session"
 )
 
 type state struct {

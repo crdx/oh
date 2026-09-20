@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/pathgrant"
-	"crdx.org/io/internal/app/portgrant"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/pathgrant"
+	"crdx.org/oh/internal/app/portgrant"
+	"crdx.org/oh/pkg/agent"
 )
 
 func fixturePortGrants() (HostToSandbox, *[]uint16) {

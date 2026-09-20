@@ -5,8 +5,8 @@ import (
 	"slices"
 	"strings"
 
-	"crdx.org/io/internal/mermaid/color"
-	"crdx.org/io/internal/mermaid/runewidth"
+	"crdx.org/oh/internal/mermaid/color"
+	"crdx.org/oh/internal/mermaid/runewidth"
 )
 
 var junctionChars = []string{

@@ -11,10 +11,10 @@ import (
 	"strings"
 	"time"
 
-	"crdx.org/io/internal/prefixwatch"
-	"crdx.org/io/internal/req"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/prefixwatch"
+	"crdx.org/oh/internal/req"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tool"
 )
 
 const (

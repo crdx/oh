@@ -9,9 +9,9 @@ import (
 
 	"github.com/BurntSushi/toml"
 
-	"crdx.org/io/internal/app/config"
-	"crdx.org/io/internal/app/ctl/migrate"
-	"crdx.org/io/internal/app/output"
+	"crdx.org/oh/internal/app/config"
+	"crdx.org/oh/internal/app/ctl/migrate"
+	"crdx.org/oh/internal/app/output"
 )
 
 func currentVersionLine() string {

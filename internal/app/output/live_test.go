@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/ansi"
-	"crdx.org/io/internal/app/link"
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/ansi"
+	"crdx.org/oh/internal/app/link"
+	"crdx.org/oh/internal/app/style"
 )
 
 func region() (*Screen, *strings.Builder) {

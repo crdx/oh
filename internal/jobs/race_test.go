@@ -3,7 +3,7 @@ package jobs
 import (
 	"testing"
 
-	"crdx.org/io/internal/sandbox"
+	"crdx.org/oh/internal/sandbox"
 )
 
 func TestAStopDuringTheStartWindowIsNotClobbered(t *testing.T) {

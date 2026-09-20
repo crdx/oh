@@ -1,9 +1,9 @@
 package backend
 
 import (
-	"crdx.org/io/pkg/provider/anthropic"
+	"crdx.org/oh/pkg/provider/anthropic"
 
-	"crdx.org/io/internal/app/model"
+	"crdx.org/oh/internal/app/model"
 )
 
 func connectAnthropic(choice model.Choice, effort string, endpoint string) (*Connection, error) {

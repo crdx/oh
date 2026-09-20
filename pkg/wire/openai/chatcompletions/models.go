@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/pkg/agent"
 )
 
 const completionsSuffix = "/chat/completions"

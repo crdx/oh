@@ -3,10 +3,10 @@ package call
 import (
 	"testing"
 
-	"crdx.org/io/internal/app/link"
-	"crdx.org/io/internal/app/work"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/app/link"
+	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tool"
 )
 
 func TestModelScratchAliassAreShownThroughTheirHostAlias(t *testing.T) {

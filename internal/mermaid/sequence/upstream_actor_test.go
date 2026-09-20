@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/mermaid/diagram"
+	"crdx.org/oh/internal/mermaid/diagram"
 )
 
 func TestActorDeclarations(t *testing.T) {

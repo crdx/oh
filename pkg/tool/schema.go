@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"strings"
 
-	"crdx.org/io/internal/util/strutil"
+	"crdx.org/oh/internal/util/strutil"
 )
 
 type DataType string

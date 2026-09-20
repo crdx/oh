@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"crdx.org/io/internal/util/pathutil"
+	"crdx.org/oh/internal/util/pathutil"
 
 	"golang.org/x/sys/unix"
 )

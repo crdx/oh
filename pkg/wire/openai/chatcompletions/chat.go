@@ -9,10 +9,10 @@ import (
 	"slices"
 	"time"
 
-	"crdx.org/io/internal/req"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/tool"
-	"crdx.org/io/pkg/wire/openai/internal/imagehistory"
+	"crdx.org/oh/internal/req"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/wire/openai/internal/imagehistory"
 )
 
 var Efforts = []string{"none", "minimal", "low", "medium", "high", "xhigh", "max"}

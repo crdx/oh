@@ -3,7 +3,7 @@ package loopback
 import (
 	"fmt"
 
-	"crdx.org/io/internal/sandbox/testnamespace"
+	"crdx.org/oh/internal/sandbox/testnamespace"
 
 	"golang.org/x/sys/unix"
 )

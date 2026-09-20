@@ -4,10 +4,10 @@ import (
 	"context"
 	"strings"
 
-	"crdx.org/io/internal/app/width"
-	"crdx.org/io/internal/app/work"
-	"crdx.org/io/pkg/ask"
-	"crdx.org/io/pkg/toolbox/notify"
+	"crdx.org/oh/internal/app/width"
+	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/pkg/ask"
+	"crdx.org/oh/pkg/toolbox/notify"
 )
 
 const detailWidth = 80

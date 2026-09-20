@@ -5,7 +5,7 @@ import (
 	"slices"
 	"strings"
 
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/style"
 )
 
 var urlPattern = regexp.MustCompile("[a-zA-Z][a-zA-Z0-9+.-]*://[^\\s'\"`<>|;()]+")

@@ -4,8 +4,8 @@ import (
 	"encoding/base64"
 	"encoding/json"
 
-	"crdx.org/io/internal/util/imageutil"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/util/imageutil"
+	"crdx.org/oh/pkg/tool"
 )
 
 type imageHistory struct {

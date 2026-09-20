@@ -5,7 +5,7 @@ import (
 	"slices"
 	"testing"
 
-	"crdx.org/io/internal/sandbox/testnamespace"
+	"crdx.org/oh/internal/sandbox/testnamespace"
 )
 
 func canMapANamespace(t *testing.T) bool {

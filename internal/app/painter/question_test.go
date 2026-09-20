@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/pkg/ask"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/pkg/ask"
 )
 
 func lastRow(rows []string) string {

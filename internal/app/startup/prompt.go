@@ -5,7 +5,7 @@ import (
 	"io"
 	"strings"
 
-	"crdx.org/io/internal/app/edit"
+	"crdx.org/oh/internal/app/edit"
 )
 
 func ReadPipedPrompt(source io.Reader) (string, error) {

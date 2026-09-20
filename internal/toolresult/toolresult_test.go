@@ -4,9 +4,9 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/toolresult"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/internal/toolresult"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/session"
 )
 
 func TestURLRoundTripsOpaqueValues(t *testing.T) {

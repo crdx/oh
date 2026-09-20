@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/tool"
-	"crdx.org/io/pkg/toolbox/title"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/toolbox/title"
 )
 
 func call(t *testing.T, titleTool tool.Tool, arguments string) tool.ToolCallResult {

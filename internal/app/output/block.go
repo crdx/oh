@@ -4,7 +4,7 @@ import (
 	"slices"
 	"strings"
 
-	"crdx.org/io/internal/app/width"
+	"crdx.org/oh/internal/app/width"
 )
 
 type Block interface {

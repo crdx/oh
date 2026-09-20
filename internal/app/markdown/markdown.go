@@ -13,10 +13,10 @@ import (
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/text"
 
-	"crdx.org/io/internal/app/link"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/width"
-	"crdx.org/io/internal/mermaid"
+	"crdx.org/oh/internal/app/link"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/width"
+	"crdx.org/oh/internal/mermaid"
 )
 
 const tab = "    "

@@ -6,7 +6,7 @@ import (
 
 	"golang.org/x/net/html"
 
-	"crdx.org/io/internal/textwriter"
+	"crdx.org/oh/internal/textwriter"
 )
 
 func Convert(root *html.Node) string {

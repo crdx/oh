@@ -6,7 +6,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"crdx.org/io/internal/util"
+	"crdx.org/oh/internal/util"
 )
 
 type IdleError struct {

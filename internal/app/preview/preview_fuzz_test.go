@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/preview"
-	"crdx.org/io/internal/app/work"
+	"crdx.org/oh/internal/app/preview"
+	"crdx.org/oh/internal/app/work"
 )
 
 const (

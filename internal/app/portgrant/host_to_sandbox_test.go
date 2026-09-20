@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/pkg/agent"
 )
 
 const testHost = "127.0.0.1"

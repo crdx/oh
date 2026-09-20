@@ -10,9 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"crdx.org/io/internal/req"
-	"crdx.org/io/internal/sse"
-	"crdx.org/io/internal/useragent"
+	"crdx.org/oh/internal/req"
+	"crdx.org/oh/internal/sse"
+	"crdx.org/oh/internal/useragent"
 )
 
 const (

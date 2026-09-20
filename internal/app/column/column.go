@@ -3,7 +3,7 @@ package column
 import (
 	"strings"
 
-	"crdx.org/io/internal/app/width"
+	"crdx.org/oh/internal/app/width"
 )
 
 const gap = 2

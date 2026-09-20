@@ -7,9 +7,9 @@ import (
 	"strings"
 	"unicode"
 
-	"crdx.org/io/internal/app/width"
-	"crdx.org/io/internal/util/strutil"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/width"
+	"crdx.org/oh/internal/util/strutil"
+	"crdx.org/oh/pkg/agent"
 )
 
 type usageError struct{}

@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/output"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/output"
+	"crdx.org/oh/pkg/agent"
 )
 
 const injection = "before \x1b]52;c;cHduZWQ=\x07 and \x1b[2J after"

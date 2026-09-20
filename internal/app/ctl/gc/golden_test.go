@@ -8,10 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/ctl/console"
-	"crdx.org/io/internal/app/store"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/internal/app/ctl/console"
+	"crdx.org/oh/internal/app/store"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/session"
 )
 
 const (

@@ -6,7 +6,7 @@ import (
 	"sync"
 	"testing"
 
-	"crdx.org/io/internal/file"
+	"crdx.org/oh/internal/file"
 )
 
 func newFiles(t *testing.T) *file.Root {

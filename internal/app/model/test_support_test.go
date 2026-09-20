@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/pkg/agent"
 )
 
 const (

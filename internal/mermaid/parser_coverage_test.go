@@ -4,10 +4,10 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/mermaid/diagram"
-	"crdx.org/io/internal/mermaid/er"
-	"crdx.org/io/internal/mermaid/orderedmap"
-	"crdx.org/io/internal/mermaid/sequence"
+	"crdx.org/oh/internal/mermaid/diagram"
+	"crdx.org/oh/internal/mermaid/er"
+	"crdx.org/oh/internal/mermaid/orderedmap"
+	"crdx.org/oh/internal/mermaid/sequence"
 )
 
 func TestFlowchartParserEdgeCases(t *testing.T) {

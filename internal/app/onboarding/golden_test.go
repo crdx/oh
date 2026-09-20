@@ -10,11 +10,11 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/link"
-	"crdx.org/io/internal/app/menu"
-	"crdx.org/io/internal/app/model"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/oauth"
+	"crdx.org/oh/internal/app/link"
+	"crdx.org/oh/internal/app/menu"
+	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/oauth"
 )
 
 const authorisationURL = "https://example.test/authorise"

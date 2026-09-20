@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"crdx.org/io/internal/req"
+	"crdx.org/oh/internal/req"
 )
 
 func TestModelsLeavesUnlistedCapabilitiesUnknown(t *testing.T) {

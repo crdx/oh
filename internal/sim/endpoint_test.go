@@ -9,13 +9,13 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/sim"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/provider/anthropic"
-	"crdx.org/io/pkg/provider/codex"
-	"crdx.org/io/pkg/provider/ollama"
-	"crdx.org/io/pkg/tool"
-	"crdx.org/io/pkg/wire/openai/chatcompletions"
+	"crdx.org/oh/internal/sim"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/provider/anthropic"
+	"crdx.org/oh/pkg/provider/codex"
+	"crdx.org/oh/pkg/provider/ollama"
+	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/wire/openai/chatcompletions"
 )
 
 type params struct {

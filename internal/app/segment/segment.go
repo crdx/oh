@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"crdx.org/io/internal/app/schedule"
+	"crdx.org/oh/internal/app/schedule"
 )
 
 type Position int

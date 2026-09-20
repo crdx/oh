@@ -1,7 +1,7 @@
 package edit
 
 import (
-	"crdx.org/io/internal/app/width"
+	"crdx.org/oh/internal/app/width"
 )
 
 const maxRows = 10

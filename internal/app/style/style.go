@@ -9,11 +9,11 @@ import (
 
 	"crdx.org/col"
 
-	"crdx.org/io/internal/app/escape"
-	"crdx.org/io/internal/app/tty"
-	"crdx.org/io/internal/app/width"
-	"crdx.org/io/internal/util"
-	"crdx.org/io/internal/util/strutil"
+	"crdx.org/oh/internal/app/escape"
+	"crdx.org/oh/internal/app/tty"
+	"crdx.org/oh/internal/app/width"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/internal/util/strutil"
 )
 
 type Style func(format any, args ...any) string

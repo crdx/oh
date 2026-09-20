@@ -9,8 +9,8 @@ import (
 	"github.com/yuin/goldmark/ast"
 	extensionast "github.com/yuin/goldmark/extension/ast"
 
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/width"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/width"
 )
 
 const widest = 30

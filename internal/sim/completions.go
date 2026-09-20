@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"crdx.org/io/internal/sim/wire/completions"
+	"crdx.org/oh/internal/sim/wire/completions"
 )
 
 type completionsDialect struct{}

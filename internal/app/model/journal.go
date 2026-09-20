@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"slices"
 
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/pkg/agent"
 )
 
 const FastModeStateKey = "fast-mode"

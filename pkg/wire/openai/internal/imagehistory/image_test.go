@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/util/imageutil"
-	"crdx.org/io/pkg/wire/openai/internal/imagehistory"
+	"crdx.org/oh/internal/util/imageutil"
+	"crdx.org/oh/pkg/wire/openai/internal/imagehistory"
 )
 
 func TestStoredOpenAIImagesAreBounded(t *testing.T) {

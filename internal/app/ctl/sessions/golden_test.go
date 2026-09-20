@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/ctl/console"
-	"crdx.org/io/internal/app/location"
+	"crdx.org/oh/internal/app/ctl/console"
+	"crdx.org/oh/internal/app/location"
 )
 
 var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")

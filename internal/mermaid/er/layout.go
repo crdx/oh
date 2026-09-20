@@ -4,7 +4,7 @@ import (
 	"math"
 	"strings"
 
-	"crdx.org/io/internal/mermaid/runewidth"
+	"crdx.org/oh/internal/mermaid/runewidth"
 )
 
 type canvas struct {

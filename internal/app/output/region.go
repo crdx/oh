@@ -5,9 +5,9 @@ import (
 	"slices"
 	"strings"
 
-	"crdx.org/io/internal/app/ansi"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/width"
+	"crdx.org/oh/internal/app/ansi"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/width"
 )
 
 const (

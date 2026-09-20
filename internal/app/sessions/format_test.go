@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/pkg/session"
 )
 
 func TestGoldenAnArchivedSessionInAnOlderFormatIsReportedOnlyWhereArchivesAreRead(t *testing.T) {

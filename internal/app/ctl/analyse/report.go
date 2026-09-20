@@ -6,11 +6,11 @@ import (
 	"io"
 	"time"
 
-	"crdx.org/io/internal/app/model"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/table"
-	"crdx.org/io/internal/money"
-	"crdx.org/io/internal/util"
+	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/table"
+	"crdx.org/oh/internal/money"
+	"crdx.org/oh/internal/util"
 )
 
 func writeJSON(analysis Analysis, writer io.Writer) error {

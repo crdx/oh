@@ -5,7 +5,7 @@ import (
 	"slices"
 	"time"
 
-	"crdx.org/io/internal/util/pathutil"
+	"crdx.org/oh/internal/util/pathutil"
 )
 
 var systemPathGrants = []grant{

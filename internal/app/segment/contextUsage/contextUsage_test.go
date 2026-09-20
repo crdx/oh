@@ -3,9 +3,9 @@ package contextUsage_test
 import (
 	"testing"
 
-	"crdx.org/io/internal/app/segment"
-	"crdx.org/io/internal/app/segment/contextUsage"
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/segment/contextUsage"
+	"crdx.org/oh/internal/app/style"
 )
 
 type noOptions struct{}

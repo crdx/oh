@@ -4,10 +4,10 @@ import (
 	"slices"
 	"strings"
 
-	"crdx.org/io/internal/app/model"
-	"crdx.org/io/internal/app/segment"
-	"crdx.org/io/internal/app/segment/fastMode"
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/segment/fastMode"
+	"crdx.org/oh/internal/app/style"
 )
 
 const (

@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/pkg/agent"
 )
 
 var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")

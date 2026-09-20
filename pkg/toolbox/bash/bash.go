@@ -11,11 +11,11 @@ import (
 
 	"mvdan.cc/sh/v3/syntax"
 
-	"crdx.org/io/internal/file"
-	"crdx.org/io/internal/sandbox"
-	"crdx.org/io/internal/util/pathutil"
-	"crdx.org/io/internal/util/strutil"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/file"
+	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/util/pathutil"
+	"crdx.org/oh/internal/util/strutil"
+	"crdx.org/oh/pkg/tool"
 )
 
 type Network string

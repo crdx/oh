@@ -1,9 +1,9 @@
 package backend
 
 import (
-	"crdx.org/io/pkg/provider/codex"
+	"crdx.org/oh/pkg/provider/codex"
 
-	"crdx.org/io/internal/app/model"
+	"crdx.org/oh/internal/app/model"
 )
 
 const webSearchModel = "gpt-5.6-terra"

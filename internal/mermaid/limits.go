@@ -6,9 +6,9 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"crdx.org/io/internal/mermaid/er"
-	"crdx.org/io/internal/mermaid/runewidth"
-	"crdx.org/io/internal/mermaid/sequence"
+	"crdx.org/oh/internal/mermaid/er"
+	"crdx.org/oh/internal/mermaid/runewidth"
+	"crdx.org/oh/internal/mermaid/sequence"
 )
 
 const (

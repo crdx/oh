@@ -8,8 +8,8 @@ import (
 	"os/exec"
 	"strings"
 
-	"crdx.org/io/internal/stop"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/stop"
+	"crdx.org/oh/pkg/tool"
 )
 
 const (

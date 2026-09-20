@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"crdx.org/io/internal/app/access"
-	"crdx.org/io/internal/app/markdown"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/access"
+	"crdx.org/oh/internal/app/markdown"
+	"crdx.org/oh/pkg/agent"
 )
 
 const ModeChange agent.Kind = "mode_change"

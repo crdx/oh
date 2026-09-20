@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/pkg/agent"
 )
 
 func TestAStartupEventKeepsItsFactsForReplay(t *testing.T) {

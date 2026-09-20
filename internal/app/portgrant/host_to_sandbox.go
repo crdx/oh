@@ -12,9 +12,9 @@ import (
 	"strings"
 	"sync"
 
-	"crdx.org/io/internal/app/access"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/toolbox/expose"
+	"crdx.org/oh/internal/app/access"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/toolbox/expose"
 )
 
 const (

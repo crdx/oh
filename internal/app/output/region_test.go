@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/ansi"
+	"crdx.org/oh/internal/app/ansi"
 )
 
 func screenWithInput() (*Screen, *strings.Builder) {

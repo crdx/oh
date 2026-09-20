@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/store/wire"
-	"crdx.org/io/internal/req"
+	"crdx.org/oh/internal/app/store/wire"
+	"crdx.org/oh/internal/req"
 )
 
 func TestRecorderContinuesSequenceNumbersAfterLongLines(t *testing.T) {

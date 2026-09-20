@@ -1,9 +1,9 @@
 package backend
 
 import (
-	"crdx.org/io/pkg/provider/opencodego"
+	"crdx.org/oh/pkg/provider/opencodego"
 
-	"crdx.org/io/internal/app/model"
+	"crdx.org/oh/internal/app/model"
 )
 
 func connectOpencodeGo(choice model.Choice, effort string, endpoint string) (*Connection, error) {

@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/pkg/session"
 
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/pkg/agent"
 )
 
 type Session interface {

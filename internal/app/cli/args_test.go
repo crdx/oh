@@ -9,9 +9,9 @@ import (
 	"slices"
 	"testing"
 
-	"crdx.org/io/internal/app/caps"
-	"crdx.org/io/internal/app/cycle"
-	"crdx.org/io/internal/app/model"
+	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/cycle"
+	"crdx.org/oh/internal/app/model"
 )
 
 const helpProcessVariable = "OH_TEST_HELP_PROCESS"

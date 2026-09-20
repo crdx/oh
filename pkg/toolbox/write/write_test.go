@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/file"
-	"crdx.org/io/pkg/toolbox/write"
+	"crdx.org/oh/internal/file"
+	"crdx.org/oh/pkg/toolbox/write"
 )
 
 func testRoot(t *testing.T) (*file.Root, string) {

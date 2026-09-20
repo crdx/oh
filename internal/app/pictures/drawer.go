@@ -8,11 +8,11 @@ import (
 	"strings"
 	"sync"
 
-	"crdx.org/io/internal/sandbox"
-	"crdx.org/io/internal/util/imageutil"
-	"crdx.org/io/internal/util/pathutil"
+	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/util/imageutil"
+	"crdx.org/oh/internal/util/pathutil"
 
-	"crdx.org/io/internal/app/graphics"
+	"crdx.org/oh/internal/app/graphics"
 )
 
 const maxPlacements = 32

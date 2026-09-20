@@ -8,12 +8,12 @@ import (
 	"sync"
 	"time"
 
-	"crdx.org/io/internal/app/segment"
-	"crdx.org/io/internal/app/spinner"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/usage"
-	"crdx.org/io/internal/util"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/spinner"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/usage"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/pkg/agent"
 )
 
 var _ segment.Refresher = &state{}

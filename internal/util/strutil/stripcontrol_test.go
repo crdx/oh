@@ -3,7 +3,7 @@ package strutil_test
 import (
 	"testing"
 
-	"crdx.org/io/internal/util/strutil"
+	"crdx.org/oh/internal/util/strutil"
 )
 
 func TestStripControlKeepsTextAndNothingElse(t *testing.T) {

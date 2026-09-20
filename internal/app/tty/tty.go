@@ -8,7 +8,7 @@ import (
 	"golang.org/x/sys/unix"
 	"golang.org/x/term"
 
-	"crdx.org/io/internal/app/key"
+	"crdx.org/oh/internal/app/key"
 )
 
 var ErrNotTerminal = errors.New("not a terminal")

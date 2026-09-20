@@ -7,7 +7,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"crdx.org/io/internal/util/strutil"
+	"crdx.org/oh/internal/util/strutil"
 )
 
 func TestCapitaliseUppercasesTheFirstRune(t *testing.T) {

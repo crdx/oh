@@ -11,9 +11,9 @@ import (
 	"slices"
 	"strings"
 
-	"crdx.org/io/internal/file"
-	"crdx.org/io/internal/util"
-	"crdx.org/io/internal/util/pathutil"
+	"crdx.org/oh/internal/file"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/internal/util/pathutil"
 	"gopkg.in/yaml.v3"
 )
 

@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/auth"
-	"crdx.org/io/pkg/provider/codex"
+	"crdx.org/oh/internal/auth"
+	"crdx.org/oh/pkg/provider/codex"
 )
 
 func accessToken() string {

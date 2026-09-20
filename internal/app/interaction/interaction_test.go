@@ -7,8 +7,8 @@ import (
 	"testing/synctest"
 	"time"
 
-	"crdx.org/io/internal/app/key"
-	"crdx.org/io/internal/app/turn"
+	"crdx.org/oh/internal/app/key"
+	"crdx.org/oh/internal/app/turn"
 )
 
 func TestABarWithNothingToSayIsNeverRedrawn(t *testing.T) {

@@ -7,11 +7,11 @@ import (
 	"strconv"
 	"strings"
 
-	"crdx.org/io/internal/app/pathgrant"
-	"crdx.org/io/internal/app/portgrant"
-	"crdx.org/io/internal/app/shell"
-	"crdx.org/io/internal/app/slash"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/pathgrant"
+	"crdx.org/oh/internal/app/portgrant"
+	"crdx.org/oh/internal/app/shell"
+	"crdx.org/oh/internal/app/slash"
+	"crdx.org/oh/pkg/agent"
 )
 
 type PathGrants struct {

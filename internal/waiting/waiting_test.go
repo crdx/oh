@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/waiting"
+	"crdx.org/oh/internal/waiting"
 )
 
 func TestWaitingIsAddedUpAcrossACall(t *testing.T) {

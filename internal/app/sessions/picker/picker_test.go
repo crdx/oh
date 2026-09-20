@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/key"
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/key"
+	"crdx.org/oh/internal/app/style"
 )
 
 func TestARunningSessionIsColouredWithoutAMarker(t *testing.T) {

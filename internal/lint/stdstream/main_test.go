@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"crdx.org/io/internal/lint/runner"
+	"crdx.org/oh/internal/lint/runner"
 )
 
 func TestAnalyse(t *testing.T) {

@@ -4,7 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"crdx.org/io/internal/xdg"
+	"crdx.org/oh/internal/xdg"
 )
 
 const (

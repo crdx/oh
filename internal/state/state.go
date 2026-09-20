@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"syscall"
 
-	"crdx.org/io/internal/format"
+	"crdx.org/oh/internal/format"
 )
 
 func Update[State any](path string, supportedFormat int, update func(*State) error) error {

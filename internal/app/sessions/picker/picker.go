@@ -8,14 +8,14 @@ import (
 	"strings"
 	"time"
 
-	"crdx.org/io/internal/app/key"
-	"crdx.org/io/internal/app/menu"
-	"crdx.org/io/internal/app/segment/fastMode"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/table"
-	"crdx.org/io/internal/util"
-	"crdx.org/io/internal/util/strutil"
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/internal/app/key"
+	"crdx.org/oh/internal/app/menu"
+	"crdx.org/oh/internal/app/segment/fastMode"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/table"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/internal/util/strutil"
+	"crdx.org/oh/pkg/session"
 )
 
 const (

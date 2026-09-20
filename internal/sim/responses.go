@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"crdx.org/io/internal/sim/wire/responses"
+	"crdx.org/oh/internal/sim/wire/responses"
 )
 
 type responsesDialect struct{}

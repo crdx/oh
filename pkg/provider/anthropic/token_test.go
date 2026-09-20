@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/auth"
-	"crdx.org/io/pkg/provider/anthropic"
+	"crdx.org/oh/internal/auth"
+	"crdx.org/oh/pkg/provider/anthropic"
 )
 
 func writeAnthropicCredentials(t *testing.T, expiresIn time.Duration) string {

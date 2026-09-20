@@ -4,9 +4,9 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/jobrecord"
-	"crdx.org/io/internal/jobs"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/jobrecord"
+	"crdx.org/oh/internal/jobs"
+	"crdx.org/oh/pkg/agent"
 )
 
 func TestTheLastListingIsTheOneRestored(t *testing.T) {

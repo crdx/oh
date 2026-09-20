@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/width"
+	"crdx.org/oh/internal/app/width"
 )
 
 var layouts = []string{

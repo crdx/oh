@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	"crdx.org/io/internal/mermaid/runewidth"
+	"crdx.org/oh/internal/mermaid/runewidth"
 )
 
 var htmlBreakPattern = regexp.MustCompile(`(?i)<br\s*/?>`)

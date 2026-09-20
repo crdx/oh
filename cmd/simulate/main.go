@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"crdx.org/col"
-	"crdx.org/io/internal/sim"
+	"crdx.org/oh/internal/sim"
 )
 
 const usage = `simulate — stand in for every provider endpoint at once

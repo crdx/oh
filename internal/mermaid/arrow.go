@@ -5,7 +5,7 @@ import (
 	"errors"
 	"slices"
 
-	"crdx.org/io/internal/mermaid/runewidth"
+	"crdx.org/oh/internal/mermaid/runewidth"
 )
 
 type priorityQueueItem struct {

@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"strings"
 
-	"crdx.org/io/internal/util/imageutil"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/util/imageutil"
+	"crdx.org/oh/pkg/tool"
 )
 
 type Cache struct {

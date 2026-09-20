@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/hostcommand"
-	"crdx.org/io/internal/app/slash"
-	"crdx.org/io/internal/app/work"
+	"crdx.org/oh/internal/app/hostcommand"
+	"crdx.org/oh/internal/app/slash"
+	"crdx.org/oh/internal/app/work"
 )
 
 func TestTheShellCommandRunsWhatFollowsItVerbatim(t *testing.T) {

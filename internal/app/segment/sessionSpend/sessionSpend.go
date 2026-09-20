@@ -1,9 +1,9 @@
 package sessionSpend
 
 import (
-	"crdx.org/io/internal/app/segment"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/money"
+	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/money"
 )
 
 type state struct {

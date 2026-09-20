@@ -4,7 +4,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"crdx.org/io/internal/app/location"
+	"crdx.org/oh/internal/app/location"
 )
 
 func TestTheStateDirectoryFollowsTheHomeDirectoryByDefault(t *testing.T) {

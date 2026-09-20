@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/file"
+	"crdx.org/oh/internal/file"
 )
 
 func writeSkill(t *testing.T, skillsDirectory string, directory string, body string) string {

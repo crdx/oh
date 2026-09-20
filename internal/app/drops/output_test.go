@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/drops"
+	"crdx.org/oh/internal/app/drops"
 )
 
 func TestSavedOutputIsWrittenIntoTheDropsDirectory(t *testing.T) {

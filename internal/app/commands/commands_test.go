@@ -8,11 +8,11 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/dispatch"
-	"crdx.org/io/internal/app/slash"
-	"crdx.org/io/internal/app/snippets"
-	"crdx.org/io/internal/app/work"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/dispatch"
+	"crdx.org/oh/internal/app/slash"
+	"crdx.org/oh/internal/app/snippets"
+	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/pkg/agent"
 )
 
 type commandTestContext struct {

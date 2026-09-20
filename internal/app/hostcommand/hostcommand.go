@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"crdx.org/io/internal/util"
-	"crdx.org/io/internal/util/strutil"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/internal/util/strutil"
+	"crdx.org/oh/pkg/agent"
 )
 
 const Ran agent.Kind = "host_command_ran"

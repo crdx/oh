@@ -15,9 +15,9 @@ import (
 	"strings"
 	"time"
 
-	"crdx.org/io/internal/browser"
-	"crdx.org/io/internal/oauth"
-	"crdx.org/io/internal/req"
+	"crdx.org/oh/internal/browser"
+	"crdx.org/oh/internal/oauth"
+	"crdx.org/oh/internal/req"
 )
 
 const (

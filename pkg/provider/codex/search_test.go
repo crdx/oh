@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/req"
-	"crdx.org/io/pkg/provider/codex"
+	"crdx.org/oh/internal/req"
+	"crdx.org/oh/pkg/provider/codex"
 )
 
 func TestSearchUsesTheCodexBackendAndAuthHeaders(t *testing.T) {

@@ -8,8 +8,8 @@ import (
 	"slices"
 	"strings"
 
-	"crdx.org/io/internal/util"
-	"crdx.org/io/internal/util/pathutil"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/internal/util/pathutil"
 )
 
 func (self Policy) DiscoverDenyPaths() ([]string, error) {

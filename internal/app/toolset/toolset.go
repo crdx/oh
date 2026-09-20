@@ -5,7 +5,7 @@ import (
 	"slices"
 	"strings"
 
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/pkg/tool"
 )
 
 func Offers(enabledToolNames []string, name string) bool {

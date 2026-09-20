@@ -14,9 +14,9 @@ import (
 	"syscall"
 	"time"
 
-	"crdx.org/io/internal/sandbox/keeper"
-	"crdx.org/io/internal/stop"
-	"crdx.org/io/internal/util"
+	"crdx.org/oh/internal/sandbox/keeper"
+	"crdx.org/oh/internal/stop"
+	"crdx.org/oh/internal/util"
 )
 
 const (

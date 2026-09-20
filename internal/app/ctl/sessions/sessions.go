@@ -11,19 +11,19 @@ import (
 
 	"crdx.org/duckopt/v2"
 
-	"crdx.org/io/internal/app/ctl/console"
-	"crdx.org/io/internal/app/location"
-	"crdx.org/io/internal/app/segment/fastMode"
-	"crdx.org/io/internal/app/sessions/picker"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/table"
-	"crdx.org/io/internal/app/width"
-	"crdx.org/io/internal/app/work"
-	"crdx.org/io/internal/util"
-	"crdx.org/io/internal/util/strutil"
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/internal/app/ctl/console"
+	"crdx.org/oh/internal/app/location"
+	"crdx.org/oh/internal/app/segment/fastMode"
+	"crdx.org/oh/internal/app/sessions/picker"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/table"
+	"crdx.org/oh/internal/app/width"
+	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/internal/util/strutil"
+	"crdx.org/oh/pkg/session"
 
-	ohSessions "crdx.org/io/internal/app/sessions"
+	ohSessions "crdx.org/oh/internal/app/sessions"
 )
 
 const usage = `oh --ctl sessions — list the stored sessions

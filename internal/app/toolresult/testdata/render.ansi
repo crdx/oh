@@ -86,7 +86,7 @@ enabled: \e[38;2;201;166;212mfalse\e[0m
 \e[38;2;192;128;80m$ \e[0m\e[38;2;129;162;190mgo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mtest\e[0m\e[38;2;150;152;150m ./...\e[0m
 \e[38;2;192;128;80m> \e[0m\e[38;2;129;162;190mprintf\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m'done\\n'\e[0m
 
-ok  crdx.org/io
+ok  crdx.org/oh
 done
 
 
@@ -309,7 +309,7 @@ job name must match [a-z0-9-]{1,10}
 }
 
 check: complete after 37s
-ok  crdx.org/io
+ok  crdx.org/oh
 lint1  ✓
 
 
@@ -363,7 +363,7 @@ note: the wait gave up after 5m00s before any watched job ended.
 }
 
 build: complete after 37s
-ok  crdx.org/io
+ok  crdx.org/oh
 
 lint: complete after 22s
 all checks passed

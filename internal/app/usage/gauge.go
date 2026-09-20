@@ -7,8 +7,8 @@ import (
 	"os"
 	"sync"
 
-	"crdx.org/io/internal/app/graphics"
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/graphics"
+	"crdx.org/oh/internal/app/style"
 )
 
 const (

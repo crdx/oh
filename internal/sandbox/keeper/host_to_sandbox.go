@@ -10,7 +10,7 @@ import (
 	"slices"
 	"strconv"
 
-	"crdx.org/io/internal/sandbox/loopback"
+	"crdx.org/oh/internal/sandbox/loopback"
 )
 
 func (self *Keeper) OpenHostToSandbox(ctx context.Context, host string, port uint16) error {

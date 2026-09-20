@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"crdx.org/io/internal/lint/runner"
+	"crdx.org/oh/internal/lint/runner"
 )
 
 const message = "a library package minds its own business"

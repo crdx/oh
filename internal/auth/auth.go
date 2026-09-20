@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"syscall"
 
-	"crdx.org/io/internal/format"
-	"crdx.org/io/internal/xdg"
+	"crdx.org/oh/internal/format"
+	"crdx.org/oh/internal/xdg"
 )
 
 const Version = 1

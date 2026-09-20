@@ -7,10 +7,10 @@ import (
 	"strings"
 
 	"crdx.org/duckopt/v2"
-	"crdx.org/io/internal/app/caps"
-	"crdx.org/io/internal/app/cycle"
-	"crdx.org/io/internal/app/model"
-	"crdx.org/io/internal/app/startup"
+	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/cycle"
+	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/internal/app/startup"
 )
 
 const (

@@ -6,13 +6,13 @@ import (
 	"path/filepath"
 	"strings"
 
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/pkg/session"
 
-	"crdx.org/io/internal/app/caps"
-	"crdx.org/io/internal/app/drops"
-	"crdx.org/io/internal/app/model"
-	"crdx.org/io/internal/app/store"
-	"crdx.org/io/internal/app/work"
+	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/drops"
+	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/internal/app/store"
+	"crdx.org/oh/internal/app/work"
 )
 
 const sessionTranscriptName = "chat.md"

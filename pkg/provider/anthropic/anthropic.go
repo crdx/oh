@@ -1,8 +1,8 @@
 package anthropic
 
 import (
-	"crdx.org/io/pkg/tool"
-	"crdx.org/io/pkg/wire/anthropic/messages"
+	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/wire/anthropic/messages"
 )
 
 const (

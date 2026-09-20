@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/auth"
+	"crdx.org/oh/internal/auth"
 )
 
 func TestConcurrentUpdatesAreSerialisedAcrossStores(t *testing.T) {

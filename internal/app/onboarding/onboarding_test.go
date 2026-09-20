@@ -14,11 +14,11 @@ import (
 
 	"golang.org/x/sys/unix"
 
-	"crdx.org/io/internal/app/config"
-	"crdx.org/io/internal/app/link"
-	"crdx.org/io/internal/app/menu"
-	"crdx.org/io/internal/app/model"
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/config"
+	"crdx.org/oh/internal/app/link"
+	"crdx.org/oh/internal/app/menu"
+	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/internal/app/style"
 )
 
 var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")

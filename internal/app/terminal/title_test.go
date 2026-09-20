@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/caps"
-	"crdx.org/io/internal/app/work"
+	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/work"
 )
 
 func interactiveTitle(writer *strings.Builder) *title {

@@ -6,7 +6,7 @@ import (
 	"io"
 	"testing"
 
-	"crdx.org/io/internal/transient"
+	"crdx.org/oh/internal/transient"
 )
 
 func TestOnlyWhatTheCallerDidNotDoIsWorthAnotherAttempt(t *testing.T) {

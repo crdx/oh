@@ -4,7 +4,7 @@ import (
 	"os"
 	"strings"
 
-	"crdx.org/io/internal/util/pathutil"
+	"crdx.org/oh/internal/util/pathutil"
 )
 
 type Paths struct {

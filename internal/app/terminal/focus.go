@@ -3,7 +3,7 @@ package terminal
 import (
 	"sync/atomic"
 
-	"crdx.org/io/internal/app/key"
+	"crdx.org/oh/internal/app/key"
 )
 
 type focus struct {

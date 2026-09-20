@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/pkg/session"
 )
 
 func archivedSession(t *testing.T) (string, string) {

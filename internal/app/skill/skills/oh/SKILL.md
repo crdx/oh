@@ -219,12 +219,12 @@ Discovery warns and skips rather than failing. A skill with no description is dr
 
 ## Source
 
-oh is built from the root of the `crdx.org/io` module. Its importable primitives live under `pkg/`, and its command-only packages live under `internal/app/`. Read them to settle a question this skill leaves open.
+oh is built from the root of the `crdx.org/oh` module. Its importable primitives live under `pkg/`, and its command-only packages live under `internal/app/`. Read them to settle a question this skill leaves open.
 
 oh points `GOPROXY` at the module cache on disk, so an installed version extracts without network:
 
 ```bash
-go mod download -json crdx.org/io@latest
+go mod download -json crdx.org/oh@latest
 ```
 
 `Dir` is the extracted tree, read-only. `Version` is what `@latest` resolved to, which is the newest version the cache holds rather than the newest released.
@@ -241,7 +241,7 @@ go version -m "$(command -v oh)"
 
 Where the two disagree the source is older than the running oh, and behaviour it lacks may be newer. Name the version read.
 
-Where the cache holds no `crdx.org/io`, ask whether a checkout is granted. One named `oh` is the front page and carries no code; the code is in one named `io`.
+Where the cache holds no `crdx.org/oh`, ask whether a checkout is granted. One named `oh` is the front page and carries no code; the code is in one named `io`.
 
 ## Changing A Setting
 

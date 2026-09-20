@@ -9,10 +9,10 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/req"
-	"crdx.org/io/internal/sim"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/provider/ollama"
+	"crdx.org/oh/internal/req"
+	"crdx.org/oh/internal/sim"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/provider/ollama"
 )
 
 func TestNewBuildsOllamaAddresses(t *testing.T) {

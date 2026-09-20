@@ -5,8 +5,8 @@ import (
 	"io"
 	"strings"
 
-	"crdx.org/io/internal/app/location"
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/internal/app/location"
+	"crdx.org/oh/pkg/session"
 )
 
 const Flag = "--complete"

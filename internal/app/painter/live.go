@@ -3,8 +3,8 @@ package painter
 import (
 	"strings"
 
-	"crdx.org/io/internal/app/output"
-	"crdx.org/io/internal/util/strutil"
+	"crdx.org/oh/internal/app/output"
+	"crdx.org/oh/internal/util/strutil"
 )
 
 const (

@@ -3,7 +3,7 @@ package permission_test
 import (
 	"testing"
 
-	"crdx.org/io/internal/app/permission"
+	"crdx.org/oh/internal/app/permission"
 )
 
 func TestARuleIsOneOfTheOfferedWords(t *testing.T) {

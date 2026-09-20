@@ -11,12 +11,12 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/session"
 
-	"crdx.org/io/internal/app/model"
-	"crdx.org/io/internal/app/store"
-	"crdx.org/io/internal/app/work"
+	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/internal/app/store"
+	"crdx.org/oh/internal/app/work"
 )
 
 var updateGoldens = flag.Bool("update", false, "update golden files")

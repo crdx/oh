@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/spinner"
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/spinner"
+	"crdx.org/oh/internal/app/style"
 )
 
 func TestActivityIsTwoCellsWide(t *testing.T) {

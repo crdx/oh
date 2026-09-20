@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/sse"
+	"crdx.org/oh/internal/sse"
 )
 
 func collect(stream string, last string) ([]string, error) {

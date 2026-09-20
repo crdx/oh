@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/pkg/agent"
 )
 
 type describedFailureError struct{}

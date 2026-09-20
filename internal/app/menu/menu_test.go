@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/style"
 )
 
 func TestMenuRenderingReturnsEveryLineToColumnZero(t *testing.T) {

@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"crdx.org/io/internal/file"
-	"crdx.org/io/internal/util"
+	"crdx.org/oh/internal/file"
+	"crdx.org/oh/internal/util"
 )
 
 func TestAnAbsolutePathCanBeNamedFromARelativeRoot(t *testing.T) {

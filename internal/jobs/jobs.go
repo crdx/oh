@@ -11,8 +11,8 @@ import (
 	"syscall"
 	"time"
 
-	"crdx.org/io/internal/sandbox"
-	"crdx.org/io/internal/util"
+	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/util"
 )
 
 const (

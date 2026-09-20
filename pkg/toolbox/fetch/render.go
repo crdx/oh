@@ -7,7 +7,7 @@ import (
 
 	"golang.org/x/net/html"
 
-	"crdx.org/io/internal/textwriter"
+	"crdx.org/oh/internal/textwriter"
 )
 
 func removeUnwantedNodes(parent *html.Node) {

@@ -5,10 +5,10 @@ import (
 	"strings"
 	"time"
 
-	"crdx.org/io/internal/app/schedule"
-	"crdx.org/io/internal/app/segment"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/jobs"
+	"crdx.org/oh/internal/app/schedule"
+	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/jobs"
 )
 
 const (

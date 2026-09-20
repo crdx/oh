@@ -12,14 +12,14 @@ import (
 	"slices"
 	"strings"
 
-	"crdx.org/io/internal/app/column"
-	"crdx.org/io/internal/app/editor"
-	"crdx.org/io/internal/app/hostcommand"
-	"crdx.org/io/internal/app/prompt"
-	"crdx.org/io/internal/app/slash"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/terminal"
-	"crdx.org/io/internal/app/work"
+	"crdx.org/oh/internal/app/column"
+	"crdx.org/oh/internal/app/editor"
+	"crdx.org/oh/internal/app/hostcommand"
+	"crdx.org/oh/internal/app/prompt"
+	"crdx.org/oh/internal/app/slash"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/terminal"
+	"crdx.org/oh/internal/app/work"
 )
 
 const (

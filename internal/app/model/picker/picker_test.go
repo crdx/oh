@@ -8,11 +8,11 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/menu"
-	"crdx.org/io/internal/app/width"
-	"crdx.org/io/internal/money"
-	"crdx.org/io/internal/util/strutil"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/menu"
+	"crdx.org/oh/internal/app/width"
+	"crdx.org/oh/internal/money"
+	"crdx.org/oh/internal/util/strutil"
+	"crdx.org/oh/pkg/agent"
 )
 
 var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")

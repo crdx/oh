@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"crdx.org/io/internal/file"
+	"crdx.org/oh/internal/file"
 )
 
 func TestRestoringReadStateSkipsPathsThatAreNoLongerMounted(t *testing.T) {

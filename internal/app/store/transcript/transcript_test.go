@@ -12,13 +12,13 @@ import (
 	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/text"
 
-	"crdx.org/io/internal/app/caps"
-	"crdx.org/io/internal/app/interrupt"
-	"crdx.org/io/internal/app/pathgrant"
-	"crdx.org/io/internal/app/portgrant"
-	"crdx.org/io/internal/app/store/transcript"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/interrupt"
+	"crdx.org/oh/internal/app/pathgrant"
+	"crdx.org/oh/internal/app/portgrant"
+	"crdx.org/oh/internal/app/store/transcript"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tool"
 )
 
 var transcriptParser = goldmark.New().Parser()

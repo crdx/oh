@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"crdx.org/io/internal/waiting"
+	"crdx.org/oh/internal/waiting"
 )
 
 var (

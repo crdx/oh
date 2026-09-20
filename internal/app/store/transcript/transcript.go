@@ -12,17 +12,17 @@ import (
 	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/text"
 
-	"crdx.org/io/internal/app/caps"
-	"crdx.org/io/internal/app/conditions"
-	"crdx.org/io/internal/app/hostcommand"
-	"crdx.org/io/internal/app/interrupt"
-	"crdx.org/io/internal/app/jobrecord"
-	"crdx.org/io/internal/app/pathgrant"
-	"crdx.org/io/internal/app/portgrant"
-	"crdx.org/io/internal/app/turn"
-	"crdx.org/io/internal/util"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/conditions"
+	"crdx.org/oh/internal/app/hostcommand"
+	"crdx.org/oh/internal/app/interrupt"
+	"crdx.org/oh/internal/app/jobrecord"
+	"crdx.org/oh/internal/app/pathgrant"
+	"crdx.org/oh/internal/app/portgrant"
+	"crdx.org/oh/internal/app/turn"
+	"crdx.org/oh/internal/util"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tool"
 )
 
 const (

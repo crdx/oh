@@ -3,11 +3,11 @@ package terminal
 import (
 	"io"
 
-	"crdx.org/io/internal/app/ansi"
+	"crdx.org/oh/internal/app/ansi"
 
-	"crdx.org/io/internal/app/caps"
-	"crdx.org/io/internal/app/tty"
-	"crdx.org/io/internal/app/work"
+	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/tty"
+	"crdx.org/oh/internal/app/work"
 )
 
 const writableMarker = "✱"

@@ -5,10 +5,10 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/style"
-	internaltoolresult "crdx.org/io/internal/toolresult"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/internal/app/style"
+	internaltoolresult "crdx.org/oh/internal/toolresult"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/session"
 )
 
 var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")

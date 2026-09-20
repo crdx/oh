@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"crdx.org/io/internal/app/location"
+	"crdx.org/oh/internal/app/location"
 )
 
 func PrepareTemporaryDirectory(name string) (string, error) {

@@ -10,8 +10,8 @@ import (
 
 	"golang.org/x/term"
 
-	"crdx.org/io/internal/app/location"
-	"crdx.org/io/internal/toolresult"
+	"crdx.org/oh/internal/app/location"
+	"crdx.org/oh/internal/toolresult"
 )
 
 const (

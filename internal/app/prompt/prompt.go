@@ -10,14 +10,14 @@ import (
 	"text/template"
 
 	"crdx.org/hereduck"
-	"crdx.org/io/internal/app/caps"
-	"crdx.org/io/internal/app/conditions"
-	"crdx.org/io/internal/app/shell"
-	"crdx.org/io/internal/app/skill"
-	"crdx.org/io/internal/app/toolset"
-	"crdx.org/io/internal/app/work"
-	"crdx.org/io/internal/util/pathutil"
-	"crdx.org/io/internal/util/strutil"
+	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/conditions"
+	"crdx.org/oh/internal/app/shell"
+	"crdx.org/oh/internal/app/skill"
+	"crdx.org/oh/internal/app/toolset"
+	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/internal/util/pathutil"
+	"crdx.org/oh/internal/util/strutil"
 )
 
 const (

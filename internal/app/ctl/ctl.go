@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"os"
 
-	"crdx.org/io/internal/app/ctl/analyse"
-	"crdx.org/io/internal/app/ctl/complete"
-	"crdx.org/io/internal/app/ctl/gc"
-	"crdx.org/io/internal/app/ctl/migrate"
-	"crdx.org/io/internal/app/ctl/regenerate"
-	"crdx.org/io/internal/app/ctl/sessions"
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/ctl/analyse"
+	"crdx.org/oh/internal/app/ctl/complete"
+	"crdx.org/oh/internal/app/ctl/gc"
+	"crdx.org/oh/internal/app/ctl/migrate"
+	"crdx.org/oh/internal/app/ctl/regenerate"
+	"crdx.org/oh/internal/app/ctl/sessions"
+	"crdx.org/oh/internal/app/style"
 )
 
 const Flag = "--ctl"

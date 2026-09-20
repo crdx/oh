@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/util/strutil"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/util/strutil"
+	"crdx.org/oh/pkg/tool"
 )
 
 func TestOptionalParametersAreLeftOutOfRequired(t *testing.T) {

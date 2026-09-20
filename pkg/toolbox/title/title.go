@@ -9,9 +9,9 @@ import (
 	"sync"
 	"unicode/utf8"
 
-	"crdx.org/io/internal/util/strutil"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/util/strutil"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tool"
 )
 
 const (

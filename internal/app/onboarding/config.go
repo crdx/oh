@@ -13,7 +13,7 @@ import (
 
 	"github.com/BurntSushi/toml"
 
-	"crdx.org/io/internal/app/config"
+	"crdx.org/oh/internal/app/config"
 )
 
 func setInitialModel(path string, selection string) (bool, error) {

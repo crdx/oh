@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/pkg/tool"
-	"crdx.org/io/pkg/tool/middleware/truncate"
+	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/tool/middleware/truncate"
 )
 
 const limitBytes = 12 * 1024

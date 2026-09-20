@@ -5,12 +5,12 @@ import (
 	"slices"
 	"strings"
 
-	"crdx.org/io/internal/app/link"
-	"crdx.org/io/internal/app/work"
-	"crdx.org/io/internal/sandbox"
-	"crdx.org/io/internal/util/pathutil"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/internal/app/link"
+	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/util/pathutil"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tool"
 )
 
 func (self Label) WithHostPathAliases(roots link.Roots) Label {

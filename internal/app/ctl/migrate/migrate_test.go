@@ -12,14 +12,14 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/caps"
-	"crdx.org/io/internal/app/ctl/migrate"
-	"crdx.org/io/internal/app/interrupt"
-	"crdx.org/io/internal/app/pathgrant"
-	"crdx.org/io/internal/app/store"
-	"crdx.org/io/internal/app/turn"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/ctl/migrate"
+	"crdx.org/oh/internal/app/interrupt"
+	"crdx.org/oh/internal/app/pathgrant"
+	"crdx.org/oh/internal/app/store"
+	"crdx.org/oh/internal/app/turn"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/session"
 )
 
 func storedJournal(t *testing.T, lines ...string) (string, string) {

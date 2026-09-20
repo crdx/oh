@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/sandbox"
+	"crdx.org/oh/internal/sandbox"
 )
 
 const answeredWithin = 20 * time.Second

@@ -4,10 +4,10 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/segment"
-	"crdx.org/io/internal/app/segment/jobNames"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/jobs"
+	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/segment/jobNames"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/jobs"
 )
 
 var noon = time.Date(2001, time.January, 1, 12, 0, 0, 0, time.UTC)

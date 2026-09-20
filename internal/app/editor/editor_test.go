@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/style"
 )
 
 var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")

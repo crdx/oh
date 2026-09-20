@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/file"
-	"crdx.org/io/internal/util/strutil"
+	"crdx.org/oh/internal/file"
+	"crdx.org/oh/internal/util/strutil"
 )
 
 const fuzzedRangeMaximumBytes = 64 * 1024

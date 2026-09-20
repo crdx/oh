@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"testing"
 
-	"crdx.org/io/internal/app/menu"
-	"crdx.org/io/internal/app/model"
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/menu"
+	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/internal/app/style"
 )
 
 func TestGoldenOnboardingEdgeCasesMatchTheGoldens(t *testing.T) {

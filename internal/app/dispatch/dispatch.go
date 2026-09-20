@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"crdx.org/io/internal/app/slash"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/slash"
+	"crdx.org/oh/pkg/agent"
 )
 
 type Result int

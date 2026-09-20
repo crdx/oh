@@ -12,12 +12,12 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/file"
-	"crdx.org/io/internal/sandbox"
-	"crdx.org/io/internal/stop"
-	"crdx.org/io/internal/util/pathutil"
-	"crdx.org/io/pkg/tool"
-	"crdx.org/io/pkg/toolbox/bash"
+	"crdx.org/oh/internal/file"
+	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/stop"
+	"crdx.org/oh/internal/util/pathutil"
+	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/toolbox/bash"
 )
 
 func TestMain(m *testing.M) {

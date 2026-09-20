@@ -20,7 +20,7 @@ def read_blocks(path):
 def by_package(blocks):
     packages = collections.defaultdict(lambda: [0, 0])
     for where, (statements, hits) in blocks.items():
-        path = where.split(':')[0].removeprefix('crdx.org/io/')
+        path = where.split(':')[0].removeprefix('crdx.org/oh/')
         name = path.rsplit('/', 1)[0] if '/' in path else '.'
         packages[name][0] += statements
         if hits:

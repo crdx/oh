@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"time"
 
-	"crdx.org/io/internal/app/painter"
-	"crdx.org/io/internal/app/schedule"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/app/width"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/painter"
+	"crdx.org/oh/internal/app/schedule"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/width"
+	"crdx.org/oh/pkg/agent"
 )
 
 type Source int

@@ -9,8 +9,8 @@ import (
 	extensionast "github.com/yuin/goldmark/extension/ast"
 	"github.com/yuin/goldmark/util"
 
-	"crdx.org/io/internal/app/link"
-	"crdx.org/io/internal/app/style"
+	"crdx.org/oh/internal/app/link"
+	"crdx.org/oh/internal/app/style"
 )
 
 const reset = "\x1b[0m"

@@ -10,11 +10,11 @@ import (
 	"strings"
 	"sync"
 
-	"crdx.org/io/internal/app/access"
-	"crdx.org/io/internal/app/shell"
-	"crdx.org/io/internal/app/work"
-	"crdx.org/io/internal/util/pathutil"
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/internal/app/access"
+	"crdx.org/oh/internal/app/shell"
+	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/internal/util/pathutil"
+	"crdx.org/oh/pkg/agent"
 )
 
 type Access = shell.Access

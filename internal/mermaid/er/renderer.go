@@ -3,7 +3,7 @@ package er
 import (
 	"strings"
 
-	"crdx.org/io/internal/mermaid/runewidth"
+	"crdx.org/oh/internal/mermaid/runewidth"
 )
 
 type glyphs struct {

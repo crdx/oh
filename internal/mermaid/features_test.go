@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/io/internal/mermaid/diagram"
-	"crdx.org/io/internal/mermaid/runewidth"
+	"crdx.org/oh/internal/mermaid/diagram"
+	"crdx.org/oh/internal/mermaid/runewidth"
 )
 
 func TestSupportedFlowchartFeatures(t *testing.T) {

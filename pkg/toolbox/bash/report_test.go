@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/sandbox"
+	"crdx.org/oh/internal/sandbox"
 
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/pkg/tool"
 )
 
 func TestAnUnfinishedCommandKeepsItsOutputAndSaysWhyItEnded(t *testing.T) {

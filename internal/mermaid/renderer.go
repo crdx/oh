@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"crdx.org/io/internal/mermaid/diagram"
-	"crdx.org/io/internal/mermaid/er"
-	"crdx.org/io/internal/mermaid/sequence"
+	"crdx.org/oh/internal/mermaid/diagram"
+	"crdx.org/oh/internal/mermaid/er"
+	"crdx.org/oh/internal/mermaid/sequence"
 )
 
 const (

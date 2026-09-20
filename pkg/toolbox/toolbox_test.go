@@ -5,9 +5,9 @@ import (
 	"slices"
 	"testing"
 
-	"crdx.org/io/internal/file"
+	"crdx.org/oh/internal/file"
 
-	"crdx.org/io/pkg/tool"
+	"crdx.org/oh/pkg/tool"
 )
 
 func testRoot(t *testing.T, isWritable bool) *file.Root {

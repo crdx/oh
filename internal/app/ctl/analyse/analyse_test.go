@@ -13,13 +13,13 @@ import (
 	"testing"
 	"time"
 
-	"crdx.org/io/internal/app/markdown"
-	"crdx.org/io/internal/app/model"
-	"crdx.org/io/internal/app/style"
-	"crdx.org/io/internal/money"
-	"crdx.org/io/internal/util/strutil"
-	"crdx.org/io/pkg/agent"
-	"crdx.org/io/pkg/session"
+	"crdx.org/oh/internal/app/markdown"
+	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/money"
+	"crdx.org/oh/internal/util/strutil"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/session"
 )
 
 const journalProvider = "codex"

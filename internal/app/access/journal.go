@@ -3,7 +3,7 @@ package access
 import (
 	"slices"
 
-	"crdx.org/io/pkg/agent"
+	"crdx.org/oh/pkg/agent"
 )
 
 func LastRecorded[Value any](
