@@ -594,11 +594,11 @@ was written
 before it
 was read
 func main()
-{ println(
-"one") } So
-the read has
-to come
-first.
+{
+println("one
+") } So the
+read has to
+come first.
 
 The build
 failed on an

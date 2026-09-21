@@ -683,10 +683,7 @@ read has to come first.
 read target.txt ✓ 1L
 A plain thought with no markup in it at
 all.
-┌───────┬────────┐ │ what │ when │
-├───────┼────────┤ │ read │ first │
-├───────┼────────┤ │ write │ second │
-└───────┴────────┘
+what when read first write second
 
 The read came first, and the file holds
 one.
@@ -979,7 +976,6 @@ w
 h
 a
 t
-|
 w
 h
 e
@@ -988,7 +984,6 @@ r
 e
 a
 d
-|
 f
 i
 r
@@ -999,7 +994,6 @@ r
 i
 t
 e
-|
 s
 e
 c
@@ -1053,8 +1047,7 @@ written • the file was written before it was read func main() { println("one")
 come first.
 read target.txt ✓ 1L
 A plain thought with no markup in it at all.
-┌───────┬────────┐ │ what │ when │ ├───────┼────────┤ │ read │ first │ ├───────┼────────┤ │ write │
-second │ └───────┴────────┘
+what when read first write second
 
 The read came first, and the file holds one.
 === plain streamed asap ===
@@ -1067,8 +1060,7 @@ written • the file was written before it was read func main() { println("one")
 come first.
 read target.txt ✓ 1L
 A plain thought with no markup in it at all.
-┌───────┬────────┐ │ what │ when │ ├───────┼────────┤ │ read │ first │ ├───────┼────────┤ │ write │
-second │ └───────┴────────┘
+what when read first write second
 
 The read came first, and the file holds one.
 === plain streamed line ===
@@ -1081,8 +1073,7 @@ written • the file was written before it was read func main() { println("one")
 come first.
 read target.txt ✓ 1L
 A plain thought with no markup in it at all.
-┌───────┬────────┐ │ what │ when │ ├───────┼────────┤ │ read │ first │ ├───────┼────────┤ │ write │
-second │ └───────┴────────┘
+what when read first write second
 
 The read came first, and the file holds one.
 === plain streamed paced ===
@@ -1095,8 +1086,7 @@ written • the file was written before it was read func main() { println("one")
 come first.
 read target.txt ✓ 1L
 A plain thought with no markup in it at all.
-┌───────┬────────┐ │ what │ when │ ├───────┼────────┤ │ read │ first │ ├───────┼────────┤ │ write │
-second │ └───────┴────────┘
+what when read first write second
 
 The read came first, and the file holds one.
 === plain tiny ===
@@ -1123,28 +1113,19 @@ was written
 before it
 was read
 func main()
-{ println(
-"one") } So
-the read has
-to come
-first.
+{
+println("one
+") } So the
+read has to
+come first.
 read t… ✓ 1L
 A plain
 thought with
 no markup in
 it at all.
-┌─────┬────┐
-│ wha │ wh │
-│ t │ en │
-├─────┼────┤
-│ rea │ fi │
-│ d │ rs │ │
-│ t │
-├─────┼────┤
-│ wri │ se │
-│ te │ co │
-│ │ nd │
-└─────┴────┘
+what when
+read first
+write second
 
 The read
 came first,
@@ -1211,7 +1192,6 @@ written • the file was written before it was read func main() { println("one")
 come first.
 read target.txt ✓ 1L
 A plain thought with no markup in it at all.
-┌───────┬────────┐ │ what │ when │ ├───────┼────────┤ │ read │ first │ ├───────┼────────┤ │ write │
-second │ └───────┴────────┘
+what when read first write second
 
 The read came first, and the file holds one.

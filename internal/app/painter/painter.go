@@ -35,14 +35,18 @@ import (
 const retryArgumentsCells = 120
 
 type Picasso struct {
-	screen         *output.Screen
-	toolBlock      *dynamic.Block
-	rows           map[string]int
-	labels         map[string]call.Label
-	answer         liveText
-	answerRenderer markdown.IncrementalRenderer
-	reasoning      liveText
-	previousKind   agent.Kind
+	screen            *output.Screen
+	toolBlock         *dynamic.Block
+	rows              map[string]int
+	labels            map[string]call.Label
+	answer            liveText
+	answerRenderer    markdown.IncrementalRenderer
+	reasoning         liveText
+	reasoningRenderer markdown.IncrementalRenderer
+	reasoningPlain    plainThought
+	reasoningReflow   paragraphReflow
+	reasoningLinks    rowLinks
+	previousKind      agent.Kind
 
 	isStale               bool
 	isRunning             bool
@@ -138,11 +142,11 @@ func (self *Picasso) DrawEvent(event agent.Event) {
 
 	case agent.ModelReasoningEvent:
 		self.answer.Reset()
-		self.reasoning.Reset()
+		self.resetReasoning()
 		self.reasoning.Write(event.Text)
 		self.drawReasoning(true)
 		self.screen.Seal()
-		self.reasoning.Reset()
+		self.resetReasoning()
 
 	case agent.ModelMessageEvent:
 		self.discardProvisionalReasoning()
@@ -349,20 +353,44 @@ func getState(status agent.Status) dynamic.RowState {
 }
 
 func RenderReasoning(thought string, columns int, rendering output.ReasoningRendering) []string {
-	renderedRows := markdown.Render(thought, columns)
+	var renderer markdown.IncrementalRenderer
+	var plain plainThought
+	var reflow paragraphReflow
+
+	return renderReasoningWith(&renderer, &plain, &reflow, thought, columns, rendering)
+}
+
+func renderReasoningWith(
+	renderer *markdown.IncrementalRenderer,
+	plain *plainThought,
+	reflow *paragraphReflow,
+	thought string,
+	columns int,
+	rendering output.ReasoningRendering,
+) []string {
+	if rendering == output.ReasoningPlain {
+		settledSource, tail := plain.Text(thought)
+		settledText := strings.Join(strings.Fields(settledSource), " ")
+		text := settledText
+		if tailText := strings.Join(strings.Fields(tail), " "); tailText != "" {
+			if text != "" {
+				text += " "
+			}
+			text += tailText
+		}
+
+		return reflow.Wrap(text, len(settledText), columns)
+	}
+
+	renderedRows := renderer.Render(thought, columns)
 
 	if rendering == output.ReasoningMarkdown {
 		for i, row := range renderedRows {
 			renderedRows[i] = style.Reasoning.Over(row)
 		}
-
-		return renderedRows
 	}
 
-	plain := style.Plain(strings.Join(renderedRows, "\n"))
-	strippedText := strings.Join(strings.Fields(plain), " ")
-
-	return width.Wrap(style.Reasoning(strippedText), columns)
+	return renderedRows
 }
 
 func (self *Picasso) Stale() bool { return self.isStale || self.screen.WasRepaintRefused() }
@@ -540,12 +568,16 @@ func (self *Picasso) settleAnswer() {
 
 func (self *Picasso) drawReasoning(isSettled bool) {
 	thought, isRowArriving := self.withoutArrivingTableRow(self.reasoning.Text(), isSettled)
-	rows := RenderReasoning(thought, self.screen.Columns(), self.reasoningRendering)
+	rows := renderReasoningWith(
+		&self.reasoningRenderer,
+		&self.reasoningPlain,
+		&self.reasoningReflow,
+		thought,
+		self.screen.Columns(),
+		self.reasoningRendering,
+	)
 	if self.screen.IsTerminal() {
-		roots := self.linkRoots()
-		for i := range rows {
-			rows[i] = link.Render(rows[i], roots)
-		}
+		rows = self.reasoningLinks.Render(rows, self.linkRoots())
 	}
 
 	isTailHidden := !isSettled && self.streamingMode == output.StreamingModeLine
@@ -627,7 +659,15 @@ func (self *Picasso) discardProvisionalReasoning() {
 	if !self.screen.DiscardLive() {
 		self.isStale = true
 	}
+	self.resetReasoning()
+}
+
+func (self *Picasso) resetReasoning() {
 	self.reasoning.Reset()
+	self.reasoningRenderer.Reset()
+	self.reasoningPlain.Reset()
+	self.reasoningReflow.Reset()
+	self.reasoningLinks.Reset()
 }
 
 func (self *Picasso) mark(event agent.Event) {
