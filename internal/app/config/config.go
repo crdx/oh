@@ -55,6 +55,7 @@ type Config struct {
 	Provider Provider                       `toml:"provider"`
 	Ports    Ports                          `toml:"ports"`
 	Snippets map[string]snippets.Definition `toml:"snippets"`
+	Tools    map[string]CustomTool          `toml:"tools"`
 	Skills   SkillPaths                     `toml:"skills"`
 	Sandbox  sandbox                        `toml:"sandbox"`
 	Bar      Bar                            `toml:"bar"`
@@ -449,6 +450,15 @@ func (self Config) getSourcePath(keys ...string) string {
 	return ""
 }
 
+func (self Config) getSourceFile(keys ...string) string {
+	for _, source := range slices.Backward(self.sources) {
+		if source.meta.IsDefined(keys...) {
+			return source.source.Path
+		}
+	}
+	return ""
+}
+
 func readConfigVersion(data []byte, isOverride bool) (int, error) {
 	if isOverride {
 		return Format, nil
@@ -670,11 +680,12 @@ var settingsAWorkspaceMayNotSet = []string{
 	"provider",
 	"sandbox",
 	"skills",
+	toolsSetting,
 }
 
 func refuseWorkspaceSettings(meta toml.MetaData) error {
 	for _, key := range meta.Keys() {
-		if !meta.IsDefined(key...) || meta.Type(key...) == "Hash" {
+		if !meta.IsDefined(key...) || (meta.Type(key...) == "Hash" && len(key) < 2) {
 			continue
 		}
 

@@ -17,6 +17,7 @@ var reaches = map[string]Reach{
 	"ports":    ReachNextRun,
 	"caps":     ReachNextSession,
 	"model":    ReachNextSession,
+	"tools":    ReachNextSession,
 }
 
 func ReachOf(setting string) Reach {

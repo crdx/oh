@@ -1,0 +1,20 @@
+{"kind":"head","version":13,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"user_message","text":"what kernel is the host running"}}
+{"kind":"event","event":{"render":"slow-roasted onions","detail":"kernel verbose","kind":"tool_call_request","id":"toolu_1","name":"sysinfo","arguments":"{\"dish\":\"slow-roasted onions\",\"fact\":\"kernel\",\"verbose\":true}"}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"kernel: 7.2.4\nreported by sysinfo on the host","id":"toolu_1","name":"sysinfo","status":"success","stats":{"kind":"output","lines":2,"bytes":45}}}
+{"kind":"event","event":{"render":"burnt offering","detail":"uptime","kind":"tool_call_request","id":"toolu_2","name":"sysinfo","arguments":"{\"dish\":\"burnt offering\",\"fact\":\"uptime\"}"}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"exit(2):\nno fact was asked for","id":"toolu_2","name":"sysinfo","status":"error","stats":{"kind":"output","lines":2,"bytes":30}}}
+{"kind":"event","event":{"kind":"model_message","text":"The kernel is 7.2.4, and the second call was refused."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"what kernel is the host running"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"sysinfo","input":{"dish":"slow-roasted onions","fact":"kernel","verbose":true}}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"kernel: 7.2.4\nreported by sysinfo on the host"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_2","name":"sysinfo","input":{"dish":"burnt offering","fact":"uptime"}}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_2","content":"exit(2):\nno fact was asked for","is_error":true}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The kernel is 7.2.4, and the second call was refused."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
+{"kind":"event","event":{"kind":"model_message","text":"Carrying on."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"carry on"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Carrying on."}]}}
+{"kind":"turn_completion","turn":{}}

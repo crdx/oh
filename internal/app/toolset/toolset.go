@@ -21,6 +21,21 @@ func Names(tools []tool.Tool) []string {
 	return names
 }
 
+func Combine(availableTools []tool.Tool, addedTools []tool.Tool) ([]tool.Tool, error) {
+	availableNames := indexByName(availableTools)
+
+	for _, addedTool := range addedTools {
+		if _, isTaken := availableNames[addedTool.Name()]; isTaken {
+			return nil, fmt.Errorf("%s is already a tool, so a custom tool cannot take its name", addedTool.Name())
+		}
+
+		availableNames[addedTool.Name()] = addedTool
+		availableTools = append(availableTools, addedTool)
+	}
+
+	return availableTools, nil
+}
+
 func Partition(availableTools []tool.Tool, names []string) ([]string, []string) {
 	availableNames := indexByName(availableTools)
 

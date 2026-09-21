@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"syscall"
 	"time"
@@ -19,6 +20,7 @@ import (
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/tool/command"
 	"crdx.org/oh/pkg/tool/middleware/truncate"
 	"crdx.org/oh/pkg/toolbox"
 	"crdx.org/oh/pkg/toolbox/bash"
@@ -106,6 +108,16 @@ var (
 	}
 )
 
+func customToolApproval(name string) approval {
+	return approval{
+		label:    "Run the " + name + " tool?",
+		language: "bash",
+		action:   name,
+		outcome:  name + " did not run",
+		advice:   "choose another approach",
+	}
+}
+
 func (self approval) ask(
 	ctx context.Context,
 	broker *ask.Broker,
@@ -167,6 +179,23 @@ var completableToolNames = []string{
 	"fetch",
 }
 
+func completableTools() []string {
+	names := slices.Clone(completableToolNames)
+
+	settings, err := config.Load(location.GetConfigFile())
+	if err != nil {
+		return names
+	}
+
+	for _, name := range settings.CustomToolNames() {
+		if !slices.Contains(names, name) {
+			names = append(names, name)
+		}
+	}
+
+	return names
+}
+
 func main() {
 	if len(os.Args) > 1 && os.Args[1] == ctl.Flag {
 		os.Exit(ctl.Run(os.Args[2:]))
@@ -189,7 +218,7 @@ func main() {
 	if cli.WriteCompletions(os.Stdout, os.Args[1:], cli.Sources{
 		ModelCachePath: location.GetModelCachePath(os.Getenv(backend.EndpointVariable) != ""),
 		SessionsDir:    location.GetSessionsDir(),
-		ToolNames:      completableToolNames,
+		ToolNames:      completableTools(),
 	}) {
 		return
 	}
@@ -854,6 +883,19 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 			dropKeeper.SaveHTML,
 		),
 	)
+	customTools, err := settings.BuildCustomTools(command.Options{
+		Directory: workspace.GetDir(),
+		Approve: func(ctx context.Context, name string, line string) error {
+			return customToolApproval(name).confirm(ctx, askBroker, line)
+		},
+	})
+	if err != nil {
+		return "", err
+	}
+	if toolboxTools, err = toolset.Combine(toolboxTools, customTools); err != nil {
+		return "", err
+	}
+
 	toolboxTools = truncate.Tools(toolboxTools, toolOutputLimit)
 
 	enabledToolNames := args.Tools

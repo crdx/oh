@@ -13,6 +13,7 @@ type Builder[T any] struct {
 	definition Definition
 	describe   Describer[T]
 	validate   Validator[T]
+	decode     Decoder[T]
 
 	parallel       bool
 	readOnly       bool
@@ -35,6 +36,11 @@ func Implement[T any](definition Definition, describe Describer[T]) Builder[T] {
 
 func (self Builder[T]) Validate(validate Validator[T]) Builder[T] {
 	self.validate = validate
+	return self
+}
+
+func (self Builder[T]) Decode(decode Decoder[T]) Builder[T] {
+	self.decode = decode
 	return self
 }
 
@@ -139,6 +145,22 @@ func (self Builder[T]) guardAccess(execute ResultExecutor[T]) ResultExecutor[T] 
 	}
 }
 
+func (self Builder[T]) decodeArguments(arguments string) (T, error) {
+	var args T
+
+	if self.decode != nil {
+		return self.decode(arguments)
+	}
+
+	if text := strings.TrimSpace(arguments); text != "" {
+		if err := json.Unmarshal([]byte(text), &args); err != nil {
+			return args, fmt.Errorf("could not parse the arguments: %w", err)
+		}
+	}
+
+	return args, nil
+}
+
 func (self Builder[T]) build(exec ResultExecutor[T]) Tool {
 	exec = self.guardAccess(exec)
 
@@ -152,11 +174,9 @@ func (self Builder[T]) build(exec ResultExecutor[T]) Tool {
 		restore:     self.restore,
 		emphasis:    self.emphasis,
 		parse: func(arguments string) (_call, error) {
-			var args T
-			if text := strings.TrimSpace(arguments); text != "" {
-				if err := json.Unmarshal([]byte(text), &args); err != nil {
-					return _call{}, fmt.Errorf("could not parse the arguments: %w", err)
-				}
+			args, err := self.decodeArguments(arguments)
+			if err != nil {
+				return _call{}, err
 			}
 
 			if self.validate != nil {

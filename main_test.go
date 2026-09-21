@@ -133,6 +133,7 @@ import (
 	"crdx.org/oh/pkg/provider/opencodego"
 	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/tool/command"
 	"crdx.org/oh/pkg/tool/middleware/truncate"
 	"crdx.org/oh/pkg/toolbox"
 	"crdx.org/oh/pkg/toolbox/bash"
@@ -9156,6 +9157,7 @@ const (
 	feedbackHeredocApproval
 	feedbackTallApproval
 	feedbackApprovalDuringACall
+	feedbackCustomToolApproval
 )
 
 func TestConfirmationFeedbackSchedulesItsOwnDismissal(t *testing.T) {
@@ -9209,6 +9211,7 @@ func TestGoldenFeedbackDrawsEveryVisibleState(t *testing.T) {
 		"heredoc approval":                  feedbackHeredocApproval,
 		"approval taller than the terminal": feedbackTallApproval,
 		"approval during a call":            feedbackApprovalDuringACall,
+		"custom tool approval":              feedbackCustomToolApproval,
 	})
 
 	compareWithGolden(t, "feedback", ".ansi", passes)
@@ -9318,35 +9321,8 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 	inputLine := edit.NewInput(nil)
 	self.inputLine = inputLine
 
-	switch scenario {
-	case feedbackCommandError,
-		feedbackClearedByEditing,
-		feedbackClearedByEscape,
-		feedbackClearedByTurnCompletion,
-		feedbackTallAnswer:
-		inputLine.SetText("/unknown")
-	case feedbackHelp:
-		inputLine.SetText("/help")
-	case feedbackSuccess:
-		inputLine.SetText("/copy")
-	case feedbackNetworkApproval:
-		inputLine.SetText("what is out there?")
-	case feedbackConcurrentApproval:
-		inputLine.SetText("waiting for approvals")
-	case feedbackChainedApproval:
-		inputLine.SetText("fetch and tidy up")
-	case feedbackTallApproval:
-		inputLine.SetText("tidy the tree")
-	case feedbackHeredocApproval:
-		inputLine.SetText("write the note")
-	case feedbackApprovalDuringACall:
-		inputLine.SetText("check what that endpoint says")
-	case feedbackStartupInfo,
-		feedbackStorageWarnings,
-		feedbackUnknownSettings,
-		feedbackClearedByBackspace,
-		feedbackClearedByControlD,
-		feedbackSurvivingADismissKey:
+	if typed := typedForFeedback(scenario); typed != "" {
+		inputLine.SetText(typed)
 	}
 	self.show(inputLine)
 
@@ -9468,9 +9444,50 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 		self.show(inputLine)
 	case feedbackApprovalDuringACall:
 		return drawApprovalDuringACall(t, self, inputLine, &screenOutput)
+	case feedbackCustomToolApproval:
+		showCustomToolApproval(t, self, inputLine)
 	}
 
 	return screenOutput.String()
+}
+
+func typedForFeedback(scenario feedbackScenario) string {
+	return map[feedbackScenario]string{
+		feedbackCommandError:            "/unknown",
+		feedbackClearedByEditing:        "/unknown",
+		feedbackClearedByEscape:         "/unknown",
+		feedbackClearedByTurnCompletion: "/unknown",
+		feedbackTallAnswer:              "/unknown",
+		feedbackHelp:                    "/help",
+		feedbackSuccess:                 "/copy",
+		feedbackNetworkApproval:         "what is out there?",
+		feedbackConcurrentApproval:      "waiting for approvals",
+		feedbackChainedApproval:         "fetch and tidy up",
+		feedbackTallApproval:            "tidy the tree",
+		feedbackHeredocApproval:         "write the note",
+		feedbackApprovalDuringACall:     "check what that endpoint says",
+		feedbackCustomToolApproval:      "leave me a note about the host",
+	}[scenario]
+}
+
+func showCustomToolApproval(t *testing.T, self *App, inputLine *edit.Input) {
+	t.Helper()
+
+	broker := ask.New()
+	closeBroker := broker.Open()
+	defer closeBroker()
+
+	go func() {
+		_ = ask.Confirm(t.Context(), broker, ask.Confirmation{
+			Label:    "Run the note tool?",
+			Detail:   "/opt/toolbox/notes.py --action add --text 'the toolbox works' --tag oh --tag test",
+			Language: "bash",
+		})
+	}()
+	<-broker.Changes()
+	self.question.broker = broker
+	self.onQuestionChange()
+	self.show(inputLine)
 }
 
 func drawApprovalTallerThanTheTerminal(
@@ -13388,6 +13405,7 @@ type sessionGoldenTool struct {
 	Blocks                bool     `toml:"blocks"`
 	StoppedOutput         string   `toml:"stopped-output"`
 	IsLargeRead           bool     `toml:"large-read"`
+	Custom                string   `toml:"custom"`
 }
 
 type sessionGoldenScenario struct {
@@ -13728,6 +13746,11 @@ func newSessionGoldenTools(
 			continue
 		}
 
+		if specification.Custom != "" {
+			tools = append(tools, newSessionGoldenCustomTool(t, specification))
+			continue
+		}
+
 		if specification.Blocks {
 			tools = append(tools, newSessionGoldenBlockingTool(specification))
 			continue
@@ -13829,6 +13852,48 @@ func sessionGoldenImage(t *testing.T, size string, byteCount int64) (tool.Image,
 }
 
 var errSessionGoldenToolStopped = errors.New("the tool was stopped")
+
+func newSessionGoldenCustomTool(t *testing.T, specification sessionGoldenTool) tool.Tool {
+	t.Helper()
+
+	script := filepath.Join(t.TempDir(), "custom")
+	//nolint:gosec // a tool the scenario supplies has to be runnable
+	if err := os.WriteFile(script, []byte("#!/bin/bash\n"+specification.Custom+"\n"), 0o700); err != nil {
+		t.Fatal(err)
+	}
+
+	customTool, err := command.New(command.Declaration{
+		Name:        specification.Name,
+		Description: "A deterministic scenario tool of the user's own.",
+		Command:     []string{script},
+		Subject:     "dish",
+		Parameters: []command.Parameter{
+			{
+				Name:        "dish",
+				Kind:        command.KindString,
+				Description: "what the dish is called",
+			},
+			{
+				Name:        "fact",
+				Kind:        command.KindEnum,
+				Values:      []string{"uptime", "kernel"},
+				Description: "which fact to report",
+				IsOptional:  true,
+			},
+			{
+				Name:        "verbose",
+				Kind:        command.KindBoolean,
+				Description: "whether to say more about it",
+				IsOptional:  true,
+			},
+		},
+	}, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return customTool
+}
 
 func newSessionGoldenBlockingTool(specification sessionGoldenTool) tool.Tool {
 	return tool.Implement(
@@ -18634,5 +18699,214 @@ func TestASimulationDrawsNoHazard(t *testing.T) {
 	unconfined := &App{runMode: runMode{isYolo: true}}
 	if got := unconfined.ruleStyle()("│"); got != style.Hazard("│") {
 		t.Errorf("an unconfined conversation drew its rule as %q, want the hazard rule", got)
+	}
+}
+
+func writeCustomToolConfig(t *testing.T, environment []string, body string) {
+	t.Helper()
+
+	var configHome string
+	for _, entry := range environment {
+		if value, isConfigHome := strings.CutPrefix(entry, "XDG_CONFIG_HOME="); isConfigHome {
+			configHome = value
+		}
+	}
+	if configHome == "" {
+		t.Fatal("the test environment names no config home")
+	}
+
+	directory := filepath.Join(configHome, "org.crdx", "oh")
+	if err := os.MkdirAll(directory, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	contents := fmt.Sprintf("version = %d\n\n%s", config.Format, body)
+	if err := os.WriteFile(filepath.Join(directory, "config.toml"), []byte(contents), 0o600); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func customToolScript(t *testing.T) string {
+	t.Helper()
+
+	path := filepath.Join(reachableWorkspaceDir(t), "forecast")
+	//nolint:gosec // a tool the test supplies has to be runnable
+	if err := os.WriteFile(path, []byte("#!/bin/bash\necho \"forecast for $*\"\n"), 0o700); err != nil {
+		t.Fatal(err)
+	}
+
+	return path
+}
+
+func TestACustomToolRunsItsOwnCommandAndReportsWhatItSaid(t *testing.T) {
+	binary := buildTestBinary(t)
+	script := customToolScript(t)
+	endpoint := sim.New(&sim.Scenario{
+		Model: "fake",
+		Turns: []sim.Turn{
+			{Calls: []sim.Call{{Name: "weather", Arguments: `{"city":"London","days":2}`}}},
+			{Say: "Rain, then."},
+		},
+	})
+	server := httptest.NewServer(endpoint)
+	t.Cleanup(server.Close)
+
+	address := endpoint.Addresses(server.URL)[sim.Messages]
+	environment := append(testBinaryEnvironment(t, t.TempDir()), backend.EndpointVariable+"="+address)
+	writeCustomToolConfig(t, environment, `[tools.weather]
+description = "report the weather for a city"
+command = ["`+script+`"]
+permission = "allow"
+parameters = [
+    { name = "city", kind = "string", description = "the city to report on" },
+    { name = "days", kind = "integer", description = "how many days ahead to look", optional = true },
+]
+`)
+
+	output := runTestBinary(
+		t, binary, reachableWorkspaceDir(t), environment,
+		"-p", "--yolo", "-m", "anthropic/fake", "what is the weather",
+	)
+
+	if !strings.Contains(output, "weather London 2") {
+		t.Errorf("the custom call was not drawn: %q", output)
+	}
+	if !strings.Contains(output, "Rain, then.") {
+		t.Errorf("the answer did not follow the tool: %q", output)
+	}
+
+	requests := endpoint.Requests()
+	if len(requests) < 2 {
+		t.Fatalf("the endpoint saw %d requests", len(requests))
+	}
+	if !slices.Contains(requests[0].Tools, "weather") {
+		t.Errorf("the custom tool was not offered: %q", requests[0].Tools)
+	}
+
+	var reported string
+	for _, entry := range requests[1].Input {
+		if entry.Type == sim.CallOutput {
+			reported = entry.Output
+		}
+	}
+	if reported != "forecast for --city London --days 2" {
+		t.Errorf("the model was told %q", reported)
+	}
+}
+
+func TestACustomToolNobodyCanBeAskedAboutDoesNotRun(t *testing.T) {
+	binary := buildTestBinary(t)
+	script := customToolScript(t)
+	endpoint := sim.New(&sim.Scenario{
+		Model: "fake",
+		Turns: []sim.Turn{
+			{Calls: []sim.Call{{Name: "weather", Arguments: `{"city":"London"}`}}},
+			{Say: "No matter."},
+		},
+	})
+	server := httptest.NewServer(endpoint)
+	t.Cleanup(server.Close)
+
+	address := endpoint.Addresses(server.URL)[sim.Messages]
+	environment := append(testBinaryEnvironment(t, t.TempDir()), backend.EndpointVariable+"="+address)
+	writeCustomToolConfig(t, environment, `[tools.weather]
+description = "report the weather for a city"
+command = ["`+script+`"]
+parameters = [
+    { name = "city", kind = "string", description = "the city to report on" },
+]
+`)
+
+	output := runTestBinary(
+		t, binary, reachableWorkspaceDir(t), environment,
+		"-p", "--yolo", "-m", "anthropic/fake", "what is the weather",
+	)
+
+	if strings.Contains(output, "forecast for") {
+		t.Errorf("the custom tool ran with nobody to ask: %q", output)
+	}
+}
+
+func TestACustomToolIsOfferedAloneWhenItIsNamed(t *testing.T) {
+	binary := buildTestBinary(t)
+	script := customToolScript(t)
+	endpoint := sim.New(&sim.Scenario{Model: "fake", Turns: []sim.Turn{{Say: "Nothing to do."}}})
+	server := httptest.NewServer(endpoint)
+	t.Cleanup(server.Close)
+
+	address := endpoint.Addresses(server.URL)[sim.Messages]
+	environment := append(testBinaryEnvironment(t, t.TempDir()), backend.EndpointVariable+"="+address)
+	writeCustomToolConfig(t, environment, `[tools.weather]
+description = "report the weather for a city"
+command = ["`+script+`"]
+parameters = [
+    { name = "city", kind = "string", description = "the city to report on" },
+]
+`)
+
+	runTestBinary(
+		t, binary, reachableWorkspaceDir(t), environment,
+		"-p", "--yolo", "-m", "anthropic/fake", "-t", "weather", "what is the weather",
+	)
+
+	requests := endpoint.Requests()
+	if len(requests) == 0 {
+		t.Fatal("the endpoint saw no request")
+	}
+	if !slices.Equal(requests[0].Tools, []string{"weather"}) {
+		t.Errorf("got the tools %q, want the custom tool alone", requests[0].Tools)
+	}
+}
+
+func TestAWorkspaceCannotAddACustomTool(t *testing.T) {
+	binary := buildTestBinary(t)
+	workspaceDir := reachableWorkspaceDir(t)
+	overridePath := filepath.Join(workspaceDir, "oh.toml")
+	body := "[tools.weather]\ndescription = \"x\"\ncommand = [\"echo\"]\n"
+	if err := os.WriteFile(overridePath, []byte(body), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	//nolint:gosec // running the binary under test
+	process := exec.CommandContext(t.Context(), binary, "-p", "hello")
+	process.Env = testBinaryEnvironment(t, t.TempDir())
+	process.Dir = workspaceDir
+	output, err := process.CombinedOutput()
+	if err == nil {
+		t.Fatalf("the workspace added a custom tool: %q", output)
+	}
+	if !strings.Contains(string(output), "cannot be overridden in oh.toml") {
+		t.Errorf("got %q", output)
+	}
+}
+
+func TestACustomToolCompletesBesideTheBuiltInTools(t *testing.T) {
+	environment := []string{"XDG_CONFIG_HOME=" + t.TempDir()}
+	writeCustomToolConfig(t, environment, "[tools.weather]\ndescription = \"x\"\ncommand = [\"true\"]\n")
+	t.Setenv("XDG_CONFIG_HOME", strings.TrimPrefix(environment[0], "XDG_CONFIG_HOME="))
+
+	completable := completableTools()
+	if !slices.Contains(completable, "weather") {
+		t.Errorf("the custom tool does not complete: %q", completable)
+	}
+	for _, builtIn := range completableToolNames {
+		if !slices.Contains(completable, builtIn) {
+			t.Errorf("%s stopped completing: %q", builtIn, completable)
+		}
+	}
+}
+
+func TestCompletionFallsBackToTheBuiltInToolsWhenTheConfigIsUnreadable(t *testing.T) {
+	configHome := t.TempDir()
+	directory := filepath.Join(configHome, "org.crdx", "oh")
+	if err := os.MkdirAll(directory, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(directory, "config.toml"), []byte("[tools\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("XDG_CONFIG_HOME", configHome)
+
+	if completable := completableTools(); !slices.Equal(completable, completableToolNames) {
+		t.Errorf("got %q, want the built-in tools alone", completable)
 	}
 }

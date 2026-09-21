@@ -21,10 +21,10 @@ Three sources load in order, each overriding the last:
 
 Global and workspace files are watched and auto-reload. A reload applies live to the theme, bar, snippets, permissions, streaming, editor command, and tool output cap. Everything else waits, and waits for one of two things:
 
-| Setting                                          | Lands               |
-|--------------------------------------------------|---------------------|
-| `[sandbox]`, `[skills]`, `[provider]`, `[ports]` | when oh next starts |
-| `caps.default`, `[model]`, the toolbox           | in a new session    |
+| Setting                                           | Lands               |
+|---------------------------------------------------|---------------------|
+| `[sandbox]`, `[skills]`, `[provider]`, `[ports]`  | when oh next starts |
+| `caps.default`, `[model]`, `[tools]`, the toolbox | in a new session    |
 
 The first group belongs to the process, so a restart that resumes this very conversation picks it up. The second is frozen into the session when it is first created, and a resumed conversation restores what was frozen, so only a new session reads it afresh.
 
@@ -43,6 +43,7 @@ Where `~/.config/org.crdx/oh/` is a symlink into a dotfiles repository, edit the
 - `[snippets]` — `/name` expansions, inline or `{ file = "snippets/name.md" }`; `{{ .Arg }}` takes the rest of the line
 - `[ui]` — `streaming`, `grouping`, `reasoning`, `currency`, `[ui.theme]`
 - `[permissions]` — `ask` or `allow` per gated action, deciding what a granted capability buys
+- `[tools]` — custom tools, each `[tools.<name>]` naming a `command` to run and the parameters the model supplies
 - `[caps]`, `[sandbox]`, `[skills]` — defaults each workspace then overrides
 - `[bar.top]`, `[bar.bottom]` — status bar segments, each naming a `segment` and its options
 - `[editor]`, `[input]`, `[tool]`, `[ports]` — editor command, continue behaviour, tool output cap, exposed-port hostname
@@ -59,6 +60,7 @@ A workspace file comes with whatever repository you cloned, so it may not set wh
 - `[sandbox]`, which says where the agent may read, write, and execute
 - `[skills]`, which says what instructions reach the model
 - `[provider]`, which says which endpoint the conversation goes to
+- `[tools]`, whose commands run on your machine
 - `[experimental]`, which is unknown by definition
 
 Those belong to the config that follows you between projects, and paths in them resolve relative to it, with `~` expanded. The table is `[skills]`, plural.
@@ -163,6 +165,61 @@ A `rate` or a duration takes Go's form, as `125ms`, `10s`, or `5m`. A segment re
 The user toggles capabilities at runtime, so `caps.default` is a starting posture, not a ceiling.
 
 Grant the narrowest set that does the job. Leave `caps.default` to the user: propose a string and name the capabilities it adds.
+
+## Custom Tools
+
+`[tools.<name>]` adds a custom tool. The model calls it like a built-in tool. The tool runs the command in `command`.
+
+The table name is the tool name. Use lowercase letters, digits, and underscores. Start with a letter. A name that a built-in tool already uses stops startup.
+
+The command runs on the host, in the workspace directory. The sandbox does not confine it. The capability flags do not gate it. Only `permission` holds it back.
+
+Put custom tools in the global config. A workspace `oh.toml` that sets `[tools]` stops startup.
+
+| Key           | Holds                                                     |
+|---------------|-----------------------------------------------------------|
+| `description` | what the tool does; required                              |
+| `command`     | the executable and its fixed arguments; required          |
+| `parameters`  | the arguments the model supplies, each one a table        |
+| `subject`     | the parameter shown in the call row; the first by default |
+| `timeout`     | the limit for one call; `30s` by default                  |
+| `permission`  | `ask` by default, or `allow` to run without a question    |
+
+The model reads the description alone to choose a tool. Write it for the model.
+
+With `ask`, oh shows the command line and waits for a yes or a no. A no tells the model to try something else. Print mode has nobody to ask, so the call fails.
+
+Give each parameter a `name`, a `kind`, and a `description`. Add `optional = true` where the model can leave it out. Add `values` for an enum.
+
+| Kind      | Passes                                           |
+|-----------|--------------------------------------------------|
+| `string`  | `--name value`                                   |
+| `integer` | `--name 7`                                       |
+| `boolean` | `--name` when true, and nothing when false       |
+| `strings` | `--name` once for each item                      |
+| `enum`    | `--name value`, refused unless `values` holds it |
+
+An underscore in a parameter name becomes a dash in the option, so `max_lines` arrives as `--max-lines`. An optional parameter the model leaves out passes nothing. The command reads the tool name from `OH_TOOL`.
+
+```toml
+[tools.weather]
+description = "report the weather for a city"
+command = ["./tools/forecast"]
+subject = "city"
+timeout = "10s"
+permission = "ask"
+parameters = [
+    { name = "city", kind = "string", description = "the city to report on" },
+    { name = "days", kind = "integer", description = "how many days ahead to look", optional = true },
+    { name = "units", kind = "enum", values = ["metric", "imperial"], description = "which units to report in", optional = true },
+]
+```
+
+oh resolves the first word of `command` against the config file when the word holds a `/`. It resolves a later word the same way when the word starts with `./` or `../`. It leaves a bare word to `PATH`. A command oh cannot find stops startup. The message names the config file and the tool.
+
+The result holds standard output and standard error. A non-zero exit reports a failure with that output. A timeout reports a failure the same way.
+
+`-t` selects the tools for a session, custom tools included. `-t weather` offers that tool alone. The session freezes its tool set, so a change here reaches the next session.
 
 ## Sandbox Paths
 

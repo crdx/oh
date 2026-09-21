@@ -93,6 +93,8 @@ type Describer[T any] func(args T) (string, string)
 
 type Validator[T any] func(args T) error
 
+type Decoder[T any] func(arguments string) (T, error)
+
 type ResultExecutor[T any] func(ctx context.Context, args T) (ToolCallResult, error)
 
 type Restorer func(state json.RawMessage) error

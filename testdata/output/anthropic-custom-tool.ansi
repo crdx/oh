@@ -1,0 +1,14 @@
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m what kernel is the host running                                                                    \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[?7l\r\e[K\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0msysinfo\e[0m\e]8;;\e\\ \e[38;2;192;128;80mslow-roasted onions\e[0m \e[38;2;150;152;150mkernel verbose\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
+\r\e[K\e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0msysinfo\e[0m\e]8;;\e\\ \e[38;2;192;128;80mburnt offering\e[0m \e[38;2;150;152;150muptime\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m2L\e[0m \e[38;2;204;102;102mexit(2): no fact was asked for\e[0m\r
+\r
+\r\e[KThe kernel is 7.2.4, and the second call was refused.\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m carry on                                                                                           \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[?2026h\e[?25l\r\e[KCarrying on.\e[?25h\e[?2026l\r
