@@ -4,7 +4,10 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"slices"
+	"sync"
 	"testing"
+	"time"
 
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/file"
@@ -107,18 +110,157 @@ func TestPathToolsCannotReadDeniedPathsOrGrantThem(t *testing.T) {
 	}
 }
 
-func TestDenyCacheKeyDependsOnReachablePathsRatherThanTheirRights(t *testing.T) {
-	left := sandbox.Policy{
-		Deny:  []string{"*.env", "secrets.yml"},
-		Read:  []string{"/read", "/shared"},
-		Write: []string{"/write"},
+func TestDenySearchKeyDependsOnThePatternSetRatherThanItsOrder(t *testing.T) {
+	left := denySearchKey([]string{"*.env", "secrets.yml"}, "/read")
+	right := denySearchKey([]string{"secrets.yml", "*.env"}, "/read")
+	if left != right {
+		t.Error("equivalent patterns produced different cache keys")
 	}
-	right := sandbox.Policy{
-		Deny:  []string{"secrets.yml", "*.env"},
-		Read:  []string{"/write"},
-		Write: []string{"/shared", "/read"},
+	if denySearchKey([]string{"*.env"}, "/other") == left {
+		t.Error("a different root produced the same cache key")
 	}
-	if denyPolicyKey(left) != denyPolicyKey(right) {
-		t.Error("equivalent reachable paths produced different cache keys")
+}
+
+func TestAGrantSearchesOnlyTheRootItAdds(t *testing.T) {
+	access, searched := denySearchRecorder(t)
+	first := t.TempDir()
+	second := t.TempDir()
+
+	policy := sandbox.Policy{Deny: []string{"*.env"}, Read: []string{first}}
+	if _, err := access.getDenyPaths(policy); err != nil {
+		t.Fatal(err)
+	}
+	if !slices.Contains(searched(), first) {
+		t.Fatalf("the first search covered %v, want %s among them", searched(), first)
+	}
+
+	policy.Read = []string{first, second}
+	if _, err := access.getDenyPaths(policy); err != nil {
+		t.Fatal(err)
+	}
+	if roots := searched(); !slices.Equal(roots, []string{second}) {
+		t.Errorf("the search after the grant covered %v, want only %s", roots, second)
+	}
+}
+
+func TestAPathIsGrantedWhileADenySearchIsStillWalking(t *testing.T) {
+	mode := caps.NewMode(caps.All())
+	access, err := NewPathAccess(configuredPathTestRoot(t, mode), mode, Paths{Deny: []string{"*.env"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(access.Close)
+
+	hasStarted := make(chan struct{})
+	release := make(chan struct{})
+	finish := sync.OnceFunc(func() { close(release) })
+	t.Cleanup(finish)
+	hold := sync.OnceFunc(func() {
+		close(hasStarted)
+		<-release
+	})
+	access.searchDeny = func([]string, string) ([]string, error) {
+		hold()
+		return nil, nil
+	}
+
+	policy := sandbox.Policy{Deny: []string{"*.env"}, Read: []string{t.TempDir()}}
+	searched := make(chan error, 1)
+	go func() {
+		_, err := access.getDenyPaths(policy)
+		searched <- err
+	}()
+	<-hasStarted
+
+	directory := t.TempDir()
+	granted := make(chan error, 1)
+	go func() {
+		_, err := access.Grant(directory, ReadAccess)
+		granted <- err
+	}()
+
+	select {
+	case err := <-granted:
+		if err != nil {
+			t.Fatal(err)
+		}
+	case <-time.After(denyGrantWait):
+		t.Fatalf("the grant waited %s for the deny search", denyGrantWait)
+	}
+
+	finish()
+	if err := <-searched; err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestConcurrentPoliciesShareOneSearchOfTheSameRoot(t *testing.T) {
+	mode := caps.NewMode(caps.All())
+	access, err := NewPathAccess(configuredPathTestRoot(t, mode), mode, Paths{Deny: []string{"*.env"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer access.Close()
+
+	var mutex sync.Mutex
+	searches := make(map[string]int)
+	access.searchDeny = func(_ []string, root string) ([]string, error) {
+		mutex.Lock()
+		searches[root]++
+		mutex.Unlock()
+		time.Sleep(denyOverlapWait)
+		return nil, nil
+	}
+
+	root := t.TempDir()
+	policy := sandbox.Policy{Deny: []string{"*.env"}, Read: []string{root}}
+
+	var group sync.WaitGroup
+	for range 4 {
+		group.Go(func() {
+			if _, err := access.getDenyPaths(policy); err != nil {
+				t.Error(err)
+			}
+		})
+	}
+	group.Wait()
+
+	mutex.Lock()
+	defer mutex.Unlock()
+	if searches[root] != 1 {
+		t.Errorf("%s was searched %d times, want once", root, searches[root])
+	}
+}
+
+const (
+	denyGrantWait   = 10 * time.Second
+	denyOverlapWait = 50 * time.Millisecond
+)
+
+func denySearchRecorder(t *testing.T) (*PathAccess, func() []string) {
+	t.Helper()
+
+	mode := caps.NewMode(caps.All())
+	access, err := NewPathAccess(configuredPathTestRoot(t, mode), mode, Paths{Deny: []string{"*.env"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(access.Close)
+
+	var mutex sync.Mutex
+	var roots []string
+	access.searchDeny = func(_ []string, root string) ([]string, error) {
+		mutex.Lock()
+		defer mutex.Unlock()
+		roots = append(roots, root)
+		return nil, nil
+	}
+
+	return access, func() []string {
+		mutex.Lock()
+		defer mutex.Unlock()
+		taken := slices.Clone(roots)
+		roots = nil
+		return taken
 	}
 }
