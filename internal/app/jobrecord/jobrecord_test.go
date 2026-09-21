@@ -147,7 +147,7 @@ func TestAnEmptyFinishedJobMarksItsCodedStatusLine(t *testing.T) {
 	if !isSaid {
 		t.Fatal("a finished job said nothing")
 	}
-	if want := "Job `build` exited: complete (no output)."; notice != want {
+	if want := "Job `build` exited: complete with no output."; notice != want {
 		t.Errorf("got %q, want %q", notice, want)
 	}
 }

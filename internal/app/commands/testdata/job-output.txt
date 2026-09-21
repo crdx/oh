@@ -2,4 +2,4 @@
 build: complete
 built successfully
 === without output ===
-build: complete (no output)
+build: complete with no output

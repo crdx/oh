@@ -20,7 +20,7 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 3 an ended job standing ===
                                                                            double-enter to send now
- ⏳ Job build exited: failed (no output).
+ ⏳ Job build exited: failed with no output.
 
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -28,7 +28,7 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 4 an ended job flushed ===
 
- 🤖 Job build exited: failed (no output).
+ 🤖 Job build exited: failed with no output.
 
 
 Model returned no reply.

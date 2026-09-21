@@ -22,12 +22,12 @@ The docs server is up.
     /state/sessions/tame-impala/drops/ou
     tput-3f2a1c8d4b5e6f70.txt]
  🤖 Job empty exited: complete after 15s
-    (no output).
+    with no output.
  🤖 Job build`fast exited: complete
     after 16s.
     done
  🤖 Job archive exited: complete after
-    17s (no output).
+    17s with no output.
     note: the oldest 1K of output was
     dropped to keep the spool bounded.
  🤖 Job docs stopped because the
@@ -693,7 +693,13 @@ r
 
 s
 
-(
+w
+
+i
+
+t
+
+h
 
 n
 
@@ -710,8 +716,6 @@ p
 u
 
 t
-
-)
 
 .
 
@@ -867,7 +871,13 @@ r
 
 s
 
-(
+w
+
+i
+
+t
+
+h
 
 n
 
@@ -884,8 +894,6 @@ p
 u
 
 t
-
-)
 
 .
 
@@ -1372,10 +1380,10 @@ The docs server is up.
 
     [truncated at 2K of 58.6K; full output in
     /state/sessions/tame-impala/drops/output-3f2a1c8d4b5e6f70.txt]
- 🤖 Job empty exited: complete after 15s (no output).
+ 🤖 Job empty exited: complete after 15s with no output.
  🤖 Job build`fast exited: complete after 16s.
     done
- 🤖 Job archive exited: complete after 17s (no output).
+ 🤖 Job archive exited: complete after 17s with no output.
     note: the oldest 1K of output was dropped to keep the spool bounded.
  🤖 Job docs stopped because the workspace was made read-only.
  🤖 Job index stopped because access to /reference was revoked.
@@ -1456,8 +1464,9 @@ up.
     exited:
     complete
     after
-    15s (no
-    output).
+    15s with
+    no
+    output.
  🤖 Job
     build`fa
     st
@@ -1471,8 +1480,9 @@ up.
     exited:
     complete
     after
-    17s (no
-    output).
+    17s with
+    no
+    output.
     note:
     the
     oldest
@@ -1547,10 +1557,10 @@ The docs server is up.
 
     [truncated at 2K of 58.6K; full output in
     /state/sessions/tame-impala/drops/output-3f2a1c8d4b5e6f70.txt]
- 🤖 Job empty exited: complete after 15s (no output).
+ 🤖 Job empty exited: complete after 15s with no output.
  🤖 Job build`fast exited: complete after 16s.
     done
- 🤖 Job archive exited: complete after 17s (no output).
+ 🤖 Job archive exited: complete after 17s with no output.
     note: the oldest 1K of output was dropped to keep the spool bounded.
  🤖 Job docs stopped because the workspace was made read-only.
  🤖 Job index stopped because access to /reference was revoked.

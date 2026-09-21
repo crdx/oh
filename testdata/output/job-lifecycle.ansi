@@ -22,12 +22,12 @@
 \r\e[K\e[48;2;48;58;67m    /state/sessions/tame-impala/drops/ou\e[0m\r
 \r\e[K\e[48;2;48;58;67m    tput-3f2a1c8d4b5e6f70.txt]          \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mempty\e[0m\e[48;2;48;58;67m exited: complete after 15s\e[0m\r
-\r\e[K\e[48;2;48;58;67m    (no output).                        \e[0m\r
+\r\e[K\e[48;2;48;58;67m    with no output.                     \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild`fast\e[0m\e[48;2;48;58;67m exited: complete     \e[0m\r
 \r\e[K\e[48;2;48;58;67m    after 16s.                          \e[0m\r
 \r\e[K\e[48;2;48;58;67m    done                                \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after  \e[0m\r
-\r\e[K\e[48;2;48;58;67m    17s (no output).                    \e[0m\r
+\r\e[K\e[48;2;48;58;67m    17s with no output.                 \e[0m\r
 \r\e[K\e[48;2;48;58;67m    note: the oldest 1K of output was   \e[0m\r
 \r\e[K\e[48;2;48;58;67m    dropped to keep the spool bounded.  \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the        \e[0m\r
@@ -694,7 +694,13 @@
 \r\e[K\e[48;2;48;58;67m \e[0m\r
 \r\e[K\e[48;2;48;58;67ms\e[0m\r
 \r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m(\e[0m\r
+\r\e[K\e[48;2;48;58;67mw\e[0m\r
+\r\e[K\e[48;2;48;58;67m \e[0m\r
+\r\e[K\e[48;2;48;58;67mi\e[0m\r
+\r\e[K\e[48;2;48;58;67m \e[0m\r
+\r\e[K\e[48;2;48;58;67mt\e[0m\r
+\r\e[K\e[48;2;48;58;67m \e[0m\r
+\r\e[K\e[48;2;48;58;67mh\e[0m\r
 \r\e[K\e[48;2;48;58;67m \e[0m\r
 \r\e[K\e[48;2;48;58;67mn\e[0m\r
 \r\e[K\e[48;2;48;58;67m \e[0m\r
@@ -711,8 +717,6 @@
 \r\e[K\e[48;2;48;58;67mu\e[0m\r
 \r\e[K\e[48;2;48;58;67m \e[0m\r
 \r\e[K\e[48;2;48;58;67mt\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m)\e[0m\r
 \r\e[K\e[48;2;48;58;67m \e[0m\r
 \r\e[K\e[48;2;48;58;67m.\e[0m\r
 \r\e[K\e[48;2;48;58;67m \e[0m\r
@@ -868,7 +872,13 @@
 \r\e[K\e[48;2;48;58;67m \e[0m\r
 \r\e[K\e[48;2;48;58;67ms\e[0m\r
 \r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m(\e[0m\r
+\r\e[K\e[48;2;48;58;67mw\e[0m\r
+\r\e[K\e[48;2;48;58;67m \e[0m\r
+\r\e[K\e[48;2;48;58;67mi\e[0m\r
+\r\e[K\e[48;2;48;58;67m \e[0m\r
+\r\e[K\e[48;2;48;58;67mt\e[0m\r
+\r\e[K\e[48;2;48;58;67m \e[0m\r
+\r\e[K\e[48;2;48;58;67mh\e[0m\r
 \r\e[K\e[48;2;48;58;67m \e[0m\r
 \r\e[K\e[48;2;48;58;67mn\e[0m\r
 \r\e[K\e[48;2;48;58;67m \e[0m\r
@@ -885,8 +895,6 @@
 \r\e[K\e[48;2;48;58;67mu\e[0m\r
 \r\e[K\e[48;2;48;58;67m \e[0m\r
 \r\e[K\e[48;2;48;58;67mt\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m)\e[0m\r
 \r\e[K\e[48;2;48;58;67m \e[0m\r
 \r\e[K\e[48;2;48;58;67m.\e[0m\r
 \r\e[K\e[48;2;48;58;67m \e[0m\r
@@ -1372,10 +1380,10 @@ exit status 1\e[0m
 seeding the database\e[0m
 \e[48;2;48;58;67m    \e[0m
 \e[48;2;48;58;67m    [truncated at 2K of 58.6K; full output in /state/sessions/tame-impala/drops/output-3f2a1c8d4b5e6f70.txt]\e[0m
-\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mempty\e[0m\e[48;2;48;58;67m exited: complete after 15s (no output).\e[0m
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mempty\e[0m\e[48;2;48;58;67m exited: complete after 15s with no output.\e[0m
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild`fast\e[0m\e[48;2;48;58;67m exited: complete after 16s.
 done\e[0m
-\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s (no output).
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s with no output.
 note: the oldest 1K of output was dropped to keep the spool bounded.\e[0m
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.\e[0m
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mindex\e[0m\e[48;2;48;58;67m stopped because access to /reference was revoked.\e[0m
@@ -1412,10 +1420,10 @@ The docs server is up.\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    [truncated at 2K of 58.6K; full output in                                                       \e[0m\r
 \e[48;2;48;58;67m    /state/sessions/tame-impala/drops/output-3f2a1c8d4b5e6f70.txt]                                  \e[0m\r
-\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mempty\e[0m\e[48;2;48;58;67m exited: complete after 15s (no output).                                               \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mempty\e[0m\e[48;2;48;58;67m exited: complete after 15s with no output.                                            \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild`fast\e[0m\e[48;2;48;58;67m exited: complete after 16s.                                                      \e[0m\r
 \e[48;2;48;58;67m    done                                                                                            \e[0m\r
-\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s (no output).                                             \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s with no output.                                          \e[0m\r
 \e[48;2;48;58;67m    note: the oldest 1K of output was dropped to keep the spool bounded.                            \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mindex\e[0m\e[48;2;48;58;67m stopped because access to /reference was revoked.                                     \e[0m\r
@@ -1455,10 +1463,10 @@ It was stopped when write access was withdrawn.\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r\e[K\e[48;2;48;58;67m    [truncated at 2K of 58.6K; full output in                                                       \e[0m\r
 \r\e[K\e[48;2;48;58;67m    /state/sessions/tame-impala/drops/output-3f2a1c8d4b5e6f70.txt]                                  \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mempty\e[0m\e[48;2;48;58;67m exited: complete after 15s (no output).                                               \e[0m\r
+\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mempty\e[0m\e[48;2;48;58;67m exited: complete after 15s with no output.                                            \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild`fast\e[0m\e[48;2;48;58;67m exited: complete after 16s.                                                      \e[0m\r
 \r\e[K\e[48;2;48;58;67m    done                                                                                            \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s (no output).                                             \e[0m\r
+\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s with no output.                                          \e[0m\r
 \r\e[K\e[48;2;48;58;67m    note: the oldest 1K of output was dropped to keep the spool bounded.                            \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mindex\e[0m\e[48;2;48;58;67m stopped because access to /reference was revoked.                                     \e[0m\r
@@ -1498,10 +1506,10 @@ It was stopped when write access was withdrawn.\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r\e[K\e[48;2;48;58;67m    [truncated at 2K of 58.6K; full output in                                                       \e[0m\r
 \r\e[K\e[48;2;48;58;67m    /state/sessions/tame-impala/drops/output-3f2a1c8d4b5e6f70.txt]                                  \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mempty\e[0m\e[48;2;48;58;67m exited: complete after 15s (no output).                                               \e[0m\r
+\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mempty\e[0m\e[48;2;48;58;67m exited: complete after 15s with no output.                                            \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild`fast\e[0m\e[48;2;48;58;67m exited: complete after 16s.                                                      \e[0m\r
 \r\e[K\e[48;2;48;58;67m    done                                                                                            \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s (no output).                                             \e[0m\r
+\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s with no output.                                          \e[0m\r
 \r\e[K\e[48;2;48;58;67m    note: the oldest 1K of output was dropped to keep the spool bounded.                            \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mindex\e[0m\e[48;2;48;58;67m stopped because access to /reference was revoked.                                     \e[0m\r
@@ -1541,10 +1549,10 @@ It was stopped when write access was withdrawn.\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r\e[K\e[48;2;48;58;67m    [truncated at 2K of 58.6K; full output in                                                       \e[0m\r
 \r\e[K\e[48;2;48;58;67m    /state/sessions/tame-impala/drops/output-3f2a1c8d4b5e6f70.txt]                                  \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mempty\e[0m\e[48;2;48;58;67m exited: complete after 15s (no output).                                               \e[0m\r
+\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mempty\e[0m\e[48;2;48;58;67m exited: complete after 15s with no output.                                            \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild`fast\e[0m\e[48;2;48;58;67m exited: complete after 16s.                                                      \e[0m\r
 \r\e[K\e[48;2;48;58;67m    done                                                                                            \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s (no output).                                             \e[0m\r
+\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s with no output.                                          \e[0m\r
 \r\e[K\e[48;2;48;58;67m    note: the oldest 1K of output was dropped to keep the spool bounded.                            \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mindex\e[0m\e[48;2;48;58;67m stopped because access to /reference was revoked.                                     \e[0m\r
@@ -1626,8 +1634,9 @@ It was stopped when write access was withdrawn.\r
 \r\e[K\e[48;2;48;58;67m    exited: \e[0m\r
 \r\e[K\e[48;2;48;58;67m    complete\e[0m\r
 \r\e[K\e[48;2;48;58;67m    after   \e[0m\r
-\r\e[K\e[48;2;48;58;67m    15s (no \e[0m\r
-\r\e[K\e[48;2;48;58;67m    output).\e[0m\r
+\r\e[K\e[48;2;48;58;67m    15s with\e[0m\r
+\r\e[K\e[48;2;48;58;67m    no      \e[0m\r
+\r\e[K\e[48;2;48;58;67m    output. \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 Job     \e[0m\r
 \r\e[K\e[48;2;48;58;67m    \e[38;2;192;128;80mbuild`fa\e[0m\e[48;2;48;58;67m\e[0m\r
 \r\e[K\e[48;2;48;58;67m    \e[38;2;192;128;80mst\e[0m\e[48;2;48;58;67m      \e[0m\r
@@ -1641,8 +1650,9 @@ It was stopped when write access was withdrawn.\r
 \r\e[K\e[48;2;48;58;67m    exited: \e[0m\r
 \r\e[K\e[48;2;48;58;67m    complete\e[0m\r
 \r\e[K\e[48;2;48;58;67m    after   \e[0m\r
-\r\e[K\e[48;2;48;58;67m    17s (no \e[0m\r
-\r\e[K\e[48;2;48;58;67m    output).\e[0m\r
+\r\e[K\e[48;2;48;58;67m    17s with\e[0m\r
+\r\e[K\e[48;2;48;58;67m    no      \e[0m\r
+\r\e[K\e[48;2;48;58;67m    output. \e[0m\r
 \r\e[K\e[48;2;48;58;67m    note:   \e[0m\r
 \r\e[K\e[48;2;48;58;67m    the     \e[0m\r
 \r\e[K\e[48;2;48;58;67m    oldest  \e[0m\r
@@ -1716,10 +1726,10 @@ exit status 1\e[0m\r
 seeding the database\e[0m\r
 \r\e[K\e[48;2;48;58;67m    \e[0m\r
 \r\e[K\e[48;2;48;58;67m    [truncated at 2K of 58.6K; full output in /state/sessions/tame-impala/drops/output-3f2a1c8d4b5e6f70.txt]\e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mempty\e[0m\e[48;2;48;58;67m exited: complete after 15s (no output).\e[0m\r
+\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mempty\e[0m\e[48;2;48;58;67m exited: complete after 15s with no output.\e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild`fast\e[0m\e[48;2;48;58;67m exited: complete after 16s.
 done\e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s (no output).
+\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s with no output.
 note: the oldest 1K of output was dropped to keep the spool bounded.\e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.\e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mindex\e[0m\e[48;2;48;58;67m stopped because access to /reference was revoked.\e[0m\r
@@ -1758,10 +1768,10 @@ note: the oldest 1K of output was dropped to keep the spool bounded.\e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r\e[K\e[48;2;48;58;67m    [truncated at 2K of 58.6K; full output in                                                       \e[0m\r
 \r\e[K\e[48;2;48;58;67m    /state/sessions/tame-impala/drops/output-3f2a1c8d4b5e6f70.txt]                                  \e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mempty\e[0m\e[48;2;48;58;67m exited: complete after 15s (no output).                                               \e[0m\r
+\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mempty\e[0m\e[48;2;48;58;67m exited: complete after 15s with no output.                                            \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild`fast\e[0m\e[48;2;48;58;67m exited: complete after 16s.                                                      \e[0m\r
 \r\e[K\e[48;2;48;58;67m    done                                                                                            \e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s (no output).                                             \e[0m\r
+\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s with no output.                                          \e[0m\r
 \r\e[K\e[48;2;48;58;67m    note: the oldest 1K of output was dropped to keep the spool bounded.                            \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mindex\e[0m\e[48;2;48;58;67m stopped because access to /reference was revoked.                                     \e[0m\r

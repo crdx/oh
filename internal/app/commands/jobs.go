@@ -139,7 +139,7 @@ func formatJobs(listing []jobs.Snapshot) string {
 
 func withJobOutput(status string, text string) string {
 	if strings.TrimSpace(text) == "" {
-		return status + " (no output)"
+		return status + " with no output"
 	}
 
 	return status + "\n" + strings.TrimRight(text, "\n")

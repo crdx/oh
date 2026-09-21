@@ -168,7 +168,7 @@ func TestAJobThatPrintedNothingSaysSo(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if notice := context.notice; !strings.HasSuffix(notice, " (no output)") || strings.Contains(notice, "\n") {
+	if notice := context.notice; !strings.HasSuffix(notice, " with no output") || strings.Contains(notice, "\n") {
 		t.Errorf("got %q, want the no-output marker on the status line", notice)
 	}
 }

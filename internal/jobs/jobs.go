@@ -613,7 +613,7 @@ func Report(status string, output string, droppedBytes int) string {
 	}
 
 	if strings.TrimSpace(output) == "" {
-		marker := " (no output)"
+		marker := " with no output"
 		for _, punctuation := range []string{".", "!", "?"} {
 			withoutPunctuation, found := strings.CutSuffix(lines[0], punctuation)
 			if found {

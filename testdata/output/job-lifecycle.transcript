@@ -46,7 +46,7 @@ seeding the database
 ## job_ended · +7s
 
 ```
-Job `empty` exited: complete after 15s (no output).
+Job `empty` exited: complete after 15s with no output.
 ```
 
 ## job_ended · +8s
@@ -59,7 +59,7 @@ done
 ## job_ended · +9s
 
 ```
-Job `archive` exited: complete after 17s (no output).
+Job `archive` exited: complete after 17s with no output.
 note: the oldest 1K of output was dropped to keep the spool bounded.
 ```
 

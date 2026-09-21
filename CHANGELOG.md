@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Make the job end message read more like a sentence
 - Shorten and simplify the restart job hint message
 - Measure grapheme clusters accurately
 - Keep a queued message on screen while it sends

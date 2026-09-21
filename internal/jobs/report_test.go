@@ -12,7 +12,7 @@ func TestAnEmptyJobReportMarksTheStatusLine(t *testing.T) {
 	} {
 		t.Run(name, func(t *testing.T) {
 			const status = "build: complete after 3s"
-			want := status + " (no output)"
+			want := status + " with no output"
 			if got := Report(status, output, 0); got != want {
 				t.Errorf("got %q, want %q", got, want)
 			}
@@ -26,7 +26,7 @@ func TestANoOutputMarkerPrecedesADroppedOutputNotice(t *testing.T) {
 	if len(lines) != 2 {
 		t.Fatalf("got lines %q, want marked status and dropped-output notice", lines)
 	}
-	if lines[0] != "build: complete (no output)" {
+	if lines[0] != "build: complete with no output" {
 		t.Errorf("got status line %q, want the concise marker inline", lines[0])
 	}
 	if !strings.HasPrefix(lines[1], "note: the oldest ") {
@@ -44,7 +44,7 @@ func TestJobOutputRemainsBelowTheStatusLine(t *testing.T) {
 }
 
 func TestANoOutputMarkerStaysInsideStatusPunctuation(t *testing.T) {
-	want := "Job `build` exited: complete (no output)."
+	want := "Job `build` exited: complete with no output."
 	if got := Report("Job `build` exited: complete.", "", 0); got != want {
 		t.Errorf("got %q, want %q", got, want)
 	}
