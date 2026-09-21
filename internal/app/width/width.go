@@ -9,6 +9,12 @@ import (
 	"github.com/rivo/uniseg"
 )
 
+const (
+	textPresentation  = '\ufe0e'
+	emojiPresentation = '\ufe0f'
+	keycapCells       = 2
+)
+
 func Graphemes(text string) iter.Seq2[string, int] {
 	return func(yield func(string, int) bool) {
 		for one := range graphemes(text) {
@@ -154,8 +160,28 @@ func plainWidth(text string) (int, bool) {
 }
 
 func graphemeWidth(grapheme string, measuredWidth int) int {
-	if strings.ContainsRune(grapheme, '\u20e3') {
-		return 2
+	first, firstSize := utf8.DecodeRuneInString(grapheme)
+	if firstSize == len(grapheme) {
+		return measuredWidth
 	}
-	return measuredWidth
+
+	base := grapheme[:firstSize]
+
+	if next, nextSize := utf8.DecodeRuneInString(grapheme[firstSize:]); isPresentation(next) {
+		if next == emojiPresentation && isKeycapBase(first) {
+			return keycapCells
+		}
+
+		base = grapheme[:firstSize+nextSize]
+	}
+
+	return uniseg.StringWidth(base)
+}
+
+func isPresentation(value rune) bool {
+	return value == textPresentation || value == emojiPresentation
+}
+
+func isKeycapBase(value rune) bool {
+	return value >= '0' && value <= '9' || value == '#' || value == '*'
 }

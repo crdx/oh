@@ -17,6 +17,28 @@ in colour.
 Combining marks pile up too: á̂̃̄ is one
 letter under four of them.
 
+A spacing mark is not a combining one:
+Thai กำ and Devanagari कि are two
+characters apiece, and each takes the
+one cell its base took.
+
+A keycap 1️⃣ asks for two, where a bare 1⃣
+keeps the one its digit had.
+
+┌────────┬───────┐
+│ Word   │ Cells │
+├────────┼───────┤
+│ กำ      │ 1     │
+├────────┼───────┤
+│ कि      │ 1     │
+├────────┼───────┤
+│ 1️⃣     │ 2     │
+├────────┼───────┤
+│ 👨‍👩‍👧     │ 2     │
+├────────┼───────┤
+│ éclair │ 6     │
+└────────┴───────┘
+
 A styled wide rune has nowhere to go in
 one column: 日本 in code, 中文 in bold.
 
@@ -320,6 +342,204 @@ m
 
 A
 s
+p
+a
+c
+i
+n
+g
+m
+a
+r
+k
+i
+s
+n
+o
+t
+a
+c
+o
+m
+b
+i
+n
+i
+n
+g
+o
+n
+e
+:
+T
+h
+a
+i
+กำ
+a
+n
+d
+D
+e
+v
+a
+n
+a
+g
+a
+r
+i
+कि
+a
+r
+e
+t
+w
+o
+c
+h
+a
+r
+a
+c
+t
+e
+r
+s
+a
+p
+i
+e
+c
+e
+,
+a
+n
+d
+e
+a
+c
+h
+t
+a
+k
+e
+s
+t
+h
+e
+o
+n
+e
+c
+e
+l
+l
+i
+t
+s
+b
+a
+s
+e
+t
+o
+o
+k
+.
+
+A
+k
+e
+y
+c
+a
+p
+1️⃣
+
+a
+s
+k
+s
+f
+o
+r
+t
+w
+o
+,
+w
+h
+e
+r
+e
+a
+b
+a
+r
+e
+1⃣
+k
+e
+e
+p
+s
+t
+h
+e
+o
+n
+e
+i
+t
+s
+d
+i
+g
+i
+t
+h
+a
+d
+.
+
+W
+o
+r
+d
+|
+C
+e
+l
+l
+s
+กำ
+|
+1
+कि
+|
+1
+
+1️⃣
+
+|
+2
+
+👨‍👩‍👧
+
+|
+2
+é
+c
+l
+a
+i
+r
+|
+6
+
+A
+s
 t
 y
 l
@@ -451,6 +671,25 @@ A family 👨‍👩‍👧 is one glyph joined from several, and a heart ❤️
 
 Combining marks pile up too: á̂̃̄ is one letter under four of them.
 
+A spacing mark is not a combining one: Thai กำ and Devanagari कि are two characters apiece, and each
+takes the one cell its base took.
+
+A keycap 1️⃣ asks for two, where a bare 1⃣ keeps the one its digit had.
+
+┌────────┬───────┐
+│ Word   │ Cells │
+├────────┼───────┤
+│ กำ      │ 1     │
+├────────┼───────┤
+│ कि      │ 1     │
+├────────┼───────┤
+│ 1️⃣     │ 2     │
+├────────┼───────┤
+│ 👨‍👩‍👧     │ 2     │
+├────────┼───────┤
+│ éclair │ 6     │
+└────────┴───────┘
+
 A styled wide rune has nowhere to go in one column: 日本 in code, 中文 in bold.
 
 And a result that came back with Windows line endings:
@@ -496,6 +735,44 @@ one letter
 under four
 of them.
 
+A spacing
+mark is not
+a combining
+one: Thai กำ
+and
+Devanagari कि
+are two
+characters
+apiece, and
+each takes
+the one cell
+its base
+took.
+
+A keycap 1️⃣
+asks for
+two, where a
+bare 1⃣ keeps
+the one its
+digit had.
+
+┌─────┬────┐
+│ Wor │ Ce │
+│ d   │ ll │
+│     │ s  │
+├─────┼────┤
+│ กำ   │ 1  │
+├─────┼────┤
+│ कि   │ 1  │
+├─────┼────┤
+│ 1️⃣  │ 2  │
+├─────┼────┤
+│ 👨‍👩‍👧  │ 2  │
+├─────┼────┤
+│ écl │ 6  │
+│ air │    │
+└─────┴────┘
+
 A styled
 wide rune
 has nowhere
@@ -525,6 +802,25 @@ The name is written café rather than café, so the accent is a mark of its own
 A family 👨‍👩‍👧 is one glyph joined from several, and a heart ❤️ asks to be drawn in colour.
 
 Combining marks pile up too: á̂̃̄ is one letter under four of them.
+
+A spacing mark is not a combining one: Thai กำ and Devanagari कि are two characters apiece, and each
+takes the one cell its base took.
+
+A keycap 1️⃣ asks for two, where a bare 1⃣ keeps the one its digit had.
+
+┌────────┬───────┐
+│ Word   │ Cells │
+├────────┼───────┤
+│ กำ      │ 1     │
+├────────┼───────┤
+│ कि      │ 1     │
+├────────┼───────┤
+│ 1️⃣     │ 2     │
+├────────┼───────┤
+│ 👨‍👩‍👧     │ 2     │
+├────────┼───────┤
+│ éclair │ 6     │
+└────────┴───────┘
 
 A styled wide rune has nowhere to go in one column: 日本 in code, 中文 in bold.
 

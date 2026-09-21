@@ -17,6 +17,28 @@
 \r\e[KCombining marks pile up too: á̂̃̄ is one\r
 \r\e[Kletter under four of them.\r
 \r
+\r\e[KA spacing mark is not a combining one:\r
+\r\e[KThai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two\r
+\r\e[Kcharacters apiece, and each takes the\r
+\r\e[Kone cell its base took.\r
+\r\e[K\r
+\r\e[KA keycap 1️⃣ asks for two, where a bare 1⃣\r
+\r\e[Kkeeps the one its digit had.\r
+\r\e[K\r
+\r\e[K\e[38;2;150;152;150m┌────────┬───────┐\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mWord\e[0m   \e[38;2;150;152;150m│\e[0m \e[1mCells\e[0m \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mกำ\e[0m      \e[38;2;150;152;150m│\e[0m 1     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mकि\e[0m      \e[38;2;150;152;150m│\e[0m 1     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m1️⃣\e[0m     \e[38;2;150;152;150m│\e[0m 2     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m👨‍👩‍👧\e[0m     \e[38;2;150;152;150m│\e[0m 2     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80méclair\e[0m \e[38;2;150;152;150m│\e[0m 6     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└────────┴───────┘\e[0m\r
+\r
 \r\e[KA styled wide rune has nowhere to go in\r
 \r\e[Kone column: \e[38;2;192;128;80m日本\e[0m in code, \e[1m中文\e[0m in bold.\r
 \r\e[K\r
@@ -321,6 +343,204 @@
 \r
 \r\e[KA\r
 \r\e[Ks\r
+\r\e[Kp\r
+\r\e[Ka\r
+\r\e[Kc\r
+\r\e[Ki\r
+\r\e[Kn\r
+\r\e[Kg\r
+\r\e[Km\r
+\r\e[Ka\r
+\r\e[Kr\r
+\r\e[Kk\r
+\r\e[Ki\r
+\r\e[Ks\r
+\r\e[Kn\r
+\r\e[Ko\r
+\r\e[Kt\r
+\r\e[Ka\r
+\r\e[Kc\r
+\r\e[Ko\r
+\r\e[Km\r
+\r\e[Kb\r
+\r\e[Ki\r
+\r\e[Kn\r
+\r\e[Ki\r
+\r\e[Kn\r
+\r\e[Kg\r
+\r\e[Ko\r
+\r\e[Kn\r
+\r\e[Ke\r
+\r\e[K:\r
+\r\e[KT\r
+\r\e[Kh\r
+\r\e[Ka\r
+\r\e[Ki\r
+\r\e[K\e[38;2;192;128;80mกำ\e[0m\r
+\r\e[Ka\r
+\r\e[Kn\r
+\r\e[Kd\r
+\r\e[KD\r
+\r\e[Ke\r
+\r\e[Kv\r
+\r\e[Ka\r
+\r\e[Kn\r
+\r\e[Ka\r
+\r\e[Kg\r
+\r\e[Ka\r
+\r\e[Kr\r
+\r\e[Ki\r
+\r\e[K\e[38;2;192;128;80mकि\e[0m\r
+\r\e[Ka\r
+\r\e[Kr\r
+\r\e[Ke\r
+\r\e[Kt\r
+\r\e[Kw\r
+\r\e[Ko\r
+\r\e[Kc\r
+\r\e[Kh\r
+\r\e[Ka\r
+\r\e[Kr\r
+\r\e[Ka\r
+\r\e[Kc\r
+\r\e[Kt\r
+\r\e[Ke\r
+\r\e[Kr\r
+\r\e[Ks\r
+\r\e[Ka\r
+\r\e[Kp\r
+\r\e[Ki\r
+\r\e[Ke\r
+\r\e[Kc\r
+\r\e[Ke\r
+\r\e[K,\r
+\r\e[Ka\r
+\r\e[Kn\r
+\r\e[Kd\r
+\r\e[Ke\r
+\r\e[Ka\r
+\r\e[Kc\r
+\r\e[Kh\r
+\r\e[Kt\r
+\r\e[Ka\r
+\r\e[Kk\r
+\r\e[Ke\r
+\r\e[Ks\r
+\r\e[Kt\r
+\r\e[Kh\r
+\r\e[Ke\r
+\r\e[Ko\r
+\r\e[Kn\r
+\r\e[Ke\r
+\r\e[Kc\r
+\r\e[Ke\r
+\r\e[Kl\r
+\r\e[Kl\r
+\r\e[Ki\r
+\r\e[Kt\r
+\r\e[Ks\r
+\r\e[Kb\r
+\r\e[Ka\r
+\r\e[Ks\r
+\r\e[Ke\r
+\r\e[Kt\r
+\r\e[Ko\r
+\r\e[Ko\r
+\r\e[Kk\r
+\r\e[K.\r
+\r\e[K\r
+\r\e[KA\r
+\r\e[Kk\r
+\r\e[Ke\r
+\r\e[Ky\r
+\r\e[Kc\r
+\r\e[Ka\r
+\r\e[Kp\r
+\r\e[K1️⃣\r
+\r\e[K \r
+\r\e[Ka\r
+\r\e[Ks\r
+\r\e[Kk\r
+\r\e[Ks\r
+\r\e[Kf\r
+\r\e[Ko\r
+\r\e[Kr\r
+\r\e[Kt\r
+\r\e[Kw\r
+\r\e[Ko\r
+\r\e[K,\r
+\r\e[Kw\r
+\r\e[Kh\r
+\r\e[Ke\r
+\r\e[Kr\r
+\r\e[Ke\r
+\r\e[Ka\r
+\r\e[Kb\r
+\r\e[Ka\r
+\r\e[Kr\r
+\r\e[Ke\r
+\r\e[K1⃣\r
+\r\e[Kk\r
+\r\e[Ke\r
+\r\e[Ke\r
+\r\e[Kp\r
+\r\e[Ks\r
+\r\e[Kt\r
+\r\e[Kh\r
+\r\e[Ke\r
+\r\e[Ko\r
+\r\e[Kn\r
+\r\e[Ke\r
+\r\e[Ki\r
+\r\e[Kt\r
+\r\e[Ks\r
+\r\e[Kd\r
+\r\e[Ki\r
+\r\e[Kg\r
+\r\e[Ki\r
+\r\e[Kt\r
+\r\e[Kh\r
+\r\e[Ka\r
+\r\e[Kd\r
+\r\e[K.\r
+\r\e[K\r
+\r\e[KW\r
+\r\e[Ko\r
+\r\e[Kr\r
+\r\e[Kd\e[38;2;150;152;150m\e[0m\r
+\r\e[K\e[38;2;150;152;150m|\e[0m\r
+\r\e[K\e[38;2;150;152;150m\e[0mC\r
+\r\e[Ke\r
+\r\e[Kl\r
+\r\e[Kl\r
+\r\e[Ks\r
+\r\e[K\e[38;2;192;128;80mกำ\e[0m\e[38;2;150;152;150m\e[0m\r
+\r\e[K\e[38;2;150;152;150m|\e[0m\r
+\r\e[K\e[38;2;150;152;150m\e[0m1\r
+\r\e[K\e[38;2;192;128;80mकि\e[0m\e[38;2;150;152;150m\e[0m\r
+\r\e[K\e[38;2;150;152;150m|\e[0m\r
+\r\e[K\e[38;2;150;152;150m\e[0m1\r
+\r\e[K\e[38;2;192;128;80m\e[0m\r
+\r\e[K\e[38;2;192;128;80m1️⃣\e[0m\r
+\r\e[K\e[38;2;192;128;80m\e[0m\e[38;2;150;152;150m\e[0m\r
+\r\e[K\e[38;2;150;152;150m|\e[0m\r
+\r\e[K\e[38;2;150;152;150m\e[0m2\r
+\r\e[K\e[38;2;192;128;80m\e[0m\r
+\r\e[K\e[38;2;192;128;80m👨‍👩‍👧\e[0m\r
+\r\e[K\e[38;2;192;128;80m\e[0m\e[38;2;150;152;150m\e[0m\r
+\r\e[K\e[38;2;150;152;150m|\e[0m\r
+\r\e[K\e[38;2;150;152;150m\e[0m2\r
+\r\e[K\e[38;2;192;128;80mé\e[0m\r
+\r\e[K\e[38;2;192;128;80mc\e[0m\r
+\r\e[K\e[38;2;192;128;80ml\e[0m\r
+\r\e[K\e[38;2;192;128;80ma\e[0m\r
+\r\e[K\e[38;2;192;128;80mi\e[0m\r
+\r\e[K\e[38;2;192;128;80mr\e[0m\e[38;2;150;152;150m\e[0m\r
+\r\e[K\e[38;2;150;152;150m|\e[0m\r
+\r\e[K\e[38;2;150;152;150m\e[0m6\r
+\r
+\r\e[KA\r
+\r\e[Ks\r
 \r\e[Kt\r
 \r\e[Ky\r
 \r\e[Kl\r
@@ -452,6 +672,17 @@ A family 👨‍👩‍👧 is one glyph joined from several, and a heart ❤️
 
 Combining marks pile up too: á̂̃̄ is one letter under four of them.
 
+A spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two characters apiece, and each takes the one cell its base took.
+
+A keycap 1️⃣ asks for two, where a bare 1⃣ keeps the one its digit had.
+
+Word\e[38;2;150;152;150m | \e[0mCells
+\e[38;2;192;128;80mกำ\e[0m\e[38;2;150;152;150m | \e[0m1
+\e[38;2;192;128;80mकि\e[0m\e[38;2;150;152;150m | \e[0m1
+\e[38;2;192;128;80m1️⃣\e[0m\e[38;2;150;152;150m | \e[0m2
+\e[38;2;192;128;80m👨‍👩‍👧\e[0m\e[38;2;150;152;150m | \e[0m2
+\e[38;2;192;128;80méclair\e[0m\e[38;2;150;152;150m | \e[0m6
+
 A styled wide rune has nowhere to go in one column: \e[38;2;192;128;80m日本\e[0m in code, \e[1m中文\e[0m in bold.
 
 And a result that came back with Windows line endings:
@@ -471,6 +702,25 @@ The name is written \e[38;2;192;128;80mcafé\e[0m rather than \e[38;2;192;128;8
 A family 👨‍👩‍👧 is one glyph joined from several, and a heart ❤️ asks to be drawn in colour.\r
 \r
 Combining marks pile up too: á̂̃̄ is one letter under four of them.\r
+\r
+A spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two characters apiece, and each\r
+takes the one cell its base took.\r
+\r
+A keycap 1️⃣ asks for two, where a bare 1⃣ keeps the one its digit had.\r
+\r
+\e[38;2;150;152;150m┌────────┬───────┐\e[0m\r
+\e[38;2;150;152;150m│\e[0m \e[1mWord\e[0m   \e[38;2;150;152;150m│\e[0m \e[1mCells\e[0m \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mกำ\e[0m      \e[38;2;150;152;150m│\e[0m 1     \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mकि\e[0m      \e[38;2;150;152;150m│\e[0m 1     \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m1️⃣\e[0m     \e[38;2;150;152;150m│\e[0m 2     \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m👨‍👩‍👧\e[0m     \e[38;2;150;152;150m│\e[0m 2     \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80méclair\e[0m \e[38;2;150;152;150m│\e[0m 6     \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m└────────┴───────┘\e[0m\r
 \r
 A styled wide rune has nowhere to go in one column: \e[38;2;192;128;80m日本\e[0m in code, \e[1m中文\e[0m in bold.\r
 \r
@@ -492,6 +742,62 @@ three\r
 \r\e[K\r
 \r\e[KCo\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombin\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining mark\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pi\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile u\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up to\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: á̂̃̄\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: á̂̃̄ is\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: á̂̃̄ is one\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: á̂̃̄ is one lett\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: á̂̃̄ is one letter u\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: á̂̃̄ is one letter under\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: á̂̃̄ is one letter under fou\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: á̂̃̄ is one letter under four of\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: á̂̃̄ is one letter under four of the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: á̂̃̄ is one letter under four of them.\e[?25h\e[?2026l\r
 \r
+\e[?2026h\e[?25l\r\e[KA sp\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacin\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing ma\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is no\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a comb\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combinin\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining on\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: T\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Dev\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanag\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two cha\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two charact\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two characters\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two characters apie\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two characters apiece,\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two characters apiece, and\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two characters apiece, and each\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Ktak\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Ktakes t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Ktakes the o\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Ktakes the one c\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Ktakes the one cell\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Ktakes the one cell its\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Ktakes the one cell its base\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Ktakes the one cell its base too\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Ktakes the one cell its base took.\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\r\e[KA ke\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ ask\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks fo\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for tw\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, w\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where a b\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where a bare\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where a bare 1⃣ k\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where a bare 1⃣ keeps\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where a bare 1⃣ keeps the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where a bare 1⃣ keeps the one\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where a bare 1⃣ keeps the one its\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where a bare 1⃣ keeps the one its dig\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where a bare 1⃣ keeps the one its digit h\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where a bare 1⃣ keeps the one its digit had.\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\r\e[K| W\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Word\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Word | Ce\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Word | Cells\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Word | Cells |\r
+\r\e[K|\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| ----\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m┌──────┬───────┐\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mWord\e[0m \e[38;2;150;152;150m│\e[0m \e[1mCells\e[0m \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├──────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m│\e[0m      \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m `กำ   \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mกำ\e[0m    \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mกำ\e[0m    \e[38;2;150;152;150m│\e[0m 1     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m├──────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m `क   \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mकि\e[0m    \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mकि\e[0m    \e[38;2;150;152;150m│\e[0m 1     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m├──────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m `    \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m1️⃣\e[0m   \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m1️⃣\e[0m   \e[38;2;150;152;150m│\e[0m 2     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m├──────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m      \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m `👨‍  \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m👨‍👩‍👧\e[0m   \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m👨‍👩‍👧\e[0m   \e[38;2;150;152;150m│\e[0m 2     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m├──────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m      \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m `éc  \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[12A\r\e[K\e[38;2;150;152;150m┌─────────┬───────┐\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mWord\e[0m    \e[38;2;150;152;150m│\e[0m \e[1mCells\e[0m \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├─────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mกำ\e[0m       \e[38;2;150;152;150m│\e[0m 1     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├─────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mकि\e[0m       \e[38;2;150;152;150m│\e[0m 1     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├─────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m1️⃣\e[0m      \e[38;2;150;152;150m│\e[0m 2     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├─────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m👨‍👩‍👧\e[0m      \e[38;2;150;152;150m│\e[0m 2     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├─────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m `éclair \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└─────────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[12A\r\e[K\e[38;2;150;152;150m┌────────┬───────┐\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mWord\e[0m   \e[38;2;150;152;150m│\e[0m \e[1mCells\e[0m \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mกำ\e[0m      \e[38;2;150;152;150m│\e[0m 1     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mकि\e[0m      \e[38;2;150;152;150m│\e[0m 1     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m1️⃣\e[0m     \e[38;2;150;152;150m│\e[0m 2     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m👨‍👩‍👧\e[0m     \e[38;2;150;152;150m│\e[0m 2     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80méclair\e[0m \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└────────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80méclair\e[0m \e[38;2;150;152;150m│\e[0m 6     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└────────┴───────┘\e[0m\e[?25h\e[?2026l\r
+\r
 \e[?2026h\e[?25l\r\e[KA st\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wid\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide ru\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune h\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has n\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhe\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one colu\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one column:\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one column: \e[38;2;192;128;80m日本\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one column: \e[38;2;192;128;80m日本\e[0m in\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one column: \e[38;2;192;128;80m日本\e[0m in code\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one column: \e[38;2;192;128;80m日本\e[0m in code, **\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one column: \e[38;2;192;128;80m日本\e[0m in code, \e[1m中文\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one column: \e[38;2;192;128;80m日本\e[0m in code, \e[1m中文\e[0m in\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one column: \e[38;2;192;128;80m日本\e[0m in code, \e[1m中文\e[0m in bold\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one column: \e[38;2;192;128;80m日本\e[0m in code, \e[1m中文\e[0m in bold.\r
 \r\e[K\r
 \r\e[KA\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a res\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a result\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a result that\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a result that cam\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a result that came ba\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a result that came back w\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a result that came back with\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a result that came back with Wind\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a result that came back with Windows\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a result that came back with Windows line\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a result that came back with Windows line end\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a result that came back with Windows line endings\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a result that came back with Windows line endings:\r
@@ -512,6 +818,35 @@ three\r
 \r\e[K\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[KCombining marks pile up too: á̂̃̄ is one letter under four of them.\e[?25h\e[?2026l\r
 \r
+\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two characters apiece, and each\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Ktakes the one cell its base took.\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[KA keycap 1️⃣ asks for two, where a bare 1⃣ keeps the one its digit had.\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K| Word | Cells |\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m┌──────┬───────┐\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mWord\e[0m \e[38;2;150;152;150m│\e[0m \e[1mCells\e[0m \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├──────┼───────┤\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mกำ\e[0m    \e[38;2;150;152;150m│\e[0m 1     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m├──────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mकि\e[0m    \e[38;2;150;152;150m│\e[0m 1     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m├──────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m1️⃣\e[0m   \e[38;2;150;152;150m│\e[0m 2     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m├──────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m👨‍👩‍👧\e[0m   \e[38;2;150;152;150m│\e[0m 2     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[10A\r\e[K\e[38;2;150;152;150m┌────────┬───────┐\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mWord\e[0m   \e[38;2;150;152;150m│\e[0m \e[1mCells\e[0m \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mกำ\e[0m      \e[38;2;150;152;150m│\e[0m 1     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mकि\e[0m      \e[38;2;150;152;150m│\e[0m 1     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m1️⃣\e[0m     \e[38;2;150;152;150m│\e[0m 2     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m👨‍👩‍👧\e[0m     \e[38;2;150;152;150m│\e[0m 2     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80méclair\e[0m \e[38;2;150;152;150m│\e[0m 6     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└────────┴───────┘\e[0m\e[?25h\e[?2026l\r
+\r
 \e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one column: \e[38;2;192;128;80m日本\e[0m in code, \e[1m中文\e[0m in bold.\r
 \r\e[K\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[KAnd a result that came back with Windows line endings:\e[?25h\e[?2026l\e[?2026h\e[?25l\r
@@ -531,6 +866,50 @@ three\r
 \r\e[KA f\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA famil\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA family 👨‍\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA family 👨‍👩‍👧\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA family 👨‍👩‍👧 is o\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA family 👨‍👩‍👧 is one g\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA family 👨‍👩‍👧 is one glyph\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA family 👨‍👩‍👧 is one glyph joi\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA family 👨‍👩‍👧 is one glyph joined\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA family 👨‍👩‍👧 is one glyph joined from\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA family 👨‍👩‍👧 is one glyph joined from sev\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA family 👨‍👩‍👧 is one glyph joined from several\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA family 👨‍👩‍👧 is one glyph joined from several, an\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA family 👨‍👩‍👧 is one glyph joined from several, and a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA family 👨‍👩‍👧 is one glyph joined from several, and a hear\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA family 👨‍👩‍👧 is one glyph joined from several, and a heart ❤️\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA family 👨‍👩‍👧 is one glyph joined from several, and a heart ❤️ ask\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA family 👨‍👩‍👧 is one glyph joined from several, and a heart ❤️ asks to\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA family 👨‍👩‍👧 is one glyph joined from several, and a heart ❤️ asks to be\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA family 👨‍👩‍👧 is one glyph joined from several, and a heart ❤️ asks to be draw\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA family 👨‍👩‍👧 is one glyph joined from several, and a heart ❤️ asks to be drawn in\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA family 👨‍👩‍👧 is one glyph joined from several, and a heart ❤️ asks to be drawn in col\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA family 👨‍👩‍👧 is one glyph joined from several, and a heart ❤️ asks to be drawn in colour.\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 \r\e[KCo\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombin\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining mark\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pi\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile u\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up to\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: á̂̃̄\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: á̂̃̄ is\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: á̂̃̄ is one\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: á̂̃̄ is one lett\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: á̂̃̄ is one letter u\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: á̂̃̄ is one letter under\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: á̂̃̄ is one letter under fou\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: á̂̃̄ is one letter under four of\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: á̂̃̄ is one letter under four of the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KCombining marks pile up too: á̂̃̄ is one letter under four of them.\e[?25h\e[?2026l\r
+\r
+\e[?2026h\e[?25l\r\e[KA sp\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacin\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing ma\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is no\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a comb\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combinin\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining on\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: T\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Dev\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanag\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two cha\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two charact\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two characters\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two characters apie\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two characters apiece,\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two characters apiece, and\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two characters apiece, and each\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Ktak\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Ktakes t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Ktakes the o\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Ktakes the one c\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Ktakes the one cell\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Ktakes the one cell its\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Ktakes the one cell its base\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Ktakes the one cell its base too\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Ktakes the one cell its base took.\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\r\e[KA ke\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ ask\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks fo\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for tw\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, w\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where a b\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where a bare\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where a bare 1⃣ k\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where a bare 1⃣ keeps\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where a bare 1⃣ keeps the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where a bare 1⃣ keeps the one\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where a bare 1⃣ keeps the one its\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where a bare 1⃣ keeps the one its dig\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where a bare 1⃣ keeps the one its digit h\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA keycap 1️⃣ asks for two, where a bare 1⃣ keeps the one its digit had.\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\r\e[K| W\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Word\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Word | Ce\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Word | Cells\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Word | Cells |\r
+\r\e[K|\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| ----\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m┌──────┬───────┐\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mWord\e[0m \e[38;2;150;152;150m│\e[0m \e[1mCells\e[0m \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├──────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m│\e[0m      \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m `กำ   \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mกำ\e[0m    \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mกำ\e[0m    \e[38;2;150;152;150m│\e[0m 1     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m├──────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m `क   \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mकि\e[0m    \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mकि\e[0m    \e[38;2;150;152;150m│\e[0m 1     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m├──────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m `    \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m1️⃣\e[0m   \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m1️⃣\e[0m   \e[38;2;150;152;150m│\e[0m 2     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m├──────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m      \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m `👨‍  \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m👨‍👩‍👧\e[0m   \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m👨‍👩‍👧\e[0m   \e[38;2;150;152;150m│\e[0m 2     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├──────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m      \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m `éc  \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└──────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[12A\r\e[K\e[38;2;150;152;150m┌────────┬───────┐\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mWord\e[0m   \e[38;2;150;152;150m│\e[0m \e[1mCells\e[0m \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mกำ\e[0m      \e[38;2;150;152;150m│\e[0m 1     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mकि\e[0m      \e[38;2;150;152;150m│\e[0m 1     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m1️⃣\e[0m     \e[38;2;150;152;150m│\e[0m 2     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m👨‍👩‍👧\e[0m     \e[38;2;150;152;150m│\e[0m 2     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80méclair\e[0m \e[38;2;150;152;150m│\e[0m       \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└────────┴───────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80méclair\e[0m \e[38;2;150;152;150m│\e[0m 6     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└────────┴───────┘\e[0m\e[?25h\e[?2026l\r
 \r
 \e[?2026h\e[?25l\r\e[KA st\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wid\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide ru\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune h\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has n\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhe\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one colu\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one column:\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one column: \e[38;2;192;128;80m日本\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one column: \e[38;2;192;128;80m日本\e[0m in\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one column: \e[38;2;192;128;80m日本\e[0m in code\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one column: \e[38;2;192;128;80m日本\e[0m in code, **\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one column: \e[38;2;192;128;80m日本\e[0m in code, \e[1m中文\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one column: \e[38;2;192;128;80m日本\e[0m in code, \e[1m中文\e[0m in\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one column: \e[38;2;192;128;80m日本\e[0m in code, \e[1m中文\e[0m in bold\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA styled wide rune has nowhere to go in one column: \e[38;2;192;128;80m日本\e[0m in code, \e[1m中文\e[0m in bold.\r
 \r\e[K\r
@@ -578,6 +957,44 @@ three\r
 \r\e[Kunder four\r
 \r\e[Kof them.\r
 \r
+\r\e[KA spacing\r
+\r\e[Kmark is not\r
+\r\e[Ka combining\r
+\r\e[Kone: Thai \e[38;2;192;128;80mกำ\e[0m\r
+\r\e[Kand\r
+\r\e[KDevanagari \e[38;2;192;128;80mकि\e[0m\r
+\r\e[Kare two\r
+\r\e[Kcharacters\r
+\r\e[Kapiece, and\r
+\r\e[Keach takes\r
+\r\e[Kthe one cell\r
+\r\e[Kits base\r
+\r\e[Ktook.\r
+\r\e[K\r
+\r\e[KA keycap 1️⃣\r
+\r\e[Kasks for\r
+\r\e[Ktwo, where a\r
+\r\e[Kbare 1⃣ keeps\r
+\r\e[Kthe one its\r
+\r\e[Kdigit had.\r
+\r\e[K\r
+\r\e[K\e[38;2;150;152;150m┌─────┬────┐\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mWor\e[0m \e[38;2;150;152;150m│\e[0m \e[1mCe\e[0m \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[1md\e[0m   \e[38;2;150;152;150m│\e[0m \e[1mll\e[0m \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m     \e[38;2;150;152;150m│\e[0m \e[1ms\e[0m  \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├─────┼────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mกำ\e[0m   \e[38;2;150;152;150m│\e[0m 1  \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├─────┼────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mकि\e[0m   \e[38;2;150;152;150m│\e[0m 1  \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├─────┼────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m1️⃣\e[0m  \e[38;2;150;152;150m│\e[0m 2  \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├─────┼────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m👨‍👩‍👧\e[0m  \e[38;2;150;152;150m│\e[0m 2  \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├─────┼────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mécl\e[0m \e[38;2;150;152;150m│\e[0m 6  \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mair\e[0m \e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└─────┴────┘\e[0m\r
+\r
 \r\e[KA styled\r
 \r\e[Kwide rune\r
 \r\e[Khas nowhere\r
@@ -608,6 +1025,17 @@ three\r
 \r\e[K\r
 \r\e[KCombining marks pile up too: á̂̃̄ is one letter under four of them.
 
+\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two characters apiece, and each takes the one cell its base took.\r
+\r\e[K\r
+\r\e[KA keycap 1️⃣ asks for two, where a bare 1⃣ keeps the one its digit had.\r
+\r\e[K\r
+\r\e[KWord\e[38;2;150;152;150m | \e[0mCells\r
+\r\e[K\e[38;2;192;128;80mกำ\e[0m\e[38;2;150;152;150m | \e[0m1\r
+\r\e[K\e[38;2;192;128;80mकि\e[0m\e[38;2;150;152;150m | \e[0m1\r
+\r\e[K\e[38;2;192;128;80m1️⃣\e[0m\e[38;2;150;152;150m | \e[0m2\r
+\r\e[K\e[38;2;192;128;80m👨‍👩‍👧\e[0m\e[38;2;150;152;150m | \e[0m2\r
+\r\e[K\e[38;2;192;128;80méclair\e[0m\e[38;2;150;152;150m | \e[0m6
+
 \r\e[KA styled wide rune has nowhere to go in one column: \e[38;2;192;128;80m日本\e[0m in code, \e[1m中文\e[0m in bold.\r
 \r\e[K\r
 \r\e[KAnd a result that came back with Windows line endings:
@@ -627,6 +1055,25 @@ three
 \r\e[KA family 👨‍👩‍👧 is one glyph joined from several, and a heart ❤️ asks to be drawn in colour.\r
 \r\e[K\r
 \r\e[KCombining marks pile up too: á̂̃̄ is one letter under four of them.\r
+\r
+\r\e[KA spacing mark is not a combining one: Thai \e[38;2;192;128;80mกำ\e[0m and Devanagari \e[38;2;192;128;80mकि\e[0m are two characters apiece, and each\r
+\r\e[Ktakes the one cell its base took.\r
+\r\e[K\r
+\r\e[KA keycap 1️⃣ asks for two, where a bare 1⃣ keeps the one its digit had.\r
+\r\e[K\r
+\r\e[K\e[38;2;150;152;150m┌────────┬───────┐\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mWord\e[0m   \e[38;2;150;152;150m│\e[0m \e[1mCells\e[0m \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mกำ\e[0m      \e[38;2;150;152;150m│\e[0m 1     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80mकि\e[0m      \e[38;2;150;152;150m│\e[0m 1     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m1️⃣\e[0m     \e[38;2;150;152;150m│\e[0m 2     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80m👨‍👩‍👧\e[0m     \e[38;2;150;152;150m│\e[0m 2     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m├────────┼───────┤\e[0m\r
+\r\e[K\e[38;2;150;152;150m│\e[0m \e[38;2;192;128;80méclair\e[0m \e[38;2;150;152;150m│\e[0m 6     \e[38;2;150;152;150m│\e[0m\r
+\r\e[K\e[38;2;150;152;150m└────────┴───────┘\e[0m\r
 \r
 \r\e[KA styled wide rune has nowhere to go in one column: \e[38;2;192;128;80m日本\e[0m in code, \e[1m中文\e[0m in bold.\r
 \r\e[K\r

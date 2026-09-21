@@ -1,4 +1,5 @@
 {"event": {"kind": "user_message", "text": "what does the accented file say? 🖊"}}
 {"event": {"kind": "model_reasoning", "text": "Reading the file with the combining marks in its name."}}
 {"event": {"kind": "model_message", "text": "The name is written `café` rather than `café`, so the accent is a mark of its own.\n\nA family 👨‍👩‍👧 is one glyph joined from several, and a heart ❤️ asks to be drawn in colour.\n\nCombining marks pile up too: á̂̃̄ is one letter under four of them.\n"}}
+{"event": {"kind": "model_message", "text": "A spacing mark is not a combining one: Thai `กำ` and Devanagari `कि` are two characters apiece, and each takes the one cell its base took.\n\nA keycap 1️⃣ asks for two, where a bare 1⃣ keeps the one its digit had.\n\n| Word | Cells |\n| ---- | ----- |\n| `กำ` | 1 |\n| `कि` | 1 |\n| `1️⃣` | 2 |\n| `👨‍👩‍👧` | 2 |\n| `éclair` | 6 |\n"}}
 {"event": {"kind": "model_message", "text": "A styled wide rune has nowhere to go in one column: `日本` in code, **中文** in bold.\n\nAnd a result that came back with Windows line endings:\r\none\r\ntwo\r\nthree\r\n"}}

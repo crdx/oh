@@ -23,6 +23,20 @@ Combining marks pile up too: á̂̃̄ is one letter under four of them.
 
 ## Assistant · +3s
 
+A spacing mark is not a combining one: Thai `กำ` and Devanagari `कि` are two characters apiece, and each takes the one cell its base took.
+
+A keycap 1️⃣ asks for two, where a bare 1⃣ keeps the one its digit had.
+
+| Word | Cells |
+| ---- | ----- |
+| `กำ` | 1 |
+| `कि` | 1 |
+| `1️⃣` | 2 |
+| `👨‍👩‍👧` | 2 |
+| `éclair` | 6 |
+
+## Assistant · +4s
+
 A styled wide rune has nowhere to go in one column: `日本` in code, **中文** in bold.
 
 And a result that came back with Windows line endings:\r
