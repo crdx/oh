@@ -103,6 +103,7 @@
 \r\e[K\e[48;2;48;58;67m                                        \e[0m\r
 \r\e[K\e[48;2;48;58;67m    Exit code: 0                        \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                        \e[0m\r
+\r
 \r\e[K\e[48;2;48;58;67m                                        \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 The user ran the following command  \e[0m\r
 \r\e[K\e[48;2;48;58;67m    on the host:                        \e[0m\r
@@ -2053,6 +2054,7 @@
 \r\e[K\e[48;2;48;58;67m \e[0m\r
 \r\e[K\e[48;2;48;58;67m0\e[0m\r
 \r\e[K\e[48;2;48;58;67m \e[0m\r
+\r
 \r\e[K\e[48;2;48;58;67m \e[0m\r
 \r\e[K\e[48;2;48;58;67m \e[0m\r
 \r\e[K\e[48;2;48;58;67m🤖\e[0m\r
@@ -3886,6 +3888,7 @@ The push was refused, so pull first.\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    Exit code: 0                                                                                    \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
+\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 The user ran the following command on the host:                                                 \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
@@ -4054,6 +4057,7 @@ That is the whole change, and your diff agrees.\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r\e[K\e[48;2;48;58;67m    Exit code: 0                                                                                    \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\r
+\r
 \e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 The user ran the following command on the host:                                                 \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
@@ -4222,6 +4226,7 @@ That is the whole change, and your diff agrees.\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r\e[K\e[48;2;48;58;67m    Exit code: 0                                                                                    \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\r
+\r
 \e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 The user ran the following command on the host:                                                 \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
@@ -4390,6 +4395,7 @@ That is the whole change, and your diff agrees.\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r\e[K\e[48;2;48;58;67m    Exit code: 0                                                                                    \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\r
+\r
 \e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 The user ran the following command on the host:                                                 \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
@@ -4666,6 +4672,7 @@ That is the whole change, and your diff agrees.\r
 \r\e[K\e[48;2;48;58;67m    Exit    \e[0m\r
 \r\e[K\e[48;2;48;58;67m    code: 0 \e[0m\r
 \r\e[K\e[48;2;48;58;67m            \e[0m\r
+\r
 \r\e[K\e[48;2;48;58;67m            \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 The user\e[0m\r
 \r\e[K\e[48;2;48;58;67m    ran the \e[0m\r
@@ -4930,6 +4937,7 @@ That is the whole change, and your diff agrees.\r
 \r\e[K\e[48;2;48;58;67m    \e[0m\r
 \r\e[K\e[48;2;48;58;67m    Exit code: 0\e[0m\r
 \r\e[K\e[48;2;48;58;67m\e[0m
+
 \r\e[K\e[48;2;48;58;67m\e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 The user ran the following command on the host:\e[0m\r
 \r\e[K\e[48;2;48;58;67m    \e[0m\r
@@ -5083,6 +5091,7 @@ That is the whole change, and your diff agrees.\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r\e[K\e[48;2;48;58;67m    Exit code: 0                                                                                    \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 The user ran the following command on the host:                                                 \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r

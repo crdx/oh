@@ -187,7 +187,7 @@ func (self *Picasso) DrawEvent(event agent.Event) {
 		self.screen.Line(style.Change(agent.CacheRebuildNotice(event)))
 
 	case portgrant.HostToSandboxChange, hostcommand.Ran, jobrecord.Ended:
-		self.drawNotices(event, self.drawSubmittedBeforeResult)
+		self.drawNotices(event, self.drawSubmittedPanel)
 
 	case caps.ModeChange, caps.JobStop, portgrant.SandboxToHostChange, jobrecord.EndedWithSession,
 		conditions.Change, pathgrant.Change, turn.HarnessPoke:
@@ -440,24 +440,17 @@ func (self *Picasso) drawSubmitted(message submittedMessage) {
 	self.Close(dynamic.Cancelled)
 
 	if message.kind == sentHarnessSubmission {
-		self.screen.Blank()
-		self.drawStandalonePanel(message)
+		self.drawSubmittedPanel(message)
 		return
 	}
 
 	self.drawSubmittedLine(message)
 	self.screen.End()
-	self.screen.Blank()
 }
 
-func (self *Picasso) drawSubmittedBeforeResult(message submittedMessage) {
+func (self *Picasso) drawSubmittedPanel(message submittedMessage) {
 	block, frame := self.submittedPanel(message)
 	self.screen.Panel(block, frame)
-}
-
-func (self *Picasso) drawStandalonePanel(message submittedMessage) {
-	block, frame := self.submittedPanel(message)
-	self.screen.StandalonePanel(block, frame)
 }
 
 func (self *Picasso) submittedPanel(message submittedMessage) (output.Block, output.Frame) {
@@ -495,14 +488,12 @@ func (self *Picasso) submittedContent(message submittedMessage, columns int) []s
 }
 
 func (self *Picasso) drawSubmittedLine(message submittedMessage) {
-	self.screen.Blank()
-
 	if message.kind == userSubmission {
-		self.screen.MarkedLine(self.renderSubmitted(message))
+		self.screen.MarkedPanelLine(self.renderSubmitted(message))
 		return
 	}
 
-	self.screen.Line(self.renderSubmitted(message))
+	self.screen.PanelLine(self.renderSubmitted(message))
 }
 
 func (self *Picasso) renderSubmitted(message submittedMessage) string {

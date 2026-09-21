@@ -27,9 +27,8 @@ func (self *Screen) OpenTool(block Block) {
 type Frame func(rows []string, columns int) []string
 
 type framedBlock struct {
-	blocks       []Block
-	frame        Frame
-	isStandalone bool
+	blocks []Block
+	frame  Frame
 }
 
 func (self *framedBlock) Rows(columns int) []string {
@@ -43,19 +42,11 @@ func (self *framedBlock) Rows(columns int) []string {
 }
 
 func (self *Screen) Panel(block Block, frame Frame) {
-	self.panel(block, frame, false)
-}
-
-func (self *Screen) StandalonePanel(block Block, frame Frame) {
-	self.panel(block, frame, true)
-}
-
-func (self *Screen) panel(block Block, frame Frame, isStandalone bool) {
 	if self.addToOpenPanel(block) {
 		return
 	}
 
-	self.open(&framedBlock{blocks: []Block{block}, frame: frame, isStandalone: isStandalone}, NoticeGroup, nil)
+	self.open(&framedBlock{blocks: []Block{block}, frame: frame}, PanelGroup, nil)
 }
 
 func (self *Screen) SealOpenPanel() bool {
@@ -66,16 +57,11 @@ func (self *Screen) SealOpenPanel() bool {
 		return false
 	}
 
-	panel, isPanel := self.blocks[0].Block.(*framedBlock)
-	if !isPanel {
+	if _, isPanel := self.blocks[0].Block.(*framedBlock); !isPanel {
 		return false
 	}
 
 	self.seal()
-
-	if panel.isStandalone {
-		self.isBlankOwed = self.hasPrinted
-	}
 
 	return true
 }
@@ -99,11 +85,11 @@ func (self *Screen) addToOpenPanel(block Block) bool {
 	return true
 }
 
-func (self *Screen) OpenStandaloneNotice(block Block) *BlockHandle {
+func (self *Screen) OpenPanel(block Block) *BlockHandle {
 	self.SealOpenPanel()
 
 	handle := new(BlockHandle)
-	self.open(block, NoticeGroup, handle)
+	self.open(block, PanelGroup, handle)
 
 	return handle
 }

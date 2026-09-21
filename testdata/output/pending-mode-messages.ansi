@@ -15,10 +15,12 @@
 \r\e[K\e[48;2;48;58;67m ⏳ Workspace is now read-only.                                                                     \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m ⏳ .git is now read-write.                                                                         \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[KJob `build` exited: complete after 30s.\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\r\e[K\r
+\r\e[KJob `build` exited: complete after 30s.\e[?25h\e[?2026l\e[?2026h\e[?25l\e[5A\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 Workspace is now read-only.                                                                     \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 .git is now read-write.                                                                         \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\r\e[K\r
 \r\e[KJob `build` exited: complete after 30s.\e[?25h\e[?2026l
 === complete interaction ===
 \e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0mtame-impala\e[38;2;150;152;150m \e[0m🦌\e[38;2;150;152;150m ready in \e[0m1\e[38;2;150;152;150mms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r

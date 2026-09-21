@@ -742,8 +742,7 @@ func (self *App) refreshPendingMessages() {
 			self.screen.IsTerminal(),
 			self.screen.LinkRoots().WithoutScratch(),
 		)
-		self.screen.Blank()
-		self.pendingNotices.block = self.screen.OpenStandaloneNotice(self.pendingNotices.renderer)
+		self.pendingNotices.block = self.screen.OpenPanel(self.pendingNotices.renderer)
 		return
 	}
 
@@ -797,7 +796,6 @@ func (self *App) settlePendingInput() {
 		self.pendingNotices.renderer.MarkSent()
 		self.screen.RefreshBlock(self.pendingNotices.block)
 		self.screen.SealBlock(self.pendingNotices.block)
-		self.screen.Blank()
 	}
 	self.pendingNotices = pendingNotices{}
 }

@@ -104,6 +104,7 @@
       Exit code: 0
 
 
+
    🤖 The user ran the following command
       on the host:
 
@@ -420,6 +421,7 @@
       Exit code: 0
 
 
+
    🤖 The user ran the following command on the host:
 
       $ ls --color=always
@@ -573,6 +575,7 @@
       2 notes.txt
 
       Exit code: 0
+
 
 
    🤖 The user ran the following command on the host:
@@ -850,6 +853,7 @@
       code: 0
 
 
+
    🤖 The user
       ran the
       followin
@@ -1113,6 +1117,7 @@
       2 notes.txt
 
       Exit code: 0
+
 
 
    🤖 The user ran the following command on the host:

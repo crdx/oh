@@ -157,6 +157,8 @@ func TestAnAnswerKeepsTheBlankRowsInsideIt(t *testing.T) {
 	}
 }
 
+const panelGroup = "panel"
+
 type drawnKind struct {
 	name  string
 	group string
@@ -174,7 +176,7 @@ func drawnKinds() []drawnKind {
 		},
 		{
 			name:  "panel",
-			group: "notice",
+			group: "panel",
 			draw: func(screen *output.Screen, text string) {
 				screen.Panel(fixedBlock(text), func(rows []string, _ int) []string { return rows })
 				screen.Seal()
@@ -207,6 +209,14 @@ func drawnKinds() []drawnKind {
 	}
 }
 
+func runsOn(first string, second string, together map[string][]string) bool {
+	if first == panelGroup && second == panelGroup {
+		return false
+	}
+
+	return first == second || slices.Contains(together[first], second)
+}
+
 func requireGroupsRunOnAsNamed(t *testing.T, groups []string, together map[string][]string) {
 	t.Helper()
 
@@ -226,7 +236,7 @@ func requireGroupsRunOnAsNamed(t *testing.T, groups []string, together map[strin
 				second.draw(screen, "two")
 
 				separator := "\n\n"
-				if first.group == second.group || slices.Contains(together[first.group], second.group) {
+				if runsOn(first.group, second.group, together) {
 					separator = "\n"
 				}
 				if got, want := screenOutput.String(), "one"+separator+"two"; got != want {
@@ -362,7 +372,7 @@ func TestAMarkedLineOpensWithTheMarkSoTheTerminalKnowsWhereItBegan(t *testing.T)
 	var screenOutput bytes.Buffer
 
 	screen := output.NewTerminalOfSize(&screenOutput, markColumns, markLines)
-	screen.MarkedLine("hello")
+	screen.MarkedPanelLine("hello")
 	screen.End()
 
 	if got, want := screenOutput.String(), escape.MessageMark+"hello\r\n"; got != want {
@@ -376,7 +386,7 @@ func TestAMarkedLineIsMarkedAfterTheBlankRowsOwedBeforeIt(t *testing.T) {
 	screen := output.NewTerminalOfSize(&screenOutput, markColumns, markLines)
 	screen.Line("banner")
 	screen.Blank()
-	screen.MarkedLine("hello")
+	screen.MarkedPanelLine("hello")
 	screen.End()
 
 	if got, want := screenOutput.String(), "banner\r\n\r\n"+escape.MessageMark+"hello\r\n"; got != want {
@@ -388,7 +398,7 @@ func TestAMarkedLineWrappedOverSeveralRowsIsMarkedOnlyOnTheFirst(t *testing.T) {
 	var screenOutput bytes.Buffer
 
 	screen := output.NewTerminalOfSize(&screenOutput, markColumns, markLines)
-	screen.MarkedLine(strings.Repeat("word ", markColumns))
+	screen.MarkedPanelLine(strings.Repeat("word ", markColumns))
 	screen.End()
 
 	if got := strings.Count(screenOutput.String(), escape.MessageMark); got != 1 {
@@ -404,7 +414,7 @@ func TestAMarkedLineCostsTheSameRowsAsAnUnmarkedOne(t *testing.T) {
 
 	var markedOutput bytes.Buffer
 	marked := output.NewTerminalOfSize(&markedOutput, markColumns, markLines)
-	marked.MarkedLine(long)
+	marked.MarkedPanelLine(long)
 	marked.End()
 
 	var plainOutput bytes.Buffer
@@ -422,7 +432,7 @@ func TestAMarkReachesATerminalThatOnlyAppends(t *testing.T) {
 	var screenOutput bytes.Buffer
 
 	screen := appendOnlyScreen(&screenOutput)
-	screen.MarkedLine("hello")
+	screen.MarkedPanelLine("hello")
 	screen.End()
 
 	if got := screenOutput.String(); !strings.HasPrefix(got, escape.MessageMark) {
@@ -434,7 +444,7 @@ func TestNothingIsMarkedWhereThereIsNoTerminalToNavigate(t *testing.T) {
 	var screenOutput bytes.Buffer
 
 	screen := output.New(&screenOutput)
-	screen.MarkedLine("hello")
+	screen.MarkedPanelLine("hello")
 	screen.End()
 
 	if got := screenOutput.String(); strings.Contains(got, escape.MessageMark) {
@@ -446,7 +456,7 @@ func TestAScreenToldToMarkNothingMarksNothing(t *testing.T) {
 	var screenOutput bytes.Buffer
 
 	screen := output.NewTerminalOfSize(&screenOutput, markColumns, markLines).WithoutMessageMarks()
-	screen.MarkedLine("hello")
+	screen.MarkedPanelLine("hello")
 	screen.End()
 
 	if got := screenOutput.String(); strings.Contains(got, escape.MessageMark) {

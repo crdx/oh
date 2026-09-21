@@ -30,6 +30,11 @@
 \r\e[K\e[48;2;48;58;67m    17s with no output.                 \e[0m\r
 \r\e[K\e[48;2;48;58;67m    note: the oldest 1K of output was   \e[0m\r
 \r\e[K\e[48;2;48;58;67m    dropped to keep the spool bounded.  \e[0m\r
+\r\e[K\e[48;2;48;58;67m                                        \e[0m\r
+\r
+\e[38;2;207;173;0mCache expired: 97Kt sent after 7m.\e[0m\r
+\r
+\r\e[K\e[48;2;48;58;67m                                        \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the        \e[0m\r
 \r\e[K\e[48;2;48;58;67m    workspace was made read-only.       \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mindex\e[0m\e[48;2;48;58;67m stopped because access to \e[0m\r
@@ -1010,6 +1015,39 @@
 \r\e[K\e[48;2;48;58;67m \e[0m\r
 \r\e[K\e[48;2;48;58;67m.\e[0m\r
 \r\e[K\e[48;2;48;58;67m \e[0m\r
+\r
+\e[38;2;207;173;0mC\e[0m\r
+\e[38;2;207;173;0ma\e[0m\r
+\e[38;2;207;173;0mc\e[0m\r
+\e[38;2;207;173;0mh\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0mx\e[0m\r
+\e[38;2;207;173;0mp\e[0m\r
+\e[38;2;207;173;0mi\e[0m\r
+\e[38;2;207;173;0mr\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0md\e[0m\r
+\e[38;2;207;173;0m:\e[0m\r
+\e[38;2;207;173;0m9\e[0m\r
+\e[38;2;207;173;0m7\e[0m\r
+\e[38;2;207;173;0mK\e[0m\r
+\e[38;2;207;173;0mt\e[0m\r
+\e[38;2;207;173;0ms\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0mn\e[0m\r
+\e[38;2;207;173;0mt\e[0m\r
+\e[38;2;207;173;0ma\e[0m\r
+\e[38;2;207;173;0mf\e[0m\r
+\e[38;2;207;173;0mt\e[0m\r
+\e[38;2;207;173;0me\e[0m\r
+\e[38;2;207;173;0mr\e[0m\r
+\e[38;2;207;173;0m7\e[0m\r
+\e[38;2;207;173;0mm\e[0m\r
+\e[38;2;207;173;0m.\e[0m\r
+\r
+\r\e[K\e[48;2;48;58;67m \e[0m\r
+\r\e[K\e[48;2;48;58;67m \e[0m\r
 \r\e[K\e[48;2;48;58;67m🤖\e[0m\r
 \r\e[K\e[48;2;48;58;67m \e[0m\r
 \r\e[K\e[48;2;48;58;67mJ\e[0m\r
@@ -1385,6 +1423,10 @@ seeding the database\e[0m
 done\e[0m
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s with no output.
 note: the oldest 1K of output was dropped to keep the spool bounded.\e[0m
+\e[48;2;48;58;67m\e[0m
+\e[38;2;207;173;0mCache expired: 97Kt sent after 7m.\e[0m
+
+\e[48;2;48;58;67m\e[0m
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.\e[0m
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mindex\e[0m\e[48;2;48;58;67m stopped because access to /reference was revoked.\e[0m
 \e[48;2;48;58;67m\e[0m
@@ -1425,6 +1467,11 @@ The docs server is up.\r
 \e[48;2;48;58;67m    done                                                                                            \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s with no output.                                          \e[0m\r
 \e[48;2;48;58;67m    note: the oldest 1K of output was dropped to keep the spool bounded.                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\r
+\e[38;2;207;173;0mCache expired: 97Kt sent after 7m.\e[0m\r
+\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mindex\e[0m\e[48;2;48;58;67m stopped because access to /reference was revoked.                                     \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
@@ -1468,7 +1515,12 @@ It was stopped when write access was withdrawn.\r
 \r\e[K\e[48;2;48;58;67m    done                                                                                            \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s with no output.                                          \e[0m\r
 \r\e[K\e[48;2;48;58;67m    note: the oldest 1K of output was dropped to keep the spool bounded.                            \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\r
+\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\r
+\r
+\e[38;2;207;173;0mCache expired: 97Kt sent after 7m.\e[0m\r
+\r
+\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mindex\e[0m\e[48;2;48;58;67m stopped because access to /reference was revoked.                                     \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\r
 \r
@@ -1511,7 +1563,12 @@ It was stopped when write access was withdrawn.\r
 \r\e[K\e[48;2;48;58;67m    done                                                                                            \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s with no output.                                          \e[0m\r
 \r\e[K\e[48;2;48;58;67m    note: the oldest 1K of output was dropped to keep the spool bounded.                            \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\r
+\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\r
+\r
+\e[38;2;207;173;0mCache expired: 97Kt sent after 7m.\e[0m\r
+\r
+\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mindex\e[0m\e[48;2;48;58;67m stopped because access to /reference was revoked.                                     \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\r
 \r
@@ -1554,7 +1611,12 @@ It was stopped when write access was withdrawn.\r
 \r\e[K\e[48;2;48;58;67m    done                                                                                            \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s with no output.                                          \e[0m\r
 \r\e[K\e[48;2;48;58;67m    note: the oldest 1K of output was dropped to keep the spool bounded.                            \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\r
+\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\r
+\r
+\e[38;2;207;173;0mCache expired: 97Kt sent after 7m.\e[0m\r
+\r
+\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mindex\e[0m\e[48;2;48;58;67m stopped because access to /reference was revoked.                                     \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\r
 \r
@@ -1664,6 +1726,14 @@ It was stopped when write access was withdrawn.\r
 \r\e[K\e[48;2;48;58;67m    the     \e[0m\r
 \r\e[K\e[48;2;48;58;67m    spool   \e[0m\r
 \r\e[K\e[48;2;48;58;67m    bounded.\e[0m\r
+\r\e[K\e[48;2;48;58;67m            \e[0m\r
+\r
+\e[38;2;207;173;0mCache\e[0m\r
+\e[38;2;207;173;0mexpired:\e[0m\r
+\e[38;2;207;173;0m97Kt sent\e[0m\r
+\e[38;2;207;173;0mafter 7m.\e[0m\r
+\r
+\r\e[K\e[48;2;48;58;67m            \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m\e[0m\r
 \r\e[K\e[48;2;48;58;67m    stopped \e[0m\r
 \r\e[K\e[48;2;48;58;67m    because \e[0m\r
@@ -1731,6 +1801,11 @@ seeding the database\e[0m\r
 done\e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s with no output.
 note: the oldest 1K of output was dropped to keep the spool bounded.\e[0m\r
+\r\e[K\e[48;2;48;58;67m\e[0m
+
+\e[38;2;207;173;0mCache expired: 97Kt sent after 7m.\e[0m
+
+\r\e[K\e[48;2;48;58;67m\e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.\e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mindex\e[0m\e[48;2;48;58;67m stopped because access to /reference was revoked.\e[0m\r
 \r\e[K\e[48;2;48;58;67m\e[0m
@@ -1773,6 +1848,11 @@ note: the oldest 1K of output was dropped to keep the spool bounded.\e[0m\r
 \r\e[K\e[48;2;48;58;67m    done                                                                                            \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s with no output.                                          \e[0m\r
 \r\e[K\e[48;2;48;58;67m    note: the oldest 1K of output was dropped to keep the spool bounded.                            \e[0m\r
+\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\r
+\e[38;2;207;173;0mCache expired: 97Kt sent after 7m.\e[0m\r
+\r
+\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\r
 \r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mindex\e[0m\e[48;2;48;58;67m stopped because access to /reference was revoked.                                     \e[0m\r
 \r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r

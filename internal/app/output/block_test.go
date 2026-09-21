@@ -67,7 +67,7 @@ func TestDiscardingANoticeBlockRestoresTheDrawingOrigin(t *testing.T) {
 	before := screen.drawingState()
 	beforeInput := screen.input
 
-	handle := screen.OpenStandaloneNotice(textBlock{text: "temporary notice"})
+	handle := screen.OpenPanel(textBlock{text: "temporary notice"})
 	if !screen.DiscardBlock(handle) {
 		t.Fatal("expected the notice block to remain retractable")
 	}
@@ -83,9 +83,9 @@ func TestDiscardingANoticeBlockRestoresTheDrawingOrigin(t *testing.T) {
 func TestAnOldBlockHandleCannotDiscardANewerBlock(t *testing.T) {
 	screen, _ := region()
 
-	oldHandle := screen.OpenStandaloneNotice(textBlock{text: "old"})
+	oldHandle := screen.OpenPanel(textBlock{text: "old"})
 	screen.Seal()
-	newHandle := screen.OpenStandaloneNotice(textBlock{text: "new"})
+	newHandle := screen.OpenPanel(textBlock{text: "new"})
 
 	if screen.DiscardBlock(oldHandle) {
 		t.Error("an old handle discarded a newer block")
@@ -99,7 +99,7 @@ func TestANoticeBlockStaysItsOwnBesideALaterLine(t *testing.T) {
 	screen, screenOutput := region()
 	block := &mutableBlock{text: "unsent"}
 
-	handle := screen.OpenStandaloneNotice(block)
+	handle := screen.OpenPanel(block)
 	screen.Line("the harness said something")
 
 	block.text = "submitted"
@@ -172,7 +172,9 @@ func TestAPanelAfterALineStartsItsOwnFrame(t *testing.T) {
 
 	want := []string{
 		"top", "first notice", "bottom",
+		"",
 		"the harness said something",
+		"",
 		"top", "second notice", "bottom",
 	}
 	if got := panelRows(screen); !slices.Equal(got, want) {
@@ -197,7 +199,7 @@ func TestAPanelSealedIntoScrollbackFramesTheNextOneApart(t *testing.T) {
 func TestDiscardingANoticeBesideALaterLineKeepsTheLine(t *testing.T) {
 	screen, screenOutput := region()
 
-	handle := screen.OpenStandaloneNotice(textBlock{text: "temporary notice"})
+	handle := screen.OpenPanel(textBlock{text: "temporary notice"})
 	screen.Line("the harness said something")
 
 	if !screen.DiscardBlock(handle) {
@@ -228,7 +230,7 @@ func TestAChangeAboveARegionTallerThanTheTerminalIsRefusedAndReported(t *testing
 	for i := range 20 {
 		block.rows = append(block.rows, "row "+strconv.Itoa(i))
 	}
-	handle := screen.OpenStandaloneNotice(block)
+	handle := screen.OpenPanel(block)
 	screen.Footer([]string{"> "}, 0, 2)
 
 	if screen.WasRepaintRefused() {
@@ -248,7 +250,7 @@ func TestARegionWithRoomToDrawRefusesNothing(t *testing.T) {
 	screen := &Screen{writer: screenOutput, isTerminal: true, canRepaint: true, columns: 40, lines: 24}
 
 	block := &rowsBlock{rows: []string{"first", "second"}}
-	handle := screen.OpenStandaloneNotice(block)
+	handle := screen.OpenPanel(block)
 	screen.Footer([]string{"> "}, 0, 2)
 
 	block.rows[0] = "first changed"

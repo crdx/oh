@@ -6,11 +6,12 @@ import (
 	"strings"
 )
 
-var DefaultGroups = []string{"notice", "reasoning tool", "answer"}
+var DefaultGroups = []string{"notice", "panel", "reasoning tool", "answer"}
 
 var groups = map[string]Group{
 	"answer":    AnswerGroup,
 	"notice":    NoticeGroup,
+	"panel":     PanelGroup,
 	"reasoning": ReasoningGroup,
 	"tool":      ToolGroup,
 }
@@ -104,6 +105,10 @@ func (self *Grouping) resolve(group Group) Group {
 }
 
 func (self *Grouping) runsOn(first Group, second Group) bool {
+	if first == PanelGroup && second == PanelGroup {
+		return false
+	}
+
 	return self.resolve(first) == self.resolve(second)
 }
 

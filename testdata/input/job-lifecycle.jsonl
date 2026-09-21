@@ -8,6 +8,7 @@
 {"event":{"kind":"job_ended","name":"empty","state":{"snapshot":{"name":"empty","command":"just empty","state":"complete","started_at":"2026-08-23T14:32:11Z","ended_at":"2026-08-23T14:32:26Z","code":0}}}}
 {"event":{"kind":"job_ended","name":"build`fast","state":{"snapshot":{"name":"build`fast","command":"just fast","state":"complete","started_at":"2026-08-23T14:32:12Z","ended_at":"2026-08-23T14:32:28Z","code":0},"output":"done"}}}
 {"event":{"kind":"job_ended","name":"archive","state":{"snapshot":{"name":"archive","command":"just archive","state":"complete","started_at":"2026-08-23T14:32:13Z","ended_at":"2026-08-23T14:32:30Z","code":0},"dropped_bytes":1024}}}
+{"event":{"kind":"cache_rebuild","name":"expired","took":420000000000,"usage":{"cache":{"read_tokens":0,"write_tokens":97000}}}}
 {"event":{"kind":"job_stop","name":"docs","state":"w"}}
 {"event":{"kind":"job_stop","name":"index","state":{"path":"/reference"}}}
 {"event":{"kind":"user_message","text":"what happened to it"}}

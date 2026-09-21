@@ -7,6 +7,7 @@ const (
 	ToolGroup
 	AnswerGroup
 	ReasoningGroup
+	PanelGroup
 )
 
-const groupCount = int(ReasoningGroup) + 1
+const groupCount = int(PanelGroup) + 1

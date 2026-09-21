@@ -22,6 +22,42 @@ func TestTheGroupingAScreenStartsWithIsTheDefaultOne(t *testing.T) {
 	}
 }
 
+func runOnAlone(first Group, second Group) bool {
+	return first == second && first != PanelGroup
+}
+
+func TestAPanelNeverRunsOnAnotherPanel(t *testing.T) {
+	groupings := [][]string{DefaultGroups, {"notice panel"}, {"notice panel reasoning tool answer"}, nil}
+
+	for _, clauses := range groupings {
+		grouping, err := ParseGrouping(clauses)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if grouping.runsOn(PanelGroup, PanelGroup) {
+			t.Errorf("two panels run on each other under %q", clauses)
+		}
+	}
+}
+
+func TestAPanelRunsOnWhateverItIsNamedWith(t *testing.T) {
+	grouping, err := ParseGrouping([]string{"notice panel", "reasoning tool", "answer"})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	for _, pair := range [][2]Group{{NoticeGroup, PanelGroup}, {PanelGroup, NoticeGroup}} {
+		if !grouping.runsOn(pair[0], pair[1]) {
+			t.Errorf("%d and %d were named together but do not run on", pair[0], pair[1])
+		}
+	}
+
+	if grouping.runsOn(PanelGroup, AnswerGroup) {
+		t.Error("a panel runs on a group it was not named with")
+	}
+}
+
 func TestEveryGroupNamedTogetherRunsOn(t *testing.T) {
 	grouping, err := ParseGrouping([]string{"notice reasoning", "tool answer"})
 	if err != nil {
@@ -59,7 +95,7 @@ func TestAGroupNamedOnItsOwnRunsOnNothingElse(t *testing.T) {
 
 	for first := range Group(groupCount) {
 		for second := range Group(groupCount) {
-			if isRunOn, isWanted := grouping.runsOn(first, second), first == second; isRunOn != isWanted {
+			if isRunOn, isWanted := grouping.runsOn(first, second), runOnAlone(first, second); isRunOn != isWanted {
 				t.Errorf("groups %d and %d run on %v, want %v", first, second, isRunOn, isWanted)
 			}
 		}
@@ -93,7 +129,7 @@ func TestNamingNoGroupsAtAllPutsEveryGroupOnItsOwn(t *testing.T) {
 
 	for first := range Group(groupCount) {
 		for second := range Group(groupCount) {
-			if isRunOn, isWanted := grouping.runsOn(first, second), first == second; isRunOn != isWanted {
+			if isRunOn, isWanted := grouping.runsOn(first, second), runOnAlone(first, second); isRunOn != isWanted {
 				t.Errorf("groups %d and %d run on %v, want %v", first, second, isRunOn, isWanted)
 			}
 		}
@@ -124,7 +160,7 @@ func TestAnUnknownGroupNamesTheOnesThatExist(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected an unknown group to be refused")
 	}
-	for _, name := range []string{"thinking", "answer", "notice", "reasoning", "tool"} {
+	for _, name := range []string{"thinking", "answer", "notice", "panel", "reasoning", "tool"} {
 		if !strings.Contains(err.Error(), name) {
 			t.Errorf("expected %q to be named, got %v", name, err)
 		}

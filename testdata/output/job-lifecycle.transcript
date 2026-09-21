@@ -63,41 +63,47 @@ Job `archive` exited: complete after 17s with no output.
 note: the oldest 1K of output was dropped to keep the spool bounded.
 ```
 
-## job_stop · +10s
+## Cache rebuild · +10s
 
 ```
-Job `docs` stopped because the workspace was made read-only.
+Cache expired: 97Kt sent after 7m.
 ```
 
 ## job_stop · +11s
 
 ```
+Job `docs` stopped because the workspace was made read-only.
+```
+
+## job_stop · +12s
+
+```
 Job `index` stopped because access to /reference was revoked.
 ```
 
-## User · +12s
+## User · +13s
 
 what happened to it
 
-## Tool calls · +13s
+## Tool calls · +14s
 
 ```
 job: stale status rendering [ok, 1 line, 26B, call_2]
 ```
 
-## job_stop · +15s
+## job_stop · +16s
 
 ```
 Job `docs` stopped from the keyboard.
 ```
 
-## Tool calls · +16s
+## Tool calls · +17s
 
 ```
 job: stale discard rendering [ok, 1 line, 52B, call_3]
 job: stale prune rendering [ok, 1 line, 67B, call_4]
 ```
 
-## Assistant · +20s
+## Assistant · +21s
 
 It was stopped when write access was withdrawn.

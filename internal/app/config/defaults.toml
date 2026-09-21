@@ -11,7 +11,7 @@ continue = "yes"
 
 [ui]
 streaming = "line"
-grouping = ["notice", "reasoning tool", "answer"]
+grouping = ["notice", "panel", "reasoning tool", "answer"]
 reasoning = "plain"
 currency = ""
 

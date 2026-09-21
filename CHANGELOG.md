@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Put panels in their own group
 - Make the job end message read more like a sentence
 - Shorten and simplify the restart job hint message
 - Measure grapheme clusters accurately

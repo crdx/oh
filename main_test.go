@@ -288,7 +288,7 @@ func drawPendingMarkdown(t *testing.T) string {
 	var screenOutput strings.Builder
 	screen := output.NewTerminalOfSize(&screenOutput, terminalInputColumns, replayLines)
 	screen.Blank()
-	screen.OpenStandaloneNotice(painter.NewPendingMessages(
+	screen.OpenPanel(painter.NewPendingMessages(
 		[]string{"# Heading\n\n- first item\n- second item"}, true, link.Roots{},
 	))
 	screen.Seal()

@@ -118,11 +118,15 @@ func (self *Screen) LinkPathsUnder(roots link.Roots) *Screen {
 }
 
 func (self *Screen) Line(text string) {
-	self.line(text, false)
+	self.line(text, false, NoticeGroup)
 }
 
-func (self *Screen) MarkedLine(text string) {
-	self.line(text, true)
+func (self *Screen) PanelLine(text string) {
+	self.line(text, false, PanelGroup)
+}
+
+func (self *Screen) MarkedPanelLine(text string) {
+	self.line(text, true, PanelGroup)
 }
 
 func (self *Screen) Blank() {
@@ -149,7 +153,7 @@ func (self *Screen) End() {
 	}
 }
 
-func (self *Screen) line(text string, isMarked bool) {
+func (self *Screen) line(text string, isMarked bool, group Group) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 
@@ -159,14 +163,14 @@ func (self *Screen) line(text string, isMarked bool) {
 	}
 
 	if len(self.blocks) > 0 {
-		self.blocks = append(self.blocks, groupedBlock{Block: textBlock{text: text}, group: NoticeGroup})
+		self.blocks = append(self.blocks, groupedBlock{Block: textBlock{text: text}, group: group})
 		self.refresh()
 
 		return
 	}
 
 	self.seal()
-	self.makeRoomFor(NoticeGroup)
+	self.makeRoomFor(group)
 
 	if self.isMidLine {
 		self.newline()
