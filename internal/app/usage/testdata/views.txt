@@ -1,22 +1,22 @@
 === every provider ===
 ● Anthropic
-Session         0% ░░░░░░░░░░░░░░░░       idle
-Week           51% ████████░░░┃░░░░ ▼ 20  1d 23h
-Opus Session   88% ███████████┃██░░ ▲ 18  1h 29m
+Session         0% ░░░░░░░░░░░░░░░░   idle
+Week           51% ████████░░░┃░░░░ ▼ 1d 23h
+Opus Session   88% ███████████┃██░░ ▲ 1h 29m
 
 ● OpenAI
-Session        41% ██████░░░┃░░░░░░ ▼ 19  1h 59m
-Week           64% ██████████░┃░░░░ ▼ 7   1d 23h
-Spark Session  12% █░░░░░░░░░░┃░░░░ ▼ 58  1h 29m
+Session        41% ██████░░░┃░░░░░░ ▼ 1h 59m
+Week           64% ██████████░┃░░░░ ▼ 1d 23h
+Spark Session  12% █░░░░░░░░░░┃░░░░ ▼ 1h 29m
 
 ● OpenCode Go
-Session         3% ░░░░░░░░░┃░░░░░░ ▼ 57  1h 59m
-Month         100% ████████████████       limited
+Session         3% ░░░░░░░░░┃░░░░░░ ▼ 1h 59m
+Month         100% ████████████████ ⊘ limited
 === a provider that was refused ===
 ✖ Anthropic refused with 429
 === a scope nothing has been spent on ===
 ● OpenAI
-Session  41% ██████░░░┃░░░░░░ ▼ 19  1h 59m
+Session  41% ██████░░░┃░░░░░░ ▼ 1h 59m
 === a window whose reset is unknown ===
 ● OpenAI
 Session  37% █████░░░░░░░░░░░
@@ -24,22 +24,22 @@ Session  37% █████░░░░░░░░░░░
 ○ OpenAI no usage data available
 === a window that has run out ===
 ● OpenAI
-Session  99% ███████████████┃       stale
+Session  99% ███████████████┃   stale
 === a limited window that still has a reset ===
 ● OpenAI
-Session  41% ██████░░░┃░░░░░░ ▼ 19  1h 59m
-Week    100% ███████████┃████ ▲ 29  1d 23h
+Session  41% ██████░░░┃░░░░░░ ▼ 1h 59m
+Week    100% ███████████┃████ ⊘ 1d 23h
 === a limited window whose reset has passed ===
 ● OpenAI
-Session 100% ███████████████┃       stale
+Session 100% ███████████████┃   stale
 === a snapshot past its refresh ===
 ● OpenAI 10m
-Session  20% ███░░░░░░┃░░░░░░ ▼ 40  1h 50m
+Session  20% ███░░░░░░┃░░░░░░ ▼ 1h 50m
 === a snapshot long past its refresh ===
 ● Anthropic 45m
-Session  20% ███░░░░░░┃░░░░░░ ▼ 40  1h 15m
+Session  20% ███░░░░░░┃░░░░░░ ▼ 1h 15m
 === a provider waiting on a turn of its own ===
 ⧗ OpenAI 45m
-Session  20% ███░░░░░░┃░░░░░░ ▼ 40  1h 15m
+Session  20% ███░░░░░░┃░░░░░░ ▼ 1h 15m
 === nothing to report at all ===
 no usage to report

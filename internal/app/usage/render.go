@@ -2,7 +2,6 @@ package usage
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 
@@ -12,7 +11,7 @@ import (
 
 const (
 	gaugeWidth = 16
-	paceWidth  = 5
+	paceWidth  = 1
 
 	fillMark    = "█"
 	trackMark   = "░"
@@ -24,6 +23,7 @@ const (
 	aheadMark   = "▲"
 	behindMark  = "▼"
 	evenMark    = "▪"
+	limitedMark = "⊘"
 
 	idleLabel    = "idle"
 	staleLabel   = "stale"
@@ -67,16 +67,17 @@ func renderProvider(provider Snapshot, now time.Time, labelWidth int, gauges *Ga
 			gauges.Draw(limit.UsedPercent, limit.ExpectedPercent, pace, gaugeWidth),
 		}
 
+		state := limit.StateAt(now)
 		reset := renderReset(limit, now)
 
 		switch {
-		case limit.StateAt(now) == StateStale:
+		case state == StateStale:
 			parts = append(parts, pad("", paceWidth), reset)
 		case reset != "":
-			parts = append(parts, PaceStyle(pace)(pad(paceText(limit), paceWidth)), reset)
+			parts = append(parts, PaceStyle(pace)(pad(paceMark(limit, state), paceWidth)), reset)
 		default:
-			if text := paceText(limit); text != "" {
-				parts = append(parts, PaceStyle(pace)(text))
+			if mark := paceMark(limit, state); mark != "" {
+				parts = append(parts, PaceStyle(pace)(mark))
 			}
 		}
 
@@ -177,7 +178,7 @@ func renderReset(limit Limit, now time.Time) string {
 	switch limit.StateAt(now) {
 	case StateLimited:
 		if resetsAt, hasReset := limit.ResetTime(); hasReset {
-			return limitedCountdown(resetsAt.Sub(now))
+			return countdown(resetsAt.Sub(now))
 		}
 
 		return style.Failure(limitedLabel)
@@ -198,34 +199,28 @@ func renderReset(limit Limit, now time.Time) string {
 }
 
 func countdown(remainingTime time.Duration) string {
-	return countdownUnder(remainingTime, style.Normal)
-}
-
-func limitedCountdown(remainingTime time.Duration) string {
-	return countdownUnder(remainingTime, style.Failure)
-}
-
-func countdownUnder(remainingTime time.Duration, majorStyle style.Style) string {
 	switch {
 	case remainingTime >= dayLength:
-		return spans(majorStyle, remainingTime/dayLength, "d", int(remainingTime.Hours())%24, "h")
+		return spans(remainingTime/dayLength, "d", int(remainingTime.Hours())%24, "h")
 	case remainingTime >= time.Hour:
-		return spans(majorStyle, time.Duration(remainingTime.Hours()), "h", int(remainingTime.Minutes())%60, "m")
+		return spans(time.Duration(remainingTime.Hours()), "h", int(remainingTime.Minutes())%60, "m")
 	case remainingTime >= time.Minute:
-		return spans(majorStyle, time.Duration(remainingTime.Minutes()), "m", int(remainingTime.Seconds())%60, "s")
+		return spans(time.Duration(remainingTime.Minutes()), "m", int(remainingTime.Seconds())%60, "s")
 	default:
-		return majorStyle(fmt.Sprintf("%ds", int(remainingTime.Seconds())))
+		return style.Normal(fmt.Sprintf("%ds", int(remainingTime.Seconds())))
 	}
 }
 
-func spans(
-	majorStyle style.Style, major time.Duration, majorUnit string, minor int, minorUnit string,
-) string {
-	return majorStyle(fmt.Sprintf("%d%s", major, majorUnit)) + " " +
+func spans(major time.Duration, majorUnit string, minor int, minorUnit string) string {
+	return style.Normal(fmt.Sprintf("%d%s", major, majorUnit)) + " " +
 		style.Dim(fmt.Sprintf("%d%s", minor, minorUnit))
 }
 
-func paceText(limit Limit) string {
+func paceMark(limit Limit, state string) string {
+	if state == StateLimited {
+		return limitedMark
+	}
+
 	if limit.ExpectedPercent == nil {
 		return ""
 	}
@@ -234,9 +229,9 @@ func paceText(limit Limit) string {
 
 	switch {
 	case delta > 0:
-		return aheadMark + " " + strconv.Itoa(delta)
+		return aheadMark
 	case delta < 0:
-		return behindMark + " " + strconv.Itoa(-delta)
+		return behindMark
 	default:
 		return evenMark
 	}

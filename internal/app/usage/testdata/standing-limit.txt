@@ -1,20 +1,20 @@
 === a standing limit whose probe is not due yet ===
 ● OpenAI 23h
-Session  96% ┃██████████████░       stale
-Week    100% █████████┃██████ ▲ 43  2d 0h
+Session  96% ┃██████████████░   stale
+Week    100% █████████┃██████ ⊘ 2d 0h
 === a standing limit whose probe has fallen due ===
 ● OpenAI
-Session   6% ░░░░░░░░░┃░░░░░░ ▼ 54  2h 0m
-Week     88% ███████████┃██░░ ▲ 17  2d 0h
+Session   6% ░░░░░░░░░┃░░░░░░ ▼ 2h 0m
+Week     88% ███████████┃██░░ ▲ 2d 0h
 === a refreshed window uses its later reset ===
 ● OpenAI
-Session   6% ░░░░░░░░░┃░░░░░░ ▼ 54  2h 0m
-Week     88% ███████████┃██░░ ▲ 18  2d 1h
+Session   6% ░░░░░░░░░┃░░░░░░ ▼ 2h 0m
+Week     88% ███████████┃██░░ ▲ 2d 1h
 === a refreshed window that arrived with no reset ===
 ● OpenAI
-Session   6% ░░░░░░░░░┃░░░░░░ ▼ 54  2h 0m
-Week     88% ███████████┃██░░ ▲ 17  2d 0h
+Session   6% ░░░░░░░░░┃░░░░░░ ▼ 2h 0m
+Week     88% ███████████┃██░░ ▲ 2d 0h
 === a limit lifted by a probe that named no window ===
 ● OpenAI
-Session  96% ███████████████┃       stale
-Week    100% ███████████┃████ ▲ 29  2d 0h
+Session  96% ███████████████┃   stale
+Week    100% ███████████┃████ ▲ 2d 0h

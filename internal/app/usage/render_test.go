@@ -68,13 +68,13 @@ func TestEveryGaugeIsDrawnAgainstTheSameColumn(t *testing.T) {
 
 	want := strings.Join([]string{
 		"● OpenAI",
-		"Session        70% █████████┃█░░░░░ ▲ 10  1h 59m",
-		"Week           20% ███░░░░░░░░┃░░░░ ▼ 51  1d 23h",
-		"Spark Session   8% █░░░░░░░░┃░░░░░░ ▼ 52  1h 59m",
+		"Session        70% █████████┃█░░░░░ ▲ 1h 59m",
+		"Week           20% ███░░░░░░░░┃░░░░ ▼ 1d 23h",
+		"Spark Session   8% █░░░░░░░░┃░░░░░░ ▼ 1h 59m",
 		"",
 		"● Anthropic",
-		"Session         0% ░░░░░░░░░░░░░░░░       idle",
-		"Week           50% ████████░░░┃░░░░ ▼ 21  1d 23h",
+		"Session         0% ░░░░░░░░░░░░░░░░   idle",
+		"Week           50% ████████░░░┃░░░░ ▼ 1d 23h",
 		"",
 	}, "\n")
 

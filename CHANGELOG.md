@@ -9,6 +9,8 @@
 - Shorten and simplify the restart job hint message
 - Measure grapheme clusters accurately
 - Keep a queued message on screen while it sends
+- Drop the pace figure from usage
+- Mark a limited window with ⊘
 
 ## [0.8.0] - 2026-09-20
 
