@@ -176,6 +176,10 @@ func TestTakingTheQueueEmptiesItAndTakingTheLastLeavesTheRest(t *testing.T) {
 	interjections.Add("first")
 	interjections.Add("second")
 
+	if !interjections.HasMessages() {
+		t.Error("expected a filled queue to say it holds messages")
+	}
+
 	last, isTaken := interjections.TakeLast()
 	if !isTaken || last != "second" {
 		t.Errorf("took back %q, want the second", last)
@@ -196,6 +200,9 @@ func TestTakingTheQueueEmptiesItAndTakingTheLastLeavesTheRest(t *testing.T) {
 	}
 	if _, isTaken := interjections.TakeLast(); isTaken {
 		t.Error("expected an emptied queue to give nothing back")
+	}
+	if interjections.HasMessages() {
+		t.Error("expected an emptied queue to hold nothing")
 	}
 }
 
@@ -227,6 +234,9 @@ func TestANilQueueIsSafeToUse(t *testing.T) {
 	}
 	if _, isTaken := interjections.TakeLast(); isTaken {
 		t.Error("expected a nil queue to give nothing back")
+	}
+	if interjections.HasMessages() {
+		t.Error("expected a nil queue to hold nothing")
 	}
 }
 

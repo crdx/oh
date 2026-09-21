@@ -98,6 +98,10 @@ func (self *Stream) TakeNotes() (string, bool) {
 	return self.Interjections().TakeNotes()
 }
 
+func (self *Stream) HasInterjections() bool {
+	return self.Interjections().HasMessages()
+}
+
 func (self *Stream) GetInterjections() []string {
 	return self.Interjections().Peek()
 }

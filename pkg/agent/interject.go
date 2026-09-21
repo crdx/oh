@@ -57,6 +57,17 @@ func (self *Interjections) Add(text string) bool {
 	return true
 }
 
+func (self *Interjections) HasMessages() bool {
+	if self == nil {
+		return false
+	}
+
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	return len(self.messages) > 0
+}
+
 func (self *Interjections) Peek() []string {
 	if self == nil {
 		return nil

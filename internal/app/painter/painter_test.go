@@ -157,7 +157,7 @@ func TestQueuedMessagePathsAreLinkedAsHostPaths(t *testing.T) {
 
 	roots := link.Roots{Workspace: workspace}
 	renderings := map[string]string{
-		"footer": strings.Join(RenderQueuedMessages([]string{"check notes.txt"}, 80, true, roots), "\n"),
+		"footer": strings.Join(RenderQueuedMessages([]string{"check notes.txt"}, true, 80, true, roots), "\n"),
 		"notice": strings.Join(NewPendingMessages([]string{"check notes.txt"}, true, roots).Rows(80), "\n"),
 	}
 
@@ -199,17 +199,31 @@ func TestStandingNoticesSayHowToSendThemNow(t *testing.T) {
 }
 
 func TestQueuedMessagesSayHowToSendThemNow(t *testing.T) {
-	rows := RenderQueuedMessages([]string{"one"}, 40, false, link.Roots{})
+	rows := RenderQueuedMessages([]string{"one"}, true, 40, false, link.Roots{})
 
 	if !strings.Contains(style.Plain(rows[0]), sendHint) {
 		t.Errorf("got rows %q, want the hint above the queued message", rows)
 	}
 }
 
+func TestAQueueAwaitingAStoppingTurnSaysSoRatherThanOfferingToSendItNow(t *testing.T) {
+	rows := RenderQueuedMessages([]string{"one"}, false, 40, false, link.Roots{})
+
+	if !strings.Contains(style.Plain(rows[0]), stoppingHint) {
+		t.Errorf("got rows %q, want the stopping hint above the queued message", rows)
+	}
+	if strings.Contains(style.Plain(rows[0]), sendHint) {
+		t.Errorf("got rows %q, want no offer to send what cannot be sent yet", rows)
+	}
+	if !strings.Contains(style.Plain(rows[1]), unsentMark+" one") {
+		t.Errorf("got rows %q, want the message still standing unsent", rows)
+	}
+}
+
 func TestTheSendHintIsDroppedWhenItDoesNotFit(t *testing.T) {
 	renderings := map[string][]string{
 		"notices": NewPendingMessages([]string{"one"}, false, link.Roots{}).Rows(len(sendHint)),
-		"queue":   RenderQueuedMessages([]string{"one"}, len(sendHint), false, link.Roots{}),
+		"queue":   RenderQueuedMessages([]string{"one"}, true, len(sendHint), false, link.Roots{}),
 	}
 
 	for name, rows := range renderings {

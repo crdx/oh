@@ -626,8 +626,8 @@ func (self *App) sendInput(inputLine *edit.Input, history *edit.History, message
 }
 
 func (self *App) continueOrFlush(inputLine *edit.Input, history *edit.History) {
-	if message, isQueued := self.currentTurn.TakeInterjections(); isQueued {
-		self.replaceTurn(message)
+	if self.currentTurn.HasInterjections() {
+		self.interruptTurn(interrupt.Replacement)
 		return
 	}
 
@@ -942,6 +942,7 @@ func (self *App) statusRows(columns int) []string {
 	if self.feedback.IsEmpty() {
 		return painter.RenderQueuedMessages(
 			self.currentTurn.GetInterjections(),
+			!self.currentTurn.Cancelled(),
 			columns,
 			self.screen.IsTerminal(),
 			self.screen.LinkRoots().WithoutScratch(),

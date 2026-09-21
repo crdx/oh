@@ -24,6 +24,7 @@ const (
 	harnessMark             = "🤖"
 	unwrappedPreviewColumns = 1 << 16
 	sendHint                = "double-enter to send now"
+	stoppingHint            = "sending" + width.Ellipsis
 )
 
 type submissionKind uint8
@@ -60,13 +61,24 @@ func (self submittedMessage) background() style.Style {
 	return style.Harness
 }
 
-func RenderQueuedMessages(messages []string, columns int, shouldRenderHyperlinks bool, roots link.Roots) []string {
+func RenderQueuedMessages(
+	messages []string,
+	canBeSentNow bool,
+	columns int,
+	shouldRenderHyperlinks bool,
+	roots link.Roots,
+) []string {
 	if len(messages) == 0 {
 		return nil
 	}
 
+	hint := sendHint
+	if !canBeSentNow {
+		hint = stoppingHint
+	}
+
 	rows := make([]string, 0, len(messages)+2)
-	rows = append(rows, frameQueuedRow(renderSendHintRow(columns), columns))
+	rows = append(rows, frameQueuedRow(renderHintRow(hint, columns), columns))
 
 	for _, message := range messages {
 		summary := summariseQueuedMessage(message, shouldRenderHyperlinks, roots)
@@ -115,13 +127,13 @@ func frameQueuedRow(row string, columns int) string {
 	return style.User(row)
 }
 
-func renderSendHintRow(columns int) string {
-	room := columns - width.Of(sendHint) - 1
+func renderHintRow(hint string, columns int) string {
+	room := columns - width.Of(hint) - 1
 	if room < 1 {
 		return ""
 	}
 
-	return strings.Repeat(" ", room) + style.Subtle(sendHint)
+	return strings.Repeat(" ", room) + style.Subtle(hint)
 }
 
 type PendingMessages struct {
@@ -171,7 +183,7 @@ func (self *PendingMessages) sendHintRow(columns int) string {
 		return ""
 	}
 
-	return renderSendHintRow(columns)
+	return renderHintRow(sendHint, columns)
 }
 
 func HarnessNotices(event agent.Event) ([]string, bool) {

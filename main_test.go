@@ -1374,15 +1374,105 @@ func TestADoubleEnterSendsTheQueueAtOnceAndStopsTheTurn(t *testing.T) {
 	self.apply(inputLine, history, key.Key{Code: key.Enter})
 	self.apply(inputLine, history, key.Key{Code: key.Enter})
 
-	pending := self.queuedTurn.Peek()
-	if !pending.Replacement || pending.Message != "first message\n\nsecond message" {
-		t.Errorf("unexpected queued turn: %+v", pending)
-	}
 	if cancellations != 1 {
 		t.Errorf("cancelled %d times, want 1", cancellations)
 	}
+	if !self.queuedTurn.Empty() {
+		t.Errorf("queued a next turn before this one stopped: %+v", self.queuedTurn.Peek())
+	}
+
+	want := []string{"first message", "second message"}
+	if queued := self.currentTurn.GetInterjections(); !slices.Equal(queued, want) {
+		t.Errorf("queued %q, want %q standing until the turn stops", queued, want)
+	}
+}
+
+func TestAFlushedQueueStandsOnScreenUntilTheTurnItStoppedGivesWay(t *testing.T) {
+	var screenOutput bytes.Buffer
+	self := &App{
+		screen: output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines),
+		currentTurn: Turn{
+			Stream: testTurnStream(nil, func(error) {}, turn.State{Running: true}),
+		},
+	}
+	history := edit.NewHistory("", historyLimit)
+	inputLine := edit.NewInput(history)
+
+	typeMessage(t, self, inputLine, history, "check the other path too")
+	if drawn := style.Plain(strings.Join(self.statusRows(replayColumns), "\n")); !strings.Contains(
+		drawn, "double-enter to send now",
+	) {
+		t.Errorf("drew %q, want the queue offering to send itself now", drawn)
+	}
+
+	self.apply(inputLine, history, key.Key{Code: key.Enter})
+	self.apply(inputLine, history, key.Key{Code: key.Enter})
+
+	drawn := style.Plain(strings.Join(self.statusRows(replayColumns), "\n"))
+	if !strings.Contains(drawn, "check the other path too") {
+		t.Errorf("drew %q, want the flushed message still standing", drawn)
+	}
+	if !strings.Contains(drawn, "sending…") {
+		t.Errorf("drew %q, want the queue saying what it is waiting for", drawn)
+	}
+}
+
+func TestAMessageTypedWhileTheStoppingTurnLingersJoinsTheFlushedOne(t *testing.T) {
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	history := edit.NewHistory("", historyLimit)
+	inputLine := edit.NewInput(history)
+
+	self.start("first")
+	stoppedEvents := self.currentTurn.Events()
+
+	typeMessage(t, self, inputLine, history, "look at this instead")
+	self.apply(inputLine, history, key.Key{Code: key.Enter})
+	self.apply(inputLine, history, key.Key{Code: key.Enter})
+
+	typeMessage(t, self, inputLine, history, "and this as well")
+
+	for report := range stoppedEvents {
+		self.takeTurn(report)
+	}
+	self.finish()
+	for report := range self.currentTurn.Events() {
+		self.takeTurn(report)
+	}
+	self.finish()
+
+	var messages []string
+	for _, event := range self.recordedEvents {
+		if event.Kind == agent.UserMessageEvent {
+			messages = append(messages, event.Text)
+		}
+	}
+
+	want := []string{"first", "look at this instead\n\nand this as well"}
+	if !slices.Equal(messages, want) {
+		t.Errorf("sent %q, want %q", messages, want)
+	}
+}
+
+func TestAStopKeyTakesAFlushedMessageBackWhileTheTurnIsStillStopping(t *testing.T) {
+	self := &App{
+		currentTurn: Turn{
+			Stream: testTurnStream(nil, func(error) {}, turn.State{Running: true}),
+		},
+	}
+	history := edit.NewHistory("", historyLimit)
+	inputLine := edit.NewInput(history)
+
+	typeMessage(t, self, inputLine, history, "look at this instead")
+	self.apply(inputLine, history, key.Key{Code: key.Enter})
+	self.apply(inputLine, history, key.Key{Code: key.Enter})
+	self.apply(inputLine, history, key.Key{Code: key.Escape})
+
+	if inputLine.Text() != "look at this instead" {
+		t.Errorf("got input %q, want the flushed message handed back", inputLine.Text())
+	}
 	if queued := self.currentTurn.GetInterjections(); len(queued) != 0 {
-		t.Errorf("expected the queue to be emptied, got %q", queued)
+		t.Errorf("left %q queued, want nothing", queued)
 	}
 }
 
@@ -9500,6 +9590,7 @@ const (
 	queuedTakenBack
 	queuedTakenBackWhileTyping
 	queuedBehindFeedback
+	queuedFlushed
 	queuedDelivered
 	queuedTallerThanTheTerminal
 )
@@ -9517,6 +9608,7 @@ func TestGoldenQueuedMessagesDrawEveryVisibleState(t *testing.T) {
 		"escape takes the last back": func() string { return queuedMessagesStream(t, queuedTakenBack) },
 		"taken back while typing":    func() string { return queuedMessagesStream(t, queuedTakenBackWhileTyping) },
 		"feedback takes the footer":  func() string { return queuedMessagesStream(t, queuedBehindFeedback) },
+		"flushed at a stopping turn": func() string { return queuedMessagesStream(t, queuedFlushed) },
 		"delivered at the boundary":  func() string { return queuedMessagesStream(t, queuedDelivered) },
 		"taller than the terminal":   func() string { return queuedMessagesStream(t, queuedTallerThanTheTerminal) },
 	}
@@ -9589,6 +9681,7 @@ func queuedMessagesStream(t *testing.T, scenario queuedMessagesScenario) string 
 		queuedTakenBack:             {"check the other path too", "and mention what you find"},
 		queuedTakenBackWhileTyping:  {"check the other path too"},
 		queuedBehindFeedback:        {"check the other path too"},
+		queuedFlushed:               {"check the other path too", "and mention what you find"},
 		queuedDelivered:             {"check the other path too"},
 		queuedTallerThanTheTerminal: tallQueue(),
 	}[scenario]
@@ -9616,6 +9709,9 @@ func queuedMessagesStream(t *testing.T, scenario queuedMessagesScenario) string 
 		self.show(inputLine)
 		self.feedback.Clear(feedback.Command)
 		self.show(inputLine)
+	case queuedFlushed:
+		self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Enter})
+		self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Enter})
 	case queuedDelivered:
 		delivered, _ := self.currentTurn.TakeInterjections()
 		event := agent.Event{Kind: agent.UserMessageEvent, Text: delivered}
