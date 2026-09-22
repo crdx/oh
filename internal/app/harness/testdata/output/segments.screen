@@ -100,6 +100,10 @@ rxw ngl
 rxw ngl
 === mode-toggle / network only ===
 rxw ngl
+=== mode-toggle / nothing changes ===
+
+=== mode-toggle / only reading and writing change ===
+rw
 === mode-toggle / pending prefix ===
 rxw ngl
 === mode-toggle / read only ===

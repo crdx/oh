@@ -30,11 +30,11 @@ type snapshot struct {
 const readableBytes = 256 << 10
 
 func readSnapshot(path string) snapshot {
-	data, err := readWrittenFile(path)
+	data, err := ReadWrittenFile(path)
 	return snapshot{data: data, failure: err, isMissing: errors.Is(err, fs.ErrNotExist)}
 }
 
-func readWrittenFile(path string) ([]byte, error) {
+func ReadWrittenFile(path string) ([]byte, error) {
 	file, err := os.OpenFile(path, os.O_RDONLY|unix.O_NONBLOCK, 0) //nolint:gosec // the path is the configured one
 	if err != nil {
 		return nil, err

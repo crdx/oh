@@ -100,6 +100,10 @@ GPT Sol \e[38;2;150;152;150m5.6\e[0m \e[38;2;150;152;150m▫▫▫▫\e[0m\e[38;
 \e[38;2;76;154;44mr\e[0m\e[38;2;150;152;150mx\e[0m\e[38;2;150;152;150mw\e[0m \e[38;2;150;152;150mn\e[0m\e[38;2;150;152;150mg\e[0m\e[38;2;129;162;190ml\e[0m
 === mode-toggle / network only ===
 \e[38;2;76;154;44mr\e[0m\e[38;2;150;152;150mx\e[0m\e[38;2;150;152;150mw\e[0m \e[38;2;129;162;190mn\e[0m\e[38;2;150;152;150mg\e[0m\e[38;2;150;152;150ml\e[0m
+=== mode-toggle / nothing changes ===
+
+=== mode-toggle / only reading and writing change ===
+\e[38;2;76;154;44mr\e[0m\e[38;2;207;173;0mw\e[0m
 === mode-toggle / pending prefix ===
 \e[4m\e[38;2;76;154;44mr\e[0m\e[0m\e[4m\e[38;2;150;152;150mx\e[0m\e[0m\e[4m\e[38;2;150;152;150mw\e[0m\e[0m \e[4m\e[38;2;150;152;150mn\e[0m\e[0m\e[4m\e[38;2;150;152;150mg\e[0m\e[0m\e[4m\e[38;2;150;152;150ml\e[0m\e[0m
 === mode-toggle / read only ===

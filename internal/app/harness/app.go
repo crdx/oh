@@ -544,7 +544,7 @@ func (self *App) queuePathGrantChange(event agent.Event) {
 	if index, isPending := self.pendingPathGrantChange(event.Name); isPending {
 		self.takeBackPathGrantChange(index, event.Name)
 
-		if self.pathGrants.IsTold(event.Name) {
+		if self.pathGrants != nil && self.pathGrants.IsTold(event.Name) {
 			return
 		}
 	}
@@ -568,7 +568,7 @@ func (self *App) pendingPathGrantChange(path string) (int, bool) {
 func (self *App) takeBackPathGrantChange(index int, path string) {
 	self.pendingNotices.takeBack(index)
 
-	grants := self.pathGrants.GetCurrent()
+	grants := self.getPathGrants()
 	for other := range self.pendingNotices.items {
 		item := &self.pendingNotices.items[other]
 		if item.state.Kind != pathgrant.Change {
@@ -663,6 +663,10 @@ func (self *App) takeBackInterjection(inputLine *edit.Input) bool {
 }
 
 func (self *App) toggleCap(whichCaps caps.Set) {
+	if !self.mode.CanChange(whichCaps) {
+		return
+	}
+
 	self.mode.Toggle(whichCaps)
 	self.terminal.SetMode(self.mode.Current())
 
@@ -986,6 +990,7 @@ func (self *App) getBarSources() bar.Sources {
 		GetCacheUsage:         self.cacheUsage,
 		GetSessionSpend:       self.sessionSpend,
 		GetGrantedCaps:        self.grantedCaps,
+		GetChangeableCaps:     self.changeableCaps,
 		GetPathGrants:         self.getPathGrants,
 		GetHostToSandboxPorts: self.getHostToSandboxPorts,
 		GetSandboxToHostPorts: self.getSandboxToHostPorts,
@@ -1161,6 +1166,10 @@ func (self *App) nextAnswerRefresh(at time.Time) time.Time {
 }
 
 func (self *App) reloadConfig(watchFailure error) bool {
+	if self.configObserver == nil {
+		return false
+	}
+
 	result := self.configObserver.Reload(watchFailure, self.display.bar.GetRegistry())
 	switch result.Status {
 	case config.ReloadUnchanged:
@@ -1319,6 +1328,10 @@ func (self *App) sessionSpend() (float64, bool) {
 
 func (self *App) grantedCaps() caps.Set {
 	return self.mode.Current()
+}
+
+func (self *App) changeableCaps() caps.Set {
+	return self.mode.Changeable()
 }
 
 func (self *App) getPathGrants() []pathgrant.Grant {

@@ -260,10 +260,18 @@ func (self Bar) entries() map[segment.Position][]toml.Primitive {
 }
 
 func (self Config) BuildLayout(registry segment.Registry) (segment.Layout, error) {
+	return BuildLayout(registry, self.Bar, self.metaFor)
+}
+
+func BuildLayout(
+	registry segment.Registry,
+	writtenBar Bar,
+	metaFor func(segment.Position) *toml.MetaData,
+) (segment.Layout, error) {
 	layout := segment.Layout{}
 
-	for position, entries := range self.Bar.entries() {
-		meta := self.metaFor(position)
+	for position, entries := range writtenBar.entries() {
+		meta := metaFor(position)
 
 		for _, entry := range entries {
 			var namedFields struct {
@@ -595,7 +603,7 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 		}
 		definition := config.Snippets[name]
 		if definition.File != "" {
-			resolvedPath, err := resolveConfigPath(source.source.Path, definition.File)
+			resolvedPath, err := ResolveWrittenPath(source.source.Path, definition.File)
 			if err != nil {
 				return fmt.Errorf("%s: snippets.%s.file: %w", displayPath, name, err)
 			}
@@ -640,7 +648,7 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 			continue
 		}
 		for i, writtenPath := range *list.values {
-			resolvedPath, err := resolveConfigPath(source.source.Path, writtenPath)
+			resolvedPath, err := ResolveWrittenPath(source.source.Path, writtenPath)
 			if err != nil {
 				return fmt.Errorf("%s: %s: %w", displayPath, list.name, err)
 			}
@@ -746,7 +754,7 @@ func isHostnameCharacter(character rune) bool {
 	}
 }
 
-func resolveConfigPath(configPath string, writtenPath string) (string, error) {
+func ResolveWrittenPath(sourcePath string, writtenPath string) (string, error) {
 	if writtenPath == "" {
 		return "", errors.New("path is empty")
 	}
@@ -756,7 +764,7 @@ func resolveConfigPath(configPath string, writtenPath string) (string, error) {
 		return "", fmt.Errorf("could not expand %q: %w", writtenPath, err)
 	}
 	if !filepath.IsAbs(path) {
-		path = filepath.Join(filepath.Dir(configPath), path)
+		path = filepath.Join(filepath.Dir(sourcePath), path)
 	}
 
 	return filepath.Clean(path), nil

@@ -82,6 +82,7 @@ type Sources struct {
 	GetCacheUsage         func() (int, int)
 	GetSessionSpend       func() (float64, bool)
 	GetGrantedCaps        func() caps.Set
+	GetChangeableCaps     func() caps.Set
 	GetPathGrants         func() []pathgrant.Grant
 	GetHostToSandboxPorts func() []uint16
 	GetSandboxToHostPorts func() []uint16
@@ -97,8 +98,12 @@ func NewRegistry(options Options) segment.Registry {
 		cacheUsageSegment:      cacheUsage.New(options.Sources.GetCacheUsage),
 		contextUsageSegment:    contextUsage.New(options.Sources.GetContextUsage),
 		sessionSpendSegment:    sessionSpend.New(options.Sources.GetSessionSpend, options.Currency),
-		modeToggleSegment:      modeToggle.New(options.Sources.GetGrantedCaps, options.Sources.IsPrefixPending),
-		pathGrantsSegment:      pathGrants.New(options.Sources.GetPathGrants),
+		modeToggleSegment: modeToggle.New(
+			options.Sources.GetGrantedCaps,
+			options.Sources.GetChangeableCaps,
+			options.Sources.IsPrefixPending,
+		),
+		pathGrantsSegment: pathGrants.New(options.Sources.GetPathGrants),
 		exposedPortsSegment: exposedPorts.New(
 			exposedPorts.Routes{
 				GetPorts: options.Sources.GetHostToSandboxPorts,

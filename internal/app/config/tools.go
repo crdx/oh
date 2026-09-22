@@ -31,6 +31,30 @@ type CustomParameter struct {
 	IsOptional  bool     `toml:"optional"`
 }
 
+func (self CustomTool) IsReference() bool {
+	return len(self.Command) == 0
+}
+
+func (self CustomTool) CheckReference() error {
+	if !self.IsReference() {
+		return nil
+	}
+
+	for setting, isWritten := range map[string]bool{
+		"description": strings.TrimSpace(self.Description) != "",
+		"parameters":  len(self.Parameters) > 0,
+		"subject":     strings.TrimSpace(self.Subject) != "",
+		"timeout":     self.Timeout != 0,
+		"permission":  strings.TrimSpace(self.Permission) != "",
+	} {
+		if isWritten {
+			return fmt.Errorf("%s: not allowed when naming a built-in tool", setting)
+		}
+	}
+
+	return nil
+}
+
 func (self Config) BuildCustomTools(options command.Options) ([]tool.Tool, error) {
 	tools := make([]tool.Tool, 0, len(self.Tools))
 
@@ -69,24 +93,26 @@ func (self Config) buildCustomTool(name string, options command.Options) (tool.T
 }
 
 func (self Config) declare(name string) (command.Declaration, error) {
-	setting := self.Tools[name]
+	return Declare(name, self.Tools[name], self.getSourceFile(toolsSetting, name))
+}
 
+func Declare(name string, declaration CustomTool, sourcePath string) (command.Declaration, error) {
 	rule := permission.Ask
-	if strings.TrimSpace(setting.Permission) != "" {
+	if strings.TrimSpace(declaration.Permission) != "" {
 		var err error
-		if rule, err = permission.ParseRule(setting.Permission); err != nil {
+		if rule, err = permission.ParseRule(declaration.Permission); err != nil {
 			return command.Declaration{}, fmt.Errorf("permission: %w", err)
 		}
 	}
 
-	resolvedCommand, err := self.resolveCommand(name, setting.Command)
+	resolvedCommand, err := ResolveCommand(sourcePath, declaration.Command)
 	if err != nil {
 		return command.Declaration{}, err
 	}
 
-	parameters := make([]command.Parameter, 0, len(setting.Parameters))
+	parameters := make([]command.Parameter, 0, len(declaration.Parameters))
 
-	for _, parameter := range setting.Parameters {
+	for _, parameter := range declaration.Parameters {
 		parameters = append(parameters, command.Parameter{
 			Name:        parameter.Name,
 			Kind:        command.Kind(parameter.Kind),
@@ -98,17 +124,16 @@ func (self Config) declare(name string) (command.Declaration, error) {
 
 	return command.Declaration{
 		Name:        name,
-		Description: setting.Description,
+		Description: declaration.Description,
 		Command:     resolvedCommand,
 		Parameters:  parameters,
-		Subject:     setting.Subject,
-		TimeLimit:   setting.Timeout,
+		Subject:     declaration.Subject,
+		TimeLimit:   declaration.Timeout,
 		MustAsk:     rule != permission.Allow,
 	}, nil
 }
 
-func (self Config) resolveCommand(name string, writtenCommand []string) ([]string, error) {
-	sourcePath := self.getSourceFile(toolsSetting, name)
+func ResolveCommand(sourcePath string, writtenCommand []string) ([]string, error) {
 	resolvedCommand := slices.Clone(writtenCommand)
 
 	for at, word := range resolvedCommand {
@@ -116,7 +141,7 @@ func (self Config) resolveCommand(name string, writtenCommand []string) ([]strin
 			continue
 		}
 
-		path, err := resolveConfigPath(sourcePath, word)
+		path, err := ResolveWrittenPath(sourcePath, word)
 		if err != nil {
 			return nil, fmt.Errorf("command: %w", err)
 		}

@@ -119,7 +119,8 @@ func RefuseWrite(mode *Mode) func(name string) error {
 }
 
 type Mode struct {
-	state *access.State[Set]
+	state      *access.State[Set]
+	changeable Set
 }
 
 func modeDefinition() access.Definition[Set] {
@@ -132,14 +133,30 @@ func modeDefinition() access.Definition[Set] {
 }
 
 func NewMode(currentCaps Set) *Mode {
-	return &Mode{state: access.New(currentCaps, modeDefinition())}
+	return NewLimitedMode(currentCaps, All())
+}
+
+func NewLimitedMode(currentCaps Set, changeableCaps Set) *Mode {
+	return &Mode{state: access.New(currentCaps, modeDefinition()), changeable: changeableCaps}
 }
 
 func (self *Mode) Current() Set {
 	return self.state.GetCurrent()
 }
 
+func (self *Mode) Changeable() Set {
+	return self.changeable
+}
+
+func (self *Mode) CanChange(whichCaps Set) bool {
+	return self.changeable.Has(whichCaps)
+}
+
 func (self *Mode) Toggle(whichCaps Set) {
+	if !self.CanChange(whichCaps) {
+		return
+	}
+
 	self.state.Change(func(currentCaps Set) Set { return currentCaps ^ whichCaps })
 }
 

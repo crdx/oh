@@ -79,6 +79,7 @@ func render(t *testing.T, grantedCaps caps.Set, isPrefixPending bool) string {
 
 	built, err := modeToggle.New(
 		func() caps.Set { return grantedCaps },
+		caps.All,
 		func() bool { return isPrefixPending },
 	)(noOptions{})
 	if err != nil {

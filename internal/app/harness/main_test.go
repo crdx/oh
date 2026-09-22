@@ -4283,7 +4283,7 @@ func TestGoldenAResumedConversationDrawsItsRecordedMode(t *testing.T) {
 	}
 
 	resumedHarness := &App{mode: caps.NewMode(restoredCaps)}
-	modeSegment, err := modeToggle.New(resumedHarness.grantedCaps, resumedHarness.isPrefixPending)(nil)
+	modeSegment, err := modeToggle.New(resumedHarness.grantedCaps, resumedHarness.changeableCaps, resumedHarness.isPrefixPending)(nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -11291,31 +11291,51 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 		),
 		"mode-toggle / all granted": goldenSegmentPass(
 			t,
-			modeToggle.New(caps.All, func() bool { return false }),
+			modeToggle.New(caps.All, caps.All, func() bool { return false }),
 			"",
 			segment.Context{},
 		),
 		"mode-toggle / pending prefix": goldenSegmentPass(
 			t,
-			modeToggle.New(func() caps.Set { return caps.Read }, func() bool { return true }),
+			modeToggle.New(func() caps.Set { return caps.Read }, caps.All, func() bool { return true }),
 			"",
 			segment.Context{},
 		),
 		"mode-toggle / read only": goldenSegmentPass(
 			t,
-			modeToggle.New(func() caps.Set { return caps.Read }, func() bool { return false }),
+			modeToggle.New(func() caps.Set { return caps.Read }, caps.All, func() bool { return false }),
 			"",
 			segment.Context{},
 		),
 		"mode-toggle / network only": goldenSegmentPass(
 			t,
-			modeToggle.New(func() caps.Set { return caps.Read | caps.Network }, func() bool { return false }),
+			modeToggle.New(func() caps.Set { return caps.Read | caps.Network }, caps.All, func() bool { return false }),
 			"",
 			segment.Context{},
 		),
 		"mode-toggle / lookup only": goldenSegmentPass(
 			t,
-			modeToggle.New(func() caps.Set { return caps.Read | caps.Lookup }, func() bool { return false }),
+			modeToggle.New(func() caps.Set { return caps.Read | caps.Lookup }, caps.All, func() bool { return false }),
+			"",
+			segment.Context{},
+		),
+		"mode-toggle / only reading and writing change": goldenSegmentPass(
+			t,
+			modeToggle.New(
+				func() caps.Set { return caps.Read | caps.Write },
+				func() caps.Set { return caps.Read | caps.Write },
+				func() bool { return false },
+			),
+			"",
+			segment.Context{},
+		),
+		"mode-toggle / nothing changes": goldenSegmentPass(
+			t,
+			modeToggle.New(
+				func() caps.Set { return caps.Read },
+				func() caps.Set { return 0 },
+				func() bool { return false },
+			),
 			"",
 			segment.Context{},
 		),

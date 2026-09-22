@@ -11,6 +11,8 @@ import (
 	"crdx.org/oh/pkg/toolbox/write"
 )
 
+var PathToolNames = []string{"read", "ls", "find", "grep", "write", "edit"}
+
 func Rummage(root *file.Root, snapshots *file.Snapshots) []tool.Tool {
 	return []tool.Tool{
 		read.New(root, snapshots),

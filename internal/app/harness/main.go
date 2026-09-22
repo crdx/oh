@@ -1012,53 +1012,79 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		Now:          time.Now,
 	})
 
-	app = &App{
-		agent:    agent.NewWithEnabledTools(systemPrompt, providerClient, toolboxTools, enabledTools),
-		screen:   screen,
-		terminal: terminal.New(os.Stdout, workspace),
-		metrics: metrics.New(metrics.Settings{
+	var openingEvents []agent.Event
+	if resumedSession == nil && model.SupportsFastMode(selection.Provider) {
+		openingEvents = []agent.Event{model.FastModeEvent(selection.IsFast)}
+	}
+
+	var picturesDisplay pictures.Display
+	cellWidth, cellHeight, hasGraphics := graphics.Detect(keyboard, os.Stdout)
+	if hasGraphics {
+		picturesDisplay = pictures.Display{
+			SessionDirectory: sessionInfo.Directory,
+			ScratchDirectory: shadowedScratch(tmpDir, args.Yolo),
+			CellWidth:        cellWidth,
+			CellHeight:       cellHeight,
+			IsLocal:          isTerminalLocal(),
+		}
+	}
+
+	app = New(Options{
+		Agent:    agent.NewWithEnabledTools(systemPrompt, providerClient, toolboxTools, enabledTools),
+		Screen:   screen,
+		Terminal: terminal.New(os.Stdout, workspace),
+		Metrics: metrics.New(metrics.Settings{
 			ContextWindowTokens: choice.ContextWindowTokens,
 			Prices:              choice.Prices,
 		}),
-		recorder:        record.New(log),
-		editorConfig:    editorConfiguration,
-		toolOutputLimit: toolOutputLimit,
-		experimental:    experimentalToggles,
-		workspace:       workspace,
-		mode:            mode,
-		conditions:      restoredConditions.State,
-		pathGrants:      pathGrants,
-		hostToSandbox:   hostToSandbox,
-		sandboxToHost:   sandboxToHost,
-		jobs: jobState{
-			manager:  jobManager,
-			doesWake: doesWake,
+		Recorder:        record.New(log),
+		EditorConfig:    editorConfiguration,
+		ToolOutputLimit: toolOutputLimit,
+		Experimental:    experimentalToggles,
+		Workspace:       workspace,
+		Mode:            mode,
+		Conditions:      restoredConditions.State,
+		PathGrants:      pathGrants,
+		HostToSandbox:   hostToSandbox,
+		SandboxToHost:   sandboxToHost,
+		Jobs:            jobManager,
+		DoJobsWake:      doesWake,
+		ConfigObserver:  configObserver,
+		IsPrinting:      args.IsPrinting,
+		IsYolo:          args.Yolo,
+		IsSimulated:     isSimulated,
+		Questions:       askBroker,
+		Keyboard:        keyboard,
+		OpeningEvents:   openingEvents,
+		Pictures:        picturesDisplay,
+		SavePastedImage: dropKeeper.SaveImage,
+		OnFailure: func(failure error) {
+			_ = notification.SendTurnError(
+				context.Background(), screen.WriteEscape, isTerminalFocused, workspace, failure,
+			)
 		},
-		configObserver: configObserver,
-		runMode:        runMode{isPrinting: args.IsPrinting, isYolo: args.Yolo, isSimulated: isSimulated},
-		question:       questionState{broker: askBroker},
-		startedAt:      util.WallClock(time.Now()),
-		keyboard:       keyboard,
-	}
-	if resumedSession == nil && model.SupportsFastMode(selection.Provider) {
-		app.openingEvents = []agent.Event{model.FastModeEvent(selection.IsFast)}
-	}
+		OnQuestion: func(question ask.Question) {
+			go func() {
+				_ = notification.SendQuestion(
+					context.Background(), screen.WriteEscape, isTerminalFocused, workspace, question,
+				)
+			}()
+		},
+	})
 	if restoredConditions.IsChanged {
 		app.pendingNotices.add(restoredConditions.Change)
 	}
-	app.onFailure = func(failure error) {
-		_ = notification.SendTurnError(
-			context.Background(), screen.WriteEscape, isTerminalFocused, workspace, failure,
-		)
+	if hasGraphics {
+		app.agent.StorePicturesWith(func(picture tool.Image) *agent.Picture {
+			reference, err := pictures.Store(sessionInfo.Directory, log.EnsurePersisted, picture)
+			if err != nil {
+				return nil
+			}
+
+			return reference
+		})
 	}
-	app.onQuestion = func(question ask.Question) {
-		go func() {
-			_ = notification.SendQuestion(
-				context.Background(), screen.WriteEscape, isTerminalFocused, workspace, question,
-			)
-		}()
-	}
-	app.savePastedImage = dropKeeper.SaveImage
+
 	toolOutputLimit.SaveOverflowWith(dropKeeper.SaveOutput)
 
 	if cellWidth, cellHeight, hasGraphics := graphics.Detect(keyboard, os.Stdout); hasGraphics {
