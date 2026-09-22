@@ -1,0 +1,33 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+take the request and say nothing at all
+
+## Retrying · attempt 1 · waited 1s · +0s
+
+```
+the stream sent nothing for 0.2s
+```
+
+## Assistant · +0s
+
+Through on the second attempt.
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+Carrying on.

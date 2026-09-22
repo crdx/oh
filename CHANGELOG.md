@@ -14,6 +14,7 @@
 - Mark a limited window with ⊘
 - Add custom tools
 - Isolate IPC and UTS namespaces
+- Fix turn resumption after a night's sleep
 
 ## [0.8.0] - 2026-09-20
 

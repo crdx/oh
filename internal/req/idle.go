@@ -3,11 +3,13 @@ package req
 import (
 	"context"
 	"io"
-	"sync/atomic"
+	"sync"
 	"time"
 
 	"crdx.org/oh/internal/util"
 )
+
+const idleCheckPeriod = 5 * time.Second
 
 type IdleError struct {
 	After time.Duration
@@ -22,41 +24,74 @@ func (*IdleError) Retriable() bool { return true }
 func (*IdleError) RetryAfter() time.Duration { return 0 }
 
 type idleWatchdog struct {
-	after      time.Duration
-	cancel     context.CancelFunc
+	after  time.Duration
+	every  time.Duration
+	now    func() time.Time
+	cancel context.CancelFunc
+
+	mutex      sync.Mutex
 	timer      *time.Timer
-	hasExpired atomic.Bool
+	quietSince time.Time
+	hasExpired bool
 }
 
-func newIdleWatchdog(after time.Duration, cancel context.CancelFunc) *idleWatchdog {
-	return &idleWatchdog{after: after, cancel: cancel}
+func newIdleWatchdog(
+	after time.Duration, every time.Duration, now func() time.Time, cancel context.CancelFunc,
+) *idleWatchdog {
+	watchdog := &idleWatchdog{
+		after:      after,
+		every:      every,
+		now:        now,
+		cancel:     cancel,
+		quietSince: util.WallClock(now()),
+	}
+
+	watchdog.timer = time.AfterFunc(min(after, every), watchdog.check)
+
+	return watchdog
+}
+
+func (self *idleWatchdog) check() {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	silence := util.WallClock(self.now()).Sub(self.quietSince)
+	if silence < self.after {
+		self.timer.Reset(min(self.after-silence, self.every))
+
+		return
+	}
+
+	self.hasExpired = true
+	self.cancel()
 }
 
 func (self *idleWatchdog) watch(body io.ReadCloser) io.ReadCloser {
-	self.timer = time.AfterFunc(self.after, func() {
-		self.hasExpired.Store(true)
-		self.cancel()
-	})
-
 	return &idleBody{ReadCloser: body, watchdog: self}
 }
 
 func (self *idleWatchdog) extend() {
-	if self.timer != nil && !self.hasExpired.Load() {
-		self.timer.Reset(self.after)
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	if !self.hasExpired {
+		self.quietSince = util.WallClock(self.now())
 	}
 }
 
 func (self *idleWatchdog) stop() {
-	if self.timer != nil {
-		self.timer.Stop()
-	}
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
 
+	self.timer.Stop()
 	self.cancel()
 }
 
 func (self *idleWatchdog) explain(err error) error {
-	if self.hasExpired.Load() {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	if self.hasExpired {
 		return &IdleError{After: self.after}
 	}
 

@@ -1,0 +1,13 @@
+{"kind":"head","version":13,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"user_message","text":"take the request and say nothing at all"}}
+{"kind":"event","event":{"kind":"request_retry","failure":{"kind":"generic_error","message":"the stream sent nothing for 0.2s"},"attempt":1}}
+{"kind":"event","event":{"kind":"model_message","text":"Through on the second attempt."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"take the request and say nothing at all"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Through on the second attempt."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
+{"kind":"event","event":{"kind":"model_message","text":"Carrying on."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"carry on"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Carrying on."}]}}
+{"kind":"turn_completion","turn":{}}

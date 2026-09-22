@@ -340,8 +340,7 @@ func (self *Agent) Stream(ctx context.Context, message string, interjections *In
 		for {
 			var prose proseStream
 
-			askedAt := self.now()
-			reply, isListening, err := self.send(ctx, &prose, yieldUpdates, yieldEvent)
+			reply, askedAt, isListening, err := self.send(ctx, &prose, yieldUpdates, yieldEvent)
 
 			switch {
 			case !isListening:
@@ -445,25 +444,27 @@ func (self *Agent) send(
 	prose *proseStream,
 	yieldUpdates func([]Update) bool,
 	yieldEvent func(Event, error) bool,
-) (Reply, bool, error) {
+) (Reply, time.Time, bool, error) {
 	isListening := true
 	askedRewind := rewindOf(self.provider)
 
 	var spentTime time.Duration
 
 	for attempt := 1; ; attempt++ {
+		askedAt := self.now()
+
 		reply, err := self.provider.Send(ctx, func(output Output) bool {
 			isListening = yieldUpdates(prose.add(output))
 			return isListening
 		})
 
 		if !isListening || err == nil {
-			return reply, isListening, err
+			return reply, askedAt, isListening, err
 		}
 
 		wait, worthIt := self.retryWait(err, attempt, spentTime)
 		if !worthIt {
-			return reply, isListening, err
+			return reply, askedAt, isListening, err
 		}
 
 		spentTime += wait
@@ -473,7 +474,7 @@ func (self *Agent) send(
 		}
 
 		if !yieldUpdates(prose.interrupted()) {
-			return reply, false, err
+			return reply, askedAt, false, err
 		}
 
 		notice := Event{
@@ -488,11 +489,11 @@ func (self *Agent) send(
 		}
 
 		if !yieldEvent(notice, nil) {
-			return reply, false, err
+			return reply, askedAt, false, err
 		}
 
 		if !self.waitBeforeRetry(ctx, wait) {
-			return reply, isListening, err
+			return reply, askedAt, isListening, err
 		}
 	}
 }

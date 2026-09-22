@@ -1,0 +1,45 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+go quiet until the cache has gone cold
+
+## Tool calls · +0s
+
+```
+work: work [ok, 1 line, 4B, toolu_1]
+```
+
+## Retrying · attempt 1 · waited 1s · +0s
+
+```
+the stream sent nothing for 0.2s
+```
+
+## Assistant · +0s
+
+The cache went cold while the connection was dead.
+
+## Cache rebuild · +0s
+
+```
+Cache expired: 28Kt sent after 8m.
+```
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+Carrying on.

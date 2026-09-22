@@ -1,11 +1,13 @@
 package req_test
 
 import (
+	"context"
 	"errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -69,6 +71,80 @@ func TestAStreamThatGoesQuietIsStopped(t *testing.T) {
 
 	if !strings.Contains(idle.Error(), "the stream sent nothing") {
 		t.Errorf("expected the silence to be named, got %q", idle)
+	}
+}
+
+func clockThatSleepsAfterTheFirstReading(slept time.Duration) func() time.Time {
+	var readings atomic.Int64
+
+	return func() time.Time {
+		if readings.Add(1) == 1 {
+			return time.Now()
+		}
+
+		return time.Now().Add(slept)
+	}
+}
+
+func TestAStreamThatWentQuietWhileTheMachineSleptIsStoppedOnWaking(t *testing.T) {
+	url := tricklingServer(t, time.Hour, 1)
+
+	client := req.NewStreaming(time.Hour, time.Hour)
+	client.CheckIdleEvery(20 * time.Millisecond)
+	client.TakeTimeFrom(clockThatSleepsAfterTheFirstReading(2 * time.Hour))
+
+	ctx, cancel := context.WithTimeout(t.Context(), 10*time.Second)
+	defer cancel()
+
+	body, _, err := client.Stream(ctx, url, map[string]string{}, nil)
+	if err != nil {
+		t.Fatalf("expected the stream to open: %v", err)
+	}
+	defer func() { _ = body.Close() }()
+
+	_, err = io.ReadAll(body)
+
+	var idle *req.IdleError
+	if !errors.As(err, &idle) {
+		t.Fatalf("expected the sleep to count against the silence, got %v", err)
+	}
+
+	if idle.After != time.Hour {
+		t.Errorf("expected the idle bound to be quantified, got %s", idle.After)
+	}
+}
+
+func TestHeadersThatNeverArrivedWhileTheMachineSleptAreGivenUpOnWaking(t *testing.T) {
+	release := make(chan struct{})
+
+	server := httptest.NewServer(http.HandlerFunc(
+		func(_ http.ResponseWriter, request *http.Request) {
+			select {
+			case <-request.Context().Done():
+			case <-release:
+			}
+		},
+	))
+
+	t.Cleanup(server.Close)
+	t.Cleanup(func() { close(release) })
+
+	client := req.NewStreaming(time.Hour, time.Hour)
+	client.CheckIdleEvery(20 * time.Millisecond)
+	client.TakeTimeFrom(clockThatSleepsAfterTheFirstReading(2 * time.Hour))
+
+	ctx, cancel := context.WithTimeout(t.Context(), 10*time.Second)
+	defer cancel()
+
+	_, _, err := client.Stream(ctx, server.URL, map[string]string{}, nil)
+
+	if _, isIdle := errors.AsType[*req.IdleError](err); !isIdle {
+		t.Fatalf("expected the wait for the headers to end, got %v", err)
+	}
+
+	var retriable agent.Retriable
+	if !errors.As(err, &retriable) || !retriable.Retriable() {
+		t.Error("expected the wait for the headers to be worth another attempt")
 	}
 }
 

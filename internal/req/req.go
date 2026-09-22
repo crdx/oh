@@ -22,29 +22,48 @@ import (
 const bodyLimit = 64 * 1024
 
 type Client struct {
-	http     *http.Client
-	idle     time.Duration
-	observer Observer
+	http       *http.Client
+	idle       time.Duration
+	idleChecks time.Duration
+	now        func() time.Time
+	observer   Observer
 }
 
 func New(timeout time.Duration) *Client {
-	return &Client{http: &http.Client{Timeout: timeout}}
+	return newClient(&http.Client{Timeout: timeout}, 0)
 }
 
 func NewStreaming(responseHeaderTimeout time.Duration, idleTimeout time.Duration) *Client {
 	transport, isStandard := http.DefaultTransport.(*http.Transport)
 	if !isStandard {
-		return &Client{http: &http.Client{}, idle: idleTimeout}
+		return newClient(&http.Client{}, idleTimeout)
 	}
 
 	streaming := transport.Clone()
 	streaming.ResponseHeaderTimeout = responseHeaderTimeout
 
-	return &Client{http: &http.Client{Transport: streaming}, idle: idleTimeout}
+	return newClient(&http.Client{Transport: streaming}, idleTimeout)
+}
+
+func newClient(client *http.Client, idleTimeout time.Duration) *Client {
+	return &Client{
+		http:       client,
+		idle:       idleTimeout,
+		idleChecks: idleCheckPeriod,
+		now:        time.Now,
+	}
 }
 
 func (self *Client) IdleAfter(after time.Duration) {
 	self.idle = after
+}
+
+func (self *Client) CheckIdleEvery(period time.Duration) {
+	self.idleChecks = period
+}
+
+func (self *Client) TakeTimeFrom(clock func() time.Time) {
+	self.now = clock
 }
 
 func (self *Client) Observe(observer Observer) {
@@ -157,7 +176,7 @@ func (self *Client) do(request *http.Request, requestBody []byte) (io.ReadCloser
 	var watchdog *idleWatchdog
 	if self.idle > 0 {
 		ctx, cancel := context.WithCancel(request.Context())
-		watchdog = newIdleWatchdog(self.idle, cancel)
+		watchdog = newIdleWatchdog(self.idle, self.idleChecks, self.now, cancel)
 		request = request.WithContext(ctx)
 	}
 
@@ -176,6 +195,7 @@ func (self *Client) do(request *http.Request, requestBody []byte) (io.ReadCloser
 	response, err := self.http.Do(request)
 	if err != nil {
 		if watchdog != nil {
+			err = watchdog.explain(err)
 			watchdog.stop()
 		}
 
