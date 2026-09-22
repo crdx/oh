@@ -53,23 +53,11 @@ func (self *Screen) DiscardLive() bool {
 	defer self.mutex.Unlock()
 
 	self.blocks = nil
-	if len(self.liveRegion.rows) == 0 {
-		return true
-	}
-	if self.liveRegion.topRowIndex > 0 {
-		return false
-	}
-	if self.canRepaint {
-		self.repaint(0, []string{""}, false)
-		self.liveRegion = liveRegion{}
-		return false
-	}
-	self.liveRegion = liveRegion{}
 
-	return true
+	return self.discardLiveRegion()
 }
 
-func (self *Screen) discardBlock() bool {
+func (self *Screen) discardLiveRegion() bool {
 	if len(self.liveRegion.rows) == 0 {
 		return true
 	}

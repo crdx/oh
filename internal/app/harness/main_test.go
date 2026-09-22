@@ -7043,6 +7043,9 @@ func TestGoldenATurnStillRunningDrawsWhatItDrewBefore(t *testing.T) {
 	screenPasses := shownPasses(t, passes)
 	screenPasses["help during reasoning"] = func() string { return shownHelpDuringReasoningFrames(t) }
 	screenPasses["help on a short running terminal"] = func() string { return shownShortRunningHelpFrames(t) }
+	screenPasses["reasoning discarded as the turn stops"] = func() string {
+		return shownStoppedTurnAfterReasoningFrames(t)
+	}
 	for name, scenario := range everyAnswerStartScenario() {
 		screenPasses["queued message as answer starts "+name] = func() string {
 			return shownAnswerStartsAfterAcceptedInputFrames(t, scenario)
@@ -7135,8 +7138,8 @@ func TestAQueuedMessageStaysVisibleAsAnAnswerStarts(t *testing.T) {
 	for name, scenario := range everyAnswerStartScenario() {
 		t.Run(name, func(t *testing.T) {
 			frames := answerStartsAfterAcceptedInputFrames(t, scenario)
-			if len(frames) < 2 {
-				t.Fatalf("answer start drew %d frames, want the live-region change and its repair", len(frames))
+			if len(frames) == 0 {
+				t.Fatal("the answer start drew nothing, so nothing kept the queued message")
 			}
 
 			for i, frame := range frames {
@@ -7188,10 +7191,16 @@ func answerStartsAfterAcceptedInputFrames(t *testing.T, scenario answerStartScen
 func shownAnswerStartsAfterAcceptedInputFrames(t *testing.T, scenario answerStartScenario) string {
 	t.Helper()
 
+	return shownFrames(t, answerStartsAfterAcceptedInputFrames(t, scenario))
+}
+
+func shownFrames(t *testing.T, frames []string) string {
+	t.Helper()
+
 	var shown strings.Builder
 	var previous []string
 	frameNumber := 0
-	for _, frame := range answerStartsAfterAcceptedInputFrames(t, scenario) {
+	for _, frame := range frames {
 		visible := visibleScreen(t, frame, replayColumns)
 		if slices.Equal(visible, previous) {
 			continue
@@ -7201,6 +7210,40 @@ func shownAnswerStartsAfterAcceptedInputFrames(t *testing.T, scenario answerStar
 		previous = visible
 	}
 	return strings.TrimSuffix(shown.String(), "\n")
+}
+
+func shownStoppedTurnAfterReasoningFrames(t *testing.T) string {
+	t.Helper()
+
+	return shownFrames(t, stoppedTurnAfterReasoningFrames(t))
+}
+
+func stoppedTurnAfterReasoningFrames(t *testing.T) []string {
+	t.Helper()
+
+	writer := &frameRecordingWriter{}
+	self := slashCommandFixture(t, caps.Read)
+	self.screen = output.NewTerminalOfSize(writer, replayColumns, replayLines)
+	self.currentTurn = Turn{Stream: testRunningTurnStream(), painter: self.newPainter(true)}
+
+	inputLine := edit.NewInput(edit.NewHistory("", historyLimit))
+	self.inputLine = inputLine
+
+	self.recordEvent(agent.Event{Kind: agent.UserMessageEvent, Text: "the migration should be reviewable"})
+	self.currentTurn.painter.DrawDelta(agent.Delta{
+		Kind: agent.ModelReasoningEvent,
+		Text: "weighing up how flat the migration can be, and what a reviewer needs from it, and whether " +
+			"the steps it takes can be read in one sitting without following anything back to where it " +
+			"came from\n",
+	})
+	self.show(inputLine)
+	framesBeforeStopping := len(writer.frames)
+
+	self.recordEvent(interrupt.Event(interrupt.Escape))
+	self.screen.End()
+	self.show(inputLine)
+
+	return slices.Clone(writer.frames[framesBeforeStopping:])
 }
 
 type journal struct {

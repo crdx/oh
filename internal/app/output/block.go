@@ -156,7 +156,7 @@ func (self *Screen) DiscardBlock(handle *BlockHandle) bool {
 	if len(self.blocks) == 1 {
 		self.blocks = nil
 
-		return self.discardBlock()
+		return self.discardLiveRegion()
 	}
 
 	self.blocks = slices.Delete(self.blocks, at, at+1)

@@ -381,3 +381,19 @@ func TestTheCursorComesBackWhenTheInputIsTakenAgain(t *testing.T) {
 		t.Errorf("expected the cursor back once the input is taken again, got %q", got)
 	}
 }
+
+func TestAHiddenRowsNoticeNeitherWrapsNorMovesTheDrawing(t *testing.T) {
+	screen, _ := region()
+
+	screen.DrawAnswer([]string{strings.Repeat("x", screen.columns)})
+	before := screen.drawingState()
+
+	notice := screen.hiddenRowsNotice(3)
+
+	if strings.Contains(notice, "\n") {
+		t.Errorf("a hidden-rows notice wrapped where the answer left the cursor: %q", notice)
+	}
+	if after := screen.drawingState(); after != before {
+		t.Errorf("measuring a hidden-rows notice left the drawing at %+v, want %+v", after, before)
+	}
+}

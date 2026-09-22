@@ -211,8 +211,11 @@ func (self *Screen) leastSeparators() int {
 
 func (self *Screen) hiddenRowsNotice(hiddenLines int) string {
 	notice := fmt.Sprintf("%s %d more %s", width.VerticalEllipsis, hiddenLines, plural(hiddenLines))
+	if self.columns > 0 {
+		notice = width.Elide(notice, self.columns)
+	}
 
-	return style.Rule(self.fit(notice))
+	return style.Rule(notice)
 }
 
 func plural(count int) string {

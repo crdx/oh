@@ -12,10 +12,12 @@
 - Keep a queued message on screen while it sends
 - Drop the pace figure from usage
 - Mark a limited window with ⊘
-- Add custom tools
+- Add custom tool definitions
 - Isolate IPC and UTS namespaces
 - Fix turn resumption after a night's sleep
 - Document the denied path weirdness for now
+- Erase discarded reasoning block in-place
+- Restrict a hidden-line notice to one row
 
 ## [0.8.0] - 2026-09-20
 

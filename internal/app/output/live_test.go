@@ -258,6 +258,25 @@ func TestDiscardingLiveReasoningLeavesNoScrollback(t *testing.T) {
 	}
 }
 
+func TestDiscardingLiveReasoningLeavesTheDrawingWhereItWas(t *testing.T) {
+	screen, _ := region()
+
+	screen.PanelLine("what the person sent")
+	screen.End()
+	screen.Footer([]string{"> "}, 0, 2)
+
+	before := screen.drawingState()
+
+	screen.DrawReasoning([]string{"half a thought", "and the rest of it"})
+	if !screen.DiscardLive() {
+		t.Fatal("expected the reasoning erased in place rather than left for a replay")
+	}
+
+	if after := screen.drawingState(); after != before {
+		t.Errorf("discarded reasoning left the drawing at %+v, want %+v", after, before)
+	}
+}
+
 func TestAnAnswerAfterReasoningIsLinkedAsItIsPaintedButNotAsARegion(t *testing.T) {
 	workspace := t.TempDir()
 	if err := os.WriteFile(filepath.Join(workspace, "one.go"), nil, 0o600); err != nil {
