@@ -155,9 +155,6 @@ refs:
 oh *args:
     go run . "$@"
 
-ohm *args:
-    go run . -crx "$@"
-
 [private]
 mega:
     mega
