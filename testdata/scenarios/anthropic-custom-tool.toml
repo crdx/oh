@@ -4,7 +4,7 @@ effort = "medium"
 
 [[tool]]
 name = "sysinfo"
-custom = '''
+declared = '''
 if [[ "$*" == *--verbose* ]]; then
     echo "kernel: 7.2.4"
     echo "reported by $OH_TOOL on the host"

@@ -32,7 +32,6 @@ sandbox *args:
     #!/bin/bash
     set -euo pipefail
     GREEN='\e[32m'
-    YELLOW='\e[33m'
     NC='\e[0m'
     if (exec 3>>/proc/self/uid_map) 2>/dev/null; then
         echo -e "${GREEN}this machine can map a namespace, so the sandbox tests ran for real${NC}"
@@ -42,36 +41,8 @@ sandbox *args:
     if [[ $# -gt 0 ]]; then
         PACKAGES=("$@")
     fi
-    NEEDS_PRIVILEGE=(
-        TestAPrivateProcessFilesystemContainsOnlySandboxProcesses
-        TestAHostLoopbackPortCanBeExposedAfterTheKeeperStarts
-        TestAnExposedPortReachesAListenerInsideTheSandbox
-        TestAReadPathInsideAWritePathIsNotWritable
-        TestARepositoryCannotBeClobbered
-        TestAWriteGrantInsideAReadGrantInsideAWriteGrantIsWritable
-        TestDeniedPathsAreInaccessibleToCommands
-        TestAnExactReadGrantInsideAWriteGrantRemainsReadOnly
-        TestAnExecutableBuiltInTmpMayRunWhenGranted
-        TestAnOrdinaryCommandReachesAListenerAJobLeftBehind
-        TestAPolicyMayNameAnOptionalMissingPath
-        TestCommandsCannotChangeAnUnreadableSubtree
-        TestCommandsMayTalkOverAUnixSocketInTheScratch
-        TestCommandsMayWriteRepositoryMetadataAfterGitIsGranted
-        TestCommandsSharingAScratchShareItsContents
-        TestCommandsWithDifferentScratchesCannotSeeEachOthersContents
-        TestDatagramsStayOnLoopback
-        TestEveryCommandGetsTheOtherNamespacesToo
-        TestLoopbackIsReachable
-        TestNamedHostLoopbackPortIsForwarded
-        TestTheCommandCannotUndoWhatHoldsAPathBack
-        TestWhatACommandWritesToTmpLandsInTheScratch
-    )
-    SKIP="$(IFS='|'; echo "${NEEDS_PRIVILEGE[*]}")"
-    NOTE="an unmapped namespace holds no privilege, so the ${#NEEDS_PRIVILEGE[@]} tests"
-    NOTE="$NOTE needing a mount, a capability or the loopback are left out"
-    echo -e "${YELLOW}${NOTE}${NC}"
     export IO_SANDBOX_TEST_UNMAPPED=1
-    go test -count=1 -skip "^(${SKIP})$" "${PACKAGES[@]}"
+    go test -count=1 "${PACKAGES[@]}"
 
 # run a fuzzing campaign against one target, for a minute unless told otherwise
 fuzz package target time='1m':

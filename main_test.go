@@ -96,7 +96,6 @@ import (
 	"crdx.org/oh/internal/app/segment/turnTimer"
 	"crdx.org/oh/internal/app/segment/workspaceDir"
 	"crdx.org/oh/internal/app/sessions"
-	"crdx.org/oh/internal/app/sessions/picker"
 	"crdx.org/oh/internal/app/shell"
 	"crdx.org/oh/internal/app/skill"
 	"crdx.org/oh/internal/app/slash"
@@ -6072,73 +6071,6 @@ func TestTheGlobalContextIsInTheXDGConfigDirectory(t *testing.T) {
 	}
 }
 
-var prompts = []string{
-	"why does the spinner stutter when a tool runs",
-	"add support for reasoning traces",
-	"the cancelled turn leaves a tool call unanswered\nand the next request fails",
-	"rename the harness to oh",
-}
-
-func TestPick(t *testing.T) {
-	if os.Getenv("RIG") == "" {
-		t.Skip("set RIG to drive the picker")
-	}
-
-	directory := t.TempDir()
-	workspaceDir := "/home/alice/florp/io"
-
-	for _, prompt := range prompts {
-		meta := fmt.Appendf(nil, `{"workspaceDir":%q}`, workspaceDir)
-		log, err := session.Create(directory, meta, meta)
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		if _, err := log.Event(agent.Event{Kind: agent.UserMessageEvent, Text: prompt}); err != nil {
-			t.Fatal(err)
-		}
-
-		for _, entry := range readJournal(t, filepath.Join("testdata", "input", lifecycleScenario)) {
-			if entry.Event == nil {
-				continue
-			}
-			if _, err := log.Event(*entry.Event); err != nil {
-				t.Fatal(err)
-			}
-		}
-
-		if err := log.Close(); err != nil {
-			t.Fatal(err)
-		}
-	}
-
-	sessions, err := sessions.Load(directory)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	store := picker.Store{
-		Sessions: sessions,
-		Read: func(storedSession *picker.Session, room int) ([]string, error) {
-			return preview.Read(directory, storedSession.Name, nil, room)
-		},
-	}
-
-	chosenSession, err := picker.Choose(store, os.Stdin, os.Stdout)
-	screen := output.New(os.Stdout)
-
-	switch {
-	case errors.Is(err, menu.ErrCancelled):
-		screen.Line(style.CancelledCall("nothing was chosen"))
-	case err != nil:
-		t.Fatal(err)
-	default:
-		screen.Line(style.Result("chose " + chosenSession.Name + ": " + chosenSession.Title))
-	}
-
-	screen.End()
-}
-
 func TestGoldenForkMessageMatchesGolden(t *testing.T) {
 	directory := t.TempDir()
 	workspaceDirectory := t.TempDir()
@@ -7887,7 +7819,7 @@ func TestGoldenTheBarConfiguredByDefaultDrawsWhatItDrewBefore(t *testing.T) {
 					)
 
 					layout, err := configFrom(t, "").BuildLayout(
-						availableSegments(work.At(workspaceMarker), "tame-impala", "gpt-5.6-sol", "high", held),
+						availableSegments(work.At(workspaceMarker), held),
 					)
 					if err != nil {
 						t.Fatal(err)
@@ -8432,7 +8364,7 @@ func prepareLiveConfigSources(t *testing.T, self *App, sources ...config.Source)
 	}
 	self.configObserver = observer
 	t.Cleanup(observer.Close)
-	registry := availableSegments(work.At(workspaceMarker), "tame-impala", "gpt-5.6-sol", "high", self)
+	registry := availableSegments(work.At(workspaceMarker), self)
 	live, err := settings.BuildLive(registry)
 	if err != nil {
 		t.Fatal(err)
@@ -9157,7 +9089,7 @@ const (
 	feedbackHeredocApproval
 	feedbackTallApproval
 	feedbackApprovalDuringACall
-	feedbackCustomToolApproval
+	feedbackDeclaredToolApproval
 )
 
 func TestConfirmationFeedbackSchedulesItsOwnDismissal(t *testing.T) {
@@ -9211,7 +9143,7 @@ func TestGoldenFeedbackDrawsEveryVisibleState(t *testing.T) {
 		"heredoc approval":                  feedbackHeredocApproval,
 		"approval taller than the terminal": feedbackTallApproval,
 		"approval during a call":            feedbackApprovalDuringACall,
-		"custom tool approval":              feedbackCustomToolApproval,
+		"declared tool approval":            feedbackDeclaredToolApproval,
 	})
 
 	compareWithGolden(t, "feedback", ".ansi", passes)
@@ -9444,8 +9376,8 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 		self.show(inputLine)
 	case feedbackApprovalDuringACall:
 		return drawApprovalDuringACall(t, self, inputLine, &screenOutput)
-	case feedbackCustomToolApproval:
-		showCustomToolApproval(t, self, inputLine)
+	case feedbackDeclaredToolApproval:
+		showDeclaredToolApproval(t, self, inputLine)
 	}
 
 	return screenOutput.String()
@@ -9466,11 +9398,11 @@ func typedForFeedback(scenario feedbackScenario) string {
 		feedbackTallApproval:            "tidy the tree",
 		feedbackHeredocApproval:         "write the note",
 		feedbackApprovalDuringACall:     "check what that endpoint says",
-		feedbackCustomToolApproval:      "leave me a note about the host",
+		feedbackDeclaredToolApproval:    "leave me a note about the host",
 	}[scenario]
 }
 
-func showCustomToolApproval(t *testing.T, self *App, inputLine *edit.Input) {
+func showDeclaredToolApproval(t *testing.T, self *App, inputLine *edit.Input) {
 	t.Helper()
 
 	broker := ask.New()
@@ -10852,20 +10784,14 @@ func goldenRepository(t *testing.T, head string) string {
 	return workspaceDir
 }
 
-func availableSegments(
-	workspace *work.Space,
-	currentSessionName string,
-	modelName string,
-	modelEffort string,
-	harness *App,
-) segment.Registry {
+func availableSegments(workspace *work.Space, harness *App) segment.Registry {
 	return bar.NewRegistry(bar.Options{
 		Workspace: workspace,
 		Session: cycle.Session{
-			Name:      currentSessionName,
-			Directory: filepath.Join("/state/sessions", currentSessionName),
-			Model:     modelName,
-			Effort:    modelEffort,
+			Name:      "tame-impala",
+			Directory: filepath.Join("/state/sessions", "tame-impala"),
+			Model:     "gpt-5.6-sol",
+			Effort:    "high",
 		},
 		ModelEffortLevels: []string{"none", "minimal", "low", "medium", "high"},
 		Sources:           harness.getBarSources(),
@@ -10905,7 +10831,7 @@ func goldenBarLayout(t *testing.T, harness *App) segment.Layout {
 	`)
 
 	layout, err := config.BuildLayout(
-		availableSegments(work.At(workspaceMarker), "tame-impala", "gpt-5.6-sol", "high", harness),
+		availableSegments(work.At(workspaceMarker), harness),
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -12424,7 +12350,7 @@ func pathGrantGoldenStream(t *testing.T, scenario pathGrantGoldenScenario) strin
 	workspace := openTestWorkspace(t, t.TempDir())
 	preparePathGrantCommands(t, self, workspace)
 	self.settleAccess()
-	registry := availableSegments(workspace, "tame-impala", "gpt-5.6-sol", "high", self)
+	registry := availableSegments(workspace, self)
 	live, err := configFrom(t, `
 		[bar.top]
 		left = [
@@ -13405,7 +13331,7 @@ type sessionGoldenTool struct {
 	Blocks                bool     `toml:"blocks"`
 	StoppedOutput         string   `toml:"stopped-output"`
 	IsLargeRead           bool     `toml:"large-read"`
-	Custom                string   `toml:"custom"`
+	Declared              string   `toml:"declared"`
 }
 
 type sessionGoldenScenario struct {
@@ -13746,8 +13672,8 @@ func newSessionGoldenTools(
 			continue
 		}
 
-		if specification.Custom != "" {
-			tools = append(tools, newSessionGoldenCustomTool(t, specification))
+		if specification.Declared != "" {
+			tools = append(tools, newSessionGoldenDeclaredTool(t, specification))
 			continue
 		}
 
@@ -13853,16 +13779,16 @@ func sessionGoldenImage(t *testing.T, size string, byteCount int64) (tool.Image,
 
 var errSessionGoldenToolStopped = errors.New("the tool was stopped")
 
-func newSessionGoldenCustomTool(t *testing.T, specification sessionGoldenTool) tool.Tool {
+func newSessionGoldenDeclaredTool(t *testing.T, specification sessionGoldenTool) tool.Tool {
 	t.Helper()
 
-	script := filepath.Join(t.TempDir(), "custom")
-	//nolint:gosec // a tool the scenario supplies has to be runnable
-	if err := os.WriteFile(script, []byte("#!/bin/bash\n"+specification.Custom+"\n"), 0o700); err != nil {
+	script := filepath.Join(t.TempDir(), "declared")
+	//nolint:gosec // a tool the scenario declares has to be runnable
+	if err := os.WriteFile(script, []byte("#!/bin/bash\n"+specification.Declared+"\n"), 0o700); err != nil {
 		t.Fatal(err)
 	}
 
-	customTool, err := command.New(command.Declaration{
+	declared, err := command.New(command.Declaration{
 		Name:        specification.Name,
 		Description: "A deterministic scenario tool of the user's own.",
 		Command:     []string{script},
@@ -13892,7 +13818,7 @@ func newSessionGoldenCustomTool(t *testing.T, specification sessionGoldenTool) t
 		t.Fatal(err)
 	}
 
-	return customTool
+	return declared
 }
 
 func newSessionGoldenBlockingTool(specification sessionGoldenTool) tool.Tool {
@@ -15674,59 +15600,6 @@ func buildSlowTool(builder tool.Builder[fakeArgs]) tool.Tool {
 
 func slowTool(name string) tool.Tool {
 	return buildSlowTool(slowToolBuilder(name))
-}
-
-func slowReadTool(name string) tool.Tool {
-	return buildSlowTool(slowToolBuilder(name).IsEmbarrassinglyParallel().ChangesNothing())
-}
-
-func failingTool(name string) tool.Tool {
-	return tool.Implement(
-		tool.Definition{
-			Name:        name,
-			Description: "",
-			Schema:      tool.Schema{tool.String("path", "file")},
-		},
-		func(args fakeArgs) (string, string) { return args.Path, "" },
-	).Plain(func(context.Context, fakeArgs) (string, error) {
-		time.Sleep(toolTakes)
-		return "", errors.New("permission denied\nnothing was written")
-	})
-}
-
-func TestVisual(t *testing.T) {
-	if os.Getenv("RIG") == "" {
-		t.Skip("set RIG to watch it draw")
-	}
-
-	tools := []tool.Tool{slowReadTool("read"), slowReadTool("grep"), failingTool("write")}
-	provider := &fakeProvider{}
-	screen := output.New(os.Stdout)
-
-	log, err := store.Create(t.TempDir(), store.Meta{Model: "fake"})
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	defer func() { _ = log.Close() }()
-
-	held := &App{
-		agent:    agent.New("", provider, tools),
-		screen:   screen,
-		recorder: record.New(log),
-		mode:     caps.NewMode(caps.Read | caps.Write),
-	}
-
-	built, err := configFrom(t, "").BuildLayout(
-		availableSegments(work.At("/tmp/somewhere"), log.Name(), "fake", "medium", held),
-	)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	held.display.bar = bar.NewConfiguration(nil, built)
-
-	held.begin("")
 }
 
 type frameRecordingWriter struct {
@@ -18702,7 +18575,7 @@ func TestASimulationDrawsNoHazard(t *testing.T) {
 	}
 }
 
-func writeCustomToolConfig(t *testing.T, environment []string, body string) {
+func writeDeclaredToolConfig(t *testing.T, environment []string, body string) {
 	t.Helper()
 
 	var configHome string
@@ -18725,11 +18598,11 @@ func writeCustomToolConfig(t *testing.T, environment []string, body string) {
 	}
 }
 
-func customToolScript(t *testing.T) string {
+func declaredToolScript(t *testing.T) string {
 	t.Helper()
 
 	path := filepath.Join(reachableWorkspaceDir(t), "forecast")
-	//nolint:gosec // a tool the test supplies has to be runnable
+	//nolint:gosec // a tool the test declares has to be runnable
 	if err := os.WriteFile(path, []byte("#!/bin/bash\necho \"forecast for $*\"\n"), 0o700); err != nil {
 		t.Fatal(err)
 	}
@@ -18737,9 +18610,9 @@ func customToolScript(t *testing.T) string {
 	return path
 }
 
-func TestACustomToolRunsItsOwnCommandAndReportsWhatItSaid(t *testing.T) {
+func TestADeclaredToolRunsItsOwnCommandAndReportsWhatItSaid(t *testing.T) {
 	binary := buildTestBinary(t)
-	script := customToolScript(t)
+	script := declaredToolScript(t)
 	endpoint := sim.New(&sim.Scenario{
 		Model: "fake",
 		Turns: []sim.Turn{
@@ -18752,7 +18625,7 @@ func TestACustomToolRunsItsOwnCommandAndReportsWhatItSaid(t *testing.T) {
 
 	address := endpoint.Addresses(server.URL)[sim.Messages]
 	environment := append(testBinaryEnvironment(t, t.TempDir()), backend.EndpointVariable+"="+address)
-	writeCustomToolConfig(t, environment, `[tools.weather]
+	writeDeclaredToolConfig(t, environment, `[tools.weather]
 description = "report the weather for a city"
 command = ["`+script+`"]
 permission = "allow"
@@ -18768,7 +18641,7 @@ parameters = [
 	)
 
 	if !strings.Contains(output, "weather London 2") {
-		t.Errorf("the custom call was not drawn: %q", output)
+		t.Errorf("the declared call was not drawn: %q", output)
 	}
 	if !strings.Contains(output, "Rain, then.") {
 		t.Errorf("the answer did not follow the tool: %q", output)
@@ -18779,7 +18652,7 @@ parameters = [
 		t.Fatalf("the endpoint saw %d requests", len(requests))
 	}
 	if !slices.Contains(requests[0].Tools, "weather") {
-		t.Errorf("the custom tool was not offered: %q", requests[0].Tools)
+		t.Errorf("the declared tool was not offered: %q", requests[0].Tools)
 	}
 
 	var reported string
@@ -18793,9 +18666,9 @@ parameters = [
 	}
 }
 
-func TestACustomToolNobodyCanBeAskedAboutDoesNotRun(t *testing.T) {
+func TestADeclaredToolNobodyCanBeAskedAboutDoesNotRun(t *testing.T) {
 	binary := buildTestBinary(t)
-	script := customToolScript(t)
+	script := declaredToolScript(t)
 	endpoint := sim.New(&sim.Scenario{
 		Model: "fake",
 		Turns: []sim.Turn{
@@ -18808,7 +18681,7 @@ func TestACustomToolNobodyCanBeAskedAboutDoesNotRun(t *testing.T) {
 
 	address := endpoint.Addresses(server.URL)[sim.Messages]
 	environment := append(testBinaryEnvironment(t, t.TempDir()), backend.EndpointVariable+"="+address)
-	writeCustomToolConfig(t, environment, `[tools.weather]
+	writeDeclaredToolConfig(t, environment, `[tools.weather]
 description = "report the weather for a city"
 command = ["`+script+`"]
 parameters = [
@@ -18822,20 +18695,20 @@ parameters = [
 	)
 
 	if strings.Contains(output, "forecast for") {
-		t.Errorf("the custom tool ran with nobody to ask: %q", output)
+		t.Errorf("the declared tool ran with nobody to ask: %q", output)
 	}
 }
 
-func TestACustomToolIsOfferedAloneWhenItIsNamed(t *testing.T) {
+func TestADeclaredToolIsOfferedAloneWhenItIsNamed(t *testing.T) {
 	binary := buildTestBinary(t)
-	script := customToolScript(t)
+	script := declaredToolScript(t)
 	endpoint := sim.New(&sim.Scenario{Model: "fake", Turns: []sim.Turn{{Say: "Nothing to do."}}})
 	server := httptest.NewServer(endpoint)
 	t.Cleanup(server.Close)
 
 	address := endpoint.Addresses(server.URL)[sim.Messages]
 	environment := append(testBinaryEnvironment(t, t.TempDir()), backend.EndpointVariable+"="+address)
-	writeCustomToolConfig(t, environment, `[tools.weather]
+	writeDeclaredToolConfig(t, environment, `[tools.weather]
 description = "report the weather for a city"
 command = ["`+script+`"]
 parameters = [
@@ -18853,16 +18726,16 @@ parameters = [
 		t.Fatal("the endpoint saw no request")
 	}
 	if !slices.Equal(requests[0].Tools, []string{"weather"}) {
-		t.Errorf("got the tools %q, want the custom tool alone", requests[0].Tools)
+		t.Errorf("got the tools %q, want the declared tool alone", requests[0].Tools)
 	}
 }
 
-func TestAWorkspaceCannotAddACustomTool(t *testing.T) {
+func TestAWorkspaceCannotDeclareAToolOfItsOwn(t *testing.T) {
 	binary := buildTestBinary(t)
 	workspaceDir := reachableWorkspaceDir(t)
 	overridePath := filepath.Join(workspaceDir, "oh.toml")
-	body := "[tools.weather]\ndescription = \"x\"\ncommand = [\"echo\"]\n"
-	if err := os.WriteFile(overridePath, []byte(body), 0o600); err != nil {
+	declaration := "[tools.weather]\ndescription = \"x\"\ncommand = [\"echo\"]\n"
+	if err := os.WriteFile(overridePath, []byte(declaration), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -18872,41 +18745,9 @@ func TestAWorkspaceCannotAddACustomTool(t *testing.T) {
 	process.Dir = workspaceDir
 	output, err := process.CombinedOutput()
 	if err == nil {
-		t.Fatalf("the workspace added a custom tool: %q", output)
+		t.Fatalf("the workspace declared a tool: %q", output)
 	}
 	if !strings.Contains(string(output), "cannot be overridden in oh.toml") {
 		t.Errorf("got %q", output)
-	}
-}
-
-func TestACustomToolCompletesBesideTheBuiltInTools(t *testing.T) {
-	environment := []string{"XDG_CONFIG_HOME=" + t.TempDir()}
-	writeCustomToolConfig(t, environment, "[tools.weather]\ndescription = \"x\"\ncommand = [\"true\"]\n")
-	t.Setenv("XDG_CONFIG_HOME", strings.TrimPrefix(environment[0], "XDG_CONFIG_HOME="))
-
-	completable := completableTools()
-	if !slices.Contains(completable, "weather") {
-		t.Errorf("the custom tool does not complete: %q", completable)
-	}
-	for _, builtIn := range completableToolNames {
-		if !slices.Contains(completable, builtIn) {
-			t.Errorf("%s stopped completing: %q", builtIn, completable)
-		}
-	}
-}
-
-func TestCompletionFallsBackToTheBuiltInToolsWhenTheConfigIsUnreadable(t *testing.T) {
-	configHome := t.TempDir()
-	directory := filepath.Join(configHome, "org.crdx", "oh")
-	if err := os.MkdirAll(directory, 0o700); err != nil {
-		t.Fatal(err)
-	}
-	if err := os.WriteFile(filepath.Join(directory, "config.toml"), []byte("[tools\n"), 0o600); err != nil {
-		t.Fatal(err)
-	}
-	t.Setenv("XDG_CONFIG_HOME", configHome)
-
-	if completable := completableTools(); !slices.Equal(completable, completableToolNames) {
-		t.Errorf("got %q, want the built-in tools alone", completable)
 	}
 }

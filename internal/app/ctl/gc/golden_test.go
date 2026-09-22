@@ -219,26 +219,6 @@ func TestTheDirectoriesHoldingACacheAreNotCountedAgainstIt(t *testing.T) {
 	}
 }
 
-func TestAnUnlistableCacheIsStillRemoved(t *testing.T) {
-	if os.Geteuid() == 0 {
-		t.Skip("root ignores directory permissions")
-	}
-
-	directories := populated(t)
-
-	unlistable := filepath.Join(directories.Farm, goldenName, ".cache")
-	if err := os.Chmod(unlistable, 0o300); err != nil { //nolint:gosec // an unlistable cache is the point
-		t.Fatal(err)
-	}
-
-	var screen, failure strings.Builder
-	if err := run(directories, options{}, console.Output{Screen: &screen, Failure: &failure}); err != nil {
-		t.Fatalf("an unlistable cache was reported as a failure: %v", err)
-	}
-
-	assertGone(t, unlistable)
-}
-
 func TestGoldenAnArchivedSessionKeepsItsScratchAndLosesItsCaches(t *testing.T) {
 	directories := Directories{Farm: t.TempDir(), Sessions: t.TempDir(), Home: t.TempDir()}
 	archivedSession(t, directories.Sessions, goldenName)

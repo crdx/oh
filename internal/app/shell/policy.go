@@ -160,25 +160,6 @@ func omitUnavailableOptionalPaths(paths Paths, optionalPaths []string) (Paths, [
 	return paths, optionalPaths
 }
 
-func createPolicy(
-	ctx context.Context,
-	workspaceDir string,
-	homeDir string,
-	tmpDir string,
-	extraPaths Paths,
-	currentCaps caps.Set,
-) (sandbox.Policy, error) {
-	return createPolicyWithOptionalPaths(
-		ctx,
-		workspaceDir,
-		homeDir,
-		tmpDir,
-		extraPaths,
-		nil,
-		currentCaps,
-	)
-}
-
 func createPolicyWithOptionalPaths(
 	ctx context.Context,
 	workspaceDir string,

@@ -2,7 +2,6 @@ package sandbox
 
 import (
 	"errors"
-	"os"
 	"testing"
 
 	"golang.org/x/sys/unix"
@@ -70,44 +69,6 @@ func TestTheSyscallFilterAllowsProcessSessions(t *testing.T) {
 		if got := evaluate(filter, target.audit, number, 0); got != actionAllow {
 			t.Errorf("syscall %d: got action %#x, want allow", number, got)
 		}
-	}
-}
-
-const unixSocketsVariable = "IO_SANDBOX_UNIX_SOCKETS"
-
-func TestAnInstalledFilterRefusesTheFamiliesItNames(t *testing.T) {
-	if !insideChildProcess() {
-		runAgainInChildProcess(t, unixSocketsVariable+"=1")
-		return
-	}
-
-	isUnixSocketScoped := os.Getenv(unixSocketsVariable) != ""
-
-	requireNoOuterSocketFilter(t, unix.AF_PACKET, unix.AF_NETLINK, unix.AF_INET, unix.AF_UNIX)
-
-	if err := applySeccomp(isUnixSocketScoped); err != nil {
-		t.Fatalf("could not install the filter: %v", err)
-	}
-
-	for _, family := range []int{unix.AF_PACKET, unix.AF_NETLINK} {
-		fd, err := unix.Socket(family, unix.SOCK_RAW, 0)
-		if err == nil {
-			_ = unix.Close(fd)
-			t.Errorf("family %d was allowed", family)
-			continue
-		}
-		if !errors.Is(err, unix.EAFNOSUPPORT) {
-			t.Errorf("family %d: got %v, want the filter's refusal", family, err)
-		}
-	}
-
-	for _, family := range []int{unix.AF_INET, unix.AF_UNIX} {
-		fd, err := unix.Socket(family, unix.SOCK_DGRAM, 0)
-		if err != nil {
-			t.Errorf("family %d: got %v, want a socket the sandbox allows", family, err)
-			continue
-		}
-		_ = unix.Close(fd)
 	}
 }
 

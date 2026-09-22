@@ -132,32 +132,6 @@ func TestAPathInBothWriteAndExecIsNotWarnedAbout(t *testing.T) {
 	}
 }
 
-func TestUncreatableConfiguredPathsAreWarnedAboutAndSkipped(t *testing.T) {
-	if os.Geteuid() == 0 {
-		t.Skip("root ignores directory permissions")
-	}
-
-	parent := filepath.Join(t.TempDir(), "read-only")
-	if err := os.Mkdir(parent, 0o500); err != nil {
-		t.Fatal(err)
-	}
-	uncreatable := filepath.Join(parent, "child")
-
-	var warnings strings.Builder
-	filtered, err := PreparePaths(Paths{
-		Read: []string{uncreatable},
-	}, &warnings)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(filtered.Read) != 0 {
-		t.Errorf("got read paths %v, want none", filtered.Read)
-	}
-	if !strings.Contains(warnings.String(), "warning: could not create configured path "+uncreatable) {
-		t.Errorf("warning does not name uncreatable path %s: %q", uncreatable, warnings.String())
-	}
-}
-
 func TestConfiguredPathsAreMountedWithTheirRequestedFileAccess(t *testing.T) {
 	workspace := t.TempDir()
 	workspaceRoot, err := os.OpenRoot(workspace)

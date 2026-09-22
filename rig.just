@@ -2,7 +2,6 @@ set quiet := true
 set shell := ["bash", "-cu", "-o", "pipefail"]
 
 SESSION   := "io-rig"
-BIN       := "/tmp/io-rig.test"
 OH        := "/tmp/io-rig.oh"
 SIM       := "/tmp/io-rig.sim"
 SCENARIO  := "internal/sim/scenarios/success.toml"
@@ -18,22 +17,6 @@ TEST_INPUTS := justfile_directory() / "testdata/input"
 
 # what the scenarios read, write and search, laid out again for every capture and every replay
 WORKSPACE_FIXTURE := justfile_directory() / "testdata/input/workspace"
-
-# build the visual pass: the harness's output layer over a fake model
-build:
-    go test -c -o {{ BIN }} ./
-
-# start the pane and run one turn against the fake model
-up pass="TestVisual": build down
-    tmux new-session -d -s {{ SESSION }} -x {{ WIDTH }} -y {{ HEIGHT }} \
-        -e RIG=1 {{ BIN }} -test.run {{ pass }}
-    tmux set-option -t {{ SESSION }} remain-on-exit on
-
-# start the pane on the session picker instead
-pick: build down
-    tmux new-session -d -s {{ SESSION }} -x {{ WIDTH }} -y {{ HEIGHT }} \
-        -e RIG=1 {{ BIN }} -test.run TestPick
-    tmux set-option -t {{ SESSION }} remain-on-exit on
 
 # build the harness and the stand-in endpoint
 harness:
@@ -212,10 +195,6 @@ resume-status:
 say text:
     tmux send-keys -t {{ SESSION }}.{bottom} -l '{{ text }}'
     tmux send-keys -t {{ SESSION }}.{bottom} Enter
-
-# rebuild and restart the app in the same pane
-reload pass="TestVisual": build
-    tmux respawn-pane -k -t {{ SESSION }} -e RIG=1 {{ BIN }} -test.run {{ pass }}
 
 # resize the rig terminal to trigger a full conversation repaint
 resize width=WIDTH height=HEIGHT:

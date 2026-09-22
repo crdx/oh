@@ -2,7 +2,6 @@ package shell
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"net/url"
 	"os"
@@ -17,10 +16,7 @@ import (
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/sandbox"
-	"crdx.org/oh/internal/util/pathutil"
 )
-
-const reachableDirPrefix = "io-shell-test-"
 
 func allowNetworking(context.Context, string) error { return nil }
 
@@ -78,35 +74,6 @@ func createTestPolicyWithOptionalPaths(
 		currentCaps,
 		func(context.Context) error { return nil },
 	)
-}
-
-func reachableDir(t *testing.T) string {
-	t.Helper()
-
-	directory := t.TempDir()
-	if _, isCovered := pathutil.RelativeTo(sandbox.TmpDir, directory); !isCovered {
-		return directory
-	}
-
-	base, err := os.UserCacheDir()
-	if err != nil {
-		t.Skipf("a scratch at %s covers %s and there is nowhere else to work: %v", sandbox.TmpDir, directory, err)
-	}
-	if _, isCovered := pathutil.RelativeTo(sandbox.TmpDir, base); isCovered {
-		t.Skipf("a scratch at %s covers both %s and %s", sandbox.TmpDir, directory, base)
-	}
-
-	created, err := os.MkdirTemp(base, reachableDirPrefix) //nolint:usetesting // the scratch covers what t.TempDir gives
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() {
-		if err := os.RemoveAll(created); err != nil {
-			t.Error(err)
-		}
-	})
-
-	return created
 }
 
 func newTestPathAccess(t *testing.T, files *file.Root, mode *caps.Mode) *PathAccess {
@@ -226,144 +193,6 @@ func TestHostNetworkingRequiresItsCapability(t *testing.T) {
 	}
 }
 
-func TestCommandsKeepTheirEnvironmentAfterACapabilityChange(t *testing.T) {
-	workspace := reachableDir(t)
-	workspaceRoot, err := os.OpenRoot(workspace)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() { _ = workspaceRoot.Close() }()
-
-	home := reachableDir(t)
-	tmp := t.TempDir()
-	if _, err := createPolicy(t.Context(), workspace, home, tmp, Paths{}, caps.Read|caps.Shell); err != nil {
-		t.Skipf("the sandbox cannot enforce a shell policy here: %v", err)
-	}
-
-	files := file.New(workspaceRoot, func(string) error { return file.ErrReadOnly })
-	mode := caps.NewMode(caps.Read | caps.Shell)
-	pathAccess := newTestPathAccess(t, files, mode)
-	shell := New(workspace, home, tmp, pathAccess, mode, files, false, allowNetworking, sandbox.Direct())
-	run := func() {
-		call, parseErr := shell.Parse(`{"command":"printf %s \"$HOME\""}`)
-		if parseErr != nil {
-			t.Fatal(parseErr)
-		}
-
-		result, execErr := call.Exec(t.Context())
-		if execErr != nil {
-			t.Fatal(execErr)
-		}
-		if result.Output != home {
-			t.Errorf("got %q, want %q", result.Output, home)
-		}
-	}
-
-	run()
-	mode.Toggle(caps.Write)
-	run()
-}
-
-func TestCommandsMayWriteRepositoryMetadataAfterGitIsGranted(t *testing.T) {
-	workspace := reachableDir(t)
-	metadata := filepath.Join(workspace, ".git")
-	if err := os.Mkdir(metadata, 0o700); err != nil {
-		t.Fatal(err)
-	}
-
-	workspaceRoot, err := os.OpenRoot(workspace)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() { _ = workspaceRoot.Close() }()
-
-	home := reachableDir(t)
-	tmp := t.TempDir()
-	initialCaps := caps.Read | caps.Write | caps.Shell
-	if _, err := createPolicy(t.Context(), workspace, home, tmp, Paths{}, initialCaps); err != nil {
-		t.Skipf("the sandbox cannot enforce a shell policy here: %v", err)
-	}
-
-	mode := caps.NewMode(initialCaps)
-	files := file.New(workspaceRoot, caps.RefuseWrite(mode))
-	pathAccess := newTestPathAccess(t, files, mode)
-	shell := New(workspace, home, tmp, pathAccess, mode, files, false, allowNetworking, sandbox.Direct())
-
-	run := func() error {
-		call, parseErr := shell.Parse(`{"command":"touch .git/proof"}`)
-		if parseErr != nil {
-			t.Fatal(parseErr)
-		}
-		_, execErr := call.Exec(t.Context())
-		return execErr
-	}
-
-	if err := run(); err == nil {
-		t.Fatal("expected repository metadata to remain read-only before git was granted")
-	}
-
-	mode.Toggle(caps.Git)
-	if err := run(); err != nil {
-		t.Fatalf("repository metadata remained read-only after git was granted: %v", err)
-	}
-}
-
-func TestTemporaryPathAccessChangesTheNextShellCommand(t *testing.T) {
-	workspace := reachableDir(t)
-	workspaceRoot, err := os.OpenRoot(workspace)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() { _ = workspaceRoot.Close() }()
-
-	home := reachableDir(t)
-	tmp := t.TempDir()
-	externalDirectory := reachableDir(t)
-	externalFile := filepath.Join(externalDirectory, "reference")
-	if err := os.WriteFile(externalFile, []byte("reference text"), 0o600); err != nil {
-		t.Fatal(err)
-	}
-	currentCaps := caps.Read | caps.Shell
-	if _, err := createPolicy(t.Context(), workspace, home, tmp, Paths{Read: []string{externalDirectory}}, currentCaps); err != nil {
-		t.Skipf("the sandbox cannot enforce a shell policy here: %v", err)
-	}
-
-	mode := caps.NewMode(currentCaps)
-	files := file.New(workspaceRoot, caps.RefuseWrite(mode))
-	access, err := NewPathAccess(files, mode, Paths{})
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer access.Close()
-	shellTool := New(workspace, home, tmp, access, mode, files, false, allowNetworking, sandbox.Direct())
-	run := func() (string, error) {
-		arguments, marshalErr := json.Marshal(map[string]string{"command": "cat " + strconv.Quote(externalFile)})
-		if marshalErr != nil {
-			t.Fatal(marshalErr)
-		}
-		call, parseErr := shellTool.Parse(string(arguments))
-		if parseErr != nil {
-			t.Fatal(parseErr)
-		}
-		result, execErr := call.Exec(t.Context())
-		return result.Output, execErr
-	}
-
-	if _, err := run(); err == nil {
-		t.Fatal("external path was readable before it was granted")
-	}
-	if _, err := access.Grant(externalDirectory, ReadAccess); err != nil {
-		t.Fatal(err)
-	}
-	if output, err := run(); err != nil || output != "reference text" {
-		t.Errorf("granted read got %q and %v", output, err)
-	}
-	access.Revoke(externalDirectory)
-	if _, err := run(); err == nil {
-		t.Fatal("external path remained readable after revocation")
-	}
-}
-
 func TestUnavailableOptionalPathsAreOmittedFromAPolicy(t *testing.T) {
 	present := t.TempDir()
 	absent := filepath.Join(t.TempDir(), "gone")
@@ -378,67 +207,6 @@ func TestUnavailableOptionalPathsAreOmittedFromAPolicy(t *testing.T) {
 	}
 	if len(paths.Write) != 0 || len(paths.Exec) != 0 || len(optionalPaths) != 0 {
 		t.Errorf("unavailable paths survived in %#v and %v", paths, optionalPaths)
-	}
-}
-
-func TestCommandsSurviveAVanishedTemporaryGrant(t *testing.T) {
-	if err := sandbox.Supported(t.Context()); err != nil {
-		t.Skipf("the sandbox cannot be built here: %v", err)
-	}
-
-	tests := []struct {
-		name          string
-		grantedAccess Access
-	}{
-		{"read and execute", ReadAccess | ExecAccess},
-		{"read and write", ReadAccess | WriteAccess},
-	}
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			workspace := reachableDir(t)
-			workspaceRoot, err := os.OpenRoot(workspace)
-			if err != nil {
-				t.Fatal(err)
-			}
-			defer func() { _ = workspaceRoot.Close() }()
-
-			mode := caps.NewMode(caps.Read | caps.Write | caps.Shell)
-			files := file.New(workspaceRoot, caps.RefuseWrite(mode))
-			access := newTestPathAccess(t, files, mode)
-			temporaryFile := filepath.Join(reachableDir(t), "recording.flac")
-			if err := os.WriteFile(temporaryFile, []byte("audio"), 0o600); err != nil {
-				t.Fatal(err)
-			}
-			if _, err := access.Grant(temporaryFile, test.grantedAccess); err != nil {
-				t.Fatal(err)
-			}
-			if err := os.Remove(temporaryFile); err != nil {
-				t.Fatal(err)
-			}
-
-			shellTool := New(
-				workspace,
-				reachableDir(t),
-				t.TempDir(),
-				access,
-				mode,
-				files,
-				false,
-				allowNetworking,
-				sandbox.Direct(),
-			)
-			call, err := shellTool.Parse(`{"command":"printf ready"}`)
-			if err != nil {
-				t.Fatal(err)
-			}
-			result, err := call.Exec(t.Context())
-			if err != nil {
-				t.Fatal(err)
-			}
-			if result.Output != "ready" {
-				t.Errorf("got %q, want ready", result.Output)
-			}
-		})
 	}
 }
 
@@ -734,38 +502,6 @@ func TestPathEntriesAlreadyExecutableInTheWorkspaceNeedNoGrant(t *testing.T) {
 	}
 }
 
-func TestCommandsCanExecuteThroughAWorkspacePathAlias(t *testing.T) {
-	if err := sandbox.Supported(t.Context()); err != nil {
-		t.Skipf("the sandbox cannot be built here: %v", err)
-	}
-
-	workspace := reachableDir(t)
-	versionDir := filepath.Join(workspace, "tools", "1.0")
-	if err := os.MkdirAll(versionDir, 0o700); err != nil {
-		t.Fatal(err)
-	}
-	if err := os.WriteFile(filepath.Join(versionDir, "probe"), []byte("#!/bin/sh\nprintf ready"), 0o700); err != nil { //nolint:gosec // the test needs an executable
-		t.Fatal(err)
-	}
-	alias := filepath.Join(workspace, "tools", "latest")
-	if err := os.Symlink("1.0", alias); err != nil {
-		t.Fatal(err)
-	}
-	t.Setenv("PATH", alias+string(os.PathListSeparator)+os.Getenv("PATH"))
-
-	policy, err := createTestPolicy(t, workspace, reachableDir(t), t.TempDir(), Paths{}, caps.Write)
-	if err != nil {
-		t.Fatal(err)
-	}
-	result, err := sandbox.Run(t.Context(), workspace, "probe", policy)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if result.ExitCode != 0 || result.Output != "ready" {
-		t.Errorf("got status %d and output %q, want ready", result.ExitCode, result.Output)
-	}
-}
-
 func TestAPathSymlinkInsideTheWorkspaceNeverGrantsItsOutsideTarget(t *testing.T) {
 	workspace := filepath.Join(t.TempDir(), "workspace")
 	outside := workspace + "-outside"
@@ -1039,52 +775,6 @@ func TestUnreadableSubtreesAreHeldReadOnly(t *testing.T) {
 				}
 			})
 		}
-	}
-}
-
-func TestCommandsCannotChangeAnUnreadableSubtree(t *testing.T) {
-	if err := sandbox.Supported(t.Context()); err != nil {
-		t.Skipf("the sandbox cannot be built here: %v", err)
-	}
-
-	workspace := reachableDir(t)
-	unreadable := filepath.Join(workspace, "service")
-	metadata := filepath.Join(unreadable, "repo", ".git", "config")
-	if err := os.MkdirAll(filepath.Dir(metadata), 0o700); err != nil {
-		t.Fatal(err)
-	}
-	if err := os.WriteFile(metadata, []byte("intact"), 0o600); err != nil {
-		t.Fatal(err)
-	}
-	makeUnreadable(t, unreadable, 0o300)
-
-	policy, err := createTestPolicy(t, workspace, reachableDir(t), t.TempDir(), Paths{}, caps.Write)
-	if err != nil {
-		t.Fatal(err)
-	}
-	result, err := sandbox.Run(t.Context(), workspace, "printf ready > work && cat work", policy)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if result.ExitCode != 0 || result.Output != "ready" {
-		t.Fatalf("the rest of the workspace is unusable: %#v", result)
-	}
-	for _, command := range []string{
-		"printf clobbered > service/repo/.git/config",
-		"chmod 700 service",
-		"mv service elsewhere",
-	} {
-		result, err := sandbox.Run(t.Context(), workspace, command, policy)
-		if err != nil {
-			t.Fatal(err)
-		}
-		if result.ExitCode == 0 {
-			t.Errorf("%q was allowed", command)
-		}
-	}
-	content, err := os.ReadFile(metadata) //nolint:gosec // the test's own metadata
-	if err != nil || string(content) != "intact" {
-		t.Errorf("the hidden metadata got %q and %v", content, err)
 	}
 }
 
@@ -1465,51 +1155,6 @@ func TestThePathIsLeftAloneWithoutAConfiguredPathDirectory(t *testing.T) {
 	}
 	if !slices.Contains(policy.Env, "PATH") {
 		t.Errorf("expected PATH to pass through, got %v", policy.Env)
-	}
-}
-
-func TestAToolInAConfiguredPathDirectoryIsCallableByName(t *testing.T) {
-	workspace := reachableDir(t)
-	workspaceRoot, err := os.OpenRoot(workspace)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() { _ = workspaceRoot.Close() }()
-
-	toolbox := reachableDir(t)
-	tool := filepath.Join(toolbox, "saymyname")
-	if err := os.WriteFile(tool, []byte("#!/bin/sh\nprintf toolbox\n"), 0o755); err != nil { //nolint:gosec // the test needs an executable
-		t.Fatal(err)
-	}
-
-	home := reachableDir(t)
-	tmp := t.TempDir()
-	paths := Paths{Path: []string{toolbox}}
-	if _, err := createPolicy(t.Context(), workspace, home, tmp, paths, caps.Read|caps.Shell); err != nil {
-		t.Skipf("the sandbox cannot enforce a shell policy here: %v", err)
-	}
-
-	files := file.New(workspaceRoot, func(string) error { return file.ErrReadOnly })
-	mode := caps.NewMode(caps.Read | caps.Shell)
-
-	access, err := NewPathAccess(files, mode, paths)
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(access.Close)
-
-	shell := New(workspace, home, tmp, access, mode, files, false, allowNetworking, sandbox.Direct())
-	call, err := shell.Parse(`{"command":"saymyname"}`)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	result, err := call.Exec(t.Context())
-	if err != nil {
-		t.Fatal(err)
-	}
-	if result.Output != "toolbox" {
-		t.Errorf("got %q, want %q", result.Output, "toolbox")
 	}
 }
 

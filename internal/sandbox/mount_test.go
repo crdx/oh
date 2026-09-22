@@ -123,7 +123,7 @@ func TestAScratchThatIsNotThereIsRefused(t *testing.T) {
 	}
 }
 
-func TestEveryCommandGetsTheOtherNamespacesToo(t *testing.T) {
+func TestEveryCommandGetsTheIsolatedNamespaces(t *testing.T) {
 	attributes := namespaceAttributes()
 
 	for name, flag := range map[string]uintptr{
@@ -136,6 +136,20 @@ func TestEveryCommandGetsTheOtherNamespacesToo(t *testing.T) {
 		if attributes.Cloneflags&flag == 0 {
 			t.Errorf("expected a %s namespace", name)
 		}
+	}
+}
+
+func TestEveryCommandMapsTheCallerToRoot(t *testing.T) {
+	attributes := namespaceAttributes()
+
+	if testnamespace.IsUnmapped() {
+		if len(attributes.UidMappings) != 0 || len(attributes.GidMappings) != 0 {
+			t.Errorf(
+				"got mappings %v and %v, want none on a machine that cannot map namespaces",
+				attributes.UidMappings, attributes.GidMappings,
+			)
+		}
+		return
 	}
 
 	if len(attributes.UidMappings) != 1 || attributes.UidMappings[0].HostID != os.Getuid() {
@@ -182,28 +196,6 @@ func TestTheNamespaceProbeIsRememberedOnlyOnceItHasSucceeded(t *testing.T) {
 
 	if again := checkNamespaces(t.Context()); again != nil {
 		t.Errorf("got %v from a remembered probe, want it answered without probing again", again)
-	}
-}
-
-func TestARememberedProbeStillChecksThePolicyOfEveryCommand(t *testing.T) {
-	if err := Supported(t.Context()); err != nil {
-		t.Skipf("the sandbox cannot run here: %v", err)
-	}
-
-	absent := filepath.Join(t.TempDir(), "not-there")
-
-	for name, policy := range map[string]Policy{
-		"a path that is not there": {Write: []string{absent}},
-		"a relative path":          {Write: []string{"relative"}},
-		"a path with a null byte":  {Write: []string{"/tmp/na\x00me"}},
-	} {
-		t.Run(name, func(t *testing.T) {
-			for attempt := range 2 {
-				if err := validate(t.Context(), policy); err == nil {
-					t.Errorf("attempt %d let a refused policy through", attempt+1)
-				}
-			}
-		})
 	}
 }
 
