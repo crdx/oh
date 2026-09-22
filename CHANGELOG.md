@@ -2,6 +2,8 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+## [0.9.0] - 2026-09-22
+
 ### Changes
 
 - Improve rendering performance of reasoning
@@ -20,6 +22,7 @@
 - Restrict a hidden-line notice to one row
 - Use fast instead of ultrafast with Codex
 - Heed X-Should-Retry header's wishes
+- Speed up deny path discovery
 
 ## [0.8.0] - 2026-09-20
 
