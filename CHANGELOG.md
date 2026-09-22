@@ -18,6 +18,7 @@
 - Document the denied path weirdness for now
 - Erase discarded reasoning block in-place
 - Restrict a hidden-line notice to one row
+- Use fast instead of ultrafast with Codex
 
 ## [0.8.0] - 2026-09-20
 
