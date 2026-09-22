@@ -45,7 +45,12 @@ type Status struct {
 }
 
 func Attributes() *syscall.SysProcAttr {
-	flags := uintptr(syscall.CLONE_NEWUSER | syscall.CLONE_NEWNET)
+	flags := uintptr(
+		syscall.CLONE_NEWUSER |
+			syscall.CLONE_NEWNET |
+			syscall.CLONE_NEWIPC |
+			syscall.CLONE_NEWUTS,
+	)
 
 	if testnamespace.IsUnmapped() {
 		return &syscall.SysProcAttr{

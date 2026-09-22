@@ -130,6 +130,8 @@ func TestEveryCommandGetsTheOtherNamespacesToo(t *testing.T) {
 		"user":    syscall.CLONE_NEWUSER,
 		"network": syscall.CLONE_NEWNET,
 		"pid":     syscall.CLONE_NEWPID,
+		"ipc":     syscall.CLONE_NEWIPC,
+		"uts":     syscall.CLONE_NEWUTS,
 	} {
 		if attributes.Cloneflags&flag == 0 {
 			t.Errorf("expected a %s namespace", name)
@@ -154,6 +156,8 @@ func TestNetworkingEnabledKeepsTheHostNetworkNamespace(t *testing.T) {
 		"user":  syscall.CLONE_NEWUSER,
 		"pid":   syscall.CLONE_NEWPID,
 		"mount": syscall.CLONE_NEWNS,
+		"ipc":   syscall.CLONE_NEWIPC,
+		"uts":   syscall.CLONE_NEWUTS,
 	} {
 		if attributes.Cloneflags&flag == 0 {
 			t.Errorf("networking removed the %s namespace", name)

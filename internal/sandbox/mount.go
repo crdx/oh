@@ -72,7 +72,13 @@ func (self Policy) writeCovers(path string) bool {
 	return false
 }
 
-const privateNamespaces uintptr = syscall.CLONE_NEWUSER | syscall.CLONE_NEWPID | syscall.CLONE_NEWNS
+const privateNamespaces = uintptr(
+	syscall.CLONE_NEWUSER |
+		syscall.CLONE_NEWPID |
+		syscall.CLONE_NEWNS |
+		syscall.CLONE_NEWIPC |
+		syscall.CLONE_NEWUTS,
+)
 
 const processFilesystemPath = "/proc"
 

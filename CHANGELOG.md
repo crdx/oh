@@ -13,6 +13,7 @@
 - Drop the pace figure from usage
 - Mark a limited window with ⊘
 - Add custom tools
+- Isolate IPC and UTS namespaces
 
 ## [0.8.0] - 2026-09-20
 
