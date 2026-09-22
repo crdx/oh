@@ -72,7 +72,7 @@ golden:
 
     # isolate shards because the generator harness mutates process-wide state
     for PATTERN in '[A-D]' '[E-L]' '[M-R]' '[S-Z]'; do
-        generate_goldens . -run "^TestGolden${PATTERN}"
+        generate_goldens ./internal/app/harness -run "^TestGolden${PATTERN}"
     done
 
     generate_goldens \

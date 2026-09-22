@@ -1,4 +1,4 @@
-package main
+package harness
 
 import (
 	"bufio"
@@ -5116,7 +5116,7 @@ var testBinary = sync.OnceValues(func() (string, error) {
 	testBinaryDirectory = directory
 	binary := filepath.Join(directory, "oh")
 
-	command := exec.Command("go", "build", "-o", binary, ".") //nolint:gosec // building the binary under test
+	command := exec.Command("go", "build", "-o", binary, "crdx.org/oh") //nolint:gosec // building the binary under test
 	if output, err := command.CombinedOutput(); err != nil {
 		return "", fmt.Errorf("build oh: %w\n%s", err, output)
 	}
