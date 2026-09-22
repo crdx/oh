@@ -1,0 +1,29 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `deepseek-v4-pro`
+- **Effort:** `medium`
+- **Provider:** `chat`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+receive a rate limit that says not to ask again
+
+## Failure · +0s
+
+```
+Rate limit reached for this key.
+```
+
+## User · +0s
+
+continue after the final refusal
+
+## Assistant · +0s
+
+Resumed.

@@ -1,0 +1,13 @@
+{"kind":"head","version":13,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"user_message","text":"receive a rate limit that says to ask again"}}
+{"kind":"event","event":{"kind":"request_retry","failure":{"kind":"http_status","message":"rate limit exceeded","http_status":429,"code":"rate_limit_error","media_type":"application/json"},"attempt":1}}
+{"kind":"event","event":{"kind":"model_message","text":"Ready now."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"receive a rate limit that says to ask again"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Ready now."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"continue after the rate limit"}}
+{"kind":"event","event":{"kind":"model_message","text":"Resumed."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"continue after the rate limit"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Resumed."}]}}
+{"kind":"turn_completion","turn":{}}

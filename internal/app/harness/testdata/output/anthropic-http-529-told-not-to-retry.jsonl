@@ -1,0 +1,11 @@
+{"kind":"head","version":13,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"user_message","text":"receive an overload that says not to ask again"}}
+{"kind":"event","event":{"kind":"turn_failure","failure":{"kind":"http_status","message":"Overloaded","http_status":529,"code":"overloaded_error","media_type":"application/json"}}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"receive an overload that says not to ask again"}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"continue after the final refusal"}}
+{"kind":"event","event":{"kind":"model_message","text":"Resumed."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"continue after the final refusal"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Resumed."}]}}
+{"kind":"turn_completion","turn":{}}

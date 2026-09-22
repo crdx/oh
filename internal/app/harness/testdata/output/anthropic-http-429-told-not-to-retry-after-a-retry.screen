@@ -1,0 +1,12 @@
+
+ receive a rate limit, then one that says not to ask again
+
+
+[#1] Request failed; retrying in 1s: Rate limit exceeded
+Usage credits are required for fast mode.
+
+
+ continue after the final refusal
+
+
+Resumed.

@@ -1,0 +1,29 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+receive a rate limit that says not to ask again
+
+## Failure · +0s
+
+```
+Usage credits are required for fast mode.
+```
+
+## User · +0s
+
+continue after the final refusal
+
+## Assistant · +0s
+
+Resumed.

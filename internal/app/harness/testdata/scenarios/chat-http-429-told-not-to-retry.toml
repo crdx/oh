@@ -1,0 +1,21 @@
+provider = "chat"
+model = "deepseek-v4-pro"
+effort = "medium"
+
+[first]
+prompt = "receive a rate limit that says not to ask again"
+
+[[first.response]]
+status = 429
+body = '''{"error":{"message":"Rate limit reached for this key.","type":"rate_limit_error"}}'''
+headers = { Content-Type = "application/json", X-Should-Retry = "false" }
+
+[resume]
+prompt = "continue after the final refusal"
+
+[[resume.response]]
+event = [
+    '''{"choices":[{"delta":{"content":"Resumed."}}]}''',
+    '''{"choices":[{"delta":{},"finish_reason":"stop"}]}''',
+    '''[DONE]''',
+]

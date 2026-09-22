@@ -1,0 +1,29 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+receive an overload that says not to ask again
+
+## Failure · +0s
+
+```
+Overloaded
+```
+
+## User · +0s
+
+continue after the final refusal
+
+## Assistant · +0s
+
+Resumed.

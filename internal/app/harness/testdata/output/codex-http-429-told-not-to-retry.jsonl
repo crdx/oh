@@ -1,0 +1,12 @@
+{"kind":"head","version":13,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
+{"kind":"event","event":{"kind":"user_message","text":"receive a rate limit that says not to ask again"}}
+{"kind":"event","event":{"kind":"turn_failure","failure":{"kind":"http_status","message":"Rate limit reached for this account.","http_status":429,"code":"rate_limit_error","media_type":"application/json"}}}
+{"kind":"item","payload":{"role":"user","content":"receive a rate limit that says not to ask again"}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"continue after the final refusal"}}
+{"kind":"event","event":{"kind":"model_message","text":"Resumed."}}
+{"kind":"item","payload":{"role":"user","content":"continue after the final refusal"}}
+{"kind":"item","payload":{"type":"message","role":"assistant","content":[{"type":"output_text","text":"Resumed."}]}}
+{"kind":"turn_completion","turn":{}}

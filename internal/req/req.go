@@ -281,6 +281,8 @@ var terminalServerStatuses = map[int]bool{
 	http.StatusNetworkAuthenticationRequired: true,
 }
 
+const shouldRetryHeader = "X-Should-Retry"
+
 type StatusError struct {
 	Status    int
 	Code      string
@@ -288,6 +290,7 @@ type StatusError struct {
 	Body      string
 	MediaType string
 	Wait      time.Duration
+	IsFinal   bool
 }
 
 func (self *StatusError) Error() string {
@@ -317,6 +320,10 @@ func IsRejected(err error) bool {
 }
 
 func (self *StatusError) Retriable() bool {
+	if self.IsFinal {
+		return false
+	}
+
 	if self.Status == http.StatusTooManyRequests {
 		return true
 	}
@@ -336,6 +343,7 @@ func refusal(response *http.Response) error {
 		Body:      string(body),
 		MediaType: mediaType(response.Header.Get("Content-Type"), body),
 		Wait:      retryAfter(response.Header.Get("Retry-After")),
+		IsFinal:   strings.EqualFold(strings.TrimSpace(response.Header.Get(shouldRetryHeader)), "false"),
 	}
 
 	var payload struct {

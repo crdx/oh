@@ -1,0 +1,33 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+receive a rate limit that says to ask again
+
+## Retrying · attempt 1 · waited 1s · +0s
+
+```
+rate limit exceeded
+```
+
+## Assistant · +0s
+
+Ready now.
+
+## User · +0s
+
+continue after the rate limit
+
+## Assistant · +0s
+
+Resumed.

@@ -325,6 +325,42 @@ func TestARefusalSaysWhetherAskingAgainIsWorthIt(t *testing.T) {
 	}
 }
 
+func TestARefusalTheEndpointSaysNotToRetryIsFinal(t *testing.T) {
+	tests := map[string]bool{
+		"false": false,
+		"False": false,
+		"true":  true,
+		"":      true,
+		"maybe": true,
+	}
+
+	for advice, worthIt := range tests {
+		t.Run(strconv.Quote(advice), func(t *testing.T) {
+			server := httptest.NewServer(http.HandlerFunc(
+				func(writer http.ResponseWriter, _ *http.Request) {
+					if advice != "" {
+						writer.Header().Set("X-Should-Retry", advice)
+					}
+					writer.WriteHeader(http.StatusTooManyRequests)
+					_, _ = writer.Write([]byte(`{"error":{"message":"Usage credits are required for fast mode."}}`))
+				},
+			))
+			t.Cleanup(server.Close)
+
+			_, _, err := req.New(time.Second).Stream(t.Context(), server.URL, map[string]string{}, nil)
+
+			var refused *req.StatusError
+			if !errors.As(err, &refused) {
+				t.Fatalf("expected a refusal the caller can read, got %v", err)
+			}
+
+			if refused.Retriable() != worthIt {
+				t.Errorf("expected retriable %t when told %q", worthIt, advice)
+			}
+		})
+	}
+}
+
 func TestARefusalCarriesHowLongItAskedToBeLeftAloneFor(t *testing.T) {
 	tests := map[string]time.Duration{
 		"7":                             7 * time.Second,

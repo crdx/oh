@@ -1,0 +1,13 @@
+
+ receive a rate limit that says to ask again
+
+
+[#1] Request failed; retrying in 1s: Rate limit exceeded
+
+Ready now.
+
+
+ continue after the rate limit
+
+
+Resumed.

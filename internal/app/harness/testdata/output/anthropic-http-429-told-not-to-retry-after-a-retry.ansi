@@ -1,0 +1,12 @@
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m receive a rate limit, then one that says not to ask again                                          \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[38;2;207;173;0m[#1] Request failed; retrying in 1s: Rate limit exceeded\e[0m\r
+\e[38;2;204;102;102mUsage credits are required for fast mode.\e[0m\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m continue after the final refusal                                                                   \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[?2026h\e[?25l\e[?7l\r\e[KResumed.\e[?25h\e[?2026l\r
