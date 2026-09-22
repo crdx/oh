@@ -160,6 +160,7 @@ func TestConfiguredPathsAreDisclosedInTheHarnessContext(t *testing.T) {
 
 	for _, want := range []string{
 		"cannot access any file or directory named by the configured deny pattern *.env",
+		"A denied path appears as an empty unreadable file or directory",
 		"configured path /reference is read-only",
 		"configured path /output is read-write and follows the workspace write state",
 		"shell can execute files at or under /commands",
@@ -167,6 +168,20 @@ func TestConfiguredPathsAreDisclosedInTheHarnessContext(t *testing.T) {
 		if !strings.Contains(got, want) {
 			t.Errorf("system prompt does not contain %q: %q", want, got)
 		}
+	}
+}
+
+func TestASessionWithNoDenyPatternIsNeverToldWhatADeniedPathLooksLike(t *testing.T) {
+	got := harnessContext(Config{
+		Workspace:   work.At("/workspace"),
+		SessionName: "session-id",
+		TmpDir:      "/state/farm/session",
+		HomeDir:     "/state/home",
+		CurrentCaps: caps.Read | caps.Write,
+	})
+
+	if strings.Contains(got, "A denied path") {
+		t.Errorf("system prompt mentions a denied path: %q", got)
 	}
 }
 
