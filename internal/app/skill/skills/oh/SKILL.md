@@ -153,14 +153,14 @@ A `rate` or a duration takes Go's form, as `125ms`, `10s`, or `5m`. A segment re
 
 `caps.default` is a string of flags, defaulting to `rx`, and applies when the command line names none. Read is implied whatever the string says.
 
-| Flag | Grants                                        |
-|------|-----------------------------------------------|
-| `r`  | Read files within the granted paths           |
-| `w`  | Write files, excluding anything under `.git`  |
-| `x`  | Run shell commands                            |
-| `n`  | Network beyond the sandbox's private loopback |
-| `g`  | Write under `.git`, which `w` alone refuses   |
-| `l`  | The lookup tool                               |
+| Flag | Grants                                               |
+|------|------------------------------------------------------|
+| `r`  | Read files within the granted paths                  |
+| `w`  | Write the workspace, excluding anything under `.git` |
+| `x`  | Run shell commands                                   |
+| `n`  | Network beyond the sandbox's private loopback        |
+| `g`  | Write under `.git`, which `w` alone refuses          |
+| `l`  | The lookup tool                                      |
 
 The user toggles capabilities at runtime, so `caps.default` is a starting posture, not a ceiling.
 
@@ -227,12 +227,12 @@ The result holds standard output and standard error. A non-zero exit reports a f
 
 - `deny` — file or directory name globs that path tools and confined shell commands cannot access anywhere; patterns contain no path separator, and a matched directory denies its whole tree
 - `read` — read-only to path tools and shell commands
-- `write` — readable everywhere, and writable only while the workspace write capability permits it
+- `write` — readable and writable to path tools and shell commands, apart from any `.git` within it, which only `g` makes writable
 - `exec` — read-only to path tools, and readable plus executable to shell commands
 - `path` — the same as `exec`, and appended to the shell's `PATH`
 - `home` — expose a real-home file at the same relative location in private `HOME`; it is read-only to path tools and shell commands
 
-Access combines when the same path is named more than once: `write` adds writing and `exec` or `path` adds execution. The current capability still gates writes.
+Access combines when the same path is named more than once: `write` adds writing and `exec` or `path` adds execution.
 
 Two implicit sets use the same source functions for both enforcement paths: the system paths needed to run commands (such as `/usr` and selected runtime configuration under `/etc`), and existing directories inherited through `PATH`. Path tools can read both sets; shell commands can also execute the executable directories. Beyond those sets and the exceptions below, a path absent from `[sandbox]` is unreachable however generous the caps.
 

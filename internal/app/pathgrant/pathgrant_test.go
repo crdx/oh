@@ -42,7 +42,7 @@ func newTestGrants(t *testing.T) (*Grants, *file.Root, *caps.Mode) {
 	return New(workspace, access), files, mode
 }
 
-func TestReadAndWriteGrantsReachTheFileToolsAndFollowTheWriteCapability(t *testing.T) {
+func TestReadAndWriteGrantsReachTheFileTools(t *testing.T) {
 	grants, files, mode := newTestGrants(t)
 	directory := t.TempDir()
 	proof := filepath.Join(directory, "proof")
@@ -75,12 +75,20 @@ func TestReadAndWriteGrantsReachTheFileToolsAndFollowTheWriteCapability(t *testi
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := mountedRoot.WriteFile(name, []byte("blocked"), 0o600); !errors.Is(err, file.ErrReadOnly) {
+	if err := mountedRoot.WriteFile(name, []byte("written"), 0o600); err != nil {
 		t.Errorf("write grant without write capability got %v", err)
 	}
-	mode.Toggle(caps.Write)
-	if err := mountedRoot.WriteFile(name, []byte("written"), 0o600); err != nil {
+
+	metadata := filepath.Join(".git", "config")
+	if err := mountedRoot.MkdirAll(".git", 0o700); !errors.Is(err, file.ErrGitDir) {
+		t.Errorf("write grant repository metadata without git capability got %v", err)
+	}
+	mode.Toggle(caps.Git)
+	if err := mountedRoot.MkdirAll(".git", 0o700); err != nil {
 		t.Fatal(err)
+	}
+	if err := mountedRoot.WriteFile(metadata, nil, 0o600); err != nil {
+		t.Errorf("write grant repository metadata with git capability got %v", err)
 	}
 }
 
@@ -179,15 +187,14 @@ func TestAnExecutableGrantIsToldToTheModelAndReadableByTheFileTools(t *testing.T
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := "Granted temporary read and execute access to " + directory +
-		". Execution there follows the shell capability."
+	want := "Granted temporary read and execute access to " + directory + "."
 	if notice, found := Notice(event); !found || notice != want {
 		t.Errorf("got notice %q and %t", notice, found)
 	}
 	if _, _, err := files.Resolve(directory); err != nil {
 		t.Errorf("executable path did not resolve through file tools: %v", err)
 	}
-	if injection := grants.Inject(); !strings.Contains(injection, "Execution there follows the shell capability") {
+	if injection := grants.Inject(); injection != want {
 		t.Errorf("got injection %q", injection)
 	}
 }
@@ -208,8 +215,7 @@ func TestGrantChangesAreInjectedOnce(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	want := "Granted temporary read and write access to " + directory +
-		". Changes there follow the workspace write capability."
+	want := "Granted temporary read and write access to " + directory + "."
 	if got := grants.Inject(); got != want {
 		t.Errorf("got injection %q", got)
 	}

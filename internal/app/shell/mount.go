@@ -472,7 +472,7 @@ func sortedPathModes(paths Paths) []pathMode {
 func newMountedRoot(mode *caps.Mode, mount configuredMount, access Access) *file.Root {
 	refuseWrite := func(string) error { return file.ErrReadOnly }
 	if access.Has(WriteAccess) {
-		currentRefusal := caps.RefuseWrite(mode)
+		currentRefusal := caps.RefuseGitWrite(mode)
 		refuseWrite = func(name string) error {
 			if mount.isExact {
 				return currentRefusal(mount.target)

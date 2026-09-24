@@ -285,9 +285,15 @@ func createPolicyWithSupportProbe(
 	if !currentCaps.Has(caps.Write) {
 		writablePolicy = writablePolicy.WithRead(workspaceDir)
 	}
+	if !slices.Contains(writablePaths, homeDir) {
+		writablePolicy = writablePolicy.WithRead(homeDir)
+	}
 
 	if !currentCaps.Has(caps.Git) {
-		protectRoots := append([]string{workspaceDir}, extraPaths.Write...)
+		protectRoots := slices.Clone(extraPaths.Write)
+		if currentCaps.Has(caps.Write) {
+			protectRoots = append([]string{workspaceDir}, protectRoots...)
+		}
 		var err error
 		writablePolicy, err = protectedPolicyWithOptionalRoots(
 			writablePolicy,
@@ -559,20 +565,7 @@ func freshPolicy(
 }
 
 func allWritablePaths(workspaceDir string, homeDir string, extraPaths []string, currentCaps caps.Set) []string {
-	paths := writablePaths(workspaceDir, homeDir, currentCaps)
-
-	switch {
-	case currentCaps.Has(caps.Write):
-		paths = append(paths, extraPaths...)
-	case currentCaps.Has(caps.Git):
-		for _, directory := range extraPaths {
-			if metadata := filepath.Join(directory, ".git"); pathutil.Exists(metadata) {
-				paths = append(paths, metadata)
-			}
-		}
-	}
-
-	return paths
+	return slices.Concat(writablePaths(workspaceDir, homeDir, currentCaps), extraPaths)
 }
 
 func writablePaths(workspaceDir string, homeDir string, currentCaps caps.Set) []string {

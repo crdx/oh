@@ -12,18 +12,14 @@ I can read the external reference now.
 
 
  🤖 Granted temporary read and write
-    access to /reference. Changes there
-    follow the workspace write
-    capability.
+    access to /reference.
 
 
-I can also change it while workspace
-writing is granted.
+I can also change it now.
 
 
  🤖 Granted temporary read and execute
-    access to /tools. Execution there
-    follows the shell capability.
+    access to /tools.
 
 
 I can run what is in the tools directory
@@ -31,10 +27,7 @@ now.
 
 
  🤖 Granted temporary read, execute, and
-    write access to /build. Execution
-    there follows the shell capability.
-    Changes there follow the workspace
-    write capability.
+    write access to /build.
 
 
 I can build in place and run what comes
@@ -328,98 +321,6 @@ e
 
 .
 
-C
-
-h
-
-a
-
-n
-
-g
-
-e
-
-s
-
-t
-
-h
-
-e
-
-r
-
-e
-
-f
-
-o
-
-l
-
-l
-
-o
-
-w
-
-t
-
-h
-
-e
-
-w
-
-o
-
-r
-
-k
-
-s
-
-p
-
-a
-
-c
-
-e
-
-w
-
-r
-
-i
-
-t
-
-e
-
-c
-
-a
-
-p
-
-a
-
-b
-
-i
-
-l
-
-i
-
-t
-
-y
-
-.
-
 
 I
 c
@@ -437,36 +338,9 @@ g
 e
 i
 t
-w
-h
-i
-l
-e
-w
+n
 o
-r
-k
-s
-p
-a
-c
-e
 w
-r
-i
-t
-i
-n
-g
-i
-s
-g
-r
-a
-n
-t
-e
-d
 .
 
 
@@ -560,86 +434,6 @@ o
 l
 
 s
-
-.
-
-E
-
-x
-
-e
-
-c
-
-u
-
-t
-
-i
-
-o
-
-n
-
-t
-
-h
-
-e
-
-r
-
-e
-
-f
-
-o
-
-l
-
-l
-
-o
-
-w
-
-s
-
-t
-
-h
-
-e
-
-s
-
-h
-
-e
-
-l
-
-l
-
-c
-
-a
-
-p
-
-a
-
-b
-
-i
-
-l
-
-i
-
-t
-
-y
 
 .
 
@@ -786,178 +580,6 @@ i
 l
 
 d
-
-.
-
-E
-
-x
-
-e
-
-c
-
-u
-
-t
-
-i
-
-o
-
-n
-
-t
-
-h
-
-e
-
-r
-
-e
-
-f
-
-o
-
-l
-
-l
-
-o
-
-w
-
-s
-
-t
-
-h
-
-e
-
-s
-
-h
-
-e
-
-l
-
-l
-
-c
-
-a
-
-p
-
-a
-
-b
-
-i
-
-l
-
-i
-
-t
-
-y
-
-.
-
-C
-
-h
-
-a
-
-n
-
-g
-
-e
-
-s
-
-t
-
-h
-
-e
-
-r
-
-e
-
-f
-
-o
-
-l
-
-l
-
-o
-
-w
-
-t
-
-h
-
-e
-
-w
-
-o
-
-r
-
-k
-
-s
-
-p
-
-a
-
-c
-
-e
-
-w
-
-r
-
-i
-
-t
-
-e
-
-c
-
-a
-
-p
-
-a
-
-b
-
-i
-
-l
-
-i
-
-t
-
-y
 
 .
 
@@ -1274,22 +896,19 @@ t
 I can read the external reference now.
 
 
- 🤖 Granted temporary read and write access to /reference. Changes there follow the workspace write
-    capability.
+ 🤖 Granted temporary read and write access to /reference.
 
 
-I can also change it while workspace writing is granted.
+I can also change it now.
 
 
- 🤖 Granted temporary read and execute access to /tools. Execution there follows the shell
-    capability.
+ 🤖 Granted temporary read and execute access to /tools.
 
 
 I can run what is in the tools directory now.
 
 
- 🤖 Granted temporary read, execute, and write access to /build. Execution there follows the shell
-    capability. Changes there follow the workspace write capability.
+ 🤖 Granted temporary read, execute, and write access to /build.
 
 
 I can build in place and run what comes out of it.
@@ -1339,22 +958,11 @@ now.
     to
     /referen
     ce.
-    Changes
-    there
-    follow
-    the
-    workspac
-    e write
-    capabili
-    ty.
 
 
 I can also
 change it
-while
-workspace
-writing is
-granted.
+now.
 
 
  🤖 Granted
@@ -1365,13 +973,6 @@ granted.
     access
     to
     /tools.
-    Executio
-    n there
-    follows
-    the
-    shell
-    capabili
-    ty.
 
 
 I can run
@@ -1390,21 +991,6 @@ now.
     access
     to
     /build.
-    Executio
-    n there
-    follows
-    the
-    shell
-    capabili
-    ty.
-    Changes
-    there
-    follow
-    the
-    workspac
-    e write
-    capabili
-    ty.
 
 
 I can build
@@ -1456,22 +1042,19 @@ it.
 I can read the external reference now.
 
 
- 🤖 Granted temporary read and write access to /reference. Changes there follow the workspace write
-    capability.
+ 🤖 Granted temporary read and write access to /reference.
 
 
-I can also change it while workspace writing is granted.
+I can also change it now.
 
 
- 🤖 Granted temporary read and execute access to /tools. Execution there follows the shell
-    capability.
+ 🤖 Granted temporary read and execute access to /tools.
 
 
 I can run what is in the tools directory now.
 
 
- 🤖 Granted temporary read, execute, and write access to /build. Execution there follows the shell
-    capability. Changes there follow the workspace write capability.
+ 🤖 Granted temporary read, execute, and write access to /build.
 
 
 I can build in place and run what comes out of it.

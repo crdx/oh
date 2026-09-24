@@ -26,17 +26,17 @@ I can read the external reference now.
 ## Path grant · 1 path · changed /reference · +3s
 
 ```
-Granted temporary read and write access to /reference. Changes there follow the workspace write capability.
+Granted temporary read and write access to /reference.
 ```
 
 ## Assistant · +4s
 
-I can also change it while workspace writing is granted.
+I can also change it now.
 
 ## Path grant · 2 paths · changed /tools · +5s
 
 ```
-Granted temporary read and execute access to /tools. Execution there follows the shell capability.
+Granted temporary read and execute access to /tools.
 ```
 
 ## Assistant · +6s
@@ -46,7 +46,7 @@ I can run what is in the tools directory now.
 ## Path grant · 3 paths · changed /build · +7s
 
 ```
-Granted temporary read, execute, and write access to /build. Execution there follows the shell capability. Changes there follow the workspace write capability.
+Granted temporary read, execute, and write access to /build.
 ```
 
 ## Assistant · +8s

@@ -17,10 +17,10 @@
 - Tools that accept a path can access the workspace, private home, /tmp, read-only system and executable search paths, and the paths listed here.
 - Pasting a clipboard image with ctrl+v saves it under /state/sessions/tame-impala/drops, where path tools can read it.
 - The configured path /reference is read-only.
-- The configured path /output is read-write and follows the workspace write state.
+- The configured path /output is read-write.
 - The configured executable path /commands is read-only to path tools.
 - The shell shares those read grants and additionally sees private process, terminal, resolver, and language-package cache files needed to run commands.
-- The shell follows the same workspace and configured-path write state as path tools; runtime devices are the only additional writable exceptions.
+- The shell has the same write access as path tools; runtime devices are the only additional writable exceptions.
 - The shell can execute files under the system directories, every directory in PATH, the workspace, HOME, and /tmp.
 - The shell can execute files at or under /commands.
 - The user can grant access to paths with /grant, and take them back with /revoke.

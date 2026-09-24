@@ -354,18 +354,5 @@ func revocationNotice(path string) string {
 }
 
 func grantNotice(grant Grant) string {
-	return "Granted temporary " + grant.Access.Describe() + " access to " +
-		grant.Path + "." + capabilityClauses(grant.Access)
-}
-
-func capabilityClauses(access Access) string {
-	clauses := ""
-	if access.Has(ExecAccess) {
-		clauses += " Execution there follows the shell capability."
-	}
-	if access.Has(WriteAccess) {
-		clauses += " Changes there follow the workspace write capability."
-	}
-
-	return clauses
+	return "Granted temporary " + grant.Access.Describe() + " access to " + grant.Path + "."
 }

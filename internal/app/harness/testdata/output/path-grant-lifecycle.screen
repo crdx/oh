@@ -24,7 +24,6 @@ Model returned no reply.
 === executable grant ===
                                                                            double-enter to send now
  ⏳ Granted temporary read and execute access to /reference.
-    Execution there follows the shell capability.
 
 
 ── ·✦· ─ rx:reference ─────────────────────────────────────────────────────────────── tame-impala ──
@@ -33,7 +32,6 @@ Model returned no reply.
 === grant replaced before sending ===
                                                                            double-enter to send now
  ⏳ Granted temporary read and write access to /reference.
-    Changes there follow the workspace write capability.
 
 
 ── ·✦· ─ rw:reference ─────────────────────────────────────────────────────────────── tame-impala ──

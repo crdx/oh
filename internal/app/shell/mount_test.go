@@ -177,12 +177,8 @@ func TestConfiguredPathsAreMountedWithTheirRequestedFileAccess(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := writeRoot.WriteFile(name, []byte("blocked"), 0o600); !errors.Is(err, file.ErrReadOnly) {
-		t.Errorf("write path without write capability got %v, want read-only", err)
-	}
-	mode.Toggle(caps.Write)
 	if err := writeRoot.WriteFile(name, []byte("written"), 0o600); err != nil {
-		t.Fatalf("write path with write capability: %v", err)
+		t.Fatalf("write path without write capability: %v", err)
 	}
 	if err := writeRoot.WriteFile(filepath.Join(".git", "config"), nil, 0o600); !errors.Is(err, file.ErrGitDir) {
 		t.Errorf("repository metadata write got %v, want git refusal", err)
@@ -443,12 +439,8 @@ func TestConfiguredFilesAreMountedWithoutTheirSiblings(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := writeRoot.WriteFile(name, []byte("blocked"), 0o600); !errors.Is(err, file.ErrReadOnly) {
-		t.Errorf("write file without write capability got %v, want read-only", err)
-	}
-	mode.Toggle(caps.Write)
 	if err := writeRoot.WriteFile(name, []byte("written"), 0o600); err != nil {
-		t.Fatalf("write file with write capability: %v", err)
+		t.Fatalf("write file without write capability: %v", err)
 	}
 
 	if _, _, err := files.Resolve(siblingPath); !errors.Is(err, file.ErrOutsideRoot) {

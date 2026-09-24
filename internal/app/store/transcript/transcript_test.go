@@ -752,7 +752,7 @@ func TestTranscriptRendersPathGrantEventsFromStructuredState(t *testing.T) {
 	transcript := string(stored)
 	for _, want := range []string{
 		"## Path grant · 1 path · changed /reference · +2s",
-		"Granted temporary read and write access to /reference. Changes there follow the workspace write capability.",
+		"Granted temporary read and write access to /reference.",
 	} {
 		if !strings.Contains(transcript, want) {
 			t.Errorf("expected %q in the transcript, got:\n%s", want, transcript)

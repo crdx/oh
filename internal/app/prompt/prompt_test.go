@@ -154,7 +154,7 @@ func TestConfiguredPathsAreDisclosedInTheHarnessContext(t *testing.T) {
 		SessionName: "session-id",
 		TmpDir:      "/state/farm/session",
 		HomeDir:     "/state/home",
-		CurrentCaps: caps.Read | caps.Write,
+		CurrentCaps: caps.Read,
 		ExtraPaths:  paths,
 	})
 
@@ -162,7 +162,7 @@ func TestConfiguredPathsAreDisclosedInTheHarnessContext(t *testing.T) {
 		"cannot access any file or directory named by the configured deny pattern *.env",
 		"A denied path appears as an empty unreadable file or directory",
 		"configured path /reference is read-only",
-		"configured path /output is read-write and follows the workspace write state",
+		"configured path /output is read-write.",
 		"shell can execute files at or under /commands",
 	} {
 		if !strings.Contains(got, want) {
@@ -825,7 +825,7 @@ func TestTheShellAndPathToolsReportSystemReadAccess(t *testing.T) {
 	for _, want := range []string{
 		"Tools that accept a path can only access the workspace, private home, /tmp, and read-only system and executable search paths.",
 		"The shell shares those read grants and additionally sees private process, terminal, resolver, and language-package cache files needed to run commands.",
-		"The shell follows the same workspace and configured-path write state as path tools; runtime devices are the only additional writable exceptions.",
+		"The shell has the same write access as path tools; runtime devices are the only additional writable exceptions.",
 	} {
 		if !strings.Contains(got, want) {
 			t.Errorf("harness context does not contain %q: %q", want, got)

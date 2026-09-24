@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Make writable paths always writable
 - Send the priority service tier for Codex fast mode
 - Send the Codex routing hint header, also
 - Abandon dead connections promptly

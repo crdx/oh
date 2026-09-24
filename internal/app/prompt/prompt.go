@@ -342,8 +342,7 @@ func scopeRules(data harnessContextTemplateData) string {
 		lines = append(lines, "- The configured path "+path+" is read-only"+scratchException(path, data)+".")
 	}
 	for _, path := range extraPaths.Write {
-		lines = append(lines, "- The configured path "+path+" is "+
-			filesystem(data.WorkspaceWritable)+" and follows the workspace write state.")
+		lines = append(lines, "- The configured path "+path+" is read-write.")
 	}
 	for _, path := range extraPaths.Exec {
 		lines = append(lines, "- The configured executable path "+path+" is read-only to path tools.")
@@ -361,7 +360,7 @@ func scopeRules(data harnessContextTemplateData) string {
 	}
 	if data.ShellOffered && !data.Yolo {
 		lines = append(lines, "- The shell shares those read grants and additionally sees private process, terminal, resolver, and language-package cache files needed to run commands.")
-		lines = append(lines, "- The shell follows the same workspace and configured-path write state as path tools; runtime devices are the only additional writable exceptions.")
+		lines = append(lines, "- The shell has the same write access as path tools; runtime devices are the only additional writable exceptions.")
 		lines = append(lines, "- The shell can execute files under the system directories, every directory in PATH, the workspace, HOME, and /tmp.")
 		for _, path := range extraPaths.Exec {
 			lines = append(lines, "- The shell can execute files at or under "+path+".")

@@ -16,7 +16,7 @@
 - Your session is named tame-impala
 - Tools that accept a path can only access the workspace, private home, /tmp, and read-only system and executable search paths.
 - The shell shares those read grants and additionally sees private process, terminal, resolver, and language-package cache files needed to run commands.
-- The shell follows the same workspace and configured-path write state as path tools; runtime devices are the only additional writable exceptions.
+- The shell has the same write access as path tools; runtime devices are the only additional writable exceptions.
 - The shell can execute files under the system directories, every directory in PATH, the workspace, HOME, and /tmp.
 - The user can grant access to paths with /grant, and take them back with /revoke.
 - Ask the user to grant a needed path rather than working around it or giving up.

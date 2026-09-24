@@ -99,22 +99,28 @@ func Parse(flags string) (Set, error) {
 }
 
 func RefuseWrite(mode *Mode) func(name string) error {
+	refuseGitWrite := RefuseGitWrite(mode)
+
 	return func(name string) error {
-		currentCaps := mode.Current()
-
 		if file.InGitDir(name) {
-			if currentCaps.Has(Git) {
-				return nil
-			}
-
-			return file.ErrGitDir
+			return refuseGitWrite(name)
 		}
 
-		if currentCaps.Has(Write) {
+		if mode.Current().Has(Write) {
 			return nil
 		}
 
 		return file.ErrReadOnly
+	}
+}
+
+func RefuseGitWrite(mode *Mode) func(name string) error {
+	return func(name string) error {
+		if file.InGitDir(name) && !mode.Current().Has(Git) {
+			return file.ErrGitDir
+		}
+
+		return nil
 	}
 }
 

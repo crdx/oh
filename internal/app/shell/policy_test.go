@@ -436,23 +436,26 @@ func TestConfiguredPathsReachTheShellPolicy(t *testing.T) {
 		Exec:  []string{execDirectory},
 	}
 
-	readOnly, err := createTestPolicy(t, workspace, home, t.TempDir(), additional, 0)
+	withoutWrite, err := createTestPolicy(t, workspace, home, t.TempDir(), additional, 0)
 	if err != nil {
 		t.Fatalf("the sandbox cannot enforce the configured policy here: %v", err)
 	}
-	for _, path := range []string{readDirectory, writeDirectory} {
-		if !slices.Contains(readOnly.Read, path) {
-			t.Errorf("expected %s to be readable, got %v", path, readOnly.Read)
+	for _, path := range []string{readDirectory, workspace, home} {
+		if !slices.Contains(withoutWrite.Read, path) {
+			t.Errorf("expected %s to be readable, got %v", path, withoutWrite.Read)
+		}
+		if slices.Contains(withoutWrite.Write, path) {
+			t.Errorf("expected %s to be read-only without write capability, got %v", path, withoutWrite.Write)
 		}
 	}
-	if !slices.Contains(readOnly.Exec, execDirectory) {
-		t.Errorf("expected %s to be executable, got %v", execDirectory, readOnly.Exec)
+	if !slices.Contains(withoutWrite.Exec, execDirectory) {
+		t.Errorf("expected %s to be executable, got %v", execDirectory, withoutWrite.Exec)
 	}
-	if slices.Contains(readOnly.Write, writeDirectory) {
-		t.Errorf("configured write path is writable without write capability: %v", readOnly.Write)
+	if !slices.Contains(withoutWrite.Write, writeDirectory) {
+		t.Errorf("configured write path is read-only without write capability: %v", withoutWrite.Write)
 	}
-	if len(readOnly.OptionalPaths) != 0 {
-		t.Errorf("configured paths were made optional: %v", readOnly.OptionalPaths)
+	if len(withoutWrite.OptionalPaths) != 0 {
+		t.Errorf("configured paths were made optional: %v", withoutWrite.OptionalPaths)
 	}
 
 	readWrite, err := createTestPolicy(t, workspace, home, t.TempDir(), additional, caps.Write)
@@ -714,6 +717,29 @@ func TestEveryExistingRepositoryIsProtectedFromTheShell(t *testing.T) {
 		if !slices.Contains(policy.Read, metadata) {
 			t.Errorf("expected %s to be protected, got %v", metadata, policy.Read)
 		}
+	}
+}
+
+func TestAConfiguredRepositoryIsProtectedWithoutWriteCapability(t *testing.T) {
+	workspace := t.TempDir()
+	additional := t.TempDir()
+	metadata := filepath.Join(additional, ".git")
+	if err := os.MkdirAll(metadata, 0o700); err != nil {
+		t.Fatal(err)
+	}
+
+	policy, err := createTestPolicy(t, workspace, t.TempDir(), t.TempDir(), Paths{
+		Write: []string{additional},
+	}, 0)
+	if err != nil {
+		t.Fatalf("the sandbox cannot enforce a writable policy here: %v", err)
+	}
+
+	if !slices.Contains(policy.Write, additional) {
+		t.Errorf("expected %s to be writable, got %v", additional, policy.Write)
+	}
+	if !slices.Contains(policy.Read, metadata) {
+		t.Errorf("expected %s to be protected, got %v", metadata, policy.Read)
 	}
 }
 

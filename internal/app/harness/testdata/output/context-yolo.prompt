@@ -23,7 +23,7 @@
 - Your session is named tame-impala
 - Tools that accept a path can access the workspace, private home, /tmp, read-only system and executable search paths, and the configured paths listed here.
 - The configured path /reference is read-only.
-- The configured path /output is read-write and follows the workspace write state.
+- The configured path /output is read-write.
 - The configured executable path /commands is read-only to path tools.
 - The shell is unconfined in --yolo mode; path tools remain limited to the paths above.
 - The user can grant access to paths with /grant, and take them back with /revoke.
