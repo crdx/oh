@@ -131,7 +131,7 @@ The right side is drawn whole and the left is then fitted into what remains, so 
 | `active-model`       | the model, its effort as a ladder of squares, and `⚡` when fast      | none                                        |
 | `cache-usage`        | what share of the last request the provider read from cache           | none                                        |
 | `context-usage`      | the context filled, as a percentage and used over total tokens        | none                                        |
-| `exposed-ports`      | each granted port as a link, `⇠` marking one reaching out to the host | none                                        |
+| `exposed-ports`      | ports as links, prefixed by associated jobs; `⇠` marks routes to host | none                                        |
 | `fast-mode`          | `⚡` for the fast model, `·` for the standard one                     | none                                        |
 | `git-branch`         | the workspace's branch, or a short hash when detached                 | `rate`, default `5s`                        |
 | `jobs`               | a mark and name per job, a finished one lingering 30 seconds          | none                                        |

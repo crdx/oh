@@ -761,7 +761,7 @@ func TestTranscriptRendersPathGrantEventsFromStructuredState(t *testing.T) {
 }
 
 func TestTranscriptRecordsBothPortDirections(t *testing.T) {
-	hostToSandbox, err := portgrant.HostToSandboxChangeEvent("127.9.9.9", 8080, []uint16{8080})
+	hostToSandbox, err := portgrant.HostToSandboxChangeEvent("127.9.9.9", 8080, []portgrant.Route{{Port: 8080}})
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -42,11 +42,16 @@ type HostToSandboxRestoreResult struct {
 	Failures []HostToSandboxRestoreFailure
 }
 
+type Route struct {
+	Port    uint16
+	JobName string
+}
+
 type HostToSandbox struct {
 	exposer               HostToSandboxExposer
 	host                  string
 	getSandboxToHostPorts func() []uint16
-	state                 *access.State[[]uint16]
+	state                 *access.State[[]Route]
 	changes               chan agent.Event
 	mutex                 sync.Mutex
 }
@@ -55,7 +60,7 @@ func NewHostToSandbox(exposer HostToSandboxExposer, host string) *HostToSandbox 
 	return &HostToSandbox{
 		exposer: exposer,
 		host:    host,
-		state:   access.New([]uint16(nil), hostToSandboxDefinition(host)),
+		state:   access.New([]Route(nil), hostToSandboxDefinition(host)),
 		changes: make(chan agent.Event, maxExposedPorts),
 	}
 }
@@ -63,26 +68,30 @@ func NewHostToSandbox(exposer HostToSandboxExposer, host string) *HostToSandbox 
 func NewRestoredHostToSandbox(
 	exposer HostToSandboxExposer,
 	host string,
-	recordedPorts []uint16,
+	recordedRoutes []Route,
 ) (*HostToSandbox, HostToSandboxRestoreResult) {
 	ports := NewHostToSandbox(exposer, host)
 	result := HostToSandboxRestoreResult{}
-	current := make([]uint16, 0, len(recordedPorts))
+	current := make([]Route, 0, len(recordedRoutes))
 
-	for _, port := range canonicalPorts(recordedPorts) {
-		if err := ports.open(port); err != nil {
-			result.Failures = append(result.Failures, HostToSandboxRestoreFailure{Port: port, Err: err})
+	for _, route := range canonicalRoutes(recordedRoutes) {
+		if err := ports.open(route.Port); err != nil {
+			result.Failures = append(result.Failures, HostToSandboxRestoreFailure{Port: route.Port, Err: err})
 			continue
 		}
-		current = append(current, port)
+		current = append(current, route)
 	}
 
-	ports.state = access.NewRestored(current, canonicalPorts(recordedPorts), hostToSandboxDefinition(host))
+	ports.state = access.NewRestored(current, canonicalRoutes(recordedRoutes), hostToSandboxDefinition(host))
 
 	return ports, result
 }
 
 func (self *HostToSandbox) GetCurrent() []uint16 {
+	return routePorts(self.state.GetCurrent())
+}
+
+func (self *HostToSandbox) GetRoutes() []Route {
 	return self.state.GetCurrent()
 }
 
@@ -109,21 +118,7 @@ func (self *HostToSandbox) Inject() string {
 }
 
 func (self *HostToSandbox) Expose(port uint16) (agent.Event, error) {
-	self.mutex.Lock()
-	defer self.mutex.Unlock()
-
-	current := self.state.GetCurrent()
-	if slices.Contains(current, port) {
-		return agent.Event{}, fmt.Errorf("port %d is already exposed", port)
-	}
-	if err := self.open(port); err != nil {
-		return agent.Event{}, err
-	}
-
-	current = canonicalPorts(append(current, port))
-	self.state.Replace(current)
-
-	return HostToSandboxChangeEvent(self.host, port, current)
+	return self.expose(port, "")
 }
 
 func (self *HostToSandbox) Hide(port uint16) (agent.Event, error) {
@@ -131,7 +126,7 @@ func (self *HostToSandbox) Hide(port uint16) (agent.Event, error) {
 	defer self.mutex.Unlock()
 
 	current := self.state.GetCurrent()
-	if !slices.Contains(current, port) {
+	if !slices.ContainsFunc(current, func(route Route) bool { return route.Port == port }) {
 		return agent.Event{}, fmt.Errorf("port %d is not exposed", port)
 	}
 	if !self.exposer.isConfigured() {
@@ -141,7 +136,7 @@ func (self *HostToSandbox) Hide(port uint16) (agent.Event, error) {
 		return agent.Event{}, err
 	}
 
-	current = slices.DeleteFunc(current, func(openPort uint16) bool { return openPort == port })
+	current = slices.DeleteFunc(current, func(route Route) bool { return route.Port == port })
 	self.state.Replace(current)
 
 	return HostToSandboxChangeEvent(self.host, port, current)
@@ -162,26 +157,44 @@ func AddressFor(sessionName string) string {
 }
 
 type hostToSandboxEventState struct {
-	Host  string   `json:"host,omitempty"`
-	Ports []uint16 `json:"ports"`
+	Host     string            `json:"host,omitempty"`
+	Ports    []uint16          `json:"ports"`
+	JobNames map[uint16]string `json:"job_names,omitempty"`
 }
 
-func HostToSandboxChangeEvent(host string, port uint16, ports []uint16) (agent.Event, error) {
-	state, err := json.Marshal(hostToSandboxEventState{Host: host, Ports: canonicalPorts(ports)})
+func HostToSandboxChangeEvent(host string, port uint16, routes []Route) (agent.Event, error) {
+	routes = canonicalRoutes(routes)
+	state := hostToSandboxEventState{
+		Host:     host,
+		Ports:    routePorts(routes),
+		JobNames: make(map[uint16]string),
+	}
+	for _, route := range routes {
+		if route.JobName != "" {
+			state.JobNames[route.Port] = route.JobName
+		}
+	}
+
+	encodedState, err := json.Marshal(state)
 	if err != nil {
 		return agent.Event{}, err
 	}
 
-	return agent.Event{Kind: HostToSandboxChange, Name: strconv.Itoa(int(port)), State: state}, nil
+	return agent.Event{Kind: HostToSandboxChange, Name: strconv.Itoa(int(port)), State: encodedState}, nil
 }
 
-func decodeHostToSandboxEvent(event agent.Event) ([]uint16, error) {
+func decodeHostToSandboxEvent(event agent.Event) ([]Route, error) {
 	state, err := decodeState(event)
 	if err != nil {
 		return nil, err
 	}
 
-	return canonicalPorts(state.Ports), nil
+	routes := make([]Route, 0, len(state.Ports))
+	for _, port := range state.Ports {
+		routes = append(routes, Route{Port: port, JobName: state.JobNames[port]})
+	}
+
+	return canonicalRoutes(routes), nil
 }
 
 func decodeState(event agent.Event) (hostToSandboxEventState, error) {
@@ -199,7 +212,7 @@ func decodeState(event agent.Event) (hostToSandboxEventState, error) {
 	return state, nil
 }
 
-func LastRecordedHostToSandbox(events []agent.Event) ([]uint16, bool) {
+func LastRecordedHostToSandbox(events []agent.Event) ([]Route, bool) {
 	return access.LastRecorded(events, HostToSandboxChange, decodeHostToSandboxEvent)
 }
 
@@ -207,18 +220,18 @@ func HostToSandboxSummary(event agent.Event) (string, bool) {
 	if event.Kind != HostToSandboxChange {
 		return "", false
 	}
-	ports, err := decodeHostToSandboxEvent(event)
+	routes, err := decodeHostToSandboxEvent(event)
 	if err != nil {
 		return "", false
 	}
-	if len(ports) == 0 {
+	if len(routes) == 0 {
 		return "none", true
 	}
-	if len(ports) == 1 {
+	if len(routes) == 1 {
 		return "1 sandbox port", true
 	}
 
-	return fmt.Sprintf("%d sandbox ports", len(ports)), true
+	return fmt.Sprintf("%d sandbox ports", len(routes)), true
 }
 
 func HostToSandboxNotice(event agent.Event) (string, bool) {
@@ -256,32 +269,52 @@ func canonicalPorts(ports []uint16) []uint16 {
 	return slices.Compact(sortedPorts)
 }
 
-func hostToSandboxDefinition(host string) access.Definition[[]uint16] {
-	return access.Definition[[]uint16]{
-		Clone: canonicalPorts,
-		Describe: func(knownPorts []uint16, currentPorts []uint16) string {
-			return describeHostToSandboxChanges(host, knownPorts, currentPorts)
+func canonicalRoutes(routes []Route) []Route {
+	sortedRoutes := slices.Clone(routes)
+	slices.SortFunc(sortedRoutes, func(left Route, right Route) int {
+		return int(left.Port) - int(right.Port)
+	})
+
+	return slices.CompactFunc(sortedRoutes, func(left Route, right Route) bool {
+		return left.Port == right.Port
+	})
+}
+
+func routePorts(routes []Route) []uint16 {
+	ports := make([]uint16, 0, len(routes))
+	for _, route := range canonicalRoutes(routes) {
+		ports = append(ports, route.Port)
+	}
+
+	return ports
+}
+
+func hostToSandboxDefinition(host string) access.Definition[[]Route] {
+	return access.Definition[[]Route]{
+		Clone: canonicalRoutes,
+		Describe: func(knownRoutes []Route, currentRoutes []Route) string {
+			return describeHostToSandboxChanges(host, knownRoutes, currentRoutes)
 		},
 	}
 }
 
-func describeHostToSandboxChanges(host string, knownPorts []uint16, currentPorts []uint16) string {
+func describeHostToSandboxChanges(host string, knownRoutes []Route, currentRoutes []Route) string {
 	var clauses []string
-	for _, port := range currentPorts {
-		if slices.Contains(knownPorts, port) {
+	for _, route := range currentRoutes {
+		if slices.ContainsFunc(knownRoutes, func(knownRoute Route) bool { return knownRoute.Port == route.Port }) {
 			continue
 		}
 		clauses = append(clauses,
-			"The user can now reach TCP port "+strconv.Itoa(int(port))+
-				" on this sandbox's loopback, at "+URL(host, port)+" on their own machine.",
+			"The user can now reach TCP port "+strconv.Itoa(int(route.Port))+
+				" on this sandbox's loopback, at "+URL(host, route.Port)+" on their own machine.",
 		)
 	}
-	for _, port := range knownPorts {
-		if slices.Contains(currentPorts, port) {
+	for _, route := range knownRoutes {
+		if slices.ContainsFunc(currentRoutes, func(current Route) bool { return current.Port == route.Port }) {
 			continue
 		}
 		clauses = append(clauses,
-			"TCP port "+strconv.Itoa(int(port))+" is no longer reachable from outside the sandbox.",
+			"TCP port "+strconv.Itoa(int(route.Port))+" is no longer reachable from outside the sandbox.",
 		)
 	}
 
@@ -296,8 +329,26 @@ func (self *HostToSandbox) ForModel() HostToSandboxModelAccess {
 	return HostToSandboxModelAccess{ports: self}
 }
 
-func (self HostToSandboxModelAccess) Expose(port uint16) (string, error) {
-	event, err := self.ports.Expose(port)
+func (self *HostToSandbox) expose(port uint16, jobName string) (agent.Event, error) {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	current := self.state.GetCurrent()
+	if slices.ContainsFunc(current, func(route Route) bool { return route.Port == port }) {
+		return agent.Event{}, fmt.Errorf("port %d is already exposed", port)
+	}
+	if err := self.open(port); err != nil {
+		return agent.Event{}, err
+	}
+
+	current = canonicalRoutes(append(current, Route{Port: port, JobName: jobName}))
+	self.state.Replace(current)
+
+	return HostToSandboxChangeEvent(self.host, port, current)
+}
+
+func (self HostToSandboxModelAccess) Expose(port uint16, jobName string) (string, error) {
+	event, err := self.ports.expose(port, jobName)
 	if err != nil {
 		return "", err
 	}
@@ -317,10 +368,14 @@ func (self HostToSandboxModelAccess) Hide(port uint16) error {
 }
 
 func (self HostToSandboxModelAccess) List() []expose.Publication {
-	current := self.ports.GetCurrent()
-	publications := make([]expose.Publication, 0, len(current))
-	for _, port := range current {
-		publications = append(publications, expose.Publication{Port: port, URL: self.ports.URL(port)})
+	routes := self.ports.GetRoutes()
+	publications := make([]expose.Publication, 0, len(routes))
+	for _, route := range routes {
+		publications = append(publications, expose.Publication{
+			Port:    route.Port,
+			JobName: route.JobName,
+			URL:     self.ports.URL(route.Port),
+		})
 	}
 
 	return publications

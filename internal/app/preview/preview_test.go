@@ -45,11 +45,11 @@ func exposedPorts(t *testing.T) []agent.Event {
 	t.Helper()
 
 	var events []agent.Event
-	var ports []uint16
+	var routes []portgrant.Route
 
 	for _, port := range []uint16{8001, 8002, 8003} {
-		ports = append(ports, port)
-		event, err := portgrant.HostToSandboxChangeEvent("127.9.9.9", port, ports)
+		routes = append(routes, portgrant.Route{Port: port})
+		event, err := portgrant.HostToSandboxChangeEvent("127.9.9.9", port, routes)
 		if err != nil {
 			t.Fatal(err)
 		}

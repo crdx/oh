@@ -52,6 +52,22 @@ GPT Sol 5.6 ▫▫▫▫▪▫
 50% 500K/1M
 === context-usage / unknown ===
 ?% 0/?
+=== exposed-ports / associated absent job ===
+docs:8000
+=== exposed-ports / associated complete job ===
+docs:8000
+=== exposed-ports / associated failed job ===
+docs:8000
+=== exposed-ports / associated job ended with session ===
+docs:8000
+=== exposed-ports / associated running job ===
+docs:8000
+=== exposed-ports / associated starting job ===
+docs:8000
+=== exposed-ports / associated stopped job ===
+docs:8000
+=== exposed-ports / associated stopping job ===
+docs:8000
 === exposed-ports / both directions ===
 8000, ⇠ 3000
 === exposed-ports / both directions constrained ===
@@ -78,6 +94,8 @@ feature/bars
 ● docs ○ builder
 === jobs / a ghost whose linger is up ===
 ● docs
+=== jobs / associated job named by port ===
+● watch
 === jobs / failures alone ===
 ✗ builder ✗ api
 === jobs / failures beside those running ===

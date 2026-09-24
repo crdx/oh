@@ -980,19 +980,19 @@ func getBarContext(frame edit.Frame) segment.Context {
 
 func (self *App) getBarSources() bar.Sources {
 	return bar.Sources{
-		IsTurnRunning:         self.isTurnRunning,
-		IsSessionPersisted:    self.isSessionPersisted,
-		GetContextUsage:       self.contextUsage,
-		GetCacheUsage:         self.cacheUsage,
-		GetSessionSpend:       self.sessionSpend,
-		GetGrantedCaps:        self.grantedCaps,
-		GetPathGrants:         self.getPathGrants,
-		GetHostToSandboxPorts: self.getHostToSandboxPorts,
-		GetSandboxToHostPorts: self.getSandboxToHostPorts,
-		IsPrefixPending:       self.isPrefixPending,
-		GetTurnTiming:         self.turnTiming,
-		GetTurnCount:          self.turnCount,
-		GetJobs:               self.getJobs,
+		IsTurnRunning:          self.isTurnRunning,
+		IsSessionPersisted:     self.isSessionPersisted,
+		GetContextUsage:        self.contextUsage,
+		GetCacheUsage:          self.cacheUsage,
+		GetSessionSpend:        self.sessionSpend,
+		GetGrantedCaps:         self.grantedCaps,
+		GetPathGrants:          self.getPathGrants,
+		GetHostToSandboxRoutes: self.getHostToSandboxRoutes,
+		GetSandboxToHostPorts:  self.getSandboxToHostPorts,
+		IsPrefixPending:        self.isPrefixPending,
+		GetTurnTiming:          self.turnTiming,
+		GetTurnCount:           self.turnCount,
+		GetJobs:                self.getJobs,
 	}
 }
 
@@ -1328,11 +1328,11 @@ func (self *App) getPathGrants() []pathgrant.Grant {
 	return self.pathGrants.GetCurrent()
 }
 
-func (self *App) getHostToSandboxPorts() []uint16 {
+func (self *App) getHostToSandboxRoutes() []portgrant.Route {
 	if self.hostToSandbox == nil {
 		return nil
 	}
-	return self.hostToSandbox.GetCurrent()
+	return self.hostToSandbox.GetRoutes()
 }
 
 func (self *App) getSandboxToHostPorts() []uint16 {

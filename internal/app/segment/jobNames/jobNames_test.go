@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/segment/jobNames"
 	"crdx.org/oh/internal/app/style"
@@ -17,6 +18,7 @@ func build(t *testing.T, listing ...jobs.Snapshot) segment.Segment {
 
 	built, err := jobNames.New(
 		func() []jobs.Snapshot { return listing },
+		func() []portgrant.Route { return nil },
 		func() time.Time { return noon },
 	)(nil)
 	if err != nil {
@@ -44,6 +46,26 @@ func TestEveryRunningJobIsNamed(t *testing.T) {
 
 	if drawn != "\u25cf docs \u25cf watch" {
 		t.Errorf("got %q, want both jobs named with their own mark", drawn)
+	}
+}
+
+func TestAnAssociatedJobIsLeftForThePortSegmentToName(t *testing.T) {
+	built, err := jobNames.New(
+		func() []jobs.Snapshot {
+			return []jobs.Snapshot{
+				{Name: "docs", State: jobs.StateRunning},
+				{Name: "watch", State: jobs.StateRunning},
+			}
+		},
+		func() []portgrant.Route { return []portgrant.Route{{Port: 8000, JobName: "docs"}} },
+		func() time.Time { return noon },
+	)(nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if drawn := style.Plain(built.Render(segment.Context{})); drawn != "● watch" {
+		t.Errorf("got %q, want only the unassociated job", drawn)
 	}
 }
 

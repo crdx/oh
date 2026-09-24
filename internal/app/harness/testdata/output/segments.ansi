@@ -52,6 +52,22 @@ GPT Sol \e[38;2;150;152;150m5.6\e[0m \e[38;2;150;152;150m▫▫▫▫\e[0m\e[38;
 50\e[38;2;150;152;150m% \e[0m500\e[38;2;150;152;150mK/\e[0m1\e[38;2;150;152;150mM\e[0m
 === context-usage / unknown ===
 ?\e[38;2;150;152;150m% \e[0m0\e[38;2;150;152;150m/\e[0m?
+=== exposed-ports / associated absent job ===
+\e]8;;http://127.82.233.168:8000\e\\\e[38;2;150;152;150mdocs\e[0m\e[38;2;150;152;150m:8000\e[0m\e]8;;\e\\
+=== exposed-ports / associated complete job ===
+\e]8;;http://127.82.233.168:8000\e\\\e[38;2;150;152;150mdocs\e[0m\e[38;2;150;152;150m:8000\e[0m\e]8;;\e\\
+=== exposed-ports / associated failed job ===
+\e]8;;http://127.82.233.168:8000\e\\\e[38;2;204;102;102mdocs\e[0m\e[38;2;150;152;150m:8000\e[0m\e]8;;\e\\
+=== exposed-ports / associated job ended with session ===
+\e]8;;http://127.82.233.168:8000\e\\\e[38;2;150;152;150mdocs\e[0m\e[38;2;150;152;150m:8000\e[0m\e]8;;\e\\
+=== exposed-ports / associated running job ===
+\e]8;;http://127.82.233.168:8000\e\\\e[38;2;129;162;190mdocs\e[0m\e[38;2;150;152;150m:8000\e[0m\e]8;;\e\\
+=== exposed-ports / associated starting job ===
+\e]8;;http://127.82.233.168:8000\e\\\e[38;2;129;162;190mdocs\e[0m\e[38;2;150;152;150m:8000\e[0m\e]8;;\e\\
+=== exposed-ports / associated stopped job ===
+\e]8;;http://127.82.233.168:8000\e\\\e[38;2;150;152;150mdocs\e[0m\e[38;2;150;152;150m:8000\e[0m\e]8;;\e\\
+=== exposed-ports / associated stopping job ===
+\e]8;;http://127.82.233.168:8000\e\\\e[38;2;207;173;0mdocs\e[0m\e[38;2;150;152;150m:8000\e[0m\e]8;;\e\\
 === exposed-ports / both directions ===
 \e]8;;http://127.82.233.168:8000\e\\8000\e]8;;\e\\\e[38;2;150;152;150m, \e[0m\e]8;;http://127.0.0.1:3000\e\\\e[38;2;150;152;150m⇠ \e[0m3000\e]8;;\e\\
 === exposed-ports / both directions constrained ===
@@ -78,6 +94,8 @@ GPT Sol \e[38;2;150;152;150m5.6\e[0m \e[38;2;150;152;150m▫▫▫▫\e[0m\e[38;
 \e[38;2;129;162;190m● docs\e[0m \e[38;2;150;152;150m○ builder\e[0m
 === jobs / a ghost whose linger is up ===
 \e[38;2;129;162;190m● docs\e[0m
+=== jobs / associated job named by port ===
+\e[38;2;129;162;190m● watch\e[0m
 === jobs / failures alone ===
 \e[38;2;204;102;102m✗ builder\e[0m \e[38;2;204;102;102m✗ api\e[0m
 === jobs / failures beside those running ===

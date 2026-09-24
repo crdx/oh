@@ -48,7 +48,7 @@ func TestExposingAPortOpensItAndRecordsTheWholeSet(t *testing.T) {
 	}
 
 	recorded, found := LastRecordedHostToSandbox([]agent.Event{event})
-	if !found || !slices.Equal(recorded, []uint16{3000, 8080}) {
+	if !found || !slices.Equal(recorded, []Route{{Port: 3000}, {Port: 8080}}) {
 		t.Errorf("got recorded ports %v and %t, want the whole set", recorded, found)
 	}
 }
@@ -72,7 +72,7 @@ func TestHidingAPortClosesItAndLeavesTheRestBehind(t *testing.T) {
 		t.Errorf("got opened ports %v, want [3000]", exposed)
 	}
 	recorded, found := LastRecordedHostToSandbox([]agent.Event{event})
-	if !found || !slices.Equal(recorded, []uint16{3000}) {
+	if !found || !slices.Equal(recorded, []Route{{Port: 3000}}) {
 		t.Errorf("got recorded ports %v and %t, want [3000]", recorded, found)
 	}
 	if _, err := ports.Hide(8080); err == nil {
@@ -127,10 +127,13 @@ func TestARestoredSessionOpensThePortsItRecordedAndReportsTheRest(t *testing.T) 
 			return nil
 		},
 		Hide: func(uint16) error { return nil },
-	}, testHost, []uint16{3000, 8080})
+	}, testHost, []Route{{Port: 3000}, {Port: 8080, JobName: "docs"}})
 
 	if !slices.Equal(ports.GetCurrent(), []uint16{8080}) {
 		t.Errorf("got current ports %v, want [8080]", ports.GetCurrent())
+	}
+	if routes := ports.GetRoutes(); !slices.Equal(routes, []Route{{Port: 8080, JobName: "docs"}}) {
+		t.Errorf("got routes %#v, want the restored job association", routes)
 	}
 	if len(result.Failures) != 1 || result.Failures[0].Port != 3000 {
 		t.Fatalf("got failures %v, want the port that could not be opened", result.Failures)
@@ -142,7 +145,7 @@ func TestARestoredSessionOpensThePortsItRecordedAndReportsTheRest(t *testing.T) 
 
 func TestARestoredSessionSaysNothingAboutThePortsItWasAlreadyToldOf(t *testing.T) {
 	var exposed []uint16
-	ports, _ := NewRestoredHostToSandbox(recordingExposer(&exposed), testHost, []uint16{8080})
+	ports, _ := NewRestoredHostToSandbox(recordingExposer(&exposed), testHost, []Route{{Port: 8080, JobName: "docs"}})
 
 	if told := ports.Peek(); told != "" {
 		t.Errorf("got %q, want nothing said about a restored port", told)
@@ -177,7 +180,7 @@ func TestTheModelIsToldWhenAPortOpensAndWhenItCloses(t *testing.T) {
 }
 
 func TestANoticeSaysWhichWayThePortWent(t *testing.T) {
-	opened, err := HostToSandboxChangeEvent(testHost, 8080, []uint16{8080})
+	opened, err := HostToSandboxChangeEvent(testHost, 8080, []Route{{Port: 8080}})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -213,7 +216,7 @@ func TestASummaryCountsTheExposedPorts(t *testing.T) {
 		"two":  {ports: []uint16{3000, 8080}, want: "2 sandbox ports"},
 	} {
 		t.Run(name, func(t *testing.T) {
-			event, err := HostToSandboxChangeEvent(testHost, 8080, shape.ports)
+			event, err := HostToSandboxChangeEvent(testHost, 8080, routesForPorts(shape.ports...))
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -222,6 +225,18 @@ func TestASummaryCountsTheExposedPorts(t *testing.T) {
 				t.Errorf("got %q and %t, want %q", summary, isSaid, shape.want)
 			}
 		})
+	}
+}
+
+func TestAnOlderPortEventRestoresWithoutAJobAssociation(t *testing.T) {
+	event := agent.Event{
+		Kind:  HostToSandboxChange,
+		State: []byte(`{"host":"127.9.9.9","ports":[8080]}`),
+	}
+
+	routes, found := LastRecordedHostToSandbox([]agent.Event{event})
+	if !found || !slices.Equal(routes, []Route{{Port: 8080}}) {
+		t.Errorf("got routes %#v and %t, want the unassociated port", routes, found)
 	}
 }
 
@@ -276,20 +291,24 @@ func TestWhatTheModelExposesIsAnnouncedToTheHarness(t *testing.T) {
 	ports := NewHostToSandbox(recordingExposer(&exposed), testHost)
 	access := ports.ForModel()
 
-	address, err := access.Expose(8080)
+	address, err := access.Expose(8080, "docs")
 	if err != nil {
 		t.Fatal(err)
 	}
 	if address != URL(testHost, 8080) {
 		t.Errorf("got %q, want the address the user can open", address)
 	}
-	if publications := access.List(); len(publications) != 1 || publications[0].Port != 8080 {
+	if publications := access.List(); len(publications) != 1 || publications[0].Port != 8080 || publications[0].JobName != "docs" {
 		t.Errorf("got %#v, want the exposed port", publications)
 	}
 
 	event := <-ports.Changes()
 	if event.Kind != HostToSandboxChange || event.Name != "8080" {
 		t.Errorf("got %#v, want the port that was exposed", event)
+	}
+	recorded, found := LastRecordedHostToSandbox([]agent.Event{event})
+	if !found || !slices.Equal(recorded, []Route{{Port: 8080, JobName: "docs"}}) {
+		t.Errorf("got recorded routes %#v and %t, want the job association", recorded, found)
 	}
 
 	if err := access.Hide(8080); err != nil {
@@ -308,7 +327,7 @@ func TestWhatTheModelCannotExposeIsNotAnnounced(t *testing.T) {
 	ports := NewHostToSandbox(recordingExposer(&exposed), testHost)
 	access := ports.ForModel()
 
-	if _, err := access.Expose(80); err == nil {
+	if _, err := access.Expose(80, ""); err == nil {
 		t.Fatal("a reserved port was exposed")
 	}
 	if err := access.Hide(8080); err == nil {
@@ -320,4 +339,13 @@ func TestWhatTheModelCannotExposeIsNotAnnounced(t *testing.T) {
 		t.Errorf("got %#v, want nothing announced", event)
 	default:
 	}
+}
+
+func routesForPorts(ports ...uint16) []Route {
+	routes := make([]Route, 0, len(ports))
+	for _, port := range ports {
+		routes = append(routes, Route{Port: port})
+	}
+
+	return routes
 }

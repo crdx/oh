@@ -13,6 +13,7 @@ import (
 	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/cycle"
 	"crdx.org/oh/internal/app/pathgrant"
+	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/turn"
@@ -168,19 +169,19 @@ func testRegistry() segment.Registry {
 		Currency:          money.Dollar(),
 		SandboxHostname:   "127.0.0.1",
 		Sources: bar.Sources{
-			IsTurnRunning:         func() bool { return false },
-			IsSessionPersisted:    func() bool { return true },
-			GetContextUsage:       func() (int, int) { return 1, 2 },
-			GetCacheUsage:         func() (int, int) { return 1, 2 },
-			GetSessionSpend:       func() (float64, bool) { return 0, false },
-			GetGrantedCaps:        caps.All,
-			GetPathGrants:         func() []pathgrant.Grant { return nil },
-			GetHostToSandboxPorts: func() []uint16 { return nil },
-			GetSandboxToHostPorts: func() []uint16 { return nil },
-			IsPrefixPending:       func() bool { return false },
-			GetTurnTiming:         func() turn.Timing { return turn.Timing{} },
-			GetTurnCount:          func() int { return 0 },
-			GetJobs:               func() []jobs.Snapshot { return nil },
+			IsTurnRunning:          func() bool { return false },
+			IsSessionPersisted:     func() bool { return true },
+			GetContextUsage:        func() (int, int) { return 1, 2 },
+			GetCacheUsage:          func() (int, int) { return 1, 2 },
+			GetSessionSpend:        func() (float64, bool) { return 0, false },
+			GetGrantedCaps:         caps.All,
+			GetPathGrants:          func() []pathgrant.Grant { return nil },
+			GetHostToSandboxRoutes: func() []portgrant.Route { return nil },
+			GetSandboxToHostPorts:  func() []uint16 { return nil },
+			IsPrefixPending:        func() bool { return false },
+			GetTurnTiming:          func() turn.Timing { return turn.Timing{} },
+			GetTurnCount:           func() int { return 0 },
+			GetJobs:                func() []jobs.Snapshot { return nil },
 		},
 	})
 }

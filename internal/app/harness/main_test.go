@@ -11034,7 +11034,7 @@ func goldenJobSchedulePass(t *testing.T, runsFor time.Duration, span time.Durati
 				}}
 			}
 
-			built, err := jobNames.New(getJobs, time.Now)(goldenSegmentOptions(""))
+			built, err := jobNames.New(getJobs, noPortRoutes, time.Now)(goldenSegmentOptions(""))
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -11382,6 +11382,78 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			"",
 			segment.Context{},
 		),
+		"exposed-ports / associated starting job": goldenSegmentPass(
+			t,
+			exposedPorts.New(
+				goldenAssociatedPort(jobs.StateStarting),
+				goldenLocalPorts(),
+			),
+			"",
+			segment.Context{},
+		),
+		"exposed-ports / associated running job": goldenSegmentPass(
+			t,
+			exposedPorts.New(
+				goldenAssociatedPort(jobs.StateRunning),
+				goldenLocalPorts(),
+			),
+			"",
+			segment.Context{},
+		),
+		"exposed-ports / associated stopping job": goldenSegmentPass(
+			t,
+			exposedPorts.New(
+				goldenAssociatedPort(jobs.StateStopping),
+				goldenLocalPorts(),
+			),
+			"",
+			segment.Context{},
+		),
+		"exposed-ports / associated failed job": goldenSegmentPass(
+			t,
+			exposedPorts.New(
+				goldenAssociatedPort(jobs.StateFailed),
+				goldenLocalPorts(),
+			),
+			"",
+			segment.Context{},
+		),
+		"exposed-ports / associated complete job": goldenSegmentPass(
+			t,
+			exposedPorts.New(
+				goldenAssociatedPort(jobs.StateComplete),
+				goldenLocalPorts(),
+			),
+			"",
+			segment.Context{},
+		),
+		"exposed-ports / associated stopped job": goldenSegmentPass(
+			t,
+			exposedPorts.New(
+				goldenAssociatedPort(jobs.StateStopped),
+				goldenLocalPorts(),
+			),
+			"",
+			segment.Context{},
+		),
+		"exposed-ports / associated job ended with session": goldenSegmentPass(
+			t,
+			exposedPorts.New(
+				goldenAssociatedPort(jobs.StateEnded),
+				goldenLocalPorts(),
+			),
+			"",
+			segment.Context{},
+		),
+		"exposed-ports / associated absent job": goldenSegmentPass(
+			t,
+			exposedPorts.New(
+				goldenAssociatedPortWithoutJob(),
+				goldenLocalPorts(),
+			),
+			"",
+			segment.Context{},
+		),
 		"exposed-ports / sandbox to host": goldenSegmentPass(
 			t,
 			exposedPorts.New(
@@ -11404,8 +11476,8 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			t,
 			exposedPorts.New(
 				exposedPorts.Routes{
-					GetPorts: func() []uint16 { return []uint16{8000} },
-					Hostname: "preview-" + goldenSessionName + ".test",
+					GetRoutes: func() []portgrant.Route { return []portgrant.Route{{Port: 8000}} },
+					Hostname:  "preview-" + goldenSessionName + ".test",
 				},
 				goldenLocalPorts(),
 			),
@@ -11669,7 +11741,7 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 		),
 		"jobs / none": goldenSegmentPass(
 			t,
-			jobNames.New(jobsOf(), clockAt(at)),
+			jobNames.New(jobsOf(), noPortRoutes, clockAt(at)),
 			"",
 			segment.Context{},
 		),
@@ -11678,7 +11750,22 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			jobNames.New(jobsOf(
 				jobs.Snapshot{Name: "docs", State: jobs.StateRunning},
 				jobs.Snapshot{Name: "watch", State: jobs.StateRunning},
-			), clockAt(at)),
+			), noPortRoutes, clockAt(at)),
+			"",
+			segment.Context{},
+		),
+		"jobs / associated job named by port": goldenSegmentPass(
+			t,
+			jobNames.New(
+				jobsOf(
+					jobs.Snapshot{Name: "docs", State: jobs.StateRunning},
+					jobs.Snapshot{Name: "watch", State: jobs.StateRunning},
+				),
+				func() []portgrant.Route {
+					return []portgrant.Route{{Port: 8000, JobName: "docs"}}
+				},
+				clockAt(at),
+			),
 			"",
 			segment.Context{},
 		),
@@ -11688,7 +11775,7 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 				jobs.Snapshot{Name: "docs", State: jobs.StateRunning},
 				jobs.Snapshot{Name: "watch", State: jobs.StateRunning},
 				jobs.Snapshot{Name: "api", State: jobs.StateStopping},
-			), clockAt(at)),
+			), noPortRoutes, clockAt(at)),
 			"",
 			segment.Context{},
 		),
@@ -11697,7 +11784,7 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			jobNames.New(jobsOf(
 				jobs.Snapshot{Name: "docs", State: jobs.StateEnded},
 				jobs.Snapshot{Name: "bridge", State: jobs.StateEnded},
-			), clockAt(at)),
+			), noPortRoutes, clockAt(at)),
 			"",
 			segment.Context{},
 		),
@@ -11706,7 +11793,7 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			jobNames.New(jobsOf(
 				jobs.Snapshot{Name: "docs", State: jobs.StateRunning},
 				jobs.Snapshot{Name: "builder", State: jobs.StateComplete, EndedAt: at.Add(-5 * time.Second)},
-			), clockAt(at)),
+			), noPortRoutes, clockAt(at)),
 			"",
 			segment.Context{},
 		),
@@ -11716,7 +11803,7 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 				jobs.Snapshot{Name: "docs", State: jobs.StateRunning},
 				jobs.Snapshot{Name: "builder", State: jobs.StateComplete, EndedAt: at.Add(-time.Minute)},
 				jobs.Snapshot{Name: "check", State: jobs.StateFailed, EndedAt: at.Add(-time.Hour)},
-			), clockAt(at)),
+			), noPortRoutes, clockAt(at)),
 			"",
 			segment.Context{},
 		),
@@ -11725,7 +11812,7 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			jobNames.New(jobsOf(
 				jobs.Snapshot{Name: "builder", State: jobs.StateFailed, EndedAt: at.Add(-time.Second)},
 				jobs.Snapshot{Name: "api", State: jobs.StateFailed, EndedAt: at.Add(-2 * time.Second)},
-			), clockAt(at)),
+			), noPortRoutes, clockAt(at)),
 			"",
 			segment.Context{},
 		),
@@ -11734,7 +11821,7 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			jobNames.New(jobsOf(
 				jobs.Snapshot{Name: "docs", State: jobs.StateRunning},
 				jobs.Snapshot{Name: "builder", State: jobs.StateFailed, EndedAt: at.Add(-time.Second)},
-			), clockAt(at)),
+			), noPortRoutes, clockAt(at)),
 			"",
 			segment.Context{},
 		),
@@ -12370,7 +12457,7 @@ func TestGoldenPortDirectionNoticesMatchGolden(t *testing.T) {
 			self := testConversation(t, &screenOutput)
 			self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
 
-			hostToSandbox, err := portgrant.HostToSandboxChangeEvent("127.9.9.9", 8080, []uint16{8080})
+			hostToSandbox, err := portgrant.HostToSandboxChangeEvent("127.9.9.9", 8080, []portgrant.Route{{Port: 8080}})
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -12409,7 +12496,7 @@ func recordedPortsInARow(t *testing.T, lines int) string {
 	var ports []uint16
 	for _, port := range []uint16{8001, 8002, 8003} {
 		ports = append(ports, port)
-		event, err := portgrant.HostToSandboxChangeEvent("127.9.9.9", port, ports)
+		event, err := portgrant.HostToSandboxChangeEvent("127.9.9.9", port, portRoutes(ports...))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -13695,17 +13782,51 @@ func newSessionGoldenProvider(
 
 const goldenSessionName = "tame-impala"
 
+func noPortRoutes() []portgrant.Route {
+	return nil
+}
+
+func portRoutes(ports ...uint16) []portgrant.Route {
+	routes := make([]portgrant.Route, 0, len(ports))
+	for _, port := range ports {
+		routes = append(routes, portgrant.Route{Port: port})
+	}
+
+	return routes
+}
+
+func goldenAssociatedPort(state jobs.State) exposedPorts.Routes {
+	return exposedPorts.Routes{
+		GetRoutes: func() []portgrant.Route {
+			return []portgrant.Route{{Port: 8000, JobName: "docs"}}
+		},
+		GetJobs: func() []jobs.Snapshot {
+			return []jobs.Snapshot{{Name: "docs", State: state}}
+		},
+		Hostname: portgrant.AddressFor(goldenSessionName),
+	}
+}
+
+func goldenAssociatedPortWithoutJob() exposedPorts.Routes {
+	return exposedPorts.Routes{
+		GetRoutes: func() []portgrant.Route {
+			return []portgrant.Route{{Port: 8000, JobName: "docs"}}
+		},
+		Hostname: portgrant.AddressFor(goldenSessionName),
+	}
+}
+
 func goldenExposedPorts(ports ...uint16) exposedPorts.Routes {
 	return exposedPorts.Routes{
-		GetPorts: func() []uint16 { return ports },
-		Hostname: portgrant.AddressFor(goldenSessionName),
+		GetRoutes: func() []portgrant.Route { return portRoutes(ports...) },
+		Hostname:  portgrant.AddressFor(goldenSessionName),
 	}
 }
 
 func goldenLocalPorts(ports ...uint16) exposedPorts.Routes {
 	return exposedPorts.Routes{
-		GetPorts: func() []uint16 { return ports },
-		Hostname: portgrant.LocalHost,
+		GetRoutes: func() []portgrant.Route { return portRoutes(ports...) },
+		Hostname:  portgrant.LocalHost,
 	}
 }
 
@@ -17410,7 +17531,7 @@ func roomyTallTurn(t *testing.T, screenOutput *bytes.Buffer) (*App, *edit.Input)
 }
 
 func noticesDrawnBesideAnOpenBlock(self *App) map[string]func() {
-	hostToSandbox, _ := portgrant.HostToSandboxChangeEvent("127.9.9.9", 8080, []uint16{8080})
+	hostToSandbox, _ := portgrant.HostToSandboxChangeEvent("127.9.9.9", 8080, []portgrant.Route{{Port: 8080}})
 
 	return map[string]func(){
 		"an ended job": func() { self.jobEnded(endedJobConclusion()) },

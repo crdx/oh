@@ -1125,7 +1125,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		correction, err := portgrant.HostToSandboxChangeEvent(
 			hostToSandboxAddress,
 			failure.Port,
-			hostToSandbox.GetCurrent(),
+			hostToSandbox.GetRoutes(),
 		)
 		if err != nil {
 			return "", err

@@ -9,15 +9,15 @@ import (
 )
 
 type recordedPorts struct {
-	open    []uint16
+	open    []Publication
 	refusal error
 }
 
-func (self *recordedPorts) Expose(port uint16) (string, error) {
+func (self *recordedPorts) Expose(port uint16, jobName string) (string, error) {
 	if self.refusal != nil {
 		return "", self.refusal
 	}
-	self.open = append(self.open, port)
+	self.open = append(self.open, Publication{Port: port, JobName: jobName})
 
 	return "http://127.9.9.9:" + strconv.Itoa(int(port)), nil
 }
@@ -26,18 +26,15 @@ func (self *recordedPorts) Hide(port uint16) error {
 	if self.refusal != nil {
 		return self.refusal
 	}
-	self.open = slices.DeleteFunc(self.open, func(openPort uint16) bool { return openPort == port })
+	self.open = slices.DeleteFunc(self.open, func(publication Publication) bool { return publication.Port == port })
 
 	return nil
 }
 
 func (self *recordedPorts) List() []Publication {
-	publications := make([]Publication, 0, len(self.open))
-	for _, port := range self.open {
-		publications = append(publications, Publication{
-			Port: port,
-			URL:  "http://127.9.9.9:" + strconv.Itoa(int(port)),
-		})
+	publications := slices.Clone(self.open)
+	for i := range publications {
+		publications[i].URL = "http://127.9.9.9:" + strconv.Itoa(int(publications[i].Port))
 	}
 
 	return publications
@@ -50,7 +47,7 @@ func TestExposingSaysWhereTheUserCanOpenIt(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !slices.Equal(ports.open, []uint16{8080}) {
+	if len(ports.open) != 1 || ports.open[0].Port != 8080 || ports.open[0].JobName != "" {
 		t.Errorf("got open ports %v, want [8080]", ports.open)
 	}
 	if !strings.Contains(said, "http://127.9.9.9:8080") {
@@ -62,8 +59,19 @@ func TestExposingSaysWhereTheUserCanOpenIt(t *testing.T) {
 	}
 }
 
+func TestExposingCanAssociateThePortWithAJob(t *testing.T) {
+	ports := &recordedPorts{}
+
+	if _, _, err := run(ports, Args{Action: actionAdd, Port: 8080, JobName: "docs"}); err != nil {
+		t.Fatal(err)
+	}
+	if len(ports.open) != 1 || ports.open[0] != (Publication{Port: 8080, JobName: "docs"}) {
+		t.Errorf("got open ports %#v, want docs associated with 8080", ports.open)
+	}
+}
+
 func TestHidingClosesThePortAndSaysSo(t *testing.T) {
-	ports := &recordedPorts{open: []uint16{8080}}
+	ports := &recordedPorts{open: []Publication{{Port: 8080}}}
 
 	said, _, err := run(ports, Args{Action: actionRemove, Port: 8080})
 	if err != nil {
@@ -86,11 +94,11 @@ func TestListingSaysWhatIsOpenOrThatNothingIs(t *testing.T) {
 		t.Errorf("got %q", said)
 	}
 
-	said, _, err = run(&recordedPorts{open: []uint16{3000, 8080}}, Args{Action: actionList})
+	said, _, err = run(&recordedPorts{open: []Publication{{Port: 3000}, {Port: 8080, JobName: "docs"}}}, Args{Action: actionList})
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, want := range []string{"3000", "8080", "http://127.9.9.9:3000"} {
+	for _, want := range []string{"3000", "docs:8080", "http://127.9.9.9:3000"} {
 		if !strings.Contains(said, want) {
 			t.Errorf("got %q, want it to name %q", said, want)
 		}
@@ -115,6 +123,9 @@ func TestACallIsRefusedBeforeItReachesTheHarness(t *testing.T) {
 		"no port":           {Action: actionAdd},
 		"port out of range": {Action: actionAdd, Port: 70000},
 		"port with list":    {Action: actionList, Port: 8080},
+		"job with list":     {Action: actionList, JobName: "docs"},
+		"job with remove":   {Action: actionRemove, Port: 8080, JobName: "docs"},
+		"invalid job name":  {Action: actionAdd, Port: 8080, JobName: "Docs"},
 	} {
 		t.Run(name, func(t *testing.T) {
 			if err := validate(args); err == nil {
@@ -124,9 +135,10 @@ func TestACallIsRefusedBeforeItReachesTheHarness(t *testing.T) {
 	}
 
 	for name, args := range map[string]Args{
-		"publish":   {Action: actionAdd, Port: 8080},
-		"unpublish": {Action: actionRemove, Port: 8080},
-		"list":      {Action: actionList},
+		"publish":          {Action: actionAdd, Port: 8080},
+		"publish with job": {Action: actionAdd, Port: 8080, JobName: "docs"},
+		"unpublish":        {Action: actionRemove, Port: 8080},
+		"list":             {Action: actionList},
 	} {
 		t.Run(name, func(t *testing.T) {
 			if err := validate(args); err != nil {

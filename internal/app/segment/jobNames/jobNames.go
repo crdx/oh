@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/schedule"
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/style"
@@ -25,13 +26,18 @@ const (
 var _ segment.Refresher = state{}
 
 type state struct {
-	getJobs func() []jobs.Snapshot
-	now     func() time.Time
+	getJobs   func() []jobs.Snapshot
+	getRoutes func() []portgrant.Route
+	now       func() time.Time
 }
 
-func New(getJobs func() []jobs.Snapshot, now func() time.Time) segment.Factory {
+func New(
+	getJobs func() []jobs.Snapshot,
+	getRoutes func() []portgrant.Route,
+	now func() time.Time,
+) segment.Factory {
 	return func(segment.Options) (segment.Segment, error) {
-		return state{getJobs: getJobs, now: now}, nil
+		return state{getJobs: getJobs, getRoutes: getRoutes, now: now}, nil
 	}
 }
 
@@ -50,8 +56,9 @@ func (self state) Render(segment.Context) string {
 		return 1
 	})
 
+	associatedJobs := self.associatedJobs()
 	for _, snapshot := range listing {
-		if !self.isShown(snapshot) {
+		if associatedJobs[snapshot.Name] || !self.isShown(snapshot) {
 			continue
 		}
 
@@ -68,7 +75,11 @@ func (self state) NextRefresh(segment.Phase) time.Time {
 
 	var due []time.Time
 
+	associatedJobs := self.associatedJobs()
 	for _, snapshot := range self.getJobs() {
+		if associatedJobs[snapshot.Name] {
+			continue
+		}
 		if snapshot.IsLive() {
 			return now.Add(beat)
 		}
@@ -81,6 +92,17 @@ func (self state) NextRefresh(segment.Phase) time.Time {
 	return schedule.Soonest(due...)
 }
 
+func (self state) associatedJobs() map[string]bool {
+	associatedJobs := make(map[string]bool)
+	for _, route := range self.getRoutes() {
+		if route.JobName != "" {
+			associatedJobs[route.JobName] = true
+		}
+	}
+
+	return associatedJobs
+}
+
 func (self state) isShown(snapshot jobs.Snapshot) bool {
 	if snapshot.IsLive() {
 		return true
@@ -90,16 +112,32 @@ func (self state) isShown(snapshot jobs.Snapshot) bool {
 }
 
 func describe(snapshot jobs.Snapshot) string {
+	var mark string
 	switch snapshot.State {
-	case jobs.StateStarting, jobs.StateRunning:
-		return style.Info(liveMark + " " + snapshot.Name)
-	case jobs.StateStopping:
-		return style.Change(liveMark + " " + snapshot.Name)
+	case jobs.StateStarting, jobs.StateRunning, jobs.StateStopping:
+		mark = liveMark
 	case jobs.StateFailed:
-		return style.Failure(failedMark + " " + snapshot.Name)
+		mark = failedMark
 	case jobs.StateComplete, jobs.StateStopped, jobs.StateEnded:
-		return style.Dim(finishedMark + " " + snapshot.Name)
+		mark = finishedMark
+	default:
+		return ""
 	}
 
-	return ""
+	return RenderState(snapshot.State, mark+" "+snapshot.Name)
+}
+
+func RenderState(state jobs.State, text string) string {
+	switch state {
+	case jobs.StateStarting, jobs.StateRunning:
+		return style.Info(text)
+	case jobs.StateStopping:
+		return style.Change(text)
+	case jobs.StateFailed:
+		return style.Failure(text)
+	case jobs.StateComplete, jobs.StateStopped, jobs.StateEnded:
+		return style.Dim(text)
+	}
+
+	return style.Dim(text)
 }

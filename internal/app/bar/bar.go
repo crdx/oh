@@ -76,19 +76,19 @@ type Options struct {
 }
 
 type Sources struct {
-	IsTurnRunning         func() bool
-	IsSessionPersisted    func() bool
-	GetContextUsage       func() (int, int)
-	GetCacheUsage         func() (int, int)
-	GetSessionSpend       func() (float64, bool)
-	GetGrantedCaps        func() caps.Set
-	GetPathGrants         func() []pathgrant.Grant
-	GetHostToSandboxPorts func() []uint16
-	GetSandboxToHostPorts func() []uint16
-	IsPrefixPending       func() bool
-	GetTurnTiming         func() turn.Timing
-	GetTurnCount          func() int
-	GetJobs               func() []jobs.Snapshot
+	IsTurnRunning          func() bool
+	IsSessionPersisted     func() bool
+	GetContextUsage        func() (int, int)
+	GetCacheUsage          func() (int, int)
+	GetSessionSpend        func() (float64, bool)
+	GetGrantedCaps         func() caps.Set
+	GetPathGrants          func() []pathgrant.Grant
+	GetHostToSandboxRoutes func() []portgrant.Route
+	GetSandboxToHostPorts  func() []uint16
+	IsPrefixPending        func() bool
+	GetTurnTiming          func() turn.Timing
+	GetTurnCount           func() int
+	GetJobs                func() []jobs.Snapshot
 }
 
 func NewRegistry(options Options) segment.Registry {
@@ -101,11 +101,19 @@ func NewRegistry(options Options) segment.Registry {
 		pathGrantsSegment:      pathGrants.New(options.Sources.GetPathGrants),
 		exposedPortsSegment: exposedPorts.New(
 			exposedPorts.Routes{
-				GetPorts: options.Sources.GetHostToSandboxPorts,
-				Hostname: options.SandboxHostname,
+				GetRoutes: options.Sources.GetHostToSandboxRoutes,
+				GetJobs:   options.Sources.GetJobs,
+				Hostname:  options.SandboxHostname,
 			},
 			exposedPorts.Routes{
-				GetPorts: options.Sources.GetSandboxToHostPorts,
+				GetRoutes: func() []portgrant.Route {
+					ports := options.Sources.GetSandboxToHostPorts()
+					routes := make([]portgrant.Route, 0, len(ports))
+					for _, port := range ports {
+						routes = append(routes, portgrant.Route{Port: port})
+					}
+					return routes
+				},
 				Hostname: portgrant.LocalHost,
 			},
 		),
@@ -129,7 +137,7 @@ func NewRegistry(options Options) segment.Registry {
 		turnTimerSegment:    turnTimer.New(options.Sources.GetTurnTiming, options.Sources.IsTurnRunning),
 		turnCountSegment:    turnCount.New(options.Sources.GetTurnCount),
 		gitBranchSegment:    gitBranch.New(options.Workspace.GetDir()),
-		jobNamesSegment:     jobNames.New(options.Sources.GetJobs, time.Now),
+		jobNamesSegment:     jobNames.New(options.Sources.GetJobs, options.Sources.GetHostToSandboxRoutes, time.Now),
 		subUsageSegment: subUsage.New(subUsage.Settings{
 			Reporter:         options.UsageReporter,
 			CachePath:        options.UsageCachePath,
