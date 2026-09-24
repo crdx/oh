@@ -164,7 +164,7 @@ func TestNewHandsBackAClientHoldingWhatItWasAsked(t *testing.T) {
 	}
 }
 
-func TestFastModeUsesTheFastServiceTier(t *testing.T) {
+func TestFastModeUsesThePriorityServiceTier(t *testing.T) {
 	server, bodies := turns(t, events(answer("Fast."), completed), events(answer("Standard."), completed))
 	client := newClient(t, server.URL)
 
@@ -181,7 +181,7 @@ func TestFastModeUsesTheFastServiceTier(t *testing.T) {
 	if err := json.Unmarshal([]byte((*bodies)[0]), &fastRequest); err != nil {
 		t.Fatal(err)
 	}
-	if got := string(fastRequest["service_tier"]); got != `"fast"` {
+	if got := string(fastRequest["service_tier"]); got != `"priority"` {
 		t.Errorf("got service tier %s", got)
 	}
 

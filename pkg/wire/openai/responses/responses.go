@@ -23,7 +23,7 @@ import (
 const (
 	Endpoint        = "https://chatgpt.com/backend-api/codex/responses"
 	Summary         = "auto"
-	fastServiceTier = "fast"
+	fastServiceTier = "priority"
 
 	Originator = "io"
 )
