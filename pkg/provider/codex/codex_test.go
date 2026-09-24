@@ -67,13 +67,23 @@ func completedWithUsage(inputTokens int, cacheReadTokens int, cacheWriteTokens i
 func turns(t *testing.T, scripted ...string) (*httptest.Server, *[]string) {
 	t.Helper()
 
+	server, bodies, _ := recordedTurns(t, scripted...)
+
+	return server, bodies
+}
+
+func recordedTurns(t *testing.T, scripted ...string) (*httptest.Server, *[]string, *[]http.Header) {
+	t.Helper()
+
 	var bodies []string
+	var headers []http.Header
 	var index int
 
 	server := httptest.NewServer(http.HandlerFunc(
 		func(writer http.ResponseWriter, request *http.Request) {
 			body, _ := io.ReadAll(request.Body)
 			bodies = append(bodies, string(body))
+			headers = append(headers, request.Header.Clone())
 
 			if index >= len(scripted) {
 				t.Errorf("the endpoint was asked %d times, with %d turns scripted",
@@ -90,7 +100,7 @@ func turns(t *testing.T, scripted ...string) (*httptest.Server, *[]string) {
 
 	t.Cleanup(server.Close)
 
-	return server, &bodies
+	return server, &bodies, &headers
 }
 
 func newAgent(t *testing.T, url string, tools []tool.Tool) *agent.Agent {
@@ -165,7 +175,7 @@ func TestNewHandsBackAClientHoldingWhatItWasAsked(t *testing.T) {
 }
 
 func TestFastModeUsesThePriorityServiceTier(t *testing.T) {
-	server, bodies := turns(t, events(answer("Fast."), completed), events(answer("Standard."), completed))
+	server, bodies, headers := recordedTurns(t, events(answer("Fast."), completed), events(answer("Standard."), completed))
 	client := newClient(t, server.URL)
 
 	client.IsFast = true
@@ -191,6 +201,12 @@ func TestFastModeUsesThePriorityServiceTier(t *testing.T) {
 	}
 	if _, isFound := standardRequest["service_tier"]; isFound {
 		t.Errorf("standard request carried a service tier: %s", (*bodies)[1])
+	}
+
+	for i, want := range []string{"model=gpt-5.6-sol;tier=priority", "model=gpt-5.6-sol"} {
+		if got := (*headers)[i].Get("X-Codex-Routing-Hint"); got != want {
+			t.Errorf("request %d routing hint is %q, want %q", i, got, want)
+		}
 	}
 }
 

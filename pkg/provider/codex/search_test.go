@@ -42,11 +42,12 @@ func TestSearchUsesTheCodexBackendAndAuthHeaders(t *testing.T) {
 	}
 
 	for name, want := range map[string]string{
-		"Authorization":      "Bearer token",
-		"Chatgpt-Account-Id": "account",
-		"Originator":         codex.Originator,
-		"Openai-Beta":        "responses=experimental",
-		"User-Agent":         fmt.Sprintf("oh (%s; %s)", runtime.GOOS, runtime.GOARCH),
+		"Authorization":        "Bearer token",
+		"Chatgpt-Account-Id":   "account",
+		"Originator":           codex.Originator,
+		"Openai-Beta":          "responses=experimental",
+		"X-Codex-Routing-Hint": "model=gpt-5.4-mini",
+		"User-Agent":           fmt.Sprintf("oh (%s; %s)", runtime.GOOS, runtime.GOARCH),
 	} {
 		if got := requestHeader.Get(name); got != want {
 			t.Errorf("%s is %q, want %q", name, got, want)

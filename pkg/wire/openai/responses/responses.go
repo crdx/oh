@@ -25,6 +25,8 @@ const (
 	Summary         = "auto"
 	fastServiceTier = "priority"
 
+	routingHintHeader = "X-Codex-Routing-Hint"
+
 	Originator = "io"
 )
 
@@ -201,15 +203,18 @@ func (self *Client) settled() error {
 	return nil
 }
 
-func (self *Client) requestBody() request {
-	serviceTier := ""
+func (self *Client) serviceTier() string {
 	if self.IsFast {
-		serviceTier = fastServiceTier
+		return fastServiceTier
 	}
 
+	return ""
+}
+
+func (self *Client) requestBody() request {
 	return request{
 		Model:             self.Model,
-		ServiceTier:       serviceTier,
+		ServiceTier:       self.serviceTier(),
 		Store:             false,
 		Stream:            true,
 		Input:             self.requestHistory.Prepare(self.history),
@@ -224,7 +229,7 @@ func (self *Client) requestBody() request {
 }
 
 func (self *Client) headers(token Token) http.Header {
-	return requestHeaders(token, self.session)
+	return requestHeaders(token, self.session, routingHint(self.Model, self.serviceTier()))
 }
 
 type request struct {

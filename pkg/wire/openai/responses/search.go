@@ -76,7 +76,7 @@ func (self *SearchClient) Search(ctx context.Context, query string) (string, err
 			Type:              "web_search",
 			SearchContextSize: "high",
 		}},
-	}, requestHeaders(token, self.session))
+	}, requestHeaders(token, self.session, routingHint(self.Model, "")))
 	if err != nil {
 		return "", fmt.Errorf("web search failed: %w", err)
 	}
@@ -148,7 +148,15 @@ func readSearchReply(reader io.Reader) (string, error) {
 	return output.String(), nil
 }
 
-func requestHeaders(token Token, session string) http.Header {
+func routingHint(model string, serviceTier string) string {
+	if serviceTier == "" {
+		return "model=" + model
+	}
+
+	return "model=" + model + ";tier=" + serviceTier
+}
+
+func requestHeaders(token Token, session string, hint string) http.Header {
 	header := http.Header{}
 
 	header.Set("Authorization", "Bearer "+token.Access)
@@ -157,6 +165,7 @@ func requestHeaders(token Token, session string) http.Header {
 	header.Set("Openai-Beta", "responses=experimental")
 	header.Set("Accept", "text/event-stream")
 	header.Set("Session_id", session)
+	header.Set(routingHintHeader, hint)
 	header.Set("User-Agent", useragent.Get())
 
 	return header
