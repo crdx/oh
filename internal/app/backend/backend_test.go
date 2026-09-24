@@ -64,15 +64,15 @@ func TestUpdatingAgainstAStandInEndpointDescribesEveryProvider(t *testing.T) {
 	if err := model.Update(
 		&output,
 		address,
-		location.GetModelCachePath(os.Getenv(EndpointVariable) != ""),
-		location.GetSeenModelsPath(os.Getenv(EndpointVariable) != ""),
+		location.GetModelCachePath(),
+		location.GetSeenModelsPath(),
 		listProviderModels,
 		false,
 	); err != nil {
 		t.Fatalf("unexpected error: %v, output %q", err, output.String())
 	}
 
-	choices := model.Choices(location.GetModelCachePath(os.Getenv(EndpointVariable) != ""))
+	choices := model.Choices(location.GetModelCachePath())
 	for _, providerName := range model.ProviderNames() {
 		var matches []model.Choice
 		for _, choice := range choices {

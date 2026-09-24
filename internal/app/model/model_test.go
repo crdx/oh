@@ -542,18 +542,6 @@ func TestTheRealRegistryIsNeverAskedAboutOurProviderNames(t *testing.T) {
 	}
 }
 
-func TestAStandInEndpointKeepsAModelCacheOfItsOwn(t *testing.T) {
-	t.Setenv("XDG_STATE_HOME", t.TempDir())
-
-	realCache := modelCachePath()
-
-	t.Setenv(endpointVariable, "http://localhost:8080/v1/messages")
-
-	if standIn := modelCachePath(); standIn == realCache {
-		t.Errorf("expected a cache of its own, got %q for both", standIn)
-	}
-}
-
 func TestProviderDescriptionCoversEveryEndpointAndRegistryCombination(t *testing.T) {
 	listed := []agent.Model{{ID: "known", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000}}
 	registered := map[string]agent.Model{"known": {ID: "known", Name: "Known"}}

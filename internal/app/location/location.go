@@ -34,19 +34,11 @@ func GetGlobalContextPath() string {
 	return GetConfigDir("SYSTEM.md")
 }
 
-func GetModelCachePath(isSimulation bool) string {
-	if isSimulation {
-		return GetStateDir("models.sim.json")
-	}
-
+func GetModelCachePath() string {
 	return GetStateDir("models.json")
 }
 
-func GetSeenModelsPath(isSimulation bool) string {
-	if isSimulation {
-		return GetStateDir("simulated_seen_models.json")
-	}
-
+func GetSeenModelsPath() string {
 	return GetStateDir("seen_models.json")
 }
 

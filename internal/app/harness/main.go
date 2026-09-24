@@ -216,7 +216,7 @@ func Main() {
 	}
 
 	if cli.WriteCompletions(os.Stdout, os.Args[1:], cli.Sources{
-		ModelCachePath: location.GetModelCachePath(os.Getenv(backend.EndpointVariable) != ""),
+		ModelCachePath: location.GetModelCachePath(),
 		SessionsDir:    location.GetSessionsDir(),
 		ToolNames:      completableTools(),
 	}) {
@@ -357,8 +357,8 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	}
 
 	endpointURL := os.Getenv(backend.EndpointVariable)
-	modelCachePath := location.GetModelCachePath(endpointURL != "")
-	seenModelsPath := location.GetSeenModelsPath(endpointURL != "")
+	modelCachePath := location.GetModelCachePath()
+	seenModelsPath := location.GetSeenModelsPath()
 	sessionsDir := location.GetSessionsDir()
 
 	if inputArgs.Version {
@@ -427,8 +427,8 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 
 		endpointURL = simulation.EndpointURL
 		inputArgs.Model = simulation.Selection
-		modelCachePath = location.GetModelCachePath(true)
-		seenModelsPath = location.GetSeenModelsPath(true)
+		modelCachePath = location.GetModelCachePath()
+		seenModelsPath = location.GetSeenModelsPath()
 		sessionsDir = location.GetSessionsDir()
 	}
 

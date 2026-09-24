@@ -106,7 +106,7 @@ func (self *Session) Close() {
 
 func (self *Session) rememberOfferedModel() error {
 	return model.StoreSimulated(
-		location.GetModelCachePath(true),
+		location.GetModelCachePath(),
 		model.AnthropicProvider,
 		[]agent.Model{sim.OfferedModel(simulatedModel)},
 	)

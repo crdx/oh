@@ -2618,12 +2618,12 @@ func TestGoldenLongAuthorisationURLMatchesTheGolden(t *testing.T) {
 
 func TestGoldenCompletionProtocolMatchesTheGolden(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
-	cachePath := location.GetModelCachePath(os.Getenv(backend.EndpointVariable) != "")
-	if err := os.MkdirAll(filepath.Dir(cachePath), 0o700); err != nil { //nolint:gosec // the path is the test's own state directory
+	cachePath := location.GetModelCachePath()
+	if err := os.MkdirAll(filepath.Dir(cachePath), 0o700); err != nil {
 		t.Fatal(err)
 	}
 	cache := checkedModelCache(`{"codex":{"models":[{"id":"gpt-5","efforts":["low","high"],"output":128000}]},"anthropic":{"models":[{"id":"claude-sonnet-5","efforts":["none","high"],"output":128000}]}}`)
-	if err := os.WriteFile(cachePath, cache, 0o600); err != nil { //nolint:gosec // the path is the test's own state directory
+	if err := os.WriteFile(cachePath, cache, 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -5579,7 +5579,7 @@ func TestASessionResumesWithTheModelItWasCreatedWithAfterTheModelListForgetsIt(t
 		t.Fatalf("expected the session to hold the model it was created with, got %+v", frozenChoice)
 	}
 
-	cachePath := filepath.Join(stateDirectory, "org.crdx", "oh", "models.sim.json")
+	cachePath := filepath.Join(stateDirectory, "org.crdx", "oh", "models.json")
 	successorCache := checkedModelCache(`{"opencode-go":{"models":[{"id":"fake-2","efforts":["high"],"output":128000}]}}`)
 	if err := os.WriteFile(cachePath, successorCache, 0o600); err != nil {
 		t.Fatal(err)
@@ -5667,8 +5667,8 @@ func useCommandLineModelCache(t *testing.T) string {
 	t.Helper()
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 
-	path := location.GetModelCachePath(os.Getenv(backend.EndpointVariable) != "")
-	if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil { //nolint:gosec // the path is the test's own state directory
+	path := location.GetModelCachePath()
+	if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
 		t.Fatal(err)
 	}
 
@@ -5680,7 +5680,7 @@ func useCommandLineModelCache(t *testing.T) string {
 		`{"id":"claude-opus-5","efforts":["medium","max"],"output":128000},` +
 		`{"id":"claude-sonnet-5","efforts":["low","high"],"output":128000}` +
 		`]}}`)
-	if err := os.WriteFile(path, data, 0o600); err != nil { //nolint:gosec // the path is the test's own state directory
+	if err := os.WriteFile(path, data, 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -5841,13 +5841,13 @@ func useRoundRobinModelCache(t *testing.T) string {
 	t.Helper()
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 
-	path := location.GetModelCachePath(os.Getenv(backend.EndpointVariable) != "")
-	if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil { //nolint:gosec // the path is the test's own state directory
+	path := location.GetModelCachePath()
+	if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
 		t.Fatal(err)
 	}
 
 	data := checkedModelCache(`{"codex":{"models":[{"id":"gpt-5.6-sol","efforts":["none","high"],"output":128000}]},"opencode-go":{"models":[{"id":"deepseek-v4-pro","efforts":["high","max"],"output":128000}]},"anthropic":{"models":[{"id":"claude-opus-5","efforts":["high","max"],"output":128000}]}}`)
-	if err := os.WriteFile(path, data, 0o600); err != nil { //nolint:gosec // the path is the test's own state directory
+	if err := os.WriteFile(path, data, 0o600); err != nil {
 		t.Fatal(err)
 	}
 

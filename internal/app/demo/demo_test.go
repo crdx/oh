@@ -80,7 +80,7 @@ func TestTheSimulationKnowsItsModelWithoutRefreshingTheList(t *testing.T) {
 	}
 	t.Cleanup(session.Close)
 
-	cachePath := location.GetModelCachePath(true)
+	cachePath := location.GetModelCachePath()
 
 	var notices strings.Builder
 
@@ -89,7 +89,7 @@ func TestTheSimulationKnowsItsModelWithoutRefreshingTheList(t *testing.T) {
 		return nil, errors.New("the simulation has no list to fetch")
 	}
 
-	if err := model.Ensure(&notices, session.EndpointURL, cachePath, location.GetSeenModelsPath(true), refresh); err != nil {
+	if err := model.Ensure(&notices, session.EndpointURL, cachePath, location.GetSeenModelsPath(), refresh); err != nil {
 		t.Fatal(err)
 	}
 	if notices.String() != "" {

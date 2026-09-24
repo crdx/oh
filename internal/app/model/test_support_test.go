@@ -10,7 +10,6 @@ import (
 )
 
 const (
-	endpointVariable   = "OH_ENDPOINT_URL"
 	codexProvider      = CodexProvider
 	opencodeGoProvider = OpencodeGoProvider
 	anthropicProvider  = AnthropicProvider
@@ -18,19 +17,11 @@ const (
 )
 
 func modelCachePath() string {
-	name := "models.json"
-	if os.Getenv(endpointVariable) != "" {
-		name = "models.sim.json"
-	}
-	return filepath.Join(os.Getenv("XDG_STATE_HOME"), name)
+	return filepath.Join(os.Getenv("XDG_STATE_HOME"), "models.json")
 }
 
 func seenModelsPath() string {
-	name := "seen_models.json"
-	if os.Getenv(endpointVariable) != "" {
-		name = "simulated_seen_models.json"
-	}
-	return filepath.Join(os.Getenv("XDG_STATE_HOME"), name)
+	return filepath.Join(os.Getenv("XDG_STATE_HOME"), "seen_models.json")
 }
 
 func chosenAnthropicModel(model string) (Choice, error) {

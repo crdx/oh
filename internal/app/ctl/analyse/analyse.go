@@ -106,7 +106,7 @@ func Run() error {
 	return run(Settings{
 		SessionsDir:    location.GetSessionsDir(),
 		CachePath:      location.GetAnalysisCachePath(),
-		ModelCachePath: location.GetModelCachePath(false),
+		ModelCachePath: location.GetModelCachePath(),
 		Currency:       readCurrency(),
 		Names:          options.Sessions,
 		IsJSON:         options.JSON,

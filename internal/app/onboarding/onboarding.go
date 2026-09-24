@@ -118,8 +118,8 @@ func PrepareConfig(options Options) (config.Config, bool, error) {
 		return config.Config{}, false, ErrNobodyToAsk
 	}
 
-	modelCachePath := location.GetModelCachePath(options.EndpointURL != "")
-	seenModelsPath := location.GetSeenModelsPath(options.EndpointURL != "")
+	modelCachePath := location.GetModelCachePath()
+	seenModelsPath := location.GetSeenModelsPath()
 	pause, stopPausing, err := typingPause(options.Input, options.Output)
 	if err != nil {
 		return settings, false, err

@@ -8,6 +8,7 @@ SCENARIO  := "internal/sim/scenarios/success.toml"
 MODEL     := "codex/gpt-5.6-sol@high"
 WORKSPACE := "tmp/workspace"
 STATE     := justfile_directory() / "tmp/rig-state"
+LIVE_STATE := justfile_directory() / "tmp/live-state"
 SESSIONS  := STATE / "org.crdx/oh/sessions"
 ADDRESS   := "localhost:8117"
 ENDPOINT  := "http://" + ADDRESS + "/v1/codex/responses"
@@ -25,14 +26,16 @@ harness:
 
 # run the harness for real against a scenario, in a workspace of its own
 live scenario=SCENARIO workspace=WORKSPACE opening="" caps="rxw": harness down
-    mkdir -p {{ workspace }}
+    rm -rf {{ LIVE_STATE }}
+    mkdir -p {{ workspace }} {{ LIVE_STATE }}
     tmux new-session -d -s {{ SESSION }} -x {{ WIDTH }} -y {{ HEIGHT }} \
         {{ SIM }} --scenario {{ scenario }} --address {{ ADDRESS }}
     tmux set-option -t {{ SESSION }} remain-on-exit on
     sleep 0.3
-    OH_ENDPOINT_URL={{ ENDPOINT }} {{ OH }} -u >/dev/null
+    OH_ENDPOINT_URL={{ ENDPOINT }} OH_STATE_DIR= XDG_STATE_HOME={{ LIVE_STATE }} \
+        {{ OH }} -u >/dev/null
     tmux split-window -t {{ SESSION }} -v -c {{ justfile_directory() }}/{{ workspace }} \
-        -e OH_ENDPOINT_URL={{ ENDPOINT }} \
+        -e OH_ENDPOINT_URL={{ ENDPOINT }} -e OH_STATE_DIR= -e XDG_STATE_HOME={{ LIVE_STATE }} \
         {{ OH }} --caps {{ caps }} -m {{ MODEL }} {{ opening }}
     tmux select-pane -t {{ SESSION }}.{bottom}
 
@@ -45,9 +48,9 @@ resume-up scenario="internal/sim/scenarios/resume-read.toml": harness down
         {{ SIM }} --scenario {{ scenario }} --address {{ ADDRESS }}
     tmux set-option -t {{ SESSION }} remain-on-exit on
     sleep 0.3
-    OH_ENDPOINT_URL={{ ENDPOINT }} XDG_STATE_HOME={{ STATE }} {{ OH }} -u >/dev/null
+    OH_ENDPOINT_URL={{ ENDPOINT }} OH_STATE_DIR= XDG_STATE_HOME={{ STATE }} {{ OH }} -u >/dev/null
     tmux split-window -t {{ SESSION }} -v -c {{ justfile_directory() }}/{{ WORKSPACE }} \
-        -e OH_ENDPOINT_URL={{ ENDPOINT }} -e XDG_STATE_HOME={{ STATE }} \
+        -e OH_ENDPOINT_URL={{ ENDPOINT }} -e OH_STATE_DIR= -e XDG_STATE_HOME={{ STATE }} \
         {{ OH }} --caps rw -m {{ MODEL }}
     tmux select-pane -t {{ SESSION }}.{bottom}
 
@@ -61,7 +64,7 @@ resume scenario="internal/sim/scenarios/resume-edit.toml": harness
         {{ SIM }} --scenario {{ scenario }} --address {{ ADDRESS }}
     sleep 0.3
     tmux respawn-pane -k -t {{ SESSION }}.{bottom} -c {{ justfile_directory() }}/{{ WORKSPACE }} \
-        -e OH_ENDPOINT_URL={{ ENDPOINT }} -e XDG_STATE_HOME={{ STATE }} \
+        -e OH_ENDPOINT_URL={{ ENDPOINT }} -e OH_STATE_DIR= -e XDG_STATE_HOME={{ STATE }} \
         {{ OH }} --caps rw --resume "$ID"
     tmux select-pane -t {{ SESSION }}.{bottom}
 
@@ -127,6 +130,7 @@ capture: harness
     CAPTURE_WORKSPACE={{ justfile_directory() }}/tmp/capture-workspace
 
     export OH_ENDPOINT_URL={{ ENDPOINT }}
+    export OH_STATE_DIR=
     export XDG_STATE_HOME=$CAPTURE_STATE
 
     mkdir -p {{ TEST_INPUTS }}
