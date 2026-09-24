@@ -1,0 +1,18 @@
+{"kind":"head","version":13,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"user_message","text":"lose the prompt cache halfway through the turn"}}
+{"kind":"event","event":{"render":"work","kind":"tool_call_request","id":"call-1","name":"work","arguments":"{}","usage":{"input_tokens":48900,"output_tokens":20,"cache":{"read_tokens":48000}}}}
+{"kind":"event","event":{"kind":"state_change","id":"call-1","state":1}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"done","id":"call-1","name":"work","status":"success","stats":{"kind":"output","lines":1,"bytes":4}}}
+{"kind":"event","event":{"kind":"model_message","text":"The cache went cold on that request.","usage":{"input_tokens":49300,"output_tokens":20,"cache":{"read_tokens":0}}}}
+{"kind":"event","event":{"kind":"cache_rebuild","name":"rebuilt","usage":{"cache":{"read_tokens":0,"write_tokens":49300}}}}
+{"kind":"item","payload":{"role":"user","content":"lose the prompt cache halfway through the turn"}}
+{"kind":"item","payload":{"role":"assistant","content":"","tool_calls":[{"id":"call-1","type":"function","function":{"name":"work","arguments":"{}"}}]}}
+{"kind":"item","payload":{"role":"tool","content":"done","tool_call_id":"call-1"}}
+{"kind":"item","payload":{"role":"assistant","content":"The cache went cold on that request."}}
+{"kind":"turn_completion","turn":{"input_tokens":49300}}
+{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
+{"kind":"event","event":{"kind":"model_message","text":"Carrying on.","usage":{"input_tokens":49500,"output_tokens":10,"cache":{"read_tokens":49152}}}}
+{"kind":"item","payload":{"role":"user","content":"carry on"}}
+{"kind":"item","payload":{"role":"assistant","content":"Carrying on."}}
+{"kind":"turn_completion","turn":{"input_tokens":49500}}

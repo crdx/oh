@@ -1097,6 +1097,10 @@ func cachedAs(readTokens int, writeTokens int) agent.Usage {
 	}
 }
 
+func readAs(readTokens int, inputTokens int) agent.Usage {
+	return agent.Usage{InputTokens: inputTokens, Cache: &agent.CacheUsage{ReadTokens: readTokens}}
+}
+
 func cacheNotices(t *testing.T, replies []agent.Usage, gap time.Duration) []agent.Event {
 	t.Helper()
 
@@ -1142,6 +1146,21 @@ func TestEveryPromptCacheRebuildIsReportedWithItsCause(t *testing.T) {
 		},
 		"an entry that had not settled": {
 			replies: []agent.Usage{cachedAs(48000, 900), cachedAs(47900, 300)},
+			gap:     4 * time.Second,
+			want:    agent.CacheSettling,
+		},
+		"a cache lost by an endpoint that reports no writes": {
+			replies: []agent.Usage{readAs(48000, 48900), readAs(0, 49300)},
+			gap:     45 * time.Second,
+			want:    agent.CacheRebuilt,
+		},
+		"a cache expired at an endpoint that reports no writes": {
+			replies: []agent.Usage{readAs(48000, 48900), readAs(0, 49300)},
+			gap:     7 * time.Hour,
+			want:    agent.CacheExpired,
+		},
+		"an unsettled entry at an endpoint that reports no writes": {
+			replies: []agent.Usage{readAs(48000, 48900), readAs(47872, 48200)},
 			gap:     4 * time.Second,
 			want:    agent.CacheSettling,
 		},
@@ -1255,6 +1274,17 @@ func TestAPromptCacheGapIsMeasuredFromWhenTheRequestWasMade(t *testing.T) {
 	}
 	if notices[0].Took != 90*time.Second {
 		t.Errorf("got a gap of %s, want 90s", notices[0].Took)
+	}
+}
+
+func TestACacheLostWithoutAWriteCountIsQuantifiedByWhatWasSentUncached(t *testing.T) {
+	notices := cacheNotices(t, []agent.Usage{readAs(48000, 48900), readAs(21000, 49300)}, 45*time.Second)
+	if len(notices) != 1 {
+		t.Fatalf("got %d notices, want 1", len(notices))
+	}
+
+	if want := "Cache rebuilt: 28Kt sent <1m later."; agent.CacheRebuildNotice(notices[0]) != want {
+		t.Errorf("got %q, want %q", agent.CacheRebuildNotice(notices[0]), want)
 	}
 }
 

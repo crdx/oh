@@ -13697,13 +13697,11 @@ func sessionGoldenProviderFor(
 	return provider
 }
 
-func settleSessionGoldenClock(
-	t *testing.T, scenario sessionGoldenScenario, assistant *agent.Agent,
-) {
+func newSessionGoldenClock(t *testing.T, scenario sessionGoldenScenario) func(*agent.Agent) {
 	t.Helper()
 
 	if scenario.Asleep == "" {
-		return
+		return func(*agent.Agent) {}
 	}
 
 	sleepBetweenRequests, err := time.ParseDuration(scenario.Asleep)
@@ -13714,7 +13712,7 @@ func settleSessionGoldenClock(
 	var mutex sync.Mutex
 	var sleepSoFar time.Duration
 
-	assistant.TakeTimeFrom(func() time.Time {
+	clock := func() time.Time {
 		mutex.Lock()
 		defer mutex.Unlock()
 
@@ -13722,7 +13720,11 @@ func settleSessionGoldenClock(
 		sleepSoFar += sleepBetweenRequests
 
 		return at
-	})
+	}
+
+	return func(assistant *agent.Agent) {
+		assistant.TakeTimeFrom(clock)
+	}
 }
 
 func newSessionGoldenProvider(
@@ -14529,7 +14531,8 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		newSessionGoldenTools(t, scenario.Tools, goldenPorts, scenario.ScratchDirectory),
 	)
 	firstAssistant.TakeRetryWaitsAtOnce()
-	settleSessionGoldenClock(t, scenario, firstAssistant)
+	settleClock := newSessionGoldenClock(t, scenario)
+	settleClock(firstAssistant)
 	var firstScreenOutput bytes.Buffer
 	firstHarness := &App{
 		agent:         firstAssistant,
@@ -14602,7 +14605,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		newSessionGoldenTools(t, scenario.Tools, goldenPorts, scenario.ScratchDirectory),
 	)
 	resumedAssistant.TakeRetryWaitsAtOnce()
-	settleSessionGoldenClock(t, scenario, resumedAssistant)
+	settleClock(resumedAssistant)
 	if err := resumedAssistant.RestoreState(storedSession.Events); err != nil {
 		t.Fatal(err)
 	}

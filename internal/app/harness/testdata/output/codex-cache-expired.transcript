@@ -1,0 +1,33 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `medium`
+- **Provider:** `codex`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+warm the prompt cache and leave it
+
+## Assistant · +0s
+
+The cache is warm.
+
+## User · +0s
+
+come back once it has gone cold
+
+## Assistant · +0s
+
+The cache went cold while the session was closed.
+
+## Cache rebuild · +0s
+
+```
+Cache expired: 49Kt sent after 10m.
+```

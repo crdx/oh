@@ -306,26 +306,36 @@ func (self *Agent) readCache(usage Usage, at time.Time) (Event, bool) {
 	previous := self.cache
 	self.cache = CacheReading{ReadTokens: usage.Cache.ReadTokens, At: util.WallClock(at)}
 
-	if usage.Cache.WriteTokens == 0 || !previous.exists() {
+	if !previous.exists() || usage.Cache.ReadTokens >= previous.ReadTokens {
 		return Event{}, false
 	}
 
-	if usage.Cache.ReadTokens >= previous.ReadTokens {
+	rewrittenTokens := rewrittenTokens(usage)
+	if rewrittenTokens == 0 {
 		return Event{}, false
 	}
 
 	gap := util.WallClock(at).Sub(previous.At)
+	cause := cacheCause(gap, self.cacheLifetime, previous.ReadTokens, rewrittenTokens)
 
-	return cacheRebuild(cacheCause(gap, self.cacheLifetime, previous.ReadTokens, usage.Cache.WriteTokens), gap, usage), true
+	return cacheRebuild(cause, gap, usage.Cache.ReadTokens, rewrittenTokens), true
 }
 
-func cacheRebuild(cause CacheCause, gap time.Duration, usage Usage) Event {
+func rewrittenTokens(usage Usage) int {
+	if usage.Cache.WriteTokens > 0 {
+		return usage.Cache.WriteTokens
+	}
+
+	return max(usage.InputTokens-usage.Cache.ReadTokens, 0)
+}
+
+func cacheRebuild(cause CacheCause, gap time.Duration, readTokens int, rewrittenTokens int) Event {
 	return Event{
 		Kind: CacheRebuildEvent,
 		Name: string(cause),
 		Took: gap,
 		Usage: &Usage{
-			Cache: &CacheUsage{ReadTokens: usage.Cache.ReadTokens, WriteTokens: usage.Cache.WriteTokens},
+			Cache: &CacheUsage{ReadTokens: readTokens, WriteTokens: rewrittenTokens},
 		},
 	}
 }

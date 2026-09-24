@@ -1,0 +1,24 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+asleep = "10m"
+
+[first]
+prompt = "warm the prompt cache and leave it"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_text.delta","delta":"The cache is warm."}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"The cache is warm."}]}}''',
+    '''{"type":"response.completed","response":{"usage":{"input_tokens":48900,"output_tokens":20,"input_tokens_details":{"cached_tokens":48000,"cache_write_tokens":0}}}}''',
+]
+
+[resume]
+prompt = "come back once it has gone cold"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_text.delta","delta":"The cache went cold while the session was closed."}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"The cache went cold while the session was closed."}]}}''',
+    '''{"type":"response.completed","response":{"usage":{"input_tokens":49300,"output_tokens":20,"input_tokens_details":{"cached_tokens":0,"cache_write_tokens":0}}}}''',
+]

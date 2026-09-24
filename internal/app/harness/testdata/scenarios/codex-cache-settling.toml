@@ -1,0 +1,33 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[tool]]
+name = "work"
+outputs = ["done"]
+
+[first]
+prompt = "lose the last block of the prompt cache"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"work","arguments":"{}"}}''',
+    '''{"type":"response.completed","response":{"usage":{"input_tokens":48900,"output_tokens":20,"input_tokens_details":{"cached_tokens":48000,"cache_write_tokens":0}}}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_text.delta","delta":"The cache fell back by one block."}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"The cache fell back by one block."}]}}''',
+    '''{"type":"response.completed","response":{"usage":{"input_tokens":48200,"output_tokens":20,"input_tokens_details":{"cached_tokens":47872,"cache_write_tokens":0}}}}''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_text.delta","delta":"Carrying on."}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"Carrying on."}]}}''',
+    '''{"type":"response.completed","response":{"usage":{"input_tokens":48400,"output_tokens":10,"input_tokens_details":{"cached_tokens":48128,"cache_write_tokens":0}}}}''',
+]

@@ -1,0 +1,14 @@
+{"kind":"head","version":13,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
+{"kind":"event","event":{"kind":"user_message","text":"warm the prompt cache and leave it"}}
+{"kind":"event","event":{"kind":"model_message","text":"The cache is warm.","usage":{"input_tokens":48900,"output_tokens":20,"cache":{"read_tokens":48000}}}}
+{"kind":"item","payload":{"role":"user","content":"warm the prompt cache and leave it"}}
+{"kind":"item","payload":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"The cache is warm."}]}}
+{"kind":"turn_completion","turn":{"input_tokens":48900}}
+{"kind":"event","event":{"kind":"user_message","text":"come back once it has gone cold"}}
+{"kind":"event","event":{"kind":"model_message","text":"The cache went cold while the session was closed.","usage":{"input_tokens":49300,"output_tokens":20,"cache":{"read_tokens":0}}}}
+{"kind":"event","event":{"kind":"cache_rebuild","name":"expired","usage":{"cache":{"read_tokens":0,"write_tokens":49300}}}}
+{"kind":"item","payload":{"role":"user","content":"come back once it has gone cold"}}
+{"kind":"item","payload":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"The cache went cold while the session was closed."}]}}
+{"kind":"turn_completion","turn":{"input_tokens":49300}}

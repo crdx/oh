@@ -1,0 +1,19 @@
+{"kind":"head","version":13,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
+{"kind":"event","event":{"kind":"user_message","text":"lose part of the prompt cache"}}
+{"kind":"event","event":{"render":"work","kind":"tool_call_request","id":"call-1","name":"work","arguments":"{}","usage":{"input_tokens":48900,"output_tokens":20,"cache":{"read_tokens":48000}}}}
+{"kind":"event","event":{"kind":"state_change","id":"call-1","state":1}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"done","id":"call-1","name":"work","status":"success","stats":{"kind":"output","lines":1,"bytes":4}}}
+{"kind":"event","event":{"kind":"model_message","text":"Part of the cache was lost.","usage":{"input_tokens":49300,"output_tokens":20,"cache":{"read_tokens":31104}}}}
+{"kind":"event","event":{"kind":"cache_rebuild","name":"rebuilt","usage":{"cache":{"read_tokens":31104,"write_tokens":18196}}}}
+{"kind":"item","payload":{"role":"user","content":"lose part of the prompt cache"}}
+{"kind":"item","payload":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"work","arguments":"{}"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"done"}}
+{"kind":"item","payload":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"Part of the cache was lost."}]}}
+{"kind":"turn_completion","turn":{"input_tokens":49300}}
+{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
+{"kind":"event","event":{"kind":"model_message","text":"Carrying on.","usage":{"input_tokens":49500,"output_tokens":10,"cache":{"read_tokens":49152}}}}
+{"kind":"item","payload":{"role":"user","content":"carry on"}}
+{"kind":"item","payload":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"Carrying on."}]}}
+{"kind":"turn_completion","turn":{"input_tokens":49500}}

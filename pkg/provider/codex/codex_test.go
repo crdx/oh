@@ -603,6 +603,31 @@ func TestStreamAttachesEachRequestsContextUsageToItsFinalEvent(t *testing.T) {
 	}
 }
 
+func TestACacheLostWithNoWritesReportedIsStillNoticed(t *testing.T) {
+	server, _ := turns(
+		t,
+		events(call("weather", `{"city":"London"}`), completedWithUsage(127_187, 126_592, 0)),
+		events(answer("It is raining."), completedWithUsage(127_269, 0, 0)),
+	)
+
+	var callCount int
+	assistant := newAgent(t, server.URL, []tool.Tool{weatherTool(t, &callCount)})
+
+	var notices []string
+	for update, err := range assistant.Stream(t.Context(), "what is the weather?", nil) {
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if update.Event != nil && update.Event.Kind == agent.CacheRebuildEvent {
+			notices = append(notices, agent.CacheRebuildNotice(*update.Event))
+		}
+	}
+
+	if want := []string{"Cache rebuilt: 127Kt sent <1m later."}; !reflect.DeepEqual(notices, want) {
+		t.Errorf("got notices %q, want %q", notices, want)
+	}
+}
+
 func TestStreamStopsWhenTheCallerDoes(t *testing.T) {
 	server, bodies := turns(
 		t,

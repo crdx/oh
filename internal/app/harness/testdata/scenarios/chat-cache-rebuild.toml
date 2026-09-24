@@ -1,0 +1,37 @@
+provider = "chat"
+model = "deepseek-v4-pro"
+effort = "medium"
+
+[[tool]]
+name = "work"
+outputs = ["done"]
+
+[first]
+prompt = "lose the prompt cache halfway through the turn"
+
+[[first.response]]
+event = [
+    '''{"choices":[{"delta":{"role":"assistant","tool_calls":[{"index":0,"id":"call-1","type":"function","function":{"name":"work","arguments":"{}"}}]}}]}''',
+    '''{"choices":[{"delta":{},"finish_reason":"tool_calls"}]}''',
+    '''{"choices":[],"usage":{"prompt_tokens":48900,"completion_tokens":20,"prompt_tokens_details":{"cached_tokens":48000}}}''',
+    '''[DONE]''',
+]
+
+[[first.response]]
+event = [
+    '''{"choices":[{"delta":{"content":"The cache went cold on that request."}}]}''',
+    '''{"choices":[{"delta":{},"finish_reason":"stop"}]}''',
+    '''{"choices":[],"usage":{"prompt_tokens":49300,"completion_tokens":20,"prompt_tokens_details":{"cached_tokens":0}}}''',
+    '''[DONE]''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"choices":[{"delta":{"content":"Carrying on."}}]}''',
+    '''{"choices":[{"delta":{},"finish_reason":"stop"}]}''',
+    '''{"choices":[],"usage":{"prompt_tokens":49500,"completion_tokens":10,"prompt_tokens_details":{"cached_tokens":49152}}}''',
+    '''[DONE]''',
+]
