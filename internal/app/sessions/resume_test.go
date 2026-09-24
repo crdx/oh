@@ -31,6 +31,63 @@ func TestAResumedSessionRestoresFastModeFromItsJournal(t *testing.T) {
 	}
 }
 
+func TestAResumedSessionTakesTheModelItHoldsWithoutAskingTheModelList(t *testing.T) {
+	heldChoice := model.Choice{
+		Provider:        model.AnthropicProvider,
+		ID:              "claude-opus-5",
+		EffortLevels:    []string{"high"},
+		MaxOutputTokens: 128_000,
+	}
+	resumedSession := &store.Session{Meta: store.Meta{
+		Provider:    model.AnthropicProvider,
+		Model:       "claude-opus-5",
+		Effort:      "high",
+		ModelChoice: &heldChoice,
+	}}
+	absentCachePath := filepath.Join(t.TempDir(), "models.json")
+	absentSeenModelsPath := filepath.Join(t.TempDir(), "seen_models.json")
+
+	got, err := ModelChoice(resumedSession, absentCachePath, absentSeenModelsPath, ModelSelection(resumedSession))
+	if err != nil || got.MaxOutputTokens != heldChoice.MaxOutputTokens {
+		t.Errorf("expected the held model, got %+v and %v", got, err)
+	}
+}
+
+func TestASessionHoldingNoModelResumesOnAModelOnlySeen(t *testing.T) {
+	absentCachePath := filepath.Join(t.TempDir(), "models.json")
+	seenModelsPath := filepath.Join(t.TempDir(), "seen_models.json")
+	seenModels := `{"version":1,"providers":{"anthropic":[{"id":"claude-opus-5","efforts":["high"],"output":128000}]}}`
+	if err := os.WriteFile(seenModelsPath, []byte(seenModels), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	resumedSession := &store.Session{Meta: store.Meta{
+		Provider: model.AnthropicProvider,
+		Model:    "claude-opus-5",
+		Effort:   "high",
+	}}
+
+	got, err := ModelChoice(resumedSession, absentCachePath, seenModelsPath, ModelSelection(resumedSession))
+	if err != nil || got.MaxOutputTokens != 128_000 {
+		t.Errorf("expected the model that was seen, got %+v and %v", got, err)
+	}
+}
+
+func TestASessionHoldingNoModelAsksTheModelList(t *testing.T) {
+	absentCachePath := filepath.Join(t.TempDir(), "models.json")
+	absentSeenModelsPath := filepath.Join(t.TempDir(), "seen_models.json")
+	selection := model.Selection{Provider: model.AnthropicProvider, Model: "claude-opus-5", Effort: "high"}
+
+	for name, resumedSession := range map[string]*store.Session{
+		"a new session":             nil,
+		"a session holding nothing": {Meta: store.Meta{Provider: selection.Provider, Model: selection.Model}},
+	} {
+		if _, err := ModelChoice(resumedSession, absentCachePath, absentSeenModelsPath, selection); err == nil || !strings.Contains(err.Error(), "-u") {
+			t.Errorf("%s: expected the model list to be asked and to know nothing, got %v", name, err)
+		}
+	}
+}
+
 func TestAResumedConversationOpensInTheModeItWasLeftIn(t *testing.T) {
 	leftCaps := caps.Read | caps.Git
 	assumedCaps := caps.Read | caps.Write

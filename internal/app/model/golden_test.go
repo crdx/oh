@@ -31,7 +31,7 @@ func TestGoldenAnUpdateWithNothingReachableMatchesTheGolden(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 
 	var output bytes.Buffer
-	err := Update(&output, deadAddress, modelCachePath(), unreachableProviders, true)
+	err := Update(&output, deadAddress, modelCachePath(), seenModelsPath(), unreachableProviders, true)
 	if err == nil {
 		t.Fatal("expected an update with nothing reachable to fail")
 	}
@@ -46,7 +46,7 @@ func TestGoldenAnUpdateFromTheRegistryAloneMatchesTheGolden(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 
 	var output bytes.Buffer
-	if err := Update(&output, serveRegistry(t, oneCodexModel), modelCachePath(), unreachableProviders, true); err != nil {
+	if err := Update(&output, serveRegistry(t, oneCodexModel), modelCachePath(), seenModelsPath(), unreachableProviders, true); err != nil {
 		t.Fatal(err)
 	}
 
@@ -86,7 +86,7 @@ func TestGoldenAnUpdateAProviderListsItselfMatchesTheGolden(t *testing.T) {
 
 		return unreachableProviders(ctx, providerName)
 	}
-	if err := Update(&output, serveRegistry(t, oneCodexModel), modelCachePath(), lister, true); err != nil {
+	if err := Update(&output, serveRegistry(t, oneCodexModel), modelCachePath(), seenModelsPath(), lister, true); err != nil {
 		t.Fatal(err)
 	}
 
@@ -151,7 +151,7 @@ func TestGoldenAnUpdateNamesTheModelsThatCameAndWent(t *testing.T) {
 	endpoint := serveRegistry(t, oneCodexModel)
 
 	var firstOutput bytes.Buffer
-	if err := Update(&firstOutput, endpoint, modelCachePath(), listingModels(firstListings()), false); err != nil {
+	if err := Update(&firstOutput, endpoint, modelCachePath(), seenModelsPath(), listingModels(firstListings()), false); err != nil {
 		t.Fatal(err)
 	}
 
@@ -160,7 +160,7 @@ func TestGoldenAnUpdateNamesTheModelsThatCameAndWent(t *testing.T) {
 	}
 
 	var output bytes.Buffer
-	if err := Update(&output, endpoint, modelCachePath(), listingModels(secondListings()), false); err != nil {
+	if err := Update(&output, endpoint, modelCachePath(), seenModelsPath(), listingModels(secondListings()), false); err != nil {
 		t.Fatal(err)
 	}
 
@@ -215,12 +215,12 @@ func updateOverStoredModels(t *testing.T, output io.Writer, isShowingIgnored boo
 	endpoint := serveRegistry(t, oneCodexModel)
 
 	var storingOutput bytes.Buffer
-	if err := Update(&storingOutput, endpoint, modelCachePath(), listingIgnoredModels(t), false); err != nil {
+	if err := Update(&storingOutput, endpoint, modelCachePath(), seenModelsPath(), listingIgnoredModels(t), false); err != nil {
 		t.Fatal(err)
 	}
 
 	lister := listingModels(changedModelListings())
-	if err := Update(output, endpoint, modelCachePath(), lister, isShowingIgnored); err != nil {
+	if err := Update(output, endpoint, modelCachePath(), seenModelsPath(), lister, isShowingIgnored); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -250,7 +250,7 @@ func TestGoldenAnUpdateNamesEveryModelItIgnoresAndWhy(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 
 	var output bytes.Buffer
-	if err := Update(&output, serveRegistry(t, oneCodexModel), modelCachePath(), listingIgnoredModels(t), true); err != nil {
+	if err := Update(&output, serveRegistry(t, oneCodexModel), modelCachePath(), seenModelsPath(), listingIgnoredModels(t), true); err != nil {
 		t.Fatal(err)
 	}
 
@@ -261,7 +261,7 @@ func TestEveryCountedRowAddsUpToTheModelsTheProviderOffered(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 
 	var output bytes.Buffer
-	if err := Update(&output, serveRegistry(t, oneCodexModel), modelCachePath(), listingIgnoredModels(t), true); err != nil {
+	if err := Update(&output, serveRegistry(t, oneCodexModel), modelCachePath(), seenModelsPath(), listingIgnoredModels(t), true); err != nil {
 		t.Fatal(err)
 	}
 
@@ -310,7 +310,7 @@ func TestGoldenAnUpdateWithoutTheFlagCountsWhatItIgnoredAndSaysHowToSeeIt(t *tes
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 
 	var output bytes.Buffer
-	if err := Update(&output, serveRegistry(t, oneCodexModel), modelCachePath(), listingIgnoredModels(t), false); err != nil {
+	if err := Update(&output, serveRegistry(t, oneCodexModel), modelCachePath(), seenModelsPath(), listingIgnoredModels(t), false); err != nil {
 		t.Fatal(err)
 	}
 
@@ -324,7 +324,7 @@ func TestGoldenAnUpdateWithoutColourKeepsItsColumns(t *testing.T) {
 	restoreStyle := style.Init(&output)
 	defer restoreStyle()
 
-	if err := Update(&output, serveRegistry(t, oneCodexModel), modelCachePath(), listingIgnoredModels(t), true); err != nil {
+	if err := Update(&output, serveRegistry(t, oneCodexModel), modelCachePath(), seenModelsPath(), listingIgnoredModels(t), true); err != nil {
 		t.Fatal(err)
 	}
 
@@ -342,7 +342,7 @@ func TestGoldenAProviderWhoseModelsAreAllIgnoredSaysSoAndOneIgnoredModelReadsAsO
 
 		return unreachableProviders(ctx, providerName)
 	}
-	if err := Update(&output, serveRegistry(t, oneCodexModel), modelCachePath(), lister, false); err != nil {
+	if err := Update(&output, serveRegistry(t, oneCodexModel), modelCachePath(), seenModelsPath(), lister, false); err != nil {
 		t.Fatal(err)
 	}
 
@@ -364,7 +364,7 @@ func TestGoldenAnUpdateThatRecordsNothingStillNamesWhatItIgnored(t *testing.T) {
 		return unreachableProviders(ctx, providerName)
 	}
 
-	err := Update(&output, deadAddress, modelCachePath(), lister, true)
+	err := Update(&output, deadAddress, modelCachePath(), seenModelsPath(), lister, true)
 	if err == nil {
 		t.Fatal("expected an update that recorded nothing to fail")
 	}
@@ -390,7 +390,7 @@ func TestGoldenAStartupRefreshThatRecordsNothingShowsWhatItIgnored(t *testing.T)
 
 		return unreachableProviders(ctx, providerName)
 	}
-	if err := Ensure(&output, deadAddress, modelCachePath(), lister); err != nil {
+	if err := Ensure(&output, deadAddress, modelCachePath(), seenModelsPath(), lister); err != nil {
 		t.Fatalf("expected a failed refresh to be forgiven, got %v", err)
 	}
 
@@ -403,14 +403,14 @@ func TestGoldenAStartupRefreshNamesWhatChangedAndNothingElse(t *testing.T) {
 	endpoint := serveRegistry(t, oneCodexModel)
 
 	var storingOutput bytes.Buffer
-	if err := Update(&storingOutput, endpoint, modelCachePath(), listingModels(firstListings()), false); err != nil {
+	if err := Update(&storingOutput, endpoint, modelCachePath(), seenModelsPath(), listingModels(firstListings()), false); err != nil {
 		t.Fatal(err)
 	}
 
 	ageModelCache(t, time.Now().Add(-8*24*time.Hour))
 
 	var output bytes.Buffer
-	if err := Ensure(&output, endpoint, modelCachePath(), listingModels(secondListings())); err != nil {
+	if err := Ensure(&output, endpoint, modelCachePath(), seenModelsPath(), listingModels(secondListings())); err != nil {
 		t.Fatalf("expected the refresh to succeed, got %v", err)
 	}
 

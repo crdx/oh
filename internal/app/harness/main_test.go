@@ -5546,6 +5546,51 @@ func TestOpenCodeRequestsUseTheStoredSessionIdentifier(t *testing.T) {
 	}
 }
 
+func TestASessionResumesWithTheModelItWasCreatedWithAfterTheModelListForgetsIt(t *testing.T) {
+	binary := buildTestBinary(t)
+	endpoint := sim.New(&sim.Scenario{
+		Model: "fake",
+		Turns: []sim.Turn{
+			{Say: "First answer."},
+			{Say: "Second answer."},
+		},
+	})
+	server := httptest.NewServer(endpoint)
+	t.Cleanup(server.Close)
+
+	address := endpoint.Addresses(server.URL)[sim.Completions]
+	stateDirectory := t.TempDir()
+	workspaceDir := reachableWorkspaceDir(t)
+	environment := append(testBinaryEnvironment(t, stateDirectory), backend.EndpointVariable+"="+address)
+	runTestBinary(t, binary, workspaceDir, environment, "-p", "--yolo", "-m", "opencode-go/fake", "first question")
+
+	sessionsDirectory := filepath.Join(stateDirectory, "org.crdx", "oh", "sessions")
+	storedSessions, err := store.List(sessionsDirectory)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(storedSessions) != 1 {
+		t.Fatalf("got %d stored sessions, want one", len(storedSessions))
+	}
+	storedSession := storedSessions[0]
+
+	frozenChoice := storedSession.Meta.ModelChoice
+	if frozenChoice == nil || frozenChoice.Provider != model.OpencodeGoProvider || frozenChoice.ID != "fake" {
+		t.Fatalf("expected the session to hold the model it was created with, got %+v", frozenChoice)
+	}
+
+	cachePath := filepath.Join(stateDirectory, "org.crdx", "oh", "models.sim.json")
+	successorCache := checkedModelCache(`{"opencode-go":{"models":[{"id":"fake-2","efforts":["high"],"output":128000}]}}`)
+	if err := os.WriteFile(cachePath, successorCache, 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	resumed := runTestBinary(t, binary, workspaceDir, environment, "-p", "-r", storedSession.Name, "second question")
+	if !strings.Contains(resumed, "Second answer.") {
+		t.Errorf("expected the session to resume on its own model, got %q", resumed)
+	}
+}
+
 func TestForkingAStoredSessionOpensANewOneCarryingItsTranscript(t *testing.T) {
 	binary := buildTestBinary(t)
 	endpoint := sim.New(&sim.Scenario{

@@ -363,7 +363,7 @@ func TestTheOutputCeilingComesFromTheChosenModel(t *testing.T) {
 	})
 
 	for model, want := range map[string]int{"claude-opus-5": 128_000, "claude-sonnet-4-6": 64_000} {
-		choice, err := chosenModel(anthropicProvider, model)
+		choice, err := chosenAnthropicModel(model)
 		if err != nil {
 			t.Fatalf("%s: %v", model, err)
 		}
@@ -377,7 +377,7 @@ func TestTheOutputCeilingComesFromTheChosenModel(t *testing.T) {
 func TestAModelNothingIsKnownAboutIsRefusedWithSomethingToDoAboutIt(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 
-	_, err := chosenModel(anthropicProvider, "claude-from-the-future")
+	_, err := chosenAnthropicModel("claude-from-the-future")
 	if err == nil || !strings.Contains(err.Error(), "-u") {
 		t.Errorf("expected the refusal to say what to do, got %v", err)
 	}
@@ -386,7 +386,7 @@ func TestAModelNothingIsKnownAboutIsRefusedWithSomethingToDoAboutIt(t *testing.T
 func TestAModelTheClientCannotTalkToIsRefusedWithTheReasonRatherThanAnUpdate(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 
-	_, err := chosenModel(anthropicProvider, "claude-opus-4-5")
+	_, err := chosenAnthropicModel("claude-opus-4-5")
 	if err == nil || !strings.Contains(err.Error(), undrivableReason) {
 		t.Errorf("expected the refusal to say the model cannot be spoken to, got %v", err)
 	}
@@ -835,12 +835,12 @@ func TestAnUpdateThatFindsTheSameModelsNamesNoChange(t *testing.T) {
 	endpoint := serveRegistry(t, oneCodexModel)
 
 	var firstOutput bytes.Buffer
-	if err := Update(&firstOutput, endpoint, modelCachePath(), listingModels(firstListings()), false); err != nil {
+	if err := Update(&firstOutput, endpoint, modelCachePath(), seenModelsPath(), listingModels(firstListings()), false); err != nil {
 		t.Fatal(err)
 	}
 
 	var output bytes.Buffer
-	if err := Update(&output, endpoint, modelCachePath(), listingModels(firstListings()), false); err != nil {
+	if err := Update(&output, endpoint, modelCachePath(), seenModelsPath(), listingModels(firstListings()), false); err != nil {
 		t.Fatal(err)
 	}
 
@@ -858,12 +858,12 @@ func TestAProviderNobodyCouldListKeepsItsModelsAndNamesNoRemoval(t *testing.T) {
 	endpoint := serveRegistry(t, oneCodexModel)
 
 	var firstOutput bytes.Buffer
-	if err := Update(&firstOutput, endpoint, modelCachePath(), listingModels(firstListings()), false); err != nil {
+	if err := Update(&firstOutput, endpoint, modelCachePath(), seenModelsPath(), listingModels(firstListings()), false); err != nil {
 		t.Fatal(err)
 	}
 
 	var output bytes.Buffer
-	if err := Update(&output, endpoint, modelCachePath(), unreachableProviders, false); err != nil {
+	if err := Update(&output, endpoint, modelCachePath(), seenModelsPath(), unreachableProviders, false); err != nil {
 		t.Fatal(err)
 	}
 

@@ -181,15 +181,21 @@ func supplement(
 }
 
 func supplemented(providerName string, model agent.Model, knownModel agent.Model) agent.Model {
+	if providerName == CodexProvider && knownModel.ContextWindowTokens > 0 {
+		model.ContextWindowTokens = knownModel.ContextWindowTokens
+	}
+
+	return filledFrom(model, knownModel)
+}
+
+func filledFrom(model agent.Model, knownModel agent.Model) agent.Model {
 	if model.Name == "" {
 		model.Name = knownModel.Name
 	}
 	if len(model.EffortLevels) == 0 {
 		model.EffortLevels = slices.Clone(knownModel.EffortLevels)
 	}
-	if providerName == CodexProvider && knownModel.ContextWindowTokens > 0 {
-		model.ContextWindowTokens = knownModel.ContextWindowTokens
-	} else if model.ContextWindowTokens == 0 {
+	if model.ContextWindowTokens == 0 {
 		model.ContextWindowTokens = knownModel.ContextWindowTokens
 	}
 	if model.MaxOutputTokens == 0 {
@@ -470,7 +476,7 @@ func List(output io.Writer, path string) error {
 
 type ProviderLister func(context.Context, string) ([]agent.Model, error)
 
-func Ensure(output io.Writer, endpoint string, path string, listProviderModels ProviderLister) error {
+func Ensure(output io.Writer, endpoint string, path string, seenPath string, listProviderModels ProviderLister) error {
 	cache := loadModelCache(path)
 	if isCacheCurrent(cache, time.Now()) {
 		return nil
@@ -483,7 +489,7 @@ func Ensure(output io.Writer, endpoint string, path string, listProviderModels P
 
 	var reportedText bytes.Buffer
 
-	reports, err := updateModels(ctx, &reportedText, endpoint, path, listProviderModels, false)
+	reports, err := updateModels(ctx, &reportedText, endpoint, path, seenPath, listProviderModels, false)
 	if err == nil {
 		writeChangedModels(output, reports)
 		return nil
@@ -514,13 +520,14 @@ func Update(
 	output io.Writer,
 	endpoint string,
 	path string,
+	seenPath string,
 	listProviderModels ProviderLister,
 	isShowingIgnored bool,
 ) error {
 	ctx, cancel := context.WithTimeout(context.Background(), updateTimeout)
 	defer cancel()
 
-	_, err := updateModels(ctx, output, endpoint, path, listProviderModels, isShowingIgnored)
+	_, err := updateModels(ctx, output, endpoint, path, seenPath, listProviderModels, isShowingIgnored)
 
 	return err
 }
@@ -530,6 +537,7 @@ func updateModels(
 	output io.Writer,
 	endpoint string,
 	path string,
+	seenPath string,
 	listProviderModels ProviderLister,
 	isShowingIgnored bool,
 ) ([]providerReport, error) {
@@ -546,6 +554,7 @@ func updateModels(
 	var describedCount int
 
 	reports := make([]providerReport, 0, len(ProviderNames()))
+	listedByProvider := make(map[string][]agent.Model, len(ProviderNames()))
 
 	for _, providerName := range ProviderNames() {
 		registeredModels := registry.Provider(registryNames[providerName])
@@ -553,6 +562,7 @@ func updateModels(
 
 		listedModels, source, why := describeProviderModels(ctx, providerName, registeredModels, listProviderModels)
 		listedModels = plainModels(listedModels)
+		listedByProvider[providerName] = listedModels
 
 		models, ignoredModels := recordableModels(providerName, listedModels)
 		ignoredModels = append(ignoredModels, unselectableModels(models)...)
@@ -583,6 +593,10 @@ func updateModels(
 
 		reports = append(reports, report)
 		writeProviderReport(output, report)
+	}
+
+	if err := recordSeenModels(seenPath, listedByProvider); err != nil {
+		return reports, fmt.Errorf("record the models seen: %w", err)
 	}
 
 	writeChangedModels(output, reports)

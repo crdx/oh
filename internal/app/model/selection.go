@@ -10,17 +10,17 @@ import (
 )
 
 type Choice struct {
-	Provider            string
-	ID                  string
-	Name                string
-	EffortLevels        []string
-	ContextWindowTokens int
-	MaxOutputTokens     int
-	Prices              *agent.TokenPrices
+	Provider            string             `json:"provider"`
+	ID                  string             `json:"id"`
+	Name                string             `json:"name,omitempty"`
+	EffortLevels        []string           `json:"efforts,omitempty"`
+	ContextWindowTokens int                `json:"context,omitempty"`
+	MaxOutputTokens     int                `json:"output,omitempty"`
+	Prices              *agent.TokenPrices `json:"prices,omitempty"`
 }
 
-func Chosen(path string, providerName string, model string) (Choice, error) {
-	for _, choice := range Choices(path) {
+func Chosen(path string, seenPath string, providerName string, model string) (Choice, error) {
+	for _, choice := range slices.Concat(Choices(path), seenChoices(seenPath)) {
 		if choice.Provider == providerName && choice.ID == model {
 			return choice, nil
 		}

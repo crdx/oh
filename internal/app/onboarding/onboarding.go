@@ -119,6 +119,7 @@ func PrepareConfig(options Options) (config.Config, bool, error) {
 	}
 
 	modelCachePath := location.GetModelCachePath(options.EndpointURL != "")
+	seenModelsPath := location.GetSeenModelsPath(options.EndpointURL != "")
 	pause, stopPausing, err := typingPause(options.Input, options.Output)
 	if err != nil {
 		return settings, false, err
@@ -141,7 +142,7 @@ func PrepareConfig(options Options) (config.Config, bool, error) {
 				OllamaHost:  settings.Provider.Ollama.Host,
 			}
 
-			return model.Update(io.Discard, options.EndpointURL, modelCachePath,
+			return model.Update(io.Discard, options.EndpointURL, modelCachePath, seenModelsPath,
 				func(ctx context.Context, providerName string) ([]agent.Model, error) {
 					return backend.ListModels(ctx, providerName, endpoints)
 				}, false)

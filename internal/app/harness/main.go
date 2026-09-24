@@ -358,6 +358,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 
 	endpointURL := os.Getenv(backend.EndpointVariable)
 	modelCachePath := location.GetModelCachePath(endpointURL != "")
+	seenModelsPath := location.GetSeenModelsPath(endpointURL != "")
 	sessionsDir := location.GetSessionsDir()
 
 	if inputArgs.Version {
@@ -427,6 +428,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		endpointURL = simulation.EndpointURL
 		inputArgs.Model = simulation.Selection
 		modelCachePath = location.GetModelCachePath(true)
+		seenModelsPath = location.GetSeenModelsPath(true)
 		sessionsDir = location.GetSessionsDir()
 	}
 
@@ -450,10 +452,10 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	}
 
 	if inputArgs.Update {
-		return "", model.Update(os.Stdout, endpointURL, modelCachePath, listProviderModels, inputArgs.IsShowingIgnored)
+		return "", model.Update(os.Stdout, endpointURL, modelCachePath, seenModelsPath, listProviderModels, inputArgs.IsShowingIgnored)
 	}
 
-	if err := model.Ensure(notices, endpointURL, modelCachePath, listProviderModels); err != nil {
+	if err := model.Ensure(notices, endpointURL, modelCachePath, seenModelsPath, listProviderModels); err != nil {
 		return "", err
 	}
 
@@ -626,7 +628,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	if err != nil {
 		return "", err
 	}
-	choice, err := model.Chosen(modelCachePath, selection.Provider, selection.Model)
+	choice, err := sessions.ModelChoice(resumedSession, modelCachePath, seenModelsPath, selection)
 	if err != nil {
 		return "", err
 	}
@@ -642,6 +644,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		Provider:     selection.Provider,
 		Effort:       selection.Effort,
 		IsFast:       selection.IsFast,
+		ModelChoice:  &choice,
 		Yolo:         args.Yolo,
 	}
 

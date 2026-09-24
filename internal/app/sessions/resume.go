@@ -144,6 +144,19 @@ func ModelSelection(resumedSession *store.Session) model.Selection {
 	}
 }
 
+func ModelChoice(
+	resumedSession *store.Session,
+	modelCachePath string,
+	seenModelsPath string,
+	selection model.Selection,
+) (model.Choice, error) {
+	if resumedSession != nil && resumedSession.Meta.ModelChoice != nil {
+		return *resumedSession.Meta.ModelChoice, nil
+	}
+
+	return model.Chosen(modelCachePath, seenModelsPath, selection.Provider, selection.Model)
+}
+
 func OpeningCaps(requestedCaps caps.Set, wereCapsChosen bool, resumedSession *store.Session) (caps.Set, error) {
 	if resumedSession == nil {
 		return requestedCaps, nil

@@ -26,6 +26,7 @@ type Meta struct {
 	Provider     string                 `json:"provider"`
 	Effort       string                 `json:"effort,omitempty"`
 	IsFast       bool                   `json:"fast,omitempty"`
+	ModelChoice  *model.Choice          `json:"model_choice,omitempty"`
 	SystemPrompt string                 `json:"system_prompt,omitempty"`
 	Tools        []string               `json:"tools,omitempty"`
 	Conditions   *conditions.Conditions `json:"conditions,omitempty"`

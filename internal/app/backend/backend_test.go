@@ -65,6 +65,7 @@ func TestUpdatingAgainstAStandInEndpointDescribesEveryProvider(t *testing.T) {
 		&output,
 		address,
 		location.GetModelCachePath(os.Getenv(EndpointVariable) != ""),
+		location.GetSeenModelsPath(os.Getenv(EndpointVariable) != ""),
 		listProviderModels,
 		false,
 	); err != nil {
