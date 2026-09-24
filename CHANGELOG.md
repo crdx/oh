@@ -2,6 +2,17 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+### Changes
+
+- Send the priority service tier for Codex fast mode
+- Send the Codex routing hint header, also
+- Abandon dead connections promptly
+- Report prompt cache losses for Codex
+- Report prompt cache loss by incomplete turns
+- Let `expose` associate a port with a job
+- Store a session's model details with the session itself
+- Also store all seen models as a fallback for old journals
+
 ## [0.9.0] - 2026-09-22
 
 ### Changes
