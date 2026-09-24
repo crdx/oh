@@ -21,6 +21,11 @@ import (
 
 const bodyLimit = 64 * 1024
 
+const (
+	healthCheckAfter        = 30 * time.Second
+	healthCheckAnswerWithin = 15 * time.Second
+)
+
 type Client struct {
 	http       *http.Client
 	idle       time.Duration
@@ -41,6 +46,10 @@ func NewStreaming(responseHeaderTimeout time.Duration, idleTimeout time.Duration
 
 	streaming := transport.Clone()
 	streaming.ResponseHeaderTimeout = responseHeaderTimeout
+	streaming.HTTP2 = &http.HTTP2Config{
+		SendPingTimeout: healthCheckAfter,
+		PingTimeout:     healthCheckAnswerWithin,
+	}
 
 	return newClient(&http.Client{Transport: streaming}, idleTimeout)
 }
