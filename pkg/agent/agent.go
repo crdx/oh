@@ -95,13 +95,34 @@ type proseStream struct {
 	kind              Kind
 	text              strings.Builder
 	pendingEvent      *Event
+	cacheUsage        *Usage
 	hasReportedUsage  bool
 	hasReportedOutput bool
 	hasAnswered       bool
 }
 
+func (self *proseStream) startAttempt() {
+	self.cacheUsage = nil
+}
+
+func (self *proseStream) takeAttemptUsage() (Usage, bool) {
+	if self.cacheUsage == nil {
+		return Usage{}, false
+	}
+
+	usage := *self.cacheUsage
+	self.cacheUsage = nil
+
+	return usage, true
+}
+
 func (self *proseStream) add(output Output) []Update {
 	output.Text = strutil.StripControl(output.Text)
+
+	if output.Usage != nil && output.Usage.Cache != nil && self.cacheUsage == nil {
+		usage := *output.Usage
+		self.cacheUsage = &usage
+	}
 
 	if output.Done {
 		if self.kind != output.Kind || self.text.Len() == 0 {
@@ -309,6 +330,20 @@ func cacheRebuild(cause CacheCause, gap time.Duration, usage Usage) Event {
 	}
 }
 
+func (self *Agent) readAbandonedCache(prose *proseStream, askedAt time.Time, yieldEvent func(Event, error) bool) bool {
+	usage, isReported := prose.takeAttemptUsage()
+	if !isReported {
+		return true
+	}
+
+	notice, wasRebuilt := self.readCache(usage, askedAt)
+	if !wasRebuilt {
+		return true
+	}
+
+	return yieldEvent(notice, nil)
+}
+
 func (self *Agent) Stream(ctx context.Context, message string, interjections *Interjections) iter.Seq2[Update, error] {
 	return func(yield func(Update, error) bool) {
 		yieldEvent := func(event Event, err error) bool {
@@ -348,6 +383,9 @@ func (self *Agent) Stream(ctx context.Context, message string, interjections *In
 				return
 			case err != nil:
 				if !yieldUpdates(prose.interrupted()) {
+					return
+				}
+				if !self.readAbandonedCache(&prose, askedAt, yieldEvent) {
 					return
 				}
 				yield(Update{}, err)
@@ -452,6 +490,7 @@ func (self *Agent) send(
 
 	for attempt := 1; ; attempt++ {
 		askedAt := self.now()
+		prose.startAttempt()
 
 		reply, err := self.provider.Send(ctx, func(output Output) bool {
 			isListening = yieldUpdates(prose.add(output))
@@ -474,6 +513,10 @@ func (self *Agent) send(
 		}
 
 		if !yieldUpdates(prose.interrupted()) {
+			return reply, askedAt, false, err
+		}
+
+		if !self.readAbandonedCache(prose, askedAt, yieldEvent) {
 			return reply, askedAt, false, err
 		}
 

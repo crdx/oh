@@ -1,0 +1,20 @@
+{"kind":"head","version":13,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"user_message","text":"lose the prompt cache on an attempt that dies"}}
+{"kind":"event","event":{"render":"work","kind":"tool_call_request","id":"toolu_1","name":"work","arguments":"{}","usage":{"input_tokens":49020,"cache":{"read_tokens":48000,"write_tokens":900}}}}
+{"kind":"event","event":{"kind":"state_change","id":"toolu_1","state":1}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"done","id":"toolu_1","name":"work","status":"success","stats":{"kind":"output","lines":1,"bytes":4}}}
+{"kind":"event","event":{"kind":"model_reasoning","text":"Completed thought.","usage":{"input_tokens":49140,"cache":{"read_tokens":0,"write_tokens":49000}}}}
+{"kind":"event","event":{"kind":"cache_rebuild","name":"rebuilt","usage":{"cache":{"read_tokens":0,"write_tokens":49000}}}}
+{"kind":"event","event":{"kind":"request_retry","failure":{"kind":"generic_error","message":"the stream ended before the response did"},"attempt":1}}
+{"kind":"event","event":{"kind":"model_message","text":"The retry found the cache the dead attempt wrote."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"lose the prompt cache on an attempt that dies"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"work","input":{}}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"done"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The retry found the cache the dead attempt wrote."}]}}
+{"kind":"turn_completion","turn":{"input_tokens":49140}}
+{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
+{"kind":"event","event":{"kind":"model_message","text":"Carrying on.","usage":{"input_tokens":49680,"cache":{"read_tokens":49100,"write_tokens":400}}}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"carry on"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Carrying on."}]}}
+{"kind":"turn_completion","turn":{"input_tokens":49680}}

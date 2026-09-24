@@ -1,0 +1,17 @@
+
+ lose the prompt cache on an attempt that dies
+
+
+work work ✓ 1L
+Completed thought.
+
+Cache rebuilt: 49Kt sent <1m later.
+[#1] Request failed; retrying in 1s: The stream ended before the response did
+
+The retry found the cache the dead attempt wrote.
+
+
+ carry on
+
+
+Carrying on.

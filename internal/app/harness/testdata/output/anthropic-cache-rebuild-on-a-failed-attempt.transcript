@@ -1,0 +1,41 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+lose the prompt cache on an attempt that is refused
+
+## Tool calls · +0s
+
+```
+work: work [ok, 1 line, 4B, toolu_1]
+```
+
+## Cache rebuild · +0s
+
+```
+Cache rebuilt: 49Kt sent <1m later.
+```
+
+## Failure · +0s
+
+```
+the request was rejected
+```
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+Carrying on.

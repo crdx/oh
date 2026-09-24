@@ -1258,6 +1258,99 @@ func TestAPromptCacheGapIsMeasuredFromWhenTheRequestWasMade(t *testing.T) {
 	}
 }
 
+type abandonedAttempt struct {
+	usage agent.Usage
+	err   error
+}
+
+type abandoningProvider struct {
+	attempts []abandonedAttempt
+	sent     int
+}
+
+func (*abandoningProvider) Configure(string, []tool.Definition)   {}
+func (*abandoningProvider) AddUserMessage(string)                 {}
+func (*abandoningProvider) AddToolResults([]agent.ToolCallResult) {}
+
+func (self *abandoningProvider) Send(_ context.Context, yield agent.Yield) (agent.Reply, error) {
+	attempt := self.attempts[self.sent]
+	self.sent++
+
+	usage := attempt.usage
+	yield(agent.Output{Kind: agent.ModelReasoningEvent, Text: "thinking it over"})
+	yield(agent.Output{Kind: agent.ModelReasoningEvent, Done: true, Usage: &usage})
+
+	if attempt.err != nil {
+		return agent.Reply{}, attempt.err
+	}
+
+	yield(agent.Output{Kind: agent.ModelMessageEvent, Text: "done"})
+	yield(agent.Output{Kind: agent.ModelMessageEvent, Done: true})
+
+	return agent.Reply{Usage: attempt.usage}, nil
+}
+
+func TestACacheLostByAnAttemptThatNeverCompletedIsReported(t *testing.T) {
+	for name, test := range map[string]struct {
+		attempts []abandonedAttempt
+		want     []agent.Kind
+	}{
+		"an attempt retried after the stream died": {
+			attempts: []abandonedAttempt{
+				{usage: cachedAs(48000, 900)},
+				{usage: cachedAs(0, 49300), err: wireDiedError{}},
+				{usage: cachedAs(49300, 200)},
+			},
+			want: []agent.Kind{agent.ModelReasoningEvent, agent.CacheRebuildEvent, agent.RetryingEvent},
+		},
+		"an attempt that failed outright": {
+			attempts: []abandonedAttempt{
+				{usage: cachedAs(48000, 900)},
+				{usage: cachedAs(0, 49300), err: flatRefusalError{}},
+			},
+			want: []agent.Kind{agent.ModelReasoningEvent, agent.CacheRebuildEvent},
+		},
+		"an attempt cut short by the person": {
+			attempts: []abandonedAttempt{
+				{usage: cachedAs(48000, 900)},
+				{usage: cachedAs(0, 49300), err: context.Canceled},
+			},
+			want: []agent.Kind{agent.ModelReasoningEvent, agent.CacheRebuildEvent},
+		},
+		"an abandoned attempt that read the cache it was given": {
+			attempts: []abandonedAttempt{
+				{usage: cachedAs(48000, 900)},
+				{usage: cachedAs(48900, 400), err: flatRefusalError{}},
+			},
+			want: []agent.Kind{agent.ModelReasoningEvent},
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			assistant := agent.New("", &abandoningProvider{attempts: test.attempts}, nil)
+			assistant.TakeRetryWaitsAtOnce()
+			assistant.TakeTimeFrom(func() time.Time { return time.Unix(0, 0) })
+
+			for range assistant.Stream(t.Context(), "go", nil) {
+			}
+
+			var got []agent.Kind
+			for update := range assistant.Stream(t.Context(), "go on", nil) {
+				if update.Event == nil || update.Event.Kind == agent.UserMessageEvent {
+					continue
+				}
+				got = append(got, update.Event.Kind)
+				if update.Event.Kind == agent.RetryingEvent {
+					break
+				}
+			}
+
+			if !slices.Equal(got, test.want) {
+				t.Errorf("got %v, want %v", got, test.want)
+			}
+		})
+	}
+}
+
 type longCacheProvider struct{ usageProvider }
 
 func (*longCacheProvider) CacheLifetime() time.Duration { return time.Hour }

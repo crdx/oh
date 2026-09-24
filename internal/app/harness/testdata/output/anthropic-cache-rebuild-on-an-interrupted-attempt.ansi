@@ -1,0 +1,15 @@
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m lose the prompt cache on an attempt somebody interrupts                                            \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[?7l\r\e[K\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\r\e[K\e[3m\e[38;2;150;152;150mCompleted thought.\e[0m\e[0m\r
+\r
+\e[38;2;207;173;0mCache rebuilt: 49Kt sent <1m later.\e[0m\r
+\e[38;2;207;173;0mTurn stopped because the user pressed escape.\e[0m\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m carry on                                                                                           \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[?2026h\e[?25l\r\e[KCarrying on.\e[?25h\e[?2026l\r
