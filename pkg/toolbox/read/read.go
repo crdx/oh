@@ -134,7 +134,9 @@ func exec(ctx context.Context, root *file.Root, args Args) (tool.ToolCallResult,
 	metrics.Lines = int64(len(lines))
 
 	if args.Offset <= 0 && args.Limit <= 0 {
-		return successfulResult(args.Path, data, string(data), tool.Image{}, metrics), nil
+		result := successfulResult(args.Path, data, string(data), tool.Image{}, metrics)
+		result.FileLines = tool.FileLines{First: 1, Total: len(lines)}
+		return result, nil
 	}
 
 	start := 0
@@ -158,7 +160,9 @@ func exec(ctx context.Context, root *file.Root, args Args) (tool.ToolCallResult,
 	output := strings.Join(lines[start:end], "\n")
 	metrics.Lines = int64(end - start)
 	metrics.Bytes = int64(len(output))
-	return successfulResult(args.Path, data, output, tool.Image{}, metrics), nil
+	result := successfulResult(args.Path, data, output, tool.Image{}, metrics)
+	result.FileLines = tool.FileLines{First: start + 1, Total: len(lines)}
+	return result, nil
 }
 
 func oversizedResult(
@@ -190,7 +194,9 @@ func oversizedResult(
 	metrics.Lines = loadedRange.selectedLines
 	metrics.Bytes = int64(len(loadedRange.output))
 	snapshot := file.ReadSnapshot{Path: args.Path, Hash: loadedRange.contentHash}
-	return successfulSnapshotResult(snapshot, loadedRange.output, tool.Image{}, metrics), nil
+	result := successfulSnapshotResult(snapshot, loadedRange.output, tool.Image{}, metrics)
+	result.FileLines = tool.FileLines{First: max(args.Offset, 1), Total: int(loadedRange.totalLines)}
+	return result, nil
 }
 
 func readFailure(path string, err error) error {

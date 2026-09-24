@@ -16,6 +16,7 @@ import (
 
 	"crdx.org/oh/internal/file"
 	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/tool/middleware/truncate"
 	"crdx.org/oh/pkg/toolbox/read"
 )
 
@@ -146,6 +147,50 @@ func TestALineRangeComesBackOnItsOwn(t *testing.T) {
 
 	if output != "two\nthree" {
 		t.Errorf("expected the second and third lines, got %q", output)
+	}
+}
+
+func TestAReadCutShortContinuesFromTheOffsetItNames(t *testing.T) {
+	var whole strings.Builder
+	for number := 1; number <= 5000; number++ {
+		fmt.Fprintf(&whole, "line %d\n", number)
+	}
+	root := testRoot(t, "long.txt", whole.String())
+	subject := truncate.Tool(read.New(root, file.NewSnapshots()), truncate.NewLimit(12*1024))
+
+	var pieces []string
+	arguments := `{"path":"long.txt"}`
+	for range 10 {
+		call, err := subject.Parse(arguments)
+		if err != nil {
+			t.Fatal(err)
+		}
+		result, err := call.Exec(t.Context())
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		shown, notice, isCut := strings.Cut(result.Output, "\n\n[")
+		pieces = append(pieces, shown)
+		if !isCut {
+			break
+		}
+
+		var last, total, next int
+		if _, err := fmt.Sscanf(notice, "truncated at line %d of %d; continue with offset %d]", &last, &total, &next); err != nil {
+			t.Fatalf("expected the notice to name an offset, got %q: %v", notice, err)
+		}
+		if total != 5000 {
+			t.Errorf("expected the notice to count the whole file, got %d", total)
+		}
+		arguments = fmt.Sprintf(`{"path":"long.txt","offset":%d}`, next)
+	}
+
+	if len(pieces) < 2 {
+		t.Fatalf("expected the file to take several reads, got %d", len(pieces))
+	}
+	if got := strings.Join(pieces, "\n"); got != strings.TrimSuffix(whole.String(), "\n") {
+		t.Errorf("expected the reads to piece the file back together, got %d of %d bytes", len(got), whole.Len())
 	}
 }
 

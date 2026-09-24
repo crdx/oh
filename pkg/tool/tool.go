@@ -36,10 +36,16 @@ type CallRendering struct {
 }
 
 type ToolCallResult struct {
-	Output  string
-	Image   Image
-	Metrics ToolCallMetrics
-	State   json.RawMessage
+	Output    string
+	Image     Image
+	Metrics   ToolCallMetrics
+	State     json.RawMessage
+	FileLines FileLines
+}
+
+type FileLines struct {
+	First int
+	Total int
 }
 
 type ToolCallMetrics struct {

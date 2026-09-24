@@ -82,7 +82,7 @@ type truncatedToolCall struct {
 
 func (self truncatedToolCall) Exec(ctx context.Context) (tool.ToolCallResult, error) {
 	result, err := self.ToolCall.Exec(ctx)
-	cappedOutput, returnedBytes, totalBytes := outputWithSizes(result.Output, self.limit, self.save)
+	cappedOutput, returnedBytes, totalBytes := outputWithSizes(result.Output, self.limit, self.save, result.FileLines)
 	result.Output = cappedOutput
 
 	if result.Metrics.Kind == tool.MetricResources || returnedBytes < totalBytes {
@@ -95,11 +95,11 @@ func (self truncatedToolCall) Exec(ctx context.Context) (tool.ToolCallResult, er
 }
 
 func Output(output string, limit *Limit) string {
-	cappedOutput, _, _ := outputWithSizes(output, limit.GetBytes(), limit.getSaver())
+	cappedOutput, _, _ := outputWithSizes(output, limit.GetBytes(), limit.getSaver(), tool.FileLines{})
 	return cappedOutput
 }
 
-func outputWithSizes(output string, limit int, save Saver) (string, int, int) {
+func outputWithSizes(output string, limit int, save Saver, lines tool.FileLines) (string, int, int) {
 	if len(output) <= limit {
 		return output, len(output), len(output)
 	}
@@ -112,6 +112,14 @@ func outputWithSizes(output string, limit int, save Saver) (string, int, int) {
 		for end > 0 && !utf8.RuneStart(output[end]) {
 			end--
 		}
+	}
+
+	if lines.First > 0 && output[end] == '\n' {
+		last := lines.First + strings.Count(output[:end], "\n")
+		return fmt.Sprintf(
+			"%s\n\n[truncated at line %d of %d; continue with offset %d]",
+			output[:end], last, lines.Total, last+1,
+		), end, len(output)
 	}
 
 	if save == nil {

@@ -12,6 +12,7 @@
 - Let `expose` associate a port with a job
 - Store a session's model details with the session itself
 - Also store all seen models as a fallback for old journals
+- Don't save a truncated read in a drop, and advise model to use an offset instead
 
 ## [0.9.0] - 2026-09-22
 

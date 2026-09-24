@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -239,6 +240,72 @@ func TestOutputTooBigSaysSoWhenItCouldNotBeSaved(t *testing.T) {
 
 	if !strings.HasSuffix(output, "the rest could not be saved: the drops directory disappeared]") {
 		t.Errorf("expected the notice to name the failure, got %q", output)
+	}
+}
+
+func fileLinesTool(output string, lines tool.FileLines) tool.Tool {
+	return tool.Implement(
+		tool.Definition{
+			Name:        "read",
+			Description: "read lines of a file",
+			Schema:      tool.Schema{},
+		},
+		func(Args) (string, string) { return "read", "" },
+	).Run(func(context.Context, Args) (tool.ToolCallResult, error) {
+		return tool.ToolCallResult{Output: output, FileLines: lines}, nil
+	})
+}
+
+func TestLinesOfAFileCutShortNameTheOffsetToContinueWith(t *testing.T) {
+	directory := t.TempDir()
+	limit := truncate.NewLimit(limitBytes)
+	limit.SaveOverflowWith(newSaver(t, directory))
+
+	var whole strings.Builder
+	for number := 101; number <= 2000; number++ {
+		fmt.Fprintf(&whole, "line %d\n", number)
+	}
+	subject := truncate.Tool(fileLinesTool(whole.String(), tool.FileLines{First: 101, Total: 2000}), limit)
+
+	output := exec(t, subject, `{}`)
+
+	shown, notice, isCut := strings.Cut(output, "\n\n[")
+	if !isCut {
+		t.Fatalf("expected the output to be cut, got %d bytes", len(output))
+	}
+	var last, total, next int
+	if _, err := fmt.Sscanf(notice, "truncated at line %d of %d; continue with offset %d]", &last, &total, &next); err != nil {
+		t.Fatalf("expected the notice to name lines, got %q: %v", notice, err)
+	}
+	if !strings.HasSuffix(shown, fmt.Sprintf("\nline %d", last)) {
+		t.Errorf("expected line %d to be the last shown, got %q", last, shown[max(len(shown)-20, 0):])
+	}
+	if total != 2000 || next != last+1 {
+		t.Errorf("got line %d of %d continuing at %d", last, total, next)
+	}
+
+	saved, err := filepath.Glob(filepath.Join(directory, "*"))
+	if err != nil || len(saved) != 0 {
+		t.Errorf("expected nothing saved for lines that can be read again, got %v and %v", saved, err)
+	}
+}
+
+func TestALineOfAFileTooLongToShowIsSaved(t *testing.T) {
+	directory := t.TempDir()
+	limit := truncate.NewLimit(limitBytes)
+	limit.SaveOverflowWith(newSaver(t, directory))
+
+	whole := strings.Repeat("x", 2*limitBytes) + "\nshort\n"
+	subject := truncate.Tool(fileLinesTool(whole, tool.FileLines{First: 1, Total: 2}), limit)
+
+	output := exec(t, subject, `{}`)
+
+	saved, err := filepath.Glob(filepath.Join(directory, "output-*.txt"))
+	if err != nil || len(saved) != 1 {
+		t.Fatalf("expected the whole of it saved once, got %v and %v", saved, err)
+	}
+	if !strings.HasSuffix(output, "full output in "+saved[0]+"]") {
+		t.Errorf("expected the notice to name the file it saved, got %q", output[len(output)-120:])
 	}
 }
 
