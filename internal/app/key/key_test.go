@@ -95,6 +95,42 @@ func TestAnEscapeSequenceMayBeSplitAcrossTerminalReads(t *testing.T) {
 	}
 }
 
+func TestAnEscapeSequenceMayCrossADelayedTerminalRead(t *testing.T) {
+	terminal, writer, err := os.Pipe()
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = terminal.Close() }()
+	defer func() { _ = writer.Close() }()
+
+	decoded := decodeNext(NewTerminalDecoder(bufio.NewReader(terminal), terminal))
+	if _, err := writer.WriteString("\x1b"); err != nil {
+		t.Fatal(err)
+	}
+
+	const delay = 50 * time.Millisecond
+	if escapeSequenceTimeout <= delay {
+		t.Fatalf("escape timeout %v does not cover the test delay", escapeSequenceTimeout)
+	}
+	time.Sleep(delay)
+
+	if _, err := writer.WriteString("[A"); err != nil {
+		t.Fatal(err)
+	}
+
+	select {
+	case got := <-decoded:
+		if got.err != nil {
+			t.Fatal(got.err)
+		}
+		if got.keypress != (Key{Code: Up}) {
+			t.Errorf("got %+v, want Up", got.keypress)
+		}
+	case <-time.After(time.Second):
+		t.Fatal("decoder did not finish")
+	}
+}
+
 func TestAltEnterMayBeSplitAcrossTerminalReads(t *testing.T) {
 	if got := decodeFragmentedTerminal(t, "\r"); got != (Key{Code: Enter, Mod: Alt}) {
 		t.Errorf("got %+v, want Alt+Enter", got)
@@ -166,6 +202,15 @@ func TestTabArrivesAsItself(t *testing.T) {
 	}
 }
 
+func TestBothLegacyBackspaceBytesAreBackspace(t *testing.T) {
+	for _, input := range []string{"\b", "\x7f"} {
+		got := decode(t, input)
+		if len(got) != 1 || got[0] != (Key{Code: Backspace}) {
+			t.Errorf("%q: expected Backspace, got %v", input, got)
+		}
+	}
+}
+
 func TestControlCharactersStillCarryTheirModifier(t *testing.T) {
 	got := decode(t, "\x03")
 
@@ -186,10 +231,94 @@ func TestLegacyAndKeyboardProtocolEscapesAreReported(t *testing.T) {
 	}
 }
 
+func TestKeyboardProtocolControlKeysKeepTheirModifiers(t *testing.T) {
+	for input, want := range map[string]Key{
+		"\x1b[13;2u":  {Code: Enter, Mod: Shift},
+		"\x1b[99;5u":  {Code: Rune, Value: 'c', Mod: Ctrl},
+		"\x1b[127;5u": {Code: Backspace, Mod: Ctrl},
+	} {
+		got := decode(t, input)
+		if len(got) != 1 || got[0] != want {
+			t.Errorf("%q: expected %+v, got %v", input, want, got)
+		}
+	}
+}
+
+func TestKeyboardProtocolKeypadKeysMatchTheirOrdinaryKeys(t *testing.T) {
+	for input, want := range map[string]Key{
+		"\x1b[57414u":   {Code: Enter},
+		"\x1b[57414;3u": {Code: Enter, Mod: Alt},
+		"\x1b[57417u":   {Code: Left},
+		"\x1b[57418u":   {Code: Right},
+		"\x1b[57419u":   {Code: Up},
+		"\x1b[57420u":   {Code: Down},
+		"\x1b[57421u":   {Code: PageUp},
+		"\x1b[57422u":   {Code: PageDown},
+		"\x1b[57423u":   {Code: Home},
+		"\x1b[57424u":   {Code: End},
+		"\x1b[57426u":   {Code: Delete},
+	} {
+		got := decode(t, input)
+		if len(got) != 1 || got[0] != want {
+			t.Errorf("%q: expected %+v, got %v", input, want, got)
+		}
+	}
+}
+
+func TestKeyboardProtocolKeypadKeysTypeTheirText(t *testing.T) {
+	for input, want := range map[string]Key{
+		"\x1b[57399u":     {Code: Rune, Value: '0'},
+		"\x1b[57404;129u": {Code: Rune, Value: '5'},
+		"\x1b[57408u":     {Code: Rune, Value: '9'},
+		"\x1b[57409u":     {Code: Rune, Value: '.'},
+		"\x1b[57410u":     {Code: Rune, Value: '/'},
+		"\x1b[57411u":     {Code: Rune, Value: '*'},
+		"\x1b[57412u":     {Code: Rune, Value: '-'},
+		"\x1b[57413u":     {Code: Rune, Value: '+'},
+		"\x1b[57415u":     {Code: Rune, Value: '='},
+		"\x1b[57416u":     {Code: Rune, Value: ','},
+	} {
+		got := decode(t, input)
+		if len(got) != 1 || got[0] != want {
+			t.Errorf("%q: expected %+v, got %v", input, want, got)
+		}
+	}
+}
+
+func TestKeyboardProtocolLockModifiersAreIgnored(t *testing.T) {
+	for input, want := range map[string]Key{
+		"\x1b[127;129u": {Code: Backspace},
+		"\x1b[13;65u":   {Code: Enter},
+		"\x1b[13;194u":  {Code: Enter, Mod: Shift},
+		"\x1b[99;133u":  {Code: Rune, Value: 'c', Mod: Ctrl},
+		"\x1b[1;131A":   {Code: Up, Mod: Alt},
+	} {
+		got := decode(t, input)
+		if len(got) != 1 || got[0] != want {
+			t.Errorf("%q: expected %+v, got %v", input, want, got)
+		}
+	}
+}
+
+func TestUnsupportedKeyboardProtocolFunctionalKeysAreNotText(t *testing.T) {
+	for _, input := range []string{
+		"\x1b[57376u",
+		"\x1b[57425u",
+		"\x1b[57427u",
+		"\x1b[57441;2u",
+	} {
+		got := decode(t, input)
+		if len(got) != 1 || got[0] != (Key{Code: Unknown}) {
+			t.Errorf("%q: expected an unknown key, got %v", input, got)
+		}
+	}
+}
+
 func TestLegacyAltPrefixesModifyTheFollowingKey(t *testing.T) {
 	for input, want := range map[string]Key{
 		"\x1ba":    {Code: Rune, Value: 'a', Mod: Alt},
 		"\x1b\r":   {Code: Enter, Mod: Alt},
+		"\x1b\b":   {Code: Backspace, Mod: Alt},
 		"\x1b\x7f": {Code: Backspace, Mod: Alt},
 	} {
 		got := decode(t, input)
@@ -229,7 +358,7 @@ func TestFocusChangesArriveAsKeys(t *testing.T) {
 	}
 }
 
-func TestApplicationCursorKeysAreArrows(t *testing.T) {
+func TestApplicationCursorKeysAreRecognised(t *testing.T) {
 	for input, want := range map[string]Code{
 		"\x1bOA": Up,
 		"\x1bOB": Down,
@@ -237,6 +366,7 @@ func TestApplicationCursorKeysAreArrows(t *testing.T) {
 		"\x1bOD": Left,
 		"\x1bOH": Home,
 		"\x1bOF": End,
+		"\x1bOM": Enter,
 	} {
 		keypresses := decode(t, input)
 
@@ -255,8 +385,12 @@ func TestLegacyTildeHomeAndEndKeysAreNavigation(t *testing.T) {
 	for input, want := range map[string]Key{
 		"\x1b[1~":   {Code: Home},
 		"\x1b[4~":   {Code: End},
+		"\x1b[7~":   {Code: Home},
+		"\x1b[8~":   {Code: End},
 		"\x1b[1;5~": {Code: Home, Mod: Ctrl},
 		"\x1b[4;5~": {Code: End, Mod: Ctrl},
+		"\x1b[7;5~": {Code: Home, Mod: Ctrl},
+		"\x1b[8;5~": {Code: End, Mod: Ctrl},
 	} {
 		keypresses := decode(t, input)
 		if len(keypresses) != 1 || keypresses[0] != want {

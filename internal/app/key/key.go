@@ -79,7 +79,7 @@ const (
 	escapeByte            = '\x1b'
 	bellByte              = '\x07'
 	delByte               = '\x7f'
-	escapeSequenceTimeout = 25 * time.Millisecond
+	escapeSequenceTimeout = 100 * time.Millisecond
 )
 
 func hasTerminalInput(terminal *os.File, timeout time.Duration) bool {
@@ -147,7 +147,7 @@ func plain(value rune) Key {
 		return Key{Code: Enter}
 	case value == '\t':
 		return Key{Code: Rune, Value: '\t'}
-	case value == delByte:
+	case value == '\b' || value == delByte:
 		return Key{Code: Backspace}
 	case value >= 1 && value <= 26:
 		return Key{Code: Rune, Value: value + 'a' - 1, Mod: Ctrl}
@@ -251,6 +251,10 @@ func (self *Decoder) applicationCursor() (Key, error) {
 		return Key{}, err
 	}
 
+	if final == 'M' {
+		return Key{Code: Enter}, nil
+	}
+
 	code, isFound := letters[final]
 	if !isFound {
 		return Key{Code: Unknown}, nil
@@ -307,9 +311,46 @@ var letters = map[rune]Code{
 }
 
 var codepoints = map[int]Code{
-	13:  Enter,
-	27:  Escape,
-	127: Backspace,
+	13:    Enter,
+	27:    Escape,
+	127:   Backspace,
+	57414: Enter,
+	57417: Left,
+	57418: Right,
+	57419: Up,
+	57420: Down,
+	57421: PageUp,
+	57422: PageDown,
+	57423: Home,
+	57424: End,
+	57426: Delete,
+}
+
+const lockModifiers Modifier = 64 | 128
+
+const (
+	functionalKeyFirst = 57344
+	functionalKeyLast  = 63743
+)
+
+var keypadText = map[int]rune{
+	57399: '0',
+	57400: '1',
+	57401: '2',
+	57402: '3',
+	57403: '4',
+	57404: '5',
+	57405: '6',
+	57406: '7',
+	57407: '8',
+	57408: '9',
+	57409: '.',
+	57410: '/',
+	57411: '*',
+	57412: '-',
+	57413: '+',
+	57415: '=',
+	57416: ',',
 }
 
 func unicodeKey(parameters string) Key {
@@ -324,7 +365,12 @@ func unicodeKey(parameters string) Key {
 		return Key{Code: code, Mod: modifier}
 	}
 
-	if number < 0 || number > unicode.MaxRune {
+	if value, isKeypadText := keypadText[number]; isKeypadText {
+		return Key{Code: Rune, Value: value, Mod: modifier}
+	}
+
+	if number < 0 || number > unicode.MaxRune ||
+		number >= functionalKeyFirst && number <= functionalKeyLast {
 		return Key{Code: Unknown}
 	}
 
@@ -345,6 +391,10 @@ func tilde(parameters string) Key {
 		return Key{Code: PageUp, Mod: modifiers(parameters)}
 	case 6:
 		return Key{Code: PageDown, Mod: modifiers(parameters)}
+	case 7:
+		return Key{Code: Home, Mod: modifiers(parameters)}
+	case 8:
+		return Key{Code: End, Mod: modifiers(parameters)}
 	case 200:
 		return Key{Code: PasteStart}
 	case 201:
@@ -360,7 +410,7 @@ func modifiers(parameters string) Modifier {
 		return 0
 	}
 
-	return Modifier(encodedModifier - 1)
+	return Modifier(encodedModifier-1) &^ lockModifiers
 }
 
 func field(parameters string, index int) (int, bool) {
