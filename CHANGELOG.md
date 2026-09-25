@@ -2,6 +2,8 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+## [0.10.0] - 2026-09-25
+
 ### Changes
 
 - Make writable paths always writable
