@@ -250,7 +250,7 @@ home = ["~/.config/git/ignore"]
 
 An `exec` grant makes a directory runnable, not findable: the shell inherits the `PATH` oh was launched with, so a tool granted that way is reachable only by its full path. `path` grants the same and puts the directory on `PATH` as well, which is what a directory of binaries wants. It is appended rather than prepended, so nothing there can shadow a host tool of the same name.
 
-Deny patterns are checked directly by path tools. Before the first confined command uses a set of grants, oh finds matching paths across its reachable trees and reuses that result for later commands with the same grants. A symlink cannot provide another route to a denied name. `--yolo` cannot be combined with a deny rule because it would make the promise unenforceable.
+Deny patterns are checked directly by path tools. Before the first confined command uses a set of grants, oh finds matching paths across its reachable trees and reuses that result for later commands with the same grants. A symlink cannot provide another route to a denied name. Under `--yolo`, deny rules bind only the path tools: oh warns at startup that the unconfined `bash` and `job` tools can reach a denied path, and tells the agent never to use them for one.
 
 Every setting here is read once, when oh starts. Editing `[sandbox]` changes nothing about the session running now, in either direction, so tell the user the grant waits for oh's next run and that resuming this conversation in that run is enough to collect it.
 

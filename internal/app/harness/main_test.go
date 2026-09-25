@@ -18761,32 +18761,39 @@ func TestEveryPermissionRefusesInWordsOfItsOwn(t *testing.T) {
 	}
 }
 
-func TestSandboxDenyRulesCannotBeWaivedByYolo(t *testing.T) {
-	denied := []string{"foo.txt"}
-
-	if err := requireDenyEnforcement(true, nil, denied); err == nil {
-		t.Fatal("a sandbox deny rule was waived")
-	}
-	if err := requireDenyEnforcement(false, nil, denied); err != nil {
-		t.Errorf("a confined deny rule was refused: %v", err)
-	}
-	if err := requireDenyEnforcement(true, nil, nil); err != nil {
-		t.Errorf("yolo without a deny rule was refused: %v", err)
+func TestYoloWarnsOnceWhenSandboxDenyRulesCanBeBypassed(t *testing.T) {
+	for _, test := range []struct {
+		tools []string
+		want  string
+	}{
+		{want: "warning: sandbox.deny cannot be enforced for the bash and job tools under --yolo\n"},
+		{tools: []string{"read", "bash"}, want: "warning: sandbox.deny cannot be enforced for the bash tool under --yolo\n"},
+		{tools: []string{"job"}, want: "warning: sandbox.deny cannot be enforced for the job tool under --yolo\n"},
+	} {
+		var warnings strings.Builder
+		warnAboutDenyEnforcement(true, test.tools, []string{"foo.txt"}, &warnings)
+		if warnings.String() != test.want {
+			t.Errorf("tools %v: got %q, want %q", test.tools, warnings.String(), test.want)
+		}
 	}
 }
 
-func TestSandboxDenyRulesStandWhenNothingCanRunUnsandboxed(t *testing.T) {
-	denied := []string{"foo.txt"}
-
-	for _, offered := range [][]string{{"bash"}, {"job"}, {"read", "bash"}} {
-		if err := requireDenyEnforcement(true, offered, denied); err == nil {
-			t.Errorf("a deny rule was waived for %v", offered)
-		}
-	}
-
-	for _, offered := range [][]string{{"read", "ls", "grep"}, {"write"}, demo.Tools()} {
-		if err := requireDenyEnforcement(true, offered, denied); err != nil {
-			t.Errorf("a deny rule that still holds for %v was refused: %v", offered, err)
+func TestSandboxDenyRulesDoNotWarnWhenTheyStillApply(t *testing.T) {
+	for _, test := range []struct {
+		isYolo bool
+		tools  []string
+		deny   []string
+	}{
+		{isYolo: false, deny: []string{"foo.txt"}},
+		{isYolo: true},
+		{isYolo: true, tools: []string{"read", "ls", "grep"}, deny: []string{"foo.txt"}},
+		{isYolo: true, tools: []string{"write"}, deny: []string{"foo.txt"}},
+		{isYolo: true, tools: demo.Tools(), deny: []string{"foo.txt"}},
+	} {
+		var warnings strings.Builder
+		warnAboutDenyEnforcement(test.isYolo, test.tools, test.deny, &warnings)
+		if warnings.Len() != 0 {
+			t.Errorf("got an inapplicable warning for %+v: %q", test, warnings.String())
 		}
 	}
 }

@@ -852,6 +852,33 @@ func TestAnUnconfinedShellDoesNotReportWhereItMayRead(t *testing.T) {
 	}
 }
 
+func TestAnUnconfinedShellIsNotSaidToHonourDenyPatterns(t *testing.T) {
+	got := harnessContext(Config{
+		Workspace:    work.At("/workspace"),
+		SessionName:  "session-id",
+		TmpDir:       "/state/farm/session",
+		HomeDir:      "/state/home",
+		CurrentCaps:  caps.Read | caps.Shell,
+		ExtraPaths:   shell.Paths{Deny: []string{"*.env"}},
+		OfferedTools: []string{"bash"},
+		Yolo:         true,
+	})
+
+	for _, want := range []string{
+		"- Path tools cannot access any file or directory named by the configured deny pattern *.env.",
+		"- The unconfined shell is not held to the deny patterns, so never use it to reach a denied path.",
+	} {
+		if !strings.Contains(got, want) {
+			t.Errorf("harness context does not contain %q: %q", want, got)
+		}
+	}
+	for _, unwanted := range []string{"shell commands cannot access", "A denied path appears"} {
+		if strings.Contains(got, unwanted) {
+			t.Errorf("harness context mentions %q with no sandbox: %q", unwanted, got)
+		}
+	}
+}
+
 func TestAnUnconfinedShellReportsNoExecutableDirectories(t *testing.T) {
 	got := harnessContext(Config{
 		Workspace:    work.At("/workspace"),

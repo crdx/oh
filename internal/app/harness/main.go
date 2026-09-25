@@ -309,18 +309,30 @@ func ensureCurrency(ctx context.Context, output io.Writer, code string, isSimula
 
 var unsandboxedToolNames = []string{"bash", "job"}
 
-func requireDenyEnforcement(isYolo bool, offeredTools []string, patterns []string) error {
+func warnAboutDenyEnforcement(isYolo bool, offeredTools []string, patterns []string, warnings io.Writer) {
 	if !isYolo || len(patterns) == 0 {
-		return nil
+		return
 	}
 
+	var exemptTools []string
 	for _, name := range unsandboxedToolNames {
 		if toolset.Offers(offeredTools, name) {
-			return errors.New("sandbox.deny cannot be enforced for the " + name + " tool under --yolo")
+			exemptTools = append(exemptTools, name)
 		}
 	}
 
-	return nil
+	switch len(exemptTools) {
+	case 0:
+		return
+	case 1:
+		util.WriteWarningf(warnings, "sandbox.deny cannot be enforced for the %s tool under --yolo", exemptTools[0])
+	default:
+		util.WriteWarningf(
+			warnings,
+			"sandbox.deny cannot be enforced for the %s tools under --yolo",
+			strings.Join(exemptTools, " and "),
+		)
+	}
 }
 
 func applySimulationOptions(options *cli.Options) {
@@ -535,9 +547,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 
 	defer func() { _ = workspace.Close() }()
 
-	if err := requireDenyEnforcement(args.Yolo, args.Tools, settings.Sandbox.Deny); err != nil {
-		return "", err
-	}
+	warnAboutDenyEnforcement(args.Yolo, args.Tools, settings.Sandbox.Deny, os.Stderr)
 
 	if !args.Yolo {
 		if err := shell.RequireSandbox(ctx); err != nil {
