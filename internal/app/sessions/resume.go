@@ -184,22 +184,10 @@ func OpeningConfinement(wasYoloChosen bool, resumedSession *store.Session) (bool
 	}
 
 	if wasYoloChosen && !resumedSession.Meta.Yolo {
-		return false, fmt.Errorf(
-			"a resumed conversation opens in the confinement it was left in, which was %s rather than %s",
-			confinement(resumedSession.Meta.Yolo),
-			confinement(wasYoloChosen),
-		)
+		return false, errors.New("this conversation is sandboxed; resume it without --yolo")
 	}
 
 	return resumedSession.Meta.Yolo, nil
-}
-
-func confinement(isYolo bool) string {
-	if isYolo {
-		return "no sandbox at all"
-	}
-
-	return "a sandbox"
 }
 
 func ResumeCommand(programPath string, name string) string {

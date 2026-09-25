@@ -1,1 +1,1 @@
-a resumed conversation opens in the confinement it was left in, which was a sandbox rather than no sandbox at all
+this conversation is sandboxed; resume it without --yolo
