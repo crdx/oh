@@ -196,7 +196,7 @@ func TestOnboardingOffersAnotherProviderAfterLoginFails(t *testing.T) {
 	if loginAttempts != 2 {
 		t.Errorf("got %d login attempts", loginAttempts)
 	}
-	if !strings.Contains(output.String(), fmt.Sprintf(signInFailure, "authorisation was refused")) {
+	if !strings.Contains(output.String(), fmt.Sprintf(oauthSignIn.failure, "authorisation was refused")) {
 		t.Errorf("failure was not shown in %q", output.String())
 	}
 }
@@ -222,9 +222,127 @@ func TestNamedLoginSkipsTheProviderPicker(t *testing.T) {
 	if loggedInTo != model.AnthropicProvider {
 		t.Errorf("logged in to %q", loggedInTo)
 	}
-	welcome := fmt.Sprintf("%s %s\n\n", successMark, fmt.Sprintf(signedIn, anthropicName))
+	welcome := fmt.Sprintf("%s %s\n\n", successMark, fmt.Sprintf(oauthSignIn.addition, anthropicName))
 	if got, want := style.Plain(output.String()), welcome; got != want {
 		t.Errorf("got output %q, want %q", got, want)
+	}
+}
+
+func TestANamedExistingLoginCanBeRemoved(t *testing.T) {
+	var output bytes.Buffer
+	var removed string
+	harry := wizard{
+		output: &output,
+		choose: func(prompt string, labels []string) (int, error) {
+			if got := style.Plain(prompt); !strings.Contains(got, anthropicName) {
+				t.Errorf("action prompt %q does not name the provider", got)
+			}
+			if !slices.Equal(labels, []string{oauthSignIn.renewal, oauthSignIn.removal, doNothing}) {
+				t.Errorf("got actions %v", labels)
+			}
+			return slices.Index(labels, oauthSignIn.removal), nil
+		},
+		login: func(provider, func(string)) error {
+			t.Fatal("sign-in was started")
+			return nil
+		},
+		logout: func(chosen provider) error {
+			removed = chosen.identifier
+			return nil
+		},
+		isLoggedIn:            func(string) bool { return true },
+		isManagingCredentials: true,
+	}
+
+	if _, err := harry.chooseProvider(model.AnthropicProvider); err != nil {
+		t.Fatal(err)
+	}
+	if removed != model.AnthropicProvider {
+		t.Errorf("removed %q", removed)
+	}
+	if got := style.Plain(output.String()); !strings.Contains(got, fmt.Sprintf(oauthSignIn.withdrawal, anthropicName)) {
+		t.Errorf("sign-out was not confirmed in %q", got)
+	}
+}
+
+func TestAKeyIsReplacedAndRemovedRatherThanSignedInto(t *testing.T) {
+	var output bytes.Buffer
+	var removed string
+	harry := wizard{
+		output: &output,
+		choose: func(_ string, labels []string) (int, error) {
+			if !slices.Equal(labels, []string{apiKey.renewal, apiKey.removal, doNothing}) {
+				t.Errorf("got actions %v", labels)
+			}
+			return slices.Index(labels, apiKey.removal), nil
+		},
+		login: func(provider, func(string)) error {
+			t.Error("a key was asked for")
+			return nil
+		},
+		logout: func(chosen provider) error {
+			removed = chosen.identifier
+			return nil
+		},
+		isLoggedIn:            func(string) bool { return true },
+		isManagingCredentials: true,
+	}
+
+	if _, err := harry.chooseProvider(model.OpencodeGoProvider); err != nil {
+		t.Fatal(err)
+	}
+	if removed != model.OpencodeGoProvider {
+		t.Errorf("removed %q", removed)
+	}
+	got := style.Plain(output.String())
+	if !strings.Contains(got, fmt.Sprintf(apiKey.withdrawal, openCodeGoName)) {
+		t.Errorf("the removal was not confirmed in %q", got)
+	}
+	if strings.Contains(strings.ToLower(got), "sign") {
+		t.Errorf("a key was described as a sign-in in %q", got)
+	}
+}
+
+func TestChoosingNothingLeavesANamedLoginAlone(t *testing.T) {
+	var output bytes.Buffer
+	harry := wizard{
+		output: &output,
+		choose: func(_ string, labels []string) (int, error) {
+			return slices.Index(labels, doNothing), nil
+		},
+		login: func(provider, func(string)) error {
+			t.Error("sign-in was started")
+			return nil
+		},
+		logout: func(provider) error {
+			t.Error("a provider was signed out of")
+			return nil
+		},
+		isLoggedIn:            func(string) bool { return true },
+		isManagingCredentials: true,
+	}
+
+	if _, err := harry.chooseProvider(model.AnthropicProvider); !errors.Is(err, ErrCancelled) {
+		t.Errorf("got %v, want the login to be cancelled", err)
+	}
+}
+
+func TestExistingLoginsAreNamedInTheProviderPicker(t *testing.T) {
+	harry := wizard{
+		isManagingCredentials: true,
+		isLoggedIn: func(providerName string) bool {
+			return providerName == model.AnthropicProvider
+		},
+	}
+
+	candidates := harry.candidateProviders()
+	for _, candidate := range candidates {
+		if candidate.identifier == model.AnthropicProvider && !strings.Contains(candidate.note, candidate.credential.presence) {
+			t.Errorf("signed-in provider has note %q", candidate.note)
+		}
+		if candidate.identifier != model.AnthropicProvider && strings.Contains(candidate.note, candidate.credential.presence) {
+			t.Errorf("signed-out provider has note %q", candidate.note)
+		}
 	}
 }
 

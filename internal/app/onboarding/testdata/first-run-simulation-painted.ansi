@@ -2,7 +2,7 @@ Oh, hello. \e[3m*yawns*\e[0m
 Yes? Oh, right. Let's get you signed in.
 \e[38;2;150;152;150m────────────────────────────────────────\e[0m
 
-\e[38;2;192;128;80mChoose your provider:\e[0m\r
+Choose your provider:\r
 \r
   ChatGPT      \e[38;2;150;152;150mOAuth\e[0m\r
   Anthropic    \e[38;2;150;152;150mOAuth\e[0m\r

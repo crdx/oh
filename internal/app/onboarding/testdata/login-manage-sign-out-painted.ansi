@@ -1,0 +1,14 @@
+Choose your provider:\r
+\r
+\e[38;2;192;128;80m› ChatGPT      \e[38;2;150;152;150mOAuth · signed in\e[0m\r
+  Anthropic    \e[38;2;150;152;150mOAuth · signed in\e[0m\r
+  OpenCode Go  \e[38;2;150;152;150mKey · saved\e[0m\r
+
+Choose what to do with ChatGPT:\r
+\r
+  Sign in again\r
+\e[38;2;192;128;80m› Sign out\e[0m\r
+  Nothing\r
+
+\e[38;2;76;154;44m✓\e[0m Signed out of \e[38;2;192;128;80mChatGPT\e[0m
+

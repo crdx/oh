@@ -214,6 +214,74 @@ func TestGoldenAuthenticationFlowsMatchTheGoldens(t *testing.T) {
 			_, err := harry.chooseProvider("")
 			return err
 		},
+		"login-manage-sign-out": func(t *testing.T, output *bytes.Buffer) error {
+			t.Helper()
+
+			harry := wizard{
+				output: output,
+				choose: menuChoices(output, 0, 1),
+				login: func(provider, func(string)) error {
+					t.Error("sign-in was started")
+					return nil
+				},
+				logout:                func(provider) error { return nil },
+				isLoggedIn:            func(string) bool { return true },
+				isManagingCredentials: true,
+			}
+			_, err := harry.chooseProvider("")
+			return err
+		},
+		"login-manage-remove-key": func(t *testing.T, output *bytes.Buffer) error {
+			t.Helper()
+
+			harry := wizard{
+				output: output,
+				choose: menuChoices(output, 2, 1),
+				login: func(provider, func(string)) error {
+					t.Error("a key was asked for")
+					return nil
+				},
+				logout:                func(provider) error { return nil },
+				isLoggedIn:            func(string) bool { return true },
+				isManagingCredentials: true,
+			}
+			_, err := harry.chooseProvider("")
+			return err
+		},
+		"login-manage-cancelled": func(t *testing.T, output *bytes.Buffer) error {
+			t.Helper()
+
+			answers := []error{nil, ErrCancelled, nil}
+			choices := []int{0, 0, 2}
+			answerIndex := 0
+			harry := wizard{
+				output: output,
+				choose: func(prompt string, labels []string) (int, error) {
+					chosen, err := choices[answerIndex], answers[answerIndex]
+					answerIndex++
+					if _, writeErr := output.WriteString(menu.RenderMenu(prompt, labels, chosen)); writeErr != nil {
+						return 0, writeErr
+					}
+					return chosen, err
+				},
+				login: func(chosen provider, _ func(string)) error {
+					if chosen.identifier != model.OpencodeGoProvider {
+						t.Errorf("got provider %q", chosen.identifier)
+					}
+					return nil
+				},
+				logout: func(provider) error {
+					t.Error("a provider was signed out of")
+					return nil
+				},
+				isLoggedIn: func(providerName string) bool {
+					return providerName == model.CodexProvider
+				},
+				isManagingCredentials: true,
+			}
+			_, err := harry.chooseProvider("")
+			return err
+		},
 		"login-cancelled": func(_ *testing.T, output *bytes.Buffer) error {
 			harry := wizard{
 				output: output,
@@ -270,6 +338,27 @@ func TestGoldenThePaintedWizardMatchesTheGolden(t *testing.T) {
 		t.Fatal(err)
 	}
 	assertANSIGolden(t, "first-run-painted", output.String())
+}
+
+func TestGoldenThePaintedSignOutMatchesTheGolden(t *testing.T) {
+	var output bytes.Buffer
+
+	harry := wizard{
+		output: &output,
+		choose: menuChoices(&output, 0, 1),
+		login: func(provider, func(string)) error {
+			t.Error("sign-in was started")
+			return nil
+		},
+		logout:                func(provider) error { return nil },
+		isLoggedIn:            func(string) bool { return true },
+		isManagingCredentials: true,
+	}
+
+	if _, err := harry.chooseProvider(""); err != nil {
+		t.Fatal(err)
+	}
+	assertANSIGolden(t, "login-manage-sign-out-painted", output.String())
 }
 
 func TestGoldenThePaintedSimulationRowMatchesTheGolden(t *testing.T) {

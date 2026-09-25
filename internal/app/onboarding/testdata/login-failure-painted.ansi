@@ -1,13 +1,13 @@
-\e[38;2;192;128;80mChoose your provider:\e[0m\r
+Choose your provider:\r
 \r
   ChatGPT      \e[38;2;150;152;150mOAuth\e[0m\r
   Anthropic    \e[38;2;150;152;150mOAuth\e[0m\r
 \e[38;2;192;128;80m› OpenCode Go  \e[38;2;150;152;150mKey\e[0m\r
 
 \e[38;2;192;128;80mOpenCode Go API key: \e[0mbad-key
-\e[38;2;204;102;102m✗ Unable to sign in: validate OpenCode Go API key: the key was refused\e[0m
+\e[38;2;204;102;102m✗ Unable to save the key: validate OpenCode Go API key: the key was refused\e[0m
 
-\e[38;2;192;128;80mChoose your provider:\e[0m\r
+Choose your provider:\r
 \r
 \e[38;2;192;128;80m› ChatGPT      \e[38;2;150;152;150mOAuth\e[0m\r
   Anthropic    \e[38;2;150;152;150mOAuth\e[0m\r

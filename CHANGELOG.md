@@ -14,6 +14,8 @@
 - Store a session's model details with the session itself
 - Also store all seen models as a fallback for old journals
 - Don't save a truncated read in a drop, and advise model to use an offset instead
+- Let `oh -L` sign out of a provider or remove its key
+- Limit `oh -l` to usable models
 
 ## [0.9.0] - 2026-09-22
 

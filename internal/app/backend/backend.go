@@ -84,6 +84,10 @@ func IsLoggedIn(providerName string) bool {
 	return requireCredentials(providerName, "") == nil
 }
 
+func IsAvailable(providerName string, endpoints EndpointSettings) bool {
+	return requireCredentials(providerName, endpoints.OverrideURL) == nil
+}
+
 func requireCredentials(providerName string, overrideURL string) error {
 	if overrideURL != "" {
 		return nil

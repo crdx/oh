@@ -379,7 +379,10 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	}
 
 	if inputArgs.List {
-		return "", model.List(os.Stdout, modelCachePath)
+		endpoints := backend.EndpointSettings{OverrideURL: endpointURL}
+		return "", model.List(os.Stdout, modelCachePath, func(providerName string) bool {
+			return backend.IsAvailable(providerName, endpoints)
+		})
 	}
 
 	workspace, err := work.Current()
@@ -450,6 +453,9 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	listProviderModels := func(ctx context.Context, providerName string) ([]agent.Model, error) {
 		return backend.ListModels(ctx, providerName, endpoints)
 	}
+	isProviderAvailable := func(providerName string) bool {
+		return backend.IsAvailable(providerName, endpoints)
+	}
 
 	if inputArgs.Update {
 		return "", model.Update(os.Stdout, endpointURL, modelCachePath, seenModelsPath, listProviderModels, inputArgs.IsShowingIgnored)
@@ -466,7 +472,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		var err error
 		startup.Wait(func() {
 			chosenModel, err = model.Choose(
-				modelCachePath, currency, backend.IsLoggedIn, keyboard, os.Stdout, settings.Model.GetDefaults(),
+				modelCachePath, currency, isProviderAvailable, keyboard, os.Stdout, settings.Model.GetDefaults(),
 			)
 		})
 		if errors.Is(err, menu.ErrCancelled) {
@@ -618,7 +624,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	if err != nil {
 		startup.Wait(func() {
 			selection, err = model.ChooseWhenNoneSelected(
-				err, modelCachePath, currency, backend.IsLoggedIn, keyboard, os.Stdout, settings.Model.GetDefaults(),
+				err, modelCachePath, currency, isProviderAvailable, keyboard, os.Stdout, settings.Model.GetDefaults(),
 			)
 		})
 	}

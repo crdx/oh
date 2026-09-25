@@ -406,6 +406,17 @@ func TestOnlyASignedIntoProviderIsReadyForASession(t *testing.T) {
 	}
 }
 
+func TestAnOverrideEndpointMakesProvidersAvailableWithoutCredentials(t *testing.T) {
+	t.Setenv("XDG_STATE_HOME", t.TempDir())
+	endpoints := EndpointSettings{OverrideURL: "http://somewhere"}
+
+	for _, providerName := range model.ProviderNames() {
+		if !IsAvailable(providerName, endpoints) {
+			t.Errorf("%s was unavailable through the override endpoint", providerName)
+		}
+	}
+}
+
 func TestListingModelsAsksForNoCredentials(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 

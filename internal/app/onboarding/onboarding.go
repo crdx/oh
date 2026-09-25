@@ -21,6 +21,7 @@ import (
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/tty"
+	"crdx.org/oh/internal/auth"
 	"crdx.org/oh/internal/browser"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/pkg/provider/anthropic"
@@ -65,30 +66,65 @@ const (
 )
 
 const (
-	greeting         = "Oh, hello."
-	greetingAside    = "*yawns*"
-	introduction     = "Yes? Oh, right. Let's get you signed in."
-	farewell         = "Thanks. Transferring you…"
-	providerPrompt   = "Choose your provider:"
-	modelPrompt      = "Choose a model:"
-	openCodeGoPrompt = "OpenCode Go API key: "
-	pasteHint        = "If the redirect breaks, paste the full redirect URL here instead."
-	browserHint      = "Visit the URL above to continue."
-	openingBrowser   = "Opening your browser to shake hands with %s…"
-	signedIn         = "Signed in to %s"
-	signInFailure    = "Unable to sign in: %s"
+	greeting             = "Oh, hello."
+	greetingAside        = "*yawns*"
+	introduction         = "Yes? Oh, right. Let's get you signed in."
+	farewell             = "Thanks. Transferring you…"
+	providerPrompt       = "Choose your provider:"
+	modelPrompt          = "Choose a model:"
+	openCodeGoPrompt     = "OpenCode Go API key: "
+	pasteHint            = "If the redirect breaks, paste the full redirect URL here instead."
+	browserHint          = "Visit the URL above to continue."
+	openingBrowser       = "Opening your browser to shake hands with %s…"
+	providerActionPrompt = "Choose what to do with %s:"
+	doNothing            = "Nothing"
 )
+
+type credential struct {
+	presence      string
+	renewal       string
+	removal       string
+	addition      string
+	withdrawal    string
+	failure       string
+	changeFailure string
+}
+
+var oauthSignIn = credential{
+	presence:      "signed in",
+	renewal:       "Sign in again",
+	removal:       "Sign out",
+	addition:      "Signed in to %s",
+	withdrawal:    "Signed out of %s",
+	failure:       "Unable to sign in: %s",
+	changeFailure: "Unable to update sign-in: %s",
+}
+
+var apiKey = credential{
+	presence:      "saved",
+	renewal:       "Replace key",
+	removal:       "Remove key",
+	addition:      "Saved the %s key",
+	withdrawal:    "Removed the %s key",
+	failure:       "Unable to save the key: %s",
+	changeFailure: "Unable to update the key: %s",
+}
+
+func (self credential) actions() []string {
+	return []string{self.renewal, self.removal, doNothing}
+}
 
 type provider struct {
 	name       string
 	identifier string
 	note       string
+	credential credential
 }
 
 var providers = []provider{
-	{name: chatGPTName, identifier: model.CodexProvider, note: "OAuth"},
-	{name: anthropicName, identifier: model.AnthropicProvider, note: "OAuth"},
-	{name: openCodeGoName, identifier: model.OpencodeGoProvider, note: "Key"},
+	{name: chatGPTName, identifier: model.CodexProvider, note: "OAuth", credential: oauthSignIn},
+	{name: anthropicName, identifier: model.AnthropicProvider, note: "OAuth", credential: oauthSignIn},
+	{name: openCodeGoName, identifier: model.OpencodeGoProvider, note: "Key", credential: apiKey},
 }
 
 var simulation = provider{name: simulatorName, identifier: simulationIdentifier, note: "The doctor will see you now"}
@@ -176,8 +212,11 @@ func Login(providerName string, terminal *os.File, output io.Writer) error {
 		choose: func(prompt string, labels []string) (int, error) {
 			return menu.ChooseIndex(terminal, output, prompt, labels)
 		},
-		login:       login(terminal, output),
-		openBrowser: browser.Open,
+		login:                 login(terminal, output),
+		logout:                removeCredentials,
+		isLoggedIn:            backend.IsLoggedIn,
+		openBrowser:           browser.Open,
+		isManagingCredentials: true,
 	}
 
 	_, err := harry.chooseProvider(providerName)
@@ -188,6 +227,8 @@ type wizard struct {
 	output          io.Writer
 	choose          func(string, []string) (int, error)
 	login           func(provider, func(string)) error
+	logout          func(provider) error
+	isLoggedIn      func(string) bool
 	openBrowser     func(string) error
 	pause           func(time.Duration) bool
 	stopPausing     func()
@@ -196,9 +237,10 @@ type wizard struct {
 	setInitialModel func(string) error
 	defaults        model.Defaults
 
-	isOpeningSkipped    bool
-	isSimulationOffered bool
-	isSimulationChosen  bool
+	isOpeningSkipped      bool
+	isSimulationOffered   bool
+	isSimulationChosen    bool
+	isManagingCredentials bool
 }
 
 func (self *wizard) castSpell() error {
@@ -225,7 +267,7 @@ func (self *wizard) castSpell() error {
 		return fmt.Errorf("no models are available for %s", chosenProvider.name)
 	}
 
-	chosenIndex, err := self.choose(style.Prompt(modelPrompt), modelLabels(choices))
+	chosenIndex, err := self.choose(modelPrompt, modelLabels(choices))
 	if err != nil {
 		return err
 	}
@@ -458,14 +500,14 @@ func (self *wizard) chooseProvider(providerName string) (provider, error) {
 				strings.Join(model.LoginProviderNames(), ", "),
 			)
 		}
-		return chosenProvider, self.authenticate(chosenProvider, false)
+		return chosenProvider, self.useProvider(chosenProvider, false)
 	}
 
 	candidates := self.candidateProviders()
 	labels := providerLabels(candidates)
 
 	for {
-		chosenIndex, err := self.choose(style.Prompt(providerPrompt), labels)
+		chosenIndex, err := self.choose(providerPrompt, labels)
 		if err != nil {
 			return provider{}, err
 		}
@@ -475,24 +517,46 @@ func (self *wizard) chooseProvider(providerName string) (provider, error) {
 			return chosenProvider, nil
 		}
 
-		if err := self.authenticate(chosenProvider, true); err == nil {
+		if err := self.useProvider(chosenProvider, true); err == nil {
 			return chosenProvider, nil
+		} else if self.isManagingCredentials && errors.Is(err, menu.ErrCancelled) {
+			if _, writeErr := fmt.Fprintln(self.output); writeErr != nil {
+				return provider{}, writeErr
+			}
 		} else if _, writeErr := fmt.Fprintf(
 			self.output,
 			"%s\n\n",
-			style.Failure(failureMark+" "+signInFailure, err),
+			style.Failure(failureMark+" "+self.providerFailure(chosenProvider), err),
 		); writeErr != nil {
 			return provider{}, writeErr
 		}
 	}
 }
 
-func (self *wizard) candidateProviders() []provider {
-	if !self.isSimulationOffered {
-		return providers
+func (self *wizard) providerFailure(chosenProvider provider) string {
+	if self.isManagingCredentials {
+		return chosenProvider.credential.changeFailure
 	}
 
-	return append(append([]provider(nil), providers...), simulation)
+	return chosenProvider.credential.failure
+}
+
+func (self *wizard) candidateProviders() []provider {
+	candidates := append([]provider(nil), providers...)
+
+	if self.isManagingCredentials {
+		for i := range candidates {
+			if self.providerIsLoggedIn(candidates[i]) {
+				candidates[i].note += " · " + candidates[i].credential.presence
+			}
+		}
+	}
+
+	if !self.isSimulationOffered {
+		return candidates
+	}
+
+	return append(candidates, simulation)
 }
 
 func providerLabels(candidates []provider) []string {
@@ -517,6 +581,52 @@ func providerNamed(identifier string) (provider, bool) {
 		}
 	}
 	return provider{}, false
+}
+
+func (self *wizard) providerIsLoggedIn(chosenProvider provider) bool {
+	return self.isLoggedIn != nil && self.isLoggedIn(chosenProvider.identifier)
+}
+
+func (self *wizard) useProvider(chosenProvider provider, shouldSeparate bool) error {
+	if self.isManagingCredentials && self.providerIsLoggedIn(chosenProvider) {
+		return self.manageProvider(chosenProvider, shouldSeparate)
+	}
+
+	return self.authenticate(chosenProvider, shouldSeparate)
+}
+
+func (self *wizard) manageProvider(chosenProvider provider, shouldSeparate bool) error {
+	if shouldSeparate {
+		if _, err := fmt.Fprintln(self.output); err != nil {
+			return err
+		}
+	}
+
+	actions := chosenProvider.credential.actions()
+	chosenAction, err := self.choose(fmt.Sprintf(providerActionPrompt, chosenProvider.name), actions)
+	if err != nil {
+		return err
+	}
+	switch actions[chosenAction] {
+	case chosenProvider.credential.renewal:
+		return self.authenticate(chosenProvider, true)
+	case doNothing:
+		return ErrCancelled
+	}
+
+	if _, err := fmt.Fprintln(self.output); err != nil {
+		return err
+	}
+	if err := self.logout(chosenProvider); err != nil {
+		return err
+	}
+	_, err = fmt.Fprintf(
+		self.output,
+		"%s %s\n\n",
+		style.Success(successMark),
+		fmt.Sprintf(chosenProvider.credential.withdrawal, style.Subject(chosenProvider.name)),
+	)
+	return err
 }
 
 func (self *wizard) authenticate(chosenProvider provider, shouldSeparate bool) error {
@@ -552,7 +662,7 @@ func (self *wizard) authenticate(chosenProvider provider, shouldSeparate bool) e
 		self.output,
 		"%s %s\n\n",
 		style.Success(successMark),
-		fmt.Sprintf(signedIn, style.Subject(chosenProvider.name)),
+		fmt.Sprintf(chosenProvider.credential.addition, style.Subject(chosenProvider.name)),
 	)
 	return err
 }
@@ -565,6 +675,23 @@ func choicesForProvider(choices []model.Choice, providerName string) []model.Cho
 		}
 	}
 	return matchingChoices
+}
+
+func removeCredentials(chosenProvider provider) error {
+	return auth.Update(auth.Path(), func(credentials *auth.Credentials) error {
+		switch chosenProvider.identifier {
+		case model.CodexProvider:
+			credentials.Codex = nil
+		case model.AnthropicProvider:
+			credentials.Anthropic = nil
+		case model.OpencodeGoProvider:
+			credentials.OpenCodeGo = nil
+		default:
+			return fmt.Errorf("unknown provider %q", chosenProvider.identifier)
+		}
+
+		return nil
+	})
 }
 
 func login(terminal *os.File, output io.Writer) func(provider, func(string)) error {

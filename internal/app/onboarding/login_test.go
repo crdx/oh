@@ -10,9 +10,42 @@ import (
 	"strings"
 	"testing"
 
+	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/auth"
 	"crdx.org/oh/pkg/provider/opencodego"
 )
+
+func TestRemovingCredentialsPreservesTheOtherProviders(t *testing.T) {
+	t.Setenv("XDG_STATE_HOME", t.TempDir())
+	path := auth.Path()
+	if err := auth.Save(path, &auth.Credentials{
+		Codex:      &auth.CodexCredentials{Access: "codex"},
+		Anthropic:  &auth.AnthropicCredentials{Access: "anthropic"},
+		OpenCodeGo: &auth.OpenCodeGoCredentials{APIKey: "opencode"},
+	}); err != nil {
+		t.Fatal(err)
+	}
+
+	chosen, found := providerNamed(model.OpencodeGoProvider)
+	if !found {
+		t.Fatal("OpenCode Go provider is missing")
+	}
+	if err := removeCredentials(chosen); err != nil {
+		t.Fatal(err)
+	}
+
+	stored, err := auth.Load(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if stored.OpenCodeGo != nil {
+		t.Errorf("OpenCode Go credentials remain: %+v", stored.OpenCodeGo)
+	}
+	if stored.Codex == nil || stored.Codex.Access != "codex" || stored.Anthropic == nil || stored.Anthropic.Access != "anthropic" {
+		t.Errorf("another provider's credentials changed: %+v", stored)
+	}
+}
 
 func TestTheKeyPromptLeavesTheEchoToTheTerminal(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "auth.json")

@@ -2,7 +2,7 @@ Oh, hello. \e[3m*yawns*\e[0m
 Yes? Oh, right. Let's get you signed in.
 \e[38;2;150;152;150m────────────────────────────────────────\e[0m
 
-\e[38;2;192;128;80mChoose your provider:\e[0m\r
+Choose your provider:\r
 \r
 \e[38;2;192;128;80m› ChatGPT      \e[38;2;150;152;150mOAuth\e[0m\r
   Anthropic    \e[38;2;150;152;150mOAuth\e[0m\r
@@ -16,7 +16,7 @@ Yes? Oh, right. Let's get you signed in.
 
 \e[38;2;76;154;44m✓\e[0m Signed in to \e[38;2;192;128;80mChatGPT\e[0m
 
-\e[38;2;192;128;80mChoose a model:\e[0m\r
+Choose a model:\r
 \r
   GPT-5.6 Sol   \e[38;2;150;152;150mgpt-5.6-sol\e[0m\r
 \e[38;2;192;128;80m› GPT-5.6 Luna  \e[38;2;150;152;150mgpt-5.6-luna\e[0m\r

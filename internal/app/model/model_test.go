@@ -93,7 +93,7 @@ func TestListingModelsPrintsEverySelectableQualifiedName(t *testing.T) {
 	useCachedModels(t)
 
 	var output bytes.Buffer
-	if err := List(&output, modelCachePath()); err != nil {
+	if err := List(&output, modelCachePath(), func(string) bool { return true }); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
@@ -116,16 +116,43 @@ func (failingWriter) Write([]byte) (int, error) {
 func TestListingModelsReturnsWriterFailures(t *testing.T) {
 	useCachedModels(t)
 
-	err := List(failingWriter{}, modelCachePath())
+	err := List(failingWriter{}, modelCachePath(), func(string) bool { return true })
 	if err == nil || !strings.Contains(err.Error(), "writer failed") {
 		t.Errorf("got %v", err)
+	}
+}
+
+func TestListingModelsOmitsProvidersThatAreNotAvailable(t *testing.T) {
+	useCachedModels(t)
+
+	var output bytes.Buffer
+	err := List(&output, modelCachePath(), func(providerName string) bool {
+		return providerName != OpencodeGoProvider
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(output.String(), OpencodeGoProvider+"/") {
+		t.Errorf("an unavailable provider was listed: %q", output.String())
+	}
+	if !strings.Contains(output.String(), CodexProvider+"/") || !strings.Contains(output.String(), AnthropicProvider+"/") {
+		t.Errorf("available providers were omitted: %q", output.String())
+	}
+}
+
+func TestListingModelsRefusesWhenNoKnownProviderIsAvailable(t *testing.T) {
+	useCachedModels(t)
+
+	err := List(&bytes.Buffer{}, modelCachePath(), func(string) bool { return false })
+	if !errors.Is(err, ErrNotLoggedIn) {
+		t.Errorf("expected the listing to advise signing in, got %v", err)
 	}
 }
 
 func TestListingModelsWithoutACacheSaysHowToFetchThem(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 
-	if err := List(&bytes.Buffer{}, modelCachePath()); err == nil || !strings.Contains(err.Error(), "-u") {
+	if err := List(&bytes.Buffer{}, modelCachePath(), func(string) bool { return true }); err == nil || !strings.Contains(err.Error(), "-u") {
 		t.Errorf("expected the empty listing to say how to fetch models, got %v", err)
 	}
 }

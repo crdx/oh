@@ -37,7 +37,7 @@ Options:
         --yolo                  Disable the sandbox
     -l, --list                  List available models
     -u, --update                Update model cache
-    -L, --login                 Log in to a provider
+    -L, --login                 Manage provider sign-ins
     -U, --usage                 Show subscription usage
     -I, --ignored               Show ignored items
     -J, --json                  Output as JSON

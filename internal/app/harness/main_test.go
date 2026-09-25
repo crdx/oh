@@ -5460,13 +5460,16 @@ func TestModelListDispatchRunsThroughTheBinary(t *testing.T) {
 	if err := os.MkdirAll(filepath.Dir(cachePath), 0o700); err != nil {
 		t.Fatal(err)
 	}
-	cache := checkedModelCache(`{"codex":{"models":[{"id":"gpt-cli","efforts":["high"],"output":128000}]}}`)
+	cache := checkedModelCache(`{
+		"codex":{"models":[{"id":"gpt-cli","efforts":["high"],"output":128000}]},
+		"ollama":{"models":[{"id":"local-cli","efforts":["high"],"output":128000}]}
+	}`)
 	if err := os.WriteFile(cachePath, cache, 0o600); err != nil {
 		t.Fatal(err)
 	}
 
 	output := runTestBinary(t, binary, reachableWorkspaceDir(t), testBinaryEnvironment(t, stateDirectory), "-l")
-	if output != "codex/gpt-cli\n" {
+	if output != "ollama/local-cli\n" {
 		t.Errorf("got %q", output)
 	}
 }
