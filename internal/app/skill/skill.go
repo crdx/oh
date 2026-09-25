@@ -11,8 +11,8 @@ import (
 	"slices"
 	"strings"
 
+	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/file"
-	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/pathutil"
 	"gopkg.in/yaml.v3"
 )
@@ -154,31 +154,31 @@ func discover(scope string, isGlobal bool, warnings io.Writer) ([]Skill, error) 
 			continue
 		}
 		if err != nil {
-			util.WriteWarningf(warnings, "%s: %v", shownLocation, err)
+			style.WriteWarningf(warnings, "%s: %v", shownLocation, err)
 			continue
 		}
 
 		skillMetadata, err := parse(data)
 		if err != nil {
-			util.WriteWarningf(warnings, "%s: %v", shownLocation, err)
+			style.WriteWarningf(warnings, "%s: %v", shownLocation, err)
 			continue
 		}
 		skillMetadata.Name = strings.TrimSpace(skillMetadata.Name)
 		skillMetadata.Description = strings.TrimSpace(skillMetadata.Description)
 		if skillMetadata.Description == "" {
-			util.WriteWarningf(warnings, "%s: skill description is missing", shownLocation)
+			style.WriteWarningf(warnings, "%s: skill description is missing", shownLocation)
 			continue
 		}
 		if skillMetadata.Name == "" {
 			skillMetadata.Name = entry.Name()
 		}
 		if skillMetadata.Name != entry.Name() {
-			util.WriteWarningf(warnings, "%s: skill name %q does not match directory %q", shownLocation, skillMetadata.Name, entry.Name())
+			style.WriteWarningf(warnings, "%s: skill name %q does not match directory %q", shownLocation, skillMetadata.Name, entry.Name())
 		}
 
 		absoluteLocation, err := filepath.Abs(location)
 		if err != nil {
-			util.WriteWarningf(warnings, "%s: could not resolve location: %v", shownLocation, err)
+			style.WriteWarningf(warnings, "%s: could not resolve location: %v", shownLocation, err)
 			continue
 		}
 

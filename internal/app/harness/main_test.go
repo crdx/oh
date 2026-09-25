@@ -18772,7 +18772,7 @@ func TestYoloWarnsOnceWhenSandboxDenyRulesCanBeBypassed(t *testing.T) {
 	} {
 		var warnings strings.Builder
 		warnAboutDenyEnforcement(true, test.tools, []string{"foo.txt"}, &warnings)
-		if warnings.String() != test.want {
+		if style.Plain(warnings.String()) != test.want {
 			t.Errorf("tools %v: got %q, want %q", test.tools, warnings.String(), test.want)
 		}
 	}

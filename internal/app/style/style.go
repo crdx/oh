@@ -45,6 +45,7 @@ var (
 	Read    Style = success()
 
 	Change      Style = warning()
+	Warning     Style = warning()
 	Write       Style = warning()
 	StoppedTurn Style = warning()
 

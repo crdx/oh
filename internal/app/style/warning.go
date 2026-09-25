@@ -1,4 +1,4 @@
-package util
+package style
 
 import (
 	"fmt"
@@ -7,6 +7,6 @@ import (
 
 func WriteWarningf(to io.Writer, format string, arguments ...any) {
 	if to != nil {
-		_, _ = fmt.Fprintf(to, "warning: "+format+"\n", arguments...)
+		_, _ = fmt.Fprintln(to, Warning("warning: "+format, arguments...))
 	}
 }

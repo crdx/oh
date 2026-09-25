@@ -37,6 +37,21 @@ func TestAnErrorUsesTheFailureStyle(t *testing.T) {
 	}
 }
 
+func TestAWarningIsPrefixedAndUsesTheWarningStyle(t *testing.T) {
+	enableColor(t)
+
+	var output strings.Builder
+	WriteWarningf(&output, "%s is %d", "answer", 42)
+
+	got := output.String()
+	if Plain(got) != "warning: answer is 42\n" {
+		t.Errorf("got %q", got)
+	}
+	if got != Warning("warning: answer is 42")+"\n" {
+		t.Errorf("the warning was not styled: %q", got)
+	}
+}
+
 func TestApplyingAThemeChangesExistingStyles(t *testing.T) {
 	enableColor(t)
 
@@ -132,6 +147,7 @@ func TestEveryStyleFollowsItsOwnPaletteRole(t *testing.T) {
 			"high price":           HighPrice,
 			"preview running hint": PreviewRunningHint,
 			"stopped turn":         StoppedTurn,
+			"warning":              Warning,
 			"write":                Write,
 		},
 		"38;2;7;7;7": {

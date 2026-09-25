@@ -325,9 +325,9 @@ func warnAboutDenyEnforcement(isYolo bool, offeredTools []string, patterns []str
 	case 0:
 		return
 	case 1:
-		util.WriteWarningf(warnings, "sandbox.deny cannot be enforced for the %s tool under --yolo", exemptTools[0])
+		style.WriteWarningf(warnings, "sandbox.deny cannot be enforced for the %s tool under --yolo", exemptTools[0])
 	default:
-		util.WriteWarningf(
+		style.WriteWarningf(
 			warnings,
 			"sandbox.deny cannot be enforced for the %s tools under --yolo",
 			strings.Join(exemptTools, " and "),
@@ -596,7 +596,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 
 	builtinSkillDir := location.GetStateDir(skill.DirectoryName)
 	if err := skill.Materialise(builtinSkillDir); err != nil {
-		util.WriteWarningf(os.Stderr, "%v", err)
+		style.WriteWarningf(os.Stderr, "%v", err)
 		builtinSkillDir = ""
 	}
 

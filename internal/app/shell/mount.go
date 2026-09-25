@@ -13,9 +13,9 @@ import (
 	"sync"
 
 	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/sandbox"
-	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/pathutil"
 )
 
@@ -317,7 +317,7 @@ func warnAboutCoveredPaths(paths Paths, warnings io.Writer) {
 				continue
 			}
 
-			util.WriteWarningf(
+			style.WriteWarningf(
 				warnings,
 				"configured path %s is redundant in [sandbox.read] due to %s",
 				pathutil.Shorten(path),
@@ -356,7 +356,7 @@ func reportContainment(warnings io.Writer, pair containment) {
 				continue
 			}
 
-			util.WriteWarningf(
+			style.WriteWarningf(
 				warnings,
 				"configured path %s %s %s from [%s]",
 				pathutil.Shorten(above),
@@ -392,7 +392,7 @@ func PreparePaths(paths Paths, warnings io.Writer) (Paths, error) {
 			_, err := os.Stat(path)
 			if errors.Is(err, fs.ErrNotExist) {
 				if err := os.MkdirAll(path, 0o700); err != nil {
-					util.WriteWarningf(
+					style.WriteWarningf(
 						warnings,
 						"could not create configured path %s: %v",
 						pathutil.Shorten(path),
