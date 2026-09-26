@@ -6,6 +6,7 @@ import (
 	"crdx.org/oh/internal/app/call"
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/jobs"
+	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/toolbox/bash"
 )
@@ -39,7 +40,7 @@ func jobsCommand(managedJobs Jobs) slash.Command {
 			if arguments.Text != "" {
 				return slash.Usage()
 			}
-			context.Notice(formatJobs(managedJobs.List()))
+			context.NoticeListing(formatJobs(managedJobs.List()))
 
 			return nil
 		},
@@ -131,7 +132,8 @@ func formatJobs(listing []jobs.Snapshot) string {
 	lines := make([]string, 0, len(listing))
 	for _, snapshot := range listing {
 		command := call.LabelForRendering(bash.DescribeCommand(snapshot.Command)).Render()
-		lines = append(lines, "  "+snapshot.Describe()+"  "+command)
+		status := strutil.Flatten(snapshot.Describe())
+		lines = append(lines, "  "+status+"  "+command)
 	}
 
 	return "Background jobs:\n" + strings.Join(lines, "\n")

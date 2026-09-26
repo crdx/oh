@@ -39,6 +39,7 @@ type Context interface {
 	Emit(event agent.Event)
 	Send(message string)
 	Notice(message string)
+	NoticeListing(message string)
 	PlainNotice(message string)
 	Success(message string)
 }

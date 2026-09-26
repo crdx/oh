@@ -2,6 +2,7 @@ package feedback
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"crdx.org/oh/internal/app/painter"
@@ -35,6 +36,7 @@ type Message struct {
 	Text         string
 	Status       agent.Status
 	HasOwnStyle  bool
+	IsListing    bool
 	DismissAfter time.Duration
 }
 
@@ -93,6 +95,21 @@ func (self *State) Render(columns int, now time.Time) []string {
 	text := self.message.Text
 	if countdown := self.countdown(now); countdown != "" {
 		text += " " + countdown
+	}
+
+	if self.message.IsListing {
+		lines := strings.Split(text, "\n")
+		for i, line := range lines {
+			if !self.message.HasOwnStyle {
+				line = painter.NoticeStyle(self.message.Status).Over(line)
+			}
+			if columns > 0 {
+				line = width.Elide(line, columns)
+			}
+			lines[i] = line
+		}
+
+		return lines
 	}
 
 	if !self.message.HasOwnStyle {

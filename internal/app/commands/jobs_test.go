@@ -109,6 +109,10 @@ func TestTheJobsCommandListsEveryJob(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	if !context.isListing {
+		t.Error("jobs were not marked as a listing")
+	}
+
 	notice := style.Plain(context.notice)
 	for _, wanted := range []string{"docs: running", "$ python3 -m http.server 8080", "build: failed", "exit(1)"} {
 		if !strings.Contains(notice, wanted) {

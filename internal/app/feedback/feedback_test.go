@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
 )
@@ -69,6 +70,23 @@ func TestAMessageWithItsOwnStyleIsNotOverpainted(t *testing.T) {
 
 	got := strutil.VisibleEscapes(renderedText(self.Render(80, time.Now()))) + "\n"
 	want, err := os.ReadFile(filepath.Join("testdata", "own-style.ansi"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got != string(want) {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
+func TestAListingElidesEachItemToOneRow(t *testing.T) {
+	var self State
+	text := "Background jobs:\n" +
+		"  docs: running for 30s  " + style.Shell("$") + " " + style.Subject("python3") + " -m http.server 8080 --bind localhost\n" +
+		"  build: failed after 2s with exit(1)  " + style.Shell("$") + " " + style.Subject("just") + " build"
+	self.Show(Command, Message{Text: text, Status: agent.InfoStatus, IsListing: true}, time.Now())
+
+	got := strutil.VisibleEscapes(renderedText(self.Render(60, time.Now()))) + "\n"
+	want, err := os.ReadFile(filepath.Join("testdata", "listing.ansi"))
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -1,0 +1,3 @@
+\e[38;2;129;162;190mBackground jobs:\e[0m
+\e[38;2;129;162;190m  docs: running for 30s  \e[38;2;129;162;190m$\e[0m\e[38;2;129;162;190m \e[38;2;192;128;80mpython3\e[0m\e[38;2;129;162;190m -m http.server 8080 --bi…\e[0m
+\e[38;2;129;162;190m  build: failed after 2s with exit(1)  \e[38;2;129;162;190m$\e[0m\e[38;2;129;162;190m \e[38;2;192;128;80mjust\e[0m\e[38;2;129;162;190m build\e[0m

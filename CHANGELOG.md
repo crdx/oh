@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Keep each jobs entry on one line
 - Show session sizes on disk in picker
 - Make plain reasoning keep underscores
 - Keep live output within the terminal, so nothing is drawn over or lost

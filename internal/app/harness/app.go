@@ -480,6 +480,9 @@ func (self *App) handleCommand(message string) dispatch.Result {
 		ShowFeedback: func(text string, status agent.Status) {
 			self.showFeedback(feedback.Command, feedback.Message{Text: text, Status: status})
 		},
+		ShowListingFeedback: func(text string, status agent.Status) {
+			self.showFeedback(feedback.Command, feedback.Message{Text: text, Status: status, IsListing: true})
+		},
 		ShowPlainFeedback: func(text string) {
 			self.showFeedback(feedback.Command, feedback.Message{Text: text, HasOwnStyle: true})
 		},

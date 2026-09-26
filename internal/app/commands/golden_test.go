@@ -9,10 +9,12 @@ import (
 	"testing"
 	"time"
 
+	"crdx.org/oh/internal/app/feedback"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/snippets"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
@@ -233,6 +235,13 @@ func TestGoldenJobListingMatchesGolden(t *testing.T) {
 			EndedAt:   startedAt.Add(3 * time.Second),
 		}
 	}
+	stoppedJob := func(name string, command string) jobs.Snapshot {
+		snapshot := finishedJob(name, command)
+		snapshot.State = jobs.StateStopped
+		snapshot.ExitCode = -1
+		snapshot.Failure = "the command was stopped after 22m46s\nnote: the command was killed by SIGKILL."
+		return snapshot
+	}
 
 	var output strings.Builder
 	for _, test := range []struct {
@@ -250,6 +259,9 @@ func TestGoldenJobListingMatchesGolden(t *testing.T) {
 		{label: "malformed stored command", listing: []jobs.Snapshot{
 			finishedJob("broken", "echo 'unterminated\necho later"),
 		}},
+		{label: "multiline failure", listing: []jobs.Snapshot{
+			stoppedJob("witness", "python3 /tmp/model-witness.py"),
+		}},
 	} {
 		managedJobs, _ := fixtureJobs()
 		managedJobs.List = func() []jobs.Snapshot { return test.listing }
@@ -258,7 +270,36 @@ func TestGoldenJobListingMatchesGolden(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		fmt.Fprintf(&output, "=== %s ===\n%s\n", test.label, context.notice)
+
+		for _, columns := range []int{120, 60, 30} {
+			var shown feedback.State
+			shown.Show(feedback.Command, feedback.Message{
+				Text:      context.notice,
+				Status:    agent.InfoStatus,
+				IsListing: context.isListing,
+			}, startedAt)
+			rows := shown.Render(columns, startedAt)
+			wantedRows := 1
+			if len(test.listing) > 0 {
+				wantedRows += len(test.listing)
+			}
+			if len(rows) != wantedRows {
+				t.Errorf("%s at %d columns drew %d rows, want %d", test.label, columns, len(rows), wantedRows)
+			}
+			for rowNumber, row := range rows {
+				rowColumns := width.Of(row)
+				if rowColumns > columns {
+					t.Errorf("%s row %d uses %d columns, want at most %d", test.label, rowNumber, rowColumns, columns)
+				}
+			}
+			fmt.Fprintf(
+				&output,
+				"=== %s (%d columns) ===\n%s\n",
+				test.label,
+				columns,
+				strings.Join(rows, "\n"),
+			)
+		}
 	}
 
 	assertGolden(t, "job-listing.txt", output.String())
@@ -299,6 +340,10 @@ func (self *helpContext) Notice(text string) {
 	self.notice = text
 }
 
+func (self *helpContext) NoticeListing(text string) {
+	self.notice = text
+}
+
 func (self *helpContext) PlainNotice(text string) {
 	self.notice = text
 }
@@ -313,9 +358,10 @@ func (self *promptContext) Emit(agent.Event) {}
 func (self *promptContext) Send(prompt string) {
 	self.sent = prompt
 }
-func (self *promptContext) Notice(string)      {}
-func (self *promptContext) PlainNotice(string) {}
-func (self *promptContext) Success(string)     {}
+func (self *promptContext) Notice(string)        {}
+func (self *promptContext) NoticeListing(string) {}
+func (self *promptContext) PlainNotice(string)   {}
+func (self *promptContext) Success(string)       {}
 
 func TestGoldenInfoMatchesGolden(t *testing.T) {
 	commands := newCommandRegistry(t, fixtureEnvironment(t))

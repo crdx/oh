@@ -16,14 +16,19 @@ import (
 )
 
 type commandTestContext struct {
-	events  []agent.Event
-	notice  string
-	success string
+	events    []agent.Event
+	notice    string
+	isListing bool
+	success   string
 }
 
-func (self *commandTestContext) Emit(event agent.Event)  { self.events = append(self.events, event) }
-func (self *commandTestContext) Send(string)             {}
-func (self *commandTestContext) Notice(text string)      { self.notice = text }
+func (self *commandTestContext) Emit(event agent.Event) { self.events = append(self.events, event) }
+func (self *commandTestContext) Send(string)            {}
+func (self *commandTestContext) Notice(text string)     { self.notice = text }
+func (self *commandTestContext) NoticeListing(text string) {
+	self.notice = text
+	self.isListing = true
+}
 func (self *commandTestContext) PlainNotice(text string) { self.notice = text }
 func (self *commandTestContext) Success(text string) {
 	self.success = text
