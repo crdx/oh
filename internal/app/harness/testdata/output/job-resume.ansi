@@ -8,8 +8,10 @@
 Both are up.\r
 \r
 \e[48;2;48;58;67m                                        \e[0m\r
-\e[48;2;48;58;67m 🤖 Jobs \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m and \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m stopped when the\e[0m\r
-\e[48;2;48;58;67m    session closed. Restart each with   \e[0m\r
+\e[48;2;48;58;67m 🤖 The session was closed and reopened \e[0m\r
+\e[48;2;48;58;67m    after your last turn. Jobs \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m and \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\r
+\e[48;2;48;58;67m    Restart each with                   \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;192;128;80mjob(action="start", name=…)\e[0m\e[48;2;48;58;67m if still\e[0m\r
 \e[48;2;48;58;67m    needed.                             \e[0m\r
 \e[48;2;48;58;67m                                        \e[0m\r
@@ -103,6 +105,102 @@ p\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67m🤖\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mT\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mh\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mw\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ma\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mc\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ml\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ma\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mr\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mp\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ma\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mf\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mr\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67my\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mu\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mr\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ml\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ma\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mu\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mr\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m.\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67mJ\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67mo\e[0m\r
@@ -157,25 +255,9 @@ p\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67mn\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mt\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mh\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67me\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67ms\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67me\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67ms\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67ms\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67mi\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mo\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67mc\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
@@ -379,7 +461,7 @@ h\r
 Both are up.
 
 \e[48;2;48;58;67m\e[0m
-\e[48;2;48;58;67m 🤖 Jobs \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m and \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m stopped when the session closed. Restart each with \e[38;2;192;128;80mjob(action="start", name=…)\e[0m\e[48;2;48;58;67m if still needed.\e[0m
+\e[48;2;48;58;67m 🤖 The session was closed and reopened after your last turn. Jobs \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m and \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m stopped when it closed. Restart each with \e[38;2;192;128;80mjob(action="start", name=…)\e[0m\e[48;2;48;58;67m if still needed.\e[0m
 \e[48;2;48;58;67m\e[0m
 \e[48;2;52;53;65m\e[0m
 \e[48;2;52;53;65m carry on\e[0m
@@ -399,8 +481,8 @@ Restarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembered with.
 Both are up.\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Jobs \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m and \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m stopped when the session closed. Restart each with \e[38;2;192;128;80mjob(action="start",\e[0m\e[48;2;48;58;67m      \e[0m\r
-\e[48;2;48;58;67m    \e[38;2;192;128;80mname=…)\e[0m\e[48;2;48;58;67m if still needed.                                                                        \e[0m\r
+\e[48;2;48;58;67m 🤖 The session was closed and reopened after your last turn. Jobs \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m and \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m stopped when it   \e[0m\r
+\e[48;2;48;58;67m    closed. Restart each with \e[38;2;192;128;80mjob(action="start", name=…)\e[0m\e[48;2;48;58;67m if still needed.                          \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
@@ -422,8 +504,8 @@ Restarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembered with.\
 \e[KBoth\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth are\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth are up.\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 \e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Jobs \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m and \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m stopped when the session closed. Restart each with \e[38;2;192;128;80mjob(action="start",\e[0m\e[48;2;48;58;67m      \e[0m\r
-\e[K\e[48;2;48;58;67m    \e[38;2;192;128;80mname=…)\e[0m\e[48;2;48;58;67m if still needed.                                                                        \e[0m\r
+\e[K\e[48;2;48;58;67m 🤖 The session was closed and reopened after your last turn. Jobs \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m and \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m stopped when it   \e[0m\r
+\e[K\e[48;2;48;58;67m    closed. Restart each with \e[38;2;192;128;80mjob(action="start", name=…)\e[0m\e[48;2;48;58;67m if still needed.                          \e[0m\r
 \e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
@@ -445,8 +527,8 @@ Restarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembered with.\
 \e[KBoth are up.\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 \e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Jobs \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m and \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m stopped when the session closed. Restart each with \e[38;2;192;128;80mjob(action="start",\e[0m\e[48;2;48;58;67m      \e[0m\r
-\e[K\e[48;2;48;58;67m    \e[38;2;192;128;80mname=…)\e[0m\e[48;2;48;58;67m if still needed.                                                                        \e[0m\r
+\e[K\e[48;2;48;58;67m 🤖 The session was closed and reopened after your last turn. Jobs \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m and \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m stopped when it   \e[0m\r
+\e[K\e[48;2;48;58;67m    closed. Restart each with \e[38;2;192;128;80mjob(action="start", name=…)\e[0m\e[48;2;48;58;67m if still needed.                          \e[0m\r
 \e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
@@ -468,8 +550,8 @@ Restarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembered with.\
 \e[KBoth\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth are\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth are up.\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 \e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Jobs \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m and \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m stopped when the session closed. Restart each with \e[38;2;192;128;80mjob(action="start",\e[0m\e[48;2;48;58;67m      \e[0m\r
-\e[K\e[48;2;48;58;67m    \e[38;2;192;128;80mname=…)\e[0m\e[48;2;48;58;67m if still needed.                                                                        \e[0m\r
+\e[K\e[48;2;48;58;67m 🤖 The session was closed and reopened after your last turn. Jobs \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m and \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m stopped when it   \e[0m\r
+\e[K\e[48;2;48;58;67m    closed. Restart each with \e[38;2;192;128;80mjob(action="start", name=…)\e[0m\e[48;2;48;58;67m if still needed.                          \e[0m\r
 \e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
@@ -494,12 +576,21 @@ Restarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembered with.\
 Both are up.\r
 \r
 \e[48;2;48;58;67m            \e[0m\r
-\e[48;2;48;58;67m 🤖 Jobs    \e[0m\r
+\e[48;2;48;58;67m 🤖 The     \e[0m\r
+\e[48;2;48;58;67m    session \e[0m\r
+\e[48;2;48;58;67m    was     \e[0m\r
+\e[48;2;48;58;67m    closed  \e[0m\r
+\e[48;2;48;58;67m    and     \e[0m\r
+\e[48;2;48;58;67m    reopened\e[0m\r
+\e[48;2;48;58;67m    after   \e[0m\r
+\e[48;2;48;58;67m    your    \e[0m\r
+\e[48;2;48;58;67m    last    \e[0m\r
+\e[48;2;48;58;67m    turn.   \e[0m\r
+\e[48;2;48;58;67m    Jobs    \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m and\e[0m\r
 \e[48;2;48;58;67m    \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m   \e[0m\r
 \e[48;2;48;58;67m    stopped \e[0m\r
-\e[48;2;48;58;67m    when the\e[0m\r
-\e[48;2;48;58;67m    session \e[0m\r
+\e[48;2;48;58;67m    when it \e[0m\r
 \e[48;2;48;58;67m    closed. \e[0m\r
 \e[48;2;48;58;67m    Restart \e[0m\r
 \e[48;2;48;58;67m    each    \e[0m\r
@@ -535,7 +626,7 @@ with.\r
 Both are up.\r
 \r
 \e[48;2;48;58;67m\e[0m\r
-\e[48;2;48;58;67m 🤖 Jobs \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m and \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m stopped when the session closed. Restart each with \e[38;2;192;128;80mjob(action="start", name=…)\e[0m\e[48;2;48;58;67m if still needed.\e[0m\r
+\e[48;2;48;58;67m 🤖 The session was closed and reopened after your last turn. Jobs \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m and \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m stopped when it closed. Restart each with \e[38;2;192;128;80mjob(action="start", name=…)\e[0m\e[48;2;48;58;67m if still needed.\e[0m\r
 \e[48;2;48;58;67m\e[0m\r
 \e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
 \e[48;2;52;53;65m carry on\e[0m\r
@@ -555,8 +646,8 @@ Restarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembered with.\
 Both are up.\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Jobs \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m and \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m stopped when the session closed. Restart each with \e[38;2;192;128;80mjob(action="start",\e[0m\e[48;2;48;58;67m      \e[0m\r
-\e[48;2;48;58;67m    \e[38;2;192;128;80mname=…)\e[0m\e[48;2;48;58;67m if still needed.                                                                        \e[0m\r
+\e[48;2;48;58;67m 🤖 The session was closed and reopened after your last turn. Jobs \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m and \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m stopped when it   \e[0m\r
+\e[48;2;48;58;67m    closed. Restart each with \e[38;2;192;128;80mjob(action="start", name=…)\e[0m\e[48;2;48;58;67m if still needed.                          \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r

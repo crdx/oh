@@ -89,6 +89,7 @@ func EndedWithSessionNotice(event agent.Event) (string, bool) {
 		pronoun = "each"
 	}
 
-	return subject + " stopped when the session closed. " +
+	return "The session was closed and reopened after your last turn. " +
+		subject + " stopped when it closed. " +
 		"Restart " + pronoun + " with `job(action=\"start\", name=…)` if still needed.", true
 }

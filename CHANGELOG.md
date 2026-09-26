@@ -11,6 +11,7 @@
 - Keep a running call's clock and hold through a redraw
 - Keep migration copies as hard links
 - Compress recorded wire traffic
+- Clarify the reason for jobs stopping
 
 ## [0.10.0] - 2026-09-25
 

@@ -8,8 +8,10 @@ job docs $ python3 -m http.server … ✓ 1L
 Both are up.
 
 
- 🤖 Jobs docs and watch stopped when the
-    session closed. Restart each with
+ 🤖 The session was closed and reopened
+    after your last turn. Jobs docs and
+    watch stopped when it closed.
+    Restart each with
     job(action="start", name=…) if still
     needed.
 
@@ -102,6 +104,102 @@ p
 
 🤖
 
+T
+
+h
+
+e
+
+s
+
+e
+
+s
+
+s
+
+i
+
+o
+
+n
+
+w
+
+a
+
+s
+
+c
+
+l
+
+o
+
+s
+
+e
+
+d
+
+a
+
+n
+
+d
+
+r
+
+e
+
+o
+
+p
+
+e
+
+n
+
+e
+
+d
+
+a
+
+f
+
+t
+
+e
+
+r
+
+y
+
+o
+
+u
+
+r
+
+l
+
+a
+
+s
+
+t
+
+t
+
+u
+
+r
+
+n
+
+.
+
 J
 
 o
@@ -156,25 +254,9 @@ e
 
 n
 
-t
-
-h
-
-e
-
-s
-
-e
-
-s
-
-s
-
 i
 
-o
-
-n
+t
 
 c
 
@@ -378,8 +460,8 @@ job docs $ python3 -m http.server 8080 ✓ 1L
 Both are up.
 
 
- 🤖 Jobs docs and watch stopped when the session closed. Restart each with job(action="start",
-    name=…) if still needed.
+ 🤖 The session was closed and reopened after your last turn. Jobs docs and watch stopped when it
+    closed. Restart each with job(action="start", name=…) if still needed.
 
 
 
@@ -403,12 +485,21 @@ job do… ✓ 1L
 Both are up.
 
 
- 🤖 Jobs
+ 🤖 The
+    session
+    was
+    closed
+    and
+    reopened
+    after
+    your
+    last
+    turn.
+    Jobs
     docs and
     watch
     stopped
-    when the
-    session
+    when it
     closed.
     Restart
     each
@@ -444,8 +535,8 @@ job docs $ python3 -m http.server 8080 ✓ 1L
 Both are up.
 
 
- 🤖 Jobs docs and watch stopped when the session closed. Restart each with job(action="start",
-    name=…) if still needed.
+ 🤖 The session was closed and reopened after your last turn. Jobs docs and watch stopped when it
+    closed. Restart each with job(action="start", name=…) if still needed.
 
 
 

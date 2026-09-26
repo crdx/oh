@@ -1,0 +1,17 @@
+{"kind":"head","version":14,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"job_listing","state":[{"name":"docs","command":"just docs","state":"running","started_at":"2026-08-23T14:32:09Z"}]}}
+{"kind":"event","event":{"kind":"user_message","text":"interrupt while the tool is working"}}
+{"kind":"event","event":{"render":"work","kind":"tool_call_request","id":"toolu_1","name":"work","arguments":"{}"}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"compiling agent\nnote: the command was stopped after 12s because the user pressed escape.","id":"toolu_1","name":"work","status":"cancelled","stats":{"kind":"output","lines":2,"bytes":88}}}
+{"kind":"event","event":{"kind":"turn_interruption","name":"escape"}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"interrupt while the tool is working"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"work","input":{}}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"compiling agent\nnote: the command was stopped after 12s because the user pressed escape.","is_error":true}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"jobs_ended_with_session","state":["docs"]}}
+{"kind":"event","event":{"kind":"model_message","text":"The session was reopened, so I will leave the docs server down."}}
+{"kind":"event","event":{"kind":"job_listing","state":[{"name":"docs","command":"just docs","state":"ended with the session","started_at":"2026-08-23T14:32:09Z"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"The session was closed and reopened after your last turn. Job `docs` stopped when it closed. Restart it with `job(action=\"start\", name=…)` if still needed."}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The session was reopened, so I will leave the docs server down."}]}}
+{"kind":"turn_completion","turn":{}}

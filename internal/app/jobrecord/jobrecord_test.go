@@ -1,6 +1,7 @@
 package jobrecord_test
 
 import (
+	"strings"
 	"testing"
 	"time"
 
@@ -59,8 +60,8 @@ func TestOneEndedJobIsNamedInTheSingular(t *testing.T) {
 	if !isSaid {
 		t.Fatal("one ended job said nothing")
 	}
-	if want := "Job `docs` stopped"; notice[:len(want)] != want {
-		t.Errorf("got %q, want it to open with %q", notice, want)
+	if want := "Job `docs` stopped"; !strings.Contains(notice, want) {
+		t.Errorf("got %q, want it to say %q", notice, want)
 	}
 }
 
@@ -71,22 +72,23 @@ func TestSeveralEndedJobsAreNamedInThePlural(t *testing.T) {
 	if !isSaid {
 		t.Fatal("several ended jobs said nothing")
 	}
-	if want := "Jobs `docs`, `build` and `watch` stopped"; notice[:len(want)] != want {
+	if want := "Jobs `docs`, `build` and `watch` stopped"; !strings.Contains(notice, want) {
 		t.Errorf("got %q, want it to name all three", notice)
 	}
 }
 
 func TestAnEndedJobNoticeAgreesWithItsOwnNumber(t *testing.T) {
-	const closed = " stopped when the session closed. Restart "
+	const reopened = "The session was closed and reopened after your last turn. "
+	const closed = " stopped when it closed. Restart "
 	const remedy = " with `job(action=\"start\", name=…)` if still needed."
 
 	for _, test := range []struct {
 		names   []string
 		expects string
 	}{
-		{[]string{"docs"}, "Job `docs`" + closed + "it" + remedy},
-		{[]string{"docs", "watch"}, "Jobs `docs` and `watch`" + closed + "each" + remedy},
-		{[]string{"docs", "build", "watch"}, "Jobs `docs`, `build` and `watch`" + closed + "each" + remedy},
+		{[]string{"docs"}, reopened + "Job `docs`" + closed + "it" + remedy},
+		{[]string{"docs", "watch"}, reopened + "Jobs `docs` and `watch`" + closed + "each" + remedy},
+		{[]string{"docs", "build", "watch"}, reopened + "Jobs `docs`, `build` and `watch`" + closed + "each" + remedy},
 	} {
 		notice, isSaid := jobrecord.EndedWithSessionNotice(jobrecord.EndedWithSessionEvent(test.names))
 		if !isSaid {
