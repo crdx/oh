@@ -14,4 +14,4 @@ The retry found the cache the dead attempt wrote.\e[?25h\e[?2026l\r
 \e[48;2;52;53;65m carry on                                                                                           \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[KCarrying on.\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\r
+Carrying on.\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\r

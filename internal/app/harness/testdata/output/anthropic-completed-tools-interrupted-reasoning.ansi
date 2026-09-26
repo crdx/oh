@@ -13,7 +13,7 @@
 \e[48;2;52;53;65m continue from the last valid tool result                                                           \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[K\e[3m\e[38;2;150;152;150mCheck restored state.\e[0m\e[0m\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;207;173;0mwork\e[0m \e[38;2;192;128;80mwork\e[0m\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=toolu_3&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[3m\e[38;2;150;152;150mCheck restored state.\e[0m\e[0m\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[38;2;207;173;0mwork\e[0m \e[38;2;192;128;80mwork\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=toolu_3&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[KRecovered.\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[10C\e[?25h\e[?2026l\r
+Recovered.\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[10C\e[?25h\e[?2026l\r

@@ -306,69 +306,69 @@ Done.\r
 \e[48;2;52;53;65m what am i allowed to do here?                                                                      \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[KRead\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading and\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading and runn\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading and running\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading and running comm\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading and running commands\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading and running commands, bu\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading and running commands, but no\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading and running commands, but not wr\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading and running commands, but not writin\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading and running commands, but not writing.\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+Read\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading and\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading and runn\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading and running\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading and running comm\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading and running commands\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading and running commands, bu\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading and running commands, but no\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading and running commands, but not wr\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading and running commands, but not writin\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading and running commands, but not writing.\e[K\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Workspace is now read-write.                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Workspace is now read-write.                                                                    \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m now write it down                                                                                  \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r
-\e[KWrit\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KWriting\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KWriting it d\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KWriting it down.\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+Writ\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rWriting\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rWriting it d\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rWriting it down.\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Bash is now refused.                                                                            \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Bash is now refused.                                                                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[KDone\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KDone.\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[5C\e[?25h\e[?2026l\r
+Done\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rDone.\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[5C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m what am i allowed to do here?                                                                      \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[KReading and running commands, but not writing.\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+Reading and running commands, but not writing.\e[K\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Workspace is now read-write.                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Workspace is now read-write.                                                                    \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m now write it down                                                                                  \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r
-\e[KWriting it down.\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+Writing it down.\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Bash is now refused.                                                                            \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Bash is now refused.                                                                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[KDone.\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[5C\e[?25h\e[?2026l\r
+Done.\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[5C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m what am i allowed to do here?                                                                      \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[KRead\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading and\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading and runn\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading and running\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading and running comm\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading and running commands\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading and running commands, bu\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading and running commands, but no\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading and running commands, but not wr\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading and running commands, but not writin\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading and running commands, but not writing.\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+Read\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading and\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading and runn\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading and running\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading and running comm\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading and running commands\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading and running commands, bu\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading and running commands, but no\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading and running commands, but not wr\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading and running commands, but not writin\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading and running commands, but not writing.\e[K\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Workspace is now read-write.                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Workspace is now read-write.                                                                    \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m now write it down                                                                                  \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r
-\e[KWrit\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KWriting\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KWriting it d\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KWriting it down.\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+Writ\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rWriting\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rWriting it d\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rWriting it down.\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Bash is now refused.                                                                            \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Bash is now refused.                                                                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[KDone\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KDone.\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[5C\e[?25h\e[?2026l\r
+Done\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rDone.\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[5C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r

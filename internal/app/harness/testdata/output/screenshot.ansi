@@ -136,39 +136,39 @@ It is a gradient, and the notes beside it are short.\r
 \e[48;2;52;53;65m what is in this screenshot?                                                                        \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mscreenshot.png\e[0m\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mscreenshot.png\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m0t\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[K\e_Ga=T,U=1,q=2,f=100,t=d,i=<identifier>,c=12,r=3,m=0;<data>\e\\<picture>􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮\e[39m\r
-\e[K<picture>􎻮̍̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮\e[39m\r
-\e[K<picture>􎻮̎̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮\e[39m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mnotes.md\e[0m\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mnotes.md\e[0m \e[38;2;76;154;44m✓\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+read \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mscreenshot.png\e[0m\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mscreenshot.png\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m0t\e[0m\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e_Ga=T,U=1,q=2,f=100,t=d,i=<identifier>,c=12,r=3,m=0;<data>\e\\<picture>􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮\e[39m\e[K\r
+<picture>􎻮̍̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮\e[39m\e[K\r
+<picture>􎻮̎̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮\e[39m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\rread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mnotes.md\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mnotes.md\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[KIt i\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a grad\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a gradient\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a gradient, an\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a gradient, and th\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a gradient, and the no\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a gradient, and the notes\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a gradient, and the notes besi\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a gradient, and the notes beside i\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a gradient, and the notes beside it ar\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a gradient, and the notes beside it are sh\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a gradient, and the notes beside it are short.\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[52C\e[?25h\e[?2026l\r
+It i\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a grad\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a gradient\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a gradient, an\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a gradient, and th\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a gradient, and the no\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a gradient, and the notes\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a gradient, and the notes besi\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a gradient, and the notes beside i\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a gradient, and the notes beside it ar\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a gradient, and the notes beside it are sh\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a gradient, and the notes beside it are short.\e[K\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[52C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m what is in this screenshot?                                                                        \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mscreenshot.png\e[0m\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mscreenshot.png\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m0t\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[K\e_Ga=T,U=1,q=2,f=100,t=d,i=<identifier>,c=12,r=3,m=0;<data>\e\\<picture>􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮\e[39m\r
-\e[K<picture>􎻮̍̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮\e[39m\r
-\e[K<picture>􎻮̎̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮\e[39m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mnotes.md\e[0m\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mnotes.md\e[0m \e[38;2;76;154;44m✓\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+read \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mscreenshot.png\e[0m\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mscreenshot.png\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m0t\e[0m\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e_Ga=T,U=1,q=2,f=100,t=d,i=<identifier>,c=12,r=3,m=0;<data>\e\\<picture>􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮\e[39m\e[K\r
+<picture>􎻮̍̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮\e[39m\e[K\r
+<picture>􎻮̎̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮\e[39m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\rread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mnotes.md\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mnotes.md\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[KIt is a gradient, and the notes beside it are short.\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[52C\e[?25h\e[?2026l\r
+It is a gradient, and the notes beside it are short.\e[K\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[52C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m what is in this screenshot?                                                                        \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mscreenshot.png\e[0m\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mscreenshot.png\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m0t\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[K\e_Ga=T,U=1,q=2,f=100,t=d,i=<identifier>,c=12,r=3,m=0;<data>\e\\<picture>􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮\e[39m\r
-\e[K<picture>􎻮̍̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮\e[39m\r
-\e[K<picture>􎻮̎̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮\e[39m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mnotes.md\e[0m\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mnotes.md\e[0m \e[38;2;76;154;44m✓\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+read \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mscreenshot.png\e[0m\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mscreenshot.png\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m0t\e[0m\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e_Ga=T,U=1,q=2,f=100,t=d,i=<identifier>,c=12,r=3,m=0;<data>\e\\<picture>􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮\e[39m\e[K\r
+<picture>􎻮̍̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮\e[39m\e[K\r
+<picture>􎻮̎̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮\e[39m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\rread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mnotes.md\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mnotes.md\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[KIt i\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a grad\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a gradient\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a gradient, an\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a gradient, and th\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a gradient, and the no\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a gradient, and the notes\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a gradient, and the notes besi\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a gradient, and the notes beside i\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a gradient, and the notes beside it ar\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a gradient, and the notes beside it are sh\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt is a gradient, and the notes beside it are short.\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[52C\e[?25h\e[?2026l\r
+It i\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a grad\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a gradient\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a gradient, an\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a gradient, and th\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a gradient, and the no\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a gradient, and the notes\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a gradient, and the notes besi\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a gradient, and the notes beside i\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a gradient, and the notes beside it ar\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a gradient, and the notes beside it are sh\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt is a gradient, and the notes beside it are short.\e[K\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[52C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r

@@ -8,6 +8,6 @@ It clips it, and marks the clipping.\e[?25h\e[?2026l\r
 \e[48;2;52;53;65m carry on                                                                                           \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[Ktitle \e[38;2;192;128;80mclip long picker titles\e[0m\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\title\e]8;;\e\\ \e[38;2;192;128;80mclip long picker titles\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+title \e[38;2;192;128;80mclip long picker titles\e[0m\e[K\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\title\e]8;;\e\\ \e[38;2;192;128;80mclip long picker titles\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[KNamed it, now that the task is clear.\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[37C\e[?25h\e[?2026l\r
+Named it, now that the task is clear.\e[K\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[37C\e[?25h\e[?2026l\r

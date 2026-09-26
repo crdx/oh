@@ -208,9 +208,9 @@ Left alone.\r
 \e[48;2;52;53;65m build it and tell me what broke                                                                    \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[KBuil\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBuilding\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBuilding now\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBuilding now.\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+Buil\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBuilding\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBuilding now\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBuilding now.\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150m11s 3L 40M\e[0m \e[38;2;150;152;150mcompiling agent compiling toolbox note: the command was stopped after 12s…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150m11s 3L 40M\e[0m \e[38;2;150;152;150mcompiling agent compiling toolbox note: the command was stopped after 12s…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -218,16 +218,16 @@ Left alone.\r
 \e[48;2;52;53;65m leave it, the build is broken anyway                                                               \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r
-\e[KLeft\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLeft alo\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLeft alone.\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[11C\e[?25h\e[?2026l\r
+Left\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rLeft alo\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rLeft alone.\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[11C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m build it and tell me what broke                                                                    \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[KBuilding now.\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+Building now.\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150m11s 3L 40M\e[0m \e[38;2;150;152;150mcompiling agent compiling toolbox note: the command was stopped after 12s…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150m11s 3L 40M\e[0m \e[38;2;150;152;150mcompiling agent compiling toolbox note: the command was stopped after 12s…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -235,16 +235,16 @@ Left alone.\r
 \e[48;2;52;53;65m leave it, the build is broken anyway                                                               \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r
-\e[KLeft alone.\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[11C\e[?25h\e[?2026l\r
+Left alone.\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[11C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m build it and tell me what broke                                                                    \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[KBuil\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBuilding\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBuilding now\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBuilding now.\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+Buil\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBuilding\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBuilding now\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBuilding now.\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150m11s 3L 40M\e[0m \e[38;2;150;152;150mcompiling agent compiling toolbox note: the command was stopped after 12s…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150m11s 3L 40M\e[0m \e[38;2;150;152;150mcompiling agent compiling toolbox note: the command was stopped after 12s…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -252,7 +252,7 @@ Left alone.\r
 \e[48;2;52;53;65m leave it, the build is broken anyway                                                               \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r
-\e[KLeft\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLeft alo\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLeft alone.\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[11C\e[?25h\e[?2026l\r
+Left\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rLeft alo\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rLeft alone.\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[11C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r

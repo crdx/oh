@@ -287,35 +287,35 @@
 \e[48;2;52;53;65m show the request flow                                                                              \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[K\e[3m\e[38;2;150;152;150mMapp\e[0m\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mMapping\e[0m\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mMapping the\e[0m\e[0m\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mMapping the requ\e[0m\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mMapping the request\e[0m\e[0m\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mMapping the request path\e[0m\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mMapping the request path.\e[0m\e[0m\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[3m\e[38;2;150;152;150mMapp\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mMapping\e[0m\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mMapping the\e[0m\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mMapping the requ\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mMapping the request\e[0m\e[0m\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mMapping the request path\e[0m\e[0m\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mMapping the request path.\e[0m\e[0m\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[1m\e[38;2;207;173;0mRe\e[0m\e[0m\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mReques\e[0m\e[0m\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mRequest pr\e[0m\e[0m\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mRequest proces\e[0m\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mRequest processing\e[0m\e[0m\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[1m\e[38;2;207;173;0mRe\e[0m\e[0m\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[1m\e[38;2;207;173;0mReques\e[0m\e[0m\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[1m\e[38;2;207;173;0mRequest pr\e[0m\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[1m\e[38;2;207;173;0mRequest proces\e[0m\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[1m\e[38;2;207;173;0mRequest processing\e[0m\e[0m\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[K``\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150mgra\e[0m\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150mgraph T\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K┌────┐\r
-\e[K│    │\r
-\e[K│ re │\r
-\e[K│    │\r
-\e[K└────┘\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K┌────────┐\e[1B\r\e[K│        │\e[1B\r\e[K│ reques │\e[1B\r\e[K│        │\e[1B\r\e[K└────────┘\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K┌────────────┐\e[1B\r\e[K│            │\e[1B\r\e[K│ 👩‍🚀 Receive │\e[1B\r\e[K│            │\e[1B\r\e[K└──────┬─────┘\r
-\e[K       │      \r
-\e[K       │      \r
-\e[K       │      \r
-\e[K       │      \r
-\e[K       ▼      \r
-\e[K┌────────────┐\r
-\e[K│            │\r
-\e[K│     v      │\r
-\e[K│            │\r
-\e[K└────────────┘\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K│   valid    │\e[2B\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r\e[K┌─────────────┐\e[1B\r\e[K│             │\e[1B\r\e[K│  👩‍🚀 Receive │\e[1B\r\e[K│             │\e[1B\r\e[K└──────┬──────┘\e[1B\r\e[K       │       \e[1B\r\e[K       │       \e[1B\r\e[K       │       \e[1B\r\e[K       │       \e[1B\r\e[K       ▼       \e[1B\r\e[K┌─────────────┐\e[1B\r\e[K│             │\e[1B\r\e[K│ ❤️ Validate │\e[1B\r\e[K│             │\e[1B\r\e[K└─────────────┘\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r\e[K┌─────────────┐     ┌─────┐\e[1B\r\e[K│             │     │     │\e[1B\r\e[K│  👩‍🚀 Receive │     │ val │\e[1B\r\e[K│             │     │     │\e[1B\r\e[K└──────┬──────┘     └─────┘\e[1B\r\e[K       │                   \e[1B\r\e[K       │                   \e[1B\r\e[K       │                   \e[1B\r\e[K       │                   \e[1B\r\e[K       ▼                   \e[1B\r\e[K┌─────────────┐            \e[1B\r\e[K│             │            \e[1B\r\e[K│ ❤️ Validate │            \e[1B\r\e[K│             │            \e[1B\r\e[K└─────────────┘            \r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r\e[K┌─────────────┐     ┌─────────┐\e[1B\r\e[K│             │     │         │\e[1B\r\e[K│  👩‍🚀 Receive │     │ validat │\e[1B\r\e[K│             │     │         │\e[1B\r\e[K└──────┬──────┘     └─────────┘\e[1B\r\e[K       │                       \e[1B\r\e[K       │                       \e[1B\r\e[K       │                       \e[1B\r\e[K       │                       \e[1B\r\e[K       ▼                       \e[1B\r\e[K┌─────────────┐                \e[1B\r\e[K│             │                \e[1B\r\e[K│ ❤️ Validate │                \e[1B\r\e[K│             │                \e[1B\r\e[K└─────────────┘                \r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r\e[K┌─────────────┐\e[1B\r\e[K│             │\e[1B\r\e[K│  👩‍🚀 Receive │\e[1B\r\e[K│             │\e[1B\r\e[K└──────┬──────┘\e[1B\r\e[K       │       \e[1B\r\e[K       │       \e[1B\r\e[K       │       \e[1B\r\e[K       │       \e[1B\r\e[K       ▼       \e[1B\r\e[K┌─────────────┐\e[1B\r\e[K│             │\e[1B\r\e[K│ ❤️ Validate │\e[1B\r\e[K│             │\e[1B\r\e[K└──────┬──────┘\r
-\e[K       │       \r
-\e[K       │       \r
-\e[K       │       \r
-\e[K       │       \r
-\e[K       ▼       \r
-\e[K┌─────────────┐\r
-\e[K│             │\r
-\e[K│      ac     │\r
-\e[K│             │\r
-\e[K└─────────────┘\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K│    accept   │\e[2B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K│  1️⃣ Accept  │\e[2B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[H\e[2J\e[3J\e[?7h\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+``\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38;2;150;152;150mgra\e[0m\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38;2;150;152;150mgraph T\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r┌────┐\e[K\r
+│    │\e[K\r
+│ re │\e[K\r
+│    │\e[K\r
+└────┘\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r┌────────┐\e[K\e[1B\r│        │\e[K\e[1B\r│ reques │\e[K\e[1B\r│        │\e[K\e[1B\r└────────┘\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r┌────────────┐\e[K\e[1B\r│            │\e[K\e[1B\r│ 👩‍🚀 Receive │\e[K\e[1B\r│            │\e[K\e[1B\r└──────┬─────┘\e[K\r
+       │      \e[K\r
+       │      \e[K\r
+       │      \e[K\r
+       │      \e[K\r
+       ▼      \e[K\r
+┌────────────┐\e[K\r
+│            │\e[K\r
+│     v      │\e[K\r
+│            │\e[K\r
+└────────────┘\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r│   valid    │\e[K\e[2B\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r┌─────────────┐\e[K\e[1B\r│             │\e[K\e[1B\r│  👩‍🚀 Receive │\e[K\e[1B\r│             │\e[K\e[1B\r└──────┬──────┘\e[K\e[1B\r       │       \e[K\e[1B\r       │       \e[K\e[1B\r       │       \e[K\e[1B\r       │       \e[K\e[1B\r       ▼       \e[K\e[1B\r┌─────────────┐\e[K\e[1B\r│             │\e[K\e[1B\r│ ❤️ Validate │\e[K\e[1B\r│             │\e[K\e[1B\r└─────────────┘\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r┌─────────────┐     ┌─────┐\e[K\e[1B\r│             │     │     │\e[K\e[1B\r│  👩‍🚀 Receive │     │ val │\e[K\e[1B\r│             │     │     │\e[K\e[1B\r└──────┬──────┘     └─────┘\e[K\e[1B\r       │                   \e[K\e[1B\r       │                   \e[K\e[1B\r       │                   \e[K\e[1B\r       │                   \e[K\e[1B\r       ▼                   \e[K\e[1B\r┌─────────────┐            \e[K\e[1B\r│             │            \e[K\e[1B\r│ ❤️ Validate │            \e[K\e[1B\r│             │            \e[K\e[1B\r└─────────────┘            \e[K\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r┌─────────────┐     ┌─────────┐\e[K\e[1B\r│             │     │         │\e[K\e[1B\r│  👩‍🚀 Receive │     │ validat │\e[K\e[1B\r│             │     │         │\e[K\e[1B\r└──────┬──────┘     └─────────┘\e[K\e[1B\r       │                       \e[K\e[1B\r       │                       \e[K\e[1B\r       │                       \e[K\e[1B\r       │                       \e[K\e[1B\r       ▼                       \e[K\e[1B\r┌─────────────┐                \e[K\e[1B\r│             │                \e[K\e[1B\r│ ❤️ Validate │                \e[K\e[1B\r│             │                \e[K\e[1B\r└─────────────┘                \e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r┌─────────────┐\e[K\e[1B\r│             │\e[K\e[1B\r│  👩‍🚀 Receive │\e[K\e[1B\r│             │\e[K\e[1B\r└──────┬──────┘\e[K\e[1B\r       │       \e[K\e[1B\r       │       \e[K\e[1B\r       │       \e[K\e[1B\r       │       \e[K\e[1B\r       ▼       \e[K\e[1B\r┌─────────────┐\e[K\e[1B\r│             │\e[K\e[1B\r│ ❤️ Validate │\e[K\e[1B\r│             │\e[K\e[1B\r└──────┬──────┘\e[K\r
+       │       \e[K\r
+       │       \e[K\r
+       │       \e[K\r
+       │       \e[K\r
+       ▼       \e[K\r
+┌─────────────┐\e[K\r
+│             │\e[K\r
+│      ac     │\e[K\r
+│             │\e[K\r
+└─────────────┘\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r│    accept   │\e[K\e[2B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r│  1️⃣ Accept  │\e[K\e[2B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[H\e[2J\e[3J\e[?7h\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m show the request flow                                                                              \e[0m\r
@@ -424,35 +424,35 @@
 \e[48;2;52;53;65m show the request flow                                                                              \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[K\e[3m\e[38;2;150;152;150mMapping the request path.\e[0m\e[0m\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[3m\e[38;2;150;152;150mMapping the request path.\e[0m\e[0m\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[1m\e[38;2;207;173;0mRequest processing\e[0m\e[0m\r
+\e[1m\e[38;2;207;173;0mRequest processing\e[0m\e[0m\e[K\r
 \e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[K┌────┐\r
-\e[K│    │\r
-\e[K│ re │\r
-\e[K│    │\r
-\e[K└────┘\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K┌────────┐\e[1B\r\e[K│        │\e[1B\r\e[K│ reques │\e[1B\r\e[K│        │\e[1B\r\e[K└────────┘\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K┌────────────┐\e[1B\r\e[K│            │\e[1B\r\e[K│ 👩‍🚀 Receive │\e[1B\r\e[K│            │\e[1B\r\e[K└──────┬─────┘\r
-\e[K       │      \r
-\e[K       │      \r
-\e[K       │      \r
-\e[K       │      \r
-\e[K       ▼      \r
-\e[K┌────────────┐\r
-\e[K│            │\r
-\e[K│     v      │\r
-\e[K│            │\r
-\e[K└────────────┘\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K│   valid    │\e[2B\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r\e[K┌─────────────┐\e[1B\r\e[K│             │\e[1B\r\e[K│  👩‍🚀 Receive │\e[1B\r\e[K│             │\e[1B\r\e[K└──────┬──────┘\e[1B\r\e[K       │       \e[1B\r\e[K       │       \e[1B\r\e[K       │       \e[1B\r\e[K       │       \e[1B\r\e[K       ▼       \e[1B\r\e[K┌─────────────┐\e[1B\r\e[K│             │\e[1B\r\e[K│ ❤️ Validate │\e[1B\r\e[K│             │\e[1B\r\e[K└─────────────┘\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r\e[K┌─────────────┐     ┌─────┐\e[1B\r\e[K│             │     │     │\e[1B\r\e[K│  👩‍🚀 Receive │     │ val │\e[1B\r\e[K│             │     │     │\e[1B\r\e[K└──────┬──────┘     └─────┘\e[1B\r\e[K       │                   \e[1B\r\e[K       │                   \e[1B\r\e[K       │                   \e[1B\r\e[K       │                   \e[1B\r\e[K       ▼                   \e[1B\r\e[K┌─────────────┐            \e[1B\r\e[K│             │            \e[1B\r\e[K│ ❤️ Validate │            \e[1B\r\e[K│             │            \e[1B\r\e[K└─────────────┘            \r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r\e[K┌─────────────┐     ┌─────────┐\e[1B\r\e[K│             │     │         │\e[1B\r\e[K│  👩‍🚀 Receive │     │ validat │\e[1B\r\e[K│             │     │         │\e[1B\r\e[K└──────┬──────┘     └─────────┘\e[1B\r\e[K       │                       \e[1B\r\e[K       │                       \e[1B\r\e[K       │                       \e[1B\r\e[K       │                       \e[1B\r\e[K       ▼                       \e[1B\r\e[K┌─────────────┐                \e[1B\r\e[K│             │                \e[1B\r\e[K│ ❤️ Validate │                \e[1B\r\e[K│             │                \e[1B\r\e[K└─────────────┘                \r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r\e[K┌─────────────┐\e[1B\r\e[K│             │\e[1B\r\e[K│  👩‍🚀 Receive │\e[1B\r\e[K│             │\e[1B\r\e[K└──────┬──────┘\e[1B\r\e[K       │       \e[1B\r\e[K       │       \e[1B\r\e[K       │       \e[1B\r\e[K       │       \e[1B\r\e[K       ▼       \e[1B\r\e[K┌─────────────┐\e[1B\r\e[K│             │\e[1B\r\e[K│ ❤️ Validate │\e[1B\r\e[K│             │\e[1B\r\e[K└──────┬──────┘\r
-\e[K       │       \r
-\e[K       │       \r
-\e[K       │       \r
-\e[K       │       \r
-\e[K       ▼       \r
-\e[K┌─────────────┐\r
-\e[K│             │\r
-\e[K│      ac     │\r
-\e[K│             │\r
-\e[K└─────────────┘\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K│    accept   │\e[2B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K│  1️⃣ Accept  │\e[2B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[H\e[2J\e[3J\e[?7h\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+┌────┐\e[K\r
+│    │\e[K\r
+│ re │\e[K\r
+│    │\e[K\r
+└────┘\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r┌────────┐\e[K\e[1B\r│        │\e[K\e[1B\r│ reques │\e[K\e[1B\r│        │\e[K\e[1B\r└────────┘\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r┌────────────┐\e[K\e[1B\r│            │\e[K\e[1B\r│ 👩‍🚀 Receive │\e[K\e[1B\r│            │\e[K\e[1B\r└──────┬─────┘\e[K\r
+       │      \e[K\r
+       │      \e[K\r
+       │      \e[K\r
+       │      \e[K\r
+       ▼      \e[K\r
+┌────────────┐\e[K\r
+│            │\e[K\r
+│     v      │\e[K\r
+│            │\e[K\r
+└────────────┘\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r│   valid    │\e[K\e[2B\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r┌─────────────┐\e[K\e[1B\r│             │\e[K\e[1B\r│  👩‍🚀 Receive │\e[K\e[1B\r│             │\e[K\e[1B\r└──────┬──────┘\e[K\e[1B\r       │       \e[K\e[1B\r       │       \e[K\e[1B\r       │       \e[K\e[1B\r       │       \e[K\e[1B\r       ▼       \e[K\e[1B\r┌─────────────┐\e[K\e[1B\r│             │\e[K\e[1B\r│ ❤️ Validate │\e[K\e[1B\r│             │\e[K\e[1B\r└─────────────┘\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r┌─────────────┐     ┌─────┐\e[K\e[1B\r│             │     │     │\e[K\e[1B\r│  👩‍🚀 Receive │     │ val │\e[K\e[1B\r│             │     │     │\e[K\e[1B\r└──────┬──────┘     └─────┘\e[K\e[1B\r       │                   \e[K\e[1B\r       │                   \e[K\e[1B\r       │                   \e[K\e[1B\r       │                   \e[K\e[1B\r       ▼                   \e[K\e[1B\r┌─────────────┐            \e[K\e[1B\r│             │            \e[K\e[1B\r│ ❤️ Validate │            \e[K\e[1B\r│             │            \e[K\e[1B\r└─────────────┘            \e[K\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r┌─────────────┐     ┌─────────┐\e[K\e[1B\r│             │     │         │\e[K\e[1B\r│  👩‍🚀 Receive │     │ validat │\e[K\e[1B\r│             │     │         │\e[K\e[1B\r└──────┬──────┘     └─────────┘\e[K\e[1B\r       │                       \e[K\e[1B\r       │                       \e[K\e[1B\r       │                       \e[K\e[1B\r       │                       \e[K\e[1B\r       ▼                       \e[K\e[1B\r┌─────────────┐                \e[K\e[1B\r│             │                \e[K\e[1B\r│ ❤️ Validate │                \e[K\e[1B\r│             │                \e[K\e[1B\r└─────────────┘                \e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r┌─────────────┐\e[K\e[1B\r│             │\e[K\e[1B\r│  👩‍🚀 Receive │\e[K\e[1B\r│             │\e[K\e[1B\r└──────┬──────┘\e[K\e[1B\r       │       \e[K\e[1B\r       │       \e[K\e[1B\r       │       \e[K\e[1B\r       │       \e[K\e[1B\r       ▼       \e[K\e[1B\r┌─────────────┐\e[K\e[1B\r│             │\e[K\e[1B\r│ ❤️ Validate │\e[K\e[1B\r│             │\e[K\e[1B\r└──────┬──────┘\e[K\r
+       │       \e[K\r
+       │       \e[K\r
+       │       \e[K\r
+       │       \e[K\r
+       ▼       \e[K\r
+┌─────────────┐\e[K\r
+│             │\e[K\r
+│      ac     │\e[K\r
+│             │\e[K\r
+└─────────────┘\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r│    accept   │\e[K\e[2B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r│  1️⃣ Accept  │\e[K\e[2B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[H\e[2J\e[3J\e[?7h\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m show the request flow                                                                              \e[0m\r
@@ -561,35 +561,35 @@
 \e[48;2;52;53;65m show the request flow                                                                              \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[K\e[3m\e[38;2;150;152;150mMapp\e[0m\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mMapping\e[0m\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mMapping the\e[0m\e[0m\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mMapping the requ\e[0m\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mMapping the request\e[0m\e[0m\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mMapping the request path\e[0m\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mMapping the request path.\e[0m\e[0m\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[3m\e[38;2;150;152;150mMapp\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mMapping\e[0m\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mMapping the\e[0m\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mMapping the requ\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mMapping the request\e[0m\e[0m\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mMapping the request path\e[0m\e[0m\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mMapping the request path.\e[0m\e[0m\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[1m\e[38;2;207;173;0mRe\e[0m\e[0m\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mReques\e[0m\e[0m\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mRequest pr\e[0m\e[0m\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mRequest proces\e[0m\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mRequest processing\e[0m\e[0m\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[1m\e[38;2;207;173;0mRe\e[0m\e[0m\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[1m\e[38;2;207;173;0mReques\e[0m\e[0m\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[1m\e[38;2;207;173;0mRequest pr\e[0m\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[1m\e[38;2;207;173;0mRequest proces\e[0m\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[1m\e[38;2;207;173;0mRequest processing\e[0m\e[0m\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[K``\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150mgra\e[0m\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150mgraph T\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K┌────┐\r
-\e[K│    │\r
-\e[K│ re │\r
-\e[K│    │\r
-\e[K└────┘\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K┌────────┐\e[1B\r\e[K│        │\e[1B\r\e[K│ reques │\e[1B\r\e[K│        │\e[1B\r\e[K└────────┘\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K┌────────────┐\e[1B\r\e[K│            │\e[1B\r\e[K│ 👩‍🚀 Receive │\e[1B\r\e[K│            │\e[1B\r\e[K└──────┬─────┘\r
-\e[K       │      \r
-\e[K       │      \r
-\e[K       │      \r
-\e[K       │      \r
-\e[K       ▼      \r
-\e[K┌────────────┐\r
-\e[K│            │\r
-\e[K│     v      │\r
-\e[K│            │\r
-\e[K└────────────┘\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K│   valid    │\e[2B\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r\e[K┌─────────────┐\e[1B\r\e[K│             │\e[1B\r\e[K│  👩‍🚀 Receive │\e[1B\r\e[K│             │\e[1B\r\e[K└──────┬──────┘\e[1B\r\e[K       │       \e[1B\r\e[K       │       \e[1B\r\e[K       │       \e[1B\r\e[K       │       \e[1B\r\e[K       ▼       \e[1B\r\e[K┌─────────────┐\e[1B\r\e[K│             │\e[1B\r\e[K│ ❤️ Validate │\e[1B\r\e[K│             │\e[1B\r\e[K└─────────────┘\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r\e[K┌─────────────┐     ┌─────┐\e[1B\r\e[K│             │     │     │\e[1B\r\e[K│  👩‍🚀 Receive │     │ val │\e[1B\r\e[K│             │     │     │\e[1B\r\e[K└──────┬──────┘     └─────┘\e[1B\r\e[K       │                   \e[1B\r\e[K       │                   \e[1B\r\e[K       │                   \e[1B\r\e[K       │                   \e[1B\r\e[K       ▼                   \e[1B\r\e[K┌─────────────┐            \e[1B\r\e[K│             │            \e[1B\r\e[K│ ❤️ Validate │            \e[1B\r\e[K│             │            \e[1B\r\e[K└─────────────┘            \r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r\e[K┌─────────────┐     ┌─────────┐\e[1B\r\e[K│             │     │         │\e[1B\r\e[K│  👩‍🚀 Receive │     │ validat │\e[1B\r\e[K│             │     │         │\e[1B\r\e[K└──────┬──────┘     └─────────┘\e[1B\r\e[K       │                       \e[1B\r\e[K       │                       \e[1B\r\e[K       │                       \e[1B\r\e[K       │                       \e[1B\r\e[K       ▼                       \e[1B\r\e[K┌─────────────┐                \e[1B\r\e[K│             │                \e[1B\r\e[K│ ❤️ Validate │                \e[1B\r\e[K│             │                \e[1B\r\e[K└─────────────┘                \r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r\e[K┌─────────────┐\e[1B\r\e[K│             │\e[1B\r\e[K│  👩‍🚀 Receive │\e[1B\r\e[K│             │\e[1B\r\e[K└──────┬──────┘\e[1B\r\e[K       │       \e[1B\r\e[K       │       \e[1B\r\e[K       │       \e[1B\r\e[K       │       \e[1B\r\e[K       ▼       \e[1B\r\e[K┌─────────────┐\e[1B\r\e[K│             │\e[1B\r\e[K│ ❤️ Validate │\e[1B\r\e[K│             │\e[1B\r\e[K└──────┬──────┘\r
-\e[K       │       \r
-\e[K       │       \r
-\e[K       │       \r
-\e[K       │       \r
-\e[K       ▼       \r
-\e[K┌─────────────┐\r
-\e[K│             │\r
-\e[K│      ac     │\r
-\e[K│             │\r
-\e[K└─────────────┘\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K│    accept   │\e[2B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K│  1️⃣ Accept  │\e[2B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[H\e[2J\e[3J\e[?7h\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+``\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38;2;150;152;150mgra\e[0m\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38;2;150;152;150mgraph T\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r┌────┐\e[K\r
+│    │\e[K\r
+│ re │\e[K\r
+│    │\e[K\r
+└────┘\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r┌────────┐\e[K\e[1B\r│        │\e[K\e[1B\r│ reques │\e[K\e[1B\r│        │\e[K\e[1B\r└────────┘\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r┌────────────┐\e[K\e[1B\r│            │\e[K\e[1B\r│ 👩‍🚀 Receive │\e[K\e[1B\r│            │\e[K\e[1B\r└──────┬─────┘\e[K\r
+       │      \e[K\r
+       │      \e[K\r
+       │      \e[K\r
+       │      \e[K\r
+       ▼      \e[K\r
+┌────────────┐\e[K\r
+│            │\e[K\r
+│     v      │\e[K\r
+│            │\e[K\r
+└────────────┘\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r│   valid    │\e[K\e[2B\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r┌─────────────┐\e[K\e[1B\r│             │\e[K\e[1B\r│  👩‍🚀 Receive │\e[K\e[1B\r│             │\e[K\e[1B\r└──────┬──────┘\e[K\e[1B\r       │       \e[K\e[1B\r       │       \e[K\e[1B\r       │       \e[K\e[1B\r       │       \e[K\e[1B\r       ▼       \e[K\e[1B\r┌─────────────┐\e[K\e[1B\r│             │\e[K\e[1B\r│ ❤️ Validate │\e[K\e[1B\r│             │\e[K\e[1B\r└─────────────┘\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r┌─────────────┐     ┌─────┐\e[K\e[1B\r│             │     │     │\e[K\e[1B\r│  👩‍🚀 Receive │     │ val │\e[K\e[1B\r│             │     │     │\e[K\e[1B\r└──────┬──────┘     └─────┘\e[K\e[1B\r       │                   \e[K\e[1B\r       │                   \e[K\e[1B\r       │                   \e[K\e[1B\r       │                   \e[K\e[1B\r       ▼                   \e[K\e[1B\r┌─────────────┐            \e[K\e[1B\r│             │            \e[K\e[1B\r│ ❤️ Validate │            \e[K\e[1B\r│             │            \e[K\e[1B\r└─────────────┘            \e[K\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r┌─────────────┐     ┌─────────┐\e[K\e[1B\r│             │     │         │\e[K\e[1B\r│  👩‍🚀 Receive │     │ validat │\e[K\e[1B\r│             │     │         │\e[K\e[1B\r└──────┬──────┘     └─────────┘\e[K\e[1B\r       │                       \e[K\e[1B\r       │                       \e[K\e[1B\r       │                       \e[K\e[1B\r       │                       \e[K\e[1B\r       ▼                       \e[K\e[1B\r┌─────────────┐                \e[K\e[1B\r│             │                \e[K\e[1B\r│ ❤️ Validate │                \e[K\e[1B\r│             │                \e[K\e[1B\r└─────────────┘                \e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[14A\r┌─────────────┐\e[K\e[1B\r│             │\e[K\e[1B\r│  👩‍🚀 Receive │\e[K\e[1B\r│             │\e[K\e[1B\r└──────┬──────┘\e[K\e[1B\r       │       \e[K\e[1B\r       │       \e[K\e[1B\r       │       \e[K\e[1B\r       │       \e[K\e[1B\r       ▼       \e[K\e[1B\r┌─────────────┐\e[K\e[1B\r│             │\e[K\e[1B\r│ ❤️ Validate │\e[K\e[1B\r│             │\e[K\e[1B\r└──────┬──────┘\e[K\r
+       │       \e[K\r
+       │       \e[K\r
+       │       \e[K\r
+       │       \e[K\r
+       ▼       \e[K\r
+┌─────────────┐\e[K\r
+│             │\e[K\r
+│      ac     │\e[K\r
+│             │\e[K\r
+└─────────────┘\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r│    accept   │\e[K\e[2B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r│  1️⃣ Accept  │\e[K\e[2B\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[H\e[2J\e[3J\e[?7h\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m show the request flow                                                                              \e[0m\r

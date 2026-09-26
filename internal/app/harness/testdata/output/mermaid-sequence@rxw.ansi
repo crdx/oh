@@ -280,27 +280,27 @@
 \e[48;2;52;53;65m show the retry interaction                                                                         \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[K\e[3m\e[38;2;150;152;150mTrac\e[0m\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mTracing\e[0m\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mTracing the\e[0m\e[0m\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mTracing the inte\e[0m\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mTracing the interact\e[0m\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mTracing the interaction.\e[0m\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[3m\e[38;2;150;152;150mTrac\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mTracing\e[0m\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mTracing the\e[0m\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mTracing the inte\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mTracing the interact\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mTracing the interaction.\e[0m\e[0m\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[1m\e[38;2;207;173;0mAp\e[0m\e[0m\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mApplic\e[0m\e[0m\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mApplicatio\e[0m\e[0m\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mApplication re\e[0m\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mApplication retry\e[0m\e[0m\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[1m\e[38;2;207;173;0mAp\e[0m\e[0m\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[1m\e[38;2;207;173;0mApplic\e[0m\e[0m\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[1m\e[38;2;207;173;0mApplicatio\e[0m\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[1m\e[38;2;207;173;0mApplication re\e[0m\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[1m\e[38;2;207;173;0mApplication retry\e[0m\e[0m\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[K\e[38;2;150;152;150msequ\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150msequence\e[0m\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150msequenceDiag\e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150msequenceDiagram\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[K\e[38;2;150;152;150mpart\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150mparticip\e[0m\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150mparticipant \e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K┌──────┐\e[1B\r\e[K│ U as │\r
-\e[K└───┬──┘\r
-\e[K    │\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K┌────┐\e[1B\r\e[K│ 👩‍🚀 │\e[1B\r\e[K└──┬─┘\e[1B\r\e[K   │\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K┌────────┐\e[1B\r\e[K│ 👩‍🚀 Use │\e[1B\r\e[K└────┬───┘\e[1B\r\e[K     │\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K┌─────────┐     ┌───┐\e[1B\r\e[K│ 👩‍🚀 User │     │ A │\e[1B\r\e[K└────┬────┘     └─┬─┘\e[1B\r\e[K     │            │\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K│ 👩‍🚀 User │     │ ❤ │\e[2B\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K┌─────────┐     ┌───────┐\e[1B\r\e[K│ 👩‍🚀 User │     │ ❤️ Ap │\e[1B\r\e[K└────┬────┘     └───┬───┘\e[1B\r\e[K     │              │\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K┌─────────┐     ┌────────┐\e[1B\r\e[K│ 👩‍🚀 User │     │ ❤️ App │\e[1B\r\e[K└────┬────┘     └────┬───┘\e[1B\r\e[K     │               │\r
-\e[K     ├──────────────►│\r
-\e[K     │               │\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K     │ 1️⃣            │\e[1B\r\e[K     ├──────────────►│\r
-\e[K     │               │\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K     │ 1️⃣ Ope        │\e[2B\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K     │ 1️⃣ Open       │\e[2B\r
-\e[K     │               │ ┌───┐\r
-\e[K     │               │ │ 🏳 │\r
-\e[K     │               │ └───┘\r
-\e[K     │               │\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K     │               │ ┌────┐\e[1B\r\e[K     │               │ │ 🏳️‍🌈 │\e[1B\r\e[K     │               │ └────┘\e[1B\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K     │               │ ┌─────────┐\e[1B\r\e[K     │               │ │ 🏳️‍🌈 Read │\e[1B\r\e[K     │               │ └─────────┘\e[1B\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K     │               │ ┌──────────┐\e[1B\r\e[K     │               │ │ 🏳️‍🌈 Ready │\e[1B\r\e[K     │               │ └──────────┘\e[1B\r\e[K   ┌─[loop 🔁 Retry]───┐\r
-\e[K   │ │               │ │\r
-\e[K   │ │ 📡 Update     │ │\r
-\e[K   │ │◄┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤ │\r
-\e[K   │ │               │ │\r
-\e[K   └───────────────────┘\r
-\e[K     │               │\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\r
+\e[38;2;150;152;150msequ\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38;2;150;152;150msequence\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38;2;150;152;150msequenceDiag\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38;2;150;152;150msequenceDiagram\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;150;152;150mpart\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38;2;150;152;150mparticip\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38;2;150;152;150mparticipant \e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r┌──────┐\e[K\e[1B\r│ U as │\e[K\r
+└───┬──┘\e[K\r
+    │\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r┌────┐\e[K\e[1B\r│ 👩‍🚀 │\e[K\e[1B\r└──┬─┘\e[K\e[1B\r   │\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r┌────────┐\e[K\e[1B\r│ 👩‍🚀 Use │\e[K\e[1B\r└────┬───┘\e[K\e[1B\r     │\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r┌─────────┐     ┌───┐\e[K\e[1B\r│ 👩‍🚀 User │     │ A │\e[K\e[1B\r└────┬────┘     └─┬─┘\e[K\e[1B\r     │            │\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r│ 👩‍🚀 User │     │ ❤ │\e[K\e[2B\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r┌─────────┐     ┌───────┐\e[K\e[1B\r│ 👩‍🚀 User │     │ ❤️ Ap │\e[K\e[1B\r└────┬────┘     └───┬───┘\e[K\e[1B\r     │              │\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r┌─────────┐     ┌────────┐\e[K\e[1B\r│ 👩‍🚀 User │     │ ❤️ App │\e[K\e[1B\r└────┬────┘     └────┬───┘\e[K\e[1B\r     │               │\e[K\r
+     ├──────────────►│\e[K\r
+     │               │\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r     │ 1️⃣            │\e[K\e[1B\r     ├──────────────►│\e[K\r
+     │               │\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r     │ 1️⃣ Ope        │\e[K\e[2B\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r     │ 1️⃣ Open       │\e[K\e[2B\r
+     │               │ ┌───┐\e[K\r
+     │               │ │ 🏳 │\e[K\r
+     │               │ └───┘\e[K\r
+     │               │\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r     │               │ ┌────┐\e[K\e[1B\r     │               │ │ 🏳️‍🌈 │\e[K\e[1B\r     │               │ └────┘\e[K\e[1B\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r     │               │ ┌─────────┐\e[K\e[1B\r     │               │ │ 🏳️‍🌈 Read │\e[K\e[1B\r     │               │ └─────────┘\e[K\e[1B\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r     │               │ ┌──────────┐\e[K\e[1B\r     │               │ │ 🏳️‍🌈 Ready │\e[K\e[1B\r     │               │ └──────────┘\e[K\e[1B\r   ┌─[loop 🔁 Retry]───┐\e[K\r
+   │ │               │ │\e[K\r
+   │ │ 📡 Update     │ │\e[K\r
+   │ │◄┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤ │\e[K\r
+   │ │               │ │\e[K\r
+   └───────────────────┘\e[K\r
+     │               │\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
@@ -309,27 +309,27 @@
 \e[48;2;52;53;65m show the retry interaction                                                                         \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[K\e[3m\e[38;2;150;152;150mTracing the interaction.\e[0m\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[3m\e[38;2;150;152;150mTracing the interaction.\e[0m\e[0m\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[1m\e[38;2;207;173;0mApplication retry\e[0m\e[0m\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[1m\e[38;2;207;173;0mApplication retry\e[0m\e[0m\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[K\e[38;2;150;152;150msequenceDiagram\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K┌──────┐\r
-\e[K│ U as │\r
-\e[K└───┬──┘\r
-\e[K    │\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K┌────┐\e[1B\r\e[K│ 👩‍🚀 │\e[1B\r\e[K└──┬─┘\e[1B\r\e[K   │\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K┌────────┐\e[1B\r\e[K│ 👩‍🚀 Use │\e[1B\r\e[K└────┬───┘\e[1B\r\e[K     │\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K┌─────────┐     ┌───┐\e[1B\r\e[K│ 👩‍🚀 User │     │ A │\e[1B\r\e[K└────┬────┘     └─┬─┘\e[1B\r\e[K     │            │\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K│ 👩‍🚀 User │     │ ❤ │\e[2B\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K┌─────────┐     ┌───────┐\e[1B\r\e[K│ 👩‍🚀 User │     │ ❤️ Ap │\e[1B\r\e[K└────┬────┘     └───┬───┘\e[1B\r\e[K     │              │\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K┌─────────┐     ┌────────┐\e[1B\r\e[K│ 👩‍🚀 User │     │ ❤️ App │\e[1B\r\e[K└────┬────┘     └────┬───┘\e[1B\r\e[K     │               │\r
-\e[K     ├──────────────►│\r
-\e[K     │               │\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K     │ 1️⃣            │\e[1B\r\e[K     ├──────────────►│\r
-\e[K     │               │\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K     │ 1️⃣ Ope        │\e[2B\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K     │ 1️⃣ Open       │\e[2B\r
-\e[K     │               │ ┌───┐\r
-\e[K     │               │ │ 🏳 │\r
-\e[K     │               │ └───┘\r
-\e[K     │               │\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K     │               │ ┌────┐\e[1B\r\e[K     │               │ │ 🏳️‍🌈 │\e[1B\r\e[K     │               │ └────┘\e[1B\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K     │               │ ┌─────────┐\e[1B\r\e[K     │               │ │ 🏳️‍🌈 Read │\e[1B\r\e[K     │               │ └─────────┘\e[1B\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K     │               │ ┌──────────┐\e[1B\r\e[K     │               │ │ 🏳️‍🌈 Ready │\e[1B\r\e[K     │               │ └──────────┘\e[1B\r\e[K   ┌─[loop 🔁 Retry]───┐\r
-\e[K   │ │               │ │\r
-\e[K   │ │ 📡 Update     │ │\r
-\e[K   │ │◄┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤ │\r
-\e[K   │ │               │ │\r
-\e[K   └───────────────────┘\r
-\e[K     │               │\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\r
+\e[38;2;150;152;150msequenceDiagram\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r┌──────┐\e[K\r
+│ U as │\e[K\r
+└───┬──┘\e[K\r
+    │\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r┌────┐\e[K\e[1B\r│ 👩‍🚀 │\e[K\e[1B\r└──┬─┘\e[K\e[1B\r   │\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r┌────────┐\e[K\e[1B\r│ 👩‍🚀 Use │\e[K\e[1B\r└────┬───┘\e[K\e[1B\r     │\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r┌─────────┐     ┌───┐\e[K\e[1B\r│ 👩‍🚀 User │     │ A │\e[K\e[1B\r└────┬────┘     └─┬─┘\e[K\e[1B\r     │            │\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r│ 👩‍🚀 User │     │ ❤ │\e[K\e[2B\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r┌─────────┐     ┌───────┐\e[K\e[1B\r│ 👩‍🚀 User │     │ ❤️ Ap │\e[K\e[1B\r└────┬────┘     └───┬───┘\e[K\e[1B\r     │              │\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r┌─────────┐     ┌────────┐\e[K\e[1B\r│ 👩‍🚀 User │     │ ❤️ App │\e[K\e[1B\r└────┬────┘     └────┬───┘\e[K\e[1B\r     │               │\e[K\r
+     ├──────────────►│\e[K\r
+     │               │\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r     │ 1️⃣            │\e[K\e[1B\r     ├──────────────►│\e[K\r
+     │               │\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r     │ 1️⃣ Ope        │\e[K\e[2B\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r     │ 1️⃣ Open       │\e[K\e[2B\r
+     │               │ ┌───┐\e[K\r
+     │               │ │ 🏳 │\e[K\r
+     │               │ └───┘\e[K\r
+     │               │\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r     │               │ ┌────┐\e[K\e[1B\r     │               │ │ 🏳️‍🌈 │\e[K\e[1B\r     │               │ └────┘\e[K\e[1B\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r     │               │ ┌─────────┐\e[K\e[1B\r     │               │ │ 🏳️‍🌈 Read │\e[K\e[1B\r     │               │ └─────────┘\e[K\e[1B\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r     │               │ ┌──────────┐\e[K\e[1B\r     │               │ │ 🏳️‍🌈 Ready │\e[K\e[1B\r     │               │ └──────────┘\e[K\e[1B\r   ┌─[loop 🔁 Retry]───┐\e[K\r
+   │ │               │ │\e[K\r
+   │ │ 📡 Update     │ │\e[K\r
+   │ │◄┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤ │\e[K\r
+   │ │               │ │\e[K\r
+   └───────────────────┘\e[K\r
+     │               │\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
@@ -338,27 +338,27 @@
 \e[48;2;52;53;65m show the retry interaction                                                                         \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[K\e[3m\e[38;2;150;152;150mTrac\e[0m\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mTracing\e[0m\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mTracing the\e[0m\e[0m\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mTracing the inte\e[0m\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mTracing the interact\e[0m\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mTracing the interaction.\e[0m\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[3m\e[38;2;150;152;150mTrac\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mTracing\e[0m\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mTracing the\e[0m\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mTracing the inte\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mTracing the interact\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mTracing the interaction.\e[0m\e[0m\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[1m\e[38;2;207;173;0mAp\e[0m\e[0m\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mApplic\e[0m\e[0m\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mApplicatio\e[0m\e[0m\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mApplication re\e[0m\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mApplication retry\e[0m\e[0m\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[1m\e[38;2;207;173;0mAp\e[0m\e[0m\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[1m\e[38;2;207;173;0mApplic\e[0m\e[0m\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[1m\e[38;2;207;173;0mApplicatio\e[0m\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[1m\e[38;2;207;173;0mApplication re\e[0m\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[1m\e[38;2;207;173;0mApplication retry\e[0m\e[0m\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[K\e[38;2;150;152;150msequ\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150msequence\e[0m\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150msequenceDiag\e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150msequenceDiagram\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[K\e[38;2;150;152;150mpart\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150mparticip\e[0m\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150mparticipant \e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K┌──────┐\e[1B\r\e[K│ U as │\r
-\e[K└───┬──┘\r
-\e[K    │\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K┌────┐\e[1B\r\e[K│ 👩‍🚀 │\e[1B\r\e[K└──┬─┘\e[1B\r\e[K   │\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K┌────────┐\e[1B\r\e[K│ 👩‍🚀 Use │\e[1B\r\e[K└────┬───┘\e[1B\r\e[K     │\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K┌─────────┐     ┌───┐\e[1B\r\e[K│ 👩‍🚀 User │     │ A │\e[1B\r\e[K└────┬────┘     └─┬─┘\e[1B\r\e[K     │            │\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K│ 👩‍🚀 User │     │ ❤ │\e[2B\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K┌─────────┐     ┌───────┐\e[1B\r\e[K│ 👩‍🚀 User │     │ ❤️ Ap │\e[1B\r\e[K└────┬────┘     └───┬───┘\e[1B\r\e[K     │              │\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K┌─────────┐     ┌────────┐\e[1B\r\e[K│ 👩‍🚀 User │     │ ❤️ App │\e[1B\r\e[K└────┬────┘     └────┬───┘\e[1B\r\e[K     │               │\r
-\e[K     ├──────────────►│\r
-\e[K     │               │\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K     │ 1️⃣            │\e[1B\r\e[K     ├──────────────►│\r
-\e[K     │               │\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K     │ 1️⃣ Ope        │\e[2B\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K     │ 1️⃣ Open       │\e[2B\r
-\e[K     │               │ ┌───┐\r
-\e[K     │               │ │ 🏳 │\r
-\e[K     │               │ └───┘\r
-\e[K     │               │\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K     │               │ ┌────┐\e[1B\r\e[K     │               │ │ 🏳️‍🌈 │\e[1B\r\e[K     │               │ └────┘\e[1B\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K     │               │ ┌─────────┐\e[1B\r\e[K     │               │ │ 🏳️‍🌈 Read │\e[1B\r\e[K     │               │ └─────────┘\e[1B\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K     │               │ ┌──────────┐\e[1B\r\e[K     │               │ │ 🏳️‍🌈 Ready │\e[1B\r\e[K     │               │ └──────────┘\e[1B\r\e[K   ┌─[loop 🔁 Retry]───┐\r
-\e[K   │ │               │ │\r
-\e[K   │ │ 📡 Update     │ │\r
-\e[K   │ │◄┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤ │\r
-\e[K   │ │               │ │\r
-\e[K   └───────────────────┘\r
-\e[K     │               │\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\r
+\e[38;2;150;152;150msequ\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38;2;150;152;150msequence\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38;2;150;152;150msequenceDiag\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38;2;150;152;150msequenceDiagram\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;150;152;150mpart\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38;2;150;152;150mparticip\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38;2;150;152;150mparticipant \e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r┌──────┐\e[K\e[1B\r│ U as │\e[K\r
+└───┬──┘\e[K\r
+    │\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r┌────┐\e[K\e[1B\r│ 👩‍🚀 │\e[K\e[1B\r└──┬─┘\e[K\e[1B\r   │\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r┌────────┐\e[K\e[1B\r│ 👩‍🚀 Use │\e[K\e[1B\r└────┬───┘\e[K\e[1B\r     │\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r┌─────────┐     ┌───┐\e[K\e[1B\r│ 👩‍🚀 User │     │ A │\e[K\e[1B\r└────┬────┘     └─┬─┘\e[K\e[1B\r     │            │\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r│ 👩‍🚀 User │     │ ❤ │\e[K\e[2B\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r┌─────────┐     ┌───────┐\e[K\e[1B\r│ 👩‍🚀 User │     │ ❤️ Ap │\e[K\e[1B\r└────┬────┘     └───┬───┘\e[K\e[1B\r     │              │\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r┌─────────┐     ┌────────┐\e[K\e[1B\r│ 👩‍🚀 User │     │ ❤️ App │\e[K\e[1B\r└────┬────┘     └────┬───┘\e[K\e[1B\r     │               │\e[K\r
+     ├──────────────►│\e[K\r
+     │               │\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r     │ 1️⃣            │\e[K\e[1B\r     ├──────────────►│\e[K\r
+     │               │\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r     │ 1️⃣ Ope        │\e[K\e[2B\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r     │ 1️⃣ Open       │\e[K\e[2B\r
+     │               │ ┌───┐\e[K\r
+     │               │ │ 🏳 │\e[K\r
+     │               │ └───┘\e[K\r
+     │               │\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r     │               │ ┌────┐\e[K\e[1B\r     │               │ │ 🏳️‍🌈 │\e[K\e[1B\r     │               │ └────┘\e[K\e[1B\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r     │               │ ┌─────────┐\e[K\e[1B\r     │               │ │ 🏳️‍🌈 Read │\e[K\e[1B\r     │               │ └─────────┘\e[K\e[1B\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r     │               │ ┌──────────┐\e[K\e[1B\r     │               │ │ 🏳️‍🌈 Ready │\e[K\e[1B\r     │               │ └──────────┘\e[K\e[1B\r   ┌─[loop 🔁 Retry]───┐\e[K\r
+   │ │               │ │\e[K\r
+   │ │ 📡 Update     │ │\e[K\r
+   │ │◄┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤ │\e[K\r
+   │ │               │ │\e[K\r
+   └───────────────────┘\e[K\r
+     │               │\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m\e[0m\r

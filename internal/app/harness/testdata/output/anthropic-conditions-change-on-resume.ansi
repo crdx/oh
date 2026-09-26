@@ -4,14 +4,14 @@
 \r
 A socket beneath /tmp it is.\e[?25h\e[?2026l\e[?2026h\e[?25l\e[?7l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Unix sockets no longer work.                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 IPv6 unavailable; use 127.0.0.1.                                                                \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Session is non-interactive; questions and approvals are unavailable.                            \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Unix sockets no longer work.                                                                    \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 IPv6 unavailable; use 127.0.0.1.                                                                \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Session is non-interactive; questions and approvals are unavailable.                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m listen on it again                                                                                 \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r
-\e[KNot any more, so 127.0.0.1 it is.\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[33C\e[?25h\e[?2026l\r
+Not any more, so 127.0.0.1 it is.\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[33C\e[?25h\e[?2026l\r

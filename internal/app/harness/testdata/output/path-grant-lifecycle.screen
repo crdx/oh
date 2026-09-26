@@ -2,7 +2,7 @@
 still working
 
 
- 🤖 Granted temporary read-only access to /reference.
+ 🤖 Granted temporary read-only access to /tmp/oh-golden-reference-0000000000/reference.
 
 
 Model returned no reply.
@@ -12,18 +12,18 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === duplicate grant rejected ===
                                                                            double-enter to send now
- ⏳ Granted temporary read-only access to /reference.
+ ⏳ Granted temporary read-only access to /tmp/oh-golden-reference-0000000000/reference.
 
 
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
- │ /grant: /reference already has temporary read-only access   │
+ │ /grant: /tmp/oh-golden-reference-0000000000/reference already has temporary read-only access   │
  │ (alt+enter to send)                                                                            │
 ─┴── ·✦· ─ r:reference ──────────────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === executable grant ===
                                                                            double-enter to send now
- ⏳ Granted temporary read and execute access to /reference.
+ ⏳ Granted temporary read and execute access to /tmp/oh-golden-reference-0000000000/reference.
 
 
 ── ·✦· ─ rx:reference ─────────────────────────────────────────────────────────────── tame-impala ──
@@ -31,7 +31,7 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === grant replaced before sending ===
                                                                            double-enter to send now
- ⏳ Granted temporary read and write access to /reference.
+ ⏳ Granted temporary read and write access to /tmp/oh-golden-reference-0000000000/reference.
 
 
 ── ·✦· ─ rw:reference ─────────────────────────────────────────────────────────────── tame-impala ──
@@ -43,7 +43,7 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === home path granted ===
                                                                            double-enter to send now
- ⏳ Granted temporary read-only access to /user/reference.
+ ⏳ Granted temporary read-only access to /tmp/oh-golden-user-0000000000/user/reference.
 
 
 ── ·✦· ─ r:reference ──────────────────────────────────────────────────────────────── tame-impala ──
@@ -55,21 +55,21 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === missing home path rejected ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
- │ /grant: Could not resolve ~/missing: lstat /user/missing: no     │
+ │ /grant: Could not resolve ~/missing: lstat /tmp/oh-golden-user-0000000000/user/missing: no     │
  │ such file or directory (alt+enter to send)                                                     │
 ─┴── ·✦· ────────────────────────────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === missing path rejected ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
- │ /grant: Could not resolve /missing: lstat                     │
- │ /missing: no such file or directory (alt+enter to send)       │
+ │ /grant: Could not resolve /tmp/oh-golden-missing-0000000000/missing: lstat                     │
+ │ /tmp/oh-golden-missing-0000000000/missing: no such file or directory (alt+enter to send)       │
 ─┴── ·✦· ────────────────────────────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === pending grant ===
                                                                            double-enter to send now
- ⏳ Granted temporary read-only access to /reference.
+ ⏳ Granted temporary read-only access to /tmp/oh-golden-reference-0000000000/reference.
 
 
 ── ·✦· ─ r:reference ──────────────────────────────────────────────────────────────── tame-impala ──
@@ -77,7 +77,7 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === restoration correction pending ===
                                                                            double-enter to send now
- ⏳ Revoked temporary access to /missing.
+ ⏳ Revoked temporary access to /tmp/oh-golden-missing-0000000000/missing.
 
 
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
@@ -87,7 +87,7 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === restoration correction settled ===
 
- 🤖 Revoked temporary access to /missing.
+ 🤖 Revoked temporary access to /tmp/oh-golden-missing-0000000000/missing.
 
 
 
@@ -103,14 +103,14 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === revoke without grant rejected ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
- │ /revoke: /reference has no temporary grant (alt+enter to    │
+ │ /revoke: /tmp/oh-golden-reference-0000000000/reference has no temporary grant (alt+enter to    │
  │ send)                                                                                          │
 ─┴── ·✦· ────────────────────────────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === settled into next turn ===
 
- 🤖 Granted temporary read-only access to /reference.
+ 🤖 Granted temporary read-only access to /tmp/oh-golden-reference-0000000000/reference.
 
 
 

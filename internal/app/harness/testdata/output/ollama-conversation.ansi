@@ -10,4 +10,4 @@ Ollama answered.\e[?25h\e[?2026l\r
 \e[48;2;52;53;65m continue through Ollama                                                                            \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[KOllama resumed.\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\r
+Ollama resumed.\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\r

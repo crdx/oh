@@ -412,10 +412,8 @@ func (self *Screen) paint() {
 		row = at
 		wasWritten = true
 
-		if !isRunningOn {
-			out.WriteString(eraseRow)
-		}
 		if at >= len(rows) {
+			out.WriteString(eraseRow)
 			continue
 		}
 
@@ -425,7 +423,7 @@ func (self *Screen) paint() {
 		}
 
 		out.WriteString(rows[at].Text)
-		if isRunningOn && style.Width(rows[at].Text) < self.columns {
+		if self.columns <= 0 || style.Width(rows[at].Text) < self.columns {
 			out.WriteString(eraseRow)
 		}
 

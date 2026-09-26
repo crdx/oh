@@ -92,20 +92,20 @@ Try this.\r
 \e[48;2;52;53;65m show me the loop again                                                                             \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[K\e[3m\e[38;2;150;152;150mWrit\e[0m\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mWriting\e[0m\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mWriting it o\e[0m\e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mWriting it out.\e[0m\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[3m\e[38;2;150;152;150mWrit\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mWriting\e[0m\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mWriting it o\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mWriting it out.\e[0m\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[KTry\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTry this\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTry this.\r
+Try\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTry this\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTry this.\e[K\r
 \e[K\r
-\e[K`\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[1B\r\e[K\e[2A\r\e[9C\e[?25h\e[?2026l\r
+`\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[1B\r\e[K\e[2A\r\e[9C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m show me the loop again                                                                             \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[K\e[3m\e[38;2;150;152;150mWriting it out.\e[0m\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[3m\e[38;2;150;152;150mWriting it out.\e[0m\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[KTry this.\r
+Try this.\e[K\r
 \e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1A\r\e[9C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
@@ -113,11 +113,11 @@ Try this.\r
 \e[48;2;52;53;65m show me the loop again                                                                             \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[K\e[3m\e[38;2;150;152;150mWrit\e[0m\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mWriting\e[0m\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mWriting it o\e[0m\e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mWriting it out.\e[0m\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[3m\e[38;2;150;152;150mWrit\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mWriting\e[0m\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mWriting it o\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mWriting it out.\e[0m\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[KTry\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTry this\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTry this.\r
+Try\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTry this\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTry this.\e[K\r
 \e[K\r
-\e[K`\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[1B\r\e[K\e[2A\r\e[9C\e[?25h\e[?2026l\r
+`\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[1B\r\e[K\e[2A\r\e[9C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r

@@ -14,4 +14,4 @@ Reading it instead.\e[?25h\e[?2026l\r
 \e[48;2;52;53;65m why did you stop the first one                                                                     \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[KYou sent another message while it was running.\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[46C\e[?25h\e[?2026l\r
+You sent another message while it was running.\e[K\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[46C\e[?25h\e[?2026l\r

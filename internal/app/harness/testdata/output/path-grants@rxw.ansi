@@ -968,126 +968,126 @@ I will no longer use it.\r
 \e[48;2;52;53;65m use the external reference                                                                         \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Granted temporary read-only access to /reference.                                               \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read-only access to /reference.                                               \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[KI ca\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can re\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can read t\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can read the e\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can read the exter\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can read the external\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can read the external refe\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can read the external referenc\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can read the external reference no\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can read the external reference now.\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+I ca\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can re\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can read t\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can read the e\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can read the exter\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can read the external\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can read the external refe\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can read the external referenc\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can read the external reference no\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can read the external reference now.\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Granted temporary read and write access to /reference.                                          \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read and write access to /reference.                                          \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[KI ca\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can al\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can also c\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can also chang\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can also change it\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can also change it now\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can also change it now.\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+I ca\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can al\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can also c\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can also chang\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can also change it\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can also change it now\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can also change it now.\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Granted temporary read and execute access to /tools.                                            \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read and execute access to /tools.                                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[KI ca\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can ru\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can run wh\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can run what i\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can run what is in\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can run what is in the\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can run what is in the too\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can run what is in the tools d\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can run what is in the tools direc\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can run what is in the tools directory\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can run what is in the tools directory now\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can run what is in the tools directory now.\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+I ca\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can ru\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run wh\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what i\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the too\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the tools d\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the tools direc\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the tools directory\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the tools directory now\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the tools directory now.\e[K\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Granted temporary read, execute, and write access to /build.                                    \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read, execute, and write access to /build.                                    \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[KI ca\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can bu\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build in p\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build in place\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build in place and\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build in place and run\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build in place and run wha\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build in place and run what co\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build in place and run what comes\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build in place and run what comes out\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build in place and run what comes out of i\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build in place and run what comes out of it.\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+I ca\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can bu\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in p\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run wha\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run what co\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run what comes\e[K\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run what comes out\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run what comes out of i\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run what comes out of it.\e[K\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Revoked temporary access to /build.                                                             \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Revoked temporary access to /tools.                                                             \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Revoked temporary access to /build.                                                             \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Revoked temporary access to /tools.                                                             \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[KI wi\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will u\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will use t\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will use the r\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will use the refer\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will use the reference\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will use the reference alo\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will use the reference alone f\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will use the reference alone from\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will use the reference alone from here\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will use the reference alone from here.\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+I wi\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will u\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will use t\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will use the r\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will use the refer\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will use the reference\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will use the reference alo\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will use the reference alone f\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will use the reference alone from\e[K\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will use the reference alone from here\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will use the reference alone from here.\e[K\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Revoked temporary access to /reference.                                                         \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Revoked temporary access to /reference.                                                         \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[KI wi\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will n\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will no lo\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will no longer\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will no longer use\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will no longer use it.\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\r
+I wi\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will n\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will no lo\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will no longer\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will no longer use\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will no longer use it.\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m use the external reference                                                                         \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Granted temporary read-only access to /reference.                                               \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read-only access to /reference.                                               \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[KI can read the external reference now.\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+I can read the external reference now.\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Granted temporary read and write access to /reference.                                          \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read and write access to /reference.                                          \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[KI can also change it now.\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+I can also change it now.\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Granted temporary read and execute access to /tools.                                            \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read and execute access to /tools.                                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[KI can run what is in the tools directory now.\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+I can run what is in the tools directory now.\e[K\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Granted temporary read, execute, and write access to /build.                                    \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read, execute, and write access to /build.                                    \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[KI can build in place and run what comes out of it.\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+I can build in place and run what comes out of it.\e[K\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Revoked temporary access to /build.                                                             \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Revoked temporary access to /tools.                                                             \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Revoked temporary access to /build.                                                             \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Revoked temporary access to /tools.                                                             \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[KI will use the reference alone from here.\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+I will use the reference alone from here.\e[K\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Revoked temporary access to /reference.                                                         \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Revoked temporary access to /reference.                                                         \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[KI will no longer use it.\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\r
+I will no longer use it.\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m use the external reference                                                                         \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Granted temporary read-only access to /reference.                                               \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read-only access to /reference.                                               \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[KI ca\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can re\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can read t\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can read the e\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can read the exter\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can read the external\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can read the external refe\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can read the external referenc\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can read the external reference no\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can read the external reference now.\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+I ca\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can re\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can read t\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can read the e\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can read the exter\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can read the external\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can read the external refe\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can read the external referenc\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can read the external reference no\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can read the external reference now.\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Granted temporary read and write access to /reference.                                          \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read and write access to /reference.                                          \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[KI ca\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can al\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can also c\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can also chang\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can also change it\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can also change it now\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can also change it now.\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+I ca\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can al\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can also c\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can also chang\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can also change it\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can also change it now\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can also change it now.\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Granted temporary read and execute access to /tools.                                            \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read and execute access to /tools.                                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[KI ca\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can ru\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can run wh\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can run what i\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can run what is in\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can run what is in the\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can run what is in the too\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can run what is in the tools d\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can run what is in the tools direc\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can run what is in the tools directory\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can run what is in the tools directory now\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can run what is in the tools directory now.\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+I ca\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can ru\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run wh\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what i\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the too\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the tools d\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the tools direc\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the tools directory\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the tools directory now\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the tools directory now.\e[K\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Granted temporary read, execute, and write access to /build.                                    \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read, execute, and write access to /build.                                    \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[KI ca\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can bu\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build in p\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build in place\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build in place and\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build in place and run\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build in place and run wha\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build in place and run what co\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build in place and run what comes\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build in place and run what comes out\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build in place and run what comes out of i\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can build in place and run what comes out of it.\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+I ca\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can bu\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in p\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run wha\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run what co\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run what comes\e[K\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run what comes out\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run what comes out of i\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run what comes out of it.\e[K\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Revoked temporary access to /build.                                                             \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Revoked temporary access to /tools.                                                             \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Revoked temporary access to /build.                                                             \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Revoked temporary access to /tools.                                                             \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[KI wi\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will u\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will use t\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will use the r\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will use the refer\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will use the reference\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will use the reference alo\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will use the reference alone f\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will use the reference alone from\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will use the reference alone from here\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will use the reference alone from here.\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+I wi\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will u\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will use t\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will use the r\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will use the refer\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will use the reference\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will use the reference alo\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will use the reference alone f\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will use the reference alone from\e[K\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will use the reference alone from here\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will use the reference alone from here.\e[K\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Revoked temporary access to /reference.                                                         \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Revoked temporary access to /reference.                                                         \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-\e[KI wi\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will n\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will no lo\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will no longer\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will no longer use\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI will no longer use it.\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\r
+I wi\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will n\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will no lo\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will no longer\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will no longer use\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will no longer use it.\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r

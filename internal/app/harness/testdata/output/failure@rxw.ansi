@@ -480,7 +480,7 @@ I can only get so far before\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[K\e[3m\e[38;2;150;152;150mThis\e[0m\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThis one\e[0m\e[0m\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThis one sto\e[0m\e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThis one stops h\e[0m\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThis one stops halfw\e[0m\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThis one stops halfway.\e[0m\e[0m\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[23C\e[?25h\e[?2026l\r
+\e[3m\e[38;2;150;152;150mThis\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mThis one\e[0m\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mThis one sto\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mThis one stops h\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mThis one stops halfw\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mThis one stops halfway.\e[0m\e[0m\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[23C\e[?25h\e[?2026l\r
 \r
 \e[38;2;204;102;102mThe stream ended before the response did\e[0m\r
 \r
@@ -488,7 +488,7 @@ I can only get so far before\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r
-\e[KLet\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me t\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me think\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me think abo\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me think about t\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me think about that.\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\r
+Let\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rLet me t\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rLet me think\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rLet me think abo\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rLet me think about t\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rLet me think about that.\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\r
 \r
 \e[38;2;204;102;102mThe model is overloaded\e[0m\r
 \r
@@ -496,7 +496,7 @@ I can only get so far before\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r
-\e[KI ca\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can on\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can only g\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can only get s\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can only get so fa\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can only get so far be\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can only get so far before\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\r
+I ca\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can on\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can only g\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can only get s\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can only get so fa\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can only get so far be\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can only get so far before\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\r
 \r
 \e[38;2;204;102;102mThe response was cut short\e[0m\r
 \r
@@ -513,7 +513,7 @@ I can only get so far before\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[K\e[3m\e[38;2;150;152;150mThis one stops halfway.\e[0m\e[0m\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[23C\e[?25h\e[?2026l\r
+\e[3m\e[38;2;150;152;150mThis one stops halfway.\e[0m\e[0m\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[23C\e[?25h\e[?2026l\r
 \r
 \e[38;2;204;102;102mThe stream ended before the response did\e[0m\r
 \r
@@ -521,7 +521,7 @@ I can only get so far before\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r
-\e[KLet me think about that.\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\r
+Let me think about that.\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\r
 \r
 \e[38;2;204;102;102mThe model is overloaded\e[0m\r
 \r
@@ -529,7 +529,7 @@ I can only get so far before\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r
-\e[KI can only get so far before\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\r
+I can only get so far before\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\r
 \r
 \e[38;2;204;102;102mThe response was cut short\e[0m\r
 \r
@@ -546,7 +546,7 @@ I can only get so far before\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[K\e[3m\e[38;2;150;152;150mThis\e[0m\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThis one\e[0m\e[0m\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThis one sto\e[0m\e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThis one stops h\e[0m\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThis one stops halfw\e[0m\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThis one stops halfway.\e[0m\e[0m\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[23C\e[?25h\e[?2026l\r
+\e[3m\e[38;2;150;152;150mThis\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mThis one\e[0m\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mThis one sto\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mThis one stops h\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mThis one stops halfw\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mThis one stops halfway.\e[0m\e[0m\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[23C\e[?25h\e[?2026l\r
 \r
 \e[38;2;204;102;102mThe stream ended before the response did\e[0m\r
 \r
@@ -554,7 +554,7 @@ I can only get so far before\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r
-\e[KLet\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me t\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me think\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me think abo\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me think about t\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me think about that.\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\r
+Let\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rLet me t\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rLet me think\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rLet me think abo\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rLet me think about t\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rLet me think about that.\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\r
 \r
 \e[38;2;204;102;102mThe model is overloaded\e[0m\r
 \r
@@ -562,7 +562,7 @@ I can only get so far before\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r
-\e[KI ca\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can on\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can only g\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can only get s\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can only get so fa\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can only get so far be\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI can only get so far before\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\r
+I ca\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can on\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can only g\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can only get s\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can only get so fa\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can only get so far be\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can only get so far before\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\r
 \r
 \e[38;2;204;102;102mThe response was cut short\e[0m\r
 \r

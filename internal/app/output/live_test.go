@@ -98,7 +98,7 @@ func TestARowAddedBelowTheRestOpensARowOfItsOwn(t *testing.T) {
 
 	screen.DrawAnswer(width.HardRows([]string{"one", "two", "three"}))
 
-	if want := "\r\n" + eraseRow + "three"; !strings.Contains(screenOutput.String(), want) {
+	if want := "\r\nthree" + eraseRow; !strings.Contains(screenOutput.String(), want) {
 		t.Errorf("expected the new row on a row of its own, got %q", screenOutput.String())
 	}
 }
@@ -324,7 +324,7 @@ func TestAnAnswerTallerThanItsRoomCommitsItsTopOnce(t *testing.T) {
 	screen.Seal()
 
 	for _, row := range rows {
-		if count := strings.Count(screenOutput.String(), eraseRow+row); count != 1 {
+		if count := strings.Count(screenOutput.String(), row+eraseRow); count != 1 {
 			t.Errorf("%q was written %d times, want it written once", row, count)
 		}
 	}

@@ -1,2 +1,2 @@
 === fatal signal ===
-\e[5 q\e[?2026h\e[?25l\e[?7l\r\e[K> ask something else\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\r\e[?7h\e[?25h\e[0 q\e[23;0t\e[?5522l\e[?1004l\e[?2004l\e[<u
+\e[5 q\e[?2026h\e[?25l\e[?7l\r> ask something else\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\r\e[?7h\e[?25h\e[0 q\e[23;0t\e[?5522l\e[?1004l\e[?2004l\e[<u

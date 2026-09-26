@@ -1496,144 +1496,144 @@ It was stopped when write access was withdrawn.\r
 \e[48;2;52;53;65m start the docs server and keep it up                                                               \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[KThe\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs ser\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server is u\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server is up.\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs ser\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs server\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs server is u\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs server is up.\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed after 12s, exit(2).                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
-\e[K\e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
-\e[K\e[48;2;48;58;67m    exit status 1                                                                                   \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mseed\e[0m\e[48;2;48;58;67m exited: complete after 14s.                                                            \e[0m\r
-\e[K\e[48;2;48;58;67m    seeding the database                                                                            \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m    [truncated at 2K of 58.6K; full output in                                                       \e[0m\r
-\e[K\e[48;2;48;58;67m    /state/sessions/tame-impala/drops/output-3f2a1c8d4b5e6f70.txt]                                  \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mempty\e[0m\e[48;2;48;58;67m exited: complete after 15s with no output.                                            \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild`fast\e[0m\e[48;2;48;58;67m exited: complete after 16s.                                                      \e[0m\r
-\e[K\e[48;2;48;58;67m    done                                                                                            \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s with no output.                                          \e[0m\r
-\e[K\e[48;2;48;58;67m    note: the oldest 1K of output was dropped to keep the spool bounded.                            \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed after 12s, exit(2).                                                    \e[0m\r
+\e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
+\e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
+\e[48;2;48;58;67m    exit status 1                                                                                   \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mseed\e[0m\e[48;2;48;58;67m exited: complete after 14s.                                                            \e[0m\r
+\e[48;2;48;58;67m    seeding the database                                                                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    [truncated at 2K of 58.6K; full output in                                                       \e[0m\r
+\e[48;2;48;58;67m    /state/sessions/tame-impala/drops/output-3f2a1c8d4b5e6f70.txt]                                  \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mempty\e[0m\e[48;2;48;58;67m exited: complete after 15s with no output.                                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild`fast\e[0m\e[48;2;48;58;67m exited: complete after 16s.                                                      \e[0m\r
+\e[48;2;48;58;67m    done                                                                                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s with no output.                                          \e[0m\r
+\e[48;2;48;58;67m    note: the oldest 1K of output was dropped to keep the spool bounded.                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mCache expired: 97Kt sent after 7m.\e[0m\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mindex\e[0m\e[48;2;48;58;67m stopped because access to /reference was revoked.                                     \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mindex\e[0m\e[48;2;48;58;67m stopped because access to /reference was revoked.                                     \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m what happened to it                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped from the keyboard.                                                             \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped from the keyboard.                                                             \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mdiscard\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mdiscard\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;150;152;150mprune\e[0m\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;150;152;150mprune\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mdiscard\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mdiscard\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[38;2;207;173;0mjob\e[0m \e[38;2;150;152;150mprune\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;150;152;150mprune\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[KIt w\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was s\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was stopp\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was stopped w\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was stopped when\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was stopped when writ\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was stopped when write ac\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was stopped when write access\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was stopped when write access was\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was stopped when write access was wit\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was stopped when write access was withdra\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was stopped when write access was withdrawn.\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[47C\e[?25h\e[?2026l\r
+It w\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was s\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was stopp\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was stopped w\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was stopped when\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was stopped when writ\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was stopped when write ac\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was stopped when write access\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was stopped when write access was\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was stopped when write access was wit\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was stopped when write access was withdra\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was stopped when write access was withdrawn.\e[K\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[47C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m start the docs server and keep it up                                                               \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[KThe docs server is up.\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+The docs server is up.\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed after 12s, exit(2).                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
-\e[K\e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
-\e[K\e[48;2;48;58;67m    exit status 1                                                                                   \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mseed\e[0m\e[48;2;48;58;67m exited: complete after 14s.                                                            \e[0m\r
-\e[K\e[48;2;48;58;67m    seeding the database                                                                            \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m    [truncated at 2K of 58.6K; full output in                                                       \e[0m\r
-\e[K\e[48;2;48;58;67m    /state/sessions/tame-impala/drops/output-3f2a1c8d4b5e6f70.txt]                                  \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mempty\e[0m\e[48;2;48;58;67m exited: complete after 15s with no output.                                            \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild`fast\e[0m\e[48;2;48;58;67m exited: complete after 16s.                                                      \e[0m\r
-\e[K\e[48;2;48;58;67m    done                                                                                            \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s with no output.                                          \e[0m\r
-\e[K\e[48;2;48;58;67m    note: the oldest 1K of output was dropped to keep the spool bounded.                            \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed after 12s, exit(2).                                                    \e[0m\r
+\e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
+\e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
+\e[48;2;48;58;67m    exit status 1                                                                                   \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mseed\e[0m\e[48;2;48;58;67m exited: complete after 14s.                                                            \e[0m\r
+\e[48;2;48;58;67m    seeding the database                                                                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    [truncated at 2K of 58.6K; full output in                                                       \e[0m\r
+\e[48;2;48;58;67m    /state/sessions/tame-impala/drops/output-3f2a1c8d4b5e6f70.txt]                                  \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mempty\e[0m\e[48;2;48;58;67m exited: complete after 15s with no output.                                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild`fast\e[0m\e[48;2;48;58;67m exited: complete after 16s.                                                      \e[0m\r
+\e[48;2;48;58;67m    done                                                                                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s with no output.                                          \e[0m\r
+\e[48;2;48;58;67m    note: the oldest 1K of output was dropped to keep the spool bounded.                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mCache expired: 97Kt sent after 7m.\e[0m\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mindex\e[0m\e[48;2;48;58;67m stopped because access to /reference was revoked.                                     \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mindex\e[0m\e[48;2;48;58;67m stopped because access to /reference was revoked.                                     \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m what happened to it                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped from the keyboard.                                                             \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped from the keyboard.                                                             \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mdiscard\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mdiscard\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;150;152;150mprune\e[0m\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;150;152;150mprune\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mdiscard\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mdiscard\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[38;2;207;173;0mjob\e[0m \e[38;2;150;152;150mprune\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;150;152;150mprune\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[KIt was stopped when write access was withdrawn.\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[47C\e[?25h\e[?2026l\r
+It was stopped when write access was withdrawn.\e[K\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[47C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m start the docs server and keep it up                                                               \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[KThe\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs ser\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server is u\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server is up.\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs ser\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs server\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs server is u\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs server is up.\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed after 12s, exit(2).                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
-\e[K\e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
-\e[K\e[48;2;48;58;67m    exit status 1                                                                                   \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mseed\e[0m\e[48;2;48;58;67m exited: complete after 14s.                                                            \e[0m\r
-\e[K\e[48;2;48;58;67m    seeding the database                                                                            \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m    [truncated at 2K of 58.6K; full output in                                                       \e[0m\r
-\e[K\e[48;2;48;58;67m    /state/sessions/tame-impala/drops/output-3f2a1c8d4b5e6f70.txt]                                  \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mempty\e[0m\e[48;2;48;58;67m exited: complete after 15s with no output.                                            \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild`fast\e[0m\e[48;2;48;58;67m exited: complete after 16s.                                                      \e[0m\r
-\e[K\e[48;2;48;58;67m    done                                                                                            \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s with no output.                                          \e[0m\r
-\e[K\e[48;2;48;58;67m    note: the oldest 1K of output was dropped to keep the spool bounded.                            \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed after 12s, exit(2).                                                    \e[0m\r
+\e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
+\e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
+\e[48;2;48;58;67m    exit status 1                                                                                   \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mseed\e[0m\e[48;2;48;58;67m exited: complete after 14s.                                                            \e[0m\r
+\e[48;2;48;58;67m    seeding the database                                                                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    [truncated at 2K of 58.6K; full output in                                                       \e[0m\r
+\e[48;2;48;58;67m    /state/sessions/tame-impala/drops/output-3f2a1c8d4b5e6f70.txt]                                  \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mempty\e[0m\e[48;2;48;58;67m exited: complete after 15s with no output.                                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild`fast\e[0m\e[48;2;48;58;67m exited: complete after 16s.                                                      \e[0m\r
+\e[48;2;48;58;67m    done                                                                                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80marchive\e[0m\e[48;2;48;58;67m exited: complete after 17s with no output.                                          \e[0m\r
+\e[48;2;48;58;67m    note: the oldest 1K of output was dropped to keep the spool bounded.                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mCache expired: 97Kt sent after 7m.\e[0m\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mindex\e[0m\e[48;2;48;58;67m stopped because access to /reference was revoked.                                     \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                      \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mindex\e[0m\e[48;2;48;58;67m stopped because access to /reference was revoked.                                     \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m what happened to it                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped from the keyboard.                                                             \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped from the keyboard.                                                             \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mdiscard\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mdiscard\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;150;152;150mprune\e[0m\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;150;152;150mprune\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mdiscard\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mdiscard\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[38;2;207;173;0mjob\e[0m \e[38;2;150;152;150mprune\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;150;152;150mprune\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\e[KIt w\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was s\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was stopp\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was stopped w\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was stopped when\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was stopped when writ\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was stopped when write ac\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was stopped when write access\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was stopped when write access was\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was stopped when write access was wit\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was stopped when write access was withdra\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt was stopped when write access was withdrawn.\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[47C\e[?25h\e[?2026l\r
+It w\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was s\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was stopp\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was stopped w\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was stopped when\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was stopped when writ\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was stopped when write ac\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was stopped when write access\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was stopped when write access was\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was stopped when write access was wit\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was stopped when write access was withdra\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was stopped when write access was withdrawn.\e[K\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[47C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r

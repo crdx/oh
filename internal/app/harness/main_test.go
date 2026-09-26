@@ -16,6 +16,7 @@ import (
 	"io"
 	"iter"
 	"maps"
+	"math"
 	"net/http"
 	"net/http/httptest"
 	"net/netip"
@@ -4559,6 +4560,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"app-plain-turn":         {".jsonl", ".transcript"},
 		"authorisation-url":      {".ansi", ".screen"},
 		"banner":                 {".ansi", ".screen"},
+		"banner-relayout":        {".ansi", ".screen"},
 		"clearing":               {".ansi", ".screen"},
 		"completion":             {".txt"},
 		"config-reload":          {".ansi", ".screen"},
@@ -8649,6 +8651,80 @@ func TestGoldenTheStartupLineDrawsWhatItDrewBefore(t *testing.T) {
 	compareWithGolden(t, "startup-sized-output", ".screen", shownStreamPasses)
 }
 
+func TestGoldenASizedBannerSurvivesARelayoutUnderTheInput(t *testing.T) {
+	startupEvent := startup.NewEvent(1500*time.Microsecond, startup.Info{
+		Session:       "tame-impala",
+		PromptBytes:   740 + 3*1024,
+		ProjectSkills: 3,
+		GlobalSkills:  1,
+		Snippets:      2,
+		ToolBytes:     614,
+	})
+	entries := []replayEntry{
+		{Event: &startupEvent},
+		{Event: &agent.Event{Kind: agent.UserMessageEvent, Text: "how many deer are there?"}},
+		{Event: &agent.Event{Kind: agent.ModelMessageEvent, Text: "Just the one, and it is still standing."}},
+	}
+
+	minimumColumns := 0
+	for columns := 1; columns <= replayColumns; columns++ {
+		if strings.Contains(startup.RenderEvent(startupEvent, columns, true), "\x1b]66;") {
+			minimumColumns = columns
+			break
+		}
+	}
+
+	passes := map[string]func() string{}
+	shownAt := map[string]int{}
+
+	for name, columns := range map[string]int{"wide": replayColumns, "details wrapped": minimumColumns} {
+		for _, isRunning := range []bool{false, true} {
+			pass := name
+			if isRunning {
+				pass += ", mid-turn"
+			}
+
+			drawnBefore, drawnAfter := relaidOutBanner(t, entries, columns, isRunning)
+			requireSameVisibleScreenInColumns(t, "a relayout under the input changed "+pass, columns, drawnBefore, drawnAfter)
+
+			if hasDeer := strings.Contains(shown(t, drawnAfter, columns), "🦌"); !hasDeer {
+				t.Errorf("a relayout under the input lost the banner's emoji, %s", pass)
+			}
+
+			passes[pass] = func() string { return drawnAfter }
+			shownAt[pass] = columns
+		}
+	}
+
+	compareWithGolden(t, "banner-relayout", ".ansi", passes)
+
+	shownPasses := map[string]func() string{}
+	for name, pass := range passes {
+		shownPasses[name] = func() string { return shown(t, pass(), shownAt[name]) }
+	}
+	compareWithGolden(t, "banner-relayout", ".screen", shownPasses)
+}
+
+func relaidOutBanner(t *testing.T, entries []replayEntry, columns int, isRunning bool) (string, string) {
+	t.Helper()
+
+	rig := newReplayRig(t, columns)
+	rig.chat.screen.SetTextSizingSupported(true)
+	rig.chat.currentTurn.Stream = testTurnStreamForRunning(isRunning)
+	rig.chat.inputLine = edit.NewInput(nil)
+	rig.load(entries)
+	rig.chat.replay()
+	rig.chat.show(rig.chat.inputLine)
+	drawnBefore := rig.drawn()
+
+	rig.chat.redraw()
+	if isRunning {
+		rig.chat.currentTurn.painter.Close(dynamic.Cancelled)
+	}
+
+	return drawnBefore, rig.drawn()
+}
+
 func TestGoldenLocalConfigsDrawMegathoroughly(t *testing.T) {
 	profiles := map[string]startup.Info{
 		"no local config": {},
@@ -10879,6 +10955,7 @@ type screen struct {
 	rows        [][]cell
 	marks       map[int]bool
 	wraps       map[int]bool
+	sized       []sizedCharacter
 	row, column int
 	columns     int
 	height      int
@@ -10893,6 +10970,16 @@ type screen struct {
 type cell struct {
 	grapheme string
 	styles   string
+}
+
+type sizedCharacter struct {
+	row, column int
+	cells, rows int
+}
+
+func (self sizedCharacter) covers(firstRow int, lastRow int, firstColumn int, lastColumn int) bool {
+	return self.row <= lastRow && firstRow < self.row+self.rows &&
+		self.column <= lastColumn && firstColumn < self.column+self.cells
 }
 
 type graphicStyle struct {
@@ -11014,6 +11101,42 @@ func TestAScreenKeepsADecorationApartFromItsColour(t *testing.T) {
 	}
 }
 
+func TestAScreenDestroysASizedCharacterWhereverAnythingTouchesIt(t *testing.T) {
+	const deer = "\x1b]66;s=2:w=2;🦌\x1b\\"
+	const heading = " " + deer + "  Agent"
+	const indented = "\x1b[5C  skills"
+
+	for _, test := range []struct {
+		name          string
+		stream        string
+		shouldSurvive bool
+	}{
+		{"appended beneath", heading + "\r\n" + indented, true},
+		{"its own row redrawn and the next stepped over", "\r\x1b[K" + heading + "\r\n\r" + indented, true},
+		{"the row beneath erased first", "\r\x1b[K" + heading + "\r\n\r\x1b[K" + indented, false},
+		{"the row beneath erased whole", heading + "\r\n\x1b[2K" + indented, false},
+		{"its lower half drawn around", heading + "\r\nxxxx", true},
+		{"everything below erased", heading + "\r\n\x1b[J", false},
+		{"erased from the row beneath", heading + "\x1b[1B\r\x1b[J", false},
+		{"the rest of its row erased", heading + "\r\x1b[7C\x1b[K", true},
+	} {
+		drawn := playScreen(t, test.stream, replayColumns)
+
+		hasSurvived := strings.Contains(strings.Join(drawn.text(), "\n"), "🦌")
+		if hasSurvived != test.shouldSurvive {
+			t.Errorf("%s: the deer survived %t, want %t: %q", test.name, hasSurvived, test.shouldSurvive, drawn.text())
+		}
+	}
+}
+
+func TestAScreenDrawsAroundTheLowerHalfOfASizedCharacter(t *testing.T) {
+	drawn := playScreen(t, " \x1b]66;s=2:w=2;🦌\x1b\\  Agent\r\nxxxx", replayColumns)
+
+	if got, want := drawn.text(), []string{" 🦌    Agent", "x    xxx"}; !slices.Equal(got, want) {
+		t.Errorf("the screen drew %q, want %q", got, want)
+	}
+}
+
 func playScreen(t *testing.T, stream string, columns int) *screen {
 	t.Helper()
 
@@ -11124,7 +11247,7 @@ func (self *screen) operatingSystemCommand(stream string, at int) int {
 		declaredWidth = prefixedNumber(option, "w=", declaredWidth)
 	}
 
-	self.putSized(parts[2], scale*declaredWidth)
+	self.putSized(parts[2], scale*declaredWidth, scale)
 
 	return end
 }
@@ -11144,13 +11267,45 @@ func (self *screen) semanticPrompt(payload string) {
 	self.marks[self.row] = true
 }
 
-func (self *screen) putSized(grapheme string, cells int) {
+func (self *screen) putSized(grapheme string, cells int, rows int) {
 	drawnCells := min(width.Of(grapheme), cells)
 	self.put(grapheme, drawnCells)
+	placed := sizedCharacter{row: self.row, column: self.column - drawnCells, cells: cells, rows: rows}
 
 	for range cells - drawnCells {
 		self.put(" ", 1)
 	}
+
+	if rows > 1 {
+		self.sized = append(self.sized, placed)
+	}
+}
+
+func (self *screen) pastLowerHalves(column int) int {
+	for _, one := range self.sized {
+		if one.row < self.row && self.row < one.row+one.rows && one.covers(self.row, self.row, column, column) {
+			return self.pastLowerHalves(one.column + one.cells)
+		}
+	}
+
+	return column
+}
+
+func (self *screen) destroySized(firstRow int, lastRow int, firstColumn int, lastColumn int) {
+	self.sized = slices.DeleteFunc(self.sized, func(one sizedCharacter) bool {
+		if !one.covers(firstRow, lastRow, firstColumn, lastColumn) {
+			return false
+		}
+
+		if one.row < len(self.rows) {
+			row := self.rows[one.row]
+			for at := one.column; at < min(one.column+one.cells, len(row)); at++ {
+				row[at] = cell{grapheme: " "}
+			}
+		}
+
+		return true
+	})
 }
 
 func (self *screen) control(stream string, at int) int {
@@ -11220,6 +11375,15 @@ func (self *screen) privateMode(command byte, parameters string) {
 }
 
 func (self *screen) eraseInRow(mode int) {
+	switch mode {
+	case 0:
+		self.destroySized(self.row, self.row, self.column, math.MaxInt)
+	case 1:
+		self.destroySized(self.row, self.row, 0, self.column)
+	case 2:
+		self.destroySized(self.row, self.row, 0, math.MaxInt)
+	}
+
 	if self.row >= len(self.rows) {
 		return
 	}
@@ -11259,6 +11423,7 @@ func (self *screen) erase(mode int) {
 
 		maps.DeleteFunc(self.marks, func(row int, _ bool) bool { return row > self.row })
 		maps.DeleteFunc(self.wraps, func(row int, _ bool) bool { return row > self.row })
+		self.destroySized(self.row+1, math.MaxInt, 0, math.MaxInt)
 	case 2, 3:
 		if self.height > 0 {
 			self.eraseScreenOrScrollback(mode)
@@ -11268,6 +11433,7 @@ func (self *screen) erase(mode int) {
 		self.rows = nil
 		self.marks = nil
 		self.wraps = nil
+		self.sized = nil
 	default:
 		self.t.Fatalf("the screen was asked to erase in a way it does not know: ESC [ %dJ", mode)
 	}
@@ -11282,6 +11448,7 @@ func (self *screen) eraseScreenOrScrollback(mode int) {
 		}
 		maps.DeleteFunc(self.marks, func(row int, _ bool) bool { return row >= top })
 		maps.DeleteFunc(self.wraps, func(row int, _ bool) bool { return row >= top })
+		self.destroySized(top, math.MaxInt, 0, math.MaxInt)
 
 		return
 	}
@@ -11289,6 +11456,10 @@ func (self *screen) eraseScreenOrScrollback(mode int) {
 	self.rows = self.rows[min(top, len(self.rows)):]
 	self.marks = rowsFrom(self.marks, top)
 	self.wraps = rowsFrom(self.wraps, top)
+	self.sized = slices.DeleteFunc(self.sized, func(one sizedCharacter) bool { return one.row < top })
+	for at := range self.sized {
+		self.sized[at].row -= top
+	}
 	self.row -= top
 	self.lowestRow -= top
 }
@@ -11333,7 +11504,12 @@ func (self *screen) put(grapheme string, cells int) {
 		self.rows = append(self.rows, nil)
 	}
 
-	drawnCells := min(cells, self.columns-self.column)
+	self.column = self.pastLowerHalves(self.column)
+	drawnCells := min(cells, max(0, self.columns-self.column))
+	if drawnCells == 0 {
+		return
+	}
+	self.destroySized(self.row, self.row, self.column, self.column+drawnCells-1)
 	row := self.rows[self.row]
 	for len(row) < self.column+drawnCells {
 		row = append(row, cell{grapheme: " "})
@@ -13375,18 +13551,19 @@ func pathGrantGoldenStream(t *testing.T, scenario pathGrantGoldenScenario) strin
 	}
 	self.show(inputLine)
 
-	stream := screenOutput.String()
-	stream = strings.ReplaceAll(stream, referencePath, "/reference")
-	stream = strings.ReplaceAll(stream, missingPath, "/missing")
-	stream = strings.ReplaceAll(stream, homePath, "/user")
-	stream = strings.ReplaceAll(stream, manyGrantParent(), "/many")
-	return stream
+	return strings.ReplaceAll(screenOutput.String(), goldenProcessIdentity(), stableProcessIdentity)
+}
+
+const stableProcessIdentity = "0000000000"
+
+func goldenProcessIdentity() string {
+	return fmt.Sprintf("%010d", os.Getpid())
 }
 
 func stableGoldenPath(t *testing.T, label string, shouldExist bool) string {
 	t.Helper()
 
-	parent := fmt.Sprintf("/tmp/oh-golden-%s-%010d", label, os.Getpid())
+	parent := "/tmp/oh-golden-" + label + "-" + goldenProcessIdentity()
 	path := filepath.Join(parent, label)
 	if err := os.RemoveAll(parent); err != nil {
 		t.Fatal(err)
@@ -13404,7 +13581,7 @@ func stableGoldenPath(t *testing.T, label string, shouldExist bool) string {
 }
 
 func manyGrantParent() string {
-	return fmt.Sprintf("/tmp/oh-many-grants-%010d", os.Getpid())
+	return "/tmp/oh-many-grants-" + goldenProcessIdentity()
 }
 
 func stableManyGrantGoldenPaths(t *testing.T) []pathgrant.Grant {

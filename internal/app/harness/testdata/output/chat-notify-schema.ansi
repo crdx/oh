@@ -8,4 +8,4 @@ The notification tool is there when it is wanted.\e[?25h\e[?2026l\r
 \e[48;2;52;53;65m finish                                                                                             \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
-\e[KDone.\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[5C\e[?25h\e[?2026l\r
+Done.\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[5C\e[?25h\e[?2026l\r

@@ -246,11 +246,11 @@ func TestTheInputTakesNoRowOfItsOwnUntilSomethingHasBeenSaid(t *testing.T) {
 
 	got := screenOutput.String()
 
-	if want := "\r" + eraseRow + "thinking"; !strings.Contains(got, want) {
+	if want := "\rthinking" + eraseRow; !strings.Contains(got, want) {
 		t.Errorf("expected what was said to take the row the input was on, got %q", got)
 	}
 
-	if want := "thinking\r\n" + eraseRow + "\r\n" + eraseRow + "> hi"; !strings.Contains(got, want) {
+	if want := "thinking" + eraseRow + "\r\n" + eraseRow + "\r\n> hi" + eraseRow; !strings.Contains(got, want) {
 		t.Errorf("expected the input to move under what was said with a blank row, got %q", got)
 	}
 }
@@ -274,7 +274,7 @@ func TestWritingToTheConversationPutsTheInputBackWithTheCursorInIt(t *testing.T)
 
 	screen.Line("thinking")
 
-	want := eraseRow + "> hi\r" + ansi.Right(3) + showCursor + endFrame
+	want := "> hi" + eraseRow + "\r" + ansi.Right(3) + showCursor + endFrame
 
 	if got := screenOutput.String(); !strings.HasSuffix(got, want) {
 		t.Errorf("expected the input to be put back under it, got %q", got)
@@ -286,17 +286,17 @@ func TestTheInputIsTakenOffTheScreenBeforeTheConversationIsWrittenTo(t *testing.
 
 	screen.Line("thinking")
 
-	want := ansi.Up(1) + "\r" + eraseRow
+	want := ansi.Up(1) + "\rthinking" + eraseRow + ansi.Down(1) + "\r" + eraseRow
 
 	got := screenOutput.String()
 
 	eraseIndex := strings.Index(got, want)
 	if eraseIndex < 0 {
-		t.Fatalf("expected the input to be erased, got %q", got)
+		t.Fatalf("expected the input's row to be taken over and cleared, got %q", got)
 	}
 
-	if writeIndex := strings.Index(got, "thinking"); writeIndex < eraseIndex {
-		t.Errorf("expected the input to come off before the write, got %q", got)
+	if drawIndex := strings.LastIndex(got, "> hi"); drawIndex < eraseIndex {
+		t.Errorf("expected the input to come back below its cleared row, got %q", got)
 	}
 }
 
@@ -323,11 +323,11 @@ func TestAnInputOfSeveralRowsIsTakenOffAndPutBackWhole(t *testing.T) {
 
 	got := screenOutput.String()
 
-	if want := ansi.Up(2) + "\r" + eraseRow; !strings.Contains(got, want) {
+	if want := ansi.Up(2) + "\rthinking" + eraseRow; !strings.Contains(got, want) {
 		t.Errorf("expected the erase to start above the top row of the input, got %q", got)
 	}
 
-	if want := eraseRow + "three" + ansi.Up(1); !strings.Contains(got, want) || !strings.Contains(got, eraseRow+"> one") || !strings.Contains(got, eraseRow+"two") {
+	if want := "three" + eraseRow + ansi.Up(1); !strings.Contains(got, want) || !strings.Contains(got, "> one"+eraseRow) || !strings.Contains(got, "two"+eraseRow) {
 		t.Errorf("expected every row back, cursor on the second, got %q", got)
 	}
 }

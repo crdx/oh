@@ -1,20 +1,20 @@
 === pending sandbox to host ===
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r
-\e[K\e[48;2;48;58;67m ⏳ Host loopback port 3000 exposed to sandbox.                                                     \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[1B\r\e[K\e[48;2;48;58;67m 🤖 Host loopback port 3000 exposed to sandbox.                                                     \e[0m\e[1B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m ⏳ Host loopback port 3000 exposed to sandbox.                                                     \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[1B\r\e[48;2;48;58;67m 🤖 Host loopback port 3000 exposed to sandbox.                                                     \e[0m\e[1B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 
 === recorded directions ===
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.9.9.9:8080.                                             \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Host loopback port 3000 exposed to sandbox.                                                     \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Host loopback port 3000 no longer exposed to sandbox.                                           \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Sandbox port 8080 no longer exposed to host.                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.9.9.9:8080.                                             \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Host loopback port 3000 exposed to sandbox.                                                     \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Host loopback port 3000 no longer exposed to sandbox.                                           \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Sandbox port 8080 no longer exposed to host.                                                    \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[?25h\e[?2026l
 === recorded ports in a row ===
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[K\e[48;2;48;58;67m 🤖 Sandbox port 8001 exposed at http://127.9.9.9:8001.                                             \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Sandbox port 8002 exposed at http://127.9.9.9:8002.                                             \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[48;2;48;58;67m 🤖 Sandbox port 8003 exposed at http://127.9.9.9:8003.                                             \e[0m\r
-\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Sandbox port 8001 exposed at http://127.9.9.9:8001.                                             \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Sandbox port 8002 exposed at http://127.9.9.9:8002.                                             \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Sandbox port 8003 exposed at http://127.9.9.9:8003.                                             \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[?25h\e[?2026l
