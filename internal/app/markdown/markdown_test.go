@@ -10,6 +10,7 @@ import (
 
 	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/width"
 )
 
 const answer = `# Findings
@@ -739,5 +740,32 @@ func TestAnImageWrittenOutNamesItsAddressWithoutAGap(t *testing.T) {
 				t.Errorf("wrote %q, want %q", got, test.want)
 			}
 		})
+	}
+}
+
+func TestOnlyCodeStandingOnItsOwnIsBrokenSoftly(t *testing.T) {
+	const code = "```bash\necho one two three four\n```"
+
+	for _, test := range []struct {
+		name            string
+		source          string
+		shouldSoftWrap  bool
+		wantsSoftBreaks bool
+	}{
+		{"code asked for", code, true, true},
+		{"code not asked for", code, false, false},
+		{"code in a list", "- " + strings.ReplaceAll(code, "\n", "\n  "), true, false},
+		{"code in a quote", "> " + strings.ReplaceAll(code, "\n", "\n> "), true, false},
+		{"prose", "echo one two three four", true, false},
+	} {
+		rows := RenderWith(test.source, Options{Columns: 10, ShouldSoftWrapCode: test.shouldSoftWrap})
+
+		hasSoftBreaks := slices.ContainsFunc(rows, func(row width.ScreenRow) bool { return row.HasSoftBreak })
+		if hasSoftBreaks != test.wantsSoftBreaks {
+			t.Errorf("%s broke softly %t, want %t: %+v", test.name, hasSoftBreaks, test.wantsSoftBreaks, rows)
+		}
+		if len(rows) < 2 {
+			t.Errorf("%s was never wider than the columns: %+v", test.name, rows)
+		}
 	}
 }

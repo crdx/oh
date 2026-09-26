@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"crdx.org/oh/internal/app/ansi"
+	"crdx.org/oh/internal/app/width"
 )
 
 type sealedState struct {
@@ -400,7 +401,7 @@ func TestTheCursorComesBackWhenTheInputIsTakenAgain(t *testing.T) {
 func TestAHiddenRowsNoticeNeitherWrapsNorMovesTheDrawing(t *testing.T) {
 	screen, _ := region()
 
-	screen.DrawAnswer([]string{strings.Repeat("x", screen.columns)})
+	screen.DrawAnswer(width.HardRows([]string{strings.Repeat("x", screen.columns)}))
 	before := screen.sealedState()
 
 	notice := screen.hiddenRowsNotice(3)

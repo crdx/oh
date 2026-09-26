@@ -32,7 +32,7 @@ A task list
 An indented code block
 
 plain = "indented four spaces, so it has
-no language"
+ no language"
 print(plain)
 
 An HTML block
@@ -529,7 +529,9 @@ l
 a
 i
 n
+
 =
+
 "
 i
 n
@@ -539,10 +541,12 @@ n
 t
 e
 d
+
 f
 o
 u
 r
+
 s
 p
 a
@@ -550,15 +554,20 @@ c
 e
 s
 ,
+
 s
 o
+
 i
 t
+
 h
 a
 s
+
 n
 o
+
 l
 a
 n
@@ -597,6 +606,7 @@ k
 d
 i
 v
+
 c
 l
 a
@@ -611,6 +621,7 @@ e
 "
 >
 
+
 <
 p
 >
@@ -618,10 +629,13 @@ h
 e
 l
 d
+
 a
 s
+
 i
 t
+
 s
 t
 a
@@ -817,28 +831,37 @@ t
 
 i
 f
+
 [
 [
+
 -
 d
+
 "
 $
 D
 I
 R
 "
+
 ]
 ]
 ;
+
 t
 h
 e
 n
 
+
+
+
 e
 c
 h
 o
+
 "
 t
 h
@@ -850,30 +873,40 @@ e
 l
 i
 f
+
 [
 [
+
 -
 f
+
 "
 $
 D
 I
 R
 "
+
 ]
 ]
 ;
+
 t
 h
 e
 n
 
+
+
+
 e
 c
 h
 o
+
 "
 a
+
 f
 i
 l
@@ -884,10 +917,14 @@ l
 s
 e
 
+
+
+
 e
 c
 h
 o
+
 "
 n
 o
@@ -905,24 +942,32 @@ h
 i
 l
 e
+
 r
 e
 a
 d
+
 -
 r
+
 N
 A
 M
 E
 ;
+
 d
 o
+
+
+
 
 e
 c
 h
 o
+
 "
 $
 N
@@ -930,7 +975,9 @@ A
 M
 E
 "
+
 >
+
 o
 u
 t
@@ -938,6 +985,7 @@ t
 t
 x
 t
+
 2
 >
 &
@@ -946,7 +994,9 @@ d
 o
 n
 e
+
 <
+
 l
 i
 s
@@ -961,10 +1011,13 @@ n
 t
 i
 l
+
 [
 [
+
 -
 z
+
 "
 $
 R
@@ -972,11 +1025,16 @@ E
 S
 T
 "
+
 ]
 ]
 ;
+
 d
 o
+
+
+
 
 R
 E
@@ -994,6 +1052,7 @@ c
 a
 s
 e
+
 "
 $
 M
@@ -1001,18 +1060,25 @@ O
 D
 E
 "
+
 i
 n
+
+
+
 
 r
 e
 a
 d
 )
+
+
 e
 c
 h
 o
+
 r
 e
 a
@@ -1020,8 +1086,12 @@ d
 i
 n
 g
+
 ;
 ;
+
+
+
 
 w
 r
@@ -1029,10 +1099,12 @@ i
 t
 e
 )
+
 e
 c
 h
 o
+
 w
 r
 i
@@ -1040,20 +1112,31 @@ t
 i
 n
 g
+
 ;
 ;
+
+
+
 
 *
 )
+
+
+
+
+
 e
 c
 h
 o
+
 o
 t
 h
 e
 r
+
 ;
 ;
 e
@@ -1067,29 +1150,36 @@ l
 e
 c
 t
+
 C
 H
 O
 I
 C
 E
+
 i
 n
+
 o
 n
 e
+
 t
 w
 o
 ;
+
 d
 o
+
 b
 r
 e
 a
 k
 ;
+
 d
 o
 n
@@ -1097,23 +1187,31 @@ e
 
 l
 s
+
 -
 l
 a
+
 |
+
 g
 r
 e
 p
+
 -
 v
+
 '
 ^
 d
 '
+
 |
+
 w
 c
+
 -
 l
 
@@ -1324,22 +1422,21 @@ A task list
 An indented
 code block
 
-plain =
-"indented
-four spaces,
-so it has no
-language"
+plain = "ind
+ented four s
+paces, so it
+ has no lang
+uage"
 print(plain)
 
 An HTML
 block
 
-<div
-class="note"
->
+<div class="
+note">
   <p>held as
-it
-stands</p>
+ it stands</
+p>
 </div>
 
 A table that
@@ -1374,28 +1471,27 @@ of
 everything
 in it:
 
-if [[ -d
-"$DIR" ]];
-then
-    echo
-"there"
-elif [[ -f
-"$DIR" ]];
-then
+if [[ -d "$D
+IR" ]]; then
+    echo "th
+ere"
+elif [[ -f "
+$DIR" ]]; th
+en
     echo "a
 file"
 else
-    echo
-"nowhere"
+    echo "no
+where"
 fi
 
-while read
--r NAME; do
-    echo
-"$NAME" >
-out.txt 2>&1
-done <
-list.txt
+while read -
+r NAME; do
+    echo "$N
+AME" > out.t
+xt 2>&1
+done < list.
+txt
 
 until [[ -z
 "$REST" ]];
@@ -1404,26 +1500,25 @@ do
 done
 
 case "$MODE"
-in
-    read)
-echo reading
+ in
+    read)  e
+cho reading
 ;;
-    write)
-echo writing
+    write) e
+cho writing
 ;;
-    *)
-echo other
-;;
+    *)     e
+cho other ;;
 esac
 
-select
-CHOICE in
-one two; do
-break; done
+select CHOIC
+E in one two
+; do break;
+done
 
-ls -la |
-grep -v '^d'
-| wc -l
+ls -la | gre
+p -v '^d' |
+wc -l
 
 And a
 pattern with

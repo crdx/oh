@@ -8,8 +8,8 @@ way to say it.
 
 Try this.
 
-for NAME in $(ls *.go); do echo "$NAME
-is quite a long line indeed"; done
+for NAME in $(ls *.go); do echo "$NAME i
+s quite a long line indeed"; done
 
 That is all.
 
@@ -150,50 +150,63 @@ s
 f
 o
 r
+
 N
 A
 M
 E
+
 i
 n
+
 $
 (
 l
 s
+
 *
 .
 g
 o
 )
 ;
+
 d
 o
+
 e
 c
 h
 o
+
 "
 $
 N
 A
 M
 E
+
 i
 s
+
 q
 u
 i
 t
 e
+
 a
+
 l
 o
 n
 g
+
 l
 i
 n
 e
+
 i
 n
 d
@@ -202,6 +215,7 @@ e
 d
 "
 ;
+
 d
 o
 n
@@ -608,12 +622,11 @@ Try this.
 
 for NAME in
 $(ls *.go);
-do echo
-"$NAME is
-quite a long
-line
-indeed";
-done
+do echo "$NA
+ME is quite
+a long line
+indeed"; don
+e
 
 That is all.
 

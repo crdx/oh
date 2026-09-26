@@ -50,6 +50,62 @@ func Rows(text string, cells int) []Row {
 	}
 }
 
+type ScreenRow struct {
+	Text         string
+	HasSoftBreak bool
+}
+
+func HardRows(texts []string) []ScreenRow {
+	rows := make([]ScreenRow, len(texts))
+
+	for i, text := range texts {
+		rows[i] = ScreenRow{Text: text}
+	}
+
+	return rows
+}
+
+func Texts(rows []ScreenRow) []string {
+	texts := make([]string, len(rows))
+
+	for i, row := range rows {
+		texts[i] = row.Text
+	}
+
+	return texts
+}
+
+func Fold(text string, cells int) []ScreenRow {
+	if cells <= 0 {
+		return []ScreenRow{{Text: text}}
+	}
+
+	var rows []ScreenRow
+
+	for line := range strings.SplitSeq(text, "\n") {
+		rows = append(rows, foldLine(line, cells)...)
+	}
+
+	return rows
+}
+
+func foldLine(line string, cells int) []ScreenRow {
+	atoms := split(line)
+	states := statesAt(atoms)
+
+	var rows []ScreenRow
+
+	for begin := 0; ; {
+		end, _ := reach(atoms, begin, cells)
+		if end >= len(atoms) {
+			return append(rows, ScreenRow{Text: join(atoms, begin, len(atoms), states)})
+		}
+
+		rows = append(rows, ScreenRow{Text: join(atoms, begin, end, states), HasSoftBreak: true})
+		begin = end
+	}
+}
+
 type atom struct {
 	text        string
 	cells       int

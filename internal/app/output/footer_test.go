@@ -111,7 +111,7 @@ func TestAFooterFillingTheTerminalStaysOffTheRowAboveIt(t *testing.T) {
 	if got := len(screen.canvas.rows); got != 9 {
 		t.Errorf("kept %d rows, want 9 beneath the row said before", got)
 	}
-	if screen.canvas.rows[0] == "" {
+	if screen.canvas.rows[0].Text == "" {
 		t.Error("spent a row of a full footer on a blank above it")
 	}
 }
@@ -122,8 +122,8 @@ func TestAFooterShorterThanTheTerminalKeepsTheBlanksAboveIt(t *testing.T) {
 
 	screen.Footer(footerRows(4), 3, 0)
 
-	if len(screen.canvas.rows) != 5 || screen.canvas.rows[0] != "" {
-		t.Errorf("drew %q, want one blank above a short footer", screen.canvas.rows)
+	if len(screen.canvas.rows) != 5 || screen.canvas.rows[0].Text != "" {
+		t.Errorf("drew %q, want one blank above a short footer", drawnTexts(screen))
 	}
 }
 

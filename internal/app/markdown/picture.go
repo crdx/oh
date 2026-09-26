@@ -21,7 +21,7 @@ func (self *renderer) picture(node ast.Node) bool {
 		return false
 	}
 
-	self.rows = append(self.rows, rows...)
+	self.add(rows...)
 
 	return true
 }

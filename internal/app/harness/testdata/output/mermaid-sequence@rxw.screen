@@ -240,9 +240,12 @@ p
 a
 n
 t
+
 U
+
 a
 s
+
 👩‍🚀
 
 U
@@ -260,9 +263,12 @@ p
 a
 n
 t
+
 A
+
 a
 s
+
 ❤️
 
 A
@@ -274,6 +280,7 @@ U
 >
 A
 :
+
 1️⃣
 
 O
@@ -284,15 +291,19 @@ N
 o
 t
 e
+
 r
 i
 g
 h
 t
+
 o
 f
+
 A
 :
+
 🏳️‍🌈
 
 R
@@ -304,6 +315,7 @@ l
 o
 o
 p
+
 🔁
 
 R
@@ -318,6 +330,7 @@ A
 >
 U
 :
+
 📡
 
 U
@@ -389,15 +402,15 @@ participant
 U as 👩‍🚀 User
 participant
 A as ❤️ App
-U->>A: 1️⃣
-Open
-Note right
-of A: 🏳️‍🌈
-Ready
-loop 🔁
-Retry
-A-->>U: 📡
-Update
+U->>A: 1️⃣ Op
+en
+Note right o
+f A: 🏳️‍🌈 Read
+y
+loop 🔁 Retr
+y
+A-->>U: 📡 U
+pdate
 end
 === wide ===
 Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.

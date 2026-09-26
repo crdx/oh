@@ -634,10 +634,11 @@ func (self *Picasso) drawReasoning(isSettled bool) {
 
 	isTailHidden := !isSettled && self.streamingMode == output.StreamingModeLine
 	if isTailHidden {
-		rows = self.reasoning.WithoutLastRow(rows)
+		rows = rows[:self.reasoning.RowCountWithoutLast(len(rows))]
 	}
 
-	if !self.screen.DrawReasoning(self.reasoning.Take(rows, isTailHidden || isRowArriving)) {
+	self.reasoning.MarkRowsDrawn(len(rows), isTailHidden || isRowArriving)
+	if !self.screen.DrawReasoning(rows) {
 		self.isStale = true
 	}
 }
@@ -649,10 +650,11 @@ func (self *Picasso) drawAnswer(isSettled bool) {
 
 	isTailHeldBack := !isRowArriving && self.isTailHeldBack(isSettled)
 	if isTailHeldBack {
-		rows = self.answer.WithoutLastRow(rows)
+		rows = rows[:self.answer.RowCountWithoutLast(len(rows))]
 	}
 
-	if !self.screen.DrawAnswer(self.answer.Take(rows, isTailHeldBack || isRowArriving)) {
+	self.answer.MarkRowsDrawn(len(rows), isTailHeldBack || isRowArriving)
+	if !self.screen.DrawAnswer(rows) {
 		self.isStale = true
 	}
 }
@@ -668,8 +670,9 @@ func (self *Picasso) linkRoots() link.Roots {
 
 func (self *Picasso) answerOptions() markdown.Options {
 	options := markdown.Options{
-		Columns:  self.screen.Columns(),
-		Pictures: self.pictureDrawer,
+		Columns:            self.screen.Columns(),
+		Pictures:           self.pictureDrawer,
+		ShouldSoftWrapCode: true,
 	}
 
 	if self.screen.IsTerminal() {

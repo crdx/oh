@@ -13,8 +13,8 @@ Request processing
 
 Diagram needs 51 columns.
 graph TD
-request[👩‍🚀 Receive] --> validate[❤️
-Validate]
+request[👩‍🚀 Receive] --> validate[❤️ Vali
+date]
 validate --> accept[1️⃣ Accept]
 validate --> reject[🏳️‍🌈 Reject]
 subgraph audit [🗂️ Audit trail]
@@ -203,6 +203,7 @@ r
 a
 p
 h
+
 T
 D
 r
@@ -223,9 +224,11 @@ i
 v
 e
 ]
+
 -
 -
 >
+
 v
 a
 l
@@ -254,9 +257,11 @@ d
 a
 t
 e
+
 -
 -
 >
+
 a
 c
 c
@@ -281,9 +286,11 @@ d
 a
 t
 e
+
 -
 -
 >
+
 r
 e
 j
@@ -308,11 +315,13 @@ r
 a
 p
 h
+
 a
 u
 d
 i
 t
+
 [
 🗂️
 
@@ -321,6 +330,7 @@ u
 d
 i
 t
+
 t
 r
 a
@@ -333,9 +343,11 @@ c
 e
 p
 t
+
 -
 -
 >
+
 r
 e
 c
@@ -353,6 +365,7 @@ c
 o
 r
 d
+
 s
 u
 c
@@ -367,9 +380,11 @@ j
 e
 c
 t
+
 -
 -
 >
+
 f
 a
 i
@@ -385,6 +400,7 @@ c
 o
 r
 d
+
 f
 a
 i
@@ -476,27 +492,26 @@ Diagram
 needs 51
 columns.
 graph TD
-request[👩‍🚀
-Receive] -->
+request[👩‍🚀 R
+eceive] -->
 validate[❤️
 Validate]
 validate -->
-accept[1️⃣
-Accept]
+ accept[1️⃣ A
+ccept]
 validate -->
-reject[🏳️‍🌈
-Reject]
-subgraph
-audit [🗂️
-Audit trail]
-accept -->
-recorded[📝
-Record
-success]
-reject -->
-failed[⚠️
-Record
-failure]
+ reject[🏳️‍🌈 R
+eject]
+subgraph aud
+it [🗂️ Audit
+ trail]
+accept --> r
+ecorded[📝 R
+ecord succes
+s]
+reject --> f
+ailed[⚠️ Rec
+ord failure]
 end
 === wide ===
 Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.

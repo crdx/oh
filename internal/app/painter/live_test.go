@@ -94,11 +94,12 @@ func TestHoldingTheUnfinishedRowBackNeverWithdrawsOneAlreadyDrawn(t *testing.T) 
 
 			rows := test.rows
 			if test.isTailHidden {
-				rows = text.WithoutLastRow(rows)
+				rows = rows[:text.RowCountWithoutLast(len(rows))]
 			}
+			text.MarkRowsDrawn(len(rows), test.isTailHidden)
 
-			if got := text.Take(rows, test.isTailHidden); !slices.Equal(got, test.want) {
-				t.Errorf("Take(%q, %t) = %q, want %q", test.rows, test.isTailHidden, got, test.want)
+			if !slices.Equal(rows, test.want) {
+				t.Errorf("holding back from %q with the tail hidden %t kept %q, want %q", test.rows, test.isTailHidden, rows, test.want)
 			}
 
 			if text.drawnRowCount != len(test.want) {

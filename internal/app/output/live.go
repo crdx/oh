@@ -6,16 +6,17 @@ import (
 
 	"crdx.org/oh/internal/app/ansi"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/width"
 )
 
 const eraseRow = ansi.EraseLine
 
 type liveRegion struct {
-	rows          []string
+	rows          []width.ScreenRow
 	firstGroup    Group
 	lastGroup     Group
 	height        int
-	committedRows []string
+	committedRows []width.ScreenRow
 	isStarted     bool
 }
 
@@ -23,12 +24,12 @@ func spansOneGroup(firstGroup Group, lastGroup Group, group Group) bool {
 	return firstGroup == group && lastGroup == group
 }
 
-func (self *Screen) DrawAnswer(rows []string) bool {
+func (self *Screen) DrawAnswer(rows []width.ScreenRow) bool {
 	return self.draw(rows, AnswerGroup)
 }
 
 func (self *Screen) DrawReasoning(rows []string) bool {
-	return self.draw(rows, ReasoningGroup)
+	return self.draw(width.HardRows(rows), ReasoningGroup)
 }
 
 func (self *Screen) DiscardLive() bool {
@@ -47,7 +48,7 @@ func (self *Screen) DiscardLive() bool {
 	return true
 }
 
-func (self *Screen) draw(rows []string, group Group) bool {
+func (self *Screen) draw(rows []width.ScreenRow, group Group) bool {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 
@@ -60,7 +61,7 @@ func (self *Screen) draw(rows []string, group Group) bool {
 			return true
 		}
 
-		rows = []string{""}
+		rows = []width.ScreenRow{{}}
 	}
 
 	committedRows := self.live.committedRows
@@ -83,9 +84,10 @@ func (self *Screen) hasLiveRegion() bool {
 	return len(self.blocks) > 0 || len(self.live.rows) > 0
 }
 
-func (self *Screen) liveContent() ([]string, Group, Group) {
+func (self *Screen) liveContent() ([]width.ScreenRow, Group, Group) {
 	if len(self.blocks) > 0 {
-		return renderGroupedBlocks(self.blocks, self.columns, self.grouping)
+		rows, firstGroup, lastGroup := renderGroupedBlocks(self.blocks, self.columns, self.grouping)
+		return width.HardRows(rows), firstGroup, lastGroup
 	}
 
 	return self.live.rows, self.live.firstGroup, self.live.lastGroup
@@ -109,16 +111,14 @@ func (self *Screen) seal() {
 		self.newline()
 	}
 
-	if len(rest) > 0 {
-		self.write(self.linkifyRows(strings.Join(rest, "\n"), isAnswer))
-	}
+	self.writeRows(rest, isAnswer)
 
 	self.lastGroup = lastGroup
 	self.blocks = nil
 	self.live = liveRegion{}
 }
 
-func (self *Screen) commit(rows []string, firstGroup Group, isAnswer bool) {
+func (self *Screen) commit(rows []width.ScreenRow, firstGroup Group, isAnswer bool) {
 	if !self.live.isStarted {
 		self.begin(firstGroup)
 		self.live.isStarted = true
@@ -132,7 +132,7 @@ func (self *Screen) commit(rows []string, firstGroup Group, isAnswer bool) {
 		self.newline()
 	}
 
-	self.write(self.linkifyRows(strings.Join(rows, "\n"), isAnswer))
+	self.writeRows(rows, isAnswer)
 	self.live.committedRows = append(self.live.committedRows, rows...)
 }
 
@@ -171,7 +171,7 @@ func (self *Screen) liveGap(firstGroup Group) int {
 	return self.blankRowsBefore(self.isBlankOwed || !self.grouping.runsOn(self.lastGroup, firstGroup))
 }
 
-func (self *Screen) liveFrameRows(room int) []string {
+func (self *Screen) liveFrameRows(room int) []width.ScreenRow {
 	if !self.hasLiveRegion() {
 		return nil
 	}
@@ -180,7 +180,7 @@ func (self *Screen) liveFrameRows(room int) []string {
 	isAnswer := spansOneGroup(firstGroup, lastGroup, AnswerGroup)
 
 	if padding := self.live.height - len(rows); padding > 0 {
-		rows = append(slices.Clone(rows), make([]string, padding)...)
+		rows = append(slices.Clone(rows), make([]width.ScreenRow, padding)...)
 	}
 	self.live.height = len(rows)
 
@@ -201,23 +201,23 @@ func (self *Screen) liveFrameRows(room int) []string {
 		gap = 0
 	}
 
-	frameRows := make([]string, gap, gap+len(visible))
+	frameRows := make([]width.ScreenRow, gap, gap+len(visible))
 	for _, row := range visible {
-		frameRows = append(frameRows, self.linkifyRows(row, isAnswer))
+		frameRows = append(frameRows, width.ScreenRow{Text: self.linkifyRows(row.Text, isAnswer), HasSoftBreak: row.HasSoftBreak})
 	}
 
 	return frameRows
 }
 
-func endingOnARow(rows []string, count int) int {
+func endingOnARow(rows []width.ScreenRow, count int) int {
 	for at := count; at <= len(rows); at++ {
-		if at == 0 || rows[at-1] != "" {
+		if at == 0 || rows[at-1].Text != "" {
 			return at
 		}
 	}
 
 	for at := count; at > 0; at-- {
-		if rows[at-1] != "" {
+		if rows[at-1].Text != "" {
 			return at
 		}
 	}
@@ -225,9 +225,9 @@ func endingOnARow(rows []string, count int) int {
 	return 0
 }
 
-func (self *Screen) windowed(rows []string, gap int, room int) []string {
+func (self *Screen) windowed(rows []width.ScreenRow, gap int, room int) []width.ScreenRow {
 	if room < 0 || gap+len(rows) <= room {
-		return append(make([]string, gap), rows...)
+		return append(make([]width.ScreenRow, gap), rows...)
 	}
 
 	if len(rows) <= room {
@@ -245,12 +245,12 @@ func (self *Screen) windowed(rows []string, gap int, room int) []string {
 
 	shownRows := rows[len(rows)-room+1:]
 
-	return append([]string{self.hiddenRowsNotice(len(rows) - len(shownRows))}, shownRows...)
+	return append([]width.ScreenRow{{Text: self.hiddenRowsNotice(len(rows) - len(shownRows))}}, shownRows...)
 }
 
-func withoutTrailingBlankRows(rows []string) []string {
+func withoutTrailingBlankRows(rows []width.ScreenRow) []width.ScreenRow {
 	end := len(rows)
-	for end > 0 && strings.TrimSpace(style.Plain(rows[end-1])) == "" {
+	for end > 0 && strings.TrimSpace(style.Plain(rows[end-1].Text)) == "" {
 		end--
 	}
 
@@ -262,14 +262,14 @@ func withoutTrailingBlankRows(rows []string) []string {
 }
 
 type canvas struct {
-	rows         []string
+	rows         []width.ScreenRow
 	cursorRow    int
 	cursorColumn int
 	isMidRow     bool
 }
 
 type frameLayout struct {
-	rows         []string
+	rows         []width.ScreenRow
 	cursorRow    int
 	cursorColumn int
 }
@@ -318,7 +318,7 @@ func (self *Screen) compose() frameLayout {
 		gap = min(gap, self.blankRowsBefore(true))
 	}
 
-	rows := make([]string, 0, len(liveRows)+gap+len(footerRows))
+	rows := make([]width.ScreenRow, 0, len(liveRows)+gap+len(footerRows))
 	rows = append(rows, liveRows...)
 
 	if len(footerRows) == 0 {
@@ -328,12 +328,12 @@ func (self *Screen) compose() frameLayout {
 
 		last := len(rows) - 1
 
-		return frameLayout{rows: rows, cursorRow: last, cursorColumn: style.Width(rows[last])}
+		return frameLayout{rows: rows, cursorRow: last, cursorColumn: style.Width(rows[last].Text)}
 	}
 
-	rows = append(rows, make([]string, gap)...)
+	rows = append(rows, make([]width.ScreenRow, gap)...)
 	cursorRow := len(rows) + footerCursorRow
-	rows = append(rows, footerRows...)
+	rows = append(rows, width.HardRows(footerRows)...)
 
 	return frameLayout{rows: rows, cursorRow: cursorRow, cursorColumn: self.input.cursorColumn}
 }
@@ -346,10 +346,12 @@ func (self *Screen) paint() {
 
 	sealedText := strings.ReplaceAll(self.owedText.String(), "\r\n", "\n")
 	isFromMidLine := self.isOwedTextFromMidLine
+	softBreaks := self.owedSoftBreaks
 	self.owedText.Reset()
+	self.owedSoftBreaks = nil
 
 	if len(self.canvas.rows) == 0 && len(layout.rows) == 0 {
-		self.append(sealedText, isFromMidLine)
+		self.append(owedRows(sealedText, softBreaks, !self.canvas.isMidRow && isFromMidLine))
 		return
 	}
 
@@ -371,12 +373,10 @@ func (self *Screen) paint() {
 		isFromMidLine = true
 	}
 
-	if isFromMidLine {
-		sealedText = strings.TrimPrefix(sealedText, "\n")
-	}
-
-	committedRows, hasTrailingNewline := rowsOf(sealedText)
-	rows := slices.Concat(committedRows, layout.rows)
+	committedRows, hasTrailingNewline := owedRows(sealedText, softBreaks, isFromMidLine)
+	rows := withSoftBreaksThatRunOn(slices.Concat(committedRows, layout.rows))
+	committedRows = rows[:len(committedRows)]
+	layout.rows = rows[len(committedRows):]
 
 	row := 0
 	first := 0
@@ -387,25 +387,51 @@ func (self *Screen) paint() {
 
 	end := max(len(rows), len(self.canvas.rows))
 	lastRowOnScreen := max(0, len(self.canvas.rows)-1)
+	wasWritten := false
+	isAutoWrapping := false
 
 	for at := first; at < end; at++ {
-		if at < len(self.canvas.rows) && at < len(rows) && self.canvas.rows[at] == rows[at] {
+		isRunningOn := wasWritten && at < len(rows) && rows[at-1].HasSoftBreak
+		if !isRunningOn && at < len(self.canvas.rows) && at < len(rows) && self.canvas.rows[at] == rows[at] {
+			wasWritten = false
 			continue
 		}
 
-		if at <= lastRowOnScreen {
+		switch {
+		case isRunningOn:
+			lastRowOnScreen = max(lastRowOnScreen, at)
+		case at <= lastRowOnScreen:
 			out.WriteString(moveBetween(row, at))
 			out.WriteString("\r")
-		} else {
+		default:
 			out.WriteString(moveBetween(row, lastRowOnScreen))
 			out.WriteString(strings.Repeat("\r\n", at-lastRowOnScreen))
 			lastRowOnScreen = at
 		}
 
 		row = at
-		out.WriteString(eraseRow)
-		if at < len(rows) {
-			out.WriteString(rows[at])
+		wasWritten = true
+
+		if !isRunningOn {
+			out.WriteString(eraseRow)
+		}
+		if at >= len(rows) {
+			continue
+		}
+
+		if rows[at].HasSoftBreak && !isAutoWrapping {
+			isAutoWrapping = true
+			out.WriteString(autoWrap)
+		}
+
+		out.WriteString(rows[at].Text)
+		if isRunningOn && style.Width(rows[at].Text) < self.columns {
+			out.WriteString(eraseRow)
+		}
+
+		if !rows[at].HasSoftBreak && isAutoWrapping {
+			isAutoWrapping = false
+			out.WriteString(noAutoWrap)
 		}
 	}
 
@@ -423,7 +449,38 @@ func (self *Screen) paint() {
 	self.raw(out.String())
 }
 
-func (self *Screen) landAfter(committedRows []string, row int, rowsOnScreen int, hasTrailingNewline bool) string {
+func withSoftBreaksThatRunOn(rows []width.ScreenRow) []width.ScreenRow {
+	for at := range rows {
+		rows[at].HasSoftBreak = at+1 < len(rows) && runsOn(rows[at], rows[at+1])
+	}
+
+	return rows
+}
+
+func runsOn(previous width.ScreenRow, row width.ScreenRow) bool {
+	return previous.HasSoftBreak && style.Width(row.Text) > 0
+}
+
+func owedRows(sealedText string, softBreaks []int, isFromMidLine bool) ([]width.ScreenRow, bool) {
+	shift := 0
+	if isFromMidLine && strings.HasPrefix(sealedText, "\n") {
+		sealedText = sealedText[1:]
+		shift = 1
+	}
+
+	texts, hasTrailingNewline := rowsOf(sealedText)
+	rows := width.HardRows(texts)
+
+	for _, at := range softBreaks {
+		if at -= shift; at >= 0 && at < len(rows) {
+			rows[at].HasSoftBreak = true
+		}
+	}
+
+	return rows, hasTrailingNewline
+}
+
+func (self *Screen) landAfter(committedRows []width.ScreenRow, row int, rowsOnScreen int, hasTrailingNewline bool) string {
 	var out strings.Builder
 
 	switch {
@@ -442,24 +499,44 @@ func (self *Screen) landAfter(committedRows []string, row int, rowsOnScreen int,
 		last := len(committedRows) - 1
 		out.WriteString(moveBetween(row, last))
 		out.WriteString("\r")
-		out.WriteString(moveRight(style.Width(committedRows[last])))
+		out.WriteString(moveRight(style.Width(committedRows[last].Text)))
 		self.canvas = canvas{isMidRow: true}
 	}
 
 	return out.String()
 }
 
-func (self *Screen) append(text string, isFromMidLine bool) {
-	if !self.canvas.isMidRow && isFromMidLine {
-		text = strings.TrimPrefix(text, "\n")
-	}
-
-	if text == "" {
+func (self *Screen) append(rows []width.ScreenRow, hasTrailingNewline bool) {
+	if len(rows) == 0 && !hasTrailingNewline {
 		return
 	}
 
-	self.raw(strings.ReplaceAll(text, "\n", "\r\n"))
-	self.canvas = canvas{isMidRow: !strings.HasSuffix(text, "\n")}
+	rows = withSoftBreaksThatRunOn(rows)
+
+	var out strings.Builder
+
+	for at, row := range rows {
+		if at > 0 && !rows[at-1].HasSoftBreak {
+			out.WriteString("\r\n")
+		}
+
+		if row.HasSoftBreak && self.isWrapping {
+			out.WriteString(autoWrap)
+		}
+
+		out.WriteString(row.Text)
+
+		if at > 0 && rows[at-1].HasSoftBreak && !row.HasSoftBreak && self.isWrapping {
+			out.WriteString(noAutoWrap)
+		}
+	}
+
+	if hasTrailingNewline {
+		out.WriteString("\r\n")
+	}
+
+	self.raw(out.String())
+	self.canvas = canvas{isMidRow: !hasTrailingNewline}
 }
 
 func rowsOf(text string) ([]string, bool) {
@@ -486,7 +563,7 @@ func moveBetween(from int, to int) string {
 	}
 }
 
-func getFirstDifference(before []string, after []string) int {
+func getFirstDifference(before []width.ScreenRow, after []width.ScreenRow) int {
 	for at := range min(len(before), len(after)) {
 		if before[at] != after[at] {
 			return at

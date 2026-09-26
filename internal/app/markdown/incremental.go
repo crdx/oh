@@ -5,10 +5,11 @@ import (
 	"strings"
 
 	"crdx.org/oh/internal/app/link"
+	"crdx.org/oh/internal/app/width"
 )
 
 type IncrementalRenderer struct {
-	stableRows     []string
+	stableRows     []width.ScreenRow
 	stableSource   string
 	previousSource string
 	tail           StreamRenderer
@@ -19,11 +20,11 @@ type IncrementalRenderer struct {
 }
 
 func (self *IncrementalRenderer) Render(markdown string, columns int) []string {
-	return self.RenderWith(markdown, Options{Columns: columns})
+	return width.Texts(self.RenderWith(markdown, Options{Columns: columns}))
 }
 
 func (self *IncrementalRenderer) RenderWithHyperlinks(markdown string, columns int) []string {
-	return self.RenderWith(markdown, Options{Columns: columns, ShouldRenderHyperlinks: true})
+	return width.Texts(self.RenderWith(markdown, Options{Columns: columns, ShouldRenderHyperlinks: true}))
 }
 
 func (self *IncrementalRenderer) RenderWithHyperlinksUnder(
@@ -31,11 +32,11 @@ func (self *IncrementalRenderer) RenderWithHyperlinksUnder(
 	columns int,
 	linkRoot link.Roots,
 ) []string {
-	return self.RenderWith(markdown, Options{
+	return width.Texts(self.RenderWith(markdown, Options{
 		Columns:                columns,
 		ShouldRenderHyperlinks: true,
 		LinkRoot:               linkRoot,
-	})
+	}))
 }
 
 func (self *IncrementalRenderer) IsTailMermaid() bool {
@@ -46,7 +47,7 @@ func (self *IncrementalRenderer) Reset() {
 	*self = IncrementalRenderer{}
 }
 
-func (self *IncrementalRenderer) RenderWith(markdown string, options Options) []string {
+func (self *IncrementalRenderer) RenderWith(markdown string, options Options) []width.ScreenRow {
 	if options != self.options || !strings.HasPrefix(markdown, self.previousSource) {
 		self.Reset()
 		self.options = options
@@ -70,7 +71,7 @@ func (self *IncrementalRenderer) RenderWith(markdown string, options Options) []
 	return joinRenderedParts(self.stableRows, tailRows)
 }
 
-func (self *IncrementalRenderer) disable(markdown string) []string {
+func (self *IncrementalRenderer) disable(markdown string) []width.ScreenRow {
 	self.stableRows = nil
 	self.stableSource = ""
 	self.tail.Reset()
@@ -98,7 +99,7 @@ func (self *IncrementalRenderer) advance(markdown string, candidate int) bool {
 	return true
 }
 
-func joinRenderedParts(stableRows []string, tailRows []string) []string {
+func joinRenderedParts(stableRows []width.ScreenRow, tailRows []width.ScreenRow) []width.ScreenRow {
 	if len(stableRows) == 0 {
 		return slices.Clone(tailRows)
 	}
@@ -106,8 +107,8 @@ func joinRenderedParts(stableRows []string, tailRows []string) []string {
 		return slices.Clone(stableRows)
 	}
 
-	rows := make([]string, 0, len(stableRows)+1+len(tailRows))
+	rows := make([]width.ScreenRow, 0, len(stableRows)+1+len(tailRows))
 	rows = append(rows, stableRows...)
-	rows = append(rows, "")
+	rows = append(rows, width.ScreenRow{})
 	return append(rows, tailRows...)
 }

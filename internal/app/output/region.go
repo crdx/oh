@@ -319,6 +319,7 @@ func (self *Screen) Reset() {
 	self.blocks = nil
 	self.live = liveRegion{}
 	self.owedText.Reset()
+	self.owedSoftBreaks = nil
 	self.canvas = canvas{}
 	self.isFrameOwed = false
 	self.column = 0
@@ -327,12 +328,16 @@ func (self *Screen) Reset() {
 	self.isBlankOwed = false
 	self.trailingNewlines = 0
 	self.lastGroup = NoticeGroup
+	restoration := ""
+	if self.isWrapping {
+		restoration = autoWrap
+	}
 	self.isWrapping = false
 	self.hasPrinted = false
 
 	self.measureTerminal()
 
-	self.raw(clearScreen + clearScrollback)
+	self.raw(clearScreen + clearScrollback + restoration)
 }
 
 func eraseRowsAbove(rows int) string {

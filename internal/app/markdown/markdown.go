@@ -34,25 +34,26 @@ type Options struct {
 	ShouldRenderHyperlinks bool
 	LinkRoot               link.Roots
 	Pictures               PictureDrawer
+	ShouldSoftWrapCode     bool
 }
 
 func Render(markdown string, columns int) []string {
-	return render(markdown, Options{Columns: columns}, nil)
+	return width.Texts(render(markdown, Options{Columns: columns}, nil))
 }
 
 func RenderWithHyperlinks(markdown string, columns int) []string {
-	return render(markdown, Options{Columns: columns, ShouldRenderHyperlinks: true}, nil)
+	return width.Texts(render(markdown, Options{Columns: columns, ShouldRenderHyperlinks: true}, nil))
 }
 
 func RenderWithHyperlinksUnder(markdown string, columns int, linkRoot link.Roots) []string {
-	return render(markdown, Options{
+	return width.Texts(render(markdown, Options{
 		Columns:                columns,
 		ShouldRenderHyperlinks: true,
 		LinkRoot:               linkRoot,
-	}, nil)
+	}, nil))
 }
 
-func RenderWith(markdown string, options Options) []string {
+func RenderWith(markdown string, options Options) []width.ScreenRow {
 	return render(markdown, options, nil)
 }
 
@@ -75,7 +76,7 @@ type StreamRenderer struct {
 }
 
 func (self *StreamRenderer) Render(markdown string, columns int) []string {
-	return self.render(markdown, Options{Columns: columns})
+	return width.Texts(self.render(markdown, Options{Columns: columns}))
 }
 
 func (self *StreamRenderer) IsTailMermaid() bool {
@@ -91,7 +92,7 @@ func (self *StreamRenderer) Reset() {
 	self.hasStableCandidateStart = false
 }
 
-func (self *StreamRenderer) render(markdown string, options Options) []string {
+func (self *StreamRenderer) render(markdown string, options Options) []width.ScreenRow {
 	self.isTailMermaid = false
 	self.hasMermaid = false
 	self.hasLinkReference = false
@@ -101,7 +102,7 @@ func (self *StreamRenderer) render(markdown string, options Options) []string {
 	return render(markdown, options, self)
 }
 
-func render(markdown string, options Options, stream *StreamRenderer) []string {
+func render(markdown string, options Options, stream *StreamRenderer) []width.ScreenRow {
 	source := []byte(strings.ReplaceAll(markdown, "\t", tab))
 	parserContext := parser.NewContext()
 	document := markdownParser.Parse(text.NewReader(source), parser.WithContext(parserContext))
@@ -124,6 +125,7 @@ func render(markdown string, options Options, stream *StreamRenderer) []string {
 		shouldRenderHyperlinks: options.ShouldRenderHyperlinks,
 		linkRoot:               options.LinkRoot,
 		pictures:               options.Pictures,
+		shouldSoftWrapCode:     options.ShouldSoftWrapCode,
 	}
 	renderer.blocks(document)
 
@@ -150,23 +152,24 @@ type renderer struct {
 	columns                int
 	mermaidBlock           *int
 	isTight                bool
-	rows                   []string
+	rows                   []width.ScreenRow
 	stream                 *StreamRenderer
 	shouldRenderHyperlinks bool
 	linkRoot               link.Roots
 	pictures               PictureDrawer
+	shouldSoftWrapCode     bool
 }
 
 func (self *renderer) blocks(parent ast.Node) {
 	for node := parent.FirstChild(); node != nil; node = node.NextSibling() {
 		if len(self.rows) > 0 && !self.isTight {
-			self.rows = append(self.rows, "")
+			self.add("")
 		}
 
 		self.block(node)
 	}
 
-	for len(self.rows) > 0 && self.rows[len(self.rows)-1] == "" {
+	for len(self.rows) > 0 && self.rows[len(self.rows)-1] == (width.ScreenRow{}) {
 		self.rows = self.rows[:len(self.rows)-1]
 	}
 }
@@ -207,7 +210,7 @@ func (self *renderer) block(node ast.Node) {
 		self.code(emphasise(self.lines(node), ""))
 
 	case *ast.ThematicBreak:
-		self.rows = append(self.rows, style.Border(strings.Repeat("─", max(self.columns, 0))))
+		self.add(style.Border(strings.Repeat("─", max(self.columns, 0))))
 
 	case *ast.Blockquote:
 		self.quote(node)
@@ -216,7 +219,7 @@ func (self *renderer) block(node ast.Node) {
 		self.list(node)
 
 	case *extensionast.Table:
-		self.rows = append(self.rows, self.table(node)...)
+		self.add(self.table(node)...)
 
 	case *ast.Paragraph, *ast.TextBlock:
 		if self.picture(node) {
@@ -231,7 +234,11 @@ func (self *renderer) block(node ast.Node) {
 }
 
 func (self *renderer) appendWrapped(styledText string) {
-	self.rows = append(self.rows, width.Wrap(self.linkPaths(styledText), self.columns)...)
+	self.add(width.Wrap(self.linkPaths(styledText), self.columns)...)
+}
+
+func (self *renderer) add(texts ...string) {
+	self.rows = append(self.rows, width.HardRows(texts)...)
 }
 
 func (self *renderer) linkPaths(text string) string {
@@ -245,11 +252,16 @@ func (self *renderer) linkPaths(text string) string {
 func (self *renderer) code(lines []string) {
 	for _, line := range lines {
 		if strings.TrimSpace(style.Plain(line)) == "" {
-			self.rows = append(self.rows, "")
+			self.add("")
 			continue
 		}
 
-		self.rows = append(self.rows, width.Wrap(self.linkPaths(line), self.columns)...)
+		if self.shouldSoftWrapCode {
+			self.rows = append(self.rows, width.Fold(self.linkPaths(line), self.columns)...)
+			continue
+		}
+
+		self.add(width.Wrap(self.linkPaths(line), self.columns)...)
 	}
 }
 
@@ -261,7 +273,7 @@ func (self *renderer) mermaid(lines []string, block int) bool {
 			return false
 		}
 
-		self.rows = append(self.rows, rows...)
+		self.add(rows...)
 		self.rememberMermaidRows(block, rows)
 		return true
 	}
@@ -273,7 +285,7 @@ func (self *renderer) mermaid(lines []string, block int) bool {
 	if !hasCachedRows || widestRow(cachedRows) > self.columns {
 		return false
 	}
-	self.rows = append(self.rows, cachedRows...)
+	self.add(cachedRows...)
 	return true
 }
 
@@ -334,7 +346,7 @@ func (self *renderer) quote(node ast.Node) {
 	inner.blocks(node)
 
 	for _, row := range inner.rows {
-		self.rows = append(self.rows, style.Border(lead)+over(style.Quote, row))
+		self.add(style.Border(lead) + over(style.Quote, row.Text))
 	}
 }
 
@@ -380,11 +392,11 @@ func (self *renderer) item(marker string, node ast.Node) {
 
 	for i, row := range inner.rows {
 		if i == 0 {
-			self.rows = append(self.rows, style.Bullet(marker)+row)
+			self.add(style.Bullet(marker) + row.Text)
 			continue
 		}
 
-		self.rows = append(self.rows, hangingIndent+row)
+		self.add(hangingIndent + row.Text)
 	}
 }
 

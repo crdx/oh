@@ -237,12 +237,15 @@ m
 e
 r
 ]
+
 {
 i
 n
 t
+
 i
 d
+
 P
 K
 s
@@ -251,6 +254,7 @@ r
 i
 n
 g
+
 n
 a
 m
@@ -270,17 +274,21 @@ d
 e
 r
 ]
+
 {
 i
 n
 t
+
 i
 d
+
 P
 K
 i
 n
 t
+
 c
 u
 s
@@ -292,6 +300,7 @@ r
 _
 i
 d
+
 F
 K
 }
@@ -303,18 +312,22 @@ O
 M
 E
 R
+
 |
 |
 -
 -
 o
 {
+
 O
 R
 D
 E
 R
+
 :
+
 1️⃣
 
 p
@@ -374,16 +387,15 @@ Customer] {
 int id PK
 string name
 }
-ORDER[❤️
-Order] {
+ORDER[❤️ Ord
+er] {
 int id PK
-int
-customer_id
-FK
+int customer
+_id FK
 }
-CUSTOMER
-||--o{ ORDER
-: 1️⃣ places
+CUSTOMER ||-
+-o{ ORDER :
+1️⃣ places
 === wide ===
 Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.
 

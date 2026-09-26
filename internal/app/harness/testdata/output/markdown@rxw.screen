@@ -267,13 +267,18 @@ f
 u
 n
 c
+
 m
 a
 i
 n
 (
 )
+
 {
+
+
+
 
 f
 m
@@ -545,6 +550,7 @@ r
 a
 p
 h
+
 L
 R
 r
@@ -557,9 +563,11 @@ e
 a
 d
 ]
+
 -
 -
 >
+
 b
 a
 s
@@ -791,9 +799,9 @@ Diagram
 needs 21
 columns.
 graph LR
-read[read]
--->
-bash[bash]
+read[read] -
+-> bash[bash
+]
 
 │ The costs
 │ are made

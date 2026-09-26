@@ -196,24 +196,32 @@ t
 f
 o
 r
+
 N
 A
 M
 E
+
 i
 n
+
 $
 (
 l
 s
+
 *
 .
 g
 o
 )
 ;
+
 d
 o
+
+
+
 
 C
 O
@@ -227,14 +235,17 @@ g
 r
 e
 p
+
 -
 c
+
 "
 f
 u
 n
 c
 "
+
 "
 $
 N
@@ -244,19 +255,25 @@ E
 "
 )
 
+
+
+
 e
 c
 h
 o
+
 "
 $
 N
 A
 M
 E
+
 h
 a
 s
+
 $
 C
 O
@@ -404,12 +421,11 @@ for NAME in
 $(ls *.go);
 do
     COUNT=$(
-grep -c
-"func"
-"$NAME")
-    echo
-"$NAME has
-$COUNT"
+grep -c "fun
+c" "$NAME")
+    echo "$N
+AME has $COU
+NT"
 done
 
 ^\\s*(func|ty

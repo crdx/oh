@@ -1123,9 +1123,9 @@ func drawRowsEndingInBlanks(lines int) frameEdgeStreams {
 
 	rows := []string{"one", "", "two", "", "three", "", "four", "", "five", "", ""}
 	for count := range rows {
-		screen.DrawAnswer(slices.Clone(rows[:count+1]))
+		screen.DrawAnswer(width.HardRows(rows[:count+1]))
 	}
-	screen.DrawAnswer(slices.Clone(rows[:9]))
+	screen.DrawAnswer(width.HardRows(rows[:9]))
 	live := screenOutput.String()
 
 	screen.Seal()
@@ -8396,6 +8396,38 @@ func TestALiveTurnLeavesTheSameScreenAsAReplayOfIt(t *testing.T) {
 	}
 }
 
+func TestACommandWiderThanTheScreenIsCopiedAsTheOneLineItIs(t *testing.T) {
+	const command = `cd /workspace/project && OH_PROFILE=/tmp/oh-profiles /workspace/bin/oh -c r ` +
+		`"think it through, then explain the incremental renderer at length"`
+
+	entries := []replayEntry{
+		{Event: &agent.Event{Kind: agent.UserMessageEvent, Text: "how do I try it?"}},
+		{Event: &agent.Event{Kind: agent.ModelMessageEvent, Text: "Run this:\n\n```bash\n" + command + "\n```\n"}},
+	}
+
+	drawings := map[string]func() (string, int){
+		"replayed": func() (string, int) { return replayAtWidth(t, entries, narrowColumns), narrowColumns },
+		"printed":  func() (string, int) { return replayAsPrinted(t, entries), replayColumns },
+	}
+	for name, streamingMode := range everyStreamingMode() {
+		drawings["streamed "+name] = func() (string, int) {
+			return streamIntoBufferAtWidth(t, entries, streamingMode, narrowColumns), narrowColumns
+		}
+	}
+
+	for name, draw := range drawings {
+		drawn, columns := draw()
+		screen := playScreen(t, drawn, columns)
+
+		if !slices.Contains(screen.copied(), command) {
+			t.Errorf("the %s command was copied as %q", name, screen.copied())
+		}
+		if len(screen.softWrapped()) == 0 {
+			t.Errorf("the %s command was never wider than the screen", name)
+		}
+	}
+}
+
 func TestGoldenTheBannerDrawsWhatItDrewBefore(t *testing.T) {
 	passes := map[string]func() string{}
 
@@ -10846,6 +10878,7 @@ type screen struct {
 	t           *testing.T
 	rows        [][]cell
 	marks       map[int]bool
+	wraps       map[int]bool
 	row, column int
 	columns     int
 	height      int
@@ -11198,12 +11231,16 @@ func (self *screen) eraseInRow(mode int) {
 		if self.column < len(row) {
 			self.rows[self.row] = row[:self.column]
 		}
+		if self.column < self.columns {
+			delete(self.wraps, self.row)
+		}
 	case 1:
 		for at := range min(self.column+1, len(row)) {
 			row[at] = cell{grapheme: " "}
 		}
 	case 2:
 		self.rows[self.row] = nil
+		delete(self.wraps, self.row)
 	}
 }
 
@@ -11221,6 +11258,7 @@ func (self *screen) erase(mode int) {
 		}
 
 		maps.DeleteFunc(self.marks, func(row int, _ bool) bool { return row > self.row })
+		maps.DeleteFunc(self.wraps, func(row int, _ bool) bool { return row > self.row })
 	case 2, 3:
 		if self.height > 0 {
 			self.eraseScreenOrScrollback(mode)
@@ -11229,6 +11267,7 @@ func (self *screen) erase(mode int) {
 
 		self.rows = nil
 		self.marks = nil
+		self.wraps = nil
 	default:
 		self.t.Fatalf("the screen was asked to erase in a way it does not know: ESC [ %dJ", mode)
 	}
@@ -11242,20 +11281,27 @@ func (self *screen) eraseScreenOrScrollback(mode int) {
 			self.rows[at] = nil
 		}
 		maps.DeleteFunc(self.marks, func(row int, _ bool) bool { return row >= top })
+		maps.DeleteFunc(self.wraps, func(row int, _ bool) bool { return row >= top })
 
 		return
 	}
 
 	self.rows = self.rows[min(top, len(self.rows)):]
-	marks := map[int]bool{}
-	for row := range self.marks {
-		if row >= top {
-			marks[row-top] = true
-		}
-	}
-	self.marks = marks
+	self.marks = rowsFrom(self.marks, top)
+	self.wraps = rowsFrom(self.wraps, top)
 	self.row -= top
 	self.lowestRow -= top
+}
+
+func rowsFrom(rows map[int]bool, top int) map[int]bool {
+	kept := map[int]bool{}
+	for row := range rows {
+		if row >= top {
+			kept[row-top] = true
+		}
+	}
+
+	return kept
 }
 
 func (self *screen) put(grapheme string, cells int) {
@@ -11274,6 +11320,11 @@ func (self *screen) put(grapheme string, cells int) {
 			return
 		}
 
+		if self.wraps == nil {
+			self.wraps = map[int]bool{}
+		}
+
+		self.wraps[self.row] = true
 		self.moveDown(1)
 		self.column = 0
 	}
@@ -11298,6 +11349,9 @@ func (self *screen) put(grapheme string, cells int) {
 		row[self.column+i] = cell{styles: styles}
 	}
 	self.rows[self.row] = row
+	if self.column+drawnCells == self.columns {
+		delete(self.wraps, self.row)
+	}
 	self.column = min(self.column+cells, self.columns)
 }
 
@@ -11413,6 +11467,35 @@ func (self *screen) styled() []string {
 
 func (self *screen) marked() []int {
 	return slices.Sorted(maps.Keys(self.marks))
+}
+
+func (self *screen) softWrapped() []int {
+	return slices.Sorted(maps.Keys(self.wraps))
+}
+
+func (self *screen) copied() []string {
+	var lines []string
+
+	for at, row := range self.rows {
+		var drawn strings.Builder
+		for _, one := range row {
+			drawn.WriteString(one.grapheme)
+		}
+
+		text := drawn.String()
+		if !self.wraps[at] {
+			text = strings.TrimRight(text, " ")
+		}
+
+		if at > 0 && self.wraps[at-1] {
+			lines[len(lines)-1] += text
+			continue
+		}
+
+		lines = append(lines, text)
+	}
+
+	return lines
 }
 
 func (self *screen) backgroundAt(row int) string {
@@ -15585,6 +15668,10 @@ func requireSameVisibleScreenOfSize(
 
 	if first, second := firstScreen.marked(), secondScreen.marked(); !slices.Equal(first, second) {
 		t.Errorf("%s, in the rows it marked\nfirst: %v\nsecond: %v", description, first, second)
+	}
+
+	if first, second := firstScreen.softWrapped(), secondScreen.softWrapped(); !slices.Equal(first, second) {
+		t.Errorf("%s, in the rows it wrapped softly\nfirst: %v\nsecond: %v", description, first, second)
 	}
 }
 

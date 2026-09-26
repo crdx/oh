@@ -2,6 +2,7 @@ package output
 
 import (
 	"strings"
+	"unicode/utf8"
 
 	"crdx.org/oh/internal/app/ansi"
 	"crdx.org/oh/internal/app/escape"
@@ -14,6 +15,14 @@ const (
 )
 
 func (self *Screen) fit(text string) string {
+	return self.fitFrom(text, false)
+}
+
+func (self *Screen) fitRunningOn(text string) string {
+	return self.fitFrom(text, true)
+}
+
+func (self *Screen) fitFrom(text string, isRunningOn bool) string {
 	if self.columns <= 0 {
 		self.openedRows += strings.Count(text, "\n")
 		return text
@@ -61,21 +70,33 @@ func (self *Screen) fit(text string) string {
 			}
 
 			for grapheme, cells := range width.Graphemes(string(runes[i:end])) {
+				isSoftBreak := false
+
 				if self.column+cells > self.columns && self.column > 0 {
-					if grapheme == " " {
+					if grapheme == " " && !isRunningOn {
 						continue
 					}
 
-					out.WriteString("\r\n")
+					isSoftBreak = isRunningOn && self.isTerminal
+					switch {
+					case !isSoftBreak:
+						out.WriteString("\r\n")
+					case self.isWrapping:
+						out.WriteString(autoWrap)
+					}
 
 					self.column = 0
 					self.openedRows++
 				}
 
+				isRunningOn = false
+
 				self.column = min(self.column+cells, self.columns)
 				out.WriteString(grapheme)
-				for _, value := range grapheme {
-					last = value
+				last = lastRune(grapheme)
+
+				if isSoftBreak && self.isWrapping {
+					out.WriteString(noAutoWrap)
 				}
 			}
 			i = end
@@ -83,4 +104,9 @@ func (self *Screen) fit(text string) string {
 	}
 
 	return out.String()
+}
+
+func lastRune(grapheme string) rune {
+	value, _ := utf8.DecodeLastRuneInString(grapheme)
+	return value
 }

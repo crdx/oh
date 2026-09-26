@@ -251,11 +251,13 @@ d
 
 /
 /
+
 c
 o
 u
 n
 t
+
 r
 e
 p
@@ -263,18 +265,22 @@ o
 r
 t
 s
+
 h
 o
 w
+
 m
 a
 n
 y
+
 t
 h
 e
 r
 e
+
 w
 e
 r
@@ -284,6 +290,7 @@ f
 u
 n
 c
+
 c
 o
 u
@@ -291,25 +298,37 @@ n
 t
 (
 )
+
 i
 n
 t
+
 {
+
+
+
 
 v
 a
 r
+
 t
 o
 t
 a
 l
+
 i
 n
 t
+
 =
+
 4
 2
+
+
+
 
 r
 e
@@ -317,6 +336,7 @@ t
 u
 r
 n
+
 t
 o
 t
@@ -391,17 +411,16 @@ skill is at
 ~/skills/tid
 y/SKILL.md.
 
-// count
-reports how
-many there
-were.
+// count rep
+orts how man
+y there were
+.
 func count()
-int {
-    var
-total int =
-42
-    return
-total
+ int {
+    var tota
+l int = 42
+    return t
+otal
 }
 === wide ===
 

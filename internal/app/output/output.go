@@ -46,6 +46,7 @@ type Screen struct {
 	input footer
 
 	owedText              strings.Builder
+	owedSoftBreaks        []int
 	isOwedTextFromMidLine bool
 	canvas                canvas
 	isFrameOwed           bool
@@ -231,6 +232,60 @@ func (self *Screen) emit(text string) {
 	}
 
 	self.owedText.WriteString(fittedText)
+}
+
+func (self *Screen) writeRows(rows []width.ScreenRow, shouldLinkPaths bool) {
+	texts := make([]string, len(rows))
+	for at, row := range rows {
+		texts[at] = self.linkifyRows(row.Text, shouldLinkPaths)
+	}
+
+	if strings.Join(texts, "") == "" && len(rows) <= 1 {
+		return
+	}
+
+	self.openPendingLine()
+
+	if !self.canRepaint {
+		self.writeRowsAtOnce(rows, texts)
+		return
+	}
+
+	for at, text := range texts {
+		if at > 0 {
+			self.emit("\n")
+		}
+
+		self.emit(text)
+
+		if rows[at].HasSoftBreak {
+			self.owedSoftBreaks = append(self.owedSoftBreaks, strings.Count(self.owedText.String(), "\n"))
+		}
+	}
+}
+
+func (self *Screen) writeRowsAtOnce(rows []width.ScreenRow, texts []string) {
+	var joinedText strings.Builder
+	var fittedText strings.Builder
+
+	for at, text := range texts {
+		switch {
+		case at > 0 && runsOn(rows[at-1], rows[at]):
+			fittedText.WriteString(self.fitRunningOn(text))
+		case at > 0:
+			joinedText.WriteString("\n")
+			fittedText.WriteString(self.fit("\n" + text))
+		default:
+			fittedText.WriteString(self.fit(text))
+		}
+
+		joinedText.WriteString(text)
+	}
+
+	self.hasPrinted = true
+	self.advance(joinedText.String())
+	self.count(joinedText.String())
+	self.raw(fittedText.String())
 }
 
 const apart = 2

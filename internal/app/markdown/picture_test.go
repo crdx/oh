@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/width"
 )
 
 type recordingDrawer struct {
@@ -29,7 +30,7 @@ func newDrawer() *recordingDrawer {
 }
 
 func renderWithDrawer(markdown string, drawer PictureDrawer) []string {
-	return RenderWith(markdown, Options{Columns: 40, Pictures: drawer})
+	return width.Texts(RenderWith(markdown, Options{Columns: 40, Pictures: drawer}))
 }
 
 func TestAPictureOfItsOwnIsDrawnWhereItIsNamed(t *testing.T) {
@@ -59,7 +60,7 @@ func TestAPictureThatCannotBeDrawnKeepsItsWrittenForm(t *testing.T) {
 }
 
 func TestAPictureIsLeftAloneWhereNoDrawerIsGiven(t *testing.T) {
-	rows := RenderWith("![a chart](/pictures/chart.png)", Options{Columns: 40})
+	rows := width.Texts(RenderWith("![a chart](/pictures/chart.png)", Options{Columns: 40}))
 
 	if !strings.Contains(style.Plain(strings.Join(rows, "\n")), "/pictures/chart.png") {
 		t.Errorf("drew %q, want the path written out", rows)
@@ -119,7 +120,7 @@ func TestAnIncrementalAnswerDrawsAPictureOnlyOnceItIsWhole(t *testing.T) {
 
 	var rows []string
 	for at := 1; at <= len(source); at++ {
-		rows = renderer.RenderWith(source[:at], options)
+		rows = width.Texts(renderer.RenderWith(source[:at], options))
 		if slices.Contains(rows, "<picture row 1>") && at < strings.Index(source, ")")+1 {
 			t.Fatalf("byte %d drew a picture before its address was whole", at)
 		}
@@ -128,7 +129,7 @@ func TestAnIncrementalAnswerDrawsAPictureOnlyOnceItIsWhole(t *testing.T) {
 	if !slices.Contains(rows, "<picture row 1>") {
 		t.Errorf("drew %q, want the picture", rows)
 	}
-	if !slices.Equal(rows, RenderWith(source, options)) {
-		t.Errorf("streamed %q, want the same as %q", rows, RenderWith(source, options))
+	if want := width.Texts(RenderWith(source, options)); !slices.Equal(rows, want) {
+		t.Errorf("streamed %q, want the same as %q", rows, want)
 	}
 }

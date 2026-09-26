@@ -239,11 +239,11 @@ func TestARegionTallerThanTheTerminalIsWindowedToTheRoomItHas(t *testing.T) {
 	if got := len(screen.canvas.rows); got > screen.lines {
 		t.Errorf("painted %d rows on a terminal of %d", got, screen.lines)
 	}
-	if !strings.Contains(screen.canvas.rows[0], "more lines") {
-		t.Errorf("the window opened with %q, want it to say what it hid", screen.canvas.rows[0])
+	if !strings.Contains(screen.canvas.rows[0].Text, "more lines") {
+		t.Errorf("the window opened with %q, want it to say what it hid", screen.canvas.rows[0].Text)
 	}
-	if !slices.Contains(screen.canvas.rows, "row 19") {
-		t.Errorf("the window lost the newest row: %q", screen.canvas.rows)
+	if !slices.Contains(drawnTexts(screen), "row 19") {
+		t.Errorf("the window lost the newest row: %q", drawnTexts(screen))
 	}
 }
 
@@ -258,7 +258,7 @@ func TestARegionWithRoomToDrawShowsEveryRow(t *testing.T) {
 	block.rows[0] = "first changed"
 	screen.RefreshBlock(handle)
 
-	if !slices.Contains(screen.canvas.rows, "first changed") || !slices.Contains(screen.canvas.rows, "second") {
-		t.Errorf("a region with room to draw lost a row: %q", screen.canvas.rows)
+	if !slices.Contains(drawnTexts(screen), "first changed") || !slices.Contains(drawnTexts(screen), "second") {
+		t.Errorf("a region with room to draw lost a row: %q", drawnTexts(screen))
 	}
 }

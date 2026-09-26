@@ -122,6 +122,72 @@ func TestNoRowIsWiderThanItWasAskedFor(t *testing.T) {
 	}
 }
 
+func TestFoldingFillsEveryRowToTheEdgeAndBreaksItSoftly(t *testing.T) {
+	soft := func(text string) ScreenRow { return ScreenRow{Text: text, HasSoftBreak: true} }
+	hard := func(text string) ScreenRow { return ScreenRow{Text: text} }
+
+	for _, test := range []struct {
+		text  string
+		cells int
+		want  []ScreenRow
+	}{
+		{"", 8, []ScreenRow{hard("")}},
+		{"hello", 5, []ScreenRow{hard("hello")}},
+		{"hello!", 5, []ScreenRow{soft("hello"), hard("!")}},
+		{"one two three", 5, []ScreenRow{soft("one t"), soft("wo th"), hard("ree")}},
+		{"ab   cd", 3, []ScreenRow{soft("ab "), soft("  c"), hard("d")}},
+		{"a日b", 2, []ScreenRow{soft("a"), soft("日"), hard("b")}},
+		{"one\ntwo", 8, []ScreenRow{hard("one"), hard("two")}},
+		{"hello", 0, []ScreenRow{hard("hello")}},
+	} {
+		if got := Fold(test.text, test.cells); !slices.Equal(got, test.want) {
+			t.Errorf("Fold(%q, %d) = %+v, want %+v", test.text, test.cells, got, test.want)
+		}
+	}
+}
+
+func TestFoldingKeepsEveryCharacterSoTheRowsJoinBackIntoTheLine(t *testing.T) {
+	line := "cd /home/somebody/project && OH_PROFILE=/tmp/profiles oh -c r \"think it through\""
+
+	for cells := 1; cells <= len(line)+1; cells++ {
+		rows := Fold(line, cells)
+
+		if joined := strings.Join(Texts(rows), ""); plain(joined) != line {
+			t.Errorf("Fold(_, %d) joined back into %q", cells, plain(joined))
+		}
+		for i, row := range rows {
+			if isLast := i == len(rows)-1; row.HasSoftBreak == isLast {
+				t.Errorf("Fold(_, %d) row %d of %d broke wrongly: %+v", cells, i, len(rows), row)
+			}
+			if got := Of(row.Text); got > cells {
+				t.Errorf("Fold(_, %d) gave a row of %d cells: %q", cells, got, row.Text)
+			}
+		}
+	}
+}
+
+func TestFoldingClosesAStyleAtTheBreakAndOpensItAgainAfter(t *testing.T) {
+	got := Texts(Fold("\x1b[31mredder\x1b[0m", 3))
+	want := []string{"\x1b[31mred" + reset, "\x1b[31mder\x1b[0m"}
+
+	if !slices.Equal(got, want) {
+		t.Errorf("Fold() = %q, want %q", got, want)
+	}
+}
+
+func TestRowsKeepTheirTextInEitherDirection(t *testing.T) {
+	texts := []string{"one", "", "three"}
+
+	if got := Texts(HardRows(texts)); !slices.Equal(got, texts) {
+		t.Errorf("Texts(HardRows(%q)) = %q", texts, got)
+	}
+	for _, row := range HardRows(texts) {
+		if row.HasSoftBreak {
+			t.Errorf("HardRows broke %q softly", row.Text)
+		}
+	}
+}
+
 func plain(text string) string {
 	var out strings.Builder
 

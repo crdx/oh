@@ -13,12 +13,12 @@ What a session does
 
 Diagram needs 130 columns.
 flowchart TD
-root["Session"] --> replay["Replay the
-journal"]
+root["Session"] --> replay["Replay the j
+ournal"]
 root --> stream["Stream the turn"]
 root --> seal["Seal into scrollback"]
-root --> notice["Draw the harness
-notice"]
+root --> notice["Draw the harness notice
+"]
 root --> question["Ask the person"]
 
 Each branch stands on its own.
@@ -214,6 +214,7 @@ h
 a
 r
 t
+
 T
 D
 r
@@ -231,9 +232,11 @@ o
 n
 "
 ]
+
 -
 -
 >
+
 r
 e
 p
@@ -248,9 +251,11 @@ p
 l
 a
 y
+
 t
 h
 e
+
 j
 o
 u
@@ -264,9 +269,11 @@ r
 o
 o
 t
+
 -
 -
 >
+
 s
 t
 r
@@ -281,9 +288,11 @@ r
 e
 a
 m
+
 t
 h
 e
+
 t
 u
 r
@@ -294,9 +303,11 @@ r
 o
 o
 t
+
 -
 -
 >
+
 s
 e
 a
@@ -307,10 +318,12 @@ S
 e
 a
 l
+
 i
 n
 t
 o
+
 s
 c
 r
@@ -327,9 +340,11 @@ r
 o
 o
 t
+
 -
 -
 >
+
 n
 o
 t
@@ -342,9 +357,11 @@ D
 r
 a
 w
+
 t
 h
 e
+
 h
 a
 r
@@ -352,6 +369,7 @@ n
 e
 s
 s
+
 n
 o
 t
@@ -364,9 +382,11 @@ r
 o
 o
 t
+
 -
 -
 >
+
 q
 u
 e
@@ -380,9 +400,11 @@ n
 A
 s
 k
+
 t
 h
 e
+
 p
 e
 r
@@ -466,26 +488,23 @@ needs 130
 columns.
 flowchart TD
 root["Sessio
-n"] -->
-replay["Repl
-ay the
-journal"]
-root -->
-stream["Stre
-am the
-turn"]
-root -->
-seal["Seal
-into
-scrollback"]
-root -->
-notice["Draw
-the harness
-notice"]
-root -->
-question["As
-k the
-person"]
+n"] --> repl
+ay["Replay t
+he journal"]
+root --> str
+eam["Stream
+the turn"]
+root --> sea
+l["Seal into
+ scrollback"
+]
+root --> not
+ice["Draw th
+e harness no
+tice"]
+root --> que
+stion["Ask t
+he person"]
 
 Each branch
 stands on

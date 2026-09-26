@@ -8,10 +8,12 @@ import (
 	"strings"
 	"testing"
 
+	"crdx.org/oh/internal/app/ansi"
 	"crdx.org/oh/internal/app/escape"
 	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/output"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/util/strutil"
 )
 
@@ -33,7 +35,7 @@ func TestAFinishedTurnEndsWithANewline(t *testing.T) {
 	screen := output.New(&screenOutput)
 
 	screen.Line("banner")
-	screen.DrawAnswer([]string{style.Answer("hello")})
+	screen.DrawAnswer(width.HardRows([]string{style.Answer("hello")}))
 	screen.End()
 
 	if got := screenOutput.String(); !strings.HasSuffix(got, "\n") {
@@ -47,7 +49,7 @@ func TestTheNextThingSaidStartsTheLineTheTurnCameDownTo(t *testing.T) {
 	screen := output.New(&screenOutput)
 
 	screen.Line("banner")
-	screen.DrawAnswer([]string{style.Answer("hello")})
+	screen.DrawAnswer(width.HardRows([]string{style.Answer("hello")}))
 	screen.End()
 	screen.Line("> again")
 
@@ -61,7 +63,7 @@ func TestEndingATurnTwiceComesDownOnlyOnce(t *testing.T) {
 
 	screen := output.New(&screenOutput)
 
-	screen.DrawAnswer([]string{style.Answer("hello")})
+	screen.DrawAnswer(width.HardRows([]string{style.Answer("hello")}))
 	screen.End()
 	screen.End()
 	screen.Line("> again")
@@ -147,7 +149,7 @@ func TestAnAnswerKeepsTheBlankRowsInsideIt(t *testing.T) {
 
 	screen := output.New(&screenOutput)
 
-	screen.DrawAnswer([]string{style.Answer("one"), "", style.Answer("two")})
+	screen.DrawAnswer(width.HardRows([]string{style.Answer("one"), "", style.Answer("two")}))
 	screen.End()
 
 	want := style.Answer("one") + "\n\n" + style.Answer("two") + "\n"
@@ -194,7 +196,7 @@ func drawnKinds() []drawnKind {
 			name:  "answer",
 			group: "answer",
 			draw: func(screen *output.Screen, text string) {
-				screen.DrawAnswer([]string{text})
+				screen.DrawAnswer(width.HardRows([]string{text}))
 				screen.Seal()
 			},
 		},
@@ -326,8 +328,8 @@ func TestAnAppendOnlyScreenWritesOnlyTheRowsTheLiveRegionSettledOn(t *testing.T)
 	var screenOutput bytes.Buffer
 
 	screen := appendOnlyScreen(&screenOutput)
-	screen.DrawAnswer([]string{"one", "two"})
-	screen.DrawAnswer([]string{"one", "two", "three"})
+	screen.DrawAnswer(width.HardRows([]string{"one", "two"}))
+	screen.DrawAnswer(width.HardRows([]string{"one", "two", "three"}))
 	screen.End()
 
 	if got := screenOutput.String(); got != "one\r\ntwo\r\nthree\r\n" {
@@ -342,7 +344,7 @@ func TestAnAppendOnlyScreenWritesNoEscapeSequences(t *testing.T) {
 	screen.BeginEditing()
 	screen.ReportProgress(true)
 	screen.DrawReasoning([]string{"thinking"})
-	screen.DrawAnswer([]string{"answered"})
+	screen.DrawAnswer(width.HardRows([]string{"answered"}))
 	screen.Footer([]string{"input"}, 0, 0)
 	screen.End()
 	screen.Release(true)
@@ -360,7 +362,7 @@ func TestAnAppendOnlyTerminalStillLinksThePathsItNames(t *testing.T) {
 
 	var screenOutput bytes.Buffer
 	screen := appendOnlyScreen(&screenOutput).LinkPathsUnder(link.Roots{Workspace: workspaceDir})
-	screen.DrawAnswer([]string{"see one.go"})
+	screen.DrawAnswer(width.HardRows([]string{"see one.go"}))
 	screen.End()
 
 	if got := screenOutput.String(); !strings.Contains(got, "\x1b]8;;file://") {
@@ -473,5 +475,54 @@ func TestAnOrdinaryLineIsNeverMarked(t *testing.T) {
 
 	if got := screenOutput.String(); strings.Contains(got, escape.MessageMark) {
 		t.Errorf("an ordinary line was marked: %q", strutil.VisibleEscapes(got))
+	}
+}
+
+func TestASoftBreakReachingSomethingThatIsNoTerminalJoinsTheRowsBackTogether(t *testing.T) {
+	var screenOutput bytes.Buffer
+
+	screen := output.New(&screenOutput)
+
+	screen.DrawAnswer([]width.ScreenRow{
+		{Text: "a long line", HasSoftBreak: true},
+		{Text: " of code"},
+		{},
+		{Text: "after"},
+	})
+	screen.End()
+
+	if got, want := screenOutput.String(), "a long line of code\n\nafter\n"; got != want {
+		t.Errorf("the screen wrote %q, want %q", got, want)
+	}
+}
+
+func TestAPrintedSoftBreakLeavesTheTerminalToWrapTheRow(t *testing.T) {
+	var screenOutput bytes.Buffer
+
+	screen := output.NewTerminalOfSize(&screenOutput, 4, 10).AppendOnly()
+
+	screen.DrawAnswer([]width.ScreenRow{{Text: "ab c", HasSoftBreak: true}, {Text: " def"}, {Text: "after"}})
+	screen.End()
+
+	if got, want := screenOutput.String(), "ab c def\r\nafte\r\nr\r\n"; got != want {
+		t.Errorf("the screen wrote %q, want %q", strutil.VisibleEscapes(got), strutil.VisibleEscapes(want))
+	}
+}
+
+func TestARowWhoseContinuationIsTakenBackIsBrokenHard(t *testing.T) {
+	var screenOutput bytes.Buffer
+
+	screen := output.NewTerminalOfSize(&screenOutput, 4, 10)
+
+	screen.DrawAnswer([]width.ScreenRow{{Text: "abcd", HasSoftBreak: true}, {Text: "ef"}})
+	if got := screenOutput.String(); !strings.Contains(got, ansi.AutoWrap+"abcdef") {
+		t.Fatalf("the screen did not run the row on into the next: %q", strutil.VisibleEscapes(got))
+	}
+
+	screenOutput.Reset()
+	screen.DrawAnswer([]width.ScreenRow{{Text: "abcd", HasSoftBreak: true}})
+
+	if got := screenOutput.String(); strings.Contains(got, ansi.AutoWrap) || !strings.Contains(got, "abcd") {
+		t.Errorf("the screen left a soft break with nothing to run on to: %q", strutil.VisibleEscapes(got))
 	}
 }
