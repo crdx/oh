@@ -9,5 +9,6 @@ Options:
 The configuration is always considered. Sessions are named on the command line, or every outdated
 stored session is done when the command names no session.
 
-The configuration file and each session bundle are copied aside before anything is written. A
-session transcript is written again from the journal it was migrated into.
+The configuration file is copied aside before anything is written. Each session bundle is kept
+aside too, by hard links where the filesystem allows, and an archived session is kept as its
+archive. A session transcript is written again from the journal it was migrated into.

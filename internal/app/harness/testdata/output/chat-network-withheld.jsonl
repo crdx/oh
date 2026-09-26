@@ -1,4 +1,4 @@
-{"kind":"head","version":13,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"head","version":14,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant."}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"run a command on the host network while network access is withheld"}}
 {"kind":"event","event":{"render":"curl example.com","emphasis":{"kind":"syntax","value":"bash"},"kind":"tool_call_request","id":"call-1","name":"bash","arguments":"{\"command\":\"curl example.com\",\"network\":\"host\"}"}}

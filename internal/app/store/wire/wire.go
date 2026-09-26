@@ -16,6 +16,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/klauspost/compress/zstd"
+
 	"crdx.org/oh/internal/req"
 )
 
@@ -31,96 +33,54 @@ type Meta struct {
 type Recorder struct {
 	mutex     sync.Mutex
 	file      *os.File
+	encoder   *zstd.Encoder
 	hasFailed bool
 	next      int
 	report    func(error)
 }
 
 func Open(path string, meta Meta, report func(error)) (*Recorder, error) {
-	recorder := &Recorder{report: report, next: 1}
 	file, err := os.OpenFile(path, os.O_CREATE|os.O_APPEND|os.O_RDWR, 0o600) //nolint:gosec // the parent store supplies the fixed bundle path
 	if err != nil {
 		return nil, err
 	}
-	recorder.file = file
 
-	info, err := file.Stat()
+	next, isNew, err := resume(file)
 	if err != nil {
 		_ = file.Close()
 		return nil, err
 	}
-	if info.Size() == 0 {
-		if err := writeTranscriptHeader(file, meta); err != nil {
-			_ = file.Close()
-			return nil, err
-		}
-	} else {
-		next, err := nextExchangeNumber(file, recorder.next)
-		if err != nil {
-			_ = file.Close()
-			return nil, err
-		}
-		recorder.next = next
+
+	encoder, err := zstd.NewWriter(
+		file,
+		zstd.WithWindowSize(windowBytes),
+		zstd.WithEncoderLevel(zstd.SpeedBetterCompression),
+		zstd.WithEncoderConcurrency(1),
+		zstd.WithEncoderCRC(false),
+	)
+	if err != nil {
+		_ = file.Close()
+		return nil, err
 	}
-	return recorder, nil
+
+	if isNew {
+		if _, err := io.WriteString(encoder, transcriptHeader(meta)); err != nil {
+			_ = file.Close()
+			return nil, err
+		}
+		if err := encoder.Flush(); err != nil {
+			_ = file.Close()
+			return nil, err
+		}
+	}
+	return &Recorder{file: file, encoder: encoder, next: next, report: report}, nil
 }
 
-func writeTranscriptHeader(file *os.File, meta Meta) error {
-	_, err := fmt.Fprintf(file, "# HTTP transcript\n# session: %s\n# started: %s\n# model: %s\n# effort: %s\n# provider: %s\n# workspace: %s\n\n", meta.Name, meta.StartedAt.UTC().Format(time.RFC3339Nano), meta.Model, meta.Effort, meta.Provider, meta.Workspace)
-	return err
+func transcriptHeader(meta Meta) string {
+	return fmt.Sprintf("# HTTP transcript\n# session: %s\n# started: %s\n# model: %s\n# effort: %s\n# provider: %s\n# workspace: %s\n\n", meta.Name, meta.StartedAt.UTC().Format(time.RFC3339Nano), meta.Model, meta.Effort, meta.Provider, meta.Workspace)
 }
 
 const exchangeMarker = "# exchange "
-
-const firstTailWindow = 64 << 10
-
-func nextExchangeNumber(file *os.File, next int) (int, error) {
-	size, err := file.Seek(0, io.SeekEnd)
-	if err != nil {
-		return 0, err
-	}
-
-	for window := int64(firstTailWindow); ; window *= 2 {
-		at := max(size-window, 0)
-
-		tail := make([]byte, size-at)
-		if _, err := file.ReadAt(tail, at); err != nil && !errors.Is(err, io.EOF) {
-			return 0, err
-		}
-
-		if sequence, wasFound := lastExchangeNumber(tail, at == 0); wasFound {
-			return max(next, sequence+1), nil
-		}
-
-		if at == 0 {
-			return next, nil
-		}
-	}
-}
-
-func lastExchangeNumber(tail []byte, isWholeFile bool) (int, bool) {
-	for at := len(tail); at > 0; {
-		lineEnd := at
-		lineStart := bytes.LastIndexByte(tail[:lineEnd], '\n') + 1
-		at = lineStart - 1
-
-		if lineStart == 0 && !isWholeFile {
-			return 0, false
-		}
-
-		line := tail[lineStart:lineEnd]
-		if !bytes.HasPrefix(line, []byte(exchangeMarker)) {
-			continue
-		}
-
-		var sequence int
-		if _, err := fmt.Sscanf(string(line), exchangeMarker+"%d start", &sequence); err == nil {
-			return sequence, true
-		}
-	}
-
-	return 0, false
-}
 
 func (self *Recorder) Start(request req.Request) req.ExchangeObserver {
 	self.mutex.Lock()
@@ -133,6 +93,7 @@ func (self *Recorder) Start(request req.Request) req.ExchangeObserver {
 	self.write("\n")
 	self.write(string(censorBody(request.Body, request.Header.Get("Content-Type"))))
 	self.write("\n")
+	self.flush()
 	return exchange
 }
 
@@ -142,8 +103,13 @@ func (self *Recorder) Close() error {
 	if self.file == nil {
 		return nil
 	}
-	err := self.file.Close()
+	err := self.encoder.Close()
+	if err == nil {
+		_, err = self.file.Write(trailer(self.next))
+	}
+	err = errors.Join(err, self.file.Close())
 	self.file = nil
+	self.encoder = nil
 	if err != nil {
 		self.fail(err)
 	}
@@ -172,7 +138,16 @@ func (self *Recorder) write(value string) {
 	if self.hasFailed || self.file == nil {
 		return
 	}
-	if _, err := self.file.WriteString(value); err != nil {
+	if _, err := io.WriteString(self.encoder, value); err != nil {
+		self.fail(err)
+	}
+}
+
+func (self *Recorder) flush() {
+	if self.hasFailed || self.file == nil {
+		return
+	}
+	if err := self.encoder.Flush(); err != nil {
 		self.fail(err)
 	}
 }
@@ -182,12 +157,13 @@ func (self *Recorder) fail(err error) {
 		return
 	}
 	self.hasFailed = true
+	self.encoder = nil
 	if self.file != nil {
 		_ = self.file.Close()
 		self.file = nil
 	}
 	if self.report != nil {
-		self.report(fmt.Errorf("wire.http recording disabled: %w", err))
+		self.report(fmt.Errorf("wire.http.zst recording disabled: %w", err))
 	}
 }
 
@@ -214,6 +190,7 @@ func (self *exchange) Response(response req.Response) {
 		self.recorder.write(fmt.Sprintf("%s%d gzip decompressed by the transport\n", exchangeMarker, self.sequence))
 	}
 	self.recorder.write("\n")
+	self.recorder.flush()
 }
 
 func (self *exchange) Body(readAt time.Time, body []byte) {
@@ -230,6 +207,7 @@ func (self *exchange) Body(readAt time.Time, body []byte) {
 		bufferedBody := self.body.Bytes()
 		lineEnd := bytes.IndexByte(bufferedBody, '\n')
 		if lineEnd < 0 {
+			self.recorder.flush()
 			return
 		}
 		line := bytes.Clone(bufferedBody[:lineEnd+1])
@@ -255,6 +233,7 @@ func (self *exchange) Finish(finishedAt time.Time, err error, isIncomplete bool)
 		state = "read error: " + censorBearer(err.Error())
 	}
 	self.recorder.write(fmt.Sprintf("# exchange %d end %s elapsed=%s %s\n\n", self.sequence, finishedAt.UTC().Format(time.RFC3339Nano), finishedAt.Sub(self.startedAt), state))
+	self.recorder.flush()
 }
 
 func (self *exchange) readMarker(readAt time.Time, byteCount int) string {

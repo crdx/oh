@@ -41,7 +41,7 @@ $ cd /tmp &&
 === combined storage warnings ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ chat.md recording disabled: transcript append failed                                           │
- │ wire.http recording disabled: wire append failed                                               │
+ │ wire.http.zst recording disabled: wire append failed                                           │
 ─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────

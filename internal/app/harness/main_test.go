@@ -9966,7 +9966,7 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 		self.finish()
 		self.show(inputLine)
 	case feedbackStorageWarnings:
-		self.notifyFailure("chat.md recording disabled: transcript append failed\nwire.http recording disabled: wire append failed")
+		self.notifyFailure("chat.md recording disabled: transcript append failed\nwire.http.zst recording disabled: wire append failed")
 		self.show(inputLine)
 	case feedbackUnknownSettings:
 		self.notifyUnknownSettings([]string{
@@ -16344,7 +16344,7 @@ func TestAuxiliaryRecorderWarningsAreShownOnceAndRemainCanonical(t *testing.T) {
 		SessionLogger: innerLog,
 		warnings: []error{
 			errors.New("chat.md recording disabled: transcript append failed"),
-			errors.New("wire.http recording disabled: wire append failed"),
+			errors.New("wire.http.zst recording disabled: wire append failed"),
 		},
 	}
 	testHarness := newStorageFaultHarness(log, agent.New("", quietProvider{}, nil))

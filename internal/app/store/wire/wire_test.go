@@ -1,7 +1,11 @@
 package wire_test
 
 import (
+	"bytes"
+	"encoding/binary"
 	"encoding/json"
+	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -9,165 +13,246 @@ import (
 	"testing"
 	"time"
 
+	"github.com/klauspost/compress/zstd"
+
 	"crdx.org/oh/internal/app/store/wire"
 	"crdx.org/oh/internal/req"
 )
 
-func TestRecorderContinuesSequenceNumbersAfterLongLines(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "wire.http")
-	stored := strings.Join([]string{
-		"# HTTP transcript\n",
-		strings.Repeat("x", 128*1024),
-		"\n# exchange 7 start\n",
-	}, "")
-	if err := os.WriteFile(path, []byte(stored), 0o600); err != nil {
-		t.Fatal(err)
-	}
+func TestANewTranscriptOpensWithItsHeaderAndNumbersFromOne(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "wire.http.zst")
+	recorder := openRecorder(t, path)
+	recordExchange(recorder, 1)
+	closeRecorder(t, recorder)
 
-	recorder, err := wire.Open(path, wire.Meta{}, func(err error) {
-		t.Errorf("unexpected recorder failure: %v", err)
-	})
-	if err != nil {
-		t.Fatal(err)
+	transcript := decompressed(t, path)
+	if !strings.HasPrefix(transcript, "# HTTP transcript\n# session: tame-impala\n") {
+		t.Errorf("expected the header first, got:\n%s", transcript)
 	}
-	recorder.Start(req.Request{StartedAt: time.Unix(2, 0), Method: http.MethodPost})
-	if err := recorder.Close(); err != nil {
-		t.Fatal(err)
-	}
-
-	transcript, err := os.ReadFile(path) //nolint:gosec // the test's own path
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !strings.Contains(string(transcript), "# exchange 8 start") {
-		t.Errorf("expected sequence numbering to continue after the long line")
+	if !strings.Contains(transcript, "# exchange 1 start") {
+		t.Errorf("expected numbering to begin at one, got:\n%s", transcript)
 	}
 }
 
-func TestRecorderFindsTheLastSequenceNumberFarFromTheEnd(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "wire.http")
-	stored := strings.Join([]string{
-		"# HTTP transcript\n",
-		"# exchange 7 start\n",
-		strings.Repeat("body line\n", 200*1024),
-	}, "")
-	if err := os.WriteFile(path, []byte(stored), 0o600); err != nil {
-		t.Fatal(err)
+func TestReopeningATranscriptContinuesItsNumbering(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "wire.http.zst")
+	for run := range 3 {
+		recorder := openRecorder(t, path)
+		recordExchange(recorder, 2)
+		closeRecorder(t, recorder)
+
+		if run == 0 {
+			continue
+		}
+		transcript := decompressed(t, path)
+		if strings.Count(transcript, "# HTTP transcript") != 1 {
+			t.Errorf("expected one header, got:\n%s", transcript)
+		}
 	}
 
-	recorder, err := wire.Open(path, wire.Meta{}, func(err error) {
-		t.Errorf("unexpected recorder failure: %v", err)
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
-	recorder.Start(req.Request{StartedAt: time.Unix(2, 0), Method: http.MethodPost})
-	if err := recorder.Close(); err != nil {
-		t.Fatal(err)
-	}
-
-	transcript, err := os.ReadFile(path) //nolint:gosec // the test's own path
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !strings.Contains(string(transcript), "# exchange 8 start") {
-		t.Errorf("expected the marker to be found beyond the first window read back")
+	transcript := decompressed(t, path)
+	for sequence := 1; sequence <= 6; sequence++ {
+		if strings.Count(transcript, fmt.Sprintf("# exchange %d start", sequence)) != 1 {
+			t.Errorf("expected exchange %d once, got:\n%s", sequence, transcript)
+		}
 	}
 }
 
-func TestRecorderNumbersTheFirstExchangeOfATranscriptWithoutOne(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "wire.http")
+func TestATrailerNamesTheNextExchangeWithoutTheFrameBeingRead(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "wire.http.zst")
+	stored := []byte{0x28, 0xB5, 0x2F, 0xFD, 0x00, 0x58, 0x25, 0x00, 0x00, 0xDE, 0xAD, 0xBE, 0xEF}
+	stored = binary.LittleEndian.AppendUint32(stored, 0x184D2A50)
+	stored = binary.LittleEndian.AppendUint32(stored, 8)
+	stored = binary.LittleEndian.AppendUint64(stored, 41)
+	if err := os.WriteFile(path, stored, 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	recorder := openRecorder(t, path)
+	recordExchange(recorder, 1)
+	closeRecorder(t, recorder)
+
+	written, err := os.ReadFile(path) //nolint:gosec // the test's own path
+	if err != nil {
+		t.Fatal(err)
+	}
+	transcript := decompressedBytes(t, written[len(stored):])
+	if !strings.HasPrefix(transcript, "# exchange 41 start") {
+		t.Errorf("expected the trailer to be believed, got:\n%s", transcript)
+	}
+}
+
+func TestAnUnclosedFrameIsClosedAndReadForItsNumbering(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "wire.http.zst")
+	crashed := openRecorder(t, path)
+	recordExchange(crashed, 4)
+	exchange := crashed.Start(req.Request{
+		StartedAt: time.Unix(5, 0),
+		Method:    http.MethodPost,
+		Header:    http.Header{"Content-Type": {"text/plain"}},
+		Body:      []byte(strings.Repeat("x", 3<<20)),
+	})
+	exchange.Response(req.Response{ReceivedAt: time.Unix(6, 0), Protocol: "HTTP/1.1", Status: "200 OK", Code: 200, Header: http.Header{"Content-Type": {"text/event-stream"}}})
+	exchange.Body(time.Unix(6, 0), []byte("data: one\n"))
+	exchange.Finish(time.Unix(7, 0), nil, false)
+
+	recorder := openRecorder(t, path)
+	recordExchange(recorder, 1)
+	closeRecorder(t, recorder)
+
+	transcript := decompressed(t, path)
+	if !strings.Contains(transcript, "# exchange 6 start") {
+		t.Errorf("expected numbering to continue past the unclosed frame, got:\n%s", tail(transcript))
+	}
+	if strings.Count(transcript, "# exchange 5 end") != 1 {
+		t.Errorf("expected everything flushed before the crash to survive, got:\n%s", tail(transcript))
+	}
+}
+
+func TestATornBlockIsCutAwayAndWhatCameBeforeItSurvives(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "wire.http.zst")
+	crashed := openRecorder(t, path)
+	recordExchange(crashed, 2)
+	crashed.Start(req.Request{StartedAt: time.Unix(9, 0), Method: http.MethodPost, Body: []byte("torn away")})
+
+	info, err := os.Stat(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Truncate(path, info.Size()-2); err != nil {
+		t.Fatal(err)
+	}
+
+	recorder := openRecorder(t, path)
+	recordExchange(recorder, 1)
+	closeRecorder(t, recorder)
+
+	transcript := decompressed(t, path)
+	if strings.Contains(transcript, "torn away") {
+		t.Errorf("expected the torn block to be cut away, got:\n%s", transcript)
+	}
+	if !strings.Contains(transcript, "# exchange 2 end") || !strings.Contains(transcript, "# exchange 3 start") {
+		t.Errorf("expected the whole exchanges to survive and numbering to continue, got:\n%s", transcript)
+	}
+}
+
+func TestATornTrailerIsCutAwayAndTheFrameReadInstead(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "wire.http.zst")
+	recorder := openRecorder(t, path)
+	recordExchange(recorder, 2)
+	closeRecorder(t, recorder)
+
+	info, err := os.Stat(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Truncate(path, info.Size()-3); err != nil {
+		t.Fatal(err)
+	}
+
+	recorder = openRecorder(t, path)
+	recordExchange(recorder, 1)
+	closeRecorder(t, recorder)
+
+	if !strings.Contains(decompressed(t, path), "# exchange 3 start") {
+		t.Errorf("expected numbering to continue, got:\n%s", decompressed(t, path))
+	}
+}
+
+func TestATranscriptThatIsNotZstdIsRefused(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "wire.http.zst")
 	if err := os.WriteFile(path, []byte("# HTTP transcript\n\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
-	recorder, err := wire.Open(path, wire.Meta{}, func(err error) {
-		t.Errorf("unexpected recorder failure: %v", err)
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
-	recorder.Start(req.Request{StartedAt: time.Unix(2, 0), Method: http.MethodPost})
-	if err := recorder.Close(); err != nil {
-		t.Fatal(err)
+	if _, err := wire.Open(path, wire.Meta{}, nil); err == nil {
+		t.Error("expected a plain transcript to be refused")
 	}
 
-	transcript, err := os.ReadFile(path) //nolint:gosec // the test's own path
+	stored, err := os.ReadFile(path) //nolint:gosec // the test's own path
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(string(transcript), "# exchange 1 start") {
-		t.Errorf("expected numbering to begin at one, got %q", string(transcript))
+	if string(stored) != "# HTTP transcript\n\n" {
+		t.Errorf("expected the refused file untouched, got %q", stored)
 	}
 }
 
-func TestRecorderIgnoresAnEndMarkerWhenNumberingTheNextExchange(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "wire.http")
-	stored := strings.Join([]string{
-		"# HTTP transcript\n",
-		"# exchange 4 start\n",
-		"# exchange 4 end 1970-01-01T00:00:00Z elapsed=1s completed\n\n",
-	}, "")
-	if err := os.WriteFile(path, []byte(stored), 0o600); err != nil {
-		t.Fatal(err)
-	}
+func openRecorder(t *testing.T, path string) *wire.Recorder {
+	t.Helper()
 
-	recorder, err := wire.Open(path, wire.Meta{}, func(err error) {
+	recorder, err := wire.Open(path, wire.Meta{Name: "tame-impala", StartedAt: time.Unix(1, 0)}, func(err error) {
 		t.Errorf("unexpected recorder failure: %v", err)
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	recorder.Start(req.Request{StartedAt: time.Unix(2, 0), Method: http.MethodPost})
+	return recorder
+}
+
+func closeRecorder(t *testing.T, recorder *wire.Recorder) {
+	t.Helper()
+
 	if err := recorder.Close(); err != nil {
 		t.Fatal(err)
-	}
-
-	transcript, err := os.ReadFile(path) //nolint:gosec // the test's own path
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !strings.Contains(string(transcript), "# exchange 5 start") {
-		t.Errorf("expected the end marker to be passed over, got %q", string(transcript))
 	}
 }
 
-func TestRecorderIgnoresAReadMarkerWhenNumberingTheNextExchange(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "wire.http")
-	stored := strings.Join([]string{
-		"# HTTP transcript\n",
-		"# exchange 4 start 1970-01-01T00:00:02Z\n",
-		"# exchange 4 read 1970-01-01T00:00:03Z elapsed=1s\n",
-		"data: one\n",
-		"# exchange 4 read 1970-01-01T00:00:03.25Z elapsed=1.25s gap=250ms\n",
-		"data: two\n",
-	}, "")
-	if err := os.WriteFile(path, []byte(stored), 0o600); err != nil {
-		t.Fatal(err)
+func recordExchange(recorder *wire.Recorder, count int) {
+	for range count {
+		exchange := recorder.Start(req.Request{
+			StartedAt: time.Unix(2, 0),
+			Method:    http.MethodPost,
+			URL:       "https://example.test/",
+			Protocol:  "HTTP/1.1",
+			Header:    http.Header{"Content-Type": {"application/json"}},
+			Body:      []byte(`{"messages":[]}`),
+		})
+		exchange.Response(req.Response{
+			ReceivedAt: time.Unix(3, 0),
+			Protocol:   "HTTP/1.1",
+			Status:     "200 OK",
+			Code:       200,
+			Header:     http.Header{"Content-Type": {"text/event-stream"}},
+		})
+		exchange.Body(time.Unix(3, 0), []byte("data: one\n"))
+		exchange.Body(time.Unix(3, 0).Add(time.Second), []byte("data: two\n"))
+		exchange.Finish(time.Unix(4, 0), nil, false)
 	}
+}
 
-	recorder, err := wire.Open(path, wire.Meta{}, func(err error) {
-		t.Errorf("unexpected recorder failure: %v", err)
-	})
+func decompressed(t *testing.T, path string) string {
+	t.Helper()
+
+	stored, err := os.ReadFile(path) //nolint:gosec // the test's own path
 	if err != nil {
 		t.Fatal(err)
 	}
-	recorder.Start(req.Request{StartedAt: time.Unix(2, 0), Method: http.MethodPost})
-	if err := recorder.Close(); err != nil {
-		t.Fatal(err)
-	}
+	return decompressedBytes(t, stored)
+}
 
-	transcript, err := os.ReadFile(path) //nolint:gosec // the test's own path
+func decompressedBytes(t *testing.T, stored []byte) string {
+	t.Helper()
+
+	decoder, err := zstd.NewReader(bytes.NewReader(stored), zstd.WithDecoderMaxWindow(128<<20))
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(string(transcript), "# exchange 5 start") {
-		t.Errorf("expected the read markers to be passed over, got %q", string(transcript))
+	defer decoder.Close()
+
+	transcript, err := io.ReadAll(decoder)
+	if err != nil {
+		t.Fatalf("the transcript does not decompress: %v", err)
 	}
+	return string(transcript)
+}
+
+func tail(transcript string) string {
+	return transcript[max(len(transcript)-2000, 0):]
 }
 
 func TestEachStreamingReadIsTimestampedSoBurstsAreVisible(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "wire.http")
+	path := filepath.Join(t.TempDir(), "wire.http.zst")
 	recorder, err := wire.Open(path, wire.Meta{Name: "tame-impala", StartedAt: time.Unix(1, 0)}, func(err error) {
 		t.Errorf("unexpected recorder failure: %v", err)
 	})
@@ -199,11 +284,8 @@ func TestEachStreamingReadIsTimestampedSoBurstsAreVisible(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	stored, err := os.ReadFile(path) //nolint:gosec // the test's own path
-	if err != nil {
-		t.Fatal(err)
-	}
-	transcript := string(stored)
+	stored := decompressed(t, path)
+	transcript := stored
 
 	for _, marker := range []string{
 		"# exchange 1 read 1970-01-01T00:00:03Z elapsed=1s bytes=10\ndata: one\n",
@@ -221,7 +303,7 @@ func TestEachStreamingReadIsTimestampedSoBurstsAreVisible(t *testing.T) {
 }
 
 func TestRecorderCensorsHeadersJSONFormsSSEAndBearerText(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "wire.http")
+	path := filepath.Join(t.TempDir(), "wire.http.zst")
 	recorder, err := wire.Open(path, wire.Meta{Name: "tame-impala", StartedAt: time.Unix(1, 0)}, func(err error) {
 		t.Errorf("unexpected recorder failure: %v", err)
 	})
@@ -253,11 +335,8 @@ func TestRecorderCensorsHeadersJSONFormsSSEAndBearerText(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	stored, err := os.ReadFile(path) //nolint:gosec // the test's own path
-	if err != nil {
-		t.Fatal(err)
-	}
-	transcript := string(stored)
+	stored := decompressed(t, path)
+	transcript := stored
 	for _, secret := range []string{"request-secret", "json-secret", "sse-secret", "response-secret"} {
 		if strings.Contains(transcript, secret) {
 			t.Errorf("secret %q survived censorship:\n%s", secret, transcript)
@@ -275,7 +354,7 @@ func TestRecorderCensorsHeadersJSONFormsSSEAndBearerText(t *testing.T) {
 }
 
 func TestRecorderCensorsIdentityMetadataWithoutCensoringProtocolIDs(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "wire.http")
+	path := filepath.Join(t.TempDir(), "wire.http.zst")
 	recorder, err := wire.Open(path, wire.Meta{}, func(err error) {
 		t.Errorf("unexpected recorder failure: %v", err)
 	})
@@ -315,11 +394,8 @@ func TestRecorderCensorsIdentityMetadataWithoutCensoringProtocolIDs(t *testing.T
 		t.Fatal(err)
 	}
 
-	stored, err := os.ReadFile(path) //nolint:gosec // the test's own path
-	if err != nil {
-		t.Fatal(err)
-	}
-	transcript := string(stored)
+	stored := decompressed(t, path)
+	transcript := stored
 	for _, secret := range []string{
 		"organisation-secret",
 		"workspace-secret",
@@ -352,7 +428,7 @@ func TestRecorderCensorsIdentityMetadataWithoutCensoringProtocolIDs(t *testing.T
 func recordBody(t *testing.T, body []byte, contentType string, events string) string {
 	t.Helper()
 
-	path := filepath.Join(t.TempDir(), "wire.http")
+	path := filepath.Join(t.TempDir(), "wire.http.zst")
 	recorder, err := wire.Open(path, wire.Meta{}, func(err error) {
 		t.Errorf("unexpected recorder failure: %v", err)
 	})
@@ -384,12 +460,9 @@ func recordBody(t *testing.T, body []byte, contentType string, events string) st
 		t.Fatal(err)
 	}
 
-	stored, err := os.ReadFile(path) //nolint:gosec // the test's own path
-	if err != nil {
-		t.Fatal(err)
-	}
+	stored := decompressed(t, path)
 
-	return string(stored)
+	return stored
 }
 
 func recordedLine(t *testing.T, transcript string, prefix string) string {
@@ -449,7 +522,7 @@ func TestABodyWithNothingToHideIsRecordedAsItWasSent(t *testing.T) {
 
 func TestATransparentlyDecompressedResponseSaysSo(t *testing.T) {
 	for name, isCompressed := range map[string]bool{"compressed": true, "plain": false} {
-		path := filepath.Join(t.TempDir(), "wire.http")
+		path := filepath.Join(t.TempDir(), "wire.http.zst")
 		recorder, err := wire.Open(path, wire.Meta{}, func(err error) {
 			t.Errorf("unexpected recorder failure: %v", err)
 		})
@@ -471,13 +544,10 @@ func TestATransparentlyDecompressedResponseSaysSo(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		stored, err := os.ReadFile(path) //nolint:gosec // the test's own path
-		if err != nil {
-			t.Fatal(err)
-		}
+		stored := decompressed(t, path)
 		note := "# exchange 1 gzip decompressed by the transport"
-		if strings.Contains(string(stored), note) != isCompressed {
-			t.Errorf("%s response recorded wrongly:\n%s", name, string(stored))
+		if strings.Contains(stored, note) != isCompressed {
+			t.Errorf("%s response recorded wrongly:\n%s", name, stored)
 		}
 	}
 }

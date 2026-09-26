@@ -327,7 +327,7 @@ Each session is a directory under `<state>/sessions/`, holding some of:
 | `chat.md`       | the conversation, human-readable — read this first          |
 | `session.jsonl` | the journal, one record per line, and the source of truth   |
 | `meta.json`     | the listing metadata, including when it was last written to |
-| `wire.http`     | recorded provider traffic, large and unsummarisable         |
+| `wire.http.zst` | recorded provider traffic, read through `zstdcat`           |
 | `drops/`        | pasted images and saved tool output                         |
 
 Each session has a scratch directory under `<state>/farm/<name>/`, holding the tree copy and patches of an agent working in a read-only workspace.

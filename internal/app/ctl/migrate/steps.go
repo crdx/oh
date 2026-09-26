@@ -41,6 +41,7 @@ var steps = map[int]step{
 		finalise:       addSessionMeta,
 	},
 	12: {migrateLine: lookupFlagReplacesWebFlag},
+	13: {finalise: compressWireTranscript},
 }
 
 var legacyGrantAccess = map[string]string{

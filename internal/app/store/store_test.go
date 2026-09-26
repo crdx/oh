@@ -578,7 +578,7 @@ func TestHTTPObservationDoesNotCreateTheBundleBeforeTheFirstEvent(t *testing.T) 
 		t.Fatal(err)
 	}
 
-	for _, name := range []string{"session.jsonl", "meta.json", "chat.md", "wire.http"} {
+	for _, name := range []string{"session.jsonl", "meta.json", "chat.md", "wire.http.zst"} {
 		if _, err := os.Stat(filepath.Join(bundle, name)); err != nil {
 			t.Errorf("expected %s: %v", name, err)
 		}
@@ -604,7 +604,7 @@ func TestTheFirstRecordCreatesACompleteBundle(t *testing.T) {
 	}
 
 	bundle := filepath.Join(directory, log.Name())
-	for _, name := range []string{"session.jsonl", "meta.json", "chat.md", "wire.http"} {
+	for _, name := range []string{"session.jsonl", "meta.json", "chat.md", "wire.http.zst"} {
 		info, err := os.Stat(filepath.Join(bundle, name))
 		if err != nil {
 			t.Errorf("expected %s: %v", name, err)

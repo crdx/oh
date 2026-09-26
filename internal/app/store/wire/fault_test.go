@@ -10,7 +10,7 @@ import (
 
 func TestAppendFailureDisablesRecordingAndWarnsOnce(t *testing.T) {
 	var warnings []error
-	recorder, err := Open(t.TempDir()+"/wire.http", Meta{}, func(err error) {
+	recorder, err := Open(t.TempDir()+"/wire.http.zst", Meta{}, func(err error) {
 		warnings = append(warnings, err)
 	})
 	if err != nil {
@@ -27,7 +27,7 @@ func TestAppendFailureDisablesRecordingAndWarnsOnce(t *testing.T) {
 	if len(warnings) != 1 {
 		t.Fatalf("got %d warnings, want 1", len(warnings))
 	}
-	if !strings.Contains(warnings[0].Error(), "wire.http recording disabled") {
+	if !strings.Contains(warnings[0].Error(), "wire.http.zst recording disabled") {
 		t.Errorf("unexpected warning: %v", warnings[0])
 	}
 	if !recorder.hasFailed || recorder.file != nil {

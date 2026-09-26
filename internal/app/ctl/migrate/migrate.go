@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -33,8 +34,9 @@ Options:
 The configuration is always considered. Sessions are named on the command line, or every outdated
 stored session is done when the command names no session.
 
-The configuration file and each session bundle are copied aside before anything is written. A
-session transcript is written again from the journal it was migrated into.
+The configuration file is copied aside before anything is written. Each session bundle is kept
+aside too, by hard links where the filesystem allows, and an archived session is kept as its
+archive. A session transcript is written again from the journal it was migrated into.
 `
 
 type inputOpts struct {
@@ -205,21 +207,36 @@ type Options struct {
 }
 
 func Session(options Options, name string) (int, error) {
-	if options.DryRun {
-		return migrateSession(options, name)
+	keepBundle := func() error {
+		return keepCopy(filepath.Join(options.Directory, name), filepath.Join(options.BackupDir, name))
+	}
+	if options.DryRun || !session.IsArchived(options.Directory, name) {
+		return migrateSession(options, name, keepBundle)
 	}
 
+	keptArchive := filepath.Join(options.BackupDir, name+session.ArchiveSuffix)
+	if err := keepLinked(session.ArchivePath(options.Directory, name), keptArchive); err != nil {
+		return 0, err
+	}
+
+	isArchiveKept := false
 	fromFormat := 0
 	err := session.Unarchived(options.Directory, name, func() error {
 		var err error
-		fromFormat, err = migrateSession(options, name)
+		fromFormat, err = migrateSession(options, name, func() error {
+			isArchiveKept = true
+			return nil
+		})
 		return err
 	})
+	if !isArchiveKept {
+		err = errors.Join(err, os.Remove(keptArchive))
+	}
 
 	return fromFormat, err
 }
 
-func migrateSession(options Options, name string) (int, error) {
+func migrateSession(options Options, name string, keep func() error) (int, error) {
 	directory := options.Directory
 	journalPath := filepath.Join(directory, name, "session.jsonl")
 
@@ -273,7 +290,7 @@ func migrateSession(options Options, name string) (int, error) {
 		return fromFormat, nil
 	}
 
-	if err := keepCopy(filepath.Join(directory, name), filepath.Join(options.BackupDir, name)); err != nil {
+	if err := keep(); err != nil {
 		return fromFormat, err
 	}
 
@@ -302,11 +319,58 @@ func keepCopy(bundlePath string, copyPath string) error {
 		return fmt.Errorf("a copy is already kept in %s: move it aside first", copyPath)
 	}
 
-	if err := os.MkdirAll(filepath.Dir(copyPath), 0o700); err != nil {
+	return filepath.WalkDir(bundlePath, func(path string, entry fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+
+		relativePath, err := filepath.Rel(bundlePath, path)
+		if err != nil {
+			return err
+		}
+		keptPath := filepath.Join(copyPath, relativePath)
+
+		switch {
+		case entry.IsDir():
+			return os.MkdirAll(keptPath, 0o700)
+		case entry.Type().IsRegular():
+			return keepLinked(path, keptPath)
+		default:
+			return fmt.Errorf("%s is neither a file nor a directory", path)
+		}
+	})
+}
+
+func keepLinked(path string, keptPath string) error {
+	if _, err := os.Lstat(keptPath); err == nil {
+		return fmt.Errorf("a copy is already kept in %s: move it aside first", keptPath)
+	}
+
+	if err := os.MkdirAll(filepath.Dir(keptPath), 0o700); err != nil {
 		return err
 	}
 
-	return os.CopyFS(copyPath, os.DirFS(bundlePath))
+	if err := os.Link(path, keptPath); err == nil {
+		return nil
+	}
+
+	return copyFile(path, keptPath)
+}
+
+func copyFile(path string, copyPath string) error {
+	source, err := os.Open(path) //nolint:gosec // a path inside the session bundle being kept
+	if err != nil {
+		return err
+	}
+	defer func() { _ = source.Close() }()
+
+	copyFile, err := os.OpenFile(copyPath, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0o600) //nolint:gosec // a path inside the copies directory
+	if err != nil {
+		return err
+	}
+
+	_, copyError := io.Copy(copyFile, source)
+	return errors.Join(copyError, copyFile.Close())
 }
 
 func backupDir(directory string) string {

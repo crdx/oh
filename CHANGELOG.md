@@ -9,6 +9,8 @@
 - Keep running calls visible and ticking beneath a tall question
 - Keep a tall question's label and countdown in view
 - Keep a running call's clock and hold through a redraw
+- Keep migration copies as hard links
+- Compress recorded wire traffic
 
 ## [0.10.0] - 2026-09-25
 

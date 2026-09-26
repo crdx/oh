@@ -60,7 +60,7 @@ var (
 		- "session.jsonl" is the journal, the single source of truth, as JSONL
 		- "meta.json" is the listing entry: name, title, timestamps, and message count
 		- "chat.md" is the readable transcript of the conversation
-		- "wire.http" is the raw traffic between the harness and the model endpoint
+		- "wire.http.zst" is the raw traffic between the harness and the model endpoint, read through zstdcat or zstdgrep
 		- The user's settings are in {{ .ConfigFile }}, and their instructions in {{ .GlobalPath }}
 		- A session name said with no other context is a hint to read that session's files
 

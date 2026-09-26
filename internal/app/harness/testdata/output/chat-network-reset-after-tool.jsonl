@@ -1,4 +1,4 @@
-{"kind":"head","version":13,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"high","system_prompt":"You are a test assistant."}}
+{"kind":"head","version":14,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"high","system_prompt":"You are a test assistant."}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"complete a tool round, then lose the network"}}
 {"kind":"event","event":{"kind":"model_reasoning","text":"Use the tool."}}

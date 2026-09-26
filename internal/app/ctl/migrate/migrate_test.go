@@ -1,23 +1,30 @@
 package migrate_test
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"net/http"
 	"os"
 	"path/filepath"
 	"slices"
 	"strconv"
 	"strings"
 	"testing"
+	"time"
+
+	"github.com/klauspost/compress/zstd"
 
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/ctl/migrate"
 	"crdx.org/oh/internal/app/interrupt"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/store"
+	"crdx.org/oh/internal/app/store/wire"
 	"crdx.org/oh/internal/app/turn"
+	"crdx.org/oh/internal/req"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 )
@@ -852,7 +859,7 @@ func TestAJournalMigratesToTheSameBytesWhetherStoredOrArchived(t *testing.T) {
 	}
 
 	for _, wanted := range []string{
-		`"version":13`,
+		`"version":14`,
 		`"emphasis":{"kind":"syntax","value":"a.go"}`,
 		`"access":"rw"`,
 		`{"kind":"turn_interruption","name":"escape"}`,
@@ -873,5 +880,210 @@ func TestAJournalMigratesToTheSameBytesWhetherStoredOrArchived(t *testing.T) {
 	}
 	if len(entries) != 1 || entries[0].Format != session.JournalFormat {
 		t.Errorf("the archived journal ended at %+v, want format %d", entries, session.JournalFormat)
+	}
+}
+
+func formatBeforeCompressedWire() string {
+	return `{"kind":"head","time":"2026-08-01T00:00:00Z","version":13,"id":"one","name":"tame-impala","meta":{"workspaceDir":"/workspace"}}`
+}
+
+func plainWireTranscript() string {
+	body := `{"messages":["` + strings.Repeat("the same conversation again ", 20000) + `"]}`
+	return "# HTTP transcript\n# session: tame-impala\n\n" +
+		"# exchange 6 start 2026-08-01T00:00:01Z\n> POST https://example.test/ HTTP/1.1\n\n" + body + "\n" +
+		"# exchange 6 end 2026-08-01T00:00:02Z elapsed=1s completed\n\n" +
+		"# exchange 7 start 2026-08-01T00:00:03Z\n> POST https://example.test/ HTTP/1.1\n\n" + body + "\n" +
+		"# exchange 7 read 2026-08-01T00:00:04Z elapsed=1s bytes=10\ndata: one\n" +
+		"# exchange 7 end 2026-08-01T00:00:05Z elapsed=2s completed\n\n"
+}
+
+func storedWithPlainWire(t *testing.T) (string, string) {
+	t.Helper()
+
+	directory, name := storedJournal(t, formatBeforeCompressedWire())
+	if err := os.WriteFile(filepath.Join(directory, name, "wire.http"), []byte(plainWireTranscript()), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	return directory, name
+}
+
+func decompressedWire(t *testing.T, path string) string {
+	t.Helper()
+
+	file, err := os.Open(path) //nolint:gosec // the test's own path
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = file.Close() }()
+
+	decoder, err := zstd.NewReader(file, zstd.WithDecoderMaxWindow(128<<20))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer decoder.Close()
+
+	transcript, err := io.ReadAll(decoder)
+	if err != nil {
+		t.Fatalf("%s does not decompress: %v", path, err)
+	}
+
+	return string(transcript)
+}
+
+func TestAPlainWireTranscriptIsCompressedWithoutLosingAByte(t *testing.T) {
+	directory, name := storedWithPlainWire(t)
+
+	if _, err := migrate.Session(options(directory), name); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := os.Stat(filepath.Join(directory, name, "wire.http")); !os.IsNotExist(err) {
+		t.Errorf("expected the plain transcript to be gone: %v", err)
+	}
+
+	compressedPath := filepath.Join(directory, name, "wire.http.zst")
+	if decompressedWire(t, compressedPath) != plainWireTranscript() {
+		t.Error("expected the compressed transcript to hold every byte of the plain one")
+	}
+
+	info, err := os.Stat(compressedPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if info.Mode().Perm() != 0o600 {
+		t.Errorf("expected the compressed transcript to be private, got %o", info.Mode().Perm())
+	}
+	if info.Size()*100 > int64(len(plainWireTranscript())) {
+		t.Errorf("expected the repeated request to cost almost nothing, got %d bytes of %d", info.Size(), len(plainWireTranscript()))
+	}
+
+	kept, err := os.ReadFile(filepath.Join(options(directory).BackupDir, name, "wire.http")) //nolint:gosec // the test's own path
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(kept) != plainWireTranscript() {
+		t.Error("expected the copy to keep the plain transcript as it stood")
+	}
+}
+
+func TestRecordingCarriesOnFromAMigratedWireTranscript(t *testing.T) {
+	directory, name := storedWithPlainWire(t)
+
+	if _, err := migrate.Session(options(directory), name); err != nil {
+		t.Fatal(err)
+	}
+
+	path := filepath.Join(directory, name, "wire.http.zst")
+	recorder, err := wire.Open(path, wire.Meta{}, func(err error) {
+		t.Errorf("unexpected recorder failure: %v", err)
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	recorder.Start(req.Request{StartedAt: time.Unix(9, 0), Method: http.MethodPost}).Finish(time.Unix(10, 0), nil, false)
+	if err := recorder.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	transcript := decompressedWire(t, path)
+	if !strings.HasPrefix(transcript, plainWireTranscript()) {
+		t.Error("expected the migrated transcript to stand unchanged ahead of the new exchange")
+	}
+	if !strings.Contains(transcript, "# exchange 8 start") {
+		t.Errorf("expected numbering to carry on from the migrated transcript, got:\n%s", transcript[len(plainWireTranscript()):])
+	}
+}
+
+func TestASessionWithoutAWireTranscriptMigratesWithoutOne(t *testing.T) {
+	directory, name := storedJournal(t, formatBeforeCompressedWire())
+
+	if _, err := migrate.Session(options(directory), name); err != nil {
+		t.Fatal(err)
+	}
+
+	for _, wireName := range []string{"wire.http", "wire.http.zst"} {
+		if _, err := os.Stat(filepath.Join(directory, name, wireName)); !os.IsNotExist(err) {
+			t.Errorf("expected no %s: %v", wireName, err)
+		}
+	}
+}
+
+func TestTheCopyOfABundleSharesItsFilesRatherThanDuplicatingThem(t *testing.T) {
+	directory, name := storedJournal(t, `{"kind":"head","time":"2026-08-01T00:00:00Z","id":"one","name":"tame-impala"}`)
+	dropPath := filepath.Join(directory, name, "drops", "picture.png")
+	if err := os.MkdirAll(filepath.Dir(dropPath), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(dropPath, []byte("picture"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := migrate.Session(options(directory), name); err != nil {
+		t.Fatal(err)
+	}
+
+	stored, err := os.Stat(dropPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	kept, err := os.Stat(filepath.Join(options(directory).BackupDir, name, "drops", "picture.png"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !os.SameFile(stored, kept) {
+		t.Error("expected the copy to be a link to the file it keeps")
+	}
+}
+
+func TestAnArchivedSessionIsKeptAsItsArchive(t *testing.T) {
+	directory, name := storedJournal(t, `{"kind":"head","time":"2026-08-01T00:00:00Z","id":"one","name":"tame-impala"}`)
+	if err := store.RebuildMeta(directory, name); err != nil {
+		t.Fatal(err)
+	}
+	if err := session.Archive(directory, name); err != nil {
+		t.Fatal(err)
+	}
+	archive, err := os.ReadFile(session.ArchivePath(directory, name))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := migrate.Session(options(directory), name); err != nil {
+		t.Fatal(err)
+	}
+
+	backupDir := options(directory).BackupDir
+	kept, err := os.ReadFile(filepath.Join(backupDir, name+session.ArchiveSuffix)) //nolint:gosec // the test's own path
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(kept, archive) {
+		t.Error("expected the archive as it stood before to be kept")
+	}
+	if _, err := os.Stat(filepath.Join(backupDir, name)); !os.IsNotExist(err) {
+		t.Errorf("expected the archive alone to be kept, not the bundle unpacked from it: %v", err)
+	}
+	if !session.IsArchived(directory, name) {
+		t.Error("expected the migrated session to be archived again")
+	}
+}
+
+func TestAnArchivedSessionAlreadyCurrentKeepsNoCopy(t *testing.T) {
+	head := fmt.Sprintf(`{"kind":"head","time":"2026-08-01T00:00:00Z","version":%d,"id":"one","name":"tame-impala"}`, session.JournalFormat)
+	directory, name := storedJournal(t, head)
+	if err := store.RebuildMeta(directory, name); err != nil {
+		t.Fatal(err)
+	}
+	if err := session.Archive(directory, name); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := migrate.Session(options(directory), name); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := os.Stat(filepath.Join(options(directory).BackupDir, name+session.ArchiveSuffix)); !os.IsNotExist(err) {
+		t.Errorf("expected no copy of a session that needed nothing: %v", err)
 	}
 }

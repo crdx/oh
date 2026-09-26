@@ -61,7 +61,7 @@ func encodeMeta(meta Meta) (json.RawMessage, json.RawMessage, error) {
 
 const (
 	transcriptName = "chat.md"
-	wireName       = "wire.http"
+	wireName       = "wire.http.zst"
 )
 
 type canonicalWriter interface {
@@ -321,7 +321,7 @@ func (self *Writer) startRecorders() {
 		}, self.queueWarning)
 		if err != nil {
 			self.wireRecordingEnabled = false
-			self.warnings = append(self.warnings, fmt.Errorf("wire.http recording disabled: %w", err))
+			self.warnings = append(self.warnings, fmt.Errorf("wire.http.zst recording disabled: %w", err))
 		} else {
 			self.wireRecorder = recorder
 		}
