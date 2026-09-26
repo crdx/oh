@@ -83,7 +83,7 @@ func grantCommand(grants PathGrants) slash.Command {
 		},
 	}.
 		WithArguments(grantFlagChoices()...).
-		WithArgumentUsage("{r|rx|rw|rxw} <path>")
+		WithArgumentUsage(pathgrant.GrantUsage)
 }
 
 func grantFlagChoices() []string {

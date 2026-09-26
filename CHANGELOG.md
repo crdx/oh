@@ -19,6 +19,7 @@
 - Share one Go build cache
 - Show if a new model was ignored for some reason
 - Don't hard-wrap code blocks
+- Give the model accurate grant docs
 
 ## [0.10.0] - 2026-09-25
 

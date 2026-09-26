@@ -12,6 +12,7 @@ import (
 	"crdx.org/hereduck"
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/conditions"
+	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/shell"
 	"crdx.org/oh/internal/app/skill"
 	"crdx.org/oh/internal/app/toolset"
@@ -386,8 +387,8 @@ func scopeRules(data harnessContextTemplateData) string {
 
 func pathGrantRules() []string {
 	return []string{
-		"- The user can grant access to paths with /grant, and take them back with /revoke.",
-		"- Ask the user to grant a needed path rather than working around it or giving up.",
+		"- The user can grant access to a path with /grant " + pathgrant.GrantUsage + ", where r is read, x is execute, and w is write, and take it back with /revoke <path>.",
+		"- Ask the user to grant a needed path rather than working around it or giving up, giving the full command with its flags, such as /grant rw /some/path.",
 	}
 }
 

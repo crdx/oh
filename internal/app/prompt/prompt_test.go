@@ -186,8 +186,8 @@ func TestASessionWithNoDenyPatternIsNeverToldWhatADeniedPathLooksLike(t *testing
 }
 
 var pathGrantWording = []string{
-	"The user can grant access to paths with /grant, and take them back with /revoke.",
-	"Ask the user to grant a needed path rather than working around it or giving up.",
+	"The user can grant access to a path with /grant {r|rx|rw|rxw} <path>, where r is read, x is execute, and w is write, and take it back with /revoke <path>.",
+	"Ask the user to grant a needed path rather than working around it or giving up, giving the full command with its flags, such as /grant rw /some/path.",
 }
 
 func TestTheHarnessDisclosesThatAPathOutOfReachCanBeGranted(t *testing.T) {

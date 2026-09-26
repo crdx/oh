@@ -25,6 +25,8 @@ const (
 	WriteAccess = shell.WriteAccess
 )
 
+const GrantUsage = "{r|rx|rw|rxw} <path>"
+
 type Grant struct {
 	Path   string
 	Access Access
