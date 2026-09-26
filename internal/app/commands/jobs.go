@@ -5,6 +5,7 @@ import (
 
 	"crdx.org/oh/internal/app/call"
 	"crdx.org/oh/internal/app/slash"
+	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
@@ -132,8 +133,9 @@ func formatJobs(listing []jobs.Snapshot) string {
 	lines := make([]string, 0, len(listing))
 	for _, snapshot := range listing {
 		command := call.LabelForRendering(bash.DescribeCommand(snapshot.Command)).Render()
-		status := strutil.Flatten(snapshot.Describe())
-		lines = append(lines, "  "+status+"  "+command)
+		name := style.Subject(strutil.Flatten(snapshot.Name))
+		status := strutil.Flatten(snapshot.Outcome())
+		lines = append(lines, "  "+name+": "+status+"  "+command)
 	}
 
 	return "Background jobs:\n" + strings.Join(lines, "\n")

@@ -112,6 +112,9 @@ func TestTheJobsCommandListsEveryJob(t *testing.T) {
 	if !context.isListing {
 		t.Error("jobs were not marked as a listing")
 	}
+	if !strings.Contains(context.notice, style.Subject("docs")+": running") {
+		t.Error("job name was not styled as a subject")
+	}
 
 	notice := style.Plain(context.notice)
 	for _, wanted := range []string{"docs: running", "$ python3 -m http.server 8080", "build: failed", "exit(1)"} {

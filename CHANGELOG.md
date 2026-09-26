@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Theme job names
 - Open session picker on first available session
 - Keep each jobs entry on one line
 - Show session sizes on disk in picker
