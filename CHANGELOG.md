@@ -14,6 +14,7 @@
 - Keep live output within the terminal, so nothing is drawn over or lost
 - Keep running calls visible and ticking beneath a tall question
 - Keep a tall question's label and countdown in view
+- Notify about a waiting question if unfocused
 - Keep a running call's clock and hold through a redraw
 - Keep migration copies as hard links
 - Compress recorded wire traffic

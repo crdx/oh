@@ -1,0 +1,64 @@
+=== announced then left again ===
++0s   question arrives: Fetch this page?
++0s   focus leaves
++5s   drawn
+      notified: oh — io: Fetch this page? / https://example.com/news
++5s   focus returns
++5s   focus leaves
++15s  drawn
+
+=== answered within the grace ===
++0s   question arrives: Fetch this page?
++0s   focus leaves
++4s   drawn
++4s   answered
++14s  drawn
+
+=== arriving focused then left ===
++0s   question arrives: Fetch this page?
++2s   drawn
++2s   focus leaves
++6s   drawn
++7s   drawn
+      notified: oh — io: Fetch this page? / https://example.com/news
++17s  drawn
+
+=== arriving unfocused ===
++0s   focus leaves
++1s   drawn
++1s   question arrives: Fetch this page?
+      notified: oh — io: Fetch this page? / https://example.com/news
++11s  drawn
+
+=== focus returning within the grace ===
++0s   question arrives: Fetch this page?
++0s   focus leaves
++4s   drawn
++4s   focus returns
++14s  drawn
+
+=== lapsing within the grace ===
++0s   question arrives: Fetch this page?
++0s   focus leaves
++4s   drawn
++4s   question lapses
++14s  drawn
+
+=== next question arriving in focus ===
++0s   question arrives: Fetch this page?
++0s   question queued: Run this command with host networking?
++0s   answered
++10s  drawn
++10s  focus leaves
++15s  drawn
+      notified: oh — io: Run this command with host networking? / curl -sI https://example.com
+
+=== next question arriving while away ===
++0s   question arrives: Fetch this page?
++0s   question queued: Run this command with host networking?
++0s   focus leaves
++5s   drawn
+      notified: oh — io: Fetch this page? / https://example.com/news
++5s   question lapses
+      notified: oh — io: Run this command with host networking? / curl -sI https://example.com
++15s  drawn

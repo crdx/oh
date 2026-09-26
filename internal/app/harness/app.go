@@ -56,7 +56,10 @@ import (
 	"crdx.org/oh/pkg/toolbox/title"
 )
 
-const configReloadConfirmationDuration = 10 * time.Second
+const (
+	configReloadConfirmationDuration = 10 * time.Second
+	focusLossGrace                   = 5 * time.Second
+)
 
 type SessionLogger = record.Session
 
@@ -131,9 +134,11 @@ type slashState struct {
 }
 
 type questionState struct {
-	broker  *ask.Broker
-	request *ask.Request
-	cursor  int
+	broker      *ask.Broker
+	request     *ask.Request
+	cursor      int
+	isAnnounced bool
+	announceAt  time.Time
 }
 
 type App struct {
@@ -258,11 +263,16 @@ func (self *App) begin(message string) cycle.Transition {
 		OnHostToSandboxChange: self.holdHostToSandboxChange,
 		QuestionChanges:       self.questionChanges(),
 		OnQuestionChange:      self.onQuestionChange,
-		OnDraw:                func() { self.show(inputLine) },
+		OnDraw:                func() { self.drawAfterEvent(inputLine) },
 		Watch:                 self.watchStalls,
 	})
 
 	return self.transition
+}
+
+func (self *App) drawAfterEvent(inputLine *edit.Input) {
+	self.announceUnseenQuestion(self.getNow())
+	self.show(inputLine)
 }
 
 func (self *App) acceptInitialInput(inputLine *edit.Input, history *edit.History, message string) {
@@ -288,6 +298,7 @@ func restoreTerminalState(screen *output.Screen, isPersisted bool, restorers ...
 
 func (self *App) handleKeypressAndShowInput(inputLine *edit.Input, history *edit.History, keypress key.Key) bool {
 	if self.terminal.ObserveFocus(keypress.Code) {
+		self.observeQuestionFocus(self.getNow())
 		return true
 	}
 
@@ -1042,9 +1053,42 @@ func (self *App) onQuestionChange() {
 		self.currentTurn.painter.HoldTiming()
 	}
 
-	if self.onQuestion != nil {
-		self.onQuestion(request.Question)
+	if !self.terminal.IsFocused() {
+		self.announceQuestion()
 	}
+}
+
+func (self *App) announceQuestion() {
+	self.question.isAnnounced = true
+	self.question.announceAt = time.Time{}
+
+	if self.onQuestion != nil {
+		self.onQuestion(self.question.request.Question)
+	}
+}
+
+func (self *App) observeQuestionFocus(at time.Time) {
+	if self.question.request == nil || self.question.isAnnounced {
+		return
+	}
+
+	if self.terminal.IsFocused() {
+		self.question.announceAt = time.Time{}
+	} else {
+		self.question.announceAt = at.Add(focusLossGrace)
+	}
+}
+
+func (self *App) announceUnseenQuestion(at time.Time) {
+	if self.question.request == nil || self.question.announceAt.IsZero() || at.Before(self.question.announceAt) {
+		return
+	}
+
+	self.announceQuestion()
+}
+
+func (self *App) nextQuestionAnnouncement() time.Time {
+	return self.question.announceAt
 }
 
 func (self *App) finishQuestion() {
@@ -1053,6 +1097,8 @@ func (self *App) finishQuestion() {
 	}
 
 	self.question.request = nil
+	self.question.isAnnounced = false
+	self.question.announceAt = time.Time{}
 
 	if self.currentTurn.painter != nil {
 		self.currentTurn.painter.ResumeTiming()
@@ -1156,6 +1202,7 @@ func (self *App) nextRefresh(at time.Time) time.Time {
 		self.nextBarRefresh(at),
 		self.feedback.NextRefresh(at),
 		self.nextAnswerRefresh(at),
+		self.nextQuestionAnnouncement(),
 	)
 }
 

@@ -67,6 +67,7 @@ import (
 	"crdx.org/oh/internal/app/menu"
 	"crdx.org/oh/internal/app/metrics"
 	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/internal/app/notification"
 	"crdx.org/oh/internal/app/output"
 	"crdx.org/oh/internal/app/painter"
 	"crdx.org/oh/internal/app/pathgrant"
@@ -621,6 +622,364 @@ func TestEveryQuestionSendsOneDesktopNotification(t *testing.T) {
 	if !slices.Equal(notified, want) {
 		t.Errorf("got notifications %q, want %q", notified, want)
 	}
+}
+
+func standingQuestionWithFocus(t *testing.T, notified *[]string) *App {
+	t.Helper()
+
+	broker := ask.New()
+	t.Cleanup(broker.Open())
+
+	trackedTerminal := terminal.New(io.Discard, work.At("/workspace"))
+	t.Cleanup(trackedTerminal.Begin(caps.Read))
+
+	self := &App{question: questionState{broker: broker}, terminal: trackedTerminal}
+	self.onQuestion = func(question ask.Question) { *notified = append(*notified, question.Label) }
+
+	result := make(chan error, 1)
+	go func() { result <- ask.Confirm(t.Context(), broker, ask.Confirmation{Label: "Fetch this page?"}) }()
+	<-broker.Changes()
+	self.onQuestionChange()
+	t.Cleanup(func() {
+		if self.question.request != nil {
+			self.answerQuestion(key.Key{Code: key.Rune, Value: 'n'})
+		}
+		<-result
+	})
+
+	return self
+}
+
+func TestAQuestionArrivingInFocusIsAnnouncedOnceFocusStaysAway(t *testing.T) {
+	var notified []string
+	self := standingQuestionWithFocus(t, &notified)
+	if len(notified) != 0 {
+		t.Fatalf("got notifications %q while focused, want none", notified)
+	}
+
+	leftAt := time.Now()
+	self.handleKeypressAndShowInput(nil, nil, key.Key{Code: key.FocusOut})
+	settledAt := time.Now()
+
+	if got := self.nextQuestionAnnouncement(); got.Before(leftAt.Add(focusLossGrace)) || got.After(settledAt.Add(focusLossGrace)) {
+		t.Errorf("got the announcement due at %s, want %s after focus left", got, focusLossGrace)
+	}
+
+	self.announceUnseenQuestion(leftAt.Add(focusLossGrace - time.Millisecond))
+	if len(notified) != 0 {
+		t.Fatalf("got notifications %q within the grace, want none", notified)
+	}
+
+	self.announceUnseenQuestion(settledAt.Add(focusLossGrace))
+	self.announceUnseenQuestion(settledAt.Add(2 * focusLossGrace))
+	if want := []string{"Fetch this page?"}; !slices.Equal(notified, want) {
+		t.Errorf("got notifications %q, want %q", notified, want)
+	}
+	if got := self.nextQuestionAnnouncement(); !got.IsZero() {
+		t.Errorf("got another announcement due at %s, want none", got)
+	}
+}
+
+func TestAQuestionIsNotAnnouncedWhenFocusReturnsWithinTheGrace(t *testing.T) {
+	var notified []string
+	self := standingQuestionWithFocus(t, &notified)
+
+	self.handleKeypressAndShowInput(nil, nil, key.Key{Code: key.FocusOut})
+	self.handleKeypressAndShowInput(nil, nil, key.Key{Code: key.FocusIn})
+	self.announceUnseenQuestion(time.Now().Add(2 * focusLossGrace))
+
+	if len(notified) != 0 {
+		t.Errorf("got notifications %q after focus returned, want none", notified)
+	}
+	if got := self.nextQuestionAnnouncement(); !got.IsZero() {
+		t.Errorf("got an announcement due at %s, want none", got)
+	}
+}
+
+func TestAnAnsweredQuestionIsNotAnnouncedLate(t *testing.T) {
+	var notified []string
+	self := standingQuestionWithFocus(t, &notified)
+
+	self.handleKeypressAndShowInput(nil, nil, key.Key{Code: key.FocusOut})
+	self.answerQuestion(key.Key{Code: key.Rune, Value: 'y'})
+	self.announceUnseenQuestion(time.Now().Add(2 * focusLossGrace))
+
+	if len(notified) != 0 {
+		t.Errorf("got notifications %q for an answered question, want none", notified)
+	}
+	if got := self.nextQuestionAnnouncement(); !got.IsZero() {
+		t.Errorf("got an announcement due at %s, want none", got)
+	}
+}
+
+func TestAnAnnouncedQuestionIsNotAnnouncedAgainWhenFocusLeaves(t *testing.T) {
+	var notified []string
+	self := standingQuestionWithFocus(t, &notified)
+
+	self.handleKeypressAndShowInput(nil, nil, key.Key{Code: key.FocusOut})
+	self.announceUnseenQuestion(time.Now().Add(focusLossGrace))
+	self.handleKeypressAndShowInput(nil, nil, key.Key{Code: key.FocusIn})
+	self.handleKeypressAndShowInput(nil, nil, key.Key{Code: key.FocusOut})
+	self.announceUnseenQuestion(time.Now().Add(2 * focusLossGrace))
+
+	if want := []string{"Fetch this page?"}; !slices.Equal(notified, want) {
+		t.Errorf("got notifications %q, want %q", notified, want)
+	}
+}
+
+type questionNotificationScenario int
+
+const (
+	questionArrivingUnfocused questionNotificationScenario = iota
+	questionArrivingFocusedThenLeft
+	questionFocusReturningWithinTheGrace
+	questionAnsweredWithinTheGrace
+	questionLapsingWithinTheGrace
+	questionAnnouncedThenLeftAgain
+	questionNextArrivingFocused
+	questionNextArrivingUnfocused
+)
+
+var questionNotificationScenarios = map[string]questionNotificationScenario{
+	"arriving unfocused":                questionArrivingUnfocused,
+	"arriving focused then left":        questionArrivingFocusedThenLeft,
+	"focus returning within the grace":  questionFocusReturningWithinTheGrace,
+	"answered within the grace":         questionAnsweredWithinTheGrace,
+	"lapsing within the grace":          questionLapsingWithinTheGrace,
+	"announced then left again":         questionAnnouncedThenLeftAgain,
+	"next question arriving in focus":   questionNextArrivingFocused,
+	"next question arriving while away": questionNextArrivingUnfocused,
+}
+
+const (
+	notifiedFetchLabel        = "Fetch this page?"
+	notifiedFetchAddress      = "https://example.com/news"
+	notifiedCurlLabel         = "Run this command with host networking?"
+	notifiedCurlCommand       = "curl -sI https://example.com"
+	notificationEscapeOpening = "\x1b]99;;"
+	notificationEscapeClosing = "\x1b\\"
+)
+
+func fakeKitten(t *testing.T) {
+	t.Helper()
+
+	bin := t.TempDir()
+	fixture := "#!/bin/bash\nset -euo pipefail\nwhile [[ $1 != -- ]]; do shift; done\nprintf '\\e]99;;%s: %s\\e\\\\' \"$2\" \"$3\"\n"
+	//nolint:gosec // an executable test fixture
+	if err := os.WriteFile(filepath.Join(bin, "kitten"), []byte(fixture), 0o700); err != nil {
+		t.Fatalf("could not write fake kitten: %v", err)
+	}
+	t.Setenv("PATH", bin+string(os.PathListSeparator)+os.Getenv("PATH"))
+	t.Setenv("KITTY_WINDOW_ID", "1")
+}
+
+type questionNotificationRig struct {
+	t            *testing.T
+	app          *App
+	inputLine    *edit.Input
+	broker       *ask.Broker
+	screenOutput *strings.Builder
+	startedAt    time.Time
+	current      time.Time
+	timeline     strings.Builder
+}
+
+func newQuestionNotificationRig(t *testing.T) *questionNotificationRig {
+	t.Helper()
+
+	fakeKitten(t)
+
+	rig := &questionNotificationRig{t: t, screenOutput: &strings.Builder{}, broker: ask.New()}
+	rig.startedAt = time.Now().Truncate(time.Second)
+	rig.current = rig.startedAt
+	closeBroker := rig.broker.Open()
+	t.Cleanup(closeBroker)
+
+	workspace := work.At("/workspace/io")
+	self := slashCommandFixture(t, caps.Read)
+	self.agent = agent.New("", quietProvider{}, nil)
+	self.screen = output.NewTerminalOfSize(rig.screenOutput, replayColumns, replayLines)
+	self.now = func() time.Time { return rig.current }
+	self.terminal = terminal.New(io.Discard, workspace)
+	t.Cleanup(self.terminal.Begin(caps.Read))
+	self.question.broker = rig.broker
+	self.onQuestion = func(question ask.Question) {
+		if err := notification.SendQuestion(
+			t.Context(), self.screen.WriteEscape, self.terminal.IsFocused, workspace, question,
+		); err != nil {
+			t.Errorf("the notification failed: %v", err)
+		}
+	}
+	self.inputLine = edit.NewInput(nil)
+	rig.app = self
+	rig.inputLine = self.inputLine
+
+	self.show(rig.inputLine)
+
+	return rig
+}
+
+func (self *questionNotificationRig) step(description string, event func()) {
+	written := self.screenOutput.Len()
+	event()
+	self.app.drawAfterEvent(self.inputLine)
+
+	fmt.Fprintf(&self.timeline, "+%-4s %s", self.current.Sub(self.startedAt), description)
+	for _, sent := range sentNotifications(self.screenOutput.String()[written:]) {
+		fmt.Fprintf(&self.timeline, "\n      notified: %s", strings.ReplaceAll(sent, "\n", " / "))
+	}
+	self.timeline.WriteString("\n")
+}
+
+func sentNotifications(stream string) []string {
+	var sent []string
+	for _, rest := range strings.Split(stream, notificationEscapeOpening)[1:] {
+		message, _, _ := strings.Cut(rest, notificationEscapeClosing)
+		sent = append(sent, message)
+	}
+
+	return sent
+}
+
+func (self *questionNotificationRig) wait(duration time.Duration) {
+	self.current = self.current.Add(duration)
+	self.step("drawn", func() {})
+}
+
+func (self *questionNotificationRig) press(description string, code key.Code) {
+	self.step(description, func() {
+		self.app.handleKeypressAndShowInput(self.inputLine, nil, key.Key{Code: code})
+	})
+}
+
+func (self *questionNotificationRig) answer() {
+	self.step("answered", func() {
+		self.app.handleKeypressAndShowInput(self.inputLine, nil, key.Key{Code: key.Rune, Value: 'y'})
+		<-self.broker.Changes()
+		self.app.onQuestionChange()
+	})
+}
+
+func (self *questionNotificationRig) ask(label string, detail string) (func(), <-chan error) {
+	questionContext, cancel := context.WithDeadline(self.t.Context(), self.startedAt.Add(approvalLimit))
+	self.t.Cleanup(cancel)
+
+	result := make(chan error, 1)
+	go func() {
+		result <- ask.Confirm(questionContext, self.broker, ask.Confirmation{Label: label, Detail: detail})
+	}()
+	<-self.broker.Changes()
+
+	return cancel, result
+}
+
+func (self *questionNotificationRig) arrive() (func(), <-chan error) {
+	var cancel func()
+	var result <-chan error
+	self.step("question arrives: "+notifiedFetchLabel, func() {
+		cancel, result = self.ask(notifiedFetchLabel, notifiedFetchAddress)
+		self.app.onQuestionChange()
+	})
+
+	return cancel, result
+}
+
+func (self *questionNotificationRig) queue() {
+	self.step("question queued: "+notifiedCurlLabel, func() {
+		self.ask(notifiedCurlLabel, notifiedCurlCommand)
+		self.app.onQuestionChange()
+	})
+}
+
+func (self *questionNotificationRig) lapse(cancel func(), result <-chan error) {
+	self.step("question lapses", func() {
+		cancel()
+		<-result
+		<-self.broker.Changes()
+		self.app.onQuestionChange()
+	})
+}
+
+func questionNotificationStream(t *testing.T, scenario questionNotificationScenario) (string, string) {
+	t.Helper()
+
+	rig := newQuestionNotificationRig(t)
+
+	switch scenario {
+	case questionArrivingUnfocused:
+		rig.press("focus leaves", key.FocusOut)
+		rig.wait(time.Second)
+		rig.arrive()
+		rig.wait(2 * focusLossGrace)
+	case questionArrivingFocusedThenLeft:
+		rig.arrive()
+		rig.wait(2 * time.Second)
+		rig.press("focus leaves", key.FocusOut)
+		rig.wait(focusLossGrace - time.Second)
+		rig.wait(time.Second)
+		rig.wait(2 * focusLossGrace)
+	case questionFocusReturningWithinTheGrace:
+		rig.arrive()
+		rig.press("focus leaves", key.FocusOut)
+		rig.wait(focusLossGrace - time.Second)
+		rig.press("focus returns", key.FocusIn)
+		rig.wait(2 * focusLossGrace)
+	case questionAnsweredWithinTheGrace:
+		rig.arrive()
+		rig.press("focus leaves", key.FocusOut)
+		rig.wait(focusLossGrace - time.Second)
+		rig.answer()
+		rig.wait(2 * focusLossGrace)
+	case questionLapsingWithinTheGrace:
+		cancel, result := rig.arrive()
+		rig.press("focus leaves", key.FocusOut)
+		rig.wait(focusLossGrace - time.Second)
+		rig.lapse(cancel, result)
+		rig.wait(2 * focusLossGrace)
+	case questionAnnouncedThenLeftAgain:
+		rig.arrive()
+		rig.press("focus leaves", key.FocusOut)
+		rig.wait(focusLossGrace)
+		rig.press("focus returns", key.FocusIn)
+		rig.press("focus leaves", key.FocusOut)
+		rig.wait(2 * focusLossGrace)
+	case questionNextArrivingFocused:
+		rig.arrive()
+		rig.queue()
+		rig.answer()
+		rig.wait(2 * focusLossGrace)
+		rig.press("focus leaves", key.FocusOut)
+		rig.wait(focusLossGrace)
+	case questionNextArrivingUnfocused:
+		cancel, result := rig.arrive()
+		rig.queue()
+		rig.press("focus leaves", key.FocusOut)
+		rig.wait(focusLossGrace)
+		rig.lapse(cancel, result)
+		rig.wait(2 * focusLossGrace)
+	}
+
+	return rig.screenOutput.String(), rig.timeline.String()
+}
+
+func TestGoldenQuestionNotificationsWaitForFocusToStayAway(t *testing.T) {
+	ansiPasses := map[string]func() string{}
+	timelinePasses := map[string]func() string{}
+	for name, scenario := range questionNotificationScenarios {
+		ansiPasses[name] = func() string {
+			stream, _ := questionNotificationStream(t, scenario)
+			requireNothingDrawnAboveTheScreen(t, name, stream, replayLines)
+			return stream
+		}
+		timelinePasses[name] = func() string {
+			_, timeline := questionNotificationStream(t, scenario)
+			return timeline
+		}
+	}
+
+	compareWithGolden(t, "question-notifications", ".ansi", ansiPasses)
+	compareWithGolden(t, "question-notifications", ".screen", shownPasses(t, ansiPasses))
+	compareWithGolden(t, "question-notifications", ".txt", timelinePasses)
 }
 
 func TestACallIsNotTimedWhileItsQuestionStands(t *testing.T) {
@@ -4568,6 +4927,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"default-bar":            {".ansi", ".screen"},
 		"feedback":               {".ansi", ".screen", ".txt"},
 		"feedback-frame":         {".ansi", ".screen"},
+		"question-notifications": {".ansi", ".screen", ".txt"},
 		"fork-message":           {".txt"},
 		"context":                {".prompt"},
 		"context-drops":          {".prompt"},
@@ -9892,6 +10252,16 @@ func TestConfirmationFeedbackSchedulesItsOwnDismissal(t *testing.T) {
 
 	if got := self.nextRefresh(dismissesAt.Add(-500 * time.Millisecond)); !got.Equal(dismissesAt) {
 		t.Errorf("next refresh = %s, want the dismissal time once within the last second", got)
+	}
+}
+
+func TestAQuestionAnnouncementSchedulesARefresh(t *testing.T) {
+	base := time.Date(2024, time.January, 1, 0, 0, 0, 0, time.UTC)
+	announceAt := base.Add(focusLossGrace)
+	self := &App{question: questionState{announceAt: announceAt}}
+
+	if got := self.nextRefresh(base); !got.Equal(announceAt) {
+		t.Errorf("next refresh = %s, want the question announcement at %s", got, announceAt)
 	}
 }
 
