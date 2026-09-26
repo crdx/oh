@@ -62,6 +62,7 @@ func (self *Screen) SealOpenPanel() bool {
 	}
 
 	self.seal()
+	self.changed()
 
 	return true
 }
@@ -80,7 +81,7 @@ func (self *Screen) addToOpenPanel(block Block) bool {
 	}
 
 	panel.blocks = append(panel.blocks, block)
-	self.refresh()
+	self.changed()
 
 	return true
 }
@@ -100,24 +101,10 @@ func (self *Screen) open(block Block, group Group, handle *BlockHandle) {
 
 	if len(self.blocks) == 0 {
 		self.seal()
-		self.liveRegion.origin = self.drawingState()
-		self.liveRegion.hasOrigin = true
-		openedRows := self.openedRows
-
-		self.makeRoomFor(group)
-
-		if self.isMidLine {
-			self.newline()
-		}
-
-		self.openPendingLine()
-		self.measureTerminal()
-		self.liveRegion.originRowOffset = self.openedRows - openedRows
 	}
 
 	self.blocks = append(self.blocks, groupedBlock{Block: block, group: group, handle: handle})
-
-	self.refresh()
+	self.changed()
 }
 
 func (self *Screen) indexOfBlock(handle *BlockHandle) int {
@@ -138,8 +125,8 @@ func (self *Screen) RefreshBlock(handle *BlockHandle) bool {
 		return false
 	}
 
-	self.isShrinkOwed = true
-	self.refresh()
+	self.live.height = 0
+	self.changed()
 
 	return true
 }
@@ -153,15 +140,9 @@ func (self *Screen) DiscardBlock(handle *BlockHandle) bool {
 		return false
 	}
 
-	if len(self.blocks) == 1 {
-		self.blocks = nil
-
-		return self.discardLiveRegion()
-	}
-
 	self.blocks = slices.Delete(self.blocks, at, at+1)
-	self.isShrinkOwed = true
-	self.refresh()
+	self.live.height = 0
+	self.changed()
 
 	return true
 }
@@ -175,6 +156,7 @@ func (self *Screen) SealBlock(handle *BlockHandle) bool {
 	}
 
 	self.seal()
+	self.changed()
 
 	return true
 }
@@ -184,54 +166,15 @@ func (self *Screen) Seal() {
 	defer self.mutex.Unlock()
 
 	self.seal()
+	self.changed()
 }
 
 func (self *Screen) Refresh() {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 
-	self.refresh()
-}
-
-func (self *Screen) WasRepaintRefused() bool {
-	self.mutex.Lock()
-	defer self.mutex.Unlock()
-
-	return self.isRepaintRefused
-}
-
-func (self *Screen) refresh() {
-	if len(self.blocks) == 0 {
-		return
-	}
-
-	if self.nestedUpdates > 0 {
-		self.isLiveDirty = true
-		return
-	}
-
-	self.paintBlocks()
-}
-
-func (self *Screen) flushLiveRegion() {
-	if !self.isLiveDirty {
-		return
-	}
-
-	self.isLiveDirty = false
-
 	if len(self.blocks) > 0 {
-		self.paintBlocks()
-	}
-}
-
-func (self *Screen) paintBlocks() {
-	rows, firstGroup, lastGroup := renderGroupedBlocks(self.blocks, self.columns, self.grouping)
-	self.paintGroups(rows, firstGroup, lastGroup)
-
-	if self.isShrinkOwed {
-		self.isShrinkOwed = false
-		self.shrinkLiveRegion()
+		self.changed()
 	}
 }
 

@@ -7,12 +7,12 @@
 \e[48;2;52;53;65m have a look at that                    \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e[?7l\r\e[KReading the target before the process\r
-\r\e[Krestarts.\r
+Reading the target before the process\r
+restarts.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
-\r\e[KThe target is now safely recorded.\r
+The target is now safely recorded.\r
 \e[?25h\e[?2026l
 === one column ===
 \e[?2026h\e[?25l\e[38;2;150;152;150mA\e[0m\r
@@ -122,79 +122,79 @@
 \e[48;2;52;53;65mt\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\e[?7l\r\e[KR\r
-\r\e[Ke\r
-\r\e[Ka\r
-\r\e[Kd\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kt\r
-\r\e[Ka\r
-\r\e[Kr\r
-\r\e[Kg\r
-\r\e[Ke\r
-\r\e[Kt\r
-\r\e[Kb\r
-\r\e[Ke\r
-\r\e[Kf\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kp\r
-\r\e[Kr\r
-\r\e[Ko\r
-\r\e[Kc\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Ks\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Kt\r
-\r\e[Ka\r
-\r\e[Kr\r
-\r\e[Kt\r
-\r\e[Ks\r
-\r\e[K.\r
+R\r
+e\r
+a\r
+d\r
+i\r
+n\r
+g\r
+t\r
+h\r
+e\r
+t\r
+a\r
+r\r
+g\r
+e\r
+t\r
+b\r
+e\r
+f\r
+o\r
+r\r
+e\r
+t\r
+h\r
+e\r
+p\r
+r\r
+o\r
+c\r
+e\r
+s\r
+s\r
+r\r
+e\r
+s\r
+t\r
+a\r
+r\r
+t\r
+s\r
+.\r
 \r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
 \r
-\r\e[KT\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kt\r
-\r\e[Ka\r
-\r\e[Kr\r
-\r\e[Kg\r
-\r\e[Ke\r
-\r\e[Kt\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[Kn\r
-\r\e[Ko\r
-\r\e[Kw\r
-\r\e[Ks\r
-\r\e[Ka\r
-\r\e[Kf\r
-\r\e[Ke\r
-\r\e[Kl\r
-\r\e[Ky\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kc\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Kd\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[K.\r
+T\r
+h\r
+e\r
+t\r
+a\r
+r\r
+g\r
+e\r
+t\r
+i\r
+s\r
+n\r
+o\r
+w\r
+s\r
+a\r
+f\r
+e\r
+l\r
+y\r
+r\r
+e\r
+c\r
+o\r
+r\r
+d\r
+e\r
+d\r
+.\r
 \e[?25h\e[?2026l
 === plain ===
 \e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m
@@ -227,12 +227,12 @@ The target is now safely recorded.\r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KRead\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the targ\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target b\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target befor\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before th\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before the pr\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before the proces\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before the process re\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before the process restar\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before the process restarts.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe targ\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is no\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is now sa\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is now safely\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is now safely rec\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is now safely recorde\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is now safely recorded.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KRead\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the targ\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target b\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target befor\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before th\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before the pr\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before the proces\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before the process re\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before the process restar\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before the process restarts.\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KThe\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe targ\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target i\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is no\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is now sa\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is now safely\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is now safely rec\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is now safely recorde\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is now safely recorded.\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[34C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
@@ -240,12 +240,12 @@ The target is now safely recorded.\r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KReading the target before the process restarts.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe target is now safely recorded.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KReading the target before the process restarts.\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KThe target is now safely recorded.\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[34C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
@@ -253,12 +253,12 @@ The target is now safely recorded.\r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KRead\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the targ\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target b\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target befor\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before th\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before the pr\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before the proces\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before the process re\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before the process restar\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before the process restarts.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe targ\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is no\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is now sa\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is now safely\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is now safely rec\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is now safely recorde\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is now safely recorded.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KRead\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the targ\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target b\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target befor\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before th\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before the pr\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before the proces\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before the process re\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before the process restar\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading the target before the process restarts.\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KThe\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe targ\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target i\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is no\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is now sa\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is now safely\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is now safely rec\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is now safely recorde\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe target is now safely recorded.\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[34C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m\e[0m\r
@@ -276,30 +276,30 @@ The target is now safely recorded.\r
 \e[48;2;52;53;65m at that    \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e[?7l\r\e[KReading the\r
-\r\e[Ktarget\r
-\r\e[Kbefore the\r
-\r\e[Kprocess\r
-\r\e[Krestarts.\r
+Reading the\r
+target\r
+before the\r
+process\r
+restarts.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mt…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mt…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
-\r\e[KThe target\r
-\r\e[Kis now\r
-\r\e[Ksafely\r
-\r\e[Krecorded.\r
+The target\r
+is now\r
+safely\r
+recorded.\r
 \e[?25h\e[?2026l
 === unsized ===
-\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m
-
-\e]133;A\e\\\e[48;2;52;53;65m\e[0m
-\e[48;2;52;53;65m have a look at that\e[0m
-\e[48;2;52;53;65m\e[0m
-\e[?7l\r\e[KReading the target before the process restarts.
-
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
-
-\r\e[KThe target is now safely recorded.
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m have a look at that\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+Reading the target before the process restarts.\r
+\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\r
+The target is now safely recorded.\r
 \e[?25h\e[?2026l
 === wide ===
 \e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
@@ -308,9 +308,9 @@ The target is now safely recorded.\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[KReading the target before the process restarts.\r
+Reading the target before the process restarts.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
-\r\e[KThe target is now safely recorded.\r
+The target is now safely recorded.\r
 \e[?25h\e[?2026l

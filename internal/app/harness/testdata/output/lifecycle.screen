@@ -43,7 +43,7 @@ The prompt is drawn by layout, which wraps the buffer against the terminal width
 the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output
 layer instead.
 === released and unused ===
-Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.
+
 === resized ===
 Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.
 

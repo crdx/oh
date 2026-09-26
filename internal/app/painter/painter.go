@@ -50,6 +50,9 @@ type Picasso struct {
 
 	isStale               bool
 	isRunning             bool
+	isTimingHeld          bool
+	drawnEvents           int
+	blockOpenedAt         int
 	streamingMode         output.StreamingMode
 	reasoningRendering    output.ReasoningRendering
 	resultLinkSessionName string
@@ -110,12 +113,9 @@ func (self *Picasso) DrawDelta(delta agent.Delta) {
 	self.drawDeltaWithAnswerRendererReset(delta, true)
 }
 
-func (self *Picasso) DrawRestoredDelta(delta agent.Delta, previous *Picasso) {
-	self.answerRenderer = previous.answerRenderer
-	self.drawDeltaWithAnswerRendererReset(delta, false)
-}
-
 func (self *Picasso) DrawEvent(event agent.Event) {
+	self.drawnEvents++
+
 	if !isJoinableNotice(event) {
 		self.screen.SealOpenPanel()
 	}
@@ -162,6 +162,10 @@ func (self *Picasso) DrawEvent(event agent.Event) {
 	case agent.ToolCallRequestEvent:
 		if self.toolBlock == nil {
 			self.toolBlock = dynamic.NewBlock(self.screen.Refresh)
+			self.blockOpenedAt = self.drawnEvents - 1
+			if self.isTimingHeld {
+				self.toolBlock.HoldTiming()
+			}
 			self.screen.OpenTool(self.toolBlock)
 			self.rows = map[string]int{}
 			self.labels = map[string]call.Label{}
@@ -394,15 +398,61 @@ func renderReasoningWith(
 	return renderedRows
 }
 
-func (self *Picasso) Stale() bool { return self.isStale || self.screen.WasRepaintRefused() }
+func (self *Picasso) Stale() bool { return self.isStale }
+
+func (self *Picasso) LiveEventCount() int {
+	if self.toolBlock == nil {
+		return 0
+	}
+
+	return self.drawnEvents - self.blockOpenedAt
+}
+
+func (self *Picasso) Redraw(liveEvents []agent.Event) {
+	if self.toolBlock != nil {
+		self.screen.OpenTool(self.toolBlock)
+
+		for _, event := range liveEvents {
+			if isDrawnBesideAnOpenBlock(event) {
+				self.drawNotices(event, self.drawSubmittedPanel)
+			}
+		}
+	}
+
+	delta := self.ProvisionalDelta()
+	if delta.Text == "" {
+		return
+	}
+
+	if delta.Kind == agent.ModelReasoningEvent {
+		self.resetReasoning()
+	} else {
+		self.answer.Reset()
+	}
+
+	self.drawDeltaWithAnswerRendererReset(delta, false)
+}
+
+func isDrawnBesideAnOpenBlock(event agent.Event) bool {
+	switch event.Kind { //nolint:exhaustive // Only these notices arrive while a call is in flight.
+	case portgrant.HostToSandboxChange, hostcommand.Ran, jobrecord.Ended:
+		return true
+	default:
+		return false
+	}
+}
 
 func (self *Picasso) HoldTiming() {
+	self.isTimingHeld = true
+
 	if self.toolBlock != nil {
 		self.toolBlock.HoldTiming()
 	}
 }
 
 func (self *Picasso) ResumeTiming() {
+	self.isTimingHeld = false
+
 	if self.toolBlock != nil {
 		self.toolBlock.ResumeTiming()
 	}

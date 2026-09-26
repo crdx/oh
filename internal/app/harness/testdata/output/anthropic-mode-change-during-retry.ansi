@@ -2,21 +2,21 @@
 \e[48;2;52;53;65m change what I am allowed to do while the answer is being asked for again                           \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[KHalf an ans\r
+Half an ans\r
 \r
 \e[38;2;207;173;0m[#1] Request failed; retrying in 1s: The stream ended before the response did\e[0m\r
 \r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Workspace is now read-only.                                                                     \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Workspace is now read-only.                                                                     \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
 \e[38;2;207;173;0m[#1] Request failed; retrying in 1s: The stream ended before the response did\e[0m\r
 \e[38;2;207;173;0m[#2] Request failed; retrying in 5s: The stream ended before the response did\e[0m\r
 \r
-\r\e[KNoted, the workspace is read-only now.\e[?25h\e[?2026l\r
+Noted, the workspace is read-only now.\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m carry on                                                                                           \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\r\e[KCarrying on.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KCarrying on.\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\r

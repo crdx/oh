@@ -1,6 +1,7 @@
 package output
 
 import (
+	"slices"
 	"strings"
 	"testing"
 )
@@ -16,7 +17,7 @@ func footerRows(count int) []string {
 func TestAFooterShorterThanTheTerminalIsLeftAlone(t *testing.T) {
 	screen := NewTerminalOfSize(&strings.Builder{}, 40, 10)
 
-	rows, cursorRow := screen.fitFooter(footerRows(4), 3)
+	rows, cursorRow := screen.fitFooter(footerRows(4), 3, 0, screen.lines)
 
 	if len(rows) != 4 || cursorRow != 3 {
 		t.Errorf("kept %d rows focused at %d, want 4 at 3", len(rows), cursorRow)
@@ -26,7 +27,7 @@ func TestAFooterShorterThanTheTerminalIsLeftAlone(t *testing.T) {
 func TestAFooterTallerThanTheTerminalIsCutToFit(t *testing.T) {
 	screen := NewTerminalOfSize(&strings.Builder{}, 40, 10)
 
-	rows, cursorRow := screen.fitFooter(footerRows(40), 39)
+	rows, cursorRow := screen.fitFooter(footerRows(40), 39, 0, screen.lines)
 
 	if len(rows) != 10 {
 		t.Fatalf("kept %d rows, want the terminal's 10", len(rows))
@@ -42,7 +43,7 @@ func TestAFooterTallerThanTheTerminalIsCutToFit(t *testing.T) {
 func TestAFooterCutAtBothEndsSaysSoAtBoth(t *testing.T) {
 	screen := NewTerminalOfSize(&strings.Builder{}, 40, 10)
 
-	rows, cursorRow := screen.fitFooter(footerRows(40), 20)
+	rows, cursorRow := screen.fitFooter(footerRows(40), 20, 0, screen.lines)
 
 	if len(rows) != 10 {
 		t.Fatalf("kept %d rows, want the terminal's 10", len(rows))
@@ -58,7 +59,7 @@ func TestAFooterCutAtBothEndsSaysSoAtBoth(t *testing.T) {
 func TestOneHiddenLineIsSaidInTheSingular(t *testing.T) {
 	screen := NewTerminalOfSize(&strings.Builder{}, 40, 10)
 
-	rows, _ := screen.fitFooter(footerRows(40), 38)
+	rows, _ := screen.fitFooter(footerRows(40), 38, 0, screen.lines)
 
 	last := rows[len(rows)-1]
 	if !strings.Contains(last, "1 more line") || strings.Contains(last, "lines") {
@@ -69,7 +70,7 @@ func TestOneHiddenLineIsSaidInTheSingular(t *testing.T) {
 func TestAOneRowOverflowHidesTwoLinesBecauseTheNoticeCostsOne(t *testing.T) {
 	screen := NewTerminalOfSize(&strings.Builder{}, 40, 10)
 
-	rows, _ := screen.fitFooter(footerRows(11), 10)
+	rows, _ := screen.fitFooter(footerRows(11), 10, 0, screen.lines)
 
 	if !strings.Contains(rows[0], "2 more lines") {
 		t.Errorf("first row is %q, want the notice to count itself", rows[0])
@@ -77,12 +78,12 @@ func TestAOneRowOverflowHidesTwoLinesBecauseTheNoticeCostsOne(t *testing.T) {
 }
 
 func TestAFooterIsLeftAloneWhenTheHeightIsUnknown(t *testing.T) {
-	screen := New(&strings.Builder{})
+	screen := &Screen{writer: &strings.Builder{}, isTerminal: true, canRepaint: true}
 
-	rows, cursorRow := screen.fitFooter(footerRows(40), 39)
+	screen.Footer(footerRows(40), 39, 0)
 
-	if len(rows) != 40 || cursorRow != 39 {
-		t.Errorf("kept %d rows focused at %d, want all 40 at 39", len(rows), cursorRow)
+	if len(screen.canvas.rows) != 40 || screen.canvas.cursorRow != 39 {
+		t.Errorf("kept %d rows focused at %d, want all 40 at 39", len(screen.canvas.rows), screen.canvas.cursorRow)
 	}
 }
 
@@ -90,7 +91,7 @@ func TestATerminalTooShortForANoticeStillFits(t *testing.T) {
 	for _, lines := range []int{1, 2} {
 		screen := NewTerminalOfSize(&strings.Builder{}, 40, lines)
 
-		rows, cursorRow := screen.fitFooter(footerRows(40), 39)
+		rows, cursorRow := screen.fitFooter(footerRows(40), 39, 0, screen.lines)
 
 		if len(rows) != lines {
 			t.Errorf("height %d kept %d rows, want %d", lines, len(rows), lines)
@@ -107,11 +108,11 @@ func TestAFooterFillingTheTerminalStaysOffTheRowAboveIt(t *testing.T) {
 
 	screen.Footer(footerRows(40), 20, 0)
 
-	if got := len(screen.shownFooter.rows); got != 9 {
+	if got := len(screen.canvas.rows); got != 9 {
 		t.Errorf("kept %d rows, want 9 beneath the row said before", got)
 	}
-	if got := screen.shownFooter.separators; got != 1 {
-		t.Errorf("drew %d blanks above the footer, want the one that spares that row", got)
+	if screen.canvas.rows[0] == "" {
+		t.Error("spent a row of a full footer on a blank above it")
 	}
 }
 
@@ -121,8 +122,8 @@ func TestAFooterShorterThanTheTerminalKeepsTheBlanksAboveIt(t *testing.T) {
 
 	screen.Footer(footerRows(4), 3, 0)
 
-	if got := screen.shownFooter.separators; got != apart {
-		t.Errorf("drew %d blanks above a short footer, want %d", got, apart)
+	if len(screen.canvas.rows) != 5 || screen.canvas.rows[0] != "" {
+		t.Errorf("drew %q, want one blank above a short footer", screen.canvas.rows)
 	}
 }
 
@@ -131,14 +132,13 @@ func TestATallFooterKeepsItsHeightWhenContentAppearsAboveIt(t *testing.T) {
 	rows := footerRows(10)
 
 	screen.Footer(rows, 8, 0)
-	if got := len(screen.input.rows); got != 6 {
-		t.Fatalf("initial footer kept %d rows, want 6", got)
+	if got := len(screen.canvas.rows); got != 5 {
+		t.Fatalf("initial footer kept %d rows, want the 5 that leave the terminal a row", got)
 	}
 
-	screen.hasPrinted = true
-	screen.Footer(rows, 8, 0)
-	if got := len(screen.input.rows); got != 6 {
-		t.Errorf("footer shrank to %d rows when content appeared above it", got)
+	screen.Line("said")
+	if got := len(screen.canvas.rows); got != 5 {
+		t.Errorf("footer went to %d rows when content appeared above it", got)
 	}
 }
 
@@ -151,8 +151,7 @@ func TestAFooterAndItsBlanksNeverOutgrowTheTerminal(t *testing.T) {
 
 		screen.Footer(footerRows(40), 20, 0)
 
-		drawn := len(screen.shownFooter.rows) + screen.shownFooter.separators
-		if drawn > lines {
+		if drawn := len(screen.canvas.rows); drawn > lines {
 			t.Errorf("height %d drew %d rows, which scrolls every repaint", lines, drawn)
 		}
 	}
@@ -162,7 +161,7 @@ func TestAWindowedFooterNeverOutgrowsItsRoomWhenBothEndsAreCut(t *testing.T) {
 	for _, lines := range []int{1, 2, 3, 4, 5} {
 		screen := NewTerminalOfSize(&strings.Builder{}, 40, lines)
 
-		rows, cursorRow := screen.fitFooter(footerRows(40), 20)
+		rows, cursorRow := screen.fitFooter(footerRows(40), 20, 0, screen.lines)
 
 		if len(rows) > lines {
 			t.Errorf("height %d kept %d rows, more than the terminal holds", lines, len(rows))
@@ -170,5 +169,64 @@ func TestAWindowedFooterNeverOutgrowsItsRoomWhenBothEndsAreCut(t *testing.T) {
 		if cursorRow < 0 || cursorRow >= len(rows) {
 			t.Errorf("height %d focused at %d, outside the %d rows kept", lines, cursorRow, len(rows))
 		}
+	}
+}
+
+func TestAWindowedFooterKeepsTheRowsPinnedAtItsHead(t *testing.T) {
+	screen := NewTerminalOfSize(&strings.Builder{}, 40, 10)
+	rows := append([]string{"head", "label"}, footerRows(30)...)
+
+	fitted, cursorRow := screen.fitFooter(rows, len(rows)-1, 2, 8)
+
+	if len(fitted) != 8 {
+		t.Fatalf("kept %d rows, want the 8 there is room for", len(fitted))
+	}
+	if fitted[0] != "head" || fitted[1] != "label" {
+		t.Errorf("kept %q at the head, want the pinned rows", fitted[:2])
+	}
+	if !strings.Contains(fitted[2], "more lines") {
+		t.Errorf("row after the pinned ones is %q, want it to say what was hidden", fitted[2])
+	}
+	if cursorRow != len(fitted)-1 {
+		t.Errorf("focused at %d, want the last row", cursorRow)
+	}
+}
+
+func TestAFooterWithRoomForOnlyItsFocusBesideItsPinnedRowsKeepsBoth(t *testing.T) {
+	screen := NewTerminalOfSize(&strings.Builder{}, 40, 10)
+	rows := append([]string{"head", "label"}, footerRows(30)...)
+	rows[len(rows)-1] = "focus"
+
+	fitted, cursorRow := screen.fitFooter(rows, len(rows)-1, 2, 3)
+
+	if !slices.Equal(fitted, []string{"head", "label", "focus"}) || cursorRow != 2 {
+		t.Errorf("kept %q focused at %d, want the pinned rows over the focus", fitted, cursorRow)
+	}
+}
+
+func TestAFooterWithNoRoomBesideItsPinnedRowsIsWindowedWhole(t *testing.T) {
+	screen := NewTerminalOfSize(&strings.Builder{}, 40, 10)
+	rows := append([]string{"head", "label"}, footerRows(30)...)
+	rows[len(rows)-1] = "focus"
+
+	fitted, cursorRow := screen.fitFooter(rows, len(rows)-1, 2, 2)
+
+	if len(fitted) != 2 || fitted[cursorRow] != "focus" {
+		t.Errorf("kept %q focused at %d, want the focus windowed into both rows", fitted, cursorRow)
+	}
+	if !strings.Contains(fitted[0], "more lines") {
+		t.Errorf("row above the focus is %q, want it to say what was hidden", fitted[0])
+	}
+}
+
+func TestAFooterWindowedIntoTwoRowsSaysWhatItHidAboveTheFocus(t *testing.T) {
+	screen := NewTerminalOfSize(&strings.Builder{}, 40, 10)
+	rows := footerRows(30)
+	rows[20] = "focus"
+
+	fitted, cursorRow := screen.fitFooter(rows, 20, 0, 2)
+
+	if len(fitted) != 2 || fitted[cursorRow] != "focus" || !strings.Contains(fitted[0], "20 more lines") {
+		t.Errorf("kept %q focused at %d, want a notice for the 20 rows above over the focus", fitted, cursorRow)
 	}
 }

@@ -676,6 +676,548 @@ func TestACallIsNotTimedWhileItsQuestionStands(t *testing.T) {
 	})
 }
 
+const questionLines = 12
+
+type questionOverCall struct {
+	command               string
+	isAskedFirst          bool
+	isRedrawn             bool
+	isRedrawnWhileRunning bool
+	hasNeighbour          bool
+}
+
+type drawnQuestionOverCall struct {
+	standing string
+	answered string
+}
+
+func tallQuestionCommand() string {
+	return "cat > script.py <<'EOF'\n" + strings.Repeat("print('hello')\n", 3*questionLines) + "EOF"
+}
+
+func drawQuestionOverCall(t *testing.T, scene questionOverCall) drawnQuestionOverCall {
+	t.Helper()
+
+	var drawn drawnQuestionOverCall
+
+	synctest.Test(t, func(t *testing.T) {
+		var written bytes.Buffer
+		chat := testConversation(t, &written)
+		chat.screen = output.NewTerminalOfSize(&written, replayColumns, questionLines)
+		chat.inputLine = edit.NewInput(nil)
+		chat.currentTurn.Stream = testRunningTurnStream()
+		chat.currentTurn.painter = chat.newPainter(true)
+
+		record := func(event agent.Event) {
+			chat.recordedEvents = append(chat.recordedEvents, event)
+			chat.currentTurn.painter.DrawEvent(event)
+			chat.show(chat.inputLine)
+		}
+
+		record(agent.Event{Kind: agent.UserMessageEvent, Text: "write the script"})
+		record(agent.Event{Kind: agent.ModelReasoningEvent, Text: "Writing it."})
+
+		rendering := bash.DescribeCommand(scene.command)
+		request := agent.Event{
+			Kind: agent.ToolCallRequestEvent,
+			ID:   "call-1",
+			Name: "bash",
+			FallbackRendering: agent.FallbackRendering{
+				Subject:  rendering.Subject,
+				Note:     rendering.Qualifier,
+				Emphasis: rendering.Emphasis,
+			},
+		}
+		if scene.hasNeighbour {
+			neighbour := bash.DescribeCommand("sleep 60")
+			record(agent.Event{
+				Kind: agent.ToolCallRequestEvent,
+				ID:   "call-0",
+				Name: "bash",
+				FallbackRendering: agent.FallbackRendering{
+					Subject:  neighbour.Subject,
+					Emphasis: neighbour.Emphasis,
+				},
+			})
+		}
+
+		if !scene.isAskedFirst {
+			record(request)
+		}
+
+		broker := ask.New()
+		t.Cleanup(broker.Open())
+		chat.question.broker = broker
+
+		result := make(chan error, 1)
+		go func() { result <- approveHostNetwork(t.Context(), broker, permission.Ask, scene.command) }()
+		<-broker.Changes()
+		chat.onQuestionChange()
+		chat.show(chat.inputLine)
+
+		if scene.isAskedFirst {
+			record(request)
+		}
+
+		time.Sleep(20 * time.Second)
+		synctest.Wait()
+
+		if scene.isRedrawn {
+			chat.redraw()
+		}
+
+		time.Sleep(20 * time.Second)
+		synctest.Wait()
+		chat.show(chat.inputLine)
+		drawn.standing = written.String()
+
+		chat.screen.Sync(func() {
+			chat.answerQuestion(key.Key{Code: key.Rune, Value: 'y'})
+			chat.show(chat.inputLine)
+		})
+		if err := <-result; err != nil {
+			t.Fatal(err)
+		}
+
+		if scene.isRedrawnWhileRunning {
+			time.Sleep(3 * time.Second)
+			synctest.Wait()
+			chat.redraw()
+			time.Sleep(2 * time.Second)
+		} else {
+			time.Sleep(5 * time.Second)
+		}
+		synctest.Wait()
+		chat.show(chat.inputLine)
+		drawn.answered = written.String()
+
+		chat.currentTurn.painter.Stop()
+	})
+
+	return drawn
+}
+
+func TestGoldenAQuestionOverARunningCallDrawsEveryVisibleState(t *testing.T) {
+	scenes := map[string]questionOverCall{
+		"a short question":                                                     {command: "curl example.com"},
+		"a short question asked before its call":                               {command: "curl example.com", isAskedFirst: true},
+		"a short question redrawn while it stands":                             {command: "curl example.com", isRedrawn: true},
+		"a tall question":                                                      {command: tallQuestionCommand()},
+		"a tall question asked before its call":                                {command: tallQuestionCommand(), isAskedFirst: true},
+		"a tall question redrawn while it stands":                              {command: tallQuestionCommand(), isRedrawn: true},
+		"a tall question asked before its call and redrawn":                    {command: tallQuestionCommand(), isAskedFirst: true, isRedrawn: true},
+		"a short question asked before its call and redrawn":                   {command: "curl example.com", isAskedFirst: true, isRedrawn: true},
+		"a short question, its call redrawn once answered":                     {command: "curl example.com", isRedrawnWhileRunning: true},
+		"a tall question, its call redrawn once answered":                      {command: tallQuestionCommand(), isRedrawnWhileRunning: true},
+		"a short question beside another call":                                 {command: "curl example.com", hasNeighbour: true},
+		"a short question beside another call, asked before its call":          {command: "curl example.com", hasNeighbour: true, isAskedFirst: true},
+		"a short question beside another call, redrawn":                        {command: "curl example.com", hasNeighbour: true, isRedrawn: true},
+		"a tall question beside another call":                                  {command: tallQuestionCommand(), hasNeighbour: true},
+		"a tall question beside another call, asked before its call":           {command: tallQuestionCommand(), hasNeighbour: true, isAskedFirst: true},
+		"a tall question beside another call, redrawn":                         {command: tallQuestionCommand(), hasNeighbour: true, isRedrawn: true},
+		"a tall question beside another call, its calls redrawn once answered": {command: tallQuestionCommand(), hasNeighbour: true, isRedrawnWhileRunning: true},
+	}
+
+	passes := map[string]func() string{}
+	answered := map[string]string{}
+
+	for name, scene := range scenes {
+		drawn := drawQuestionOverCall(t, scene)
+
+		requireNothingDrawnAboveTheScreen(t, name+", standing", drawn.standing, questionLines)
+		requireNothingDrawnAboveTheScreen(t, name+", answered", drawn.answered, questionLines)
+
+		answered[name] = drawn.answered
+		passes[name+", standing"] = func() string {
+			return shownInLines(t, drawn.standing, questionLines)
+		}
+		passes[name+", answered"] = func() string {
+			return shownInLines(t, drawn.answered, questionLines)
+		}
+	}
+
+	for name, scene := range scenes {
+		plain := "a short question"
+		if scene.command != "curl example.com" {
+			plain = "a tall question"
+		}
+		if scene.hasNeighbour {
+			plain += " beside another call"
+		}
+
+		requireSameVisibleScreenOfSize(
+			t,
+			name+" differs once answered from "+plain,
+			replayColumns,
+			questionLines,
+			answered[plain],
+			answered[name],
+		)
+	}
+
+	compareWithGolden(t, "question-over-call", ".screen", passes)
+}
+
+const footerOverCallsLines = 12
+
+type footerOverCalls struct {
+	calls            int
+	footer           string
+	isBeforeTheCalls bool
+}
+
+type drawnFooterOverCalls struct {
+	standing string
+	gone     string
+}
+
+const (
+	noTallFooter    = "no tall footer"
+	helpFooter      = "help"
+	tallDraftFooter = "a tall draft"
+)
+
+func drawFooterOverCalls(t *testing.T, scene footerOverCalls) drawnFooterOverCalls {
+	t.Helper()
+
+	var drawn drawnFooterOverCalls
+
+	synctest.Test(t, func(t *testing.T) {
+		var written bytes.Buffer
+		chat := slashCommandFixture(t, caps.Read)
+		chat.agent = agent.New("", quietProvider{}, nil)
+		chat.screen = output.NewTerminalOfSize(&written, replayColumns, footerOverCallsLines)
+		chat.slash.commands = fixtureCommandRegistry(t, slash.Command{
+			Name: "help",
+			Run: func(context slash.Context, _ slash.Arguments) error {
+				context.Notice("Commands:\n" + strings.Repeat("  /copy\n", 2*footerOverCallsLines))
+				return nil
+			},
+		})
+		history := edit.NewHistory("", historyLimit)
+		chat.inputLine = edit.NewInput(history)
+		chat.currentTurn = Turn{Stream: testRunningTurnStream(), painter: chat.newPainter(true)}
+
+		record := func(event agent.Event) {
+			chat.recordedEvents = append(chat.recordedEvents, event)
+			chat.currentTurn.painter.DrawEvent(event)
+			chat.show(chat.inputLine)
+		}
+
+		showTallFooter := func() {
+			switch scene.footer {
+			case helpFooter:
+				chat.inputLine.SetText("/help")
+				chat.handleKeypressAndShowInput(chat.inputLine, history, key.Key{Code: key.Enter})
+			case tallDraftFooter:
+				chat.inputLine.SetText(strings.TrimSuffix(strings.Repeat("a line of the draft\n", 2*footerOverCallsLines), "\n"))
+				chat.show(chat.inputLine)
+			}
+		}
+
+		record(agent.Event{Kind: agent.UserMessageEvent, Text: "run them"})
+		if scene.isBeforeTheCalls {
+			showTallFooter()
+		}
+		record(agent.Event{Kind: agent.ModelReasoningEvent, Text: "Running them."})
+		for i := range scene.calls {
+			rendering := bash.DescribeCommand("sleep " + strconv.Itoa(60+i))
+			record(agent.Event{
+				Kind: agent.ToolCallRequestEvent,
+				ID:   "call-" + strconv.Itoa(i),
+				Name: "bash",
+				FallbackRendering: agent.FallbackRendering{
+					Subject:  rendering.Subject,
+					Emphasis: rendering.Emphasis,
+				},
+			})
+		}
+
+		time.Sleep(time.Second)
+		synctest.Wait()
+		chat.show(chat.inputLine)
+
+		if !scene.isBeforeTheCalls {
+			showTallFooter()
+		}
+
+		time.Sleep(time.Second)
+		synctest.Wait()
+		chat.show(chat.inputLine)
+		drawn.standing = written.String()
+
+		switch scene.footer {
+		case helpFooter:
+			chat.handleKeypressAndShowInput(chat.inputLine, history, key.Key{Code: key.Backspace})
+		case tallDraftFooter:
+			chat.inputLine.SetText("")
+			chat.show(chat.inputLine)
+		}
+
+		time.Sleep(4 * time.Second)
+		synctest.Wait()
+		chat.show(chat.inputLine)
+		drawn.gone = written.String()
+
+		chat.currentTurn.painter.Stop()
+	})
+
+	return drawn
+}
+
+const callsFillingTheRoom = 8
+
+func TestGoldenATallFooterOverRunningCallsDrawsEveryVisibleState(t *testing.T) {
+	passes := map[string]func() string{}
+
+	for _, calls := range []int{1, 2, callsFillingTheRoom, callsFillingTheRoom + 1} {
+		baseline := drawFooterOverCalls(t, footerOverCalls{calls: calls, footer: noTallFooter})
+
+		for _, scene := range []footerOverCalls{
+			{calls: calls, footer: noTallFooter},
+			{calls: calls, footer: helpFooter},
+			{calls: calls, footer: helpFooter, isBeforeTheCalls: true},
+			{calls: calls, footer: tallDraftFooter},
+			{calls: calls, footer: tallDraftFooter, isBeforeTheCalls: true},
+		} {
+			name := fmt.Sprintf("%d calls beneath %s", calls, scene.footer)
+			if scene.isBeforeTheCalls {
+				name += " shown before them"
+			}
+			drawn := baseline
+			if scene.footer != noTallFooter {
+				drawn = drawFooterOverCalls(t, scene)
+			}
+
+			requireNothingDrawnAboveTheScreen(t, name+", standing", drawn.standing, footerOverCallsLines)
+			requireNothingDrawnAboveTheScreen(t, name+", gone", drawn.gone, footerOverCallsLines)
+			requireSameVisibleScreenOfSize(
+				t,
+				name+" differs once the footer has gone from the same calls beneath no tall footer",
+				replayColumns,
+				footerOverCallsLines,
+				baseline.gone,
+				drawn.gone,
+			)
+
+			passes[name+", standing"] = func() string { return shownInLines(t, drawn.standing, footerOverCallsLines) }
+			passes[name+", gone"] = func() string { return shownInLines(t, drawn.gone, footerOverCallsLines) }
+		}
+	}
+
+	compareWithGolden(t, "footer-over-calls", ".screen", passes)
+}
+
+const roomyFrameLines = 60
+
+func frameEdgeConversation(t *testing.T, screenOutput *bytes.Buffer, lines int) *App {
+	t.Helper()
+
+	self := testConversation(t, screenOutput)
+	self.screen = output.NewTerminalOfSize(screenOutput, replayColumns, lines)
+	self.inputLine = edit.NewInput(nil)
+	self.currentTurn = Turn{Stream: testRunningTurnStream(), painter: self.newPainter(true)}
+	self.recordEvent(agent.Event{Kind: agent.UserMessageEvent, Text: "run them"})
+	self.show(self.inputLine)
+
+	return self
+}
+
+func requestTwoCalls(self *App) {
+	for _, command := range []string{"sleep 60", "sleep 61"} {
+		rendering := bash.DescribeCommand(command)
+		self.recordEvent(agent.Event{
+			Kind: agent.ToolCallRequestEvent,
+			ID:   command,
+			Name: "bash",
+			FallbackRendering: agent.FallbackRendering{
+				Subject:  rendering.Subject,
+				Emphasis: rendering.Emphasis,
+			},
+		})
+	}
+	self.show(self.inputLine)
+}
+
+type frameEdgeStreams struct {
+	live   string
+	sealed string
+}
+
+func drawNoticeBesideTwoCalls(t *testing.T, lines int, isRedrawn bool) frameEdgeStreams {
+	t.Helper()
+
+	var screenOutput bytes.Buffer
+	self := frameEdgeConversation(t, &screenOutput, lines)
+	requestTwoCalls(self)
+	self.jobEnded(endedJobConclusion())
+	self.show(self.inputLine)
+	if isRedrawn {
+		self.redraw()
+	}
+	live := screenOutput.String()
+
+	self.currentTurn.painter.Close(dynamic.Cancelled)
+	self.show(self.inputLine)
+
+	return frameEdgeStreams{live: live, sealed: screenOutput.String()}
+}
+
+const longProse = "The first sentence of a long stretch of prose that has to wrap. " +
+	"Every sentence after it adds another row, so the prose soon outgrows a short terminal. " +
+	"A third sentence keeps going so the rows keep arriving while the footer stands. " +
+	"A fourth one follows it, just as long, to push the top of the prose off the screen. " +
+	"And a fifth rounds it off, which is where a redraw is asked for in the middle."
+
+func streamProse(self *App, kind agent.Kind, text string) {
+	for _, word := range strings.SplitAfter(text, " ") {
+		delta := agent.Delta{Kind: kind, Text: word}
+		self.takeTurn(TurnEvent{Update: agent.Update{Delta: &delta}})
+		self.show(self.inputLine)
+	}
+}
+
+func drawProseRedrawnMidway(t *testing.T, kind agent.Kind, lines int, isRedrawn bool) frameEdgeStreams {
+	t.Helper()
+
+	var screenOutput bytes.Buffer
+	self := frameEdgeConversation(t, &screenOutput, lines)
+	middle := len(longProse) / 2
+	streamProse(self, kind, longProse[:middle])
+	if isRedrawn {
+		self.redraw()
+	}
+	streamProse(self, kind, longProse[middle:])
+	live := screenOutput.String()
+
+	self.recordEvent(agent.Event{Kind: kind, Text: longProse})
+	self.show(self.inputLine)
+
+	return frameEdgeStreams{live: live, sealed: screenOutput.String()}
+}
+
+const answerResolvedLate = "See [the docs][docs] first.\n\n" +
+	"A line of the answer.\n\nAnother line of the answer.\n\nA third line of the answer.\n\n" +
+	"A fourth line of the answer.\n\nA fifth line of the answer.\n\nA sixth line of the answer.\n\n" +
+	"[docs]: https://example.com\n"
+
+func drawAnswerResolvedLate(t *testing.T, lines int) frameEdgeStreams {
+	t.Helper()
+
+	var screenOutput bytes.Buffer
+	self := frameEdgeConversation(t, &screenOutput, lines)
+	streamProse(self, agent.ModelMessageEvent, answerResolvedLate)
+	live := screenOutput.String()
+
+	self.recordEvent(agent.Event{Kind: agent.ModelMessageEvent, Text: answerResolvedLate})
+	self.show(self.inputLine)
+
+	return frameEdgeStreams{live: live, sealed: screenOutput.String()}
+}
+
+func drawRowsEndingInBlanks(lines int) frameEdgeStreams {
+	var screenOutput bytes.Buffer
+	screen := output.NewTerminalOfSize(&screenOutput, replayColumns, lines)
+	screen.Line("said before")
+	screen.Footer([]string{"─", "> ", "─"}, 1, 2)
+
+	rows := []string{"one", "", "two", "", "three", "", "four", "", "five", "", ""}
+	for count := range rows {
+		screen.DrawAnswer(slices.Clone(rows[:count+1]))
+	}
+	screen.DrawAnswer(slices.Clone(rows[:9]))
+	live := screenOutput.String()
+
+	screen.Seal()
+	screen.Footer([]string{"─", "> ", "─"}, 1, 2)
+
+	return frameEdgeStreams{live: live, sealed: screenOutput.String()}
+}
+
+func drawQuestionOnATinyTerminal(t *testing.T, lines int) string {
+	t.Helper()
+
+	var drawn string
+
+	synctest.Test(t, func(t *testing.T) {
+		var screenOutput bytes.Buffer
+		self := frameEdgeConversation(t, &screenOutput, lines)
+		requestTwoCalls(self)
+
+		broker := ask.New()
+		t.Cleanup(broker.Open())
+		self.question.broker = broker
+
+		go func() { _ = approveHostNetwork(t.Context(), broker, permission.Ask, tallQuestionCommand()) }()
+		<-broker.Changes()
+		self.onQuestionChange()
+		self.show(self.inputLine)
+		drawn = screenOutput.String()
+
+		broker.Current().Cancel()
+		self.currentTurn.painter.Stop()
+	})
+
+	return drawn
+}
+
+func TestGoldenTheFrameAtItsEdgesDrawsEveryVisibleState(t *testing.T) {
+	passes := map[string]func() string{}
+	add := func(name string, stream string, lines int) {
+		requireNothingDrawnAboveTheScreen(t, name, stream, lines)
+		passes[name] = func() string { return shownInLines(t, stream, lines) }
+	}
+
+	roomyNotice := drawNoticeBesideTwoCalls(t, roomyFrameLines, false)
+	for lines := 5; lines <= 15; lines++ {
+		drawn := drawNoticeBesideTwoCalls(t, lines, false)
+		add(fmt.Sprintf("a notice beside two calls at %02d lines", lines), drawn.live, lines)
+		requireSameVisibleScreen(t, fmt.Sprintf("the calls sealed at %d lines", lines), roomyNotice.sealed, drawn.sealed)
+	}
+
+	for _, lines := range []int{8, replayLines} {
+		plain := drawNoticeBesideTwoCalls(t, lines, false)
+		redrawn := drawNoticeBesideTwoCalls(t, lines, true)
+		add(fmt.Sprintf("a notice beside two calls redrawn at %d lines", lines), redrawn.live, lines)
+		requireSameVisibleScreenOfSize(t, "a redraw beside a notice", replayColumns, lines, plain.live, redrawn.live)
+		requireSameVisibleScreenOfSize(t, "a redraw beside a notice, sealed", replayColumns, lines, plain.sealed, redrawn.sealed)
+	}
+
+	for kind, name := range map[agent.Kind]string{agent.ModelReasoningEvent: "thought", agent.ModelMessageEvent: "answer"} {
+		roomy := drawProseRedrawnMidway(t, kind, roomyFrameLines, false)
+		for _, lines := range []int{8, replayLines} {
+			plain := drawProseRedrawnMidway(t, kind, lines, false)
+			redrawn := drawProseRedrawnMidway(t, kind, lines, true)
+			add(fmt.Sprintf("a streaming %s redrawn midway at %d lines", name, lines), redrawn.live, lines)
+			add(fmt.Sprintf("a streaming %s redrawn midway at %d lines, sealed", name, lines), redrawn.sealed, lines)
+			requireSameVisibleScreenOfSize(t, "a streaming "+name+" redrawn midway", replayColumns, lines, plain.live, redrawn.live)
+			requireSameVisibleScreen(t, "a streaming "+name+" sealed on a short terminal", roomy.sealed, redrawn.sealed)
+		}
+	}
+
+	roomyAnswer := drawAnswerResolvedLate(t, roomyFrameLines)
+	for _, lines := range []int{8, replayLines} {
+		drawn := drawAnswerResolvedLate(t, lines)
+		add(fmt.Sprintf("an answer whose top changes after it was committed at %d lines", lines), drawn.live, lines)
+		add(fmt.Sprintf("an answer whose top changes after it was committed at %d lines, sealed", lines), drawn.sealed, lines)
+		requireSameVisibleScreen(t, "an answer resolved late", roomyAnswer.sealed, drawn.sealed)
+	}
+
+	roomyRows := drawRowsEndingInBlanks(roomyFrameLines)
+	for _, lines := range []int{6, 7, 8} {
+		drawn := drawRowsEndingInBlanks(lines)
+		add(fmt.Sprintf("rows ending in blanks at %d lines", lines), drawn.live, lines)
+		add(fmt.Sprintf("rows ending in blanks at %d lines, sealed", lines), drawn.sealed, lines)
+		requireSameVisibleScreen(t, "rows ending in blanks, sealed", roomyRows.sealed, drawn.sealed)
+	}
+
+	for _, lines := range []int{4, 5, 6} {
+		add(fmt.Sprintf("a tall question on a terminal of %d lines", lines), drawQuestionOnATinyTerminal(t, lines), lines)
+	}
+
+	compareWithGolden(t, "frame-edges", ".screen", passes)
+}
+
 func TestAQuestionMovesItsCursorAndAnswersWhereItRests(t *testing.T) {
 	for name, test := range map[string]struct {
 		keypresses []key.Key
@@ -3584,7 +4126,7 @@ func TestAShellCallIsDrawnAsAShellPrompt(t *testing.T) {
 	}
 }
 
-func TestARedrawDuringATurnHandsTheOpenBlockToTheTurn(t *testing.T) {
+func TestARedrawDuringATurnKeepsTheOpenBlockWithTheTurn(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		var screenOutput bytes.Buffer
 
@@ -3595,23 +4137,26 @@ func TestARedrawDuringATurnHandsTheOpenBlockToTheTurn(t *testing.T) {
 
 		testConversation.currentTurn = Turn{Stream: testRunningTurnStream(), painter: testConversation.newPainter(true)}
 
-		testConversation.recordedEvents = []agent.Event{
+		for _, event := range []agent.Event{
 			{Kind: agent.UserMessageEvent, Text: "read it"},
 			{Kind: agent.ToolCallRequestEvent, ID: "1", Name: "read", FallbackRendering: agent.FallbackRendering{Subject: "one.go"}},
+		} {
+			testConversation.recordedEvents = append(testConversation.recordedEvents, event)
+			testConversation.currentTurn.painter.DrawEvent(event)
 		}
 
-		previousPainter := testConversation.currentTurn.painter
+		livePainter := testConversation.currentTurn.painter
 
 		testConversation.redraw()
 
-		if testConversation.currentTurn.painter == previousPainter {
-			t.Fatal("expected the turn to be given the painter that drew the replay")
+		if testConversation.currentTurn.painter != livePainter {
+			t.Fatal("expected the turn to keep the painter holding its open block")
 		}
 
 		testConversation.currentTurn.painter.DrawEvent(agent.Event{Kind: agent.ToolCallResultEvent, ID: "1", Name: "read", Took: time.Second})
 
 		if plain := style.Plain(screenOutput.String()); !strings.Contains(plain, "read one.go ✓") {
-			t.Errorf("expected the replayed call to be answered on the block that was handed over, got %q", plain)
+			t.Errorf("expected the call to be answered on the block the redraw kept, got %q", plain)
 		}
 	})
 }
@@ -4065,6 +4610,9 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"plain-input":            {".ansi", ".screen"},
 		"print-arguments":        {".txt"},
 		"queued-messages":        {".ansi", ".screen"},
+		"question-over-call":     {".screen"},
+		"footer-over-calls":      {".screen"},
+		"frame-edges":            {".screen"},
 		"readline-bindings":      {".ansi", ".screen"},
 		"resume-arguments":       {".txt"},
 		"resume-model-arguments": {".txt"},
@@ -4884,7 +5432,7 @@ func lineResizeFrames(t *testing.T) string {
 	narrowScreen := output.NewTerminalOfSize(&screenOutput, narrowColumns, replayLines)
 	narrowScreen.Reset()
 	narrowPainter := newStreamedTestPainter(narrowScreen, true, output.StreamingModeLine)
-	narrowPainter.DrawRestoredDelta(provisional, widePainter)
+	narrowPainter.DrawDelta(provisional)
 	narrowRows := visibleScreen(t, screenOutput.String(), narrowColumns)
 	fmt.Fprintf(&frames, "--- resize frame at %d columns ---\n%s\n", narrowColumns, strings.Join(narrowRows, "\n"))
 
@@ -6783,6 +7331,24 @@ func shown(t *testing.T, stream string, columns int) string {
 	return strings.Join(visibleScreen(t, stream, columns), "\n")
 }
 
+func requireNothingDrawnAboveTheScreen(t *testing.T, description string, stream string, lines int) {
+	t.Helper()
+
+	played := playScreenOfSize(t, stream, replayColumns, lines)
+	if played.wasDrawnAboveTheScreen {
+		t.Errorf("%s moved the cursor above the top of a %d-line screen", description, lines)
+	}
+	if played.wasScreenErasedWhole {
+		t.Errorf("%s erased a %d-line screen from its top, which a terminal may push into scrollback", description, lines)
+	}
+}
+
+func shownInLines(t *testing.T, stream string, lines int) string {
+	t.Helper()
+
+	return strings.Join(playScreenOfSize(t, stream, replayColumns, lines).text(), "\n")
+}
+
 func streamPasses[Scenario any](
 	t *testing.T,
 	stream func(*testing.T, Scenario) string,
@@ -6834,7 +7400,7 @@ func TestGoldenEveryScenarioDrawsWhatItDrewBefore(t *testing.T) {
 
 const shortLines = 6
 
-func TestGoldenATallRegionOnAShortTerminalIsRepairedRatherThanFrozen(t *testing.T) {
+func TestGoldenATallRegionOnAShortTerminalIsWindowedAndSealedWhole(t *testing.T) {
 	scenarios := map[string]string{
 		"streamed taller than the terminal":      tallRegionScenario,
 		"a panel grown taller than the terminal": noticePanelScenario,
@@ -6847,7 +7413,7 @@ func TestGoldenATallRegionOnAShortTerminalIsRepairedRatherThanFrozen(t *testing.
 
 		drawn := streamThrough(t, newShortRig(t), entries)
 
-		passes[name] = func() string { return shown(t, drawn, replayColumns) }
+		passes[name] = func() string { return shownInLines(t, drawn, shortLines) }
 
 		requireSameVisibleScreen(
 			t,
@@ -6857,25 +7423,36 @@ func TestGoldenATallRegionOnAShortTerminalIsRepairedRatherThanFrozen(t *testing.
 		)
 	}
 
-	noticeBeside := func(openTurn func(*testing.T, *bytes.Buffer) (*App, *edit.Input)) string {
+	noticeBeside := func(openTurn func(*testing.T, *bytes.Buffer) (*App, *edit.Input)) (string, string) {
 		var screenOutput bytes.Buffer
 		self, inputLine := openTurn(t, &screenOutput)
 		self.jobEnded(endedJobConclusion())
 		self.show(inputLine)
+		live := screenOutput.String()
 
-		return screenOutput.String()
+		self.currentTurn.painter.Close(dynamic.Cancelled)
+		self.show(inputLine)
+
+		return live, screenOutput.String()
 	}
 
-	frozen := noticeBeside(frozenTallTurn)
+	windowed, sealed := noticeBeside(shortTallTurn)
+	_, roomy := noticeBeside(roomyTallTurn)
 
+	requireNothingDrawnAboveTheScreen(t, "a notice beside a region taller than the terminal", windowed, shortLines)
 	requireSameVisibleScreen(
 		t,
-		"a notice beside a region taller than the terminal differs from the same one with room to draw",
-		noticeBeside(roomyTallTurn),
-		frozen,
+		"a sealed region that was taller than the terminal differs from the same one with room to draw",
+		roomy,
+		sealed,
 	)
 
-	passes["a notice beside a frozen region"] = func() string { return shown(t, frozen, replayColumns) }
+	passes["a notice beside a region taller than the terminal"] = func() string {
+		return shownInLines(t, windowed, shortLines)
+	}
+	passes["a notice beside a region taller than the terminal, sealed"] = func() string {
+		return shownInLines(t, sealed, shortLines)
+	}
 
 	compareWithGolden(t, "short-terminal", ".screen", passes)
 }
@@ -7239,17 +7816,23 @@ func answerStartsAfterAcceptedInputFrames(t *testing.T, scenario answerStartScen
 func shownAnswerStartsAfterAcceptedInputFrames(t *testing.T, scenario answerStartScenario) string {
 	t.Helper()
 
-	return shownFrames(t, answerStartsAfterAcceptedInputFrames(t, scenario))
+	return shownFramesOfSize(t, answerStartsAfterAcceptedInputFrames(t, scenario), scenario.terminalLines)
 }
 
 func shownFrames(t *testing.T, frames []string) string {
+	t.Helper()
+
+	return shownFramesOfSize(t, frames, 0)
+}
+
+func shownFramesOfSize(t *testing.T, frames []string, lines int) string {
 	t.Helper()
 
 	var shown strings.Builder
 	var previous []string
 	frameNumber := 0
 	for _, frame := range frames {
-		visible := visibleScreen(t, frame, replayColumns)
+		visible := playScreenOfSize(t, frame, replayColumns, lines).text()
 		if slices.Equal(visible, previous) {
 			continue
 		}
@@ -10265,8 +10848,13 @@ type screen struct {
 	marks       map[int]bool
 	row, column int
 	columns     int
-	isWrapping  bool
-	style       graphicStyle
+	height      int
+	lowestRow   int
+
+	wasDrawnAboveTheScreen bool
+	wasScreenErasedWhole   bool
+	isWrapping             bool
+	style                  graphicStyle
 }
 
 type cell struct {
@@ -10396,10 +10984,29 @@ func TestAScreenKeepsADecorationApartFromItsColour(t *testing.T) {
 func playScreen(t *testing.T, stream string, columns int) *screen {
 	t.Helper()
 
-	self := &screen{t: t, columns: columns, isWrapping: true}
+	return playScreenOfSize(t, stream, columns, 0)
+}
+
+func playScreenOfSize(t *testing.T, stream string, columns int, lines int) *screen {
+	t.Helper()
+
+	self := &screen{t: t, columns: columns, height: lines, isWrapping: true}
 	self.play(stream)
 
 	return self
+}
+
+func (self *screen) topRow() int {
+	if self.height == 0 {
+		return 0
+	}
+
+	return max(0, self.lowestRow-self.height+1)
+}
+
+func (self *screen) moveDown(rows int) {
+	self.row += rows
+	self.lowestRow = max(self.lowestRow, self.row)
 }
 
 func visibleScreen(t *testing.T, stream string, columns int) []string {
@@ -10417,7 +11024,7 @@ func (self *screen) play(stream string) {
 			self.column = 0
 			at++
 		case '\n':
-			self.row++
+			self.moveDown(1)
 			self.column = 0
 			at++
 		default:
@@ -10541,15 +11148,21 @@ func (self *screen) apply(command byte, parameters string) {
 	case 'm':
 		self.restyle(parameters)
 	case 'A':
-		self.row = max(0, self.row-count)
+		if self.row-count < self.topRow() {
+			self.wasDrawnAboveTheScreen = true
+		}
+		self.row = max(self.topRow(), self.row-count)
 	case 'B':
 		self.row += count
+		if self.height > 0 {
+			self.row = min(self.row, self.topRow()+self.height-1)
+		}
 	case 'C':
 		self.column += count
 	case 'D':
 		self.column = max(0, self.column-count)
 	case 'H':
-		self.row, self.column = 0, 0
+		self.row, self.column = self.topRow(), 0
 	case 'K':
 		self.eraseInRow(numberOr(parameters, 0))
 	case 'J':
@@ -10597,6 +11210,10 @@ func (self *screen) eraseInRow(mode int) {
 func (self *screen) erase(mode int) {
 	switch mode {
 	case 0:
+		if self.height > 0 && self.row == self.topRow() && self.column == 0 {
+			self.wasScreenErasedWhole = true
+		}
+
 		self.eraseInRow(0)
 
 		if self.row+1 < len(self.rows) {
@@ -10605,11 +11222,40 @@ func (self *screen) erase(mode int) {
 
 		maps.DeleteFunc(self.marks, func(row int, _ bool) bool { return row > self.row })
 	case 2, 3:
+		if self.height > 0 {
+			self.eraseScreenOrScrollback(mode)
+			return
+		}
+
 		self.rows = nil
 		self.marks = nil
 	default:
 		self.t.Fatalf("the screen was asked to erase in a way it does not know: ESC [ %dJ", mode)
 	}
+}
+
+func (self *screen) eraseScreenOrScrollback(mode int) {
+	top := self.topRow()
+
+	if mode == 2 {
+		for at := top; at < len(self.rows); at++ {
+			self.rows[at] = nil
+		}
+		maps.DeleteFunc(self.marks, func(row int, _ bool) bool { return row >= top })
+
+		return
+	}
+
+	self.rows = self.rows[min(top, len(self.rows)):]
+	marks := map[int]bool{}
+	for row := range self.marks {
+		if row >= top {
+			marks[row-top] = true
+		}
+	}
+	self.marks = marks
+	self.row -= top
+	self.lowestRow -= top
 }
 
 func (self *screen) put(grapheme string, cells int) {
@@ -10628,7 +11274,7 @@ func (self *screen) put(grapheme string, cells int) {
 			return
 		}
 
-		self.row++
+		self.moveDown(1)
 		self.column = 0
 	}
 
@@ -10718,6 +11364,18 @@ func isDecoration(token string) bool {
 	number, err := strconv.Atoi(name)
 
 	return err == nil && (number >= 1 && number <= 9 || number == 53)
+}
+
+func (self *screen) onScreen() []string {
+	text := self.text()
+	rows := make([]string, self.height)
+	for i := range rows {
+		if at := self.topRow() + i; at < len(text) {
+			rows[i] = text[at]
+		}
+	}
+
+	return rows
 }
 
 func (self *screen) text() []string {
@@ -14889,8 +15547,21 @@ func requireSameVisibleScreenInColumns(
 ) {
 	t.Helper()
 
-	firstScreen := playScreen(t, firstOutput, columns)
-	secondScreen := playScreen(t, secondOutput, columns)
+	requireSameVisibleScreenOfSize(t, description, columns, 0, firstOutput, secondOutput)
+}
+
+func requireSameVisibleScreenOfSize(
+	t *testing.T,
+	description string,
+	columns int,
+	lines int,
+	firstOutput string,
+	secondOutput string,
+) {
+	t.Helper()
+
+	firstScreen := playScreenOfSize(t, firstOutput, columns, lines)
+	secondScreen := playScreenOfSize(t, secondOutput, columns, lines)
 
 	if first, second := firstScreen.text(), secondScreen.text(); !slices.Equal(first, second) {
 		t.Errorf(
@@ -16352,9 +17023,9 @@ func TestHelpStaysPutOnAShortTerminalDuringARunningTurn(t *testing.T) {
 		t.Fatalf("help drew only %d frame, want repeated running-turn repaints", len(frames))
 	}
 
-	first := visibleScreen(t, frames[0], replayColumns)
+	first := playScreenOfSize(t, frames[0], replayColumns, shortLines).onScreen()
 	for i, frame := range frames[1:] {
-		if got := visibleScreen(t, frame, replayColumns); !slices.Equal(got, first) {
+		if got := playScreenOfSize(t, frame, replayColumns, shortLines).onScreen(); !slices.Equal(got[1:], first[1:]) {
 			t.Errorf("frame %d moved the help feedback:\n%s", i+2, strings.Join(got, "\n"))
 		}
 	}
@@ -16366,6 +17037,9 @@ func shortRunningHelpFrames(t *testing.T) []string {
 	writer := &frameRecordingWriter{}
 	self := slashCommandFixture(t, caps.Read)
 	self.screen = output.NewTerminalOfSize(writer, replayColumns, shortLines)
+	for line := range shortLines {
+		self.screen.Line("earlier line " + strconv.Itoa(line+1))
+	}
 	self.slash.commands = fixtureCommandRegistry(t, slash.Command{
 		Name: "help",
 		Run: func(context slash.Context, _ slash.Arguments) error {
@@ -17512,15 +18186,10 @@ func tallTurn(t *testing.T, screenOutput *bytes.Buffer, lines int) (*App, *edit.
 	return self, inputLine
 }
 
-func frozenTallTurn(t *testing.T, screenOutput *bytes.Buffer) (*App, *edit.Input) {
+func shortTallTurn(t *testing.T, screenOutput *bytes.Buffer) (*App, *edit.Input) {
 	t.Helper()
 
-	self, inputLine := tallTurn(t, screenOutput, shortLines)
-	if !self.screen.WasRepaintRefused() {
-		t.Fatal("the region drew a change above its top row, want the refusal this covers")
-	}
-
-	return self, inputLine
+	return tallTurn(t, screenOutput, shortLines)
 }
 
 const roomyLines = 60
@@ -17528,12 +18197,7 @@ const roomyLines = 60
 func roomyTallTurn(t *testing.T, screenOutput *bytes.Buffer) (*App, *edit.Input) {
 	t.Helper()
 
-	self, inputLine := tallTurn(t, screenOutput, roomyLines)
-	if self.screen.WasRepaintRefused() {
-		t.Fatal("the region refused a repaint it had the room to draw")
-	}
-
-	return self, inputLine
+	return tallTurn(t, screenOutput, roomyLines)
 }
 
 func noticesDrawnBesideAnOpenBlock(self *App) map[string]func() {
@@ -17548,18 +18212,18 @@ func noticesDrawnBesideAnOpenBlock(self *App) map[string]func() {
 	}
 }
 
-func TestEveryHarnessNoticeRepairsARegionFrozenByARefusedRepaint(t *testing.T) {
+func TestEveryHarnessNoticeReachesTheScreenBesideARegionTallerThanTheTerminal(t *testing.T) {
 	for name := range noticesDrawnBesideAnOpenBlock(nil) {
 		t.Run(name, func(t *testing.T) {
 			var screenOutput bytes.Buffer
-			self, inputLine := frozenTallTurn(t, &screenOutput)
+			self, inputLine := shortTallTurn(t, &screenOutput)
 
 			noticesDrawnBesideAnOpenBlock(self)[name]()
 			self.show(inputLine)
+			requireNothingDrawnAboveTheScreen(t, "the notice beside the region", screenOutput.String(), shortLines)
 
-			if self.screen.WasRepaintRefused() {
-				t.Error("the notice left the region frozen rather than redrawing it")
-			}
+			self.currentTurn.painter.Close(dynamic.Cancelled)
+			self.show(inputLine)
 
 			drawn := strings.Join(visibleScreen(t, screenOutput.String(), replayColumns), "\n")
 			if !strings.Contains(drawn, "🤖") {

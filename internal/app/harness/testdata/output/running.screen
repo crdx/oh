@@ -38,15 +38,27 @@ Stream failed
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === help on a short running terminal ===
 --- frame 1 ---
-⋮ 2 more lines
- │   /conf                                                                                        │
+earlier line 1
+earlier line 2
+earlier line 3
+earlier line 4
+earlier line 5
+earlier line 6
+⋮ 3 more lines
  │   /copy                                                                                        │
 ─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ⋮ 1 more line
 --- frame 2 ---
-⋮ 2 more lines
- │   /conf                                                                                        │
+earlier line 1
+earlier line 2
+earlier line 3
+earlier line 4
+earlier line 5
+earlier line 6
+
+answer grows
+⋮ 3 more lines
  │   /copy                                                                                        │
 ─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
@@ -89,22 +101,6 @@ The answer starts here.
  look into it
 
 
-⋮ 15 more lines
- ⏳ queued message 15
- ⏳ queued message 16
- ⏳ queued message 17
- ⏳ queued message 18
- ⏳ queued message 19
- ⏳ queued message 20
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
-
-⋮ 1 more line
---- frame 2 ---
-
- look into it
-
-
 The answer starts here.
 ⋮ 15 more lines
  ⏳ queued message 15
@@ -134,24 +130,7 @@ The answer starts here.
 
  look into it
 
-
 ⋮ 15 more lines
- ⏳ queued message 15
- ⏳ queued message 16
- ⏳ queued message 17
- ⏳ queued message 18
- ⏳ queued message 19
- ⏳ queued message 20
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
-
-⋮ 1 more line
---- frame 2 ---
-
- look into it
-
-⋮ 14 more lines
- ⏳ queued message 14
  ⏳ queued message 15
  ⏳ queued message 16
  ⏳ queued message 17
@@ -189,22 +168,6 @@ The answer starts here.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === queued message as answer starts markdown paced terminal-filling ===
 --- frame 1 ---
-
- look into it
-
-
-⋮ 15 more lines
- ⏳ queued message 15
- ⏳ queued message 16
- ⏳ queued message 17
- ⏳ queued message 18
- ⏳ queued message 19
- ⏳ queued message 20
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
-
-⋮ 1 more line
---- frame 2 ---
 
  look into it
 
@@ -252,22 +215,6 @@ The answer starts here.
  look into it
 
 
-⋮ 15 more lines
- ⏳ queued message 15
- ⏳ queued message 16
- ⏳ queued message 17
- ⏳ queued message 18
- ⏳ queued message 19
- ⏳ queued message 20
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
-
-⋮ 1 more line
---- frame 2 ---
-
- look into it
-
-
 The answer starts here.
 ⋮ 15 more lines
  ⏳ queued message 15
@@ -297,24 +244,7 @@ The answer starts here.
 
  look into it
 
-
 ⋮ 15 more lines
- ⏳ queued message 15
- ⏳ queued message 16
- ⏳ queued message 17
- ⏳ queued message 18
- ⏳ queued message 19
- ⏳ queued message 20
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
-
-⋮ 1 more line
---- frame 2 ---
-
- look into it
-
-⋮ 14 more lines
- ⏳ queued message 14
  ⏳ queued message 15
  ⏳ queued message 16
  ⏳ queued message 17
@@ -352,22 +282,6 @@ The answer starts here.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === queued message as answer starts plain paced terminal-filling ===
 --- frame 1 ---
-
- look into it
-
-
-⋮ 15 more lines
- ⏳ queued message 15
- ⏳ queued message 16
- ⏳ queued message 17
- ⏳ queued message 18
- ⏳ queued message 19
- ⏳ queued message 20
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
-
-⋮ 1 more line
---- frame 2 ---
 
  look into it
 

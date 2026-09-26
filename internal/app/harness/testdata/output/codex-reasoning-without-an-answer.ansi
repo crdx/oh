@@ -2,20 +2,20 @@
 \e[48;2;52;53;65m reason and then stop                                                                               \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mWeighing what to do next.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mWeighing what to do next.\e[0m\e[0m\r
 \r
 \e[38;2;207;173;0mModel returned no reply.\e[0m\r
 \r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 No reply was returned; continue from where you stopped.                                         \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 No reply was returned; continue from where you stopped.                                         \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
-\r\e[K\e[3m\e[38;2;150;152;150mStill weighing it.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mStill weighing it.\e[0m\e[0m\r
 \r
 \e[38;2;207;173;0mModel returned no reply.\e[0m\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m say something this time                                                                            \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\r\e[KCarrying on.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KCarrying on.\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\r

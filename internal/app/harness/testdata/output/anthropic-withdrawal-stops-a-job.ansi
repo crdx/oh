@@ -1,16 +1,16 @@
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Workspace is now read-only.                                                                     \e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mweb\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                       \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Workspace is now read-only.                                                                     \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mweb\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                       \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m is the preview still up                                                                            \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\r\e[KNo. It was stopped when the workspace was made read-only.\e[?25h\e[?2026l\r
+No. It was stopped when the workspace was made read-only.\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m start it again                                                                                     \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\r\e[KThe workspace is read-only, so it cannot run yet.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KThe workspace is read-only, so it cannot run yet.\r\e[49C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[49C\e[?25h\e[?2026l\r

@@ -3,6 +3,8 @@ package output
 import (
 	"os"
 	"path/filepath"
+	"slices"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -29,7 +31,7 @@ func TestOnlyTheAnswerIsLinked(t *testing.T) {
 
 	screen, screenOutput := region()
 	screen.LinkPathsUnder(link.Roots{Workspace: workspace})
-	screen.drawRow(style.Subtle("cmd/oh/") + style.Subject("draw.go"))
+	screen.OpenTool(textBlock{text: style.Subtle("cmd/oh/") + style.Subject("draw.go")})
 	screen.DrawAnswer([]string{"see cmd/oh/draw.go"})
 
 	if count := strings.Count(screenOutput.String(), "\x1b]8;;file://"); count != 1 {
@@ -95,7 +97,7 @@ func TestARowAddedBelowTheRestOpensARowOfItsOwn(t *testing.T) {
 
 	screen.DrawAnswer([]string{"one", "two", "three"})
 
-	if want := "\r\n\r" + clearRow + "three"; !strings.Contains(screenOutput.String(), want) {
+	if want := "\r\n" + eraseRow + "three"; !strings.Contains(screenOutput.String(), want) {
 		t.Errorf("expected the new row on a row of its own, got %q", screenOutput.String())
 	}
 }
@@ -114,8 +116,8 @@ func TestARowRewrittenHigherUpIsReachedByMovingBackToIt(t *testing.T) {
 		t.Errorf("expected the cursor to move back a row, got %q", got)
 	}
 
-	if !strings.Contains(got, "TWO") || !strings.Contains(got, "three") {
-		t.Errorf("expected the row and everything under it to be drawn again, got %q", got)
+	if !strings.Contains(got, "TWO") || strings.Contains(got, "three") {
+		t.Errorf("expected only the row that changed to be drawn again, got %q", got)
 	}
 }
 
@@ -130,8 +132,8 @@ func TestADifferenceAboveTheScreenIsReportedRatherThanRepaired(t *testing.T) {
 		t.Fatal("expected the first drawing to be made")
 	}
 
-	if screen.liveRegion.topRowIndex != len(rows)-4 {
-		t.Fatalf("expected %d rows to have scrolled off, got %d", len(rows)-4, screen.liveRegion.topRowIndex)
+	if len(screen.live.committedRows) != len(rows)-4 {
+		t.Fatalf("expected %d rows committed to scrollback, got %q", len(rows)-4, screen.live.committedRows)
 	}
 
 	if screen.DrawAnswer([]string{"ONE", "two", "three", "four", "five", "six"}) {
@@ -149,14 +151,14 @@ func TestWritingOutsideTheRegionEndsIt(t *testing.T) {
 	screen.DrawAnswer([]string{"one", "two"})
 	screen.Line("a line")
 
-	if screen.liveRegion.rows != nil {
-		t.Errorf("expected the region to be forgotten, got %q", screen.liveRegion.rows)
+	if screen.live.rows != nil {
+		t.Errorf("expected the region to be forgotten, got %q", screen.live.rows)
 	}
 
 	screen.DrawAnswer([]string{"three"})
 
-	if len(screen.liveRegion.rows) != 1 {
-		t.Errorf("expected a region of its own, got %q", screen.liveRegion.rows)
+	if len(screen.live.rows) != 1 {
+		t.Errorf("expected a region of its own, got %q", screen.live.rows)
 	}
 }
 
@@ -189,8 +191,8 @@ func TestAFrameThatShrinksKeepsItsPaintedHeightUntilItIsSealed(t *testing.T) {
 		t.Fatal("expected a shorter set of rows to be repaired")
 	}
 
-	if len(screen.liveRegion.rows) != 3 || screen.liveRegion.rows[2] != "" || screen.liveRegion.currentContentRowCount != 2 {
-		t.Fatalf("expected two content rows held at three painted rows, got %q", screen.liveRegion.rows)
+	if len(screen.canvas.rows) != 3 || screen.canvas.rows[2] != "" || len(screen.live.rows) != 2 {
+		t.Fatalf("expected two content rows held at three painted rows, got %q", screen.canvas.rows)
 	}
 	if got := screenOutput.String(); strings.Contains(got, moveUp(1)) {
 		t.Errorf("expected the cursor not to move up while streaming, got %q", got)
@@ -200,8 +202,8 @@ func TestAFrameThatShrinksKeepsItsPaintedHeightUntilItIsSealed(t *testing.T) {
 	screen.End()
 
 	got := screenOutput.String()
-	if !strings.Contains(got, clearBelow) || !strings.Contains(got, "two") {
-		t.Errorf("expected sealing to repaint the new last row and clear below it, got %q", got)
+	if !strings.Contains(got, eraseRow) || strings.Contains(got, "three") {
+		t.Errorf("expected sealing to clear below the new last row, got %q", got)
 	}
 }
 
@@ -215,8 +217,8 @@ func TestRowsThatScrolledOffDoNotReturnWhenTheRegionShrinks(t *testing.T) {
 	if !screen.DrawAnswer([]string{"one", "two", "three", "four", "five"}) {
 		t.Fatal("expected the visible end of the region to be shortened")
 	}
-	if screen.liveRegion.topRowIndex != 2 {
-		t.Fatalf("expected the first two rows to remain offscreen, got top row %d", screen.liveRegion.topRowIndex)
+	if len(screen.live.committedRows) != 2 {
+		t.Fatalf("expected the first two rows to remain committed, got %q", screen.live.committedRows)
 	}
 	if screen.DrawAnswer([]string{"one", "TWO", "three", "four", "five"}) {
 		t.Error("expected a change to a row that remains offscreen to require a replay")
@@ -237,7 +239,7 @@ func TestAFrameWithNoRowsErasesWhatWasDrawn(t *testing.T) {
 		t.Fatal("expected an empty frame to be repaired")
 	}
 
-	if !strings.Contains(screenOutput.String(), clearRow) {
+	if !strings.Contains(screenOutput.String(), eraseRow) {
 		t.Errorf("expected the old row to be cleared, got %q", screenOutput.String())
 	}
 }
@@ -265,19 +267,23 @@ func TestDiscardingLiveReasoningLeavesTheDrawingWhereItWas(t *testing.T) {
 	screen.End()
 	screen.Footer([]string{"> "}, 0, 2)
 
-	before := screen.drawingState()
+	before := screen.sealedState()
+	beforeFrame := screen.canvas.rows
 
 	screen.DrawReasoning([]string{"half a thought", "and the rest of it"})
 	if !screen.DiscardLive() {
 		t.Fatal("expected the reasoning erased in place rather than left for a replay")
 	}
 
-	if after := screen.drawingState(); after != before {
+	if after := screen.sealedState(); after != before {
 		t.Errorf("discarded reasoning left the drawing at %+v, want %+v", after, before)
+	}
+	if !slices.Equal(screen.canvas.rows, beforeFrame) {
+		t.Errorf("discarded reasoning left %q painted, want %q", screen.canvas.rows, beforeFrame)
 	}
 }
 
-func TestAnAnswerAfterReasoningIsLinkedAsItIsPaintedButNotAsARegion(t *testing.T) {
+func TestAnAnswerDrawnOverReasoningIsNotLinkedAsAnAnswer(t *testing.T) {
 	workspace := t.TempDir()
 	if err := os.WriteFile(filepath.Join(workspace, "one.go"), nil, 0o600); err != nil {
 		t.Fatalf("prepare file: %v", err)
@@ -289,7 +295,70 @@ func TestAnAnswerAfterReasoningIsLinkedAsItIsPaintedButNotAsARegion(t *testing.T
 	screen.DrawAnswer([]string{"looking at one.go", "the answer names one.go"})
 	screen.Seal()
 
-	if count := strings.Count(screenOutput.String(), "\x1b]8;;file://"); count != 1 {
-		t.Errorf("expected the painted answer row linked once, got %d links in %q", count, screenOutput)
+	if count := strings.Count(screenOutput.String(), "\x1b]8;;file://"); count != 0 {
+		t.Errorf("expected a region spanning reasoning and answer left unlinked, got %d links in %q", count, screenOutput)
+	}
+}
+
+func TestAnAnswerTallerThanItsRoomCommitsItsTopOnce(t *testing.T) {
+	screenOutput := &strings.Builder{}
+	screen := &Screen{writer: screenOutput, isTerminal: true, canRepaint: true, columns: 40, lines: 6}
+	screen.Footer([]string{"─", "> ", "─"}, 1, 2)
+
+	var rows []string
+	for i := range 10 {
+		rows = append(rows, "row "+strconv.Itoa(i))
+		if !screen.DrawAnswer(slices.Clone(rows)) {
+			t.Fatalf("an answer growing by row %d was refused", i)
+		}
+		if got := len(screen.canvas.rows); got > screen.lines {
+			t.Fatalf("painted %d rows on a terminal of %d", got, screen.lines)
+		}
+	}
+
+	if !slices.Contains(screen.live.committedRows, "row 0") {
+		t.Errorf("committed %q, want the top of the answer in scrollback", screen.live.committedRows)
+	}
+
+	screen.Seal()
+
+	for _, row := range rows {
+		if count := strings.Count(screenOutput.String(), eraseRow+row); count != 1 {
+			t.Errorf("%q was written %d times, want it written once", row, count)
+		}
+	}
+}
+
+func TestTheFrameNeverOutgrowsTheTerminal(t *testing.T) {
+	for _, lines := range []int{1, 2, 3, 6, 12} {
+		screen := &Screen{writer: &strings.Builder{}, isTerminal: true, canRepaint: true, columns: 40, lines: lines}
+		screen.Line("said before")
+
+		block := &rowsBlock{}
+		for i := range 20 {
+			block.rows = append(block.rows, "call "+strconv.Itoa(i))
+		}
+		screen.OpenTool(block)
+		screen.InertFooter(footerRows(30), 29, 0)
+
+		if got := len(screen.canvas.rows); got > lines {
+			t.Errorf("height %d painted %d rows", lines, got)
+		}
+	}
+}
+
+func TestAWindowedRegionEndsOnARowThatSaysSomething(t *testing.T) {
+	screen := &Screen{writer: &strings.Builder{}, isTerminal: true, canRepaint: true, columns: 40, lines: 6}
+
+	block := &rowsBlock{}
+	for i := range 10 {
+		block.rows = append(block.rows, "call "+strconv.Itoa(i))
+	}
+	block.rows = append(block.rows, "", " notice", " last word", style.Reasoning.Over("   "), "")
+	screen.OpenTool(block)
+	screen.Footer([]string{"─", "> ", "─"}, 1, 2)
+
+	if got := screen.canvas.rows[:2]; !strings.Contains(got[0], "more lines") || got[1] != " last word" {
+		t.Errorf("windowed to %q, want the hidden-rows notice over the last row with something in it", got)
 	}
 }

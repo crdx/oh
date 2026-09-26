@@ -3,19 +3,19 @@
 \e[48;2;52;53;65m expose the preview and read the notes  \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mexposing the preview.\e[0m\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
-\r\e[K\r
-\r\e[K\e[48;2;48;58;67m                                        \e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at        \e[0m\r
-\r\e[K\e[48;2;48;58;67m    http://127.27.192.223:8080.         \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                        \e[0m\r
+\e[3m\e[38;2;150;152;150mLooking at the notes first, then\e[0m\r
+\e[3m\e[38;2;150;152;150mexposing the preview.\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
 \r
-\r\e[KThe preview is up, and the notes hold\r
-\r\e[Kone line.\r
+\e[48;2;48;58;67m                                        \e[0m\r
+\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at        \e[0m\r
+\e[48;2;48;58;67m    http://127.27.192.223:8080.         \e[0m\r
+\e[48;2;48;58;67m                                        \e[0m\r
+\r
+The preview is up, and the notes hold\r
+one line.\r
 \e[?25h\e[?2026l
 === one column ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
@@ -83,201 +83,201 @@
 \e[48;2;52;53;65ms\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mL\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mk\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mg\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mh\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mf\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150m,\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mh\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mx\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mp\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mg\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mh\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mp\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mv\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mw\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150m.\e[0m\e[0m\r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m🤖\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67mS\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67ma\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67mn\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67md\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67mb\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67mo\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67mx\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67mp\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67mo\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67mr\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67mt\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m8\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m0\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m8\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m0\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67me\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67mx\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67mp\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67mo\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67ms\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67me\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67md\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67ma\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67mt\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67mh\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67mt\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67mt\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67mp\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m:\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m/\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m/\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m1\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m2\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m7\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m.\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m2\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m7\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m.\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m1\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m9\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m2\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m.\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m2\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m2\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m3\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m:\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m8\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m0\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m8\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m0\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m.\e[0m\r
-\r\e[K\e[48;2;48;58;67m \e[0m\r
+\e[3m\e[38;2;150;152;150mL\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mk\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mg\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150mf\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150m,\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mx\e[0m\r
+\e[3m\e[38;2;150;152;150mp\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mg\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mp\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mv\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mw\e[0m\r
+\e[3m\e[38;2;150;152;150m.\e[0m\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
 \r
-\r\e[KT\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kp\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kv\r
-\r\e[Ki\r
-\r\e[Ke\r
-\r\e[Kw\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[Ku\r
-\r\e[Kp\r
-\r\e[K,\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kn\r
-\r\e[Ko\r
-\r\e[Kt\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Kh\r
-\r\e[Ko\r
-\r\e[Kl\r
-\r\e[Kd\r
-\r\e[Ko\r
-\r\e[Kn\r
-\r\e[Ke\r
-\r\e[Kl\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Ke\r
-\r\e[K.\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m🤖\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mS\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ma\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mb\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mx\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mp\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mr\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m8\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m0\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m8\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m0\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mx\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mp\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ma\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mh\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mp\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m:\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m/\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m/\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m1\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m2\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m7\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m.\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m2\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m7\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m.\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m1\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m9\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m2\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m.\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m2\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m2\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m3\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m:\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m8\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m0\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m8\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m0\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m.\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\r
+T\r
+h\r
+e\r
+p\r
+r\r
+e\r
+v\r
+i\r
+e\r
+w\r
+i\r
+s\r
+u\r
+p\r
+,\r
+a\r
+n\r
+d\r
+t\r
+h\r
+e\r
+n\r
+o\r
+t\r
+e\r
+s\r
+h\r
+o\r
+l\r
+d\r
+o\r
+n\r
+e\r
+l\r
+i\r
+n\r
+e\r
+.\r
 \e[?25h\e[?2026l
 === plain ===
 \e[48;2;52;53;65m\e[0m
@@ -313,64 +313,49 @@ The preview is up, and the notes hold one line.\r
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m expose the preview and read the notes                                                              \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mLook\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at t\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the n\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes fir\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first,\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exp\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposin\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing th\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing the pr\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing the previe\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing the preview.\e[0m\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kls\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[Kls\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K\e[3m\e[38;2;150;152;150mLook\e[0m\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking\e[0m\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at t\e[0m\e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the n\e[0m\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes\e[0m\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes fir\e[0m\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first,\e[0m\e[0m\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then\e[0m\e[0m\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exp\e[0m\e[0m\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposin\e[0m\e[0m\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing th\e[0m\e[0m\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing the pr\e[0m\e[0m\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing the previe\e[0m\e[0m\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing the preview.\e[0m\e[0m\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kls\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[1B\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[K\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.                                        \e[0m\r
+\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\e[4B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.                                        \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
-\r\e[K\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.                                        \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prev\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is u\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the n\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the notes\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the notes hol\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the notes hold on\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the notes hold one li\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the notes hold one line.\e[?25h\e[?2026l\r
+\e[KThe\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prev\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is u\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, a\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and t\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the n\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the notes\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the notes hol\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the notes hold on\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the notes hold one li\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the notes hold one line.\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[47C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m expose the preview and read the notes                                                              \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing the preview.\e[0m\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kls\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[Kls\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing the preview.\e[0m\e[0m\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kls\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[1B\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[K\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.                                        \e[0m\r
+\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\e[4B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.                                        \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
-\r\e[K\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.                                        \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe preview is up, and the notes hold one line.\e[?25h\e[?2026l\r
+\e[KThe preview is up, and the notes hold one line.\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[47C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m expose the preview and read the notes                                                              \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mLook\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at t\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the n\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes fir\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first,\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exp\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposin\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing th\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing the pr\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing the previe\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing the preview.\e[0m\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kls\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[Kls\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K\e[3m\e[38;2;150;152;150mLook\e[0m\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking\e[0m\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at t\e[0m\e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the n\e[0m\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes\e[0m\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes fir\e[0m\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first,\e[0m\e[0m\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then\e[0m\e[0m\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exp\e[0m\e[0m\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposin\e[0m\e[0m\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing th\e[0m\e[0m\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing the pr\e[0m\e[0m\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing the previe\e[0m\e[0m\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing the preview.\e[0m\e[0m\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kls\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[1B\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[K\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.                                        \e[0m\r
+\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\e[4B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.                                        \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
-\r\e[K\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.                                        \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prev\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is u\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the n\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the notes\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the notes hol\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the notes hold on\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the notes hold one li\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the notes hold one line.\e[?25h\e[?2026l\r
+\e[KThe\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prev\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is u\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, a\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and t\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the n\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the notes\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the notes hol\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the notes hold on\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the notes hold one li\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe preview is up, and the notes hold one line.\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[47C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
@@ -380,61 +365,60 @@ The preview is up, and the notes hold one line.\r
 \e[48;2;52;53;65m notes      \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mLooking at\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mthe notes\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mfirst, then\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mexposing the\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mpreview.\e[0m\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mt…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mR…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
-\r\e[K\r
-\r\e[K\e[48;2;48;58;67m            \e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Sandbox \e[0m\r
-\r\e[K\e[48;2;48;58;67m    port    \e[0m\r
-\r\e[K\e[48;2;48;58;67m    8080    \e[0m\r
-\r\e[K\e[48;2;48;58;67m    exposed \e[0m\r
-\r\e[K\e[48;2;48;58;67m    at      \e[0m\r
-\r\e[K\e[48;2;48;58;67m    http://1\e[0m\r
-\r\e[K\e[48;2;48;58;67m    27.27.19\e[0m\r
-\r\e[K\e[48;2;48;58;67m    2.223:80\e[0m\r
-\r\e[K\e[48;2;48;58;67m    80.     \e[0m\r
-\r\e[K\e[48;2;48;58;67m            \e[0m\r
+\e[3m\e[38;2;150;152;150mLooking at\e[0m\r
+\e[3m\e[38;2;150;152;150mthe notes\e[0m\r
+\e[3m\e[38;2;150;152;150mfirst, then\e[0m\r
+\e[3m\e[38;2;150;152;150mexposing the\e[0m\r
+\e[3m\e[38;2;150;152;150mpreview.\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mt…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mR…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
 \r
-\r\e[KThe preview\r
-\r\e[Kis up, and\r
-\r\e[Kthe notes\r
-\r\e[Khold one\r
-\r\e[Kline.\r
+\e[48;2;48;58;67m            \e[0m\r
+\e[48;2;48;58;67m 🤖 Sandbox \e[0m\r
+\e[48;2;48;58;67m    port    \e[0m\r
+\e[48;2;48;58;67m    8080    \e[0m\r
+\e[48;2;48;58;67m    exposed \e[0m\r
+\e[48;2;48;58;67m    at      \e[0m\r
+\e[48;2;48;58;67m    http://1\e[0m\r
+\e[48;2;48;58;67m    27.27.19\e[0m\r
+\e[48;2;48;58;67m    2.223:80\e[0m\r
+\e[48;2;48;58;67m    80.     \e[0m\r
+\e[48;2;48;58;67m            \e[0m\r
+\r
+The preview\r
+is up, and\r
+the notes\r
+hold one\r
+line.\r
 \e[?25h\e[?2026l
 === unsized ===
-\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m
-\e[48;2;52;53;65m expose the preview and read the notes\e[0m
-\e[48;2;52;53;65m\e[0m
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing the preview.\e[0m\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
-\r\e[K\r
-\r\e[K\e[48;2;48;58;67m\e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.\e[0m\r
-\r\e[K\e[48;2;48;58;67m\e[0m
-
-\r\e[KThe preview is up, and the notes hold one line.
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m expose the preview and read the notes\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing the preview.\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
+\r
+\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.\e[0m\r
+\e[48;2;48;58;67m\e[0m\r
+The preview is up, and the notes hold one line.\r
 \e[?25h\e[?2026l
 === wide ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m expose the preview and read the notes                                                              \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing the preview.\e[0m\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
-\r\e[K\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.                                        \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[3m\e[38;2;150;152;150mLooking at the notes first, then exposing the preview.\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
 \r
-\r\e[KThe preview is up, and the notes hold one line.\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.                                        \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\r
+The preview is up, and the notes hold one line.\r
 \e[?25h\e[?2026l

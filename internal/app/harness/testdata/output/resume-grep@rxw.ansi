@@ -7,13 +7,13 @@
 \e[48;2;52;53;65m have a look at that                    \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e[?7l\r\e[KSearching the target before the process\r
-\r\e[Krestarts.\r
+Searching the target before the process\r
+restarts.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone\e[0m \e[38;2;150;152;150m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone\e[0m \e[38;2;150;152;150m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
-\r\e[KThe matching target is now safely\r
-\r\e[Krecorded.\r
+The matching target is now safely\r
+recorded.\r
 \e[?25h\e[?2026l
 === one column ===
 \e[?2026h\e[?25l\e[38;2;150;152;150mA\e[0m\r
@@ -123,89 +123,89 @@
 \e[48;2;52;53;65mt\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\e[?7l\r\e[KS\r
-\r\e[Ke\r
-\r\e[Ka\r
-\r\e[Kr\r
-\r\e[Kc\r
-\r\e[Kh\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kt\r
-\r\e[Ka\r
-\r\e[Kr\r
-\r\e[Kg\r
-\r\e[Ke\r
-\r\e[Kt\r
-\r\e[Kb\r
-\r\e[Ke\r
-\r\e[Kf\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kp\r
-\r\e[Kr\r
-\r\e[Ko\r
-\r\e[Kc\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Ks\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Kt\r
-\r\e[Ka\r
-\r\e[Kr\r
-\r\e[Kt\r
-\r\e[Ks\r
-\r\e[K.\r
+S\r
+e\r
+a\r
+r\r
+c\r
+h\r
+i\r
+n\r
+g\r
+t\r
+h\r
+e\r
+t\r
+a\r
+r\r
+g\r
+e\r
+t\r
+b\r
+e\r
+f\r
+o\r
+r\r
+e\r
+t\r
+h\r
+e\r
+p\r
+r\r
+o\r
+c\r
+e\r
+s\r
+s\r
+r\r
+e\r
+s\r
+t\r
+a\r
+r\r
+t\r
+s\r
+.\r
 \r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
 \r
-\r\e[KT\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Km\r
-\r\e[Ka\r
-\r\e[Kt\r
-\r\e[Kc\r
-\r\e[Kh\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[Kt\r
-\r\e[Ka\r
-\r\e[Kr\r
-\r\e[Kg\r
-\r\e[Ke\r
-\r\e[Kt\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[Kn\r
-\r\e[Ko\r
-\r\e[Kw\r
-\r\e[Ks\r
-\r\e[Ka\r
-\r\e[Kf\r
-\r\e[Ke\r
-\r\e[Kl\r
-\r\e[Ky\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kc\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Kd\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[K.\r
+T\r
+h\r
+e\r
+m\r
+a\r
+t\r
+c\r
+h\r
+i\r
+n\r
+g\r
+t\r
+a\r
+r\r
+g\r
+e\r
+t\r
+i\r
+s\r
+n\r
+o\r
+w\r
+s\r
+a\r
+f\r
+e\r
+l\r
+y\r
+r\r
+e\r
+c\r
+o\r
+r\r
+d\r
+e\r
+d\r
+.\r
 \e[?25h\e[?2026l
 === plain ===
 \e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m
@@ -238,12 +238,12 @@ The matching target is now safely recorded.\r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KSear\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearchin\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching th\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the ta\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target bef\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the proc\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the process\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the process rest\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the process restarts\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the process restarts.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kgrep \e[38;2;150;152;150mone\e[0m \e[38;2;150;152;150m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone\e[0m \e[38;2;150;152;150m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matc\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching tar\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is n\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is now s\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is now safel\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is now safely re\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is now safely record\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is now safely recorded.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KSear\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearchin\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching th\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the ta\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target bef\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the proc\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the process\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the process rest\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the process restarts\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the process restarts.\r\e[49C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[49C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kgrep \e[38;2;150;152;150mone\e[0m \e[38;2;150;152;150m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone\e[0m \e[38;2;150;152;150m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KThe\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matc\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching tar\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is n\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is now s\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is now safel\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is now safely re\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is now safely record\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is now safely recorded.\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[43C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
@@ -251,12 +251,12 @@ The matching target is now safely recorded.\r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KSearching the target before the process restarts.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kgrep \e[38;2;150;152;150mone\e[0m \e[38;2;150;152;150m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone\e[0m \e[38;2;150;152;150m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe matching target is now safely recorded.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KSearching the target before the process restarts.\r\e[49C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[49C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kgrep \e[38;2;150;152;150mone\e[0m \e[38;2;150;152;150m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone\e[0m \e[38;2;150;152;150m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KThe matching target is now safely recorded.\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[43C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
@@ -264,12 +264,12 @@ The matching target is now safely recorded.\r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KSear\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearchin\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching th\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the ta\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target bef\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the proc\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the process\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the process rest\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the process restarts\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the process restarts.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kgrep \e[38;2;150;152;150mone\e[0m \e[38;2;150;152;150m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone\e[0m \e[38;2;150;152;150m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matc\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching tar\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is n\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is now s\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is now safel\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is now safely re\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is now safely record\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is now safely recorded.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KSear\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearchin\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching th\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the ta\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target bef\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the proc\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the process\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the process rest\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the process restarts\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KSearching the target before the process restarts.\r\e[49C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[49C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kgrep \e[38;2;150;152;150mone\e[0m \e[38;2;150;152;150m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone\e[0m \e[38;2;150;152;150m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KThe\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matc\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching tar\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is n\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is now s\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is now safel\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is now safely re\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is now safely record\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe matching target is now safely recorded.\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[43C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m\e[0m\r
@@ -287,30 +287,30 @@ The matching target is now safely recorded.\r
 \e[48;2;52;53;65m at that    \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e[?7l\r\e[KSearching\r
-\r\e[Kthe target\r
-\r\e[Kbefore the\r
-\r\e[Kprocess\r
-\r\e[Krestarts.\r
+Searching\r
+the target\r
+before the\r
+process\r
+restarts.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mo\e[0m\e[38;2;150;152;150m…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mo\e[0m\e[38;2;150;152;150m…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
-\r\e[KThe matching\r
-\r\e[Ktarget is\r
-\r\e[Know safely\r
-\r\e[Krecorded.\r
+The matching\r
+target is\r
+now safely\r
+recorded.\r
 \e[?25h\e[?2026l
 === unsized ===
-\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m
-
-\e]133;A\e\\\e[48;2;52;53;65m\e[0m
-\e[48;2;52;53;65m have a look at that\e[0m
-\e[48;2;52;53;65m\e[0m
-\e[?7l\r\e[KSearching the target before the process restarts.
-
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone\e[0m \e[38;2;150;152;150m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
-
-\r\e[KThe matching target is now safely recorded.
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m have a look at that\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+Searching the target before the process restarts.\r
+\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone\e[0m \e[38;2;150;152;150m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\r
+The matching target is now safely recorded.\r
 \e[?25h\e[?2026l
 === wide ===
 \e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
@@ -319,9 +319,9 @@ The matching target is now safely recorded.\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[KSearching the target before the process restarts.\r
+Searching the target before the process restarts.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone\e[0m \e[38;2;150;152;150m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone\e[0m \e[38;2;150;152;150m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
-\r\e[KThe matching target is now safely recorded.\r
+The matching target is now safely recorded.\r
 \e[?25h\e[?2026l

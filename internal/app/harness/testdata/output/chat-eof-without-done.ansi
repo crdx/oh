@@ -2,84 +2,84 @@
 \e[48;2;52;53;65m close without the done sentinel                                                                    \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[KPartial answer.\r
+Partial answer.\r
 \r
 \e[38;2;207;173;0m[#1] Request failed; retrying in 1s: The stream ended before the response did\e[0m\r
 \r
-\r\e[KPartial answer.\r
+Partial answer.\r
 \r
 \e[38;2;207;173;0m[#2] Request failed; retrying in 5s: The stream ended before the response did\e[0m\r
 \r
-\r\e[KPartial answer.\r
+Partial answer.\r
 \r
 \e[38;2;207;173;0m[#3] Request failed; retrying in 10s: The stream ended before the response did\e[0m\r
 \r
-\r\e[KPartial answer.\r
+Partial answer.\r
 \r
 \e[38;2;207;173;0m[#4] Request failed; retrying in 30s: The stream ended before the response did\e[0m\r
 \r
-\r\e[KPartial answer.\r
+Partial answer.\r
 \r
 \e[38;2;207;173;0m[#5] Request failed; retrying in 1m: The stream ended before the response did\e[0m\r
 \r
-\r\e[KPartial answer.\r
+Partial answer.\r
 \r
 \e[38;2;207;173;0m[#6] Request failed; retrying in 1m: The stream ended before the response did\e[0m\r
 \r
-\r\e[KPartial answer.\r
+Partial answer.\r
 \r
 \e[38;2;207;173;0m[#7] Request failed; retrying in 1m: The stream ended before the response did\e[0m\r
 \r
-\r\e[KPartial answer.\r
+Partial answer.\r
 \r
 \e[38;2;207;173;0m[#8] Request failed; retrying in 1m: The stream ended before the response did\e[0m\r
 \r
-\r\e[KPartial answer.\r
+Partial answer.\r
 \r
 \e[38;2;207;173;0m[#9] Request failed; retrying in 1m: The stream ended before the response did\e[0m\r
 \r
-\r\e[KPartial answer.\r
+Partial answer.\r
 \r
 \e[38;2;207;173;0m[#10] Request failed; retrying in 1m: The stream ended before the response did\e[0m\r
 \r
-\r\e[KPartial answer.\r
+Partial answer.\r
 \r
 \e[38;2;207;173;0m[#11] Request failed; retrying in 1m: The stream ended before the response did\e[0m\r
 \r
-\r\e[KPartial answer.\r
+Partial answer.\r
 \r
 \e[38;2;207;173;0m[#12] Request failed; retrying in 1m: The stream ended before the response did\e[0m\r
 \r
-\r\e[KPartial answer.\r
+Partial answer.\r
 \r
 \e[38;2;207;173;0m[#13] Request failed; retrying in 1m: The stream ended before the response did\e[0m\r
 \r
-\r\e[KPartial answer.\r
+Partial answer.\r
 \r
 \e[38;2;207;173;0m[#14] Request failed; retrying in 1m: The stream ended before the response did\e[0m\r
 \r
-\r\e[KPartial answer.\r
+Partial answer.\r
 \r
 \e[38;2;207;173;0m[#15] Request failed; retrying in 1m: The stream ended before the response did\e[0m\r
 \r
-\r\e[KPartial answer.\r
+Partial answer.\r
 \r
 \e[38;2;207;173;0m[#16] Request failed; retrying in 1m: The stream ended before the response did\e[0m\r
 \r
-\r\e[KPartial answer.\r
+Partial answer.\r
 \r
 \e[38;2;207;173;0m[#17] Request failed; retrying in 1m: The stream ended before the response did\e[0m\r
 \r
-\r\e[KPartial answer.\r
+Partial answer.\r
 \r
 \e[38;2;207;173;0m[#18] Request failed; retrying in 1m: The stream ended before the response did\e[0m\r
 \r
-\r\e[KPartial answer.\r
+Partial answer.\r
 \r
 \e[38;2;204;102;102mThe stream ended before the response did\e[0m\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m continue after the first response                                                                  \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\r\e[KResumed.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KResumed.\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[8C\e[?25h\e[?2026l\r

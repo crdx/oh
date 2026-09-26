@@ -1,5 +1,5 @@
 === editing cursor lifecycle ===
-\e[5 q\e[?2026h\e[?25l\e[?7l\r> ask something else\r\e[20C\e[?25h\e[?2026l\r\e[J\e[?7h\e[?25h\e[0 q
+\e[5 q\e[?2026h\e[?25l\e[?7l\r\e[K> ask something else\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\r\e[?7h\e[?25h\e[0 q
 === progress refreshed mid-turn ===
 \e]9;4;3\e\\\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
 \r
@@ -7,22 +7,22 @@
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r
 \r
-\r\e[KI'll have a look at how the editor draws its prompt.\r
+I'll have a look at how the editor draws its prompt.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r
 \r
-\r\e[KFound it. Reading the renderer now.\r
+Found it. Reading the renderer now.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
 \r
-\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r
-\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
-\r\e[Klayer instead.\r
-\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-> ask something else\r\e[20C\e[?25h\e[?2026l\e]9;4;3\e\\
+The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r
+the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
+layer instead.\r
+\e[?25h\e[?2026l\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K> ask something else\r\e[20C\e[?25h\e[?2026l\e]9;4;3\e\\
 === progress refreshed mid-turn on a pipe ===
 \e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m
 
@@ -49,22 +49,22 @@ The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer ag
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r
 \r
-\r\e[KI'll have a look at how the editor draws its prompt.\r
+I'll have a look at how the editor draws its prompt.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r
 \r
-\r\e[KFound it. Reading the renderer now.\r
+Found it. Reading the renderer now.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
 \r
-\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r
-\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
-\r\e[Klayer instead.\r
-\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-> ask something else\r\e[20C\e[?25h\e[?2026l\e]9;4;0\e\\\r\e[J\e[1A\e[?7h\e[?25h
+The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r
+the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
+layer instead.\r
+\e[?25h\e[?2026l\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K> ask something else\r\e[20C\e[?25h\e[?2026l\e]9;4;0\e\\\e[?2026h\e[?25l\e[1A\r\e[K\e[1B\r\e[K\e[1A\r\e[?25h\e[?2026l\r\e[?7h\e[?25h
 === released and kept on a pipe ===
 \e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m
 
@@ -91,22 +91,42 @@ The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer ag
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r
 \r
-\r\e[KI'll have a look at how the editor draws its prompt.\r
+I'll have a look at how the editor draws its prompt.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r
 \r
-\r\e[KFound it. Reading the renderer now.\r
+Found it. Reading the renderer now.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
 \r
-\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r
-\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
-\r\e[Klayer instead.\r
-\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-> ask something else\r\e[20C\e[?25h\e[?2026l\e]9;4;0\e\\\r\e[J\e[1A\r\e[18A\e[J\e[?7h\e[?25h
+The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r
+the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
+layer instead.\r
+\e[?25h\e[?2026l\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K> ask something else\r\e[20C\e[?25h\e[?2026l\e]9;4;0\e\\\e[?2026h\e[?25l\e[1A\r\e[K\e[1B\r\e[K\e[1A\r\e[?25h\e[?2026l\r\e[20A\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[20A\e[?7h\e[?25h
 === released and unused on a pipe ===
 \e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m
 
@@ -133,63 +153,63 @@ The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer ag
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r
 \r
-\r\e[KI'll have a look at how the editor draws its prompt.\r
+I'll have a look at how the editor draws its prompt.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r
 \r
-\r\e[KFound it. Reading the renderer now.\r
+Found it. Reading the renderer now.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
 \r
-\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r
-\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
-\r\e[Klayer instead.\r
+The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r
+the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
+layer instead.\r
 \e[?25h\e[?2026l\e[?2026h\e[?25l\e[H\e[2J\e[3J\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r
 \r
-\r\e[KI'll have a look at how the editor draws its prompt.\r
+I'll have a look at how the editor draws its prompt.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r
 \r
-\r\e[KFound it. Reading the renderer now.\r
+Found it. Reading the renderer now.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
 \r
-\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r
-\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
-\r\e[Klayer instead.\r
+The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r
+the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
+layer instead.\r
 \e[?25h\e[?2026l
 === resized mid-turn ===
-\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
-\r
-\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
-\e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
-\e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r
-\r
-\r\e[KI'll have a look at how the editor draws its prompt.\r
-\r
-\r\e[Kgrep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[H\e[2J\e[3J\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
-\r
-\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
-\e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
-\e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r
-\r
-\r\e[KI'll have a look at how the editor draws its prompt.\r
-\r
-\r\e[Kgrep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kgrep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m–\e[0m\e[?25h\e[?2026l
+\e[?2026h\e[?25l\e[?7l\r\e[K\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\e[K\r
+\e[K\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[K\e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
+\e[K\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[K\r
+\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r
+\e[K\r
+\e[KI'll have a look at how the editor draws its prompt.\r
+\e[K\r
+\e[Kgrep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[H\e[2J\e[3J\e[?7l\r\e[K\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\e[K\r
+\e[K\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[K\e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
+\e[K\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[K\r
+\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r
+\e[K\r
+\e[KI'll have a look at how the editor draws its prompt.\r
+\e[K\r
+\e[Kgrep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kgrep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m–\e[0m\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l
 === resized mid-turn on a pipe ===
 \e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m
 
@@ -250,80 +270,29 @@ read \e[38;2;150;152;150mcmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e[0m \e[3
 The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output layer instead.
 
 === under a footer ===
-\e[?2026h\e[?25l\e[?7l\r> ask something else\r
-> and a second row\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[1A\e[J\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
-\r
-> ask something else\r
-> and a second row\r\r\e[1A\e[J\e[2A\e[86C\r
-\r
-> ask something else\r
-> and a second row\r\r\e[1A\e[J\e[1A\r
-\r> ask something else\r
-> and a second row\r\r\e[1A\e[J\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
-\e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
-\e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-> ask something else\r
-> and a second row\r\r\e[1A\e[J\e[2A\e[100C\r
-\r
-> ask something else\r
-> and a second row\r\r\e[1A\e[J\e[1A\r
-\r> ask something else\r
-> and a second row\r\r\e[1A\e[J\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r
-\r
-> ask something else\r
-> and a second row\r\r\e[1A\e[J\e[2A\e[38C\r
-\r
-> ask something else\r
-> and a second row\r\r\e[1A\e[J\e[1A\r
-\r> ask something else\r
-> and a second row\r\r\e[1A\e[J\r\e[KI'll have a look at how the editor draws its prompt.\r
-\r
-> ask something else\r
-> and a second row\r\r\e[1A\e[J\e[2A\e[52C\r
-\r
-> ask something else\r
-> and a second row\r\r\e[1A\e[J\e[1A\r
-\r> ask something else\r
-> and a second row\r\r\e[1A\e[J\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r
-> ask something else\r
-> and a second row\r\r\e[1A\e[J\e[2A\e[21C\r
-\r
-> ask something else\r
-> and a second row\r\r\e[1A\e[J\e[1A\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r
-\r
-> ask something else\r
-> and a second row\r\r\e[1A\e[J\e[2A\e[65C\r
-\r
-> ask something else\r
-> and a second row\r\r\e[1A\e[J\e[1A\r
-\r> ask something else\r
-> and a second row\r\r\e[1A\e[J\r\e[KFound it. Reading the renderer now.\r
-\r
-> ask something else\r
-> and a second row\r\r\e[1A\e[J\e[2A\e[35C\r
-\r
-> ask something else\r
-> and a second row\r\r\e[1A\e[J\e[1A\r
-\r> ask something else\r
-> and a second row\r\r\e[1A\e[J\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
-\r
-> ask something else\r
-> and a second row\r\r\e[1A\e[J\e[2A\e[31C\r
-\r
-> ask something else\r
-> and a second row\r\r\e[1A\e[J\e[1A\r
-\r> ask something else\r
-> and a second row\r\r\e[1A\e[J\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r
-\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
-\r\e[Klayer instead.\r
-\r
-> ask something else\r
-> and a second row\r\r\e[1A\e[J\e[2A\e[14C\r
-\r
-> ask something else\r
-> and a second row\r\e[?25h\e[?2026l
+\e[?2026h\e[?25l\e[?7l\r\e[K> ask something else\r
+\e[K> and a second row\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\e[1B\r\e[K\r
+\e[K\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[K\e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
+\e[K\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[K\r
+\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r
+\e[K\r
+\e[KI'll have a look at how the editor draws its prompt.\r
+\e[K\r
+\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r
+\e[K\r
+\e[KFound it. Reading the renderer now.\r
+\e[K\r
+\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e[K\r
+\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r
+\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
+\e[Klayer instead.\r
+\e[K\r
+\e[K> ask something else\r
+\e[K> and a second row\r\e[?25h\e[?2026l
 === under a footer on a pipe ===
 \e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m
 

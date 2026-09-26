@@ -44,6 +44,10 @@ func Up(rows int) string {
 	return "\x1b[" + strconv.Itoa(rows) + "A"
 }
 
+func Down(rows int) string {
+	return "\x1b[" + strconv.Itoa(rows) + "B"
+}
+
 func Right(cells int) string {
 	return "\x1b[" + strconv.Itoa(cells) + "C"
 }

@@ -2,26 +2,22 @@
 \e[48;2;52;53;65m put the preview where i can see it                                                                 \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mexpose\e[0m\e]8;;\e\\ \e[38;2;192;128;80m8080\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at \e]8;;http://tame-impala.agent:8080\e\\\e[38;2;129;162;190mhttp://tame-impala.agent:8080\e[0m\e[48;2;48;58;67m\e]8;;\e\\.                                     \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mexpose\e[0m\e]8;;\e\\ \e[38;2;192;128;80m8080\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
-\r\e[KThe preview is exposed at the address in the tool result above.\e[?25h\e[?2026l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at \e]8;;http://tame-impala.agent:8080\e\\\e[38;2;129;162;190mhttp://tame-impala.agent:8080\e[0m\e[48;2;48;58;67m\e]8;;\e\\.                                     \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\r
+The preview is exposed at the address in the tool result above.\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m take it down                                                                                       \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mexpose\e[0m \e[38;2;192;128;80m8080\e[0m \e[38;2;150;152;150mremove\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;207;173;0mexpose\e[0m \e[38;2;192;128;80m8080\e[0m \e[38;2;150;152;150mremove\e[0m\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[K\e[48;2;48;58;67m 🤖 Sandbox port 8080 no longer exposed to host.                                                    \e[0m\r
+\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0mexpose\e[0m\e]8;;\e\\ \e[38;2;192;128;80m8080\e[0m \e[38;2;150;152;150mremove\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[4B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Sandbox port 8080 no longer exposed to host.                                                    \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0mexpose\e[0m\e]8;;\e\\ \e[38;2;192;128;80m8080\e[0m \e[38;2;150;152;150mremove\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Sandbox port 8080 no longer exposed to host.                                                    \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KTaken down.\e[?25h\e[?2026l\r
+\e[KTaken down.\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[11C\e[?25h\e[?2026l\r

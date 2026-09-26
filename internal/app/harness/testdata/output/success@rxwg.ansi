@@ -7,25 +7,25 @@
 \e[48;2;52;53;65m have a look at that                    \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r
 \r
-\r\e[KI'll have a look at how the editor draws\r
-\r\e[Kits prompt.\r
+I'll have a look at how the editor draws\r
+its prompt.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mthat is the file to read.\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so\e[0m\r
+\e[3m\e[38;2;150;152;150mthat is the file to read.\e[0m\e[0m\r
 \r
-\r\e[KFound it. Reading the renderer now.\r
+Found it. Reading the renderer now.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
 \r
-\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which\r
-\r\e[Kwraps the buffer against the terminal\r
-\r\e[Kwidth and reports where the cursor\r
-\r\e[Klanded. Nothing there needs changing to\r
-\r\e[Kmake it sticky: the work belongs in the\r
-\r\e[Koutput layer instead.\r
+The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which\r
+wraps the buffer against the terminal\r
+width and reports where the cursor\r
+landed. Nothing there needs changing to\r
+make it sticky: the work belongs in the\r
+output layer instead.\r
 \e[?25h\e[?2026l
 === one column ===
 \e[?2026h\e[?25l\e[38;2;150;152;150mA\e[0m\r
@@ -135,345 +135,345 @@
 \e[48;2;52;53;65mt\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mL\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mk\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mg\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mf\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mw\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mh\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mh\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mp\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mm\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mp\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150md\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mw\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150m.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mL\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mk\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mg\e[0m\r
+\e[3m\e[38;2;150;152;150mf\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150mw\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mp\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mm\e[0m\r
+\e[3m\e[38;2;150;152;150mp\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150md\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mw\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150m.\e[0m\e[0m\r
 \r
-\r\e[KI\r
-\r\e[K'\r
-\r\e[Kl\r
-\r\e[Kl\r
-\r\e[Kh\r
-\r\e[Ka\r
-\r\e[Kv\r
-\r\e[Ke\r
-\r\e[Ka\r
-\r\e[Kl\r
-\r\e[Ko\r
-\r\e[Ko\r
-\r\e[Kk\r
-\r\e[Ka\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ko\r
-\r\e[Kw\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Kd\r
-\r\e[Kr\r
-\r\e[Ka\r
-\r\e[Kw\r
-\r\e[Ks\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[Ks\r
-\r\e[Kp\r
-\r\e[Kr\r
-\r\e[Ko\r
-\r\e[Km\r
-\r\e[Kp\r
-\r\e[Kt\r
-\r\e[K.\r
+I\r
+'\r
+l\r
+l\r
+h\r
+a\r
+v\r
+e\r
+a\r
+l\r
+o\r
+o\r
+k\r
+a\r
+t\r
+h\r
+o\r
+w\r
+t\r
+h\r
+e\r
+e\r
+d\r
+i\r
+t\r
+o\r
+r\r
+d\r
+r\r
+a\r
+w\r
+s\r
+i\r
+t\r
+s\r
+p\r
+r\r
+o\r
+m\r
+p\r
+t\r
+.\r
 \r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mT\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mh\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mp\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mm\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mp\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150md\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mw\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mb\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150my\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mh\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150md\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150m,\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mh\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mh\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mf\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ml\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150md\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150m.\e[0m\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
+\e[3m\e[38;2;150;152;150mT\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mp\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mm\e[0m\r
+\e[3m\e[38;2;150;152;150mp\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150md\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mw\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mb\e[0m\r
+\e[3m\e[38;2;150;152;150my\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150md\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150m,\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mf\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150ml\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150md\e[0m\r
+\e[3m\e[38;2;150;152;150m.\e[0m\e[0m\r
 \r
-\r\e[KF\r
-\r\e[Ko\r
-\r\e[Ku\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[K.\r
-\r\e[KR\r
-\r\e[Ke\r
-\r\e[Ka\r
-\r\e[Kd\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Kn\r
-\r\e[Ko\r
-\r\e[Kw\r
-\r\e[K.\r
+F\r
+o\r
+u\r
+n\r
+d\r
+i\r
+t\r
+.\r
+R\r
+e\r
+a\r
+d\r
+i\r
+n\r
+g\r
+t\r
+h\r
+e\r
+r\r
+e\r
+n\r
+d\r
+e\r
+r\r
+e\r
+r\r
+n\r
+o\r
+w\r
+.\r
 \r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
 \r
-\r\e[KT\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kp\r
-\r\e[Kr\r
-\r\e[Ko\r
-\r\e[Km\r
-\r\e[Kp\r
-\r\e[Kt\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[Kd\r
-\r\e[Kr\r
-\r\e[Ka\r
-\r\e[Kw\r
-\r\e[Kn\r
-\r\e[Kb\r
-\r\e[Ky\r
-\r\e[K\e[38;2;192;128;80ml\e[0m\r
-\r\e[K\e[38;2;192;128;80ma\e[0m\r
-\r\e[K\e[38;2;192;128;80my\e[0m\r
-\r\e[K\e[38;2;192;128;80mo\e[0m\r
-\r\e[K\e[38;2;192;128;80mu\e[0m\r
-\r\e[K\e[38;2;192;128;80mt\e[0m\r
-\r\e[K,\r
-\r\e[Kw\r
-\r\e[Kh\r
-\r\e[Ki\r
-\r\e[Kc\r
-\r\e[Kh\r
-\r\e[Kw\r
-\r\e[Kr\r
-\r\e[Ka\r
-\r\e[Kp\r
-\r\e[Ks\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kb\r
-\r\e[Ku\r
-\r\e[Kf\r
-\r\e[Kf\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ka\r
-\r\e[Kg\r
-\r\e[Ka\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Ks\r
-\r\e[Kt\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kt\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Km\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Ka\r
-\r\e[Kl\r
-\r\e[Kw\r
-\r\e[Ki\r
-\r\e[Kd\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kp\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Kt\r
-\r\e[Ks\r
-\r\e[Kw\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kc\r
-\r\e[Ku\r
-\r\e[Kr\r
-\r\e[Ks\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Kl\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[K.\r
-\r\e[KN\r
-\r\e[Ko\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kn\r
-\r\e[Ke\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[Ks\r
-\r\e[Kc\r
-\r\e[Kh\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[Kt\r
-\r\e[Ko\r
-\r\e[Km\r
-\r\e[Ka\r
-\r\e[Kk\r
-\r\e[Ke\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[Ks\r
-\r\e[Kt\r
-\r\e[Ki\r
-\r\e[Kc\r
-\r\e[Kk\r
-\r\e[Ky\r
-\r\e[K:\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kw\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Kk\r
-\r\e[Kb\r
-\r\e[Ke\r
-\r\e[Kl\r
-\r\e[Ko\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[Ks\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Ko\r
-\r\e[Ku\r
-\r\e[Kt\r
-\r\e[Kp\r
-\r\e[Ku\r
-\r\e[Kt\r
-\r\e[Kl\r
-\r\e[Ka\r
-\r\e[Ky\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Ks\r
-\r\e[Kt\r
-\r\e[Ke\r
-\r\e[Ka\r
-\r\e[Kd\r
-\r\e[K.\r
+T\r
+h\r
+e\r
+p\r
+r\r
+o\r
+m\r
+p\r
+t\r
+i\r
+s\r
+d\r
+r\r
+a\r
+w\r
+n\r
+b\r
+y\r
+\e[38;2;192;128;80ml\e[0m\r
+\e[38;2;192;128;80ma\e[0m\r
+\e[38;2;192;128;80my\e[0m\r
+\e[38;2;192;128;80mo\e[0m\r
+\e[38;2;192;128;80mu\e[0m\r
+\e[38;2;192;128;80mt\e[0m\r
+,\r
+w\r
+h\r
+i\r
+c\r
+h\r
+w\r
+r\r
+a\r
+p\r
+s\r
+t\r
+h\r
+e\r
+b\r
+u\r
+f\r
+f\r
+e\r
+r\r
+a\r
+g\r
+a\r
+i\r
+n\r
+s\r
+t\r
+t\r
+h\r
+e\r
+t\r
+e\r
+r\r
+m\r
+i\r
+n\r
+a\r
+l\r
+w\r
+i\r
+d\r
+t\r
+h\r
+a\r
+n\r
+d\r
+r\r
+e\r
+p\r
+o\r
+r\r
+t\r
+s\r
+w\r
+h\r
+e\r
+r\r
+e\r
+t\r
+h\r
+e\r
+c\r
+u\r
+r\r
+s\r
+o\r
+r\r
+l\r
+a\r
+n\r
+d\r
+e\r
+d\r
+.\r
+N\r
+o\r
+t\r
+h\r
+i\r
+n\r
+g\r
+t\r
+h\r
+e\r
+r\r
+e\r
+n\r
+e\r
+e\r
+d\r
+s\r
+c\r
+h\r
+a\r
+n\r
+g\r
+i\r
+n\r
+g\r
+t\r
+o\r
+m\r
+a\r
+k\r
+e\r
+i\r
+t\r
+s\r
+t\r
+i\r
+c\r
+k\r
+y\r
+:\r
+t\r
+h\r
+e\r
+w\r
+o\r
+r\r
+k\r
+b\r
+e\r
+l\r
+o\r
+n\r
+g\r
+s\r
+i\r
+n\r
+t\r
+h\r
+e\r
+o\r
+u\r
+t\r
+p\r
+u\r
+t\r
+l\r
+a\r
+y\r
+e\r
+r\r
+i\r
+n\r
+s\r
+t\r
+e\r
+a\r
+d\r
+.\r
 \e[?25h\e[?2026l
 === plain ===
 \e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m
@@ -522,21 +522,21 @@ layer instead.\r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mLook\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for wher\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where th\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the pr\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is draw\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KI'll\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll hav\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the edit\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the editor d\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the editor draws\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the editor draws its\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the editor draws its pro\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the editor draws its prompt.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kgrep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prom\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt i\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is dr\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by t\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the r\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the rende\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer,\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KFoun\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Re\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Readin\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Reading th\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Reading the re\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Reading the render\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Reading the renderer n\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Reading the renderer now.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prom\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is dr\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by `\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by `layo\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m,\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, whi\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which w\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buf\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer agai\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the term\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal wid\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and repor\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports w\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kthe\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cur\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor land\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed.\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Noth\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing ther\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there ne\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs chan\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it stic\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky:\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work bel\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the outp\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output l\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
-\r\e[Klayer\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klayer ins\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klayer instead\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klayer instead.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K\e[3m\e[38;2;150;152;150mLook\e[0m\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking\e[0m\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for\e[0m\e[0m\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for wher\e[0m\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where th\e[0m\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the pr\e[0m\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt\e[0m\e[0m\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is\e[0m\e[0m\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is draw\e[0m\e[0m\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KI'll\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll hav\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the edit\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the editor d\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the editor draws\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the editor draws its\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the editor draws its pro\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the editor draws its prompt.\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kgrep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[3m\e[38;2;150;152;150mThe\e[0m\e[0m\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prom\e[0m\e[0m\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt i\e[0m\e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is dr\e[0m\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn\e[0m\e[0m\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by t\e[0m\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the r\e[0m\e[0m\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the rende\e[0m\e[0m\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer,\e[0m\e[0m\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so\e[0m\e[0m\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that\e[0m\e[0m\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is\e[0m\e[0m\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the\e[0m\e[0m\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file\e[0m\e[0m\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to\e[0m\e[0m\r\e[59C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read\e[0m\e[0m\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r\e[65C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[65C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KFoun\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Re\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Readin\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Reading th\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Reading the re\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Reading the render\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Reading the renderer n\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Reading the renderer now.\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KThe\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prom\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt i\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is dr\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by `\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by `layo\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m,\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, whi\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which w\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buf\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer agai\r\e[58C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against\r\e[61C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the\r\e[65C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the term\r\e[70C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal\r\e[74C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal wid\r\e[78C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width a\r\e[82C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and r\r\e[86C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and repor\r\e[90C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports w\r\e[94C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r\e[98C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kthe\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cur\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor land\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed.\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Noth\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing ther\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there ne\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs chan\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it\r\e[58C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it stic\r\e[63C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky:\r\e[66C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the\r\e[70C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work\r\e[75C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work bel\r\e[79C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs\r\e[83C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in\r\e[86C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the\r\e[90C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the outp\r\e[95C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output l\r\e[99C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
+\e[Klayer\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klayer ins\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klayer instead\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klayer instead.\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[14C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
@@ -544,21 +544,21 @@ layer instead.\r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KI'll have a look at how the editor draws its prompt.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kgrep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KFound it. Reading the renderer now.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Klayer instead.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KI'll have a look at how the editor draws its prompt.\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kgrep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r\e[65C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[65C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KFound it. Reading the renderer now.\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r\e[98C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r\e[97C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Klayer instead.\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[14C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
@@ -566,21 +566,21 @@ layer instead.\r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mLook\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for wher\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where th\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the pr\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is draw\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KI'll\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll hav\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the edit\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the editor d\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the editor draws\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the editor draws its\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the editor draws its pro\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the editor draws its prompt.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kgrep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prom\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt i\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is dr\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by t\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the r\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the rende\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer,\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KFoun\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Re\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Readin\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Reading th\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Reading the re\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Reading the render\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Reading the renderer n\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Reading the renderer now.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prom\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is dr\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by `\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by `layo\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m,\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, whi\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which w\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buf\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer agai\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the term\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal wid\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and repor\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports w\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kthe\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cur\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor land\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed.\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Noth\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing ther\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there ne\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs chan\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it stic\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky:\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work bel\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the outp\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output l\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
-\r\e[Klayer\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klayer ins\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klayer instead\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klayer instead.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K\e[3m\e[38;2;150;152;150mLook\e[0m\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking\e[0m\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for\e[0m\e[0m\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for wher\e[0m\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where th\e[0m\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the pr\e[0m\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt\e[0m\e[0m\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is\e[0m\e[0m\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is draw\e[0m\e[0m\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KI'll\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll hav\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the edit\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the editor d\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the editor draws\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the editor draws its\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the editor draws its pro\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI'll have a look at how the editor draws its prompt.\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kgrep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[3m\e[38;2;150;152;150mThe\e[0m\e[0m\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prom\e[0m\e[0m\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt i\e[0m\e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is dr\e[0m\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn\e[0m\e[0m\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by t\e[0m\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the r\e[0m\e[0m\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the rende\e[0m\e[0m\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer,\e[0m\e[0m\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so\e[0m\e[0m\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that\e[0m\e[0m\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is\e[0m\e[0m\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the\e[0m\e[0m\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file\e[0m\e[0m\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to\e[0m\e[0m\r\e[59C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read\e[0m\e[0m\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r\e[65C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[65C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KFoun\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Re\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Readin\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Reading th\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Reading the re\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Reading the render\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Reading the renderer n\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KFound it. Reading the renderer now.\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KThe\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prom\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt i\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is dr\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by `\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by `layo\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m,\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, whi\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which w\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buf\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer agai\r\e[58C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against\r\e[61C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the\r\e[65C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the term\r\e[70C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal\r\e[74C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal wid\r\e[78C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width a\r\e[82C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and r\r\e[86C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and repor\r\e[90C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports w\r\e[94C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r\e[98C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kthe\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cur\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor land\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed.\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Noth\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing ther\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there ne\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs chan\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it\r\e[58C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it stic\r\e[63C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky:\r\e[66C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the\r\e[70C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work\r\e[75C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work bel\r\e[79C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs\r\e[83C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in\r\e[86C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the\r\e[90C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the outp\r\e[95C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output l\r\e[99C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
+\e[Klayer\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klayer ins\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klayer instead\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klayer instead.\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[14C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m\e[0m\r
@@ -598,73 +598,73 @@ layer instead.\r
 \e[48;2;52;53;65m at that    \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mLooking for\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mwhere the\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mprompt is\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mdrawn.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mLooking for\e[0m\r
+\e[3m\e[38;2;150;152;150mwhere the\e[0m\r
+\e[3m\e[38;2;150;152;150mprompt is\e[0m\r
+\e[3m\e[38;2;150;152;150mdrawn.\e[0m\e[0m\r
 \r
-\r\e[KI'll have a\r
-\r\e[Klook at how\r
-\r\e[Kthe editor\r
-\r\e[Kdraws its\r
-\r\e[Kprompt.\r
+I'll have a\r
+look at how\r
+the editor\r
+draws its\r
+prompt.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mp\e[0m\e[38;2;150;152;150m…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mThe prompt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mis drawn by\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mthe\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mrenderer, so\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mthat is the\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mfile to\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mread.\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mp\e[0m\e[38;2;150;152;150m…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e[3m\e[38;2;150;152;150mThe prompt\e[0m\r
+\e[3m\e[38;2;150;152;150mis drawn by\e[0m\r
+\e[3m\e[38;2;150;152;150mthe\e[0m\r
+\e[3m\e[38;2;150;152;150mrenderer, so\e[0m\r
+\e[3m\e[38;2;150;152;150mthat is the\e[0m\r
+\e[3m\e[38;2;150;152;150mfile to\e[0m\r
+\e[3m\e[38;2;150;152;150mread.\e[0m\e[0m\r
 \r
-\r\e[KFound it.\r
-\r\e[KReading the\r
-\r\e[Krenderer\r
-\r\e[Know.\r
+Found it.\r
+Reading the\r
+renderer\r
+now.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mc…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mc…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
 \r
-\r\e[KThe prompt\r
-\r\e[Kis drawn by\r
-\r\e[K\e[38;2;192;128;80mlayout\e[0m,\r
-\r\e[Kwhich wraps\r
-\r\e[Kthe buffer\r
-\r\e[Kagainst the\r
-\r\e[Kterminal\r
-\r\e[Kwidth and\r
-\r\e[Kreports\r
-\r\e[Kwhere the\r
-\r\e[Kcursor\r
-\r\e[Klanded.\r
-\r\e[KNothing\r
-\r\e[Kthere needs\r
-\r\e[Kchanging to\r
-\r\e[Kmake it\r
-\r\e[Ksticky: the\r
-\r\e[Kwork belongs\r
-\r\e[Kin the\r
-\r\e[Koutput layer\r
-\r\e[Kinstead.\r
+The prompt\r
+is drawn by\r
+\e[38;2;192;128;80mlayout\e[0m,\r
+which wraps\r
+the buffer\r
+against the\r
+terminal\r
+width and\r
+reports\r
+where the\r
+cursor\r
+landed.\r
+Nothing\r
+there needs\r
+changing to\r
+make it\r
+sticky: the\r
+work belongs\r
+in the\r
+output layer\r
+instead.\r
 \e[?25h\e[?2026l
 === unsized ===
-\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m
-
-\e]133;A\e\\\e[48;2;52;53;65m\e[0m
-\e[48;2;52;53;65m have a look at that\e[0m
-\e[48;2;52;53;65m\e[0m
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m
-
-\r\e[KI'll have a look at how the editor draws its prompt.
-
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
-\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m
-
-\r\e[KFound it. Reading the renderer now.
-
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m
-
-\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output layer instead.
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m have a look at that\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r
+\r
+I'll have a look at how the editor draws its prompt.\r
+\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r
+\r
+Found it. Reading the renderer now.\r
+\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\r
+The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output layer instead.\r
 \e[?25h\e[?2026l
 === wide ===
 \e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
@@ -673,18 +673,18 @@ layer instead.\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mLooking for where the prompt is drawn.\e[0m\e[0m\r
 \r
-\r\e[KI'll have a look at how the editor draws its prompt.\r
+I'll have a look at how the editor draws its prompt.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r
 \r
-\r\e[KFound it. Reading the renderer now.\r
+Found it. Reading the renderer now.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
 \r
-\r\e[KThe prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r
-\r\e[Kthe cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
-\r\e[Klayer instead.\r
+The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r
+the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
+layer instead.\r
 \e[?25h\e[?2026l

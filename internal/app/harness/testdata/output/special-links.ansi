@@ -8,18 +8,18 @@
 === a path under the scratch in an answer only appended ===
 it is at \e]8;;file:///state/farm/tame-impala/zoom-on.png\e\\/tmp/zoom-on.png\e]8;;\e\\
 === a path under the scratch the model sees as /tmp ===
-\e[?2026h\e[?25l\e[?7l\r\e[Kit is at \e]8;;file:///state/farm/tame-impala/zoom-on.png\e\\/tmp/zoom-on.png\e]8;;\e\\\e[?25h\e[?2026l
+\e[?2026h\e[?25l\e[?7l\r\e[Kit is at \e]8;;file:///state/farm/tame-impala/zoom-on.png\e\\/tmp/zoom-on.png\e]8;;\e\\\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l
 === email autolink ===
-\e[?2026h\e[?25l\e[?7l\r\e[K\e]8;;mailto:person-at-example.test\e\\\e[38;2;129;162;190mperson-at-example.test\e[0m\e]8;;\e\\\e[?25h\e[?2026l
+\e[?2026h\e[?25l\e[?7l\r\e[K\e]8;;mailto:person-at-example.test\e\\\e[38;2;129;162;190mperson-at-example.test\e[0m\e]8;;\e\\\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[19C\e[?25h\e[?2026l
 === pending message ===
 \e[?2026h\e[?25l\e[?7l\r\e[K\e[48;2;48;58;67m               \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m ⏳ Granted temporary read-only access  \e[0m\r
-\r\e[K\e[48;2;48;58;67m    to /reference.                      \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                        \e[0m\e[?25h\e[?2026l
+\e[K\e[48;2;48;58;67m ⏳ Granted temporary read-only access  \e[0m\r
+\e[K\e[48;2;48;58;67m    to /reference.                      \e[0m\r
+\e[K\e[48;2;48;58;67m                                        \e[0m\r\e[40C\e[?25h\e[?2026l
 === pending message with a heading and a list ===
 \e[?2026h\e[?25l\e[?7l\r\e[K\e[48;2;48;58;67m               \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r
-\r\e[K\e[48;2;48;58;67m ⏳ \e[1m\e[38;2;207;173;0mHeading\e[0m\e[48;2;48;58;67m\e[0m\e[48;2;48;58;67m                             \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                        \e[0m\r
-\r\e[K\e[48;2;48;58;67m    \e[38;2;192;128;80m• \e[0m\e[48;2;48;58;67mfirst item                        \e[0m\r
-\r\e[K\e[48;2;48;58;67m    \e[38;2;192;128;80m• \e[0m\e[48;2;48;58;67msecond item                       \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                        \e[0m\e[?25h\e[?2026l
+\e[K\e[48;2;48;58;67m ⏳ \e[1m\e[38;2;207;173;0mHeading\e[0m\e[48;2;48;58;67m\e[0m\e[48;2;48;58;67m                             \e[0m\r
+\e[K\e[48;2;48;58;67m                                        \e[0m\r
+\e[K\e[48;2;48;58;67m    \e[38;2;192;128;80m• \e[0m\e[48;2;48;58;67mfirst item                        \e[0m\r
+\e[K\e[48;2;48;58;67m    \e[38;2;192;128;80m• \e[0m\e[48;2;48;58;67msecond item                       \e[0m\r
+\e[K\e[48;2;48;58;67m                                        \e[0m\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[40C\e[?25h\e[?2026l

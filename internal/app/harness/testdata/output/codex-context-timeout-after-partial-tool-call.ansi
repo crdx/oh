@@ -2,12 +2,12 @@
 \e[48;2;52;53;65m start a tool call, then wait beyond the request deadline                                           \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mPrepare the tool call.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mPrepare the tool call.\e[0m\e[0m\r
 \r
 \e[38;2;204;102;102mContext deadline exceeded\e[0m\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m continue after the transport timeout                                                               \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\r\e[KResumed.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KResumed.\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[8C\e[?25h\e[?2026l\r

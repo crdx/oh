@@ -21,7 +21,6 @@ type Screen struct {
 	mutex sync.Mutex
 
 	isMidLine        bool
-	hasPendingText   bool
 	isBlankOwed      bool
 	trailingNewlines int
 	lastGroup        Group
@@ -44,14 +43,15 @@ type Screen struct {
 	nestedUpdates     int
 	synchronisedBytes strings.Builder
 
-	input       footer
-	shownFooter footer
+	input footer
 
-	liveRegion       liveRegion
-	isLiveDirty      bool
-	isShrinkOwed     bool
-	isRepaintRefused bool
-	blocks           []groupedBlock
+	owedText              strings.Builder
+	isOwedTextFromMidLine bool
+	canvas                canvas
+	isFrameOwed           bool
+
+	live   liveRegion
+	blocks []groupedBlock
 }
 
 func New(writer io.Writer) *Screen {
@@ -149,8 +149,9 @@ func (self *Screen) End() {
 	if self.isMidLine {
 		self.newline()
 		self.isMidLine = false
-		self.hasPendingText = false
 	}
+
+	self.changed()
 }
 
 func (self *Screen) line(text string, isMarked bool, group Group) {
@@ -164,7 +165,7 @@ func (self *Screen) line(text string, isMarked bool, group Group) {
 
 	if len(self.blocks) > 0 {
 		self.blocks = append(self.blocks, groupedBlock{Block: textBlock{text: text}, group: group})
-		self.refresh()
+		self.changed()
 
 		return
 	}
@@ -177,6 +178,7 @@ func (self *Screen) line(text string, isMarked bool, group Group) {
 	}
 
 	self.write(self.wrapToWidth(text))
+	self.changed()
 }
 
 func (self *Screen) wrapToWidth(text string) string {
@@ -185,15 +187,6 @@ func (self *Screen) wrapToWidth(text string) string {
 	}
 
 	return strings.Join(width.Wrap(text, self.columns), "\n")
-}
-
-func (self *Screen) drawRow(text string) {
-	self.mutex.Lock()
-	defer self.mutex.Unlock()
-
-	self.makeRoomFor(NoticeGroup)
-
-	self.write(text)
 }
 
 func (self *Screen) measureTerminal() {
@@ -222,11 +215,22 @@ func (self *Screen) write(text string) {
 }
 
 func (self *Screen) emit(text string) {
+	wasMidLine := self.isMidLine
 	self.hasPrinted = true
 	fittedText := self.fit(text)
 	self.advance(text)
 	self.count(text)
-	self.at(fittedText)
+
+	if !self.canRepaint {
+		self.raw(fittedText)
+		return
+	}
+
+	if self.owedText.Len() == 0 {
+		self.isOwedTextFromMidLine = wasMidLine
+	}
+
+	self.owedText.WriteString(fittedText)
 }
 
 const apart = 2
@@ -240,11 +244,6 @@ func (self *Screen) makeRoomFor(next Group) {
 }
 
 func (self *Screen) openPendingLine() {
-	if self.hasPendingText {
-		self.hasPendingText = false
-		self.newline()
-	}
-
 	if self.isBlankOwed {
 		self.isBlankOwed = false
 
@@ -275,15 +274,6 @@ func (self *Screen) count(styledText string) {
 	}
 
 	self.trailingNewlines = trailingNewlines
-}
-
-func (self *Screen) at(text string) {
-	if len(self.shownFooter.rows) == 0 {
-		self.raw(text)
-		return
-	}
-
-	self.redraw(text)
 }
 
 func (self *Screen) linkifyScrollback(text string) string {

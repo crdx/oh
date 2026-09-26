@@ -1,34 +1,41 @@
-=== a notice beside a frozen region ===
+=== a notice beside a region taller than the terminal ===
+⋮ 34 more lines
+    exit status 1
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a notice beside a region taller than the terminal, sealed ===
 read ✓
-read
-read
-read
-read
-read
-read
-read
-read
-read
-read
-read
-read
-read
-read
-read
-read
-read
-read
-read
-read
-read
-read
-read
-read
-read
-read
-read
-read
-read
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
+read –
 
 
  🤖 Job build exited: failed, exit(2).

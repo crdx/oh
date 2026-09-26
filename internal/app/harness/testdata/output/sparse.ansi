@@ -3,10 +3,10 @@
 \e[48;2;52;53;65m run the thing that takes no arguments  \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e[?7l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mnotify\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdone\e[0m \e[38;2;150;152;150mnothing to report\e[0m \e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mnotify\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdone\e[0m \e[38;2;150;152;150mnothing to report\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \r
-\r\e[KNothing came back.\r
+Nothing came back.\r
 \e[?25h\e[?2026l
 === one column ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
@@ -74,25 +74,25 @@
 \e[48;2;52;53;65ms\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\e[?7l\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
 \r
-\r\e[KN\r
-\r\e[Ko\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[Kc\r
-\r\e[Ka\r
-\r\e[Km\r
-\r\e[Ke\r
-\r\e[Kb\r
-\r\e[Ka\r
-\r\e[Kc\r
-\r\e[Kk\r
-\r\e[K.\r
+N\r
+o\r
+t\r
+h\r
+i\r
+n\r
+g\r
+c\r
+a\r
+m\r
+e\r
+b\r
+a\r
+c\r
+k\r
+.\r
 \e[?25h\e[?2026l
 === plain ===
 \e[48;2;52;53;65m\e[0m
@@ -117,31 +117,31 @@ Nothing came back.\r
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m run the thing that takes no arguments                                                              \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[Kstatus\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mnotify\e[0m \e[38;2;192;128;80mdone\e[0m \e[38;2;150;152;150mnothing to report\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mnotify\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdone\e[0m \e[38;2;150;152;150mnothing to report\e[0m \e[38;2;76;154;44m✓\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KNoth\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KNothing\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KNothing came\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KNothing came bac\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KNothing came back.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kstatus\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mnotify\e[0m \e[38;2;192;128;80mdone\e[0m \e[38;2;150;152;150mnothing to report\e[0m\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mnotify\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdone\e[0m \e[38;2;150;152;150mnothing to report\e[0m \e[38;2;76;154;44m✓\e[0m\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KNoth\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KNothing\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KNothing came\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KNothing came bac\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KNothing came back.\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m run the thing that takes no arguments                                                              \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[Kstatus\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mnotify\e[0m \e[38;2;192;128;80mdone\e[0m \e[38;2;150;152;150mnothing to report\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mnotify\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdone\e[0m \e[38;2;150;152;150mnothing to report\e[0m \e[38;2;76;154;44m✓\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KNothing came back.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kstatus\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mnotify\e[0m \e[38;2;192;128;80mdone\e[0m \e[38;2;150;152;150mnothing to report\e[0m\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mnotify\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdone\e[0m \e[38;2;150;152;150mnothing to report\e[0m \e[38;2;76;154;44m✓\e[0m\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KNothing came back.\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m run the thing that takes no arguments                                                              \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[Kstatus\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mnotify\e[0m \e[38;2;192;128;80mdone\e[0m \e[38;2;150;152;150mnothing to report\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mnotify\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdone\e[0m \e[38;2;150;152;150mnothing to report\e[0m \e[38;2;76;154;44m✓\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KNoth\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KNothing\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KNothing came\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KNothing came bac\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KNothing came back.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kstatus\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mnotify\e[0m \e[38;2;192;128;80mdone\e[0m \e[38;2;150;152;150mnothing to report\e[0m\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mnotify\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdone\e[0m \e[38;2;150;152;150mnothing to report\e[0m \e[38;2;76;154;44m✓\e[0m\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KNoth\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KNothing\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KNothing came\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KNothing came bac\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KNothing came back.\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
@@ -151,28 +151,28 @@ Nothing came back.\r
 \e[48;2;52;53;65m arguments  \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e[?7l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mnotify\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdo…\e[0m \e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mnotify\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdo…\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \r
-\r\e[KNothing came\r
-\r\e[Kback.\r
+Nothing came\r
+back.\r
 \e[?25h\e[?2026l
 === unsized ===
-\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m
-\e[48;2;52;53;65m run the thing that takes no arguments\e[0m
-\e[48;2;52;53;65m\e[0m
-\e[?7l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mnotify\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdone\e[0m \e[38;2;150;152;150mnothing to report\e[0m \e[38;2;76;154;44m✓\e[0m
-
-\r\e[KNothing came back.
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m run the thing that takes no arguments\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mnotify\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdone\e[0m \e[38;2;150;152;150mnothing to report\e[0m \e[38;2;76;154;44m✓\e[0m\r
+\r
+Nothing came back.\r
 \e[?25h\e[?2026l
 === wide ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m run the thing that takes no arguments                                                              \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mnotify\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdone\e[0m \e[38;2;150;152;150mnothing to report\e[0m \e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mnotify\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdone\e[0m \e[38;2;150;152;150mnothing to report\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \r
-\r\e[KNothing came back.\r
+Nothing came back.\r
 \e[?25h\e[?2026l

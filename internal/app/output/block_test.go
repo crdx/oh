@@ -64,19 +64,19 @@ func TestSealingInsideASynchronisedUpdateDrawsTheRefreshItOwes(t *testing.T) {
 
 func TestDiscardingANoticeBlockRestoresTheDrawingOrigin(t *testing.T) {
 	screen, _ := screenWithInput()
-	before := screen.drawingState()
-	beforeInput := screen.input
+	before := screen.sealedState()
+	beforeFrame := screen.canvas
 
 	handle := screen.OpenPanel(textBlock{text: "temporary notice"})
 	if !screen.DiscardBlock(handle) {
 		t.Fatal("expected the notice block to remain retractable")
 	}
 
-	if got := screen.drawingState(); got != before {
+	if got := screen.sealedState(); got != before {
 		t.Errorf("drawing state was not restored: got %+v, want %+v", got, before)
 	}
-	if !slices.Equal(screen.shownFooter.rows, beforeInput.rows) || screen.shownFooter.cursorRow != beforeInput.cursorRow || screen.shownFooter.cursorColumn != beforeInput.cursorColumn {
-		t.Errorf("input was not restored: got %+v, want %+v", screen.shownFooter, beforeInput)
+	if !slices.Equal(screen.canvas.rows, beforeFrame.rows) || screen.canvas.cursorRow != beforeFrame.cursorRow {
+		t.Errorf("input was not restored: got %+v, want %+v", screen.canvas, beforeFrame)
 	}
 }
 
@@ -222,7 +222,7 @@ func (self *rowsBlock) Rows(_ int) []string {
 	return self.rows
 }
 
-func TestAChangeAboveARegionTallerThanTheTerminalIsRefusedAndReported(t *testing.T) {
+func TestARegionTallerThanTheTerminalIsWindowedToTheRoomItHas(t *testing.T) {
 	screenOutput := &strings.Builder{}
 	screen := &Screen{writer: screenOutput, isTerminal: true, canRepaint: true, columns: 40, lines: 8}
 
@@ -233,19 +233,21 @@ func TestAChangeAboveARegionTallerThanTheTerminalIsRefusedAndReported(t *testing
 	handle := screen.OpenPanel(block)
 	screen.Footer([]string{"> "}, 0, 2)
 
-	if screen.WasRepaintRefused() {
-		t.Fatal("the region was refused before anything above its top row changed")
-	}
-
-	block.rows[0] = "the row that scrolled away changed"
+	block.rows[0] = "the row that was windowed away changed"
 	screen.RefreshBlock(handle)
 
-	if !screen.WasRepaintRefused() {
-		t.Error("a change above the top row of the region was drawn rather than refused")
+	if got := len(screen.canvas.rows); got > screen.lines {
+		t.Errorf("painted %d rows on a terminal of %d", got, screen.lines)
+	}
+	if !strings.Contains(screen.canvas.rows[0], "more lines") {
+		t.Errorf("the window opened with %q, want it to say what it hid", screen.canvas.rows[0])
+	}
+	if !slices.Contains(screen.canvas.rows, "row 19") {
+		t.Errorf("the window lost the newest row: %q", screen.canvas.rows)
 	}
 }
 
-func TestARegionWithRoomToDrawRefusesNothing(t *testing.T) {
+func TestARegionWithRoomToDrawShowsEveryRow(t *testing.T) {
 	screenOutput := &strings.Builder{}
 	screen := &Screen{writer: screenOutput, isTerminal: true, canRepaint: true, columns: 40, lines: 24}
 
@@ -256,7 +258,7 @@ func TestARegionWithRoomToDrawRefusesNothing(t *testing.T) {
 	block.rows[0] = "first changed"
 	screen.RefreshBlock(handle)
 
-	if screen.WasRepaintRefused() {
-		t.Error("a region with room to draw refused its repaint")
+	if !slices.Contains(screen.canvas.rows, "first changed") || !slices.Contains(screen.canvas.rows, "second") {
+		t.Errorf("a region with room to draw lost a row: %q", screen.canvas.rows)
 	}
 }

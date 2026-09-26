@@ -2,21 +2,21 @@
 \e[48;2;52;53;65m has the build finished                                                                             \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mThe build was still running when last checked.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mThe build was still running when last checked.\e[0m\e[0m\r
 \r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\r\e[K\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed after 12s, exit(2).                                                    \e[0m\r
-\r\e[K\e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
-\r\e[K\e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
-\r\e[K\e[48;2;48;58;67m    exit status 1                                                                                   \e[0m\r
-\r\e[K\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed after 12s, exit(2).                                                    \e[0m\r
+\e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
+\e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
+\e[48;2;48;58;67m    exit status 1                                                                                   \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
-\r\e[KThe build is still running.\r
+The build is still running.\r
 \r
-\r\e[KCorrection: the build has now failed because getWidth is undefined.\e[?25h\e[?2026l\r
+Correction: the build has now failed because getWidth is undefined.\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m carry on                                                                                           \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\r\e[KCarrying on.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KCarrying on.\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\r

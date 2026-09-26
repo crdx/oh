@@ -3,7 +3,7 @@
 \e[48;2;52;53;65m show terminal-active text safely       \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before after second line\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mreasoning before after second line\e[0m\e[0m\r
 \r
 \e[38;2;204;102;102mFailure before after\e[0m\r
 second line\e[0m\r
@@ -70,36 +70,36 @@ second line\e[0m\r
 \e[48;2;52;53;65my\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mg\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mb\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mf\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mf\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mc\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150md\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ml\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mg\e[0m\r
+\e[3m\e[38;2;150;152;150mb\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mf\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mf\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mc\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150md\e[0m\r
+\e[3m\e[38;2;150;152;150ml\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\e[0m\r
 \r
 \e[38;2;204;102;102mF\e[0m\r
 \e[38;2;204;102;102ma\e[0m\r
@@ -153,8 +153,8 @@ second line\e[0m\r
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m show terminal-active text safely                                                                   \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mreas\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasonin\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning be\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before aft\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before after s\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before after secon\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before after second li\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before after second line\e[0m\e[0m\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K\e[3m\e[38;2;150;152;150mreas\e[0m\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasonin\e[0m\e[0m\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning be\e[0m\e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before\e[0m\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before aft\e[0m\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before after s\e[0m\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before after secon\e[0m\e[0m\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before after second li\e[0m\e[0m\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before after second line\e[0m\e[0m\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[34C\e[?25h\e[?2026l\r
 \r
 \e[38;2;204;102;102mFailure before after\e[0m\r
 second line\e[0m\r
@@ -163,8 +163,8 @@ second line\e[0m\r
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m show terminal-active text safely                                                                   \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before after second line\e[0m\e[0m\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K\e[3m\e[38;2;150;152;150mreasoning before after second line\e[0m\e[0m\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[34C\e[?25h\e[?2026l\r
 \r
 \e[38;2;204;102;102mFailure before after\e[0m\r
 second line\e[0m\r
@@ -173,8 +173,8 @@ second line\e[0m\r
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m show terminal-active text safely                                                                   \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mreas\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasonin\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning be\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before aft\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before after s\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before after secon\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before after second li\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before after second line\e[0m\e[0m\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K\e[3m\e[38;2;150;152;150mreas\e[0m\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasonin\e[0m\e[0m\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning be\e[0m\e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before\e[0m\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before aft\e[0m\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before after s\e[0m\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before after secon\e[0m\e[0m\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before after second li\e[0m\e[0m\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before after second line\e[0m\e[0m\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[34C\e[?25h\e[?2026l\r
 \r
 \e[38;2;204;102;102mFailure before after\e[0m\r
 second line\e[0m\r
@@ -187,29 +187,29 @@ second line\e[0m\r
 \e[48;2;52;53;65m safely     \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mreasoning\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mbefore after\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150msecond line\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mreasoning\e[0m\r
+\e[3m\e[38;2;150;152;150mbefore after\e[0m\r
+\e[3m\e[38;2;150;152;150msecond line\e[0m\e[0m\r
 \r
 \e[38;2;204;102;102mFailure\e[0m\r
 \e[38;2;204;102;102mbefore after\e[0m\r
 second line\e[0m\r
 \e[?25h\e[?2026l
 === unsized ===
-\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m
-\e[48;2;52;53;65m show terminal-active text safely\e[0m
-\e[48;2;52;53;65m\e[0m
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before after second line\e[0m\e[0m
-
-\e[38;2;204;102;102mFailure before after
-second line\e[0m
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m show terminal-active text safely\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[3m\e[38;2;150;152;150mreasoning before after second line\e[0m\e[0m\r
+\r
+\e[38;2;204;102;102mFailure before after\r
+second line\e[0m\r
 \e[?25h\e[?2026l
 === wide ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m show terminal-active text safely                                                                   \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mreasoning before after second line\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mreasoning before after second line\e[0m\e[0m\r
 \r
 \e[38;2;204;102;102mFailure before after\e[0m\r
 second line\e[0m\r

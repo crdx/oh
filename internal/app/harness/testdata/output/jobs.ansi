@@ -4,21 +4,21 @@
 \e[48;2;52;53;65m then stop it                           \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e[?7l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server \e[0m\e[38;2;150;152;150m…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150moutput\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpytho\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102ma job of that na…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;150;152;150mlist\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_timeout&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L ~100t\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstop\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_any&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mbuild, docs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_all&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L ~100t\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server \e[0m\e[38;2;150;152;150m…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150moutput\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpytho\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102ma job of that na…\e[0m\r
+\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;150;152;150mlist\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\r
+\e]8;;oh://tool-result?call=call_timeout&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L ~100t\e[0m\r
+\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstop\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_any&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mbuild, docs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\r
+\e]8;;oh://tool-result?call=call_all&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L ~100t\e[0m\r
 \r
-\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m\r
-\r\e[Kand is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was\r
-\r\e[Kkilled by \e[38;2;192;128;80mSIGXCPU\e[0m after exceeding its 2s\r
-\r\e[Kprocessor limit.\r
+The docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m\r
+and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was\r
+killed by \e[38;2;192;128;80mSIGXCPU\e[0m after exceeding its 2s\r
+processor limit.\r
 \e[?25h\e[?2026l
 === one column ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
@@ -102,128 +102,128 @@
 \e[48;2;52;53;65mt\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\e[?7l\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
 \r
-\r\e[KT\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[Ko\r
-\r\e[Kc\r
-\r\e[Ks\r
-\r\e[Ks\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Kv\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Kr\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Ko\r
-\r\e[Kn\r
-\r\e[K\e[38;2;192;128;80ml\e[0m\r
-\r\e[K\e[38;2;192;128;80mo\e[0m\r
-\r\e[K\e[38;2;192;128;80mc\e[0m\r
-\r\e[K\e[38;2;192;128;80ma\e[0m\r
-\r\e[K\e[38;2;192;128;80ml\e[0m\r
-\r\e[K\e[38;2;192;128;80mh\e[0m\r
-\r\e[K\e[38;2;192;128;80mo\e[0m\r
-\r\e[K\e[38;2;192;128;80ms\e[0m\r
-\r\e[K\e[38;2;192;128;80mt\e[0m\r
-\r\e[K\e[38;2;192;128;80m:\e[0m\r
-\r\e[K\e[38;2;192;128;80m8\e[0m\r
-\r\e[K\e[38;2;192;128;80m0\e[0m\r
-\r\e[K\e[38;2;192;128;80m8\e[0m\r
-\r\e[K\e[38;2;192;128;80m0\e[0m\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[Ks\r
-\r\e[Kt\r
-\r\e[Ko\r
-\r\e[Kp\r
-\r\e[Kp\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[Kn\r
-\r\e[Ko\r
-\r\e[Kw\r
-\r\e[K.\r
-\r\e[KT\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[K\e[38;2;192;128;80mb\e[0m\r
-\r\e[K\e[38;2;192;128;80mu\e[0m\r
-\r\e[K\e[38;2;192;128;80mi\e[0m\r
-\r\e[K\e[38;2;192;128;80ml\e[0m\r
-\r\e[K\e[38;2;192;128;80md\e[0m\r
-\r\e[Kj\r
-\r\e[Ko\r
-\r\e[Kb\r
-\r\e[Kw\r
-\r\e[Ka\r
-\r\e[Ks\r
-\r\e[Kk\r
-\r\e[Ki\r
-\r\e[Kl\r
-\r\e[Kl\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[Kb\r
-\r\e[Ky\r
-\r\e[K\e[38;2;192;128;80mS\e[0m\r
-\r\e[K\e[38;2;192;128;80mI\e[0m\r
-\r\e[K\e[38;2;192;128;80mG\e[0m\r
-\r\e[K\e[38;2;192;128;80mX\e[0m\r
-\r\e[K\e[38;2;192;128;80mC\e[0m\r
-\r\e[K\e[38;2;192;128;80mP\e[0m\r
-\r\e[K\e[38;2;192;128;80mU\e[0m\r
-\r\e[Ka\r
-\r\e[Kf\r
-\r\e[Kt\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kx\r
-\r\e[Kc\r
-\r\e[Ke\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[Ks\r
-\r\e[K2\r
-\r\e[Ks\r
-\r\e[Kp\r
-\r\e[Kr\r
-\r\e[Ko\r
-\r\e[Kc\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Ks\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Kl\r
-\r\e[Ki\r
-\r\e[Km\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[K.\r
+T\r
+h\r
+e\r
+d\r
+o\r
+c\r
+s\r
+s\r
+e\r
+r\r
+v\r
+e\r
+r\r
+r\r
+a\r
+n\r
+o\r
+n\r
+\e[38;2;192;128;80ml\e[0m\r
+\e[38;2;192;128;80mo\e[0m\r
+\e[38;2;192;128;80mc\e[0m\r
+\e[38;2;192;128;80ma\e[0m\r
+\e[38;2;192;128;80ml\e[0m\r
+\e[38;2;192;128;80mh\e[0m\r
+\e[38;2;192;128;80mo\e[0m\r
+\e[38;2;192;128;80ms\e[0m\r
+\e[38;2;192;128;80mt\e[0m\r
+\e[38;2;192;128;80m:\e[0m\r
+\e[38;2;192;128;80m8\e[0m\r
+\e[38;2;192;128;80m0\e[0m\r
+\e[38;2;192;128;80m8\e[0m\r
+\e[38;2;192;128;80m0\e[0m\r
+a\r
+n\r
+d\r
+i\r
+s\r
+s\r
+t\r
+o\r
+p\r
+p\r
+e\r
+d\r
+n\r
+o\r
+w\r
+.\r
+T\r
+h\r
+e\r
+\e[38;2;192;128;80mb\e[0m\r
+\e[38;2;192;128;80mu\e[0m\r
+\e[38;2;192;128;80mi\e[0m\r
+\e[38;2;192;128;80ml\e[0m\r
+\e[38;2;192;128;80md\e[0m\r
+j\r
+o\r
+b\r
+w\r
+a\r
+s\r
+k\r
+i\r
+l\r
+l\r
+e\r
+d\r
+b\r
+y\r
+\e[38;2;192;128;80mS\e[0m\r
+\e[38;2;192;128;80mI\e[0m\r
+\e[38;2;192;128;80mG\e[0m\r
+\e[38;2;192;128;80mX\e[0m\r
+\e[38;2;192;128;80mC\e[0m\r
+\e[38;2;192;128;80mP\e[0m\r
+\e[38;2;192;128;80mU\e[0m\r
+a\r
+f\r
+t\r
+e\r
+r\r
+e\r
+x\r
+c\r
+e\r
+e\r
+d\r
+i\r
+n\r
+g\r
+i\r
+t\r
+s\r
+2\r
+s\r
+p\r
+r\r
+o\r
+c\r
+e\r
+s\r
+s\r
+o\r
+r\r
+l\r
+i\r
+m\r
+i\r
+t\r
+.\r
 \e[?25h\e[?2026l
 === plain ===
 \e[48;2;52;53;65m\e[0m
@@ -265,58 +265,58 @@ exceeding its 2s processor limit.\r
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m start the docs server, check on it, then stop it                                                   \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m--bind\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlocalhost\e[0m \e[38;2;150;152;150m2L\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m--bind\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlocalhost\e[0m \e[38;2;150;152;150m2L\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150moutput\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150moutput\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mwait\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102ma job of that name is already running\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;150;152;150mlist\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;150;152;150mlist\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_timeout&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L ~100t\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstop\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstop\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mbuild, docs\e[0m \e[38;2;150;152;150mwait\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_any&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mbuild, docs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_all&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L ~100t\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs ser\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on `\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on `loca\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on `localhos\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on `localhost:80\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is s\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopp\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped n\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now.\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The `bui\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was kill\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed b\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by `S\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by `SIGXC\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by \e[38;2;192;128;80mSIGXCPU\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by \e[38;2;192;128;80mSIGXCPU\e[0m afte\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by \e[38;2;192;128;80mSIGXCPU\e[0m after\r
-\r\e[Kex\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceed\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its 2s p\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its 2s proce\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its 2s processor\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its 2s processor lim\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its 2s processor limit.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m--bind\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlocalhost\e[0m \e[38;2;150;152;150m2L\e[0m\r\e[59C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m--bind\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlocalhost\e[0m \e[38;2;150;152;150m2L\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150moutput\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150moutput\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mwait\e[0m\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102ma job of that name is already running\e[0m\r\e[81C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[81C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;150;152;150mlist\e[0m\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;150;152;150mlist\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_timeout&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L ~100t\e[0m\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstop\e[0m\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstop\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mbuild, docs\e[0m \e[38;2;150;152;150mwait\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_any&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mbuild, docs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_all&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L ~100t\e[0m\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KThe\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs ser\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on `\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on `loca\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on `localhos\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on `localhost:80\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is s\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopp\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped n\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now.\r\e[57C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The\r\e[61C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The `bui\r\e[66C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m\r\e[67C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was\r\e[75C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was kill\r\e[80C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed b\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by `S\r\e[88C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by `SIGXC\r\e[92C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by \e[38;2;192;128;80mSIGXCPU\e[0m\r\e[93C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by \e[38;2;192;128;80mSIGXCPU\e[0m afte\r\e[98C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by \e[38;2;192;128;80mSIGXCPU\e[0m after\r
+\e[Kex\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceed\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its 2s p\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its 2s proce\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its 2s processor\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its 2s processor lim\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its 2s processor limit.\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[33C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m start the docs server, check on it, then stop it                                                   \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m--bind\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlocalhost\e[0m \e[38;2;150;152;150m2L\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m--bind\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlocalhost\e[0m \e[38;2;150;152;150m2L\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150moutput\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150moutput\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mwait\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102ma job of that name is already running\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;150;152;150mlist\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;150;152;150mlist\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_timeout&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L ~100t\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstop\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstop\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mbuild, docs\e[0m \e[38;2;150;152;150mwait\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_any&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mbuild, docs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_all&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L ~100t\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by \e[38;2;192;128;80mSIGXCPU\e[0m after\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kexceeding its 2s processor limit.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m--bind\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlocalhost\e[0m \e[38;2;150;152;150m2L\e[0m\r\e[59C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m--bind\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlocalhost\e[0m \e[38;2;150;152;150m2L\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150moutput\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150moutput\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mwait\e[0m\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102ma job of that name is already running\e[0m\r\e[81C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[81C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;150;152;150mlist\e[0m\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;150;152;150mlist\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_timeout&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L ~100t\e[0m\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstop\e[0m\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstop\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mbuild, docs\e[0m \e[38;2;150;152;150mwait\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_any&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mbuild, docs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_all&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L ~100t\e[0m\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by \e[38;2;192;128;80mSIGXCPU\e[0m after\r\e[99C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kexceeding its 2s processor limit.\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[33C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m start the docs server, check on it, then stop it                                                   \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m--bind\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlocalhost\e[0m \e[38;2;150;152;150m2L\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m--bind\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlocalhost\e[0m \e[38;2;150;152;150m2L\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150moutput\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150moutput\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mwait\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102ma job of that name is already running\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;150;152;150mlist\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;150;152;150mlist\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_timeout&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L ~100t\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstop\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstop\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mbuild, docs\e[0m \e[38;2;150;152;150mwait\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_any&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mbuild, docs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_all&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L ~100t\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs ser\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on `\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on `loca\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on `localhos\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on `localhost:80\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is s\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopp\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped n\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now.\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The `bui\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was kill\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed b\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by `S\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by `SIGXC\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by \e[38;2;192;128;80mSIGXCPU\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by \e[38;2;192;128;80mSIGXCPU\e[0m afte\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by \e[38;2;192;128;80mSIGXCPU\e[0m after\r
-\r\e[Kex\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceed\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its 2s p\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its 2s proce\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its 2s processor\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its 2s processor lim\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its 2s processor limit.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m--bind\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlocalhost\e[0m \e[38;2;150;152;150m2L\e[0m\r\e[59C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m--bind\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlocalhost\e[0m \e[38;2;150;152;150m2L\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150moutput\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150moutput\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mwait\e[0m\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102ma job of that name is already running\e[0m\r\e[81C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[81C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;150;152;150mlist\e[0m\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;150;152;150mlist\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_timeout&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L ~100t\e[0m\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstop\e[0m\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstop\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mbuild, docs\e[0m \e[38;2;150;152;150mwait\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_any&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mbuild, docs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_all&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L ~100t\e[0m\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KThe\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs ser\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on `\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on `loca\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on `localhos\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on `localhost:80\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is s\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopp\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped n\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now.\r\e[57C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The\r\e[61C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The `bui\r\e[66C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m\r\e[67C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was\r\e[75C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was kill\r\e[80C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed b\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by `S\r\e[88C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by `SIGXC\r\e[92C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by \e[38;2;192;128;80mSIGXCPU\e[0m\r\e[93C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by \e[38;2;192;128;80mSIGXCPU\e[0m afte\r\e[98C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by \e[38;2;192;128;80mSIGXCPU\e[0m after\r
+\e[Kex\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceed\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its 2s p\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its 2s proce\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its 2s processor\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its 2s processor lim\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kexceeding its 2s processor limit.\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[33C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
@@ -328,66 +328,66 @@ exceeding its 2s processor limit.\r
 \e[48;2;52;53;65m stop it    \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e[?7l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdo…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdo…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdo…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdo…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102ma …\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_timeout&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L ~100t\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdo…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_any&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_all&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L ~100t\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdo…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdo…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdo…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdo…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102ma …\e[0m\r
+\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\r
+\e]8;;oh://tool-result?call=call_timeout&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L ~100t\e[0m\r
+\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdo…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_any&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\r
+\e]8;;oh://tool-result?call=call_all&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L ~100t\e[0m\r
 \r
-\r\e[KThe docs\r
-\r\e[Kserver ran\r
-\r\e[Kon\r
-\r\e[K\e[38;2;192;128;80mlocalhost:80\e[0m\r
-\r\e[K\e[38;2;192;128;80m80\e[0m and is\r
-\r\e[Kstopped now.\r
-\r\e[KThe \e[38;2;192;128;80mbuild\e[0m\r
-\r\e[Kjob was\r
-\r\e[Kkilled by\r
-\r\e[K\e[38;2;192;128;80mSIGXCPU\e[0m\r
-\r\e[Kafter\r
-\r\e[Kexceeding\r
-\r\e[Kits 2s\r
-\r\e[Kprocessor\r
-\r\e[Klimit.\r
+The docs\r
+server ran\r
+on\r
+\e[38;2;192;128;80mlocalhost:80\e[0m\r
+\e[38;2;192;128;80m80\e[0m and is\r
+stopped now.\r
+The \e[38;2;192;128;80mbuild\e[0m\r
+job was\r
+killed by\r
+\e[38;2;192;128;80mSIGXCPU\e[0m\r
+after\r
+exceeding\r
+its 2s\r
+processor\r
+limit.\r
 \e[?25h\e[?2026l
 === unsized ===
-\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m
-\e[48;2;52;53;65m start the docs server, check on it, then stop it\e[0m
-\e[48;2;52;53;65m\e[0m
-\e[?7l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m--bind\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlocalhost\e[0m \e[38;2;150;152;150m2L\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150moutput\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102ma job of that name is already running\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;150;152;150mlist\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_timeout&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L ~100t\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstop\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_any&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mbuild, docs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_all&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L ~100t\e[0m
-
-\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by \e[38;2;192;128;80mSIGXCPU\e[0m after exceeding its 2s processor limit.
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m start the docs server, check on it, then stop it\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m--bind\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlocalhost\e[0m \e[38;2;150;152;150m2L\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150moutput\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102ma job of that name is already running\e[0m\r
+\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;150;152;150mlist\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\r
+\e]8;;oh://tool-result?call=call_timeout&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L ~100t\e[0m\r
+\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstop\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_any&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mbuild, docs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\r
+\e]8;;oh://tool-result?call=call_all&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L ~100t\e[0m\r
+\r
+The docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by \e[38;2;192;128;80mSIGXCPU\e[0m after exceeding its 2s processor limit.\r
 \e[?25h\e[?2026l
 === wide ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m start the docs server, check on it, then stop it                                                   \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m--bind\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlocalhost\e[0m \e[38;2;150;152;150m2L\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150moutput\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102ma job of that name is already running\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;150;152;150mlist\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_timeout&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L ~100t\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstop\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_any&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mbuild, docs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_all&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L ~100t\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m--bind\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlocalhost\e[0m \e[38;2;150;152;150m2L\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstatus\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150moutput\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102ma job of that name is already running\e[0m\r
+\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;150;152;150mlist\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\r
+\e]8;;oh://tool-result?call=call_timeout&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L ~100t\e[0m\r
+\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150mstop\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_any&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mbuild, docs\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\r
+\e]8;;oh://tool-result?call=call_all&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs, build\e[0m \e[38;2;150;152;150mwait\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L ~100t\e[0m\r
 \r
-\r\e[KThe docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by \e[38;2;192;128;80mSIGXCPU\e[0m after\r
-\r\e[Kexceeding its 2s processor limit.\r
+The docs server ran on \e[38;2;192;128;80mlocalhost:8080\e[0m and is stopped now. The \e[38;2;192;128;80mbuild\e[0m job was killed by \e[38;2;192;128;80mSIGXCPU\e[0m after\r
+exceeding its 2s processor limit.\r
 \e[?25h\e[?2026l

@@ -6,8 +6,8 @@
 \e[48;2;52;53;65m -was                                                                                               \e[0m\r
 \e[48;2;52;53;65m +is                                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KSaid it.\e[?25h\e[?2026l\e]9;4;0\e\\\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KSaid it.\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[8C\e[?25h\e[?2026l\e]9;4;0\e\\\r
 
 === a piped prompt follows a given one ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
@@ -19,8 +19,8 @@
 \e[48;2;52;53;65m \e[38;2;204;102;102m-was\e[0m\e[48;2;52;53;65m                                                                                               \e[0m\r
 \e[48;2;52;53;65m \e[38;2;76;154;44m+is\e[0m\e[48;2;52;53;65m                                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KSaid it.\e[?25h\e[?2026l\e]9;4;0\e\\\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KSaid it.\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[8C\e[?25h\e[?2026l\e]9;4;0\e\\\r
 
 === a piped prompt printed ===
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
@@ -49,11 +49,11 @@ Said it.
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m first question                                                                                     \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KSaid it.\e[?25h\e[?2026l\e]9;4;0\e\\\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KSaid it.\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[8C\e[?25h\e[?2026l\e]9;4;0\e\\\r
 \e]9;4;3\e\\\r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m second question                                                                                    \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\r\e[KSaid it.\e[?25h\e[?2026l\e]9;4;0\e\\\r
+\e[?2026h\e[?25l\r\e[K\r
+\e[KSaid it.\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[8C\e[?25h\e[?2026l\e]9;4;0\e\\\r

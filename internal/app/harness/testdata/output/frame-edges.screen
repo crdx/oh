@@ -1,0 +1,498 @@
+=== a notice beside two calls at 05 lines ===
+
+ run them
+
+    exit status 1
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a notice beside two calls at 06 lines ===
+
+ run them
+
+⋮ 6 more lines
+    exit status 1
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a notice beside two calls at 07 lines ===
+
+ run them
+
+⋮ 5 more lines
+    undefined: getWidth
+    exit status 1
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a notice beside two calls at 08 lines ===
+
+ run them
+
+⋮ 4 more lines
+ 🤖 Job build exited: failed, exit(2).
+    undefined: getWidth
+    exit status 1
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a notice beside two calls at 09 lines ===
+
+ run them
+
+⋮ 3 more lines
+
+ 🤖 Job build exited: failed, exit(2).
+    undefined: getWidth
+    exit status 1
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a notice beside two calls at 10 lines ===
+
+ run them
+
+⋮ 2 more lines
+
+
+ 🤖 Job build exited: failed, exit(2).
+    undefined: getWidth
+    exit status 1
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a notice beside two calls at 11 lines ===
+
+ run them
+
+$ sleep 60
+$ sleep 61
+
+
+ 🤖 Job build exited: failed, exit(2).
+    undefined: getWidth
+    exit status 1
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a notice beside two calls at 12 lines ===
+
+ run them
+
+$ sleep 60
+$ sleep 61
+
+
+ 🤖 Job build exited: failed, exit(2).
+    undefined: getWidth
+    exit status 1
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a notice beside two calls at 13 lines ===
+
+ run them
+
+
+$ sleep 60
+$ sleep 61
+
+
+ 🤖 Job build exited: failed, exit(2).
+    undefined: getWidth
+    exit status 1
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a notice beside two calls at 14 lines ===
+
+ run them
+
+
+$ sleep 60
+$ sleep 61
+
+
+ 🤖 Job build exited: failed, exit(2).
+    undefined: getWidth
+    exit status 1
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a notice beside two calls at 15 lines ===
+
+ run them
+
+
+$ sleep 60
+$ sleep 61
+
+
+ 🤖 Job build exited: failed, exit(2).
+    undefined: getWidth
+    exit status 1
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a notice beside two calls redrawn at 24 lines ===
+
+ run them
+
+
+$ sleep 60
+$ sleep 61
+
+
+ 🤖 Job build exited: failed, exit(2).
+    undefined: getWidth
+    exit status 1
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a notice beside two calls redrawn at 8 lines ===
+
+ run them
+
+⋮ 4 more lines
+ 🤖 Job build exited: failed, exit(2).
+    undefined: getWidth
+    exit status 1
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a streaming answer redrawn midway at 24 lines ===
+
+ run them
+
+
+The first sentence of a long stretch of prose that has to wrap. Every sentence after it adds another
+row, so the prose soon outgrows a short terminal. A third sentence keeps going so the rows keep
+arriving while the footer stands. A fourth one follows it, just as long, to push the top of the
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a streaming answer redrawn midway at 24 lines, sealed ===
+
+ run them
+
+
+The first sentence of a long stretch of prose that has to wrap. Every sentence after it adds another
+row, so the prose soon outgrows a short terminal. A third sentence keeps going so the rows keep
+arriving while the footer stands. A fourth one follows it, just as long, to push the top of the
+prose off the screen. And a fifth rounds it off, which is where a redraw is asked for in the middle.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a streaming answer redrawn midway at 8 lines ===
+
+ run them
+
+
+The first sentence of a long stretch of prose that has to wrap. Every sentence after it adds another
+row, so the prose soon outgrows a short terminal. A third sentence keeps going so the rows keep
+arriving while the footer stands. A fourth one follows it, just as long, to push the top of the
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a streaming answer redrawn midway at 8 lines, sealed ===
+
+ run them
+
+
+The first sentence of a long stretch of prose that has to wrap. Every sentence after it adds another
+row, so the prose soon outgrows a short terminal. A third sentence keeps going so the rows keep
+arriving while the footer stands. A fourth one follows it, just as long, to push the top of the
+prose off the screen. And a fifth rounds it off, which is where a redraw is asked for in the middle.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a streaming thought redrawn midway at 24 lines ===
+
+ run them
+
+
+The first sentence of a long stretch of prose that has to wrap. Every sentence after it adds another
+row, so the prose soon outgrows a short terminal. A third sentence keeps going so the rows keep
+arriving while the footer stands. A fourth one follows it, just as long, to push the top of the
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a streaming thought redrawn midway at 24 lines, sealed ===
+
+ run them
+
+
+The first sentence of a long stretch of prose that has to wrap. Every sentence after it adds another
+row, so the prose soon outgrows a short terminal. A third sentence keeps going so the rows keep
+arriving while the footer stands. A fourth one follows it, just as long, to push the top of the
+prose off the screen. And a fifth rounds it off, which is where a redraw is asked for in the middle.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a streaming thought redrawn midway at 8 lines ===
+
+ run them
+
+
+The first sentence of a long stretch of prose that has to wrap. Every sentence after it adds another
+row, so the prose soon outgrows a short terminal. A third sentence keeps going so the rows keep
+arriving while the footer stands. A fourth one follows it, just as long, to push the top of the
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a streaming thought redrawn midway at 8 lines, sealed ===
+
+ run them
+
+
+The first sentence of a long stretch of prose that has to wrap. Every sentence after it adds another
+row, so the prose soon outgrows a short terminal. A third sentence keeps going so the rows keep
+arriving while the footer stands. A fourth one follows it, just as long, to push the top of the
+prose off the screen. And a fifth rounds it off, which is where a redraw is asked for in the middle.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question on a terminal of 4 lines ===
+
+ run them
+
+$ sleep 61
+──────────────────────────────────────── auto-denies in 1m ─────────────────────────────────────────
+Run this command with host networking?
+[Yes]  No
+=== a tall question on a terminal of 5 lines ===
+
+ run them
+
+$ sleep 61
+──────────────────────────────────────── auto-denies in 1m ─────────────────────────────────────────
+Run this command with host networking?
+⋮ 40 more lines
+[Yes]  No
+=== a tall question on a terminal of 6 lines ===
+
+ run them
+
+$ sleep 61
+──────────────────────────────────────── auto-denies in 1m ─────────────────────────────────────────
+Run this command with host networking?
+⋮ 40 more lines
+[Yes]  No
+⋮ 1 more line
+=== an answer whose top changes after it was committed at 24 lines ===
+
+ run them
+
+
+See the docs (https://example.com) first.
+
+A line of the answer.
+
+Another line of the answer.
+
+A third line of the answer.
+
+A fourth line of the answer.
+
+A fifth line of the answer.
+
+A sixth line of the answer.
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== an answer whose top changes after it was committed at 24 lines, sealed ===
+
+ run them
+
+
+See the docs (https://example.com) first.
+
+A line of the answer.
+
+Another line of the answer.
+
+A third line of the answer.
+
+A fourth line of the answer.
+
+A fifth line of the answer.
+
+A sixth line of the answer.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== an answer whose top changes after it was committed at 8 lines ===
+
+ run them
+
+
+See the docs (https://example.com) first.
+
+A line of the answer.
+
+Another line of the answer.
+
+A third line of the answer.
+
+A fourth line of the answer.
+
+A fifth line of the answer.
+
+A sixth line of the answer.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== an answer whose top changes after it was committed at 8 lines, sealed ===
+
+ run them
+
+
+See the docs (https://example.com) first.
+
+A line of the answer.
+
+Another line of the answer.
+
+A third line of the answer.
+
+A fourth line of the answer.
+
+A fifth line of the answer.
+
+A sixth line of the answer.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== rows ending in blanks at 6 lines ===
+said before
+
+one
+
+two
+
+three
+
+four
+
+five
+
+
+
+─
+>
+─
+=== rows ending in blanks at 6 lines, sealed ===
+said before
+
+one
+
+two
+
+three
+
+four
+
+five
+
+─
+>
+─
+=== rows ending in blanks at 7 lines ===
+said before
+
+one
+
+two
+
+three
+
+four
+
+five
+
+
+
+─
+>
+─
+=== rows ending in blanks at 7 lines, sealed ===
+said before
+
+one
+
+two
+
+three
+
+four
+
+five
+
+─
+>
+─
+=== rows ending in blanks at 8 lines ===
+said before
+
+one
+
+two
+
+three
+
+four
+
+five
+
+
+
+─
+>
+─
+=== rows ending in blanks at 8 lines, sealed ===
+said before
+
+one
+
+two
+
+three
+
+four
+
+five
+
+─
+>
+─

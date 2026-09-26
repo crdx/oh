@@ -3,13 +3,13 @@
 \e[48;2;52;53;65m search everything for the spinner      \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e[?7l\r\e[KThat will take a moment.\r
+That will take a moment.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;192;128;80m9s\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\find\e]8;;\e\\ \e[38;2;192;128;80m**/*.go\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m02s\e[0m \e[38;2;204;102;102mthe search went on…\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;192;128;80m9s\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\find\e]8;;\e\\ \e[38;2;192;128;80m**/*.go\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m02s\e[0m \e[38;2;204;102;102mthe search went on…\e[0m\r
 \r
-\r\e[KThe grep took nine seconds and the find\r
-\r\e[Kgave up after a minute.\r
+The grep took nine seconds and the find\r
+gave up after a minute.\r
 \e[?25h\e[?2026l
 === one column ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
@@ -73,81 +73,81 @@
 \e[48;2;52;53;65mr\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\e[?7l\r\e[KT\r
-\r\e[Kh\r
-\r\e[Ka\r
-\r\e[Kt\r
-\r\e[Kw\r
-\r\e[Ki\r
-\r\e[Kl\r
-\r\e[Kl\r
-\r\e[Kt\r
-\r\e[Ka\r
-\r\e[Kk\r
-\r\e[Ke\r
-\r\e[Ka\r
-\r\e[Km\r
-\r\e[Ko\r
-\r\e[Km\r
-\r\e[Ke\r
-\r\e[Kn\r
-\r\e[Kt\r
-\r\e[K.\r
+T\r
+h\r
+a\r
+t\r
+w\r
+i\r
+l\r
+l\r
+t\r
+a\r
+k\r
+e\r
+a\r
+m\r
+o\r
+m\r
+e\r
+n\r
+t\r
+.\r
 \r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
 \r
-\r\e[KT\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kg\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kp\r
-\r\e[Kt\r
-\r\e[Ko\r
-\r\e[Ko\r
-\r\e[Kk\r
-\r\e[Kn\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Ke\r
-\r\e[Kc\r
-\r\e[Ko\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Ks\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kf\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Kg\r
-\r\e[Ka\r
-\r\e[Kv\r
-\r\e[Ke\r
-\r\e[Ku\r
-\r\e[Kp\r
-\r\e[Ka\r
-\r\e[Kf\r
-\r\e[Kt\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ka\r
-\r\e[Km\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Ku\r
-\r\e[Kt\r
-\r\e[Ke\r
-\r\e[K.\r
+T\r
+h\r
+e\r
+g\r
+r\r
+e\r
+p\r
+t\r
+o\r
+o\r
+k\r
+n\r
+i\r
+n\r
+e\r
+s\r
+e\r
+c\r
+o\r
+n\r
+d\r
+s\r
+a\r
+n\r
+d\r
+t\r
+h\r
+e\r
+f\r
+i\r
+n\r
+d\r
+g\r
+a\r
+v\r
+e\r
+u\r
+p\r
+a\r
+f\r
+t\r
+e\r
+r\r
+a\r
+m\r
+i\r
+n\r
+u\r
+t\r
+e\r
+.\r
 \e[?25h\e[?2026l
 === plain ===
 \e[48;2;52;53;65m\e[0m
@@ -176,40 +176,37 @@ The grep took nine seconds and the find gave up after a minute.\r
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m search everything for the spinner                                                                  \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KThat\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat wil\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat will ta\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat will take a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat will take a mom\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat will take a moment.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kgrep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kfind \e[38;2;192;128;80m**/*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;192;128;80m9s\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[Kfind \e[38;2;192;128;80m**/*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\find\e]8;;\e\\ \e[38;2;192;128;80m**/*.go\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m02s\e[0m \e[38;2;204;102;102mthe search went on too long\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep too\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took ni\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine s\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine secon\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the f\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave up\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave up afte\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave up after a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave up after a minu\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave up after a minute.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KThat\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat wil\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat will ta\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat will take a\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat will take a mom\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat will take a moment.\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kgrep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kfind \e[38;2;192;128;80m**/*.go\e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;192;128;80m9s\e[0m \e[38;2;150;152;150m1L\e[0m\e[1B\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\find\e]8;;\e\\ \e[38;2;192;128;80m**/*.go\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m02s\e[0m \e[38;2;204;102;102mthe search went on too long\e[0m\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KThe\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep too\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took ni\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine s\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine secon\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds a\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and t\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the f\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave up\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave up afte\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave up after a\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave up after a minu\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave up after a minute.\r\e[63C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[63C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m search everything for the spinner                                                                  \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KThat will take a moment.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kgrep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kfind \e[38;2;192;128;80m**/*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;192;128;80m9s\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[Kfind \e[38;2;192;128;80m**/*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\find\e]8;;\e\\ \e[38;2;192;128;80m**/*.go\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m02s\e[0m \e[38;2;204;102;102mthe search went on too long\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave up after a minute.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KThat will take a moment.\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kgrep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kfind \e[38;2;192;128;80m**/*.go\e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;192;128;80m9s\e[0m \e[38;2;150;152;150m1L\e[0m\e[1B\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\find\e]8;;\e\\ \e[38;2;192;128;80m**/*.go\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m02s\e[0m \e[38;2;204;102;102mthe search went on too long\e[0m\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KThe grep took nine seconds and the find gave up after a minute.\r\e[63C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[63C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m search everything for the spinner                                                                  \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KThat\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat wil\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat will ta\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat will take a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat will take a mom\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat will take a moment.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kgrep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kfind \e[38;2;192;128;80m**/*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;192;128;80m9s\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[Kfind \e[38;2;192;128;80m**/*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\find\e]8;;\e\\ \e[38;2;192;128;80m**/*.go\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m02s\e[0m \e[38;2;204;102;102mthe search went on too long\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep too\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took ni\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine s\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine secon\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the f\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave up\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave up afte\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave up after a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave up after a minu\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave up after a minute.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KThat\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat wil\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat will ta\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat will take a\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat will take a mom\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat will take a moment.\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kgrep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kfind \e[38;2;192;128;80m**/*.go\e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;192;128;80m9s\e[0m \e[38;2;150;152;150m1L\e[0m\e[1B\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\find\e]8;;\e\\ \e[38;2;192;128;80m**/*.go\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m02s\e[0m \e[38;2;204;102;102mthe search went on too long\e[0m\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KThe\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep too\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took ni\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine s\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine secon\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds a\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and t\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the f\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave up\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave up afte\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave up after a\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave up after a minu\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe grep took nine seconds and the find gave up after a minute.\r\e[63C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[63C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
@@ -219,41 +216,41 @@ The grep took nine seconds and the find gave up after a minute.\r
 \e[48;2;52;53;65m spinner    \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e[?7l\r\e[KThat will\r
-\r\e[Ktake a\r
-\r\e[Kmoment.\r
+That will\r
+take a\r
+moment.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;192;128;80m9s\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\…\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m02s\e[0m \e[38;2;204;102;102mt…\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;192;128;80m9s\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\…\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m02s\e[0m \e[38;2;204;102;102mt…\e[0m\r
 \r
-\r\e[KThe grep\r
-\r\e[Ktook nine\r
-\r\e[Kseconds and\r
-\r\e[Kthe find\r
-\r\e[Kgave up\r
-\r\e[Kafter a\r
-\r\e[Kminute.\r
+The grep\r
+took nine\r
+seconds and\r
+the find\r
+gave up\r
+after a\r
+minute.\r
 \e[?25h\e[?2026l
 === unsized ===
-\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m
-\e[48;2;52;53;65m search everything for the spinner\e[0m
-\e[48;2;52;53;65m\e[0m
-\e[?7l\r\e[KThat will take a moment.
-
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;192;128;80m9s\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\find\e]8;;\e\\ \e[38;2;192;128;80m**/*.go\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m02s\e[0m \e[38;2;204;102;102mthe search went on too long\e[0m
-
-\r\e[KThe grep took nine seconds and the find gave up after a minute.
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m search everything for the spinner\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+That will take a moment.\r
+\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;192;128;80m9s\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\find\e]8;;\e\\ \e[38;2;192;128;80m**/*.go\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m02s\e[0m \e[38;2;204;102;102mthe search went on too long\e[0m\r
+\r
+The grep took nine seconds and the find gave up after a minute.\r
 \e[?25h\e[?2026l
 === wide ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m search everything for the spinner                                                                  \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[KThat will take a moment.\r
+That will take a moment.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;192;128;80m9s\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\find\e]8;;\e\\ \e[38;2;192;128;80m**/*.go\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m02s\e[0m \e[38;2;204;102;102mthe search went on too long\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;192;128;80m9s\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\find\e]8;;\e\\ \e[38;2;192;128;80m**/*.go\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m02s\e[0m \e[38;2;204;102;102mthe search went on too long\e[0m\r
 \r
-\r\e[KThe grep took nine seconds and the find gave up after a minute.\r
+The grep took nine seconds and the find gave up after a minute.\r
 \e[?25h\e[?2026l

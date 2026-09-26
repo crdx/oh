@@ -8,20 +8,35 @@ import (
 	"crdx.org/oh/internal/app/ansi"
 )
 
+type sealedState struct {
+	isMidLine        bool
+	isBlankOwed      bool
+	trailingNewlines int
+	lastGroup        Group
+	hasPrinted       bool
+	column           int
+}
+
+func (self *Screen) sealedState() sealedState {
+	return sealedState{
+		isMidLine:        self.isMidLine,
+		isBlankOwed:      self.isBlankOwed,
+		trailingNewlines: self.trailingNewlines,
+		lastGroup:        self.lastGroup,
+		hasPrinted:       self.hasPrinted,
+		column:           self.column,
+	}
+}
+
 func screenWithInput() (*Screen, *strings.Builder) {
 	screenOutput := &strings.Builder{}
 
-	shownFooter := footer{rows: []string{"> hi"}, cursorColumn: 3, column: 4, separators: apart, hasContentAbove: true}
+	screen := &Screen{writer: screenOutput, isTerminal: true, canRepaint: true}
+	screen.Line("said")
+	screen.Footer([]string{"> hi"}, 0, 3)
+	screenOutput.Reset()
 
-	return &Screen{
-		writer:      screenOutput,
-		isTerminal:  true,
-		canRepaint:  true,
-		column:      4,
-		hasPrinted:  true,
-		input:       shownFooter,
-		shownFooter: shownFooter,
-	}, screenOutput
+	return screen, screenOutput
 }
 
 func TestSynchronisingHoldsNestedFramesBackUntilDrawingFinishes(t *testing.T) {
@@ -172,19 +187,20 @@ func TestReleasingAUsedConversationComesDownBelowIt(t *testing.T) {
 
 	screen.Release(true)
 
-	if got := screenOutput.String(); !strings.Contains(got, "\r\n"+autoWrap+showCursor) {
+	got := screenOutput.String()
+	if !strings.HasSuffix(got, "\r"+autoWrap+showCursor) || strings.Contains(got, clearBelow) {
 		t.Errorf("expected the conversation to be left above the next line, got %q", got)
 	}
 }
 
-func TestReleasingAConversationThatEndedItsRowLeavesNoGapBelowIt(t *testing.T) {
+func TestReleasingAConversationAddsNoRowBelowIt(t *testing.T) {
 	screen, screenOutput := screenWithInput()
-	screen.column = 0
+	footerRows := len(screen.canvas.rows)
 
 	screen.Release(true)
 
-	if got := screenOutput.String(); strings.Contains(got, "\r\n") {
-		t.Errorf("expected nothing below the conversation, got %q", got)
+	if got := screenOutput.String(); strings.Count(got, "\r\n") >= footerRows {
+		t.Errorf("expected to stay within the %d rows the footer held, got %q", footerRows, got)
 	}
 }
 
@@ -193,7 +209,7 @@ func TestReleasingAnUnusedConversationErasesItsLine(t *testing.T) {
 
 	screen.Release(false)
 
-	if got := screenOutput.String(); !strings.Contains(got, "\r"+clearBelow+autoWrap+showCursor) {
+	if got := screenOutput.String(); !strings.Contains(got, "\r"+eraseRowsAbove(1)+autoWrap+showCursor) {
 		t.Errorf("expected the unused conversation line to be erased, got %q", got)
 	}
 }
@@ -207,7 +223,7 @@ func TestReleasingAnUnusedConversationErasesEveryWrappedRow(t *testing.T) {
 	screenOutput.Reset()
 	screen.Release(false)
 
-	if got := screenOutput.String(); !strings.Contains(got, "\r"+moveUp(1)+clearBelow) {
+	if got := screenOutput.String(); !strings.Contains(got, "\r"+eraseRowsAbove(2)) || strings.Contains(got, clearBelow) {
 		t.Errorf("expected both rows of the unused conversation to be erased, got %q", got)
 	}
 }
@@ -229,11 +245,11 @@ func TestTheInputTakesNoRowOfItsOwnUntilSomethingHasBeenSaid(t *testing.T) {
 
 	got := screenOutput.String()
 
-	if want := "\r" + clearBelow + "thinking"; !strings.Contains(got, want) {
+	if want := "\r" + eraseRow + "thinking"; !strings.Contains(got, want) {
 		t.Errorf("expected what was said to take the row the input was on, got %q", got)
 	}
 
-	if want := "thinking\r\n\r\n> hi"; !strings.Contains(got, want) {
+	if want := "thinking\r\n" + eraseRow + "\r\n" + eraseRow + "> hi"; !strings.Contains(got, want) {
 		t.Errorf("expected the input to move under what was said with a blank row, got %q", got)
 	}
 }
@@ -247,8 +263,7 @@ func TestFinishingTheConversationKeepsTheFooterInPlace(t *testing.T) {
 
 	screen.End()
 
-	got := screenOutput.String()
-	if !strings.Contains(got, "\r\n> hi") || strings.Contains(got, "\r\n\r\n> hi") {
+	if got := screenOutput.String(); strings.Contains(got, "> hi") {
 		t.Errorf("expected the existing blank row to keep the footer in place, got %q", got)
 	}
 }
@@ -258,7 +273,7 @@ func TestWritingToTheConversationPutsTheInputBackWithTheCursorInIt(t *testing.T)
 
 	screen.Line("thinking")
 
-	want := "\r\n\r\n> hi\r" + ansi.Right(3) + showCursor + endFrame
+	want := eraseRow + "> hi\r" + ansi.Right(3) + showCursor + endFrame
 
 	if got := screenOutput.String(); !strings.HasSuffix(got, want) {
 		t.Errorf("expected the input to be put back under it, got %q", got)
@@ -270,7 +285,7 @@ func TestTheInputIsTakenOffTheScreenBeforeTheConversationIsWrittenTo(t *testing.
 
 	screen.Line("thinking")
 
-	want := "\r" + clearBelow + ansi.Up(apart) + ansi.Right(4)
+	want := ansi.Up(1) + "\r" + eraseRow
 
 	got := screenOutput.String()
 
@@ -307,11 +322,11 @@ func TestAnInputOfSeveralRowsIsTakenOffAndPutBackWhole(t *testing.T) {
 
 	got := screenOutput.String()
 
-	if want := "\r" + ansi.Up(1) + clearBelow; !strings.Contains(got, want) {
-		t.Errorf("expected the erase to start at the top row of the input, got %q", got)
+	if want := ansi.Up(2) + "\r" + eraseRow; !strings.Contains(got, want) {
+		t.Errorf("expected the erase to start above the top row of the input, got %q", got)
 	}
 
-	if want := "\r\n\r\n> one\r\ntwo\r\nthree" + ansi.Up(1); !strings.Contains(got, want) {
+	if want := eraseRow + "three" + ansi.Up(1); !strings.Contains(got, want) || !strings.Contains(got, eraseRow+"> one") || !strings.Contains(got, eraseRow+"two") {
 		t.Errorf("expected every row back, cursor on the second, got %q", got)
 	}
 }
@@ -332,11 +347,11 @@ func TestResettingClearsTheScreenWithoutErasingFromAStaleRecord(t *testing.T) {
 		t.Errorf("expected nothing to be erased where the input used to be, got %q", got)
 	}
 
-	if screen.shownFooter.rows != nil || screen.input.rows != nil {
-		t.Errorf("expected both footers to be forgotten, got %v and %v", screen.shownFooter, screen.input)
+	if screen.canvas.rows != nil || screen.input.rows != nil {
+		t.Errorf("expected both footers to be forgotten, got %v and %v", screen.canvas, screen.input)
 	}
 
-	if screen.column != 0 || screen.openedRows != 0 || screen.isMidLine || screen.hasPendingText || screen.hasPrinted || screen.lastGroup != NoticeGroup || screen.isWrapping {
+	if screen.column != 0 || screen.openedRows != 0 || screen.isMidLine || screen.hasPrinted || screen.lastGroup != NoticeGroup || screen.isWrapping {
 		t.Errorf("expected the screen to be forgotten, got %+v", screen)
 	}
 }
@@ -344,7 +359,7 @@ func TestResettingClearsTheScreenWithoutErasingFromAStaleRecord(t *testing.T) {
 func TestWritingWithNoInputShownIsLeftAlone(t *testing.T) {
 	screen, screenOutput := screenWithInput()
 	screen.input = footer{}
-	screen.shownFooter = footer{}
+	screen.canvas = canvas{}
 
 	screen.Line("thinking")
 
@@ -357,7 +372,7 @@ func TestAnInertFooterLeavesTheCursorHidden(t *testing.T) {
 	screenOutput := &strings.Builder{}
 	screen := &Screen{writer: screenOutput, isTerminal: true, canRepaint: true}
 
-	screen.InertFooter([]string{"> hi"}, 0)
+	screen.InertFooter([]string{"> hi"}, 0, 0)
 
 	got := screenOutput.String()
 	if strings.Contains(got, showCursor) {
@@ -372,7 +387,7 @@ func TestTheCursorComesBackWhenTheInputIsTakenAgain(t *testing.T) {
 	screenOutput := &strings.Builder{}
 	screen := &Screen{writer: screenOutput, isTerminal: true, canRepaint: true}
 
-	screen.InertFooter([]string{"> hi"}, 0)
+	screen.InertFooter([]string{"> hi"}, 0, 0)
 	screenOutput.Reset()
 
 	screen.Footer([]string{"> hi"}, 0, 3)
@@ -386,14 +401,14 @@ func TestAHiddenRowsNoticeNeitherWrapsNorMovesTheDrawing(t *testing.T) {
 	screen, _ := region()
 
 	screen.DrawAnswer([]string{strings.Repeat("x", screen.columns)})
-	before := screen.drawingState()
+	before := screen.sealedState()
 
 	notice := screen.hiddenRowsNotice(3)
 
 	if strings.Contains(notice, "\n") {
 		t.Errorf("a hidden-rows notice wrapped where the answer left the cursor: %q", notice)
 	}
-	if after := screen.drawingState(); after != before {
+	if after := screen.sealedState(); after != before {
 		t.Errorf("measuring a hidden-rows notice left the drawing at %+v, want %+v", after, before)
 	}
 }

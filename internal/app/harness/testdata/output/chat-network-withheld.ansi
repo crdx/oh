@@ -2,12 +2,12 @@
 \e[48;2;52;53;65m run a command on the host network while network access is withheld                                 \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102mhost network unavailable; ctrl+x n grants it\e[0m\r
+\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102mhost network unavailable; ctrl+x n grants it\e[0m\r
 \r
-\r\e[KHost network access is unavailable.\e[?25h\e[?2026l\r
+Host network access is unavailable.\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m continue after the refused command                                                                 \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\r\e[KResumed after the refusal.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KResumed after the refusal.\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[26C\e[?25h\e[?2026l\r

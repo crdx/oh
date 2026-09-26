@@ -4,27 +4,27 @@
 \e[48;2;52;53;65m each call says about itself            \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e[?7l\r\e[KOne of each, then.\r
+One of each, then.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m0\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mfor\e[0m\e[38;2;150;152;150m NAME \e[0m\e[38;2;201;166;212min\e[0m\e[38;2;150;152;150m *.g\e[0m\e[38;2;150;152;150m…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2s 3L 700M\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mdiagram.png\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m~1.6Kt\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0medit\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;76;154;44m+12\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;204;102;102m−5\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;201;166;212m^\e[0m\e[38;2;150;152;150mfunc\e[0m\e[38;2;201;166;212m\\s\e[0m\e[38;2;138;190;183m+\e[0m\e[38;2;150;152;150m(\e[0m\e[38;2;150;152;150mN\e[0m\e[38;2;150;152;150m…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L+ ~100t (of ~3.4Kt)\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m0\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mfor\e[0m\e[38;2;150;152;150m NAME \e[0m\e[38;2;201;166;212min\e[0m\e[38;2;150;152;150m *.g\e[0m\e[38;2;150;152;150m…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2s 3L 700M\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mdiagram.png\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m~1.6Kt\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0medit\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;76;154;44m+12\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;204;102;102m−5\e[0m\r
+\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;201;166;212m^\e[0m\e[38;2;150;152;150mfunc\e[0m\e[38;2;201;166;212m\\s\e[0m\e[38;2;138;190;183m+\e[0m\e[38;2;150;152;150m(\e[0m\e[38;2;150;152;150mN\e[0m\e[38;2;150;152;150m…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L+ ~100t (of ~3.4Kt)\e[0m\r
+\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
 \r
-\r\e[KHere is a script, and a pattern beside\r
-\r\e[Kit:\r
-\r\e[K\r
-\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m\r
-\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"func"\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m"\e[0m\e[38;2;201;166;212m)\e[0m\r
-\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has \e[0m$COUNT\e[38;2;181;189;104m"\e[0m\r
-\r\e[K\e[38;2;201;166;212mdone\e[0m\r
-\r\e[K\r
-\r\e[K\e[38;2;150;152;150m^\\s*(func|type)\\s+\\w{3,12}\\(\e[0m\r
+Here is a script, and a pattern beside\r
+it:\r
 \r
-\r\e[KThat is one call of every kind the\r
-\r\e[Kharness knows how to measure.\r
+\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m\r
+    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"func"\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m"\e[0m\e[38;2;201;166;212m)\e[0m\r
+    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has \e[0m$COUNT\e[38;2;181;189;104m"\e[0m\r
+\e[38;2;201;166;212mdone\e[0m\r
+\r
+\e[38;2;150;152;150m^\\s*(func|type)\\s+\\w{3,12}\\(\e[0m\r
+\r
+That is one call of every kind the\r
+harness knows how to measure.\r
 \e[?25h\e[?2026l
 === one column ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
@@ -136,221 +136,221 @@
 \e[48;2;52;53;65mf\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\e[?7l\r\e[KO\r
-\r\e[Kn\r
-\r\e[Ke\r
-\r\e[Ko\r
-\r\e[Kf\r
-\r\e[Ke\r
-\r\e[Ka\r
-\r\e[Kc\r
-\r\e[Kh\r
-\r\e[K,\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kn\r
-\r\e[K.\r
+O\r
+n\r
+e\r
+o\r
+f\r
+e\r
+a\r
+c\r
+h\r
+,\r
+t\r
+h\r
+e\r
+n\r
+.\r
 \r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
 \r
-\r\e[KH\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[Ka\r
-\r\e[Ks\r
-\r\e[Kc\r
-\r\e[Kr\r
-\r\e[Ki\r
-\r\e[Kp\r
-\r\e[Kt\r
-\r\e[K,\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Ka\r
-\r\e[Kp\r
-\r\e[Ka\r
-\r\e[Kt\r
-\r\e[Kt\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Kn\r
-\r\e[Kb\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Ki\r
-\r\e[Kd\r
-\r\e[Ke\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[K:\r
-\r\e[K\r
-\r\e[K\e[38;2;201;166;212mf\e[0m\r
-\r\e[K\e[38;2;201;166;212mo\e[0m\r
-\r\e[K\e[38;2;201;166;212mr\e[0m\r
-\r\e[K\e[38;2;150;152;150mN\e[0m\r
-\r\e[K\e[38;2;150;152;150mA\e[0m\r
-\r\e[K\e[38;2;150;152;150mM\e[0m\r
-\r\e[K\e[38;2;150;152;150mE\e[0m\r
-\r\e[K\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[38;2;201;166;212m$\e[0m\r
-\r\e[K\e[38;2;201;166;212m(\e[0m\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150ml\e[0m\r
-\r\e[K\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[38;2;150;152;150m*\e[0m\r
-\r\e[K\e[38;2;150;152;150m.\e[0m\r
-\r\e[K\e[38;2;150;152;150mg\e[0m\r
-\r\e[K\e[38;2;150;152;150mo\e[0m\e[38;2;201;166;212m\e[0m\r
-\r\e[K\e[38;2;201;166;212m)\e[0m\r
-\r\e[K;\r
-\r\e[K\e[38;2;201;166;212md\e[0m\r
-\r\e[K\e[38;2;201;166;212mo\e[0m\r
-\r\e[K \r
-\r\e[KC\r
-\r\e[KO\r
-\r\e[KU\r
-\r\e[KN\r
-\r\e[KT\e[38;2;138;190;183m\e[0m\r
-\r\e[K\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m\e[0m\r
-\r\e[K\e[38;2;201;166;212m$\e[0m\r
-\r\e[K\e[38;2;201;166;212m(\e[0m\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150mg\e[0m\r
-\r\e[K\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[38;2;150;152;150mp\e[0m\r
-\r\e[K\e[38;2;150;152;150m-\e[0m\r
-\r\e[K\e[38;2;150;152;150mc\e[0m\r
-\r\e[K\e[38;2;181;189;104m"\e[0m\r
-\r\e[K\e[38;2;181;189;104mf\e[0m\r
-\r\e[K\e[38;2;181;189;104mu\e[0m\r
-\r\e[K\e[38;2;181;189;104mn\e[0m\r
-\r\e[K\e[38;2;181;189;104mc\e[0m\r
-\r\e[K\e[38;2;181;189;104m"\e[0m\r
-\r\e[K\e[38;2;181;189;104m"\e[0m\r
-\r\e[K$\r
-\r\e[KN\r
-\r\e[KA\r
-\r\e[KM\r
-\r\e[KE\e[38;2;181;189;104m\e[0m\r
-\r\e[K\e[38;2;181;189;104m"\e[0m\e[38;2;201;166;212m\e[0m\r
-\r\e[K\e[38;2;201;166;212m)\e[0m\r
-\r\e[K \r
-\r\e[K\e[38;2;240;198;116me\e[0m\r
-\r\e[K\e[38;2;240;198;116mc\e[0m\r
-\r\e[K\e[38;2;240;198;116mh\e[0m\r
-\r\e[K\e[38;2;240;198;116mo\e[0m\r
-\r\e[K\e[38;2;181;189;104m"\e[0m\r
-\r\e[K$\r
-\r\e[KN\r
-\r\e[KA\r
-\r\e[KM\r
-\r\e[KE\e[38;2;181;189;104m\e[0m\r
-\r\e[K\e[38;2;181;189;104mh\e[0m\r
-\r\e[K\e[38;2;181;189;104ma\e[0m\r
-\r\e[K\e[38;2;181;189;104ms\e[0m\r
-\r\e[K\e[38;2;181;189;104m\e[0m$\r
-\r\e[KC\r
-\r\e[KO\r
-\r\e[KU\r
-\r\e[KN\r
-\r\e[KT\e[38;2;181;189;104m\e[0m\r
-\r\e[K\e[38;2;181;189;104m"\e[0m\r
-\r\e[K\e[38;2;201;166;212md\e[0m\r
-\r\e[K\e[38;2;201;166;212mo\e[0m\r
-\r\e[K\e[38;2;201;166;212mn\e[0m\r
-\r\e[K\e[38;2;201;166;212me\e[0m\r
-\r\e[K\r
-\r\e[K\e[38;2;150;152;150m^\e[0m\r
-\r\e[K\e[38;2;150;152;150m\\\e[0m\r
-\r\e[K\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[38;2;150;152;150m*\e[0m\r
-\r\e[K\e[38;2;150;152;150m(\e[0m\r
-\r\e[K\e[38;2;150;152;150mf\e[0m\r
-\r\e[K\e[38;2;150;152;150mu\e[0m\r
-\r\e[K\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[38;2;150;152;150mc\e[0m\r
-\r\e[K\e[38;2;150;152;150m|\e[0m\r
-\r\e[K\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[38;2;150;152;150my\e[0m\r
-\r\e[K\e[38;2;150;152;150mp\e[0m\r
-\r\e[K\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[38;2;150;152;150m)\e[0m\r
-\r\e[K\e[38;2;150;152;150m\\\e[0m\r
-\r\e[K\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[38;2;150;152;150m+\e[0m\r
-\r\e[K\e[38;2;150;152;150m\\\e[0m\r
-\r\e[K\e[38;2;150;152;150mw\e[0m\r
-\r\e[K\e[38;2;150;152;150m{\e[0m\r
-\r\e[K\e[38;2;150;152;150m3\e[0m\r
-\r\e[K\e[38;2;150;152;150m,\e[0m\r
-\r\e[K\e[38;2;150;152;150m1\e[0m\r
-\r\e[K\e[38;2;150;152;150m2\e[0m\r
-\r\e[K\e[38;2;150;152;150m}\e[0m\r
-\r\e[K\e[38;2;150;152;150m\\\e[0m\r
-\r\e[K\e[38;2;150;152;150m(\e[0m\r
+H\r
+e\r
+r\r
+e\r
+i\r
+s\r
+a\r
+s\r
+c\r
+r\r
+i\r
+p\r
+t\r
+,\r
+a\r
+n\r
+d\r
+a\r
+p\r
+a\r
+t\r
+t\r
+e\r
+r\r
+n\r
+b\r
+e\r
+s\r
+i\r
+d\r
+e\r
+i\r
+t\r
+:\r
 \r
-\r\e[KT\r
-\r\e[Kh\r
-\r\e[Ka\r
-\r\e[Kt\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[Ko\r
-\r\e[Kn\r
-\r\e[Ke\r
-\r\e[Kc\r
-\r\e[Ka\r
-\r\e[Kl\r
-\r\e[Kl\r
-\r\e[Ko\r
-\r\e[Kf\r
-\r\e[Ke\r
-\r\e[Kv\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ky\r
-\r\e[Kk\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kh\r
-\r\e[Ka\r
-\r\e[Kr\r
-\r\e[Kn\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Ks\r
-\r\e[Kk\r
-\r\e[Kn\r
-\r\e[Ko\r
-\r\e[Kw\r
-\r\e[Ks\r
-\r\e[Kh\r
-\r\e[Ko\r
-\r\e[Kw\r
-\r\e[Kt\r
-\r\e[Ko\r
-\r\e[Km\r
-\r\e[Ke\r
-\r\e[Ka\r
-\r\e[Ks\r
-\r\e[Ku\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[K.\r
+\e[38;2;201;166;212mf\e[0m\r
+\e[38;2;201;166;212mo\e[0m\r
+\e[38;2;201;166;212mr\e[0m\r
+\e[38;2;150;152;150mN\e[0m\r
+\e[38;2;150;152;150mA\e[0m\r
+\e[38;2;150;152;150mM\e[0m\r
+\e[38;2;150;152;150mE\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;201;166;212m$\e[0m\r
+\e[38;2;201;166;212m(\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150ml\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150m*\e[0m\r
+\e[38;2;150;152;150m.\e[0m\r
+\e[38;2;150;152;150mg\e[0m\r
+\e[38;2;150;152;150mo\e[0m\e[38;2;201;166;212m\e[0m\r
+\e[38;2;201;166;212m)\e[0m\r
+;\r
+\e[38;2;201;166;212md\e[0m\r
+\e[38;2;201;166;212mo\e[0m\r
+ \r
+C\r
+O\r
+U\r
+N\r
+T\e[38;2;138;190;183m\e[0m\r
+\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m\e[0m\r
+\e[38;2;201;166;212m$\e[0m\r
+\e[38;2;201;166;212m(\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mg\e[0m\r
+\e[38;2;150;152;150mr\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150mp\e[0m\r
+\e[38;2;150;152;150m-\e[0m\r
+\e[38;2;150;152;150mc\e[0m\r
+\e[38;2;181;189;104m"\e[0m\r
+\e[38;2;181;189;104mf\e[0m\r
+\e[38;2;181;189;104mu\e[0m\r
+\e[38;2;181;189;104mn\e[0m\r
+\e[38;2;181;189;104mc\e[0m\r
+\e[38;2;181;189;104m"\e[0m\r
+\e[38;2;181;189;104m"\e[0m\r
+$\r
+N\r
+A\r
+M\r
+E\e[38;2;181;189;104m\e[0m\r
+\e[38;2;181;189;104m"\e[0m\e[38;2;201;166;212m\e[0m\r
+\e[38;2;201;166;212m)\e[0m\r
+ \r
+\e[38;2;240;198;116me\e[0m\r
+\e[38;2;240;198;116mc\e[0m\r
+\e[38;2;240;198;116mh\e[0m\r
+\e[38;2;240;198;116mo\e[0m\r
+\e[38;2;181;189;104m"\e[0m\r
+$\r
+N\r
+A\r
+M\r
+E\e[38;2;181;189;104m\e[0m\r
+\e[38;2;181;189;104mh\e[0m\r
+\e[38;2;181;189;104ma\e[0m\r
+\e[38;2;181;189;104ms\e[0m\r
+\e[38;2;181;189;104m\e[0m$\r
+C\r
+O\r
+U\r
+N\r
+T\e[38;2;181;189;104m\e[0m\r
+\e[38;2;181;189;104m"\e[0m\r
+\e[38;2;201;166;212md\e[0m\r
+\e[38;2;201;166;212mo\e[0m\r
+\e[38;2;201;166;212mn\e[0m\r
+\e[38;2;201;166;212me\e[0m\r
+\r
+\e[38;2;150;152;150m^\e[0m\r
+\e[38;2;150;152;150m\\\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150m*\e[0m\r
+\e[38;2;150;152;150m(\e[0m\r
+\e[38;2;150;152;150mf\e[0m\r
+\e[38;2;150;152;150mu\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150mc\e[0m\r
+\e[38;2;150;152;150m|\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150my\e[0m\r
+\e[38;2;150;152;150mp\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150m)\e[0m\r
+\e[38;2;150;152;150m\\\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150m+\e[0m\r
+\e[38;2;150;152;150m\\\e[0m\r
+\e[38;2;150;152;150mw\e[0m\r
+\e[38;2;150;152;150m{\e[0m\r
+\e[38;2;150;152;150m3\e[0m\r
+\e[38;2;150;152;150m,\e[0m\r
+\e[38;2;150;152;150m1\e[0m\r
+\e[38;2;150;152;150m2\e[0m\r
+\e[38;2;150;152;150m}\e[0m\r
+\e[38;2;150;152;150m\\\e[0m\r
+\e[38;2;150;152;150m(\e[0m\r
+\r
+T\r
+h\r
+a\r
+t\r
+i\r
+s\r
+o\r
+n\r
+e\r
+c\r
+a\r
+l\r
+l\r
+o\r
+f\r
+e\r
+v\r
+e\r
+r\r
+y\r
+k\r
+i\r
+n\r
+d\r
+t\r
+h\r
+e\r
+h\r
+a\r
+r\r
+n\r
+e\r
+s\r
+s\r
+k\r
+n\r
+o\r
+w\r
+s\r
+h\r
+o\r
+w\r
+t\r
+o\r
+m\r
+e\r
+a\r
+s\r
+u\r
+r\r
+e\r
+.\r
 \e[?25h\e[?2026l
 === plain ===
 \e[48;2;52;53;65m\e[0m
@@ -405,76 +405,76 @@ That is one call of every kind the harness knows how to measure.\r
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m do one of everything so I can see what each call says about itself                                 \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KOne\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KOne of e\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KOne of each,\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KOne of each, the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KOne of each, then.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m0\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mfor\e[0m\e[38;2;150;152;150m NAME \e[0m\e[38;2;201;166;212min\e[0m\e[38;2;150;152;150m *.go; \e[0m\e[38;2;201;166;212mdo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m$((COUNT + 1))\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mdone\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m$COUNT\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m0\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mfor\e[0m\e[38;2;150;152;150m NAME \e[0m\e[38;2;201;166;212min\e[0m\e[38;2;150;152;150m *.go; \e[0m\e[38;2;201;166;212mdo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m$((COUNT + 1))\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mdone\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m$COUNT\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2s 3L 700M\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kls\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mdiagram.png\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mdiagram.png\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m~1.6Kt\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0medit\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0medit\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;76;154;44m+12\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;204;102;102m−5\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kgrep \e[38;2;201;166;212m^\e[0m\e[38;2;150;152;150mfunc\e[0m\e[38;2;201;166;212m\\s\e[0m\e[38;2;138;190;183m+\e[0m\e[38;2;150;152;150m(\e[0m\e[38;2;150;152;150mNew\e[0m\e[38;2;138;190;183m|\e[0m\e[38;2;150;152;150mDraw\e[0m\e[38;2;150;152;150m)[\e[0m\e[38;2;150;152;150mA\e[0m\e[38;2;138;190;183m-\e[0m\e[38;2;150;152;150mZ\e[0m\e[38;2;150;152;150m]\e[0m\e[38;2;201;166;212m\\w\e[0m\e[38;2;138;190;183m{2,8}\e[0m\e[38;2;201;166;212m\\(\e[0m \e[38;2;150;152;150m*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;201;166;212m^\e[0m\e[38;2;150;152;150mfunc\e[0m\e[38;2;201;166;212m\\s\e[0m\e[38;2;138;190;183m+\e[0m\e[38;2;150;152;150m(\e[0m\e[38;2;150;152;150mNew\e[0m\e[38;2;138;190;183m|\e[0m\e[38;2;150;152;150mDraw\e[0m\e[38;2;150;152;150m)[\e[0m\e[38;2;150;152;150mA\e[0m\e[38;2;138;190;183m-\e[0m\e[38;2;150;152;150mZ\e[0m\e[38;2;150;152;150m]\e[0m\e[38;2;201;166;212m\\w\e[0m\e[38;2;138;190;183m{2,8}\e[0m\e[38;2;201;166;212m\\(\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L+ ~100t (of ~3.4Kt)\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KHere\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a sc\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, an\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a patt\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a pattern\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a pattern besi\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a pattern beside i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a pattern beside it:\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KOne\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KOne of e\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KOne of each,\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KOne of each, the\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KOne of each, then.\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m0\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mfor\e[0m\e[38;2;150;152;150m NAME \e[0m\e[38;2;201;166;212min\e[0m\e[38;2;150;152;150m *.go; \e[0m\e[38;2;201;166;212mdo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m$((COUNT + 1))\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mdone\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m$COUNT\e[0m\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m0\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mfor\e[0m\e[38;2;150;152;150m NAME \e[0m\e[38;2;201;166;212min\e[0m\e[38;2;150;152;150m *.go; \e[0m\e[38;2;201;166;212mdo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m$((COUNT + 1))\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mdone\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m$COUNT\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2s 3L 700M\e[0m\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kls\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mdiagram.png\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mdiagram.png\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m~1.6Kt\e[0m\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0medit\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0medit\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;76;154;44m+12\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;204;102;102m−5\e[0m\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kgrep \e[38;2;201;166;212m^\e[0m\e[38;2;150;152;150mfunc\e[0m\e[38;2;201;166;212m\\s\e[0m\e[38;2;138;190;183m+\e[0m\e[38;2;150;152;150m(\e[0m\e[38;2;150;152;150mNew\e[0m\e[38;2;138;190;183m|\e[0m\e[38;2;150;152;150mDraw\e[0m\e[38;2;150;152;150m)[\e[0m\e[38;2;150;152;150mA\e[0m\e[38;2;138;190;183m-\e[0m\e[38;2;150;152;150mZ\e[0m\e[38;2;150;152;150m]\e[0m\e[38;2;201;166;212m\\w\e[0m\e[38;2;138;190;183m{2,8}\e[0m\e[38;2;201;166;212m\\(\e[0m \e[38;2;150;152;150m*.go\e[0m\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;201;166;212m^\e[0m\e[38;2;150;152;150mfunc\e[0m\e[38;2;201;166;212m\\s\e[0m\e[38;2;138;190;183m+\e[0m\e[38;2;150;152;150m(\e[0m\e[38;2;150;152;150mNew\e[0m\e[38;2;138;190;183m|\e[0m\e[38;2;150;152;150mDraw\e[0m\e[38;2;150;152;150m)[\e[0m\e[38;2;150;152;150mA\e[0m\e[38;2;138;190;183m-\e[0m\e[38;2;150;152;150mZ\e[0m\e[38;2;150;152;150m]\e[0m\e[38;2;201;166;212m\\w\e[0m\e[38;2;138;190;183m{2,8}\e[0m\e[38;2;201;166;212m\\(\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L+ ~100t (of ~3.4Kt)\e[0m\r\e[66C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[66C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\r\e[K\e[38;2;201;166;212mfor\e[0m \e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.g\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K    \e[38;2;150;152;150mC\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mCOUNT\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mg\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"\e[0m\e[38;2;181;189;104mfunc\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"func"\e[0m \e[38;2;181;189;104m"\e[0m\e[38;2;150;152;150m$\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"func"\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"func"\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m"\e[0m\e[38;2;201;166;212m)\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K    \e[38;2;150;152;150me\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NA\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m h\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has \e[0m\e[38;2;150;152;150m$\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has \e[0m$COUN\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has \e[0m$COUNT\e[38;2;181;189;104m"\e[0m\r
-\r\e[K\e[38;2;150;152;150md\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mdone\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[KHere\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a sc\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, an\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a patt\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a pattern\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a pattern besi\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a pattern beside i\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a pattern beside it:\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[K\e[38;2;201;166;212mfor\e[0m \r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.g\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K    \e[38;2;150;152;150mC\e[0m\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mCOUNT\e[0m\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mg\e[0m\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"\e[0m\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"\e[0m\e[38;2;181;189;104mfunc\e[0m\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"func"\e[0m \e[38;2;181;189;104m"\e[0m\e[38;2;150;152;150m$\e[0m\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"func"\e[0m \e[38;2;181;189;104m"\e[0m$NAME\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"func"\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m"\e[0m\e[38;2;201;166;212m)\e[0m\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K    \e[38;2;150;152;150me\e[0m\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NA\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m h\e[0m\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has \e[0m\e[38;2;150;152;150m$\e[0m\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has \e[0m$COUN\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has \e[0m$COUNT\e[38;2;181;189;104m"\e[0m\r
+\e[K\e[38;2;150;152;150md\e[0m\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mdone\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[K\e[38;2;150;152;150m^\e[0m\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(\e[0m\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func\e[0m\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func|typ\e[0m\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func|type)\\s\e[0m\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func|type)\\s+\\w{\e[0m\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func|type)\\s+\\w{3,12\e[0m\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func|type)\\s+\\w{3,12}\\(\e[0m\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\r\e[K\e[38;2;150;152;150m^\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func|typ\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func|type)\\s\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func|type)\\s+\\w{\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func|type)\\s+\\w{3,12\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func|type)\\s+\\w{3,12}\\(\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThat\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of ever\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every ki\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the h\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harne\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness k\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness knows\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness knows how\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness knows how to\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness knows how to meas\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness knows how to measure.\e[?25h\e[?2026l\r
+\e[KThat\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of ever\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every ki\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind t\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the h\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harne\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness k\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness knows\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness knows how\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness knows how to\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness knows how to meas\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness knows how to measure.\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[64C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m do one of everything so I can see what each call says about itself                                 \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KOne of each, then.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m0\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mfor\e[0m\e[38;2;150;152;150m NAME \e[0m\e[38;2;201;166;212min\e[0m\e[38;2;150;152;150m *.go; \e[0m\e[38;2;201;166;212mdo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m$((COUNT + 1))\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mdone\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m$COUNT\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m0\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mfor\e[0m\e[38;2;150;152;150m NAME \e[0m\e[38;2;201;166;212min\e[0m\e[38;2;150;152;150m *.go; \e[0m\e[38;2;201;166;212mdo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m$((COUNT + 1))\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mdone\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m$COUNT\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2s 3L 700M\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kls\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mdiagram.png\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mdiagram.png\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m~1.6Kt\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0medit\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0medit\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;76;154;44m+12\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;204;102;102m−5\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kgrep \e[38;2;201;166;212m^\e[0m\e[38;2;150;152;150mfunc\e[0m\e[38;2;201;166;212m\\s\e[0m\e[38;2;138;190;183m+\e[0m\e[38;2;150;152;150m(\e[0m\e[38;2;150;152;150mNew\e[0m\e[38;2;138;190;183m|\e[0m\e[38;2;150;152;150mDraw\e[0m\e[38;2;150;152;150m)[\e[0m\e[38;2;150;152;150mA\e[0m\e[38;2;138;190;183m-\e[0m\e[38;2;150;152;150mZ\e[0m\e[38;2;150;152;150m]\e[0m\e[38;2;201;166;212m\\w\e[0m\e[38;2;138;190;183m{2,8}\e[0m\e[38;2;201;166;212m\\(\e[0m \e[38;2;150;152;150m*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;201;166;212m^\e[0m\e[38;2;150;152;150mfunc\e[0m\e[38;2;201;166;212m\\s\e[0m\e[38;2;138;190;183m+\e[0m\e[38;2;150;152;150m(\e[0m\e[38;2;150;152;150mNew\e[0m\e[38;2;138;190;183m|\e[0m\e[38;2;150;152;150mDraw\e[0m\e[38;2;150;152;150m)[\e[0m\e[38;2;150;152;150mA\e[0m\e[38;2;138;190;183m-\e[0m\e[38;2;150;152;150mZ\e[0m\e[38;2;150;152;150m]\e[0m\e[38;2;201;166;212m\\w\e[0m\e[38;2;138;190;183m{2,8}\e[0m\e[38;2;201;166;212m\\(\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L+ ~100t (of ~3.4Kt)\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KHere is a script, and a pattern beside it:\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"func"\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m"\e[0m\e[38;2;201;166;212m)\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has \e[0m$COUNT\e[38;2;181;189;104m"\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;201;166;212mdone\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;150;152;150m^\\s*(func|type)\\s+\\w{3,12}\\(\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness knows how to measure.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KOne of each, then.\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m0\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mfor\e[0m\e[38;2;150;152;150m NAME \e[0m\e[38;2;201;166;212min\e[0m\e[38;2;150;152;150m *.go; \e[0m\e[38;2;201;166;212mdo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m$((COUNT + 1))\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mdone\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m$COUNT\e[0m\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m0\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mfor\e[0m\e[38;2;150;152;150m NAME \e[0m\e[38;2;201;166;212min\e[0m\e[38;2;150;152;150m *.go; \e[0m\e[38;2;201;166;212mdo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m$((COUNT + 1))\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mdone\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m$COUNT\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2s 3L 700M\e[0m\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kls\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mdiagram.png\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mdiagram.png\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m~1.6Kt\e[0m\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0medit\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0medit\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;76;154;44m+12\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;204;102;102m−5\e[0m\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kgrep \e[38;2;201;166;212m^\e[0m\e[38;2;150;152;150mfunc\e[0m\e[38;2;201;166;212m\\s\e[0m\e[38;2;138;190;183m+\e[0m\e[38;2;150;152;150m(\e[0m\e[38;2;150;152;150mNew\e[0m\e[38;2;138;190;183m|\e[0m\e[38;2;150;152;150mDraw\e[0m\e[38;2;150;152;150m)[\e[0m\e[38;2;150;152;150mA\e[0m\e[38;2;138;190;183m-\e[0m\e[38;2;150;152;150mZ\e[0m\e[38;2;150;152;150m]\e[0m\e[38;2;201;166;212m\\w\e[0m\e[38;2;138;190;183m{2,8}\e[0m\e[38;2;201;166;212m\\(\e[0m \e[38;2;150;152;150m*.go\e[0m\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;201;166;212m^\e[0m\e[38;2;150;152;150mfunc\e[0m\e[38;2;201;166;212m\\s\e[0m\e[38;2;138;190;183m+\e[0m\e[38;2;150;152;150m(\e[0m\e[38;2;150;152;150mNew\e[0m\e[38;2;138;190;183m|\e[0m\e[38;2;150;152;150mDraw\e[0m\e[38;2;150;152;150m)[\e[0m\e[38;2;150;152;150mA\e[0m\e[38;2;138;190;183m-\e[0m\e[38;2;150;152;150mZ\e[0m\e[38;2;150;152;150m]\e[0m\e[38;2;201;166;212m\\w\e[0m\e[38;2;138;190;183m{2,8}\e[0m\e[38;2;201;166;212m\\(\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L+ ~100t (of ~3.4Kt)\e[0m\r\e[66C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[66C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KHere is a script, and a pattern beside it:\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"func"\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m"\e[0m\e[38;2;201;166;212m)\e[0m\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has \e[0m$COUNT\e[38;2;181;189;104m"\e[0m\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;201;166;212mdone\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;150;152;150m^\\s*(func|type)\\s+\\w{3,12}\\(\e[0m\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KThat is one call of every kind the harness knows how to measure.\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[64C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m do one of everything so I can see what each call says about itself                                 \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KOne\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KOne of e\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KOne of each,\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KOne of each, the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KOne of each, then.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m0\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mfor\e[0m\e[38;2;150;152;150m NAME \e[0m\e[38;2;201;166;212min\e[0m\e[38;2;150;152;150m *.go; \e[0m\e[38;2;201;166;212mdo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m$((COUNT + 1))\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mdone\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m$COUNT\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m0\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mfor\e[0m\e[38;2;150;152;150m NAME \e[0m\e[38;2;201;166;212min\e[0m\e[38;2;150;152;150m *.go; \e[0m\e[38;2;201;166;212mdo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m$((COUNT + 1))\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mdone\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m$COUNT\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2s 3L 700M\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kls\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mdiagram.png\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mdiagram.png\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m~1.6Kt\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0medit\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0medit\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;76;154;44m+12\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;204;102;102m−5\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kgrep \e[38;2;201;166;212m^\e[0m\e[38;2;150;152;150mfunc\e[0m\e[38;2;201;166;212m\\s\e[0m\e[38;2;138;190;183m+\e[0m\e[38;2;150;152;150m(\e[0m\e[38;2;150;152;150mNew\e[0m\e[38;2;138;190;183m|\e[0m\e[38;2;150;152;150mDraw\e[0m\e[38;2;150;152;150m)[\e[0m\e[38;2;150;152;150mA\e[0m\e[38;2;138;190;183m-\e[0m\e[38;2;150;152;150mZ\e[0m\e[38;2;150;152;150m]\e[0m\e[38;2;201;166;212m\\w\e[0m\e[38;2;138;190;183m{2,8}\e[0m\e[38;2;201;166;212m\\(\e[0m \e[38;2;150;152;150m*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;201;166;212m^\e[0m\e[38;2;150;152;150mfunc\e[0m\e[38;2;201;166;212m\\s\e[0m\e[38;2;138;190;183m+\e[0m\e[38;2;150;152;150m(\e[0m\e[38;2;150;152;150mNew\e[0m\e[38;2;138;190;183m|\e[0m\e[38;2;150;152;150mDraw\e[0m\e[38;2;150;152;150m)[\e[0m\e[38;2;150;152;150mA\e[0m\e[38;2;138;190;183m-\e[0m\e[38;2;150;152;150mZ\e[0m\e[38;2;150;152;150m]\e[0m\e[38;2;201;166;212m\\w\e[0m\e[38;2;138;190;183m{2,8}\e[0m\e[38;2;201;166;212m\\(\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L+ ~100t (of ~3.4Kt)\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KHere\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a sc\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, an\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a patt\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a pattern\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a pattern besi\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a pattern beside i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a pattern beside it:\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KOne\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KOne of e\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KOne of each,\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KOne of each, the\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KOne of each, then.\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m0\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mfor\e[0m\e[38;2;150;152;150m NAME \e[0m\e[38;2;201;166;212min\e[0m\e[38;2;150;152;150m *.go; \e[0m\e[38;2;201;166;212mdo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m$((COUNT + 1))\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mdone\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m$COUNT\e[0m\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m0\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mfor\e[0m\e[38;2;150;152;150m NAME \e[0m\e[38;2;201;166;212min\e[0m\e[38;2;150;152;150m *.go; \e[0m\e[38;2;201;166;212mdo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m$((COUNT + 1))\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mdone\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m$COUNT\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2s 3L 700M\e[0m\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kls\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mdiagram.png\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mdiagram.png\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m~1.6Kt\e[0m\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0medit\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0medit\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;76;154;44m+12\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;204;102;102m−5\e[0m\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kgrep \e[38;2;201;166;212m^\e[0m\e[38;2;150;152;150mfunc\e[0m\e[38;2;201;166;212m\\s\e[0m\e[38;2;138;190;183m+\e[0m\e[38;2;150;152;150m(\e[0m\e[38;2;150;152;150mNew\e[0m\e[38;2;138;190;183m|\e[0m\e[38;2;150;152;150mDraw\e[0m\e[38;2;150;152;150m)[\e[0m\e[38;2;150;152;150mA\e[0m\e[38;2;138;190;183m-\e[0m\e[38;2;150;152;150mZ\e[0m\e[38;2;150;152;150m]\e[0m\e[38;2;201;166;212m\\w\e[0m\e[38;2;138;190;183m{2,8}\e[0m\e[38;2;201;166;212m\\(\e[0m \e[38;2;150;152;150m*.go\e[0m\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;201;166;212m^\e[0m\e[38;2;150;152;150mfunc\e[0m\e[38;2;201;166;212m\\s\e[0m\e[38;2;138;190;183m+\e[0m\e[38;2;150;152;150m(\e[0m\e[38;2;150;152;150mNew\e[0m\e[38;2;138;190;183m|\e[0m\e[38;2;150;152;150mDraw\e[0m\e[38;2;150;152;150m)[\e[0m\e[38;2;150;152;150mA\e[0m\e[38;2;138;190;183m-\e[0m\e[38;2;150;152;150mZ\e[0m\e[38;2;150;152;150m]\e[0m\e[38;2;201;166;212m\\w\e[0m\e[38;2;138;190;183m{2,8}\e[0m\e[38;2;201;166;212m\\(\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L+ ~100t (of ~3.4Kt)\e[0m\r\e[66C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[66C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\r\e[K\e[38;2;201;166;212mfor\e[0m \e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.g\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K    \e[38;2;150;152;150mC\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mCOUNT\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mg\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"\e[0m\e[38;2;181;189;104mfunc\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"func"\e[0m \e[38;2;181;189;104m"\e[0m\e[38;2;150;152;150m$\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"func"\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"func"\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m"\e[0m\e[38;2;201;166;212m)\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K    \e[38;2;150;152;150me\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NA\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m h\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has \e[0m\e[38;2;150;152;150m$\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has \e[0m$COUN\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has \e[0m$COUNT\e[38;2;181;189;104m"\e[0m\r
-\r\e[K\e[38;2;150;152;150md\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mdone\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[KHere\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a sc\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, an\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a patt\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a pattern\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a pattern besi\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a pattern beside i\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHere is a script, and a pattern beside it:\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[K\e[38;2;201;166;212mfor\e[0m \r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.g\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K    \e[38;2;150;152;150mC\e[0m\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mCOUNT\e[0m\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mg\e[0m\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"\e[0m\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"\e[0m\e[38;2;181;189;104mfunc\e[0m\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"func"\e[0m \e[38;2;181;189;104m"\e[0m\e[38;2;150;152;150m$\e[0m\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"func"\e[0m \e[38;2;181;189;104m"\e[0m$NAME\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"func"\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m"\e[0m\e[38;2;201;166;212m)\e[0m\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K    \e[38;2;150;152;150me\e[0m\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NA\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m h\e[0m\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has \e[0m\e[38;2;150;152;150m$\e[0m\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has \e[0m$COUN\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has \e[0m$COUNT\e[38;2;181;189;104m"\e[0m\r
+\e[K\e[38;2;150;152;150md\e[0m\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mdone\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[K\e[38;2;150;152;150m^\e[0m\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(\e[0m\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func\e[0m\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func|typ\e[0m\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func|type)\\s\e[0m\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func|type)\\s+\\w{\e[0m\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func|type)\\s+\\w{3,12\e[0m\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func|type)\\s+\\w{3,12}\\(\e[0m\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\r\e[K\e[38;2;150;152;150m^\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func|typ\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func|type)\\s\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func|type)\\s+\\w{\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func|type)\\s+\\w{3,12\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m^\\s*(func|type)\\s+\\w{3,12}\\(\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThat\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of ever\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every ki\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the h\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harne\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness k\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness knows\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness knows how\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness knows how to\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness knows how to meas\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness knows how to measure.\e[?25h\e[?2026l\r
+\e[KThat\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of ever\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every ki\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind t\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the h\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harne\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness k\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness knows\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness knows how\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness knows how to\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness knows how to meas\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is one call of every kind the harness knows how to measure.\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[64C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
@@ -487,90 +487,90 @@ That is one call of every kind the harness knows how to measure.\r
 \e[48;2;52;53;65m itself     \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e[?7l\r\e[KOne of each,\r
-\r\e[Kthen.\r
+One of each,\r
+then.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m0\e[0m\e[38;2;138;190;183m…\e[0m \e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\re…\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m~1.6Kt\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0med…\e[0m\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;76;154;44m+12\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;204;102;102m−5\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;201;166;212m^\e[0m\e[38;2;150;152;150mfun\e[0m\e[38;2;150;152;150m…\e[0m \e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mR…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m0\e[0m\e[38;2;138;190;183m…\e[0m \e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\re…\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m~1.6Kt\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0med…\e[0m\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;76;154;44m+12\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;204;102;102m−5\e[0m\r
+\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;201;166;212m^\e[0m\e[38;2;150;152;150mfun\e[0m\e[38;2;150;152;150m…\e[0m \e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mR…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
 \r
-\r\e[KHere is a\r
-\r\e[Kscript, and\r
-\r\e[Ka pattern\r
-\r\e[Kbeside it:\r
-\r\e[K\r
-\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m\r
-\r\e[K\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m;\r
-\r\e[K\e[38;2;201;166;212mdo\e[0m\r
-\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m\r
-\r\e[K\e[38;2;181;189;104m"func"\e[0m\r
-\r\e[K\e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m"\e[0m\e[38;2;201;166;212m)\e[0m\r
-\r\e[K    \e[38;2;240;198;116mecho\e[0m\r
-\r\e[K\e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has\e[0m\r
-\r\e[K\e[38;2;181;189;104m\e[0m$COUNT\e[38;2;181;189;104m"\e[0m\r
-\r\e[K\e[38;2;201;166;212mdone\e[0m\r
-\r\e[K\r
-\r\e[K\e[38;2;150;152;150m^\\s*(func|ty\e[0m\r
-\r\e[K\e[38;2;150;152;150mpe)\\s+\\w{3,1\e[0m\r
-\r\e[K\e[38;2;150;152;150m2}\\(\e[0m\r
+Here is a\r
+script, and\r
+a pattern\r
+beside it:\r
 \r
-\r\e[KThat is one\r
-\r\e[Kcall of\r
-\r\e[Kevery kind\r
-\r\e[Kthe harness\r
-\r\e[Kknows how to\r
-\r\e[Kmeasure.\r
+\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m\r
+\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m;\r
+\e[38;2;201;166;212mdo\e[0m\r
+    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m\r
+\e[38;2;181;189;104m"func"\e[0m\r
+\e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m"\e[0m\e[38;2;201;166;212m)\e[0m\r
+    \e[38;2;240;198;116mecho\e[0m\r
+\e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has\e[0m\r
+\e[38;2;181;189;104m\e[0m$COUNT\e[38;2;181;189;104m"\e[0m\r
+\e[38;2;201;166;212mdone\e[0m\r
+\r
+\e[38;2;150;152;150m^\\s*(func|ty\e[0m\r
+\e[38;2;150;152;150mpe)\\s+\\w{3,1\e[0m\r
+\e[38;2;150;152;150m2}\\(\e[0m\r
+\r
+That is one\r
+call of\r
+every kind\r
+the harness\r
+knows how to\r
+measure.\r
 \e[?25h\e[?2026l
 === unsized ===
-\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m
-\e[48;2;52;53;65m do one of everything so I can see what each call says about itself\e[0m
-\e[48;2;52;53;65m\e[0m
-\e[?7l\r\e[KOne of each, then.
-
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m0\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mfor\e[0m\e[38;2;150;152;150m NAME \e[0m\e[38;2;201;166;212min\e[0m\e[38;2;150;152;150m *.go; \e[0m\e[38;2;201;166;212mdo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m$((COUNT + 1))\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mdone\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m$COUNT\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2s 3L 700M\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mdiagram.png\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m~1.6Kt\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0medit\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;76;154;44m+12\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;204;102;102m−5\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;201;166;212m^\e[0m\e[38;2;150;152;150mfunc\e[0m\e[38;2;201;166;212m\\s\e[0m\e[38;2;138;190;183m+\e[0m\e[38;2;150;152;150m(\e[0m\e[38;2;150;152;150mNew\e[0m\e[38;2;138;190;183m|\e[0m\e[38;2;150;152;150mDraw\e[0m\e[38;2;150;152;150m)[\e[0m\e[38;2;150;152;150mA\e[0m\e[38;2;138;190;183m-\e[0m\e[38;2;150;152;150mZ\e[0m\e[38;2;150;152;150m]\e[0m\e[38;2;201;166;212m\\w\e[0m\e[38;2;138;190;183m{2,8}\e[0m\e[38;2;201;166;212m\\(\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L+ ~100t (of ~3.4Kt)\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m
-
-\r\e[KHere is a script, and a pattern beside it:\r
-\r\e[K\r
-\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m\r
-\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"func"\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m"\e[0m\e[38;2;201;166;212m)\e[0m\r
-\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has \e[0m$COUNT\e[38;2;181;189;104m"\e[0m\r
-\r\e[K\e[38;2;201;166;212mdone\e[0m\r
-\r\e[K\r
-\r\e[K\e[38;2;150;152;150m^\\s*(func|type)\\s+\\w{3,12}\\(\e[0m
-
-\r\e[KThat is one call of every kind the harness knows how to measure.
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m do one of everything so I can see what each call says about itself\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+One of each, then.\r
+\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m0\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mfor\e[0m\e[38;2;150;152;150m NAME \e[0m\e[38;2;201;166;212min\e[0m\e[38;2;150;152;150m *.go; \e[0m\e[38;2;201;166;212mdo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m$((COUNT + 1))\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mdone\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m$COUNT\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2s 3L 700M\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mdiagram.png\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m~1.6Kt\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0medit\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;76;154;44m+12\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;204;102;102m−5\e[0m\r
+\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;201;166;212m^\e[0m\e[38;2;150;152;150mfunc\e[0m\e[38;2;201;166;212m\\s\e[0m\e[38;2;138;190;183m+\e[0m\e[38;2;150;152;150m(\e[0m\e[38;2;150;152;150mNew\e[0m\e[38;2;138;190;183m|\e[0m\e[38;2;150;152;150mDraw\e[0m\e[38;2;150;152;150m)[\e[0m\e[38;2;150;152;150mA\e[0m\e[38;2;138;190;183m-\e[0m\e[38;2;150;152;150mZ\e[0m\e[38;2;150;152;150m]\e[0m\e[38;2;201;166;212m\\w\e[0m\e[38;2;138;190;183m{2,8}\e[0m\e[38;2;201;166;212m\\(\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L+ ~100t (of ~3.4Kt)\e[0m\r
+\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\r
+Here is a script, and a pattern beside it:\r
+\r
+\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m\r
+    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"func"\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m"\e[0m\e[38;2;201;166;212m)\e[0m\r
+    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has \e[0m$COUNT\e[38;2;181;189;104m"\e[0m\r
+\e[38;2;201;166;212mdone\e[0m\r
+\r
+\e[38;2;150;152;150m^\\s*(func|type)\\s+\\w{3,12}\\(\e[0m\r
+\r
+That is one call of every kind the harness knows how to measure.\r
 \e[?25h\e[?2026l
 === wide ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m do one of everything so I can see what each call says about itself                                 \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[KOne of each, then.\r
+One of each, then.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m0\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mfor\e[0m\e[38;2;150;152;150m NAME \e[0m\e[38;2;201;166;212min\e[0m\e[38;2;150;152;150m *.go; \e[0m\e[38;2;201;166;212mdo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m$((COUNT + 1))\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mdone\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m$COUNT\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2s 3L 700M\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mdiagram.png\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m~1.6Kt\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0medit\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;76;154;44m+12\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;204;102;102m−5\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;201;166;212m^\e[0m\e[38;2;150;152;150mfunc\e[0m\e[38;2;201;166;212m\\s\e[0m\e[38;2;138;190;183m+\e[0m\e[38;2;150;152;150m(\e[0m\e[38;2;150;152;150mNew\e[0m\e[38;2;138;190;183m|\e[0m\e[38;2;150;152;150mDraw\e[0m\e[38;2;150;152;150m)[\e[0m\e[38;2;150;152;150mA\e[0m\e[38;2;138;190;183m-\e[0m\e[38;2;150;152;150mZ\e[0m\e[38;2;150;152;150m]\e[0m\e[38;2;201;166;212m\\w\e[0m\e[38;2;138;190;183m{2,8}\e[0m\e[38;2;201;166;212m\\(\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L+ ~100t (of ~3.4Kt)\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m0\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mfor\e[0m\e[38;2;150;152;150m NAME \e[0m\e[38;2;201;166;212min\e[0m\e[38;2;150;152;150m *.go; \e[0m\e[38;2;201;166;212mdo\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150mCOUNT\e[0m\e[38;2;138;190;183m=\e[0m\e[38;2;150;152;150m$((COUNT + 1))\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;201;166;212mdone\e[0m\e[38;2;138;190;183m;\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m$COUNT\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2s 3L 700M\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mdiagram.png\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m~1.6Kt\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0medit\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;76;154;44m+12\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;204;102;102m−5\e[0m\r
+\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;201;166;212m^\e[0m\e[38;2;150;152;150mfunc\e[0m\e[38;2;201;166;212m\\s\e[0m\e[38;2;138;190;183m+\e[0m\e[38;2;150;152;150m(\e[0m\e[38;2;150;152;150mNew\e[0m\e[38;2;138;190;183m|\e[0m\e[38;2;150;152;150mDraw\e[0m\e[38;2;150;152;150m)[\e[0m\e[38;2;150;152;150mA\e[0m\e[38;2;138;190;183m-\e[0m\e[38;2;150;152;150mZ\e[0m\e[38;2;150;152;150m]\e[0m\e[38;2;201;166;212m\\w\e[0m\e[38;2;138;190;183m{2,8}\e[0m\e[38;2;201;166;212m\\(\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m7L+ ~100t (of ~3.4Kt)\e[0m\r
+\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
 \r
-\r\e[KHere is a script, and a pattern beside it:\r
-\r\e[K\r
-\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m\r
-\r\e[K    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"func"\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m"\e[0m\e[38;2;201;166;212m)\e[0m\r
-\r\e[K    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has \e[0m$COUNT\e[38;2;181;189;104m"\e[0m\r
-\r\e[K\e[38;2;201;166;212mdone\e[0m\r
-\r\e[K\r
-\r\e[K\e[38;2;150;152;150m^\\s*(func|type)\\s+\\w{3,12}\\(\e[0m\r
+Here is a script, and a pattern beside it:\r
 \r
-\r\e[KThat is one call of every kind the harness knows how to measure.\r
+\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m\r
+    COUNT\e[38;2;138;190;183m=\e[0m\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mgrep\e[0m \e[38;2;150;152;150m-c\e[0m \e[38;2;181;189;104m"func"\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m"\e[0m\e[38;2;201;166;212m)\e[0m\r
+    \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m has \e[0m$COUNT\e[38;2;181;189;104m"\e[0m\r
+\e[38;2;201;166;212mdone\e[0m\r
+\r
+\e[38;2;150;152;150m^\\s*(func|type)\\s+\\w{3,12}\\(\e[0m\r
+\r
+That is one call of every kind the harness knows how to measure.\r
 \e[?25h\e[?2026l

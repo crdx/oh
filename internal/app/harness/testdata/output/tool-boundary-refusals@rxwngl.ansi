@@ -7,15 +7,15 @@
 \e[48;2;52;53;65m check every refused boundary           \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e[?7l\r\e[KI checked each boundary without crossing\r
-\r\e[Kit.\r
+I checked each boundary without crossing\r
+it.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhuge.log\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m0L ~96Mt\e[0m \e[38;2;204;102;102mfile is larger…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150msecret\e[0m \e[38;2;150;152;150mlinked\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mlinked: path escap…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;192;128;80mhttp://[200…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe fetch failed: …\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mready\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe shell cannot be conf…\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhuge.log\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m0L ~96Mt\e[0m \e[38;2;204;102;102mfile is larger…\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150msecret\e[0m \e[38;2;150;152;150mlinked\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mlinked: path escap…\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;192;128;80mhttp://[200…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe fetch failed: …\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mready\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe shell cannot be conf…\e[0m\r
 \r
-\r\e[KEach boundary stayed closed.\r
+Each boundary stayed closed.\r
 \e[?25h\e[?2026l
 === one column ===
 \e[?2026h\e[?25l\e[38;2;150;152;150mA\e[0m\r
@@ -145,75 +145,75 @@
 \e[48;2;52;53;65my\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\e[?7l\r\e[KI\r
-\r\e[Kc\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kc\r
-\r\e[Kk\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[Ke\r
-\r\e[Ka\r
-\r\e[Kc\r
-\r\e[Kh\r
-\r\e[Kb\r
-\r\e[Ko\r
-\r\e[Ku\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Ka\r
-\r\e[Kr\r
-\r\e[Ky\r
-\r\e[Kw\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ko\r
-\r\e[Ku\r
-\r\e[Kt\r
-\r\e[Kc\r
-\r\e[Kr\r
-\r\e[Ko\r
-\r\e[Ks\r
-\r\e[Ks\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[K.\r
+I\r
+c\r
+h\r
+e\r
+c\r
+k\r
+e\r
+d\r
+e\r
+a\r
+c\r
+h\r
+b\r
+o\r
+u\r
+n\r
+d\r
+a\r
+r\r
+y\r
+w\r
+i\r
+t\r
+h\r
+o\r
+u\r
+t\r
+c\r
+r\r
+o\r
+s\r
+s\r
+i\r
+n\r
+g\r
+i\r
+t\r
+.\r
 \r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
 \r
-\r\e[KE\r
-\r\e[Ka\r
-\r\e[Kc\r
-\r\e[Kh\r
-\r\e[Kb\r
-\r\e[Ko\r
-\r\e[Ku\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Ka\r
-\r\e[Kr\r
-\r\e[Ky\r
-\r\e[Ks\r
-\r\e[Kt\r
-\r\e[Ka\r
-\r\e[Ky\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[Kc\r
-\r\e[Kl\r
-\r\e[Ko\r
-\r\e[Ks\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[K.\r
+E\r
+a\r
+c\r
+h\r
+b\r
+o\r
+u\r
+n\r
+d\r
+a\r
+r\r
+y\r
+s\r
+t\r
+a\r
+y\r
+e\r
+d\r
+c\r
+l\r
+o\r
+s\r
+e\r
+d\r
+.\r
 \e[?25h\e[?2026l
 === plain ===
 \e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m
@@ -252,15 +252,15 @@ Each boundary stayed closed.\r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m check every refused boundary                                                                       \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KI ch\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checke\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked ea\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each b\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each bound\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary with\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary without\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary without cros\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary without crossing\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary without crossing it.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhuge.log\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhuge.log\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m0L ~96Mt\e[0m \e[38;2;204;102;102mfile is larger than the 20971520-byte limit\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kgrep \e[38;2;150;152;150msecret\e[0m \e[38;2;150;152;150mlinked\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150msecret\e[0m \e[38;2;150;152;150mlinked\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mlinked: path escapes from parent\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttp://[2001:db8::1]/private\e[0m \e[38;2;150;152;150mtext\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttp://[2001:db8::1]/private\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe fetch failed: Get "http://[2001:db8::1]/private": dia…\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mready\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mready\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe shell cannot be confined: writable policy unsupported\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KEach\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach bou\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach boundar\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach boundary st\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach boundary stayed\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach boundary stayed clo\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach boundary stayed closed.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KI ch\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checke\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked ea\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each b\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each bound\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary with\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary without\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary without cros\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary without crossing\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary without crossing it.\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhuge.log\e[0m\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhuge.log\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m0L ~96Mt\e[0m \e[38;2;204;102;102mfile is larger than the 20971520-byte limit\e[0m\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kgrep \e[38;2;150;152;150msecret\e[0m \e[38;2;150;152;150mlinked\e[0m\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150msecret\e[0m \e[38;2;150;152;150mlinked\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mlinked: path escapes from parent\e[0m\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttp://[2001:db8::1]/private\e[0m \e[38;2;150;152;150mtext\e[0m\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttp://[2001:db8::1]/private\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe fetch failed: Get "http://[2001:db8::1]/private": dia…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mready\e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mready\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe shell cannot be confined: writable policy unsupported\e[0m\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KEach\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach bou\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach boundar\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach boundary st\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach boundary stayed\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach boundary stayed clo\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach boundary stayed closed.\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
@@ -268,15 +268,15 @@ Each boundary stayed closed.\r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m check every refused boundary                                                                       \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KI checked each boundary without crossing it.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhuge.log\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhuge.log\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m0L ~96Mt\e[0m \e[38;2;204;102;102mfile is larger than the 20971520-byte limit\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kgrep \e[38;2;150;152;150msecret\e[0m \e[38;2;150;152;150mlinked\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150msecret\e[0m \e[38;2;150;152;150mlinked\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mlinked: path escapes from parent\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttp://[2001:db8::1]/private\e[0m \e[38;2;150;152;150mtext\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttp://[2001:db8::1]/private\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe fetch failed: Get "http://[2001:db8::1]/private": dia…\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mready\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mready\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe shell cannot be confined: writable policy unsupported\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KEach boundary stayed closed.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KI checked each boundary without crossing it.\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhuge.log\e[0m\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhuge.log\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m0L ~96Mt\e[0m \e[38;2;204;102;102mfile is larger than the 20971520-byte limit\e[0m\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kgrep \e[38;2;150;152;150msecret\e[0m \e[38;2;150;152;150mlinked\e[0m\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150msecret\e[0m \e[38;2;150;152;150mlinked\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mlinked: path escapes from parent\e[0m\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttp://[2001:db8::1]/private\e[0m \e[38;2;150;152;150mtext\e[0m\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttp://[2001:db8::1]/private\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe fetch failed: Get "http://[2001:db8::1]/private": dia…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mready\e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mready\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe shell cannot be confined: writable policy unsupported\e[0m\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KEach boundary stayed closed.\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
@@ -284,15 +284,15 @@ Each boundary stayed closed.\r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m check every refused boundary                                                                       \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KI ch\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checke\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked ea\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each b\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each bound\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary with\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary without\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary without cros\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary without crossing\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary without crossing it.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhuge.log\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhuge.log\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m0L ~96Mt\e[0m \e[38;2;204;102;102mfile is larger than the 20971520-byte limit\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kgrep \e[38;2;150;152;150msecret\e[0m \e[38;2;150;152;150mlinked\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150msecret\e[0m \e[38;2;150;152;150mlinked\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mlinked: path escapes from parent\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttp://[2001:db8::1]/private\e[0m \e[38;2;150;152;150mtext\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttp://[2001:db8::1]/private\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe fetch failed: Get "http://[2001:db8::1]/private": dia…\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mready\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mready\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe shell cannot be confined: writable policy unsupported\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KEach\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach bou\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach boundar\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach boundary st\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach boundary stayed\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach boundary stayed clo\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach boundary stayed closed.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KI ch\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checke\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked ea\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each b\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each bound\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary with\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary without\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary without cros\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary without crossing\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KI checked each boundary without crossing it.\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhuge.log\e[0m\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhuge.log\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m0L ~96Mt\e[0m \e[38;2;204;102;102mfile is larger than the 20971520-byte limit\e[0m\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kgrep \e[38;2;150;152;150msecret\e[0m \e[38;2;150;152;150mlinked\e[0m\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150msecret\e[0m \e[38;2;150;152;150mlinked\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mlinked: path escapes from parent\e[0m\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttp://[2001:db8::1]/private\e[0m \e[38;2;150;152;150mtext\e[0m\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttp://[2001:db8::1]/private\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe fetch failed: Get "http://[2001:db8::1]/private": dia…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mready\e[0m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mready\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe shell cannot be confined: writable policy unsupported\e[0m\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KEach\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach bou\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach boundar\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach boundary st\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach boundary stayed\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach boundary stayed clo\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEach boundary stayed closed.\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m\e[0m\r
@@ -311,36 +311,36 @@ Each boundary stayed closed.\r
 \e[48;2;52;53;65m boundary   \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e[?7l\r\e[KI checked\r
-\r\e[Keach\r
-\r\e[Kboundary\r
-\r\e[Kwithout\r
-\r\e[Kcrossing it.\r
+I checked\r
+each\r
+boundary\r
+without\r
+crossing it.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\…\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m0L ~96Mt\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mlink…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190mfet…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe …\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190me\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe …\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\…\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m0L ~96Mt\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mlink…\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190mfet…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe …\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190me\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe …\e[0m\r
 \r
-\r\e[KEach\r
-\r\e[Kboundary\r
-\r\e[Kstayed\r
-\r\e[Kclosed.\r
+Each\r
+boundary\r
+stayed\r
+closed.\r
 \e[?25h\e[?2026l
 === unsized ===
-\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m
-
-\e]133;A\e\\\e[48;2;52;53;65m\e[0m
-\e[48;2;52;53;65m check every refused boundary\e[0m
-\e[48;2;52;53;65m\e[0m
-\e[?7l\r\e[KI checked each boundary without crossing it.
-
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhuge.log\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m0L ~96Mt\e[0m \e[38;2;204;102;102mfile is larger than the 20971520-byte limit\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150msecret\e[0m \e[38;2;150;152;150mlinked\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mlinked: path escapes from parent\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttp://[2001:db8::1]/private\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe fetch failed: Get "http://[2001:db8::1]/private": dial tcp [2001:db8::1]:80: 2001:db8::1 is documentation space, and fetch reaches only the public internet\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mready\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe shell cannot be confined: writable policy unsupported\e[0m
-
-\r\e[KEach boundary stayed closed.
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m check every refused boundary\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+I checked each boundary without crossing it.\r
+\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhuge.log\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m0L ~96Mt\e[0m \e[38;2;204;102;102mfile is larger than the 20971520-byte limit\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150msecret\e[0m \e[38;2;150;152;150mlinked\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mlinked: path escapes from parent\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttp://[2001:db8::1]/private\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe fetch failed: Get "http://[2001:db8::1]/private": dial tcp [2001:db8::1]:80: 2001:db8::1 is documentation space, and fetch reaches only the public internet\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mready\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe shell cannot be confined: writable policy unsupported\e[0m\r
+\r
+Each boundary stayed closed.\r
 \e[?25h\e[?2026l
 === wide ===
 \e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
@@ -349,12 +349,12 @@ Each boundary stayed closed.\r
 \e[48;2;52;53;65m check every refused boundary                                                                       \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[KI checked each boundary without crossing it.\r
+I checked each boundary without crossing it.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhuge.log\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m0L ~96Mt\e[0m \e[38;2;204;102;102mfile is larger than the 20971520-byte limit\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150msecret\e[0m \e[38;2;150;152;150mlinked\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mlinked: path escapes from parent\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttp://[2001:db8::1]/private\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe fetch failed: Get "http://[2001:db8::1]/private": dia…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mready\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe shell cannot be confined: writable policy unsupported\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhuge.log\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m0L ~96Mt\e[0m \e[38;2;204;102;102mfile is larger than the 20971520-byte limit\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150msecret\e[0m \e[38;2;150;152;150mlinked\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mlinked: path escapes from parent\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttp://[2001:db8::1]/private\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe fetch failed: Get "http://[2001:db8::1]/private": dia…\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mready\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthe shell cannot be confined: writable policy unsupported\e[0m\r
 \r
-\r\e[KEach boundary stayed closed.\r
+Each boundary stayed closed.\r
 \e[?25h\e[?2026l

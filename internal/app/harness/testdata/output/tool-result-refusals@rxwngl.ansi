@@ -7,24 +7,24 @@
 \e[48;2;52;53;65m exercise every recent refusal          \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e[?7l\r\e[KChecking each refusal and failure shape.\r
+Checking each refusal and failure shape.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mread the file first\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfile changed; re-r…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mhello\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mshim: Permission denied\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstart way-too…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mjob name must matc…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailab…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go …\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_8&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go …\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailab…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_9&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;192;128;80mhttps://exa…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch refused; fet…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_10&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;192;128;80mhttps://exa…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_11&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;192;128;80mhttps://exa…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailab…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_12&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;192;128;80mhttps://exa…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned HTT…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_13&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;192;128;80mhttps://exa…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned no …\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_14&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;192;128;80mhttps://exa…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msave raw HTML: dro…\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mread the file first\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfile changed; re-r…\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mhello\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mshim: Permission denied\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstart way-too…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mjob name must matc…\e[0m\r
+\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out…\e[0m\r
+\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailab…\e[0m\r
+\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go …\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out…\e[0m\r
+\e]8;;oh://tool-result?call=call_8&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go …\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailab…\e[0m\r
+\e]8;;oh://tool-result?call=call_9&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;192;128;80mhttps://exa…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch refused; fet…\e[0m\r
+\e]8;;oh://tool-result?call=call_10&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;192;128;80mhttps://exa…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out…\e[0m\r
+\e]8;;oh://tool-result?call=call_11&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;192;128;80mhttps://exa…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailab…\e[0m\r
+\e]8;;oh://tool-result?call=call_12&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;192;128;80mhttps://exa…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned HTT…\e[0m\r
+\e]8;;oh://tool-result?call=call_13&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;192;128;80mhttps://exa…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned no …\e[0m\r
+\e]8;;oh://tool-result?call=call_14&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;192;128;80mhttps://exa…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msave raw HTML: dro…\e[0m\r
 \r
-\r\e[KEvery recent refusal remained visible.\r
+Every recent refusal remained visible.\r
 \e[?25h\e[?2026l
 === one column ===
 \e[?2026h\e[?25l\e[38;2;150;152;150mA\e[0m\r
@@ -156,91 +156,91 @@
 \e[48;2;52;53;65ml\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\e[?7l\r\e[KC\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kc\r
-\r\e[Kk\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[Ke\r
-\r\e[Ka\r
-\r\e[Kc\r
-\r\e[Kh\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kf\r
-\r\e[Ku\r
-\r\e[Ks\r
-\r\e[Ka\r
-\r\e[Kl\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Kf\r
-\r\e[Ka\r
-\r\e[Ki\r
-\r\e[Kl\r
-\r\e[Ku\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Kh\r
-\r\e[Ka\r
-\r\e[Kp\r
-\r\e[Ke\r
-\r\e[K.\r
+C\r
+h\r
+e\r
+c\r
+k\r
+i\r
+n\r
+g\r
+e\r
+a\r
+c\r
+h\r
+r\r
+e\r
+f\r
+u\r
+s\r
+a\r
+l\r
+a\r
+n\r
+d\r
+f\r
+a\r
+i\r
+l\r
+u\r
+r\r
+e\r
+s\r
+h\r
+a\r
+p\r
+e\r
+.\r
 \r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
 \r
-\r\e[KE\r
-\r\e[Kv\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ky\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kc\r
-\r\e[Ke\r
-\r\e[Kn\r
-\r\e[Kt\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kf\r
-\r\e[Ku\r
-\r\e[Ks\r
-\r\e[Ka\r
-\r\e[Kl\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Km\r
-\r\e[Ka\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[Kv\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[Ki\r
-\r\e[Kb\r
-\r\e[Kl\r
-\r\e[Ke\r
-\r\e[K.\r
+E\r
+v\r
+e\r
+r\r
+y\r
+r\r
+e\r
+c\r
+e\r
+n\r
+t\r
+r\r
+e\r
+f\r
+u\r
+s\r
+a\r
+l\r
+r\r
+e\r
+m\r
+a\r
+i\r
+n\r
+e\r
+d\r
+v\r
+i\r
+s\r
+i\r
+b\r
+l\r
+e\r
+.\r
 \e[?25h\e[?2026l
 === plain ===
 \e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m
@@ -299,25 +299,25 @@ Every recent refusal remained visible.\r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m exercise every recent refusal                                                                      \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KChec\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking eac\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each re\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusa\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusal an\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusal and fa\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusal and failur\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusal and failure sh\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusal and failure shape.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mwrite\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mread the file first\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mwrite\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfile changed; re-read it\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kgrep \e[38;2;150;152;150mhello\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mhello\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mshim: Permission denied\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mstart way-too-long true\e[0m \e[38;2;150;152;150mstart\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstart way-too-long true\e[0m \e[38;2;150;152;150mstart\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mjob name must match [a-z0-9-]{1,10}\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; command did not run\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; command did not run\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mlookup\e[0m \e[38;2;192;128;80mmodern Go release\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go release\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; lookup did not run\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mlookup\e[0m \e[38;2;192;128;80mmodern Go release\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_8&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go release\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; lookup did not run\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_9&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch refused; fetch did not run; choose another appr…\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_10&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; fetch did not run\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_11&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; fetch did not run\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/teapot\e[0m \e[38;2;150;152;150mtext\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_12&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/teapot\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned HTTP 418: not today (raw HTML saved to /sta…\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/empty\e[0m \e[38;2;150;152;150mtext\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_13&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/empty\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned no content (raw HTML saved to /state/session…\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_14&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msave raw HTML: drops are unavailable\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KEver\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery re\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent ref\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal rem\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal remaine\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal remained vi\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal remained visibl\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal remained visible.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KChec\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking eac\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each re\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusa\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusal an\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusal and fa\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusal and failur\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusal and failure sh\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusal and failure shape.\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;207;173;0mwrite\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mread the file first\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mwrite\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfile changed; re-read it\e[0m\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kgrep \e[38;2;150;152;150mhello\e[0m\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mhello\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mshim: Permission denied\e[0m\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mstart way-too-long true\e[0m \e[38;2;150;152;150mstart\e[0m\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstart way-too-long true\e[0m \e[38;2;150;152;150mstart\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mjob name must match [a-z0-9-]{1,10}\e[0m\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; command did not run\e[0m\r\e[69C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[69C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; command did not run\e[0m\r\e[62C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[62C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mlookup\e[0m \e[38;2;192;128;80mmodern Go release\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go release\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; lookup did not run\e[0m\r\e[74C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[74C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mlookup\e[0m \e[38;2;192;128;80mmodern Go release\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_8&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go release\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; lookup did not run\e[0m\r\e[67C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[67C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_9&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch refused; fetch did not run; choose another appr…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_10&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; fetch did not run\e[0m\r\e[92C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[92C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_11&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; fetch did not run\e[0m\r\e[85C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[85C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/teapot\e[0m \e[38;2;150;152;150mtext\e[0m\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_12&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/teapot\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned HTTP 418: not today (raw HTML saved to /sta…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/empty\e[0m \e[38;2;150;152;150mtext\e[0m\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_13&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/empty\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned no content (raw HTML saved to /state/session…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_14&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msave raw HTML: drops are unavailable\e[0m\r\e[82C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[82C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KEver\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery re\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent ref\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal rem\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal remaine\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal remained vi\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal remained visibl\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal remained visible.\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
@@ -325,25 +325,25 @@ Every recent refusal remained visible.\r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m exercise every recent refusal                                                                      \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KChecking each refusal and failure shape.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mwrite\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mread the file first\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mwrite\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfile changed; re-read it\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kgrep \e[38;2;150;152;150mhello\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mhello\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mshim: Permission denied\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mstart way-too-long true\e[0m \e[38;2;150;152;150mstart\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstart way-too-long true\e[0m \e[38;2;150;152;150mstart\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mjob name must match [a-z0-9-]{1,10}\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; command did not run\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; command did not run\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mlookup\e[0m \e[38;2;192;128;80mmodern Go release\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go release\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; lookup did not run\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mlookup\e[0m \e[38;2;192;128;80mmodern Go release\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_8&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go release\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; lookup did not run\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_9&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch refused; fetch did not run; choose another appr…\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_10&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; fetch did not run\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_11&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; fetch did not run\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/teapot\e[0m \e[38;2;150;152;150mtext\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_12&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/teapot\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned HTTP 418: not today (raw HTML saved to /sta…\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/empty\e[0m \e[38;2;150;152;150mtext\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_13&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/empty\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned no content (raw HTML saved to /state/session…\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_14&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msave raw HTML: drops are unavailable\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KEvery recent refusal remained visible.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KChecking each refusal and failure shape.\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;207;173;0mwrite\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mread the file first\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mwrite\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfile changed; re-read it\e[0m\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kgrep \e[38;2;150;152;150mhello\e[0m\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mhello\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mshim: Permission denied\e[0m\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mstart way-too-long true\e[0m \e[38;2;150;152;150mstart\e[0m\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstart way-too-long true\e[0m \e[38;2;150;152;150mstart\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mjob name must match [a-z0-9-]{1,10}\e[0m\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; command did not run\e[0m\r\e[69C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[69C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; command did not run\e[0m\r\e[62C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[62C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mlookup\e[0m \e[38;2;192;128;80mmodern Go release\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go release\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; lookup did not run\e[0m\r\e[74C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[74C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mlookup\e[0m \e[38;2;192;128;80mmodern Go release\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_8&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go release\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; lookup did not run\e[0m\r\e[67C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[67C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_9&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch refused; fetch did not run; choose another appr…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_10&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; fetch did not run\e[0m\r\e[92C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[92C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_11&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; fetch did not run\e[0m\r\e[85C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[85C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/teapot\e[0m \e[38;2;150;152;150mtext\e[0m\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_12&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/teapot\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned HTTP 418: not today (raw HTML saved to /sta…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/empty\e[0m \e[38;2;150;152;150mtext\e[0m\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_13&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/empty\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned no content (raw HTML saved to /state/session…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_14&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msave raw HTML: drops are unavailable\e[0m\r\e[82C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[82C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KEvery recent refusal remained visible.\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
@@ -351,25 +351,25 @@ Every recent refusal remained visible.\r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m exercise every recent refusal                                                                      \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KChec\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking eac\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each re\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusa\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusal an\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusal and fa\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusal and failur\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusal and failure sh\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusal and failure shape.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mwrite\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mread the file first\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mwrite\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfile changed; re-read it\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[Kgrep \e[38;2;150;152;150mhello\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mhello\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mshim: Permission denied\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mstart way-too-long true\e[0m \e[38;2;150;152;150mstart\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstart way-too-long true\e[0m \e[38;2;150;152;150mstart\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mjob name must match [a-z0-9-]{1,10}\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; command did not run\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; command did not run\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mlookup\e[0m \e[38;2;192;128;80mmodern Go release\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go release\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; lookup did not run\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mlookup\e[0m \e[38;2;192;128;80mmodern Go release\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_8&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go release\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; lookup did not run\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_9&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch refused; fetch did not run; choose another appr…\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_10&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; fetch did not run\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_11&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; fetch did not run\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/teapot\e[0m \e[38;2;150;152;150mtext\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_12&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/teapot\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned HTTP 418: not today (raw HTML saved to /sta…\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/empty\e[0m \e[38;2;150;152;150mtext\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_13&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/empty\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned no content (raw HTML saved to /state/session…\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_14&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msave raw HTML: drops are unavailable\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KEver\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery re\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent ref\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal rem\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal remaine\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal remained vi\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal remained visibl\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal remained visible.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KChec\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking eac\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each re\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusa\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusal an\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusal and fa\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusal and failur\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusal and failure sh\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KChecking each refusal and failure shape.\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;207;173;0mwrite\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mread the file first\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mwrite\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfile changed; re-read it\e[0m\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[Kgrep \e[38;2;150;152;150mhello\e[0m\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mhello\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mshim: Permission denied\e[0m\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mstart way-too-long true\e[0m \e[38;2;150;152;150mstart\e[0m\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstart way-too-long true\e[0m \e[38;2;150;152;150mstart\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mjob name must match [a-z0-9-]{1,10}\e[0m\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; command did not run\e[0m\r\e[69C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[69C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; command did not run\e[0m\r\e[62C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[62C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mlookup\e[0m \e[38;2;192;128;80mmodern Go release\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go release\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; lookup did not run\e[0m\r\e[74C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[74C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mlookup\e[0m \e[38;2;192;128;80mmodern Go release\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_8&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go release\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; lookup did not run\e[0m\r\e[67C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[67C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_9&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch refused; fetch did not run; choose another appr…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_10&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; fetch did not run\e[0m\r\e[92C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[92C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_11&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; fetch did not run\e[0m\r\e[85C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[85C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/teapot\e[0m \e[38;2;150;152;150mtext\e[0m\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_12&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/teapot\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned HTTP 418: not today (raw HTML saved to /sta…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/empty\e[0m \e[38;2;150;152;150mtext\e[0m\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_13&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/empty\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned no content (raw HTML saved to /state/session…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190mfetch\e[0m \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_14&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msave raw HTML: drops are unavailable\e[0m\r\e[82C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[82C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KEver\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery re\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent ref\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal rem\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal remaine\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal remained vi\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal remained visibl\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery recent refusal remained visible.\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m\e[0m\r
@@ -389,55 +389,55 @@ Every recent refusal remained visible.\r
 \e[48;2;52;53;65m refusal    \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e[?7l\r\e[KChecking\r
-\r\e[Keach refusal\r
-\r\e[Kand failure\r
-\r\e[Kshape.\r
+Checking\r
+each refusal\r
+and failure\r
+shape.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mwri…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mread…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mwri…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfile…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mshim…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mjob …\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mc\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mappr…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mc\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mappr…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;129;162;190mloo…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mappr…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_8&session=tame-impala\e\\\e[38;2;129;162;190mloo…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mappr…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_9&session=tame-impala\e\\\e[38;2;129;162;190mfet…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetc…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_10&session=tame-impala\e\\\e[38;2;129;162;190mfet…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mappr…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_11&session=tame-impala\e\\\e[38;2;129;162;190mfet…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mappr…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_12&session=tame-impala\e\\\e[38;2;129;162;190mfet…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetc…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_13&session=tame-impala\e\\\e[38;2;129;162;190mfet…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetc…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_14&session=tame-impala\e\\\e[38;2;129;162;190mfet…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msave…\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mwri…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mread…\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mwri…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfile…\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mshim…\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mjob …\e[0m\r
+\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mc\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mappr…\e[0m\r
+\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mc\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mappr…\e[0m\r
+\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;129;162;190mloo…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mappr…\e[0m\r
+\e]8;;oh://tool-result?call=call_8&session=tame-impala\e\\\e[38;2;129;162;190mloo…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mappr…\e[0m\r
+\e]8;;oh://tool-result?call=call_9&session=tame-impala\e\\\e[38;2;129;162;190mfet…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetc…\e[0m\r
+\e]8;;oh://tool-result?call=call_10&session=tame-impala\e\\\e[38;2;129;162;190mfet…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mappr…\e[0m\r
+\e]8;;oh://tool-result?call=call_11&session=tame-impala\e\\\e[38;2;129;162;190mfet…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mappr…\e[0m\r
+\e]8;;oh://tool-result?call=call_12&session=tame-impala\e\\\e[38;2;129;162;190mfet…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetc…\e[0m\r
+\e]8;;oh://tool-result?call=call_13&session=tame-impala\e\\\e[38;2;129;162;190mfet…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetc…\e[0m\r
+\e]8;;oh://tool-result?call=call_14&session=tame-impala\e\\\e[38;2;129;162;190mfet…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msave…\e[0m\r
 \r
-\r\e[KEvery recent\r
-\r\e[Krefusal\r
-\r\e[Kremained\r
-\r\e[Kvisible.\r
+Every recent\r
+refusal\r
+remained\r
+visible.\r
 \e[?25h\e[?2026l
 === unsized ===
-\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m
-
-\e]133;A\e\\\e[48;2;52;53;65m\e[0m
-\e[48;2;52;53;65m exercise every recent refusal\e[0m
-\e[48;2;52;53;65m\e[0m
-\e[?7l\r\e[KChecking each refusal and failure shape.
-
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mread the file first\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfile changed; re-read it\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mhello\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mshim: Permission denied\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstart way-too-long true\e[0m \e[38;2;150;152;150mstart\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mjob name must match [a-z0-9-]{1,10}\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; command did not run\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; command did not run\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go release\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; lookup did not run\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_8&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go release\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; lookup did not run\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_9&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch refused; fetch did not run; choose another approach\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_10&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; fetch did not run\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_11&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; fetch did not run\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_12&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/teapot\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned HTTP 418: not today (raw HTML saved to /state/sessions/tame-impala/drops/fetch-error.html)\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_13&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/empty\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned no content (raw HTML saved to /state/sessions/tame-impala/drops/fetch-empty.html)\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_14&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msave raw HTML: drops are unavailable\e[0m
-
-\r\e[KEvery recent refusal remained visible.
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m exercise every recent refusal\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+Checking each refusal and failure shape.\r
+\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mread the file first\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfile changed; re-read it\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mhello\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mshim: Permission denied\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstart way-too-long true\e[0m \e[38;2;150;152;150mstart\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mjob name must match [a-z0-9-]{1,10}\e[0m\r
+\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; command did not run\e[0m\r
+\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; command did not run\e[0m\r
+\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go release\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; lookup did not run\e[0m\r
+\e]8;;oh://tool-result?call=call_8&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go release\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; lookup did not run\e[0m\r
+\e]8;;oh://tool-result?call=call_9&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch refused; fetch did not run; choose another approach\e[0m\r
+\e]8;;oh://tool-result?call=call_10&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; fetch did not run\e[0m\r
+\e]8;;oh://tool-result?call=call_11&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; fetch did not run\e[0m\r
+\e]8;;oh://tool-result?call=call_12&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/teapot\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned HTTP 418: not today (raw HTML saved to /state/sessions/tame-impala/drops/fetch-error.html)\e[0m\r
+\e]8;;oh://tool-result?call=call_13&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/empty\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned no content (raw HTML saved to /state/sessions/tame-impala/drops/fetch-empty.html)\e[0m\r
+\e]8;;oh://tool-result?call=call_14&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msave raw HTML: drops are unavailable\e[0m\r
+\r
+Every recent refusal remained visible.\r
 \e[?25h\e[?2026l
 === wide ===
 \e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
@@ -446,22 +446,22 @@ Every recent refusal remained visible.\r
 \e[48;2;52;53;65m exercise every recent refusal                                                                      \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[KChecking each refusal and failure shape.\r
+Checking each refusal and failure shape.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mread the file first\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfile changed; re-read it\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mhello\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mshim: Permission denied\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstart way-too-long true\e[0m \e[38;2;150;152;150mstart\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mjob name must match [a-z0-9-]{1,10}\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; command did not run\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; command did not run\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go release\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; lookup did not run\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_8&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go release\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; lookup did not run\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_9&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch refused; fetch did not run; choose another appr…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_10&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; fetch did not run\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_11&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; fetch did not run\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_12&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/teapot\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned HTTP 418: not today (raw HTML saved to /sta…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_13&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/empty\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned no content (raw HTML saved to /state/session…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_14&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msave raw HTML: drops are unavailable\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mread the file first\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mwrite\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mconfig.yaml\e[0m \e[38;2;150;152;150m15B\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfile changed; re-read it\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mhello\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mshim: Permission denied\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstart way-too-long true\e[0m \e[38;2;150;152;150mstart\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mjob name must match [a-z0-9-]{1,10}\e[0m\r
+\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; command did not run\e[0m\r
+\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; command did not run\e[0m\r
+\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go release\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; lookup did not run\e[0m\r
+\e]8;;oh://tool-result?call=call_8&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmodern Go release\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; lookup did not run\e[0m\r
+\e]8;;oh://tool-result?call=call_9&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch refused; fetch did not run; choose another appr…\e[0m\r
+\e]8;;oh://tool-result?call=call_10&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval timed out after 1m; fetch did not run\e[0m\r
+\e]8;;oh://tool-result?call=call_11&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mapproval unavailable; fetch did not run\e[0m\r
+\e]8;;oh://tool-result?call=call_12&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/teapot\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned HTTP 418: not today (raw HTML saved to /sta…\e[0m\r
+\e]8;;oh://tool-result?call=call_13&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/empty\e[0m \e[38;2;150;152;150mtext\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mfetch returned no content (raw HTML saved to /state/session…\e[0m\r
+\e]8;;oh://tool-result?call=call_14&session=tame-impala\e\\\e[38;2;129;162;190mfetch\e[0m\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mhttps://example.test/article\e[0m \e[38;2;150;152;150mmarkdown\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msave raw HTML: drops are unavailable\e[0m\r
 \r
-\r\e[KEvery recent refusal remained visible.\r
+Every recent refusal remained visible.\r
 \e[?25h\e[?2026l

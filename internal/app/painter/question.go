@@ -32,6 +32,10 @@ func RenderQuestion(question ask.Question, cursor int, columns int) []string {
 	return append(rows, "", renderOptions(question, cursor, columns))
 }
 
+func QuestionLabelRows(question ask.Question, columns int) int {
+	return len(renderQuestionLabel(question.Label, columns))
+}
+
 func QuestionHead(question ask.Question, remainingTime time.Duration) string {
 	return renderCountdown(question.Lapse, remainingTime)
 }

@@ -16,9 +16,9 @@ $ curl https://example.com/status
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === approval taller than the terminal ===
 the conversation this question stands over
+────────────────────────────────────────────────────────────────────────────────────────────────────
+Run this command with host networking?
 ⋮ 24 more lines
-  make step-10 &&
-  rm -rf build/step-11 &&
   make step-11
 
 [Yes]  No

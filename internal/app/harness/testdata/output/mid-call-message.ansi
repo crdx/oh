@@ -4,12 +4,12 @@
 \e[48;2;52;53;65m does                                   \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150manything about it.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mReading the renderer before saying\e[0m\r
+\e[3m\e[38;2;150;152;150manything about it.\e[0m\e[0m\r
 \r
-\r\e[KReading it now.\r
+Reading it now.\r
 \r
-\r\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m–\e[0m\r
+read \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m–\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -17,9 +17,9 @@
 \e[48;2;52;53;65m never mind, what is in \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\?     \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
-\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\r
+It holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\r
 \e[?25h\e[?2026l
 === one column ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
@@ -93,68 +93,68 @@
 \e[48;2;52;53;65ms\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mR\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150md\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mg\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mh\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150md\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mb\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mf\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150my\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mg\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150my\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mh\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mg\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mb\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mu\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150m.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mR\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150md\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mg\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150md\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150mb\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mf\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150my\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mg\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150my\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mg\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mb\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mu\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150m.\e[0m\e[0m\r
 \r
-\r\e[KR\r
-\r\e[Ke\r
-\r\e[Ka\r
-\r\e[Kd\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[Kn\r
-\r\e[Ko\r
-\r\e[Kw\r
-\r\e[K.\r
+R\r
+e\r
+a\r
+d\r
+i\r
+n\r
+g\r
+i\r
+t\r
+n\r
+o\r
+w\r
+.\r
 \r
-\r\e[K\e[38;2;150;152;150m–\e[0m\r
+\e[38;2;150;152;150m–\e[0m\r
 \r
 \e[38;2;207;173;0mT\e[0m\r
 \e[38;2;207;173;0mu\e[0m\r
@@ -230,41 +230,41 @@
 \e[48;2;52;53;65m?\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
 \r
-\r\e[KI\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ko\r
-\r\e[Kl\r
-\r\e[Kd\r
-\r\e[Ks\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kw\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Kd\r
-\r\e[K\e[38;2;192;128;80mo\e[0m\r
-\r\e[K\e[38;2;192;128;80mn\e[0m\r
-\r\e[K\e[38;2;192;128;80me\e[0m\r
-\r\e[K,\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Kn\r
-\r\e[Ko\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[Ke\r
-\r\e[Kl\r
-\r\e[Ks\r
-\r\e[Ke\r
-\r\e[K.\r
+I\r
+t\r
+h\r
+o\r
+l\r
+d\r
+s\r
+t\r
+h\r
+e\r
+w\r
+o\r
+r\r
+d\r
+\e[38;2;192;128;80mo\e[0m\r
+\e[38;2;192;128;80mn\e[0m\r
+\e[38;2;192;128;80me\e[0m\r
+,\r
+a\r
+n\r
+d\r
+n\r
+o\r
+t\r
+h\r
+i\r
+n\r
+g\r
+e\r
+l\r
+s\r
+e\r
+.\r
 \e[?25h\e[?2026l
 === plain ===
 \e[48;2;52;53;65m\e[0m
@@ -310,64 +310,64 @@ It holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\r
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m read the renderer and tell me what it does                                                         \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mRead\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the rend\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer bef\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before sayi\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying a\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anyth\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything abou\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it.\e[0m\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KRead\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading it n\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading it now.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m–\e[0m\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K\e[3m\e[38;2;150;152;150mRead\e[0m\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading\e[0m\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the\e[0m\e[0m\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the rend\e[0m\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer\e[0m\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer bef\e[0m\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before\e[0m\e[0m\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before sayi\e[0m\e[0m\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying a\e[0m\e[0m\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anyth\e[0m\e[0m\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything\e[0m\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything abou\e[0m\e[0m\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it\e[0m\e[0m\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it.\e[0m\e[0m\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KRead\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading it n\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading it now.\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m–\e[0m\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m never mind, what is in \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\?                                                                 \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KIt h\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the wor\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word `o\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m,\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and not\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing els\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KIt h\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the wor\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word `o\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m,\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and not\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing els\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[40C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m read the renderer and tell me what it does                                                         \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it.\e[0m\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KReading it now.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m–\e[0m\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it.\e[0m\e[0m\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KReading it now.\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m–\e[0m\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m never mind, what is in \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\?                                                                 \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[40C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m read the renderer and tell me what it does                                                         \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mRead\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the rend\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer bef\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before sayi\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying a\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anyth\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything abou\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it.\e[0m\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KRead\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading it n\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading it now.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m–\e[0m\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K\e[3m\e[38;2;150;152;150mRead\e[0m\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading\e[0m\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the\e[0m\e[0m\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the rend\e[0m\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer\e[0m\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer bef\e[0m\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before\e[0m\e[0m\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before sayi\e[0m\e[0m\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying a\e[0m\e[0m\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anyth\e[0m\e[0m\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything\e[0m\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything abou\e[0m\e[0m\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it\e[0m\e[0m\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it.\e[0m\e[0m\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KRead\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading it n\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KReading it now.\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m–\e[0m\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m never mind, what is in \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\?                                                                 \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KIt h\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the wor\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word `o\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m,\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and not\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing els\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KIt h\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the wor\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word `o\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m,\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and not\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing els\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[40C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
@@ -378,17 +378,17 @@ It holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\r
 \e[48;2;52;53;65m does       \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mReading the\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mrenderer\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mbefore\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150msaying\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150manything\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mabout it.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mReading the\e[0m\r
+\e[3m\e[38;2;150;152;150mrenderer\e[0m\r
+\e[3m\e[38;2;150;152;150mbefore\e[0m\r
+\e[3m\e[38;2;150;152;150msaying\e[0m\r
+\e[3m\e[38;2;150;152;150manything\e[0m\r
+\e[3m\e[38;2;150;152;150mabout it.\e[0m\e[0m\r
 \r
-\r\e[KReading it\r
-\r\e[Know.\r
+Reading it\r
+now.\r
 \r
-\r\e[Kread \e[38;2;192;128;80mcmd/…\e[0m \e[38;2;150;152;150m–\e[0m\r
+read \e[38;2;192;128;80mcmd/…\e[0m \e[38;2;150;152;150m–\e[0m\r
 \r
 \e[38;2;207;173;0mTurn\e[0m\r
 \e[38;2;207;173;0mstopped.\e[0m\r
@@ -399,42 +399,42 @@ It holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\r
 \e[48;2;52;53;65m \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\?\e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mt…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mt…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
-\r\e[KIt holds the\r
-\r\e[Kword \e[38;2;192;128;80mone\e[0m,\r
-\r\e[Kand nothing\r
-\r\e[Kelse.\r
+It holds the\r
+word \e[38;2;192;128;80mone\e[0m,\r
+and nothing\r
+else.\r
 \e[?25h\e[?2026l
 === unsized ===
-\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m
-\e[48;2;52;53;65m read the renderer and tell me what it does\e[0m
-\e[48;2;52;53;65m\e[0m
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it.\e[0m\e[0m
-
-\r\e[KReading it now.
-
-\r\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m–\e[0m
-
-\e[38;2;207;173;0mTurn stopped.\e[0m
-
-\e]133;A\e\\\e[48;2;52;53;65m\e[0m
-\e[48;2;52;53;65m never mind, what is in \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\?\e[0m
-\e[48;2;52;53;65m\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
-
-\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m read the renderer and tell me what it does\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it.\e[0m\e[0m\r
+\r
+Reading it now.\r
+\r
+read \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m–\e[0m\r
+\r
+\e[38;2;207;173;0mTurn stopped.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m never mind, what is in \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\?\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\r
+It holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\r
 \e[?25h\e[?2026l
 === wide ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m read the renderer and tell me what it does                                                         \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it.\e[0m\e[0m\r
 \r
-\r\e[KReading it now.\r
+Reading it now.\r
 \r
-\r\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m–\e[0m\r
+read \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m–\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -442,7 +442,7 @@ It holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\r
 \e[48;2;52;53;65m never mind, what is in \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\?                                                                 \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
-\r\e[KIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\r
+It holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\r
 \e[?25h\e[?2026l

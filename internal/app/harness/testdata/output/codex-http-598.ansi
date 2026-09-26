@@ -4,10 +4,10 @@
 \r
 \e[38;2;207;173;0m[#1] Request failed; retrying in 1s: Request failed with status 598\e[0m\r
 \r
-\e[?7l\r\e[KRecovered from an unknown future status.\e[?25h\e[?2026l\r
+Recovered from an unknown future status.\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m continue after the unknown failure                                                                 \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\r\e[KResumed.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KResumed.\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[8C\e[?25h\e[?2026l\r

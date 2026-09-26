@@ -5,31 +5,31 @@
 \e[48;2;52;53;65m \e]8;;https://example.test/request\e\\\e[38;2;129;162;190mhttps://example.test/request\e[0m\e[48;2;52;53;65m\e]8;;\e\\           \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e[?7l\r\e[K\e[1m\e[38;2;207;173;0mTerminal links\e[0m\e[0m\r
-\r\e[K\r
-\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(https://example.test/label)\e[0m, a bare\r
-\r\e[Ksecure URL \e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a\r
-\r\e[Kbare ordinary URL\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mhttp://www.example.test/path\e[0m\e]8;;\e\\.\r
-\r\e[K\r
-\r\e[KThis \e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mlong linked label crosses narrow\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mrows without leaking into its neighbours\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination\e[0m\r
-\r\e[K\e[38;2;150;152;150m?first=one&second=two)\e[0m, while \e]8;;https://example.test/case\e\\\e[38;2;129;162;190mmixed-case\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mHTTPS\e[0m\e]8;;\e\\\e[38;2;150;152;150m (HTTPS://example.test/case)\e[0m is\r
-\r\e[Kaccepted too.\r
-\r\e[K\r
-\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(docs/page.md)\e[0m, \e[38;2;129;162;190mhostless links\e[0m\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP\r
-\r\e[K\e[38;2;129;162;190mftp://example.test/archive\e[0m remain\r
-\r\e[Kvisible but inert.\r
-\r\e[K\r
-\r\e[KAn image remains a fallback: \e[38;2;129;162;190mdiagram\e[0m\r
-\r\e[K\e[38;2;150;152;150m(diagram.png)\e[0m.\r
+\e[1m\e[38;2;207;173;0mTerminal links\e[0m\e[0m\r
+\r
+A \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m(https://example.test/label)\e[0m, a bare\r
+secure URL \e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a\r
+bare ordinary URL\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mhttp://www.example.test/path\e[0m\e]8;;\e\\.\r
+\r
+This \e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mlong linked label crosses narrow\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mrows without leaking into its neighbours\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m(https://example.test/a-long-destination\e[0m\r
+\e[38;2;150;152;150m?first=one&second=two)\e[0m, while \e]8;;https://example.test/case\e\\\e[38;2;129;162;190mmixed-case\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mHTTPS\e[0m\e]8;;\e\\\e[38;2;150;152;150m (HTTPS://example.test/case)\e[0m is\r
+accepted too.\r
+\r
+Unsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m(javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m(docs/page.md)\e[0m, \e[38;2;129;162;190mhostless links\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m(https:path)\e[0m, and FTP\r
+\e[38;2;129;162;190mftp://example.test/archive\e[0m remain\r
+visible but inert.\r
+\r
+An image remains a fallback: \e[38;2;129;162;190mdiagram\e[0m\r
+\e[38;2;150;152;150m(diagram.png)\e[0m.\r
 \e[?25h\e[?2026l
 === one column ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
@@ -201,585 +201,585 @@
 \e[48;2;52;53;65m\e]8;;https://example.test/request\e\\\e[38;2;129;162;190mt\e[0m\e[48;2;52;53;65m\e]8;;\e\\\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\e[?7l\r\e[K\e[1m\e[38;2;207;173;0mT\e[0m\r
-\r\e[K\e[1m\e[38;2;207;173;0me\e[0m\r
-\r\e[K\e[1m\e[38;2;207;173;0mr\e[0m\r
-\r\e[K\e[1m\e[38;2;207;173;0mm\e[0m\r
-\r\e[K\e[1m\e[38;2;207;173;0mi\e[0m\r
-\r\e[K\e[1m\e[38;2;207;173;0mn\e[0m\r
-\r\e[K\e[1m\e[38;2;207;173;0ma\e[0m\r
-\r\e[K\e[1m\e[38;2;207;173;0ml\e[0m\r
-\r\e[K\e[1m\e[38;2;207;173;0ml\e[0m\r
-\r\e[K\e[1m\e[38;2;207;173;0mi\e[0m\r
-\r\e[K\e[1m\e[38;2;207;173;0mn\e[0m\r
-\r\e[K\e[1m\e[38;2;207;173;0mk\e[0m\r
-\r\e[K\e[1m\e[38;2;207;173;0ms\e[0m\e[0m\r
-\r\e[K\r
-\r\e[KA\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190mb\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190mw\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190mi\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190mh\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1mn\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1ms\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1md\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1mm\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1mp\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1mh\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1ms\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1mi\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1ms\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(\e[0m\r
-\r\e[K\e[38;2;150;152;150mh\e[0m\r
-\r\e[K\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[38;2;150;152;150mp\e[0m\r
-\r\e[K\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[38;2;150;152;150m:\e[0m\r
-\r\e[K\e[38;2;150;152;150m/\e[0m\r
-\r\e[K\e[38;2;150;152;150m/\e[0m\r
-\r\e[K\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[38;2;150;152;150mx\e[0m\r
-\r\e[K\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[38;2;150;152;150mm\e[0m\r
-\r\e[K\e[38;2;150;152;150mp\e[0m\r
-\r\e[K\e[38;2;150;152;150ml\e[0m\r
-\r\e[K\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[38;2;150;152;150m.\e[0m\r
-\r\e[K\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[38;2;150;152;150m/\e[0m\r
-\r\e[K\e[38;2;150;152;150ml\e[0m\r
-\r\e[K\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[38;2;150;152;150mb\e[0m\r
-\r\e[K\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[38;2;150;152;150ml\e[0m\r
-\r\e[K\e[38;2;150;152;150m)\e[0m\r
-\r\e[K,\r
-\r\e[Ka\r
-\r\e[Kb\r
-\r\e[Ka\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Ke\r
-\r\e[Kc\r
-\r\e[Ku\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[KU\r
-\r\e[KR\r
-\r\e[KL\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mh\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mp\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190m:\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190m/\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190m/\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mx\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mm\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mp\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190m.\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190m/\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mb\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mr\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
-\r\e[K,\r
-\r\e[Ka\r
-\r\e[Kb\r
-\r\e[Ka\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Kd\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Ka\r
-\r\e[Kr\r
-\r\e[Ky\r
-\r\e[KU\r
-\r\e[KR\r
-\r\e[KL\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mh\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mp\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190m:\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190m/\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190m/\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mx\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mm\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mp\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190m.\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190m/\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mp\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mi\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mn\e[0m\e]8;;\e\\\r
-\r\e[K,\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Ka\r
-\r\e[Kw\r
-\r\e[Kw\r
-\r\e[Kw\r
-\r\e[KU\r
-\r\e[KR\r
-\r\e[KL\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mh\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mp\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190m:\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190m/\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190m/\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mw\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mw\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mw\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190m.\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mx\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mm\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mp\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190m.\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190m/\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mp\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mh\e[0m\e]8;;\e\\\r
-\r\e[K.\r
-\r\e[K\r
-\r\e[KT\r
-\r\e[Kh\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mo\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mn\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mg\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mi\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mn\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mk\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190md\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mb\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mc\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mr\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mo\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mn\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mr\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mr\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mo\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mw\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mr\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mo\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mw\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mw\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mi\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mh\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mo\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mu\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mk\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mi\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mn\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mg\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mi\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mn\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mo\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mi\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mn\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mi\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mg\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mh\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mb\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mo\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mu\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mr\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(\e[0m\r
-\r\e[K\e[38;2;150;152;150mh\e[0m\r
-\r\e[K\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[38;2;150;152;150mp\e[0m\r
-\r\e[K\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[38;2;150;152;150m:\e[0m\r
-\r\e[K\e[38;2;150;152;150m/\e[0m\r
-\r\e[K\e[38;2;150;152;150m/\e[0m\r
-\r\e[K\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[38;2;150;152;150mx\e[0m\r
-\r\e[K\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[38;2;150;152;150mm\e[0m\r
-\r\e[K\e[38;2;150;152;150mp\e[0m\r
-\r\e[K\e[38;2;150;152;150ml\e[0m\r
-\r\e[K\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[38;2;150;152;150m.\e[0m\r
-\r\e[K\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[38;2;150;152;150m/\e[0m\r
-\r\e[K\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[38;2;150;152;150m-\e[0m\r
-\r\e[K\e[38;2;150;152;150ml\e[0m\r
-\r\e[K\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[38;2;150;152;150mg\e[0m\r
-\r\e[K\e[38;2;150;152;150m-\e[0m\r
-\r\e[K\e[38;2;150;152;150md\e[0m\r
-\r\e[K\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[38;2;150;152;150m?\e[0m\r
-\r\e[K\e[38;2;150;152;150mf\e[0m\r
-\r\e[K\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[38;2;150;152;150m=\e[0m\r
-\r\e[K\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[38;2;150;152;150m&\e[0m\r
-\r\e[K\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[38;2;150;152;150mc\e[0m\r
-\r\e[K\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[38;2;150;152;150md\e[0m\r
-\r\e[K\e[38;2;150;152;150m=\e[0m\r
-\r\e[K\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[38;2;150;152;150mw\e[0m\r
-\r\e[K\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[38;2;150;152;150m)\e[0m\r
-\r\e[K,\r
-\r\e[Kw\r
-\r\e[Kh\r
-\r\e[Ki\r
-\r\e[Kl\r
-\r\e[Ke\r
-\r\e[K\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mm\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mi\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mx\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/case\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/case\e\\\e[38;2;129;162;190md\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/case\e\\\e[38;2;129;162;190m-\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mc\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/case\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/case\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/case\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mH\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mT\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mT\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mP\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mS\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(\e[0m\r
-\r\e[K\e[38;2;150;152;150mH\e[0m\r
-\r\e[K\e[38;2;150;152;150mT\e[0m\r
-\r\e[K\e[38;2;150;152;150mT\e[0m\r
-\r\e[K\e[38;2;150;152;150mP\e[0m\r
-\r\e[K\e[38;2;150;152;150mS\e[0m\r
-\r\e[K\e[38;2;150;152;150m:\e[0m\r
-\r\e[K\e[38;2;150;152;150m/\e[0m\r
-\r\e[K\e[38;2;150;152;150m/\e[0m\r
-\r\e[K\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[38;2;150;152;150mx\e[0m\r
-\r\e[K\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[38;2;150;152;150mm\e[0m\r
-\r\e[K\e[38;2;150;152;150mp\e[0m\r
-\r\e[K\e[38;2;150;152;150ml\e[0m\r
-\r\e[K\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[38;2;150;152;150m.\e[0m\r
-\r\e[K\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[38;2;150;152;150m/\e[0m\r
-\r\e[K\e[38;2;150;152;150mc\e[0m\r
-\r\e[K\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[38;2;150;152;150m)\e[0m\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[Ka\r
-\r\e[Kc\r
-\r\e[Kc\r
-\r\e[Ke\r
-\r\e[Kp\r
-\r\e[Kt\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[Kt\r
-\r\e[Ko\r
-\r\e[Ko\r
-\r\e[K.\r
-\r\e[K\r
-\r\e[KU\r
-\r\e[Kn\r
-\r\e[Ks\r
-\r\e[Ku\r
-\r\e[Kp\r
-\r\e[Kp\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Kt\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[K\e[38;2;129;162;190ms\e[0m\r
-\r\e[K\e[38;2;129;162;190mc\e[0m\r
-\r\e[K\e[38;2;129;162;190mr\e[0m\r
-\r\e[K\e[38;2;129;162;190mi\e[0m\r
-\r\e[K\e[38;2;129;162;190mp\e[0m\r
-\r\e[K\e[38;2;129;162;190mt\e[0m\r
-\r\e[K\e[38;2;129;162;190ml\e[0m\r
-\r\e[K\e[38;2;129;162;190mi\e[0m\r
-\r\e[K\e[38;2;129;162;190mn\e[0m\r
-\r\e[K\e[38;2;129;162;190mk\e[0m\r
-\r\e[K\e[38;2;129;162;190ms\e[0m\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(\e[0m\r
-\r\e[K\e[38;2;150;152;150mj\e[0m\r
-\r\e[K\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[38;2;150;152;150mv\e[0m\r
-\r\e[K\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[38;2;150;152;150mc\e[0m\r
-\r\e[K\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[38;2;150;152;150mp\e[0m\r
-\r\e[K\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[38;2;150;152;150m:\e[0m\r
-\r\e[K\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[38;2;150;152;150ml\e[0m\r
-\r\e[K\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[38;2;150;152;150m(\e[0m\r
-\r\e[K\e[38;2;150;152;150m1\e[0m\r
-\r\e[K\e[38;2;150;152;150m)\e[0m\r
-\r\e[K\e[38;2;150;152;150m)\e[0m\r
-\r\e[K,\r
-\r\e[K\e[38;2;129;162;190mr\e[0m\r
-\r\e[K\e[38;2;129;162;190me\e[0m\r
-\r\e[K\e[38;2;129;162;190ml\e[0m\r
-\r\e[K\e[38;2;129;162;190ma\e[0m\r
-\r\e[K\e[38;2;129;162;190mt\e[0m\r
-\r\e[K\e[38;2;129;162;190mi\e[0m\r
-\r\e[K\e[38;2;129;162;190mv\e[0m\r
-\r\e[K\e[38;2;129;162;190me\e[0m\r
-\r\e[K\e[38;2;129;162;190ml\e[0m\r
-\r\e[K\e[38;2;129;162;190mi\e[0m\r
-\r\e[K\e[38;2;129;162;190mn\e[0m\r
-\r\e[K\e[38;2;129;162;190mk\e[0m\r
-\r\e[K\e[38;2;129;162;190ms\e[0m\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(\e[0m\r
-\r\e[K\e[38;2;150;152;150md\e[0m\r
-\r\e[K\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[38;2;150;152;150mc\e[0m\r
-\r\e[K\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[38;2;150;152;150m/\e[0m\r
-\r\e[K\e[38;2;150;152;150mp\e[0m\r
-\r\e[K\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[38;2;150;152;150mg\e[0m\r
-\r\e[K\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[38;2;150;152;150m.\e[0m\r
-\r\e[K\e[38;2;150;152;150mm\e[0m\r
-\r\e[K\e[38;2;150;152;150md\e[0m\r
-\r\e[K\e[38;2;150;152;150m)\e[0m\r
-\r\e[K,\r
-\r\e[K\e[38;2;129;162;190mh\e[0m\r
-\r\e[K\e[38;2;129;162;190mo\e[0m\r
-\r\e[K\e[38;2;129;162;190ms\e[0m\r
-\r\e[K\e[38;2;129;162;190mt\e[0m\r
-\r\e[K\e[38;2;129;162;190ml\e[0m\r
-\r\e[K\e[38;2;129;162;190me\e[0m\r
-\r\e[K\e[38;2;129;162;190ms\e[0m\r
-\r\e[K\e[38;2;129;162;190ms\e[0m\r
-\r\e[K\e[38;2;129;162;190ml\e[0m\r
-\r\e[K\e[38;2;129;162;190mi\e[0m\r
-\r\e[K\e[38;2;129;162;190mn\e[0m\r
-\r\e[K\e[38;2;129;162;190mk\e[0m\r
-\r\e[K\e[38;2;129;162;190ms\e[0m\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(\e[0m\r
-\r\e[K\e[38;2;150;152;150mh\e[0m\r
-\r\e[K\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[38;2;150;152;150mp\e[0m\r
-\r\e[K\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[38;2;150;152;150m:\e[0m\r
-\r\e[K\e[38;2;150;152;150mp\e[0m\r
-\r\e[K\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[38;2;150;152;150mh\e[0m\r
-\r\e[K\e[38;2;150;152;150m)\e[0m\r
-\r\e[K,\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[KF\r
-\r\e[KT\r
-\r\e[KP\r
-\r\e[K\e[38;2;129;162;190mf\e[0m\r
-\r\e[K\e[38;2;129;162;190mt\e[0m\r
-\r\e[K\e[38;2;129;162;190mp\e[0m\r
-\r\e[K\e[38;2;129;162;190m:\e[0m\r
-\r\e[K\e[38;2;129;162;190m/\e[0m\r
-\r\e[K\e[38;2;129;162;190m/\e[0m\r
-\r\e[K\e[38;2;129;162;190me\e[0m\r
-\r\e[K\e[38;2;129;162;190mx\e[0m\r
-\r\e[K\e[38;2;129;162;190ma\e[0m\r
-\r\e[K\e[38;2;129;162;190mm\e[0m\r
-\r\e[K\e[38;2;129;162;190mp\e[0m\r
-\r\e[K\e[38;2;129;162;190ml\e[0m\r
-\r\e[K\e[38;2;129;162;190me\e[0m\r
-\r\e[K\e[38;2;129;162;190m.\e[0m\r
-\r\e[K\e[38;2;129;162;190mt\e[0m\r
-\r\e[K\e[38;2;129;162;190me\e[0m\r
-\r\e[K\e[38;2;129;162;190ms\e[0m\r
-\r\e[K\e[38;2;129;162;190mt\e[0m\r
-\r\e[K\e[38;2;129;162;190m/\e[0m\r
-\r\e[K\e[38;2;129;162;190ma\e[0m\r
-\r\e[K\e[38;2;129;162;190mr\e[0m\r
-\r\e[K\e[38;2;129;162;190mc\e[0m\r
-\r\e[K\e[38;2;129;162;190mh\e[0m\r
-\r\e[K\e[38;2;129;162;190mi\e[0m\r
-\r\e[K\e[38;2;129;162;190mv\e[0m\r
-\r\e[K\e[38;2;129;162;190me\e[0m\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Km\r
-\r\e[Ka\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kv\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[Ki\r
-\r\e[Kb\r
-\r\e[Kl\r
-\r\e[Ke\r
-\r\e[Kb\r
-\r\e[Ku\r
-\r\e[Kt\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Kt\r
-\r\e[K.\r
-\r\e[K\r
-\r\e[KA\r
-\r\e[Kn\r
-\r\e[Ki\r
-\r\e[Km\r
-\r\e[Ka\r
-\r\e[Kg\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Km\r
-\r\e[Ka\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Ks\r
-\r\e[Ka\r
-\r\e[Kf\r
-\r\e[Ka\r
-\r\e[Kl\r
-\r\e[Kl\r
-\r\e[Kb\r
-\r\e[Ka\r
-\r\e[Kc\r
-\r\e[Kk\r
-\r\e[K:\r
-\r\e[K\e[38;2;129;162;190md\e[0m\r
-\r\e[K\e[38;2;129;162;190mi\e[0m\r
-\r\e[K\e[38;2;129;162;190ma\e[0m\r
-\r\e[K\e[38;2;129;162;190mg\e[0m\r
-\r\e[K\e[38;2;129;162;190mr\e[0m\r
-\r\e[K\e[38;2;129;162;190ma\e[0m\r
-\r\e[K\e[38;2;129;162;190mm\e[0m\r
-\r\e[K\e[38;2;150;152;150m(\e[0m\r
-\r\e[K\e[38;2;150;152;150md\e[0m\r
-\r\e[K\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[38;2;150;152;150mg\e[0m\r
-\r\e[K\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[38;2;150;152;150mm\e[0m\r
-\r\e[K\e[38;2;150;152;150m.\e[0m\r
-\r\e[K\e[38;2;150;152;150mp\e[0m\r
-\r\e[K\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[38;2;150;152;150mg\e[0m\r
-\r\e[K\e[38;2;150;152;150m)\e[0m\r
-\r\e[K.\r
+\e[1m\e[38;2;207;173;0mT\e[0m\r
+\e[1m\e[38;2;207;173;0me\e[0m\r
+\e[1m\e[38;2;207;173;0mr\e[0m\r
+\e[1m\e[38;2;207;173;0mm\e[0m\r
+\e[1m\e[38;2;207;173;0mi\e[0m\r
+\e[1m\e[38;2;207;173;0mn\e[0m\r
+\e[1m\e[38;2;207;173;0ma\e[0m\r
+\e[1m\e[38;2;207;173;0ml\e[0m\r
+\e[1m\e[38;2;207;173;0ml\e[0m\r
+\e[1m\e[38;2;207;173;0mi\e[0m\r
+\e[1m\e[38;2;207;173;0mn\e[0m\r
+\e[1m\e[38;2;207;173;0mk\e[0m\r
+\e[1m\e[38;2;207;173;0ms\e[0m\e[0m\r
+\r
+A\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190mb\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190mw\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190mi\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190mh\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1mn\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1me\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1ms\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1mt\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1me\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1md\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1me\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1mm\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1mp\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1mh\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1ma\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1ms\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1mi\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1ms\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m(\e[0m\r
+\e[38;2;150;152;150mh\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150mp\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150m:\e[0m\r
+\e[38;2;150;152;150m/\e[0m\r
+\e[38;2;150;152;150m/\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150mx\e[0m\r
+\e[38;2;150;152;150ma\e[0m\r
+\e[38;2;150;152;150mm\e[0m\r
+\e[38;2;150;152;150mp\e[0m\r
+\e[38;2;150;152;150ml\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150m.\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150m/\e[0m\r
+\e[38;2;150;152;150ml\e[0m\r
+\e[38;2;150;152;150ma\e[0m\r
+\e[38;2;150;152;150mb\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150ml\e[0m\r
+\e[38;2;150;152;150m)\e[0m\r
+,\r
+a\r
+b\r
+a\r
+r\r
+e\r
+s\r
+e\r
+c\r
+u\r
+r\r
+e\r
+U\r
+R\r
+L\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mh\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mp\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190m:\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190m/\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190m/\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mx\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mm\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mp\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190m.\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190m/\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mb\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mr\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
+,\r
+a\r
+b\r
+a\r
+r\r
+e\r
+o\r
+r\r
+d\r
+i\r
+n\r
+a\r
+r\r
+y\r
+U\r
+R\r
+L\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mh\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mp\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190m:\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190m/\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190m/\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mx\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mm\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mp\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190m.\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190m/\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mp\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mi\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mn\e[0m\e]8;;\e\\\r
+,\r
+a\r
+n\r
+d\r
+a\r
+w\r
+w\r
+w\r
+U\r
+R\r
+L\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mh\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mp\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190m:\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190m/\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190m/\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mw\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mw\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mw\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190m.\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mx\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mm\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mp\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190m.\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190m/\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mp\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mh\e[0m\e]8;;\e\\\r
+.\r
+\r
+T\r
+h\r
+i\r
+s\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mo\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mn\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mg\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mi\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mn\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mk\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190md\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mb\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mc\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mr\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mo\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mn\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mr\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mr\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mo\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mw\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mr\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mo\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mw\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mw\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mi\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mh\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mo\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mu\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ml\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mk\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mi\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mn\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mg\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mi\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mn\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mo\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mi\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mt\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mn\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mi\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mg\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mh\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mb\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mo\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mu\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mr\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m(\e[0m\r
+\e[38;2;150;152;150mh\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150mp\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150m:\e[0m\r
+\e[38;2;150;152;150m/\e[0m\r
+\e[38;2;150;152;150m/\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150mx\e[0m\r
+\e[38;2;150;152;150ma\e[0m\r
+\e[38;2;150;152;150mm\e[0m\r
+\e[38;2;150;152;150mp\e[0m\r
+\e[38;2;150;152;150ml\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150m.\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150m/\e[0m\r
+\e[38;2;150;152;150ma\e[0m\r
+\e[38;2;150;152;150m-\e[0m\r
+\e[38;2;150;152;150ml\e[0m\r
+\e[38;2;150;152;150mo\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150mg\e[0m\r
+\e[38;2;150;152;150m-\e[0m\r
+\e[38;2;150;152;150md\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150ma\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150mo\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150m?\e[0m\r
+\e[38;2;150;152;150mf\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150mr\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150m=\e[0m\r
+\e[38;2;150;152;150mo\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150m&\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150mc\e[0m\r
+\e[38;2;150;152;150mo\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150md\e[0m\r
+\e[38;2;150;152;150m=\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150mw\e[0m\r
+\e[38;2;150;152;150mo\e[0m\r
+\e[38;2;150;152;150m)\e[0m\r
+,\r
+w\r
+h\r
+i\r
+l\r
+e\r
+\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mm\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mi\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mx\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/case\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/case\e\\\e[38;2;129;162;190md\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/case\e\\\e[38;2;129;162;190m-\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mc\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/case\e\\\e[38;2;129;162;190ma\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/case\e\\\e[38;2;129;162;190ms\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/case\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mH\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mT\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mT\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mP\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mS\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m(\e[0m\r
+\e[38;2;150;152;150mH\e[0m\r
+\e[38;2;150;152;150mT\e[0m\r
+\e[38;2;150;152;150mT\e[0m\r
+\e[38;2;150;152;150mP\e[0m\r
+\e[38;2;150;152;150mS\e[0m\r
+\e[38;2;150;152;150m:\e[0m\r
+\e[38;2;150;152;150m/\e[0m\r
+\e[38;2;150;152;150m/\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150mx\e[0m\r
+\e[38;2;150;152;150ma\e[0m\r
+\e[38;2;150;152;150mm\e[0m\r
+\e[38;2;150;152;150mp\e[0m\r
+\e[38;2;150;152;150ml\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150m.\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150m/\e[0m\r
+\e[38;2;150;152;150mc\e[0m\r
+\e[38;2;150;152;150ma\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150m)\e[0m\r
+i\r
+s\r
+a\r
+c\r
+c\r
+e\r
+p\r
+t\r
+e\r
+d\r
+t\r
+o\r
+o\r
+.\r
+\r
+U\r
+n\r
+s\r
+u\r
+p\r
+p\r
+o\r
+r\r
+t\r
+e\r
+d\r
+\e[38;2;129;162;190ms\e[0m\r
+\e[38;2;129;162;190mc\e[0m\r
+\e[38;2;129;162;190mr\e[0m\r
+\e[38;2;129;162;190mi\e[0m\r
+\e[38;2;129;162;190mp\e[0m\r
+\e[38;2;129;162;190mt\e[0m\r
+\e[38;2;129;162;190ml\e[0m\r
+\e[38;2;129;162;190mi\e[0m\r
+\e[38;2;129;162;190mn\e[0m\r
+\e[38;2;129;162;190mk\e[0m\r
+\e[38;2;129;162;190ms\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m(\e[0m\r
+\e[38;2;150;152;150mj\e[0m\r
+\e[38;2;150;152;150ma\e[0m\r
+\e[38;2;150;152;150mv\e[0m\r
+\e[38;2;150;152;150ma\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150mc\e[0m\r
+\e[38;2;150;152;150mr\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150mp\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150m:\e[0m\r
+\e[38;2;150;152;150ma\e[0m\r
+\e[38;2;150;152;150ml\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150mr\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150m(\e[0m\r
+\e[38;2;150;152;150m1\e[0m\r
+\e[38;2;150;152;150m)\e[0m\r
+\e[38;2;150;152;150m)\e[0m\r
+,\r
+\e[38;2;129;162;190mr\e[0m\r
+\e[38;2;129;162;190me\e[0m\r
+\e[38;2;129;162;190ml\e[0m\r
+\e[38;2;129;162;190ma\e[0m\r
+\e[38;2;129;162;190mt\e[0m\r
+\e[38;2;129;162;190mi\e[0m\r
+\e[38;2;129;162;190mv\e[0m\r
+\e[38;2;129;162;190me\e[0m\r
+\e[38;2;129;162;190ml\e[0m\r
+\e[38;2;129;162;190mi\e[0m\r
+\e[38;2;129;162;190mn\e[0m\r
+\e[38;2;129;162;190mk\e[0m\r
+\e[38;2;129;162;190ms\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m(\e[0m\r
+\e[38;2;150;152;150md\e[0m\r
+\e[38;2;150;152;150mo\e[0m\r
+\e[38;2;150;152;150mc\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150m/\e[0m\r
+\e[38;2;150;152;150mp\e[0m\r
+\e[38;2;150;152;150ma\e[0m\r
+\e[38;2;150;152;150mg\e[0m\r
+\e[38;2;150;152;150me\e[0m\r
+\e[38;2;150;152;150m.\e[0m\r
+\e[38;2;150;152;150mm\e[0m\r
+\e[38;2;150;152;150md\e[0m\r
+\e[38;2;150;152;150m)\e[0m\r
+,\r
+\e[38;2;129;162;190mh\e[0m\r
+\e[38;2;129;162;190mo\e[0m\r
+\e[38;2;129;162;190ms\e[0m\r
+\e[38;2;129;162;190mt\e[0m\r
+\e[38;2;129;162;190ml\e[0m\r
+\e[38;2;129;162;190me\e[0m\r
+\e[38;2;129;162;190ms\e[0m\r
+\e[38;2;129;162;190ms\e[0m\r
+\e[38;2;129;162;190ml\e[0m\r
+\e[38;2;129;162;190mi\e[0m\r
+\e[38;2;129;162;190mn\e[0m\r
+\e[38;2;129;162;190mk\e[0m\r
+\e[38;2;129;162;190ms\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m(\e[0m\r
+\e[38;2;150;152;150mh\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150mp\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150m:\e[0m\r
+\e[38;2;150;152;150mp\e[0m\r
+\e[38;2;150;152;150ma\e[0m\r
+\e[38;2;150;152;150mt\e[0m\r
+\e[38;2;150;152;150mh\e[0m\r
+\e[38;2;150;152;150m)\e[0m\r
+,\r
+a\r
+n\r
+d\r
+F\r
+T\r
+P\r
+\e[38;2;129;162;190mf\e[0m\r
+\e[38;2;129;162;190mt\e[0m\r
+\e[38;2;129;162;190mp\e[0m\r
+\e[38;2;129;162;190m:\e[0m\r
+\e[38;2;129;162;190m/\e[0m\r
+\e[38;2;129;162;190m/\e[0m\r
+\e[38;2;129;162;190me\e[0m\r
+\e[38;2;129;162;190mx\e[0m\r
+\e[38;2;129;162;190ma\e[0m\r
+\e[38;2;129;162;190mm\e[0m\r
+\e[38;2;129;162;190mp\e[0m\r
+\e[38;2;129;162;190ml\e[0m\r
+\e[38;2;129;162;190me\e[0m\r
+\e[38;2;129;162;190m.\e[0m\r
+\e[38;2;129;162;190mt\e[0m\r
+\e[38;2;129;162;190me\e[0m\r
+\e[38;2;129;162;190ms\e[0m\r
+\e[38;2;129;162;190mt\e[0m\r
+\e[38;2;129;162;190m/\e[0m\r
+\e[38;2;129;162;190ma\e[0m\r
+\e[38;2;129;162;190mr\e[0m\r
+\e[38;2;129;162;190mc\e[0m\r
+\e[38;2;129;162;190mh\e[0m\r
+\e[38;2;129;162;190mi\e[0m\r
+\e[38;2;129;162;190mv\e[0m\r
+\e[38;2;129;162;190me\e[0m\r
+r\r
+e\r
+m\r
+a\r
+i\r
+n\r
+v\r
+i\r
+s\r
+i\r
+b\r
+l\r
+e\r
+b\r
+u\r
+t\r
+i\r
+n\r
+e\r
+r\r
+t\r
+.\r
+\r
+A\r
+n\r
+i\r
+m\r
+a\r
+g\r
+e\r
+r\r
+e\r
+m\r
+a\r
+i\r
+n\r
+s\r
+a\r
+f\r
+a\r
+l\r
+l\r
+b\r
+a\r
+c\r
+k\r
+:\r
+\e[38;2;129;162;190md\e[0m\r
+\e[38;2;129;162;190mi\e[0m\r
+\e[38;2;129;162;190ma\e[0m\r
+\e[38;2;129;162;190mg\e[0m\r
+\e[38;2;129;162;190mr\e[0m\r
+\e[38;2;129;162;190ma\e[0m\r
+\e[38;2;129;162;190mm\e[0m\r
+\e[38;2;150;152;150m(\e[0m\r
+\e[38;2;150;152;150md\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150ma\e[0m\r
+\e[38;2;150;152;150mg\e[0m\r
+\e[38;2;150;152;150mr\e[0m\r
+\e[38;2;150;152;150ma\e[0m\r
+\e[38;2;150;152;150mm\e[0m\r
+\e[38;2;150;152;150m.\e[0m\r
+\e[38;2;150;152;150mp\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;150;152;150mg\e[0m\r
+\e[38;2;150;152;150m)\e[0m\r
+.\r
 \e[?25h\e[?2026l
 === plain ===
 \e[48;2;52;53;65m\e[0m
@@ -819,67 +819,61 @@ An image remains a fallback: \e[38;2;129;162;190mdiagram\e[0m \e[38;2;150;152;15
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m compare \e]8;;https://example.test/question\e\\\e[38;2;129;162;190mthe references\e[0m\e[48;2;52;53;65m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/question)\e[0m\e[48;2;52;53;65m with \e]8;;https://example.test/request\e\\\e[38;2;129;162;190mhttps://example.test/request\e[0m\e[48;2;52;53;65m\e]8;;\e\\           \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[1m\e[38;2;207;173;0mTe\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mTermin\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mTerminal l\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mTerminal links\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\r
-\r\e[KA\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [lab\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label w\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with **ne\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with **nested\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with **nested emp\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with **nested emphasi\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m]\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](htt\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](https:/\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](https://exa\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](https://example\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](\e]8;;https://example.tes\e\\\e[38;2;129;162;190mhttps://example.tes\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](\e]8;;https://example.test/la\e\\\e[38;2;129;162;190mhttps://example.test/la\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare sec\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL http\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL https://\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL https://exam\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL https://example.\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL \e]8;;https://example.test\e\\\e[38;2;129;162;190mhttps://example.test\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL\r
-\r\e[K\e]8;;https://example.test/bar\e\\\e[38;2;129;162;190mhttps://example.test/bar\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bar\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare or\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordina\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary U\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL h\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL http:\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL http://ex\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL http://exampl\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.te\e\\\e[38;2;129;162;190mhttp://example.te\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/p\e\\\e[38;2;129;162;190mhttp://example.test/p\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, an\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL www.\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL www.exam\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL www.example.\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL\r
-\r\e[K\e]8;;http://www.example.test\e\\\e[38;2;129;162;190mhttp://www.example.test\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;http://www.example.test/pat\e\\\e[38;2;129;162;190mhttp://www.example.test/pat\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mhttp://www.example.test/path\e[0m\e]8;;\e\\.\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\r
-\r\e[KThis\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [lo\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long l\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linke\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked la\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label cros\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narr\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows with\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leak\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its nei\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbo\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours]\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours](htt\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours](https:/\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours](https://exa\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours](https://example\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours](\e]8;;https://example.tes\e\\\e[38;2;129;162;190mhttps://example.tes\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its\r
-\r\e[Kneighbours](\e]8;;https://example.test/a-\e\\\e[38;2;129;162;190mhttps://example.test/a-\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long\e\\\e[38;2;129;162;190mhttps://example.test/a-long\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-des\e\\\e[38;2;129;162;190mhttps://example.test/a-long-des\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-destina\e\\\e[38;2;129;162;190mhttps://example.test/a-long-destina\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-destination\e\\\e[38;2;129;162;190mhttps://example.test/a-long-destination\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-destination?fir\e\\\e[38;2;129;162;190mhttps://example.test/a-long-destination?fir\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-destination?first=o\e\\\e[38;2;129;162;190mhttps://example.test/a-long-destination?first=o\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-destination?first=one&s\e\\\e[38;2;129;162;190mhttps://example.test/a-long-destination?first=one&s\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-destination?first=one&secon\e\\\e[38;2;129;162;190mhttps://example.test/a-long-destination?first=one&secon\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-destination?first=one&second=tw\e\\\e[38;2;129;162;190mhttps://example.test/a-long-destination?first=one&second=tw\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[KThis \e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mlong linked label crosses narrow rows without leaking into its neighbours\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m,\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, whil\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-cas\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-case HT\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-case HTTPS]\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-case HTTPS](HTT\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-case HTTPS](HTTPS:/\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-case HTTPS](HTTPS://exa\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-case\r
-\r\e[KHTTPS](HTTPS://example\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHTTPS](HTTPS://example.tes\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHTTPS](HTTPS://example.test/ca\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while \e]8;;https://example.test/case\e\\\e[38;2;129;162;190mmixed-case HTTPS\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(HTTPS://example.test/case)\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(HTTPS://example.test/case)\e[0m is a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(HTTPS://example.test/case)\e[0m is accep\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(HTTPS://example.test/case)\e[0m is accepted\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(HTTPS://example.test/case)\e[0m is accepted too.\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\r
-\r\e[KUn\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupp\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupporte\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [s\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [scrip\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [script li\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [script links]\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [script links](jav\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [script links](javascr\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [script links](javascript:\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [script links](javascript:aler\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [script links](javascript:alert(1)\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [rela\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [relative\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [relative lin\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [relative links](\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [relative links](docs\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [relative links](docs/pag\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [relative links](docs/page.md\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [host\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [hostless\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [hostless lin\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [hostless links](\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [hostless links](http\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [hostless\r
-\r\e[Klinks](https:pa\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, \e[38;2;129;162;190mhostless links\e[0m\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(https:path)\e[0m,\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP ftp\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP ftp://e\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP ftp://examp\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.t\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/arch\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m rema\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain v\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visib\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visible b\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visible but i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visible but inert\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visible but inert.\r
-\r\e[K\r
-\r\e[KA\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn im\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image rema\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fa\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallba\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallback:\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallback: ![di\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallback: ![diagra\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallback: ![diagram](d\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallback: ![diagram](diagr\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallback: ![diagram](diagram.p\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallback: \e[38;2;129;162;190mdiagram\e[0m \e[38;2;150;152;150m(diagram.png)\e[0m.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K\e[1m\e[38;2;207;173;0mTe\e[0m\e[0m\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mTermin\e[0m\e[0m\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mTerminal l\e[0m\e[0m\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mTerminal links\e[0m\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[KA\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [lab\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label w\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with **ne\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with **nested\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with **nested emp\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with **nested emphasi\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m]\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](htt\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](https:/\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](https://exa\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](https://example\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](\e]8;;https://example.tes\e\\\e[38;2;129;162;190mhttps://example.tes\e[0m\e]8;;\e\\\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](\e]8;;https://example.test/la\e\\\e[38;2;129;162;190mhttps://example.test/la\e[0m\e]8;;\e\\\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m\r\e[57C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare\r\e[65C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare sec\r\e[69C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL\r\e[76C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL http\r\e[81C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL https://\r\e[85C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL https://exam\r\e[89C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL https://example.\r\e[93C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL \e]8;;https://example.test\e\\\e[38;2;129;162;190mhttps://example.test\e[0m\e]8;;\e\\\r\e[97C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL\r
+\e[K\e]8;;https://example.test/bar\e\\\e[38;2;129;162;190mhttps://example.test/bar\e[0m\e]8;;\e\\\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bar\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare or\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordina\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary U\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL h\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL http:\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL http://ex\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL http://exampl\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.te\e\\\e[38;2;129;162;190mhttp://example.te\e[0m\e]8;;\e\\\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/p\e\\\e[38;2;129;162;190mhttp://example.test/p\e[0m\e]8;;\e\\\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, an\r\e[76C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a\r\e[79C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www\r\e[83C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL\r\e[87C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL www.\r\e[92C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL www.exam\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL www.example.\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL\r
+\e[K\e]8;;http://www.example.test\e\\\e[38;2;129;162;190mhttp://www.example.test\e[0m\e]8;;\e\\\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;http://www.example.test/pat\e\\\e[38;2;129;162;190mhttp://www.example.test/pat\e[0m\e]8;;\e\\\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mhttp://www.example.test/path\e[0m\e]8;;\e\\.\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[KThis\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [lo\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linke\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked la\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label cros\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narr\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow r\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows with\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leak\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking\r\e[59C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its nei\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbo\r\e[76C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours]\r\e[80C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours](htt\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours](https:/\r\e[88C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours](https://exa\r\e[92C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours](https://example\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours](\e]8;;https://example.tes\e\\\e[38;2;129;162;190mhttps://example.tes\e[0m\e]8;;\e\\\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its\r
+\e[Kneighbours](\e]8;;https://example.test/a-\e\\\e[38;2;129;162;190mhttps://example.test/a-\e[0m\e]8;;\e\\\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long\e\\\e[38;2;129;162;190mhttps://example.test/a-long\e[0m\e]8;;\e\\\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-des\e\\\e[38;2;129;162;190mhttps://example.test/a-long-des\e[0m\e]8;;\e\\\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-destina\e\\\e[38;2;129;162;190mhttps://example.test/a-long-destina\e[0m\e]8;;\e\\\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-destination\e\\\e[38;2;129;162;190mhttps://example.test/a-long-destination\e[0m\e]8;;\e\\\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-destination?fir\e\\\e[38;2;129;162;190mhttps://example.test/a-long-destination?fir\e[0m\e]8;;\e\\\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-destination?first=o\e\\\e[38;2;129;162;190mhttps://example.test/a-long-destination?first=o\e[0m\e]8;;\e\\\r\e[59C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-destination?first=one&s\e\\\e[38;2;129;162;190mhttps://example.test/a-long-destination?first=one&s\e[0m\e]8;;\e\\\r\e[63C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-destination?first=one&secon\e\\\e[38;2;129;162;190mhttps://example.test/a-long-destination?first=one&secon\e[0m\e]8;;\e\\\r\e[67C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-destination?first=one&second=tw\e\\\e[38;2;129;162;190mhttps://example.test/a-long-destination?first=one&second=tw\e[0m\e]8;;\e\\\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[KThis \e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mlong linked label crosses narrow rows without leaking into its neighbours\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\e[1B\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m,\r\e[63C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, whil\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [m\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed\r\e[76C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-cas\r\e[80C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-case HT\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-case HTTPS]\r\e[88C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-case HTTPS](HTT\r\e[92C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-case HTTPS](HTTPS:/\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-case HTTPS](HTTPS://exa\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-case\r
+\e[KHTTPS](HTTPS://example\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHTTPS](HTTPS://example.tes\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHTTPS](HTTPS://example.test/ca\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while \e]8;;https://example.test/case\e\\\e[38;2;129;162;190mmixed-case HTTPS\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\e[1B\r\e[K\e[38;2;150;152;150m(HTTPS://example.test/case)\e[0m\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(HTTPS://example.test/case)\e[0m is a\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(HTTPS://example.test/case)\e[0m is accep\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(HTTPS://example.test/case)\e[0m is accepted\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(HTTPS://example.test/case)\e[0m is accepted too.\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[KUn\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupp\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupporte\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [s\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [scrip\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [script li\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [script links]\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [script links](jav\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [script links](javascr\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [script links](javascript:\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [script links](javascript:aler\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [script links](javascript:alert(1)\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [\r\e[49C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [rela\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [relative\r\e[57C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [relative lin\r\e[61C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [relative links](\r\e[65C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [relative links](docs\r\e[69C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [relative links](docs/pag\r\e[73C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [relative links](docs/page.md\r\e[77C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [\r\e[80C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [host\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [hostless\r\e[88C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [hostless lin\r\e[92C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [hostless links](\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [hostless links](http\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [hostless\r
+\e[Klinks](https:pa\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, \e[38;2;129;162;190mhostless links\e[0m\e[38;2;150;152;150m\e[0m\e[1B\r\e[K\e[38;2;150;152;150m(https:path)\e[0m,\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP ftp\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP ftp://e\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP ftp://examp\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.t\e[0m\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/\e[0m\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/arch\e[0m\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m rema\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain v\r\e[57C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visib\r\e[61C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visible b\r\e[65C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visible but i\r\e[69C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visible but inert\r\e[73C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visible but inert.\r
+\e[K\r
+\e[KA\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn im\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image rema\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fa\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallba\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallback:\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallback: ![di\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallback: ![diagra\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallback: ![diagram](d\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallback: ![diagram](diagr\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallback: ![diagram](diagram.p\r\e[49C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallback: \e[38;2;129;162;190mdiagram\e[0m \e[38;2;150;152;150m(diagram.png)\e[0m.\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[51C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m compare \e]8;;https://example.test/question\e\\\e[38;2;129;162;190mthe references\e[0m\e[48;2;52;53;65m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/question)\e[0m\e[48;2;52;53;65m with \e]8;;https://example.test/request\e\\\e[38;2;129;162;190mhttps://example.test/request\e[0m\e[48;2;52;53;65m\e]8;;\e\\           \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[1m\e[38;2;207;173;0mTerminal links\e[0m\e[0m\r
-\r\e[K\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mhttp://www.example.test/path\e[0m\e]8;;\e\\.\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[KThis [long linked label crosses narrow rows without leaking into its\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis \e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mlong linked label crosses narrow rows without leaking into its neighbours\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-case\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while \e]8;;https://example.test/case\e\\\e[38;2;129;162;190mmixed-case HTTPS\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;150;152;150m(HTTPS://example.test/case)\e[0m is accepted too.\r
-\r\e[K\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [hostless\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, \e[38;2;129;162;190mhostless links\e[0m\e[38;2;150;152;150m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visible but inert.\r
-\r\e[K\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[KAn image remains a fallback: \e[38;2;129;162;190mdiagram\e[0m \e[38;2;150;152;150m(diagram.png)\e[0m.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K\e[1m\e[38;2;207;173;0mTerminal links\e[0m\e[0m\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL\r\e[76C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL\r\e[87C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mhttp://www.example.test/path\e[0m\e]8;;\e\\.\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[KThis [long linked label crosses narrow rows without leaking into its\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis \e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mlong linked label crosses narrow rows without leaking into its neighbours\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r\e[78C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-case\r\e[81C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while \e]8;;https://example.test/case\e\\\e[38;2;129;162;190mmixed-case HTTPS\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r\e[86C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;150;152;150m(HTTPS://example.test/case)\e[0m is accepted too.\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [hostless\r\e[88C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, \e[38;2;129;162;190mhostless links\e[0m\e[38;2;150;152;150m\e[0m\r\e[93C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visible but inert.\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[KAn image remains a fallback: \e[38;2;129;162;190mdiagram\e[0m \e[38;2;150;152;150m(diagram.png)\e[0m.\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[51C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m compare \e]8;;https://example.test/question\e\\\e[38;2;129;162;190mthe references\e[0m\e[48;2;52;53;65m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/question)\e[0m\e[48;2;52;53;65m with \e]8;;https://example.test/request\e\\\e[38;2;129;162;190mhttps://example.test/request\e[0m\e[48;2;52;53;65m\e]8;;\e\\           \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[1m\e[38;2;207;173;0mTe\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mTermin\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mTerminal l\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mTerminal links\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\r
-\r\e[KA\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [lab\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label w\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with **ne\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with **nested\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with **nested emp\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with **nested emphasi\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m]\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](htt\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](https:/\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](https://exa\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](https://example\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](\e]8;;https://example.tes\e\\\e[38;2;129;162;190mhttps://example.tes\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](\e]8;;https://example.test/la\e\\\e[38;2;129;162;190mhttps://example.test/la\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare sec\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL http\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL https://\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL https://exam\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL https://example.\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL \e]8;;https://example.test\e\\\e[38;2;129;162;190mhttps://example.test\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL\r
-\r\e[K\e]8;;https://example.test/bar\e\\\e[38;2;129;162;190mhttps://example.test/bar\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bar\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare or\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordina\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary U\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL h\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL http:\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL http://ex\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL http://exampl\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.te\e\\\e[38;2;129;162;190mhttp://example.te\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/p\e\\\e[38;2;129;162;190mhttp://example.test/p\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, an\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL www.\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL www.exam\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL www.example.\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL\r
-\r\e[K\e]8;;http://www.example.test\e\\\e[38;2;129;162;190mhttp://www.example.test\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;http://www.example.test/pat\e\\\e[38;2;129;162;190mhttp://www.example.test/pat\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mhttp://www.example.test/path\e[0m\e]8;;\e\\.\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\r
-\r\e[KThis\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [lo\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long l\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linke\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked la\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label cros\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narr\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows with\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leak\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its nei\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbo\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours]\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours](htt\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours](https:/\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours](https://exa\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours](https://example\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours](\e]8;;https://example.tes\e\\\e[38;2;129;162;190mhttps://example.tes\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its\r
-\r\e[Kneighbours](\e]8;;https://example.test/a-\e\\\e[38;2;129;162;190mhttps://example.test/a-\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-des\e\\\e[38;2;129;162;190mhttps://example.test/a-long-des\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-destination\e\\\e[38;2;129;162;190mhttps://example.test/a-long-destination\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-destination?first=o\e\\\e[38;2;129;162;190mhttps://example.test/a-long-destination?first=o\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-destination?first=one&secon\e\\\e[38;2;129;162;190mhttps://example.test/a-long-destination?first=one&secon\e[0m\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[KThis \e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mlong linked label crosses narrow rows without leaking into its neighbours\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m,\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-cas\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-case HTTPS]\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-case HTTPS](HTTPS:/\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-case\r
-\r\e[KHTTPS](HTTPS://example\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHTTPS](HTTPS://example.test/ca\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while \e]8;;https://example.test/case\e\\\e[38;2;129;162;190mmixed-case HTTPS\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(HTTPS://example.test/case)\e[0m is a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(HTTPS://example.test/case)\e[0m is accepted\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(HTTPS://example.test/case)\e[0m is accepted too.\r
-\r\e[K\r
-\r\e[KUn\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupporte\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [scrip\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [script links]\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [script links](javascr\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [script links](javascript:aler\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [relative\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [relative links](\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [relative links](docs/pag\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [hostless\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [hostless links](\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [hostless\r
-\r\e[Klinks](https:pa\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, \e[38;2;129;162;190mhostless links\e[0m\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP ftp\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP ftp://examp\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visib\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visible but inert\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visible but inert.\r
-\r\e[K\r
-\r\e[KAn image\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fa\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallback: ![di\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallback: ![diagram](diagr\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallback: \e[38;2;129;162;190mdiagram\e[0m \e[38;2;150;152;150m(diagram.png)\e[0m.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K\e[1m\e[38;2;207;173;0mTe\e[0m\e[0m\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mTermin\e[0m\e[0m\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mTerminal l\e[0m\e[0m\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1m\e[38;2;207;173;0mTerminal links\e[0m\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[KA\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [lab\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label w\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with **ne\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with **nested\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with **nested emp\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with **nested emphasi\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m]\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](htt\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](https:/\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](https://exa\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](https://example\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](\e]8;;https://example.tes\e\\\e[38;2;129;162;190mhttps://example.tes\e[0m\e]8;;\e\\\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA [label with \e[1mnested emphasis\e[0m](\e]8;;https://example.test/la\e\\\e[38;2;129;162;190mhttps://example.test/la\e[0m\e]8;;\e\\\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m\r\e[57C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare\r\e[65C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare sec\r\e[69C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL\r\e[76C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL http\r\e[81C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL https://\r\e[85C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL https://exam\r\e[89C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL https://example.\r\e[93C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL \e]8;;https://example.test\e\\\e[38;2;129;162;190mhttps://example.test\e[0m\e]8;;\e\\\r\e[97C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL\r
+\e[K\e]8;;https://example.test/bar\e\\\e[38;2;129;162;190mhttps://example.test/bar\e[0m\e]8;;\e\\\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bar\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare or\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordina\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary U\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL h\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL http:\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL http://ex\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL http://exampl\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.te\e\\\e[38;2;129;162;190mhttp://example.te\e[0m\e]8;;\e\\\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/p\e\\\e[38;2;129;162;190mhttp://example.test/p\e[0m\e]8;;\e\\\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, an\r\e[76C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a\r\e[79C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www\r\e[83C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL\r\e[87C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL www.\r\e[92C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL www.exam\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL www.example.\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL\r
+\e[K\e]8;;http://www.example.test\e\\\e[38;2;129;162;190mhttp://www.example.test\e[0m\e]8;;\e\\\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;http://www.example.test/pat\e\\\e[38;2;129;162;190mhttp://www.example.test/pat\e[0m\e]8;;\e\\\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mhttp://www.example.test/path\e[0m\e]8;;\e\\.\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[KThis\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [lo\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linke\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked la\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label cros\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narr\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow r\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows with\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leak\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking\r\e[59C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its nei\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbo\r\e[76C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours]\r\e[80C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours](htt\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours](https:/\r\e[88C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours](https://exa\r\e[92C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours](https://example\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its neighbours](\e]8;;https://example.tes\e\\\e[38;2;129;162;190mhttps://example.tes\e[0m\e]8;;\e\\\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThis [long linked label crosses narrow rows without leaking into its\r
+\e[Kneighbours](\e]8;;https://example.test/a-\e\\\e[38;2;129;162;190mhttps://example.test/a-\e[0m\e]8;;\e\\\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-des\e\\\e[38;2;129;162;190mhttps://example.test/a-long-des\e[0m\e]8;;\e\\\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-destination\e\\\e[38;2;129;162;190mhttps://example.test/a-long-destination\e[0m\e]8;;\e\\\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-destination?first=o\e\\\e[38;2;129;162;190mhttps://example.test/a-long-destination?first=o\e[0m\e]8;;\e\\\r\e[59C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kneighbours](\e]8;;https://example.test/a-long-destination?first=one&secon\e\\\e[38;2;129;162;190mhttps://example.test/a-long-destination?first=one&secon\e[0m\e]8;;\e\\\r\e[67C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[KThis \e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mlong linked label crosses narrow rows without leaking into its neighbours\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\e[1B\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m,\r\e[63C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [m\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-cas\r\e[80C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-case HTTPS]\r\e[88C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-case HTTPS](HTTPS:/\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while [mixed-case\r
+\e[KHTTPS](HTTPS://example\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KHTTPS](HTTPS://example.test/ca\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while \e]8;;https://example.test/case\e\\\e[38;2;129;162;190mmixed-case HTTPS\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\e[1B\r\e[K\e[38;2;150;152;150m(HTTPS://example.test/case)\e[0m is a\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(HTTPS://example.test/case)\e[0m is accepted\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(HTTPS://example.test/case)\e[0m is accepted too.\r
+\e[K\r
+\e[KUn\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupporte\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [scrip\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [script links]\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [script links](javascr\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported [script links](javascript:aler\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [\r\e[49C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [relative\r\e[57C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [relative links](\r\e[65C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, [relative links](docs/pag\r\e[73C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [\r\e[80C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [hostless\r\e[88C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [hostless links](\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, [hostless\r
+\e[Klinks](https:pa\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, \e[38;2;129;162;190mhostless links\e[0m\e[38;2;150;152;150m\e[0m\e[1B\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP ftp\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP ftp://examp\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/\e[0m\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visib\r\e[61C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visible but inert\r\e[73C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visible but inert.\r
+\e[K\r
+\e[KAn image\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fa\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallback: ![di\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallback: ![diagram](diagr\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAn image remains a fallback: \e[38;2;129;162;190mdiagram\e[0m \e[38;2;150;152;150m(diagram.png)\e[0m.\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[51C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
@@ -894,105 +888,105 @@ An image remains a fallback: \e[38;2;129;162;190mdiagram\e[0m \e[38;2;150;152;15
 \e[48;2;52;53;65m \e]8;;https://example.test/request\e\\\e[38;2;129;162;190mequest\e[0m\e[48;2;52;53;65m\e]8;;\e\\     \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e[?7l\r\e[K\e[1m\e[38;2;207;173;0mTerminal\e[0m\r
-\r\e[K\e[1m\e[38;2;207;173;0mlinks\e[0m\e[0m\r
-\r\e[K\r
-\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1mnested\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1memphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(https://exa\e[0m\r
-\r\e[K\e[38;2;150;152;150mmple.test/la\e[0m\r
-\r\e[K\e[38;2;150;152;150mbel)\e[0m, a bare\r
-\r\e[Ksecure URL\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://exam\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mple.test/bar\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\, a bare\r
-\r\e[Kordinary URL\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://examp\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mle.test/plai\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mn\e[0m\e]8;;\e\\, and a www\r
-\r\e[KURL\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mhttp://www.e\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mxample.test/\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mpath\e[0m\e]8;;\e\\.\r
-\r\e[K\r
-\r\e[KThis \e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mlong\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mlinked label\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mcrosses\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mnarrow rows\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mwithout\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mleaking into\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mits\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mneighbours\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(https://exa\e[0m\r
-\r\e[K\e[38;2;150;152;150mmple.test/a-\e[0m\r
-\r\e[K\e[38;2;150;152;150mlong-destina\e[0m\r
-\r\e[K\e[38;2;150;152;150mtion?first=o\e[0m\r
-\r\e[K\e[38;2;150;152;150mne&second=tw\e[0m\r
-\r\e[K\e[38;2;150;152;150mo)\e[0m, while\r
-\r\e[K\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mmixed-case\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mHTTPS\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(HTTPS://exa\e[0m\r
-\r\e[K\e[38;2;150;152;150mmple.test/ca\e[0m\r
-\r\e[K\e[38;2;150;152;150mse)\e[0m is\r
-\r\e[Kaccepted\r
-\r\e[Ktoo.\r
-\r\e[K\r
-\r\e[KUnsupported\r
-\r\e[K\e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(javascript:\e[0m\r
-\r\e[K\e[38;2;150;152;150malert(1))\e[0m,\r
-\r\e[K\e[38;2;129;162;190mrelative\e[0m\r
-\r\e[K\e[38;2;129;162;190mlinks\e[0m\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(docs/page.m\e[0m\r
-\r\e[K\e[38;2;150;152;150md)\e[0m, \e[38;2;129;162;190mhostless\e[0m\r
-\r\e[K\e[38;2;129;162;190mlinks\e[0m\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(https:path)\e[0m\r
-\r\e[K, and FTP\r
-\r\e[K\e[38;2;129;162;190mftp://exampl\e[0m\r
-\r\e[K\e[38;2;129;162;190me.test/archi\e[0m\r
-\r\e[K\e[38;2;129;162;190mve\e[0m remain\r
-\r\e[Kvisible but\r
-\r\e[Kinert.\r
-\r\e[K\r
-\r\e[KAn image\r
-\r\e[Kremains a\r
-\r\e[Kfallback:\r
-\r\e[K\e[38;2;129;162;190mdiagram\e[0m\r
-\r\e[K\e[38;2;150;152;150m(diagram.png\e[0m\r
-\r\e[K\e[38;2;150;152;150m)\e[0m.\r
+\e[1m\e[38;2;207;173;0mTerminal\e[0m\r
+\e[1m\e[38;2;207;173;0mlinks\e[0m\e[0m\r
+\r
+A \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1mnested\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/label\e\\\e[38;2;129;162;190m\e[1memphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m(https://exa\e[0m\r
+\e[38;2;150;152;150mmple.test/la\e[0m\r
+\e[38;2;150;152;150mbel)\e[0m, a bare\r
+secure URL\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://exam\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mple.test/bar\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190me\e[0m\e]8;;\e\\, a bare\r
+ordinary URL\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://examp\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mle.test/plai\e[0m\e]8;;\e\\\r
+\e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mn\e[0m\e]8;;\e\\, and a www\r
+URL\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mhttp://www.e\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mxample.test/\e[0m\e]8;;\e\\\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mpath\e[0m\e]8;;\e\\.\r
+\r
+This \e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mlong\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mlinked label\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mcrosses\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mnarrow rows\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mwithout\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mleaking into\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mits\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mneighbours\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m(https://exa\e[0m\r
+\e[38;2;150;152;150mmple.test/a-\e[0m\r
+\e[38;2;150;152;150mlong-destina\e[0m\r
+\e[38;2;150;152;150mtion?first=o\e[0m\r
+\e[38;2;150;152;150mne&second=tw\e[0m\r
+\e[38;2;150;152;150mo)\e[0m, while\r
+\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mmixed-case\e[0m\e]8;;\e\\\r
+\e]8;;https://example.test/case\e\\\e[38;2;129;162;190mHTTPS\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m(HTTPS://exa\e[0m\r
+\e[38;2;150;152;150mmple.test/ca\e[0m\r
+\e[38;2;150;152;150mse)\e[0m is\r
+accepted\r
+too.\r
+\r
+Unsupported\r
+\e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m(javascript:\e[0m\r
+\e[38;2;150;152;150malert(1))\e[0m,\r
+\e[38;2;129;162;190mrelative\e[0m\r
+\e[38;2;129;162;190mlinks\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m(docs/page.m\e[0m\r
+\e[38;2;150;152;150md)\e[0m, \e[38;2;129;162;190mhostless\e[0m\r
+\e[38;2;129;162;190mlinks\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m(https:path)\e[0m\r
+, and FTP\r
+\e[38;2;129;162;190mftp://exampl\e[0m\r
+\e[38;2;129;162;190me.test/archi\e[0m\r
+\e[38;2;129;162;190mve\e[0m remain\r
+visible but\r
+inert.\r
+\r
+An image\r
+remains a\r
+fallback:\r
+\e[38;2;129;162;190mdiagram\e[0m\r
+\e[38;2;150;152;150m(diagram.png\e[0m\r
+\e[38;2;150;152;150m)\e[0m.\r
 \e[?25h\e[?2026l
 === unsized ===
-\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m
-\e[48;2;52;53;65m compare \e]8;;https://example.test/question\e\\\e[38;2;129;162;190mthe references\e[0m\e[48;2;52;53;65m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/question)\e[0m\e[48;2;52;53;65m with \e]8;;https://example.test/request\e\\\e[38;2;129;162;190mhttps://example.test/request\e[0m\e[48;2;52;53;65m\e]8;;\e\\\e[0m
-\e[48;2;52;53;65m\e[0m
-\e[?7l\r\e[K\e[1m\e[38;2;207;173;0mTerminal links\e[0m\e[0m\r
-\r\e[K\r
-\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL \e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL \e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mhttp://www.example.test/path\e[0m\e]8;;\e\\.\r
-\r\e[K\r
-\r\e[KThis \e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mlong linked label crosses narrow rows without leaking into its neighbours\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/a-long-destination?first=one&second=two)\e[0m, while \e]8;;https://example.test/case\e\\\e[38;2;129;162;190mmixed-case HTTPS\e[0m\e]8;;\e\\\e[38;2;150;152;150m (HTTPS://example.test/case)\e[0m is accepted too.\r
-\r\e[K\r
-\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, \e[38;2;129;162;190mhostless links\e[0m\e[38;2;150;152;150m (https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visible but inert.\r
-\r\e[K\r
-\r\e[KAn image remains a fallback: \e[38;2;129;162;190mdiagram\e[0m \e[38;2;150;152;150m(diagram.png)\e[0m.
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m compare \e]8;;https://example.test/question\e\\\e[38;2;129;162;190mthe references\e[0m\e[48;2;52;53;65m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/question)\e[0m\e[48;2;52;53;65m with \e]8;;https://example.test/request\e\\\e[38;2;129;162;190mhttps://example.test/request\e[0m\e[48;2;52;53;65m\e]8;;\e\\\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[1m\e[38;2;207;173;0mTerminal links\e[0m\e[0m\r
+\r
+A \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL \e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL \e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mhttp://www.example.test/path\e[0m\e]8;;\e\\.\r
+\r
+This \e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mlong linked label crosses narrow rows without leaking into its neighbours\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/a-long-destination?first=one&second=two)\e[0m, while \e]8;;https://example.test/case\e\\\e[38;2;129;162;190mmixed-case HTTPS\e[0m\e]8;;\e\\\e[38;2;150;152;150m (HTTPS://example.test/case)\e[0m is accepted too.\r
+\r
+Unsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, \e[38;2;129;162;190mhostless links\e[0m\e[38;2;150;152;150m (https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visible but inert.\r
+\r
+An image remains a fallback: \e[38;2;129;162;190mdiagram\e[0m \e[38;2;150;152;150m(diagram.png)\e[0m.\r
 \e[?25h\e[?2026l
 === wide ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m compare \e]8;;https://example.test/question\e\\\e[38;2;129;162;190mthe references\e[0m\e[48;2;52;53;65m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/question)\e[0m\e[48;2;52;53;65m with \e]8;;https://example.test/request\e\\\e[38;2;129;162;190mhttps://example.test/request\e[0m\e[48;2;52;53;65m\e]8;;\e\\           \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e[1m\e[38;2;207;173;0mTerminal links\e[0m\e[0m\r
-\r\e[K\r
-\r\e[KA \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL\r
-\r\e[K\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL\r
-\r\e[K\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mhttp://www.example.test/path\e[0m\e]8;;\e\\.\r
-\r\e[K\r
-\r\e[KThis \e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mlong linked label crosses narrow rows without leaking into its neighbours\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while \e]8;;https://example.test/case\e\\\e[38;2;129;162;190mmixed-case HTTPS\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(HTTPS://example.test/case)\e[0m is accepted too.\r
-\r\e[K\r
-\r\e[KUnsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, \e[38;2;129;162;190mhostless links\e[0m\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visible but inert.\r
-\r\e[K\r
-\r\e[KAn image remains a fallback: \e[38;2;129;162;190mdiagram\e[0m \e[38;2;150;152;150m(diagram.png)\e[0m.\r
+\e[1m\e[38;2;207;173;0mTerminal links\e[0m\e[0m\r
+\r
+A \e]8;;https://example.test/label\e\\\e[38;2;129;162;190mlabel with \e[1mnested emphasis\e[0m\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.test/label)\e[0m, a bare secure URL\r
+\e]8;;https://example.test/bare\e\\\e[38;2;129;162;190mhttps://example.test/bare\e[0m\e]8;;\e\\, a bare ordinary URL \e]8;;http://example.test/plain\e\\\e[38;2;129;162;190mhttp://example.test/plain\e[0m\e]8;;\e\\, and a www URL\r
+\e]8;;http://www.example.test/path\e\\\e[38;2;129;162;190mhttp://www.example.test/path\e[0m\e]8;;\e\\.\r
+\r
+This \e]8;;https://example.test/a-long-destination?first=one&second=two\e\\\e[38;2;129;162;190mlong linked label crosses narrow rows without leaking into its neighbours\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m(https://example.test/a-long-destination?first=one&second=two)\e[0m, while \e]8;;https://example.test/case\e\\\e[38;2;129;162;190mmixed-case HTTPS\e[0m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m(HTTPS://example.test/case)\e[0m is accepted too.\r
+\r
+Unsupported \e[38;2;129;162;190mscript links\e[0m\e[38;2;150;152;150m (javascript:alert(1))\e[0m, \e[38;2;129;162;190mrelative links\e[0m\e[38;2;150;152;150m (docs/page.md)\e[0m, \e[38;2;129;162;190mhostless links\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m(https:path)\e[0m, and FTP \e[38;2;129;162;190mftp://example.test/archive\e[0m remain visible but inert.\r
+\r
+An image remains a fallback: \e[38;2;129;162;190mdiagram\e[0m \e[38;2;150;152;150m(diagram.png)\e[0m.\r
 \e[?25h\e[?2026l

@@ -1,0 +1,642 @@
+=== 1 calls beneath a tall draft shown before them, gone ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦· 6s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 1 calls beneath a tall draft shown before them, standing ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦·
+⋮ 2 more lines
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+⋮ 1 more line
+=== 1 calls beneath a tall draft, gone ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦· 6s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 1 calls beneath a tall draft, standing ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦·
+⋮ 2 more lines
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+⋮ 1 more line
+=== 1 calls beneath help shown before them, gone ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦· 6s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 1 calls beneath help shown before them, standing ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦·
+⋮ 20 more lines
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │                                                                                                │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
+
+⋮ 1 more line
+=== 1 calls beneath help, gone ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦· 6s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 1 calls beneath help, standing ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦·
+⋮ 20 more lines
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │                                                                                                │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
+
+⋮ 1 more line
+=== 1 calls beneath no tall footer, gone ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦· 6s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 1 calls beneath no tall footer, standing ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦·
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 2 calls beneath a tall draft shown before them, gone ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦· 6s
+$ sleep 61 ✦· 6s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 2 calls beneath a tall draft shown before them, standing ===
+
+ run them
+
+
+Running them.
+$ sleep 61 ✦·
+⋮ 2 more lines
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+⋮ 1 more line
+=== 2 calls beneath a tall draft, gone ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦· 6s
+$ sleep 61 ✦· 6s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 2 calls beneath a tall draft, standing ===
+
+ run them
+
+
+Running them.
+$ sleep 61 ✦·
+⋮ 2 more lines
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+⋮ 1 more line
+=== 2 calls beneath help shown before them, gone ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦· 6s
+$ sleep 61 ✦· 6s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 2 calls beneath help shown before them, standing ===
+
+ run them
+
+
+Running them.
+$ sleep 61 ✦·
+⋮ 20 more lines
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │                                                                                                │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
+
+⋮ 1 more line
+=== 2 calls beneath help, gone ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦· 6s
+$ sleep 61 ✦· 6s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 2 calls beneath help, standing ===
+
+ run them
+
+
+Running them.
+$ sleep 61 ✦·
+⋮ 20 more lines
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │                                                                                                │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
+
+⋮ 1 more line
+=== 2 calls beneath no tall footer, gone ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦· 6s
+$ sleep 61 ✦· 6s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 2 calls beneath no tall footer, standing ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦·
+$ sleep 61 ✦·
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 8 calls beneath a tall draft shown before them, gone ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦· 6s
+$ sleep 61 ✦· 6s
+$ sleep 62 ✦· 6s
+$ sleep 63 ✦· 6s
+$ sleep 64 ✦· 6s
+$ sleep 65 ✦· 6s
+$ sleep 66 ✦· 6s
+$ sleep 67 ✦· 6s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 8 calls beneath a tall draft shown before them, standing ===
+
+ run them
+
+
+Running them.
+$ sleep 67 ✦·
+⋮ 2 more lines
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+⋮ 1 more line
+=== 8 calls beneath a tall draft, gone ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦· 6s
+$ sleep 61 ✦· 6s
+$ sleep 62 ✦· 6s
+$ sleep 63 ✦· 6s
+$ sleep 64 ✦· 6s
+$ sleep 65 ✦· 6s
+$ sleep 66 ✦· 6s
+$ sleep 67 ✦· 6s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 8 calls beneath a tall draft, standing ===
+
+ run them
+
+
+Running them.
+$ sleep 67 ✦·
+⋮ 2 more lines
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+⋮ 1 more line
+=== 8 calls beneath help shown before them, gone ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦· 6s
+$ sleep 61 ✦· 6s
+$ sleep 62 ✦· 6s
+$ sleep 63 ✦· 6s
+$ sleep 64 ✦· 6s
+$ sleep 65 ✦· 6s
+$ sleep 66 ✦· 6s
+$ sleep 67 ✦· 6s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 8 calls beneath help shown before them, standing ===
+
+ run them
+
+
+Running them.
+$ sleep 67 ✦·
+⋮ 20 more lines
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │                                                                                                │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
+
+⋮ 1 more line
+=== 8 calls beneath help, gone ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦· 6s
+$ sleep 61 ✦· 6s
+$ sleep 62 ✦· 6s
+$ sleep 63 ✦· 6s
+$ sleep 64 ✦· 6s
+$ sleep 65 ✦· 6s
+$ sleep 66 ✦· 6s
+$ sleep 67 ✦· 6s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 8 calls beneath help, standing ===
+
+ run them
+
+
+Running them.
+$ sleep 67 ✦·
+⋮ 20 more lines
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │                                                                                                │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
+
+⋮ 1 more line
+=== 8 calls beneath no tall footer, gone ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦· 6s
+$ sleep 61 ✦· 6s
+$ sleep 62 ✦· 6s
+$ sleep 63 ✦· 6s
+$ sleep 64 ✦· 6s
+$ sleep 65 ✦· 6s
+$ sleep 66 ✦· 6s
+$ sleep 67 ✦· 6s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 8 calls beneath no tall footer, standing ===
+
+ run them
+
+
+Running them.
+$ sleep 60 ✦·
+$ sleep 61 ✦·
+$ sleep 62 ✦·
+$ sleep 63 ✦·
+$ sleep 64 ✦·
+$ sleep 65 ✦·
+$ sleep 66 ✦·
+$ sleep 67 ✦·
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 9 calls beneath a tall draft shown before them, gone ===
+
+ run them
+
+
+Running them.
+⋮ 2 more lines
+$ sleep 62 ✦· 6s
+$ sleep 63 ✦· 6s
+$ sleep 64 ✦· 6s
+$ sleep 65 ✦· 6s
+$ sleep 66 ✦· 6s
+$ sleep 67 ✦· 6s
+$ sleep 68 ✦· 6s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 9 calls beneath a tall draft shown before them, standing ===
+
+ run them
+
+
+Running them.
+$ sleep 68 ✦·
+⋮ 2 more lines
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+⋮ 1 more line
+=== 9 calls beneath a tall draft, gone ===
+
+ run them
+
+
+Running them.
+⋮ 2 more lines
+$ sleep 62 ✦· 6s
+$ sleep 63 ✦· 6s
+$ sleep 64 ✦· 6s
+$ sleep 65 ✦· 6s
+$ sleep 66 ✦· 6s
+$ sleep 67 ✦· 6s
+$ sleep 68 ✦· 6s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 9 calls beneath a tall draft, standing ===
+
+ run them
+
+
+Running them.
+$ sleep 68 ✦·
+⋮ 2 more lines
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+a line of the draft
+⋮ 1 more line
+=== 9 calls beneath help shown before them, gone ===
+
+ run them
+
+
+Running them.
+⋮ 2 more lines
+$ sleep 62 ✦· 6s
+$ sleep 63 ✦· 6s
+$ sleep 64 ✦· 6s
+$ sleep 65 ✦· 6s
+$ sleep 66 ✦· 6s
+$ sleep 67 ✦· 6s
+$ sleep 68 ✦· 6s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 9 calls beneath help shown before them, standing ===
+
+ run them
+
+
+Running them.
+$ sleep 68 ✦·
+⋮ 20 more lines
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │                                                                                                │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
+
+⋮ 1 more line
+=== 9 calls beneath help, gone ===
+
+ run them
+
+
+Running them.
+⋮ 2 more lines
+$ sleep 62 ✦· 6s
+$ sleep 63 ✦· 6s
+$ sleep 64 ✦· 6s
+$ sleep 65 ✦· 6s
+$ sleep 66 ✦· 6s
+$ sleep 67 ✦· 6s
+$ sleep 68 ✦· 6s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 9 calls beneath help, standing ===
+
+ run them
+
+
+Running them.
+$ sleep 68 ✦·
+⋮ 20 more lines
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │   /copy                                                                                        │
+ │                                                                                                │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
+
+⋮ 1 more line
+=== 9 calls beneath no tall footer, gone ===
+
+ run them
+
+
+Running them.
+⋮ 2 more lines
+$ sleep 62 ✦· 6s
+$ sleep 63 ✦· 6s
+$ sleep 64 ✦· 6s
+$ sleep 65 ✦· 6s
+$ sleep 66 ✦· 6s
+$ sleep 67 ✦· 6s
+$ sleep 68 ✦· 6s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 9 calls beneath no tall footer, standing ===
+
+ run them
+
+
+Running them.
+⋮ 2 more lines
+$ sleep 62 ✦·
+$ sleep 63 ✦·
+$ sleep 64 ✦·
+$ sleep 65 ✦·
+$ sleep 66 ✦·
+$ sleep 67 ✦·
+$ sleep 68 ✦·
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────

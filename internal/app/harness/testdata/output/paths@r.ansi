@@ -7,28 +7,28 @@
 \e[48;2;52;53;65m have a look at that                    \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150manything about it.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mReading the renderer before saying\e[0m\r
+\e[3m\e[38;2;150;152;150manything about it.\e[0m\e[0m\r
 \r
-\r\e[KLet me read the renderer.\r
+Let me read the renderer.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
 \r
-\r\e[KThe prompt is built in\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\r
-\r\e[Kholds the spinner beside it. There is\r
-\r\e[Knothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and\r
-\r\e[Knothing at all in\r
-\r\e[Kcmd/oh/line/missing.go, which is where I\r
-\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the\r
-\r\e[Kworkspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file\r
-\r\e[Keverything else works on.\r
-\r\e[K\r
-\r\e[KA wrapped patch path looks like this:\r
-\r\e[K\r
-\r\e[K    \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\cmd/oh/line/a-patch-path-that-is-lon\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mg-enough-to-wrap-after-leading-indentati\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mon-and-remain-clickable.patch\e]8;;\e\\\e[0m\r
+The prompt is built in\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\r
+holds the spinner beside it. There is\r
+nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and\r
+nothing at all in\r
+cmd/oh/line/missing.go, which is where I\r
+looked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the\r
+workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file\r
+everything else works on.\r
+\r
+A wrapped patch path looks like this:\r
+\r
+    \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\cmd/oh/line/a-patch-path-that-is-lon\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mg-enough-to-wrap-after-leading-indentati\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mon-and-remain-clickable.patch\e]8;;\e\\\e[0m\r
 \e[?25h\e[?2026l
 === one column ===
 \e[?2026h\e[?25l\e[38;2;150;152;150mA\e[0m\r
@@ -138,468 +138,468 @@
 \e[48;2;52;53;65mt\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mR\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150md\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mg\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mh\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150md\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mb\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mf\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150my\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mg\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150my\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mh\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mg\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mb\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mu\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150m.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mR\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150md\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mg\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150md\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150mb\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mf\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150my\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mg\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150my\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mg\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mb\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mu\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150m.\e[0m\e[0m\r
 \r
-\r\e[KL\r
-\r\e[Ke\r
-\r\e[Kt\r
-\r\e[Km\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Ka\r
-\r\e[Kd\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[K.\r
+L\r
+e\r
+t\r
+m\r
+e\r
+r\r
+e\r
+a\r
+d\r
+t\r
+h\r
+e\r
+r\r
+e\r
+n\r
+d\r
+e\r
+r\r
+e\r
+r\r
+.\r
 \r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
 \r
-\r\e[KT\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kp\r
-\r\e[Kr\r
-\r\e[Ko\r
-\r\e[Km\r
-\r\e[Kp\r
-\r\e[Kt\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[Kb\r
-\r\e[Ku\r
-\r\e[Ki\r
-\r\e[Kl\r
-\r\e[Kt\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\c\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\d\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\/\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\o\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\h\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\/\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\l\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\i\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\n\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\e\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\/\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\r\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\e\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\n\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\d\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\e\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\r\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\.\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\g\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\o\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\:\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\4\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\:\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\9\e]8;;\e\\\r
-\r\e[K,\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[K\e]8;;file:///workspace/screen.go\e\\s\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/screen.go\e\\c\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/screen.go\e\\r\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/screen.go\e\\e\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/screen.go\e\\e\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/screen.go\e\\n\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/screen.go\e\\.\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/screen.go\e\\g\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/screen.go\e\\o\e]8;;\e\\\r
-\r\e[Kh\r
-\r\e[Ko\r
-\r\e[Kl\r
-\r\e[Kd\r
-\r\e[Ks\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Kp\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kn\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Kb\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Ki\r
-\r\e[Kd\r
-\r\e[Ke\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[K.\r
-\r\e[KT\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[Kn\r
-\r\e[Ko\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[Ka\r
-\r\e[Kb\r
-\r\e[Ko\r
-\r\e[Ku\r
-\r\e[Kt\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[K\e]8;;file:///workspace/README.md\e\\R\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/README.md\e\\E\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/README.md\e\\A\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/README.md\e\\D\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/README.md\e\\M\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/README.md\e\\E\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/README.md\e\\.\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/README.md\e\\m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/README.md\e\\d\e]8;;\e\\\r
-\r\e[K,\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Kn\r
-\r\e[Ko\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[Ka\r
-\r\e[Kt\r
-\r\e[Ka\r
-\r\e[Kl\r
-\r\e[Kl\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kc\r
-\r\e[Km\r
-\r\e[Kd\r
-\r\e[K/\r
-\r\e[Ko\r
-\r\e[Kh\r
-\r\e[K/\r
-\r\e[Kl\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Ke\r
-\r\e[K/\r
-\r\e[Km\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[Ks\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[K.\r
-\r\e[Kg\r
-\r\e[Ko\r
-\r\e[K,\r
-\r\e[Kw\r
-\r\e[Kh\r
-\r\e[Ki\r
-\r\e[Kc\r
-\r\e[Kh\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[Kw\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[KI\r
-\r\e[Kl\r
-\r\e[Ko\r
-\r\e[Ko\r
-\r\e[Kk\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[Kf\r
-\r\e[Ki\r
-\r\e[Kr\r
-\r\e[Ks\r
-\r\e[Kt\r
-\r\e[K.\r
-\r\e[K\e]8;;file:///workspace/settings.toml\e\\s\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/settings.toml\e\\e\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/settings.toml\e\\t\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/settings.toml\e\\t\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/settings.toml\e\\i\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/settings.toml\e\\n\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/settings.toml\e\\g\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/settings.toml\e\\s\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/settings.toml\e\\.\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/settings.toml\e\\t\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/settings.toml\e\\o\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/settings.toml\e\\m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/settings.toml\e\\l\e]8;;\e\\\r
-\r\e[Kn\r
-\r\e[Ka\r
-\r\e[Km\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kw\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Kk\r
-\r\e[Ks\r
-\r\e[Kp\r
-\r\e[Ka\r
-\r\e[Kc\r
-\r\e[Ke\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[K\e]8;;file:///workspace/target.txt\e\\t\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/target.txt\e\\a\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/target.txt\e\\r\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/target.txt\e\\g\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/target.txt\e\\e\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/target.txt\e\\t\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/target.txt\e\\.\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/target.txt\e\\t\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/target.txt\e\\x\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/target.txt\e\\t\e]8;;\e\\\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kf\r
-\r\e[Ki\r
-\r\e[Kl\r
-\r\e[Ke\r
-\r\e[Ke\r
-\r\e[Kv\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ky\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[Ke\r
-\r\e[Kl\r
-\r\e[Ks\r
-\r\e[Ke\r
-\r\e[Kw\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Kk\r
-\r\e[Ks\r
-\r\e[Ko\r
-\r\e[Kn\r
-\r\e[K.\r
-\r\e[K\r
-\r\e[KA\r
-\r\e[Kw\r
-\r\e[Kr\r
-\r\e[Ka\r
-\r\e[Kp\r
-\r\e[Kp\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[Kp\r
-\r\e[Ka\r
-\r\e[Kt\r
-\r\e[Kc\r
-\r\e[Kh\r
-\r\e[Kp\r
-\r\e[Ka\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Kl\r
-\r\e[Ko\r
-\r\e[Ko\r
-\r\e[Kk\r
-\r\e[Ks\r
-\r\e[Kl\r
-\r\e[Ki\r
-\r\e[Kk\r
-\r\e[Ke\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[K:\r
-\r\e[K\r
-\r\e[K \r
-\r\e[K\e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\c\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mm\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150md\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m/\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mo\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mh\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m/\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ml\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mi\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mn\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m/\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mp\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mc\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mh\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mp\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mh\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mh\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mi\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ms\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ml\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mo\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mn\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mg\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mn\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mo\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mu\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mg\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mh\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mo\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mw\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mr\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mp\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mf\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mr\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ml\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150md\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mi\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mn\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mg\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mi\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mn\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150md\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mn\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mi\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mo\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mn\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mn\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150md\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mr\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mm\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mi\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mn\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mc\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ml\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mi\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mc\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mk\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mb\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ml\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150me\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m.\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mp\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mt\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mc\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mh\e]8;;\e\\\e[0m\r
+T\r
+h\r
+e\r
+p\r
+r\r
+o\r
+m\r
+p\r
+t\r
+i\r
+s\r
+b\r
+u\r
+i\r
+l\r
+t\r
+i\r
+n\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\c\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\d\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\/\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\o\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\h\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\/\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\l\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\i\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\n\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\e\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\/\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\r\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\e\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\n\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\d\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\e\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\r\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\.\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\g\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\o\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\:\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\4\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\:\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\9\e]8;;\e\\\r
+,\r
+a\r
+n\r
+d\r
+\e]8;;file:///workspace/screen.go\e\\s\e]8;;\e\\\r
+\e]8;;file:///workspace/screen.go\e\\c\e]8;;\e\\\r
+\e]8;;file:///workspace/screen.go\e\\r\e]8;;\e\\\r
+\e]8;;file:///workspace/screen.go\e\\e\e]8;;\e\\\r
+\e]8;;file:///workspace/screen.go\e\\e\e]8;;\e\\\r
+\e]8;;file:///workspace/screen.go\e\\n\e]8;;\e\\\r
+\e]8;;file:///workspace/screen.go\e\\.\e]8;;\e\\\r
+\e]8;;file:///workspace/screen.go\e\\g\e]8;;\e\\\r
+\e]8;;file:///workspace/screen.go\e\\o\e]8;;\e\\\r
+h\r
+o\r
+l\r
+d\r
+s\r
+t\r
+h\r
+e\r
+s\r
+p\r
+i\r
+n\r
+n\r
+e\r
+r\r
+b\r
+e\r
+s\r
+i\r
+d\r
+e\r
+i\r
+t\r
+.\r
+T\r
+h\r
+e\r
+r\r
+e\r
+i\r
+s\r
+n\r
+o\r
+t\r
+h\r
+i\r
+n\r
+g\r
+a\r
+b\r
+o\r
+u\r
+t\r
+i\r
+t\r
+i\r
+n\r
+\e]8;;file:///workspace/README.md\e\\R\e]8;;\e\\\r
+\e]8;;file:///workspace/README.md\e\\E\e]8;;\e\\\r
+\e]8;;file:///workspace/README.md\e\\A\e]8;;\e\\\r
+\e]8;;file:///workspace/README.md\e\\D\e]8;;\e\\\r
+\e]8;;file:///workspace/README.md\e\\M\e]8;;\e\\\r
+\e]8;;file:///workspace/README.md\e\\E\e]8;;\e\\\r
+\e]8;;file:///workspace/README.md\e\\.\e]8;;\e\\\r
+\e]8;;file:///workspace/README.md\e\\m\e]8;;\e\\\r
+\e]8;;file:///workspace/README.md\e\\d\e]8;;\e\\\r
+,\r
+a\r
+n\r
+d\r
+n\r
+o\r
+t\r
+h\r
+i\r
+n\r
+g\r
+a\r
+t\r
+a\r
+l\r
+l\r
+i\r
+n\r
+c\r
+m\r
+d\r
+/\r
+o\r
+h\r
+/\r
+l\r
+i\r
+n\r
+e\r
+/\r
+m\r
+i\r
+s\r
+s\r
+i\r
+n\r
+g\r
+.\r
+g\r
+o\r
+,\r
+w\r
+h\r
+i\r
+c\r
+h\r
+i\r
+s\r
+w\r
+h\r
+e\r
+r\r
+e\r
+I\r
+l\r
+o\r
+o\r
+k\r
+e\r
+d\r
+f\r
+i\r
+r\r
+s\r
+t\r
+.\r
+\e]8;;file:///workspace/settings.toml\e\\s\e]8;;\e\\\r
+\e]8;;file:///workspace/settings.toml\e\\e\e]8;;\e\\\r
+\e]8;;file:///workspace/settings.toml\e\\t\e]8;;\e\\\r
+\e]8;;file:///workspace/settings.toml\e\\t\e]8;;\e\\\r
+\e]8;;file:///workspace/settings.toml\e\\i\e]8;;\e\\\r
+\e]8;;file:///workspace/settings.toml\e\\n\e]8;;\e\\\r
+\e]8;;file:///workspace/settings.toml\e\\g\e]8;;\e\\\r
+\e]8;;file:///workspace/settings.toml\e\\s\e]8;;\e\\\r
+\e]8;;file:///workspace/settings.toml\e\\.\e]8;;\e\\\r
+\e]8;;file:///workspace/settings.toml\e\\t\e]8;;\e\\\r
+\e]8;;file:///workspace/settings.toml\e\\o\e]8;;\e\\\r
+\e]8;;file:///workspace/settings.toml\e\\m\e]8;;\e\\\r
+\e]8;;file:///workspace/settings.toml\e\\l\e]8;;\e\\\r
+n\r
+a\r
+m\r
+e\r
+s\r
+t\r
+h\r
+e\r
+w\r
+o\r
+r\r
+k\r
+s\r
+p\r
+a\r
+c\r
+e\r
+a\r
+n\r
+d\r
+\e]8;;file:///workspace/target.txt\e\\t\e]8;;\e\\\r
+\e]8;;file:///workspace/target.txt\e\\a\e]8;;\e\\\r
+\e]8;;file:///workspace/target.txt\e\\r\e]8;;\e\\\r
+\e]8;;file:///workspace/target.txt\e\\g\e]8;;\e\\\r
+\e]8;;file:///workspace/target.txt\e\\e\e]8;;\e\\\r
+\e]8;;file:///workspace/target.txt\e\\t\e]8;;\e\\\r
+\e]8;;file:///workspace/target.txt\e\\.\e]8;;\e\\\r
+\e]8;;file:///workspace/target.txt\e\\t\e]8;;\e\\\r
+\e]8;;file:///workspace/target.txt\e\\x\e]8;;\e\\\r
+\e]8;;file:///workspace/target.txt\e\\t\e]8;;\e\\\r
+i\r
+s\r
+t\r
+h\r
+e\r
+f\r
+i\r
+l\r
+e\r
+e\r
+v\r
+e\r
+r\r
+y\r
+t\r
+h\r
+i\r
+n\r
+g\r
+e\r
+l\r
+s\r
+e\r
+w\r
+o\r
+r\r
+k\r
+s\r
+o\r
+n\r
+.\r
+\r
+A\r
+w\r
+r\r
+a\r
+p\r
+p\r
+e\r
+d\r
+p\r
+a\r
+t\r
+c\r
+h\r
+p\r
+a\r
+t\r
+h\r
+l\r
+o\r
+o\r
+k\r
+s\r
+l\r
+i\r
+k\r
+e\r
+t\r
+h\r
+i\r
+s\r
+:\r
+\r
+ \r
+\e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\c\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mm\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150md\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m/\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mo\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mh\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m/\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ml\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mi\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mn\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150me\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m/\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mp\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mt\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mc\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mh\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mp\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mt\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mh\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mt\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mh\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mt\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mi\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ms\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ml\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mo\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mn\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mg\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150me\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mn\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mo\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mu\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mg\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mh\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mt\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mo\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mw\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mr\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mp\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mf\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mt\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150me\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mr\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ml\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150me\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150md\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mi\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mn\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mg\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mi\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mn\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150md\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150me\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mn\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mt\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mt\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mi\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mo\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mn\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mn\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150md\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mr\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150me\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mm\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mi\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mn\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mc\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ml\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mi\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mc\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mk\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mb\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ml\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150me\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m.\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mp\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150ma\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mt\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mc\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mh\e]8;;\e\\\e[0m\r
 \e[?25h\e[?2026l
 === plain ===
 \e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m
@@ -647,23 +647,22 @@ A wrapped patch path looks like this:\r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mRead\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the rend\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer bef\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before sayi\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying a\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anyth\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything abou\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it.\e[0m\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KLet\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me read\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me read the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me read the rend\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me read the renderer\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me read the renderer.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prom\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is bu\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in c\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in cmd/o\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in cmd/oh/li\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in cmd/oh/line/r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in cmd/oh/line/rende\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/render.go\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, an\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and sc\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and screen\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ hold\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds th\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the sp\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinne\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner be\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it.\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it. The\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it. There i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it. There\r
-\r\e[Kis no\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothin\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing ab\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in RE\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in README\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\,\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and not\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in c\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/o\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/li\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missi\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.g\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, w\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which is\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which is wher\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which is where I\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Klook\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked f\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. se\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. settin\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. settings.t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ name\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names th\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the wo\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the worksp\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and targ\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and target.t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is th\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the fi\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file e\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file every\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everythin\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything el\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything else w\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything else works\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything else works on.\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K\e[3m\e[38;2;150;152;150mRead\e[0m\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading\e[0m\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the\e[0m\e[0m\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the rend\e[0m\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer\e[0m\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer bef\e[0m\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before\e[0m\e[0m\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before sayi\e[0m\e[0m\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying a\e[0m\e[0m\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anyth\e[0m\e[0m\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything\e[0m\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything abou\e[0m\e[0m\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it\e[0m\e[0m\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it.\e[0m\e[0m\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\r\e[KA\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrap\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patc\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patch pa\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patch path l\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patch path looks\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patch path looks lik\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patch path looks like th\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patch path looks like this:\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[KLet\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me r\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me read\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me read the\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me read the rend\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me read the renderer\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me read the renderer.\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\r\e[K    \e[38;2;150;152;150mcmd\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh\e\\cmd/oh\e]8;;\e\\/\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line\e\\cmd/oh/line\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-p\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-pat\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-th\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-i\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-lo\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-e\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enoug\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wra\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-af\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-lead\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-inde\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentat\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-rema\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-c\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-click\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clicka\e[0m\r
-\r\e[K\e[38;2;150;152;150mble\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150mble.pat\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K    \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clicka\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mble.patch\e]8;;\e\\\e[0m\r
-\r\e[K\e[38;2;181;189;104m`\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[J\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mble.patch\e]8;;\e\\\e[0m\e[?25h\e[?2026l\r
+\e[KThe\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prom\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt i\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is bu\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in c\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in cmd/o\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in cmd/oh/li\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in cmd/oh/line/r\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in cmd/oh/line/rende\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/render.go\e]8;;\e\\\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, an\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and sc\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and screen\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\r\e[63C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ hold\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds th\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the sp\r\e[76C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinne\r\e[80C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner be\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside\r\e[88C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it.\r\e[92C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it. The\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it. There i\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it. There\r
+\e[Kis no\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothin\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing ab\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it i\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in RE\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in README\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\,\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and not\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in c\r\e[57C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/o\r\e[61C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/li\r\e[65C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/m\r\e[69C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missi\r\e[73C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.g\r\e[77C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, w\r\e[81C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which\r\e[85C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which is\r\e[88C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which is wher\r\e[93C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which is where I\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Klook\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked f\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. se\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. settin\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. settings.t\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ name\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names th\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the wo\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the worksp\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and targ\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and target.t\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ i\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is th\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the fi\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file e\r\e[76C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file every\r\e[80C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everythin\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything el\r\e[88C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything else w\r\e[92C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything else works\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything else works on.\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[KA\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrap\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patc\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patch pa\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patch path l\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patch path looks\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patch path looks lik\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patch path looks like th\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patch path looks like this:\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[K    \e[38;2;150;152;150mcmd\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh\e\\cmd/oh\e]8;;\e\\/\e[0m\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line\e\\cmd/oh/line\e]8;;\e\\\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-p\e[0m\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch\e[0m\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-pat\e[0m\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-th\e[0m\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-i\e[0m\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-lo\e[0m\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-e\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enoug\e[0m\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to\e[0m\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wra\e[0m\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-af\e[0m\r\e[59C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-\e[0m\r\e[63C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-lead\e[0m\r\e[67C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-\e[0m\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-inde\e[0m\r\e[75C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentat\e[0m\r\e[79C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-\e[0m\r\e[83C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-\e[0m\r\e[87C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-rema\e[0m\r\e[91C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-c\e[0m\r\e[95C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-click\e[0m\r\e[99C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clicka\e[0m\r
+\e[K\e[38;2;150;152;150mble\e[0m\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150mble.pat\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K    \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clicka\e[0m\e]8;;\e\\\e[1B\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mble.patch\e]8;;\e\\\e[0m\r
+\e[K\e[38;2;181;189;104m`\e[0m\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1A\r\e[9C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
@@ -671,21 +670,21 @@ A wrapped patch path looks like this:\r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it.\e[0m\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KLet me read the renderer.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it. There\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which is where I\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything else works on.\r
-\r\e[K\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[KA wrapped patch path looks like this:\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clicka\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clicka\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mble.patch\e]8;;\e\\\e[0m\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it.\e[0m\e[0m\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KLet me read the renderer.\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it. There\r\e[98C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which is where I\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything else works on.\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[KA wrapped patch path looks like this:\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clicka\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clicka\e[0m\e]8;;\e\\\r
+\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mble.patch\e]8;;\e\\\e[0m\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[9C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
@@ -693,22 +692,21 @@ A wrapped patch path looks like this:\r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mRead\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the rend\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer bef\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before sayi\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying a\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anyth\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything abou\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it.\e[0m\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KLet\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me read\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me read the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me read the rend\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me read the renderer\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me read the renderer.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prom\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is bu\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in c\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in cmd/o\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in cmd/oh/li\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in cmd/oh/line/r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in cmd/oh/line/rende\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/render.go\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, an\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and sc\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and screen\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ hold\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds th\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the sp\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinne\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner be\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it.\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it. The\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it. There i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it. There\r
-\r\e[Kis no\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothin\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing ab\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in RE\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in README\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\,\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and not\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in c\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/o\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/li\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missi\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.g\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, w\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which is\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which is wher\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which is where I\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Klook\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked f\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. se\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. settin\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. settings.t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ name\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names th\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the wo\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the worksp\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and targ\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and target.t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is th\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the fi\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file e\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file every\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everythin\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything el\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything else w\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything else works\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything else works on.\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K\e[3m\e[38;2;150;152;150mRead\e[0m\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading\e[0m\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the\e[0m\e[0m\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the rend\e[0m\e[0m\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer\e[0m\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer bef\e[0m\e[0m\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before\e[0m\e[0m\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before sayi\e[0m\e[0m\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying a\e[0m\e[0m\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anyth\e[0m\e[0m\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything\e[0m\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything abou\e[0m\e[0m\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it\e[0m\e[0m\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it.\e[0m\e[0m\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\r\e[KA\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrap\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patc\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patch pa\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patch path looks\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patch path looks like th\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patch path looks like this:\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[KLet\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me r\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me read\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me read the\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me read the rend\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me read the renderer\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KLet me read the renderer.\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\r\e[K    \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh\e\\cmd/oh\e]8;;\e\\/\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-p\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-pat\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-i\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-e\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-af\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-lead\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-inde\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-rema\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-click\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clicka\e[0m\r
-\r\e[K\e[38;2;150;152;150mble.pat\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K    \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clicka\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mble.patch\e]8;;\e\\\e[0m\e[?25h\e[?2026l\r
+\e[KThe\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prom\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt i\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is bu\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in c\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in cmd/o\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in cmd/oh/li\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in cmd/oh/line/r\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in cmd/oh/line/rende\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/render.go\e]8;;\e\\\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, an\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and sc\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and screen\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\r\e[63C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ hold\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds th\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the sp\r\e[76C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinne\r\e[80C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner be\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside\r\e[88C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it.\r\e[92C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it. The\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it. There i\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it. There\r
+\e[Kis no\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothin\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing ab\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it i\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in RE\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in README\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\,\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and not\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in c\r\e[57C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/o\r\e[61C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/li\r\e[65C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/m\r\e[69C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missi\r\e[73C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.g\r\e[77C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, w\r\e[81C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which\r\e[85C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which is\r\e[88C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which is wher\r\e[93C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which is where I\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Klook\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked f\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. se\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. settin\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. settings.t\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ name\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names th\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the wo\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the worksp\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and targ\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and target.t\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ i\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is th\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the fi\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file e\r\e[76C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file every\r\e[80C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everythin\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything el\r\e[88C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything else w\r\e[92C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything else works\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything else works on.\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[KA\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrap\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patc\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patch pa\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patch path looks\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patch path looks like th\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KA wrapped patch path looks like this:\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[K    \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh\e\\cmd/oh\e]8;;\e\\/\e[0m\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-p\e[0m\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-pat\e[0m\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-i\e[0m\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-e\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to\e[0m\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-af\e[0m\r\e[59C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-lead\e[0m\r\e[67C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-inde\e[0m\r\e[75C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-\e[0m\r\e[83C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-rema\e[0m\r\e[91C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-click\e[0m\r\e[99C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K    \e[38;2;150;152;150mcmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clicka\e[0m\r
+\e[K\e[38;2;150;152;150mble.pat\e[0m\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K    \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clicka\e[0m\e]8;;\e\\\e[1B\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mble.patch\e]8;;\e\\\e[0m\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[9C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m\e[0m\r
@@ -726,83 +724,83 @@ A wrapped patch path looks like this:\r
 \e[48;2;52;53;65m at that    \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mReading the\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mrenderer\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mbefore\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150msaying\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150manything\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mabout it.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mReading the\e[0m\r
+\e[3m\e[38;2;150;152;150mrenderer\e[0m\r
+\e[3m\e[38;2;150;152;150mbefore\e[0m\r
+\e[3m\e[38;2;150;152;150msaying\e[0m\r
+\e[3m\e[38;2;150;152;150manything\e[0m\r
+\e[3m\e[38;2;150;152;150mabout it.\e[0m\e[0m\r
 \r
-\r\e[KLet me read\r
-\r\e[Kthe\r
-\r\e[Krenderer.\r
+Let me read\r
+the\r
+renderer.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mc…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mc…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
 \r
-\r\e[KThe prompt\r
-\r\e[Kis built in\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\render.go:4:\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\9\e]8;;\e\\, and\r
-\r\e[K\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\r
-\r\e[Kholds the\r
-\r\e[Kspinner\r
-\r\e[Kbeside it.\r
-\r\e[KThere is\r
-\r\e[Knothing\r
-\r\e[Kabout it in\r
-\r\e[K\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\,\r
-\r\e[Kand nothing\r
-\r\e[Kat all in\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line\e\\cmd/oh/line\e]8;;\e\\/\r
-\r\e[Kmissing.go,\r
-\r\e[Kwhich is\r
-\r\e[Kwhere I\r
-\r\e[Klooked\r
-\r\e[Kfirst.\r
-\r\e[K\e]8;;file:///workspace/settings.toml\e\\settings.tom\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/settings.toml\e\\l\e]8;;\e\\ names the\r
-\r\e[Kworkspace\r
-\r\e[Kand\r
-\r\e[K\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\r
-\r\e[Kis the file\r
-\r\e[Keverything\r
-\r\e[Kelse works\r
-\r\e[Kon.\r
-\r\e[K\r
-\r\e[KA wrapped\r
-\r\e[Kpatch path\r
-\r\e[Klooks like\r
-\r\e[Kthis:\r
-\r\e[K\r
-\r\e[K    \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\cmd/oh/l\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mine/a-patch-\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mpath-that-is\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-long-enough\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-to-wrap-aft\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mer-leading-i\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mndentation-a\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mnd-remain-cl\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mickable.patc\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mh\e]8;;\e\\\e[0m\r
+The prompt\r
+is built in\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\render.go:4:\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\9\e]8;;\e\\, and\r
+\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\r
+holds the\r
+spinner\r
+beside it.\r
+There is\r
+nothing\r
+about it in\r
+\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\,\r
+and nothing\r
+at all in\r
+\e]8;;file:///workspace/cmd/oh/line\e\\cmd/oh/line\e]8;;\e\\/\r
+missing.go,\r
+which is\r
+where I\r
+looked\r
+first.\r
+\e]8;;file:///workspace/settings.toml\e\\settings.tom\e]8;;\e\\\r
+\e]8;;file:///workspace/settings.toml\e\\l\e]8;;\e\\ names the\r
+workspace\r
+and\r
+\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\r
+is the file\r
+everything\r
+else works\r
+on.\r
+\r
+A wrapped\r
+patch path\r
+looks like\r
+this:\r
+\r
+    \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\cmd/oh/l\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mine/a-patch-\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mpath-that-is\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-long-enough\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150m-to-wrap-aft\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mer-leading-i\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mndentation-a\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mnd-remain-cl\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mickable.patc\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mh\e]8;;\e\\\e[0m\r
 \e[?25h\e[?2026l
 === unsized ===
-\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m
-
-\e]133;A\e\\\e[48;2;52;53;65m\e[0m
-\e[48;2;52;53;65m have a look at that\e[0m
-\e[48;2;52;53;65m\e[0m
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it.\e[0m\e[0m
-
-\r\e[KLet me read the renderer.
-
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m
-
-\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it. There is nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which is where I looked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything else works on.\r
-\r\e[K\r
-\r\e[KA wrapped patch path looks like this:\r
-\r\e[K\r
-\r\e[K    \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e]8;;\e\\\e[0m
+\e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m have a look at that\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it.\e[0m\e[0m\r
+\r
+Let me read the renderer.\r
+\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\r
+The prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it. There is nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which is where I looked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything else works on.\r
+\r
+A wrapped patch path looks like this:\r
+\r
+    \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e]8;;\e\\\e[0m\r
 \e[?25h\e[?2026l
 === wide ===
 \e[?2026h\e[?25l\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0m000000000000000000000000\e[38;2;150;152;150m ready in \e[0m0\e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m with \e[0m0\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m0\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m800\e[38;2;150;152;150mt\e[0m\e[38;2;150;152;150m context.\e[0m\r
@@ -811,18 +809,18 @@ A wrapped patch path looks like this:\r
 \e[48;2;52;53;65m have a look at that                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mReading the renderer before saying anything about it.\e[0m\e[0m\r
 \r
-\r\e[KLet me read the renderer.\r
+Let me read the renderer.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
 \r
-\r\e[KThe prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it. There\r
-\r\e[Kis nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which is where I\r
-\r\e[Klooked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything else works on.\r
-\r\e[K\r
-\r\e[KA wrapped patch path looks like this:\r
-\r\e[K\r
-\r\e[K    \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clicka\e[0m\e]8;;\e\\\r
-\r\e[K\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mble.patch\e]8;;\e\\\e[0m\r
+The prompt is built in \e]8;;file:///workspace/cmd/oh/line/render.go#4:9\e\\cmd/oh/line/render.go:4:9\e]8;;\e\\, and \e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\ holds the spinner beside it. There\r
+is nothing about it in \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\, and nothing at all in cmd/oh/line/missing.go, which is where I\r
+looked first. \e]8;;file:///workspace/settings.toml\e\\settings.toml\e]8;;\e\\ names the workspace and \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ is the file everything else works on.\r
+\r
+A wrapped patch path looks like this:\r
+\r
+    \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clicka\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[38;2;150;152;150mble.patch\e]8;;\e\\\e[0m\r
 \e[?25h\e[?2026l

@@ -3,41 +3,41 @@
 \e[48;2;52;53;65m show me how to count the go files      \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mway to say it.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest\e[0m\r
+\e[3m\e[38;2;150;152;150mway to say it.\e[0m\e[0m\r
 \r
-\r\e[KTry this.\r
-\r\e[K\r
-\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m\e[0m\r
-\r\e[K\e[38;2;181;189;104mis quite a long line indeed\e[0m\e[38;2;181;189;104m"\e[0m; \e[38;2;201;166;212mdone\e[0m\r
-\r\e[K\r
-\r\e[KThat is all.\r
+Try this.\r
 \r
-\r\e[KAnd a table, which changes shape as its\r
-\r\e[Krows arrive:\r
-\r\e[K\r
-\r\e[K\e[38;2;150;152;150m┌──────┬───────────────────────────────┐\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked\e[0m \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m      \e[38;2;150;152;150m│\e[0m \e[1mto\e[0m                            \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼───────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it     \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m      \e[38;2;150;152;150m│\e[0m back to you                   \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼───────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking  \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m      \e[38;2;150;152;150m│\e[0m for a pattern                 \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────┘\e[0m\r
-\r\e[K\r
-\r\e[KThat is the lot.\r
+\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m\e[0m\r
+\e[38;2;181;189;104mis quite a long line indeed\e[0m\e[38;2;181;189;104m"\e[0m; \e[38;2;201;166;212mdone\e[0m\r
 \r
-\r\e[KAnd a nested list, whose markers arrive\r
-\r\e[Kbefore the items they introduce:\r
-\r\e[K\r
-\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands it back\r
-\r\e[K  \e[38;2;192;128;80m• \e[0mand says how big it was\r
-\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it where it found it\r
-\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tree for a pattern\r
-\r\e[K\r
-\r\e[KThat is the lot.\r
+That is all.\r
+\r
+And a table, which changes shape as its\r
+rows arrive:\r
+\r
+\e[38;2;150;152;150m┌──────┬───────────────────────────────┐\e[0m\r
+\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked\e[0m \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m      \e[38;2;150;152;150m│\e[0m \e[1mto\e[0m                            \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m├──────┼───────────────────────────────┤\e[0m\r
+\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it     \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m      \e[38;2;150;152;150m│\e[0m back to you                   \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m├──────┼───────────────────────────────┤\e[0m\r
+\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking  \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m      \e[38;2;150;152;150m│\e[0m for a pattern                 \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m└──────┴───────────────────────────────┘\e[0m\r
+\r
+That is the lot.\r
+\r
+And a nested list, whose markers arrive\r
+before the items they introduce:\r
+\r
+\e[38;2;192;128;80m• \e[0mread takes a file and hands it back\r
+  \e[38;2;192;128;80m• \e[0mand says how big it was\r
+  \e[38;2;192;128;80m• \e[0mand leaves it where it found it\r
+\e[38;2;192;128;80m• \e[0mgrep walks the tree for a pattern\r
+\r
+That is the lot.\r
 \e[?25h\e[?2026l
 === one column ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
@@ -95,469 +95,469 @@
 \e[48;2;52;53;65ms\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mA\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ml\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mp\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mv\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mh\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ml\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mg\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mh\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mh\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mr\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150me\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mw\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150my\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mo\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150ma\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150my\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mt\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150m.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mA\e[0m\r
+\e[3m\e[38;2;150;152;150ml\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mp\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mv\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150ml\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mg\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mw\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150my\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150my\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150m.\e[0m\e[0m\r
 \r
-\r\e[KT\r
-\r\e[Kr\r
-\r\e[Ky\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[K.\r
-\r\e[K\r
-\r\e[K\e[38;2;201;166;212mf\e[0m\r
-\r\e[K\e[38;2;201;166;212mo\e[0m\r
-\r\e[K\e[38;2;201;166;212mr\e[0m\r
-\r\e[K\e[38;2;150;152;150mN\e[0m\r
-\r\e[K\e[38;2;150;152;150mA\e[0m\r
-\r\e[K\e[38;2;150;152;150mM\e[0m\r
-\r\e[K\e[38;2;150;152;150mE\e[0m\r
-\r\e[K\e[38;2;150;152;150mi\e[0m\r
-\r\e[K\e[38;2;150;152;150mn\e[0m\r
-\r\e[K\e[38;2;201;166;212m$\e[0m\r
-\r\e[K\e[38;2;201;166;212m(\e[0m\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150ml\e[0m\r
-\r\e[K\e[38;2;150;152;150ms\e[0m\r
-\r\e[K\e[38;2;150;152;150m*\e[0m\r
-\r\e[K\e[38;2;150;152;150m.\e[0m\r
-\r\e[K\e[38;2;150;152;150mg\e[0m\r
-\r\e[K\e[38;2;150;152;150mo\e[0m\e[38;2;201;166;212m\e[0m\r
-\r\e[K\e[38;2;201;166;212m)\e[0m\r
-\r\e[K;\r
-\r\e[K\e[38;2;201;166;212md\e[0m\r
-\r\e[K\e[38;2;201;166;212mo\e[0m\r
-\r\e[K\e[38;2;240;198;116me\e[0m\r
-\r\e[K\e[38;2;240;198;116mc\e[0m\r
-\r\e[K\e[38;2;240;198;116mh\e[0m\r
-\r\e[K\e[38;2;240;198;116mo\e[0m\r
-\r\e[K\e[38;2;181;189;104m"\e[0m\r
-\r\e[K$\r
-\r\e[KN\r
-\r\e[KA\r
-\r\e[KM\r
-\r\e[KE\e[38;2;181;189;104m\e[0m\r
-\r\e[K\e[38;2;181;189;104mi\e[0m\r
-\r\e[K\e[38;2;181;189;104ms\e[0m\r
-\r\e[K\e[38;2;181;189;104mq\e[0m\r
-\r\e[K\e[38;2;181;189;104mu\e[0m\r
-\r\e[K\e[38;2;181;189;104mi\e[0m\r
-\r\e[K\e[38;2;181;189;104mt\e[0m\r
-\r\e[K\e[38;2;181;189;104me\e[0m\r
-\r\e[K\e[38;2;181;189;104ma\e[0m\r
-\r\e[K\e[38;2;181;189;104ml\e[0m\r
-\r\e[K\e[38;2;181;189;104mo\e[0m\r
-\r\e[K\e[38;2;181;189;104mn\e[0m\r
-\r\e[K\e[38;2;181;189;104mg\e[0m\r
-\r\e[K\e[38;2;181;189;104ml\e[0m\r
-\r\e[K\e[38;2;181;189;104mi\e[0m\r
-\r\e[K\e[38;2;181;189;104mn\e[0m\r
-\r\e[K\e[38;2;181;189;104me\e[0m\r
-\r\e[K\e[38;2;181;189;104mi\e[0m\r
-\r\e[K\e[38;2;181;189;104mn\e[0m\r
-\r\e[K\e[38;2;181;189;104md\e[0m\r
-\r\e[K\e[38;2;181;189;104me\e[0m\r
-\r\e[K\e[38;2;181;189;104me\e[0m\r
-\r\e[K\e[38;2;181;189;104md\e[0m\e[38;2;181;189;104m\e[0m\r
-\r\e[K\e[38;2;181;189;104m"\e[0m\r
-\r\e[K;\r
-\r\e[K\e[38;2;201;166;212md\e[0m\r
-\r\e[K\e[38;2;201;166;212mo\e[0m\r
-\r\e[K\e[38;2;201;166;212mn\e[0m\r
-\r\e[K\e[38;2;201;166;212me\e[0m\r
-\r\e[K\r
-\r\e[KT\r
-\r\e[Kh\r
-\r\e[Ka\r
-\r\e[Kt\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[Ka\r
-\r\e[Kl\r
-\r\e[Kl\r
-\r\e[K.\r
+T\r
+r\r
+y\r
+t\r
+h\r
+i\r
+s\r
+.\r
 \r
-\r\e[KA\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Ka\r
-\r\e[Kt\r
-\r\e[Ka\r
-\r\e[Kb\r
-\r\e[Kl\r
-\r\e[Ke\r
-\r\e[K,\r
-\r\e[Kw\r
-\r\e[Kh\r
-\r\e[Ki\r
-\r\e[Kc\r
-\r\e[Kh\r
-\r\e[Kc\r
-\r\e[Kh\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Ks\r
-\r\e[Kh\r
-\r\e[Ka\r
-\r\e[Kp\r
-\r\e[Ke\r
-\r\e[Ka\r
-\r\e[Ks\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[Ks\r
-\r\e[Kr\r
-\r\e[Ko\r
-\r\e[Kw\r
-\r\e[Ks\r
-\r\e[Ka\r
-\r\e[Kr\r
-\r\e[Kr\r
-\r\e[Ki\r
-\r\e[Kv\r
-\r\e[Ke\r
-\r\e[K:\r
-\r\e[K\r
-\r\e[KT\r
-\r\e[Ko\r
-\r\e[Ko\r
-\r\e[Kl\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m|\e[0m\r
-\r\e[K\e[38;2;150;152;150m\e[0mW\r
-\r\e[Kh\r
-\r\e[Ka\r
-\r\e[Kt\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[Kd\r
-\r\e[Ko\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Kw\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kn\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[Ka\r
-\r\e[Ks\r
-\r\e[Kk\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[Kt\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Ka\r
-\r\e[Kd\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m|\e[0m\r
-\r\e[K\e[38;2;150;152;150m\e[0mt\r
-\r\e[Ka\r
-\r\e[Kk\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Ka\r
-\r\e[Kf\r
-\r\e[Ki\r
-\r\e[Kl\r
-\r\e[Ke\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Kh\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Ks\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[Kb\r
-\r\e[Ka\r
-\r\e[Kc\r
-\r\e[Kk\r
-\r\e[Kt\r
-\r\e[Ko\r
-\r\e[Ky\r
-\r\e[Ko\r
-\r\e[Ku\r
-\r\e[Kg\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kp\e[38;2;150;152;150m\e[0m\r
-\r\e[K\e[38;2;150;152;150m|\e[0m\r
-\r\e[K\e[38;2;150;152;150m\e[0mw\r
-\r\e[Ka\r
-\r\e[Kl\r
-\r\e[Kk\r
-\r\e[Ks\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kw\r
-\r\e[Kh\r
-\r\e[Ko\r
-\r\e[Kl\r
-\r\e[Ke\r
-\r\e[Kt\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Ke\r
-\r\e[Kl\r
-\r\e[Ko\r
-\r\e[Ko\r
-\r\e[Kk\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[Kf\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Ka\r
-\r\e[Kp\r
-\r\e[Ka\r
-\r\e[Kt\r
-\r\e[Kt\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Kn\r
-\r\e[K\r
-\r\e[KT\r
-\r\e[Kh\r
-\r\e[Ka\r
-\r\e[Kt\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kl\r
-\r\e[Ko\r
-\r\e[Kt\r
-\r\e[K.\r
+\e[38;2;201;166;212mf\e[0m\r
+\e[38;2;201;166;212mo\e[0m\r
+\e[38;2;201;166;212mr\e[0m\r
+\e[38;2;150;152;150mN\e[0m\r
+\e[38;2;150;152;150mA\e[0m\r
+\e[38;2;150;152;150mM\e[0m\r
+\e[38;2;150;152;150mE\e[0m\r
+\e[38;2;150;152;150mi\e[0m\r
+\e[38;2;150;152;150mn\e[0m\r
+\e[38;2;201;166;212m$\e[0m\r
+\e[38;2;201;166;212m(\e[0m\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150ml\e[0m\r
+\e[38;2;150;152;150ms\e[0m\r
+\e[38;2;150;152;150m*\e[0m\r
+\e[38;2;150;152;150m.\e[0m\r
+\e[38;2;150;152;150mg\e[0m\r
+\e[38;2;150;152;150mo\e[0m\e[38;2;201;166;212m\e[0m\r
+\e[38;2;201;166;212m)\e[0m\r
+;\r
+\e[38;2;201;166;212md\e[0m\r
+\e[38;2;201;166;212mo\e[0m\r
+\e[38;2;240;198;116me\e[0m\r
+\e[38;2;240;198;116mc\e[0m\r
+\e[38;2;240;198;116mh\e[0m\r
+\e[38;2;240;198;116mo\e[0m\r
+\e[38;2;181;189;104m"\e[0m\r
+$\r
+N\r
+A\r
+M\r
+E\e[38;2;181;189;104m\e[0m\r
+\e[38;2;181;189;104mi\e[0m\r
+\e[38;2;181;189;104ms\e[0m\r
+\e[38;2;181;189;104mq\e[0m\r
+\e[38;2;181;189;104mu\e[0m\r
+\e[38;2;181;189;104mi\e[0m\r
+\e[38;2;181;189;104mt\e[0m\r
+\e[38;2;181;189;104me\e[0m\r
+\e[38;2;181;189;104ma\e[0m\r
+\e[38;2;181;189;104ml\e[0m\r
+\e[38;2;181;189;104mo\e[0m\r
+\e[38;2;181;189;104mn\e[0m\r
+\e[38;2;181;189;104mg\e[0m\r
+\e[38;2;181;189;104ml\e[0m\r
+\e[38;2;181;189;104mi\e[0m\r
+\e[38;2;181;189;104mn\e[0m\r
+\e[38;2;181;189;104me\e[0m\r
+\e[38;2;181;189;104mi\e[0m\r
+\e[38;2;181;189;104mn\e[0m\r
+\e[38;2;181;189;104md\e[0m\r
+\e[38;2;181;189;104me\e[0m\r
+\e[38;2;181;189;104me\e[0m\r
+\e[38;2;181;189;104md\e[0m\e[38;2;181;189;104m\e[0m\r
+\e[38;2;181;189;104m"\e[0m\r
+;\r
+\e[38;2;201;166;212md\e[0m\r
+\e[38;2;201;166;212mo\e[0m\r
+\e[38;2;201;166;212mn\e[0m\r
+\e[38;2;201;166;212me\e[0m\r
 \r
-\r\e[KA\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Kt\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[Kl\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[Kt\r
-\r\e[K,\r
-\r\e[Kw\r
-\r\e[Kh\r
-\r\e[Ko\r
-\r\e[Ks\r
-\r\e[Ke\r
-\r\e[Km\r
-\r\e[Ka\r
-\r\e[Kr\r
-\r\e[Kk\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ks\r
-\r\e[Ka\r
-\r\e[Kr\r
-\r\e[Kr\r
-\r\e[Ki\r
-\r\e[Kv\r
-\r\e[Ke\r
-\r\e[Kb\r
-\r\e[Ke\r
-\r\e[Kf\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[Ke\r
-\r\e[Km\r
-\r\e[Ks\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Ky\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kt\r
-\r\e[Kr\r
-\r\e[Ko\r
-\r\e[Kd\r
-\r\e[Ku\r
-\r\e[Kc\r
-\r\e[Ke\r
-\r\e[K:\r
-\r\e[K\r
-\r\e[K\e[38;2;192;128;80m•\e[0m\r
-\r\e[K\e[38;2;192;128;80m\e[0mr\r
-\r\e[Ke\r
-\r\e[Ka\r
-\r\e[Kd\r
-\r\e[Kt\r
-\r\e[Ka\r
-\r\e[Kk\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Ka\r
-\r\e[Kf\r
-\r\e[Ki\r
-\r\e[Kl\r
-\r\e[Ke\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Kh\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Ks\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[Kb\r
-\r\e[Ka\r
-\r\e[Kc\r
-\r\e[Kk\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Ks\r
-\r\e[Ka\r
-\r\e[Ky\r
-\r\e[Ks\r
-\r\e[Kh\r
-\r\e[Ko\r
-\r\e[Kw\r
-\r\e[Kb\r
-\r\e[Ki\r
-\r\e[Kg\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[Kw\r
-\r\e[Ka\r
-\r\e[Ks\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Kl\r
-\r\e[Ke\r
-\r\e[Ka\r
-\r\e[Kv\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[Kw\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[Kf\r
-\r\e[Ko\r
-\r\e[Ku\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[K\e[38;2;192;128;80m•\e[0m\r
-\r\e[K\e[38;2;192;128;80m\e[0mg\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kp\r
-\r\e[Kw\r
-\r\e[Ka\r
-\r\e[Kl\r
-\r\e[Kk\r
-\r\e[Ks\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kt\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Ke\r
-\r\e[Kf\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Ka\r
-\r\e[Kp\r
-\r\e[Ka\r
-\r\e[Kt\r
-\r\e[Kt\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Kn\r
-\r\e[K\r
-\r\e[KT\r
-\r\e[Kh\r
-\r\e[Ka\r
-\r\e[Kt\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kl\r
-\r\e[Ko\r
-\r\e[Kt\r
-\r\e[K.\r
+T\r
+h\r
+a\r
+t\r
+i\r
+s\r
+a\r
+l\r
+l\r
+.\r
+\r
+A\r
+n\r
+d\r
+a\r
+t\r
+a\r
+b\r
+l\r
+e\r
+,\r
+w\r
+h\r
+i\r
+c\r
+h\r
+c\r
+h\r
+a\r
+n\r
+g\r
+e\r
+s\r
+s\r
+h\r
+a\r
+p\r
+e\r
+a\r
+s\r
+i\r
+t\r
+s\r
+r\r
+o\r
+w\r
+s\r
+a\r
+r\r
+r\r
+i\r
+v\r
+e\r
+:\r
+\r
+T\r
+o\r
+o\r
+l\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m|\e[0m\r
+\e[38;2;150;152;150m\e[0mW\r
+h\r
+a\r
+t\r
+i\r
+t\r
+d\r
+o\r
+e\r
+s\r
+w\r
+h\r
+e\r
+n\r
+i\r
+t\r
+i\r
+s\r
+a\r
+s\r
+k\r
+e\r
+d\r
+t\r
+o\r
+r\r
+e\r
+a\r
+d\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m|\e[0m\r
+\e[38;2;150;152;150m\e[0mt\r
+a\r
+k\r
+e\r
+s\r
+a\r
+f\r
+i\r
+l\r
+e\r
+a\r
+n\r
+d\r
+h\r
+a\r
+n\r
+d\r
+s\r
+i\r
+t\r
+b\r
+a\r
+c\r
+k\r
+t\r
+o\r
+y\r
+o\r
+u\r
+g\r
+r\r
+e\r
+p\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150m|\e[0m\r
+\e[38;2;150;152;150m\e[0mw\r
+a\r
+l\r
+k\r
+s\r
+t\r
+h\r
+e\r
+w\r
+h\r
+o\r
+l\r
+e\r
+t\r
+r\r
+e\r
+e\r
+l\r
+o\r
+o\r
+k\r
+i\r
+n\r
+g\r
+f\r
+o\r
+r\r
+a\r
+p\r
+a\r
+t\r
+t\r
+e\r
+r\r
+n\r
+\r
+T\r
+h\r
+a\r
+t\r
+i\r
+s\r
+t\r
+h\r
+e\r
+l\r
+o\r
+t\r
+.\r
+\r
+A\r
+n\r
+d\r
+a\r
+n\r
+e\r
+s\r
+t\r
+e\r
+d\r
+l\r
+i\r
+s\r
+t\r
+,\r
+w\r
+h\r
+o\r
+s\r
+e\r
+m\r
+a\r
+r\r
+k\r
+e\r
+r\r
+s\r
+a\r
+r\r
+r\r
+i\r
+v\r
+e\r
+b\r
+e\r
+f\r
+o\r
+r\r
+e\r
+t\r
+h\r
+e\r
+i\r
+t\r
+e\r
+m\r
+s\r
+t\r
+h\r
+e\r
+y\r
+i\r
+n\r
+t\r
+r\r
+o\r
+d\r
+u\r
+c\r
+e\r
+:\r
+\r
+\e[38;2;192;128;80m•\e[0m\r
+\e[38;2;192;128;80m\e[0mr\r
+e\r
+a\r
+d\r
+t\r
+a\r
+k\r
+e\r
+s\r
+a\r
+f\r
+i\r
+l\r
+e\r
+a\r
+n\r
+d\r
+h\r
+a\r
+n\r
+d\r
+s\r
+i\r
+t\r
+b\r
+a\r
+c\r
+k\r
+a\r
+n\r
+d\r
+s\r
+a\r
+y\r
+s\r
+h\r
+o\r
+w\r
+b\r
+i\r
+g\r
+i\r
+t\r
+w\r
+a\r
+s\r
+a\r
+n\r
+d\r
+l\r
+e\r
+a\r
+v\r
+e\r
+s\r
+i\r
+t\r
+w\r
+h\r
+e\r
+r\r
+e\r
+i\r
+t\r
+f\r
+o\r
+u\r
+n\r
+d\r
+i\r
+t\r
+\e[38;2;192;128;80m•\e[0m\r
+\e[38;2;192;128;80m\e[0mg\r
+r\r
+e\r
+p\r
+w\r
+a\r
+l\r
+k\r
+s\r
+t\r
+h\r
+e\r
+t\r
+r\r
+e\r
+e\r
+f\r
+o\r
+r\r
+a\r
+p\r
+a\r
+t\r
+t\r
+e\r
+r\r
+n\r
+\r
+T\r
+h\r
+a\r
+t\r
+i\r
+s\r
+t\r
+h\r
+e\r
+l\r
+o\r
+t\r
+.\r
 \e[?25h\e[?2026l
 === plain ===
 \e[48;2;52;53;65m\e[0m
@@ -624,190 +624,103 @@ That is the lot.\r
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m show me how to count the go files                                                                  \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mA lo\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop o\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the list\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is t\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the s\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the short\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way to s\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way to say i\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way to say it.\e[0m\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KTry\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTry this\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTry this.\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K\e[3m\e[38;2;150;152;150mA lo\e[0m\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop o\e[0m\e[0m\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over\e[0m\e[0m\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the\e[0m\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the list\e[0m\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing\e[0m\e[0m\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is t\e[0m\e[0m\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the s\e[0m\e[0m\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the short\e[0m\e[0m\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest\e[0m\e[0m\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way\e[0m\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way to s\e[0m\e[0m\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way to say i\e[0m\e[0m\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way to say it.\e[0m\e[0m\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\r\e[K`\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150mf\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mN\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;150;152;150m$\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;150;152;150md\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;150;152;150mec\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAM\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is qui\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a lon\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long li\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line i\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line indee\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line indeed\e[0m\e[38;2;181;189;104m"\e[0m; \e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line indeed\e[0m\e[38;2;181;189;104m"\e[0m; \e[38;2;201;166;212mdone\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[KTry\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTry this\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTry this.\r
+\e[K\r
+\e[K`\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150mf\e[0m\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mN\e[0m\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;150;152;150m$\e[0m\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;150;152;150md\e[0m\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;150;152;150mec\e[0m\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAM\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is\e[0m\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is qui\e[0m\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a\e[0m\r\e[49C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a lon\e[0m\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long li\e[0m\r\e[57C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line i\e[0m\r\e[61C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line indee\e[0m\r\e[65C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line indeed\e[0m\e[38;2;181;189;104m"\e[0m; \r\e[69C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line indeed\e[0m\e[38;2;181;189;104m"\e[0m; \e[38;2;201;166;212mdone\e[0m\r\e[73C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[KTh\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat i\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is al\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is all.\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\r\e[KTh\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is al\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is all.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KAnd\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a ta\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table,\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, whi\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which c\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which chang\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes s\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape as\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape as its\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape as its rows\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape as its rows arr\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape as its rows arrive:\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[KAnd\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a ta\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table,\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, whi\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which c\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which chang\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes s\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape as\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape as its\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape as its rows\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape as its rows arr\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape as its rows arrive:\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[K|\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | W\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it d\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when it\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when it is a\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when it is asked\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when it is asked to\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when it is asked to       |\r\e[49C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K|---\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K|------|\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m┌──────┬──────────────────────────────────┐\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m \e[38;2;150;152;150m│\e[0m\r
+\e[K\e[38;2;150;152;150m├──────┼──────────────────────────────────┤\e[0m\r
+\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m│\e[0m      \e[38;2;150;152;150m│\e[0m                                  \e[38;2;150;152;150m│\e[0m\r
+\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m                                  \e[38;2;150;152;150m│\e[0m\e[1B\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m t                                \e[38;2;150;152;150m│\e[0m\e[1B\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes                            \e[38;2;150;152;150m│\e[0m\e[1B\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a f                        \e[38;2;150;152;150m│\e[0m\e[1B\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file                     \e[38;2;150;152;150m│\e[0m\e[1B\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and                 \e[38;2;150;152;150m│\e[0m\e[1B\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hand            \e[38;2;150;152;150m│\e[0m\e[1B\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it        \e[38;2;150;152;150m│\e[0m\e[1B\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it bac    \e[38;2;150;152;150m│\e[0m\e[1B\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e[38;2;150;152;150m┌──────┬───────────────────────────────────┐\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m  \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m├──────┼───────────────────────────────────┤\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────┘\e[0m\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e[38;2;150;152;150m┌──────┬───────────────────────────────────────┐\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m      \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m├──────┼───────────────────────────────────────┤\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to you \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m├──────┼───────────────────────────────────────┤\e[0m\r
+\e[K\e[38;2;150;152;150m│\e[0m gr   \e[38;2;150;152;150m│\e[0m                                       \e[38;2;150;152;150m│\e[0m\r
+\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m                                       \e[38;2;150;152;150m│\e[0m\e[1B\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m wal                                   \e[38;2;150;152;150m│\e[0m\e[1B\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks t                               \e[38;2;150;152;150m│\e[0m\e[1B\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the w                           \e[38;2;150;152;150m│\e[0m\e[1B\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole                       \e[38;2;150;152;150m│\e[0m\e[1B\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tre                   \e[38;2;150;152;150m│\e[0m\e[1B\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree lo               \e[38;2;150;152;150m│\e[0m\e[1B\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree lookin           \e[38;2;150;152;150m│\e[0m\e[1B\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking fo       \e[38;2;150;152;150m│\e[0m\e[1B\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking for a    \e[38;2;150;152;150m│\e[0m\e[1B\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[6A\r\e[K\e[38;2;150;152;150m┌──────┬─────────────────────────────────────────┐\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m        \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m├──────┼─────────────────────────────────────────┤\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to you   \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m├──────┼─────────────────────────────────────────┤\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking for a patt \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m└──────┴─────────────────────────────────────────┘\e[0m\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[6A\r\e[K\e[38;2;150;152;150m┌──────┬────────────────────────────────────────────┐\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m           \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m├──────┼────────────────────────────────────────────┤\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to you      \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m├──────┼────────────────────────────────────────────┤\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking for a pattern \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m└──────┴────────────────────────────────────────────┘\e[0m\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[KT\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is t\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is the l\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is the lot.\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\r\e[K|\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | W\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it d\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when it\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when it is a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when it is asked\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when it is asked to\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when it is asked to       |\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K|---\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K|------|\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m┌──────┬──────────────────────────────────┐\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼──────────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m│\e[0m      \e[38;2;150;152;150m│\e[0m                                  \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m                                  \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m t                                \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes                            \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a f                        \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file                     \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and                 \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hand            \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it        \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it bac    \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e[38;2;150;152;150m┌──────┬───────────────────────────────────┐\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m  \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼───────────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e[38;2;150;152;150m┌──────┬───────────────────────────────────────┐\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m      \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼───────────────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to you \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m├──────┼───────────────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m gr   \e[38;2;150;152;150m│\e[0m                                       \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m                                       \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m wal                                   \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks t                               \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the w                           \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole                       \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tre                   \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree lo               \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree lookin           \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking fo       \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking for a    \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[6A\r\e[K\e[38;2;150;152;150m┌──────┬─────────────────────────────────────────┐\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m        \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼─────────────────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to you   \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼─────────────────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking for a patt \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴─────────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[6A\r\e[K\e[38;2;150;152;150m┌──────┬────────────────────────────────────────────┐\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m           \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼────────────────────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to you      \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼────────────────────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking for a pattern \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴────────────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\r
-\r\e[KT\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is the l\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is the lot.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KAnd\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a ne\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested lis\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, w\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose mar\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arr\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive befo\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the items\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the items the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the items they in\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the items they introd\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the items they introduce:\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\r
-\r\e[K\e[38;2;192;128;80m• \e[0mread\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread tak\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a fil\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file an\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and ha\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands it b\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands it back\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0m\e[1m\e[38;2;207;173;0mread takes a file and hands it back\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands it back\r
-\r\e[K  \e[38;2;192;128;80m• \e[0mand\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand says\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand says how\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand says how big\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand says how big it\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand says how big it was\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K  \e[38;2;192;128;80m• \e[0mand\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leav\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it wh\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it where\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it where it f\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it where it found\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it where it found it\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;192;128;80m• \e[0mgr\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep w\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tre\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tree fo\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tree for a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tree for a patt\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tree for a pattern\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\r
-\r\e[KTha\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is the lot\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is the lot.\e[?25h\e[?2026l\r
+\e[KAnd\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a ne\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested lis\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, w\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose mar\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arr\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive befo\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before t\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the i\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the items\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the items the\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the items they in\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the items they introd\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the items they introduce:\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[K\e[38;2;192;128;80m• \e[0mread\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread tak\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a fil\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file an\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and ha\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands it b\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands it back\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0m\e[1m\e[38;2;207;173;0mread takes a file and hands it back\e[0m\e[0m\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands it back\r
+\e[K  \e[38;2;192;128;80m• \e[0mand\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand says\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand says how\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand says how big\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand says how big it\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand says how big it was\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K  \e[38;2;192;128;80m• \e[0mand\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leav\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves i\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it wh\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it where\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it where it f\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it where it found\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it where it found it\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;192;128;80m• \e[0mgr\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep w\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tre\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tree fo\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tree for a\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tree for a patt\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tree for a pattern\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[KTha\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is the\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is the lot\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is the lot.\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[16C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m show me how to count the go files                                                                  \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way to say it.\e[0m\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KTry this.\r
-\r\e[K\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line indeed\e[0m\e[38;2;181;189;104m"\e[0m; \e[38;2;201;166;212mdone\e[0m\r
-\r\e[K\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[KThat is all.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape as its rows arrive:\r
-\r\e[K\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K| Tool | What it does when it is asked to       |\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m┌──────┬──────────────────────────────────┐\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼──────────────────────────────────┤\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K\e[38;2;150;152;150m┌──────┬───────────────────────────────────────┐\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m      \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼───────────────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to you \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e[38;2;150;152;150m┌──────┬────────────────────────────────────────────┐\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m           \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼────────────────────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to you      \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼────────────────────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking for a pattern \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴────────────────────────────────────────────┘\e[0m\r
-\r\e[K\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[KThat is the lot.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the items they introduce:\r
-\r\e[K\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands it back\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0m\e[1m\e[38;2;207;173;0mread takes a file and hands it back\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands it back\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K  \e[38;2;192;128;80m• \e[0mand says how big it was\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it where it found it\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tree for a pattern\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[KThat is the lot.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way to say it.\e[0m\e[0m\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KTry this.\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line indeed\e[0m\e[38;2;181;189;104m"\e[0m; \e[38;2;201;166;212mdone\e[0m\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[KThat is all.\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KAnd a table, which changes shape as its rows arrive:\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K| Tool | What it does when it is asked to       |\r\e[49C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m┌──────┬──────────────────────────────────┐\e[0m\r
+\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m \e[38;2;150;152;150m│\e[0m\r
+\e[K\e[38;2;150;152;150m├──────┼──────────────────────────────────┤\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K\e[38;2;150;152;150m┌──────┬───────────────────────────────────────┐\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m      \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m├──────┼───────────────────────────────────────┤\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to you \e[38;2;150;152;150m│\e[0m\r
+\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e[38;2;150;152;150m┌──────┬────────────────────────────────────────────┐\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m           \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m├──────┼────────────────────────────────────────────┤\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to you      \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m├──────┼────────────────────────────────────────────┤\e[0m\r
+\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking for a pattern \e[38;2;150;152;150m│\e[0m\r
+\e[K\e[38;2;150;152;150m└──────┴────────────────────────────────────────────┘\e[0m\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[KThat is the lot.\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KAnd a nested list, whose markers arrive before the items they introduce:\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands it back\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0m\e[1m\e[38;2;207;173;0mread takes a file and hands it back\e[0m\e[0m\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands it back\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K  \e[38;2;192;128;80m• \e[0mand says how big it was\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K  \e[38;2;192;128;80m• \e[0mand leaves it where it found it\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tree for a pattern\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[KThat is the lot.\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[16C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m show me how to count the go files                                                                  \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mA lo\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop o\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the list\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is t\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the s\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the short\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way to s\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way to say i\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way to say it.\e[0m\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KTry\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTry this\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTry this.\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[K\e[3m\e[38;2;150;152;150mA lo\e[0m\e[0m\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop o\e[0m\e[0m\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over\e[0m\e[0m\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the\e[0m\e[0m\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the list\e[0m\e[0m\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing\e[0m\e[0m\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is t\e[0m\e[0m\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the s\e[0m\e[0m\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the short\e[0m\e[0m\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest\e[0m\e[0m\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way\e[0m\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way to s\e[0m\e[0m\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way to say i\e[0m\e[0m\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way to say it.\e[0m\e[0m\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\r\e[K`\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150mf\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mN\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;150;152;150m$\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;150;152;150md\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;150;152;150mec\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAM\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is qui\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a lon\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long li\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line i\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line indee\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line indeed\e[0m\e[38;2;181;189;104m"\e[0m; \e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line indeed\e[0m\e[38;2;181;189;104m"\e[0m; \e[38;2;201;166;212mdone\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[KTry\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTry this\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTry this.\r
+\e[K\r
+\e[K`\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150mf\e[0m\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mN\e[0m\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;150;152;150m$\e[0m\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;150;152;150md\e[0m\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;150;152;150mec\e[0m\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAM\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is\e[0m\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is qui\e[0m\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a\e[0m\r\e[49C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a lon\e[0m\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long li\e[0m\r\e[57C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line i\e[0m\r\e[61C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line indee\e[0m\r\e[65C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line indeed\e[0m\e[38;2;181;189;104m"\e[0m; \r\e[69C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line indeed\e[0m\e[38;2;181;189;104m"\e[0m; \e[38;2;201;166;212mdone\e[0m\r\e[73C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[KTh\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat i\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is al\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is all.\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\r\e[KTh\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is al\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is all.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KAnd\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a ta\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table,\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, whi\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which c\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which chang\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes s\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape as\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape as its\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape as its rows\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape as its rows arr\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape as its rows arrive:\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[KAnd\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a ta\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table,\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, whi\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which c\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which chang\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes s\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape as\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape as its\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape as its rows\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape as its rows arr\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a table, which changes shape as its rows arrive:\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[K|\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | W\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it d\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when it\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when it is a\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when it is asked\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when it is asked to\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when it is asked to       |\r\e[49C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K|---\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K|------|\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m┌──────┬──────────────────────────────────┐\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m \e[38;2;150;152;150m│\e[0m\r
+\e[K\e[38;2;150;152;150m├──────┼──────────────────────────────────┤\e[0m\r
+\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m│\e[0m      \e[38;2;150;152;150m│\e[0m                                  \e[38;2;150;152;150m│\e[0m\r
+\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m                                  \e[38;2;150;152;150m│\e[0m\e[1B\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m t                                \e[38;2;150;152;150m│\e[0m\e[1B\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes                            \e[38;2;150;152;150m│\e[0m\e[1B\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a f                        \e[38;2;150;152;150m│\e[0m\e[1B\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file                     \e[38;2;150;152;150m│\e[0m\e[1B\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and                 \e[38;2;150;152;150m│\e[0m\e[1B\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hand            \e[38;2;150;152;150m│\e[0m\e[1B\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it        \e[38;2;150;152;150m│\e[0m\e[1B\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it bac    \e[38;2;150;152;150m│\e[0m\e[1B\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e[38;2;150;152;150m┌──────┬───────────────────────────────────┐\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m  \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m├──────┼───────────────────────────────────┤\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────┘\e[0m\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e[38;2;150;152;150m┌──────┬───────────────────────────────────────┐\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m      \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m├──────┼───────────────────────────────────────┤\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to you \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m├──────┼───────────────────────────────────────┤\e[0m\r
+\e[K\e[38;2;150;152;150m│\e[0m gr   \e[38;2;150;152;150m│\e[0m                                       \e[38;2;150;152;150m│\e[0m\r
+\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m                                       \e[38;2;150;152;150m│\e[0m\e[1B\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m wal                                   \e[38;2;150;152;150m│\e[0m\e[1B\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks t                               \e[38;2;150;152;150m│\e[0m\e[1B\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the w                           \e[38;2;150;152;150m│\e[0m\e[1B\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole                       \e[38;2;150;152;150m│\e[0m\e[1B\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tre                   \e[38;2;150;152;150m│\e[0m\e[1B\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree lo               \e[38;2;150;152;150m│\e[0m\e[1B\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree lookin           \e[38;2;150;152;150m│\e[0m\e[1B\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking fo       \e[38;2;150;152;150m│\e[0m\e[1B\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking for a    \e[38;2;150;152;150m│\e[0m\e[1B\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[6A\r\e[K\e[38;2;150;152;150m┌──────┬─────────────────────────────────────────┐\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m        \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m├──────┼─────────────────────────────────────────┤\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to you   \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m├──────┼─────────────────────────────────────────┤\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking for a patt \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m└──────┴─────────────────────────────────────────┘\e[0m\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[6A\r\e[K\e[38;2;150;152;150m┌──────┬────────────────────────────────────────────┐\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m           \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m├──────┼────────────────────────────────────────────┤\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to you      \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m├──────┼────────────────────────────────────────────┤\e[0m\e[1B\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking for a pattern \e[38;2;150;152;150m│\e[0m\e[1B\r\e[K\e[38;2;150;152;150m└──────┴────────────────────────────────────────────┘\e[0m\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[KT\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is t\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is the l\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is the lot.\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
-\r\e[K|\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | W\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it d\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when it\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when it is a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when it is asked\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when it is asked to\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K| Tool | What it does when it is asked to       |\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K|---\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K|------|\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m┌──────┬──────────────────────────────────┐\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼──────────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m│\e[0m      \e[38;2;150;152;150m│\e[0m                                  \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m                                  \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m t                                \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes                            \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a f                        \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file                     \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and                 \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hand            \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it        \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it bac    \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴──────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e[38;2;150;152;150m┌──────┬───────────────────────────────────┐\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m  \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼───────────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e[38;2;150;152;150m┌──────┬───────────────────────────────────────┐\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m      \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼───────────────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to you \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;150;152;150m├──────┼───────────────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m gr   \e[38;2;150;152;150m│\e[0m                                       \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m                                       \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m wal                                   \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks t                               \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the w                           \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole                       \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tre                   \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree lo               \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree lookin           \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking fo       \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking for a    \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴───────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[6A\r\e[K\e[38;2;150;152;150m┌──────┬─────────────────────────────────────────┐\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m        \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼─────────────────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to you   \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼─────────────────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking for a patt \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴─────────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[6A\r\e[K\e[38;2;150;152;150m┌──────┬────────────────────────────────────────────┐\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m           \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼────────────────────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to you      \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼────────────────────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking for a pattern \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴────────────────────────────────────────────┘\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\r
-\r\e[KT\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is the l\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is the lot.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KAnd\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a ne\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested lis\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, w\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose mar\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arr\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive befo\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the items\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the items the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the items they in\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the items they introd\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the items they introduce:\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\r
-\r\e[K\e[38;2;192;128;80m• \e[0mread\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread tak\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a fil\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file an\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and ha\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands it b\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands it back\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0m\e[1m\e[38;2;207;173;0mread takes a file and hands it back\e[0m\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands it back\r
-\r\e[K  \e[38;2;192;128;80m• \e[0mand\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand says\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand says how\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand says how big\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand says how big it\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand says how big it was\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K  \e[38;2;192;128;80m• \e[0mand\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leav\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves i\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it wh\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it where\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it where it f\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it where it found\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it where it found it\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;192;128;80m• \e[0mgr\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep w\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tre\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tree fo\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tree for a\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tree for a patt\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tree for a pattern\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\r
-\r\e[KTha\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is the\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is the lot\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is the lot.\e[?25h\e[?2026l\r
+\e[KAnd\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a ne\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested lis\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, w\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose mar\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arr\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive befo\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before t\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the i\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the items\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the items the\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the items they in\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the items they introd\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KAnd a nested list, whose markers arrive before the items they introduce:\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[K\e[38;2;192;128;80m• \e[0mread\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread tak\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a fil\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file an\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and ha\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands it b\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands it back\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0m\e[1m\e[38;2;207;173;0mread takes a file and hands it back\e[0m\e[0m\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands it back\r
+\e[K  \e[38;2;192;128;80m• \e[0mand\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand says\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand says how\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand says how big\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand says how big it\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand says how big it was\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K  \e[38;2;192;128;80m• \e[0mand\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leav\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves i\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it wh\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it where\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it where it f\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it where it found\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it where it found it\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;192;128;80m• \e[0mgr\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep w\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tre\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tree fo\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tree for a\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tree for a patt\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tree for a pattern\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[KTha\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is the\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is the lot\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThat is the lot.\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[16C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
@@ -817,165 +730,165 @@ That is the lot.\r
 \e[48;2;52;53;65m files      \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mA loop over\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mthe listing\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mis the\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mshortest way\e[0m\r
-\r\e[K\e[3m\e[38;2;150;152;150mto say it.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mA loop over\e[0m\r
+\e[3m\e[38;2;150;152;150mthe listing\e[0m\r
+\e[3m\e[38;2;150;152;150mis the\e[0m\r
+\e[3m\e[38;2;150;152;150mshortest way\e[0m\r
+\e[3m\e[38;2;150;152;150mto say it.\e[0m\e[0m\r
 \r
-\r\e[KTry this.\r
-\r\e[K\r
-\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m\r
-\r\e[K\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m;\r
-\r\e[K\e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m\r
-\r\e[K\e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is\e[0m\r
-\r\e[K\e[38;2;181;189;104mquite a long\e[0m\r
-\r\e[K\e[38;2;181;189;104mline\e[0m\r
-\r\e[K\e[38;2;181;189;104mindeed\e[0m\e[38;2;181;189;104m"\e[0m;\r
-\r\e[K\e[38;2;201;166;212mdone\e[0m\r
-\r\e[K\r
-\r\e[KThat is all.\r
+Try this.\r
 \r
-\r\e[KAnd a table,\r
-\r\e[Kwhich\r
-\r\e[Kchanges\r
-\r\e[Kshape as its\r
-\r\e[Krows arrive:\r
-\r\e[K\r
-\r\e[K\e[38;2;150;152;150m┌────┬─────┐\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTo\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWha\e[0m \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mol\e[0m \e[38;2;150;152;150m│\e[0m \e[1mt\e[0m   \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m \e[1mit\e[0m  \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m \e[1mdoe\e[0m \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m \e[1ms\e[0m   \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m \e[1mwhe\e[0m \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m \e[1mn\e[0m   \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m \e[1mit\e[0m  \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m \e[1mis\e[0m  \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m \e[1mask\e[0m \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m \e[1med\e[0m  \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m \e[1mto\e[0m  \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├────┼─────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m re \e[38;2;150;152;150m│\e[0m tak \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m ad \e[38;2;150;152;150m│\e[0m es  \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m a   \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m fil \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m e   \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m and \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m han \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m ds  \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m it  \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m bac \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m k   \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m to  \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m you \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├────┼─────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m gr \e[38;2;150;152;150m│\e[0m wal \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m ep \e[38;2;150;152;150m│\e[0m ks  \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m the \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m who \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m le  \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m tre \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m e   \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m loo \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m kin \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m g   \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m for \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m a   \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m pat \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m ter \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m n   \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└────┴─────┘\e[0m\r
-\r\e[K\r
-\r\e[KThat is the\r
-\r\e[Klot.\r
+\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m\r
+\e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m;\r
+\e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m\r
+\e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is\e[0m\r
+\e[38;2;181;189;104mquite a long\e[0m\r
+\e[38;2;181;189;104mline\e[0m\r
+\e[38;2;181;189;104mindeed\e[0m\e[38;2;181;189;104m"\e[0m;\r
+\e[38;2;201;166;212mdone\e[0m\r
 \r
-\r\e[KAnd a nested\r
-\r\e[Klist, whose\r
-\r\e[Kmarkers\r
-\r\e[Karrive\r
-\r\e[Kbefore the\r
-\r\e[Kitems they\r
-\r\e[Kintroduce:\r
-\r\e[K\r
-\r\e[K\e[38;2;192;128;80m• \e[0mread takes\r
-\r\e[K  a file and\r
-\r\e[K  hands it\r
-\r\e[K  back\r
-\r\e[K  \e[38;2;192;128;80m• \e[0mand says\r
-\r\e[K    how big\r
-\r\e[K    it was\r
-\r\e[K  \e[38;2;192;128;80m• \e[0mand\r
-\r\e[K    leaves\r
-\r\e[K    it where\r
-\r\e[K    it found\r
-\r\e[K    it\r
-\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks\r
-\r\e[K  the tree\r
-\r\e[K  for a\r
-\r\e[K  pattern\r
-\r\e[K\r
-\r\e[KThat is the\r
-\r\e[Klot.\r
+That is all.\r
+\r
+And a table,\r
+which\r
+changes\r
+shape as its\r
+rows arrive:\r
+\r
+\e[38;2;150;152;150m┌────┬─────┐\e[0m\r
+\e[38;2;150;152;150m│\e[0m \e[1mTo\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWha\e[0m \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m \e[1mol\e[0m \e[38;2;150;152;150m│\e[0m \e[1mt\e[0m   \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m \e[1mit\e[0m  \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m \e[1mdoe\e[0m \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m \e[1ms\e[0m   \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m \e[1mwhe\e[0m \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m \e[1mn\e[0m   \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m \e[1mit\e[0m  \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m \e[1mis\e[0m  \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m \e[1mask\e[0m \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m \e[1med\e[0m  \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m \e[1mto\e[0m  \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m├────┼─────┤\e[0m\r
+\e[38;2;150;152;150m│\e[0m re \e[38;2;150;152;150m│\e[0m tak \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m ad \e[38;2;150;152;150m│\e[0m es  \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m a   \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m fil \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m e   \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m and \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m han \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m ds  \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m it  \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m bac \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m k   \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m to  \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m you \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m├────┼─────┤\e[0m\r
+\e[38;2;150;152;150m│\e[0m gr \e[38;2;150;152;150m│\e[0m wal \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m ep \e[38;2;150;152;150m│\e[0m ks  \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m the \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m who \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m le  \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m tre \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m e   \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m loo \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m kin \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m g   \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m for \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m a   \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m pat \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m ter \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m│\e[0m    \e[38;2;150;152;150m│\e[0m n   \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m└────┴─────┘\e[0m\r
+\r
+That is the\r
+lot.\r
+\r
+And a nested\r
+list, whose\r
+markers\r
+arrive\r
+before the\r
+items they\r
+introduce:\r
+\r
+\e[38;2;192;128;80m• \e[0mread takes\r
+  a file and\r
+  hands it\r
+  back\r
+  \e[38;2;192;128;80m• \e[0mand says\r
+    how big\r
+    it was\r
+  \e[38;2;192;128;80m• \e[0mand\r
+    leaves\r
+    it where\r
+    it found\r
+    it\r
+\e[38;2;192;128;80m• \e[0mgrep walks\r
+  the tree\r
+  for a\r
+  pattern\r
+\r
+That is the\r
+lot.\r
 \e[?25h\e[?2026l
 === unsized ===
-\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m
-\e[48;2;52;53;65m show me how to count the go files\e[0m
-\e[48;2;52;53;65m\e[0m
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way to say it.\e[0m\e[0m
-
-\r\e[KTry this.\r
-\r\e[K\r
-\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line indeed\e[0m\e[38;2;181;189;104m"\e[0m; \e[38;2;201;166;212mdone\e[0m\r
-\r\e[K\r
-\r\e[KThat is all.
-
-\r\e[KAnd a table, which changes shape as its rows arrive:\r
-\r\e[K\r
-\r\e[KTool\e[38;2;150;152;150m | \e[0mWhat it does when it is asked to\r
-\r\e[Kread\e[38;2;150;152;150m | \e[0mtakes a file and hands it back to you\r
-\r\e[Kgrep\e[38;2;150;152;150m | \e[0mwalks the whole tree looking for a pattern\r
-\r\e[K\r
-\r\e[KThat is the lot.
-
-\r\e[KAnd a nested list, whose markers arrive before the items they introduce:\r
-\r\e[K\r
-\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands it backand says how big it wasand leaves it where it found it\r
-\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tree for a pattern\r
-\r\e[K\r
-\r\e[KThat is the lot.
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m show me how to count the go files\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way to say it.\e[0m\e[0m\r
+\r
+Try this.\r
+\r
+\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line indeed\e[0m\e[38;2;181;189;104m"\e[0m; \e[38;2;201;166;212mdone\e[0m\r
+\r
+That is all.\r
+\r
+And a table, which changes shape as its rows arrive:\r
+\r
+Tool\e[38;2;150;152;150m | \e[0mWhat it does when it is asked to\r
+read\e[38;2;150;152;150m | \e[0mtakes a file and hands it back to you\r
+grep\e[38;2;150;152;150m | \e[0mwalks the whole tree looking for a pattern\r
+\r
+That is the lot.\r
+\r
+And a nested list, whose markers arrive before the items they introduce:\r
+\r
+\e[38;2;192;128;80m• \e[0mread takes a file and hands it backand says how big it wasand leaves it where it found it\r
+\e[38;2;192;128;80m• \e[0mgrep walks the tree for a pattern\r
+\r
+That is the lot.\r
 \e[?25h\e[?2026l
 === wide ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m show me how to count the go files                                                                  \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way to say it.\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mA loop over the listing is the shortest way to say it.\e[0m\e[0m\r
 \r
-\r\e[KTry this.\r
-\r\e[K\r
-\r\e[K\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line indeed\e[0m\e[38;2;181;189;104m"\e[0m; \e[38;2;201;166;212mdone\e[0m\r
-\r\e[K\r
-\r\e[KThat is all.\r
+Try this.\r
 \r
-\r\e[KAnd a table, which changes shape as its rows arrive:\r
-\r\e[K\r
-\r\e[K\e[38;2;150;152;150m┌──────┬────────────────────────────────────────────┐\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m           \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼────────────────────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to you      \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m├──────┼────────────────────────────────────────────┤\e[0m\r
-\r\e[K\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking for a pattern \e[38;2;150;152;150m│\e[0m\r
-\r\e[K\e[38;2;150;152;150m└──────┴────────────────────────────────────────────┘\e[0m\r
-\r\e[K\r
-\r\e[KThat is the lot.\r
+\e[38;2;201;166;212mfor\e[0m \e[38;2;150;152;150mNAME\e[0m \e[38;2;150;152;150min\e[0m \e[38;2;201;166;212m$(\e[0m\e[38;2;150;152;150mls\e[0m \e[38;2;150;152;150m*.go\e[0m\e[38;2;201;166;212m)\e[0m; \e[38;2;201;166;212mdo\e[0m \e[38;2;240;198;116mecho\e[0m \e[38;2;181;189;104m"\e[0m$NAME\e[38;2;181;189;104m is quite a long line indeed\e[0m\e[38;2;181;189;104m"\e[0m; \e[38;2;201;166;212mdone\e[0m\r
 \r
-\r\e[KAnd a nested list, whose markers arrive before the items they introduce:\r
-\r\e[K\r
-\r\e[K\e[38;2;192;128;80m• \e[0mread takes a file and hands it back\r
-\r\e[K  \e[38;2;192;128;80m• \e[0mand says how big it was\r
-\r\e[K  \e[38;2;192;128;80m• \e[0mand leaves it where it found it\r
-\r\e[K\e[38;2;192;128;80m• \e[0mgrep walks the tree for a pattern\r
-\r\e[K\r
-\r\e[KThat is the lot.\r
+That is all.\r
+\r
+And a table, which changes shape as its rows arrive:\r
+\r
+\e[38;2;150;152;150m┌──────┬────────────────────────────────────────────┐\e[0m\r
+\e[38;2;150;152;150m│\e[0m \e[1mTool\e[0m \e[38;2;150;152;150m│\e[0m \e[1mWhat it does when it is asked to\e[0m           \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m├──────┼────────────────────────────────────────────┤\e[0m\r
+\e[38;2;150;152;150m│\e[0m read \e[38;2;150;152;150m│\e[0m takes a file and hands it back to you      \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m├──────┼────────────────────────────────────────────┤\e[0m\r
+\e[38;2;150;152;150m│\e[0m grep \e[38;2;150;152;150m│\e[0m walks the whole tree looking for a pattern \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m└──────┴────────────────────────────────────────────┘\e[0m\r
+\r
+That is the lot.\r
+\r
+And a nested list, whose markers arrive before the items they introduce:\r
+\r
+\e[38;2;192;128;80m• \e[0mread takes a file and hands it back\r
+  \e[38;2;192;128;80m• \e[0mand says how big it was\r
+  \e[38;2;192;128;80m• \e[0mand leaves it where it found it\r
+\e[38;2;192;128;80m• \e[0mgrep walks the tree for a pattern\r
+\r
+That is the lot.\r
 \e[?25h\e[?2026l

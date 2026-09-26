@@ -891,7 +891,9 @@ func (self *App) show(inputLine *edit.Input) {
 	rows, cursorRow, cursorColumn := block.Rows(columns)
 
 	if self.isAwaitingAnswer() {
-		self.screen.InertFooter(rows, cursorRow)
+		firstQuestionRow := cursorRow - (len(block.Question) - 1)
+		labelRows := painter.QuestionLabelRows(self.question.request.Question, columns)
+		self.screen.InertFooter(rows, cursorRow, firstQuestionRow+labelRows)
 		return
 	}
 
@@ -1482,15 +1484,21 @@ func (self *App) newPainter(isRunning bool) *painter.Picasso {
 }
 
 func (self *App) replay() {
+	self.replayHistory(len(self.recordedEvents))
+}
+
+func (self *App) replayHistory(count int) {
 	self.screen.Sync(func() {
 		painter := self.newPainter(self.currentTurn.Running())
 
-		for _, event := range self.recordedEvents {
+		for _, event := range self.recordedEvents[:count] {
 			painter.DrawEvent(event)
 		}
 
 		if self.currentTurn.Running() {
-			self.currentTurn.painter = painter
+			if self.currentTurn.painter == nil {
+				self.currentTurn.painter = painter
+			}
 			return
 		}
 
@@ -1502,21 +1510,22 @@ func (self *App) replay() {
 }
 
 func (self *App) redraw() {
-	var provisionalPainter agent.Delta
-	var previousPainter *painter.Picasso
-	if self.currentTurn.Running() {
-		previousPainter = self.currentTurn.painter
-		provisionalPainter = previousPainter.ProvisionalDelta()
-		previousPainter.Stop()
+	var livePainter *painter.Picasso
+	liveEvents := 0
+	if self.currentTurn.Running() && self.currentTurn.painter != nil {
+		livePainter = self.currentTurn.painter
+		liveEvents = livePainter.LiveEventCount()
 	}
+
+	history := len(self.recordedEvents) - liveEvents
 
 	self.screen.Sync(func() {
 		self.pendingNotices.renderer = nil
 		self.pendingNotices.block = nil
 		self.screen.Reset()
-		self.replay()
-		if provisionalPainter.Text != "" {
-			self.currentTurn.painter.DrawRestoredDelta(provisionalPainter, previousPainter)
+		self.replayHistory(history)
+		if livePainter != nil {
+			livePainter.Redraw(self.recordedEvents[history:])
 		}
 		if self.inputLine != nil {
 			self.show(self.inputLine)

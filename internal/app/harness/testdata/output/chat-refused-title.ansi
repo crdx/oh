@@ -2,14 +2,14 @@
 \e[48;2;52;53;65m name this session                                                                                  \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\title\e]8;;\e\\ \e[38;2;192;128;80mwork out why the session picker clips a really very long title\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mtitle exceeds 50 characters\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call-2&session=tame-impala\e\\title\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mtitle is required\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call-3&session=tame-impala\e\\title\e]8;;\e\\ \e[38;2;192;128;80mfix picker clipping\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\title\e]8;;\e\\ \e[38;2;192;128;80mwork out why the session picker clips a really very long title\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mtitle exceeds 50 characters\e[0m\r
+\e]8;;oh://tool-result?call=call-2&session=tame-impala\e\\title\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mtitle is required\e[0m\r
+\e]8;;oh://tool-result?call=call-3&session=tame-impala\e\\title\e]8;;\e\\ \e[38;2;192;128;80mfix picker clipping\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
-\r\e[KThird time lucky.\e[?25h\e[?2026l\r
+Third time lucky.\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m and what did the picker make of it                                                                 \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\r\e[KIt fits, with room to spare.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KIt fits, with room to spare.\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\r

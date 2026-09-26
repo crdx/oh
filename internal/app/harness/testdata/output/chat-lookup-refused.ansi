@@ -2,12 +2,12 @@
 \e[48;2;52;53;65m look up a topic the user will refuse                                                               \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcurrent weather\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102mlookup refused; lookup did not run; choose another approach\e[0m\r
+\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcurrent weather\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102mlookup refused; lookup did not run; choose another approach\e[0m\r
 \r
-\r\e[KI will not look that up then.\e[?25h\e[?2026l\r
+I will not look that up then.\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m continue after the refusal                                                                         \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\r\e[KResumed after the refusal.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KResumed after the refusal.\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[26C\e[?25h\e[?2026l\r

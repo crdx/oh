@@ -47,8 +47,8 @@ func (self *Screen) Sync(draw func()) {
 		self.mutex.Lock()
 		defer self.mutex.Unlock()
 
-		if self.nestedUpdates == 1 {
-			self.flushLiveRegion()
+		if self.nestedUpdates == 1 && self.isFrameOwed {
+			self.paint()
 		}
 
 		self.nestedUpdates--
@@ -86,21 +86,19 @@ func (self *Screen) closeFrame() string {
 }
 
 type footer struct {
-	rows            []string
-	cursorRow       int
-	cursorColumn    int
-	column          int
-	separators      int
-	hasContentAbove bool
-	isCursorHidden  bool
+	rows           []string
+	cursorRow      int
+	cursorColumn   int
+	pinnedRows     int
+	isCursorHidden bool
 }
 
 func (self *Screen) Footer(rows []string, cursorRow int, cursorColumn int) {
 	self.showFooter(footer{rows: rows, cursorRow: cursorRow, cursorColumn: cursorColumn})
 }
 
-func (self *Screen) InertFooter(rows []string, focusRow int) {
-	self.showFooter(footer{rows: rows, cursorRow: focusRow, isCursorHidden: true})
+func (self *Screen) InertFooter(rows []string, focusRow int, pinnedRows int) {
+	self.showFooter(footer{rows: rows, cursorRow: focusRow, pinnedRows: pinnedRows, isCursorHidden: true})
 }
 
 func (self *Screen) showFooter(input footer) {
@@ -111,33 +109,36 @@ func (self *Screen) showFooter(input footer) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 
-	input.rows, input.cursorRow = self.fitFooter(input.rows, input.cursorRow)
-
 	if slices.Equal(self.input.rows, input.rows) &&
 		self.input.cursorRow == input.cursorRow &&
 		self.input.cursorColumn == input.cursorColumn &&
+		self.input.pinnedRows == input.pinnedRows &&
 		self.input.isCursorHidden == input.isCursorHidden {
 		return
 	}
 
 	self.input = input
-
-	self.redraw("")
+	self.changed()
 }
 
-func (self *Screen) fitFooter(rows []string, cursorRow int) ([]string, int) {
-	if self.lines <= 0 {
-		return rows, cursorRow
-	}
+const leastWindowedRows = 1
 
-	room := max(1, self.lines-self.leastSeparators())
-	if len(rows) > room && len(self.input.rows) > room {
-		room = min(len(self.input.rows), self.lines)
-	}
+func (self *Screen) fitFooter(rows []string, cursorRow int, pinnedRows int, room int) ([]string, int) {
+	room = max(1, room)
 	if len(rows) <= room {
 		return rows, cursorRow
 	}
 
+	if pinnedRows > 0 && pinnedRows <= cursorRow && room-pinnedRows >= leastWindowedRows {
+		windowRows, windowCursorRow := self.windowFooter(rows[pinnedRows:], cursorRow-pinnedRows, room-pinnedRows)
+
+		return slices.Concat(rows[:pinnedRows], windowRows), pinnedRows + windowCursorRow
+	}
+
+	return self.windowFooter(rows, cursorRow, room)
+}
+
+func (self *Screen) windowFooter(rows []string, cursorRow int, room int) ([]string, int) {
 	visibleRows := width.WindowRows(rows, room, cursorRow)
 	notices := noticesFor(visibleRows)
 
@@ -149,6 +150,11 @@ func (self *Screen) fitFooter(rows []string, cursorRow int) ([]string, int) {
 		}
 
 		return self.withHiddenRowNotices(shrunkRows)
+	}
+
+	if room > 1 && visibleRows.HiddenLinesAbove > 0 {
+		windowRows := width.WindowRows(rows, room-1, cursorRow)
+		return slices.Concat([]string{self.hiddenRowsNotice(windowRows.HiddenLinesAbove)}, windowRows.Rows), windowRows.Focus + 1
 	}
 
 	return visibleRows.Rows, visibleRows.Focus
@@ -182,31 +188,6 @@ func noticesFor(visibleRows width.Window) int {
 	}
 
 	return notices
-}
-
-func (self *Screen) wantedSeparators() int {
-	if !self.hasPrinted {
-		return 0
-	}
-
-	return max(0, apart-self.trailingNewlines)
-}
-
-func (self *Screen) separatorsAbove(footerRows int) int {
-	separators := self.wantedSeparators()
-	if self.lines <= 0 {
-		return separators
-	}
-
-	return min(separators, max(0, self.lines-footerRows))
-}
-
-func (self *Screen) leastSeparators() int {
-	if !self.hasPrinted || self.trailingNewlines > 0 {
-		return 0
-	}
-
-	return 1
 }
 
 func (self *Screen) hiddenRowsNotice(hiddenLines int) string {
@@ -287,23 +268,43 @@ func (self *Screen) Release(shouldKeep bool) {
 
 	self.setProgress(false)
 
-	landing := ""
-	if self.shownFooter.hasContentAbove {
-		switch {
-		case !shouldKeep:
-			landing = "\r" + moveUp(self.openedRows) + clearBelow
-		case self.column > 0:
-			landing = "\r\n"
-		}
+	if shouldKeep {
+		self.seal()
+	} else {
+		self.blocks = nil
+		self.live = liveRegion{}
 	}
 
-	self.raw(self.eraseInput() + landing + autoWrap + showCursor)
-
 	self.input = footer{}
+	self.paint()
+
+	var out strings.Builder
+
+	switch {
+	case self.canvas.isMidRow:
+		out.WriteString("\r\n")
+	default:
+		out.WriteString("\r")
+	}
+
+	if !shouldKeep && self.hasPrinted {
+		rows := self.openedRows
+		if self.isMidLine {
+			rows++
+		}
+		if self.lines > 0 {
+			rows = min(rows, self.lines-1)
+		}
+		out.WriteString(eraseRowsAbove(rows))
+	}
+
+	out.WriteString(autoWrap + showCursor)
+	self.raw(out.String())
+
+	self.canvas = canvas{}
 	self.openedRows = 0
 	self.isWrapping = false
 	self.isMidLine = false
-	self.hasPendingText = false
 }
 
 func (self *Screen) Reset() {
@@ -314,90 +315,37 @@ func (self *Screen) Reset() {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 
-	self.shownFooter = footer{}
 	self.input = footer{}
 	self.blocks = nil
+	self.live = liveRegion{}
+	self.owedText.Reset()
+	self.canvas = canvas{}
+	self.isFrameOwed = false
 	self.column = 0
 	self.openedRows = 0
 	self.isMidLine = false
-	self.hasPendingText = false
 	self.isBlankOwed = false
 	self.trailingNewlines = 0
 	self.lastGroup = NoticeGroup
 	self.isWrapping = false
 	self.hasPrinted = false
-	self.liveRegion = liveRegion{}
-	self.isLiveDirty = false
-	self.isShrinkOwed = false
-	self.isRepaintRefused = false
 
 	self.measureTerminal()
 
 	self.raw(clearScreen + clearScrollback)
 }
 
-func (self *Screen) redraw(text string) {
+func eraseRowsAbove(rows int) string {
 	var out strings.Builder
 
-	out.WriteString(self.openFrame())
-
-	if !self.isWrapping {
-		self.isWrapping = true
-
-		out.WriteString(noAutoWrap)
-	}
-
-	out.WriteString(self.eraseInput())
-	out.WriteString(text)
-	out.WriteString(self.drawInput())
-	out.WriteString(self.closeFrame())
-
-	self.raw(out.String())
-}
-
-func (self *Screen) eraseInput() string {
-	shownFooter := self.shownFooter
-	self.shownFooter = footer{}
-
-	if len(shownFooter.rows) == 0 {
-		return ""
-	}
-
-	if !shownFooter.hasContentAbove {
-		return "\r" + moveUp(shownFooter.cursorRow) + clearBelow
-	}
-
-	return "\r" + moveUp(shownFooter.cursorRow) + clearBelow + moveUp(shownFooter.separators) + moveRight(shownFooter.column)
-}
-
-func (self *Screen) drawInput() string {
-	if len(self.input.rows) == 0 {
-		return ""
-	}
-
-	self.shownFooter = self.input
-	self.shownFooter.column = self.column
-	self.shownFooter.hasContentAbove = self.hasPrinted
-	self.shownFooter.separators = self.separatorsAbove(len(self.input.rows))
-
-	var out strings.Builder
-
-	for i, row := range self.input.rows {
-		switch {
-		case i > 0:
+	out.WriteString(moveUp(rows))
+	for row := range rows + 1 {
+		if row > 0 {
 			out.WriteString("\r\n")
-		case self.shownFooter.separators > 0:
-			out.WriteString(strings.Repeat("\r\n", self.shownFooter.separators))
-		default:
-			out.WriteString("\r")
 		}
-
-		out.WriteString(row)
+		out.WriteString(eraseRow)
 	}
-
-	out.WriteString(moveUp(len(self.input.rows) - 1 - self.input.cursorRow))
-	out.WriteString("\r")
-	out.WriteString(moveRight(self.input.cursorColumn))
+	out.WriteString(moveUp(rows))
 
 	return out.String()
 }

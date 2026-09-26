@@ -3,14 +3,14 @@
 \e[48;2;52;53;65m show every tool result link state      \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e[?7l\r\e[K\e]8;;oh://tool-result?call=call%2Fa%3F%26&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150m[\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mregex parse error: [ ^ error: …\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m0L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe command was stopped be…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150mno output\e[0m\r
+\e]8;;oh://tool-result?call=call%2Fa%3F%26&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150m[\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mregex parse error: [ ^ error: …\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m0L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe command was stopped be…\e[0m\r
+\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150mno output\e[0m\r
 \r
-\r\e[KEvery finished call has a result link,\r
-\r\e[Kwhether or not it returned anything.\r
+Every finished call has a result link,\r
+whether or not it returned anything.\r
 \e[?25h\e[?2026l
 === one column ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
@@ -72,75 +72,75 @@
 \e[48;2;52;53;65me\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\e[?7l\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e[38;2;150;152;150m–\e[0m\r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;150;152;150m–\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
 \r
-\r\e[KE\r
-\r\e[Kv\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ky\r
-\r\e[Kf\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Ki\r
-\r\e[Ks\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[Kc\r
-\r\e[Ka\r
-\r\e[Kl\r
-\r\e[Kl\r
-\r\e[Kh\r
-\r\e[Ka\r
-\r\e[Ks\r
-\r\e[Ka\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Ku\r
-\r\e[Kl\r
-\r\e[Kt\r
-\r\e[Kl\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kk\r
-\r\e[K,\r
-\r\e[Kw\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Kn\r
-\r\e[Ko\r
-\r\e[Kt\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kt\r
-\r\e[Ku\r
-\r\e[Kr\r
-\r\e[Kn\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Ky\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[K.\r
+E\r
+v\r
+e\r
+r\r
+y\r
+f\r
+i\r
+n\r
+i\r
+s\r
+h\r
+e\r
+d\r
+c\r
+a\r
+l\r
+l\r
+h\r
+a\r
+s\r
+a\r
+r\r
+e\r
+s\r
+u\r
+l\r
+t\r
+l\r
+i\r
+n\r
+k\r
+,\r
+w\r
+h\r
+e\r
+t\r
+h\r
+e\r
+r\r
+o\r
+r\r
+n\r
+o\r
+t\r
+i\r
+t\r
+r\r
+e\r
+t\r
+u\r
+r\r
+n\r
+e\r
+d\r
+a\r
+n\r
+y\r
+t\r
+h\r
+i\r
+n\r
+g\r
+.\r
 \e[?25h\e[?2026l
 === plain ===
 \e[48;2;52;53;65m\e[0m
@@ -171,70 +171,40 @@ Every finished call has a result link, whether or not it returned anything.\r
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m show every tool result link state                                                                  \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kgrep \e[38;2;150;152;150m[\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kls\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e]8;;oh://tool-result?call=call%2Fa%3F%26&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[Kgrep \e[38;2;150;152;150m[\e[0m\r
-\r\e[Kls\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150m[\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mregex parse error: [ ^ error: unclosed character class\e[0m\r
-\r\e[Kls\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m0L\e[0m\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe command was stopped because the user pressed escape\e[0m\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150mno output\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KEver\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery fi\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finish\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished c\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a re\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result lin\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, w\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, wheth\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether o\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or no\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it ret\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it returne\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it returned an\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it returned anythi\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it returned anything.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kgrep \e[38;2;150;152;150m[\e[0m\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kls\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e]8;;oh://tool-result?call=call%2Fa%3F%26&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[4B\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150m[\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mregex parse error: [ ^ error: unclosed character class\e[0m\e[3B\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m0L\e[0m\e[2B\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe command was stopped because the user pressed escape\e[0m\e[1B\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150mno output\e[0m\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KEver\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery fi\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finish\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished c\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a re\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result lin\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, w\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, wheth\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether o\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or no\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it ret\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it returne\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it returned an\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it returned anythi\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it returned anything.\r\e[75C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[75C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m show every tool result link state                                                                  \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kgrep \e[38;2;150;152;150m[\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kls\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e]8;;oh://tool-result?call=call%2Fa%3F%26&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[Kgrep \e[38;2;150;152;150m[\e[0m\r
-\r\e[Kls\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150m[\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mregex parse error: [ ^ error: unclosed character class\e[0m\r
-\r\e[Kls\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m0L\e[0m\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe command was stopped because the user pressed escape\e[0m\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150mno output\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it returned anything.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kgrep \e[38;2;150;152;150m[\e[0m\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kls\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e]8;;oh://tool-result?call=call%2Fa%3F%26&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[4B\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150m[\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mregex parse error: [ ^ error: unclosed character class\e[0m\e[3B\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m0L\e[0m\e[2B\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe command was stopped because the user pressed escape\e[0m\e[1B\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150mno output\e[0m\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KEvery finished call has a result link, whether or not it returned anything.\r\e[75C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[75C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m show every tool result link state                                                                  \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kgrep \e[38;2;150;152;150m[\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kls\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e]8;;oh://tool-result?call=call%2Fa%3F%26&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[Kgrep \e[38;2;150;152;150m[\e[0m\r
-\r\e[Kls\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150m[\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mregex parse error: [ ^ error: unclosed character class\e[0m\r
-\r\e[Kls\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m0L\e[0m\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe command was stopped because the user pressed escape\e[0m\r
-\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150mno output\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KEver\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery fi\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finish\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished c\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a re\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result lin\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, w\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, wheth\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether o\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or no\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it ret\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it returne\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it returned an\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it returned anythi\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it returned anything.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kgrep \e[38;2;150;152;150m[\e[0m\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kls\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e[K\e]8;;oh://tool-result?call=call%2Fa%3F%26&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[4B\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150m[\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mregex parse error: [ ^ error: unclosed character class\e[0m\e[3B\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m0L\e[0m\e[2B\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe command was stopped because the user pressed escape\e[0m\e[1B\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150mno output\e[0m\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KEver\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery fi\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finish\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished c\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a re\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result lin\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, w\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, wheth\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether o\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or no\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it ret\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it returne\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it returned an\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it returned anythi\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KEvery finished call has a result link, whether or not it returned anything.\r\e[75C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[75C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
@@ -243,43 +213,43 @@ Every finished call has a result link, whether or not it returned anything.\r
 \e[48;2;52;53;65m link state \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e[?7l\r\e[K\e]8;;oh://tool-result?call=call%2Fa%3F%26&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mR…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mrege…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m0L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190ms\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe …\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mm\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=call%2Fa%3F%26&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mR…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mrege…\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m0L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190ms\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe …\e[0m\r
+\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mm\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \r
-\r\e[KEvery\r
-\r\e[Kfinished\r
-\r\e[Kcall has a\r
-\r\e[Kresult link,\r
-\r\e[Kwhether or\r
-\r\e[Knot it\r
-\r\e[Kreturned\r
-\r\e[Kanything.\r
+Every\r
+finished\r
+call has a\r
+result link,\r
+whether or\r
+not it\r
+returned\r
+anything.\r
 \e[?25h\e[?2026l
 === unsized ===
-\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m
-\e[48;2;52;53;65m show every tool result link state\e[0m
-\e[48;2;52;53;65m\e[0m
-\e[?7l\r\e[K\e]8;;oh://tool-result?call=call%2Fa%3F%26&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150m[\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mregex parse error: [ ^ error: unclosed character class\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m0L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe command was stopped because the user pressed escape\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150mno output\e[0m
-
-\r\e[KEvery finished call has a result link, whether or not it returned anything.
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m show every tool result link state\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e]8;;oh://tool-result?call=call%2Fa%3F%26&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150m[\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mregex parse error: [ ^ error: unclosed character class\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m0L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe command was stopped because the user pressed escape\e[0m\r
+\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150mno output\e[0m\r
+\r
+Every finished call has a result link, whether or not it returned anything.\r
 \e[?25h\e[?2026l
 === wide ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m show every tool result link state                                                                  \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e]8;;oh://tool-result?call=call%2Fa%3F%26&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150m[\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mregex parse error: [ ^ error: unclosed character class\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m0L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe command was stopped because the user pressed escape\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150mno output\e[0m\r
+\e]8;;oh://tool-result?call=call%2Fa%3F%26&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150m[\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mregex parse error: [ ^ error: unclosed character class\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m0L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190msleep\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m10\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe command was stopped because the user pressed escape\e[0m\r
+\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mtouch\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mmarker\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150mno output\e[0m\r
 \r
-\r\e[KEvery finished call has a result link, whether or not it returned anything.\r
+Every finished call has a result link, whether or not it returned anything.\r
 \e[?25h\e[?2026l

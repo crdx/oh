@@ -2,12 +2,12 @@
 \e[48;2;52;53;65m answer before anything goes wrong                                                                  \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[KAll well so far.\e[?25h\e[?2026l\r
+All well so far.\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m receive HTTP 500 on the turn after a replay                                                        \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[38;2;207;173;0m[#1] Request failed; retrying in 1s: Request failed with status 500\e[0m\r
-\r
-\e[?2026h\e[?25l\r\e[KRecovered after the replay.\e[?25h\e[?2026l\r
+\e[38;2;207;173;0m[#1] Request failed; retrying in 1s: Request failed with status 500\e[0m\e[?2026h\e[?25l\e[?7l\r
+\r\e[K\r
+\e[KRecovered after the replay.\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[27C\e[?25h\e[?2026l\r

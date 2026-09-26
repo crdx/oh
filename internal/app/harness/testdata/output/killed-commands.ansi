@@ -5,13 +5,13 @@
 \e[48;2;52;53;65m hosts file                             \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e[?7l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mju\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m11s\e[0m \e[38;2;150;152;150m1h01m 5L ~100t 1144M\e[0m \e[38;2;204;102;102mexit…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mdd\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mif=\e]8;;file:///dev\e\\/dev\e]8;;\e\\/\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m2s 4L 8M\e[0m \e[38;2;204;102;102mexit(153): dd…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcp\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mREADME\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m6L ~100t 2M\e[0m \e[38;2;204;102;102mexit(1): cp:…\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mju\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m11s\e[0m \e[38;2;150;152;150m1h01m 5L ~100t 1144M\e[0m \e[38;2;204;102;102mexit…\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mdd\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mif=\e]8;;file:///dev\e\\/dev\e]8;;\e\\/\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m2s 4L 8M\e[0m \e[38;2;204;102;102mexit(153): dd…\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcp\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mREADME\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m6L ~100t 2M\e[0m \e[38;2;204;102;102mexit(1): cp:…\e[0m\r
 \r
-\r\e[KThe linter was killed for its processor\r
-\r\e[Ktime, the write for its size, and the\r
-\r\e[Kcopy refused.\r
+The linter was killed for its processor\r
+time, the write for its size, and the\r
+copy refused.\r
 \e[?25h\e[?2026l
 === one column ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
@@ -153,85 +153,85 @@
 \e[48;2;52;53;65me\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\e[?7l\r\e[K\e[38;2;204;102;102m✗\e[0m\r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
-\r\e[K\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
+\e[38;2;204;102;102m✗\e[0m\r
 \r
-\r\e[KT\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kl\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kt\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[Kw\r
-\r\e[Ka\r
-\r\e[Ks\r
-\r\e[Kk\r
-\r\e[Ki\r
-\r\e[Kl\r
-\r\e[Kl\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[Kf\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[Ks\r
-\r\e[Kp\r
-\r\e[Kr\r
-\r\e[Ko\r
-\r\e[Kc\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Ks\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Kt\r
-\r\e[Ki\r
-\r\e[Km\r
-\r\e[Ke\r
-\r\e[K,\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kw\r
-\r\e[Kr\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[Ke\r
-\r\e[Kf\r
-\r\e[Ko\r
-\r\e[Kr\r
-\r\e[Ki\r
-\r\e[Kt\r
-\r\e[Ks\r
-\r\e[Ks\r
-\r\e[Ki\r
-\r\e[Kz\r
-\r\e[Ke\r
-\r\e[K,\r
-\r\e[Ka\r
-\r\e[Kn\r
-\r\e[Kd\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kc\r
-\r\e[Ko\r
-\r\e[Kp\r
-\r\e[Ky\r
-\r\e[Kr\r
-\r\e[Ke\r
-\r\e[Kf\r
-\r\e[Ku\r
-\r\e[Ks\r
-\r\e[Ke\r
-\r\e[Kd\r
-\r\e[K.\r
+T\r
+h\r
+e\r
+l\r
+i\r
+n\r
+t\r
+e\r
+r\r
+w\r
+a\r
+s\r
+k\r
+i\r
+l\r
+l\r
+e\r
+d\r
+f\r
+o\r
+r\r
+i\r
+t\r
+s\r
+p\r
+r\r
+o\r
+c\r
+e\r
+s\r
+s\r
+o\r
+r\r
+t\r
+i\r
+m\r
+e\r
+,\r
+t\r
+h\r
+e\r
+w\r
+r\r
+i\r
+t\r
+e\r
+f\r
+o\r
+r\r
+i\r
+t\r
+s\r
+s\r
+i\r
+z\r
+e\r
+,\r
+a\r
+n\r
+d\r
+t\r
+h\r
+e\r
+c\r
+o\r
+p\r
+y\r
+r\r
+e\r
+f\r
+u\r
+s\r
+e\r
+d\r
+.\r
 \e[?25h\e[?2026l
 === plain ===
 \e[48;2;52;53;65m\e[0m
@@ -258,34 +258,34 @@ The linter was killed for its processor time, the write for its size, and the co
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m run the linter, write the big file, then copy the readme over the host's hosts file                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlint\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlint\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m11s\e[0m \e[38;2;150;152;150m1h01m 5L ~100t 1144M\e[0m \e[38;2;204;102;102mexit(137): error: recipe `lint` was terminated on line 104…\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mdd\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mif=\e]8;;file:///dev/zero\e\\/dev/zero\e]8;;\e\\\e[0m\e[38;2;150;152;150m of=big bs=1M count=4096\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mdd\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mif=\e]8;;file:///dev/zero\e\\/dev/zero\e]8;;\e\\\e[0m\e[38;2;150;152;150m of=big bs=1M count=4096\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m2s 4L 8M\e[0m \e[38;2;204;102;102mexit(153): dd: writing 'big': File size limit …\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mcp\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[38;2;150;152;150m \e]8;;file:///etc/hosts\e\\/etc/hosts\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcp\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[38;2;150;152;150m \e]8;;file:///etc/hosts\e\\/etc/hosts\e]8;;\e\\\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m6L ~100t 2M\e[0m \e[38;2;204;102;102mexit(1): cp: cannot create regular file '/etc/hosts': Permi…\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe lint\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter w\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was k\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was kille\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed fo\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for it\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its pr\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its proces\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, th\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the wr\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, an\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, and th\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, and the co\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, and the copy r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, and the copy refus\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, and the copy refused.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlint\e[0m\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlint\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m11s\e[0m \e[38;2;150;152;150m1h01m 5L ~100t 1144M\e[0m \e[38;2;204;102;102mexit(137): error: recipe `lint` was terminated on line 104…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mdd\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mif=\e]8;;file:///dev/zero\e\\/dev/zero\e]8;;\e\\\e[0m\e[38;2;150;152;150m of=big bs=1M count=4096\e[0m\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mdd\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mif=\e]8;;file:///dev/zero\e\\/dev/zero\e]8;;\e\\\e[0m\e[38;2;150;152;150m of=big bs=1M count=4096\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m2s 4L 8M\e[0m \e[38;2;204;102;102mexit(153): dd: writing 'big': File size limit …\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mcp\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[38;2;150;152;150m \e]8;;file:///etc/hosts\e\\/etc/hosts\e]8;;\e\\\e[0m\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcp\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[38;2;150;152;150m \e]8;;file:///etc/hosts\e\\/etc/hosts\e]8;;\e\\\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m6L ~100t 2M\e[0m \e[38;2;204;102;102mexit(1): cp: cannot create regular file '/etc/hosts': Permi…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KThe\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe lint\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter w\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was k\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was kille\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed fo\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for it\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its pr\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its proces\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, th\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the wr\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for\r\e[59C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its\r\e[63C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, an\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, and th\r\e[76C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, and the co\r\e[80C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, and the copy r\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, and the copy refus\r\e[88C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, and the copy refused.\r\e[91C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[91C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m run the linter, write the big file, then copy the readme over the host's hosts file                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlint\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlint\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m11s\e[0m \e[38;2;150;152;150m1h01m 5L ~100t 1144M\e[0m \e[38;2;204;102;102mexit(137): error: recipe `lint` was terminated on line 104…\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mdd\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mif=\e]8;;file:///dev/zero\e\\/dev/zero\e]8;;\e\\\e[0m\e[38;2;150;152;150m of=big bs=1M count=4096\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mdd\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mif=\e]8;;file:///dev/zero\e\\/dev/zero\e]8;;\e\\\e[0m\e[38;2;150;152;150m of=big bs=1M count=4096\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m2s 4L 8M\e[0m \e[38;2;204;102;102mexit(153): dd: writing 'big': File size limit …\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mcp\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[38;2;150;152;150m \e]8;;file:///etc/hosts\e\\/etc/hosts\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcp\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[38;2;150;152;150m \e]8;;file:///etc/hosts\e\\/etc/hosts\e]8;;\e\\\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m6L ~100t 2M\e[0m \e[38;2;204;102;102mexit(1): cp: cannot create regular file '/etc/hosts': Permi…\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, and the copy refused.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlint\e[0m\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlint\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m11s\e[0m \e[38;2;150;152;150m1h01m 5L ~100t 1144M\e[0m \e[38;2;204;102;102mexit(137): error: recipe `lint` was terminated on line 104…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mdd\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mif=\e]8;;file:///dev/zero\e\\/dev/zero\e]8;;\e\\\e[0m\e[38;2;150;152;150m of=big bs=1M count=4096\e[0m\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mdd\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mif=\e]8;;file:///dev/zero\e\\/dev/zero\e]8;;\e\\\e[0m\e[38;2;150;152;150m of=big bs=1M count=4096\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m2s 4L 8M\e[0m \e[38;2;204;102;102mexit(153): dd: writing 'big': File size limit …\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mcp\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[38;2;150;152;150m \e]8;;file:///etc/hosts\e\\/etc/hosts\e]8;;\e\\\e[0m\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcp\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[38;2;150;152;150m \e]8;;file:///etc/hosts\e\\/etc/hosts\e]8;;\e\\\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m6L ~100t 2M\e[0m \e[38;2;204;102;102mexit(1): cp: cannot create regular file '/etc/hosts': Permi…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KThe linter was killed for its processor time, the write for its size, and the copy refused.\r\e[91C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[91C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m run the linter, write the big file, then copy the readme over the host's hosts file                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlint\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlint\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m11s\e[0m \e[38;2;150;152;150m1h01m 5L ~100t 1144M\e[0m \e[38;2;204;102;102mexit(137): error: recipe `lint` was terminated on line 104…\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mdd\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mif=\e]8;;file:///dev/zero\e\\/dev/zero\e]8;;\e\\\e[0m\e[38;2;150;152;150m of=big bs=1M count=4096\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mdd\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mif=\e]8;;file:///dev/zero\e\\/dev/zero\e]8;;\e\\\e[0m\e[38;2;150;152;150m of=big bs=1M count=4096\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m2s 4L 8M\e[0m \e[38;2;204;102;102mexit(153): dd: writing 'big': File size limit …\e[0m\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mcp\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[38;2;150;152;150m \e]8;;file:///etc/hosts\e\\/etc/hosts\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcp\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[38;2;150;152;150m \e]8;;file:///etc/hosts\e\\/etc/hosts\e]8;;\e\\\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m6L ~100t 2M\e[0m \e[38;2;204;102;102mexit(1): cp: cannot create regular file '/etc/hosts': Permi…\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KThe\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe lint\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter w\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was k\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was kille\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed fo\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for it\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its pr\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its proces\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, th\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the wr\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, an\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, and th\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, and the co\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, and the copy r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, and the copy refus\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, and the copy refused.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlint\e[0m\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlint\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m11s\e[0m \e[38;2;150;152;150m1h01m 5L ~100t 1144M\e[0m \e[38;2;204;102;102mexit(137): error: recipe `lint` was terminated on line 104…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mdd\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mif=\e]8;;file:///dev/zero\e\\/dev/zero\e]8;;\e\\\e[0m\e[38;2;150;152;150m of=big bs=1M count=4096\e[0m\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mdd\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mif=\e]8;;file:///dev/zero\e\\/dev/zero\e]8;;\e\\\e[0m\e[38;2;150;152;150m of=big bs=1M count=4096\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m2s 4L 8M\e[0m \e[38;2;204;102;102mexit(153): dd: writing 'big': File size limit …\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mcp\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[38;2;150;152;150m \e]8;;file:///etc/hosts\e\\/etc/hosts\e]8;;\e\\\e[0m\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcp\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[38;2;150;152;150m \e]8;;file:///etc/hosts\e\\/etc/hosts\e]8;;\e\\\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m6L ~100t 2M\e[0m \e[38;2;204;102;102mexit(1): cp: cannot create regular file '/etc/hosts': Permi…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KThe\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe lint\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter w\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was k\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was kille\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed fo\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for it\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its pr\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its proces\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, th\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the wr\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for\r\e[59C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its\r\e[63C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, an\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, and th\r\e[76C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, and the co\r\e[80C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, and the copy r\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, and the copy refus\r\e[88C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KThe linter was killed for its processor time, the write for its size, and the copy refused.\r\e[91C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[91C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
@@ -300,38 +300,38 @@ The linter was killed for its processor time, the write for its size, and the co
 \e[48;2;52;53;65m hosts file \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e[?7l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mj\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mexit…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m2s 4L 8M\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mc\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mexit…\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mj\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mexit…\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m2s 4L 8M\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mc\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mexit…\e[0m\r
 \r
-\r\e[KThe linter\r
-\r\e[Kwas killed\r
-\r\e[Kfor its\r
-\r\e[Kprocessor\r
-\r\e[Ktime, the\r
-\r\e[Kwrite for\r
-\r\e[Kits size,\r
-\r\e[Kand the copy\r
-\r\e[Krefused.\r
+The linter\r
+was killed\r
+for its\r
+processor\r
+time, the\r
+write for\r
+its size,\r
+and the copy\r
+refused.\r
 \e[?25h\e[?2026l
 === unsized ===
-\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m
-\e[48;2;52;53;65m run the linter, write the big file, then copy the readme over the host's hosts file\e[0m
-\e[48;2;52;53;65m\e[0m
-\e[?7l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlint\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m11s\e[0m \e[38;2;150;152;150m1h01m 5L ~100t 1144M\e[0m \e[38;2;204;102;102mexit(137): error: recipe `lint` was terminated on line 104 by signal 9 note: the shell reports that a process was killed by SIGKILL. the sandbox gives each process 1h00m of processor time, counted across every thread it runs, and stops the whole command after 5m00s of wall clock. every process this command started used 1h01m of processor time between them.\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mdd\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mif=\e]8;;file:///dev/zero\e\\/dev/zero\e]8;;\e\\\e[0m\e[38;2;150;152;150m of=big bs=1M count=4096\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m2s 4L 8M\e[0m \e[38;2;204;102;102mexit(153): dd: writing 'big': File size limit exceeded note: the shell reports that a process was killed by SIGXFSZ. the sandbox lets a command write no more than 1G to a single file.\e[0m
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcp\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[38;2;150;152;150m \e]8;;file:///etc/hosts\e\\/etc/hosts\e]8;;\e\\\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m6L ~100t 2M\e[0m \e[38;2;204;102;102mexit(1): cp: cannot create regular file '/etc/hosts': Permission denied note: this command ran in a sandbox, and the failure may be the sandbox refusing it. external networks and the host's loopback interface are unavailable. writable: /workspace, /tmp readable: /etc/ssl/certs, /nix/store\e[0m
-
-\r\e[KThe linter was killed for its processor time, the write for its size, and the copy refused.
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m run the linter, write the big file, then copy the readme over the host's hosts file\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlint\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m11s\e[0m \e[38;2;150;152;150m1h01m 5L ~100t 1144M\e[0m \e[38;2;204;102;102mexit(137): error: recipe `lint` was terminated on line 104 by signal 9 note: the shell reports that a process was killed by SIGKILL. the sandbox gives each process 1h00m of processor time, counted across every thread it runs, and stops the whole command after 5m00s of wall clock. every process this command started used 1h01m of processor time between them.\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mdd\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mif=\e]8;;file:///dev/zero\e\\/dev/zero\e]8;;\e\\\e[0m\e[38;2;150;152;150m of=big bs=1M count=4096\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m2s 4L 8M\e[0m \e[38;2;204;102;102mexit(153): dd: writing 'big': File size limit exceeded note: the shell reports that a process was killed by SIGXFSZ. the sandbox lets a command write no more than 1G to a single file.\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcp\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[38;2;150;152;150m \e]8;;file:///etc/hosts\e\\/etc/hosts\e]8;;\e\\\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m6L ~100t 2M\e[0m \e[38;2;204;102;102mexit(1): cp: cannot create regular file '/etc/hosts': Permission denied note: this command ran in a sandbox, and the failure may be the sandbox refusing it. external networks and the host's loopback interface are unavailable. writable: /workspace, /tmp readable: /etc/ssl/certs, /nix/store\e[0m\r
+\r
+The linter was killed for its processor time, the write for its size, and the copy refused.\r
 \e[?25h\e[?2026l
 === wide ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m run the linter, write the big file, then copy the readme over the host's hosts file                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlint\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m11s\e[0m \e[38;2;150;152;150m1h01m 5L ~100t 1144M\e[0m \e[38;2;204;102;102mexit(137): error: recipe `lint` was terminated on line 104…\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mdd\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mif=\e]8;;file:///dev/zero\e\\/dev/zero\e]8;;\e\\\e[0m\e[38;2;150;152;150m of=big bs=1M count=4096\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m2s 4L 8M\e[0m \e[38;2;204;102;102mexit(153): dd: writing 'big': File size limit …\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcp\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[38;2;150;152;150m \e]8;;file:///etc/hosts\e\\/etc/hosts\e]8;;\e\\\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m6L ~100t 2M\e[0m \e[38;2;204;102;102mexit(1): cp: cannot create regular file '/etc/hosts': Permi…\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mlint\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m11s\e[0m \e[38;2;150;152;150m1h01m 5L ~100t 1144M\e[0m \e[38;2;204;102;102mexit(137): error: recipe `lint` was terminated on line 104…\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mdd\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mif=\e]8;;file:///dev/zero\e\\/dev/zero\e]8;;\e\\\e[0m\e[38;2;150;152;150m of=big bs=1M count=4096\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m2s 4L 8M\e[0m \e[38;2;204;102;102mexit(153): dd: writing 'big': File size limit …\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcp\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[38;2;150;152;150m \e]8;;file:///etc/hosts\e\\/etc/hosts\e]8;;\e\\\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m6L ~100t 2M\e[0m \e[38;2;204;102;102mexit(1): cp: cannot create regular file '/etc/hosts': Permi…\e[0m\r
 \r
-\r\e[KThe linter was killed for its processor time, the write for its size, and the copy refused.\r
+The linter was killed for its processor time, the write for its size, and the copy refused.\r
 \e[?25h\e[?2026l

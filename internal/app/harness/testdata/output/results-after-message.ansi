@@ -4,12 +4,12 @@
 \e[48;2;52;53;65m changed                                \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e[?7l\r\e[KTaking them together.\r
+Taking them together.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
-\r\e[KBoth still mention the spinner.\r
+Both still mention the spinner.\r
 \e[?25h\e[?2026l
 === one column ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
@@ -89,56 +89,56 @@
 \e[48;2;52;53;65md\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\e[?7l\r\e[KT\r
-\r\e[Ka\r
-\r\e[Kk\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kg\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Km\r
-\r\e[Kt\r
-\r\e[Ko\r
-\r\e[Kg\r
-\r\e[Ke\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[K.\r
+T\r
+a\r
+k\r
+i\r
+n\r
+g\r
+t\r
+h\r
+e\r
+m\r
+t\r
+o\r
+g\r
+e\r
+t\r
+h\r
+e\r
+r\r
+.\r
 \r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
-\r\e[K\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
+\e[38;2;76;154;44m✓\e[0m\r
 \r
-\r\e[KB\r
-\r\e[Ko\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ks\r
-\r\e[Kt\r
-\r\e[Ki\r
-\r\e[Kl\r
-\r\e[Kl\r
-\r\e[Km\r
-\r\e[Ke\r
-\r\e[Kn\r
-\r\e[Kt\r
-\r\e[Ki\r
-\r\e[Ko\r
-\r\e[Kn\r
-\r\e[Kt\r
-\r\e[Kh\r
-\r\e[Ke\r
-\r\e[Ks\r
-\r\e[Kp\r
-\r\e[Ki\r
-\r\e[Kn\r
-\r\e[Kn\r
-\r\e[Ke\r
-\r\e[Kr\r
-\r\e[K.\r
+B\r
+o\r
+t\r
+h\r
+s\r
+t\r
+i\r
+l\r
+l\r
+m\r
+e\r
+n\r
+t\r
+i\r
+o\r
+n\r
+t\r
+h\r
+e\r
+s\r
+p\r
+i\r
+n\r
+n\r
+e\r
+r\r
+.\r
 \e[?25h\e[?2026l
 === plain ===
 \e[48;2;52;53;65m\e[0m
@@ -167,40 +167,37 @@ Both still mention the spinner.\r
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m look at both of those and tell me what changed                                                     \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KTaki\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTaking t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTaking them\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTaking them toge\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTaking them together\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTaking them together.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kgrep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
-\r\e[Kgrep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KBoth\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth sti\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still menti\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still mention t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still mention the s\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still mention the spinn\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still mention the spinner.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KTaki\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTaking t\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTaking them\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTaking them toge\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTaking them together\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTaking them together.\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kgrep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\e[1B\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KBoth\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth sti\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still menti\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still mention t\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still mention the s\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still mention the spinn\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still mention the spinner.\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed line ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m look at both of those and tell me what changed                                                     \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KTaking them together.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kgrep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
-\r\e[Kgrep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KBoth still mention the spinner.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KTaking them together.\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kgrep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\e[1B\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KBoth still mention the spinner.\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === streamed paced ===
 \e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m look at both of those and tell me what changed                                                     \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
-\r
-\e[?2026h\e[?25l\e[?7l\r\e[KTaki\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTaking t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTaking them\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTaking them toge\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTaking them together\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTaking them together.\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[Kgrep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
-\r\e[Kgrep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[?25h\e[?2026l\r
-\r
-\e[?2026h\e[?25l\r\e[KBoth\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth sti\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still m\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still menti\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still mention t\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still mention the s\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still mention the spinn\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still mention the spinner.\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+\e[KTaki\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTaking t\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTaking them\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTaking them toge\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTaking them together\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KTaking them together.\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kread \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[Kgrep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\e[1B\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+\e[KBoth\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth sti\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still m\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still menti\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still mention t\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still mention the s\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still mention the spinn\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[KBoth still mention the spinner.\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
@@ -212,36 +209,36 @@ Both still mention the spinner.\r
 \e[48;2;52;53;65m changed    \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e[?7l\r\e[KTaking them\r
-\r\e[Ktogether.\r
+Taking them\r
+together.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80ms…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80ms…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
-\r\e[KBoth still\r
-\r\e[Kmention the\r
-\r\e[Kspinner.\r
+Both still\r
+mention the\r
+spinner.\r
 \e[?25h\e[?2026l
 === unsized ===
-\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m
-\e[48;2;52;53;65m look at both of those and tell me what changed\e[0m
-\e[48;2;52;53;65m\e[0m
-\e[?7l\r\e[KTaking them together.
-
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
-
-\r\e[KBoth still mention the spinner.
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m look at both of those and tell me what changed\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+Taking them together.\r
+\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\r
+Both still mention the spinner.\r
 \e[?25h\e[?2026l
 === wide ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m look at both of those and tell me what changed                                                     \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[?7l\r\e[KTaking them together.\r
+Taking them together.\r
 \r
-\r\e[K\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
-\r\e[K\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
-\r\e[KBoth still mention the spinner.\r
+Both still mention the spinner.\r
 \e[?25h\e[?2026l
