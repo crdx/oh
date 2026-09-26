@@ -82,9 +82,9 @@ func TestOnlyASessionThatIsNotRunningCanBeArchived(t *testing.T) {
 	var archived []string
 	self := &sessionList{store: Store{
 		Sessions: []*Session{{Name: "chewy-sardine", IsRunning: true}, {Name: "thick-poodle"}},
-		Archive: func(storedSession *Session) error {
+		Archive: func(storedSession *Session) (int64, error) {
 			archived = append(archived, storedSession.Name)
-			return nil
+			return 0, nil
 		},
 	}}
 
@@ -118,9 +118,9 @@ func TestASessionPickerWithNowhereToArchiveToRemovesNothing(t *testing.T) {
 
 func archivingStore() (*sessionList, *[]string) {
 	var moved []string
-	record := func(storedSession *Session) error {
+	record := func(storedSession *Session) (int64, error) {
 		moved = append(moved, storedSession.Name)
-		return nil
+		return 0, nil
 	}
 
 	return &sessionList{store: Store{
@@ -214,7 +214,7 @@ func TestAnArchivedSessionIsRestoredWhenItIsChosen(t *testing.T) {
 func TestAnArchivedSessionThatCannotBeRestoredIsNotChosen(t *testing.T) {
 	self := &sessionList{store: Store{
 		ArchivedSessions: []*Session{{Name: "tame-impala", IsArchived: true}},
-		Restore:          func(*Session) error { return errors.New("the archive is unreadable") },
+		Restore:          func(*Session) (int64, error) { return 0, errors.New("the archive is unreadable") },
 	}}
 	self.Switch(1)
 
@@ -276,7 +276,7 @@ func TestDeletingTakesTheSessionOutOfWhicheverViewItIsIn(t *testing.T) {
 func TestARunningSessionIsNeitherArchivedNorDeleted(t *testing.T) {
 	self := &sessionList{store: Store{
 		Sessions: []*Session{{Name: "chewy-sardine", IsRunning: true}},
-		Archive:  func(*Session) error { return nil },
+		Archive:  func(*Session) (int64, error) { return 0, nil },
 		Delete:   func(*Session) error { return nil },
 	}}
 
@@ -293,7 +293,7 @@ func TestARunningSessionIsNeitherArchivedNorDeleted(t *testing.T) {
 func TestAnUnboundKeyAsksForNothing(t *testing.T) {
 	self := &sessionList{store: Store{
 		Sessions: []*Session{{Name: "thick-poodle"}},
-		Archive:  func(*Session) error { return nil },
+		Archive:  func(*Session) (int64, error) { return 0, nil },
 		Delete:   func(*Session) error { return nil },
 	}}
 
@@ -347,5 +347,45 @@ func TestAnArchivedSessionIsOpenedRatherThanRead(t *testing.T) {
 	}
 	if !self.IsReachable(0) {
 		t.Error("expected an archived session to stay reachable")
+	}
+}
+
+func TestASessionMovedBetweenViewsTakesTheSizeItNowOccupies(t *testing.T) {
+	self := &sessionList{store: Store{
+		Sessions:         []*Session{{Name: "thick-poodle", Bytes: 4 << 20}},
+		ArchivedSessions: []*Session{},
+		Archive:          func(*Session) (int64, error) { return 1 << 20, nil },
+		Restore:          func(*Session) (int64, error) { return 4 << 20, nil },
+	}}
+
+	removal, _ := self.Removal(0, archiveKeypress())
+	if err := removal.Perform(); err != nil {
+		t.Fatal(err)
+	}
+	removal.Apply()
+	self.Switch(1)
+
+	if got := self.at(0).Bytes; got != 1<<20 {
+		t.Errorf("expected the archive's size, got %d bytes", got)
+	}
+	if got := self.Row(0, false, 120); !strings.Contains(got, "1M") {
+		t.Errorf("expected the archive's size to be drawn, got %q", got)
+	}
+
+	removal, _ = self.Removal(0, archiveKeypress())
+	if err := removal.Perform(); err != nil {
+		t.Fatal(err)
+	}
+	removal.Apply()
+	self.Switch(-1)
+
+	if got := self.at(0).Bytes; got != 4<<20 {
+		t.Errorf("expected the restored directory's size, got %d bytes", got)
+	}
+}
+
+func TestASessionWhoseSizeIsUnknownIsDrawnWithADash(t *testing.T) {
+	if got := FormatSize(0); got != unknownSize {
+		t.Errorf("got %q", got)
 	}
 }

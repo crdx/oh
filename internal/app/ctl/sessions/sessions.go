@@ -21,7 +21,6 @@ import (
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/strutil"
-	"crdx.org/oh/pkg/session"
 
 	ohSessions "crdx.org/oh/internal/app/sessions"
 )
@@ -74,6 +73,7 @@ type Listing struct {
 	Model        string    `json:"model"`
 	Effort       string    `json:"effort"`
 	Messages     int       `json:"messages"`
+	Bytes        int64     `json:"bytes"`
 	StartedAt    time.Time `json:"started"`
 	TouchedAt    time.Time `json:"touched"`
 }
@@ -109,6 +109,7 @@ func run(options *inputOpts, output console.Output) error {
 	}
 
 	listings = withinLimit(listings, listingTotal, options.Filter, output.Failure)
+	measure(listings)
 
 	if options.JSON {
 		return writeJSON(listings, output.Screen)
@@ -194,6 +195,12 @@ func withinLimit(listings []Listing, total int, filter string, failure io.Writer
 	return listings[:min(listLimit, len(listings))]
 }
 
+func measure(listings []Listing) {
+	for index := range listings {
+		listings[index].Bytes = ohSessions.Occupied(listings[index].SessionDir)
+	}
+}
+
 func describe(directory string, storedSessions []*picker.Session, isRunningOnly bool) []Listing {
 	listings := make([]Listing, 0, len(storedSessions))
 	for _, storedSession := range storedSessions {
@@ -210,7 +217,7 @@ func describe(directory string, storedSessions []*picker.Session, isRunningOnly 
 			Title:        oneLine(storedSession.Title),
 			WorkspaceDir: storedSession.WorkspaceDir,
 			ScratchDir:   location.GetTmpDir(storedSession.Name),
-			SessionDir:   sessionPath(directory, storedSession),
+			SessionDir:   ohSessions.Path(directory, storedSession),
 			Model:        storedSession.ModelID,
 			Effort:       storedSession.Effort,
 			Messages:     storedSession.MessageCount,
@@ -233,14 +240,6 @@ func status(storedSession *picker.Session) string {
 	}
 }
 
-func sessionPath(directory string, storedSession *picker.Session) string {
-	if storedSession.IsArchived {
-		return session.ArchivePath(directory, storedSession.Name)
-	}
-
-	return session.Dir(directory, storedSession.Name)
-}
-
 func writeJSON(listings []Listing, writer io.Writer) error {
 	encoder := json.NewEncoder(writer)
 	encoder.SetIndent("", "    ")
@@ -259,6 +258,7 @@ func writeTable(listings []Listing, writer io.Writer) error {
 			listing.Name,
 			width.Elide(strutil.OrDash(listing.Title), titleColumn),
 			strconv.Itoa(listing.Messages),
+			picker.FormatSize(listing.Bytes),
 			util.CoarseDuration(listing.TouchedAt.Sub(listing.StartedAt)),
 			util.Ago(listing.TouchedAt),
 			modelName(listing),
@@ -272,6 +272,7 @@ func writeTable(listings []Listing, writer io.Writer) error {
 		table.Column{Title: "Agent"},
 		table.Column{Title: "Title"},
 		table.Column{Title: "Messages"},
+		table.Column{Title: "Size", Align: table.Right},
 		table.Column{Title: "Length"},
 		table.Column{Title: "Last Message"},
 		table.Column{Title: "Model"},

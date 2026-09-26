@@ -12,6 +12,7 @@
         "model": "claude-opus-5",
         "effort": "medium",
         "messages": 32,
+        "bytes": 3250585,
         "started": "2026-08-28T07:15:25Z",
         "touched": "2026-08-28T11:15:25Z"
     },
@@ -28,6 +29,7 @@
         "model": "gpt-5.3-codex",
         "effort": "high",
         "messages": 8,
+        "bytes": 421888,
         "started": "2026-08-28T12:45:25Z",
         "touched": "2026-08-28T13:45:25Z"
     },
@@ -44,6 +46,7 @@
         "model": "gpt-5.3-codex",
         "effort": "medium",
         "messages": 26,
+        "bytes": 1288490188,
         "started": "2026-08-16T02:15:25Z",
         "touched": "2026-08-16T12:15:25Z"
     },
@@ -60,6 +63,7 @@
         "model": "",
         "effort": "",
         "messages": 0,
+        "bytes": 0,
         "started": "2026-08-28T14:15:25Z",
         "touched": "2026-08-28T14:15:25Z"
     }

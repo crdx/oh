@@ -1,26 +1,34 @@
 --- 150 columns ---
-  Agent                 Title                                                           Model                   Effort  Messages  Length  Last Message
-  🐟 chewy-sardine      why does the spinner stutter when a tool runs                   [38;2;192;128;80m⚡[0m Codex 5.3              high        12      8m      just now
-› 🐩 thick-poodle       add support for reasoning traces                                [38;2;192;128;80m⚡[0m Sonnet 5             medium         4      1h       37m ago
-  🦡 funny-badger       the cancelled turn leaves a tool call unanswered and the next…  [38;2;192;128;80m⚡[0m Qwen Coder 3 30B…    medium       148      3h        5h ago
-  🐬 able-dolphin       (untitled)                                                      —                                      1      4h        3d ago
-  🦌 tame-impala        rename the harness to oh                                        Codex 5.3                             26      1d       12d ago
+  Agent                 Title                                                    Model                   Effort  Messages   Size  Length  Last Message
+  🐟 chewy-sardine      why does the spinner stutter when a tool runs            [38;2;192;128;80m⚡[0m Codex 5.3              high        12     1M      8m      just now
+› 🐩 thick-poodle       add support for reasoning traces                         [38;2;192;128;80m⚡[0m Sonnet 5             medium         4    <1M      1h       37m ago
+  🦡 funny-badger       the cancelled turn leaves a tool call unanswered and t…  [38;2;192;128;80m⚡[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago
+  🐬 able-dolphin       (untitled)                                               —                                      1      —      4h        3d ago
+  🦌 tame-impala        rename the harness to oh                                 Codex 5.3                             26     4M      1d       12d ago
 
 --- 120 columns ---
-  Agent                 Title                             Model                   Effort  Messages  Length  Last Message
-  🐟 chewy-sardine      why does the spinner stutter wh…  [38;2;192;128;80m⚡[0m Codex 5.3              high        12      8m      just now
-› 🐩 thick-poodle       add support for reasoning traces  [38;2;192;128;80m⚡[0m Sonnet 5             medium         4      1h       37m ago
-  🦡 funny-badger       the cancelled turn leaves a too…  [38;2;192;128;80m⚡[0m Qwen Coder 3 30B…    medium       148      3h        5h ago
-  🐬 able-dolphin       (untitled)                        —                                      1      4h        3d ago
-  🦌 tame-impala        rename the harness to oh          Codex 5.3                             26      1d       12d ago
+  Agent                 Title                      Model                   Effort  Messages   Size  Length  Last Message
+  🐟 chewy-sardine      why does the spinner stu…  [38;2;192;128;80m⚡[0m Codex 5.3              high        12     1M      8m      just now
+› 🐩 thick-poodle       add support for reasonin…  [38;2;192;128;80m⚡[0m Sonnet 5             medium         4    <1M      1h       37m ago
+  🦡 funny-badger       the cancelled turn leave…  [38;2;192;128;80m⚡[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago
+  🐬 able-dolphin       (untitled)                 —                                      1      —      4h        3d ago
+  🦌 tame-impala        rename the harness to oh   Codex 5.3                             26     4M      1d       12d ago
 
 --- 80 columns ---
-  Agent                 Title                     Messages  Length  Last Message
-  🐟 chewy-sardine      why does the spinner st…        12      8m      just now
-› 🐩 thick-poodle       add support for reasoni…         4      1h       37m ago
-  🦡 funny-badger       the cancelled turn leav…       148      3h        5h ago
-  🐬 able-dolphin       (untitled)                       1      4h        3d ago
-  🦌 tame-impala        rename the harness to oh        26      1d       12d ago
+  Agent                 Title              Messages   Size  Length  Last Message
+  🐟 chewy-sardine      why does the spi…        12     1M      8m      just now
+› 🐩 thick-poodle       add support for …         4    <1M      1h       37m ago
+  🦡 funny-badger       the cancelled tu…       148    23M      3h        5h ago
+  🐬 able-dolphin       (untitled)                1      —      4h        3d ago
+  🦌 tame-impala        rename the harne…        26     4M      1d       12d ago
+
+--- 79 columns ---
+  Agent                 Title                    Messages  Length  Last Message
+  🐟 chewy-sardine      why does the spinner s…        12      8m      just now
+› 🐩 thick-poodle       add support for reason…         4      1h       37m ago
+  🦡 funny-badger       the cancelled turn lea…       148      3h        5h ago
+  🐬 able-dolphin       (untitled)                      1      4h        3d ago
+  🦌 tame-impala        rename the harness to …        26      1d       12d ago
 
 --- 46 columns ---
   Agent      …  Messages  Length  Last Message

@@ -1,0 +1,14 @@
+  Agent                 Title                                                    Model                   Effort  Messages   Size  Length  Last Message
+  🐩 thick-poodle       0 bytes                                                  —                                      4      —      1h      just now
+  🐩 thick-poodle       1 bytes                                                  —                                      4    <1M      1h      just now
+  🐩 thick-poodle       1048575 bytes                                            —                                      4    <1M      1h      just now
+  🐩 thick-poodle       1048576 bytes                                            —                                      4     1M      1h      just now
+  🐩 thick-poodle       1572863 bytes                                            —                                      4     1M      1h      just now
+  🐩 thick-poodle       1572864 bytes                                            —                                      4     2M      1h      just now
+  🐩 thick-poodle       11010048 bytes                                           —                                      4    11M      1h      just now
+  🐩 thick-poodle       1073217535 bytes                                         —                                      4  1023M      1h      just now
+  🐩 thick-poodle       1073217536 bytes                                         —                                      4     1G      1h      just now
+  🐩 thick-poodle       1073741824 bytes                                         —                                      4     1G      1h      just now
+  🐩 thick-poodle       1610612735 bytes                                         —                                      4     1G      1h      just now
+  🐩 thick-poodle       1610612736 bytes                                         —                                      4     2G      1h      just now
+  🐩 thick-poodle       1099511627776 bytes                                      —                                      4  1024G      1h      just now

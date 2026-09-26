@@ -540,3 +540,47 @@ func putListingBehind(t *testing.T, directory string, name string) {
 		t.Fatal(err)
 	}
 }
+
+func TestASessionIsMeasuredByWhatItsFilesOccupy(t *testing.T) {
+	directory := t.TempDir()
+	name := writeIdleSession(t, directory, store.Meta{})
+	drops := filepath.Join(session.Dir(directory, name), "drops")
+	if err := os.MkdirAll(drops, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(drops, "pasted.png"), make([]byte, 1<<20), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	loadedSessions, err := Load(directory)
+	if err != nil {
+		t.Fatal(err)
+	}
+	Measure(directory, loadedSessions)
+
+	if got := loadedSessions[0].Bytes; got < 1<<20 {
+		t.Errorf("expected a session holding a 1MB drop to measure at least that, got %d bytes", got)
+	}
+}
+
+func TestAnArchivedSessionIsMeasuredByItsArchive(t *testing.T) {
+	directory := t.TempDir()
+	name := writeIdleSession(t, directory, store.Meta{})
+	if err := session.Archive(directory, name); err != nil {
+		t.Fatal(err)
+	}
+
+	archivedSessions, err := LoadArchived(directory)
+	if err != nil {
+		t.Fatal(err)
+	}
+	Measure(directory, archivedSessions)
+
+	info, err := os.Stat(session.ArchivePath(directory, name))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := archivedSessions[0].Bytes; got < info.Size() {
+		t.Errorf("expected the archive of %d bytes to be measured, got %d bytes", info.Size(), got)
+	}
+}

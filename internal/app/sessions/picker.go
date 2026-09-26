@@ -17,6 +17,7 @@ import (
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/internal/util/diskutil"
 	"crdx.org/oh/pkg/session"
 )
 
@@ -40,6 +41,9 @@ func Choose(directory string, workspace *work.Space, terminal *os.File, screen i
 	}
 	archivedSessions = InWorkspace(archivedSessions, workspace)
 
+	Measure(directory, sessions)
+	Measure(directory, archivedSessions)
+
 	if len(sessions) == 0 && len(archivedSessions) == 0 {
 		return "", errors.New("there are no stored conversations for this workspace")
 	}
@@ -47,11 +51,19 @@ func Choose(directory string, workspace *work.Space, terminal *os.File, screen i
 	store := picker.Store{
 		Sessions:         sessions,
 		ArchivedSessions: archivedSessions,
-		Archive: func(storedSession *picker.Session) error {
-			return session.Archive(directory, storedSession.Name)
+		Archive: func(storedSession *picker.Session) (int64, error) {
+			if err := session.Archive(directory, storedSession.Name); err != nil {
+				return 0, err
+			}
+
+			return Occupied(session.ArchivePath(directory, storedSession.Name)), nil
 		},
-		Restore: func(storedSession *picker.Session) error {
-			return session.Restore(directory, storedSession.Name)
+		Restore: func(storedSession *picker.Session) (int64, error) {
+			if err := session.Restore(directory, storedSession.Name); err != nil {
+				return 0, err
+			}
+
+			return Occupied(session.Dir(directory, storedSession.Name)), nil
 		},
 		Delete: func(storedSession *picker.Session) error {
 			if err := session.Delete(directory, storedSession.Name); err != nil {
@@ -85,6 +97,29 @@ func InWorkspace(sessions []*picker.Session, workspace *work.Space) []*picker.Se
 	}
 
 	return chosenSessions
+}
+
+func Measure(directory string, sessions []*picker.Session) {
+	for _, storedSession := range sessions {
+		storedSession.Bytes = Occupied(Path(directory, storedSession))
+	}
+}
+
+func Occupied(path string) int64 {
+	occupiedBytes, err := diskutil.Occupied(path)
+	if err != nil {
+		return 0
+	}
+
+	return occupiedBytes
+}
+
+func Path(directory string, storedSession *picker.Session) string {
+	if storedSession.IsArchived {
+		return session.ArchivePath(directory, storedSession.Name)
+	}
+
+	return session.Dir(directory, storedSession.Name)
 }
 
 func NamesInWorkspace(directory string, workspace *work.Space) ([]string, error) {

@@ -16,6 +16,12 @@ import (
 	"crdx.org/oh/internal/util/strutil"
 )
 
+const (
+	archivedBytes = 6_291_456
+	restoredBytes = 7_340_032
+	sizesRoom     = 150
+)
+
 var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")
 
 func storedSessions() []*Session {
@@ -24,6 +30,7 @@ func storedSessions() []*Session {
 	return []*Session{
 		{
 			Name:         "chewy-sardine",
+			Bytes:        1_258_291,
 			Title:        "why does the spinner stutter when a tool runs",
 			Model:        "Codex 5.3",
 			ModelID:      "gpt-5.3-codex",
@@ -36,6 +43,7 @@ func storedSessions() []*Session {
 		},
 		{
 			Name:         "thick-poodle",
+			Bytes:        188_416,
 			Title:        "add support for reasoning traces",
 			Model:        "Sonnet 5",
 			ModelID:      "claude-sonnet-5",
@@ -47,6 +55,7 @@ func storedSessions() []*Session {
 		},
 		{
 			Name:         "funny-badger",
+			Bytes:        24_536_678,
 			Model:        "Qwen Coder 3 30B Instruct",
 			ModelID:      "qwen3-coder:30b-a3b-instruct",
 			Effort:       "medium",
@@ -64,6 +73,7 @@ func storedSessions() []*Session {
 		},
 		{
 			Name:         "tame-impala",
+			Bytes:        4_300_800,
 			Title:        "rename the harness to oh",
 			Model:        "Codex 5.3",
 			ModelID:      "gpt-5.3-codex",
@@ -80,6 +90,7 @@ func archivedSessions() []*Session {
 	return []*Session{
 		{
 			Name:         "tame-impala",
+			Bytes:        831_488,
 			Title:        "rename the harness to oh",
 			Model:        "Codex 5.3",
 			ModelID:      "gpt-5.3-codex",
@@ -90,6 +101,7 @@ func archivedSessions() []*Session {
 		},
 		{
 			Name:         "wiry-turtle",
+			Bytes:        2_411_724,
 			Title:        "add an archive view to the picker",
 			Model:        "Sonnet 5",
 			ModelID:      "claude-sonnet-5",
@@ -133,7 +145,7 @@ func TestGoldenTheRowsOfTheSessionPickerMatchTheGolden(t *testing.T) {
 
 	var output strings.Builder
 
-	for i, room := range []int{150, 120, 80, 46} {
+	for i, room := range []int{150, 120, roomForSize, roomForSize - 1, 46} {
 		if i > 0 {
 			_, _ = fmt.Fprintln(&output)
 		}
@@ -145,6 +157,26 @@ func TestGoldenTheRowsOfTheSessionPickerMatchTheGolden(t *testing.T) {
 	}
 
 	compareWithGolden(t, "rows.golden", output.String())
+}
+
+func TestGoldenEverySizeASessionCanOccupyIsDrawnWithinItsColumn(t *testing.T) {
+	now := time.Now()
+	sizes := []int64{0, 1, megabyte - 1, megabyte, 1_572_863, 1_572_864, 11_010_048, 1_073_217_535, 1_073_217_536, gigabyte, 1_610_612_735, 1_610_612_736, 1 << 40}
+
+	var output strings.Builder
+	_, _ = fmt.Fprintln(&output, sessionTable("Agent").Header(sizesRoom))
+	for _, bytes := range sizes {
+		_, _ = fmt.Fprintln(&output, row(&Session{
+			Name:         "thick-poodle",
+			Title:        strconv.FormatInt(bytes, 10) + " bytes",
+			MessageCount: 4,
+			Bytes:        bytes,
+			StartedAt:    now.Add(-time.Hour),
+			TouchedAt:    now,
+		}, false, sizesRoom))
+	}
+
+	compareWithGolden(t, "sizes.golden", output.String())
 }
 
 func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
@@ -159,6 +191,7 @@ func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
 
 		isArchivedView     bool
 		hasNothingArchived bool
+		movedIndex         *int
 	}{
 		{name: "a wide terminal, with room for the title", room: 150, height: 24, cursor: 1},
 		{name: "a terminal wide enough for the model that answered", room: 120, height: 24, cursor: 1},
@@ -184,6 +217,8 @@ func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
 		{name: "an archived session, which is opened rather than read", room: 120, height: 24, cursor: 1, isArchivedView: true, keypress: new(openKeypress()), read: reading()},
 		{name: "a session picker with nothing to read from", room: 120, height: 24, cursor: 1, keypress: new(openKeypress())},
 		{name: "the conversation of a running session, which cannot be opened", room: 120, height: 12, cursor: 0, keypress: new(openKeypress()), read: reading()},
+		{name: "a session archived here, drawn at the size of its archive", room: 120, height: 24, cursor: 0, isArchivedView: true, movedIndex: new(2)},
+		{name: "a session restored here, drawn at the size of its directory", room: 120, height: 24, cursor: 0, movedIndex: new(1)},
 	}
 
 	var output strings.Builder
@@ -202,19 +237,25 @@ func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
 			archived = nil
 		}
 
+		sessions := &sessionList{
+			store: Store{
+				Sessions:         storedSessions(),
+				ArchivedSessions: archived,
+				Archive:          archiving(),
+				Restore:          restoring(),
+				Delete:           deleting(),
+				Read:             frame.read,
+			},
+		}
+		if frame.movedIndex != nil {
+			sessions.isArchivedView = !frame.isArchivedView
+			move(t, sessions, *frame.movedIndex)
+		}
+		sessions.isArchivedView = frame.isArchivedView
+
 		fmt.Fprintf(&output, "=== %s ===\n%s\n", frame.name, strutil.VisibleEscapes(
 			paint(
-				&sessionList{
-					store: Store{
-						Sessions:         storedSessions(),
-						ArchivedSessions: archived,
-						Archive:          archiving(),
-						Restore:          archiving(),
-						Delete:           archiving(),
-						Read:             frame.read,
-					},
-					isArchivedView: frame.isArchivedView,
-				},
+				sessions,
 				frame.room,
 				frame.height,
 				frame.cursor,
@@ -226,7 +267,28 @@ func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
 	compareWithGolden(t, "painted.ansi", output.String())
 }
 
-func archiving() func(*Session) error {
+func archiving() func(*Session) (int64, error) {
+	return func(*Session) (int64, error) { return archivedBytes, nil }
+}
+
+func restoring() func(*Session) (int64, error) {
+	return func(*Session) (int64, error) { return restoredBytes, nil }
+}
+
+func move(t *testing.T, sessions *sessionList, index int) {
+	t.Helper()
+
+	removal, isBound := sessions.Removal(index, archiveKeypress())
+	if !isBound {
+		t.Fatalf("expected row %d to be movable", index)
+	}
+	if err := removal.Perform(); err != nil {
+		t.Fatal(err)
+	}
+	removal.Apply()
+}
+
+func deleting() func(*Session) error {
 	return func(*Session) error { return nil }
 }
 

@@ -105,7 +105,7 @@ func TestTheTableNamesEveryColumnAndAlignsThem(t *testing.T) {
 	}
 
 	header := lines[0]
-	for _, column := range []string{"Status", "Agent", "Title", "Messages", "Length", "Last Message", "Model", "Effort", "Workspace"} {
+	for _, column := range []string{"Status", "Agent", "Title", "Messages", "Size", "Length", "Last Message", "Model", "Effort", "Workspace"} {
 		if !strings.Contains(header, column) {
 			t.Errorf("expected the header to name %q, got %q", column, header)
 		}
@@ -153,14 +153,14 @@ func TestAWideTitleIsElidedAndAnEmojiStillLinesUp(t *testing.T) {
 	}
 }
 
-func TestATitleModelAndEffortAreShownAsADashWhenThereIsNone(t *testing.T) {
+func TestATitleModelEffortAndSizeAreShownAsADashWhenThereIsNone(t *testing.T) {
 	var written strings.Builder
 	if err := writeTable([]Listing{{Name: "chewy-raven", Status: endedStatus}}, &written); err != nil {
 		t.Fatal(err)
 	}
 
-	if strings.Count(written.String(), "—") != 3 {
-		t.Errorf("expected a dash for the title, model, and effort, got %q", written.String())
+	if strings.Count(written.String(), "—") != 4 {
+		t.Errorf("expected a dash for the title, model, effort, and size, got %q", written.String())
 	}
 }
 

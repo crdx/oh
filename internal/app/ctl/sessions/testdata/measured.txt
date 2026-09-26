@@ -1,0 +1,6 @@
+=== screen ===
+[38;2;150;152;150mStatus  Agent         Title  Messages  Size  Length  Last Message  Model        Effort  Workspace[0m
+ended   thick-poodle  begin  1           1M  <1m     just now      gpt-5.6-sol  —       /home/agent/florp/io
+[38;2;150;152;150mStatus    Agent        Title  Messages  Size  Length  Last Message  Model        Effort  Workspace[0m
+archived  wiry-turtle  begin  1          <1M  <1m     just now      gpt-5.6-sol  —       /home/agent/florp/io
+=== failure ===

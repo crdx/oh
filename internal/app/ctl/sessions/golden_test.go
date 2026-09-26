@@ -1,6 +1,7 @@
 package sessions
 
 import (
+	"encoding/json"
 	"flag"
 	"os"
 	"path/filepath"
@@ -10,6 +11,15 @@ import (
 
 	"crdx.org/oh/internal/app/ctl/console"
 	"crdx.org/oh/internal/app/location"
+	"crdx.org/oh/internal/app/store"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/session"
+)
+
+const (
+	goldenWorkspace = "/home/agent/florp/io"
+	metaFile        = "meta.json"
+	dropBytes       = 1 << 20
 )
 
 var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")
@@ -73,10 +83,89 @@ func TestGoldenTheNoticeThatCapsTheListingMatchesTheGolden(t *testing.T) {
 	assertGolden(t, "capped.txt", failure.String())
 }
 
+func TestGoldenTheListingMeasuresEachSessionWhereItIsKept(t *testing.T) {
+	t.Setenv(location.StateDirVariable, t.TempDir())
+	directory := location.GetSessionsDir()
+
+	storedSessionNamed(t, directory, "thick-poodle")
+	storedSessionNamed(t, directory, "wiry-turtle")
+	if err := session.Archive(directory, "wiry-turtle"); err != nil {
+		t.Fatal(err)
+	}
+
+	var screen, failure strings.Builder
+	output := console.Output{Screen: &screen, Failure: &failure}
+	if err := run(&inputOpts{}, output); err != nil {
+		t.Fatal(err)
+	}
+	if err := run(&inputOpts{Archived: true}, output); err != nil {
+		t.Fatal(err)
+	}
+
+	assertGolden(t, "measured.txt", strings.Join([]string{
+		"=== screen ===\n", screen.String(),
+		"=== failure ===\n", failure.String(),
+	}, ""))
+}
+
+func storedSessionNamed(t *testing.T, directory string, name string) {
+	t.Helper()
+
+	writer, err := store.Create(directory, store.Meta{WorkspaceDir: goldenWorkspace, Model: "gpt-5.6-sol"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "begin"}); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	created := session.Dir(directory, writer.Name())
+	drops := filepath.Join(created, "drops")
+	if err := os.MkdirAll(drops, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(drops, "pasted.png"), make([]byte, dropBytes), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	renamed := session.Dir(directory, name)
+	if err := os.Rename(created, renamed); err != nil {
+		t.Fatal(err)
+	}
+	renameMeta(t, filepath.Join(renamed, metaFile), name)
+}
+
+func renameMeta(t *testing.T, path string, name string) {
+	t.Helper()
+
+	encoded, err := os.ReadFile(path) //nolint:gosec // a session the test created
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var meta session.Meta
+	if err := json.Unmarshal(encoded, &meta); err != nil {
+		t.Fatal(err)
+	}
+	meta.Name = name
+
+	encoded, err = json.Marshal(meta)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(path, encoded, 0o600); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func goldenListings(now time.Time) []Listing {
 	return []Listing{
 		{
 			Name:         "wild-scorpion",
+			Bytes:        3_250_585,
 			Status:       runningStatus,
 			IsRunning:    true,
 			Title:        "audit-golden-files 🟡",
@@ -91,6 +180,7 @@ func goldenListings(now time.Time) []Listing {
 		},
 		{
 			Name:         "dewy-vole",
+			Bytes:        421_888,
 			Status:       endedStatus,
 			IsFast:       true,
 			Title:        strings.Repeat("a-title-far-wider-than-its-column ", 3),
@@ -105,6 +195,7 @@ func goldenListings(now time.Time) []Listing {
 		},
 		{
 			Name:         "tame-impala",
+			Bytes:        1_288_490_188,
 			Status:       archivedStatus,
 			IsArchived:   true,
 			Title:        "rename the harness to oh",

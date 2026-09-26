@@ -23,10 +23,16 @@ const (
 	modelColumn       = 20
 	messageColumn     = 8
 	lengthColumn      = 6
+	sizeColumn        = 5
+	roomForSize       = 80
 	lastMessageColumn = 12
 	roomForModel      = 100
 	archiveKey        = 'a'
 	markWidth         = 2
+	unknownSize       = "—"
+	belowMegabyte     = "<1M"
+	megabyte          = 1 << 20
+	gigabyte          = 1 << 30
 )
 
 type Session struct {
@@ -39,6 +45,7 @@ type Session struct {
 	ModelID      string
 	Effort       string
 	MessageCount int
+	Bytes        int64
 	IsRunning    bool
 	IsFast       bool
 	IsArchived   bool
@@ -49,8 +56,8 @@ func (self *Session) Messages() int { return self.MessageCount }
 type Store struct {
 	Sessions         []*Session
 	ArchivedSessions []*Session
-	Archive          func(*Session) error
-	Restore          func(*Session) error
+	Archive          func(*Session) (int64, error)
+	Restore          func(*Session) (int64, error)
 	Delete           func(*Session) error
 	Read             func(*Session, int) ([]string, error)
 }
@@ -194,11 +201,17 @@ func (self *sessionList) archival(index int, movedSession *Session) (menu.Remova
 			return menu.Removal{}, false
 		}
 
+		var restoredBytes int64
+
 		return menu.Removal{
 			Prompt:   "Press ctrl+a again to restore " + movedSession.Name,
 			Progress: "Restoring…",
-			Perform:  func() error { return self.store.Restore(movedSession) },
-			Apply:    func() { self.restore(index, movedSession) },
+			Perform: func() error {
+				bytes, err := self.store.Restore(movedSession)
+				restoredBytes = bytes
+				return err
+			},
+			Apply: func() { self.restore(index, movedSession, restoredBytes) },
 		}, true
 	}
 
@@ -206,11 +219,17 @@ func (self *sessionList) archival(index int, movedSession *Session) (menu.Remova
 		return menu.Removal{}, false
 	}
 
+	var archivedBytes int64
+
 	return menu.Removal{
 		Prompt:   "Press ctrl+a again to archive " + movedSession.Name,
 		Progress: "Archiving…",
-		Perform:  func() error { return self.store.Archive(movedSession) },
-		Apply:    func() { self.archive(index, movedSession) },
+		Perform: func() error {
+			bytes, err := self.store.Archive(movedSession)
+			archivedBytes = bytes
+			return err
+		},
+		Apply: func() { self.archive(index, movedSession, archivedBytes) },
 	}, true
 }
 
@@ -236,15 +255,17 @@ func (self *sessionList) forget(index int) {
 	self.store.Sessions = slices.Delete(self.store.Sessions, index, index+1)
 }
 
-func (self *sessionList) restore(index int, movedSession *Session) {
+func (self *sessionList) restore(index int, movedSession *Session, restoredBytes int64) {
 	movedSession.IsArchived = false
+	movedSession.Bytes = restoredBytes
 	self.store.ArchivedSessions = slices.Delete(self.store.ArchivedSessions, index, index+1)
 	self.store.Sessions = append(self.store.Sessions, movedSession)
 	newestFirst(self.store.Sessions)
 }
 
-func (self *sessionList) archive(index int, movedSession *Session) {
+func (self *sessionList) archive(index int, movedSession *Session, archivedBytes int64) {
 	movedSession.IsArchived = true
+	movedSession.Bytes = archivedBytes
 	self.store.Sessions = slices.Delete(self.store.Sessions, index, index+1)
 	self.store.ArchivedSessions = append(self.store.ArchivedSessions, movedSession)
 	newestFirst(self.store.ArchivedSessions)
@@ -274,7 +295,7 @@ func (self *sessionList) chosen(index int) (*Session, error) {
 		return chosenSession, nil
 	}
 
-	if err := self.store.Restore(chosenSession); err != nil {
+	if _, err := self.store.Restore(chosenSession); err != nil {
 		return nil, err
 	}
 	chosenSession.IsArchived = false
@@ -289,6 +310,7 @@ func sessionTable(agentTitle string) *table.Table {
 		table.Column{Title: "Model", Width: modelColumn, MinRoom: roomForModel},
 		table.Column{Title: "Effort", Width: menu.EffortColumn, Align: table.Right, MinRoom: roomForModel},
 		table.Column{Title: "Messages", Width: messageColumn, Align: table.Right},
+		table.Column{Title: "Size", Width: sizeColumn, Align: table.Right, MinRoom: roomForSize},
 		table.Column{Title: "Length", Width: lengthColumn, Align: table.Right},
 		table.Column{Title: "Last Message", Width: lastMessageColumn, Align: table.Right},
 	)
@@ -301,6 +323,7 @@ func row(storedSession *Session, isChosen bool, room int) string {
 		sessionModel(storedSession),
 		storedSession.Effort,
 		strconv.Itoa(storedSession.Messages()),
+		FormatSize(storedSession.Bytes),
 		util.CoarseDuration(storedSession.TouchedAt.Sub(storedSession.StartedAt)),
 		util.Ago(storedSession.TouchedAt),
 	}, room)
@@ -313,6 +336,26 @@ func sessionModel(storedSession *Session) string {
 	}
 
 	return name
+}
+
+func FormatSize(bytes int64) string {
+	switch {
+	case bytes <= 0:
+		return unknownSize
+	case bytes < megabyte:
+		return belowMegabyte
+	}
+
+	megabytes := nearest(bytes, megabyte)
+	if megabytes < gigabyte/megabyte {
+		return strconv.FormatInt(megabytes, 10) + "M"
+	}
+
+	return strconv.FormatInt(nearest(bytes, gigabyte), 10) + "G"
+}
+
+func nearest(bytes int64, unit int64) int64 {
+	return (bytes + unit/2) / unit
 }
 
 func sessionAnimal(storedSession *Session) string {

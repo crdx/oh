@@ -1,11 +1,11 @@
 === a wide terminal, with room for the title ===
 \e[H\e[38;2;150;152;150mFilter: \e[0m\e[K\r
-\e[4m\e[38;2;150;152;150m  Agent                 Title                                                           Model                   Effort  Messages  Length  Last Message\e[0m\e[0m\e[K\r
-\e[3m\e[38;2;150;152;150m  🐟 chewy-sardine      why does the spinner stutter when a tool runs                   \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;150;152;150m Codex 5.3              high        12      8m      just now\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› 🐩 thick-poodle       add support for reasoning traces                                \e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m Sonnet 5             medium         4      1h       37m ago\e[0m\e[K\r
-  🦡 funny-badger       the cancelled turn leaves a tool call unanswered and the next…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148      3h        5h ago\e[K\r
-  🐬 able-dolphin       (untitled)                                                      —                                      1      4h        3d ago\e[K\r
-  🦌 tame-impala        rename the harness to oh                                        Codex 5.3                             26      1d       12d ago\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent                 Title                                                    Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[3m\e[38;2;150;152;150m  🐟 chewy-sardine      why does the spinner stutter when a tool runs            \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;150;152;150m Codex 5.3              high        12     1M      8m      just now\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m› 🐩 thick-poodle       add support for reasoning traces                         \e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m Sonnet 5             medium         4    <1M      1h       37m ago\e[0m\e[K\r
+  🦡 funny-badger       the cancelled turn leaves a tool call unanswered and t…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago\e[K\r
+  🐬 able-dolphin       (untitled)                                               —                                      1      —      4h        3d ago\e[K\r
+  🦌 tame-impala        rename the harness to oh                                 Codex 5.3                             26     4M      1d       12d ago\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -25,12 +25,12 @@
 \e[K\e[J
 === a terminal wide enough for the model that answered ===
 \e[H\e[38;2;150;152;150mFilter: \e[0m\e[K\r
-\e[4m\e[38;2;150;152;150m  Agent                 Title                             Model                   Effort  Messages  Length  Last Message\e[0m\e[0m\e[K\r
-\e[3m\e[38;2;150;152;150m  🐟 chewy-sardine      why does the spinner stutter wh…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;150;152;150m Codex 5.3              high        12      8m      just now\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› 🐩 thick-poodle       add support for reasoning traces  \e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m Sonnet 5             medium         4      1h       37m ago\e[0m\e[K\r
-  🦡 funny-badger       the cancelled turn leaves a too…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148      3h        5h ago\e[K\r
-  🐬 able-dolphin       (untitled)                        —                                      1      4h        3d ago\e[K\r
-  🦌 tame-impala        rename the harness to oh          Codex 5.3                             26      1d       12d ago\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent                 Title                      Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[3m\e[38;2;150;152;150m  🐟 chewy-sardine      why does the spinner stu…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;150;152;150m Codex 5.3              high        12     1M      8m      just now\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m› 🐩 thick-poodle       add support for reasonin…  \e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m Sonnet 5             medium         4    <1M      1h       37m ago\e[0m\e[K\r
+  🦡 funny-badger       the cancelled turn leave…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago\e[K\r
+  🐬 able-dolphin       (untitled)                 —                                      1      —      4h        3d ago\e[K\r
+  🦌 tame-impala        rename the harness to oh   Codex 5.3                             26     4M      1d       12d ago\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -50,12 +50,12 @@
 \e[K\e[J
 === no room for the model, so the room goes to the title ===
 \e[H\e[38;2;150;152;150mFilter: \e[0m\e[K\r
-\e[4m\e[38;2;150;152;150m  Agent                 Title                     Messages  Length  Last Message\e[0m\e[0m\e[K\r
-\e[3m\e[38;2;150;152;150m  🐟 chewy-sardine      why does the spinner st…        12      8m      just now\e[0m\e[0m\e[K\r
-  🐩 thick-poodle       add support for reasoni…         4      1h       37m ago\e[K\r
-  🦡 funny-badger       the cancelled turn leav…       148      3h        5h ago\e[K\r
-\e[38;2;192;128;80m› 🐬 able-dolphin       (untitled)                       1      4h        3d ago\e[0m\e[K\r
-  🦌 tame-impala        rename the harness to oh        26      1d       12d ago\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent                 Title              Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[3m\e[38;2;150;152;150m  🐟 chewy-sardine      why does the spi…        12     1M      8m      just now\e[0m\e[0m\e[K\r
+  🐩 thick-poodle       add support for …         4    <1M      1h       37m ago\e[K\r
+  🦡 funny-badger       the cancelled tu…       148    23M      3h        5h ago\e[K\r
+\e[38;2;192;128;80m› 🐬 able-dolphin       (untitled)                1      —      4h        3d ago\e[0m\e[K\r
+  🦌 tame-impala        rename the harne…        26     4M      1d       12d ago\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -100,9 +100,9 @@
 \e[K\e[J
 === a filter narrowing the list to the model that answered ===
 \e[H\e[38;2;150;152;150mFilter: \e[0mcodex\e[K\r
-\e[4m\e[38;2;150;152;150m  Agent                 Title                             Model                   Effort  Messages  Length  Last Message\e[0m\e[0m\e[K\r
-\e[3m\e[38;2;192;128;80m› 🐟 chewy-sardine      why does the spinner stutter wh…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;192;128;80m Codex 5.3              high        12      8m      just now\e[0m\e[0m\e[K\r
-  🦌 tame-impala        rename the harness to oh          Codex 5.3                             26      1d       12d ago\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent                 Title                      Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[3m\e[38;2;192;128;80m› 🐟 chewy-sardine      why does the spinner stu…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;192;128;80m Codex 5.3              high        12     1M      8m      just now\e[0m\e[0m\e[K\r
+  🦌 tame-impala        rename the harness to oh   Codex 5.3                             26     4M      1d       12d ago\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -125,10 +125,10 @@
 \e[K\e[J
 === a filter matching the mode a session ran in ===
 \e[H\e[38;2;150;152;150mFilter: \e[0mfast\e[K\r
-\e[4m\e[38;2;150;152;150m  Agent                 Title                             Model                   Effort  Messages  Length  Last Message\e[0m\e[0m\e[K\r
-\e[3m\e[38;2;192;128;80m› 🐟 chewy-sardine      why does the spinner stutter wh…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;192;128;80m Codex 5.3              high        12      8m      just now\e[0m\e[0m\e[K\r
-  🐩 thick-poodle       add support for reasoning traces  \e[38;2;192;128;80m⚡\e[0m Sonnet 5             medium         4      1h       37m ago\e[K\r
-  🦡 funny-badger       the cancelled turn leaves a too…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148      3h        5h ago\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent                 Title                      Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[3m\e[38;2;192;128;80m› 🐟 chewy-sardine      why does the spinner stu…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;192;128;80m Codex 5.3              high        12     1M      8m      just now\e[0m\e[0m\e[K\r
+  🐩 thick-poodle       add support for reasonin…  \e[38;2;192;128;80m⚡\e[0m Sonnet 5             medium         4    <1M      1h       37m ago\e[K\r
+  🦡 funny-badger       the cancelled turn leave…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -150,7 +150,7 @@
 \e[K\e[J
 === a filter no session answers to ===
 \e[H\e[38;2;150;152;150mFilter: \e[0mkimi\e[K\r
-\e[4m\e[38;2;150;152;150m  Agent                 Title                             Model                   Effort  Messages  Length  Last Message\e[0m\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent                 Title                      Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -175,12 +175,12 @@
 \e[K\e[J
 === the confirmation asked before a session is archived ===
 \e[H\e[38;2;207;173;0mPress ctrl+a again to archive thick-poodle\e[0m\e[K\r
-\e[4m\e[38;2;150;152;150m  Agent                 Title                             Model                   Effort  Messages  Length  Last Message\e[0m\e[0m\e[K\r
-\e[3m\e[38;2;150;152;150m  🐟 chewy-sardine      why does the spinner stutter wh…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;150;152;150m Codex 5.3              high        12      8m      just now\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› 🐩 thick-poodle       add support for reasoning traces  \e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m Sonnet 5             medium         4      1h       37m ago\e[0m\e[K\r
-  🦡 funny-badger       the cancelled turn leaves a too…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148      3h        5h ago\e[K\r
-  🐬 able-dolphin       (untitled)                        —                                      1      4h        3d ago\e[K\r
-  🦌 tame-impala        rename the harness to oh          Codex 5.3                             26      1d       12d ago\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent                 Title                      Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[3m\e[38;2;150;152;150m  🐟 chewy-sardine      why does the spinner stu…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;150;152;150m Codex 5.3              high        12     1M      8m      just now\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m› 🐩 thick-poodle       add support for reasonin…  \e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m Sonnet 5             medium         4    <1M      1h       37m ago\e[0m\e[K\r
+  🦡 funny-badger       the cancelled turn leave…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago\e[K\r
+  🐬 able-dolphin       (untitled)                 —                                      1      —      4h        3d ago\e[K\r
+  🦌 tame-impala        rename the harness to oh   Codex 5.3                             26     4M      1d       12d ago\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -225,9 +225,9 @@
 \e[K\e[J
 === the confirmation taking the place of a filter being typed ===
 \e[H\e[38;2;207;173;0mPress ctrl+a again to archive tame-impala\e[0m\e[K\r
-\e[4m\e[38;2;150;152;150m  Agent                 Title                             Model                   Effort  Messages  Length  Last Message\e[0m\e[0m\e[K\r
-\e[3m\e[38;2;150;152;150m  🐟 chewy-sardine      why does the spinner stutter wh…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;150;152;150m Codex 5.3              high        12      8m      just now\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› 🦌 tame-impala        rename the harness to oh          Codex 5.3                             26      1d       12d ago\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent                 Title                      Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[3m\e[38;2;150;152;150m  🐟 chewy-sardine      why does the spinner stu…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;150;152;150m Codex 5.3              high        12     1M      8m      just now\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m› 🦌 tame-impala        rename the harness to oh   Codex 5.3                             26     4M      1d       12d ago\e[0m\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -250,9 +250,9 @@
 \e[K\e[J
 === a running session under the cursor, which is never offered for archiving ===
 \e[H\e[38;2;150;152;150mFilter: \e[0mcodex\e[K\r
-\e[4m\e[38;2;150;152;150m  Agent                 Title                             Model                   Effort  Messages  Length  Last Message\e[0m\e[0m\e[K\r
-\e[3m\e[38;2;192;128;80m› 🐟 chewy-sardine      why does the spinner stutter wh…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;192;128;80m Codex 5.3              high        12      8m      just now\e[0m\e[0m\e[K\r
-  🦌 tame-impala        rename the harness to oh          Codex 5.3                             26      1d       12d ago\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent                 Title                      Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[3m\e[38;2;192;128;80m› 🐟 chewy-sardine      why does the spinner stu…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;192;128;80m Codex 5.3              high        12     1M      8m      just now\e[0m\e[0m\e[K\r
+  🦌 tame-impala        rename the harness to oh   Codex 5.3                             26     4M      1d       12d ago\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -275,9 +275,9 @@
 \e[K\e[J
 === the archived view, switched to with left or right ===
 \e[H\e[38;2;150;152;150mFilter: \e[0m\e[K\r
-\e[4m\e[38;2;150;152;150m  Agent (archived)      Title                             Model                   Effort  Messages  Length  Last Message\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› 🦌 tame-impala        rename the harness to oh          Codex 5.3                             26      1d       12d ago\e[0m\e[K\r
-  🐢 wiry-turtle        add an archive view to the pick…  Sonnet 5                  high        61      3h        2d ago\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (archived)      Title                      Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m› 🦌 tame-impala        rename the harness to oh   Codex 5.3                             26    <1M      1d       12d ago\e[0m\e[K\r
+  🐢 wiry-turtle        add an archive view to t…  Sonnet 5                  high        61     2M      3h        2d ago\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -300,9 +300,9 @@
 \e[K\e[J
 === the confirmation asked before an archived session is restored ===
 \e[H\e[38;2;207;173;0mPress ctrl+a again to restore wiry-turtle\e[0m\e[K\r
-\e[4m\e[38;2;150;152;150m  Agent (archived)      Title                             Model                   Effort  Messages  Length  Last Message\e[0m\e[0m\e[K\r
-  🦌 tame-impala        rename the harness to oh          Codex 5.3                             26      1d       12d ago\e[K\r
-\e[38;2;192;128;80m› 🐢 wiry-turtle        add an archive view to the pick…  Sonnet 5                  high        61      3h        2d ago\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (archived)      Title                      Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+  🦌 tame-impala        rename the harness to oh   Codex 5.3                             26    <1M      1d       12d ago\e[K\r
+\e[38;2;192;128;80m› 🐢 wiry-turtle        add an archive view to t…  Sonnet 5                  high        61     2M      3h        2d ago\e[0m\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -325,7 +325,7 @@
 \e[K\e[J
 === the archived view with nothing archived ===
 \e[H\e[38;2;150;152;150mFilter: \e[0m\e[K\r
-\e[4m\e[38;2;150;152;150m  Agent (archived)      Title                             Model                   Effort  Messages  Length  Last Message\e[0m\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (archived)      Title                      Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -350,12 +350,12 @@
 \e[K\e[J
 === the confirmation asked before a session is deleted for good ===
 \e[H\e[38;2;207;173;0mPress delete again to delete thick-poodle for good\e[0m\e[K\r
-\e[4m\e[38;2;150;152;150m  Agent                 Title                             Model                   Effort  Messages  Length  Last Message\e[0m\e[0m\e[K\r
-\e[3m\e[38;2;150;152;150m  🐟 chewy-sardine      why does the spinner stutter wh…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;150;152;150m Codex 5.3              high        12      8m      just now\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› 🐩 thick-poodle       add support for reasoning traces  \e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m Sonnet 5             medium         4      1h       37m ago\e[0m\e[K\r
-  🦡 funny-badger       the cancelled turn leaves a too…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148      3h        5h ago\e[K\r
-  🐬 able-dolphin       (untitled)                        —                                      1      4h        3d ago\e[K\r
-  🦌 tame-impala        rename the harness to oh          Codex 5.3                             26      1d       12d ago\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent                 Title                      Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[3m\e[38;2;150;152;150m  🐟 chewy-sardine      why does the spinner stu…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;150;152;150m Codex 5.3              high        12     1M      8m      just now\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m› 🐩 thick-poodle       add support for reasonin…  \e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m Sonnet 5             medium         4    <1M      1h       37m ago\e[0m\e[K\r
+  🦡 funny-badger       the cancelled turn leave…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago\e[K\r
+  🐬 able-dolphin       (untitled)                 —                                      1      —      4h        3d ago\e[K\r
+  🦌 tame-impala        rename the harness to oh   Codex 5.3                             26     4M      1d       12d ago\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -400,9 +400,9 @@
 \e[K\e[J
 === deleting an archived session for good ===
 \e[H\e[38;2;207;173;0mPress delete again to delete tame-impala for good\e[0m\e[K\r
-\e[4m\e[38;2;150;152;150m  Agent (archived)      Title                             Model                   Effort  Messages  Length  Last Message\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› 🦌 tame-impala        rename the harness to oh          Codex 5.3                             26      1d       12d ago\e[0m\e[K\r
-  🐢 wiry-turtle        add an archive view to the pick…  Sonnet 5                  high        61      3h        2d ago\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (archived)      Title                      Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m› 🦌 tame-impala        rename the harness to oh   Codex 5.3                             26    <1M      1d       12d ago\e[0m\e[K\r
+  🐢 wiry-turtle        add an archive view to t…  Sonnet 5                  high        61     2M      3h        2d ago\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -485,9 +485,9 @@ output layer instead.\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[K\e[J
 === an archived session, which is opened rather than read ===
 \e[H\e[38;2;150;152;150mFilter: \e[0m\e[K\r
-\e[4m\e[38;2;150;152;150m  Agent (archived)      Title                             Model                   Effort  Messages  Length  Last Message\e[0m\e[0m\e[K\r
-  🦌 tame-impala        rename the harness to oh          Codex 5.3                             26      1d       12d ago\e[K\r
-\e[38;2;192;128;80m› 🐢 wiry-turtle        add an archive view to the pick…  Sonnet 5                  high        61      3h        2d ago\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (archived)      Title                      Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+  🦌 tame-impala        rename the harness to oh   Codex 5.3                             26    <1M      1d       12d ago\e[K\r
+\e[38;2;192;128;80m› 🐢 wiry-turtle        add an archive view to t…  Sonnet 5                  high        61     2M      3h        2d ago\e[0m\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -510,12 +510,12 @@ output layer instead.\e[0m\e[K\r
 \e[K\e[J
 === a session picker with nothing to read from ===
 \e[H\e[38;2;150;152;150mFilter: \e[0m\e[K\r
-\e[4m\e[38;2;150;152;150m  Agent                 Title                             Model                   Effort  Messages  Length  Last Message\e[0m\e[0m\e[K\r
-\e[3m\e[38;2;150;152;150m  🐟 chewy-sardine      why does the spinner stutter wh…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;150;152;150m Codex 5.3              high        12      8m      just now\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› 🐩 thick-poodle       add support for reasoning traces  \e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m Sonnet 5             medium         4      1h       37m ago\e[0m\e[K\r
-  🦡 funny-badger       the cancelled turn leaves a too…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148      3h        5h ago\e[K\r
-  🐬 able-dolphin       (untitled)                        —                                      1      4h        3d ago\e[K\r
-  🦌 tame-impala        rename the harness to oh          Codex 5.3                             26      1d       12d ago\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent                 Title                      Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[3m\e[38;2;150;152;150m  🐟 chewy-sardine      why does the spinner stu…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;150;152;150m Codex 5.3              high        12     1M      8m      just now\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m› 🐩 thick-poodle       add support for reasonin…  \e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m Sonnet 5             medium         4    <1M      1h       37m ago\e[0m\e[K\r
+  🦡 funny-badger       the cancelled turn leave…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago\e[K\r
+  🐬 able-dolphin       (untitled)                 —                                      1      —      4h        3d ago\e[K\r
+  🦌 tame-impala        rename the harness to oh   Codex 5.3                             26     4M      1d       12d ago\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -546,3 +546,53 @@ output layer instead.\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[K\r
 \e[3m\e[2m\e[38;2;207;173;0mSession is running...\e[0m\e[0m\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[K\e[J
+=== a session archived here, drawn at the size of its archive ===
+\e[H\e[38;2;150;152;150mFilter: \e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent (archived)      Title                      Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m› 🦡 funny-badger       the cancelled turn leave…  \e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m Qwen Coder 3 30B…    medium       148     6M      3h        5h ago\e[0m\e[K\r
+  🐢 wiry-turtle        add an archive view to t…  Sonnet 5                  high        61     2M      3h        2d ago\e[K\r
+  🦌 tame-impala        rename the harness to oh   Codex 5.3                             26    <1M      1d       12d ago\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
+=== a session restored here, drawn at the size of its directory ===
+\e[H\e[38;2;150;152;150mFilter: \e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent                 Title                      Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[3m\e[38;2;192;128;80m› 🐟 chewy-sardine      why does the spinner stu…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;192;128;80m Codex 5.3              high        12     1M      8m      just now\e[0m\e[0m\e[K\r
+  🐩 thick-poodle       add support for reasonin…  \e[38;2;192;128;80m⚡\e[0m Sonnet 5             medium         4    <1M      1h       37m ago\e[K\r
+  🦡 funny-badger       the cancelled turn leave…  \e[38;2;192;128;80m⚡\e[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago\e[K\r
+  🐢 wiry-turtle        add an archive view to t…  Sonnet 5                  high        61     7M      3h        2d ago\e[K\r
+  🐬 able-dolphin       (untitled)                 —                                      1      —      4h        3d ago\e[K\r
+  🦌 tame-impala        rename the harness to oh   Codex 5.3                             26     4M      1d       12d ago\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
