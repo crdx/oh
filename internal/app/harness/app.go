@@ -105,6 +105,23 @@ func (self *pendingNotices) notices() []string {
 	return notices
 }
 
+func (self *pendingNotices) accessNotices() []string {
+	var notices []string
+	for _, item := range self.items {
+		kind := item.state.Kind
+		isAccessChange := kind == caps.ModeChange || kind == caps.JobStop ||
+			kind == pathgrant.Change || kind == portgrant.SandboxToHostChange
+		if !isAccessChange {
+			continue
+		}
+
+		if itemNotices, areSaid := painter.HarnessNotices(item.state); areSaid {
+			notices = append(notices, itemNotices...)
+		}
+	}
+	return notices
+}
+
 type jobState struct {
 	manager         *jobs.Manager
 	recordedListing string
@@ -956,8 +973,14 @@ func (self *App) ruleStyle() style.Style {
 
 func (self *App) statusRows(columns int) []string {
 	if self.feedback.IsEmpty() {
-		return painter.RenderQueuedMessages(
+		var notices []string
+		if self.currentTurn.Running() {
+			notices = self.pendingNotices.accessNotices()
+		}
+
+		return painter.RenderQueuedMessagesAndNotices(
 			self.currentTurn.GetInterjections(),
+			notices,
 			!self.currentTurn.Cancelled(),
 			columns,
 			self.screen.IsTerminal(),

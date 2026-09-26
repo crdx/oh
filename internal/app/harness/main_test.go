@@ -3122,6 +3122,42 @@ func countModeNotes(messages []string, note string) int {
 	return said
 }
 
+func TestOnlyQueuedAccessChangesAreShownInTheFooter(t *testing.T) {
+	pathChange, err := pathgrant.ChangeEvent(
+		"/reference",
+		[]pathgrant.Grant{{Path: "/reference", Access: pathgrant.ReadAccess}},
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	portChange, err := portgrant.SandboxToHostChangeEvent(3000, []uint16{3000})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tests := map[string]struct {
+		event   agent.Event
+		isShown bool
+	}{
+		"mode change":         {event: caps.ModeToggleEvent(caps.Write, caps.Read), isShown: true},
+		"job stopped":         {event: caps.JobStopEvent("web", caps.Write), isShown: true},
+		"path grant changed":  {event: pathChange, isShown: true},
+		"port access changed": {event: portChange, isShown: true},
+		"host command ran":    {event: hostCommandRun()},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			pending := pendingNotices{}
+			pending.add(test.event)
+
+			if isShown := len(pending.accessNotices()) > 0; isShown != test.isShown {
+				t.Errorf("got shown=%t, want %t", isShown, test.isShown)
+			}
+		})
+	}
+}
+
 func TestPendingInputCanTakeBackAnyMessage(t *testing.T) {
 	var pending pendingNotices
 	pending.add(agent.Event{Kind: caps.ModeChange, Text: "first"})
@@ -3172,6 +3208,31 @@ func TestAQueuedModeChangeCanBeTakenBackBeforeItStarts(t *testing.T) {
 	}
 	if !storedSession.CanResume() {
 		t.Error("taking back the queued mode change left the session unsafe")
+	}
+}
+
+func TestAQueuedModeChangeIsShownWhileTheInterruptedTurnFinishes(t *testing.T) {
+	var screenOutput strings.Builder
+	wasStopped := false
+	self := &App{
+		screen: output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines),
+		mode:   caps.NewMode(caps.Read | caps.Write),
+		currentTurn: Turn{Stream: testTurnStream(
+			nil,
+			func(error) { wasStopped = true },
+			turn.State{Running: true},
+		)},
+	}
+
+	self.toggleCap(caps.Write)
+	self.show(edit.NewInput(nil))
+
+	if !wasStopped {
+		t.Error("expected the running turn to be interrupted")
+	}
+	drawn := strings.Join(visibleScreen(t, screenOutput.String(), replayColumns), "\n")
+	if !strings.Contains(drawn, "⏳ "+workspaceNowReadOnly()) {
+		t.Errorf("expected the pending mode change while the turn finishes, got %q", drawn)
 	}
 }
 
@@ -5479,7 +5540,15 @@ func TestGoldenPendingModeMessagesAreSeparatedFromStartupAndJoinedToEachOther(t 
 	)
 
 	compareWithGolden(t, "pending-mode-messages", ".ansi", map[string]func() string{
-		"complete interaction":  func() string { return pendingModeMessagesStream(t, 2) },
+		"complete interaction":         func() string { return pendingModeMessagesStream(t, 2) },
+		"queued beside a running call": func() string { return pendingModeMessageDuringCallStream(t) },
+		"queued beside a user message": func() string { return pendingModeAndUserMessageDuringCallStream(t) },
+		"two queued beside a running call": func() string {
+			return twoPendingModeMessagesDuringCallStream(t)
+		},
+		"taken back beside a running call": func() string {
+			return takenBackModeMessageDuringCallStream(t)
+		},
 		"carried by a new turn": func() string { return sentModeMessagesStream(t, "") },
 		"carried by a new turn beside a later line": func() string {
 			return sentModeMessagesStream(t, laterHarnessLine)
@@ -5492,6 +5561,14 @@ func TestGoldenPendingModeMessagesAreSeparatedFromStartupAndJoinedToEachOther(t 
 		"4 carried by a new turn":      func() string { return sentModeMessagesStream(t, "") },
 		"5 carried by a new turn beside a later line": func() string {
 			return sentModeMessagesStream(t, laterHarnessLine)
+		},
+		"6 queued beside a running call": func() string { return pendingModeMessageDuringCallStream(t) },
+		"7 queued beside a user message": func() string { return pendingModeAndUserMessageDuringCallStream(t) },
+		"8 two queued beside a running call": func() string {
+			return twoPendingModeMessagesDuringCallStream(t)
+		},
+		"9 taken back beside a running call": func() string {
+			return takenBackModeMessageDuringCallStream(t)
 		},
 	}))
 }
@@ -5508,6 +5585,68 @@ func sentModeMessagesStream(t *testing.T, laterLine string) string {
 	t.Helper()
 
 	return modeMessagesStream(t, 2, true, laterLine)
+}
+
+func pendingModeMessageDuringCallStream(t *testing.T) string {
+	t.Helper()
+
+	return pendingModeMessagesDuringCallStream(t, func(self *App, _ *edit.Input) {
+		self.toggleCap(caps.Write)
+	})
+}
+
+func pendingModeAndUserMessageDuringCallStream(t *testing.T) string {
+	t.Helper()
+
+	return pendingModeMessagesDuringCallStream(t, func(self *App, _ *edit.Input) {
+		self.currentTurn.Interject("do this instead")
+		self.toggleCap(caps.Write)
+	})
+}
+
+func twoPendingModeMessagesDuringCallStream(t *testing.T) string {
+	t.Helper()
+
+	return pendingModeMessagesDuringCallStream(t, func(self *App, _ *edit.Input) {
+		self.toggleCap(caps.Write)
+		self.toggleCap(caps.Git)
+	})
+}
+
+func takenBackModeMessageDuringCallStream(t *testing.T) string {
+	t.Helper()
+
+	return pendingModeMessagesDuringCallStream(t, func(self *App, inputLine *edit.Input) {
+		self.toggleCap(caps.Write)
+		self.show(inputLine)
+		self.toggleCap(caps.Write)
+	})
+}
+
+func pendingModeMessagesDuringCallStream(t *testing.T, change func(*App, *edit.Input)) string {
+	t.Helper()
+
+	self, _ := modeFixture(t)
+	var screenOutput strings.Builder
+	self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
+	self.currentTurn = Turn{
+		painter: self.newPainter(true),
+		Stream:  testTurnStream(nil, func(error) {}, turn.State{Running: true}),
+	}
+	call := agent.Event{
+		Kind:              agent.ToolCallRequestEvent,
+		ID:                "1",
+		Name:              "bash",
+		FallbackRendering: agent.FallbackRendering{Subject: "sleep 600"},
+	}
+	self.recordedEvents = append(self.recordedEvents, call)
+	self.currentTurn.painter.DrawEvent(call)
+
+	inputLine := edit.NewInput(nil)
+	change(self, inputLine)
+	self.show(inputLine)
+
+	return screenOutput.String()
 }
 
 func modeMessagesStream(t *testing.T, toggleCount int, isSent bool, laterLine string) string {

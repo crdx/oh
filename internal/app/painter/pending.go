@@ -68,7 +68,25 @@ func RenderQueuedMessages(
 	shouldRenderHyperlinks bool,
 	roots link.Roots,
 ) []string {
-	if len(messages) == 0 {
+	return RenderQueuedMessagesAndNotices(messages, nil, canBeSentNow, columns, shouldRenderHyperlinks, roots)
+}
+
+func RenderQueuedMessagesAndNotices(
+	messages []string,
+	notices []string,
+	canBeSentNow bool,
+	columns int,
+	shouldRenderHyperlinks bool,
+	roots link.Roots,
+) []string {
+	submissions := make([]submittedMessage, 0, len(notices)+len(messages))
+	for _, notice := range notices {
+		submissions = append(submissions, submittedMessage{text: notice, kind: pendingHarnessSubmission})
+	}
+	for _, message := range messages {
+		submissions = append(submissions, submittedMessage{text: message, kind: userSubmission})
+	}
+	if len(submissions) == 0 {
 		return nil
 	}
 
@@ -77,15 +95,15 @@ func RenderQueuedMessages(
 		hint = stoppingHint
 	}
 
-	rows := make([]string, 0, len(messages)+2)
-	rows = append(rows, frameQueuedRow(renderHintRow(hint, columns), columns))
+	rows := make([]string, 0, len(submissions)+2)
+	rows = append(rows, frameQueuedRow(renderHintRow(hint, columns), columns, submissions[0].background()))
 
-	for _, message := range messages {
-		summary := summariseQueuedMessage(message, shouldRenderHyperlinks, roots)
-		rows = append(rows, renderQueuedRow(unsentMark+" "+summary, columns))
+	for _, submission := range submissions {
+		summary := summariseQueuedMessage(submission.text, shouldRenderHyperlinks, roots)
+		rows = append(rows, renderQueuedRow(unsentMark+" "+summary, columns, submission.background()))
 	}
 
-	return append(rows, renderQueuedRow("", columns))
+	return append(rows, renderQueuedRow("", columns, submissions[len(submissions)-1].background()))
 }
 
 func summariseQueuedMessage(message string, shouldRenderHyperlinks bool, roots link.Roots) string {
@@ -110,21 +128,21 @@ func summariseQueuedMessage(message string, shouldRenderHyperlinks bool, roots l
 	return summary
 }
 
-func renderQueuedRow(text string, columns int) string {
+func renderQueuedRow(text string, columns int, background style.Style) string {
 	row := ""
 	if text != "" {
 		row = width.Elide(" "+text, columns)
 	}
 
-	return frameQueuedRow(row, columns)
+	return frameQueuedRow(row, columns, background)
 }
 
-func frameQueuedRow(row string, columns int) string {
+func frameQueuedRow(row string, columns int, background style.Style) string {
 	if room := columns - style.Width(row); room > 0 {
 		row += strings.Repeat(" ", room)
 	}
 
-	return style.User(row)
+	return background(row)
 }
 
 func renderHintRow(hint string, columns int) string {
