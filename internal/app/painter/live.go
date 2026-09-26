@@ -16,6 +16,7 @@ type liveText struct {
 	streamingMode output.StreamingMode
 	arrivedText   strings.Builder
 	drawnBytes    int
+	cleanBytes    int
 	drawnRowCount int
 	isTailHidden  bool
 }
@@ -29,7 +30,13 @@ func (self *liveText) String() string {
 }
 
 func (self *liveText) Text() string {
-	return strutil.StripControl(self.arrivedText.String())
+	text := self.arrivedText.String()
+	self.cleanBytes = strutil.ControlFreeLength(text, self.cleanBytes)
+	if self.cleanBytes == len(text) {
+		return text
+	}
+
+	return strutil.StripControl(text)
 }
 
 func (self *liveText) Write(text string) {
@@ -39,6 +46,7 @@ func (self *liveText) Write(text string) {
 func (self *liveText) Reset() {
 	self.arrivedText.Reset()
 	self.drawnBytes = 0
+	self.cleanBytes = 0
 	self.drawnRowCount = 0
 	self.isTailHidden = false
 }

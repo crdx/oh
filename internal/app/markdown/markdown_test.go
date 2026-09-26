@@ -55,6 +55,18 @@ func TestAnAnswerDrawnADeltaAtATimeIsTheAnswerDrawnAtOnce(t *testing.T) {
 	}
 }
 
+func TestAStreamRendererDrawsEveryPrefixAsARenderFromScratch(t *testing.T) {
+	source := answer + "\n```go\nfunc second() {}\n```\n\n> ```bash\n> echo quoted\n> ```\n"
+	var stream StreamRenderer
+
+	for length := range len(source) + 1 {
+		got := stream.Render(source[:length], columns)
+		if want := width.Texts(render(source[:length], Options{Columns: columns}, nil)); !slices.Equal(got, want) {
+			t.Fatalf("a prefix of %d drew %q, want %q", length, got, want)
+		}
+	}
+}
+
 func TestATableWidensAsItsRowsArrive(t *testing.T) {
 	short := Render("| a | b |\n|---|---|\n| x | y |\n", columns)
 	long := Render("| a | b |\n|---|---|\n| x | y |\n| a much wider cell | y |\n", columns)

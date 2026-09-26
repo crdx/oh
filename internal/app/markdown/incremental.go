@@ -43,6 +43,14 @@ func (self *IncrementalRenderer) IsTailMermaid() bool {
 	return self.tail.IsTailMermaid()
 }
 
+func (self *IncrementalRenderer) EndsWithTable(markdown string) bool {
+	if self.isDisabled || self.stableSource == "" || !strings.HasPrefix(markdown, self.stableSource) {
+		return EndsWithTable(markdown)
+	}
+
+	return EndsWithTable(markdown[len(self.stableSource):])
+}
+
 func (self *IncrementalRenderer) Reset() {
 	*self = IncrementalRenderer{}
 }
@@ -63,8 +71,10 @@ func (self *IncrementalRenderer) RenderWith(markdown string, options Options) []
 	}
 	if self.tail.hasStableCandidateStart && self.tail.stableCandidateStart > 0 {
 		candidate := len(self.stableSource) + self.tail.stableCandidateStart
-		if candidate > self.lastCandidate && self.advance(markdown, candidate) {
-			tailRows = self.tail.render(markdown[len(self.stableSource):], options)
+		if candidate > self.lastCandidate {
+			if remainingRows, isAdvanced := self.advance(markdown, candidate, tailRows); isAdvanced {
+				tailRows = remainingRows
+			}
 		}
 	}
 
@@ -80,23 +90,38 @@ func (self *IncrementalRenderer) disable(markdown string) []width.ScreenRow {
 	return self.tail.render(markdown, self.options)
 }
 
-func (self *IncrementalRenderer) advance(markdown string, candidate int) bool {
+func (self *IncrementalRenderer) advance(
+	markdown string,
+	candidate int,
+	tailRows []width.ScreenRow,
+) ([]width.ScreenRow, bool) {
 	self.lastCandidate = candidate
-	stableRows := render(markdown[:candidate], self.options, nil)
+	settledRows := render(markdown[len(self.stableSource):candidate], self.options, nil)
 	var tail StreamRenderer
-	tailRows := tail.render(markdown[candidate:], self.options)
+	remainingRows := tail.render(markdown[candidate:], self.options)
 	if tail.hasMermaid || tail.hasLinkReference {
-		return false
+		return nil, false
 	}
-	fullRows := render(markdown, self.options, nil)
-	if !slices.Equal(fullRows, joinRenderedParts(stableRows, tailRows)) {
-		return false
+	if !slices.Equal(tailRows, joinRenderedParts(settledRows, remainingRows)) {
+		return nil, false
 	}
 
-	self.stableRows = stableRows
+	self.stableRows = appendRenderedParts(self.stableRows, settledRows)
 	self.stableSource = markdown[:candidate]
-	self.tail.Reset()
-	return true
+	self.tail = tail
+	return remainingRows, true
+}
+
+func appendRenderedParts(stableRows []width.ScreenRow, settledRows []width.ScreenRow) []width.ScreenRow {
+	if len(settledRows) == 0 {
+		return stableRows
+	}
+	if len(stableRows) == 0 {
+		return slices.Clone(settledRows)
+	}
+
+	stableRows = append(stableRows, width.ScreenRow{})
+	return append(stableRows, settledRows...)
 }
 
 func joinRenderedParts(stableRows []width.ScreenRow, tailRows []width.ScreenRow) []width.ScreenRow {

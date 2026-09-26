@@ -50,8 +50,7 @@ func (self *plainThought) Text(source string, isSettled bool) (string, string) {
 		self.consumedBytes += at + 1
 
 		if text, isKept := self.strip(line, endOfLine); isKept {
-			self.settledText.WriteString(text)
-			self.settledText.WriteByte('\n')
+			self.settle(text)
 		}
 	}
 
@@ -66,6 +65,15 @@ func (self *plainThought) Text(source string, isSettled bool) (string, string) {
 	}
 
 	return self.settledText.String(), tail
+}
+
+func (self *plainThought) settle(text string) {
+	for field := range strings.FieldsSeq(text) {
+		if self.settledText.Len() > 0 {
+			self.settledText.WriteByte(' ')
+		}
+		self.settledText.WriteString(field)
+	}
 }
 
 func (self *plainThought) peek(line string, boundary lineBoundary) (string, bool) {

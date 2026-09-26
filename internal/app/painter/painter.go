@@ -45,6 +45,7 @@ type Picasso struct {
 	reasoningRenderer markdown.IncrementalRenderer
 	reasoningPlain    plainThought
 	reasoningReflow   paragraphReflow
+	reasoningStyles   rowMemory
 	reasoningLinks    rowLinks
 	previousKind      agent.Kind
 
@@ -360,22 +361,23 @@ func RenderReasoning(thought string, columns int, rendering output.ReasoningRend
 	var renderer markdown.IncrementalRenderer
 	var plain plainThought
 	var reflow paragraphReflow
+	var styles rowMemory
 
-	return renderReasoningWith(&renderer, &plain, &reflow, thought, columns, rendering, true)
+	return renderReasoningWith(&renderer, &plain, &reflow, &styles, thought, columns, rendering, true)
 }
 
 func renderReasoningWith(
 	renderer *markdown.IncrementalRenderer,
 	plain *plainThought,
 	reflow *paragraphReflow,
+	styles *rowMemory,
 	thought string,
 	columns int,
 	rendering output.ReasoningRendering,
 	isSettled bool,
 ) []string {
 	if rendering == output.ReasoningPlain {
-		settledSource, tail := plain.Text(thought, isSettled)
-		settledText := strings.Join(strings.Fields(settledSource), " ")
+		settledText, tail := plain.Text(thought, isSettled)
 		text := settledText
 		if tailText := strings.Join(strings.Fields(tail), " "); tailText != "" {
 			if text != "" {
@@ -390,9 +392,7 @@ func renderReasoningWith(
 	renderedRows := renderer.Render(thought, columns)
 
 	if rendering == output.ReasoningMarkdown {
-		for i, row := range renderedRows {
-			renderedRows[i] = style.Reasoning.Over(row)
-		}
+		return styles.Render(renderedRows, style.Reasoning.Over)
 	}
 
 	return renderedRows
@@ -618,11 +618,16 @@ func (self *Picasso) settleAnswer() {
 }
 
 func (self *Picasso) drawReasoning(isSettled bool) {
-	thought, isRowArriving := self.withoutArrivingTableRow(self.reasoning.Text(), isSettled)
+	thought, isRowArriving := self.withoutArrivingTableRow(
+		&self.reasoningRenderer,
+		self.reasoning.Text(),
+		isSettled,
+	)
 	rows := renderReasoningWith(
 		&self.reasoningRenderer,
 		&self.reasoningPlain,
 		&self.reasoningReflow,
+		&self.reasoningStyles,
 		thought,
 		self.screen.Columns(),
 		self.reasoningRendering,
@@ -644,7 +649,11 @@ func (self *Picasso) drawReasoning(isSettled bool) {
 }
 
 func (self *Picasso) drawAnswer(isSettled bool) {
-	answerText, isRowArriving := self.withoutArrivingTableRow(self.answer.Text(), isSettled)
+	answerText, isRowArriving := self.withoutArrivingTableRow(
+		&self.answerRenderer,
+		self.answer.Text(),
+		isSettled,
+	)
 
 	rows := self.answerRenderer.RenderWith(answerText, self.answerOptions())
 
@@ -691,7 +700,11 @@ func (self *Picasso) isTailHeldBack(isSettled bool) bool {
 	return !strings.HasSuffix(self.answer.String(), "\n") && !self.answerRenderer.IsTailMermaid()
 }
 
-func (self *Picasso) withoutArrivingTableRow(text string, isSettled bool) (string, bool) {
+func (self *Picasso) withoutArrivingTableRow(
+	renderer *markdown.IncrementalRenderer,
+	text string,
+	isSettled bool,
+) (string, bool) {
 	if isSettled || self.streamingMode != output.StreamingModeLine {
 		return text, false
 	}
@@ -699,7 +712,7 @@ func (self *Picasso) withoutArrivingTableRow(text string, isSettled bool) (strin
 	settledEnd := strings.LastIndex(text, "\n") + 1
 	arrivingRow := text[settledEnd:]
 
-	if !strings.Contains(arrivingRow, "|") || !markdown.EndsWithTable(text[:settledEnd]) {
+	if !strings.Contains(arrivingRow, "|") || !renderer.EndsWithTable(text[:settledEnd]) {
 		return text, false
 	}
 
@@ -722,6 +735,7 @@ func (self *Picasso) resetReasoning() {
 	self.reasoningRenderer.Reset()
 	self.reasoningPlain.Reset()
 	self.reasoningReflow.Reset()
+	self.reasoningStyles.Reset()
 	self.reasoningLinks.Reset()
 }
 

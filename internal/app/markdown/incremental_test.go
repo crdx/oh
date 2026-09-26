@@ -10,20 +10,22 @@ import (
 
 func TestIncrementalRendererMatchesMarkdownThatCanChangeEarlierBlocks(t *testing.T) {
 	for name, source := range map[string]string{
-		"paragraphs":              "first paragraph\n\nsecond paragraph\n\nthird paragraph",
-		"provisional heading":     "0\n#000",
-		"tabs before blocks":      "\tindented code\n\nparagraph\n\n\tmore code",
-		"multi-byte text":         "héllo 🐞\n\nsecond paragraph\n\nthird",
-		"fenced code with blanks": "before\n\n```go\nfunc one() {}\n\nfunc two() {}\n```\n\nafter",
-		"table":                   "before\n\n| one | two |\n| --- | --- |\n| a | b |\n\nafter",
-		"loose list":              "before\n\n- one\n\n- two\n\nafter",
-		"late list continuation":  "before\n\n- one\n\n- two\n\nafter\n\n- unrelated",
-		"late link reference":     "see [the note][note]\n\nordinary text\n\n[note]: https://example.com",
-		"early link reference":    "[note]: https://example.com\n\nordinary text\n\nsee [the note][note]",
-		"quoted blocks":           "> first\n>\n> second\n\nafter",
-		"empty quote":             "0\n>\n*0",
-		"html blocks":             "<div>\nfirst\n\nsecond\n</div>\n\nafter",
-		"mermaid blocks":          "```mermaid\ngraph LR\nA --> B\n```\n\nafter\n\n```mermaid\ngraph LR\nB --> C",
+		"paragraphs":                 "first paragraph\n\nsecond paragraph\n\nthird paragraph",
+		"provisional heading":        "0\n#000",
+		"tabs before blocks":         "\tindented code\n\nparagraph\n\n\tmore code",
+		"multi-byte text":            "héllo 🐞\n\nsecond paragraph\n\nthird",
+		"fenced code with blanks":    "before\n\n```go\nfunc one() {}\n\nfunc two() {}\n```\n\nafter",
+		"table":                      "before\n\n| one | two |\n| --- | --- |\n| a | b |\n\nafter",
+		"loose list":                 "before\n\n- one\n\n- two\n\nafter",
+		"late list continuation":     "before\n\n- one\n\n- two\n\nafter\n\n- unrelated",
+		"late link reference":        "see [the note][note]\n\nordinary text\n\n[note]: https://example.com",
+		"early link reference":       "[note]: https://example.com\n\nordinary text\n\nsee [the note][note]",
+		"quoted blocks":              "> first\n>\n> second\n\nafter",
+		"empty quote":                "0\n>\n*0",
+		"indent before a definition": "intro\n\n    [note]:\nhttps://example.com/note\n\nafter",
+		"tab before an HTML opening": "\t<!A\n>0",
+		"html blocks":                "<div>\nfirst\n\nsecond\n</div>\n\nafter",
+		"mermaid blocks":             "```mermaid\ngraph LR\nA --> B\n```\n\nafter\n\n```mermaid\ngraph LR\nB --> C",
 	} {
 		for _, columns := range []int{0, 1, 10, 40, 100} {
 			t.Run(name, func(t *testing.T) {
@@ -142,6 +144,10 @@ func FuzzIncrementalRenderer(fuzzer *testing.F) {
 			}
 			if incremental.IsTailMermaid() != baseline.IsTailMermaid() {
 				t.Fatalf("byte %d disagreed about a Mermaid tail", at)
+			}
+			fresh := width.Texts(render(source[:at], Options{Columns: columns}, nil))
+			if !baseline.hasMermaid && !slices.Equal(want, fresh) {
+				t.Fatalf("byte %d streamed different rows from a fresh render\nfresh:    %q\nstreamed: %q", at, fresh, want)
 			}
 		}
 	})

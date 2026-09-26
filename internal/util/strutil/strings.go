@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strings"
 	"unicode"
+	"unicode/utf8"
 )
 
 func Capitalise(text string) string {
@@ -99,6 +100,19 @@ var escapeSequence = regexp.MustCompile(
 
 func StripControl(text string) string {
 	return strings.Map(withoutControl, escapeSequence.ReplaceAllString(text, ""))
+}
+
+func ControlFreeLength(text string, from int) int {
+	at := from
+	for at < len(text) {
+		character, size := utf8.DecodeRuneInString(text[at:])
+		if character == utf8.RuneError && size <= 1 || withoutControl(character) != character {
+			return at
+		}
+		at += size
+	}
+
+	return at
 }
 
 func withoutControl(character rune) rune {

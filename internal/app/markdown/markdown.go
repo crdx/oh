@@ -68,6 +68,8 @@ func EndsWithTable(markdown string) bool {
 
 type StreamRenderer struct {
 	mermaidRows             map[int][]string
+	highlightedRows         map[highlightedCode][]string
+	earlierHighlightedRows  map[highlightedCode][]string
 	isTailMermaid           bool
 	hasMermaid              bool
 	hasLinkReference        bool
@@ -85,6 +87,8 @@ func (self *StreamRenderer) IsTailMermaid() bool {
 
 func (self *StreamRenderer) Reset() {
 	clear(self.mermaidRows)
+	self.highlightedRows = nil
+	self.earlierHighlightedRows = nil
 	self.isTailMermaid = false
 	self.hasMermaid = false
 	self.hasLinkReference = false
@@ -93,6 +97,8 @@ func (self *StreamRenderer) Reset() {
 }
 
 func (self *StreamRenderer) render(markdown string, options Options) []width.ScreenRow {
+	self.earlierHighlightedRows = self.highlightedRows
+	self.highlightedRows = nil
 	self.isTailMermaid = false
 	self.hasMermaid = false
 	self.hasLinkReference = false
@@ -110,7 +116,8 @@ func render(markdown string, options Options, stream *StreamRenderer) []width.Sc
 		stream.hasLinkReference = len(parserContext.References()) > 0
 		if lastBlock := document.LastChild(); lastBlock != nil {
 			if candidate := lastBlock.PreviousSibling(); candidate != nil && candidate.Pos() >= 0 {
-				stream.stableCandidateStart = originalOffset(markdown, candidate.Pos())
+				contentStart := originalOffset(markdown, candidate.Pos())
+				stream.stableCandidateStart = strings.LastIndexByte(markdown[:contentStart], '\n') + 1
 				stream.hasStableCandidateStart = true
 			}
 		}
@@ -211,7 +218,7 @@ func (self *renderer) block(node ast.Node) {
 				return
 			}
 		}
-		self.code(emphasise(lines, language))
+		self.code(self.emphasise(lines, language))
 
 	case *ast.CodeBlock:
 		self.code(emphasise(self.lines(node), ""))
@@ -259,6 +266,33 @@ func (self *renderer) linkPaths(text string) string {
 	}
 
 	return link.Render(text, self.linkRoot)
+}
+
+type highlightedCode struct {
+	language string
+	source   string
+}
+
+func (self *renderer) emphasise(lines []string, language string) []string {
+	if self.stream == nil {
+		return emphasise(lines, language)
+	}
+
+	code := highlightedCode{language: language, source: strings.Join(lines, "\n")}
+	rows, isRemembered := self.stream.highlightedRows[code]
+	if !isRemembered {
+		rows, isRemembered = self.stream.earlierHighlightedRows[code]
+	}
+	if !isRemembered {
+		rows = emphasise(lines, language)
+	}
+
+	if self.stream.highlightedRows == nil {
+		self.stream.highlightedRows = map[highlightedCode][]string{}
+	}
+	self.stream.highlightedRows[code] = rows
+
+	return rows
 }
 
 func (self *renderer) code(lines []string) {

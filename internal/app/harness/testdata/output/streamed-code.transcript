@@ -1,0 +1,50 @@
+=== written down ===
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `high`
+- **Provider:** `codex`
+- **Workspace:** `/workspace`
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## User · +0s
+
+stream some code at me
+
+## Assistant · +1s
+
+A fence whose last line is blank:
+
+```go
+func first() {}
+
+```
+
+It keeps that blank while more arrives after it.
+
+The same fence twice in a row:
+
+```go
+func twice() {}
+```
+
+```go
+func twice() {}
+```
+
+Both are highlighted alike, and so is this one while the paragraph after it grows:
+
+```bash
+echo "still highlighted"
+```
+
+A paragraph that keeps growing after the fence, word by word, until it wraps across more than one row of the terminal.
+
+An indented line that would read as a link definition without its indent:
+
+    [note]:
+https://example.com/note
+
+And the answer carries on after it.

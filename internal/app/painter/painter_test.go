@@ -512,3 +512,43 @@ func TestRenderContextExceededStaysSilentForOtherFailures(t *testing.T) {
 		})
 	}
 }
+
+func TestReasoningDrawnADeltaAtATimeIsTheReasoningDrawnAtOnce(t *testing.T) {
+	const thought = "First  thought,\twith spacing.\n\n> quoted **bold** line\n\n" +
+		"| a | b |\n| --- | --- |\n| one | two |\n\n```go\nfunc   kept() {}\n```\n\n" +
+		"- listed `code`\n- another\n\n# Heading\n\nA closing paragraph that runs long enough to wrap across rows."
+
+	for name, rendering := range map[string]output.ReasoningRendering{
+		"plain":    output.ReasoningPlain,
+		"markdown": output.ReasoningMarkdown,
+	} {
+		t.Run(name, func(t *testing.T) {
+			var renderer markdown.IncrementalRenderer
+			var plain plainThought
+			var reflow paragraphReflow
+			var styles rowMemory
+
+			for at := 1; at <= len(thought); at++ {
+				got := renderReasoningWith(&renderer, &plain, &reflow, &styles, thought[:at], 30, rendering, false)
+
+				var freshRenderer markdown.IncrementalRenderer
+				var freshPlain plainThought
+				var freshReflow paragraphReflow
+				var freshStyles rowMemory
+				want := renderReasoningWith(
+					&freshRenderer,
+					&freshPlain,
+					&freshReflow,
+					&freshStyles,
+					thought[:at],
+					30,
+					rendering,
+					false,
+				)
+				if strings.Join(got, "\n") != strings.Join(want, "\n") {
+					t.Fatalf("byte %d drew\n%q\nwant\n%q", at, got, want)
+				}
+			}
+		})
+	}
+}

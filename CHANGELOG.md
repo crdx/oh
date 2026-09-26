@@ -11,6 +11,7 @@
 - Keep each jobs entry on one line
 - Show session sizes on disk in picker
 - Make plain reasoning keep underscores
+- Keep streamed redraws proportional
 - Keep empty Markdown blocks from adding blank rows
 - Keep live output within the terminal, so nothing is drawn over or lost
 - Keep running calls visible and ticking beneath a tall question

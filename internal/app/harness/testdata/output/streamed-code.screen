@@ -1,0 +1,675 @@
+=== narrow ===
+
+ stream some code at me
+
+
+A fence whose last line is blank:
+
+func first() {}
+
+
+It keeps that blank while more arrives
+after it.
+
+The same fence twice in a row:
+
+func twice() {}
+
+func twice() {}
+
+Both are highlighted alike, and so is
+this one while the paragraph after it
+grows:
+
+echo "still highlighted"
+
+A paragraph that keeps growing after the
+fence, word by word, until it wraps
+across more than one row of the
+terminal.
+
+An indented line that would read as a
+link definition without its indent:
+
+[note]:
+
+https://example.com/note
+
+And the answer carries on after it.
+=== one column ===
+
+
+s
+
+t
+
+r
+
+e
+
+a
+
+m
+
+s
+
+o
+
+m
+
+e
+
+c
+
+o
+
+d
+
+e
+
+a
+
+t
+
+m
+
+e
+
+
+A
+f
+e
+n
+c
+e
+w
+h
+o
+s
+e
+l
+a
+s
+t
+l
+i
+n
+e
+i
+s
+b
+l
+a
+n
+k
+:
+
+f
+u
+n
+c
+
+f
+i
+r
+s
+t
+(
+)
+
+{
+}
+
+
+I
+t
+k
+e
+e
+p
+s
+t
+h
+a
+t
+b
+l
+a
+n
+k
+w
+h
+i
+l
+e
+m
+o
+r
+e
+a
+r
+r
+i
+v
+e
+s
+a
+f
+t
+e
+r
+i
+t
+.
+
+T
+h
+e
+s
+a
+m
+e
+f
+e
+n
+c
+e
+t
+w
+i
+c
+e
+i
+n
+a
+r
+o
+w
+:
+
+f
+u
+n
+c
+
+t
+w
+i
+c
+e
+(
+)
+
+{
+}
+
+f
+u
+n
+c
+
+t
+w
+i
+c
+e
+(
+)
+
+{
+}
+
+B
+o
+t
+h
+a
+r
+e
+h
+i
+g
+h
+l
+i
+g
+h
+t
+e
+d
+a
+l
+i
+k
+e
+,
+a
+n
+d
+s
+o
+i
+s
+t
+h
+i
+s
+o
+n
+e
+w
+h
+i
+l
+e
+t
+h
+e
+p
+a
+r
+a
+g
+r
+a
+p
+h
+a
+f
+t
+e
+r
+i
+t
+g
+r
+o
+w
+s
+:
+
+e
+c
+h
+o
+
+"
+s
+t
+i
+l
+l
+
+h
+i
+g
+h
+l
+i
+g
+h
+t
+e
+d
+"
+
+A
+p
+a
+r
+a
+g
+r
+a
+p
+h
+t
+h
+a
+t
+k
+e
+e
+p
+s
+g
+r
+o
+w
+i
+n
+g
+a
+f
+t
+e
+r
+t
+h
+e
+f
+e
+n
+c
+e
+,
+w
+o
+r
+d
+b
+y
+w
+o
+r
+d
+,
+u
+n
+t
+i
+l
+i
+t
+w
+r
+a
+p
+s
+a
+c
+r
+o
+s
+s
+m
+o
+r
+e
+t
+h
+a
+n
+o
+n
+e
+r
+o
+w
+o
+f
+t
+h
+e
+t
+e
+r
+m
+i
+n
+a
+l
+.
+
+A
+n
+i
+n
+d
+e
+n
+t
+e
+d
+l
+i
+n
+e
+t
+h
+a
+t
+w
+o
+u
+l
+d
+r
+e
+a
+d
+a
+s
+a
+l
+i
+n
+k
+d
+e
+f
+i
+n
+i
+t
+i
+o
+n
+w
+i
+t
+h
+o
+u
+t
+i
+t
+s
+i
+n
+d
+e
+n
+t
+:
+
+[
+n
+o
+t
+e
+]
+:
+
+h
+t
+t
+p
+s
+:
+/
+/
+e
+x
+a
+m
+p
+l
+e
+.
+c
+o
+m
+/
+n
+o
+t
+e
+
+A
+n
+d
+t
+h
+e
+a
+n
+s
+w
+e
+r
+c
+a
+r
+r
+i
+e
+s
+o
+n
+a
+f
+t
+e
+r
+i
+t
+.
+=== printed ===
+
+ stream some code at me
+
+
+A fence whose last line is blank:
+
+func first() {}
+
+
+It keeps that blank while more arrives after it.
+
+The same fence twice in a row:
+
+func twice() {}
+
+func twice() {}
+
+Both are highlighted alike, and so is this one while the paragraph after it grows:
+
+echo "still highlighted"
+
+A paragraph that keeps growing after the fence, word by word, until it wraps across more than one
+row of the terminal.
+
+An indented line that would read as a link definition without its indent:
+
+[note]:
+
+https://example.com/note
+
+And the answer carries on after it.
+=== tiny ===
+
+ stream some
+ code at me
+
+
+A fence
+whose last
+line is
+blank:
+
+func first()
+ {}
+
+
+It keeps
+that blank
+while more
+arrives
+after it.
+
+The same
+fence twice
+in a row:
+
+func twice()
+ {}
+
+func twice()
+ {}
+
+Both are
+highlighted
+alike, and
+so is this
+one while
+the
+paragraph
+after it
+grows:
+
+echo "still
+highlighted"
+
+A paragraph
+that keeps
+growing
+after the
+fence, word
+by word,
+until it
+wraps across
+more than
+one row of
+the
+terminal.
+
+An indented
+line that
+would read
+as a link
+definition
+without its
+indent:
+
+[note]:
+
+https://exam
+ple.com/note
+
+And the
+answer
+carries on
+after it.
+=== wide ===
+
+ stream some code at me
+
+
+A fence whose last line is blank:
+
+func first() {}
+
+
+It keeps that blank while more arrives after it.
+
+The same fence twice in a row:
+
+func twice() {}
+
+func twice() {}
+
+Both are highlighted alike, and so is this one while the paragraph after it grows:
+
+echo "still highlighted"
+
+A paragraph that keeps growing after the fence, word by word, until it wraps across more than one
+row of the terminal.
+
+An indented line that would read as a link definition without its indent:
+
+[note]:
+
+https://example.com/note
+
+And the answer carries on after it.
