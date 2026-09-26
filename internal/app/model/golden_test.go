@@ -148,6 +148,27 @@ func listingIgnoredModels(t *testing.T) ProviderLister {
 func TestGoldenAnUpdateNamesTheModelsThatCameAndWent(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 
+	var output bytes.Buffer
+	updateOverFirstListings(t, &output)
+
+	assertGolden(t, "update-naming-changes.ansi", report(t, output.String()))
+}
+
+func TestGoldenModelChangesWithoutColourMatchTheGolden(t *testing.T) {
+	t.Setenv("XDG_STATE_HOME", t.TempDir())
+
+	var output bytes.Buffer
+	restoreStyle := style.Init(&output)
+	defer restoreStyle()
+
+	updateOverFirstListings(t, &output)
+
+	assertGolden(t, "update-naming-changes-plain.txt", report(t, output.String()))
+}
+
+func updateOverFirstListings(t *testing.T, output io.Writer) {
+	t.Helper()
+
 	endpoint := serveRegistry(t, oneCodexModel)
 
 	var firstOutput bytes.Buffer
@@ -159,12 +180,9 @@ func TestGoldenAnUpdateNamesTheModelsThatCameAndWent(t *testing.T) {
 		t.Errorf("expected a first update to have nothing to compare with, got %q", firstOutput.String())
 	}
 
-	var output bytes.Buffer
-	if err := Update(&output, endpoint, modelCachePath(), seenModelsPath(), listingModels(secondListings()), false); err != nil {
+	if err := Update(output, endpoint, modelCachePath(), seenModelsPath(), listingModels(secondListings()), false); err != nil {
 		t.Fatal(err)
 	}
-
-	assertGolden(t, "update-naming-changes.ansi", report(t, output.String()))
 }
 
 func firstListings() map[string][]agent.Model {
@@ -187,6 +205,9 @@ func secondListings() map[string][]agent.Model {
 		},
 		OllamaProvider: {
 			{ID: "llama-4", EffortLevels: []string{"medium"}, MaxOutputTokens: 8_000},
+			{ID: "local-preview", MaxOutputTokens: 8_000},
+			{ID: "output-preview", EffortLevels: []string{"medium"}},
+			{Name: "Unidentified Preview", EffortLevels: []string{"medium"}, MaxOutputTokens: 8_000},
 		},
 	}
 }

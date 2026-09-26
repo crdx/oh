@@ -387,6 +387,7 @@ const (
 type modelChange struct {
 	Name   string
 	Change string
+	Reason string
 }
 
 func modelChanges(storedModels []agent.Model, models []agent.Model) []modelChange {
@@ -394,7 +395,11 @@ func modelChanges(storedModels []agent.Model, models []agent.Model) []modelChang
 
 	for _, model := range models {
 		if !holdsModel(storedModels, model.ID) {
-			changes = append(changes, modelChange{Name: modelName(model), Change: addedChange})
+			changes = append(changes, modelChange{
+				Name:   modelName(model),
+				Change: addedChange,
+				Reason: unselectableReason(model),
+			})
 		}
 	}
 

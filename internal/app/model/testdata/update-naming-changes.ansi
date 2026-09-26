@@ -2,10 +2,14 @@
 Codex              1           \e[38;2;76;154;44m1\e[0m           \e[38;2;129;162;190mmodels.dev\e[0m \e[38;2;150;152;150m(it lists no models of its own, and only the registry describes it)\e[0m
 OpenCode Go        \e[38;2;150;152;150m—\e[0m                       \e[38;2;150;152;150mnot logged in to OpenCode Go: run the login command with opencode-go\e[0m
 Anthropic          2           \e[38;2;76;154;44m2\e[0m           \e[38;2;129;162;190mendpoint\e[0m
-Ollama             1           \e[38;2;76;154;44m1\e[0m           \e[38;2;129;162;190mendpoint\e[0m
+Ollama             4           \e[38;2;76;154;44m1\e[0m        \e[38;2;207;173;0m3\e[0m  \e[38;2;129;162;190mendpoint\e[0m
 
-\e[4m\e[38;2;150;152;150mProvider   Model             Change\e[0m\e[0m
-Anthropic  claude-fable-5-1  \e[38;2;76;154;44madded\e[0m
-Anthropic  claude-opus-4-6   \e[38;2;204;102;102mremoved\e[0m
+\e[4m\e[38;2;150;152;150mProvider   Model                 Change\e[0m\e[0m
+Anthropic  claude-fable-5-1      \e[38;2;76;154;44madded\e[0m
+Anthropic  claude-opus-4-6       \e[38;2;204;102;102mremoved\e[0m
+Ollama     local-preview         \e[38;2;76;154;44madded\e[0m\e[38;2;150;152;150m (\e[0m\e[38;2;207;173;0mignored\e[0m\e[38;2;150;152;150m: unknown effort level)\e[0m
+Ollama     output-preview        \e[38;2;76;154;44madded\e[0m\e[38;2;150;152;150m (\e[0m\e[38;2;207;173;0mignored\e[0m\e[38;2;150;152;150m: unknown output limit)\e[0m
+Ollama     Unidentified Preview  \e[38;2;76;154;44madded\e[0m\e[38;2;150;152;150m (\e[0m\e[38;2;207;173;0mignored\e[0m\e[38;2;150;152;150m: unknown id)\e[0m
 
 \e[38;2;150;152;150mStored model list in \e[0m/state/models.json
+\e[38;2;150;152;150mRun \e[0m\e[38;2;192;128;80moh -u -I\e[0m\e[38;2;150;152;150m to see the 3 models that were ignored.\e[0m

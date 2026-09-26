@@ -108,7 +108,7 @@ func changeRows(reports []providerReport) [][]string {
 			rows = append(rows, []string{
 				ProviderName(report.Provider),
 				change.Name,
-				changeCell(change.Change),
+				changeCell(change),
 			})
 		}
 	}
@@ -116,12 +116,17 @@ func changeRows(reports []providerReport) [][]string {
 	return rows
 }
 
-func changeCell(change string) string {
-	if change == addedChange {
-		return style.InsertedText(change)
+func changeCell(change modelChange) string {
+	if change.Change == removedChange {
+		return style.DeletedText(change.Change)
 	}
 
-	return style.DeletedText(change)
+	cell := style.InsertedText(change.Change)
+	if change.Reason != "" {
+		cell += style.Subtle(" (") + style.Change("ignored") + style.Subtle(": "+change.Reason+")")
+	}
+
+	return cell
 }
 
 func writeChangedModels(output io.Writer, reports []providerReport) {

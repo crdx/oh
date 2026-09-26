@@ -1,5 +1,8 @@
 \e[38;2;150;152;150mRefreshing the model list...\e[0m
 
-\e[4m\e[38;2;150;152;150mProvider   Model             Change\e[0m\e[0m
-Anthropic  claude-fable-5-1  \e[38;2;76;154;44madded\e[0m
-Anthropic  claude-opus-4-6   \e[38;2;204;102;102mremoved\e[0m
+\e[4m\e[38;2;150;152;150mProvider   Model                 Change\e[0m\e[0m
+Anthropic  claude-fable-5-1      \e[38;2;76;154;44madded\e[0m
+Anthropic  claude-opus-4-6       \e[38;2;204;102;102mremoved\e[0m
+Ollama     local-preview         \e[38;2;76;154;44madded\e[0m\e[38;2;150;152;150m (\e[0m\e[38;2;207;173;0mignored\e[0m\e[38;2;150;152;150m: unknown effort level)\e[0m
+Ollama     output-preview        \e[38;2;76;154;44madded\e[0m\e[38;2;150;152;150m (\e[0m\e[38;2;207;173;0mignored\e[0m\e[38;2;150;152;150m: unknown output limit)\e[0m
+Ollama     Unidentified Preview  \e[38;2;76;154;44madded\e[0m\e[38;2;150;152;150m (\e[0m\e[38;2;207;173;0mignored\e[0m\e[38;2;150;152;150m: unknown id)\e[0m

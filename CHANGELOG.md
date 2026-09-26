@@ -14,6 +14,7 @@
 - Compress recorded wire traffic
 - Clarify the reason for jobs stopping
 - Share one Go build cache
+- Show if a new model was ignored for some reason
 
 ## [0.10.0] - 2026-09-25
 
