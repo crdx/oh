@@ -162,11 +162,16 @@ type renderer struct {
 
 func (self *renderer) blocks(parent ast.Node) {
 	for node := parent.FirstChild(); node != nil; node = node.NextSibling() {
+		unseparatedRowCount := len(self.rows)
 		if len(self.rows) > 0 && !self.isTight {
 			self.add("")
 		}
 
+		separatedRowCount := len(self.rows)
 		self.block(node)
+		if len(self.rows) == separatedRowCount {
+			self.rows = self.rows[:unseparatedRowCount]
+		}
 	}
 
 	for len(self.rows) > 0 && self.rows[len(self.rows)-1] == (width.ScreenRow{}) {
@@ -181,7 +186,12 @@ func (self *renderer) block(node ast.Node) {
 
 	switch node := node.(type) {
 	case *ast.Heading:
-		self.appendWrapped(over(col.Bold, style.Heading(self.inline(node))))
+		heading := self.inline(node)
+		if strings.TrimSpace(style.Plain(heading)) == "" {
+			return
+		}
+
+		self.appendWrapped(over(col.Bold, style.Heading(heading)))
 
 	case *ast.FencedCodeBlock:
 		language := string(node.Language(self.source))
@@ -220,6 +230,8 @@ func (self *renderer) block(node ast.Node) {
 
 	case *extensionast.Table:
 		self.add(self.table(node)...)
+
+	case *ast.LinkReferenceDefinition:
 
 	case *ast.Paragraph, *ast.TextBlock:
 		if self.picture(node) {
@@ -372,6 +384,10 @@ func (self *renderer) item(marker string, node ast.Node) {
 
 	room := self.columns - width.Of(marker)
 	if room < 1 {
+		if self.drawsNothing(node) {
+			return
+		}
+
 		self.appendWrapped(style.Bullet(marker) + self.inline(node))
 		return
 	}
@@ -398,6 +414,21 @@ func (self *renderer) item(marker string, node ast.Node) {
 
 		self.add(hangingIndent + row.Text)
 	}
+}
+
+func (self *renderer) drawsNothing(node ast.Node) bool {
+	contents := &renderer{
+		source:                 self.source,
+		columns:                max(self.columns, 1),
+		mermaidBlock:           new(int),
+		isTight:                true,
+		shouldRenderHyperlinks: self.shouldRenderHyperlinks,
+		linkRoot:               self.linkRoot,
+		shouldSoftWrapCode:     self.shouldSoftWrapCode,
+	}
+	contents.blocks(node)
+
+	return len(contents.rows) == 0
 }
 
 func (self *renderer) lines(node ast.Node) []string {

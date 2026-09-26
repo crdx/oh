@@ -1,0 +1,706 @@
+=== narrow ===
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                        \e[0m\r
+\e[48;2;52;53;65m draw every block that holds nothing    \e[0m\r
+\e[48;2;52;53;65m                                        \e[0m\r
+\r
+Every block below draws nothing, so a\r
+single blank stands between each of\r
+these lines.\r
+\r
+A quote held nothing.\r
+\r
+A bullet held nothing.\r
+\r
+A numbered item held nothing.\r
+\r
+A bullet inside a bullet held nothing.\r
+\r
+A heading held nothing.\r
+\r
+A fence held nothing.\r
+\r
+A Go fence held nothing.\r
+\r
+A quote inside a quote held nothing.\r
+\r
+A quote inside a bullet held nothing.\r
+\r
+A link definition drew nothing.\r
+\r
+And that is the last of them.\r
+\e[?25h\e[?2026l
+=== one column ===
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m \e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65md\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mw\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mv\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65me\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mr\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65my\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mb\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ml\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mo\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mc\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mk\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mh\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ma\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mh\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mo\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ml\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65md\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65ms\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mn\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mo\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mt\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mh\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mi\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mn\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65mg\e[0m\r
+\e[48;2;52;53;65m \e[0m\r
+\r
+E\r
+v\r
+e\r
+r\r
+y\r
+b\r
+l\r
+o\r
+c\r
+k\r
+b\r
+e\r
+l\r
+o\r
+w\r
+d\r
+r\r
+a\r
+w\r
+s\r
+n\r
+o\r
+t\r
+h\r
+i\r
+n\r
+g\r
+,\r
+s\r
+o\r
+a\r
+s\r
+i\r
+n\r
+g\r
+l\r
+e\r
+b\r
+l\r
+a\r
+n\r
+k\r
+s\r
+t\r
+a\r
+n\r
+d\r
+s\r
+b\r
+e\r
+t\r
+w\r
+e\r
+e\r
+n\r
+e\r
+a\r
+c\r
+h\r
+o\r
+f\r
+t\r
+h\r
+e\r
+s\r
+e\r
+l\r
+i\r
+n\r
+e\r
+s\r
+.\r
+\r
+A\r
+q\r
+u\r
+o\r
+t\r
+e\r
+h\r
+e\r
+l\r
+d\r
+n\r
+o\r
+t\r
+h\r
+i\r
+n\r
+g\r
+.\r
+\r
+A\r
+b\r
+u\r
+l\r
+l\r
+e\r
+t\r
+h\r
+e\r
+l\r
+d\r
+n\r
+o\r
+t\r
+h\r
+i\r
+n\r
+g\r
+.\r
+\r
+A\r
+n\r
+u\r
+m\r
+b\r
+e\r
+r\r
+e\r
+d\r
+i\r
+t\r
+e\r
+m\r
+h\r
+e\r
+l\r
+d\r
+n\r
+o\r
+t\r
+h\r
+i\r
+n\r
+g\r
+.\r
+\r
+A\r
+b\r
+u\r
+l\r
+l\r
+e\r
+t\r
+i\r
+n\r
+s\r
+i\r
+d\r
+e\r
+a\r
+b\r
+u\r
+l\r
+l\r
+e\r
+t\r
+h\r
+e\r
+l\r
+d\r
+n\r
+o\r
+t\r
+h\r
+i\r
+n\r
+g\r
+.\r
+\r
+A\r
+h\r
+e\r
+a\r
+d\r
+i\r
+n\r
+g\r
+h\r
+e\r
+l\r
+d\r
+n\r
+o\r
+t\r
+h\r
+i\r
+n\r
+g\r
+.\r
+\r
+A\r
+f\r
+e\r
+n\r
+c\r
+e\r
+h\r
+e\r
+l\r
+d\r
+n\r
+o\r
+t\r
+h\r
+i\r
+n\r
+g\r
+.\r
+\r
+A\r
+G\r
+o\r
+f\r
+e\r
+n\r
+c\r
+e\r
+h\r
+e\r
+l\r
+d\r
+n\r
+o\r
+t\r
+h\r
+i\r
+n\r
+g\r
+.\r
+\r
+A\r
+q\r
+u\r
+o\r
+t\r
+e\r
+i\r
+n\r
+s\r
+i\r
+d\r
+e\r
+a\r
+q\r
+u\r
+o\r
+t\r
+e\r
+h\r
+e\r
+l\r
+d\r
+n\r
+o\r
+t\r
+h\r
+i\r
+n\r
+g\r
+.\r
+\r
+A\r
+q\r
+u\r
+o\r
+t\r
+e\r
+i\r
+n\r
+s\r
+i\r
+d\r
+e\r
+a\r
+b\r
+u\r
+l\r
+l\r
+e\r
+t\r
+h\r
+e\r
+l\r
+d\r
+n\r
+o\r
+t\r
+h\r
+i\r
+n\r
+g\r
+.\r
+\r
+A\r
+l\r
+i\r
+n\r
+k\r
+d\r
+e\r
+f\r
+i\r
+n\r
+i\r
+t\r
+i\r
+o\r
+n\r
+d\r
+r\r
+e\r
+w\r
+n\r
+o\r
+t\r
+h\r
+i\r
+n\r
+g\r
+.\r
+\r
+A\r
+n\r
+d\r
+t\r
+h\r
+a\r
+t\r
+i\r
+s\r
+t\r
+h\r
+e\r
+l\r
+a\r
+s\r
+t\r
+o\r
+f\r
+t\r
+h\r
+e\r
+m\r
+.\r
+\e[?25h\e[?2026l
+=== plain ===
+\e[48;2;52;53;65m\e[0m
+\e[48;2;52;53;65m draw every block that holds nothing\e[0m
+\e[48;2;52;53;65m\e[0m
+Every block below draws nothing, so a single blank stands between each of these lines.
+
+A quote held nothing.
+
+A bullet held nothing.
+
+A numbered item held nothing.
+
+A bullet inside a bullet held nothing.
+
+A heading held nothing.
+
+A fence held nothing.
+
+A Go fence held nothing.
+
+A quote inside a quote held nothing.
+
+A quote inside a bullet held nothing.
+
+A link definition drew nothing.
+
+And that is the last of them.
+
+=== printed ===
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m draw every block that holds nothing                                                                \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+Every block below draws nothing, so a single blank stands between each of these lines.\r
+\r
+A quote held nothing.\r
+\r
+A bullet held nothing.\r
+\r
+A numbered item held nothing.\r
+\r
+A bullet inside a bullet held nothing.\r
+\r
+A heading held nothing.\r
+\r
+A fence held nothing.\r
+\r
+A Go fence held nothing.\r
+\r
+A quote inside a quote held nothing.\r
+\r
+A quote inside a bullet held nothing.\r
+\r
+A link definition drew nothing.\r
+\r
+And that is the last of them.\r
+
+=== streamed asap ===
+\e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m draw every block that holds nothing                                                                \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+Ever\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery bl\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block belo\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below dr\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws noth\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing,\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so\e[K\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a si\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single bla\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single blank s\e[K\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single blank stand\e[K\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single blank stands be\e[K\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single blank stands betwee\e[K\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single blank stands between ea\e[K\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single blank stands between each o\e[K\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single blank stands between each of th\e[K\r\e[76C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single blank stands between each of these\e[K\r\e[79C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single blank stands between each of these line\e[K\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single blank stands between each of these lines.\e[K\r\e[86C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+A\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quo\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote h\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote held\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote held noth\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote held nothing.\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+A b\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bulle\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet he\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet held n\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet held nothi\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet held nothing.\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+A n\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA numbe\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA numbered\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA numbered item\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA numbered item hel\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA numbered item held no\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA numbered item held nothin\e[K\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA numbered item held nothing.\e[K\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+A b\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bulle\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet in\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet inside\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet inside a b\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet inside a bulle\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet inside a bullet he\e[K\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet inside a bullet held n\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet inside a bullet held nothi\e[K\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet inside a bullet held nothing.\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+A he\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA headin\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA heading he\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA heading held n\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA heading held nothi\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA heading held nothing.\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+A\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA fenc\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA fence he\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA fence held n\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA fence held nothi\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA fence held nothing.\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[38;2;150;152;150m`\e[0m\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\rA Go\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA Go fen\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA Go fence h\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA Go fence held\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA Go fence held noth\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA Go fence held nothing.\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+A\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quo\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote i\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote insid\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote inside a\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote inside a quot\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote inside a quote he\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote inside a quote held n\e[K\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote inside a quote held nothi\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote inside a quote held nothing.\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+A\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quot\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote in\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote inside\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote inside a b\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote inside a bulle\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote inside a bullet he\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote inside a bullet held n\e[K\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote inside a bullet held nothi\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote inside a bullet held nothing.\e[K\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+[un\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r[unused\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\rA\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA lin\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA link de\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA link defini\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA link definition\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA link definition dre\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA link definition drew no\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA link definition drew nothin\e[K\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA link definition drew nothing.\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+And\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd that\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd that is\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd that is the\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd that is the last\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd that is the last of\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd that is the last of them\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd that is the last of them.\e[K\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[29C\e[?25h\e[?2026l\r
+\e]9;4;0\e\\
+=== streamed line ===
+\e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m draw every block that holds nothing                                                                \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+Every block below draws nothing, so a single blank stands between each of these lines.\e[K\r\e[86C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+A quote held nothing.\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+A bullet held nothing.\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+A numbered item held nothing.\e[K\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+A bullet inside a bullet held nothing.\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+A heading held nothing.\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+A fence held nothing.\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+A Go fence held nothing.\e[K\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+A quote inside a quote held nothing.\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+A quote inside a bullet held nothing.\e[K\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+A link definition drew nothing.\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+And that is the last of them.\e[K\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[29C\e[?25h\e[?2026l\r
+\e]9;4;0\e\\
+=== streamed paced ===
+\e]9;4;3\e\\\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m draw every block that holds nothing                                                                \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+Ever\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery bl\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block belo\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below dr\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws noth\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing,\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so\e[K\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a si\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single bla\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single blank s\e[K\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single blank stand\e[K\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single blank stands be\e[K\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single blank stands betwee\e[K\r\e[64C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single blank stands between ea\e[K\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single blank stands between each o\e[K\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single blank stands between each of th\e[K\r\e[76C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single blank stands between each of these\e[K\r\e[79C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single blank stands between each of these line\e[K\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery block below draws nothing, so a single blank stands between each of these lines.\e[K\r\e[86C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+A\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quo\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote h\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote held\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote held noth\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote held nothing.\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+A b\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bulle\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet he\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet held n\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet held nothi\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet held nothing.\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+A n\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA numbe\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA numbered\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA numbered item\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA numbered item hel\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA numbered item held no\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA numbered item held nothin\e[K\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA numbered item held nothing.\e[K\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+A b\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bulle\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet in\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet inside\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet inside a b\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet inside a bulle\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet inside a bullet he\e[K\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet inside a bullet held n\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet inside a bullet held nothi\e[K\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA bullet inside a bullet held nothing.\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+A he\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA headin\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA heading he\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA heading held n\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA heading held nothi\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA heading held nothing.\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+A\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA fenc\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA fence he\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA fence held n\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA fence held nothi\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA fence held nothing.\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[38;2;150;152;150m`\e[0m\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\rA Go\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA Go fen\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA Go fence h\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA Go fence held\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA Go fence held noth\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA Go fence held nothing.\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+A\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote i\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote inside a\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote inside a quote he\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote inside a quote held nothi\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote inside a quote held nothing.\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+A quot\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote inside\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote inside a bulle\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote inside a bullet held n\e[K\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA quote inside a bullet held nothing.\e[K\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+[unused\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\rA\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA link de\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA link definition\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA link definition drew no\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA link definition drew nothing.\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+And that\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd that is the\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd that is the last of\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd that is the last of them.\e[K\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[29C\e[?25h\e[?2026l\r
+\e]9;4;0\e\\
+=== tiny ===
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
+\e[48;2;52;53;65m draw every \e[0m\r
+\e[48;2;52;53;65m block that \e[0m\r
+\e[48;2;52;53;65m holds      \e[0m\r
+\e[48;2;52;53;65m nothing    \e[0m\r
+\e[48;2;52;53;65m            \e[0m\r
+\r
+Every block\r
+below draws\r
+nothing, so\r
+a single\r
+blank stands\r
+between each\r
+of these\r
+lines.\r
+\r
+A quote held\r
+nothing.\r
+\r
+A bullet\r
+held\r
+nothing.\r
+\r
+A numbered\r
+item held\r
+nothing.\r
+\r
+A bullet\r
+inside a\r
+bullet held\r
+nothing.\r
+\r
+A heading\r
+held\r
+nothing.\r
+\r
+A fence held\r
+nothing.\r
+\r
+A Go fence\r
+held\r
+nothing.\r
+\r
+A quote\r
+inside a\r
+quote held\r
+nothing.\r
+\r
+A quote\r
+inside a\r
+bullet held\r
+nothing.\r
+\r
+A link\r
+definition\r
+drew\r
+nothing.\r
+\r
+And that is\r
+the last of\r
+them.\r
+\e[?25h\e[?2026l
+=== unsized ===
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
+\e[48;2;52;53;65m draw every block that holds nothing\e[0m\r
+\e[48;2;52;53;65m\e[0m\r
+Every block below draws nothing, so a single blank stands between each of these lines.\r
+\r
+A quote held nothing.\r
+\r
+A bullet held nothing.\r
+\r
+A numbered item held nothing.\r
+\r
+A bullet inside a bullet held nothing.\r
+\r
+A heading held nothing.\r
+\r
+A fence held nothing.\r
+\r
+A Go fence held nothing.\r
+\r
+A quote inside a quote held nothing.\r
+\r
+A quote inside a bullet held nothing.\r
+\r
+A link definition drew nothing.\r
+\r
+And that is the last of them.\r
+\e[?25h\e[?2026l
+=== wide ===
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m draw every block that holds nothing                                                                \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+Every block below draws nothing, so a single blank stands between each of these lines.\r
+\r
+A quote held nothing.\r
+\r
+A bullet held nothing.\r
+\r
+A numbered item held nothing.\r
+\r
+A bullet inside a bullet held nothing.\r
+\r
+A heading held nothing.\r
+\r
+A fence held nothing.\r
+\r
+A Go fence held nothing.\r
+\r
+A quote inside a quote held nothing.\r
+\r
+A quote inside a bullet held nothing.\r
+\r
+A link definition drew nothing.\r
+\r
+And that is the last of them.\r
+\e[?25h\e[?2026l

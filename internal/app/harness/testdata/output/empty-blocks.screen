@@ -1,0 +1,558 @@
+=== narrow ===
+
+ draw every block that holds nothing
+
+
+Every block below draws nothing, so a
+single blank stands between each of
+these lines.
+
+A quote held nothing.
+
+A bullet held nothing.
+
+A numbered item held nothing.
+
+A bullet inside a bullet held nothing.
+
+A heading held nothing.
+
+A fence held nothing.
+
+A Go fence held nothing.
+
+A quote inside a quote held nothing.
+
+A quote inside a bullet held nothing.
+
+A link definition drew nothing.
+
+And that is the last of them.
+=== one column ===
+
+
+d
+
+r
+
+a
+
+w
+
+e
+
+v
+
+e
+
+r
+
+y
+
+b
+
+l
+
+o
+
+c
+
+k
+
+t
+
+h
+
+a
+
+t
+
+h
+
+o
+
+l
+
+d
+
+s
+
+n
+
+o
+
+t
+
+h
+
+i
+
+n
+
+g
+
+
+E
+v
+e
+r
+y
+b
+l
+o
+c
+k
+b
+e
+l
+o
+w
+d
+r
+a
+w
+s
+n
+o
+t
+h
+i
+n
+g
+,
+s
+o
+a
+s
+i
+n
+g
+l
+e
+b
+l
+a
+n
+k
+s
+t
+a
+n
+d
+s
+b
+e
+t
+w
+e
+e
+n
+e
+a
+c
+h
+o
+f
+t
+h
+e
+s
+e
+l
+i
+n
+e
+s
+.
+
+A
+q
+u
+o
+t
+e
+h
+e
+l
+d
+n
+o
+t
+h
+i
+n
+g
+.
+
+A
+b
+u
+l
+l
+e
+t
+h
+e
+l
+d
+n
+o
+t
+h
+i
+n
+g
+.
+
+A
+n
+u
+m
+b
+e
+r
+e
+d
+i
+t
+e
+m
+h
+e
+l
+d
+n
+o
+t
+h
+i
+n
+g
+.
+
+A
+b
+u
+l
+l
+e
+t
+i
+n
+s
+i
+d
+e
+a
+b
+u
+l
+l
+e
+t
+h
+e
+l
+d
+n
+o
+t
+h
+i
+n
+g
+.
+
+A
+h
+e
+a
+d
+i
+n
+g
+h
+e
+l
+d
+n
+o
+t
+h
+i
+n
+g
+.
+
+A
+f
+e
+n
+c
+e
+h
+e
+l
+d
+n
+o
+t
+h
+i
+n
+g
+.
+
+A
+G
+o
+f
+e
+n
+c
+e
+h
+e
+l
+d
+n
+o
+t
+h
+i
+n
+g
+.
+
+A
+q
+u
+o
+t
+e
+i
+n
+s
+i
+d
+e
+a
+q
+u
+o
+t
+e
+h
+e
+l
+d
+n
+o
+t
+h
+i
+n
+g
+.
+
+A
+q
+u
+o
+t
+e
+i
+n
+s
+i
+d
+e
+a
+b
+u
+l
+l
+e
+t
+h
+e
+l
+d
+n
+o
+t
+h
+i
+n
+g
+.
+
+A
+l
+i
+n
+k
+d
+e
+f
+i
+n
+i
+t
+i
+o
+n
+d
+r
+e
+w
+n
+o
+t
+h
+i
+n
+g
+.
+
+A
+n
+d
+t
+h
+a
+t
+i
+s
+t
+h
+e
+l
+a
+s
+t
+o
+f
+t
+h
+e
+m
+.
+=== printed ===
+
+ draw every block that holds nothing
+
+
+Every block below draws nothing, so a single blank stands between each of these lines.
+
+A quote held nothing.
+
+A bullet held nothing.
+
+A numbered item held nothing.
+
+A bullet inside a bullet held nothing.
+
+A heading held nothing.
+
+A fence held nothing.
+
+A Go fence held nothing.
+
+A quote inside a quote held nothing.
+
+A quote inside a bullet held nothing.
+
+A link definition drew nothing.
+
+And that is the last of them.
+=== tiny ===
+
+ draw every
+ block that
+ holds
+ nothing
+
+
+Every block
+below draws
+nothing, so
+a single
+blank stands
+between each
+of these
+lines.
+
+A quote held
+nothing.
+
+A bullet
+held
+nothing.
+
+A numbered
+item held
+nothing.
+
+A bullet
+inside a
+bullet held
+nothing.
+
+A heading
+held
+nothing.
+
+A fence held
+nothing.
+
+A Go fence
+held
+nothing.
+
+A quote
+inside a
+quote held
+nothing.
+
+A quote
+inside a
+bullet held
+nothing.
+
+A link
+definition
+drew
+nothing.
+
+And that is
+the last of
+them.
+=== wide ===
+
+ draw every block that holds nothing
+
+
+Every block below draws nothing, so a single blank stands between each of these lines.
+
+A quote held nothing.
+
+A bullet held nothing.
+
+A numbered item held nothing.
+
+A bullet inside a bullet held nothing.
+
+A heading held nothing.
+
+A fence held nothing.
+
+A Go fence held nothing.
+
+A quote inside a quote held nothing.
+
+A quote inside a bullet held nothing.
+
+A link definition drew nothing.
+
+And that is the last of them.

@@ -65,6 +65,12 @@ inner_x *y*
 ├───────┼────────┤
 │ write │ second │
 └───────┴────────┘
+A thought holding empty blocks:
+
+Each of them draws nothing.
+
+So one blank stands between each of
+these.
 
 The read came first, and the file holds
 one.
@@ -952,6 +958,93 @@ c
 o
 n
 d
+A
+t
+h
+o
+u
+g
+h
+t
+h
+o
+l
+d
+i
+n
+g
+e
+m
+p
+t
+y
+b
+l
+o
+c
+k
+s
+:
+
+E
+a
+c
+h
+o
+f
+t
+h
+e
+m
+d
+r
+a
+w
+s
+n
+o
+t
+h
+i
+n
+g
+.
+
+S
+o
+o
+n
+e
+b
+l
+a
+n
+k
+s
+t
+a
+n
+d
+s
+b
+e
+t
+w
+e
+e
+n
+e
+a
+c
+h
+o
+f
+t
+h
+e
+s
+e
+.
 
 T
 h
@@ -1043,6 +1136,11 @@ inner_x *y*
 ├───────┼────────┤
 │ write │ second │
 └───────┴────────┘
+A thought holding empty blocks:
+
+Each of them draws nothing.
+
+So one blank stands between each of these.
 
 The read came first, and the file holds one.
 === markdown streamed asap ===
@@ -1099,6 +1197,11 @@ inner_x *y*
 ├───────┼────────┤
 │ write │ second │
 └───────┴────────┘
+A thought holding empty blocks:
+
+Each of them draws nothing.
+
+So one blank stands between each of these.
 
 The read came first, and the file holds one.
 === markdown streamed line ===
@@ -1155,6 +1258,11 @@ inner_x *y*
 ├───────┼────────┤
 │ write │ second │
 └───────┴────────┘
+A thought holding empty blocks:
+
+Each of them draws nothing.
+
+So one blank stands between each of these.
 
 The read came first, and the file holds one.
 === markdown streamed paced ===
@@ -1211,6 +1319,11 @@ inner_x *y*
 ├───────┼────────┤
 │ write │ second │
 └───────┴────────┘
+A thought holding empty blocks:
+
+Each of them draws nothing.
+
+So one blank stands between each of these.
 
 The read came first, and the file holds one.
 === markdown tiny ===
@@ -1349,6 +1462,19 @@ inner_x *y*
 │ te  │ co │
 │     │ nd │
 └─────┴────┘
+A thought
+holding
+empty
+blocks:
+
+Each of them
+draws
+nothing.
+
+So one blank
+stands
+between each
+of these.
 
 The read
 came first,
@@ -1486,6 +1612,11 @@ inner_x *y*
 ├───────┼────────┤
 │ write │ second │
 └───────┴────────┘
+A thought holding empty blocks:
+
+Each of them draws nothing.
+
+So one blank stands between each of these.
 
 The read came first, and the file holds one.
 === plain narrow ===
@@ -1522,6 +1653,9 @@ and _under_ and $5 and 50% • entities &
 © A and &unknown; • a hard break 1.
 first 2. second ``` inner_x *y* ```
 what when read first write second
+A thought holding empty blocks: Each of
+them draws nothing. So one blank stands
+between each of these.
 
 The read came first, and the file holds
 one.
@@ -2397,6 +2531,91 @@ c
 o
 n
 d
+A
+t
+h
+o
+u
+g
+h
+t
+h
+o
+l
+d
+i
+n
+g
+e
+m
+p
+t
+y
+b
+l
+o
+c
+k
+s
+:
+E
+a
+c
+h
+o
+f
+t
+h
+e
+m
+d
+r
+a
+w
+s
+n
+o
+t
+h
+i
+n
+g
+.
+S
+o
+o
+n
+e
+b
+l
+a
+n
+k
+s
+t
+a
+n
+d
+s
+b
+e
+t
+w
+e
+e
+n
+e
+a
+c
+h
+o
+f
+t
+h
+e
+s
+e
+.
 
 T
 h
@@ -2453,6 +2672,8 @@ me@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • 
 _under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second ``` inner_x
 *y* ```
 what when read first write second
+A thought holding empty blocks: Each of them draws nothing. So one blank stands between each of
+these.
 
 The read came first, and the file holds one.
 === plain streamed asap ===
@@ -2474,6 +2695,8 @@ me@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • 
 _under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second ``` inner_x
 *y* ```
 what when read first write second
+A thought holding empty blocks: Each of them draws nothing. So one blank stands between each of
+these.
 
 The read came first, and the file holds one.
 === plain streamed line ===
@@ -2495,6 +2718,8 @@ me@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • 
 _under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second ``` inner_x
 *y* ```
 what when read first write second
+A thought holding empty blocks: Each of them draws nothing. So one blank stands between each of
+these.
 
 The read came first, and the file holds one.
 === plain streamed paced ===
@@ -2516,6 +2741,8 @@ me@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • 
 _under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second ``` inner_x
 *y* ```
 what when read first write second
+A thought holding empty blocks: Each of them draws nothing. So one blank stands between each of
+these.
 
 The read came first, and the file holds one.
 === plain tiny ===
@@ -2623,6 +2850,17 @@ inner_x *y*
 what when
 read first
 write second
+A thought
+holding
+empty
+blocks: Each
+of them
+draws
+nothing. So
+one blank
+stands
+between each
+of these.
 
 The read
 came first,
@@ -2698,5 +2936,7 @@ me@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • 
 _under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second ``` inner_x
 *y* ```
 what when read first write second
+A thought holding empty blocks: Each of them draws nothing. So one blank stands between each of
+these.
 
 The read came first, and the file holds one.

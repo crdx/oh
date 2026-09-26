@@ -32,6 +32,9 @@ and _under_ and $5 and 50% • entities &
 © A and &unknown; • a hard break 1.
 first 2. second ``` inner_x *y* ```
 what when read first write second
+A thought holding empty blocks: Each of
+them draws nothing. So one blank stands
+between each of these.
 
 The read came first, and the file holds
 one.
@@ -907,6 +910,91 @@ c
 o
 n
 d
+A
+t
+h
+o
+u
+g
+h
+t
+h
+o
+l
+d
+i
+n
+g
+e
+m
+p
+t
+y
+b
+l
+o
+c
+k
+s
+:
+E
+a
+c
+h
+o
+f
+t
+h
+e
+m
+d
+r
+a
+w
+s
+n
+o
+t
+h
+i
+n
+g
+.
+S
+o
+o
+n
+e
+b
+l
+a
+n
+k
+s
+t
+a
+n
+d
+s
+b
+e
+t
+w
+e
+e
+n
+e
+a
+c
+h
+o
+f
+t
+h
+e
+s
+e
+.
 
 T
 h
@@ -963,6 +1051,8 @@ me@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • 
 _under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second ``` inner_x
 *y* ```
 what when read first write second
+A thought holding empty blocks: Each of them draws nothing. So one blank stands between each of
+these.
 
 The read came first, and the file holds one.
 === tiny ===
@@ -1070,6 +1160,17 @@ inner_x *y*
 what when
 read first
 write second
+A thought
+holding
+empty
+blocks: Each
+of them
+draws
+nothing. So
+one blank
+stands
+between each
+of these.
 
 The read
 came first,
@@ -1094,5 +1195,7 @@ me@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • 
 _under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second ``` inner_x
 *y* ```
 what when read first write second
+A thought holding empty blocks: Each of them draws nothing. So one blank stands between each of
+these.
 
 The read came first, and the file holds one.

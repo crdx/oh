@@ -21,6 +21,7 @@ func TestIncrementalRendererMatchesMarkdownThatCanChangeEarlierBlocks(t *testing
 		"late link reference":     "see [the note][note]\n\nordinary text\n\n[note]: https://example.com",
 		"early link reference":    "[note]: https://example.com\n\nordinary text\n\nsee [the note][note]",
 		"quoted blocks":           "> first\n>\n> second\n\nafter",
+		"empty quote":             "0\n>\n*0",
 		"html blocks":             "<div>\nfirst\n\nsecond\n</div>\n\nafter",
 		"mermaid blocks":          "```mermaid\ngraph LR\nA --> B\n```\n\nafter\n\n```mermaid\ngraph LR\nB --> C",
 	} {

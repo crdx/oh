@@ -1,0 +1,62 @@
+=== written down ===
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `high`
+- **Provider:** `codex`
+- **Workspace:** `/workspace`
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## User · +0s
+
+draw every block that holds nothing
+
+## Assistant · +1s
+
+Every block below draws nothing, so a single blank stands between each of these lines.
+
+>
+
+A quote held nothing.
+
+-
+
+A bullet held nothing.
+
+1.
+
+A numbered item held nothing.
+
+- -
+
+A bullet inside a bullet held nothing.
+
+#
+
+A heading held nothing.
+
+```
+```
+
+A fence held nothing.
+
+```go
+```
+
+A Go fence held nothing.
+
+> >
+
+A quote inside a quote held nothing.
+
+- >
+
+A quote inside a bullet held nothing.
+
+[unused]: https://example.com/unused
+
+A link definition drew nothing.
+
+And that is the last of them.

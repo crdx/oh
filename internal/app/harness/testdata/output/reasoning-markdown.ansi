@@ -32,6 +32,9 @@
 \e[3m\e[38;2;150;152;150m© A and &unknown; • a hard break 1.\e[0m\r
 \e[3m\e[38;2;150;152;150mfirst 2. second ``` inner_x *y* ```\e[0m\e[0m\r
 \e[3m\e[38;2;150;152;150mwhat when read first write second\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of\e[0m\r
+\e[3m\e[38;2;150;152;150mthem draws nothing. So one blank stands\e[0m\r
+\e[3m\e[38;2;150;152;150mbetween each of these.\e[0m\e[0m\r
 \r
 The read came first, and the file holds\r
 \e[38;2;192;128;80mone\e[0m.\r
@@ -908,6 +911,91 @@ The read came first, and the file holds\r
 \e[3m\e[38;2;150;152;150mo\e[0m\r
 \e[3m\e[38;2;150;152;150mn\e[0m\r
 \e[3m\e[38;2;150;152;150md\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mA\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mu\e[0m\r
+\e[3m\e[38;2;150;152;150mg\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150ml\e[0m\r
+\e[3m\e[38;2;150;152;150md\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mg\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mm\e[0m\r
+\e[3m\e[38;2;150;152;150mp\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150my\e[0m\r
+\e[3m\e[38;2;150;152;150mb\e[0m\r
+\e[3m\e[38;2;150;152;150ml\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mc\e[0m\r
+\e[3m\e[38;2;150;152;150mk\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150m:\e[0m\r
+\e[3m\e[38;2;150;152;150mE\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mc\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mf\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mm\e[0m\r
+\e[3m\e[38;2;150;152;150md\e[0m\r
+\e[3m\e[38;2;150;152;150mr\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mw\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150mi\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mg\e[0m\r
+\e[3m\e[38;2;150;152;150m.\e[0m\r
+\e[3m\e[38;2;150;152;150mS\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mb\e[0m\r
+\e[3m\e[38;2;150;152;150ml\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150mk\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150md\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150mb\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mw\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150mn\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150ma\e[0m\r
+\e[3m\e[38;2;150;152;150mc\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150mf\e[0m\r
+\e[3m\e[38;2;150;152;150mt\e[0m\r
+\e[3m\e[38;2;150;152;150mh\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150ms\e[0m\r
+\e[3m\e[38;2;150;152;150me\e[0m\r
+\e[3m\e[38;2;150;152;150m.\e[0m\e[0m\r
 \r
 T\r
 h\r
@@ -955,6 +1043,7 @@ read \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mtarget.txt\e[0m \e[38;2;76;154;
 \e[3m\e[38;2;150;152;150mA plain thought with no markup in it at all.\e[0m\e[0m
 \e[3m\e[38;2;150;152;150mEvery way markup can stand in a thought • intraword foo_bar_baz and snake_case_name • leading _private • trailing trailing_ • dunder init • emphasis one two three four five six • nested foo_bar and xyz • code **kept** and foo_bar and a ` b • unclosed ` tick • arithmetic 2 * 3 * 4 and a ** b • tildes ~/proj and ~5 • brackets items[0] and map[key] and [a][b] • link the docs (https://example.com/a_(b)) and bold label (has space) • autolinks https://example.com and me@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • escaped *star* and _under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second ``` inner_x *y* ```\e[0m\e[0m
 \e[3m\e[38;2;150;152;150mwhat when read first write second\e[0m\e[0m
+\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one blank stands between each of these.\e[0m\e[0m
 
 The read came first, and the file holds \e[38;2;192;128;80mone\e[0m.
 
@@ -977,6 +1066,8 @@ The read came first, and the file holds \e[38;2;192;128;80mone\e[0m.
 \e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second ``` inner_x\e[0m\r
 \e[3m\e[38;2;150;152;150m*y* ```\e[0m\e[0m\r
 \e[3m\e[38;2;150;152;150mwhat when read first write second\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one blank stands between each of\e[0m\r
+\e[3m\e[38;2;150;152;150mthese.\e[0m\e[0m\r
 \r
 The read came first, and the file holds \e[38;2;192;128;80mone\e[0m.\r
 
@@ -998,7 +1089,9 @@ The read came first, and the file holds \e[38;2;192;128;80mone\e[0m.\r
 \e[3m\e[38;2;150;152;150m<me@localhost\e[0m\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost an\e[0m\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b\e[0m\e[0m\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>htm\e[0m\e[0m\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b\e[0m\e[0m\e[K\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> •\e[0m\e[0m\e[K\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pict\e[0m\e[0m\e[K\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures\e[0m\e[0m\e[K\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures ![a\e[0m\e[0m\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures ![a pic\e[0m\e[0m\e[K\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures ![a picture\e[0m\e[0m\e[K\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (on)\e[0m\e[0m\e[K\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (one.pn)\e[0m\e[0m\e[K\r\e[58C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (one.png) a\e[0m\e[0m\e[K\r\e[61C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (one.png) and !\e[0m\e[0m\e[K\r\e[65C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (one.png) and (t)\e[0m\e[0m\e[K\r\e[67C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (one.png) and (two.p)\e[0m\e[0m\e[K\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (one.png) and (two.png)\e[0m\e[0m\e[K\r\e[73C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • es\e[0m\e[0m\e[K\r\e[78C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • escape\e[0m\e[0m\e[K\r\e[82C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • escaped *\e[0m\e[0m\e[K\r\e[85C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • escaped *star\e[0m\e[0m\e[K\r\e[89C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • escaped *star* a\e[0m\e[0m\e[K\r\e[92C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • escaped *star* and\e[0m\e[0m\e[K\r\e[94C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • escaped *star* and _und\e[0m\e[0m\e[K\r\e[99C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • escaped *star* and\e[0m\e[K\r
 \e[3m\e[38;2;150;152;150m_under_\e[0m\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and\e[0m\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5\e[0m\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and\e[0m\e[0m\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50\e[0m\e[0m\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% •\e[0m\e[0m\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • enti\e[0m\e[0m\e[K\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities\e[0m\e[0m\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities &am\e[0m\e[0m\e[K\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & &\e[0m\e[0m\e[K\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & &copy\e[0m\e[0m\e[K\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © &#\e[0m\e[0m\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A\e[0m\e[0m\e[K\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and\e[0m\e[0m\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unk\e[0m\e[0m\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown\e[0m\e[0m\e[K\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; •\e[0m\e[0m\e[K\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; • a ha\e[0m\e[0m\e[K\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; • a hard\e[0m\e[0m\e[K\r\e[62C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; • a hard br\e[0m\e[0m\e[K\r\e[65C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; • a hard break\e[0m\e[0m\e[K\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1.\e[0m\e[0m\e[K\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. firs\e[0m\e[0m\e[K\r\e[76C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2)\e[0m\e[0m\e[K\r\e[80C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. sec\e[0m\e[0m\e[K\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second\e[0m\e[0m\e[K\r\e[87C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second ```\e[0m\e[0m\e[K\r\e[91C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second ``` inne\e[0m\e[0m\e[K\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second ``` inner_x\e[0m\e[0m\e[K\r\e[99C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second ``` inner_x\e[0m\e[K\r
 \e[3m\e[38;2;150;152;150m*y*\e[0m\e[0m\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m*y* ```\e[0m\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[7C\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m| wh\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m| what | whe\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when\e[0m\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when |\e[0m\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when | read\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when | read | f\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when | read | first\e[0m\e[0m\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first |\e[0m\e[0m\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first | wri\e[0m\e[0m\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first write\e[0m\e[0m\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first | write | sec\e[0m\e[0m\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first | write | second\e[0m\e[0m\e[K\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first write second\e[0m\e[0m\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m| wh\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m| what | whe\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when\e[0m\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when |\e[0m\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when | read\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when | read | f\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when | read | first\e[0m\e[0m\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first |\e[0m\e[0m\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first | wri\e[0m\e[0m\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first write\e[0m\e[0m\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first | write | sec\e[0m\e[0m\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first | write | second\e[0m\e[0m\e[K\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first write second\e[0m\e[0m\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[33C\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA th\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA though\e[0m\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought ho\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holdin\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding em\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty\e[0m\e[0m\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty bloc\e[0m\e[0m\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks:\e[0m\e[0m\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Eac\e[0m\e[0m\e[K\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of\e[0m\e[0m\e[K\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of the\e[0m\e[0m\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them dr\e[0m\e[0m\e[K\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws\e[0m\e[0m\e[K\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws noth\e[0m\e[0m\e[K\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing.\e[0m\e[0m\e[K\r\e[59C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So\e[0m\e[0m\e[K\r\e[62C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one\e[0m\e[0m\e[K\r\e[66C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one bla\e[0m\e[0m\e[K\r\e[70C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one blank s\e[0m\e[0m\e[K\r\e[74C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one blank stand\e[0m\e[0m\e[K\r\e[78C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one blank stands be\e[0m\e[0m\e[K\r\e[82C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one blank stands betwee\e[0m\e[0m\e[K\r\e[86C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one blank stands between ea\e[0m\e[0m\e[K\r\e[90C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one blank stands between each o\e[0m\e[0m\e[K\r\e[94C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one blank stands between each of th\e[0m\e[0m\e[K\r\e[98C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one blank stands between each of\e[0m\e[K\r
+\e[3m\e[38;2;150;152;150mthese.\e[0m\e[0m\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read cam\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read came fi\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read came first,\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read came first, and\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read came first, and the\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read came first, and the fil\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read came first, and the file ho\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read came first, and the file holds\e[K\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read came first, and the file holds `one\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read came first, and the file holds \e[38;2;192;128;80mone\e[0m.\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[44C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
@@ -1020,7 +1113,9 @@ The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read\e[K\r\e[8C\e[?25h\e[?20
 \e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • escaped *star* and\e[0m\e[K\r\e[94C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second ``` inner_x\e[0m\e[K\r\e[99C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[3m\e[38;2;150;152;150m*y* ```\e[0m\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[7C\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first write second\e[0m\e[0m\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first write second\e[0m\e[0m\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[33C\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one blank stands between each of\e[0m\e[K\r\e[95C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[3m\e[38;2;150;152;150mthese.\e[0m\e[0m\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 The read came first, and the file holds \e[38;2;192;128;80mone\e[0m.\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[44C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
@@ -1042,7 +1137,9 @@ The read came first, and the file holds \e[38;2;192;128;80mone\e[0m.\e[K\r\e[44C
 \e[3m\e[38;2;150;152;150m<me@localhost\e[0m\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b\e[0m\e[0m\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b\e[0m\e[0m\e[K\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pict\e[0m\e[0m\e[K\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures ![a\e[0m\e[0m\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (on)\e[0m\e[0m\e[K\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (one.png) and !\e[0m\e[0m\e[K\r\e[65C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (one.png) and (two.png)\e[0m\e[0m\e[K\r\e[73C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • escaped *\e[0m\e[0m\e[K\r\e[85C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • escaped *star* and\e[0m\e[0m\e[K\r\e[94C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mme@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • escaped *star* and\e[0m\e[K\r
 \e[3m\e[38;2;150;152;150m_under_ and\e[0m\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50\e[0m\e[0m\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities\e[0m\e[0m\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & &copy\e[0m\e[0m\e[K\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and\e[0m\e[0m\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; •\e[0m\e[0m\e[K\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; • a hard br\e[0m\e[0m\e[K\r\e[65C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. firs\e[0m\e[0m\e[K\r\e[76C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second\e[0m\e[0m\e[K\r\e[87C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second ```\e[0m\e[0m\e[K\r\e[91C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second ``` inner_x\e[0m\e[K\r
 \e[3m\e[38;2;150;152;150m*y*\e[0m\e[0m\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m*y* ```\e[0m\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[7C\e[?25h\e[?2026l\r
-\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m| wh\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m| what | whe\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when\e[0m\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when |\e[0m\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when | read\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when | read | f\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when | read | first\e[0m\e[0m\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first |\e[0m\e[0m\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first | wri\e[0m\e[0m\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first write\e[0m\e[0m\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first | write | sec\e[0m\e[0m\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first | write | second\e[0m\e[0m\e[K\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first write second\e[0m\e[0m\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m| wh\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150m| what | whe\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when\e[0m\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when |\e[0m\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when | read\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when | read | f\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when | read | first\e[0m\e[0m\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first |\e[0m\e[0m\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first | wri\e[0m\e[0m\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first write\e[0m\e[0m\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first | write | sec\e[0m\e[0m\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first | write | second\e[0m\e[0m\e[K\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mwhat when read first write second\e[0m\e[0m\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[33C\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA th\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA though\e[0m\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought ho\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holdin\e[0m\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding em\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty\e[0m\e[0m\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty bloc\e[0m\e[0m\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks:\e[0m\e[0m\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Eac\e[0m\e[0m\e[K\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of\e[0m\e[0m\e[K\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of the\e[0m\e[0m\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them dr\e[0m\e[0m\e[K\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws\e[0m\e[0m\e[K\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws noth\e[0m\e[0m\e[K\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing.\e[0m\e[0m\e[K\r\e[59C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So\e[0m\e[0m\e[K\r\e[62C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one\e[0m\e[0m\e[K\r\e[66C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one bla\e[0m\e[0m\e[K\r\e[70C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one blank s\e[0m\e[0m\e[K\r\e[74C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one blank stand\e[0m\e[0m\e[K\r\e[78C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one blank stands be\e[0m\e[0m\e[K\r\e[82C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one blank stands betwee\e[0m\e[0m\e[K\r\e[86C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one blank stands between ea\e[0m\e[0m\e[K\r\e[90C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one blank stands between each o\e[0m\e[0m\e[K\r\e[94C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one blank stands between each of th\e[0m\e[0m\e[K\r\e[98C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one blank stands between each of\e[0m\e[K\r
+\e[3m\e[38;2;150;152;150mthese.\e[0m\e[0m\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read cam\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read came fi\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read came first,\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read came first, and\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read came first, and the\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read came first, and the fil\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read came first, and the file ho\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read came first, and the file holds\e[K\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read came first, and the file holds `one\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read came first, and the file holds \e[38;2;192;128;80mone\e[0m.\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[44C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
@@ -1151,6 +1248,17 @@ The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read\e[K\r\e[8C\e[?25h\e[?20
 \e[3m\e[38;2;150;152;150mwhat when\e[0m\r
 \e[3m\e[38;2;150;152;150mread first\e[0m\r
 \e[3m\e[38;2;150;152;150mwrite second\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mA thought\e[0m\r
+\e[3m\e[38;2;150;152;150mholding\e[0m\r
+\e[3m\e[38;2;150;152;150mempty\e[0m\r
+\e[3m\e[38;2;150;152;150mblocks: Each\e[0m\r
+\e[3m\e[38;2;150;152;150mof them\e[0m\r
+\e[3m\e[38;2;150;152;150mdraws\e[0m\r
+\e[3m\e[38;2;150;152;150mnothing. So\e[0m\r
+\e[3m\e[38;2;150;152;150mone blank\e[0m\r
+\e[3m\e[38;2;150;152;150mstands\e[0m\r
+\e[3m\e[38;2;150;152;150mbetween each\e[0m\r
+\e[3m\e[38;2;150;152;150mof these.\e[0m\e[0m\r
 \r
 The read\r
 came first,\r
@@ -1166,6 +1274,7 @@ holds \e[38;2;192;128;80mone\e[0m.\r
 \e[3m\e[38;2;150;152;150mA plain thought with no markup in it at all.\e[0m\e[0m\r
 \e[3m\e[38;2;150;152;150mEvery way markup can stand in a thought • intraword foo_bar_baz and snake_case_name • leading _private • trailing trailing_ • dunder init • emphasis one two three four five six • nested foo_bar and xyz • code **kept** and foo_bar and a ` b • unclosed ` tick • arithmetic 2 * 3 * 4 and a ** b • tildes ~/proj and ~5 • brackets items[0] and map[key] and [a][b] • link the docs (https://example.com/a_(b)) and bold label (has space) • autolinks https://example.com and me@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • escaped *star* and _under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second ``` inner_x *y* ```\e[0m\e[0m\r
 \e[3m\e[38;2;150;152;150mwhat when read first write second\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one blank stands between each of these.\e[0m\e[0m\r
 \r
 The read came first, and the file holds \e[38;2;192;128;80mone\e[0m.\r
 \e[?25h\e[?2026l
@@ -1188,6 +1297,8 @@ The read came first, and the file holds \e[38;2;192;128;80mone\e[0m.\r
 \e[3m\e[38;2;150;152;150m_under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second ``` inner_x\e[0m\r
 \e[3m\e[38;2;150;152;150m*y* ```\e[0m\e[0m\r
 \e[3m\e[38;2;150;152;150mwhat when read first write second\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150mA thought holding empty blocks: Each of them draws nothing. So one blank stands between each of\e[0m\r
+\e[3m\e[38;2;150;152;150mthese.\e[0m\e[0m\r
 \r
 The read came first, and the file holds \e[38;2;192;128;80mone\e[0m.\r
 \e[?25h\e[?2026l

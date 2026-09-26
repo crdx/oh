@@ -200,6 +200,36 @@ func TestANestedListKeepsItsChildrenWithTheirParent(t *testing.T) {
 	}
 }
 
+func TestABlockThatDrawsNothingTakesNoBlankBesideIt(t *testing.T) {
+	for name, block := range map[string]string{
+		"quote":           ">",
+		"quote in quote":  "> >",
+		"bullet":          "-",
+		"bullet in item":  "- -",
+		"numbered item":   "1.",
+		"quote in bullet": "- >",
+		"fence":           "```\n```",
+		"Go fence":        "```go\n```",
+		"link definition": "[unused]: https://example.com",
+		"heading":         "#",
+		"heading of two":  "## ",
+	} {
+		for _, width := range []int{1, 2, 3, 4, columns} {
+			got := style.Plain(strings.Join(Render("before\n\n"+block+"\n\nafter", width), "\n"))
+			want := style.Plain(strings.Join(Render("before", width), "\n") + "\n\n" + strings.Join(Render("after", width), "\n"))
+			if got != want {
+				t.Errorf("an empty %s at %d columns drew %q, want %q", name, width, got, want)
+			}
+		}
+	}
+}
+
+func TestANarrowItemHoldingOnlyAFenceStillShowsItsMarker(t *testing.T) {
+	if got := style.Plain(strings.Join(Render("- ```\n  code\n  ```", 1), "\n")); got == "" {
+		t.Error("an item whose only content is a fence drew nothing at one column")
+	}
+}
+
 func TestTheBlocksAreDrawnWithoutTheirPunctuation(t *testing.T) {
 	got := style.Plain(strings.Join(Render(answer, columns), "\n"))
 
