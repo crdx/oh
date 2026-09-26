@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Honour explicit server advice to retry a refused request
 - Require double-enter in quick succession
 - Theme job names in jobs list output
 - Open session picker on first available session

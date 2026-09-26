@@ -1,0 +1,28 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[first]
+prompt = "receive a bad request that says to ask again"
+
+[[first.response]]
+status = 400
+body = '''{"error":{"message":"The route is moving.","type":"routing_error"}}'''
+headers = { Content-Type = "application/json", X-Should-Retry = "true" }
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_text.delta","delta":"Recovered after the routing refusal."}''',
+    '''{"type":"response.output_item.done","item":{"type":"message","role":"assistant","content":[{"type":"output_text","text":"Recovered after the routing refusal."}]}}''',
+    '''{"type":"response.completed"}''',
+]
+
+[resume]
+prompt = "continue after the recovered request"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_text.delta","delta":"Resumed."}''',
+    '''{"type":"response.output_item.done","item":{"type":"message","role":"assistant","content":[{"type":"output_text","text":"Resumed."}]}}''',
+    '''{"type":"response.completed"}''',
+]

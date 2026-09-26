@@ -325,23 +325,29 @@ func TestARefusalSaysWhetherAskingAgainIsWorthIt(t *testing.T) {
 	}
 }
 
-func TestARefusalTheEndpointSaysNotToRetryIsFinal(t *testing.T) {
-	tests := map[string]bool{
-		"false": false,
-		"False": false,
-		"true":  true,
-		"":      true,
-		"maybe": true,
+func TestARefusalHonoursTheEndpointsRetryAdvice(t *testing.T) {
+	tests := []struct {
+		name    string
+		status  int
+		advice  string
+		worthIt bool
+	}{
+		{name: "do not retry", status: http.StatusTooManyRequests, advice: "false"},
+		{name: "case insensitive refusal", status: http.StatusTooManyRequests, advice: "False"},
+		{name: "retry", status: http.StatusBadRequest, advice: "true", worthIt: true},
+		{name: "case insensitive retry", status: http.StatusBadRequest, advice: "True", worthIt: true},
+		{name: "no advice", status: http.StatusTooManyRequests, worthIt: true},
+		{name: "invalid advice", status: http.StatusTooManyRequests, advice: "maybe", worthIt: true},
 	}
 
-	for advice, worthIt := range tests {
-		t.Run(strconv.Quote(advice), func(t *testing.T) {
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
 			server := httptest.NewServer(http.HandlerFunc(
 				func(writer http.ResponseWriter, _ *http.Request) {
-					if advice != "" {
-						writer.Header().Set("X-Should-Retry", advice)
+					if test.advice != "" {
+						writer.Header().Set("X-Should-Retry", test.advice)
 					}
-					writer.WriteHeader(http.StatusTooManyRequests)
+					writer.WriteHeader(test.status)
 					_, _ = writer.Write([]byte(`{"error":{"message":"Usage credits are required for fast mode."}}`))
 				},
 			))
@@ -354,8 +360,8 @@ func TestARefusalTheEndpointSaysNotToRetryIsFinal(t *testing.T) {
 				t.Fatalf("expected a refusal the caller can read, got %v", err)
 			}
 
-			if refused.Retriable() != worthIt {
-				t.Errorf("expected retriable %t when told %q", worthIt, advice)
+			if refused.Retriable() != test.worthIt {
+				t.Errorf("expected retriable %t when told %q", test.worthIt, test.advice)
 			}
 		})
 	}

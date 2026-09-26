@@ -1,0 +1,13 @@
+
+ receive a bad request that says to ask again
+
+
+[#1] Request failed; retrying in 1s: The route is moving.
+
+Recovered after the routing refusal.
+
+
+ continue after the recovered request
+
+
+Resumed.

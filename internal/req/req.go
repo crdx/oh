@@ -293,13 +293,14 @@ var terminalServerStatuses = map[int]bool{
 const shouldRetryHeader = "X-Should-Retry"
 
 type StatusError struct {
-	Status    int
-	Code      string
-	Message   string
-	Body      string
-	MediaType string
-	Wait      time.Duration
-	IsFinal   bool
+	Status      int
+	Code        string
+	Message     string
+	Body        string
+	MediaType   string
+	Wait        time.Duration
+	IsFinal     bool
+	IsRetriable bool
 }
 
 func (self *StatusError) Error() string {
@@ -332,6 +333,9 @@ func (self *StatusError) Retriable() bool {
 	if self.IsFinal {
 		return false
 	}
+	if self.IsRetriable {
+		return true
+	}
 
 	if self.Status == http.StatusTooManyRequests {
 		return true
@@ -347,12 +351,14 @@ func (self *StatusError) RetryAfter() time.Duration {
 func refusal(response *http.Response) error {
 	body, _ := io.ReadAll(io.LimitReader(response.Body, bodyLimit))
 
+	retryAdvice := strings.TrimSpace(response.Header.Get(shouldRetryHeader))
 	refusedRequest := &StatusError{
-		Status:    response.StatusCode,
-		Body:      string(body),
-		MediaType: mediaType(response.Header.Get("Content-Type"), body),
-		Wait:      retryAfter(response.Header.Get("Retry-After")),
-		IsFinal:   strings.EqualFold(strings.TrimSpace(response.Header.Get(shouldRetryHeader)), "false"),
+		Status:      response.StatusCode,
+		Body:        string(body),
+		MediaType:   mediaType(response.Header.Get("Content-Type"), body),
+		Wait:        retryAfter(response.Header.Get("Retry-After")),
+		IsFinal:     strings.EqualFold(retryAdvice, "false"),
+		IsRetriable: strings.EqualFold(retryAdvice, "true"),
 	}
 
 	var payload struct {
