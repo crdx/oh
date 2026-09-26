@@ -34,6 +34,7 @@ const (
 	goBuildCacheDir  = "go-build"
 	goModuleCacheDir = "go-mod"
 	goLintCacheDir   = "golangci-lint"
+	goFlags          = "-trimpath"
 )
 
 func shellCPUTime() time.Duration {
@@ -247,6 +248,7 @@ func createPolicyWithSupportProbe(
 		SetEnv: map[string]string{
 			"GIT_CONFIG_NOSYSTEM":     "1",
 			"GOCACHE":                 filepath.Join(cacheDir, goBuildCacheDir),
+			"GOFLAGS":                 goFlags,
 			"GOLANGCI_LINT_CACHE":     filepath.Join(sandbox.TmpDir, lintCachePath),
 			"GOMODCACHE":              filepath.Join(cacheDir, goModuleCacheDir),
 			"HOME":                    homeDir,
@@ -434,6 +436,7 @@ func YoloPolicy(homeDir string, tmpDir string) sandbox.Policy {
 
 		SetEnv: map[string]string{
 			"GIT_CONFIG_NOSYSTEM":     "1",
+			"GOFLAGS":                 goFlags,
 			"HOME":                    homeDir,
 			location.StateDirVariable: location.GetStateDir(),
 			"TMPDIR":                  tmpDir,

@@ -3,8 +3,10 @@ package shell
 import (
 	"context"
 	"errors"
+	"io/fs"
 	"net/url"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
 	"slices"
@@ -554,6 +556,7 @@ func TestGoUsesTheShellCacheAndTheHostModuleCacheAsAProxy(t *testing.T) {
 
 	wantEnvironment := map[string]string{
 		"GOCACHE":    filepath.Join(cacheDir, goBuildCacheDir),
+		"GOFLAGS":    "-trimpath",
 		"GOMODCACHE": filepath.Join(cacheDir, goModuleCacheDir),
 		"GOPROXY":    (&url.URL{Scheme: "file", Path: proxyDir}).String(),
 		"GOSUMDB":    "off",
@@ -1243,4 +1246,94 @@ func TestPreparingHomeMappingsRefusesAStaleSymlinkAtEveryWriteState(t *testing.T
 			}
 		})
 	}
+}
+
+func TestEveryShellBuildsGoWithoutNamingItsWorkspace(t *testing.T) {
+	for _, currentCaps := range everyCap {
+		policy, err := createTestPolicy(t, t.TempDir(), t.TempDir(), t.TempDir(), Paths{}, currentCaps)
+		if err != nil {
+			t.Fatalf("%s: the sandbox cannot enforce the policy here: %v", currentCaps.Flags(), err)
+		}
+		if got := policy.SetEnv["GOFLAGS"]; got != "-trimpath" {
+			t.Errorf("%s: got GOFLAGS %q, want -trimpath", currentCaps.Flags(), got)
+		}
+	}
+
+	if got := YoloPolicy(t.TempDir(), t.TempDir()).SetEnv["GOFLAGS"]; got != "-trimpath" {
+		t.Errorf("a waived sandbox got GOFLAGS %q, want -trimpath", got)
+	}
+}
+
+func TestTwoWorkspacesShareOneGoBuildCache(t *testing.T) {
+	if _, err := exec.LookPath("go"); err != nil {
+		t.Skip("no go toolchain to build with")
+	}
+
+	home := t.TempDir()
+	cache := filepath.Join(home, ".cache", "go-build")
+	build := func(command string) int {
+		t.Helper()
+
+		workspace := t.TempDir()
+		for name, content := range map[string]string{
+			"go.mod":    "module example.test/shared\n\ngo 1.21\n",
+			"shared.go": "package shared\n\nfunc Answer() int { return 42 }\n",
+		} {
+			if err := os.WriteFile(filepath.Join(workspace, name), []byte(content), 0o600); err != nil {
+				t.Fatal(err)
+			}
+		}
+
+		workspaceRoot, err := os.OpenRoot(workspace)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer func() { _ = workspaceRoot.Close() }()
+
+		files := file.New(workspaceRoot, func(string) error { return file.ErrReadOnly })
+		mode := caps.NewMode(caps.Read | caps.Shell)
+		shell := New(workspace, home, t.TempDir(), newTestPathAccess(t, files, mode), mode, files, true, allowNetworking, sandbox.Direct())
+
+		call, err := shell.Parse(`{"command":` + strconv.Quote(command+" && echo built") + `}`)
+		if err != nil {
+			t.Fatal(err)
+		}
+		result, err := call.Exec(t.Context())
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !strings.HasSuffix(strings.TrimSpace(result.Output), "built") {
+			t.Fatalf("%s failed: %s", command, result.Output)
+		}
+
+		return cacheEntries(t, cache)
+	}
+
+	first := build("GOTOOLCHAIN=local go build ./...")
+	if second := build("GOTOOLCHAIN=local go build ./..."); second != first {
+		t.Errorf("a second workspace added %d cache entries for the same source", second-first)
+	}
+	if third := build("GOTOOLCHAIN=local GOFLAGS= go build ./..."); third == first {
+		t.Error("a build naming its workspace added nothing, so this test cannot tell the difference")
+	}
+}
+
+func cacheEntries(t *testing.T, cache string) int {
+	t.Helper()
+
+	count := 0
+	err := filepath.WalkDir(cache, func(path string, entry fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if entry.Type().IsRegular() && filepath.Base(filepath.Dir(path)) != filepath.Base(cache) {
+			count++
+		}
+		return nil
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return count
 }

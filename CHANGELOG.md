@@ -12,6 +12,7 @@
 - Keep migration copies as hard links
 - Compress recorded wire traffic
 - Clarify the reason for jobs stopping
+- Share one Go build cache
 
 ## [0.10.0] - 2026-09-25
 
