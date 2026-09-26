@@ -2,6 +2,10 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+### Changes
+
+- Make plain reasoning keep underscores
+
 ## [0.10.0] - 2026-09-25
 
 ### Changes

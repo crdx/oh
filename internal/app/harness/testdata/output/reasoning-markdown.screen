@@ -8,11 +8,29 @@ Checking one.go The first thing to
 settle is which of these holds: • the
 file was read before it was written •
 the file was written before it was read
-func main() { println("one") } So the
-read has to come first.
+func main() { println("one") } So
+read_file has to come before write_file.
 read target.txt ✓ 1L
 A plain thought with no markup in it at
 all.
+Every way markup can stand in a thought
+• intraword foo_bar_baz and
+snake_case_name • leading _private •
+trailing trailing_ • dunder init •
+emphasis one two three four five six •
+nested foo_bar and xyz • code **kept**
+and foo_bar and a ` b • unclosed ` tick
+• arithmetic 2 * 3 * 4 and a ** b •
+tildes ~/proj and ~5 • brackets items[0]
+and map[key] and [a][b] • link the docs
+(https://example.com/a_(b)) and bold
+label (has space) • autolinks
+https://example.com and me@localhost and
+<b>html</b> • pictures a picture
+(one.png) and (two.png) • escaped *star*
+and _under_ and $5 and 50% • entities &
+© A and &unknown; • a hard break 1.
+first 2. second ``` inner_x *y* ```
 what when read first write second
 
 The read came first, and the file holds
@@ -244,13 +262,15 @@ e
 }
 S
 o
-t
-h
-e
 r
 e
 a
 d
+_
+f
+i
+l
+e
 h
 a
 s
@@ -260,11 +280,22 @@ c
 o
 m
 e
+b
+e
+f
+o
+r
+e
+w
+r
+i
+t
+e
+_
 f
 i
-r
-s
-t
+l
+e
 .
 ✓
 A
@@ -302,6 +333,552 @@ a
 l
 l
 .
+E
+v
+e
+r
+y
+w
+a
+y
+m
+a
+r
+k
+u
+p
+c
+a
+n
+s
+t
+a
+n
+d
+i
+n
+a
+t
+h
+o
+u
+g
+h
+t
+•
+i
+n
+t
+r
+a
+w
+o
+r
+d
+f
+o
+o
+_
+b
+a
+r
+_
+b
+a
+z
+a
+n
+d
+s
+n
+a
+k
+e
+_
+c
+a
+s
+e
+_
+n
+a
+m
+e
+•
+l
+e
+a
+d
+i
+n
+g
+_
+p
+r
+i
+v
+a
+t
+e
+•
+t
+r
+a
+i
+l
+i
+n
+g
+t
+r
+a
+i
+l
+i
+n
+g
+_
+•
+d
+u
+n
+d
+e
+r
+i
+n
+i
+t
+•
+e
+m
+p
+h
+a
+s
+i
+s
+o
+n
+e
+t
+w
+o
+t
+h
+r
+e
+e
+f
+o
+u
+r
+f
+i
+v
+e
+s
+i
+x
+•
+n
+e
+s
+t
+e
+d
+f
+o
+o
+_
+b
+a
+r
+a
+n
+d
+x
+y
+z
+•
+c
+o
+d
+e
+*
+*
+k
+e
+p
+t
+*
+*
+a
+n
+d
+f
+o
+o
+_
+b
+a
+r
+a
+n
+d
+a
+`
+b
+•
+u
+n
+c
+l
+o
+s
+e
+d
+`
+t
+i
+c
+k
+•
+a
+r
+i
+t
+h
+m
+e
+t
+i
+c
+2
+*
+3
+*
+4
+a
+n
+d
+a
+*
+*
+b
+•
+t
+i
+l
+d
+e
+s
+~
+/
+p
+r
+o
+j
+a
+n
+d
+~
+5
+•
+b
+r
+a
+c
+k
+e
+t
+s
+i
+t
+e
+m
+s
+[
+0
+]
+a
+n
+d
+m
+a
+p
+[
+k
+e
+y
+]
+a
+n
+d
+[
+a
+]
+[
+b
+]
+•
+l
+i
+n
+k
+t
+h
+e
+d
+o
+c
+s
+(
+h
+t
+t
+p
+s
+:
+/
+/
+e
+x
+a
+m
+p
+l
+e
+.
+c
+o
+m
+/
+a
+_
+(
+b
+)
+)
+a
+n
+d
+b
+o
+l
+d
+l
+a
+b
+e
+l
+(
+h
+a
+s
+s
+p
+a
+c
+e
+)
+•
+a
+u
+t
+o
+l
+i
+n
+k
+s
+h
+t
+t
+p
+s
+:
+/
+/
+e
+x
+a
+m
+p
+l
+e
+.
+c
+o
+m
+a
+n
+d
+m
+e
+@
+l
+o
+c
+a
+l
+h
+o
+s
+t
+a
+n
+d
+<
+b
+>
+h
+t
+m
+l
+<
+/
+b
+>
+•
+p
+i
+c
+t
+u
+r
+e
+s
+a
+p
+i
+c
+t
+u
+r
+e
+(
+o
+n
+e
+.
+p
+n
+g
+)
+a
+n
+d
+(
+t
+w
+o
+.
+p
+n
+g
+)
+•
+e
+s
+c
+a
+p
+e
+d
+*
+s
+t
+a
+r
+*
+a
+n
+d
+_
+u
+n
+d
+e
+r
+_
+a
+n
+d
+$
+5
+a
+n
+d
+5
+0
+%
+•
+e
+n
+t
+i
+t
+i
+e
+s
+&
+©
+A
+a
+n
+d
+&
+u
+n
+k
+n
+o
+w
+n
+;
+•
+a
+h
+a
+r
+d
+b
+r
+e
+a
+k
+1
+.
+f
+i
+r
+s
+t
+2
+.
+s
+e
+c
+o
+n
+d
+`
+`
+`
+i
+n
+n
+e
+r
+_
+x
+*
+y
+*
+`
+`
+`
 w
 h
 a
@@ -373,10 +950,18 @@ e
 
 
 Checking one.go The first thing to settle is which of these holds: • the file was read before it was
-written • the file was written before it was read func main() { println("one") } So the read has to
-come first.
+written • the file was written before it was read func main() { println("one") } So read_file has to
+come before write_file.
 read target.txt ✓ 1L
 A plain thought with no markup in it at all.
+Every way markup can stand in a thought • intraword foo_bar_baz and snake_case_name • leading
+_private • trailing trailing_ • dunder init • emphasis one two three four five six • nested foo_bar
+and xyz • code **kept** and foo_bar and a ` b • unclosed ` tick • arithmetic 2 * 3 * 4 and a ** b •
+tildes ~/proj and ~5 • brackets items[0] and map[key] and [a][b] • link the docs
+(https://example.com/a_(b)) and bold label (has space) • autolinks https://example.com and
+me@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • escaped *star* and
+_under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second ``` inner_x
+*y* ```
 what when read first write second
 
 The read came first, and the file holds one.
@@ -406,14 +991,82 @@ was read
 func main()
 {
 println("one
-") } So the
-read has to
-come first.
+") } So
+read_file
+has to come
+before
+write_file.
 read t… ✓ 1L
 A plain
 thought with
 no markup in
 it at all.
+Every way
+markup can
+stand in a
+thought •
+intraword
+foo_bar_baz
+and
+snake_case_n
+ame •
+leading
+_private •
+trailing
+trailing_ •
+dunder init
+• emphasis
+one two
+three four
+five six •
+nested
+foo_bar and
+xyz • code
+**kept** and
+foo_bar and
+a ` b •
+unclosed `
+tick •
+arithmetic 2
+* 3 * 4 and
+a ** b •
+tildes
+~/proj and
+~5 •
+brackets
+items[0] and
+map[key] and
+[a][b] •
+link the
+docs
+(https://exa
+mple.com/a_(
+b)) and bold
+label (has
+space) •
+autolinks
+https://exam
+ple.com and
+me@localhost
+and
+<b>html</b>
+• pictures a
+picture
+(one.png)
+and
+(two.png) •
+escaped
+*star* and
+_under_ and
+$5 and 50% •
+entities & ©
+A and
+&unknown; •
+a hard break
+1. first 2.
+second ```
+inner_x *y*
+```
 what when
 read first
 write second
@@ -428,10 +1081,18 @@ holds one.
 
 
 Checking one.go The first thing to settle is which of these holds: • the file was read before it was
-written • the file was written before it was read func main() { println("one") } So the read has to
-come first.
+written • the file was written before it was read func main() { println("one") } So read_file has to
+come before write_file.
 read target.txt ✓ 1L
 A plain thought with no markup in it at all.
+Every way markup can stand in a thought • intraword foo_bar_baz and snake_case_name • leading
+_private • trailing trailing_ • dunder init • emphasis one two three four five six • nested foo_bar
+and xyz • code **kept** and foo_bar and a ` b • unclosed ` tick • arithmetic 2 * 3 * 4 and a ** b •
+tildes ~/proj and ~5 • brackets items[0] and map[key] and [a][b] • link the docs
+(https://example.com/a_(b)) and bold label (has space) • autolinks https://example.com and
+me@localhost and <b>html</b> • pictures a picture (one.png) and (two.png) • escaped *star* and
+_under_ and $5 and 50% • entities & © A and &unknown; • a hard break 1. first 2. second ``` inner_x
+*y* ```
 what when read first write second
 
 The read came first, and the file holds one.

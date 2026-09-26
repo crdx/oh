@@ -357,7 +357,7 @@ func RenderReasoning(thought string, columns int, rendering output.ReasoningRend
 	var plain plainThought
 	var reflow paragraphReflow
 
-	return renderReasoningWith(&renderer, &plain, &reflow, thought, columns, rendering)
+	return renderReasoningWith(&renderer, &plain, &reflow, thought, columns, rendering, true)
 }
 
 func renderReasoningWith(
@@ -367,9 +367,10 @@ func renderReasoningWith(
 	thought string,
 	columns int,
 	rendering output.ReasoningRendering,
+	isSettled bool,
 ) []string {
 	if rendering == output.ReasoningPlain {
-		settledSource, tail := plain.Text(thought)
+		settledSource, tail := plain.Text(thought, isSettled)
 		settledText := strings.Join(strings.Fields(settledSource), " ")
 		text := settledText
 		if tailText := strings.Join(strings.Fields(tail), " "); tailText != "" {
@@ -575,6 +576,7 @@ func (self *Picasso) drawReasoning(isSettled bool) {
 		thought,
 		self.screen.Columns(),
 		self.reasoningRendering,
+		isSettled,
 	)
 	if self.screen.IsTerminal() {
 		rows = self.reasoningLinks.Render(rows, self.linkRoots())
