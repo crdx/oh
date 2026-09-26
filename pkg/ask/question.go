@@ -5,6 +5,7 @@ import (
 	"errors"
 	"slices"
 	"strconv"
+	"time"
 )
 
 var ErrDenied = errors.New("the request was denied")
@@ -72,7 +73,20 @@ func (self Confirmation) Question() Question {
 
 func Confirm(ctx context.Context, broker *Broker, confirmation Confirmation) error {
 	index, err := broker.Ask(ctx, confirmation.Question())
+	return confirmationResult(index, err)
+}
 
+func ConfirmWithin(
+	ctx context.Context,
+	broker *Broker,
+	confirmation Confirmation,
+	lapseAfter time.Duration,
+) error {
+	index, err := broker.AskWithin(ctx, confirmation.Question(), lapseAfter)
+	return confirmationResult(index, err)
+}
+
+func confirmationResult(index int, err error) error {
 	switch {
 	case errors.Is(err, ErrCancelled):
 		return ErrDenied

@@ -126,6 +126,73 @@ func TestConcurrentRequestsReachTheAnswererInOrder(t *testing.T) {
 	}
 }
 
+func TestConcurrentTimedRequestsEachGetTheirWholeLapse(t *testing.T) {
+	synctest.Test(t, func(t *testing.T) {
+		const (
+			lapse      = time.Minute
+			firstStood = 45 * time.Second
+		)
+
+		broker := ask.New()
+		closeBroker := broker.Open()
+		defer closeBroker()
+
+		firstResult := make(chan error, 1)
+		go func() {
+			_, err := broker.AskWithin(t.Context(), ask.Confirmation{Label: "First?"}.Question(), lapse)
+			firstResult <- err
+		}()
+		<-broker.Changes()
+
+		first := broker.Current()
+		firstDeadline, hasDeadline := first.Deadline()
+		if want := time.Now().Add(lapse); !hasDeadline || !firstDeadline.Equal(want) {
+			t.Fatalf("first deadline = %s (%t), want %s", firstDeadline, hasDeadline, want)
+		}
+
+		secondContext, secondWaitedTime := waiting.Track(t.Context())
+		secondResult := make(chan error, 1)
+		go func() {
+			_, err := broker.AskWithin(secondContext, ask.Confirmation{Label: "Second?"}.Question(), lapse)
+			secondResult <- err
+		}()
+		<-broker.Changes()
+		synctest.Wait()
+
+		time.Sleep(firstStood)
+		first.Choose(0)
+		if err := <-firstResult; err != nil {
+			t.Fatalf("the first request failed: %v", err)
+		}
+
+		second := broker.Current()
+		if second == nil || second.Question.Label != "Second?" {
+			t.Fatalf("got second request %+v", second)
+		}
+		secondDeadline, hasDeadline := second.Deadline()
+		if want := time.Now().Add(lapse); !hasDeadline || !secondDeadline.Equal(want) {
+			t.Fatalf("second deadline = %s (%t), want %s", secondDeadline, hasDeadline, want)
+		}
+
+		time.Sleep(lapse - time.Second)
+		synctest.Wait()
+		select {
+		case err := <-secondResult:
+			t.Fatalf("the second request lapsed early: %v", err)
+		default:
+		}
+
+		time.Sleep(time.Second)
+		synctest.Wait()
+		if err := <-secondResult; !errors.Is(err, context.DeadlineExceeded) {
+			t.Errorf("got %v, want the second request to lapse", err)
+		}
+		if got, want := secondWaitedTime(), firstStood+lapse; got != want {
+			t.Errorf("recorded %s waiting, want the %s queued and standing", got, want)
+		}
+	})
+}
+
 func TestCancellationWithdrawsARequest(t *testing.T) {
 	broker := ask.New()
 	closeBroker := broker.Open()

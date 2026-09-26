@@ -982,6 +982,80 @@ func TestGoldenQuestionNotificationsWaitForFocusToStayAway(t *testing.T) {
 	compareWithGolden(t, "question-notifications", ".txt", timelinePasses)
 }
 
+type firstApprovalOutcome int
+
+const (
+	firstApprovalAnswer firstApprovalOutcome = iota
+	firstApprovalLapse
+)
+
+func queuedApprovalStream(t *testing.T, firstOutcome firstApprovalOutcome) string {
+	t.Helper()
+
+	var stream string
+	synctest.Test(t, func(t *testing.T) {
+		var screenOutput strings.Builder
+		self := slashCommandFixture(t, caps.Read)
+		self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
+		inputLine := edit.NewInput(nil)
+
+		broker := ask.New()
+		t.Cleanup(broker.Open())
+		self.question.broker = broker
+
+		firstResult := make(chan error, 1)
+		go func() { firstResult <- fetchApproval.confirm(t.Context(), broker, "first page") }()
+		<-broker.Changes()
+		self.onQuestionChange()
+		self.show(inputLine)
+
+		secondResult := make(chan error, 1)
+		go func() { secondResult <- fetchApproval.confirm(t.Context(), broker, "second page") }()
+		<-broker.Changes()
+		synctest.Wait()
+
+		if firstOutcome == firstApprovalLapse {
+			time.Sleep(approvalLimit)
+			synctest.Wait()
+			if err := <-firstResult; err == nil || !strings.Contains(err.Error(), "timed out after 1m") {
+				t.Fatalf("the first approval did not lapse as expected: %v", err)
+			}
+		} else {
+			time.Sleep(45 * time.Second)
+			self.show(inputLine)
+			self.answerQuestion(key.Key{Code: key.Rune, Value: 'y'})
+			if err := <-firstResult; err != nil {
+				t.Fatalf("the first approval failed: %v", err)
+			}
+		}
+
+		<-broker.Changes()
+		self.onQuestionChange()
+		self.show(inputLine)
+		stream = screenOutput.String()
+
+		self.answerQuestion(key.Key{Code: key.Rune, Value: 'y'})
+		if err := <-secondResult; err != nil {
+			t.Fatalf("the second approval failed: %v", err)
+		}
+	})
+
+	return stream
+}
+
+func TestGoldenQueuedApprovalsEachGetTheirWholeLapse(t *testing.T) {
+	passes := map[string]func() string{
+		"after the first is answered": func() string { return queuedApprovalStream(t, firstApprovalAnswer) },
+		"after the first lapses":      func() string { return queuedApprovalStream(t, firstApprovalLapse) },
+	}
+	for name, pass := range passes {
+		requireNothingDrawnAboveTheScreen(t, name, pass(), replayLines)
+	}
+
+	compareWithGolden(t, "approval-queue", ".ansi", passes)
+	compareWithGolden(t, "approval-queue", ".screen", shownPasses(t, passes))
+}
+
 func TestACallIsNotTimedWhileItsQuestionStands(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		rig := newWideRig(t)
@@ -4978,6 +5052,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 	for name, extensions := range map[string][]string{
 		"app-plain-resume":       {".jsonl", ".transcript"},
 		"app-plain-turn":         {".jsonl", ".transcript"},
+		"approval-queue":         {".ansi", ".screen"},
 		"authorisation-url":      {".ansi", ".screen"},
 		"banner":                 {".ansi", ".screen"},
 		"banner-relayout":        {".ansi", ".screen"},

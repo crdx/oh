@@ -133,14 +133,11 @@ func (self approval) ask(
 }
 
 func (self approval) confirm(ctx context.Context, broker *ask.Broker, subject string) error {
-	questionContext, cancel := context.WithTimeout(ctx, approvalLimit)
-	defer cancel()
-
-	err := ask.Confirm(questionContext, broker, ask.Confirmation{
+	err := ask.ConfirmWithin(ctx, broker, ask.Confirmation{
 		Label:    self.label,
 		Detail:   subject,
 		Language: self.language,
-	})
+	}, approvalLimit)
 
 	switch {
 	case errors.Is(err, ask.ErrDenied):
