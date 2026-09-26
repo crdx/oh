@@ -163,6 +163,7 @@ type App struct {
 	onFailure       func(failure error)
 	onQuestion      func(question ask.Question)
 	savePastedImage func(mediaType string, data []byte) (string, error)
+	watchStalls     func(work string) func()
 	pasteExchange   paste.Exchange
 	workspace       *work.Space
 	continueMessage string
@@ -258,6 +259,7 @@ func (self *App) begin(message string) cycle.Transition {
 		QuestionChanges:       self.questionChanges(),
 		OnQuestionChange:      self.onQuestionChange,
 		OnDraw:                func() { self.show(inputLine) },
+		Watch:                 self.watchStalls,
 	})
 
 	return self.transition

@@ -36,13 +36,14 @@ type Handler struct {
 	QuestionChanges       <-chan struct{}
 	OnQuestionChange      func()
 	OnDraw                func()
+	Watch                 func(work string) func()
 }
 
 func Run(terminal *os.File, getNextRefresh func(time.Time) time.Time, handler Handler) {
 	resizeSignals := Resizes()
 	defer signal.Stop(resizeSignals)
 
-	refresh := newRefreshTimer(getNextRefresh)
+	refresh := newRefreshTimer(watchedSchedule(getNextRefresh, handler.Watch))
 	defer refresh.stop()
 
 	beater := time.NewTicker(heartRate)
@@ -51,7 +52,7 @@ func Run(terminal *os.File, getNextRefresh func(time.Time) time.Time, handler Ha
 	keys, stopReading := Keypresses(terminal)
 	defer stopReading()
 
-	run(keys, resizeSignals, refresh.timer.C, refresh.schedule, beater.C, handler)
+	run(keys, resizeSignals, refresh.timer.C, refresh.schedule, beater.C, watched(handler))
 }
 
 func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan time.Time, schedule func(), beats <-chan time.Time, handler Handler) {

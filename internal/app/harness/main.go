@@ -63,6 +63,7 @@ import (
 	"crdx.org/oh/internal/app/shell"
 	"crdx.org/oh/internal/app/skill"
 	"crdx.org/oh/internal/app/slash"
+	"crdx.org/oh/internal/app/stall"
 	"crdx.org/oh/internal/app/startup"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/style"
@@ -1078,6 +1079,9 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		}()
 	}
 	app.savePastedImage = dropKeeper.SaveImage
+	stallWatchdog := stall.Watch(filepath.Join(sessionInfo.Directory, stall.LogName))
+	defer stallWatchdog.Close()
+	app.watchStalls = stallWatchdog.Begin
 	toolOutputLimit.SaveOverflowWith(dropKeeper.SaveOutput)
 
 	if cellWidth, cellHeight, hasGraphics := graphics.Detect(keyboard, os.Stdout); hasGraphics {
