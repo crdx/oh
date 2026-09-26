@@ -19,7 +19,7 @@
 - Keep migration copies as hard links
 - Compress recorded wire traffic
 - Clarify the reason for jobs stopping
-- Share one Go build cache
+- Keep each session's Go build cache separate
 - Show if a new model was ignored for some reason
 - Don't hard-wrap code blocks
 - Give the model accurate grant docs

@@ -288,9 +288,9 @@ go mod download -json crdx.org/oh@latest
 
 Read a dependency's source the same way, naming that module.
 
-`go env GOMODCACHE` names the session's own cache rather than the user's, so download the module rather than going looking by hand.
+`go env GOMODCACHE` names oh's shared module cache rather than the user's, so download the module rather than going looking by hand.
 
-oh sets `GOFLAGS=-trimpath` in the shell, so every session shares one build cache whichever directory it builds in. A binary built in a session names its source files by module path, such as `crdx.org/oh/internal/app/shell/policy.go`, rather than by absolute path. A test that finds its files through `runtime.Caller` sees that module path too, and a project setting its own `GOFLAGS` replaces the setting.
+oh gives each session its own Go build cache and sets `GOFLAGS=-trimpath` in the shell. A binary built in a session names its source files by module path, such as `crdx.org/oh/internal/app/shell/policy.go`, rather than by absolute path. A test that finds its files through `runtime.Caller` sees that module path too, and a project setting its own `GOFLAGS` replaces the setting.
 
 Confirm the version before trusting what you read:
 

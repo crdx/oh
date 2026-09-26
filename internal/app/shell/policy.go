@@ -140,6 +140,17 @@ func PrepareHomeMappings(
 
 type supportProbe func(context.Context) error
 
+func prepareSessionCache(tmpDir string, relativePath string, description string, writableRoots []string) error {
+	hostPath := filepath.Join(tmpDir, relativePath)
+	if link, redirects := sandbox.FirstSymlinkBeneath(hostPath, writableRoots); redirects {
+		return fmt.Errorf("the shell %s cache at %s passes through the symbolic link %s", description, hostPath, link)
+	}
+	if err := os.MkdirAll(hostPath, 0o700); err != nil {
+		return fmt.Errorf("could not prepare the shell %s cache: %w", description, err)
+	}
+	return nil
+}
+
 func omitUnavailableOptionalPaths(paths Paths, optionalPaths []string) (Paths, []string) {
 	var unavailablePaths []string
 	optionalPaths = slices.DeleteFunc(slices.Clone(optionalPaths), func(path string) bool {
@@ -204,15 +215,14 @@ func createPolicyWithSupportProbe(
 		return sandbox.Policy{}, fmt.Errorf("could not prepare the shell cache: %w", err)
 	}
 
-	lintCachePath := filepath.Join(".cache", goLintCacheDir)
-	hostLintCachePath := filepath.Join(tmpDir, lintCachePath)
-	if link, redirects := sandbox.FirstSymlinkBeneath(hostLintCachePath, writableRoots); redirects {
-		return sandbox.Policy{}, fmt.Errorf(
-			"the shell lint cache at %s passes through the symbolic link %s", hostLintCachePath, link,
-		)
+	buildCachePath := filepath.Join(".cache", goBuildCacheDir)
+	if err := prepareSessionCache(tmpDir, buildCachePath, "build", writableRoots); err != nil {
+		return sandbox.Policy{}, err
 	}
-	if err := os.MkdirAll(hostLintCachePath, 0o700); err != nil {
-		return sandbox.Policy{}, fmt.Errorf("could not prepare the shell lint cache: %w", err)
+
+	lintCachePath := filepath.Join(".cache", goLintCacheDir)
+	if err := prepareSessionCache(tmpDir, lintCachePath, "lint", writableRoots); err != nil {
+		return sandbox.Policy{}, err
 	}
 
 	mappedPaths, err := furnish(homeDir, extraPaths.Home, writableRoots)
@@ -247,7 +257,7 @@ func createPolicyWithSupportProbe(
 
 		SetEnv: map[string]string{
 			"GIT_CONFIG_NOSYSTEM":     "1",
-			"GOCACHE":                 filepath.Join(cacheDir, goBuildCacheDir),
+			"GOCACHE":                 filepath.Join(sandbox.TmpDir, buildCachePath),
 			"GOFLAGS":                 goFlags,
 			"GOLANGCI_LINT_CACHE":     filepath.Join(sandbox.TmpDir, lintCachePath),
 			"GOMODCACHE":              filepath.Join(cacheDir, goModuleCacheDir),
@@ -436,6 +446,7 @@ func YoloPolicy(homeDir string, tmpDir string) sandbox.Policy {
 
 		SetEnv: map[string]string{
 			"GIT_CONFIG_NOSYSTEM":     "1",
+			"GOCACHE":                 filepath.Join(tmpDir, ".cache", goBuildCacheDir),
 			"GOFLAGS":                 goFlags,
 			"HOME":                    homeDir,
 			location.StateDirVariable: location.GetStateDir(),

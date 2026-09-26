@@ -526,9 +526,10 @@ func TestAPathSymlinkInsideTheWorkspaceNeverGrantsItsOutsideTarget(t *testing.T)
 	}
 }
 
-func TestGoUsesTheShellCacheAndTheHostModuleCacheAsAProxy(t *testing.T) {
+func TestGoUsesTheSessionBuildCacheAndTheHostModuleCacheAsAProxy(t *testing.T) {
 	workspace := t.TempDir()
 	home := t.TempDir()
+	temporaryDirectory := t.TempDir()
 	hostModules := filepath.Join(t.TempDir(), "pkg", "mod")
 	proxyDir := filepath.Join(hostModules, "cache", "download")
 
@@ -538,7 +539,7 @@ func TestGoUsesTheShellCacheAndTheHostModuleCacheAsAProxy(t *testing.T) {
 
 	t.Setenv("GOMODCACHE", hostModules)
 
-	policy, err := createTestPolicy(t, workspace, home, t.TempDir(), Paths{}, 0)
+	policy, err := createTestPolicy(t, workspace, home, temporaryDirectory, Paths{}, 0)
 	if err != nil {
 		t.Fatalf("the sandbox cannot enforce the Go cache policy here: %v", err)
 	}
@@ -555,7 +556,7 @@ func TestGoUsesTheShellCacheAndTheHostModuleCacheAsAProxy(t *testing.T) {
 	}
 
 	wantEnvironment := map[string]string{
-		"GOCACHE":    filepath.Join(cacheDir, goBuildCacheDir),
+		"GOCACHE":    filepath.Join(sandbox.TmpDir, ".cache", goBuildCacheDir),
 		"GOFLAGS":    "-trimpath",
 		"GOMODCACHE": filepath.Join(cacheDir, goModuleCacheDir),
 		"GOPROXY":    (&url.URL{Scheme: "file", Path: proxyDir}).String(),
@@ -565,6 +566,10 @@ func TestGoUsesTheShellCacheAndTheHostModuleCacheAsAProxy(t *testing.T) {
 		if got := policy.SetEnv[name]; got != want {
 			t.Errorf("got %s %q, want %q", name, got, want)
 		}
+	}
+
+	if _, err := os.Stat(filepath.Join(temporaryDirectory, ".cache", goBuildCacheDir)); err != nil {
+		t.Errorf("the build cache was not prepared in the session tmp dir: %v", err)
 	}
 }
 
@@ -963,7 +968,7 @@ func TestASymlinkedCacheRefusesTheShellPolicyAtEveryWriteState(t *testing.T) {
 	}
 }
 
-func TestASymlinkedLintCacheRefusesTheShellPolicy(t *testing.T) {
+func TestASymlinkedSessionCacheRefusesTheShellPolicy(t *testing.T) {
 	tmp := t.TempDir()
 	victim := t.TempDir()
 	planted := filepath.Join(tmp, ".cache")
@@ -973,7 +978,7 @@ func TestASymlinkedLintCacheRefusesTheShellPolicy(t *testing.T) {
 
 	_, err := createTestPolicy(t, t.TempDir(), t.TempDir(), tmp, Paths{}, caps.Read)
 	if err == nil || !strings.Contains(err.Error(), planted) {
-		t.Errorf("got %v, want the planted lint cache link named", err)
+		t.Errorf("got %v, want the planted session cache link named", err)
 	}
 }
 
@@ -1259,62 +1264,70 @@ func TestEveryShellBuildsGoWithoutNamingItsWorkspace(t *testing.T) {
 		}
 	}
 
-	if got := YoloPolicy(t.TempDir(), t.TempDir()).SetEnv["GOFLAGS"]; got != "-trimpath" {
+	temporaryDirectory := t.TempDir()
+	waivedPolicy := YoloPolicy(t.TempDir(), temporaryDirectory)
+	if got := waivedPolicy.SetEnv["GOFLAGS"]; got != "-trimpath" {
 		t.Errorf("a waived sandbox got GOFLAGS %q, want -trimpath", got)
+	}
+	if got, want := waivedPolicy.SetEnv["GOCACHE"], filepath.Join(temporaryDirectory, ".cache", goBuildCacheDir); got != want {
+		t.Errorf("a waived sandbox got GOCACHE %q, want %q", got, want)
 	}
 }
 
-func TestTwoWorkspacesShareOneGoBuildCache(t *testing.T) {
+func TestCleaningOneSessionGoBuildCacheLeavesAnotherAlone(t *testing.T) {
 	if _, err := exec.LookPath("go"); err != nil {
 		t.Skip("no go toolchain to build with")
 	}
 
+	workspace := t.TempDir()
+	for name, content := range map[string]string{
+		"go.mod":      "module example.test/separate\n\ngo 1.21\n",
+		"separate.go": "package separate\n\nfunc Answer() int { return 42 }\n",
+	} {
+		if err := os.WriteFile(filepath.Join(workspace, name), []byte(content), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+
 	home := t.TempDir()
-	cache := filepath.Join(home, ".cache", "go-build")
-	build := func(command string) int {
+	build := func(temporaryDirectory string) string {
 		t.Helper()
 
-		workspace := t.TempDir()
-		for name, content := range map[string]string{
-			"go.mod":    "module example.test/shared\n\ngo 1.21\n",
-			"shared.go": "package shared\n\nfunc Answer() int { return 42 }\n",
-		} {
-			if err := os.WriteFile(filepath.Join(workspace, name), []byte(content), 0o600); err != nil {
-				t.Fatal(err)
-			}
+		policy := YoloPolicy(home, temporaryDirectory)
+		cache := policy.SetEnv["GOCACHE"]
+		command := exec.CommandContext(t.Context(), "go", "build", "./...")
+		command.Dir = workspace
+		command.Env = append(os.Environ(),
+			"GOCACHE="+cache,
+			"GOFLAGS="+policy.SetEnv["GOFLAGS"],
+			"GOTOOLCHAIN=local",
+		)
+		if output, err := command.CombinedOutput(); err != nil {
+			t.Fatalf("go build failed: %v\n%s", err, output)
 		}
-
-		workspaceRoot, err := os.OpenRoot(workspace)
-		if err != nil {
-			t.Fatal(err)
+		if entries := cacheEntries(t, cache); entries == 0 {
+			t.Fatalf("go build left no entries in %s", cache)
 		}
-		defer func() { _ = workspaceRoot.Close() }()
-
-		files := file.New(workspaceRoot, func(string) error { return file.ErrReadOnly })
-		mode := caps.NewMode(caps.Read | caps.Shell)
-		shell := New(workspace, home, t.TempDir(), newTestPathAccess(t, files, mode), mode, files, true, allowNetworking, sandbox.Direct())
-
-		call, err := shell.Parse(`{"command":` + strconv.Quote(command+" && echo built") + `}`)
-		if err != nil {
-			t.Fatal(err)
-		}
-		result, err := call.Exec(t.Context())
-		if err != nil {
-			t.Fatal(err)
-		}
-		if !strings.HasSuffix(strings.TrimSpace(result.Output), "built") {
-			t.Fatalf("%s failed: %s", command, result.Output)
-		}
-
-		return cacheEntries(t, cache)
+		return cache
 	}
 
-	first := build("GOTOOLCHAIN=local go build ./...")
-	if second := build("GOTOOLCHAIN=local go build ./..."); second != first {
-		t.Errorf("a second workspace added %d cache entries for the same source", second-first)
+	firstCache := build(t.TempDir())
+	secondCache := build(t.TempDir())
+	if firstCache == secondCache {
+		t.Fatalf("two sessions share the build cache %s", firstCache)
 	}
-	if third := build("GOTOOLCHAIN=local GOFLAGS= go build ./..."); third == first {
-		t.Error("a build naming its workspace added nothing, so this test cannot tell the difference")
+
+	command := exec.CommandContext(t.Context(), "go", "clean", "-cache")
+	command.Env = append(os.Environ(), "GOCACHE="+firstCache)
+	if output, err := command.CombinedOutput(); err != nil {
+		t.Fatalf("go clean -cache failed: %v\n%s", err, output)
+	}
+
+	if entries := cacheEntries(t, firstCache); entries != 0 {
+		t.Errorf("the cleaned session kept %d build cache entries", entries)
+	}
+	if entries := cacheEntries(t, secondCache); entries == 0 {
+		t.Error("cleaning one session removed the other session's build cache entries")
 	}
 }
 
