@@ -408,7 +408,7 @@ func (self *state) refilter() {
 		}
 	}
 
-	self.cursor = self.firstSelectable()
+	self.cursor = self.firstChoosable()
 	self.offset = 0
 }
 
@@ -442,6 +442,16 @@ func (self *state) adjust(direction int) {
 	if self.cursor >= 0 {
 		self.list.Adjust(self.chosen(), direction)
 	}
+}
+
+func (self *state) firstChoosable() int {
+	for at, index := range self.matches {
+		if self.list.IsChoosable(index) {
+			return at
+		}
+	}
+
+	return self.firstSelectable()
 }
 
 func (self *state) firstSelectable() int {

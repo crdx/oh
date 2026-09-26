@@ -109,6 +109,31 @@ func TestGoldenTheCompleteMenuLifecycleMatchesTheGolden(t *testing.T) {
 	compareWithGolden(t, "lifecycle.ansi", strutil.VisibleEscapes(output.String()))
 }
 
+func TestGoldenAMenuOpeningPastRowsThatCannotBeChosenMatchesTheGolden(t *testing.T) {
+	rows := reachableRows(
+		"chewy-sardine   why does the spinner stutter when a tool runs",
+		"thick-poodle    add support for reasoning traces",
+		"funny-badger    the cancelled turn leaves a tool call unanswered",
+	)
+	rows.unrunnable = []bool{true, true, false}
+
+	keys := make(chan key.Key, 2)
+	keys <- key.Key{Code: key.Enter}
+	keys <- key.Key{Code: key.Enter}
+	close(keys)
+
+	var output strings.Builder
+	chosen, err := choose(rows, keys, func() (int, int) { return 46, 9 }, &output, inline)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if chosen != 2 {
+		t.Errorf("chose row %d, want 2", chosen)
+	}
+
+	compareWithGolden(t, "reached.ansi", strutil.VisibleEscapes(output.String()))
+}
+
 func TestGoldenTheCompleteRemovalLifecycleMatchesTheGolden(t *testing.T) {
 	rows := &removableList{
 		fakeList: fakeList{

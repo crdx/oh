@@ -838,6 +838,42 @@ func TestARowThatCannotBeChosenIsStillReached(t *testing.T) {
 	}
 }
 
+func TestTheCursorOpensOnTheFirstRowThatCanBeChosen(t *testing.T) {
+	rows := reachableRows("first", "second", "third")
+	rows.unrunnable = []bool{true, true, false}
+	self := newState(rows)
+
+	if self.cursor != 2 {
+		t.Errorf("expected the cursor to pass over the rows that cannot be chosen, got %d", self.cursor)
+	}
+
+	self.move(-1)
+	if self.cursor != 1 {
+		t.Errorf("expected the rows passed over to stay reachable, got %d", self.cursor)
+	}
+}
+
+func TestTheCursorOpensOnTheFirstReachableRowWhenNoneCanBeChosen(t *testing.T) {
+	rows := reachableRows("first", "second")
+	rows.unrunnable = []bool{true, true}
+	self := newState(rows)
+
+	if self.cursor != 0 {
+		t.Errorf("expected the cursor on the first row, got %d", self.cursor)
+	}
+}
+
+func TestANarrowedListOpensOnTheFirstRowThatCanBeChosen(t *testing.T) {
+	rows := reachableRows("first spinner", "second", "third spinner", "fourth spinner")
+	rows.unrunnable = []bool{true, false, false, false}
+	self := listState(rows, 1)
+
+	self.narrow("spinner")
+	if self.chosen() != 2 {
+		t.Errorf("expected the first narrowed row that can be chosen, got %d", self.chosen())
+	}
+}
+
 func TestARowThatCannotBeChosenIsReadButNeverOpened(t *testing.T) {
 	rows := reachableRows("first", "second")
 	rows.unrunnable = []bool{true, false}

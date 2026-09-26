@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Open session picker on first available session
 - Keep each jobs entry on one line
 - Show session sizes on disk in picker
 - Make plain reasoning keep underscores
