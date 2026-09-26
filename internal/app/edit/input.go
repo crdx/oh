@@ -39,6 +39,7 @@ type Input struct {
 	isClearPending  bool
 	acceptAfter     time.Time
 	continueAfter   time.Time
+	continueBefore  time.Time
 	currentTime     func() time.Time
 	wasRunning      bool
 }
@@ -53,6 +54,10 @@ func NewInput(history *History) *Input {
 	return self
 }
 
+func (self *Input) TakeTimeFrom(clock func() time.Time) {
+	self.currentTime = clock
+}
+
 func (self *Input) Reset() {
 	self.buffer = &Buffer{}
 	self.search = nil
@@ -61,6 +66,7 @@ func (self *Input) Reset() {
 	self.isEnterPending = false
 	self.isClearPending = false
 	self.acceptAfter = time.Time{}
+	self.continueBefore = time.Time{}
 	self.wasRunning = false
 
 	if self.history != nil {
@@ -316,6 +322,7 @@ func (self *Input) finishSearch() {
 
 const (
 	acceptCoolOff   = 250 * time.Millisecond
+	continueWindow  = 250 * time.Millisecond
 	continueCoolOff = time.Second
 )
 
@@ -346,13 +353,14 @@ func (self *Input) enter(keypress key.Key) Action {
 		return DrawInput
 	}
 
-	if self.isEnterPending {
+	if self.isEnterPending && !now.After(self.continueBefore) {
 		self.isEnterPending = false
 		self.continueAfter = now.Add(continueCoolOff)
 		return ContinueTurn
 	}
 
 	self.isEnterPending = true
+	self.continueBefore = now.Add(continueWindow)
 	return DrawInput
 }
 

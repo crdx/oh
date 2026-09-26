@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Require double-enter in quick succession
 - Theme job names
 - Open session picker on first available session
 - Keep each jobs entry on one line

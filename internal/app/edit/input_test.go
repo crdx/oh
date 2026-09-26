@@ -306,6 +306,21 @@ func TestTwoReturnsOnAnEmptyIdleLineAskToContinue(t *testing.T) {
 	}
 }
 
+func TestTheFirstReturnExpiresBeforeItCanAskToContinue(t *testing.T) {
+	now := time.Time{}
+	self := NewInput(nil)
+	self.TakeTimeFrom(func() time.Time { return now })
+
+	self.Apply(key.Key{Code: key.Enter}, false)
+	now = now.Add(continueWindow + time.Nanosecond)
+	if got := self.Apply(key.Key{Code: key.Enter}, false); got != DrawInput {
+		t.Errorf("expected a late second return to become a new first return, got %v", got)
+	}
+	if got := self.Apply(key.Key{Code: key.Enter}, false); got != ContinueTurn {
+		t.Errorf("expected a return within the new window to continue, got %v", got)
+	}
+}
+
 func TestReturnAcceptsInputDuringARunningTurn(t *testing.T) {
 	self := inputFromKeys(t, "hello")
 
