@@ -14,7 +14,6 @@ import (
 	"strconv"
 	"strings"
 	"sync"
-	"syscall"
 
 	"crdx.org/duckopt/v2"
 
@@ -23,6 +22,7 @@ import (
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/table"
 	"crdx.org/oh/internal/util"
+	"crdx.org/oh/internal/util/diskutil"
 	"crdx.org/oh/pkg/session"
 )
 
@@ -45,7 +45,6 @@ const (
 	sweepsPerCPU   = 4
 	minimumSweeps  = 32
 	ownerPerm      = 0o700
-	blockBytes     = 512
 	executablePerm = 0o111
 )
 
@@ -284,7 +283,7 @@ func take(next root, choice options) result {
 	}
 
 	for _, found := range caches {
-		removedBytes, err := size(found.path)
+		removedBytes, err := diskutil.Occupied(found.path)
 		if err == nil && !choice.isDryRun {
 			err = remove(found.path)
 		}
@@ -574,33 +573,4 @@ func skip(entry fs.DirEntry) error {
 	}
 
 	return nil
-}
-
-func size(root string) (int64, error) {
-	var totalBytes int64
-
-	err := filepath.WalkDir(root, func(_ string, entry fs.DirEntry, err error) error {
-		if err != nil {
-			return skip(entry)
-		}
-
-		info, err := entry.Info()
-		if err != nil {
-			return skip(entry)
-		}
-		totalBytes += occupiedBytes(info)
-
-		return nil
-	})
-
-	return totalBytes, err
-}
-
-func occupiedBytes(info fs.FileInfo) int64 {
-	stat, isSystem := info.Sys().(*syscall.Stat_t)
-	if !isSystem || !info.Mode().IsRegular() {
-		return 0
-	}
-
-	return stat.Blocks * blockBytes
 }
