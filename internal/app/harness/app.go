@@ -318,6 +318,11 @@ func (self *App) handleKeypressAndShowInput(inputLine *edit.Input, history *edit
 		return true
 	}
 
+	if isRedrawKey(keypress) && !inputLine.IsPasting() {
+		self.redraw()
+		return true
+	}
+
 	if self.isAwaitingAnswer() {
 		self.screen.Sync(func() {
 			self.answerQuestion(keypress)
@@ -853,6 +858,10 @@ func dismissesFeedback(keypress key.Key) bool {
 	}
 
 	return keypress.Code == key.Rune && keypress.Value == 'd' && keypress.Mod.Has(key.Ctrl)
+}
+
+func isRedrawKey(keypress key.Key) bool {
+	return keypress.Code == key.Rune && keypress.Value == 'l' && keypress.Mod == key.Ctrl
 }
 
 func stopKeyCause(keypress key.Key) interrupt.Cause {

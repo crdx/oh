@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Redraw the screen with ctrl+l
 - List every model context source and token estimate with /ctx
 - Show arguments in snippet completion dropdowns
 - Dynamically name snippet arguments
