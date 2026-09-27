@@ -1,17 +1,17 @@
 === effective paths and ports in both directions ===
-Paths:
+\e[38;2;129;162;190mPaths:\e[0m
   rx   PATH                  /commands
   r    config                /configuration/first-long-reference-directory /somewhere-else/second-l…
   rw   config + temporary    /reference
   rw   temporary             /output
 
-Ports:
+\e[38;2;129;162;190mPorts:\e[0m
   Host http://127.9.9.9:3000 → Sandbox 3000
   Host http://127.9.9.9:3001 → Sandbox 3001
   Sandbox 8080 → Host 127.0.0.1:8080
   Sandbox 8081 → Host 127.0.0.1:8081
 === every permanent path kind ===
-Paths:
+\e[38;2;129;162;190mPaths:\e[0m
   rw   cache + sockets       /cache
   r    drops                 /drops
   rw   git                   /repo/**/.git
@@ -25,7 +25,7 @@ Paths:
   rx   system                /usr
   rxw  tmp + sockets         /tmp
 === built-in paths ===
-Paths:
+\e[38;2;129;162;190mPaths:\e[0m
   rx   PATH                  /path/{one,two}
   r    modules               /modules/cache
   r    runtime               /runtime/process
@@ -35,23 +35,23 @@ Paths:
   rw   system                /system/devices
   rx   system                /system/bin
 === read-only workspace ===
-Paths:
+\e[38;2;129;162;190mPaths:\e[0m
   r    workspace             /workspace
 === writable workspace and denied names ===
-Paths:
+\e[38;2;129;162;190mPaths:\e[0m
   rw   workspace             /workspace
 
-Denied:
+\e[38;2;129;162;190mDenied:\e[0m
   secrets.yml, expenses.yml, domains.yml, auth.json, creds.json, .env, .env.prod, production
 === yolo ===
-Paths:
+\e[38;2;129;162;190mPaths:\e[0m
   rxw  workspace             /workspace
   rxw  yolo shell            /
 === host to sandbox alone ===
-Ports:
+\e[38;2;129;162;190mPorts:\e[0m
   Host http://127.9.9.9:8080 → Sandbox 8080
 === sandbox to host alone ===
-Ports:
+\e[38;2;129;162;190mPorts:\e[0m
   Sandbox 3000 → Host 127.0.0.1:3000
 === nothing granted ===
 No grants or routes.

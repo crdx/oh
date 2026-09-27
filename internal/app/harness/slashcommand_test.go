@@ -151,6 +151,14 @@ func slashCommandScenarios(t *testing.T) map[string]pathRefScenario {
 			rig.listingArrives()
 			rig.press(pathRefDown, tabKey)
 		}),
+		"27 enter sends a whole command that takes arguments": commanding(func(rig *pathRefRig) {
+			typing("/copy")(rig)
+			rig.press(pathRefEnter)
+			if got := rig.input.Text(); got != "" {
+				rig.t.Errorf("enter left %q in the input rather than sending it", got)
+			}
+		}),
+		"28 space after a whole command goes on to its arguments": commanding(typing("/copy ")),
 	}
 }
 

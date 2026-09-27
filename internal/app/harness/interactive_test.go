@@ -109,6 +109,17 @@ func TestAModelPickerLeftWithoutAChoiceStartsNothing(t *testing.T) {
 	}
 }
 
+func TestWhatIsTypedWhileTheSessionStartsIsKept(t *testing.T) {
+	rig := newInteractiveRig(t, "Early answer.")
+
+	session := rig.start("--yolo", "-m", "opencode-go/fake")
+	session.typeText("typed early")
+	session.waitFor(readyBanner)
+	session.typeText(pressEnter)
+	session.waitFor("Early answer.")
+	session.quit()
+}
+
 type interactiveRig struct {
 	t              *testing.T
 	binary         string
@@ -291,7 +302,8 @@ func TestCommandsTypedIntoAnInteractiveSessionAreAnsweredInPlace(t *testing.T) {
 	session.typeAndSettle("/grants")
 	session.typeAndSettle(pressEscape)
 	session.typeAndSettle(pressEnter)
-	session.requireShown("Caps: r read · x shell")
+	session.requireShown("Paths:")
+	session.requireHidden("Caps:")
 	session.requireShown("rxw  yolo shell")
 	session.typeAndSettle(pressEscape)
 
@@ -306,6 +318,15 @@ func (self *interactiveSession) requireShown(text string) {
 	shown := strings.Join(self.screen(), "\n")
 	if !strings.Contains(shown, text) {
 		self.t.Errorf("%q is not on the screen, which shows:\n%s", text, shown)
+	}
+}
+
+func (self *interactiveSession) requireHidden(text string) {
+	self.t.Helper()
+
+	shown := strings.Join(self.screen(), "\n")
+	if strings.Contains(shown, text) {
+		self.t.Errorf("%q is on the screen, which shows:\n%s", text, shown)
 	}
 }
 

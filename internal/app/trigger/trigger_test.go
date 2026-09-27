@@ -14,6 +14,7 @@ import (
 type fakeSource struct {
 	symbol         rune
 	items          []trigger.Result
+	textSuffix     string
 	opens          int
 	announceChange func()
 	queries        []string
@@ -51,7 +52,7 @@ func (self *fakeSource) Results(word trigger.Word, limit int) trigger.Results {
 		if len(items) < limit {
 			items = append(items, trigger.Result{
 				Label:       item.Text,
-				Text:        trigger.WordText(self.symbol, item.Text, word.IsQuoted, item.IsOpenEnded),
+				Text:        trigger.WordText(self.symbol, item.Text, word.IsQuoted, item.IsOpenEnded) + self.textSuffix,
 				IsOpenEnded: item.IsOpenEnded,
 			})
 		}
@@ -291,6 +292,49 @@ func TestTypingOutTheOnlyResultClosesTheDropdown(t *testing.T) {
 	typeInto(completer, editor, "d")
 	if completer.IsOpen() {
 		t.Error("the dropdown stayed open over a word it had nothing to add to")
+	}
+}
+
+func TestEnterLeavesAWordTypedOutWholeToBeSent(t *testing.T) {
+	completer := trigger.New(&fakeSource{symbol: '#', items: []trigger.Result{{Text: "bug"}, {Text: "build"}}, textSuffix: " "})
+	editor := &fakeEditor{}
+
+	typeInto(completer, editor, "#bug")
+	if !completer.IsOpen() {
+		t.Fatal("the dropdown closed over a word that goes on to arguments")
+	}
+
+	if completer.Apply(editor, key.Key{Code: key.Enter}) {
+		t.Error("enter was taken to choose what was already written")
+	}
+	if got := string(editor.runes); got != "#bug" {
+		t.Errorf("the word became %q", got)
+	}
+	if completer.IsOpen() {
+		t.Error("the dropdown stayed open over a word being sent")
+	}
+}
+
+func TestTabStillCarriesAWordTypedOutWholeOnToItsArguments(t *testing.T) {
+	completer := trigger.New(&fakeSource{symbol: '#', items: []trigger.Result{{Text: "bug", IsOpenEnded: true}}, textSuffix: " "})
+	editor := &fakeEditor{}
+
+	typeInto(completer, editor, "#bug")
+	if !completer.Apply(editor, key.Key{Code: key.Rune, Value: '\t'}) {
+		t.Fatal("tab was not taken")
+	}
+	if got := string(editor.runes); got != "#bug " {
+		t.Errorf("the word became %q", got)
+	}
+}
+
+func TestEnterStillChoosesAmongSeveralResults(t *testing.T) {
+	completer := trigger.New(&fakeSource{symbol: '#', items: []trigger.Result{{Text: "bug"}, {Text: "bugs"}}, textSuffix: " "})
+	editor := &fakeEditor{}
+
+	typeInto(completer, editor, "#bug")
+	if !completer.Apply(editor, key.Key{Code: key.Enter}) {
+		t.Error("enter was left alone while a longer result still extends the word")
 	}
 }
 

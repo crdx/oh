@@ -167,6 +167,17 @@ func renderInformationListing(text string, columns int) string {
 	return strings.Join(shown.Render(columns, time.Time{}), "\n")
 }
 
+func renderCommandFeedback(context *commandTestContext, columns int) string {
+	var shown feedback.State
+	shown.Show(feedback.Command, feedback.Message{
+		Text:               context.notice,
+		HasOwnStyle:        context.hasOwnStyle,
+		IsListing:          context.isListing,
+		ContinuationIndent: context.continuationIndent,
+	}, time.Time{})
+	return strings.Join(shown.Render(columns, time.Time{}), "\n")
+}
+
 func assertGolden(t *testing.T, name string, got string) {
 	t.Helper()
 
@@ -227,15 +238,16 @@ func fixtureSnippets() map[string]snippets.Definition {
 }
 
 func TestGoldenGrantListingMatchesGolden(t *testing.T) {
-	var output strings.Builder
+	const columns = 100
+
+	var compactOutput strings.Builder
+	var completeOutput strings.Builder
 	for _, test := range []struct {
 		label         string
 		permanent     []shell.ScopedPathGrant
 		temporary     []pathgrant.Grant
 		currentCaps   caps.Set
 		denyPatterns  []string
-		isYolo        bool
-		isExpanded    bool
 		hostToSandbox []uint16
 		sandboxToHost []uint16
 	}{
@@ -243,14 +255,16 @@ func TestGoldenGrantListingMatchesGolden(t *testing.T) {
 			label: "effective paths and ports in both directions",
 			permanent: []shell.ScopedPathGrant{
 				{Path: "/commands", Access: pathgrant.ReadAccess | pathgrant.ExecAccess, Kind: shell.ExecutableSearchGrant},
+				{Path: "/configuration/first-long-reference-directory", Access: pathgrant.ReadAccess, Kind: shell.ConfiguredGrant},
 				{Path: "/reference", Access: pathgrant.ReadAccess, Kind: shell.ConfiguredGrant},
+				{Path: "/somewhere-else/second-long-reference-directory", Access: pathgrant.ReadAccess, Kind: shell.ConfiguredGrant},
 			},
 			temporary: []pathgrant.Grant{
 				{Path: "/output", Access: pathgrant.ReadAccess | pathgrant.WriteAccess},
 				{Path: "/reference", Access: pathgrant.ReadAccess | pathgrant.WriteAccess},
 			},
-			hostToSandbox: []uint16{3000},
-			sandboxToHost: []uint16{8080},
+			hostToSandbox: []uint16{3000, 3001},
+			sandboxToHost: []uint16{8080, 8081},
 		},
 		{
 			label: "every permanent path kind",
@@ -274,7 +288,7 @@ func TestGoldenGrantListingMatchesGolden(t *testing.T) {
 			currentCaps: caps.All(),
 		},
 		{
-			label: "expanded built-in paths",
+			label: "built-in paths",
 			permanent: []shell.ScopedPathGrant{
 				{Path: "/path/one", Access: shell.ReadAccess | shell.ExecAccess, Kind: shell.ExecutableSearchGrant},
 				{Path: "/path/two", Access: shell.ReadAccess | shell.ExecAccess, Kind: shell.ExecutableSearchGrant},
@@ -287,7 +301,6 @@ func TestGoldenGrantListingMatchesGolden(t *testing.T) {
 				{Path: "/system/devices", Access: shell.ReadAccess | shell.WriteAccess, Kind: shell.SystemGrant},
 				{Path: "/system/bin", Access: shell.ReadAccess | shell.ExecAccess, Kind: shell.SystemGrant},
 			},
-			isExpanded: true,
 		},
 		{
 			label:       "read-only workspace",
@@ -299,20 +312,20 @@ func TestGoldenGrantListingMatchesGolden(t *testing.T) {
 			permanent: []shell.ScopedPathGrant{{
 				Path: "/workspace", Access: shell.ReadAccess | shell.WriteAccess, Kind: shell.WorkspaceGrant,
 			}},
-			currentCaps:  caps.Read | caps.Write,
-			denyPatterns: []string{".env", "*.pem"},
+			currentCaps: caps.Read | caps.Write,
+			denyPatterns: []string{
+				"secrets.yml", "expenses.yml", "domains.yml", "auth.json", "creds.json", ".env", ".env.prod", "production",
+			},
 		},
 		{
-			label: "yolo deny scope",
+			label: "yolo",
 			permanent: []shell.ScopedPathGrant{
 				{Path: "/", Access: shell.ReadAccess | shell.ExecAccess | shell.WriteAccess, Kind: shell.UnconfinedShellGrant},
 				{
 					Path: "/workspace", Access: shell.ReadAccess | shell.ExecAccess | shell.WriteAccess, Kind: shell.WorkspaceGrant,
 				},
 			},
-			currentCaps:  caps.Read | caps.Shell | caps.Write,
-			denyPatterns: []string{".env"},
-			isYolo:       true,
+			currentCaps: caps.Read | caps.Shell | caps.Write,
 		},
 		{label: "host to sandbox alone", hostToSandbox: []uint16{8080}},
 		{label: "sandbox to host alone", sandboxToHost: []uint16{3000}},
@@ -321,7 +334,6 @@ func TestGoldenGrantListingMatchesGolden(t *testing.T) {
 		pathGrants, current := fixturePathGrants()
 		pathGrants.Permanent = test.permanent
 		pathGrants.DenyPatterns = test.denyPatterns
-		pathGrants.IsYolo = test.isYolo
 		if test.currentCaps != 0 {
 			pathGrants.GetCurrentCaps = func() caps.Set { return test.currentCaps }
 		}
@@ -335,21 +347,33 @@ func TestGoldenGrantListingMatchesGolden(t *testing.T) {
 			hostToSandbox: hostToSandbox,
 			sandboxToHost: sandboxToHost,
 		})
-		input := "/grants"
-		if test.isExpanded {
-			input += " all"
+		for _, view := range []struct {
+			input  string
+			output *strings.Builder
+		}{
+			{input: "/grants", output: &compactOutput},
+			{input: "/grants all", output: &completeOutput},
+		} {
+			invocation, found := commands.Find(view.input)
+			if !found {
+				t.Fatalf("expected %s to be registered", view.input)
+			}
+			context := &commandTestContext{}
+			if err := invocation.Command.Run(context, invocation.Arguments); err != nil {
+				t.Fatal(err)
+			}
+			fmt.Fprintf(
+				view.output,
+				"=== %s ===\n%s\n",
+				test.label,
+				renderCommandFeedback(context, columns),
+			)
 		}
-		invocation, found := commands.Find(input)
-		if !found {
-			t.Fatal("expected /grants to be registered")
-		}
-		context := &helpContext{}
-		if err := invocation.Command.Run(context, invocation.Arguments); err != nil {
-			t.Fatal(err)
-		}
-		fmt.Fprintf(&output, "=== %s ===\n%s\n", test.label, context.notice)
 	}
-	assertGolden(t, "grants.txt", output.String())
+	assertGolden(t, "grants.txt", style.Plain(compactOutput.String()))
+	assertGolden(t, "grants.ansi", strutil.VisibleEscapes(compactOutput.String()))
+	assertGolden(t, "grants-all.txt", style.Plain(completeOutput.String()))
+	assertGolden(t, "grants-all.ansi", strutil.VisibleEscapes(completeOutput.String()))
 }
 
 func TestGoldenSnippetHelpMatchesGolden(t *testing.T) {
@@ -546,6 +570,14 @@ func (self *helpContext) PlainNotice(text string) {
 	self.notice = text
 }
 
+func (self *helpContext) PlainNoticeIndented(text string, _ int) {
+	self.notice = text
+}
+
+func (self *helpContext) PlainNoticeListing(text string) {
+	self.notice = text
+}
+
 func (self *helpContext) Success(string) {}
 
 type promptContext struct {
@@ -556,11 +588,13 @@ func (self *promptContext) Emit(agent.Event) {}
 func (self *promptContext) Send(prompt string) {
 	self.sent = prompt
 }
-func (self *promptContext) Notice(string)              {}
-func (self *promptContext) NoticeIndented(string, int) {}
-func (self *promptContext) NoticeListing(string)       {}
-func (self *promptContext) PlainNotice(string)         {}
-func (self *promptContext) Success(string)             {}
+func (self *promptContext) Notice(string)                   {}
+func (self *promptContext) NoticeIndented(string, int)      {}
+func (self *promptContext) NoticeListing(string)            {}
+func (self *promptContext) PlainNotice(string)              {}
+func (self *promptContext) PlainNoticeIndented(string, int) {}
+func (self *promptContext) PlainNoticeListing(string)       {}
+func (self *promptContext) Success(string)                  {}
 
 func TestGoldenInfoMatchesGolden(t *testing.T) {
 	commands := newCommandRegistry(t, fixtureEnvironment(t))

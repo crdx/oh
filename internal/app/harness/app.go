@@ -522,6 +522,14 @@ func (self *App) handleCommand(message string) dispatch.Result {
 		ShowPlainFeedback: func(text string) {
 			self.showFeedback(feedback.Command, feedback.Message{Text: text, HasOwnStyle: true})
 		},
+		ShowPlainIndentedFeedback: func(text string, continuationIndent int) {
+			self.showFeedback(feedback.Command, feedback.Message{
+				Text: text, HasOwnStyle: true, ContinuationIndent: continuationIndent,
+			})
+		},
+		ShowPlainListingFeedback: func(text string) {
+			self.showFeedback(feedback.Command, feedback.Message{Text: text, HasOwnStyle: true, IsListing: true})
+		},
 	}, message)
 	if failure != "" {
 		self.showFeedback(feedback.Command, feedback.Message{Text: failure, Status: agent.ErrorStatus})

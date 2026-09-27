@@ -4,16 +4,15 @@ import (
 	"bytes"
 	"compress/zlib"
 	"encoding/base64"
-	"errors"
 	"fmt"
 	"image"
 	"io"
-	"math"
 	"os"
+	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 	"sync/atomic"
-	"time"
 
 	"golang.org/x/sys/unix"
 	"golang.org/x/term"
@@ -25,13 +24,13 @@ const (
 	openCommand  = "\x1b_G"
 	closeCommand = "\x1b\\"
 
-	probeCommand   = openCommand + "i=1,s=1,v=1,a=q,t=d,f=24;AAAA" + closeCommand
-	deviceAttempt  = "\x1b[c"
-	probeSuccess   = ";OK"
-	replyTimeout   = 250 * time.Millisecond
-	maximumReply   = 256
-	deviceReplyEnd = 'c'
+	probeCommand     = openCommand + "i=1,s=1,v=1,a=q,t=d,f=24;AAAA" + closeCommand
+	deviceAttempt    = "\x1b[c"
+	probeSuccess     = ";OK"
+	deviceReplyStart = "\x1b[?"
 )
+
+var probeReply = regexp.MustCompile(`\x1b_G[^\x1b]*\x1b\\|\x1b\[\?[0-9;]*c`)
 
 const (
 	placeholder    = "\U0010EEEE"
@@ -69,7 +68,13 @@ func isSupported(input *os.File, output *os.File) bool {
 		return false
 	}
 
-	return strings.Contains(readReply(input), probeSuccess)
+	replies := tty.ReadReplies(input, probeReply, hasDeviceReplied)
+
+	return slices.ContainsFunc(replies, func(reply string) bool { return strings.Contains(reply, probeSuccess) })
+}
+
+func hasDeviceReplied(replies []string) bool {
+	return slices.ContainsFunc(replies, func(reply string) bool { return strings.HasPrefix(reply, deviceReplyStart) })
 }
 
 func CellSize(output *os.File) (int, int) {
@@ -191,49 +196,4 @@ func boolDigit(isSet bool) string {
 	}
 
 	return "0"
-}
-
-func readReply(input *os.File) string {
-	fileDescriptor := input.Fd()
-	if fileDescriptor > math.MaxInt32 {
-		return ""
-	}
-
-	deadline := time.Now().Add(replyTimeout)
-
-	var reply bytes.Buffer
-	buffer := make([]byte, maximumReply)
-
-	for !strings.ContainsRune(reply.String(), deviceReplyEnd) && reply.Len() < maximumReply {
-		remainingTime := time.Until(deadline)
-		if remainingTime <= 0 {
-			break
-		}
-
-		pollDescriptors := []unix.PollFd{{Fd: int32(fileDescriptor), Events: unix.POLLIN}}
-
-		readyCount, err := unix.Poll(pollDescriptors, max(1, int(remainingTime.Milliseconds())))
-		if err != nil {
-			if errors.Is(err, unix.EINTR) {
-				continue
-			}
-
-			break
-		}
-
-		if readyCount == 0 || pollDescriptors[0].Revents&unix.POLLIN == 0 {
-			continue
-		}
-
-		readBytes, err := input.Read(buffer[:maximumReply-reply.Len()])
-		if readBytes > 0 {
-			_, _ = reply.Write(buffer[:readBytes])
-		}
-
-		if err != nil {
-			break
-		}
-	}
-
-	return reply.String()
 }

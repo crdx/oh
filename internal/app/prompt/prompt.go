@@ -340,20 +340,13 @@ func scopeRules(data harnessContextTemplateData) string {
 	if dropsDirectory != "" {
 		lines = append(lines, "- "+dropsRule(dropsDirectory))
 	}
-	isShellUnconfined := data.ShellOffered && data.Yolo
-	for _, pattern := range extraPaths.Deny {
-		if isShellUnconfined {
-			lines = append(lines, "- Path tools cannot access any file or directory named by the configured deny pattern "+pattern+".")
-		} else {
+	if !data.Yolo {
+		for _, pattern := range extraPaths.Deny {
 			lines = append(lines, "- Path tools and shell commands cannot access any file or directory named by the configured deny pattern "+pattern+".")
 		}
-	}
-	switch {
-	case len(extraPaths.Deny) == 0:
-	case isShellUnconfined:
-		lines = append(lines, "- The unconfined shell is not held to the deny patterns, so never use it to reach a denied path.")
-	default:
-		lines = append(lines, "- A denied path appears as an empty unreadable file or directory, so tools (e.g. git) may show the file with modifications. It can safely be ignored.")
+		if len(extraPaths.Deny) > 0 {
+			lines = append(lines, "- A denied path appears as an empty unreadable file or directory, so tools (e.g. git) may show the file with modifications. It can safely be ignored.")
+		}
 	}
 	for _, path := range extraPaths.Read {
 		lines = append(lines, "- The configured path "+path+" is read-only"+scratchException(path, data)+".")

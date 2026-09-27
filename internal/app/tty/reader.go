@@ -53,6 +53,10 @@ func (self *Reader) Close() {
 }
 
 func (self *Reader) Read(buffer []byte) (int, error) {
+	if count := takeHeld(buffer); count > 0 {
+		return count, nil
+	}
+
 	pollDescriptors := []unix.PollFd{{Fd: pollDescriptor(self.input), Events: unix.POLLIN}}
 	timeout := int(readPollInterval.Milliseconds())
 

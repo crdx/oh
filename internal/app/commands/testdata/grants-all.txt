@@ -1,7 +1,8 @@
 === effective paths and ports in both directions ===
 Paths:
   rx   PATH                  /commands
-  r    config                /configuration/first-long-reference-directory /somewhere-else/second-l…
+  r    config                /configuration/first-long-reference-directory
+                             /somewhere-else/second-long-reference-directory
   rw   config + temporary    /reference
   rw   temporary             /output
 

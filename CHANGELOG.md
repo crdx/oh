@@ -4,6 +4,11 @@
 
 ### Changes
 
+- Keep keys typed while a session starts
+- Send a command typed out in full on the first enter
+- Recompute the cache share when a session resumes
+- Keep grant rows compact
+- Make yolo bypass sandbox fully
 - Redraw the screen with ctrl+l
 - List every model context source and token estimate with /ctx
 - Show arguments in snippet completion dropdowns

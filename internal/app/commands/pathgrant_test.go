@@ -9,6 +9,7 @@ import (
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/shell"
 	"crdx.org/oh/internal/app/slash"
+	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -96,8 +97,8 @@ func TestGrantsCommandListsEffectivePermanentAndTemporaryAccess(t *testing.T) {
 		"  rw   config                /write\n" +
 		"  rx   config + temporary    /read\n" +
 		"  rxw  temporary             /tools"
-	if context.notice != want {
-		t.Errorf("got notice %q", context.notice)
+	if got := style.Plain(context.notice); got != want {
+		t.Errorf("got notice %q", got)
 	}
 }
 
@@ -106,6 +107,32 @@ func TestGrantsCommandRejectsAnUnknownView(t *testing.T) {
 	_, err := invokePathGrantCommand(t, grants, "/grants verbose")
 	if !slash.IsUsageError(err) {
 		t.Errorf("got %v", err)
+	}
+}
+
+func TestGrantsAllUsesTheSameContentWithoutElision(t *testing.T) {
+	grants, _ := fixturePathGrants()
+	grants.Permanent = []shell.ScopedPathGrant{
+		{Path: "/skills/one", Access: pathgrant.ReadAccess, Kind: shell.GlobalSkillGrant},
+		{Path: "/skills/two", Access: pathgrant.ReadAccess, Kind: shell.GlobalSkillGrant},
+	}
+
+	standard, err := invokePathGrantCommand(t, grants, "/grants")
+	if err != nil {
+		t.Fatal(err)
+	}
+	explicit, err := invokePathGrantCommand(t, grants, "/grants all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if standard.notice != explicit.notice {
+		t.Errorf("/grants gave %q, /grants all gave %q", standard.notice, explicit.notice)
+	}
+	if !standard.isListing {
+		t.Error("/grants did not request one-line rows")
+	}
+	if explicit.isListing || explicit.continuationIndent != pathGrantContinuationIndent {
+		t.Errorf("/grants all requested listing %t with continuation indent %d", explicit.isListing, explicit.continuationIndent)
 	}
 }
 
@@ -146,24 +173,19 @@ func TestPathGrantRowsGroupMatchingSourcesAndFoldSiblingPaths(t *testing.T) {
 		{path: "/etc/one", access: pathgrant.ReadAccess, sources: []shell.GrantKind{shell.ConfiguredGrant}},
 	}
 	want := "Paths:\n  r    config                /dev/null /etc/{one,two}"
-	if got := formatPathGrants(grants, false); got != want {
+	if got := style.Plain(formatPathGrants(grants)); got != want {
 		t.Errorf("got %q, want %q", got, want)
 	}
 }
 
-func TestPathGrantRowsSummariseEnabledSkills(t *testing.T) {
+func TestPathGrantRowsListEnabledSkillPaths(t *testing.T) {
 	grants := []effectivePathGrant{
 		{path: "/skills/one", access: pathgrant.ReadAccess, sources: []shell.GrantKind{shell.GlobalSkillGrant}},
 		{path: "/skills/two", access: pathgrant.ReadAccess, sources: []shell.GrantKind{shell.GlobalSkillGrant}},
 	}
-	want := "Paths:\n  r    skills                2 enabled"
-	if got := formatPathGrants(grants, false); got != want {
+	want := "Paths:\n  r    skills                /skills/{one,two}"
+	if got := style.Plain(formatPathGrants(grants)); got != want {
 		t.Errorf("got %q, want %q", got, want)
-	}
-
-	expandedWant := "Paths:\n  r    skills                /skills/{one,two}"
-	if got := formatPathGrants(grants, true); got != expandedWant {
-		t.Errorf("expanded got %q, want %q", got, expandedWant)
 	}
 }
 

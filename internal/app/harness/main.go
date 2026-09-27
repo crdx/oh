@@ -313,32 +313,11 @@ func ensureCurrency(ctx context.Context, output io.Writer, code string, isSimula
 	return money.Load(path, code)
 }
 
-var unsandboxedToolNames = []string{"bash", "job"}
-
-func warnAboutDenyEnforcement(isYolo bool, offeredTools []string, patterns []string, warnings io.Writer) {
-	if !isYolo || len(patterns) == 0 {
-		return
+func sandboxPathsForMode(paths shell.Paths, isYolo bool) shell.Paths {
+	if isYolo {
+		paths.Deny = nil
 	}
-
-	var exemptTools []string
-	for _, name := range unsandboxedToolNames {
-		if toolset.Offers(offeredTools, name) {
-			exemptTools = append(exemptTools, name)
-		}
-	}
-
-	switch len(exemptTools) {
-	case 0:
-		return
-	case 1:
-		style.WriteWarningf(warnings, "sandbox.deny cannot be enforced for the %s tool under --yolo", exemptTools[0])
-	default:
-		style.WriteWarningf(
-			warnings,
-			"sandbox.deny cannot be enforced for the %s tools under --yolo",
-			strings.Join(exemptTools, " and "),
-		)
-	}
+	return paths
 }
 
 func applySimulationOptions(options *cli.Options) {
@@ -542,6 +521,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	if err != nil {
 		return "", err
 	}
+	settings.Sandbox = sandboxPathsForMode(settings.Sandbox, args.Yolo)
 
 	if err := workspace.Validate(); err != nil {
 		return "", err
@@ -552,8 +532,6 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	}
 
 	defer func() { _ = workspace.Close() }()
-
-	warnAboutDenyEnforcement(args.Yolo, args.Tools, settings.Sandbox.Deny, os.Stderr)
 
 	if !args.Yolo {
 		if err := shell.RequireSandbox(ctx); err != nil {
@@ -995,7 +973,6 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		Output:           os.Stdout,
 		PathGrants: commands.PathGrants{
 			DenyPatterns: settings.Sandbox.Deny,
-			IsYolo:       args.Yolo,
 			Grant:        pathGrants.Grant,
 			Revoke: func(path string) (agent.Event, error) {
 				event, err := pathGrants.Revoke(path)

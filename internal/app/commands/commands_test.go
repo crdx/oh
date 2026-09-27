@@ -16,17 +16,20 @@ import (
 )
 
 type commandTestContext struct {
-	events    []agent.Event
-	notice    string
-	isListing bool
-	success   string
+	events             []agent.Event
+	notice             string
+	continuationIndent int
+	hasOwnStyle        bool
+	isListing          bool
+	success            string
 }
 
 func (self *commandTestContext) Emit(event agent.Event) { self.events = append(self.events, event) }
 func (self *commandTestContext) Send(string)            {}
 func (self *commandTestContext) Notice(text string)     { self.notice = text }
-func (self *commandTestContext) NoticeIndented(text string, _ int) {
+func (self *commandTestContext) NoticeIndented(text string, continuationIndent int) {
 	self.notice = text
+	self.continuationIndent = continuationIndent
 }
 
 func (self *commandTestContext) NoticeListing(text string) {
@@ -34,7 +37,23 @@ func (self *commandTestContext) NoticeListing(text string) {
 	self.isListing = true
 }
 
-func (self *commandTestContext) PlainNotice(text string) { self.notice = text }
+func (self *commandTestContext) PlainNotice(text string) {
+	self.notice = text
+	self.hasOwnStyle = true
+}
+
+func (self *commandTestContext) PlainNoticeIndented(text string, continuationIndent int) {
+	self.notice = text
+	self.continuationIndent = continuationIndent
+	self.hasOwnStyle = true
+}
+
+func (self *commandTestContext) PlainNoticeListing(text string) {
+	self.notice = text
+	self.hasOwnStyle = true
+	self.isListing = true
+}
+
 func (self *commandTestContext) Success(text string) {
 	self.success = text
 }

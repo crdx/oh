@@ -49,7 +49,6 @@ import (
 	"crdx.org/oh/internal/app/conditions"
 	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/cycle"
-	"crdx.org/oh/internal/app/demo"
 	"crdx.org/oh/internal/app/dispatch"
 	"crdx.org/oh/internal/app/dropdown"
 	"crdx.org/oh/internal/app/dynamic"
@@ -5073,7 +5072,6 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"feedback-frame":         {".ansi", ".screen"},
 		"question-notifications": {".ansi", ".screen", ".txt"},
 		"fork-message":           {".txt"},
-		"yolo-deny-warning":      {".ansi"},
 		"context":                {".prompt"},
 		"context-deny":           {".prompt"},
 		"context-drops":          {".prompt"},
@@ -5090,8 +5088,6 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"context-scratch-root":   {".prompt"},
 		"context-simulation":     {".prompt"},
 		"context-yolo":           {".prompt"},
-		"context-yolo-deny":      {".prompt"},
-		"context-yolo-file-deny": {".prompt"},
 		"host-command":           {".ansi", ".screen"},
 		"inputblock":             {".ansi", ".screen"},
 		"pathrefs":               {".ansi", ".screen"},
@@ -7326,15 +7322,9 @@ type promptGolden struct {
 
 func TestGoldenTheCompleteSystemPromptMatchesTheGolden(t *testing.T) {
 	for name, shape := range map[string]promptGolden{
-		"context":           {},
-		"context-deny":      {hasDenyPattern: true},
-		"context-yolo":      {isYolo: true},
-		"context-yolo-deny": {isYolo: true, hasDenyPattern: true},
-		"context-yolo-file-deny": {
-			isYolo:         true,
-			hasDenyPattern: true,
-			offeredTools:   []string{"read", "ls", "grep"},
-		},
+		"context":               {},
+		"context-deny":          {hasDenyPattern: true},
+		"context-yolo":          {isYolo: true},
 		"context-jobs":          {areJobsGiven: true},
 		"context-drops":         {hasClipboardDrops: true},
 		"context-network":       {isNetworkGranted: true},
@@ -20445,56 +20435,16 @@ func TestEveryPermissionRefusesInWordsOfItsOwn(t *testing.T) {
 	}
 }
 
-func TestGoldenYoloDenyWarningsMatchTheGolden(t *testing.T) {
-	warningFor := func(tools []string) func() string {
-		return func() string {
-			var warnings strings.Builder
-			warnAboutDenyEnforcement(true, tools, []string{"*.key"}, &warnings)
-			return warnings.String()
-		}
+func TestYoloDropsDenyPatternsForEveryTool(t *testing.T) {
+	configured := shell.Paths{Deny: []string{"*.key"}}
+	if got := sandboxPathsForMode(configured, true); len(got.Deny) != 0 {
+		t.Errorf("yolo kept deny patterns %v", got.Deny)
 	}
-
-	compareWithGolden(t, "yolo-deny-warning", ".ansi", map[string]func() string{
-		"both unconfined tools": warningFor(nil),
-		"bash alone":            warningFor([]string{"read", "bash"}),
-		"job alone":             warningFor([]string{"job"}),
-	})
-}
-
-func TestYoloWarnsOnceWhenSandboxDenyRulesCanBeBypassed(t *testing.T) {
-	for _, test := range []struct {
-		tools []string
-		want  string
-	}{
-		{want: "warning: sandbox.deny cannot be enforced for the bash and job tools under --yolo\n"},
-		{tools: []string{"read", "bash"}, want: "warning: sandbox.deny cannot be enforced for the bash tool under --yolo\n"},
-		{tools: []string{"job"}, want: "warning: sandbox.deny cannot be enforced for the job tool under --yolo\n"},
-	} {
-		var warnings strings.Builder
-		warnAboutDenyEnforcement(true, test.tools, []string{"foo.txt"}, &warnings)
-		if style.Plain(warnings.String()) != test.want {
-			t.Errorf("tools %v: got %q, want %q", test.tools, warnings.String(), test.want)
-		}
+	if got := sandboxPathsForMode(configured, false); !slices.Equal(got.Deny, configured.Deny) {
+		t.Errorf("confined mode changed deny patterns from %v to %v", configured.Deny, got.Deny)
 	}
-}
-
-func TestSandboxDenyRulesDoNotWarnWhenTheyStillApply(t *testing.T) {
-	for _, test := range []struct {
-		isYolo bool
-		tools  []string
-		deny   []string
-	}{
-		{isYolo: false, deny: []string{"foo.txt"}},
-		{isYolo: true},
-		{isYolo: true, tools: []string{"read", "ls", "grep"}, deny: []string{"foo.txt"}},
-		{isYolo: true, tools: []string{"write"}, deny: []string{"foo.txt"}},
-		{isYolo: true, tools: demo.Tools(), deny: []string{"foo.txt"}},
-	} {
-		var warnings strings.Builder
-		warnAboutDenyEnforcement(test.isYolo, test.tools, test.deny, &warnings)
-		if warnings.Len() != 0 {
-			t.Errorf("got an inapplicable warning for %+v: %q", test, warnings.String())
-		}
+	if !slices.Equal(configured.Deny, []string{"*.key"}) {
+		t.Errorf("choosing a mode mutated configured paths to %v", configured.Deny)
 	}
 }
 

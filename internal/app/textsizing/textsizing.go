@@ -1,16 +1,12 @@
 package textsizing
 
 import (
-	"bytes"
-	"errors"
 	"io"
-	"math"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
-	"time"
 
-	"golang.org/x/sys/unix"
 	"golang.org/x/term"
 
 	"crdx.org/oh/internal/app/tty"
@@ -20,9 +16,10 @@ const (
 	beginProbe = "\x1b[?1049h\x1b[?25l\r\x1b[6n\x1b]66;w=2; \a\x1b[6n\x1b]66;s=2; \a\x1b[6n"
 	endProbe   = "\x1b[?25h\x1b[?1049l"
 
-	replyTimeout = 250 * time.Millisecond
-	maximumReply = 128
+	positionReplies = 3
 )
+
+var positionReply = regexp.MustCompile(`\x1b\[[0-9]+;[0-9]+R`)
 
 func Detect(input *os.File, output *os.File) bool {
 	if os.Getenv("KITTY_WINDOW_ID") == "" || !tty.Is(input) || !tty.Is(output) {
@@ -39,47 +36,9 @@ func Detect(input *os.File, output *os.File) bool {
 		return false
 	}
 
-	return supports(readReplies(input))
-}
+	replies := tty.ReadReplies(input, positionReply, func(replies []string) bool { return len(replies) >= positionReplies })
 
-func readReplies(input *os.File) string {
-	fileDescriptor := input.Fd()
-	if fileDescriptor > math.MaxInt32 {
-		return ""
-	}
-
-	deadline := time.Now().Add(replyTimeout)
-	var reply bytes.Buffer
-	buffer := make([]byte, maximumReply)
-
-	for strings.Count(reply.String(), "R") < 3 && reply.Len() < maximumReply {
-		remainingTime := time.Until(deadline)
-		if remainingTime <= 0 {
-			break
-		}
-
-		pollDescriptors := []unix.PollFd{{Fd: int32(fileDescriptor), Events: unix.POLLIN}}
-		readyCount, err := unix.Poll(pollDescriptors, max(1, int(remainingTime.Milliseconds())))
-		if err != nil {
-			if errors.Is(err, unix.EINTR) {
-				continue
-			}
-			break
-		}
-		if readyCount == 0 || pollDescriptors[0].Revents&unix.POLLIN == 0 {
-			continue
-		}
-
-		readBytes, err := input.Read(buffer[:maximumReply-reply.Len()])
-		if readBytes > 0 {
-			_, _ = reply.Write(buffer[:readBytes])
-		}
-		if err != nil {
-			break
-		}
-	}
-
-	return reply.String()
+	return supports(strings.Join(replies, ""))
 }
 
 type position struct {

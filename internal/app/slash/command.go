@@ -42,6 +42,8 @@ type Context interface {
 	NoticeIndented(message string, continuationIndent int)
 	NoticeListing(message string)
 	PlainNotice(message string)
+	PlainNoticeIndented(message string, continuationIndent int)
+	PlainNoticeListing(message string)
 	Success(message string)
 }
 
