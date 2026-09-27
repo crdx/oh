@@ -1,16 +1,18 @@
 === every context category ===
 [38;2;129;162;190mSystem:[0m
-[38;2;129;162;190m  [38;2;150;152;150m~12Kt[0m[38;2;129;162;190m  /config/SYSTEM.md[0m
+[38;2;129;162;190m  [38;2;150;152;150m~4Kt[0m[38;2;129;162;190m  harness[0m
+[38;2;129;162;190m  [38;2;150;152;150m~2Kt[0m[38;2;129;162;190m  /config/SYSTEM.md[0m
+[38;2;129;162;190m  [38;2;150;152;150m~3Kt[0m[38;2;129;162;190m  tool definitions (12 tools)[0m
 [38;2;129;162;190mProject:[0m
-[38;2;129;162;190m  [38;2;150;152;150m ~4Kt[0m[38;2;129;162;190m  /workspace/AGENTS.md[0m
+[38;2;129;162;190m  [38;2;150;152;150m~1Kt[0m[38;2;129;162;190m  /workspace/AGENTS.md[0m
 [38;2;129;162;190mSession:[0m
-[38;2;129;162;190m  [38;2;150;152;150m ~2Kt[0m[38;2;129;162;190m  /config/skills/golang/SKILL.md[0m
-[38;2;129;162;190m  [38;2;150;152;150m ~1Kt[0m[38;2;129;162;190m  /config/skills/todo/SKILL.md[0m
-=== project files only ===
+[38;2;129;162;190m  [38;2;150;152;150m~2Kt[0m[38;2;129;162;190m  skill catalogue (29 skills)[0m
+[38;2;129;162;190m  [38;2;150;152;150m~1Kt[0m[38;2;129;162;190m  /config/skills/golang/SKILL.md[0m
+=== project sources only ===
 [38;2;129;162;190mProject:[0m
 [38;2;129;162;190m  [38;2;150;152;150m~4Kt[0m[38;2;129;162;190m  /workspace/AGENTS.md[0m
-=== session files only ===
+=== session sources only ===
 [38;2;129;162;190mSession:[0m
 [38;2;129;162;190m  [38;2;150;152;150m~1Kt[0m[38;2;129;162;190m  /config/skills/todo/SKILL.md[0m
-=== no file context ===
-[38;2;129;162;190mNo context files.[0m
+=== no context sources ===
+[38;2;129;162;190mNo context sources.[0m

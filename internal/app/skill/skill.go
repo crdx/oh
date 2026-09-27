@@ -11,7 +11,7 @@ import (
 	"slices"
 	"strings"
 
-	"crdx.org/oh/internal/app/contextfile"
+	"crdx.org/oh/internal/app/contextsource"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/util/pathutil"
@@ -95,10 +95,10 @@ func NameFromPath(path string) (string, bool) {
 	return filepath.Base(directory), true
 }
 
-func LoadedSkillFiles(events []agent.Event) []contextfile.File {
+func LoadedSkillSources(events []agent.Event) []contextsource.Source {
 	requestedPaths := make(map[string]string)
 	seenPaths := make(map[string]struct{})
-	var files []contextfile.File
+	var sources []contextsource.Source
 
 	for _, event := range events {
 		if event.Kind == agent.ToolCallRequestEvent && event.Name == readToolName {
@@ -118,12 +118,12 @@ func LoadedSkillFiles(events []agent.Event) []contextfile.File {
 		delete(requestedPaths, event.ID)
 		_, wasSeen := seenPaths[path]
 		if event.Status == agent.SuccessStatus && !wasSeen {
-			files = append(files, contextfile.FromBytes(path, len(event.Text)))
+			sources = append(sources, contextsource.FileFromBytes(path, len(event.Text)))
 			seenPaths[path] = struct{}{}
 		}
 	}
 
-	return files
+	return sources
 }
 
 func Discover(project string, globalDirectories []string, warnings io.Writer) ([]Skill, error) {

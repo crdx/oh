@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"crdx.org/oh/internal/app/contextfile"
+	"crdx.org/oh/internal/app/contextsource"
 	"crdx.org/oh/internal/file"
 	"crdx.org/oh/pkg/agent"
 )
@@ -165,7 +165,7 @@ func TestASkillIsRecognisedByThePathItLivesAt(t *testing.T) {
 	}
 }
 
-func TestLoadedSkillFilesIncludeOnlySuccessfulSkillReads(t *testing.T) {
+func TestLoadedSkillSourcesIncludeOnlySuccessfulSkillReads(t *testing.T) {
 	one := "/skills/one/SKILL.md"
 	events := []agent.Event{
 		{Kind: agent.ToolCallRequestEvent, ID: "one", Name: readToolName, FallbackRendering: agent.FallbackRendering{Subject: one}},
@@ -180,11 +180,11 @@ func TestLoadedSkillFilesIncludeOnlySuccessfulSkillReads(t *testing.T) {
 		{Kind: agent.ToolCallResultEvent, ID: "one-again", Name: readToolName, Status: agent.SuccessStatus, Text: strings.Repeat("a", 5_600)},
 	}
 
-	want := []contextfile.File{
+	want := []contextsource.Source{
 		{Path: one, EstimatedTokens: 1_001},
 		{Path: ".agents/skills/two/SKILL.md", EstimatedTokens: 501},
 	}
-	if got := LoadedSkillFiles(events); !slices.Equal(got, want) {
+	if got := LoadedSkillSources(events); !slices.Equal(got, want) {
 		t.Errorf("got %v, want %v", got, want)
 	}
 }

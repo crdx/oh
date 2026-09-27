@@ -37,7 +37,7 @@ import (
 	"crdx.org/oh/internal/app/commands"
 	"crdx.org/oh/internal/app/conditions"
 	"crdx.org/oh/internal/app/config"
-	"crdx.org/oh/internal/app/contextfile"
+	"crdx.org/oh/internal/app/contextsource"
 	"crdx.org/oh/internal/app/ctl"
 	"crdx.org/oh/internal/app/cycle"
 	"crdx.org/oh/internal/app/demo"
@@ -80,7 +80,12 @@ import (
 	"crdx.org/oh/pkg/ask"
 )
 
-const approvalLimit = time.Minute
+const (
+	approvalLimit                   = time.Minute
+	harnessContextSourceName        = "harness"
+	skillCatalogueSourceNameFormat  = "skill catalogue (%d %s)"
+	toolDefinitionsSourceNameFormat = "tool definitions (%d %s)"
+)
 
 type approval struct {
 	label    string
@@ -753,12 +758,18 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	}
 
 	var systemPrompt string
-	var systemContextFiles []contextfile.File
-	var projectContextFiles []contextfile.File
+	var systemContextFiles []contextsource.Source
+	var projectContextFiles []contextsource.Source
+	var systemContextSources []contextsource.Source
+	var sessionContextSources []contextsource.Source
+	var contextFileBytes int
+	var skillCatalogue string
 	if resumedSession != nil && resumedSession.Meta.SystemPrompt != "" {
 		systemPrompt = resumedSession.Meta.SystemPrompt
 		systemContextFiles = slices.Clone(resumedSession.Meta.SystemContextFiles)
 		projectContextFiles = slices.Clone(resumedSession.Meta.ProjectContextFiles)
+		systemContextSources = slices.Clone(resumedSession.Meta.SystemContextSources)
+		sessionContextSources = slices.Clone(resumedSession.Meta.SessionContextSources)
 	} else {
 		var contextFiles []prompt.File
 		systemPrompt, contextFiles, err = prompt.Load(prompt.Config{
@@ -784,15 +795,32 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 			return "", err
 		}
 		for _, loadedFile := range contextFiles {
-			contextFile := contextfile.FromBytes(loadedFile.Path, len(loadedFile.Body))
+			loadedBytes := len(loadedFile.Body)
+			contextFileBytes += loadedBytes
+			contextFile := contextsource.FileFromBytes(loadedFile.Path, loadedBytes)
 			if loadedFile.IsSystem {
 				systemContextFiles = append(systemContextFiles, contextFile)
 			} else {
 				projectContextFiles = append(projectContextFiles, contextFile)
 			}
 		}
+		skillCatalogue = skill.Context(availableSkills)
 	}
 	systemPrompt = prompt.WithDropsDirectory(systemPrompt, dropKeeper.GetDirectory())
+	if resumedSession == nil {
+		harnessBytes := max(len(systemPrompt)-contextFileBytes-len(skillCatalogue), 0)
+		systemContextSources = append(
+			[]contextsource.Source{contextsource.NamedFromBytes(harnessContextSourceName, harnessBytes)},
+			systemContextSources...,
+		)
+		if skillCatalogue != "" {
+			skillCount := len(availableSkills)
+			sessionContextSources = append(sessionContextSources, contextsource.NamedFromBytes(
+				fmt.Sprintf(skillCatalogueSourceNameFormat, skillCount, util.PluralNoun(skillCount, "skill")),
+				len(skillCatalogue),
+			))
+		}
+	}
 
 	tmpRoot, err := shell.MountTemporaryDirectory(files, tmpDir)
 	if err != nil {
@@ -952,11 +980,24 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		meta.SystemPrompt = systemPrompt
 		meta.SystemContextFiles = slices.Clone(systemContextFiles)
 		meta.ProjectContextFiles = slices.Clone(projectContextFiles)
+		meta.SystemContextSources = slices.Clone(systemContextSources)
+		meta.SessionContextSources = slices.Clone(sessionContextSources)
 		meta.Tools = toolset.Names(enabledTools)
 		meta.Conditions = &currentConditions
 		if err := log.SetMeta(meta); err != nil {
 			return "", err
 		}
+	}
+
+	toolContextBytes := client.ToolsSize(enabledTools)
+	var toolContextSource *contextsource.Source
+	if toolContextBytes > 0 {
+		toolCount := len(enabledTools)
+		source := contextsource.NamedFromBytes(
+			fmt.Sprintf(toolDefinitionsSourceNameFormat, toolCount, util.PluralNoun(toolCount, "tool")),
+			toolContextBytes,
+		)
+		toolContextSource = &source
 	}
 
 	if forkSource != nil {
@@ -1025,14 +1066,19 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 			return app.display.bar.RenderInfo(segment.Context{})
 		},
 		GetContextSources: func() commands.ContextSources {
-			var sessionFiles []contextfile.File
+			systemSources := slices.Clone(systemContextSources)
+			systemSources = append(systemSources, systemContextFiles...)
+			if toolContextSource != nil {
+				systemSources = append(systemSources, *toolContextSource)
+			}
+			sessionSources := slices.Clone(sessionContextSources)
 			if app != nil {
-				sessionFiles = skill.LoadedSkillFiles(app.recordedEvents)
+				sessionSources = append(sessionSources, skill.LoadedSkillSources(app.recordedEvents)...)
 			}
 			return commands.ContextSources{
-				SystemFiles:  slices.Clone(systemContextFiles),
-				ProjectFiles: slices.Clone(projectContextFiles),
-				SessionFiles: sessionFiles,
+				SystemSources:  systemSources,
+				ProjectSources: slices.Clone(projectContextFiles),
+				SessionSources: sessionSources,
 			}
 		},
 		Session: commands.Session{
@@ -1244,7 +1290,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		ProjectSkills: projectSkills,
 		GlobalSkills:  globalSkills,
 		Snippets:      len(settings.Snippets),
-		ToolBytes:     client.ToolsSize(enabledTools),
+		ToolBytes:     toolContextBytes,
 		LocalConfig:   localConfig,
 	}
 	if resumedSession == nil {

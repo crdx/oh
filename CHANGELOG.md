@@ -4,7 +4,7 @@
 
 ### Changes
 
-- List model context with /ctx command
+- List every model context source and token estimate with /ctx
 - Show arguments in snippet completion dropdowns
 - Show complete effective grant access
 - Advise on how to detect applied patches

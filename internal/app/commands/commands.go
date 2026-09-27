@@ -13,7 +13,7 @@ import (
 	"strings"
 
 	"crdx.org/oh/internal/app/column"
-	"crdx.org/oh/internal/app/contextfile"
+	"crdx.org/oh/internal/app/contextsource"
 	"crdx.org/oh/internal/app/editor"
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/prompt"
@@ -69,9 +69,9 @@ type SessionStart struct {
 }
 
 type ContextSources struct {
-	SystemFiles  []contextfile.File
-	ProjectFiles []contextfile.File
-	SessionFiles []contextfile.File
+	SystemSources  []contextsource.Source
+	ProjectSources []contextsource.Source
+	SessionSources []contextsource.Source
 }
 
 type commandEnvironment struct {
@@ -307,7 +307,7 @@ func helpCommand(getHelp func() string) slash.Command {
 func contextCommand(getSources func() ContextSources) slash.Command {
 	return slash.Command{
 		Name:        "ctx",
-		Description: "list files contributing to model context",
+		Description: "list sources contributing to model context",
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if len(arguments.Fields) != 0 {
 				return slash.Usage()
@@ -321,22 +321,22 @@ func contextCommand(getSources func() ContextSources) slash.Command {
 
 func formatContextSources(sources ContextSources) string {
 	sections := []struct {
-		label string
-		files []contextfile.File
+		label   string
+		sources []contextsource.Source
 	}{
-		{label: "System", files: sources.SystemFiles},
-		{label: "Project", files: sources.ProjectFiles},
-		{label: "Session", files: sources.SessionFiles},
+		{label: "System", sources: sources.SystemSources},
+		{label: "Project", sources: sources.ProjectSources},
+		{label: "Session", sources: sources.SessionSources},
 	}
 
 	var rows [][]string
 	for _, section := range sections {
-		for _, file := range section.files {
-			rows = append(rows, []string{util.FormatEstimatedTokens(file.EstimatedTokens), file.Path})
+		for _, source := range section.sources {
+			rows = append(rows, []string{util.FormatEstimatedTokens(source.EstimatedTokens), source.DisplayName()})
 		}
 	}
 	if len(rows) == 0 {
-		return "No context files."
+		return "No context sources."
 	}
 
 	contextTable := table.New(
@@ -345,15 +345,15 @@ func formatContextSources(sources ContextSources) string {
 	).Fit(rows)
 	var listings []string
 	for _, section := range sections {
-		if len(section.files) == 0 {
+		if len(section.sources) == 0 {
 			continue
 		}
 
 		listing := []string{section.label + ":"}
-		for _, file := range section.files {
+		for _, source := range section.sources {
 			listing = append(listing, "  "+contextTable.Row([]string{
-				util.FormatEstimatedTokens(file.EstimatedTokens),
-				file.Path,
+				util.FormatEstimatedTokens(source.EstimatedTokens),
+				source.DisplayName(),
 			}, 0))
 		}
 		listings = append(listings, strings.Join(listing, "\n"))

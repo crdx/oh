@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/app/caps"
-	"crdx.org/oh/internal/app/contextfile"
+	"crdx.org/oh/internal/app/contextsource"
 	"crdx.org/oh/internal/app/feedback"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/shell"
@@ -70,29 +70,33 @@ func TestGoldenContextListingMatchesGolden(t *testing.T) {
 		{
 			label: "every context category",
 			sources: ContextSources{
-				SystemFiles: []contextfile.File{{Path: "/config/SYSTEM.md", EstimatedTokens: 12_000}},
-				ProjectFiles: []contextfile.File{{
-					Path: "/workspace/AGENTS.md", EstimatedTokens: 4_000,
+				SystemSources: []contextsource.Source{
+					{Name: "harness", EstimatedTokens: 4_000},
+					{Path: "/config/SYSTEM.md", EstimatedTokens: 2_000},
+					{Name: "tool definitions (12 tools)", EstimatedTokens: 3_000},
+				},
+				ProjectSources: []contextsource.Source{{
+					Path: "/workspace/AGENTS.md", EstimatedTokens: 1_000,
 				}},
-				SessionFiles: []contextfile.File{
-					{Path: "/config/skills/golang/SKILL.md", EstimatedTokens: 2_000},
-					{Path: "/config/skills/todo/SKILL.md", EstimatedTokens: 1_000},
+				SessionSources: []contextsource.Source{
+					{Name: "skill catalogue (29 skills)", EstimatedTokens: 2_000},
+					{Path: "/config/skills/golang/SKILL.md", EstimatedTokens: 1_000},
 				},
 			},
 		},
 		{
-			label: "project files only",
-			sources: ContextSources{ProjectFiles: []contextfile.File{{
+			label: "project sources only",
+			sources: ContextSources{ProjectSources: []contextsource.Source{{
 				Path: "/workspace/AGENTS.md", EstimatedTokens: 4_000,
 			}}},
 		},
 		{
-			label: "session files only",
-			sources: ContextSources{SessionFiles: []contextfile.File{{
+			label: "session sources only",
+			sources: ContextSources{SessionSources: []contextsource.Source{{
 				Path: "/config/skills/todo/SKILL.md", EstimatedTokens: 1_000,
 			}}},
 		},
-		{label: "no file context"},
+		{label: "no context sources"},
 	} {
 		commands := newCommandRegistry(t, commandEnvironment{
 			getContextSources: func() ContextSources { return test.sources },
@@ -106,7 +110,7 @@ func TestGoldenContextListingMatchesGolden(t *testing.T) {
 			t.Fatal(err)
 		}
 		if !context.isListing {
-			t.Error("context files were not marked as a listing")
+			t.Error("context sources were not marked as a listing")
 		}
 		fmt.Fprintf(
 			&output,
