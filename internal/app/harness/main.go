@@ -1058,7 +1058,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		question:       questionState{broker: askBroker},
 		completer: trigger.New(
 			pathref.NewSource(pathref.NewIndex(workspace.GetDir(), files.ExcludedNames)),
-			slash.NewSource(func() slash.Registry { return app.slash.commands }),
+			slash.NewSource(func() slash.Registry { return app.commands }),
 		),
 		startedAt: util.WallClock(time.Now()),
 		keyboard:  keyboard,
@@ -1130,7 +1130,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	if err != nil {
 		return "", err
 	}
-	app.slash.commands = commandRegistry
+	app.commands = commandRegistry
 	app.permissions = permissions
 	app.notifyUnknownSettings(liveConfig.UnknownSettings)
 	app.continueMessage = liveConfig.ContinueMessage

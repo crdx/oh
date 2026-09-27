@@ -1323,7 +1323,7 @@ func drawFooterOverCalls(t *testing.T, scene footerOverCalls) drawnFooterOverCal
 		chat := slashCommandFixture(t, caps.Read)
 		chat.agent = agent.New("", quietProvider{}, nil)
 		chat.screen = output.NewTerminalOfSize(&written, replayColumns, footerOverCallsLines)
-		chat.slash.commands = fixtureCommandRegistry(t, slash.Command{
+		chat.commands = fixtureCommandRegistry(t, slash.Command{
 			Name: "help",
 			Run: func(context slash.Context, _ slash.Arguments) error {
 				context.Notice("Commands:\n" + strings.Repeat("  /copy\n", 2*footerOverCallsLines))
@@ -4531,7 +4531,7 @@ func testConversation(t *testing.T, screenOutput *bytes.Buffer) *App {
 		screen:          output.New(screenOutput),
 		recorder:        record.New(log),
 		mode:            caps.NewMode(caps.Read | caps.Write),
-		slash:           slashState{commands: fixtureSnippetRegistry(t, nil)},
+		commands:        fixtureSnippetRegistry(t, nil),
 		continueMessage: settings.Input.Continue,
 		editorConfig:    editor.NewConfiguration(settings.Editor.Command),
 		toolOutputLimit: truncate.NewLimit(settings.Tool.Output.Bytes),
@@ -8282,7 +8282,7 @@ func drawAcceptedInputDuringStream(t *testing.T, message string, kind agent.Kind
 	writer := &frameRecordingWriter{}
 	self := slashCommandFixture(t, caps.Read)
 	self.screen = output.NewTerminalOfSize(writer, replayColumns, replayLines)
-	self.slash.commands = fixtureSnippetRegistry(t, nil)
+	self.commands = fixtureSnippetRegistry(t, nil)
 	self.currentTurn = Turn{Stream: testRunningTurnStream(), painter: self.newPainter(true)}
 
 	history := edit.NewHistory("", historyLimit)
@@ -9779,7 +9779,7 @@ func prepareLiveConfigSources(t *testing.T, self *App, sources ...config.Source)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := self.slash.commands.ReplaceCommandSet(live.SnippetCommandSet); err != nil {
+	if err := self.commands.ReplaceCommandSet(live.SnippetCommandSet); err != nil {
 		t.Fatal(err)
 	}
 	if self.editorConfig == nil {
@@ -10333,19 +10333,19 @@ func TestReloadingConfigReplacesSnippetsAtomically(t *testing.T) {
 
 	writeLiveConfig(t, path, "[snippets]\nbroken = \"{{\"\n")
 	settleLiveConfig(t, self)
-	if _, found := self.slash.commands.Find("//old"); !found {
+	if _, found := self.commands.Find("//old"); !found {
 		t.Error("an invalid revision replaced the working snippets")
 	}
-	if _, found := self.slash.commands.Find("//broken"); found {
+	if _, found := self.commands.Find("//broken"); found {
 		t.Error("the invalid snippet was registered")
 	}
 
 	writeLiveConfig(t, path, "[snippets]\nnew = \"Use the new snippet.\"\n")
 	settleLiveConfig(t, self)
-	if _, found := self.slash.commands.Find("//old"); found {
+	if _, found := self.commands.Find("//old"); found {
 		t.Error("the old snippet survived a valid replacement")
 	}
-	if _, found := self.slash.commands.Find("//new"); !found {
+	if _, found := self.commands.Find("//new"); !found {
 		t.Error("the reloaded snippet was not registered")
 	}
 
@@ -10427,7 +10427,7 @@ func drawExistingPathMessage(t *testing.T) string {
 	self := slashCommandFixture(t, caps.Read)
 	self.agent = agent.New("", quietProvider{}, nil)
 	self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
-	self.slash.commands = fixtureCommandRegistry(t)
+	self.commands = fixtureCommandRegistry(t)
 	self.workspace = work.At(t.TempDir())
 
 	inputLine := edit.NewInput(nil)
@@ -10646,7 +10646,7 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 		terminalLines = 8
 	}
 	self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, terminalLines)
-	self.slash.commands = fixtureCommandRegistry(
+	self.commands = fixtureCommandRegistry(
 		t,
 		slash.Command{
 			Name: "help",
@@ -11014,7 +11014,7 @@ func queuedMessagesStream(t *testing.T, scenario queuedMessagesScenario) string 
 	self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, terminalLines).LinkPathsUnder(
 		link.Roots{Workspace: self.workspace.GetDir()},
 	)
-	self.slash.commands = fixtureCommandRegistryWithSnippets(
+	self.commands = fixtureCommandRegistryWithSnippets(
 		t,
 		map[string]snippets.Definition{
 			"add": {Prompt: "Add the following:\n\n{{ .Arg }}", Arguments: snippets.ArgumentsRequired},
@@ -11100,7 +11100,7 @@ func plainFeedback(t *testing.T) string {
 	self := slashCommandFixture(t, caps.Read)
 	self.screen = output.New(&screenOutput)
 	self.runMode.isPlain = true
-	self.slash.commands = fixtureCommandRegistry(t, slash.Command{
+	self.commands = fixtureCommandRegistry(t, slash.Command{
 		Name: "help",
 		Run: func(context slash.Context, _ slash.Arguments) error {
 			context.Notice("Commands:\n  /help")
@@ -11117,7 +11117,7 @@ func TestAPrintedSessionAnswersOneCommandAndStops(t *testing.T) {
 	self := slashCommandFixture(t, caps.Read)
 	self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines).AppendOnly()
 	self.runMode.isPrinting = true
-	self.slash.commands = fixtureCommandRegistry(t, slash.Command{
+	self.commands = fixtureCommandRegistry(t, slash.Command{
 		Name: "help",
 		Run: func(context slash.Context, _ slash.Arguments) error {
 			context.Notice("Commands:\n  /help")
@@ -11204,13 +11204,13 @@ func TestEphemeralInterfaceFeedbackStaysOutOfConversationHistory(t *testing.T) {
 		screen:   output.NewTerminalOfSize(&liveOutput, replayColumns, terminalLines),
 		recorder: record.New(log),
 		mode:     caps.NewMode(caps.Read),
-		slash: slashState{commands: fixtureCommandRegistryWithSnippets(t, nil, slash.Command{
+		commands: fixtureCommandRegistryWithSnippets(t, nil, slash.Command{
 			Name: "help",
 			Run: func(context slash.Context, _ slash.Arguments) error {
 				context.Notice("Commands:\n  /help")
 				return nil
 			},
-		})},
+		}),
 	}
 	prepareLiveConfig(t, self, path)
 	self.currentTurn = Turn{Stream: testRunningTurnStream(), painter: self.newPainter(true)}
@@ -13625,7 +13625,7 @@ func TestSlashCommandRunsImmediately(t *testing.T) {
 	})
 
 	self := slashCommandFixture(t, caps.Read|caps.Shell)
-	self.slash.commands = fixtureCommands
+	self.commands = fixtureCommands
 	if got := self.handleCommand("/fixture one two"); got != dispatch.Handled {
 		t.Fatalf("got slash input result %d", got)
 	}
@@ -14277,7 +14277,7 @@ func TestPlainCommandFeedbackIsPrintedWithoutEnteringConversationHistory(t *test
 	self := slashCommandFixture(t, caps.Read)
 	self.screen = output.New(&screenOutput)
 	self.runMode.isPlain = true
-	self.slash.commands = fixtureCommandRegistry(t, slash.Command{
+	self.commands = fixtureCommandRegistry(t, slash.Command{
 		Name: "help",
 		Run: func(context slash.Context, _ slash.Arguments) error {
 			context.Notice("Commands:\n  /help")
@@ -14342,7 +14342,7 @@ func plainInputStream(t *testing.T, scenario plainInputScenario) string {
 	self := slashCommandFixture(t, caps.Read)
 	self.agent = agent.New("", &plainTurnProvider{}, nil)
 	self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
-	self.slash.commands = fixtureSnippetRegistry(t, nil)
+	self.commands = fixtureSnippetRegistry(t, nil)
 
 	history := edit.NewHistory("", historyLimit)
 
@@ -14432,7 +14432,7 @@ func TestTypedPlainLinesEachAskAQuestionOfTheirOwn(t *testing.T) {
 func TestUnknownSlashCommandShowsOneErrorWhileReturnRepeatsAndKeepsTheInput(t *testing.T) {
 	self := slashCommandFixture(t, caps.Read)
 	self.screen = output.New(&bytes.Buffer{})
-	self.slash.commands = fixtureCommandRegistry(t)
+	self.commands = fixtureCommandRegistry(t)
 	inputLine := edit.NewInput(nil)
 	for _, value := range "/unknown" {
 		inputLine.Apply(key.Key{Code: key.Rune, Value: value}, false)
@@ -14458,7 +14458,7 @@ func TestUnknownSlashCommandDoesNotInterruptARunningTurn(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := slashCommandFixture(t, caps.Read)
 	self.screen = output.New(&screenOutput)
-	self.slash.commands = fixtureCommandRegistry(t)
+	self.commands = fixtureCommandRegistry(t)
 	self.currentTurn = Turn{Stream: testRunningTurnStream(), painter: self.newPainter(true)}
 	self.currentTurn.painter.DrawDelta(agent.Delta{Kind: agent.ModelReasoningEvent, Text: "still working"})
 	inputLine := edit.NewInput(nil)
@@ -14488,7 +14488,7 @@ func TestUnknownSlashCommandDoesNotInterruptARunningTurn(t *testing.T) {
 
 func TestSnippetKeepsItsInvocationInHistoryAndQueuesItsRenderedPrompt(t *testing.T) {
 	self := slashCommandFixture(t, caps.Read)
-	self.slash.commands = fixtureSnippetRegistry(t, map[string]snippets.Definition{
+	self.commands = fixtureSnippetRegistry(t, map[string]snippets.Definition{
 		"add": {Prompt: "Add the following:\n\n{{ .Arg }}", Arguments: snippets.ArgumentsRequired},
 	})
 	self.currentTurn = Turn{Stream: testTurnStream(nil, func(error) {}, turn.State{Running: true})}
@@ -14519,7 +14519,7 @@ func TestSnippetKeepsItsInvocationInHistoryAndQueuesItsRenderedPrompt(t *testing
 
 func TestSnippetKeepsTheLayoutOfAPastedArgument(t *testing.T) {
 	self := slashCommandFixture(t, caps.Read)
-	self.slash.commands = fixtureSnippetRegistry(t, map[string]snippets.Definition{
+	self.commands = fixtureSnippetRegistry(t, map[string]snippets.Definition{
 		"add": {Prompt: "Add the following:\n\n{{ .Arg }}", Arguments: snippets.ArgumentsRequired},
 	})
 	self.currentTurn = Turn{Stream: testTurnStream(nil, func(error) {}, turn.State{Running: true})}
@@ -14558,7 +14558,7 @@ func TestSnippetKeepsTheLayoutOfAPastedArgument(t *testing.T) {
 func TestSnippetWithoutArgumentsShowsUsageAndKeepsTheInput(t *testing.T) {
 	self := slashCommandFixture(t, caps.Read)
 	self.screen = output.New(&bytes.Buffer{})
-	self.slash.commands = fixtureSnippetRegistry(t, map[string]snippets.Definition{
+	self.commands = fixtureSnippetRegistry(t, map[string]snippets.Definition{
 		"add": {Prompt: "Add the following:\n\n{{ .Arg }}", Arguments: snippets.ArgumentsRequired},
 	})
 	history := edit.NewHistory("", historyLimit)
@@ -14583,7 +14583,7 @@ func TestSnippetWithoutArgumentsShowsUsageAndKeepsTheInput(t *testing.T) {
 func TestPlainSnippetInputWaitsForTheRenderedPrompt(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
-	self.slash.commands = fixtureSnippetRegistry(t, map[string]snippets.Definition{
+	self.commands = fixtureSnippetRegistry(t, map[string]snippets.Definition{
 		"ask": {Prompt: "Question: {{index .Args 0}} / {{.Arg}}", Arguments: snippets.ArgumentsRequired},
 	})
 
@@ -14660,7 +14660,7 @@ func TestATurnCutShortIsPokedAndWaitedForBeforeTheNextInput(t *testing.T) {
 func TestSnippetTemplateErrorsAreReportedAndKeepTheInput(t *testing.T) {
 	self := slashCommandFixture(t, caps.Read)
 	self.screen = output.New(&bytes.Buffer{})
-	self.slash.commands = fixtureSnippetRegistry(t, map[string]snippets.Definition{
+	self.commands = fixtureSnippetRegistry(t, map[string]snippets.Definition{
 		"review": {Prompt: "{{index .Args 2}}", Arguments: snippets.ArgumentsRequired},
 	})
 
@@ -14681,7 +14681,7 @@ func TestSnippetTemplateErrorsAreReportedAndKeepTheInput(t *testing.T) {
 func TestUnknownSnippetShowsAnErrorAndKeepsTheInput(t *testing.T) {
 	self := slashCommandFixture(t, caps.Read)
 	self.screen = output.New(&bytes.Buffer{})
-	self.slash.commands = fixtureSnippetRegistry(t, nil)
+	self.commands = fixtureSnippetRegistry(t, nil)
 	inputLine := edit.NewInput(nil)
 	for _, value := range "//unknown" {
 		inputLine.Apply(key.Key{Code: key.Rune, Value: value}, false)
@@ -14702,7 +14702,7 @@ func TestUnknownSnippetShowsAnErrorAndKeepsTheInput(t *testing.T) {
 }
 
 func withSlashCompleter(self *App) {
-	self.completer = trigger.New(slash.NewSource(func() slash.Registry { return self.slash.commands }))
+	self.completer = trigger.New(slash.NewSource(func() slash.Registry { return self.commands }))
 }
 
 func TestTabCompletionKeepsCommandNamespacesSeparate(t *testing.T) {
@@ -14722,7 +14722,7 @@ func TestTabCompletionKeepsCommandNamespacesSeparate(t *testing.T) {
 		t.Fatal(err)
 	}
 	self := slashCommandFixture(t, caps.Read)
-	self.slash.commands = fixtureRegistry(t, systemSet, snippetSet)
+	self.commands = fixtureRegistry(t, systemSet, snippetSet)
 	withSlashCompleter(self)
 
 	for input, want := range map[string]string{
@@ -14743,7 +14743,7 @@ func TestTabCompletionKeepsCommandNamespacesSeparate(t *testing.T) {
 
 func TestTabOpensThenChoosesAUniqueSlashCommand(t *testing.T) {
 	self := slashCommandFixture(t, caps.Read)
-	self.slash.commands = fixtureCommandRegistry(
+	self.commands = fixtureCommandRegistry(
 		t,
 		slash.Command{Name: "conf", Run: slashTestHandler},
 		slash.Command{Name: "copy", Run: slashTestHandler},
@@ -14848,7 +14848,7 @@ func preparePathGrantCommands(t *testing.T, self *App, workspace *work.Space) *p
 	if err != nil {
 		t.Fatal(err)
 	}
-	self.slash.commands = fixtureRegistry(t, systemSet, snippetSet)
+	self.commands = fixtureRegistry(t, systemSet, snippetSet)
 	self.pathGrants = grants
 	return grants
 }
@@ -14870,7 +14870,7 @@ func slashCommandFixture(t *testing.T, currentCaps caps.Set) *App {
 
 func TestChoosingACommandGoesOnToItsArguments(t *testing.T) {
 	self := slashCommandFixture(t, caps.Read)
-	self.slash.commands = fixtureCommandRegistry(
+	self.commands = fixtureCommandRegistry(
 		t,
 		slash.Command{Name: "copy", Run: slashTestHandler}.WithArguments("session-name", "session-id", "session-dir"),
 	)
@@ -14929,7 +14929,7 @@ func assertSlashCommandFeedback(t *testing.T, run func(slash.Context), want feed
 
 	self := slashCommandFixture(t, caps.Read)
 	self.screen = output.New(&bytes.Buffer{})
-	self.slash.commands = fixtureCommands
+	self.commands = fixtureCommands
 	if got := self.handleCommand("/fixture"); got != dispatch.Handled {
 		t.Fatalf("got slash input result %d", got)
 	}
@@ -14944,7 +14944,7 @@ func assertSlashCommandFeedback(t *testing.T, run func(slash.Context), want feed
 func TestUsageErrorIsNotPrefixedWithTheCommandName(t *testing.T) {
 	self := slashCommandFixture(t, caps.Read)
 	self.screen = output.New(&bytes.Buffer{})
-	self.slash.commands = fixtureCommandRegistry(t, slash.Command{
+	self.commands = fixtureCommandRegistry(t, slash.Command{
 		Name: "copy",
 		Run: func(slash.Context, slash.Arguments) error {
 			return slash.Usage()
@@ -14966,7 +14966,7 @@ func TestUsageErrorIsNotPrefixedWithTheCommandName(t *testing.T) {
 func TestARefusedCommandKeepsWhatWasTypedAndSaysWhy(t *testing.T) {
 	self := slashCommandFixture(t, caps.Read)
 	self.screen = output.New(&bytes.Buffer{})
-	self.slash.commands = fixtureCommandRegistry(t, slash.Command{
+	self.commands = fixtureCommandRegistry(t, slash.Command{
 		Name: "new",
 		Run: func(slash.Context, slash.Arguments) error {
 			return errors.New(`model "opus" is ambiguous`)
@@ -17903,7 +17903,7 @@ func helpDuringReasoningFrames(t *testing.T) []string {
 	writer := &frameRecordingWriter{}
 	self := slashCommandFixture(t, caps.Read)
 	self.screen = output.NewTerminalOfSize(writer, replayColumns, replayLines)
-	self.slash.commands = fixtureCommandRegistry(t, slash.Command{
+	self.commands = fixtureCommandRegistry(t, slash.Command{
 		Name: "help",
 		Run: func(context slash.Context, _ slash.Arguments) error {
 			context.Notice("Commands:\n  /conf\n  /copy")
@@ -17960,7 +17960,7 @@ func shortRunningHelpFrames(t *testing.T) []string {
 	for line := range shortLines {
 		self.screen.Line("earlier line " + strconv.Itoa(line+1))
 	}
-	self.slash.commands = fixtureCommandRegistry(t, slash.Command{
+	self.commands = fixtureCommandRegistry(t, slash.Command{
 		Name: "help",
 		Run: func(context slash.Context, _ slash.Arguments) error {
 			context.Notice("Commands:\n  /conf\n  /copy")

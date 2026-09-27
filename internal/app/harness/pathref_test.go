@@ -335,8 +335,8 @@ func newPathRefRig(t *testing.T, scenario pathRefScenario) *pathRefRig {
 		func() time.Time { return clock },
 	))}
 	if scenario.commands != nil {
-		rig.app.slash.commands = scenario.commands(t)
-		sources = append(sources, slash.NewSource(func() slash.Registry { return rig.app.slash.commands }))
+		rig.app.commands = scenario.commands(t)
+		sources = append(sources, slash.NewSource(func() slash.Registry { return rig.app.commands }))
 	}
 	rig.app.completer = trigger.New(sources...)
 

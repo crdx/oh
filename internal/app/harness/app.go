@@ -146,10 +146,6 @@ type runMode struct {
 	isSimulated bool
 }
 
-type slashState struct {
-	commands slash.Registry
-}
-
 type questionState struct {
 	broker      *ask.Broker
 	request     *ask.Request
@@ -191,7 +187,7 @@ type App struct {
 	continueMessage string
 	display         displayState
 	runMode         runMode
-	slash           slashState
+	commands        slash.Registry
 	completer       *trigger.Completer
 	question        questionState
 	transition      cycle.Transition
@@ -504,7 +500,7 @@ func (self *App) requestTransition(transition cycle.Transition) error {
 
 func (self *App) handleCommand(message string) dispatch.Result {
 	self.feedback.Clear(feedback.Command)
-	result, failure := dispatch.Handle(self.slash.commands, dispatch.Actions{
+	result, failure := dispatch.Handle(self.commands, dispatch.Actions{
 		EmitEvent:  self.emitCommandEvent,
 		SendPrompt: self.sendCommandPrompt,
 		ShowFeedback: func(text string, status agent.Status) {
@@ -1253,7 +1249,7 @@ func (self *App) reloadConfig(watchFailure error) bool {
 		})
 		return true
 	case config.ReloadApplied:
-		if err := self.slash.commands.ReplaceCommandSet(result.LiveConfig.SnippetCommandSet); err != nil {
+		if err := self.commands.ReplaceCommandSet(result.LiveConfig.SnippetCommandSet); err != nil {
 			self.showFeedback(feedback.Config, feedback.Message{
 				Text:   "The configuration could not be reloaded: could not replace snippets: " + err.Error(),
 				Status: agent.ErrorStatus,
