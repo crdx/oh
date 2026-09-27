@@ -132,6 +132,27 @@ func TestAPathInBothWriteAndExecIsNotWarnedAbout(t *testing.T) {
 	}
 }
 
+func TestConfiguredGrantsCombineAccessForEachPath(t *testing.T) {
+	paths := Paths{
+		Read:  []string{"/read", "/combined"},
+		Write: []string{"/write", "/combined"},
+		Exec:  []string{"/exec", "/combined"},
+		Path:  []string{"/path"},
+		Home:  []string{"/home"},
+	}
+	want := []PathGrant{
+		{Path: "/combined", Access: ReadAccess | ExecAccess | WriteAccess},
+		{Path: "/exec", Access: ReadAccess | ExecAccess},
+		{Path: "/home", Access: ReadAccess},
+		{Path: "/path", Access: ReadAccess | ExecAccess},
+		{Path: "/read", Access: ReadAccess},
+		{Path: "/write", Access: ReadAccess | WriteAccess},
+	}
+	if got := paths.ConfiguredGrants(); !slices.Equal(got, want) {
+		t.Errorf("got grants %#v, want %#v", got, want)
+	}
+}
+
 func TestConfiguredPathsAreMountedWithTheirRequestedFileAccess(t *testing.T) {
 	workspace := t.TempDir()
 	workspaceRoot, err := os.OpenRoot(workspace)

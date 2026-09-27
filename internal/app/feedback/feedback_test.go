@@ -78,6 +78,22 @@ func TestAMessageWithItsOwnStyleIsNotOverpainted(t *testing.T) {
 	}
 }
 
+func TestAContinuationIndentAlignsWrappedRows(t *testing.T) {
+	var self State
+	self.Show(Command, Message{
+		Text: "one two three", HasOwnStyle: true, ContinuationIndent: 4,
+	}, time.Now())
+
+	got := strings.Join(self.Render(10, time.Now()), "\n") + "\n"
+	want, err := os.ReadFile(filepath.Join("testdata", "continuation-indent.txt"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got != string(want) {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
 func TestAListingElidesEachItemToOneRow(t *testing.T) {
 	var self State
 	text := "Background jobs:\n" +

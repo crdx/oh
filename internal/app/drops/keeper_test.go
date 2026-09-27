@@ -51,6 +51,9 @@ func isReadable(t *testing.T, keeper *Keeper, path string) bool {
 func TestAKeeperOpensWithoutADropsDirectory(t *testing.T) {
 	keeper, sessionDirectory := openKeeper(t)
 
+	if keeper.IsMounted() {
+		t.Error("an absent drops directory is reported as mounted")
+	}
 	if _, err := os.Stat(GetDirectory(sessionDirectory)); !os.IsNotExist(err) {
 		t.Error("opening a keeper made a drops directory before anything was dropped")
 	}
@@ -92,6 +95,9 @@ func TestAKeeperMountsTheDropsItMadeOnlyOnce(t *testing.T) {
 	first, err := keeper.SaveOutput("one\n")
 	if err != nil {
 		t.Fatal(err)
+	}
+	if !keeper.IsMounted() {
+		t.Error("saved drops are not reported as mounted")
 	}
 	second, err := keeper.SaveOutput("another\n")
 	if err != nil {

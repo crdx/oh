@@ -506,6 +506,11 @@ func (self *App) handleCommand(message string) dispatch.Result {
 		ShowFeedback: func(text string, status agent.Status) {
 			self.showFeedback(feedback.Command, feedback.Message{Text: text, Status: status})
 		},
+		ShowIndentedFeedback: func(text string, status agent.Status, continuationIndent int) {
+			self.showFeedback(feedback.Command, feedback.Message{
+				Text: text, Status: status, ContinuationIndent: continuationIndent,
+			})
+		},
 		ShowListingFeedback: func(text string, status agent.Status) {
 			self.showFeedback(feedback.Command, feedback.Message{Text: text, Status: status, IsListing: true})
 		},

@@ -51,6 +51,16 @@ func Counts(skills []Skill) (int, int) {
 	return project, global
 }
 
+func GlobalDirectories(skills []Skill) []string {
+	var directories []string
+	for _, foundSkill := range skills {
+		if foundSkill.isGlobal && !slices.Contains(directories, foundSkill.directory) {
+			directories = append(directories, foundSkill.directory)
+		}
+	}
+	return directories
+}
+
 func ExcludeGlobal(skills []Skill, directories []string) []Skill {
 	excludedDirectories := make(map[string]struct{}, len(directories))
 	for _, directory := range directories {

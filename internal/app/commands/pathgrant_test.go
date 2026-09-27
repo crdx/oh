@@ -2,9 +2,12 @@ package commands
 
 import (
 	"slices"
+	"strings"
 	"testing"
 
+	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/pathgrant"
+	"crdx.org/oh/internal/app/shell"
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/pkg/agent"
 )
@@ -75,20 +78,100 @@ func TestGrantCommandRejectsAnUnknownAccess(t *testing.T) {
 	}
 }
 
-func TestGrantsCommandListsTheCurrentState(t *testing.T) {
+func TestGrantsCommandListsEffectivePermanentAndTemporaryAccess(t *testing.T) {
 	grants, current := fixturePathGrants()
+	grants.Permanent = []shell.ScopedPathGrant{
+		{Path: "/read", Access: pathgrant.ReadAccess, Kind: shell.ConfiguredGrant},
+		{Path: "/write", Access: pathgrant.ReadAccess | pathgrant.WriteAccess, Kind: shell.ConfiguredGrant},
+	}
 	*current = []pathgrant.Grant{
-		{Path: "/read", Access: pathgrant.ReadAccess},
-		{Path: "/write", Access: pathgrant.ReadAccess | pathgrant.WriteAccess},
+		{Path: "/read", Access: pathgrant.ReadAccess | pathgrant.ExecAccess},
 		{Path: "/tools", Access: pathgrant.ReadAccess | pathgrant.WriteAccess | pathgrant.ExecAccess},
 	}
 	context, err := invokePathGrantCommand(t, grants, "/grants")
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := "Temporary path grants:\n  r    /read\n  rxw  /tools\n  rw   /write"
+	want := "Paths:\n" +
+		"  rw   config                /write\n" +
+		"  rx   config + temporary    /read\n" +
+		"  rxw  temporary             /tools"
 	if context.notice != want {
 		t.Errorf("got notice %q", context.notice)
+	}
+}
+
+func TestGrantsCommandRejectsAnUnknownView(t *testing.T) {
+	grants, _ := fixturePathGrants()
+	_, err := invokePathGrantCommand(t, grants, "/grants verbose")
+	if !slash.IsUsageError(err) {
+		t.Errorf("got %v", err)
+	}
+}
+
+func TestGrantsCommandReadsLiveWorkspaceAccess(t *testing.T) {
+	grants, _ := fixturePathGrants()
+	currentCaps := caps.Read
+	grants.GetCurrentCaps = func() caps.Set { return currentCaps }
+	grants.GetPermanent = func() []shell.ScopedPathGrant {
+		access := shell.ReadAccess
+		if currentCaps.Has(caps.Write) {
+			access |= shell.WriteAccess
+		}
+		return []shell.ScopedPathGrant{{Path: "/workspace", Access: access, Kind: shell.WorkspaceGrant}}
+	}
+
+	context, err := invokePathGrantCommand(t, grants, "/grants")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(context.notice, "r    workspace") {
+		t.Errorf("read-only notice %q", context.notice)
+	}
+
+	currentCaps |= caps.Write
+	context, err = invokePathGrantCommand(t, grants, "/grants")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(context.notice, "rw   workspace") {
+		t.Errorf("writable notice %q", context.notice)
+	}
+}
+
+func TestPathGrantRowsGroupMatchingSourcesAndFoldSiblingPaths(t *testing.T) {
+	grants := []effectivePathGrant{
+		{path: "/etc/two", access: pathgrant.ReadAccess, sources: []shell.GrantKind{shell.ConfiguredGrant}},
+		{path: "/dev/null", access: pathgrant.ReadAccess, sources: []shell.GrantKind{shell.ConfiguredGrant}},
+		{path: "/etc/one", access: pathgrant.ReadAccess, sources: []shell.GrantKind{shell.ConfiguredGrant}},
+	}
+	want := "Paths:\n  r    config                /dev/null /etc/{one,two}"
+	if got := formatPathGrants(grants, false); got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
+func TestPathGrantRowsSummariseEnabledSkills(t *testing.T) {
+	grants := []effectivePathGrant{
+		{path: "/skills/one", access: pathgrant.ReadAccess, sources: []shell.GrantKind{shell.GlobalSkillGrant}},
+		{path: "/skills/two", access: pathgrant.ReadAccess, sources: []shell.GrantKind{shell.GlobalSkillGrant}},
+	}
+	want := "Paths:\n  r    skills                2 enabled"
+	if got := formatPathGrants(grants, false); got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+
+	expandedWant := "Paths:\n  r    skills                /skills/{one,two}"
+	if got := formatPathGrants(grants, true); got != expandedWant {
+		t.Errorf("expanded got %q, want %q", got, expandedWant)
+	}
+}
+
+func TestPathGrantRowsDoNotFoldNamesThatUseBraceSyntax(t *testing.T) {
+	paths := compactPaths([]string{"/reference/a,b", "/reference/c"})
+	want := []string{"/reference/a,b", "/reference/c"}
+	if !slices.Equal(paths, want) {
+		t.Errorf("got %v, want %v", paths, want)
 	}
 }
 

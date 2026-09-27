@@ -962,7 +962,9 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		Editor:           editorConfiguration,
 		Output:           os.Stdout,
 		PathGrants: commands.PathGrants{
-			Grant: pathGrants.Grant,
+			DenyPatterns: settings.Sandbox.Deny,
+			IsYolo:       args.Yolo,
+			Grant:        pathGrants.Grant,
 			Revoke: func(path string) (agent.Event, error) {
 				event, err := pathGrants.Revoke(path)
 				if err != nil {
@@ -973,6 +975,23 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 				return event, nil
 			},
 			GetCurrent: pathGrants.GetCurrent,
+			GetPermanent: func() []shell.ScopedPathGrant {
+				grants := shell.PermanentGrants(
+					workspace.GetDir(), homeDir, settings.Sandbox, mode.Current(), args.Yolo,
+				)
+				for _, directory := range skill.GlobalDirectories(availableSkills) {
+					grants = append(grants, shell.ScopedPathGrant{
+						Path: directory, Access: shell.ReadAccess, Kind: shell.GlobalSkillGrant,
+					})
+				}
+				if dropKeeper.IsMounted() {
+					grants = append(grants, shell.ScopedPathGrant{
+						Path: dropKeeper.GetDirectory(), Access: shell.ReadAccess, Kind: shell.SessionDropsGrant,
+					})
+				}
+				return grants
+			},
+			GetCurrentCaps: mode.Current,
 		},
 		HostToSandbox: commands.HostToSandbox{
 			Hide:       hostToSandbox.Hide,

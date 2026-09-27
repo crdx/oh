@@ -8,7 +8,7 @@
   /new [model]
   /expose <port>
   /grant {r|rx|rw|rxw} <path>
-  /grants
+  /grants [all]
   /revoke {<path>|<port>}
   /jobs
   /job {status|output|stop|discard} <name> | prune

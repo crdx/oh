@@ -89,14 +89,14 @@ func NewPathAccess(files *file.Root, mode *caps.Mode, paths Paths) (*PathAccess,
 		access.install(path, baselineMount)
 	}
 
-	for _, path := range sortedPathModes(paths) {
-		configuredPathMount, err := access.openMountedPath(path.path, path.access)
+	for _, grant := range paths.ConfiguredGrants() {
+		configuredPathMount, err := access.openMountedPath(grant.Path, grant.Access)
 		if err != nil {
 			access.Close()
-			return nil, fmt.Errorf("could not mount configured path %s: %w", pathutil.Shorten(path.path), err)
+			return nil, fmt.Errorf("could not mount configured path %s: %w", pathutil.Shorten(grant.Path), err)
 		}
-		access.configuredMounts[path.path] = configuredPathMount
-		access.install(path.path, configuredPathMount)
+		access.configuredMounts[grant.Path] = configuredPathMount
+		access.install(grant.Path, configuredPathMount)
 	}
 
 	return access, nil
@@ -419,11 +419,6 @@ func PreparePaths(paths Paths, warnings io.Writer) (Paths, error) {
 	return filteredPaths, nil
 }
 
-type pathMode struct {
-	path   string
-	access Access
-}
-
 func implicitReadablePaths(workspaceDir string, writableRoots []string) []string {
 	workspaceRoot := pathutil.Canonicalise(workspaceDir)
 	seen := make(map[string]struct{})
@@ -444,17 +439,17 @@ func implicitReadablePaths(workspaceDir string, writableRoots []string) []string
 	return paths
 }
 
-func sortedPathModes(paths Paths) []pathMode {
-	accessByPath := make(map[string]Access, len(paths.Read)+len(paths.Write)+len(paths.Exec))
+func (self Paths) ConfiguredGrants() []PathGrant {
+	accessByPath := make(map[string]Access, len(self.Read)+len(self.Write)+len(self.Exec))
 	for _, list := range []struct {
 		paths  []string
 		access Access
 	}{
-		{paths.Read, ReadAccess},
-		{paths.Write, ReadAccess | WriteAccess},
-		{paths.Exec, ReadAccess | ExecAccess},
-		{paths.Path, ReadAccess | ExecAccess},
-		{paths.Home, ReadAccess},
+		{self.Read, ReadAccess},
+		{self.Write, ReadAccess | WriteAccess},
+		{self.Exec, ReadAccess | ExecAccess},
+		{self.Path, ReadAccess | ExecAccess},
+		{self.Home, ReadAccess},
 	} {
 		for _, path := range list.paths {
 			accessByPath[filepath.Clean(path)] |= list.access
@@ -462,11 +457,11 @@ func sortedPathModes(paths Paths) []pathMode {
 	}
 
 	names := slices.Sorted(maps.Keys(accessByPath))
-	modes := make([]pathMode, 0, len(names))
+	grants := make([]PathGrant, 0, len(names))
 	for _, path := range names {
-		modes = append(modes, pathMode{path: path, access: accessByPath[path]})
+		grants = append(grants, PathGrant{Path: path, Access: accessByPath[path]})
 	}
-	return modes
+	return grants
 }
 
 func newMountedRoot(mode *caps.Mode, mount configuredMount, access Access) *file.Root {

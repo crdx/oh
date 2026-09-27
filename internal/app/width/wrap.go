@@ -31,6 +31,56 @@ func Wrap(text string, cells int) []string {
 	return texts
 }
 
+func WrapIndented(text string, cells int, continuationIndent int) []string {
+	if cells <= 0 || continuationIndent <= 0 {
+		return Wrap(text, cells)
+	}
+
+	var rows []string
+	for line := range strings.SplitSeq(text, "\n") {
+		rows = append(rows, wrapLineIndented(line, cells, continuationIndent)...)
+	}
+	return rows
+}
+
+func wrapLineIndented(line string, cells int, continuationIndent int) []string {
+	atoms := split(line)
+	states := statesAt(atoms)
+	indent := strings.Repeat(" ", continuationIndent)
+	var rows []string
+
+	for begin := 0; begin < len(atoms); {
+		available := cells
+		prefix := ""
+		if len(rows) > 0 {
+			available = max(1, cells-continuationIndent)
+			prefix = indent
+		}
+		end, space := reach(atoms, begin, available)
+		if end == len(atoms) {
+			rows = append(rows, prefix+join(atoms, begin, end, states))
+			break
+		}
+		if space > begin {
+			from, after := run(atoms, space)
+			doesBreakLeaveOnlyIndent := len(rows) == 0 && Of(join(atoms, begin, from, states)) <= continuationIndent
+			if from == begin || doesBreakLeaveOnlyIndent {
+				from = end
+				after = max(after, end)
+			}
+			rows = append(rows, prefix+join(atoms, begin, from, states))
+			begin = after
+			continue
+		}
+		rows = append(rows, prefix+join(atoms, begin, end, states))
+		begin = end
+	}
+	if len(rows) == 0 {
+		return []string{""}
+	}
+	return rows
+}
+
 func Rows(text string, cells int) []Row {
 	var rows []Row
 

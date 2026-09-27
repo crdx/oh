@@ -33,11 +33,12 @@ func (self Source) CanBeDismissed() bool {
 }
 
 type Message struct {
-	Text         string
-	Status       agent.Status
-	HasOwnStyle  bool
-	IsListing    bool
-	DismissAfter time.Duration
+	Text               string
+	Status             agent.Status
+	HasOwnStyle        bool
+	IsListing          bool
+	ContinuationIndent int
+	DismissAfter       time.Duration
 }
 
 type State struct {
@@ -119,7 +120,7 @@ func (self *State) Render(columns int, now time.Time) []string {
 	if !self.message.HasOwnStyle {
 		text = painter.NoticeStyle(self.message.Status).Over(text)
 	}
-	return width.Wrap(text, columns)
+	return width.WrapIndented(text, columns, self.message.ContinuationIndent)
 }
 
 func (self *State) countdown(now time.Time) string {

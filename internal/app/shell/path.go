@@ -16,6 +16,11 @@ type Paths struct {
 	Home  []string `toml:"home"`
 }
 
+type PathGrant struct {
+	Path   string
+	Access Access
+}
+
 func ShellPath(pathDirectories []string) string {
 	return strings.Join(append([]string{os.Getenv("PATH")}, pathDirectories...), string(os.PathListSeparator))
 }

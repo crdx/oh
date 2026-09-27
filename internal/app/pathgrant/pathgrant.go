@@ -27,10 +27,7 @@ const (
 
 const GrantUsage = "{r|rx|rw|rxw} <path>"
 
-type Grant struct {
-	Path   string
-	Access Access
-}
+type Grant = shell.PathGrant
 
 type RestoreFailure struct {
 	Grant Grant

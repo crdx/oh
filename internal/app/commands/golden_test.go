@@ -9,8 +9,10 @@ import (
 	"testing"
 	"time"
 
+	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/feedback"
 	"crdx.org/oh/internal/app/pathgrant"
+	"crdx.org/oh/internal/app/shell"
 	"crdx.org/oh/internal/app/snippets"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/width"
@@ -28,6 +30,7 @@ func TestGoldenCompletionMatchesGolden(t *testing.T) {
 		"/c",
 		"/g",
 		"/grant ",
+		"/grants ",
 		"/r",
 		"/revoke ",
 		"/copy ",
@@ -143,23 +146,102 @@ func TestGoldenGrantListingMatchesGolden(t *testing.T) {
 	var output strings.Builder
 	for _, test := range []struct {
 		label         string
-		grants        []pathgrant.Grant
+		permanent     []shell.ScopedPathGrant
+		temporary     []pathgrant.Grant
+		currentCaps   caps.Set
+		denyPatterns  []string
+		isYolo        bool
+		isExpanded    bool
 		hostToSandbox []uint16
 		sandboxToHost []uint16
 	}{
-		{label: "paths and ports in both directions", grants: []pathgrant.Grant{
-			{Path: "/reference", Access: pathgrant.ReadAccess},
-			{Path: "/output", Access: pathgrant.ReadAccess | pathgrant.WriteAccess},
-		}, hostToSandbox: []uint16{3000}, sandboxToHost: []uint16{8080}},
-		{label: "paths alone", grants: []pathgrant.Grant{
-			{Path: "/reference", Access: pathgrant.ReadAccess},
-		}},
+		{
+			label: "effective paths and ports in both directions",
+			permanent: []shell.ScopedPathGrant{
+				{Path: "/commands", Access: pathgrant.ReadAccess | pathgrant.ExecAccess, Kind: shell.ExecutableSearchGrant},
+				{Path: "/reference", Access: pathgrant.ReadAccess, Kind: shell.ConfiguredGrant},
+			},
+			temporary: []pathgrant.Grant{
+				{Path: "/output", Access: pathgrant.ReadAccess | pathgrant.WriteAccess},
+				{Path: "/reference", Access: pathgrant.ReadAccess | pathgrant.WriteAccess},
+			},
+			hostToSandbox: []uint16{3000},
+			sandboxToHost: []uint16{8080},
+		},
+		{
+			label: "every permanent path kind",
+			permanent: []shell.ScopedPathGrant{
+				{Path: "/cache", Access: shell.ReadAccess | shell.WriteAccess, Kind: shell.PrivateCacheGrant},
+				{Path: "/cache", Access: shell.ReadAccess | shell.WriteAccess, Kind: shell.UnixSocketGrant},
+				{Path: "/drops", Access: shell.ReadAccess, Kind: shell.SessionDropsGrant},
+				{Path: "/go-mod", Access: shell.ReadAccess, Kind: shell.LanguageModuleGrant},
+				{Path: "/home", Access: shell.ReadAccess | shell.WriteAccess, Kind: shell.PrivateHomeGrant},
+				{Path: "/repo/**/.git", Access: shell.ReadAccess | shell.WriteAccess, Kind: shell.RepositoryMetadataGrant},
+				{Path: "/runtime", Access: shell.ReadAccess, Kind: shell.RuntimeGrant},
+				{Path: "/ptys", Access: shell.ReadAccess | shell.WriteAccess, Kind: shell.RuntimeGrant},
+				{Path: "/skill/one", Access: shell.ReadAccess, Kind: shell.GlobalSkillGrant},
+				{Path: "/skill/two", Access: shell.ReadAccess, Kind: shell.GlobalSkillGrant},
+				{Path: "/etc/one", Access: shell.ReadAccess, Kind: shell.SystemGrant},
+				{Path: "/dev/null", Access: shell.ReadAccess | shell.WriteAccess, Kind: shell.SystemGrant},
+				{Path: "/usr", Access: shell.ReadAccess | shell.ExecAccess, Kind: shell.SystemGrant},
+				{Path: "/tmp", Access: shell.ReadAccess | shell.ExecAccess | shell.WriteAccess, Kind: shell.TemporaryDirectoryGrant},
+				{Path: "/tmp", Access: shell.ReadAccess | shell.WriteAccess, Kind: shell.UnixSocketGrant},
+			},
+			currentCaps: caps.All(),
+		},
+		{
+			label: "expanded built-in paths",
+			permanent: []shell.ScopedPathGrant{
+				{Path: "/path/one", Access: shell.ReadAccess | shell.ExecAccess, Kind: shell.ExecutableSearchGrant},
+				{Path: "/path/two", Access: shell.ReadAccess | shell.ExecAccess, Kind: shell.ExecutableSearchGrant},
+				{Path: "/modules/cache", Access: shell.ReadAccess, Kind: shell.LanguageModuleGrant},
+				{Path: "/runtime/process", Access: shell.ReadAccess, Kind: shell.RuntimeGrant},
+				{Path: "/runtime/ptys", Access: shell.ReadAccess | shell.WriteAccess, Kind: shell.RuntimeGrant},
+				{Path: "/skills/one", Access: shell.ReadAccess, Kind: shell.GlobalSkillGrant},
+				{Path: "/skills/two", Access: shell.ReadAccess, Kind: shell.GlobalSkillGrant},
+				{Path: "/system/read", Access: shell.ReadAccess, Kind: shell.SystemGrant},
+				{Path: "/system/devices", Access: shell.ReadAccess | shell.WriteAccess, Kind: shell.SystemGrant},
+				{Path: "/system/bin", Access: shell.ReadAccess | shell.ExecAccess, Kind: shell.SystemGrant},
+			},
+			isExpanded: true,
+		},
+		{
+			label:       "read-only workspace",
+			permanent:   []shell.ScopedPathGrant{{Path: "/workspace", Access: shell.ReadAccess, Kind: shell.WorkspaceGrant}},
+			currentCaps: caps.Read,
+		},
+		{
+			label: "writable workspace and denied names",
+			permanent: []shell.ScopedPathGrant{{
+				Path: "/workspace", Access: shell.ReadAccess | shell.WriteAccess, Kind: shell.WorkspaceGrant,
+			}},
+			currentCaps:  caps.Read | caps.Write,
+			denyPatterns: []string{".env", "*.pem"},
+		},
+		{
+			label: "yolo deny scope",
+			permanent: []shell.ScopedPathGrant{
+				{Path: "/", Access: shell.ReadAccess | shell.ExecAccess | shell.WriteAccess, Kind: shell.UnconfinedShellGrant},
+				{
+					Path: "/workspace", Access: shell.ReadAccess | shell.ExecAccess | shell.WriteAccess, Kind: shell.WorkspaceGrant,
+				},
+			},
+			currentCaps:  caps.Read | caps.Shell | caps.Write,
+			denyPatterns: []string{".env"},
+			isYolo:       true,
+		},
 		{label: "host to sandbox alone", hostToSandbox: []uint16{8080}},
 		{label: "sandbox to host alone", sandboxToHost: []uint16{3000}},
 		{label: "nothing granted"},
 	} {
 		pathGrants, current := fixturePathGrants()
-		*current = test.grants
+		pathGrants.Permanent = test.permanent
+		pathGrants.DenyPatterns = test.denyPatterns
+		pathGrants.IsYolo = test.isYolo
+		if test.currentCaps != 0 {
+			pathGrants.GetCurrentCaps = func() caps.Set { return test.currentCaps }
+		}
+		*current = test.temporary
 		hostToSandbox, hostExposed := fixturePortGrants()
 		*hostExposed = test.hostToSandbox
 		sandboxToHost, sandboxExposed := fixtureSandboxToHost()
@@ -169,7 +251,11 @@ func TestGoldenGrantListingMatchesGolden(t *testing.T) {
 			hostToSandbox: hostToSandbox,
 			sandboxToHost: sandboxToHost,
 		})
-		invocation, found := commands.Find("/grants")
+		input := "/grants"
+		if test.isExpanded {
+			input += " all"
+		}
+		invocation, found := commands.Find(input)
 		if !found {
 			t.Fatal("expected /grants to be registered")
 		}
@@ -364,6 +450,10 @@ func (self *helpContext) Notice(text string) {
 	self.notice = text
 }
 
+func (self *helpContext) NoticeIndented(text string, _ int) {
+	self.notice = text
+}
+
 func (self *helpContext) NoticeListing(text string) {
 	self.notice = text
 }
@@ -382,10 +472,11 @@ func (self *promptContext) Emit(agent.Event) {}
 func (self *promptContext) Send(prompt string) {
 	self.sent = prompt
 }
-func (self *promptContext) Notice(string)        {}
-func (self *promptContext) NoticeListing(string) {}
-func (self *promptContext) PlainNotice(string)   {}
-func (self *promptContext) Success(string)       {}
+func (self *promptContext) Notice(string)              {}
+func (self *promptContext) NoticeIndented(string, int) {}
+func (self *promptContext) NoticeListing(string)       {}
+func (self *promptContext) PlainNotice(string)         {}
+func (self *promptContext) Success(string)             {}
 
 func TestGoldenInfoMatchesGolden(t *testing.T) {
 	commands := newCommandRegistry(t, fixtureEnvironment(t))

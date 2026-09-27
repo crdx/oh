@@ -2,10 +2,10 @@
   /conf → /conf  (edit the config and system prompt)
   /copy → /copy …  (copy a target to the clipboard)
   /edit → /edit …  (open a target in your editor)
-  /expose → /expose  (expose a host loopback port to the sandbox)
+  /expose <port> → /expose …  (expose a host loopback port to the sandbox)
   /fork → /fork  (fork this session into a new one, optionally on another model)
   /grant → /grant …  (grant temporary access to a path)
-  /grants → /grants  (list temporary path grants and port routes)
+  /grants → /grants …  (list effective access and port routes)
   /help → /help  (list the commands and targets)
   /info → /info  (show every bar segment with its current value)
   /job → /job …  (inspect, stop, or discard a background job, or prune finished ones)
@@ -18,12 +18,14 @@
   /copy → /copy …  (copy a target to the clipboard)
 "/g"
   /grant → /grant …  (grant temporary access to a path)
-  /grants → /grants  (list temporary path grants and port routes)
+  /grants → /grants …  (list effective access and port routes)
 "/grant "
   r → /grant r
   rw → /grant rw
   rx → /grant rx
   rxw → /grant rxw
+"/grants "
+  all → /grants all
 "/r"
   /revoke → /revoke …  (revoke a temporary path grant or port route)
 "/revoke "
@@ -81,12 +83,12 @@
 "/open sn"
   snippets-dir → /open snippets-dir
 "//"
-  //add → //add  (Add a task, then continue.)
-  //ask → //ask  (Answer without making changes.)
+  //add <args> → //add …  (Add a task, then continue.)
+  //ask <args> → //ask …  (Answer without making changes.)
   //help → //help  (list the configured snippets)
   //note → //note
 "//a"
-  //add → //add  (Add a task, then continue.)
-  //ask → //ask  (Answer without making changes.)
+  //add <args> → //add …  (Add a task, then continue.)
+  //ask <args> → //ask …  (Answer without making changes.)
 "//h"
   //help → //help  (list the configured snippets)

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 
@@ -50,6 +51,12 @@ func TestDiscoverReadsProjectAndGlobalDirectories(t *testing.T) {
 	projectCount, globalCount := Counts(discoveredSkills)
 	if projectCount != 1 || globalCount != 2 {
 		t.Errorf("got %d project and %d global skills, want 1 and 2", projectCount, globalCount)
+	}
+	globalDirectories := GlobalDirectories(discoveredSkills)
+	for _, directory := range []string{filepath.Dir(globalPath), filepath.Join(globalDirectory, "review")} {
+		if !slices.Contains(globalDirectories, directory) {
+			t.Errorf("global directories %v do not contain %s", globalDirectories, directory)
+		}
 	}
 }
 

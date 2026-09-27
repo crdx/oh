@@ -39,6 +39,12 @@ func (self *Keeper) GetDirectory() string {
 	return GetDirectory(self.sessionDirectory)
 }
 
+func (self *Keeper) IsMounted() bool {
+	self.mountMutex.Lock()
+	defer self.mountMutex.Unlock()
+	return self.isMounted
+}
+
 func (self *Keeper) SaveImage(mediaType string, data []byte) (string, error) {
 	self.saveMutex.Lock()
 	defer self.saveMutex.Unlock()

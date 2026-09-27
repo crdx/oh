@@ -24,11 +24,12 @@ const (
 )
 
 type Actions struct {
-	EmitEvent           func(agent.Event)
-	SendPrompt          func(string)
-	ShowFeedback        func(string, agent.Status)
-	ShowListingFeedback func(string, agent.Status)
-	ShowPlainFeedback   func(string)
+	EmitEvent            func(agent.Event)
+	SendPrompt           func(string)
+	ShowFeedback         func(string, agent.Status)
+	ShowIndentedFeedback func(string, agent.Status, int)
+	ShowListingFeedback  func(string, agent.Status)
+	ShowPlainFeedback    func(string)
 }
 
 func Handle(registry slash.Registry, actions Actions, message string) (Result, string) {
@@ -62,6 +63,10 @@ func (self Actions) Send(message string) {
 
 func (self Actions) Notice(message string) {
 	self.ShowFeedback(message, agent.InfoStatus)
+}
+
+func (self Actions) NoticeIndented(message string, continuationIndent int) {
+	self.ShowIndentedFeedback(message, agent.InfoStatus, continuationIndent)
 }
 
 func (self Actions) NoticeListing(message string) {

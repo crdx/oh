@@ -53,13 +53,37 @@ var systemPathGrants = []grant{
 }
 
 func BaselineReadablePaths() []string {
+	return baselinePathsWith(rightsRead)
+}
+
+func BaselineWritablePaths() []string {
+	return baselinePathsWith(accessWriteFile)
+}
+
+func BaselineExecutablePaths() []string {
+	return baselinePathsWith(accessExecute)
+}
+
+func baselinePathsWith(rights uint64) []string {
 	paths := make([]string, 0, len(systemPathGrants))
 	for _, systemGrant := range systemPathGrants {
-		if systemGrant.rights&rightsRead == rightsRead {
+		if systemGrant.rights&rights == rights {
 			paths = append(paths, systemGrant.path)
 		}
 	}
 	return paths
+}
+
+func RuntimeReadablePaths() []string {
+	paths := []string{processFilesystemPath}
+	for _, file := range resolverFiles {
+		paths = append(paths, file.path)
+	}
+	return paths
+}
+
+func RuntimeWritablePaths() []string {
+	return []string{"/dev/ptmx", "/dev/pts"}
 }
 
 type Policy struct {

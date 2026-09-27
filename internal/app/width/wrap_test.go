@@ -34,6 +34,22 @@ func TestWrappingBreaksAtSpacesAndMidWordWhereThereAreNone(t *testing.T) {
 	}
 }
 
+func TestIndentedWrappingAlignsContinuationRows(t *testing.T) {
+	got := WrapIndented("one two three four\nfive six seven", 10, 4)
+	want := []string{"one two", "    three", "    four", "five six", "    seven"}
+	if !slices.Equal(got, want) {
+		t.Errorf("WrapIndented() = %q, want %q", got, want)
+	}
+}
+
+func TestIndentedWrappingUsesTheFirstRowsPathColumns(t *testing.T) {
+	got := WrapIndented("tag abcdefghij", 8, 4)
+	want := []string{"tag abcd", "    efgh", "    ij"}
+	if !slices.Equal(got, want) {
+		t.Errorf("WrapIndented() = %q, want %q", got, want)
+	}
+}
+
 func TestSizedTextWrapsAtItsDeclaredWidth(t *testing.T) {
 	fish := "\x1b]66;s=2:n=3:d=4:w=2;🐟\x1b\\"
 	got := Wrap(fish+" hi", 6)
