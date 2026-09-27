@@ -70,7 +70,7 @@ func awaitPathRefListing(t *testing.T, self *App, inputLine *edit.Input) {
 
 func selectedPathRef(self *App) string {
 	selected, _ := self.completer.Selected()
-	return selected.Text
+	return selected.Label
 }
 
 func TestTypingTheSigilListsTheWorkspace(t *testing.T) {
@@ -660,9 +660,60 @@ func pathRefScenarios(t *testing.T) map[string]pathRefScenario {
 			rig.typeAndList("look at @")
 			rig.press(key.Key{Code: key.Rune, Value: '\t', Mod: key.Shift})
 		}),
+		"47 choosing a path with a space quotes it": {
+			columns: 60,
+			lines:   24,
+			files:   spacedPathRefListing,
+			steps: func(rig *pathRefRig) {
+				rig.typeAndList("look at @plan")
+				rig.press(tabKey)
+			},
+		},
+		"48 a quoted directory keeps completing inside its quotes": {
+			columns: 60,
+			lines:   24,
+			files:   spacedPathRefListing,
+			steps: func(rig *pathRefRig) {
+				rig.typeAndList("look at @meet")
+				rig.press(tabKey)
+			},
+		},
+		"49 a file within a quoted directory closes its quotes": {
+			columns: 60,
+			lines:   24,
+			files:   spacedPathRefListing,
+			steps: func(rig *pathRefRig) {
+				rig.typeAndList("look at @meet")
+				rig.press(tabKey, pathRefDown, tabKey)
+			},
+		},
+		"50 an opened quote searches with spaces": {
+			columns: 60,
+			lines:   24,
+			files:   spacedPathRefListing,
+			steps: func(rig *pathRefRig) {
+				rig.typeAndList(`look at @"meeting n`)
+			},
+		},
+		"51 an opened quote keeps its quotes for a plain path": {
+			columns: 60,
+			lines:   24,
+			files:   spacedPathRefListing,
+			steps: func(rig *pathRefRig) {
+				rig.typeAndList(`look at @"read`)
+				rig.press(tabKey)
+			},
+		},
 	}
 
 	return scenarios
+}
+
+var spacedPathRefListing = []string{
+	"meeting notes/monday.md",
+	"meeting notes/tuesday plan.md",
+	"project plan.md",
+	"readme.md",
 }
 
 func longPathRefListing() []string {

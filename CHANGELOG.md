@@ -29,6 +29,7 @@
 - Render the session emoji after relayout
 - Show pending access changes notices
 - Complete paths with `@`
+- Quote completed paths that contain spaces
 
 ## [0.10.0] - 2026-09-25
 

@@ -28,24 +28,32 @@ func (self *fakeSource) Elision() dropdown.Elision {
 	return dropdown.ElideEnd
 }
 
+func (self *fakeSource) Find(runes []rune, cursor int) (trigger.Word, bool) {
+	return trigger.FindWord(runes, cursor, self.symbol)
+}
+
 func (self *fakeSource) Open(announceChange func()) {
 	self.opens++
 	self.announceChange = announceChange
 }
 
-func (self *fakeSource) Results(query string, limit int) trigger.Results {
-	self.queries = append(self.queries, query)
+func (self *fakeSource) Results(word trigger.Word, limit int) trigger.Results {
+	self.queries = append(self.queries, word.Query)
 	self.limits = append(self.limits, limit)
 
 	var items []trigger.Result
 	total := 0
 	for _, item := range self.items {
-		if !strings.HasPrefix(item.Text, query) {
+		if !strings.HasPrefix(item.Text, word.Query) {
 			continue
 		}
 		total++
 		if len(items) < limit {
-			items = append(items, item)
+			items = append(items, trigger.Result{
+				Label:       item.Text,
+				Text:        trigger.WordText(self.symbol, item.Text, word.IsQuoted, item.IsOpenEnded),
+				IsOpenEnded: item.IsOpenEnded,
+			})
 		}
 	}
 
@@ -99,10 +107,6 @@ func tags() *fakeSource {
 	return &fakeSource{symbol: '#', items: []trigger.Result{{Text: "bug"}, {Text: "build"}}}
 }
 
-func isAt(symbol rune) bool {
-	return symbol == '@'
-}
-
 func plainRows(completer *trigger.Completer) []string {
 	rows := completer.Rows(40, dropdown.MaxRows)
 	for i, row := range rows {
@@ -118,18 +122,25 @@ func TestFindReadsTheWordUnderTheCursor(t *testing.T) {
 		want      trigger.Word
 		wantFound bool
 	}{
-		"bare symbol":            {text: "@", cursor: 1, want: trigger.Word{Symbol: '@', Start: 0, End: 1}, wantFound: true},
-		"after a word":           {text: "look at @int", cursor: 12, want: trigger.Word{Symbol: '@', Start: 8, End: 12, Query: "int"}, wantFound: true},
-		"cursor inside the word": {text: "@internal x", cursor: 4, want: trigger.Word{Symbol: '@', Start: 0, End: 9, Query: "int"}, wantFound: true},
-		"after a newline":        {text: "one\n@two", cursor: 8, want: trigger.Word{Symbol: '@', Start: 4, End: 8, Query: "two"}, wantFound: true},
-		"within a word":          {text: "mail foo@bar", cursor: 12},
-		"after a space":          {text: "@foo ", cursor: 5},
-		"before the symbol":      {text: "@foo", cursor: 0},
-		"an unknown symbol":      {text: "#foo", cursor: 4},
-		"no symbol":              {text: "plain", cursor: 5},
+		"bare symbol":                {text: "@", cursor: 1, want: trigger.Word{Start: 0, End: 1}, wantFound: true},
+		"after a word":               {text: "look at @int", cursor: 12, want: trigger.Word{Start: 8, End: 12, Query: "int"}, wantFound: true},
+		"cursor inside the word":     {text: "@internal x", cursor: 4, want: trigger.Word{Start: 0, End: 9, Query: "int"}, wantFound: true},
+		"after a newline":            {text: "one\n@two", cursor: 8, want: trigger.Word{Start: 4, End: 8, Query: "two"}, wantFound: true},
+		"an opening quote":           {text: `@"`, cursor: 2, want: trigger.Word{Start: 0, End: 2, IsQuoted: true}, wantFound: true},
+		"a space inside quotes":      {text: `see @"my do`, cursor: 11, want: trigger.Word{Start: 4, End: 11, Query: "my do", IsQuoted: true}, wantFound: true},
+		"inside closed quotes":       {text: `@"my docs" x`, cursor: 5, want: trigger.Word{Start: 0, End: 10, Query: "my ", IsQuoted: true}, wantFound: true},
+		"an unclosed quote runs on":  {text: `@"my docs next`, cursor: 7, want: trigger.Word{Start: 0, End: 9, Query: "my do", IsQuoted: true}, wantFound: true},
+		"after closed quotes":        {text: `@"my docs" `, cursor: 10},
+		"a quote within a word":      {text: `x@"my do`, cursor: 8},
+		"a quote on an earlier line": {text: "@\"one\ntwo", cursor: 8},
+		"within a word":              {text: "mail foo@bar", cursor: 12},
+		"after a space":              {text: "@foo ", cursor: 5},
+		"before the symbol":          {text: "@foo", cursor: 0},
+		"another symbol":             {text: "#foo", cursor: 4},
+		"no symbol":                  {text: "plain", cursor: 5},
 	} {
 		t.Run(name, func(t *testing.T) {
-			got, found := trigger.Find([]rune(test.text), test.cursor, isAt)
+			got, found := trigger.FindWord([]rune(test.text), test.cursor, '@')
 			if found != test.wantFound {
 				t.Fatalf("found %v, want %v", found, test.wantFound)
 			}
@@ -141,19 +152,41 @@ func TestFindReadsTheWordUnderTheCursor(t *testing.T) {
 }
 
 func TestReplacementLeavesAnOpenEndedResultOpenAndClosesTheRest(t *testing.T) {
-	word := trigger.Word{Symbol: '@', Start: 0, End: 4, Query: "int"}
+	word := trigger.Word{Start: 0, End: 4, Query: "int"}
 	runes := []rune("@int")
 
-	if got := trigger.Replacement(word, trigger.Result{Text: "internal/", IsOpenEnded: true}, runes); got != "@internal/" {
+	if got := trigger.Replacement(word, trigger.Result{Text: "@internal/", IsOpenEnded: true}, runes); got != "@internal/" {
 		t.Errorf("open-ended replacement is %q", got)
 	}
-	if got := trigger.Replacement(word, trigger.Result{Text: "main.go"}, runes); got != "@main.go " {
+	if got := trigger.Replacement(word, trigger.Result{Text: "@main.go"}, runes); got != "@main.go " {
 		t.Errorf("closed replacement is %q", got)
 	}
 
-	beforeSpace := trigger.Word{Symbol: '#', Start: 0, End: 3, Query: "ma"}
-	if got := trigger.Replacement(beforeSpace, trigger.Result{Text: "main"}, []rune("#ma rest")); got != "#main" {
+	beforeSpace := trigger.Word{Start: 0, End: 3, Query: "ma"}
+	if got := trigger.Replacement(beforeSpace, trigger.Result{Text: "#main"}, []rune("#ma rest")); got != "#main" {
 		t.Errorf("closed replacement before a space is %q", got)
+	}
+}
+
+func TestWordTextQuotesOnlyWhatNeedsIt(t *testing.T) {
+	for name, test := range map[string]struct {
+		text        string
+		isQuoted    bool
+		isOpenEnded bool
+		want        string
+	}{
+		"plain":                     {text: "main.go", want: "@main.go"},
+		"plain open-ended":          {text: "cmd/", isOpenEnded: true, want: "@cmd/"},
+		"a space":                   {text: "my docs/a b.txt", want: `@"my docs/a b.txt"`},
+		"a space open-ended":        {text: "my docs/", isOpenEnded: true, want: `@"my docs/`},
+		"already quoted":            {text: "main.go", isQuoted: true, want: `@"main.go"`},
+		"already quoted open-ended": {text: "cmd/", isQuoted: true, isOpenEnded: true, want: `@"cmd/`},
+	} {
+		t.Run(name, func(t *testing.T) {
+			if got := trigger.WordText('@', test.text, test.isQuoted, test.isOpenEnded); got != test.want {
+				t.Errorf("got %q, want %q", got, test.want)
+			}
+		})
 	}
 }
 
@@ -226,7 +259,7 @@ func TestChoosingAnOpenEndedResultKeepsCompleting(t *testing.T) {
 	if got := string(editor.runes); got != "@cmd/" {
 		t.Errorf("completed to %q", got)
 	}
-	if selected, _ := completer.Selected(); selected.Text != "cmd/" || !completer.IsOpen() {
+	if selected, _ := completer.Selected(); selected.Label != "cmd/" || !completer.IsOpen() {
 		t.Errorf("selected %+v with the dropdown open %v", selected, completer.IsOpen())
 	}
 }
@@ -416,13 +449,13 @@ func TestMovingOntoTheLastHeldResultFetchesMore(t *testing.T) {
 	if got := fmt.Sprint(source.limits); got != "[200 400]" {
 		t.Errorf("asked for %s", got)
 	}
-	if selected, _ := completer.Selected(); selected.Text != "file199" {
-		t.Errorf("selected %q after fetching more", selected.Text)
+	if selected, _ := completer.Selected(); selected.Label != "file199" {
+		t.Errorf("selected %q after fetching more", selected.Label)
 	}
 
 	completer.Apply(editor, down)
-	if selected, _ := completer.Selected(); selected.Text != "file200" {
-		t.Errorf("selected %q past the first page", selected.Text)
+	if selected, _ := completer.Selected(); selected.Label != "file200" {
+		t.Errorf("selected %q past the first page", selected.Label)
 	}
 
 	rows := plainRows(completer)
@@ -437,8 +470,8 @@ func TestUpAtTheTopOfAnIncompleteListStaysPut(t *testing.T) {
 	typeInto(completer, editor, "@")
 
 	completer.Apply(editor, key.Key{Code: key.Up})
-	if selected, _ := completer.Selected(); selected.Text != "file000" {
-		t.Errorf("up at the top selected %q", selected.Text)
+	if selected, _ := completer.Selected(); selected.Label != "file000" {
+		t.Errorf("up at the top selected %q", selected.Label)
 	}
 	if rows := plainRows(completer); rows[len(rows)-1] != "  ⋮ 443 more" {
 		t.Errorf("the note reads %q", rows[len(rows)-1])
@@ -457,5 +490,68 @@ func TestANewQueryStartsFromTheFirstPage(t *testing.T) {
 	typeInto(completer, editor, "f")
 	if got := source.limits[len(source.limits)-1]; got != 200 {
 		t.Errorf("a new query asked for %d", got)
+	}
+}
+
+func spacedFiles() *fakeSource {
+	return &fakeSource{symbol: '@', items: []trigger.Result{
+		{Text: "a b.txt"},
+		{Text: "my docs/", IsOpenEnded: true},
+		{Text: "my docs/q r.txt"},
+	}}
+}
+
+func TestChoosingAPathWithASpaceQuotesIt(t *testing.T) {
+	completer := trigger.New(spacedFiles())
+	editor := &fakeEditor{}
+
+	typeInto(completer, editor, "see @a")
+	completer.Apply(editor, key.Key{Code: key.Enter})
+
+	if got := string(editor.runes); got != `see @"a b.txt" ` {
+		t.Errorf("completed to %q", got)
+	}
+	if completer.IsOpen() {
+		t.Error("the dropdown stayed open after a quoted file")
+	}
+}
+
+func TestAQuotedDirectoryKeepsCompletingInsideItsQuotes(t *testing.T) {
+	completer := trigger.New(spacedFiles())
+	editor := &fakeEditor{}
+
+	typeInto(completer, editor, "@my")
+	completer.Apply(editor, key.Key{Code: key.Enter})
+	if got := string(editor.runes); got != `@"my docs/` {
+		t.Fatalf("completed the directory to %q", got)
+	}
+	if !completer.IsOpen() {
+		t.Fatal("the dropdown closed inside a quoted directory")
+	}
+	if selected, _ := completer.Selected(); selected.Label != "my docs/" {
+		t.Errorf("selected %q inside the quoted directory", selected.Label)
+	}
+
+	completer.Apply(editor, key.Key{Code: key.Down})
+	completer.Apply(editor, key.Key{Code: key.Enter})
+	if got := string(editor.runes); got != `@"my docs/q r.txt" ` {
+		t.Errorf("completed the file to %q", got)
+	}
+}
+
+func TestOpeningAQuoteAsksAgain(t *testing.T) {
+	source := files()
+	completer := trigger.New(source)
+	editor := &fakeEditor{}
+
+	typeInto(completer, editor, `@"`)
+	if got := strings.Join(source.queries, ","); got != "," {
+		t.Errorf("asked for %q", got)
+	}
+
+	completer.Apply(editor, key.Key{Code: key.Down})
+	completer.Apply(editor, key.Key{Code: key.Enter})
+	if got := string(editor.runes); got != `@"cmd/main.go" ` {
+		t.Errorf("completed to %q", got)
 	}
 }

@@ -174,7 +174,7 @@ func TestASourceSaysItIsListingUntilTheListingArrives(t *testing.T) {
 
 	changes := make(chan struct{}, 1)
 	source.Open(func() { changes <- struct{}{} })
-	if got := source.Results("", 10); got.Placeholder != "listing files…" || len(got.Items) != 0 {
+	if got := source.Results(trigger.Word{}, 10); got.Placeholder != "listing files…" || len(got.Items) != 0 {
 		t.Errorf("got %+v before the listing arrived", got)
 	}
 
@@ -182,13 +182,13 @@ func TestASourceSaysItIsListingUntilTheListingArrives(t *testing.T) {
 	<-changes
 	want := trigger.Results{
 		Items: []trigger.Result{
-			{Text: "cmd/", IsOpenEnded: true},
-			{Text: "cmd/main.go"},
+			{Label: "cmd/", Text: "@cmd/", IsOpenEnded: true},
+			{Label: "cmd/main.go", Text: "@cmd/main.go"},
 		},
 		Total:       2,
 		Placeholder: "no matching paths",
 	}
-	if got := source.Results("", 10); !reflect.DeepEqual(got, want) {
+	if got := source.Results(trigger.Word{}, 10); !reflect.DeepEqual(got, want) {
 		t.Errorf("got %+v, want %+v", got, want)
 	}
 	if source.Symbol() != '@' || source.Elision() != dropdown.ElideStart {
@@ -205,7 +205,7 @@ func TestASourceNamesAFailedListing(t *testing.T) {
 	source.Open(func() { changes <- struct{}{} })
 	<-changes
 
-	if got := source.Results("x", 10).Placeholder; got != "could not list files: rg: not found" {
+	if got := source.Results(trigger.Word{Query: "x"}, 10).Placeholder; got != "could not list files: rg: not found" {
 		t.Errorf("got placeholder %q", got)
 	}
 }
@@ -234,5 +234,32 @@ func BenchmarkMatchAnEmptyQuery(b *testing.B) {
 	for b.Loop() {
 		var matcher pathref.Matcher
 		matcher.Match(listing, "", 200)
+	}
+}
+
+func TestASourceQuotesAPathWithASpace(t *testing.T) {
+	source := pathref.NewSource(pathref.NewIndexWith("/nowhere", nil, func(context.Context, string, []string) ([]string, bool, error) {
+		return []string{"my notes/a b.md"}, false, nil
+	}, time.Now))
+
+	changes := make(chan struct{}, 1)
+	source.Open(func() { changes <- struct{}{} })
+	<-changes
+
+	want := []trigger.Result{
+		{Label: "my notes/", Text: `@"my notes/`, IsOpenEnded: true},
+		{Label: "my notes/a b.md", Text: `@"my notes/a b.md"`},
+	}
+	if got := source.Results(trigger.Word{Query: "my"}, 10).Items; !reflect.DeepEqual(got, want) {
+		t.Errorf("got %+v, want %+v", got, want)
+	}
+}
+
+func TestASourceFindsAQuotedPath(t *testing.T) {
+	source := pathref.NewSource(pathref.NewIndex("/nowhere", nil))
+
+	want := trigger.Word{Start: 4, End: 14, Query: "my no", IsQuoted: true}
+	if got, isFound := source.Find([]rune(`see @"my notes`), 11); !isFound || got != want {
+		t.Errorf("got %+v, want %+v", got, want)
 	}
 }

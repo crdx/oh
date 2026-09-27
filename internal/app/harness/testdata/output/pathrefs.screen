@@ -336,3 +336,29 @@ look at @
   main.go
   ⋮ 17 more
 ────────────────────────────────────────────────────────────
+=== 47 choosing a path with a space quotes it ===
+────────────────────────────────────────────────────────────
+look at @"project plan.md"
+────────────────────────────────────────────────────────────
+=== 48 a quoted directory keeps completing inside its quotes ===
+────────────────────────────────────────────────────────────
+look at @"meeting notes/
+› meeting notes/monday.md
+  meeting notes/tuesday plan.md
+
+────────────────────────────────────────────────────────────
+=== 49 a file within a quoted directory closes its quotes ===
+────────────────────────────────────────────────────────────
+look at @"meeting notes/tuesday plan.md"
+────────────────────────────────────────────────────────────
+=== 50 an opened quote searches with spaces ===
+────────────────────────────────────────────────────────────
+look at @"meeting n
+› meeting notes/
+  meeting notes/monday.md
+  meeting notes/tuesday plan.md
+────────────────────────────────────────────────────────────
+=== 51 an opened quote keeps its quotes for a plain path ===
+────────────────────────────────────────────────────────────
+look at @"readme.md"
+────────────────────────────────────────────────────────────

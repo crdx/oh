@@ -31,11 +31,15 @@ func (self *Source) Elision() dropdown.Elision {
 	return dropdown.ElideStart
 }
 
+func (self *Source) Find(runes []rune, cursor int) (trigger.Word, bool) {
+	return trigger.FindWord(runes, cursor, Symbol)
+}
+
 func (self *Source) Open(announceChange func()) {
 	self.index.Refresh(announceChange)
 }
 
-func (self *Source) Results(query string, limit int) trigger.Results {
+func (self *Source) Results(word trigger.Word, limit int) trigger.Results {
 	listing := self.index.Listing()
 	if listing == nil {
 		return trigger.Results{Placeholder: listingText}
@@ -46,10 +50,15 @@ func (self *Source) Results(query string, limit int) trigger.Results {
 		placeholder = failurePrefix + listing.Err.Error()
 	}
 
-	paths, total := self.matcher.Match(listing, query, limit)
+	paths, total := self.matcher.Match(listing, word.Query, limit)
 	items := make([]trigger.Result, len(paths))
 	for i, path := range paths {
-		items[i] = trigger.Result{Text: path, IsOpenEnded: IsDirectory(path)}
+		isOpenEnded := IsDirectory(path)
+		items[i] = trigger.Result{
+			Label:       path,
+			Text:        trigger.WordText(Symbol, path, word.IsQuoted, isOpenEnded),
+			IsOpenEnded: isOpenEnded,
+		}
 	}
 
 	return trigger.Results{Items: items, Total: total, Placeholder: placeholder}

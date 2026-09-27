@@ -15,7 +15,8 @@ type Editor interface {
 }
 
 type Completer struct {
-	sources  map[rune]Source
+	sources  []Source
+	source   Source
 	dropdown dropdown.Dropdown
 	current  Word
 	results  []Result
@@ -25,15 +26,10 @@ type Completer struct {
 }
 
 func New(sources ...Source) *Completer {
-	self := &Completer{
-		sources: make(map[rune]Source, len(sources)),
+	return &Completer{
+		sources: sources,
 		changes: make(chan struct{}, 1),
 	}
-	for _, source := range sources {
-		self.sources[source.Symbol()] = source
-	}
-
-	return self
 }
 
 func (self *Completer) Changes() <-chan struct{} {
@@ -92,33 +88,32 @@ func (self *Completer) Apply(editor Editor, keypress key.Key) bool {
 }
 
 func (self *Completer) Open(editor Editor) bool {
-	word, isFound := self.find(editor)
-	if !isFound {
-		return false
+	for _, source := range self.sources {
+		if word, isFound := self.find(source, editor); isFound {
+			self.openWith(source, word)
+			return true
+		}
 	}
 
-	source := self.sources[word.Symbol]
-	self.close()
-	self.dropdown.SetElision(source.Elision())
-	self.dropdown.Open()
-	self.current = word
-	source.Open(self.announceChange)
-	self.match()
-
-	return true
+	return false
 }
 
 func (self *Completer) Typed(editor Editor, keypress key.Key) bool {
-	if keypress.Code != key.Rune || keypress.Mod&^key.Shift != 0 || !self.isSymbol(keypress.Value) {
+	if keypress.Code != key.Rune || keypress.Mod&^key.Shift != 0 {
 		return false
 	}
 
-	word, isFound := self.find(editor)
-	if !isFound || word.Start != editor.Cursor()-1 || word.Symbol != keypress.Value {
-		return false
+	for _, source := range self.sources {
+		if source.Symbol() != keypress.Value {
+			continue
+		}
+		if word, isFound := self.find(source, editor); isFound && word.Start == editor.Cursor()-1 {
+			self.openWith(source, word)
+			return true
+		}
 	}
 
-	return self.Open(editor)
+	return false
 }
 
 func (self *Completer) Sync(editor Editor) {
@@ -126,13 +121,13 @@ func (self *Completer) Sync(editor Editor) {
 		return
 	}
 
-	word, isFound := self.find(editor)
-	if !isFound || word.Symbol != self.current.Symbol || word.Start != self.current.Start {
+	word, isFound := self.find(self.source, editor)
+	if !isFound || word.Start != self.current.Start {
 		self.close()
 		return
 	}
 
-	isUnchanged := word.Query == self.current.Query
+	isUnchanged := word.Query == self.current.Query && word.IsQuoted == self.current.IsQuoted
 	self.current = word
 	if !isUnchanged {
 		self.match()
@@ -145,17 +140,22 @@ func (self *Completer) Receive() {
 	}
 }
 
-func (self *Completer) find(editor Editor) (Word, bool) {
+func (self *Completer) openWith(source Source, word Word) {
+	self.close()
+	self.source = source
+	self.current = word
+	self.dropdown.SetElision(source.Elision())
+	self.dropdown.Open()
+	source.Open(self.announceChange)
+	self.match()
+}
+
+func (self *Completer) find(source Source, editor Editor) (Word, bool) {
 	if editor.IsSearching() {
 		return Word{}, false
 	}
 
-	return Find(editor.Runes(), editor.Cursor(), self.isSymbol)
-}
-
-func (self *Completer) isSymbol(symbol rune) bool {
-	_, isFound := self.sources[symbol]
-	return isFound
+	return source.Find(editor.Runes(), editor.Cursor())
 }
 
 func (self *Completer) announceChange() {
@@ -172,11 +172,11 @@ func (self *Completer) match() {
 }
 
 func (self *Completer) fetch() []string {
-	results := self.sources[self.current.Symbol].Results(self.current.Query, self.limit)
+	results := self.source.Results(self.current, self.limit)
 
 	labels := make([]string, len(results.Items))
 	for i, result := range results.Items {
-		labels[i] = result.Text
+		labels[i] = result.Label
 	}
 
 	self.results = results.Items
