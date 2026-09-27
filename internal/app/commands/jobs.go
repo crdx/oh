@@ -37,7 +37,7 @@ func jobCommands(managedJobs Jobs) []slash.Command {
 func jobsCommand(managedJobs Jobs) slash.Command {
 	return slash.Command{
 		Name:        "jobs",
-		Description: "List the background jobs of this session.",
+		Description: "list this session's background jobs",
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if arguments.Text != "" {
 				return slash.Usage()
@@ -52,7 +52,7 @@ func jobsCommand(managedJobs Jobs) slash.Command {
 func jobCommand(managedJobs Jobs) slash.Command {
 	return slash.Command{
 		Name:        "job",
-		Description: "Inspect, stop, or discard a background job; prune drops every finished one.",
+		Description: "inspect, stop, or discard a background job, or prune finished ones",
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			action, name, isNamed := strings.Cut(arguments.Text, " ")
 			name = strings.TrimSpace(name)

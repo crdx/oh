@@ -1,31 +1,31 @@
 "/"
-  /conf → /conf
-  /copy → /copy …
-  /edit → /edit …
-  /expose → /expose  (Expose a host loopback port to the sandbox.)
-  /fork → /fork
-  /grant → /grant …  (Grant temporary path access, spelled with the flags r, x, and w.)
-  /grants → /grants  (List temporary pathname grants and port routes in either direction.)
-  /help → /help
-  /info → /info
-  /job → /job …  (Inspect, stop, or discard a background job; prune drops every finished one.)
-  /jobs → /jobs  (List the background jobs of this session.)
-  /new → /new
-  /open → /open …
-  /revoke → /revoke …  (Revoke temporary pathname access or a port route.)
+  /conf → /conf  (edit the config and system prompt)
+  /copy → /copy …  (copy a target to the clipboard)
+  /edit → /edit …  (open a target in your editor)
+  /expose → /expose  (expose a host loopback port to the sandbox)
+  /fork → /fork  (fork this session into a new one, optionally on another model)
+  /grant → /grant …  (grant temporary access to a path)
+  /grants → /grants  (list temporary path grants and port routes)
+  /help → /help  (list the commands and targets)
+  /info → /info  (show every bar segment with its current value)
+  /job → /job …  (inspect, stop, or discard a background job, or prune finished ones)
+  /jobs → /jobs  (list this session's background jobs)
+  /new → /new  (start a new session, optionally on another model)
+  /open → /open …  (open a target with its default application)
+  /revoke → /revoke …  (revoke a temporary path grant or port route)
 "/c"
-  /conf → /conf
-  /copy → /copy …
+  /conf → /conf  (edit the config and system prompt)
+  /copy → /copy …  (copy a target to the clipboard)
 "/g"
-  /grant → /grant …  (Grant temporary path access, spelled with the flags r, x, and w.)
-  /grants → /grants  (List temporary pathname grants and port routes in either direction.)
+  /grant → /grant …  (grant temporary access to a path)
+  /grants → /grants  (list temporary path grants and port routes)
 "/grant "
   r → /grant r
   rw → /grant rw
   rx → /grant rx
   rxw → /grant rxw
 "/r"
-  /revoke → /revoke …  (Revoke temporary pathname access or a port route.)
+  /revoke → /revoke …  (revoke a temporary path grant or port route)
 "/revoke "
   /reference → /revoke /reference
   8080 → /revoke 8080
@@ -83,10 +83,10 @@
 "//"
   //add → //add  (Add a task, then continue.)
   //ask → //ask  (Answer without making changes.)
-  //help → //help
+  //help → //help  (list the configured snippets)
   //note → //note
 "//a"
   //add → //add  (Add a task, then continue.)
   //ask → //ask  (Answer without making changes.)
 "//h"
-  //help → //help
+  //help → //help  (list the configured snippets)

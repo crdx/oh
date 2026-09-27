@@ -156,12 +156,19 @@ func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 	})
 	commands := []slash.Command{
 		shellCommand(environment),
-		editorCommand("conf", configTarget(environment), environment.openEditor),
-		targetCommand("copy", copyTargets(environment, targets), targetNames, environment.copyText, copyConfirmation),
-		targetCommand("edit", targets, targetNames, environment.openEditor, nil),
+		editorCommand("conf", "edit the config and system prompt", configTarget(environment), environment.openEditor),
+		targetCommand(
+			"copy",
+			"copy a target to the clipboard",
+			copyTargets(environment, targets),
+			targetNames,
+			environment.copyText,
+			copyConfirmation,
+		),
+		targetCommand("edit", "open a target in your editor", targets, targetNames, environment.openEditor, nil),
 		infoCommand(environment.getInfo),
-		targetCommand("open", targets, targetNames, environment.openTarget, nil),
-		sessionCommand("new", func(modelGlob string) error {
+		targetCommand("open", "open a target with its default application", targets, targetNames, environment.openTarget, nil),
+		sessionCommand("new", "start a new session, optionally on another model", func(modelGlob string) error {
 			return environment.startSession(SessionStart{ModelGlob: modelGlob})
 		}),
 	}
@@ -178,7 +185,7 @@ func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 	commands = append(commands, help)
 	commands = append(commands, commandsRequiringPersistedSession(
 		environment.session.isPersisted,
-		sessionCommand("fork", func(modelGlob string) error {
+		sessionCommand("fork", "fork this session into a new one, optionally on another model", func(modelGlob string) error {
 			return environment.startSession(SessionStart{
 				ModelGlob:         modelGlob,
 				SourceSessionName: environment.session.name,
@@ -268,7 +275,8 @@ func locationTargets(environment commandEnvironment) map[string]commandTarget {
 
 func helpCommand(getHelp func() string) slash.Command {
 	return slash.Command{
-		Name: "help",
+		Name:        "help",
+		Description: "list the commands and targets",
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if len(arguments.Fields) != 0 {
 				return slash.Usage()
@@ -282,7 +290,8 @@ func helpCommand(getHelp func() string) slash.Command {
 
 func infoCommand(getInfo func() (string, error)) slash.Command {
 	return slash.Command{
-		Name: "info",
+		Name:        "info",
+		Description: "show every bar segment with its current value",
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if len(arguments.Fields) != 0 {
 				return slash.Usage()
@@ -298,9 +307,15 @@ func infoCommand(getInfo func() (string, error)) slash.Command {
 	}
 }
 
-func editorCommand(name string, target commandTarget, openEditor func([]string) error) slash.Command {
+func editorCommand(
+	name string,
+	description string,
+	target commandTarget,
+	openEditor func([]string) error,
+) slash.Command {
 	return slash.Command{
-		Name: name,
+		Name:        name,
+		Description: description,
 		Run: func(_ slash.Context, arguments slash.Arguments) error {
 			if len(arguments.Fields) != 0 {
 				return slash.Usage()
@@ -315,9 +330,10 @@ func editorCommand(name string, target commandTarget, openEditor func([]string) 
 	}
 }
 
-func sessionCommand(name string, startSession func(string) error) slash.Command {
+func sessionCommand(name string, description string, startSession func(string) error) slash.Command {
 	return slash.Command{
-		Name: name,
+		Name:        name,
+		Description: description,
 		Run: func(_ slash.Context, arguments slash.Arguments) error {
 			if len(arguments.Fields) > 1 {
 				return slash.Usage()
@@ -437,13 +453,15 @@ func copyConfirmation(targetName string, values []string) string {
 
 func targetCommand(
 	name string,
+	description string,
 	targets map[string]commandTarget,
 	targetNames []string,
 	action func([]string) error,
 	confirm func(targetName string, values []string) string,
 ) slash.Command {
 	command := slash.Command{
-		Name: name,
+		Name:        name,
+		Description: description,
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if len(arguments.Fields) != 1 {
 				return slash.Usage()

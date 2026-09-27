@@ -95,7 +95,8 @@ func New(configuredDefinitions map[string]Definition) (slash.CommandSet, error) 
 	var set slash.CommandSet
 	var help slash.Command
 	help = slash.Command{
-		Name: helpCommandName,
+		Name:        helpCommandName,
+		Description: "list the configured snippets",
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if len(arguments.Fields) != 0 {
 				return slash.Usage()

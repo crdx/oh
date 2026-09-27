@@ -1,18 +1,18 @@
 === 01 a slash lists the commands with what they do ===
 ────────────────────────────────────────────────────────────
 /
-› /conf    Edit the configuration file.
-  /copy    Copy a session target to the clipboard.
-  /grant   Grant temporary path access.
+› /conf    edit the configuration file
+  /copy    copy a session target to the clipboard
+  /grant   grant temporary path access
   /open
-  /quit    Leave the session, and say goodbye in a line lon…
-  /revoke  Revoke a grant.
+  /quit    leave the session, and say goodbye in a line lon…
+  /revoke  revoke a grant
 ────────────────────────────────────────────────────────────
 === 02 a name narrows the commands ===
 ────────────────────────────────────────────────────────────
 /co
-› /conf  Edit the configuration file.
-  /copy  Copy a session target to the clipboard.
+› /conf  edit the configuration file
+  /copy  copy a session target to the clipboard
 
 
 
@@ -63,7 +63,7 @@
 === 09 two slashes list the snippets ===
 ────────────────────────────────────────────────────────────
 //
-› //help
+› //help    list the configured snippets
   //review  Review the working tree.
   //test
 
@@ -108,7 +108,7 @@ see /co
 === 17 a narrow terminal cuts what a command does ===
 ────────────────────
 /q
-› /quit  Leave the …
+› /quit  leave the …
 
 
 

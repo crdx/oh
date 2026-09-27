@@ -40,7 +40,7 @@ func pathGrantCommands(
 func exposeCommand(sandboxToHost SandboxToHost) slash.Command {
 	return slash.Command{
 		Name:        "expose",
-		Description: "Expose a host loopback port to the sandbox.",
+		Description: "expose a host loopback port to the sandbox",
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			port, err := portgrant.ParsePort(arguments.Text)
 			if err != nil {
@@ -62,7 +62,7 @@ func exposeCommand(sandboxToHost SandboxToHost) slash.Command {
 func grantCommand(grants PathGrants) slash.Command {
 	return slash.Command{
 		Name:        "grant",
-		Description: "Grant temporary path access, spelled with the flags r, x, and w.",
+		Description: "grant temporary access to a path",
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			accessText, path, found := strings.Cut(arguments.Text, " ")
 			path = strings.TrimSpace(path)
@@ -105,7 +105,7 @@ func grantFlagChoices() []string {
 func grantsCommand(grants PathGrants, hostToSandbox HostToSandbox, sandboxToHost SandboxToHost) slash.Command {
 	return slash.Command{
 		Name:        "grants",
-		Description: "List temporary pathname grants and port routes in either direction.",
+		Description: "list temporary path grants and port routes",
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if arguments.Text != "" {
 				return slash.Usage()
@@ -119,7 +119,7 @@ func grantsCommand(grants PathGrants, hostToSandbox HostToSandbox, sandboxToHost
 func revokeCommand(grants PathGrants, hostToSandbox HostToSandbox, sandboxToHost SandboxToHost) slash.Command {
 	return slash.Command{
 		Name:        "revoke",
-		Description: "Revoke temporary pathname access or a port route.",
+		Description: "revoke a temporary path grant or port route",
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if arguments.Text == "" {
 				return slash.Usage()

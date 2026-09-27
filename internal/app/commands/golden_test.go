@@ -57,6 +57,29 @@ func TestGoldenCompletionMatchesGolden(t *testing.T) {
 	assertGolden(t, "completion.txt", output.String())
 }
 
+func TestEveryCommandIsDescribedInOneLowercaseSentence(t *testing.T) {
+	commands := newCommandRegistryWithSnippets(t, fixtureEnvironment(t), nil)
+
+	descriptions := map[string]string{}
+	for _, prefix := range []string{"/", "//"} {
+		for _, completion := range commands.Completions(prefix) {
+			descriptions[completion.Label] = completion.Description
+		}
+	}
+	invocation, found := commands.Find(systemCommandPrefix + shellCommandName + "ls")
+	if !found {
+		t.Fatal("expected /! to be registered")
+	}
+	descriptions[invocation.Name] = invocation.Command.Description
+
+	for name, description := range descriptions {
+		isLowercase := description != "" && description == strings.ToLower(description)
+		if !isLowercase || strings.ContainsAny(description, ".;:!?") {
+			t.Errorf("%s is described as %q", name, description)
+		}
+	}
+}
+
 func assertGolden(t *testing.T, name string, got string) {
 	t.Helper()
 
