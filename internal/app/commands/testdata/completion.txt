@@ -13,7 +13,7 @@
   /jobs → /jobs  (list this session's background jobs)
   /new [model] → /new …  (start a new session, optionally on another model)
   /open <target> → /open …  (open a target with its default application)
-  /revoke {<path>|<port>} → /revoke …  (revoke a temporary path grant or port route)
+  /revoke {<path>|<port>}... → /revoke …  (revoke temporary path grants or port routes)
 "/c"
   /conf → /conf  (edit the config and system prompt)
   /copy <target> → /copy …  (copy a target to the clipboard)
@@ -35,10 +35,12 @@
   status → /job status
   stop → /job stop
 "/r"
-  /revoke {<path>|<port>} → /revoke …  (revoke a temporary path grant or port route)
+  /revoke {<path>|<port>}... → /revoke …  (revoke temporary path grants or port routes)
 "/revoke "
   /reference → /revoke /reference
   8080 → /revoke 8080
+"/revoke 8080 "
+  /reference → /revoke 8080 /reference
 "/copy "
   agents-file → /copy agents-file
   config-dir → /copy config-dir

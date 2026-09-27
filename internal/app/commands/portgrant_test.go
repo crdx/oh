@@ -133,6 +133,76 @@ func TestRevokeReadsAnythingThatIsNotAPortAsAPath(t *testing.T) {
 	}
 }
 
+func TestRevokeClosesEveryPathAndPortItIsGiven(t *testing.T) {
+	grants, paths := fixturePathGrants()
+	*paths = []pathgrant.Grant{
+		{Path: "/first", Access: pathgrant.ReadAccess},
+		{Path: "/second", Access: pathgrant.ReadAccess},
+		{Path: "/third", Access: pathgrant.ReadAccess},
+	}
+	ports, exposed := fixturePortGrants()
+	*exposed = []uint16{3000, 8080}
+
+	context, err := invokeGrantCommand(t, grants, ports, "/revoke /first 8080 /third")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !slices.Equal(pathGrantPaths(*paths), []string{"/second"}) {
+		t.Errorf("got path grants %#v, want only /second left", *paths)
+	}
+	if !slices.Equal(*exposed, []uint16{3000}) {
+		t.Errorf("got exposed ports %v, want [3000]", *exposed)
+	}
+	if len(context.events) != 3 {
+		t.Errorf("got events %#v, want one for each revocation", context.events)
+	}
+}
+
+func TestRevokeClosesASubjectNamedTwiceOnce(t *testing.T) {
+	grants, _ := fixturePathGrants()
+	ports, exposed := fixturePortGrants()
+	*exposed = []uint16{8080}
+
+	context, err := invokeGrantCommand(t, grants, ports, "/revoke 8080 8080")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(context.events) != 1 {
+		t.Errorf("got events %#v, want one", context.events)
+	}
+}
+
+func TestRevokeClosesWhatItCanAndNamesWhatItCannot(t *testing.T) {
+	grants, paths := fixturePathGrants()
+	*paths = []pathgrant.Grant{{Path: "/reference", Access: pathgrant.ReadAccess}}
+
+	context, err := invokeGrantCommand(t, grants, HostToSandbox{}, "/revoke 8080 /reference 9090")
+	if err == nil || err.Error() != "port 8080 is not exposed; port 9090 is not exposed" {
+		t.Errorf("got %v, want both ports named", err)
+	}
+	if len(*paths) != 0 {
+		t.Errorf("got path grants %#v, want none", *paths)
+	}
+	if len(context.events) != 1 {
+		t.Errorf("got events %#v, want the path's alone", context.events)
+	}
+}
+
+func TestRevokeReadsAGrantedPathHoldingASpaceWhole(t *testing.T) {
+	grants, paths := fixturePathGrants()
+	*paths = []pathgrant.Grant{
+		{Path: "/some", Access: pathgrant.ReadAccess},
+		{Path: "/some path", Access: pathgrant.ReadAccess},
+	}
+
+	if _, err := invokeGrantCommand(t, grants, HostToSandbox{}, "/revoke /some path"); err != nil {
+		t.Fatal(err)
+	}
+	if !slices.Equal(pathGrantPaths(*paths), []string{"/some"}) {
+		t.Errorf("got path grants %#v, want only /some left", *paths)
+	}
+}
+
 func TestRevokeSaysAPortIsNotExposedWhereThereIsNoSandbox(t *testing.T) {
 	grants, _ := fixturePathGrants()
 

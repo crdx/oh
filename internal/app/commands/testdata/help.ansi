@@ -10,7 +10,7 @@
   /expose <port>
   /grant {r|rx|rw|rxw} <path>
   /grants [all]
-  /revoke {<path>|<port>}
+  /revoke {<path>|<port>}...
   /jobs
   /job {status|output|stop|discard} <name> | prune
   /fork [model]

@@ -159,7 +159,41 @@ func slashCommandScenarios(t *testing.T) map[string]pathRefScenario {
 			}
 		}),
 		"28 space after a whole command goes on to its arguments": commanding(typing("/copy ")),
+		"29 tab after a chosen argument offers only the rest": {
+			columns:  60,
+			lines:    24,
+			commands: manyArgumentsGoldenRegistry,
+			steps: func(rig *pathRefRig) {
+				typing("/revoke ")(rig)
+				rig.press(tabKey, tabKey)
+			},
+		},
+		"30 tab after arguments typed by hand offers only the rest": {
+			columns:  60,
+			lines:    24,
+			commands: manyArgumentsGoldenRegistry,
+			steps: func(rig *pathRefRig) {
+				typing("/revoke 8080 /first ")(rig)
+				rig.press(tabKey)
+			},
+		},
 	}
+}
+
+func manyArgumentsGoldenRegistry(t *testing.T) slash.Registry {
+	t.Helper()
+
+	set, err := slash.NewCommandSet(
+		"/",
+		slash.Command{Name: "revoke", Description: "revoke grants", Run: slashTestHandler}.
+			WithArguments("/first", "/second", "8080").
+			WithManyArguments(),
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return fixtureRegistry(t, set)
 }
 
 func TestGoldenSlashCommandsDrawWhatTheyDrewBefore(t *testing.T) {

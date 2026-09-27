@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Revoke several grants at once
 - Keep keys typed while a session starts
 - Send a command typed out in full on the first enter
 - Recompute the cache share when a session resumes

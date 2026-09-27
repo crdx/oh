@@ -212,6 +212,32 @@ func TestCompletionReadsDynamicArgumentsWhenAsked(t *testing.T) {
 	assertCompletions(t, registry, "/revoke ", []string{"/revoke second"})
 }
 
+func TestCompletionOffersFurtherArgumentsWithoutThoseAlreadyWritten(t *testing.T) {
+	registry := mustRegistry(t, mustSet(t, "/",
+		slash.Command{Name: "revoke", Run: commandHandler}.
+			WithArguments("/first", "/second", "8080").
+			WithManyArguments(),
+	))
+
+	assertCompletions(t, registry, "/revoke ", []string{"/revoke /first", "/revoke /second", "/revoke 8080"})
+	assertCompletions(t, registry, "/revoke 8080 ", []string{"/revoke 8080 /first", "/revoke 8080 /second"})
+	assertCompletions(t, registry, "/revoke 8080 /first /", []string{"/revoke 8080 /first /second"})
+	assertCompletions(t, registry, "/revoke /unknown  8", []string{"/revoke /unknown  8080"})
+	if registry.Completes("/revoke /first /second 8080 ") {
+		t.Error("Completes held with every argument already written")
+	}
+}
+
+func TestCompletionOffersOneArgumentToACommandThatTakesOne(t *testing.T) {
+	registry := mustRegistry(t, mustSet(t, "/",
+		slash.Command{Name: "copy", Run: commandHandler}.WithArguments("session-dir", "session-id"),
+	))
+
+	if registry.Completes("/copy session-dir ") {
+		t.Error("Completes held for a second argument to a command that takes one")
+	}
+}
+
 func TestCompletionsListMatchingArguments(t *testing.T) {
 	registry := mustRegistry(t, mustSet(t, "/",
 		slash.Command{Name: "ask", Run: commandHandler}.WithArgumentUsage("<args>"),

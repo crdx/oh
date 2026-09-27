@@ -61,6 +61,7 @@ type Command struct {
 	argumentUsage         string
 	completionUsage       string
 	takesAttachedArgument bool
+	allowsManyArguments   bool
 }
 
 func (self Command) WithAttachedArgument(usage string) Command {
@@ -76,6 +77,11 @@ func (self Command) WithArguments(arguments ...string) Command {
 
 func (self Command) WithListedArguments(list func() []string) Command {
 	self.listArguments = list
+	return self
+}
+
+func (self Command) WithManyArguments() Command {
+	self.allowsManyArguments = true
 	return self
 }
 
@@ -328,10 +334,17 @@ type Completion struct {
 }
 
 type completionTarget struct {
-	set     CommandSet
-	command *Command
-	name    string
-	partial string
+	set              CommandSet
+	command          *Command
+	precedingText    string
+	partial          string
+	writtenArguments []string
+}
+
+func (self completionTarget) arguments() []string {
+	return slices.DeleteFunc(slices.Clone(self.command.getArguments()), func(argument string) bool {
+		return slices.Contains(self.writtenArguments, argument)
+	})
 }
 
 func (self Registry) Completes(prefix string) bool {
@@ -340,7 +353,7 @@ func (self Registry) Completes(prefix string) bool {
 		return false
 	}
 
-	return target.command == nil || len(matchingPrefixes(target.partial, target.command.getArguments())) > 0
+	return target.command == nil || len(matchingPrefixes(target.partial, target.arguments())) > 0
 }
 
 func (self Registry) Completions(prefix string) []Completion {
@@ -372,10 +385,10 @@ func (self Registry) Completions(prefix string) []Completion {
 		return completions
 	}
 
-	arguments := matchingPrefixes(target.partial, target.command.getArguments())
+	arguments := matchingPrefixes(target.partial, target.arguments())
 	completions := make([]Completion, len(arguments))
 	for i, argument := range arguments {
-		completions[i] = Completion{Text: target.name + " " + argument, Label: argument}
+		completions[i] = Completion{Text: target.precedingText + argument, Label: argument}
 	}
 	return completions
 }
@@ -398,16 +411,24 @@ func (self Registry) completionTarget(prefix string) (completionTarget, bool) {
 		}
 		return completionTarget{set: set, partial: bareName}, true
 	}
-	if strings.Contains(argumentPrefix, " ") {
-		return completionTarget{}, false
-	}
-
 	command, isFound := set.commands[bareName]
 	if !isFound || command.listArguments == nil {
 		return completionTarget{}, false
 	}
 
-	return completionTarget{set: set, command: command, name: name, partial: argumentPrefix}, true
+	partialStart := strings.LastIndex(argumentPrefix, " ") + 1
+	if partialStart > 0 && !command.allowsManyArguments {
+		return completionTarget{}, false
+	}
+
+	partial := argumentPrefix[partialStart:]
+	return completionTarget{
+		set:              set,
+		command:          command,
+		precedingText:    strings.TrimSuffix(prefix, partial),
+		partial:          partial,
+		writtenArguments: strings.Fields(argumentPrefix[:partialStart]),
+	}, true
 }
 
 func (self Registry) getSet(name string) (CommandSet, bool) {

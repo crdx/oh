@@ -14038,6 +14038,7 @@ const (
 	pathGrantExec
 	pathGrantTakenBack
 	pathGrantReplaced
+	pathGrantRevokeSeveral
 )
 
 func TestGoldenPathGrantLifecycleDrawsEveryVisibleState(t *testing.T) {
@@ -14057,6 +14058,7 @@ func TestGoldenPathGrantLifecycleDrawsEveryVisibleState(t *testing.T) {
 		"restoration correction pending": func() string { return pathGrantGoldenStream(t, pathGrantRestorePending) },
 		"restoration correction settled": func() string { return pathGrantGoldenStream(t, pathGrantRestoreSettled) },
 		"revoke without grant rejected":  func() string { return pathGrantGoldenStream(t, pathGrantRevokeMissing) },
+		"several revoked at once":        func() string { return pathGrantGoldenStream(t, pathGrantRevokeSeveral) },
 		"settled into next turn":         func() string { return pathGrantGoldenStream(t, pathGrantSettled) },
 		"unknown access rejected":        func() string { return pathGrantGoldenStream(t, pathGrantUnknownAccess) },
 	}
@@ -14239,6 +14241,12 @@ func pathGrantGoldenStream(t *testing.T, scenario pathGrantGoldenScenario) strin
 		self.handleCommand("/grant rwz " + referencePath)
 	case pathGrantRevokeMissing:
 		self.handleCommand("/revoke " + referencePath)
+	case pathGrantRevokeSeveral:
+		self.handleCommand("/grant r " + referencePath)
+		self.handleCommand("/grant r " + homePath)
+		self.start("continue")
+		self.waitForCurrentTurn()
+		self.handleCommand("/revoke " + referencePath + " " + missingPath + " " + homePath)
 	case pathGrantRestorePending, pathGrantRestoreSettled:
 		pathAccess := pathGrantAccess(t, self.mode, workspace)
 		grants, result := pathgrant.NewRestored(workspace, pathAccess, []pathgrant.Grant{{

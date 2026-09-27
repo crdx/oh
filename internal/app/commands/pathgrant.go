@@ -157,21 +157,48 @@ func grantsCommand(grants PathGrants, hostToSandbox HostToSandbox, sandboxToHost
 func revokeCommand(grants PathGrants, hostToSandbox HostToSandbox, sandboxToHost SandboxToHost) slash.Command {
 	return slash.Command{
 		Name:        "revoke",
-		Description: "revoke a temporary path grant or port route",
+		Description: "revoke temporary path grants or port routes",
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if arguments.Text == "" {
 				return slash.Usage()
 			}
-			event, err := revoke(grants, hostToSandbox, sandboxToHost, arguments.Text)
-			if err != nil {
-				return err
+			var failures []string
+			for _, subject := range revokedSubjects(grants, hostToSandbox, sandboxToHost, arguments) {
+				event, err := revoke(grants, hostToSandbox, sandboxToHost, subject)
+				if err != nil {
+					failures = append(failures, err.Error())
+					continue
+				}
+				context.Emit(event)
 			}
-			context.Emit(event)
+			if len(failures) > 0 {
+				return errors.New(strings.Join(failures, "; "))
+			}
 			return nil
 		},
 	}.
 		WithListedArguments(func() []string { return revocableSubjects(grants, hostToSandbox, sandboxToHost) }).
-		WithArgumentUsage("{<path>|<port>}")
+		WithManyArguments().
+		WithArgumentUsage("{<path>|<port>}...")
+}
+
+func revokedSubjects(
+	grants PathGrants,
+	hostToSandbox HostToSandbox,
+	sandboxToHost SandboxToHost,
+	arguments slash.Arguments,
+) []string {
+	if slices.Contains(revocableSubjects(grants, hostToSandbox, sandboxToHost), arguments.Text) {
+		return []string{arguments.Text}
+	}
+
+	subjects := make([]string, 0, len(arguments.Fields))
+	for _, field := range arguments.Fields {
+		if !slices.Contains(subjects, field) {
+			subjects = append(subjects, field)
+		}
+	}
+	return subjects
 }
 
 func revoke(
