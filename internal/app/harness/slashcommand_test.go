@@ -20,6 +20,8 @@ func slashGoldenRegistry(t *testing.T) slash.Registry {
 			WithArguments("r", "rw", "rx", "rxw"),
 		slash.Command{Name: "open", Run: slashTestHandler}.WithArguments("config-dir", "workspace-dir"),
 		slash.Command{Name: "quit", Description: "Leave the session, and say goodbye in a line long enough to be cut.", Run: slashTestHandler},
+		slash.Command{Name: "revoke", Description: "Revoke a grant.", Run: slashTestHandler}.
+			WithListedArguments(func() []string { return nil }),
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -112,6 +114,16 @@ func slashCommandScenarios(t *testing.T) map[string]pathRefScenario {
 		"18 alt with a slash opens nothing": commanding(func(rig *pathRefRig) {
 			rig.show()
 			rig.press(key.Key{Code: key.Rune, Value: '/', Mod: key.Alt})
+		}),
+		"19 a command with nothing to list closes once chosen": commanding(func(rig *pathRefRig) {
+			typing("/rev")(rig)
+			rig.press(tabKey)
+		}),
+		"20 an argument matching nothing closes the dropdown": commanding(typing("/copy x")),
+		"21 typing on after a closed command opens nothing": commanding(func(rig *pathRefRig) {
+			typing("/rev")(rig)
+			rig.press(tabKey)
+			rig.typeText("/tmp/notes")
 		}),
 	}
 }

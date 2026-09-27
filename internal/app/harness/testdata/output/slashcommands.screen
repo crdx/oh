@@ -1,11 +1,12 @@
 === 01 a slash lists the commands with what they do ===
 ────────────────────────────────────────────────────────────
 /
-› /conf   Edit the configuration file.
-  /copy   Copy a session target to the clipboard.
-  /grant  Grant temporary path access.
+› /conf    Edit the configuration file.
+  /copy    Copy a session target to the clipboard.
+  /grant   Grant temporary path access.
   /open
-  /quit   Leave the session, and say goodbye in a line long…
+  /quit    Leave the session, and say goodbye in a line lon…
+  /revoke  Revoke a grant.
 ────────────────────────────────────────────────────────────
 === 02 a name narrows the commands ===
 ────────────────────────────────────────────────────────────
@@ -15,11 +16,13 @@
 
 
 
+
 ────────────────────────────────────────────────────────────
 === 03 a name matching nothing ===
 ────────────────────────────────────────────────────────────
 /zz
   no matching commands
+
 
 
 
@@ -37,11 +40,13 @@
   session-name
 
 
+
 ────────────────────────────────────────────────────────────
 === 06 an argument narrows the arguments ===
 ────────────────────────────────────────────────────────────
 /copy session-n
 › session-name
+
 
 
 
@@ -61,6 +66,7 @@
 › //help
   //review  Review the working tree.
   //test
+
 
 
 ────────────────────────────────────────────────────────────
@@ -107,8 +113,21 @@ see /co
 
 
 
+
 ────────────────────
 === 18 alt with a slash opens nothing ===
 ────────────────────────────────────────────────────────────
 /
+────────────────────────────────────────────────────────────
+=== 19 a command with nothing to list closes once chosen ===
+────────────────────────────────────────────────────────────
+/revoke
+────────────────────────────────────────────────────────────
+=== 20 an argument matching nothing closes the dropdown ===
+────────────────────────────────────────────────────────────
+/copy x
+────────────────────────────────────────────────────────────
+=== 21 typing on after a closed command opens nothing ===
+────────────────────────────────────────────────────────────
+/revoke /tmp/notes
 ────────────────────────────────────────────────────────────

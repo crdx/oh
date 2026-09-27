@@ -35,16 +35,17 @@ func TestTheSourceFindsOnlyWhatTheRegistryCompletes(t *testing.T) {
 		want      trigger.Word
 		wantFound bool
 	}{
-		"a bare slash":             {text: "/", cursor: 1, want: trigger.Word{End: 1, Query: "/"}, wantFound: true},
-		"a name":                   {text: "/co", cursor: 3, want: trigger.Word{End: 3, Query: "/co"}, wantFound: true},
-		"the middle of a name":     {text: "/copy x", cursor: 2, want: trigger.Word{End: 5, Query: "/c"}, wantFound: true},
-		"an argument":              {text: "/copy session-na", cursor: 16, want: trigger.Word{End: 16, Query: "/copy session-na"}, wantFound: true},
-		"a snippet":                {text: "//re", cursor: 4, want: trigger.Word{End: 4, Query: "//re"}, wantFound: true},
-		"a command taking nothing": {text: "/conf ", cursor: 6},
-		"a second argument":        {text: "/copy session-id more", cursor: 21},
-		"a path":                   {text: "/tmp/notes.md", cursor: 13},
-		"prose":                    {text: "hello /co", cursor: 9},
-		"nothing":                  {text: "", cursor: 0},
+		"a bare slash":                 {text: "/", cursor: 1, want: trigger.Word{End: 1, Query: "/"}, wantFound: true},
+		"a name":                       {text: "/co", cursor: 3, want: trigger.Word{End: 3, Query: "/co"}, wantFound: true},
+		"the middle of a name":         {text: "/copy x", cursor: 2, want: trigger.Word{End: 5, Query: "/c"}, wantFound: true},
+		"an argument":                  {text: "/copy session-na", cursor: 16, want: trigger.Word{End: 16, Query: "/copy session-na"}, wantFound: true},
+		"a snippet":                    {text: "//re", cursor: 4, want: trigger.Word{End: 4, Query: "//re"}, wantFound: true},
+		"a command taking nothing":     {text: "/conf ", cursor: 6},
+		"a second argument":            {text: "/copy session-id more", cursor: 21},
+		"an argument matching nothing": {text: "/copy x", cursor: 7},
+		"a path":                       {text: "/tmp/notes.md", cursor: 13},
+		"prose":                        {text: "hello /co", cursor: 9},
+		"nothing":                      {text: "", cursor: 0},
 	} {
 		t.Run(name, func(t *testing.T) {
 			got, found := source.Find([]rune(test.text), test.cursor)

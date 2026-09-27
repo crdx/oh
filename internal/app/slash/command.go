@@ -320,8 +320,12 @@ type completionTarget struct {
 }
 
 func (self Registry) Completes(prefix string) bool {
-	_, isCompletable := self.completionTarget(prefix)
-	return isCompletable
+	target, isCompletable := self.completionTarget(prefix)
+	if !isCompletable {
+		return false
+	}
+
+	return target.command == nil || len(matchingPrefixes(target.partial, target.command.getArguments())) > 0
 }
 
 func (self Registry) Completions(prefix string) []Completion {
@@ -339,7 +343,7 @@ func (self Registry) Completions(prefix string) []Completion {
 				Text:           target.set.prefix + name,
 				Label:          target.set.prefix + name,
 				Description:    command.Description,
-				TakesArguments: command.listArguments != nil,
+				TakesArguments: len(command.getArguments()) > 0,
 			}
 		}
 		return completions

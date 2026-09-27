@@ -390,3 +390,22 @@ func TestOperationalErrorCapitalisesItsFirstRune(t *testing.T) {
 		t.Errorf("got %q", got)
 	}
 }
+
+func TestNothingCompletesWhereNoArgumentMatches(t *testing.T) {
+	registry := mustRegistry(t, mustSet(t, "/",
+		slash.Command{Name: "copy", Run: commandHandler}.WithArguments("session-name"),
+		slash.Command{Name: "revoke", Run: commandHandler}.WithListedArguments(func() []string { return nil }),
+	))
+
+	for _, prefix := range []string{"/copy x", "/revoke ", "/revoke /tmp"} {
+		if registry.Completes(prefix) {
+			t.Errorf("Completes(%q) unexpectedly held", prefix)
+		}
+	}
+
+	for _, completion := range registry.Completions("/") {
+		if completion.Text == "/revoke" && completion.TakesArguments {
+			t.Error("a command listing no arguments claimed to take them")
+		}
+	}
+}
