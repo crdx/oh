@@ -65,6 +65,37 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 7b a restored job flushed at the window boundary ===
+
+ 🤖 The session was closed and reopened after your last turn. Job docs stopped when it closed.
+    Restart it with job(action="start", name=…) if still needed.
+
+
+Model returned no reply.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 7c a restored job after an expired return pair ===
+                                                                           double-enter to send now
+ ⏳ The session was closed and reopened after your last turn. Job docs stopped when it closed.
+    Restart it with job(action="start", name=…) if still needed.
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== 7d a restored job flushed after an expired pair ===
+
+ 🤖 The session was closed and reopened after your last turn. Job docs stopped when it closed.
+    Restart it with job(action="start", name=…) if still needed.
+
+
+Model returned no reply.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
 === 8 a stopped job standing ===
                                                                            double-enter to send now
  ⏳ Workspace is now read-only.

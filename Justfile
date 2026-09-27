@@ -93,6 +93,7 @@ golden:
         ./internal/app/usage \
         ./internal/app/ctl/... \
         ./pkg/toolbox/bash \
+        ./pkg/toolbox/read \
         -run '^TestGolden'
 
     STATUS=0

@@ -1,0 +1,16 @@
+=== a whole multiline file ===
+alpha
+bravo
+
+[truncated at line 2 of 5; continue with offset 3]
+
+=== a range beginning after the first line ===
+charlie
+delta
+
+[truncated at line 4 of 5; continue with offset 5]
+
+=== a line too long to return whole ===
+xxxxxxxxxxxxxx
+
+[truncated at 14B of 27B; full output in /state/sessions/tame-impala/drops/output.txt]

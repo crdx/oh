@@ -1,0 +1,8 @@
+=== bash alone ===
+\e[38;2;207;173;0mwarning: sandbox.deny cannot be enforced for the bash tool under --yolo\e[0m
+
+=== both unconfined tools ===
+\e[38;2;207;173;0mwarning: sandbox.deny cannot be enforced for the bash and job tools under --yolo\e[0m
+
+=== job alone ===
+\e[38;2;207;173;0mwarning: sandbox.deny cannot be enforced for the job tool under --yolo\e[0m

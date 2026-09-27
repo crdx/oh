@@ -71,18 +71,25 @@ func TestGoldenContextListingMatchesGolden(t *testing.T) {
 			label: "every context category",
 			sources: ContextSources{
 				SystemSources: []contextsource.Source{
-					{Name: "harness", EstimatedTokens: 4_000},
+					{Name: "harness", EstimatedTokens: 12_000},
 					{Path: "/config/SYSTEM.md", EstimatedTokens: 2_000},
-					{Name: "tool definitions (12 tools)", EstimatedTokens: 3_000},
+					{Name: "tool definitions (12 tools)", EstimatedTokens: 300},
 				},
 				ProjectSources: []contextsource.Source{{
-					Path: "/workspace/AGENTS.md", EstimatedTokens: 1_000,
+					Path: "/workspace/AGENTS.md", EstimatedTokens: 4_000,
 				}},
 				SessionSources: []contextsource.Source{
-					{Name: "skill catalogue (29 skills)", EstimatedTokens: 2_000},
+					{Name: "skill catalogue (29 skills)", EstimatedTokens: 300},
 					{Path: "/config/skills/golang/SKILL.md", EstimatedTokens: 1_000},
 				},
 			},
+		},
+		{
+			label: "system sources only",
+			sources: ContextSources{SystemSources: []contextsource.Source{
+				{Name: "harness", EstimatedTokens: 4_000},
+				{Name: "tool definitions (4 tools)", EstimatedTokens: 300},
+			}},
 		},
 		{
 			label: "project sources only",
@@ -112,12 +119,15 @@ func TestGoldenContextListingMatchesGolden(t *testing.T) {
 		if !context.isListing {
 			t.Error("context sources were not marked as a listing")
 		}
-		fmt.Fprintf(
-			&output,
-			"=== %s ===\n%s\n",
-			test.label,
-			renderInformationListing(context.notice, 80),
-		)
+		for _, columns := range []int{120, 60, 30} {
+			fmt.Fprintf(
+				&output,
+				"=== %s (%d columns) ===\n%s\n",
+				test.label,
+				columns,
+				renderInformationListing(context.notice, columns),
+			)
+		}
 	}
 
 	assertGolden(t, "context.txt", output.String())

@@ -758,20 +758,17 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	}
 
 	var systemPrompt string
-	var systemContextFiles []contextsource.Source
-	var projectContextFiles []contextsource.Source
-	var systemContextSources []contextsource.Source
-	var sessionContextSources []contextsource.Source
-	var contextFileBytes int
-	var skillCatalogue string
+	var fixedContextSources staticContextSources
+	var contextFiles []prompt.File
 	if resumedSession != nil && resumedSession.Meta.SystemPrompt != "" {
 		systemPrompt = resumedSession.Meta.SystemPrompt
-		systemContextFiles = slices.Clone(resumedSession.Meta.SystemContextFiles)
-		projectContextFiles = slices.Clone(resumedSession.Meta.ProjectContextFiles)
-		systemContextSources = slices.Clone(resumedSession.Meta.SystemContextSources)
-		sessionContextSources = slices.Clone(resumedSession.Meta.SessionContextSources)
+		fixedContextSources = staticContextSources{
+			systemFiles:    slices.Clone(resumedSession.Meta.SystemContextFiles),
+			projectFiles:   slices.Clone(resumedSession.Meta.ProjectContextFiles),
+			systemSources:  slices.Clone(resumedSession.Meta.SystemContextSources),
+			sessionSources: slices.Clone(resumedSession.Meta.SessionContextSources),
+		}
 	} else {
-		var contextFiles []prompt.File
 		systemPrompt, contextFiles, err = prompt.Load(prompt.Config{
 			GlobalPath:     location.GetGlobalContextPath(),
 			Workspace:      workspace,
@@ -794,32 +791,10 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		if err != nil {
 			return "", err
 		}
-		for _, loadedFile := range contextFiles {
-			loadedBytes := len(loadedFile.Body)
-			contextFileBytes += loadedBytes
-			contextFile := contextsource.FileFromBytes(loadedFile.Path, loadedBytes)
-			if loadedFile.IsSystem {
-				systemContextFiles = append(systemContextFiles, contextFile)
-			} else {
-				projectContextFiles = append(projectContextFiles, contextFile)
-			}
-		}
-		skillCatalogue = skill.Context(availableSkills)
 	}
 	systemPrompt = prompt.WithDropsDirectory(systemPrompt, dropKeeper.GetDirectory())
 	if resumedSession == nil {
-		harnessBytes := max(len(systemPrompt)-contextFileBytes-len(skillCatalogue), 0)
-		systemContextSources = append(
-			[]contextsource.Source{contextsource.NamedFromBytes(harnessContextSourceName, harnessBytes)},
-			systemContextSources...,
-		)
-		if skillCatalogue != "" {
-			skillCount := len(availableSkills)
-			sessionContextSources = append(sessionContextSources, contextsource.NamedFromBytes(
-				fmt.Sprintf(skillCatalogueSourceNameFormat, skillCount, util.PluralNoun(skillCount, "skill")),
-				len(skillCatalogue),
-			))
-		}
+		fixedContextSources = identifyStaticContextSources(systemPrompt, contextFiles, availableSkills)
 	}
 
 	tmpRoot, err := shell.MountTemporaryDirectory(files, tmpDir)
@@ -978,10 +953,10 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 
 	if resumedSession == nil {
 		meta.SystemPrompt = systemPrompt
-		meta.SystemContextFiles = slices.Clone(systemContextFiles)
-		meta.ProjectContextFiles = slices.Clone(projectContextFiles)
-		meta.SystemContextSources = slices.Clone(systemContextSources)
-		meta.SessionContextSources = slices.Clone(sessionContextSources)
+		meta.SystemContextFiles = slices.Clone(fixedContextSources.systemFiles)
+		meta.ProjectContextFiles = slices.Clone(fixedContextSources.projectFiles)
+		meta.SystemContextSources = slices.Clone(fixedContextSources.systemSources)
+		meta.SessionContextSources = slices.Clone(fixedContextSources.sessionSources)
 		meta.Tools = toolset.Names(enabledTools)
 		meta.Conditions = &currentConditions
 		if err := log.SetMeta(meta); err != nil {
@@ -1066,20 +1041,11 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 			return app.display.bar.RenderInfo(segment.Context{})
 		},
 		GetContextSources: func() commands.ContextSources {
-			systemSources := slices.Clone(systemContextSources)
-			systemSources = append(systemSources, systemContextFiles...)
-			if toolContextSource != nil {
-				systemSources = append(systemSources, *toolContextSource)
-			}
-			sessionSources := slices.Clone(sessionContextSources)
+			var events []agent.Event
 			if app != nil {
-				sessionSources = append(sessionSources, skill.LoadedSkillSources(app.recordedEvents)...)
+				events = app.recordedEvents
 			}
-			return commands.ContextSources{
-				SystemSources:  systemSources,
-				ProjectSources: slices.Clone(projectContextFiles),
-				SessionSources: sessionSources,
-			}
+			return currentContextSources(fixedContextSources, toolContextSource, events)
 		},
 		Session: commands.Session{
 			Name:           log.Name(),

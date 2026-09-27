@@ -1,18 +1,66 @@
-=== every context category ===
+=== every context category (120 columns) ===
 [38;2;129;162;190mSystem:[0m
-[38;2;129;162;190m  [38;2;150;152;150m~4Kt[0m[38;2;129;162;190m  harness[0m
-[38;2;129;162;190m  [38;2;150;152;150m~2Kt[0m[38;2;129;162;190m  /config/SYSTEM.md[0m
-[38;2;129;162;190m  [38;2;150;152;150m~3Kt[0m[38;2;129;162;190m  tool definitions (12 tools)[0m
+[38;2;129;162;190m  [38;2;150;152;150m~12Kt[0m[38;2;129;162;190m  harness[0m
+[38;2;129;162;190m  [38;2;150;152;150m ~2Kt[0m[38;2;129;162;190m  /config/SYSTEM.md[0m
+[38;2;129;162;190m  [38;2;150;152;150m~300t[0m[38;2;129;162;190m  tool definitions (12 tools)[0m
 [38;2;129;162;190mProject:[0m
-[38;2;129;162;190m  [38;2;150;152;150m~1Kt[0m[38;2;129;162;190m  /workspace/AGENTS.md[0m
+[38;2;129;162;190m  [38;2;150;152;150m ~4Kt[0m[38;2;129;162;190m  /workspace/AGENTS.md[0m
 [38;2;129;162;190mSession:[0m
-[38;2;129;162;190m  [38;2;150;152;150m~2Kt[0m[38;2;129;162;190m  skill catalogue (29 skills)[0m
-[38;2;129;162;190m  [38;2;150;152;150m~1Kt[0m[38;2;129;162;190m  /config/skills/golang/SKILL.md[0m
-=== project sources only ===
+[38;2;129;162;190m  [38;2;150;152;150m~300t[0m[38;2;129;162;190m  skill catalogue (29 skills)[0m
+[38;2;129;162;190m  [38;2;150;152;150m ~1Kt[0m[38;2;129;162;190m  /config/skills/golang/SKILL.md[0m
+=== every context category (60 columns) ===
+[38;2;129;162;190mSystem:[0m
+[38;2;129;162;190m  [38;2;150;152;150m~12Kt[0m[38;2;129;162;190m  harness[0m
+[38;2;129;162;190m  [38;2;150;152;150m ~2Kt[0m[38;2;129;162;190m  /config/SYSTEM.md[0m
+[38;2;129;162;190m  [38;2;150;152;150m~300t[0m[38;2;129;162;190m  tool definitions (12 tools)[0m
+[38;2;129;162;190mProject:[0m
+[38;2;129;162;190m  [38;2;150;152;150m ~4Kt[0m[38;2;129;162;190m  /workspace/AGENTS.md[0m
+[38;2;129;162;190mSession:[0m
+[38;2;129;162;190m  [38;2;150;152;150m~300t[0m[38;2;129;162;190m  skill catalogue (29 skills)[0m
+[38;2;129;162;190m  [38;2;150;152;150m ~1Kt[0m[38;2;129;162;190m  /config/skills/golang/SKILL.md[0m
+=== every context category (30 columns) ===
+[38;2;129;162;190mSystem:[0m
+[38;2;129;162;190m  [38;2;150;152;150m~12Kt[0m[38;2;129;162;190m  harness[0m
+[38;2;129;162;190m  [38;2;150;152;150m ~2Kt[0m[38;2;129;162;190m  /config/SYSTEM.md[0m
+[38;2;129;162;190m  [38;2;150;152;150m~300t[0m[38;2;129;162;190m  tool definitions (12…[0m
+[38;2;129;162;190mProject:[0m
+[38;2;129;162;190m  [38;2;150;152;150m ~4Kt[0m[38;2;129;162;190m  /workspace/AGENTS.md[0m
+[38;2;129;162;190mSession:[0m
+[38;2;129;162;190m  [38;2;150;152;150m~300t[0m[38;2;129;162;190m  skill catalogue (29 …[0m
+[38;2;129;162;190m  [38;2;150;152;150m ~1Kt[0m[38;2;129;162;190m  /config/skills/golan…[0m
+=== system sources only (120 columns) ===
+[38;2;129;162;190mSystem:[0m
+[38;2;129;162;190m  [38;2;150;152;150m ~4Kt[0m[38;2;129;162;190m  harness[0m
+[38;2;129;162;190m  [38;2;150;152;150m~300t[0m[38;2;129;162;190m  tool definitions (4 tools)[0m
+=== system sources only (60 columns) ===
+[38;2;129;162;190mSystem:[0m
+[38;2;129;162;190m  [38;2;150;152;150m ~4Kt[0m[38;2;129;162;190m  harness[0m
+[38;2;129;162;190m  [38;2;150;152;150m~300t[0m[38;2;129;162;190m  tool definitions (4 tools)[0m
+=== system sources only (30 columns) ===
+[38;2;129;162;190mSystem:[0m
+[38;2;129;162;190m  [38;2;150;152;150m ~4Kt[0m[38;2;129;162;190m  harness[0m
+[38;2;129;162;190m  [38;2;150;152;150m~300t[0m[38;2;129;162;190m  tool definitions (4 …[0m
+=== project sources only (120 columns) ===
 [38;2;129;162;190mProject:[0m
 [38;2;129;162;190m  [38;2;150;152;150m~4Kt[0m[38;2;129;162;190m  /workspace/AGENTS.md[0m
-=== session sources only ===
+=== project sources only (60 columns) ===
+[38;2;129;162;190mProject:[0m
+[38;2;129;162;190m  [38;2;150;152;150m~4Kt[0m[38;2;129;162;190m  /workspace/AGENTS.md[0m
+=== project sources only (30 columns) ===
+[38;2;129;162;190mProject:[0m
+[38;2;129;162;190m  [38;2;150;152;150m~4Kt[0m[38;2;129;162;190m  /workspace/AGENTS.md[0m
+=== session sources only (120 columns) ===
 [38;2;129;162;190mSession:[0m
 [38;2;129;162;190m  [38;2;150;152;150m~1Kt[0m[38;2;129;162;190m  /config/skills/todo/SKILL.md[0m
-=== no context sources ===
+=== session sources only (60 columns) ===
+[38;2;129;162;190mSession:[0m
+[38;2;129;162;190m  [38;2;150;152;150m~1Kt[0m[38;2;129;162;190m  /config/skills/todo/SKILL.md[0m
+=== session sources only (30 columns) ===
+[38;2;129;162;190mSession:[0m
+[38;2;129;162;190m  [38;2;150;152;150m~1Kt[0m[38;2;129;162;190m  /config/skills/todo/S…[0m
+=== no context sources (120 columns) ===
+[38;2;129;162;190mNo context sources.[0m
+=== no context sources (60 columns) ===
+[38;2;129;162;190mNo context sources.[0m
+=== no context sources (30 columns) ===
 [38;2;129;162;190mNo context sources.[0m

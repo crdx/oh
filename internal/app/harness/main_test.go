@@ -5073,7 +5073,9 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"feedback-frame":         {".ansi", ".screen"},
 		"question-notifications": {".ansi", ".screen", ".txt"},
 		"fork-message":           {".txt"},
+		"yolo-deny-warning":      {".ansi"},
 		"context":                {".prompt"},
+		"context-deny":           {".prompt"},
 		"context-drops":          {".prompt"},
 		"context-jobs":           {".prompt"},
 		"context-network":        {".prompt"},
@@ -5088,6 +5090,8 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"context-scratch-root":   {".prompt"},
 		"context-simulation":     {".prompt"},
 		"context-yolo":           {".prompt"},
+		"context-yolo-deny":      {".prompt"},
+		"context-yolo-file-deny": {".prompt"},
 		"host-command":           {".ansi", ".screen"},
 		"inputblock":             {".ansi", ".screen"},
 		"pathrefs":               {".ansi", ".screen"},
@@ -7287,6 +7291,7 @@ type promptGolden struct {
 	isYolo              bool
 	areJobsGiven        bool
 	hasClipboardDrops   bool
+	hasDenyPattern      bool
 	isNetworkGranted    bool
 	isPrinting          bool
 	offeredTools        []string
@@ -7299,8 +7304,15 @@ type promptGolden struct {
 
 func TestGoldenTheCompleteSystemPromptMatchesTheGolden(t *testing.T) {
 	for name, shape := range map[string]promptGolden{
-		"context":               {},
-		"context-yolo":          {isYolo: true},
+		"context":           {},
+		"context-deny":      {hasDenyPattern: true},
+		"context-yolo":      {isYolo: true},
+		"context-yolo-deny": {isYolo: true, hasDenyPattern: true},
+		"context-yolo-file-deny": {
+			isYolo:         true,
+			hasDenyPattern: true,
+			offeredTools:   []string{"read", "ls", "grep"},
+		},
 		"context-jobs":          {areJobsGiven: true},
 		"context-drops":         {hasClipboardDrops: true},
 		"context-network":       {isNetworkGranted: true},
@@ -7372,6 +7384,9 @@ func compareSystemPromptWithGolden(t *testing.T, name string, shape promptGolden
 	if shape.hasEveryPathKind {
 		extraPaths.Path = []string{"/toolbox"}
 		extraPaths.Home = []string{"/users/alice/.config/git/ignore", "/outside/git/ignore"}
+	}
+	if shape.hasDenyPattern {
+		extraPaths.Deny = []string{"*.key"}
 	}
 
 	currentCaps := caps.Read | caps.Write | caps.Git | caps.Shell
@@ -19340,7 +19355,9 @@ func TestGoldenHostCommandNoticesMatchGolden(t *testing.T) {
 }
 
 func TestGoldenADoubleReturnFlushesPendingNoticesWithoutTheContinueMessage(t *testing.T) {
-	drawnAt := func(build func(*App), returns int) func() string {
+	const doubleReturnWindow = 250 * time.Millisecond
+
+	drawnAtWithDelays := func(build func(*App), delays ...time.Duration) func() string {
 		return func() string {
 			var screenOutput bytes.Buffer
 			self := testConversation(t, &screenOutput)
@@ -19350,12 +19367,15 @@ func TestGoldenADoubleReturnFlushesPendingNoticesWithoutTheContinueMessage(t *te
 
 			history := edit.NewHistory("", historyLimit)
 			inputLine := edit.NewInput(history)
+			currentTime := time.Time{}
+			inputLine.TakeTimeFrom(func() time.Time { return currentTime })
 			self.inputLine = inputLine
 
 			build(self)
 			self.show(inputLine)
 
-			for range returns {
+			for _, delay := range delays {
+				currentTime = currentTime.Add(delay)
 				self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Enter})
 			}
 
@@ -19371,6 +19391,9 @@ func TestGoldenADoubleReturnFlushesPendingNoticesWithoutTheContinueMessage(t *te
 
 			return screenOutput.String()
 		}
+	}
+	drawnAt := func(build func(*App), returns int) func() string {
+		return drawnAtWithDelays(build, make([]time.Duration, returns)...)
 	}
 
 	restoreOneJob := func(self *App) {
@@ -19401,15 +19424,18 @@ func TestGoldenADoubleReturnFlushesPendingNoticesWithoutTheContinueMessage(t *te
 	}
 
 	passes := map[string]func() string{
-		"1 a restored job standing":       drawnAt(restoreOneJob, 0),
-		"2 a restored job flushed":        drawnAt(restoreOneJob, 2),
-		"3 an ended job standing":         drawnAt(endOneJob, 0),
-		"4 an ended job flushed":          drawnAt(endOneJob, 2),
-		"5 a mode change flushed":         drawnAt(withdrawWrites, 2),
-		"6 nothing standing carries on":   drawnAt(func(*App) {}, 2),
-		"7 a restored job and one return": drawnAt(restoreOneJob, 1),
-		"8 a stopped job standing":        drawnAt(stopAJobAndGrantWritesBack, 0),
-		"9 a stopped job flushed":         drawnAt(stopAJobAndGrantWritesBack, 2),
+		"1 a restored job standing":                        drawnAt(restoreOneJob, 0),
+		"2 a restored job flushed":                         drawnAt(restoreOneJob, 2),
+		"3 an ended job standing":                          drawnAt(endOneJob, 0),
+		"4 an ended job flushed":                           drawnAt(endOneJob, 2),
+		"5 a mode change flushed":                          drawnAt(withdrawWrites, 2),
+		"6 nothing standing carries on":                    drawnAt(func(*App) {}, 2),
+		"7 a restored job and one return":                  drawnAt(restoreOneJob, 1),
+		"7b a restored job flushed at the window boundary": drawnAtWithDelays(restoreOneJob, 0, doubleReturnWindow),
+		"7c a restored job after an expired return pair":   drawnAtWithDelays(restoreOneJob, 0, time.Second),
+		"7d a restored job flushed after an expired pair":  drawnAtWithDelays(restoreOneJob, 0, time.Second, 0),
+		"8 a stopped job standing":                         drawnAt(stopAJobAndGrantWritesBack, 0),
+		"9 a stopped job flushed":                          drawnAt(stopAJobAndGrantWritesBack, 2),
 	}
 
 	compareWithGolden(t, "pending-notices", ".ansi", passes)
@@ -20371,6 +20397,22 @@ func TestEveryPermissionRefusesInWordsOfItsOwn(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestGoldenYoloDenyWarningsMatchTheGolden(t *testing.T) {
+	warningFor := func(tools []string) func() string {
+		return func() string {
+			var warnings strings.Builder
+			warnAboutDenyEnforcement(true, tools, []string{"*.key"}, &warnings)
+			return warnings.String()
+		}
+	}
+
+	compareWithGolden(t, "yolo-deny-warning", ".ansi", map[string]func() string{
+		"both unconfined tools": warningFor(nil),
+		"bash alone":            warningFor([]string{"read", "bash"}),
+		"job alone":             warningFor([]string{"job"}),
+	})
 }
 
 func TestYoloWarnsOnceWhenSandboxDenyRulesCanBeBypassed(t *testing.T) {
