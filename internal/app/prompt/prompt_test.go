@@ -931,7 +931,13 @@ func TestTheReadOnlyWorkspaceWorkflowHasItsOwnSection(t *testing.T) {
 		"git clone --shared <workspace> <destination>",
 		"git -C <workspace> diff --binary HEAD",
 		"Do the work and run its checks in the scratch copy",
-		"hand off only unapplied patches",
+		"Check a standalone patch",
+		"ordered series in a scratch clone",
+		"last-to-first",
+		"hand off only the remaining suffix",
+		"fresh scratch clone",
+		"first-to-last",
+		"same standalone or series-aware success check",
 		"git -C <workspace> apply --check <patch>",
 	} {
 		if !strings.Contains(got, rule) {

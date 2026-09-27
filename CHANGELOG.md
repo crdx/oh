@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Advise on how to detect applied patches
 - Restyle jobs list output
 - Honour explicit server advice to retry a refused request
 - Require double-enter in quick succession

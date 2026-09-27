@@ -683,9 +683,11 @@ func readOnlyWorkspaceSection(data harnessContextTemplateData) string {
 		"\t- Copy untracked files you need by hand, and use cp -r only when the workspace is not a repository",
 		"\t- Do the work and run its checks in the scratch copy",
 		"\t- Produce workspace-relative *.patch files the user can apply to the real repository",
-		"\t- Check each patch with git -C <workspace> apply --reverse --check <patch>; hand off only unapplied patches",
-		"\t- Verify each unapplied patch with: git -C <workspace> apply --check <patch>",
-		"\t- Start a watcher (see \"Waiting for the User\") that exits once the user has applied the patch",
+		"\t- Check a standalone patch with git -C <workspace> apply --reverse --check <patch>",
+		"\t- Check an ordered series in a scratch clone: try patches last-to-first and reverse each that applies; hand off only the remaining suffix",
+		"\t- Verify a standalone patch with: git -C <workspace> apply --check <patch>",
+		"\t- Verify an ordered series in a fresh scratch clone by applying its remaining patches first-to-last",
+		"\t- Start a watcher (see \"Waiting for the User\") and use the same standalone or series-aware success check",
 		"\t- Tell the user to apply it with: cd <workspace> && git apply <user's path to patch>",
 	}
 
