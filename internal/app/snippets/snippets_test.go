@@ -181,13 +181,15 @@ func TestSnippetTemplateErrorsAreReported(t *testing.T) {
 func TestSnippetDefinitionsAreValidated(t *testing.T) {
 	valid := snippets.Definition{Prompt: "Prompt", Arguments: snippets.ArgumentsNone}
 	for name, configured := range map[string]map[string]snippets.Definition{
-		"empty name":        {"": valid},
-		"spaced name":       {"code review": valid},
-		"slash in name":     {"review/code": valid},
-		"prefixed name":     {"//review": valid},
-		"empty prompt":      {"review": {Arguments: snippets.ArgumentsNone}},
-		"whitespace prompt": {"review": {Prompt: "  \t  ", Arguments: snippets.ArgumentsNone}},
-		"invalid arguments": {"review": {Prompt: "Prompt", Arguments: "sometimes"}},
+		"empty name":         {"": valid},
+		"spaced name":        {"code review": valid},
+		"slash in name":      {"review/code": valid},
+		"prefixed name":      {"//review": valid},
+		"empty prompt":       {"review": {Arguments: snippets.ArgumentsNone}},
+		"whitespace prompt":  {"review": {Prompt: "  \t  ", Arguments: snippets.ArgumentsNone}},
+		"invalid arguments":  {"review": {Prompt: "Prompt", Arguments: "sometimes"}},
+		"two argument names": {"review": {Prompt: "Compare {{.Left}} with {{.Right}}."}},
+		"a name beside Arg":  {"review": {Prompt: "Review {{.Scope}}: {{.Arg}}."}},
 	} {
 		t.Run(name, func(t *testing.T) {
 			if _, err := snippets.New(configured); err == nil {
@@ -287,6 +289,70 @@ func TestAnUnsetArgumentPolicyIsReadFromTheTemplate(t *testing.T) {
 				t.Errorf("got usages %v, want [%s //help]", got, want)
 			}
 		})
+	}
+}
+
+func TestAFieldNamesTheArgumentInTheUsage(t *testing.T) {
+	for prompt, want := range map[string]string{
+		"Answer {{.Question}}.":                                "//review <question>",
+		"Answer {{ .Question }}, then {{ .Question }} again.":  "//review <question>",
+		`Review {{.Scope | default "the current changes"}}.`:   "//review [<scope>]",
+		"Open {{.FilePath}}.":                                  "//review <file-path>",
+		"Open {{.file_path}}.":                                 "//review <file-path>",
+		"Fetch {{.URL}}.":                                      "//review <url>",
+		"Read {{.Section2Title}}.":                             "//review <section2-title>",
+		"{{with .Question}}Answer {{.Length}}.{{end}}":         "//review <question>",
+		"{{range .Args}}[{{.Word}}]{{end}} {{$.Topic}}":        "//review <topic>",
+		"{{.Question}} in {{len .Args}} words":                 "//review <question>",
+		"{{if .Question}}Answer {{.Question}}.{{end}}":         "//review <question>",
+		"{{range .Args}}{{.Word}}{{else}}{{.Question}}{{end}}": "//review <question>",
+	} {
+		t.Run(prompt, func(t *testing.T) {
+			set, err := snippets.New(map[string]snippets.Definition{"review": {Prompt: prompt}})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if got := set.Usages(); !slices.Equal(got, []string{want, "//help"}) {
+				t.Errorf("got usages %v, want [%s //help]", got, want)
+			}
+		})
+	}
+}
+
+func TestAnExplicitPolicyWithoutAFieldStillShowsArgs(t *testing.T) {
+	set, err := snippets.New(map[string]snippets.Definition{
+		"fix": {Prompt: "Fix it.", Arguments: snippets.ArgumentsRequired},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := set.Usages(); !slices.Equal(got, []string{"//fix <args>", "//help"}) {
+		t.Errorf("got usages %v", got)
+	}
+}
+
+func TestANamedArgumentIsRendered(t *testing.T) {
+	invocation := getInvocation(t, map[string]snippets.Definition{
+		"ask": {Prompt: "{{.Question}}? ({{len .Args}} words)"},
+	}, "//ask why is the sky blue")
+
+	context := &snippetContext{}
+	if err := invocation.Command.Run(context, invocation.Arguments); err != nil {
+		t.Fatal(err)
+	}
+	if want := "why is the sky blue? (5 words)"; context.sent != want {
+		t.Errorf("sent %q, want %q", context.sent, want)
+	}
+}
+
+func TestANamedArgumentIsRequiredUnlessDefaulted(t *testing.T) {
+	invocation := getInvocation(t, map[string]snippets.Definition{
+		"ask": {Prompt: "Answer {{.Question}}."},
+	}, "//ask")
+
+	err := invocation.Command.Run(&snippetContext{}, invocation.Arguments)
+	if got := slash.FormatError(invocation, err); got != "Usage: //ask <question>" {
+		t.Errorf("got formatted error %q", got)
 	}
 }
 

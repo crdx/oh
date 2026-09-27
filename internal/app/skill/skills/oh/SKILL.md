@@ -40,7 +40,7 @@ Where `~/.config/org.crdx/oh/` is a symlink into a dotfiles repository, edit the
 
 - `[model]` — `round_robin` of `provider/model@effort` entries to rotate through; `effort` and `fast` defaults
 - `[provider.ollama]` — `host` for a local or LAN endpoint
-- `[snippets]` — `/name` expansions, inline or `{ file = "snippets/name.md" }`; `{{ .Arg }}` takes the rest of the line
+- `[snippets]` — `//name` expansions, inline or `{ file = "snippets/name.md" }`; `{{ .Arg }}` takes the rest of the line, and a field of any other name, as `{{ .Question }}`, takes it too while naming it `<question>` in completion and help rather than `<args>`; `{{ .Args }}` is the same text split into words
 - `[ui]` — `streaming`, `grouping`, `reasoning`, `currency`, `[ui.theme]`
 - `[permissions]` — `ask` or `allow` per gated action, deciding what a granted capability buys
 - `[tools]` — custom tools, each `[tools.<name>]` naming a `command` to run and the parameters the model supplies

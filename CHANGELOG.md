@@ -6,6 +6,7 @@
 
 - List every model context source and token estimate with /ctx
 - Show arguments in snippet completion dropdowns
+- Dynamically name snippet arguments
 - Show complete effective grant access
 - Advise on how to detect applied patches
 - Restyle jobs list output

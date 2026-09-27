@@ -216,7 +216,7 @@ func fixtureSnippets() map[string]snippets.Definition {
 			Arguments:   snippets.ArgumentsRequired,
 		},
 		"ask": {
-			Prompt:      "Ask {{.Arg}}",
+			Prompt:      "Ask {{.Question}}",
 			Description: "Answer without making changes.",
 			Arguments:   snippets.ArgumentsRequired,
 		},

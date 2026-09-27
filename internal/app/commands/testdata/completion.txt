@@ -92,11 +92,11 @@
   snippets-dir → /open snippets-dir
 "//"
   //add <args> → //add …  (Add a task, then continue.)
-  //ask <args> → //ask …  (Answer without making changes.)
+  //ask <question> → //ask …  (Answer without making changes.)
   //help → //help  (list the configured snippets)
   //note → //note
 "//a"
   //add <args> → //add …  (Add a task, then continue.)
-  //ask <args> → //ask …  (Answer without making changes.)
+  //ask <question> → //ask …  (Answer without making changes.)
 "//h"
   //help → //help  (list the configured snippets)
