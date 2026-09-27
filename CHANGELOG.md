@@ -13,7 +13,7 @@
 - Make plain reasoning keep underscores
 - Keep streamed redraws proportional
 - Keep empty Markdown blocks from adding blank rows
-- Keep live output within the terminal, so nothing is drawn over or lost
+- Keep live output within the terminal
 - Keep running calls visible and ticking beneath a tall question
 - Keep a tall question's label and countdown in view
 - Notify about a waiting question if unfocused
@@ -28,9 +28,9 @@
 - Give the model accurate grant docs
 - Render the session emoji after relayout
 - Show pending access changes notices
-- Complete paths with `@`
+- Complete paths with `@` notation
 - Quote completed paths that contain spaces
-- Complete slash commands and their arguments from the same dropdown
+- Complete slash commands and arguments
 
 ## [0.10.0] - 2026-09-25
 
