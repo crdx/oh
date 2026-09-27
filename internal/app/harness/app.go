@@ -320,6 +320,7 @@ func (self *App) handleKeypressAndShowInput(inputLine *edit.Input, history *edit
 	}
 
 	if isRedrawKey(keypress) && !inputLine.IsPasting() {
+		self.feedback.Dismiss()
 		self.redraw()
 		return true
 	}

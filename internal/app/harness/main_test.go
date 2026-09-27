@@ -10544,6 +10544,7 @@ const (
 	feedbackClearedByEscape
 	feedbackClearedByBackspace
 	feedbackClearedByControlD
+	feedbackClearedByControlL
 	feedbackSurvivingADismissKey
 	feedbackClearedByTurnCompletion
 	feedbackStorageWarnings
@@ -10608,6 +10609,7 @@ func TestGoldenFeedbackDrawsEveryVisibleState(t *testing.T) {
 		"escape clears feedback":            feedbackClearedByEscape,
 		"backspace clears feedback":         feedbackClearedByBackspace,
 		"ctrl+d clears feedback":            feedbackClearedByControlD,
+		"ctrl+l clears feedback":            feedbackClearedByControlL,
 		"a warning survives escape":         feedbackSurvivingADismissKey,
 		"turn completion clears it":         feedbackClearedByTurnCompletion,
 		"combined storage warnings":         feedbackStorageWarnings,
@@ -10754,6 +10756,10 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 		self.handleCommand("/unknown")
 		self.show(inputLine)
 		self.handleKeypressAndShowInput(inputLine, nil, feedbackDismissKeys[scenario])
+	case feedbackClearedByControlL:
+		self.handleCommand("/unknown")
+		self.show(inputLine)
+		pressControlL(self)
 	case feedbackSurvivingADismissKey:
 		self.notifyFailure("chat.md recording disabled: transcript append failed")
 		self.show(inputLine)

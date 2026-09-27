@@ -6,7 +6,7 @@
 
 - Keep keys typed while a session starts
 - Send a command typed out in full on the first enter
-- Redraw the screen with ctrl+l
+- Redraw the screen and dismiss feedback with ctrl+l
 - Show arguments of snippet definitions
 - Require double-enter in quick succession
 - Stop sending continue message during a turn
