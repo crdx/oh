@@ -1,0 +1,468 @@
+=== narrow ===
+Agent 000000000000000000000000 ready in
+0s with 0 skills ⧸ 0 snippets ⧸ ~800t
+context.
+
+
+ draw the config pipeline and its reload
+
+
+Drawing both.
+
+Config pipeline
+
+flowchart LR
+    A[dnsmasq.conf] --> M{{magic black b
+ox}}
+    B[lighthouse.sql] --> M
+    M --> C[new dnsmasq.conf]
+
+sequenceDiagram
+Client->>Server: reload
+activate Server
+Server-->>Client: done
+=== one column ===
+A
+g
+e
+n
+t
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+r
+e
+a
+d
+y
+i
+n
+0
+s
+w
+i
+t
+h
+0
+s
+k
+i
+l
+l
+s
+⧸
+0
+s
+n
+i
+p
+p
+e
+t
+s
+⧸
+~
+8
+0
+0
+t
+c
+o
+n
+t
+e
+x
+t
+.
+
+
+
+d
+
+r
+
+a
+
+w
+
+t
+
+h
+
+e
+
+c
+
+o
+
+n
+
+f
+
+i
+
+g
+
+p
+
+i
+
+p
+
+e
+
+l
+
+i
+
+n
+
+e
+
+a
+
+n
+
+d
+
+i
+
+t
+
+s
+
+r
+
+e
+
+l
+
+o
+
+a
+
+d
+
+
+D
+r
+a
+w
+i
+n
+g
+b
+o
+t
+h
+.
+
+C
+o
+n
+f
+i
+g
+p
+i
+p
+e
+l
+i
+n
+e
+
+f
+l
+o
+w
+c
+h
+a
+r
+t
+
+L
+R
+
+
+
+
+A
+[
+d
+n
+s
+m
+a
+s
+q
+.
+c
+o
+n
+f
+]
+
+-
+-
+>
+
+M
+{
+{
+m
+a
+g
+i
+c
+
+b
+l
+a
+c
+k
+
+b
+o
+x
+}
+}
+
+
+
+
+B
+[
+l
+i
+g
+h
+t
+h
+o
+u
+s
+e
+.
+s
+q
+l
+]
+
+-
+-
+>
+
+M
+
+
+
+
+M
+
+-
+-
+>
+
+C
+[
+n
+e
+w
+
+d
+n
+s
+m
+a
+s
+q
+.
+c
+o
+n
+f
+]
+
+s
+e
+q
+u
+e
+n
+c
+e
+D
+i
+a
+g
+r
+a
+m
+C
+l
+i
+e
+n
+t
+-
+>
+>
+S
+e
+r
+v
+e
+r
+:
+
+r
+e
+l
+o
+a
+d
+a
+c
+t
+i
+v
+a
+t
+e
+
+S
+e
+r
+v
+e
+r
+S
+e
+r
+v
+e
+r
+-
+-
+>
+>
+C
+l
+i
+e
+n
+t
+:
+
+d
+o
+n
+e
+=== printed ===
+Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.
+
+
+ draw the config pipeline and its reload
+
+
+Drawing both.
+
+Config pipeline
+
+flowchart LR
+    A[dnsmasq.conf] --> M{{magic black box}}
+    B[lighthouse.sql] --> M
+    M --> C[new dnsmasq.conf]
+
+sequenceDiagram
+Client->>Server: reload
+activate Server
+Server-->>Client: done
+=== tiny ===
+Agent
+000000000000
+000000000000
+ready in 0s
+with 0
+skills ⧸ 0
+snippets ⧸
+~800t
+context.
+
+
+ draw the
+ config
+ pipeline
+ and its
+ reload
+
+
+Drawing
+both.
+
+Config
+pipeline
+
+flowchart LR
+    A[dnsmas
+q.conf] -->
+M{{magic bla
+ck box}}
+    B[lighth
+ouse.sql] --
+> M
+    M --> C[
+new dnsmasq.
+conf]
+
+sequenceDiag
+ram
+Client->>Ser
+ver: reload
+activate Ser
+ver
+Server-->>Cl
+ient: done
+=== wide ===
+Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.
+
+
+ draw the config pipeline and its reload
+
+
+Drawing both.
+
+Config pipeline
+
+flowchart LR
+    A[dnsmasq.conf] --> M{{magic black box}}
+    B[lighthouse.sql] --> M
+    M --> C[new dnsmasq.conf]
+
+sequenceDiagram
+Client->>Server: reload
+activate Server
+Server-->>Client: done

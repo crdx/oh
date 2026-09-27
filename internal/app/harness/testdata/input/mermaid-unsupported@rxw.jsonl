@@ -1,0 +1,4 @@
+{"event":{"kind":"session_startup","took":0,"state":{"session":"000000000000000000000000","tools":2320}}}
+{"event":{"kind":"user_message","text":"draw the config pipeline and its reload"}}
+{"event":{"kind":"model_reasoning","text":"Drawing both."}}
+{"event":{"kind":"model_message","text":"# Config pipeline\n\n```mermaid\nflowchart LR\n    A[dnsmasq.conf] --> M{{magic black box}}\n    B[lighthouse.sql] --> M\n    M --> C[new dnsmasq.conf]\n```\n\n```mermaid\nsequenceDiagram\nClient->>Server: reload\nactivate Server\nServer-->>Client: done\n```\n"}}

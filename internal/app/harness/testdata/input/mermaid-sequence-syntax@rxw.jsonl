@@ -1,0 +1,4 @@
+{"event":{"kind":"session_startup","took":0,"state":{"session":"000000000000000000000000","tools":2320}}}
+{"event":{"kind":"user_message","text":"show every kind of exchange"}}
+{"event":{"kind":"model_reasoning","text":"Tracing each exchange."}}
+{"event":{"kind":"model_message","text":"# Every exchange\n\n```mermaid\nsequenceDiagram\nautonumber\nparticipant C as Client\nactor O as Operator\nC->>S: solid\nS-->>C: dotted\nC->S: open\nS-->C: dotted open\nC-xS: cross\nS--xC: dotted cross\nC-)S: async\nS--)C: dotted async\nC<<->>S: both\nS<<-->>C: dotted both\nNote left of C: left\nNote right of S: right\nNote over C,O: over\nloop poll\nC->>S: ping\nend\nalt healthy\nS-->>C: pong\nelse sick\nS-->>O: page\nend\nopt verbose\nS->>S: log\nend\npar primary\nS->>C: one\nand secondary\nS->>O: two\nend\ncritical commit\nS->>S: write\noption rollback\nS->>S: undo\nend\nbreak abort\nO->>S: stop\nend\nrect rgb(1,2,3)\nC->>S: highlighted\nend\n```\n"}}

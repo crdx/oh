@@ -1,0 +1,32 @@
+=== written down ===
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `high`
+- **Provider:** `codex`
+- **Workspace:** `/workspace`
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Startup · +0s
+
+## User · +1s
+
+draw the config pipeline
+
+## Assistant · +3s
+
+# How it fits together
+
+```mermaid
+---
+title: Config pipeline
+---
+flowchart LR
+%% every flowchart feature the prompt names
+classDef hot color:#ff0000
+conf[dnsmasq.conf]:::hot & sql[lighthouse.sql] -->|feed| box[magic<br>black box];
+box --> out[new dnsmasq.conf] --> reload
+reload <--> daemon
+```

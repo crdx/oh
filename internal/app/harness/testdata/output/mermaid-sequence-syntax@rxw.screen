@@ -1,0 +1,1094 @@
+=== narrow ===
+Agent 000000000000000000000000 ready in
+0s with 0 skills ⧸ 0 snippets ⧸ ~800t
+context.
+
+
+ show every kind of exchange
+
+
+Tracing each exchange.
+
+Every exchange
+
+Diagram needs 57 columns.
+sequenceDiagram
+autonumber
+participant C as Client
+actor O as Operator
+C->>S: solid
+S-->>C: dotted
+C->S: open
+S-->C: dotted open
+C-xS: cross
+S--xC: dotted cross
+C-)S: async
+S--)C: dotted async
+C<<->>S: both
+S<<-->>C: dotted both
+Note left of C: left
+Note right of S: right
+Note over C,O: over
+loop poll
+C->>S: ping
+end
+alt healthy
+S-->>C: pong
+else sick
+S-->>O: page
+end
+opt verbose
+S->>S: log
+end
+par primary
+S->>C: one
+and secondary
+S->>O: two
+end
+critical commit
+S->>S: write
+option rollback
+S->>S: undo
+end
+break abort
+O->>S: stop
+end
+rect rgb(1,2,3)
+C->>S: highlighted
+end
+=== one column ===
+A
+g
+e
+n
+t
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+r
+e
+a
+d
+y
+i
+n
+0
+s
+w
+i
+t
+h
+0
+s
+k
+i
+l
+l
+s
+⧸
+0
+s
+n
+i
+p
+p
+e
+t
+s
+⧸
+~
+8
+0
+0
+t
+c
+o
+n
+t
+e
+x
+t
+.
+
+
+
+s
+
+h
+
+o
+
+w
+
+e
+
+v
+
+e
+
+r
+
+y
+
+k
+
+i
+
+n
+
+d
+
+o
+
+f
+
+e
+
+x
+
+c
+
+h
+
+a
+
+n
+
+g
+
+e
+
+
+T
+r
+a
+c
+i
+n
+g
+e
+a
+c
+h
+e
+x
+c
+h
+a
+n
+g
+e
+.
+
+E
+v
+e
+r
+y
+e
+x
+c
+h
+a
+n
+g
+e
+
+D
+i
+a
+g
+r
+a
+m
+n
+e
+e
+d
+s
+5
+7
+c
+o
+l
+u
+m
+n
+s
+.
+s
+e
+q
+u
+e
+n
+c
+e
+D
+i
+a
+g
+r
+a
+m
+a
+u
+t
+o
+n
+u
+m
+b
+e
+r
+p
+a
+r
+t
+i
+c
+i
+p
+a
+n
+t
+
+C
+
+a
+s
+
+C
+l
+i
+e
+n
+t
+a
+c
+t
+o
+r
+
+O
+
+a
+s
+
+O
+p
+e
+r
+a
+t
+o
+r
+C
+-
+>
+>
+S
+:
+
+s
+o
+l
+i
+d
+S
+-
+-
+>
+>
+C
+:
+
+d
+o
+t
+t
+e
+d
+C
+-
+>
+S
+:
+
+o
+p
+e
+n
+S
+-
+-
+>
+C
+:
+
+d
+o
+t
+t
+e
+d
+
+o
+p
+e
+n
+C
+-
+x
+S
+:
+
+c
+r
+o
+s
+s
+S
+-
+-
+x
+C
+:
+
+d
+o
+t
+t
+e
+d
+
+c
+r
+o
+s
+s
+C
+-
+)
+S
+:
+
+a
+s
+y
+n
+c
+S
+-
+-
+)
+C
+:
+
+d
+o
+t
+t
+e
+d
+
+a
+s
+y
+n
+c
+C
+<
+<
+-
+>
+>
+S
+:
+
+b
+o
+t
+h
+S
+<
+<
+-
+-
+>
+>
+C
+:
+
+d
+o
+t
+t
+e
+d
+
+b
+o
+t
+h
+N
+o
+t
+e
+
+l
+e
+f
+t
+
+o
+f
+
+C
+:
+
+l
+e
+f
+t
+N
+o
+t
+e
+
+r
+i
+g
+h
+t
+
+o
+f
+
+S
+:
+
+r
+i
+g
+h
+t
+N
+o
+t
+e
+
+o
+v
+e
+r
+
+C
+,
+O
+:
+
+o
+v
+e
+r
+l
+o
+o
+p
+
+p
+o
+l
+l
+C
+-
+>
+>
+S
+:
+
+p
+i
+n
+g
+e
+n
+d
+a
+l
+t
+
+h
+e
+a
+l
+t
+h
+y
+S
+-
+-
+>
+>
+C
+:
+
+p
+o
+n
+g
+e
+l
+s
+e
+
+s
+i
+c
+k
+S
+-
+-
+>
+>
+O
+:
+
+p
+a
+g
+e
+e
+n
+d
+o
+p
+t
+
+v
+e
+r
+b
+o
+s
+e
+S
+-
+>
+>
+S
+:
+
+l
+o
+g
+e
+n
+d
+p
+a
+r
+
+p
+r
+i
+m
+a
+r
+y
+S
+-
+>
+>
+C
+:
+
+o
+n
+e
+a
+n
+d
+
+s
+e
+c
+o
+n
+d
+a
+r
+y
+S
+-
+>
+>
+O
+:
+
+t
+w
+o
+e
+n
+d
+c
+r
+i
+t
+i
+c
+a
+l
+
+c
+o
+m
+m
+i
+t
+S
+-
+>
+>
+S
+:
+
+w
+r
+i
+t
+e
+o
+p
+t
+i
+o
+n
+
+r
+o
+l
+l
+b
+a
+c
+k
+S
+-
+>
+>
+S
+:
+
+u
+n
+d
+o
+e
+n
+d
+b
+r
+e
+a
+k
+
+a
+b
+o
+r
+t
+O
+-
+>
+>
+S
+:
+
+s
+t
+o
+p
+e
+n
+d
+r
+e
+c
+t
+
+r
+g
+b
+(
+1
+,
+2
+,
+3
+)
+C
+-
+>
+>
+S
+:
+
+h
+i
+g
+h
+l
+i
+g
+h
+t
+e
+d
+e
+n
+d
+=== printed ===
+Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.
+
+
+ show every kind of exchange
+
+
+Tracing each exchange.
+
+Every exchange
+
+    ┌────────┐     ┌──────────┐     ┌───┐
+    │ Client │     │ Operator │     │ S │
+    └────┬───┘     └─────┬────┘     └─┬─┘
+         │               │            │
+         │ 1. solid      │            │
+         ├───────────────────────────►│
+         │               │            │
+         │ 2. dotted     │            │
+         │◄┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+         │               │            │
+         │ 3. open       │            │
+         ├────────────────────────────│
+         │               │            │
+         │ 4. dotted open│            │
+         │┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+         │               │            │
+         │ 5. cross      │            │
+         ├───────────────────────────×│
+         │               │            │
+         │ 6. dotted cross            │
+         │×┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+         │               │            │
+         │ 7. async      │            │
+         ├───────────────────────────)│
+         │               │            │
+         │ 8. dotted async            │
+         │(┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+         │               │            │
+         │ 9. both       │            │
+         ├◄──────────────────────────►│
+         │               │            │
+         │ 10. dotted both            │
+         │◄┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈►┤
+         │               │            │
+┌──────┐ │               │            │
+│ left │ │               │            │
+└──────┘ │               │            │
+         │               │            │
+         │               │            │ ┌───────┐
+         │               │            │ │ right │
+         │               │            │ └───────┘
+         │               │            │
+        ┌─────────────────┐           │
+        │      over       │           │
+        └─────────────────┘           │
+       ┌─[loop poll]────────────────────┐
+       │ │               │            │ │
+       │ │ 11. ping      │            │ │
+       │ ├───────────────────────────►│ │
+       │ │               │            │ │
+       └────────────────────────────────┘
+       ┌─[alt healthy]──────────────────┐
+       │ │               │            │ │
+       │ │ 12. pong      │            │ │
+       │ │◄┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤ │
+       ├┈[sick]┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+       │ │               │            │ │
+       │ │               │ 13. page   │ │
+       │ │               │◄┈┈┈┈┈┈┈┈┈┈┈┤ │
+       │ │               │            │ │
+       └────────────────────────────────┘
+         │               │          ┌─[opt verbose]─┐
+         │               │          │ │             │
+         │               │          │ │ 14. log     │
+         │               │          │ ├──┐          │
+         │               │          │ │  │          │
+         │               │          │ │◄─┘          │
+         │               │          │ │             │
+         │               │          └───────────────┘
+       ┌─[par primary]──────────────────┐
+       │ │               │            │ │
+       │ │ 15. one       │            │ │
+       │ │◄───────────────────────────┤ │
+       ├┈[secondary]┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+       │ │               │            │ │
+       │ │               │ 16. two    │ │
+       │ │               │◄───────────┤ │
+       │ │               │            │ │
+       └────────────────────────────────┘
+         │               │          ┌─[critical commit]─┐
+         │               │          │ │                 │
+         │               │          │ │ 17. write       │
+         │               │          │ ├──┐              │
+         │               │          │ │  │              │
+         │               │          │ │◄─┘              │
+         │               │          ├┈[rollback]┈┈┈┈┈┈┈┈┤
+         │               │          │ │                 │
+         │               │          │ │ 18. undo        │
+         │               │          │ ├──┐              │
+         │               │          │ │  │              │
+         │               │          │ │◄─┘              │
+         │               │          │ │                 │
+         │               │          └───────────────────┘
+         │             ┌─[break abort]──┐
+         │             │ │            │ │
+         │             │ │ 19. stop   │ │
+         │             │ ├───────────►│ │
+         │             │ │            │ │
+         │             └────────────────┘
+       ┌─[rect]─────────────────────────┐
+       │ │               │            │ │
+       │ │ 20. highlighted            │ │
+       │ ├───────────────────────────►│ │
+       │ │               │            │ │
+       └────────────────────────────────┘
+         │               │            │
+=== tiny ===
+Agent
+000000000000
+000000000000
+ready in 0s
+with 0
+skills ⧸ 0
+snippets ⧸
+~800t
+context.
+
+
+ show every
+ kind of
+ exchange
+
+
+Tracing each
+exchange.
+
+Every
+exchange
+
+Diagram
+needs 57
+columns.
+sequenceDiag
+ram
+autonumber
+participant
+C as Client
+actor O as O
+perator
+C->>S: solid
+S-->>C: dott
+ed
+C->S: open
+S-->C: dotte
+d open
+C-xS: cross
+S--xC: dotte
+d cross
+C-)S: async
+S--)C: dotte
+d async
+C<<->>S: bot
+h
+S<<-->>C: do
+tted both
+Note left of
+ C: left
+Note right o
+f S: right
+Note over C,
+O: over
+loop poll
+C->>S: ping
+end
+alt healthy
+S-->>C: pong
+else sick
+S-->>O: page
+end
+opt verbose
+S->>S: log
+end
+par primary
+S->>C: one
+and secondar
+y
+S->>O: two
+end
+critical com
+mit
+S->>S: write
+option rollb
+ack
+S->>S: undo
+end
+break abort
+O->>S: stop
+end
+rect rgb(1,2
+,3)
+C->>S: highl
+ighted
+end
+=== wide ===
+Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.
+
+
+ show every kind of exchange
+
+
+Tracing each exchange.
+
+Every exchange
+
+    ┌────────┐     ┌──────────┐     ┌───┐
+    │ Client │     │ Operator │     │ S │
+    └────┬───┘     └─────┬────┘     └─┬─┘
+         │               │            │
+         │ 1. solid      │            │
+         ├───────────────────────────►│
+         │               │            │
+         │ 2. dotted     │            │
+         │◄┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+         │               │            │
+         │ 3. open       │            │
+         ├────────────────────────────│
+         │               │            │
+         │ 4. dotted open│            │
+         │┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+         │               │            │
+         │ 5. cross      │            │
+         ├───────────────────────────×│
+         │               │            │
+         │ 6. dotted cross            │
+         │×┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+         │               │            │
+         │ 7. async      │            │
+         ├───────────────────────────)│
+         │               │            │
+         │ 8. dotted async            │
+         │(┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+         │               │            │
+         │ 9. both       │            │
+         ├◄──────────────────────────►│
+         │               │            │
+         │ 10. dotted both            │
+         │◄┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈►┤
+         │               │            │
+┌──────┐ │               │            │
+│ left │ │               │            │
+└──────┘ │               │            │
+         │               │            │
+         │               │            │ ┌───────┐
+         │               │            │ │ right │
+         │               │            │ └───────┘
+         │               │            │
+        ┌─────────────────┐           │
+        │      over       │           │
+        └─────────────────┘           │
+       ┌─[loop poll]────────────────────┐
+       │ │               │            │ │
+       │ │ 11. ping      │            │ │
+       │ ├───────────────────────────►│ │
+       │ │               │            │ │
+       └────────────────────────────────┘
+       ┌─[alt healthy]──────────────────┐
+       │ │               │            │ │
+       │ │ 12. pong      │            │ │
+       │ │◄┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤ │
+       ├┈[sick]┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+       │ │               │            │ │
+       │ │               │ 13. page   │ │
+       │ │               │◄┈┈┈┈┈┈┈┈┈┈┈┤ │
+       │ │               │            │ │
+       └────────────────────────────────┘
+         │               │          ┌─[opt verbose]─┐
+         │               │          │ │             │
+         │               │          │ │ 14. log     │
+         │               │          │ ├──┐          │
+         │               │          │ │  │          │
+         │               │          │ │◄─┘          │
+         │               │          │ │             │
+         │               │          └───────────────┘
+       ┌─[par primary]──────────────────┐
+       │ │               │            │ │
+       │ │ 15. one       │            │ │
+       │ │◄───────────────────────────┤ │
+       ├┈[secondary]┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+       │ │               │            │ │
+       │ │               │ 16. two    │ │
+       │ │               │◄───────────┤ │
+       │ │               │            │ │
+       └────────────────────────────────┘
+         │               │          ┌─[critical commit]─┐
+         │               │          │ │                 │
+         │               │          │ │ 17. write       │
+         │               │          │ ├──┐              │
+         │               │          │ │  │              │
+         │               │          │ │◄─┘              │
+         │               │          ├┈[rollback]┈┈┈┈┈┈┈┈┤
+         │               │          │ │                 │
+         │               │          │ │ 18. undo        │
+         │               │          │ ├──┐              │
+         │               │          │ │  │              │
+         │               │          │ │◄─┘              │
+         │               │          │ │                 │
+         │               │          └───────────────────┘
+         │             ┌─[break abort]──┐
+         │             │ │            │ │
+         │             │ │ 19. stop   │ │
+         │             │ ├───────────►│ │
+         │             │ │            │ │
+         │             └────────────────┘
+       ┌─[rect]─────────────────────────┐
+       │ │               │            │ │
+       │ │ 20. highlighted            │ │
+       │ ├───────────────────────────►│ │
+       │ │               │            │ │
+       └────────────────────────────────┘
+         │               │            │

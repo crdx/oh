@@ -1,0 +1,565 @@
+=== narrow ===
+Agent 000000000000000000000000 ready in
+0s with 0 skills ⧸ 0 snippets ⧸ ~800t
+context.
+
+
+ draw the config pipeline
+
+
+Drawing the pipeline.
+
+How it fits together
+
+Diagram needs 93 columns.
+---
+title: Config pipeline
+---
+flowchart LR
+%% every flowchart feature the prompt na
+mes
+classDef hot color:#ff0000
+conf[dnsmasq.conf]:::hot & sql[lighthous
+e.sql] -->|feed| box[magic<br>black box]
+;
+box --> out[new dnsmasq.conf] --> reload
+reload <--> daemon
+=== one column ===
+A
+g
+e
+n
+t
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+r
+e
+a
+d
+y
+i
+n
+0
+s
+w
+i
+t
+h
+0
+s
+k
+i
+l
+l
+s
+⧸
+0
+s
+n
+i
+p
+p
+e
+t
+s
+⧸
+~
+8
+0
+0
+t
+c
+o
+n
+t
+e
+x
+t
+.
+
+
+
+d
+
+r
+
+a
+
+w
+
+t
+
+h
+
+e
+
+c
+
+o
+
+n
+
+f
+
+i
+
+g
+
+p
+
+i
+
+p
+
+e
+
+l
+
+i
+
+n
+
+e
+
+
+D
+r
+a
+w
+i
+n
+g
+t
+h
+e
+p
+i
+p
+e
+l
+i
+n
+e
+.
+
+H
+o
+w
+i
+t
+f
+i
+t
+s
+t
+o
+g
+e
+t
+h
+e
+r
+
+D
+i
+a
+g
+r
+a
+m
+n
+e
+e
+d
+s
+9
+3
+c
+o
+l
+u
+m
+n
+s
+.
+-
+-
+-
+t
+i
+t
+l
+e
+:
+
+C
+o
+n
+f
+i
+g
+
+p
+i
+p
+e
+l
+i
+n
+e
+-
+-
+-
+f
+l
+o
+w
+c
+h
+a
+r
+t
+
+L
+R
+%
+%
+
+e
+v
+e
+r
+y
+
+f
+l
+o
+w
+c
+h
+a
+r
+t
+
+f
+e
+a
+t
+u
+r
+e
+
+t
+h
+e
+
+p
+r
+o
+m
+p
+t
+
+n
+a
+m
+e
+s
+c
+l
+a
+s
+s
+D
+e
+f
+
+h
+o
+t
+
+c
+o
+l
+o
+r
+:
+#
+f
+f
+0
+0
+0
+0
+c
+o
+n
+f
+[
+d
+n
+s
+m
+a
+s
+q
+.
+c
+o
+n
+f
+]
+:
+:
+:
+h
+o
+t
+
+&
+
+s
+q
+l
+[
+l
+i
+g
+h
+t
+h
+o
+u
+s
+e
+.
+s
+q
+l
+]
+
+-
+-
+>
+|
+f
+e
+e
+d
+|
+
+b
+o
+x
+[
+m
+a
+g
+i
+c
+<
+b
+r
+>
+b
+l
+a
+c
+k
+
+b
+o
+x
+]
+;
+b
+o
+x
+
+-
+-
+>
+
+o
+u
+t
+[
+n
+e
+w
+
+d
+n
+s
+m
+a
+s
+q
+.
+c
+o
+n
+f
+]
+
+-
+-
+>
+
+r
+e
+l
+o
+a
+d
+r
+e
+l
+o
+a
+d
+
+<
+-
+-
+>
+
+d
+a
+e
+m
+o
+n
+=== printed ===
+Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.
+
+
+ draw the config pipeline
+
+
+Drawing the pipeline.
+
+How it fits together
+
+Config pipeline
+
+┌────────────────┐       ┌───────────┐     ┌──────────────────┐     ┌────────┐     ┌────────┐
+│                │       │           │     │                  │     │        │     │        │
+│                │       │   magic   │     │                  │     │        │     │        │
+│  dnsmasq.conf  ├─feed─►│           ├────►│ new dnsmasq.conf ├────►│ reload ├◄───►│ daemon │
+│                │       │ black box │     │                  │     │        │     │        │
+│                │       │           │     │                  │     │        │     │        │
+└────────────────┘       └───────────┘     └──────────────────┘     └────────┘     └────────┘
+                               ▲
+                               │
+                               │
+                               │
+                               │
+┌────────────────┐             │
+│                │             │
+│ lighthouse.sql ├────feed─────┘
+│                │
+└────────────────┘
+=== tiny ===
+Agent
+000000000000
+000000000000
+ready in 0s
+with 0
+skills ⧸ 0
+snippets ⧸
+~800t
+context.
+
+
+ draw the
+ config
+ pipeline
+
+
+Drawing the
+pipeline.
+
+How it fits
+together
+
+Diagram
+needs 93
+columns.
+---
+title: Confi
+g pipeline
+---
+flowchart LR
+%% every flo
+wchart featu
+re the promp
+t names
+classDef hot
+ color:#ff00
+00
+conf[dnsmasq
+.conf]:::hot
+ & sql[light
+house.sql] -
+->|feed| box
+[magic<br>bl
+ack box];
+box --> out[
+new dnsmasq.
+conf] --> re
+load
+reload <-->
+daemon
+=== wide ===
+Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.
+
+
+ draw the config pipeline
+
+
+Drawing the pipeline.
+
+How it fits together
+
+Config pipeline
+
+┌────────────────┐       ┌───────────┐     ┌──────────────────┐     ┌────────┐     ┌────────┐
+│                │       │           │     │                  │     │        │     │        │
+│                │       │   magic   │     │                  │     │        │     │        │
+│  dnsmasq.conf  ├─feed─►│           ├────►│ new dnsmasq.conf ├────►│ reload ├◄───►│ daemon │
+│                │       │ black box │     │                  │     │        │     │        │
+│                │       │           │     │                  │     │        │     │        │
+└────────────────┘       └───────────┘     └──────────────────┘     └────────┘     └────────┘
+                               ▲
+                               │
+                               │
+                               │
+                               │
+┌────────────────┐             │
+│                │             │
+│ lighthouse.sql ├────feed─────┘
+│                │
+└────────────────┘

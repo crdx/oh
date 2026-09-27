@@ -1,0 +1,67 @@
+=== written down ===
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `high`
+- **Provider:** `codex`
+- **Workspace:** `/workspace`
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Startup · +0s
+
+## User · +1s
+
+show every kind of exchange
+
+## Assistant · +3s
+
+# Every exchange
+
+```mermaid
+sequenceDiagram
+autonumber
+participant C as Client
+actor O as Operator
+C->>S: solid
+S-->>C: dotted
+C->S: open
+S-->C: dotted open
+C-xS: cross
+S--xC: dotted cross
+C-)S: async
+S--)C: dotted async
+C<<->>S: both
+S<<-->>C: dotted both
+Note left of C: left
+Note right of S: right
+Note over C,O: over
+loop poll
+C->>S: ping
+end
+alt healthy
+S-->>C: pong
+else sick
+S-->>O: page
+end
+opt verbose
+S->>S: log
+end
+par primary
+S->>C: one
+and secondary
+S->>O: two
+end
+critical commit
+S->>S: write
+option rollback
+S->>S: undo
+end
+break abort
+O->>S: stop
+end
+rect rgb(1,2,3)
+C->>S: highlighted
+end
+```

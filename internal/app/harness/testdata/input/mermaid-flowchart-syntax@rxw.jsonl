@@ -1,0 +1,4 @@
+{"event":{"kind":"session_startup","took":0,"state":{"session":"000000000000000000000000","tools":2320}}}
+{"event":{"kind":"user_message","text":"draw the config pipeline"}}
+{"event":{"kind":"model_reasoning","text":"Drawing the pipeline."}}
+{"event":{"kind":"model_message","text":"# How it fits together\n\n```mermaid\n---\ntitle: Config pipeline\n---\nflowchart LR\n%% every flowchart feature the prompt names\nclassDef hot color:#ff0000\nconf[dnsmasq.conf]:::hot & sql[lighthouse.sql] -->|feed| box[magic<br>black box];\nbox --> out[new dnsmasq.conf] --> reload\nreload <--> daemon\n```\n"}}
