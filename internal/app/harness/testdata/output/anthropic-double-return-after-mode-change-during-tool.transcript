@@ -1,0 +1,43 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+change what I am allowed to do and then press return twice while the tool is working
+
+## Tool calls · +0s
+
+```
+work: work [cancelled, 1 line, 88B, toolu_1]
+```
+
+## Interrupted · +0s
+
+Turn stopped because access changed.
+
+## Mode · rxngl · toggled w · +0s
+
+```
+Workspace is now read-only.
+```
+
+## Assistant · +0s
+
+Noted, the workspace is read-only now.
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+Carrying on.

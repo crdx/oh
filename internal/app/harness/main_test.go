@@ -2142,38 +2142,32 @@ func workspaceNowReadOnly() string {
 	return withdrawn.Inject()
 }
 
-func TestTwoReturnsOnAnEmptyLineReplaceTheRunningTurnWithTheContinueMessage(t *testing.T) {
+func TestTwoReturnsOnAnEmptyLineLeaveTheRunningTurnAlone(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
 	history := edit.NewHistory("", historyLimit)
 	inputLine := edit.NewInput(history)
 
 	self.start("first")
-	interruptedEvents := self.currentTurn.Events()
+	firstEvents := self.currentTurn.Events()
 
+	self.apply(inputLine, history, key.Key{Code: key.Enter})
 	self.apply(inputLine, history, key.Key{Code: key.Enter})
 	if self.currentTurn.Cancelled() {
-		t.Error("expected the first return to leave the turn running")
+		t.Error("expected the double return to leave the turn running")
+	}
+	if !self.queuedTurn.Empty() {
+		t.Errorf("expected nothing queued, got %+v", self.queuedTurn.Peek())
 	}
 
-	self.apply(inputLine, history, key.Key{Code: key.Enter})
-	if !self.currentTurn.Cancelled() {
-		t.Error("expected the second return to cancel the turn")
-	}
-
-	for report := range interruptedEvents {
+	for report := range firstEvents {
 		self.takeTurn(report)
 	}
 	self.finish()
 
-	if !self.currentTurn.Running() {
-		t.Fatal("expected a continuation to start after the interrupted turn")
+	if self.currentTurn.Running() {
+		t.Fatal("expected no turn to follow the one that ran")
 	}
-
-	for report := range self.currentTurn.Events() {
-		self.takeTurn(report)
-	}
-	self.finish()
 
 	var messages []string
 	var wasInterrupted bool
@@ -2184,13 +2178,17 @@ func TestTwoReturnsOnAnEmptyLineReplaceTheRunningTurnWithTheContinueMessage(t *t
 		wasInterrupted = wasInterrupted || record.Kind == agent.InterruptionEvent
 	}
 
-	wantMessages := []string{"first", builtInConfig(t).Input.Continue}
-	if !slices.Equal(messages, wantMessages) {
+	if wantMessages := []string{"first"}; !slices.Equal(messages, wantMessages) {
 		t.Errorf("got messages %q, want %q", messages, wantMessages)
 	}
-	if !wasInterrupted {
-		t.Error("expected the replacement to record an interruption")
+	if wasInterrupted {
+		t.Error("expected no interruption")
 	}
+}
+
+func (self *App) replaceTurn(message string) {
+	self.queuedTurn.Replace(message)
+	self.interruptTurn(interrupt.Replacement)
 }
 
 type reasoningThenAnswerProvider struct {
@@ -2454,26 +2452,34 @@ func TestAStopKeyTakesAFlushedMessageBackWhileTheTurnIsStillStopping(t *testing.
 	}
 }
 
-func TestADoubleEnterWithNothingQueuedStillSendsTheContinueMessage(t *testing.T) {
-	cancellations := 0
-	self := &App{
-		continueMessage: "carry on",
-		currentTurn: Turn{
-			Stream: testTurnStream(nil, func(error) { cancellations++ }, turn.State{Running: true}),
-		},
+func TestADoubleEnterWithNothingQueuedNeverSendsTheContinueMessageDuringATurn(t *testing.T) {
+	tests := map[string]turn.State{
+		"a running turn":  {Running: true},
+		"a stopping turn": {Running: true, IsCancelled: true},
 	}
-	history := edit.NewHistory("", historyLimit)
-	inputLine := edit.NewInput(history)
 
-	self.apply(inputLine, history, key.Key{Code: key.Enter})
-	self.apply(inputLine, history, key.Key{Code: key.Enter})
+	for name, state := range tests {
+		t.Run(name, func(t *testing.T) {
+			cancellations := 0
+			self := &App{
+				continueMessage: "carry on",
+				currentTurn: Turn{
+					Stream: testTurnStream(nil, func(error) { cancellations++ }, state),
+				},
+			}
+			history := edit.NewHistory("", historyLimit)
+			inputLine := edit.NewInput(history)
 
-	pending := self.queuedTurn.Peek()
-	if !pending.Replacement || pending.Message != "carry on" {
-		t.Errorf("unexpected queued turn: %+v", pending)
-	}
-	if cancellations != 1 {
-		t.Errorf("cancelled %d times, want 1", cancellations)
+			self.apply(inputLine, history, key.Key{Code: key.Enter})
+			self.apply(inputLine, history, key.Key{Code: key.Enter})
+
+			if !self.queuedTurn.Empty() {
+				t.Errorf("unexpected queued turn: %+v", self.queuedTurn.Peek())
+			}
+			if cancellations != 0 {
+				t.Errorf("cancelled %d times, want none", cancellations)
+			}
+		})
 	}
 }
 
@@ -15025,28 +15031,28 @@ type sessionGoldenResponse struct {
 }
 
 type sessionGoldenTurn struct {
-	Prompt                    string                  `toml:"prompt"`
-	Responses                 []sessionGoldenResponse `toml:"response"`
-	Timeout                   string                  `toml:"timeout"`
-	IsCancelled               bool                    `toml:"is-cancelled"`
-	CancelWithCtrlD           bool                    `toml:"cancel-with-ctrl-d"`
-	CancelAfterReasoningDelta int                     `toml:"cancel-after-reasoning-delta"`
-	CancelAfterReasoningEvent int                     `toml:"cancel-after-reasoning-event"`
-	CancelAfterMessageDelta   int                     `toml:"cancel-after-message-delta"`
-	CancelAfterToolRequest    int                     `toml:"cancel-after-tool-request"`
-	CancelAfterRetryNotice    int                     `toml:"cancel-after-retry-notice"`
-	ReplaceAfterToolRequest   string                  `toml:"replace-after-tool-request"`
-	QueueAfterToolRequest     []string                `toml:"queue-after-tool-request"`
-	QueueAfterEachToolRequest []string                `toml:"queue-after-each-tool-request"`
-	QueueAfterMessageDelta    []string                `toml:"queue-after-message-delta"`
-	FlushAfterToolRequest     bool                    `toml:"flush-after-tool-request"`
-	CancelAfterQueueing       bool                    `toml:"cancel-after-queueing"`
-	ToggleAfterMessageDelta   string                  `toml:"toggle-after-message-delta"`
-	ToggleAfterToolRequest    string                  `toml:"toggle-after-tool-request"`
-	ToggleDuringModeTurn      string                  `toml:"toggle-during-mode-turn"`
-	CancelAfterToolToggle     bool                    `toml:"cancel-after-tool-toggle"`
-	EndJobAfterToolRequest    string                  `toml:"end-job-after-tool-request"`
-	EndJobAfterReasoningEvent string                  `toml:"end-job-after-reasoning-event"`
+	Prompt                       string                  `toml:"prompt"`
+	Responses                    []sessionGoldenResponse `toml:"response"`
+	Timeout                      string                  `toml:"timeout"`
+	IsCancelled                  bool                    `toml:"is-cancelled"`
+	CancelWithCtrlD              bool                    `toml:"cancel-with-ctrl-d"`
+	CancelAfterReasoningDelta    int                     `toml:"cancel-after-reasoning-delta"`
+	CancelAfterReasoningEvent    int                     `toml:"cancel-after-reasoning-event"`
+	CancelAfterMessageDelta      int                     `toml:"cancel-after-message-delta"`
+	CancelAfterToolRequest       int                     `toml:"cancel-after-tool-request"`
+	CancelAfterRetryNotice       int                     `toml:"cancel-after-retry-notice"`
+	ReplaceAfterToolRequest      string                  `toml:"replace-after-tool-request"`
+	QueueAfterToolRequest        []string                `toml:"queue-after-tool-request"`
+	QueueAfterEachToolRequest    []string                `toml:"queue-after-each-tool-request"`
+	QueueAfterMessageDelta       []string                `toml:"queue-after-message-delta"`
+	DoubleReturnAfterToolRequest bool                    `toml:"double-return-after-tool-request"`
+	CancelAfterQueueing          bool                    `toml:"cancel-after-queueing"`
+	ToggleAfterMessageDelta      string                  `toml:"toggle-after-message-delta"`
+	ToggleAfterToolRequest       string                  `toml:"toggle-after-tool-request"`
+	ToggleDuringModeTurn         string                  `toml:"toggle-during-mode-turn"`
+	CancelAfterToolToggle        bool                    `toml:"cancel-after-tool-toggle"`
+	EndJobAfterToolRequest       string                  `toml:"end-job-after-tool-request"`
+	EndJobAfterReasoningEvent    string                  `toml:"end-job-after-reasoning-event"`
 }
 
 const exposeToolName = "expose"
@@ -15076,7 +15082,7 @@ func (self sessionGoldenTurn) usesTheInterface() bool {
 		self.ToggleDuringModeTurn != "" ||
 		self.EndJobAfterToolRequest != "" ||
 		self.EndJobAfterReasoningEvent != "" ||
-		self.FlushAfterToolRequest ||
+		self.DoubleReturnAfterToolRequest ||
 		self.CancelAfterQueueing ||
 		len(self.QueueAfterToolRequest) > 0 ||
 		len(self.QueueAfterEachToolRequest) > 0 ||
@@ -16128,11 +16134,12 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	settleClock(firstAssistant)
 	var firstScreenOutput bytes.Buffer
 	firstHarness := &App{
-		agent:         firstAssistant,
-		screen:        scenario.screen(&firstScreenOutput),
-		recorder:      record.New(log),
-		hostToSandbox: goldenPorts,
-		display:       displayState{modelName: scenario.Model},
+		agent:           firstAssistant,
+		screen:          scenario.screen(&firstScreenOutput),
+		recorder:        record.New(log),
+		hostToSandbox:   goldenPorts,
+		display:         displayState{modelName: scenario.Model},
+		continueMessage: builtInConfig(t).Input.Continue,
 	}
 	if scenario.Provider == model.CodexProvider {
 		firstHarness.openingEvents = []agent.Event{model.FastModeEvent(scenario.IsFast)}
@@ -16897,10 +16904,6 @@ func takeFirstSessionGoldenToolRequest(
 		}
 	}
 
-	if turn.FlushAfterToolRequest {
-		testHarness.continueOrFlush(inputLine, edit.NewHistory("", historyLimit))
-	}
-
 	if turn.ToggleAfterToolRequest != "" {
 		toggleSessionGoldenCaps(t, testHarness, turn.ToggleAfterToolRequest)
 		if turn.CancelAfterToolToggle {
@@ -16910,6 +16913,15 @@ func takeFirstSessionGoldenToolRequest(
 
 	if turn.EndJobAfterToolRequest != "" {
 		testHarness.jobEnded(endedSessionGoldenJob(turn.EndJobAfterToolRequest))
+	}
+
+	if turn.DoubleReturnAfterToolRequest {
+		history := edit.NewHistory("", historyLimit)
+		for range 2 {
+			if !testHarness.apply(inputLine, history, key.Key{Code: key.Enter}) {
+				t.Fatal("a return closed the harness")
+			}
+		}
 	}
 }
 

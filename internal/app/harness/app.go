@@ -654,11 +654,7 @@ func (self *App) sendInput(inputLine *edit.Input, history *edit.History, message
 		return
 	}
 
-	if self.currentTurn.Running() {
-		self.replaceTurn(message)
-	} else {
-		self.start(message)
-	}
+	self.start(message)
 }
 
 func (self *App) continueOrFlush(inputLine *edit.Input, history *edit.History) {
@@ -667,7 +663,11 @@ func (self *App) continueOrFlush(inputLine *edit.Input, history *edit.History) {
 		return
 	}
 
-	if !self.currentTurn.Running() && self.hasUntoldPendingNotices() {
+	if self.currentTurn.Running() {
+		return
+	}
+
+	if self.hasUntoldPendingNotices() {
 		self.startTurn()
 		return
 	}
@@ -869,11 +869,6 @@ func (self *App) cancelTurn(cause interrupt.Cause) {
 	}
 
 	self.interruptTurn(cause)
-}
-
-func (self *App) replaceTurn(message string) {
-	self.queuedTurn.Replace(message)
-	self.interruptTurn(interrupt.Replacement)
 }
 
 func (self *App) interruptTurn(cause interrupt.Cause) {

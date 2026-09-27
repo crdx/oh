@@ -4,14 +4,11 @@ effort = "medium"
 
 [[tool]]
 name = "work"
-blocks = true
-stopped-output = "the call was stopped after 4s because the user sent another message"
+outputs = ["the work is done"]
 
 [first]
-prompt = "queue a message and then push it out at once"
-queue-after-tool-request = ["stop and do this instead"]
+prompt = "press return twice while the tool is working"
 double-return-after-tool-request = true
-is-cancelled = true
 
 [[first.response]]
 event = [
@@ -27,7 +24,7 @@ event = [
 event = [
     '''{"type":"message_start","message":{}}''',
     '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
-    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Stopping that and doing this instead."}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"The work is done."}}''',
     '''{"type":"content_block_stop","index":0}''',
     '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
     '''{"type":"message_stop"}''',

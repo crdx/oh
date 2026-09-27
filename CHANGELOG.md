@@ -10,6 +10,7 @@
 - Restyle jobs list output
 - Honour explicit server advice to retry a refused request
 - Require double-enter in quick succession
+- Stop sending continue message during a turn
 - Open session picker on first available session
 - Show session sizes on disk in picker
 - Make plain reasoning keep underscores
