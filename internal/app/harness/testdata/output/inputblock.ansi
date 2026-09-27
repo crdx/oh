@@ -2,12 +2,12 @@
 \e[38;2;150;152;150m──\e[0m \e]8;;file:///workspace\e\\workspace\e]8;;\e\\ \e[38;2;150;152;150m───────\e[0m
 have a look at @harn
 \e[38;2;192;128;80m› …rnal/app/harness/\e[0m
-\e[38;2;150;152;150m  …pp/harness/app.go\e[0m
-\e[38;2;150;152;150m  …p/harness/main.go\e[0m
-\e[38;2;150;152;150m  …ness/main_test.go\e[0m
-\e[38;2;150;152;150m  …arness/pathref.go\e[0m
-\e[38;2;150;152;150m  …/harness/print.go\e[0m
-\e[38;2;150;152;150m  …harness/replay.go\e[0m
+  …pp/harness/app.go
+  …p/harness/main.go
+  …ness/main_test.go
+  …arness/pathref.go
+  …/harness/print.go
+  …harness/replay.go
 \e[38;2;150;152;150m  ⋮ 14 more\e[0m
 \e[38;2;150;152;150m────────────────────\e[0m
 cursor row 1 column 20
@@ -15,12 +15,12 @@ cursor row 1 column 20
 \e[38;2;150;152;150m──\e[0m \e]8;;file:///workspace\e\\workspace\e]8;;\e\\ \e[38;2;150;152;150m─────────────────\e[0m GPT Sol \e[38;2;150;152;150m5.6\e[0m \e[38;2;150;152;150m▫▫▫\e[0m\e[38;2;192;128;80m▪\e[0m\e[38;2;150;152;150m··\e[0m \e[38;2;150;152;150m──────────────────────────────\e[0m
 have a look at @harn
 \e[38;2;192;128;80m› internal/app/harness/\e[0m
-\e[38;2;150;152;150m  internal/app/harness/app.go\e[0m
-\e[38;2;150;152;150m  internal/app/harness/main.go\e[0m
-\e[38;2;150;152;150m  internal/app/harness/main_test.go\e[0m
-\e[38;2;150;152;150m  internal/app/harness/pathref.go\e[0m
-\e[38;2;150;152;150m  internal/app/harness/print.go\e[0m
-\e[38;2;150;152;150m  internal/app/harness/replay.go\e[0m
+  internal/app/harness/app.go
+  internal/app/harness/main.go
+  internal/app/harness/main_test.go
+  internal/app/harness/pathref.go
+  internal/app/harness/print.go
+  internal/app/harness/replay.go
 \e[38;2;150;152;150m  ⋮ 14 more\e[0m
 \e[38;2;150;152;150m──\e[0m \e[38;2;192;128;80m··✦\e[0m \e[38;2;150;152;150m─\e[0m \e[38;2;150;152;150m0m\e[0m 0\e[38;2;150;152;150mm\e[0m \e[38;2;150;152;150m─\e[0m \e[38;2;76;154;44mr\e[0m\e[38;2;207;173;0mx\e[0m\e[38;2;207;173;0mw\e[0m \e[38;2;129;162;190mn\e[0m\e[38;2;129;162;190mg\e[0m\e[38;2;129;162;190ml\e[0m \e[38;2;150;152;150m─\e[0m \e]8;;file:///workspace\e\\workspace\e]8;;\e\\ \e[38;2;150;152;150m─\e[0m GPT Sol \e[38;2;150;152;150m5.6\e[0m \e[38;2;150;152;150m▫▫▫\e[0m\e[38;2;192;128;80m▪\e[0m\e[38;2;150;152;150m··\e[0m \e[38;2;150;152;150m─\e[0m ?\e[38;2;150;152;150m% \e[0m0\e[38;2;150;152;150m/\e[0m? \e[38;2;150;152;150m─────────────\e[0m
 cursor row 1 column 20
@@ -30,27 +30,63 @@ cursor row 1 column 20
 \e[38;2;150;152;150m─┴\e[0m\e[38;2;150;152;150m──\e[0m \e]8;;file:///workspace\e\\workspace\e]8;;\e\\ \e[38;2;150;152;150m───────────────\e[0m GPT Sol \e[38;2;150;152;150m5.6\e[0m \e[38;2;150;152;150m▫▫▫\e[0m\e[38;2;192;128;80m▪\e[0m\e[38;2;150;152;150m··\e[0m \e[38;2;150;152;150m────────────────────────────\e[0m\e[38;2;150;152;150m┴─\e[0m
 have a look at @harn
 \e[38;2;192;128;80m› internal/app/harness/\e[0m
-\e[38;2;150;152;150m  internal/app/harness/app.go\e[0m
-\e[38;2;150;152;150m  internal/app/harness/main.go\e[0m
+  internal/app/harness/app.go
+  internal/app/harness/main.go
 \e[38;2;150;152;150m──\e[0m \e[38;2;192;128;80m··✦\e[0m \e[38;2;150;152;150m─\e[0m \e[38;2;150;152;150m0m\e[0m 0\e[38;2;150;152;150mm\e[0m \e[38;2;150;152;150m─\e[0m \e[38;2;76;154;44mr\e[0m\e[38;2;207;173;0mx\e[0m\e[38;2;207;173;0mw\e[0m \e[38;2;129;162;190mn\e[0m\e[38;2;129;162;190mg\e[0m\e[38;2;129;162;190ml\e[0m \e[38;2;150;152;150m─\e[0m \e]8;;file:///workspace\e\\workspace\e]8;;\e\\ \e[38;2;150;152;150m─\e[0m GPT Sol \e[38;2;150;152;150m5.6\e[0m \e[38;2;150;152;150m▫▫▫\e[0m\e[38;2;192;128;80m▪\e[0m\e[38;2;150;152;150m··\e[0m \e[38;2;150;152;150m─\e[0m ?\e[38;2;150;152;150m% \e[0m0\e[38;2;150;152;150m/\e[0m? \e[38;2;150;152;150m─────────────\e[0m
 cursor row 3 column 20
 === dropdown scrolled at 80 columns ===
 \e[38;2;150;152;150m──\e[0m \e]8;;file:///workspace\e\\workspace\e]8;;\e\\ \e[38;2;150;152;150m─────────────────\e[0m GPT Sol \e[38;2;150;152;150m5.6\e[0m \e[38;2;150;152;150m▫▫▫\e[0m\e[38;2;192;128;80m▪\e[0m\e[38;2;150;152;150m··\e[0m \e[38;2;150;152;150m──────────────────────────────\e[0m
 have a look at @harn
-\e[38;2;150;152;150m  internal/app/harness/main.go\e[0m
-\e[38;2;150;152;150m  internal/app/harness/main_test.go\e[0m
-\e[38;2;150;152;150m  internal/app/harness/pathref.go\e[0m
-\e[38;2;150;152;150m  internal/app/harness/print.go\e[0m
-\e[38;2;150;152;150m  internal/app/harness/replay.go\e[0m
-\e[38;2;150;152;150m  internal/app/harness/testdata/\e[0m
+  internal/app/harness/main.go
+  internal/app/harness/main_test.go
+  internal/app/harness/pathref.go
+  internal/app/harness/print.go
+  internal/app/harness/replay.go
+  internal/app/harness/testdata/
 \e[38;2;192;128;80m› internal/app/harness/turn.go\e[0m
 \e[38;2;150;152;150m  ⋮ 2 above, 12 below\e[0m
 \e[38;2;150;152;150m──\e[0m \e[38;2;192;128;80m··✦\e[0m \e[38;2;150;152;150m─\e[0m \e[38;2;150;152;150m0m\e[0m 0\e[38;2;150;152;150mm\e[0m \e[38;2;150;152;150m─\e[0m \e[38;2;76;154;44mr\e[0m\e[38;2;207;173;0mx\e[0m\e[38;2;207;173;0mw\e[0m \e[38;2;129;162;190mn\e[0m\e[38;2;129;162;190mg\e[0m\e[38;2;129;162;190ml\e[0m \e[38;2;150;152;150m─\e[0m \e]8;;file:///workspace\e\\workspace\e]8;;\e\\ \e[38;2;150;152;150m─\e[0m GPT Sol \e[38;2;150;152;150m5.6\e[0m \e[38;2;150;152;150m▫▫▫\e[0m\e[38;2;192;128;80m▪\e[0m\e[38;2;150;152;150m··\e[0m \e[38;2;150;152;150m─\e[0m ?\e[38;2;150;152;150m% \e[0m0\e[38;2;150;152;150m/\e[0m? \e[38;2;150;152;150m─────────────\e[0m
 cursor row 1 column 20
+=== dropdown with details at 13 columns ===
+\e[38;2;150;152;150m──\e[0m \e]8;;file:///workspace\e\\workspace\e]8;;\e\\ \e[38;2;150;152;150m\e[0m
+have a look at @harn
+  /conf\e[38;2;150;152;150m    e…\e[0m
+\e[38;2;192;128;80m› /copy\e[0m\e[38;2;150;152;150m    c…\e[0m
+  /expose\e[38;2;150;152;150m  e…\e[0m
+  /open
+\e[38;2;150;152;150m─────────────\e[0m
+cursor row 1 column 20
+=== dropdown with details at 30 columns ===
+\e[38;2;150;152;150m──\e[0m \e]8;;file:///workspace\e\\workspace\e]8;;\e\\ \e[38;2;150;152;150m─────────────────\e[0m
+have a look at @harn
+  /conf\e[38;2;150;152;150m    edit the config an…\e[0m
+\e[38;2;192;128;80m› /copy\e[0m\e[38;2;150;152;150m    copy a target to t…\e[0m
+  /expose\e[38;2;150;152;150m  expose a host loop…\e[0m
+  /open
+\e[38;2;150;152;150m──────────────────────────────\e[0m
+cursor row 1 column 20
+=== dropdown with details at 80 columns ===
+\e[38;2;150;152;150m──\e[0m \e]8;;file:///workspace\e\\workspace\e]8;;\e\\ \e[38;2;150;152;150m─────────────────\e[0m GPT Sol \e[38;2;150;152;150m5.6\e[0m \e[38;2;150;152;150m▫▫▫\e[0m\e[38;2;192;128;80m▪\e[0m\e[38;2;150;152;150m··\e[0m \e[38;2;150;152;150m──────────────────────────────\e[0m
+have a look at @harn
+  /conf\e[38;2;150;152;150m    edit the config and system prompt\e[0m
+\e[38;2;192;128;80m› /copy\e[0m\e[38;2;150;152;150m    copy a target to the clipboard\e[0m
+  /expose\e[38;2;150;152;150m  expose a host loopback port to the sandbox\e[0m
+  /open
+\e[38;2;150;152;150m──\e[0m \e[38;2;192;128;80m··✦\e[0m \e[38;2;150;152;150m─\e[0m \e[38;2;150;152;150m0m\e[0m 0\e[38;2;150;152;150mm\e[0m \e[38;2;150;152;150m─\e[0m \e[38;2;76;154;44mr\e[0m\e[38;2;207;173;0mx\e[0m\e[38;2;207;173;0mw\e[0m \e[38;2;129;162;190mn\e[0m\e[38;2;129;162;190mg\e[0m\e[38;2;129;162;190ml\e[0m \e[38;2;150;152;150m─\e[0m \e]8;;file:///workspace\e\\workspace\e]8;;\e\\ \e[38;2;150;152;150m─\e[0m GPT Sol \e[38;2;150;152;150m5.6\e[0m \e[38;2;150;152;150m▫▫▫\e[0m\e[38;2;192;128;80m▪\e[0m\e[38;2;150;152;150m··\e[0m \e[38;2;150;152;150m─\e[0m ?\e[38;2;150;152;150m% \e[0m0\e[38;2;150;152;150m/\e[0m? \e[38;2;150;152;150m─────────────\e[0m
+cursor row 1 column 20
+=== dropdown with details at 9 columns ===
+\e[38;2;150;152;150m─────────\e[0m
+have a look at @harn
+  /conf
+\e[38;2;192;128;80m› /copy\e[0m
+  /expose
+  /open
+\e[38;2;150;152;150m─────────\e[0m
+cursor row 1 column 20
 === dropdown with few options at 80 columns ===
 \e[38;2;150;152;150m──\e[0m \e]8;;file:///workspace\e\\workspace\e]8;;\e\\ \e[38;2;150;152;150m─────────────────\e[0m GPT Sol \e[38;2;150;152;150m5.6\e[0m \e[38;2;150;152;150m▫▫▫\e[0m\e[38;2;192;128;80m▪\e[0m\e[38;2;150;152;150m··\e[0m \e[38;2;150;152;150m──────────────────────────────\e[0m
 have a look at @harn
-\e[38;2;150;152;150m  internal/app/harness/\e[0m
+  internal/app/harness/
 \e[38;2;192;128;80m› internal/app/harness/app.go\e[0m
 \e[38;2;150;152;150m──\e[0m \e[38;2;192;128;80m··✦\e[0m \e[38;2;150;152;150m─\e[0m \e[38;2;150;152;150m0m\e[0m 0\e[38;2;150;152;150mm\e[0m \e[38;2;150;152;150m─\e[0m \e[38;2;76;154;44mr\e[0m\e[38;2;207;173;0mx\e[0m\e[38;2;207;173;0mw\e[0m \e[38;2;129;162;190mn\e[0m\e[38;2;129;162;190mg\e[0m\e[38;2;129;162;190ml\e[0m \e[38;2;150;152;150m─\e[0m \e]8;;file:///workspace\e\\workspace\e]8;;\e\\ \e[38;2;150;152;150m─\e[0m GPT Sol \e[38;2;150;152;150m5.6\e[0m \e[38;2;150;152;150m▫▫▫\e[0m\e[38;2;192;128;80m▪\e[0m\e[38;2;150;152;150m··\e[0m \e[38;2;150;152;150m─\e[0m ?\e[38;2;150;152;150m% \e[0m0\e[38;2;150;152;150m/\e[0m? \e[38;2;150;152;150m─────────────\e[0m
 cursor row 1 column 20

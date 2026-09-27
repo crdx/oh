@@ -6,13 +6,11 @@ import (
 
 	"crdx.org/oh/internal/app/dropdown"
 	"crdx.org/oh/internal/app/trigger"
-	"crdx.org/oh/internal/app/width"
 )
 
 const (
-	Symbol            = '/'
-	noMatchText       = "no matching commands"
-	descriptionIndent = "  "
+	Symbol      = '/'
+	noMatchText = "no matching commands"
 )
 
 type Source struct {
@@ -54,24 +52,15 @@ func (self *Source) Open(func()) {}
 func (self *Source) Results(word trigger.Word, limit int) trigger.Results {
 	completions := self.getRegistry().Completions(word.Query)
 
-	labelWidth := 0
-	for _, completion := range completions {
-		labelWidth = max(labelWidth, width.Of(completion.Label))
-	}
-
 	items := make([]trigger.Result, 0, min(len(completions), limit))
 	for _, completion := range completions[:min(len(completions), limit)] {
-		label := completion.Label
-		if description, _, _ := strings.Cut(strings.TrimSpace(completion.Description), "\n"); description != "" {
-			label += strings.Repeat(" ", labelWidth-width.Of(label)) + descriptionIndent + description
-		}
-
+		description, _, _ := strings.Cut(strings.TrimSpace(completion.Description), "\n")
 		text := completion.Text
 		if completion.TakesArguments {
 			text += " "
 		}
 
-		items = append(items, trigger.Result{Label: label, Text: text, IsOpenEnded: completion.TakesArguments})
+		items = append(items, trigger.Result{Label: completion.Label, Detail: description, Text: text, IsOpenEnded: completion.TakesArguments})
 	}
 
 	return trigger.Results{Items: items, Total: len(completions), Placeholder: noMatchText}

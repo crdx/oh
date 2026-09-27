@@ -58,8 +58,8 @@ func (self *Completer) Apply(editor Editor, keypress key.Key) bool {
 	case dropdown.Moved:
 		if self.dropdown.IsShortOfOptions() {
 			self.limit += resultPage
-			labels := self.fetch()
-			self.dropdown.ExtendOptions(labels, self.total)
+			options := self.fetch()
+			self.dropdown.ExtendOptions(options, self.total)
 		}
 		return true
 
@@ -176,23 +176,23 @@ func (self *Completer) announceChange() {
 
 func (self *Completer) match() {
 	self.limit = resultPage
-	labels := self.fetch()
-	self.dropdown.SetOptions(labels, self.total)
+	options := self.fetch()
+	self.dropdown.SetOptions(options, self.total)
 }
 
-func (self *Completer) fetch() []string {
+func (self *Completer) fetch() []dropdown.Option {
 	results := self.source.Results(self.current, self.limit)
 
-	labels := make([]string, len(results.Items))
+	options := make([]dropdown.Option, len(results.Items))
 	for i, result := range results.Items {
-		labels[i] = result.Label
+		options[i] = dropdown.Option{Label: result.Label, Detail: result.Detail}
 	}
 
 	self.results = results.Items
 	self.total = results.Total
 	self.dropdown.SetPlaceholder(results.Placeholder)
 
-	return labels
+	return options
 }
 
 func (self *Completer) close() {

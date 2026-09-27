@@ -11,6 +11,7 @@ const quote = '"'
 
 type Result struct {
 	Label       string
+	Detail      string
 	Text        string
 	IsOpenEnded bool
 }

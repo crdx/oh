@@ -9492,18 +9492,18 @@ func TestGoldenTheInputBlockDrawsWhatItDrewBefore(t *testing.T) {
 	}
 
 	pathRefFrame := edit.Frame{Rows: []string{"have a look at @harn"}, Row: 0, Column: 20}
-	pathRefOptions := []string{
-		"internal/app/harness/",
-		"internal/app/harness/app.go",
-		"internal/app/harness/main.go",
-		"internal/app/harness/main_test.go",
-		"internal/app/harness/pathref.go",
-		"internal/app/harness/print.go",
-		"internal/app/harness/replay.go",
-		"internal/app/harness/testdata/",
-		"internal/app/harness/turn.go",
+	pathRefOptions := []dropdown.Option{
+		{Label: "internal/app/harness/"},
+		{Label: "internal/app/harness/app.go"},
+		{Label: "internal/app/harness/main.go"},
+		{Label: "internal/app/harness/main_test.go"},
+		{Label: "internal/app/harness/pathref.go"},
+		{Label: "internal/app/harness/print.go"},
+		{Label: "internal/app/harness/replay.go"},
+		{Label: "internal/app/harness/testdata/"},
+		{Label: "internal/app/harness/turn.go"},
 	}
-	openDropdown := func(options []string, total int, moves int) func() *dropdown.Dropdown {
+	openDropdown := func(options []dropdown.Option, total int, moves int) func() *dropdown.Dropdown {
 		return func() *dropdown.Dropdown {
 			opened := &dropdown.Dropdown{}
 			opened.SetElision(dropdown.ElideStart)
@@ -9536,6 +9536,22 @@ func TestGoldenTheInputBlockDrawsWhatItDrewBefore(t *testing.T) {
 		status:   []string{"Command not found: /unknown"},
 		dropdown: openDropdown(pathRefOptions[:3], 3, 0),
 	})
+	commandOptions := []dropdown.Option{
+		{Label: "/conf", Detail: "edit the config and system prompt"},
+		{Label: "/copy", Detail: "copy a target to the clipboard"},
+		{Label: "/expose", Detail: "expose a host loopback port to the sandbox"},
+		{Label: "/open"},
+	}
+	openCommandDropdown := func() *dropdown.Dropdown {
+		opened := openDropdown(commandOptions, len(commandOptions), 1)()
+		opened.SetElision(dropdown.ElideEnd)
+		return opened
+	}
+	for _, width := range []int{80, 30, 13, 9} {
+		addPass(fmt.Sprintf("dropdown with details at %d columns", width), inputBlockPass{
+			frame: pathRefFrame, width: width, dropdown: openCommandDropdown,
+		})
+	}
 
 	compareWithGolden(t, "inputblock", ".ansi", passes)
 	compareWithGolden(t, "inputblock", ".screen", shownPassesAtWidth)

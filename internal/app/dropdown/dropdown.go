@@ -13,7 +13,13 @@ const (
 	MaxRows      = 8
 	marker       = "› "
 	markerIndent = "  "
+	detailIndent = "  "
 )
+
+type Option struct {
+	Label  string
+	Detail string
+}
 
 type Outcome int
 
@@ -34,7 +40,7 @@ const (
 
 type Dropdown struct {
 	elision     Elision
-	options     []string
+	options     []Option
 	total       int
 	placeholder string
 	selection   int
@@ -59,7 +65,7 @@ func (self *Dropdown) IsOpen() bool {
 	return self.isOpen
 }
 
-func (self *Dropdown) SetOptions(options []string, total int) {
+func (self *Dropdown) SetOptions(options []Option, total int) {
 	self.options = options
 	self.total = max(total, len(options))
 	self.selection = 0
@@ -67,7 +73,7 @@ func (self *Dropdown) SetOptions(options []string, total int) {
 	self.height = max(self.height, min(MaxRows, max(self.total, 1)))
 }
 
-func (self *Dropdown) ExtendOptions(options []string, total int) {
+func (self *Dropdown) ExtendOptions(options []Option, total int) {
 	self.options = options
 	self.total = max(total, len(options))
 	self.selection = min(self.selection, max(len(options)-1, 0))
@@ -131,14 +137,9 @@ func (self *Dropdown) Rows(columns int, budget int) []string {
 	offset := min(self.offset, self.selection)
 	offset = max(offset, self.selection-visibleRows+1)
 	end := min(offset+visibleRows, len(self.options))
+	labelWidth := self.labelWidth()
 	for i := offset; i < end; i++ {
-		option := self.elide(self.options[i], columns-width.Of(marker))
-		if i == self.selection {
-			rows = append(rows, style.ChosenRow.Over(width.Elide(marker+option, columns)))
-			continue
-		}
-
-		rows = append(rows, style.Dim.Over(width.Elide(markerIndent+option, columns)))
+		rows = append(rows, self.row(self.options[i], i == self.selection, labelWidth, columns))
 	}
 
 	if note := self.hiddenNote(offset, end); note != "" && len(rows) < height {
@@ -150,6 +151,29 @@ func (self *Dropdown) Rows(columns int, budget int) []string {
 	}
 
 	return rows
+}
+
+func (self *Dropdown) row(option Option, isSelected bool, labelWidth int, columns int) string {
+	label := self.elide(option.Label, columns-width.Of(marker))
+	row := style.Normal(markerIndent + label)
+	if isSelected {
+		row = style.ChosenRow(marker + label)
+	}
+	gap := max(labelWidth-width.Of(label), 0) + width.Of(detailIndent)
+	if room := columns - width.Of(row) - gap; option.Detail != "" && room > 0 {
+		row += style.Dim(strings.Repeat(" ", gap) + width.Elide(option.Detail, room))
+	}
+
+	return width.Elide(row, columns)
+}
+
+func (self *Dropdown) labelWidth() int {
+	labelWidth := 0
+	for _, option := range self.options {
+		labelWidth = max(labelWidth, width.Of(option.Label))
+	}
+
+	return labelWidth
 }
 
 func (self *Dropdown) move(distance int) {

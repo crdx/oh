@@ -43,6 +43,41 @@ have a look at @harn
 › internal/app/harness/turn.go
   ⋮ 2 above, 12 below
 ── ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? ─────────────
+=== dropdown with details at 13 columns ===
+── workspace
+have a look a
+t @harn
+  /conf    e…
+› /copy    c…
+  /expose  e…
+  /open
+─────────────
+=== dropdown with details at 30 columns ===
+── workspace ─────────────────
+have a look at @harn
+  /conf    edit the config an…
+› /copy    copy a target to t…
+  /expose  expose a host loop…
+  /open
+──────────────────────────────
+=== dropdown with details at 80 columns ===
+── workspace ───────────────── GPT Sol 5.6 ▫▫▫▪·· ──────────────────────────────
+have a look at @harn
+  /conf    edit the config and system prompt
+› /copy    copy a target to the clipboard
+  /expose  expose a host loopback port to the sandbox
+  /open
+── ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? ─────────────
+=== dropdown with details at 9 columns ===
+─────────
+have a lo
+ok at @ha
+rn
+  /conf
+› /copy
+  /expose
+  /open
+─────────
 === dropdown with few options at 80 columns ===
 ── workspace ───────────────── GPT Sol 5.6 ▫▫▫▪·· ──────────────────────────────
 have a look at @harn

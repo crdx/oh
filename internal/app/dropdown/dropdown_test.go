@@ -19,7 +19,7 @@ var (
 	escape   = key.Key{Code: key.Escape}
 )
 
-func opened(options []string, total int) *dropdown.Dropdown {
+func opened(options []dropdown.Option, total int) *dropdown.Dropdown {
 	menu := &dropdown.Dropdown{}
 	menu.Open()
 	menu.SetPlaceholder("nothing here")
@@ -27,10 +27,10 @@ func opened(options []string, total int) *dropdown.Dropdown {
 	return menu
 }
 
-func numbered(count int) []string {
-	options := make([]string, count)
+func numbered(count int) []dropdown.Option {
+	options := make([]dropdown.Option, count)
 	for i := range options {
-		options[i] = fmt.Sprintf("option %d", i+1)
+		options[i] = dropdown.Option{Label: fmt.Sprintf("option %d", i+1)}
 	}
 	return options
 }
@@ -45,7 +45,7 @@ func plainRows(menu *dropdown.Dropdown, columns int) []string {
 
 func TestAClosedDropdownDrawsNothingAndIgnoresKeys(t *testing.T) {
 	var menu dropdown.Dropdown
-	menu.SetOptions([]string{"one"}, 1)
+	menu.SetOptions([]dropdown.Option{{Label: "one"}}, 1)
 
 	if rows := menu.Rows(40, dropdown.MaxRows); rows != nil {
 		t.Errorf("drew %q", rows)
@@ -167,7 +167,7 @@ func TestTheHeightNeverShrinksWhileOpen(t *testing.T) {
 }
 
 func TestStartElisionKeepsTheTailOfAnOption(t *testing.T) {
-	menu := opened([]string{"internal/app/harness/app.go"}, 1)
+	menu := opened([]dropdown.Option{{Label: "internal/app/harness/app.go"}}, 1)
 	menu.SetElision(dropdown.ElideStart)
 
 	if got := plainRows(menu, 14); got[0] != "› …ness/app.go" {
@@ -282,5 +282,51 @@ func TestExtendingOptionsKeepsTheSelectionAndWindow(t *testing.T) {
 	menu.Apply(down)
 	if got, _ := menu.Selected(); got != 10 {
 		t.Errorf("moving on after extending selected %d", got)
+	}
+}
+
+func TestDetailsAlignAfterTheWidestLabel(t *testing.T) {
+	menu := opened([]dropdown.Option{
+		{Label: "/conf", Detail: "Edit the config."},
+		{Label: "/expose", Detail: "Expose a port."},
+		{Label: "/quit"},
+	}, 3)
+
+	want := []string{"› /conf    Edit the config.", "  /expose  Expose a port.", "  /quit"}
+	if got := plainRows(menu, 40); !reflect.DeepEqual(got, want) {
+		t.Errorf("drew %q", got)
+	}
+}
+
+func TestANarrowRowCutsTheDetailBeforeTheLabel(t *testing.T) {
+	menu := opened([]dropdown.Option{{Label: "/expose", Detail: "Expose a port."}}, 1)
+
+	if got := plainRows(menu, 14); got[0] != "› /expose  Ex…" {
+		t.Errorf("drew %q", got[0])
+	}
+}
+
+func TestAStartElidedLabelKeepsItsTailBesideADetail(t *testing.T) {
+	menu := opened([]dropdown.Option{{Label: "internal/app/harness/app.go", Detail: "The app."}}, 1)
+	menu.SetElision(dropdown.ElideStart)
+
+	if got := plainRows(menu, 14); got[0] != "› …ness/app.go" {
+		t.Errorf("drew %q", got[0])
+	}
+}
+
+func TestADetailWithNoRoomLeftIsDropped(t *testing.T) {
+	menu := opened([]dropdown.Option{{Label: "/expose", Detail: "Expose a port."}}, 1)
+
+	for columns, want := range map[int]string{
+		9:  "› /expose",
+		10: "› /expose",
+		11: "› /expose",
+		12: "› /expose  …",
+		13: "› /expose  E…",
+	} {
+		if got := plainRows(menu, columns); got[0] != want {
+			t.Errorf("drew %q at %d columns, want %q", got[0], columns, want)
+		}
 	}
 }
