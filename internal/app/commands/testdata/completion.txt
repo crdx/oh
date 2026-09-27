@@ -1,16 +1,92 @@
-/ → /conf → /copy → /edit → /expose → /fork → /grant → /grants → /help → /info → /job → /jobs → /new → /open
-/c → /conf → /copy
-/g → /grant → /grants
-/grant  → /grant r → /grant rw → /grant rx → /grant rxw
-/r → /revoke
-/revoke  → /revoke /reference
-/copy  → /copy agents-file → /copy config-dir → /copy config-file
-/copy l → /copy last-message
-/copy sn → /copy snippets-dir
-/edit  → /edit agents-file → /edit config-dir → /edit config-file
-/edit sn → /edit snippets-dir
-/open  → /open agents-file → /open config-dir → /open config-file → /open home-dir → /open scratch-dir → /open session-chat-file → /open session-dir → /open session-log-file → /open skills-dir → /open snippets-dir → /open system-prompt-file → /open workspace-dir
-/open sn → /open snippets-dir
-// → //add → //ask → //help → //note
-//a → //add → //ask → //add
-//h → //help
+"/"
+  /conf → /conf
+  /copy → /copy …
+  /edit → /edit …
+  /expose → /expose  (Expose a host loopback port to the sandbox.)
+  /fork → /fork
+  /grant → /grant …  (Grant temporary path access, spelled with the flags r, x, and w.)
+  /grants → /grants  (List temporary pathname grants and port routes in either direction.)
+  /help → /help
+  /info → /info
+  /job → /job …  (Inspect, stop, or discard a background job; prune drops every finished one.)
+  /jobs → /jobs  (List the background jobs of this session.)
+  /new → /new
+  /open → /open …
+  /revoke → /revoke …  (Revoke temporary pathname access or a port route.)
+"/c"
+  /conf → /conf
+  /copy → /copy …
+"/g"
+  /grant → /grant …  (Grant temporary path access, spelled with the flags r, x, and w.)
+  /grants → /grants  (List temporary pathname grants and port routes in either direction.)
+"/grant "
+  r → /grant r
+  rw → /grant rw
+  rx → /grant rx
+  rxw → /grant rxw
+"/r"
+  /revoke → /revoke …  (Revoke temporary pathname access or a port route.)
+"/revoke "
+  /reference → /revoke /reference
+  8080 → /revoke 8080
+"/copy "
+  agents-file → /copy agents-file
+  config-dir → /copy config-dir
+  config-file → /copy config-file
+  home-dir → /copy home-dir
+  last-message → /copy last-message
+  scratch-dir → /copy scratch-dir
+  session-chat → /copy session-chat
+  session-chat-file → /copy session-chat-file
+  session-dir → /copy session-dir
+  session-id → /copy session-id
+  session-log-file → /copy session-log-file
+  session-name → /copy session-name
+  skills-dir → /copy skills-dir
+  snippets-dir → /copy snippets-dir
+  system-prompt-file → /copy system-prompt-file
+  workspace-dir → /copy workspace-dir
+"/copy l"
+  last-message → /copy last-message
+"/copy sn"
+  snippets-dir → /copy snippets-dir
+"/edit "
+  agents-file → /edit agents-file
+  config-dir → /edit config-dir
+  config-file → /edit config-file
+  home-dir → /edit home-dir
+  scratch-dir → /edit scratch-dir
+  session-chat-file → /edit session-chat-file
+  session-dir → /edit session-dir
+  session-log-file → /edit session-log-file
+  skills-dir → /edit skills-dir
+  snippets-dir → /edit snippets-dir
+  system-prompt-file → /edit system-prompt-file
+  workspace-dir → /edit workspace-dir
+"/edit sn"
+  snippets-dir → /edit snippets-dir
+"/open "
+  agents-file → /open agents-file
+  config-dir → /open config-dir
+  config-file → /open config-file
+  home-dir → /open home-dir
+  scratch-dir → /open scratch-dir
+  session-chat-file → /open session-chat-file
+  session-dir → /open session-dir
+  session-log-file → /open session-log-file
+  skills-dir → /open skills-dir
+  snippets-dir → /open snippets-dir
+  system-prompt-file → /open system-prompt-file
+  workspace-dir → /open workspace-dir
+"/open sn"
+  snippets-dir → /open snippets-dir
+"//"
+  //add → //add  (Add a task, then continue.)
+  //ask → //ask  (Answer without making changes.)
+  //help → //help
+  //note → //note
+"//a"
+  //add → //add  (Add a task, then continue.)
+  //ask → //ask  (Answer without making changes.)
+"//h"
+  //help → //help

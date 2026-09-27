@@ -108,6 +108,7 @@ import (
 	"crdx.org/oh/internal/app/store/transcript"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/terminal"
+	"crdx.org/oh/internal/app/trigger"
 	"crdx.org/oh/internal/app/tty"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/usage"
@@ -5084,6 +5085,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"host-command":           {".ansi", ".screen"},
 		"inputblock":             {".ansi", ".screen"},
 		"pathrefs":               {".ansi", ".screen"},
+		"slashcommands":          {".ansi", ".screen"},
 		"legacy-alt-enter":       {".ansi", ".screen"},
 		"lifecycle":              {".ansi", ".screen"},
 		"line-resize":            {".screen"},
@@ -10347,10 +10349,12 @@ func TestReloadingConfigReplacesSnippetsAtomically(t *testing.T) {
 		t.Error("the reloaded snippet was not registered")
 	}
 
+	withSlashCompleter(self)
 	inputLine := edit.NewInput(nil)
 	inputLine.SetText("//ne")
-	self.apply(inputLine, nil, key.Key{Code: key.Rune, Value: '\t'})
-	if inputLine.Text() != "//new" {
+	self.apply(inputLine, nil, tabKey)
+	self.apply(inputLine, nil, tabKey)
+	if inputLine.Text() != "//new " {
 		t.Errorf("reloaded completion is %q", inputLine.Text())
 	}
 }
@@ -14697,6 +14701,10 @@ func TestUnknownSnippetShowsAnErrorAndKeepsTheInput(t *testing.T) {
 	}
 }
 
+func withSlashCompleter(self *App) {
+	self.completer = trigger.New(slash.NewSource(func() slash.Registry { return self.slash.commands }))
+}
+
 func TestTabCompletionKeepsCommandNamespacesSeparate(t *testing.T) {
 	systemSet, err := slash.NewCommandSet(
 		"/",
@@ -14715,24 +14723,25 @@ func TestTabCompletionKeepsCommandNamespacesSeparate(t *testing.T) {
 	}
 	self := slashCommandFixture(t, caps.Read)
 	self.slash.commands = fixtureRegistry(t, systemSet, snippetSet)
+	withSlashCompleter(self)
 
 	for input, want := range map[string]string{
-		"/":  "/conf",
-		"//": "//help",
+		"/":  "/conf ",
+		"//": "//help ",
 	} {
-		self.slash.completion.Reset()
 		inputLine := edit.NewInput(nil)
 		for _, value := range input {
 			inputLine.Apply(key.Key{Code: key.Rune, Value: value}, false)
 		}
-		self.apply(inputLine, nil, key.Key{Code: key.Rune, Value: '\t'})
+		self.apply(inputLine, nil, tabKey)
+		self.apply(inputLine, nil, tabKey)
 		if got := inputLine.Text(); got != want {
 			t.Errorf("completion for %q got %q, want %q", input, got, want)
 		}
 	}
 }
 
-func TestTabCompletesAUniqueSlashCommand(t *testing.T) {
+func TestTabOpensThenChoosesAUniqueSlashCommand(t *testing.T) {
 	self := slashCommandFixture(t, caps.Read)
 	self.slash.commands = fixtureCommandRegistry(
 		t,
@@ -14740,14 +14749,19 @@ func TestTabCompletesAUniqueSlashCommand(t *testing.T) {
 		slash.Command{Name: "copy", Run: slashTestHandler},
 		slash.Command{Name: "open", Run: slashTestHandler},
 	)
+	withSlashCompleter(self)
 	inputLine := edit.NewInput(nil)
 	for _, value := range "/op" {
 		inputLine.Apply(key.Key{Code: key.Rune, Value: value}, false)
 	}
 
-	self.apply(inputLine, nil, key.Key{Code: key.Rune, Value: '\t'})
+	self.apply(inputLine, nil, tabKey)
+	if got := inputLine.Text(); got != "/op" || !self.completer.IsOpen() {
+		t.Fatalf("the first tab left %q with the dropdown open %v", got, self.completer.IsOpen())
+	}
 
-	if got := inputLine.Text(); got != "/open" {
+	self.apply(inputLine, nil, tabKey)
+	if got := inputLine.Text(); got != "/open " {
 		t.Errorf("got completion %q", got)
 	}
 }
@@ -14854,25 +14868,31 @@ func slashCommandFixture(t *testing.T, currentCaps caps.Set) *App {
 	}
 }
 
-func TestConsecutiveTabsCycleCommandArguments(t *testing.T) {
+func TestChoosingACommandGoesOnToItsArguments(t *testing.T) {
 	self := slashCommandFixture(t, caps.Read)
 	self.slash.commands = fixtureCommandRegistry(
 		t,
 		slash.Command{Name: "copy", Run: slashTestHandler}.WithArguments("session-name", "session-id", "session-dir"),
 	)
+	withSlashCompleter(self)
 	inputLine := edit.NewInput(nil)
-	for _, value := range "/copy " {
+	for _, value := range "/co" {
 		inputLine.Apply(key.Key{Code: key.Rune, Value: value}, false)
 	}
 
-	self.apply(inputLine, nil, key.Key{Code: key.Rune, Value: '\t'})
-	if got := inputLine.Text(); got != "/copy session-dir" {
-		t.Errorf("got first completion %q", got)
+	self.apply(inputLine, nil, tabKey)
+	self.apply(inputLine, nil, tabKey)
+	if got := inputLine.Text(); got != "/copy " || !self.completer.IsOpen() {
+		t.Fatalf("choosing the command left %q with the dropdown open %v", got, self.completer.IsOpen())
+	}
+	if selected, _ := self.completer.Selected(); selected.Label != "session-dir" {
+		t.Errorf("went on to %q", selected.Label)
 	}
 
-	self.apply(inputLine, nil, key.Key{Code: key.Rune, Value: '\t'})
-	if got := inputLine.Text(); got != "/copy session-id" {
-		t.Errorf("got second completion %q", got)
+	self.apply(inputLine, nil, key.Key{Code: key.Down})
+	self.apply(inputLine, nil, tabKey)
+	if got := inputLine.Text(); got != "/copy session-id " || self.completer.IsOpen() {
+		t.Errorf("choosing the argument left %q with the dropdown open %v", got, self.completer.IsOpen())
 	}
 }
 

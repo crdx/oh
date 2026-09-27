@@ -147,8 +147,7 @@ type runMode struct {
 }
 
 type slashState struct {
-	commands   slash.Registry
-	completion slash.Completion
+	commands slash.Registry
 }
 
 type questionState struct {
@@ -390,7 +389,6 @@ func (self *App) apply(inputLine *edit.Input, history *edit.History, keypress ke
 		if inputLine.Text() != previousText {
 			self.feedback.Dismiss()
 		}
-		self.slash.completion.Reset()
 		return true
 	}
 
@@ -401,10 +399,6 @@ func (self *App) apply(inputLine *edit.Input, history *edit.History, keypress ke
 	} else if dismissesFeedback(keypress) && self.feedback.Dismiss() {
 		action = edit.DrawInput
 	}
-	if action != edit.CompleteCommand {
-		self.slash.completion.Reset()
-	}
-
 	switch action {
 	case edit.AcceptInput:
 		self.acceptInput(inputLine, history)
@@ -422,11 +416,6 @@ func (self *App) apply(inputLine *edit.Input, history *edit.History, keypress ke
 
 	case edit.QuitSession:
 		return false
-
-	case edit.CompleteCommand:
-		if completion, found := self.slash.completion.Next(self.slash.commands, inputLine.Text()); found {
-			inputLine.SetText(completion)
-		}
 
 	case edit.ToggleWrite:
 		self.toggleCap(caps.Write)
@@ -1277,7 +1266,6 @@ func (self *App) reloadConfig(watchFailure error) bool {
 			self.display.theme = result.LiveConfig.Theme
 			defer self.redraw()
 		}
-		self.slash.completion.Reset()
 		self.continueMessage = result.LiveConfig.ContinueMessage
 		self.editorConfig.ReplaceCommand(result.LiveConfig.EditorCommand)
 		self.display.streamingMode = result.LiveConfig.StreamingMode

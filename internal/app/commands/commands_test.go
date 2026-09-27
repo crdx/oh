@@ -379,10 +379,9 @@ func TestTargetCommandsExposeTheirArgumentsForCompletion(t *testing.T) {
 		"/open scr":       "/open scratch-dir",
 		"/edit sy":        "/edit system-prompt-file",
 	} {
-		var state slash.Completion
-		completion, found := state.Next(commands, prefix)
-		if !found || completion != want {
-			t.Errorf("Complete(%q) got %q and %t, want %q", prefix, completion, found, want)
+		completions := commands.Completions(prefix)
+		if len(completions) == 0 || completions[0].Text != want {
+			t.Errorf("Completions(%q) got %+v, want %q first", prefix, completions, want)
 		}
 	}
 }

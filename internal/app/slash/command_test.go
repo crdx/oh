@@ -98,12 +98,8 @@ func TestAnAttachedArgumentIsNotOfferedAsACompletion(t *testing.T) {
 		slash.Command{Name: "conf", Run: commandHandler},
 	))
 
-	assertCompletionCycle(t, registry, "/", []string{"/conf", "/conf"})
-
-	var completion slash.Completion
-	if completed, found := completion.Next(registry, "/!"); found {
-		t.Errorf(`Next("/!") unexpectedly got %q`, completed)
-	}
+	assertCompletions(t, registry, "/", []string{"/conf"})
+	assertCompletions(t, registry, "/!", nil)
 }
 
 func TestSetRejectsInvalidDefinitions(t *testing.T) {
@@ -177,7 +173,7 @@ func commandHandler(slash.Context, slash.Arguments) error {
 	return nil
 }
 
-func TestCompletionCyclesThroughNamesWithinTheLongestPrefix(t *testing.T) {
+func TestCompletionsListNamesWithinTheLongestPrefix(t *testing.T) {
 	registry := mustRegistry(t,
 		mustSet(t, "/",
 			slash.Command{Name: "conf", Run: commandHandler},
@@ -190,14 +186,15 @@ func TestCompletionCyclesThroughNamesWithinTheLongestPrefix(t *testing.T) {
 		),
 	)
 
-	assertCompletionCycle(t, registry, "/co", []string{"/conf", "/copy", "/conf"})
-	assertCompletionCycle(t, registry, "//re", []string{"//review", "//rewrite", "//review"})
-	assertCompletionCycle(t, registry, "/op", []string{"/open", "/open"})
+	assertCompletions(t, registry, "/co", []string{"/conf", "/copy"})
+	assertCompletions(t, registry, "//re", []string{"//review", "//rewrite"})
+	assertCompletions(t, registry, "/op", []string{"/open"})
+	assertCompletions(t, registry, "/missing", nil)
+	assertCompletions(t, registry, "//missing", nil)
 
-	for _, prefix := range []string{"", "hello", "/missing", "//missing", "/open argument"} {
-		var completion slash.Completion
-		if completed, found := completion.Next(registry, prefix); found {
-			t.Errorf("Next(%q) unexpectedly got %q", prefix, completed)
+	for _, prefix := range []string{"", "hello", "/open argument", "/tmp/notes.md", "//a/b"} {
+		if registry.Completes(prefix) {
+			t.Errorf("Completes(%q) unexpectedly held", prefix)
 		}
 	}
 }
@@ -210,12 +207,12 @@ func TestCompletionReadsDynamicArgumentsWhenAsked(t *testing.T) {
 			WithArgumentUsage("<path>"),
 	))
 
-	assertCompletionCycle(t, registry, "/revoke ", []string{"/revoke first"})
+	assertCompletions(t, registry, "/revoke ", []string{"/revoke first"})
 	arguments = []string{"second"}
-	assertCompletionCycle(t, registry, "/revoke ", []string{"/revoke second"})
+	assertCompletions(t, registry, "/revoke ", []string{"/revoke second"})
 }
 
-func TestCompletionCyclesThroughMatchingArguments(t *testing.T) {
+func TestCompletionsListMatchingArguments(t *testing.T) {
 	registry := mustRegistry(t, mustSet(t, "/",
 		slash.Command{Name: "ask", Run: commandHandler}.WithArgumentUsage("<args>"),
 		slash.Command{Name: "browse", Run: commandHandler}.WithArguments("config-dir", "session-dir"),
@@ -224,18 +221,16 @@ func TestCompletionCyclesThroughMatchingArguments(t *testing.T) {
 		slash.Command{Name: "open", Run: commandHandler}.WithArguments("session-log", "session-chat"),
 	))
 
-	assertCompletionCycle(t, registry, "/copy ", []string{
+	assertCompletions(t, registry, "/copy ", []string{
 		"/copy session-dir",
 		"/copy session-id",
 		"/copy session-name",
-		"/copy session-dir",
 	})
-	assertCompletionCycle(t, registry, "/open session-", []string{
+	assertCompletions(t, registry, "/open session-", []string{
 		"/open session-chat",
 		"/open session-log",
-		"/open session-chat",
 	})
-	assertCompletionCycle(t, registry, "/browse c", []string{"/browse config-dir"})
+	assertCompletions(t, registry, "/browse c", []string{"/browse config-dir"})
 
 	for _, prefix := range []string{
 		"/ask ",
@@ -243,24 +238,45 @@ func TestCompletionCyclesThroughMatchingArguments(t *testing.T) {
 		"/open session-log extra",
 		"/missing anything",
 	} {
-		var completion slash.Completion
-		if completed, found := completion.Next(registry, prefix); found {
-			t.Errorf("Next(%q) unexpectedly got %q", prefix, completed)
+		if registry.Completes(prefix) {
+			t.Errorf("Completes(%q) unexpectedly held", prefix)
 		}
 	}
 }
 
-func assertCompletionCycle(t *testing.T, registry slash.Registry, prefix string, wants []string) {
+func TestACompletionNamesWhatItCompletes(t *testing.T) {
+	registry := mustRegistry(t, mustSet(t, "/",
+		slash.Command{Name: "conf", Description: "Edit the config.", Run: commandHandler},
+		slash.Command{Name: "copy", Run: commandHandler}.WithArguments("session-name"),
+	))
+
+	want := []slash.Completion{
+		{Text: "/conf", Label: "/conf", Description: "Edit the config."},
+		{Text: "/copy", Label: "/copy", TakesArguments: true},
+	}
+	if got := registry.Completions("/co"); !slices.Equal(got, want) {
+		t.Errorf("got %+v, want %+v", got, want)
+	}
+
+	wantArguments := []slash.Completion{{Text: "/copy session-name", Label: "session-name"}}
+	if got := registry.Completions("/copy s"); !slices.Equal(got, wantArguments) {
+		t.Errorf("got %+v, want %+v", got, wantArguments)
+	}
+}
+
+func assertCompletions(t *testing.T, registry slash.Registry, prefix string, wants []string) {
 	t.Helper()
 
-	var completion slash.Completion
-	current := prefix
-	for _, want := range wants {
-		completed, found := completion.Next(registry, current)
-		if !found || completed != want {
-			t.Fatalf("Next(%q) got %q and %t, want %q", current, completed, found, want)
-		}
-		current = completed
+	if !registry.Completes(prefix) {
+		t.Fatalf("Completes(%q) did not hold", prefix)
+	}
+
+	var got []string
+	for _, completion := range registry.Completions(prefix) {
+		got = append(got, completion.Text)
+	}
+	if !slices.Equal(got, wants) {
+		t.Errorf("Completions(%q) got %q, want %q", prefix, got, wants)
 	}
 }
 
@@ -321,7 +337,7 @@ func TestArgumentUsageSummarisesArgumentsThatStillComplete(t *testing.T) {
 		t.Errorf("got usages %v, want %v", got, want)
 	}
 
-	assertCompletionCycle(t, registry, "/open s", []string{"/open session-dir", "/open session-dir"})
+	assertCompletions(t, registry, "/open s", []string{"/open session-dir"})
 }
 
 func TestUsageErrorIsRecognised(t *testing.T) {

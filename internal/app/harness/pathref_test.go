@@ -15,6 +15,7 @@ import (
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/output"
 	"crdx.org/oh/internal/app/pathref"
+	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/trigger"
 	"crdx.org/oh/pkg/ask"
@@ -294,6 +295,7 @@ type pathRefScenario struct {
 	historyLines  []string
 	listingErr    error
 	files         []string
+	commands      func(t *testing.T) slash.Registry
 	isTurnRunning bool
 	steps         func(rig *pathRefRig)
 }
@@ -323,7 +325,7 @@ func newPathRefRig(t *testing.T, scenario pathRefScenario) *pathRefRig {
 	}
 
 	clock := time.Unix(0, 0)
-	rig.app.completer = trigger.New(pathref.NewSource(pathref.NewIndexWith(
+	sources := []trigger.Source{pathref.NewSource(pathref.NewIndexWith(
 		"/workspace",
 		nil,
 		func(context.Context, string, []string) ([]string, bool, error) {
@@ -331,7 +333,12 @@ func newPathRefRig(t *testing.T, scenario pathRefScenario) *pathRefRig {
 			return files, false, scenario.listingErr
 		},
 		func() time.Time { return clock },
-	)))
+	))}
+	if scenario.commands != nil {
+		rig.app.slash.commands = scenario.commands(t)
+		sources = append(sources, slash.NewSource(func() slash.Registry { return rig.app.slash.commands }))
+	}
+	rig.app.completer = trigger.New(sources...)
 
 	return rig
 }

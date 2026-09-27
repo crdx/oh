@@ -1,0 +1,114 @@
+=== 01 a slash lists the commands with what they do ===
+────────────────────────────────────────────────────────────
+/
+› /conf   Edit the configuration file.
+  /copy   Copy a session target to the clipboard.
+  /grant  Grant temporary path access.
+  /open
+  /quit   Leave the session, and say goodbye in a line long…
+────────────────────────────────────────────────────────────
+=== 02 a name narrows the commands ===
+────────────────────────────────────────────────────────────
+/co
+› /conf  Edit the configuration file.
+  /copy  Copy a session target to the clipboard.
+
+
+
+────────────────────────────────────────────────────────────
+=== 03 a name matching nothing ===
+────────────────────────────────────────────────────────────
+/zz
+  no matching commands
+
+
+
+
+────────────────────────────────────────────────────────────
+=== 04 tab chooses a command that takes nothing ===
+────────────────────────────────────────────────────────────
+/conf
+────────────────────────────────────────────────────────────
+=== 05 choosing a command goes on to its arguments ===
+────────────────────────────────────────────────────────────
+/copy
+› session-dir
+  session-id
+  session-name
+
+
+────────────────────────────────────────────────────────────
+=== 06 an argument narrows the arguments ===
+────────────────────────────────────────────────────────────
+/copy session-n
+› session-name
+
+
+
+
+────────────────────────────────────────────────────────────
+=== 07 tab chooses an argument ===
+────────────────────────────────────────────────────────────
+/copy session-id
+────────────────────────────────────────────────────────────
+=== 08 enter chooses rather than sends ===
+────────────────────────────────────────────────────────────
+/quit
+────────────────────────────────────────────────────────────
+=== 09 two slashes list the snippets ===
+────────────────────────────────────────────────────────────
+//
+› //help
+  //review  Review the working tree.
+  //test
+
+
+────────────────────────────────────────────────────────────
+=== 10 a path closes the dropdown at its second slash ===
+────────────────────────────────────────────────────────────
+/tmp/notes
+────────────────────────────────────────────────────────────
+=== 11 a slash within prose opens nothing ===
+────────────────────────────────────────────────────────────
+see /co
+────────────────────────────────────────────────────────────
+=== 12 tab after a command that takes nothing is left to the input ===
+────────────────────────────────────────────────────────────
+/conf
+────────────────────────────────────────────────────────────
+=== 13 escape closes the dropdown ===
+────────────────────────────────────────────────────────────
+/
+────────────────────────────────────────────────────────────
+=== 14 recalling a command opens nothing ===
+────────────────────────────────────────────────────────────
+/copy session-id
+────────────────────────────────────────────────────────────
+=== 15 tab over a recalled argument opens its arguments ===
+────────────────────────────────────────────────────────────
+/copy session-
+› session-dir
+  session-id
+  session-name
+────────────────────────────────────────────────────────────
+=== 16 a path reference within a command completes as a path ===
+────────────────────────────────────────────────────────────
+/grant rw @harn
+› internal/app/harness/
+  internal/app/harness/app.go
+  internal/app/harness/main.go
+  internal/app/harness/pathref.go
+────────────────────────────────────────────────────────────
+=== 17 a narrow terminal cuts what a command does ===
+────────────────────
+/q
+› /quit  Leave the …
+
+
+
+
+────────────────────
+=== 18 alt with a slash opens nothing ===
+────────────────────────────────────────────────────────────
+/
+────────────────────────────────────────────────────────────

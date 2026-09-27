@@ -22,7 +22,6 @@ const (
 	ToggleGit
 	ToggleLookup
 	ToggleNetwork
-	CompleteCommand
 )
 
 type Input struct {
@@ -396,9 +395,6 @@ func (self *Input) insert(value rune) {
 
 func (self *Input) rune(keypress key.Key, isRunning bool) Action {
 	if !keypress.Mod.Has(key.Ctrl) {
-		if keypress.Value == '\t' && strings.HasPrefix(self.buffer.String(), "/") {
-			return CompleteCommand
-		}
 		self.insert(keypress.Value)
 		return DrawInput
 	}

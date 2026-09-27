@@ -30,6 +30,7 @@
 - Show pending access changes notices
 - Complete paths with `@`
 - Quote completed paths that contain spaces
+- Complete slash commands and their arguments from the same dropdown
 
 ## [0.10.0] - 2026-09-25
 

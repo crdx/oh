@@ -11,7 +11,6 @@ import (
 
 	"crdx.org/oh/internal/app/feedback"
 	"crdx.org/oh/internal/app/pathgrant"
-	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/snippets"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/width"
@@ -24,39 +23,35 @@ func TestGoldenCompletionMatchesGolden(t *testing.T) {
 	commands := newCommandRegistryWithSnippets(t, fixtureEnvironment(t), fixtureSnippets())
 	var output strings.Builder
 
-	for _, test := range []struct {
-		prefix string
-		steps  int
-	}{
-		{prefix: "/", steps: 13},
-		{prefix: "/c", steps: 2},
-		{prefix: "/g", steps: 2},
-		{prefix: "/grant ", steps: 4},
-		{prefix: "/r", steps: 1},
-		{prefix: "/revoke ", steps: 1},
-		{prefix: "/copy ", steps: 3},
-		{prefix: "/copy l", steps: 1},
-		{prefix: "/copy sn", steps: 1},
-		{prefix: "/edit ", steps: 3},
-		{prefix: "/edit sn", steps: 1},
-		{prefix: "/open ", steps: 12},
-		{prefix: "/open sn", steps: 1},
-		{prefix: "//", steps: 4},
-		{prefix: "//a", steps: 3},
-		{prefix: "//h", steps: 1},
+	for _, prefix := range []string{
+		"/",
+		"/c",
+		"/g",
+		"/grant ",
+		"/r",
+		"/revoke ",
+		"/copy ",
+		"/copy l",
+		"/copy sn",
+		"/edit ",
+		"/edit sn",
+		"/open ",
+		"/open sn",
+		"//",
+		"//a",
+		"//h",
 	} {
-		state := slash.Completion{}
-		current := test.prefix
-		fmt.Fprintf(&output, "%s", test.prefix)
-		for range test.steps {
-			completed, found := state.Next(commands, current)
-			if !found {
-				t.Fatalf("expected completion for %q", current)
+		fmt.Fprintf(&output, "%q\n", prefix)
+		for _, completion := range commands.Completions(prefix) {
+			fmt.Fprintf(&output, "  %s → %s", completion.Label, completion.Text)
+			if completion.TakesArguments {
+				output.WriteString(" …")
 			}
-			fmt.Fprintf(&output, " → %s", completed)
-			current = completed
+			if completion.Description != "" {
+				fmt.Fprintf(&output, "  (%s)", completion.Description)
+			}
+			output.WriteByte('\n')
 		}
-		output.WriteByte('\n')
 	}
 
 	assertGolden(t, "completion.txt", output.String())

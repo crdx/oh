@@ -1056,9 +1056,12 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		configObserver: configObserver,
 		runMode:        runMode{isPrinting: args.IsPrinting, isYolo: args.Yolo, isSimulated: isSimulated},
 		question:       questionState{broker: askBroker},
-		completer:      trigger.New(pathref.NewSource(pathref.NewIndex(workspace.GetDir(), files.ExcludedNames))),
-		startedAt:      util.WallClock(time.Now()),
-		keyboard:       keyboard,
+		completer: trigger.New(
+			pathref.NewSource(pathref.NewIndex(workspace.GetDir(), files.ExcludedNames)),
+			slash.NewSource(func() slash.Registry { return app.slash.commands }),
+		),
+		startedAt: util.WallClock(time.Now()),
+		keyboard:  keyboard,
 	}
 	if resumedSession == nil && model.SupportsFastMode(selection.Provider) {
 		app.openingEvents = []agent.Event{model.FastModeEvent(selection.IsFast)}

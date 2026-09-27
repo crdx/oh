@@ -915,17 +915,6 @@ func TestTabInOrdinaryInputBecomesSpaces(t *testing.T) {
 	}
 }
 
-func TestTabRequestsCompletionWithoutChangingTheInput(t *testing.T) {
-	self := inputFromKeys(t, "/co")
-
-	if got := self.Apply(key.Key{Code: key.Rune, Value: '\t'}, false); got != CompleteCommand {
-		t.Errorf("got action %v", got)
-	}
-	if got := self.Text(); got != "/co" {
-		t.Errorf("got text %q", got)
-	}
-}
-
 func TestAltReturnForceAcceptsNonEmptyInput(t *testing.T) {
 	self := inputFromKeys(t, "/unknown")
 

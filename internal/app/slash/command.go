@@ -305,6 +305,84 @@ func (self Registry) CommandName(message string) (string, bool) {
 	return fields[0], true
 }
 
+type Completion struct {
+	Text           string
+	Label          string
+	Description    string
+	TakesArguments bool
+}
+
+type completionTarget struct {
+	set     CommandSet
+	command *Command
+	name    string
+	partial string
+}
+
+func (self Registry) Completes(prefix string) bool {
+	_, isCompletable := self.completionTarget(prefix)
+	return isCompletable
+}
+
+func (self Registry) Completions(prefix string) []Completion {
+	target, isCompletable := self.completionTarget(prefix)
+	if !isCompletable {
+		return nil
+	}
+
+	if target.command == nil {
+		names := matchingPrefixes(target.partial, target.set.commandNames())
+		completions := make([]Completion, len(names))
+		for i, name := range names {
+			command := target.set.commands[name]
+			completions[i] = Completion{
+				Text:           target.set.prefix + name,
+				Label:          target.set.prefix + name,
+				Description:    command.Description,
+				TakesArguments: command.listArguments != nil,
+			}
+		}
+		return completions
+	}
+
+	arguments := matchingPrefixes(target.partial, target.command.getArguments())
+	completions := make([]Completion, len(arguments))
+	for i, argument := range arguments {
+		completions[i] = Completion{Text: target.name + " " + argument, Label: argument}
+	}
+	return completions
+}
+
+func (self Registry) completionTarget(prefix string) (completionTarget, bool) {
+	if strings.ContainsAny(prefix, "\t\r\n") {
+		return completionTarget{}, false
+	}
+
+	name, argumentPrefix, hasArgument := strings.Cut(prefix, " ")
+	set, isFound := self.getSet(name)
+	if !isFound {
+		return completionTarget{}, false
+	}
+
+	bareName := strings.TrimPrefix(name, set.prefix)
+	if !hasArgument {
+		if strings.Contains(bareName, "/") {
+			return completionTarget{}, false
+		}
+		return completionTarget{set: set, partial: bareName}, true
+	}
+	if strings.Contains(argumentPrefix, " ") {
+		return completionTarget{}, false
+	}
+
+	command, isFound := set.commands[bareName]
+	if !isFound || command.listArguments == nil {
+		return completionTarget{}, false
+	}
+
+	return completionTarget{set: set, command: command, name: name, partial: argumentPrefix}, true
+}
+
 func (self Registry) getSet(name string) (CommandSet, bool) {
 	for _, set := range self.sets {
 		if strings.HasPrefix(name, set.prefix) {
@@ -312,71 +390,6 @@ func (self Registry) getSet(name string) (CommandSet, bool) {
 		}
 	}
 	return CommandSet{}, false
-}
-
-type Completion struct {
-	matches []string
-	current string
-	index   int
-}
-
-func (self *Completion) Next(registry Registry, prefix string) (string, bool) {
-	if prefix == self.current && len(self.matches) > 0 {
-		self.index = (self.index + 1) % len(self.matches)
-		self.current = self.matches[self.index]
-		return self.current, true
-	}
-
-	self.matches = registry.completions(prefix)
-	self.index = 0
-	if len(self.matches) == 0 {
-		self.current = ""
-		return "", false
-	}
-
-	self.current = self.matches[0]
-	return self.current, true
-}
-
-func (self *Completion) Reset() {
-	self.matches = nil
-	self.current = ""
-	self.index = 0
-}
-
-func (self Registry) completions(prefix string) []string {
-	if strings.ContainsAny(prefix, "\t\r\n") {
-		return nil
-	}
-
-	name, argumentPrefix, hasArgument := strings.Cut(prefix, " ")
-	set, isFound := self.getSet(name)
-	if !isFound {
-		return nil
-	}
-
-	bareName := strings.TrimPrefix(name, set.prefix)
-	if !hasArgument {
-		matches := matchingPrefixes(bareName, set.commandNames())
-		for i := range matches {
-			matches[i] = set.prefix + matches[i]
-		}
-		return matches
-	}
-	if strings.Contains(argumentPrefix, " ") {
-		return nil
-	}
-
-	command, isFound := set.commands[bareName]
-	if !isFound {
-		return nil
-	}
-
-	arguments := matchingPrefixes(argumentPrefix, command.getArguments())
-	for i := range arguments {
-		arguments[i] = name + " " + arguments[i]
-	}
-	return arguments
 }
 
 func (self CommandSet) commandNames() []string {
