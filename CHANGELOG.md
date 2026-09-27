@@ -40,6 +40,7 @@
 - Shed bar segment detail from the right on narrow terminals
 - Move the centre of the bar off-centre into free room rather than hiding it
 - Keep a divider between every pair of bar groups, and never two spaces
+- Keep unrelated Mermaid edges from running along one another
 
 ### Sessions and storage
 

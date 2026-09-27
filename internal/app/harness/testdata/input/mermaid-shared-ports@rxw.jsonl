@@ -1,0 +1,4 @@
+{"event":{"kind":"session_startup","took":0,"state":{"session":"000000000000000000000000","tools":2320}}}
+{"event":{"kind":"user_message","text":"draw the edges that meet at a port"}}
+{"event":{"kind":"model_reasoning","text":"Routing each edge apart."}}
+{"event":{"kind":"model_message","text":"# Shared ports\n\n```mermaid\ngraph LR\nA --> M\nB --> M\nM --> C\nM --> D\n```\n\n```mermaid\ngraph TD\nA --> M\nB --> M\nM --> C\nM --> D\n```\n\n```mermaid\ngraph LR\nA --> B\nB --> C\nA --> C\nB --> D\nD --> C\n```\n\n```mermaid\nflowchart LR\nconf[dnsmasq.conf] & sql[lighthouse.sql] -->|feed| box[magic<br>black box]\nbox --> out[new dnsmasq.conf] --> reload\nbox <--> cache\n```\n"}}

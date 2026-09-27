@@ -1,0 +1,52 @@
+=== written down ===
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `high`
+- **Provider:** `codex`
+- **Workspace:** `/workspace`
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Startup · +0s
+
+## User · +1s
+
+draw the edges that meet at a port
+
+## Assistant · +3s
+
+# Shared ports
+
+```mermaid
+graph LR
+A --> M
+B --> M
+M --> C
+M --> D
+```
+
+```mermaid
+graph TD
+A --> M
+B --> M
+M --> C
+M --> D
+```
+
+```mermaid
+graph LR
+A --> B
+B --> C
+A --> C
+B --> D
+D --> C
+```
+
+```mermaid
+flowchart LR
+conf[dnsmasq.conf] & sql[lighthouse.sql] -->|feed| box[magic<br>black box]
+box --> out[new dnsmasq.conf] --> reload
+box <--> cache
+```

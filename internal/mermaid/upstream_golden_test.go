@@ -12,6 +12,9 @@ import (
 )
 
 var intentionalUpstreamRenderingDifferences = map[string]string{
+	"ascii/backlink_from_top.txt":                       "a backlink no longer runs along the edge it leaves beside",
+	"ascii/backlink_with_short_y_padding.txt":           "a backlink no longer runs along the edge it leaves beside",
+	"extended-chars/backlink_from_top.txt":              "a backlink no longer runs along the edge it leaves beside",
 	"ascii/subgraph_complex_mixed.txt":                  "subgraph border includes the external-node offset",
 	"ascii/subgraph_mixed_nodes.txt":                    "subgraph border includes the external-node offset",
 	"ascii/subgraph_mixed_nodes_td.txt":                 "subgraph border includes the external-node offset",

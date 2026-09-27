@@ -33,6 +33,7 @@ func (self *graph) determinePath(edge *edge) {
 	preferredFrom := edge.from.gridCoord.Direction(preferredDir)
 	preferredTo := edge.to.gridCoord.Direction(preferredOppositeDir)
 	preferredPath, preferredError := self.getPath(preferredFrom, preferredTo)
+	preferredPenalty := self.pathPenalty(edge, preferredPath)
 	if preferredError == nil {
 		preferredPath = mergePath(preferredPath)
 	}
@@ -40,12 +41,16 @@ func (self *graph) determinePath(edge *edge) {
 	alternativeFrom := edge.from.gridCoord.Direction(alternativeDir)
 	alternativeTo := edge.to.gridCoord.Direction(alternativeOppositeDir)
 	alternativePath, alternativeError := self.getPath(alternativeFrom, alternativeTo)
+	alternativePenalty := self.pathPenalty(edge, alternativePath)
 	if alternativeError == nil {
 		alternativePath = mergePath(alternativePath)
 	}
 
+	isPreferredBetter := preferredPenalty < alternativePenalty ||
+		(preferredPenalty == alternativePenalty && len(preferredPath) <= len(alternativePath))
+
 	switch {
-	case preferredError == nil && (alternativeError != nil || len(preferredPath) <= len(alternativePath)):
+	case preferredError == nil && (alternativeError != nil || isPreferredBetter):
 		edge.startDir = preferredDir
 		edge.endDir = preferredOppositeDir
 		edge.path = preferredPath

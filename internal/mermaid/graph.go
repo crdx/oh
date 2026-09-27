@@ -38,6 +38,7 @@ type graph struct {
 	edges            []*edge
 	drawing          *drawing
 	grid             map[gridCoord]*node
+	occupants        map[gridCoord][]occupant
 	edgeCounts       map[edgePair]int
 	columnWidth      map[int]int
 	rowHeight        map[int]int
@@ -80,6 +81,7 @@ type subgraph struct {
 func mkGraph(data *orderedmap.OrderedMap[string, []textEdge], nodeSpecs map[string]graphNodeSpec) graph {
 	builtGraph := graph{drawing: mkDrawing(0, 0)}
 	builtGraph.grid = make(map[gridCoord]*node)
+	builtGraph.occupants = make(map[gridCoord][]occupant)
 	builtGraph.edgeCounts = make(map[edgePair]int)
 	builtGraph.columnWidth = make(map[int]int)
 	builtGraph.rowHeight = make(map[int]int)
@@ -266,6 +268,7 @@ func (self *graph) createMapping() error {
 
 	for _, e := range self.edges {
 		self.determinePath(e)
+		self.occupyCells(e)
 		self.increaseGridSizeForPath(e.path)
 		self.determineLabelLine(e)
 	}

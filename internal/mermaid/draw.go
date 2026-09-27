@@ -105,6 +105,14 @@ func (self *graph) drawLine(target *drawing, from drawingCoord, to drawingCoord,
 }
 
 func drawMap(properties *graphProperties) (string, error) {
+	graph, err := mapGraph(properties)
+	if err != nil {
+		return "", err
+	}
+	return drawingToString(graph.draw()), nil
+}
+
+func mapGraph(properties *graphProperties) (*graph, error) {
 	graph := mkGraph(properties.data, properties.nodeSpecs)
 	graph.setStyleClasses(properties)
 	graph.paddingX = properties.paddingX
@@ -112,9 +120,9 @@ func drawMap(properties *graphProperties) (string, error) {
 	graph.useAscii = properties.useAscii
 	graph.setSubgraphs(properties.subgraphs)
 	if err := graph.createMapping(); err != nil {
-		return "", err
+		return nil, err
 	}
-	return drawingToString(graph.draw()), nil
+	return &graph, nil
 }
 
 func drawBox(node *node, graph *graph) *drawing {

@@ -1,0 +1,835 @@
+=== narrow ===
+Agent 000000000000000000000000 ready in
+0s with 0 skills ⧸ 0 snippets ⧸ ~800t
+context.
+
+
+ draw the edges that meet at a port
+
+
+Routing each edge apart.
+
+Shared ports
+
+┌───┐     ┌───┐     ┌───┐
+│   │     │   │     │   │
+│ A ├──┬─►│ M ├────►│ C │
+│   │  │  │   │     │   │
+└───┘  │  └─┬─┘     └───┘
+       │    │
+       │    │
+  ┌────┘    │
+  │         │
+  │         │
+┌─┴─┐       │       ┌───┐
+│   │       │       │   │
+│ B │       └──────►│ D │
+│   │               │   │
+└───┘               └───┘
+
+┌───┐     ┌───┐
+│   │     │   │
+│ A │  ┌──┤ B │
+│   │  │  │   │
+└─┬─┘  │  └───┘
+  │    │
+  │    │
+  ├────┘
+  │
+  ▼
+┌───┐
+│   │
+│ M ├───────┐
+│   │       │
+└─┬─┘       │
+  │         │
+  │         │
+  │         │
+  │         │
+  ▼         ▼
+┌───┐     ┌───┐
+│   │     │   │
+│ C │     │ D │
+│   │     │   │
+└───┘     └───┘
+
+┌───┐     ┌───┐     ┌───┐
+│   │     │   │     │   │
+│ A ├────►│ B ├────►│ D │
+│   │     │   │     │   │
+└─┬─┘     └─┬─┘     └─┬─┘
+  │         │         │
+  │         │         │
+  │         │         │
+  │         │         │
+  │         ▼         │
+  │       ┌───┐       │
+  │       │   │       │
+  └──────►│ C │       │
+          │   │       │
+          └───┘  ┌────┘
+            ▲    │
+            └────┘
+
+Diagram needs 78 columns.
+flowchart LR
+conf[dnsmasq.conf] & sql[lighthouse.sql]
+ -->|feed| box[magic<br>black box]
+box --> out[new dnsmasq.conf] --> reload
+box <--> cache
+=== one column ===
+A
+g
+e
+n
+t
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+r
+e
+a
+d
+y
+i
+n
+0
+s
+w
+i
+t
+h
+0
+s
+k
+i
+l
+l
+s
+⧸
+0
+s
+n
+i
+p
+p
+e
+t
+s
+⧸
+~
+8
+0
+0
+t
+c
+o
+n
+t
+e
+x
+t
+.
+
+
+
+d
+
+r
+
+a
+
+w
+
+t
+
+h
+
+e
+
+e
+
+d
+
+g
+
+e
+
+s
+
+t
+
+h
+
+a
+
+t
+
+m
+
+e
+
+e
+
+t
+
+a
+
+t
+
+a
+
+p
+
+o
+
+r
+
+t
+
+
+R
+o
+u
+t
+i
+n
+g
+e
+a
+c
+h
+e
+d
+g
+e
+a
+p
+a
+r
+t
+.
+
+S
+h
+a
+r
+e
+d
+p
+o
+r
+t
+s
+
+D
+i
+a
+g
+r
+a
+m
+n
+e
+e
+d
+s
+2
+5
+c
+o
+l
+u
+m
+n
+s
+.
+g
+r
+a
+p
+h
+
+L
+R
+A
+
+-
+-
+>
+
+M
+B
+
+-
+-
+>
+
+M
+M
+
+-
+-
+>
+
+C
+M
+
+-
+-
+>
+
+D
+
+D
+i
+a
+g
+r
+a
+m
+n
+e
+e
+d
+s
+1
+5
+c
+o
+l
+u
+m
+n
+s
+.
+g
+r
+a
+p
+h
+
+T
+D
+A
+
+-
+-
+>
+
+M
+B
+
+-
+-
+>
+
+M
+M
+
+-
+-
+>
+
+C
+M
+
+-
+-
+>
+
+D
+
+D
+i
+a
+g
+r
+a
+m
+n
+e
+e
+d
+s
+2
+5
+c
+o
+l
+u
+m
+n
+s
+.
+g
+r
+a
+p
+h
+
+L
+R
+A
+
+-
+-
+>
+
+B
+B
+
+-
+-
+>
+
+C
+A
+
+-
+-
+>
+
+C
+B
+
+-
+-
+>
+
+D
+D
+
+-
+-
+>
+
+C
+
+D
+i
+a
+g
+r
+a
+m
+n
+e
+e
+d
+s
+7
+8
+c
+o
+l
+u
+m
+n
+s
+.
+f
+l
+o
+w
+c
+h
+a
+r
+t
+
+L
+R
+c
+o
+n
+f
+[
+d
+n
+s
+m
+a
+s
+q
+.
+c
+o
+n
+f
+]
+
+&
+
+s
+q
+l
+[
+l
+i
+g
+h
+t
+h
+o
+u
+s
+e
+.
+s
+q
+l
+]
+
+-
+-
+>
+|
+f
+e
+e
+d
+|
+
+b
+o
+x
+[
+m
+a
+g
+i
+c
+<
+b
+r
+>
+b
+l
+a
+c
+k
+
+b
+o
+x
+]
+b
+o
+x
+
+-
+-
+>
+
+o
+u
+t
+[
+n
+e
+w
+
+d
+n
+s
+m
+a
+s
+q
+.
+c
+o
+n
+f
+]
+
+-
+-
+>
+
+r
+e
+l
+o
+a
+d
+b
+o
+x
+
+<
+-
+-
+>
+
+c
+a
+c
+h
+e
+=== printed ===
+Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.
+
+
+ draw the edges that meet at a port
+
+
+Routing each edge apart.
+
+Shared ports
+
+┌───┐     ┌───┐     ┌───┐
+│   │     │   │     │   │
+│ A ├──┬─►│ M ├────►│ C │
+│   │  │  │   │     │   │
+└───┘  │  └─┬─┘     └───┘
+       │    │
+       │    │
+  ┌────┘    │
+  │         │
+  │         │
+┌─┴─┐       │       ┌───┐
+│   │       │       │   │
+│ B │       └──────►│ D │
+│   │               │   │
+└───┘               └───┘
+
+┌───┐     ┌───┐
+│   │     │   │
+│ A │  ┌──┤ B │
+│   │  │  │   │
+└─┬─┘  │  └───┘
+  │    │
+  │    │
+  ├────┘
+  │
+  ▼
+┌───┐
+│   │
+│ M ├───────┐
+│   │       │
+└─┬─┘       │
+  │         │
+  │         │
+  │         │
+  │         │
+  ▼         ▼
+┌───┐     ┌───┐
+│   │     │   │
+│ C │     │ D │
+│   │     │   │
+└───┘     └───┘
+
+┌───┐     ┌───┐     ┌───┐
+│   │     │   │     │   │
+│ A ├────►│ B ├────►│ D │
+│   │     │   │     │   │
+└─┬─┘     └─┬─┘     └─┬─┘
+  │         │         │
+  │         │         │
+  │         │         │
+  │         │         │
+  │         ▼         │
+  │       ┌───┐       │
+  │       │   │       │
+  └──────►│ C │       │
+          │   │       │
+          └───┘  ┌────┘
+            ▲    │
+            └────┘
+
+┌────────────────┐       ┌───────────┐     ┌──────────────────┐     ┌────────┐
+│                │       │           │     │                  │     │        │
+│                │       │   magic   │     │                  │     │        │
+│  dnsmasq.conf  ├─feed─►│           ├────►│ new dnsmasq.conf ├────►│ reload │
+│                │   │   │ black box │     │                  │     │        │
+│                │   │   │           │     │                  │     │        │
+└────────────────┘ feed  └─────┬─────┘     └──────────────────┘     └────────┘
+                     │         ▲
+                     │         │
+         ┌───────────┘         │
+         │                     │
+         │                     │
+┌────────┴───────┐             │           ┌──────────────────┐
+│                │             │           │                  │
+│ lighthouse.sql │             └──────────►│      cache       │
+│                │                         │                  │
+└────────────────┘                         └──────────────────┘
+=== tiny ===
+Agent
+000000000000
+000000000000
+ready in 0s
+with 0
+skills ⧸ 0
+snippets ⧸
+~800t
+context.
+
+
+ draw the
+ edges that
+ meet at a
+ port
+
+
+Routing each
+edge apart.
+
+Shared ports
+
+Diagram
+needs 25
+columns.
+graph LR
+A --> M
+B --> M
+M --> C
+M --> D
+
+Diagram
+needs 15
+columns.
+graph TD
+A --> M
+B --> M
+M --> C
+M --> D
+
+Diagram
+needs 25
+columns.
+graph LR
+A --> B
+B --> C
+A --> C
+B --> D
+D --> C
+
+Diagram
+needs 78
+columns.
+flowchart LR
+conf[dnsmasq
+.conf] & sql
+[lighthouse.
+sql] -->|fee
+d| box[magic
+<br>black bo
+x]
+box --> out[
+new dnsmasq.
+conf] --> re
+load
+box <--> cac
+he
+=== wide ===
+Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800t context.
+
+
+ draw the edges that meet at a port
+
+
+Routing each edge apart.
+
+Shared ports
+
+┌───┐     ┌───┐     ┌───┐
+│   │     │   │     │   │
+│ A ├──┬─►│ M ├────►│ C │
+│   │  │  │   │     │   │
+└───┘  │  └─┬─┘     └───┘
+       │    │
+       │    │
+  ┌────┘    │
+  │         │
+  │         │
+┌─┴─┐       │       ┌───┐
+│   │       │       │   │
+│ B │       └──────►│ D │
+│   │               │   │
+└───┘               └───┘
+
+┌───┐     ┌───┐
+│   │     │   │
+│ A │  ┌──┤ B │
+│   │  │  │   │
+└─┬─┘  │  └───┘
+  │    │
+  │    │
+  ├────┘
+  │
+  ▼
+┌───┐
+│   │
+│ M ├───────┐
+│   │       │
+└─┬─┘       │
+  │         │
+  │         │
+  │         │
+  │         │
+  ▼         ▼
+┌───┐     ┌───┐
+│   │     │   │
+│ C │     │ D │
+│   │     │   │
+└───┘     └───┘
+
+┌───┐     ┌───┐     ┌───┐
+│   │     │   │     │   │
+│ A ├────►│ B ├────►│ D │
+│   │     │   │     │   │
+└─┬─┘     └─┬─┘     └─┬─┘
+  │         │         │
+  │         │         │
+  │         │         │
+  │         │         │
+  │         ▼         │
+  │       ┌───┐       │
+  │       │   │       │
+  └──────►│ C │       │
+          │   │       │
+          └───┘  ┌────┘
+            ▲    │
+            └────┘
+
+┌────────────────┐       ┌───────────┐     ┌──────────────────┐     ┌────────┐
+│                │       │           │     │                  │     │        │
+│                │       │   magic   │     │                  │     │        │
+│  dnsmasq.conf  ├─feed─►│           ├────►│ new dnsmasq.conf ├────►│ reload │
+│                │   │   │ black box │     │                  │     │        │
+│                │   │   │           │     │                  │     │        │
+└────────────────┘ feed  └─────┬─────┘     └──────────────────┘     └────────┘
+                     │         ▲
+                     │         │
+         ┌───────────┘         │
+         │                     │
+         │                     │
+┌────────┴───────┐             │           ┌──────────────────┐
+│                │             │           │                  │
+│ lighthouse.sql │             └──────────►│      cache       │
+│                │                         │                  │
+└────────────────┘                         └──────────────────┘
