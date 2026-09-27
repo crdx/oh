@@ -125,6 +125,8 @@ func slashCommandScenarios(t *testing.T) map[string]pathRefScenario {
 			rig.press(tabKey)
 			rig.typeText("/tmp/notes")
 		}),
+		"22 a command typed whole that takes nothing closes the dropdown": commanding(typing("/quit")),
+		"23 an argument typed whole closes the dropdown":                  commanding(typing("/copy session-id")),
 	}
 }
 

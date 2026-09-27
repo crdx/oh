@@ -711,6 +711,10 @@ func pathRefScenarios(t *testing.T) map[string]pathRefScenario {
 				rig.press(tabKey)
 			},
 		},
+		"52 typing out the only path closes the dropdown": at(60, 24, func(rig *pathRefRig) {
+			rig.typeAndList("look at @go.mo")
+			rig.typeText("d")
+		}),
 	}
 
 	return scenarios
@@ -774,6 +778,10 @@ func TestAClosedDropdownLeavesTheScreenAsAFreshDrawWould(t *testing.T) {
 		"backspace": func(rig *pathRefRig) {
 			rig.typeAndList("look at @")
 			rig.press(pathRefBack)
+		},
+		"typed whole": func(rig *pathRefRig) {
+			rig.typeAndList("look at @go.mo")
+			rig.typeText("d")
 		},
 	} {
 		t.Run(name, func(t *testing.T) {

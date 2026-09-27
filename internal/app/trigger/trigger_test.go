@@ -279,6 +279,31 @@ func TestChoosingAClosedResultEndsTheWord(t *testing.T) {
 	}
 }
 
+func TestTypingOutTheOnlyResultClosesTheDropdown(t *testing.T) {
+	completer := trigger.New(files())
+	editor := &fakeEditor{}
+
+	typeInto(completer, editor, "@go.mo")
+	if !completer.IsOpen() {
+		t.Fatal("the dropdown closed before the word was whole")
+	}
+
+	typeInto(completer, editor, "d")
+	if completer.IsOpen() {
+		t.Error("the dropdown stayed open over a word it had nothing to add to")
+	}
+}
+
+func TestTypingOutOneOfSeveralResultsKeepsTheDropdownOpen(t *testing.T) {
+	completer := trigger.New(&fakeSource{symbol: '#', items: []trigger.Result{{Text: "bug"}, {Text: "bugs"}}})
+	editor := &fakeEditor{}
+
+	typeInto(completer, editor, "#bug")
+	if !completer.IsOpen() {
+		t.Error("the dropdown closed over a word a longer result still extends")
+	}
+}
+
 func TestOnlyTypingTheSymbolOrOpeningOpensTheDropdown(t *testing.T) {
 	completer := trigger.New(files())
 	editor := &fakeEditor{}

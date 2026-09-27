@@ -129,8 +129,13 @@ func (self *Completer) Sync(editor Editor) {
 
 	isUnchanged := word.Query == self.current.Query && word.IsQuoted == self.current.IsQuoted
 	self.current = word
-	if !isUnchanged {
-		self.match()
+	if isUnchanged {
+		return
+	}
+
+	self.match()
+	if self.offersOnly(string(editor.Runes()[word.Start:word.End])) {
+		self.close()
 	}
 }
 
@@ -138,6 +143,10 @@ func (self *Completer) Receive() {
 	if self.dropdown.IsOpen() {
 		self.match()
 	}
+}
+
+func (self *Completer) offersOnly(text string) bool {
+	return self.total == 1 && len(self.results) == 1 && self.results[0].Text == text
 }
 
 func (self *Completer) openWith(source Source, word Word) {
