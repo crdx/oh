@@ -112,14 +112,43 @@ func TestTheJobsCommandListsEveryJob(t *testing.T) {
 	if !context.isListing {
 		t.Error("jobs were not marked as a listing")
 	}
-	if !strings.Contains(context.notice, style.Subject("docs")+": running") {
+	if !strings.Contains(context.notice, style.Subject("docs")) {
 		t.Error("job name was not styled as a subject")
 	}
 
 	notice := style.Plain(context.notice)
-	for _, wanted := range []string{"docs: running", "$ python3 -m http.server 8080", "build: failed", "exit(1)"} {
+	for _, wanted := range []string{"docs", "running", "$ python3 -m http.server 8080", "build", "failed", "exit(1)"} {
 		if !strings.Contains(notice, wanted) {
 			t.Errorf("got %q, want it to carry %q", notice, wanted)
+		}
+	}
+
+	lines := strings.Split(notice, "\n")
+	if len(lines) != 3 {
+		t.Fatalf("got %d lines, want a heading and two jobs", len(lines))
+	}
+	if docsStatusAt, buildStatusAt := strings.Index(lines[1], "running"), strings.Index(lines[2], "failed"); docsStatusAt != buildStatusAt {
+		t.Errorf("status columns start at %d and %d, want them aligned", docsStatusAt, buildStatusAt)
+	}
+	if docsCommandAt, buildCommandAt := strings.Index(lines[1], "$"), strings.Index(lines[2], "$"); docsCommandAt != buildCommandAt {
+		t.Errorf("command columns start at %d and %d, want them aligned", docsCommandAt, buildCommandAt)
+	}
+}
+
+func TestJobOutcomesCarryTheirStateStyle(t *testing.T) {
+	for _, test := range []struct {
+		state jobs.State
+		paint style.Style
+	}{
+		{state: jobs.StateComplete, paint: style.Dim},
+		{state: jobs.StateRunning, paint: style.Normal},
+		{state: jobs.StateFailed, paint: style.Failure},
+	} {
+		snapshot := jobs.Snapshot{State: test.state, StartedAt: time.Now().Add(-time.Second)}
+		want := test.paint(snapshot.Outcome())
+		got := styleJobOutcome(snapshot)
+		if got != want {
+			t.Errorf("%s outcome was %q, want %q", test.state, got, want)
 		}
 	}
 }

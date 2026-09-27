@@ -6,6 +6,7 @@ import (
 	"crdx.org/oh/internal/app/call"
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/table"
 	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
@@ -130,15 +131,40 @@ func formatJobs(listing []jobs.Snapshot) string {
 		return "No background jobs."
 	}
 
-	lines := make([]string, 0, len(listing))
-	for _, snapshot := range listing {
-		command := call.LabelForRendering(bash.DescribeCommand(snapshot.Command)).Render()
-		name := style.Subject(strutil.Flatten(snapshot.Name))
-		status := strutil.Flatten(snapshot.Outcome())
-		lines = append(lines, "  "+name+": "+status+"  "+command)
+	rows := make([][]string, len(listing))
+	for index, snapshot := range listing {
+		rows[index] = []string{
+			style.Subject(strutil.Flatten(snapshot.Name)),
+			styleJobOutcome(snapshot),
+			call.LabelForRendering(bash.DescribeCommand(snapshot.Command)).Render(),
+		}
+	}
+
+	jobTable := table.New(
+		table.Column{},
+		table.Column{},
+		table.Column{},
+	).Fit(rows)
+	lines := make([]string, len(rows))
+	for index, row := range rows {
+		lines[index] = "  " + jobTable.Row(row, 0)
 	}
 
 	return "Background jobs:\n" + strings.Join(lines, "\n")
+}
+
+func styleJobOutcome(snapshot jobs.Snapshot) string {
+	outcome := strutil.Flatten(snapshot.Outcome())
+	switch snapshot.State {
+	case jobs.StateComplete:
+		return style.Dim(outcome)
+	case jobs.StateFailed:
+		return style.Failure(outcome)
+	case jobs.StateStarting, jobs.StateRunning, jobs.StateStopping, jobs.StateStopped, jobs.StateEnded:
+		return style.Normal(outcome)
+	}
+
+	return style.Normal(outcome)
 }
 
 func withJobOutput(status string, text string) string {

@@ -4,11 +4,10 @@
 
 ### Changes
 
+- Restyle jobs list output
 - Honour explicit server advice to retry a refused request
 - Require double-enter in quick succession
-- Theme job names in jobs list output
 - Open session picker on first available session
-- Keep each jobs entry on one line
 - Show session sizes on disk in picker
 - Make plain reasoning keep underscores
 - Keep streamed redraws proportional

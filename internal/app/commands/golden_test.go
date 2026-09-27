@@ -230,6 +230,12 @@ func TestGoldenJobListingMatchesGolden(t *testing.T) {
 			EndedAt:   startedAt.Add(3 * time.Second),
 		}
 	}
+	failedJob := func(name string, command string) jobs.Snapshot {
+		snapshot := finishedJob(name, command)
+		snapshot.State = jobs.StateFailed
+		snapshot.ExitCode = 1
+		return snapshot
+	}
 	stoppedJob := func(name string, command string) jobs.Snapshot {
 		snapshot := finishedJob(name, command)
 		snapshot.State = jobs.StateStopped
@@ -246,7 +252,7 @@ func TestGoldenJobListingMatchesGolden(t *testing.T) {
 		{label: "no jobs"},
 		{label: "ordinary and multiline commands", listing: []jobs.Snapshot{
 			finishedJob("build", "GOCACHE=/tmp/cache just build && echo done"),
-			finishedJob("docs", "python3 -m http.server 8080\n  --bind localhost"),
+			failedJob("docs", "python3 -m http.server 8080\n  --bind localhost"),
 		}},
 		{label: "heredoc command", listing: []jobs.Snapshot{
 			finishedJob("write", "cat <<'EOF' > notes.txt\nhello\nEOF"),
