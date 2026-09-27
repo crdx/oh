@@ -141,6 +141,18 @@ func (self *Screen) Blank() {
 	self.isBlankOwed = self.hasPrinted
 }
 
+func (self *Screen) TopPad() {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	if !self.canRepaint || self.hasPrinted || len(self.blocks) > 0 {
+		return
+	}
+
+	self.newline()
+	self.changed()
+}
+
 func (self *Screen) End() {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()

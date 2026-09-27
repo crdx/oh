@@ -53,6 +53,7 @@ const (
 	sizedEmojiCells         = 4
 	bannerLeftPadding       = 1
 	bannerGap               = 2
+	textSizingPrefix        = "\x1b]66;"
 	textSizingMetadata      = "s=2:w=2"
 	startupDetailsSeparator = "⧸"
 )
@@ -66,6 +67,10 @@ func RenderEvent(event agent.Event, columns int, isTextSizingSupported bool) str
 	}
 
 	return RenderBanner(event.Took, false, info, columns, isTextSizingSupported)
+}
+
+func IsBannerSized(event agent.Event, columns int, isTextSizingSupported bool) bool {
+	return strings.Contains(RenderEvent(event, columns, isTextSizingSupported), textSizingPrefix)
 }
 
 func RenderBanner(elapsedTime time.Duration, wasResumed bool, info Info, columns int, isTextSizingSupported bool) string {
@@ -135,7 +140,7 @@ func renderDetails(info Info, introduction string, conclusion string) string {
 }
 
 func sizedEmoji(emoji string) string {
-	return "\x1b]66;" + textSizingMetadata + ";" + emoji + "\x1b\\"
+	return textSizingPrefix + textSizingMetadata + ";" + emoji + "\x1b\\"
 }
 
 func startupDuration(elapsedTime time.Duration) string {

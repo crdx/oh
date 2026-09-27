@@ -9324,6 +9324,7 @@ func relaidOutBanner(t *testing.T, entries []replayEntry, columns int, isRunning
 	rig.chat.currentTurn.Stream = testTurnStreamForRunning(isRunning)
 	rig.chat.inputLine = edit.NewInput(nil)
 	rig.load(entries)
+	rig.chat.screen.TopPad()
 	rig.chat.replay()
 	rig.chat.show(rig.chat.inputLine)
 	drawnBefore := rig.drawn()

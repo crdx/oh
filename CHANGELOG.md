@@ -11,6 +11,7 @@
 - Keep grant rows compact
 - Make yolo bypass sandbox fully
 - Redraw the screen with ctrl+l
+- Add a gap above the startup banner emoji after redraw
 - List every model context source and token estimate with /ctx
 - Show arguments in snippet completion dropdowns
 - Dynamically name snippet arguments

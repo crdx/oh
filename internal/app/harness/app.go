@@ -42,6 +42,7 @@ import (
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/shell"
 	"crdx.org/oh/internal/app/slash"
+	"crdx.org/oh/internal/app/startup"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/terminal"
@@ -1614,6 +1615,15 @@ func (self *App) redraw() {
 		self.pendingNotices.renderer = nil
 		self.pendingNotices.block = nil
 		self.screen.Reset()
+		if slices.ContainsFunc(self.recordedEvents[:history], func(event agent.Event) bool {
+			return event.Kind == agent.StartupEvent && startup.IsBannerSized(
+				event,
+				self.screen.Columns(),
+				self.screen.IsTextSizingSupported(),
+			)
+		}) {
+			self.screen.TopPad()
+		}
 		self.replayHistory(history)
 		if livePainter != nil {
 			livePainter.Redraw(self.recordedEvents[history:])
