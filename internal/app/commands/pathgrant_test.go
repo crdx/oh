@@ -71,6 +71,19 @@ func TestGrantCommandPassesOnAnExecutableGrant(t *testing.T) {
 	}
 }
 
+func TestGrantPathCompletionAcceptsNonCanonicalValidAccessOrders(t *testing.T) {
+	grants, _ := fixturePathGrants()
+	registry := newCommandRegistry(t, commandEnvironment{pathGrants: grants})
+	source := slash.NewPathSource(t.TempDir(), func() slash.Registry { return registry })
+
+	for _, access := range []string{"rxw", "rwx", "xwr"} {
+		text := "/grant " + access + " ~/reference"
+		if _, found := source.Find([]rune(text), len([]rune(text))); !found {
+			t.Errorf("did not find the path after %q", access)
+		}
+	}
+}
+
 func TestGrantCommandRejectsAnUnknownAccess(t *testing.T) {
 	grants, _ := fixturePathGrants()
 	_, err := invokePathGrantCommand(t, grants, "/grant rwz /reference")

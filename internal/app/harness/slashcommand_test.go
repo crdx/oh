@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"crdx.org/oh/internal/app/key"
+	"crdx.org/oh/internal/app/shell"
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/snippets"
 )
@@ -18,7 +19,10 @@ func slashGoldenRegistry(t *testing.T) slash.Registry {
 			WithArguments("session-name", "session-id", "session-dir"),
 		slash.Command{Name: "grant", Description: "grant temporary path access", Run: slashTestHandler}.
 			WithArguments("r", "rw", "rx", "rxw").
-			WithPathArgumentAfter("r", "rw", "rx", "rxw").
+			WithPathArgumentAfterMatching(func(argument string) bool {
+				access, err := shell.ParseAccess(argument)
+				return err == nil && shell.IsAccess(access)
+			}).
 			WithArgumentUsage("{r|rx|rw|rxw} <path>").
 			WithCompletionUsage("<access> <path>"),
 		slash.Command{Name: "open", Run: slashTestHandler}.WithArguments("config-dir", "workspace-dir"),
@@ -177,6 +181,12 @@ func slashCommandScenarios(t *testing.T) map[string]pathRefScenario {
 				rig.press(tabKey)
 			},
 		},
+		"31 tab lists a tilde path after conventionally ordered access": commanding(func(rig *pathRefRig) {
+			rig.show()
+			rig.typeText("/grant rwx ~/doc")
+			rig.press(tabKey)
+			rig.listingArrives()
+		}),
 	}
 }
 

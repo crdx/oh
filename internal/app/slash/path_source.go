@@ -155,13 +155,13 @@ func (self Registry) pathArgumentWord(runes []rune, cursor int) (trigger.Word, b
 		return trigger.Word{}, false
 	}
 	command, isFound := set.commands[strings.TrimPrefix(name, set.prefix)]
-	if !isFound || len(command.pathArgumentAfter) == 0 {
+	if !isFound || command.isPathArgumentAfter == nil {
 		return trigger.Word{}, false
 	}
 
 	argumentStart := skipSpaces(runes, nameEnd)
 	argumentEnd := indexSpace(runes, argumentStart)
-	if argumentStart == argumentEnd || !slices.Contains(command.pathArgumentAfter, string(runes[argumentStart:argumentEnd])) {
+	if argumentStart == argumentEnd || !command.isPathArgumentAfter(string(runes[argumentStart:argumentEnd])) {
 		return trigger.Word{}, false
 	}
 	if argumentEnd == len(runes) {

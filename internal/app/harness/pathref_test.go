@@ -339,6 +339,7 @@ func newPathRefRig(t *testing.T, scenario pathRefScenario) *pathRefRig {
 	if scenario.commands != nil {
 		rig.app.commands = scenario.commands(t)
 		pathDirectory := t.TempDir()
+		t.Setenv("HOME", pathDirectory)
 		if err := os.Mkdir(filepath.Join(pathDirectory, "documents"), 0o700); err != nil {
 			t.Fatal(err)
 		}

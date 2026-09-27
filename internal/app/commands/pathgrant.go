@@ -112,9 +112,14 @@ func grantCommand(grants PathGrants) slash.Command {
 		},
 	}.
 		WithArguments(flagChoices...).
-		WithPathArgumentAfter(flagChoices...).
+		WithPathArgumentAfterMatching(isGrantAccess).
 		WithArgumentUsage(pathgrant.GrantUsage).
 		WithCompletionUsage("<access> <path>")
+}
+
+func isGrantAccess(argument string) bool {
+	access, err := shell.ParseAccess(argument)
+	return err == nil && shell.IsAccess(access)
 }
 
 func grantFlagChoices() []string {

@@ -57,7 +57,7 @@ type Command struct {
 	Description           string
 	Run                   func(Context, Arguments) error
 	listArguments         func() []string
-	pathArgumentAfter     []string
+	isPathArgumentAfter   func(string) bool
 	argumentUsage         string
 	completionUsage       string
 	takesAttachedArgument bool
@@ -86,7 +86,14 @@ func (self Command) WithManyArguments() Command {
 }
 
 func (self Command) WithPathArgumentAfter(arguments ...string) Command {
-	self.pathArgumentAfter = slices.Clone(arguments)
+	pathArguments := slices.Clone(arguments)
+	return self.WithPathArgumentAfterMatching(func(argument string) bool {
+		return slices.Contains(pathArguments, argument)
+	})
+}
+
+func (self Command) WithPathArgumentAfterMatching(match func(string) bool) Command {
+	self.isPathArgumentAfter = match
 	return self
 }
 
