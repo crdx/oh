@@ -2,48 +2,65 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
-### Changes
+### Completion and input
 
-- Revoke several grants at once
 - Keep keys typed while a session starts
 - Send a command typed out in full on the first enter
-- Recompute the cache share when a session resumes
-- Keep grant rows compact
-- Make yolo bypass sandbox fully
 - Redraw the screen with ctrl+l
-- Add a gap above the startup banner emoji after redraw
-- List every model context source and token estimate with /ctx
-- Show arguments in snippet completion dropdowns
-- Dynamically name snippet arguments
-- Show complete effective grant access
-- Advise on how to detect applied patches
-- Restyle jobs list output
-- Honour explicit server advice to retry a refused request
+- Show arguments of snippet definitions
 - Require double-enter in quick succession
 - Stop sending continue message during a turn
-- Open session picker on first available session
-- Show session sizes on disk in picker
+- Complete paths with `@` notation
+- Complete slash commands and arguments
+
+### Grants and sandbox
+
+- Revoke several grants at once
+- Keep grant rows compact
+- Make yolo bypass sandbox fully
+- Show complete effective grant access
+- Keep each session's Go build cache separate
+- Show pending access change notices
+
+### Questions and approvals
+
+- Keep tall questions and approvals in view
+- Notify about a waiting question if unfocused
+- Give each queued approval its full timeout
+
+### Drawing
+
 - Make plain reasoning keep underscores
 - Keep streamed redraws proportional
 - Keep empty Markdown blocks from adding blank rows
 - Keep live output within the terminal
-- Keep running calls visible and ticking beneath a tall question
-- Keep a tall question's label and countdown in view
-- Notify about a waiting question if unfocused
-- Give each queued approval its full timeout
 - Keep a running call's clock and hold through a redraw
+- Don't hard-wrap code blocks
+- Render the session emoji with a gap above it after redraw
+
+### Sessions and storage
+
+- Recompute the cache share when a session resumes
+- Open session picker on first available session
+- Show session sizes on disk in picker
 - Keep migration copies as hard links
 - Compress recorded wire traffic
-- Clarify the reason for jobs stopping
-- Keep each session's Go build cache separate
+
+### Models and providers
+
+- List every model context source and token estimate with /ctx
+- Honour explicit server advice to retry a refused request
 - Show if a new model was ignored for some reason
-- Don't hard-wrap code blocks
+
+### Jobs
+
+- Restyle jobs list output
+- Clarify the reason for jobs stopping
+
+### Model guidance
+
+- Advise on how to detect applied patches
 - Give the model accurate grant docs
-- Render the session emoji after relayout
-- Show pending access changes notices
-- Complete paths with `@` notation
-- Quote completed paths that contain spaces
-- Complete slash commands and arguments
 
 ## [0.10.0] - 2026-09-25
 
