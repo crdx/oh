@@ -417,7 +417,7 @@ func sessionCommand(name string, description string, startSession func(string) e
 			}
 			return startSession(arguments.Fields[0])
 		},
-	}
+	}.WithArgumentUsage("[model]")
 }
 
 func commandsRequiringPersistedSession(isSessionPersisted func() bool, commands ...slash.Command) []slash.Command {
@@ -435,13 +435,9 @@ func commandsRequiringPersistedSession(isSessionPersisted func() bool, commands 
 
 func helpText(commandUsages []string, hiddenCommandUsage string, targetNames []string) string {
 	visibleCommandUsages := slices.DeleteFunc(commandUsages, func(usage string) bool { return usage == hiddenCommandUsage })
-	usesTargets := false
-	for i, usage := range visibleCommandUsages {
-		if usage == "/new" || usage == "/fork" {
-			visibleCommandUsages[i] += " [model]"
-		}
-		usesTargets = usesTargets || strings.Contains(usage, targetPlaceholder)
-	}
+	usesTargets := slices.ContainsFunc(visibleCommandUsages, func(usage string) bool {
+		return strings.Contains(usage, targetPlaceholder)
+	})
 	sections := []string{style.Info("Commands:") + "\n" + slash.HelpIndent + strings.Join(visibleCommandUsages, "\n"+slash.HelpIndent)}
 	if usesTargets {
 		targetRows := column.Rows(targetNames, slash.HelpWidth-len(slash.HelpIndent))
@@ -564,7 +560,8 @@ func targetCommand(
 	argumentNames := slices.Sorted(maps.Keys(targets))
 	return command.
 		WithArguments(argumentNames...).
-		WithArgumentUsage(summariseTargets(argumentNames, targetNames))
+		WithArgumentUsage(summariseTargets(argumentNames, targetNames)).
+		WithCompletionUsage(targetPlaceholder)
 }
 
 func openDesktopTargets(paths []string) error {

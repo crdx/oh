@@ -113,7 +113,8 @@ func grantCommand(grants PathGrants) slash.Command {
 	}.
 		WithArguments(flagChoices...).
 		WithPathArgumentAfter(flagChoices...).
-		WithArgumentUsage(pathgrant.GrantUsage)
+		WithArgumentUsage(pathgrant.GrantUsage).
+		WithCompletionUsage("<access> <path>")
 }
 
 func grantFlagChoices() []string {

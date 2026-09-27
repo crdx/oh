@@ -1,12 +1,12 @@
 === 01 a slash lists the commands with what they do ===
 ────────────────────────────────────────────────────────────
 /
-› /conf    edit the configuration file
-  /copy    copy a session target to the clipboard
-  /grant   grant temporary path access
+› /conf                   edit the configuration file
+  /copy                   copy a session target to the clip…
+  /grant <access> <path>  grant temporary path access
   /open
-  /quit    leave the session, and say goodbye in a line lon…
-  /revoke  revoke a grant
+  /quit                   leave the session, and say goodby…
+  /revoke                 revoke a grant
 ────────────────────────────────────────────────────────────
 === 02 a name narrows the commands ===
 ────────────────────────────────────────────────────────────

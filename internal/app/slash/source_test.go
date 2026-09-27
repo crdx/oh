@@ -15,7 +15,14 @@ func sourceFixture(t *testing.T) *slash.Source {
 	registry := mustRegistry(t,
 		mustSet(t, "/",
 			slash.Command{Name: "conf", Description: "Edit the config.\nIn your editor.", Run: commandHandler},
-			slash.Command{Name: "copy", Description: "Copy a target.", Run: commandHandler}.WithArguments("session-name", "session-id"),
+			slash.Command{Name: "copy", Description: "Copy a target.", Run: commandHandler}.
+				WithArguments("session-name", "session-id").
+				WithArgumentUsage("<target>"),
+			slash.Command{Name: "grant", Description: "Grant path access.", Run: commandHandler}.
+				WithArguments("r", "rx").
+				WithPathArgumentAfter("r", "rx").
+				WithArgumentUsage("{r|rx} <path>").
+				WithCompletionUsage("<access> <path>"),
 			slash.Command{Name: "quit", Run: commandHandler},
 		),
 		mustSet(t, "//",
@@ -65,10 +72,16 @@ func TestTheSourceDescribesEachCommand(t *testing.T) {
 	want := trigger.Results{
 		Items: []trigger.Result{
 			{Label: "/conf", Detail: "Edit the config.", Text: "/conf"},
-			{Label: "/copy", Detail: "Copy a target.", Text: "/copy ", IsOpenEnded: true},
+			{Label: "/copy <target>", Detail: "Copy a target.", Text: "/copy ", IsOpenEnded: true},
+			{
+				Label:       "/grant <access> <path>",
+				Detail:      "Grant path access.",
+				Text:        "/grant ",
+				IsOpenEnded: true,
+			},
 			{Label: "/quit", Text: "/quit"},
 		},
-		Total:       3,
+		Total:       4,
 		Placeholder: "no matching commands",
 	}
 	if got := source.Results(trigger.Word{Query: "/"}, 10); !reflect.DeepEqual(got, want) {
@@ -106,7 +119,7 @@ func TestTheSourceHoldsNoMoreThanItIsAskedFor(t *testing.T) {
 	source := sourceFixture(t)
 
 	got := source.Results(trigger.Word{Query: "/"}, 2)
-	if len(got.Items) != 2 || got.Total != 3 {
+	if len(got.Items) != 2 || got.Total != 4 {
 		t.Errorf("held %d of %d", len(got.Items), got.Total)
 	}
 }

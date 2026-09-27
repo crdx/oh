@@ -57,6 +57,7 @@ type Command struct {
 	listArguments         func() []string
 	pathArgumentAfter     []string
 	argumentUsage         string
+	completionUsage       string
 	takesAttachedArgument bool
 }
 
@@ -83,6 +84,11 @@ func (self Command) WithPathArgumentAfter(arguments ...string) Command {
 
 func (self Command) WithArgumentUsage(usage string) Command {
 	self.argumentUsage = usage
+	return self
+}
+
+func (self Command) WithCompletionUsage(usage string) Command {
+	self.completionUsage = usage
 	return self
 }
 
@@ -349,7 +355,9 @@ func (self Registry) Completions(prefix string) []Completion {
 			arguments := command.getArguments()
 			text := target.set.prefix + name
 			label := text
-			if command.argumentUsage != "" && command.listArguments == nil {
+			if command.completionUsage != "" {
+				label += " " + command.completionUsage
+			} else if command.argumentUsage != "" {
 				label = command.usage(target.set.prefix)
 			}
 			completions[i] = Completion{

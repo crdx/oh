@@ -67,7 +67,8 @@ func jobCommand(managedJobs Jobs) slash.Command {
 		},
 	}.
 		WithArguments("status", "output", "stop", "discard", "prune").
-		WithArgumentUsage("{status|output|stop|discard} <name> | prune")
+		WithArgumentUsage("{status|output|stop|discard} <name> | prune").
+		WithCompletionUsage("<action>")
 }
 
 func runJobAction(context slash.Context, managedJobs Jobs, action string, name string) error {

@@ -32,6 +32,7 @@ func TestGoldenCompletionMatchesGolden(t *testing.T) {
 		"/g",
 		"/grant ",
 		"/grants ",
+		"/job ",
 		"/r",
 		"/revoke ",
 		"/copy ",

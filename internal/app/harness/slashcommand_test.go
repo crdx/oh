@@ -18,7 +18,9 @@ func slashGoldenRegistry(t *testing.T) slash.Registry {
 			WithArguments("session-name", "session-id", "session-dir"),
 		slash.Command{Name: "grant", Description: "grant temporary path access", Run: slashTestHandler}.
 			WithArguments("r", "rw", "rx", "rxw").
-			WithPathArgumentAfter("r", "rw", "rx", "rxw"),
+			WithPathArgumentAfter("r", "rw", "rx", "rxw").
+			WithArgumentUsage("{r|rx|rw|rxw} <path>").
+			WithCompletionUsage("<access> <path>"),
 		slash.Command{Name: "open", Run: slashTestHandler}.WithArguments("config-dir", "workspace-dir"),
 		slash.Command{Name: "quit", Description: "leave the session, and say goodbye in a line long enough to be cut", Run: slashTestHandler},
 		slash.Command{Name: "revoke", Description: "revoke a grant", Run: slashTestHandler}.

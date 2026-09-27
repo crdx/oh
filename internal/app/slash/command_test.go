@@ -264,22 +264,29 @@ func TestACompletionNamesWhatItCompletes(t *testing.T) {
 	}
 }
 
-func TestAFreeFormArgumentUsageAppearsInACompletion(t *testing.T) {
-	registry := mustRegistry(t, mustSet(t, "//",
+func TestExplicitArgumentUsageAppearsInACompletion(t *testing.T) {
+	set := mustSet(t, "//",
 		slash.Command{Name: "optional", Run: commandHandler}.WithArgumentUsage("[<args>]"),
 		slash.Command{Name: "required", Run: commandHandler}.WithArgumentUsage("<args>"),
 		slash.Command{Name: "targets", Run: commandHandler}.
 			WithArguments("one", "two").
-			WithArgumentUsage("<target>"),
-	))
+			WithArgumentUsage("{one|two}").
+			WithCompletionUsage("<target>"),
+	)
+	registry := mustRegistry(t, set)
 
 	want := []slash.Completion{
 		{Text: "//optional", Label: "//optional [<args>]", TakesArguments: true},
 		{Text: "//required", Label: "//required <args>", TakesArguments: true},
-		{Text: "//targets", Label: "//targets", TakesArguments: true},
+		{Text: "//targets", Label: "//targets <target>", TakesArguments: true},
 	}
 	if got := registry.Completions("//"); !slices.Equal(got, want) {
 		t.Errorf("got %+v, want %+v", got, want)
+	}
+
+	wantUsages := []string{"//optional [<args>]", "//required <args>", "//targets {one|two}"}
+	if got := set.Usages(); !slices.Equal(got, wantUsages) {
+		t.Errorf("got usages %v, want %v", got, wantUsages)
 	}
 }
 
