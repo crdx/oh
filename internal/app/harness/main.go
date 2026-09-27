@@ -979,7 +979,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 				grants := shell.PermanentGrants(
 					workspace.GetDir(), homeDir, settings.Sandbox, mode.Current(), args.Yolo,
 				)
-				for _, directory := range skill.GlobalDirectories(availableSkills) {
+				for _, directory := range skill.EnabledDirectories(availableSkills) {
 					grants = append(grants, shell.ScopedPathGrant{
 						Path: directory, Access: shell.ReadAccess, Kind: shell.GlobalSkillGrant,
 					})

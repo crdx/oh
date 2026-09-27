@@ -264,6 +264,25 @@ func TestACompletionNamesWhatItCompletes(t *testing.T) {
 	}
 }
 
+func TestAFreeFormArgumentUsageAppearsInACompletion(t *testing.T) {
+	registry := mustRegistry(t, mustSet(t, "//",
+		slash.Command{Name: "optional", Run: commandHandler}.WithArgumentUsage("[<args>]"),
+		slash.Command{Name: "required", Run: commandHandler}.WithArgumentUsage("<args>"),
+		slash.Command{Name: "targets", Run: commandHandler}.
+			WithArguments("one", "two").
+			WithArgumentUsage("<target>"),
+	))
+
+	want := []slash.Completion{
+		{Text: "//optional", Label: "//optional [<args>]", TakesArguments: true},
+		{Text: "//required", Label: "//required <args>", TakesArguments: true},
+		{Text: "//targets", Label: "//targets", TakesArguments: true},
+	}
+	if got := registry.Completions("//"); !slices.Equal(got, want) {
+		t.Errorf("got %+v, want %+v", got, want)
+	}
+}
+
 func assertCompletions(t *testing.T, registry slash.Registry, prefix string, wants []string) {
 	t.Helper()
 

@@ -19,7 +19,7 @@ func sourceFixture(t *testing.T) *slash.Source {
 			slash.Command{Name: "quit", Run: commandHandler},
 		),
 		mustSet(t, "//",
-			slash.Command{Name: "review", Run: commandHandler},
+			slash.Command{Name: "review", Description: "Review a scope.", Run: commandHandler}.WithArgumentUsage("<args>"),
 		),
 	)
 
@@ -72,6 +72,20 @@ func TestTheSourceDescribesEachCommand(t *testing.T) {
 		Placeholder: "no matching commands",
 	}
 	if got := source.Results(trigger.Word{Query: "/"}, 10); !reflect.DeepEqual(got, want) {
+		t.Errorf("got %+v, want %+v", got, want)
+	}
+}
+
+func TestTheSourceShowsFreeFormArgumentUsageWithoutInsertingIt(t *testing.T) {
+	source := sourceFixture(t)
+
+	want := []trigger.Result{{
+		Label:       "//review <args>",
+		Detail:      "Review a scope.",
+		Text:        "//review ",
+		IsOpenEnded: true,
+	}}
+	if got := source.Results(trigger.Word{Query: "//"}, 10).Items; !reflect.DeepEqual(got, want) {
 		t.Errorf("got %+v, want %+v", got, want)
 	}
 }

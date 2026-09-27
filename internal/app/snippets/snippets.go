@@ -18,7 +18,7 @@ const (
 	helpCommandName       = "help"
 	defaultFunctionName   = "default"
 	requiredArgumentUsage = "<args>"
-	optionalArgumentUsage = "[args]"
+	optionalArgumentUsage = "[<args>]"
 	argumentFieldName     = "Arg"
 	argumentsFieldName    = "Args"
 )

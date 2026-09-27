@@ -27,8 +27,8 @@ func slashGoldenRegistry(t *testing.T) slash.Registry {
 		t.Fatal(err)
 	}
 	snippetSet, err := snippets.New(map[string]snippets.Definition{
-		"review": {Prompt: "Review changes.", Description: "Review the working tree.", Arguments: snippets.ArgumentsNone},
-		"test":   {Prompt: "Run tests.", Arguments: snippets.ArgumentsNone},
+		"review": {Prompt: "Review {{.Arg}}.", Description: "Review the named scope.", Arguments: snippets.ArgumentsRequired},
+		"test":   {Prompt: `Run {{.Arg | default "the tests"}}.`, Arguments: snippets.ArgumentsOptional},
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -74,9 +74,12 @@ func slashCommandScenarios(t *testing.T) map[string]pathRefScenario {
 		"09 two slashes list the snippets":                  commanding(typing("//")),
 		"10 a path closes the dropdown at its second slash": commanding(typing("/tmp/notes")),
 		"11 a slash within prose opens nothing":             commanding(typing("see /co")),
-		"12 tab after a command that takes nothing is left to the input": commanding(func(rig *pathRefRig) {
+		"12 tab after a complete command is swallowed": commanding(func(rig *pathRefRig) {
 			typing("/conf ")(rig)
 			rig.press(tabKey)
+			if got := rig.input.Text(); got != "/conf " {
+				rig.t.Errorf("tab changed the input to %q", got)
+			}
 		}),
 		"13 escape closes the dropdown": commanding(func(rig *pathRefRig) {
 			typing("/")(rig)
@@ -127,6 +130,11 @@ func slashCommandScenarios(t *testing.T) map[string]pathRefScenario {
 		}),
 		"22 a command typed whole that takes nothing closes the dropdown": commanding(typing("/quit")),
 		"23 an argument typed whole closes the dropdown":                  commanding(typing("/copy session-id")),
+		"24 choosing a snippet leaves room for its arguments": commanding(func(rig *pathRefRig) {
+			typing("//rev")(rig)
+			rig.press(tabKey)
+			rig.typeText("the tests")
+		}),
 	}
 }
 

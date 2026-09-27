@@ -27,7 +27,14 @@ func (self *App) applyToCompleter(inputLine *edit.Input, keypress key.Key) bool 
 	}
 
 	if !self.completer.IsOpen() {
-		return keypress == tabKey && self.completer.Open(inputLine)
+		if keypress != tabKey {
+			return false
+		}
+		if self.completer.Open(inputLine) {
+			return true
+		}
+		invocation, isCommand := self.commands.Find(inputLine.Text())
+		return isCommand && invocation.Arguments.Text == ""
 	}
 	if dismissesFeedback(keypress) && self.feedback.CanBeDismissed() {
 		return false

@@ -87,7 +87,7 @@
   /open\e[K\r
   /quit\e[38;2;150;152;150m    leave the session, and say goodbye in a line lon…\e[0m\r
   /revoke\e[38;2;150;152;150m  revoke a grant\e[0m\e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//\e[K\e[1B\r\e[38;2;192;128;80m› //help\e[0m\e[38;2;150;152;150m    list the configured snippets\e[0m\e[K\e[1B\r  //review\e[38;2;150;152;150m  Review the working tree.\e[0m\e[K\e[1B\r  //test\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//\e[K\e[1B\r\e[38;2;192;128;80m› //help\e[0m\e[38;2;150;152;150m           list the configured snippets\e[0m\e[K\e[1B\r  //review <args>\e[38;2;150;152;150m  Review the named scope.\e[0m\e[K\e[1B\r  //test [<args>]\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l
 === 10 a path closes the dropdown at its second slash ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
@@ -102,7 +102,7 @@
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\rs\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\rse\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\rsee\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rsee \e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rsee /\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\rsee /c\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\rsee /co\e[K\r\e[7C\e[?25h\e[?2026l
-=== 12 tab after a command that takes nothing is left to the input ===
+=== 12 tab after a complete command is swallowed ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m    edit the configuration file\e[0m\e[K\r
@@ -111,7 +111,7 @@
   /open\e[K\r
   /quit\e[38;2;150;152;150m    leave the session, and say goodbye in a line lon…\e[0m\r
   /revoke\e[38;2;150;152;150m  revoke a grant\e[0m\e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/c\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m  edit the configuration file\e[0m\e[K\e[1B\r  /copy\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/co\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/con\e[K\e[2B\r\e[K\e[2A\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/conf\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/conf \e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/conf     \e[K\r\e[10C\e[?25h\e[?2026l
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/c\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m  edit the configuration file\e[0m\e[K\e[1B\r  /copy\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/co\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/con\e[K\e[2B\r\e[K\e[2A\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/conf\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/conf \e[K\r\e[6C\e[?25h\e[?2026l
 === 13 escape closes the dropdown ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
@@ -211,3 +211,13 @@
   /quit\e[38;2;150;152;150m    leave the session, and say goodbye in a line lon…\e[0m\r
   /revoke\e[38;2;150;152;150m  revoke a grant\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/c\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m  edit the configuration file\e[0m\e[K\e[1B\r  /copy\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/co\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/cop\e[K\e[1B\r\e[38;2;192;128;80m› /copy\e[0m\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[2A\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy \e[K\e[1B\r\e[38;2;192;128;80m› session-dir\e[0m\e[K\e[1B\r  session-id\e[K\e[1B\r  session-name\e[K\e[3A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy s\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy se\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy ses\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy sess\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy sessi\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy sessio\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy session\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy session-\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy session-i\e[K\e[1B\r\e[38;2;192;128;80m› session-id\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy session-id\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[16C\e[?25h\e[?2026l
+=== 24 choosing a snippet leaves room for its arguments ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m    edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m    copy a session target to the clipboard\e[0m\e[K\r
+  /grant\e[38;2;150;152;150m   grant temporary path access\e[0m\e[K\r
+  /open\e[K\r
+  /quit\e[38;2;150;152;150m    leave the session, and say goodbye in a line lon…\e[0m\r
+  /revoke\e[38;2;150;152;150m  revoke a grant\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//\e[K\e[1B\r\e[38;2;192;128;80m› //help\e[0m\e[38;2;150;152;150m           list the configured snippets\e[0m\e[K\e[1B\r  //review <args>\e[38;2;150;152;150m  Review the named scope.\e[0m\e[K\e[1B\r  //test [<args>]\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//r\e[K\e[1B\r\e[38;2;192;128;80m› //review <args>\e[0m\e[38;2;150;152;150m  Review the named scope.\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//re\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//rev\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review t\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review th\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review the\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review the \e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review the t\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review the te\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review the tes\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review the test\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review the tests\e[K\r\e[18C\e[?25h\e[?2026l

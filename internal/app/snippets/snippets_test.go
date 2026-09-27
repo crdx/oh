@@ -206,7 +206,7 @@ func TestSnippetUsagesAreDeterministic(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := []string{"//optional [args]", "//review <args>", "//test", "//help"}
+	want := []string{"//optional [<args>]", "//review <args>", "//test", "//help"}
 	if got := set.Usages(); !slices.Equal(got, want) {
 		t.Errorf("got usages %v, want %v", got, want)
 	}
@@ -234,7 +234,7 @@ func TestExplicitArgumentPoliciesControlUsageAndValidation(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	wantUsages := []string{"//none", "//optional [args]", "//required <args>", "//help"}
+	wantUsages := []string{"//none", "//optional [<args>]", "//required <args>", "//help"}
 	if got := set.Usages(); !slices.Equal(got, wantUsages) {
 		t.Errorf("got usages %v, want %v", got, wantUsages)
 	}
@@ -270,8 +270,8 @@ func TestExplicitArgumentPoliciesControlUsageAndValidation(t *testing.T) {
 func TestAnUnsetArgumentPolicyIsReadFromTheTemplate(t *testing.T) {
 	for name, want := range map[string]string{
 		"Review the current changes.":              "//review",
-		`Review {{.Arg | default "the current"}}.`: "//review [args]",
-		`Review {{default "the current" .Arg}}.`:   "//review [args]",
+		`Review {{.Arg | default "the current"}}.`: "//review [<args>]",
+		`Review {{default "the current" .Arg}}.`:   "//review [<args>]",
 		"Review {{.Arg}}.":                         "//review <args>",
 		"Review {{index .Args 0}}.":                "//review <args>",
 		"{{if .Args}}Review {{.Arg}}.{{end}}":      "//review <args>",

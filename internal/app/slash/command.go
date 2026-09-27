@@ -340,11 +340,17 @@ func (self Registry) Completions(prefix string) []Completion {
 		completions := make([]Completion, len(names))
 		for i, name := range names {
 			command := target.set.commands[name]
+			arguments := command.getArguments()
+			text := target.set.prefix + name
+			label := text
+			if command.argumentUsage != "" && command.listArguments == nil {
+				label = command.usage(target.set.prefix)
+			}
 			completions[i] = Completion{
-				Text:           target.set.prefix + name,
-				Label:          target.set.prefix + name,
+				Text:           text,
+				Label:          label,
 				Description:    command.Description,
-				TakesArguments: len(command.getArguments()) > 0,
+				TakesArguments: command.argumentUsage != "" || len(arguments) > 0,
 			}
 		}
 		return completions

@@ -63,9 +63,9 @@
 === 09 two slashes list the snippets ===
 ────────────────────────────────────────────────────────────
 //
-› //help    list the configured snippets
-  //review  Review the working tree.
-  //test
+› //help           list the configured snippets
+  //review <args>  Review the named scope.
+  //test [<args>]
 
 
 
@@ -78,7 +78,7 @@
 ────────────────────────────────────────────────────────────
 see /co
 ────────────────────────────────────────────────────────────
-=== 12 tab after a command that takes nothing is left to the input ===
+=== 12 tab after a complete command is swallowed ===
 ────────────────────────────────────────────────────────────
 /conf
 ────────────────────────────────────────────────────────────
@@ -138,4 +138,8 @@ see /co
 === 23 an argument typed whole closes the dropdown ===
 ────────────────────────────────────────────────────────────
 /copy session-id
+────────────────────────────────────────────────────────────
+=== 24 choosing a snippet leaves room for its arguments ===
+────────────────────────────────────────────────────────────
+//review the tests
 ────────────────────────────────────────────────────────────

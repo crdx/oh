@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Show arguments in snippet completion dropdowns
 - Show complete effective grant access
 - Advise on how to detect applied patches
 - Restyle jobs list output
