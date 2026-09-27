@@ -135,8 +135,10 @@ func ProjectContextPaths(workspace *work.Space) []string {
 }
 
 type File struct {
-	Name string
-	Body string
+	Name     string
+	Path     string
+	Body     string
+	IsSystem bool
 }
 
 type Config struct {
@@ -171,7 +173,12 @@ func Load(config Config) (string, []File, error) {
 	}
 
 	files := projectFiles
+	for i := range files {
+		files[i].Path = filepath.Join(config.Workspace.GetDir(), files[i].Name)
+	}
 	if globalFile != nil {
+		globalFile.Path = config.GlobalPath
+		globalFile.IsSystem = true
 		files = append([]File{*globalFile}, projectFiles...)
 	}
 

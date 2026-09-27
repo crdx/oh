@@ -13,13 +13,16 @@ import (
 	"strings"
 
 	"crdx.org/oh/internal/app/column"
+	"crdx.org/oh/internal/app/contextfile"
 	"crdx.org/oh/internal/app/editor"
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/prompt"
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/table"
 	"crdx.org/oh/internal/app/terminal"
 	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/internal/util"
 )
 
 const (
@@ -40,15 +43,16 @@ type Options struct {
 	HomeDir          string
 	Session          Session
 
-	Editor        *editor.Config
-	Output        io.Writer
-	PathGrants    PathGrants
-	HostToSandbox HostToSandbox
-	SandboxToHost SandboxToHost
-	Jobs          Jobs
-	GetInfo       func() (string, error)
-	StartSession  func(SessionStart) error
-	LimitOutput   func(string) string
+	Editor            *editor.Config
+	Output            io.Writer
+	PathGrants        PathGrants
+	HostToSandbox     HostToSandbox
+	SandboxToHost     SandboxToHost
+	Jobs              Jobs
+	GetInfo           func() (string, error)
+	GetContextSources func() ContextSources
+	StartSession      func(SessionStart) error
+	LimitOutput       func(string) string
 }
 
 type Session struct {
@@ -64,6 +68,12 @@ type SessionStart struct {
 	SourceSessionName string
 }
 
+type ContextSources struct {
+	SystemFiles  []contextfile.File
+	ProjectFiles []contextfile.File
+	SessionFiles []contextfile.File
+}
+
 type commandEnvironment struct {
 	configDir        string
 	configPath       string
@@ -74,17 +84,18 @@ type commandEnvironment struct {
 	homeDir          string
 	session          commandSession
 
-	openEditor     func([]string) error
-	openTarget     func([]string) error
-	copyText       func([]string) error
-	runHostCommand func(string, string) (hostcommand.Result, error)
-	limitOutput    func(string) string
-	pathGrants     PathGrants
-	hostToSandbox  HostToSandbox
-	sandboxToHost  SandboxToHost
-	jobs           Jobs
-	getInfo        func() (string, error)
-	startSession   func(SessionStart) error
+	openEditor        func([]string) error
+	openTarget        func([]string) error
+	copyText          func([]string) error
+	runHostCommand    func(string, string) (hostcommand.Result, error)
+	limitOutput       func(string) string
+	pathGrants        PathGrants
+	hostToSandbox     HostToSandbox
+	sandboxToHost     SandboxToHost
+	jobs              Jobs
+	getInfo           func() (string, error)
+	getContextSources func() ContextSources
+	startSession      func(SessionStart) error
 }
 
 type commandSession struct {
@@ -127,14 +138,15 @@ func New(options Options) (slash.CommandSet, error) {
 		copyText: func(values []string) error {
 			return terminal.Copy(options.Output, strings.Join(values, "\n"))
 		},
-		runHostCommand: hostcommand.Run,
-		limitOutput:    options.LimitOutput,
-		pathGrants:     options.PathGrants,
-		hostToSandbox:  options.HostToSandbox,
-		sandboxToHost:  options.SandboxToHost,
-		jobs:           options.Jobs,
-		getInfo:        options.GetInfo,
-		startSession:   options.StartSession,
+		runHostCommand:    hostcommand.Run,
+		limitOutput:       options.LimitOutput,
+		pathGrants:        options.PathGrants,
+		hostToSandbox:     options.HostToSandbox,
+		sandboxToHost:     options.SandboxToHost,
+		jobs:              options.Jobs,
+		getInfo:           options.GetInfo,
+		getContextSources: options.GetContextSources,
+		startSession:      options.StartSession,
 	})
 }
 
@@ -144,6 +156,9 @@ func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 	}
 	if environment.limitOutput == nil {
 		environment.limitOutput = func(output string) string { return output }
+	}
+	if environment.getContextSources == nil {
+		environment.getContextSources = func() ContextSources { return ContextSources{} }
 	}
 
 	targets := locationTargets(environment)
@@ -165,6 +180,7 @@ func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 			environment.copyText,
 			copyConfirmation,
 		),
+		contextCommand(environment.getContextSources),
 		targetCommand("edit", "open a target in your editor", targets, targetNames, environment.openEditor, nil),
 		infoCommand(environment.getInfo),
 		targetCommand("open", "open a target with its default application", targets, targetNames, environment.openTarget, nil),
@@ -288,6 +304,64 @@ func helpCommand(getHelp func() string) slash.Command {
 	}
 }
 
+func contextCommand(getSources func() ContextSources) slash.Command {
+	return slash.Command{
+		Name:        "ctx",
+		Description: "list files contributing to model context",
+		Run: func(context slash.Context, arguments slash.Arguments) error {
+			if len(arguments.Fields) != 0 {
+				return slash.Usage()
+			}
+
+			context.NoticeListing(formatContextSources(getSources()))
+			return nil
+		},
+	}
+}
+
+func formatContextSources(sources ContextSources) string {
+	sections := []struct {
+		label string
+		files []contextfile.File
+	}{
+		{label: "System", files: sources.SystemFiles},
+		{label: "Project", files: sources.ProjectFiles},
+		{label: "Session", files: sources.SessionFiles},
+	}
+
+	var rows [][]string
+	for _, section := range sections {
+		for _, file := range section.files {
+			rows = append(rows, []string{util.FormatEstimatedTokens(file.EstimatedTokens), file.Path})
+		}
+	}
+	if len(rows) == 0 {
+		return "No context files."
+	}
+
+	contextTable := table.New(
+		table.Column{Align: table.Right, Style: style.Dim},
+		table.Column{},
+	).Fit(rows)
+	var listings []string
+	for _, section := range sections {
+		if len(section.files) == 0 {
+			continue
+		}
+
+		listing := []string{section.label + ":"}
+		for _, file := range section.files {
+			listing = append(listing, "  "+contextTable.Row([]string{
+				util.FormatEstimatedTokens(file.EstimatedTokens),
+				file.Path,
+			}, 0))
+		}
+		listings = append(listings, strings.Join(listing, "\n"))
+	}
+
+	return strings.Join(listings, "\n")
+}
+
 func infoCommand(getInfo func() (string, error)) slash.Command {
 	return slash.Command{
 		Name:        "info",
@@ -301,7 +375,7 @@ func infoCommand(getInfo func() (string, error)) slash.Command {
 			if err != nil {
 				return err
 			}
-			context.PlainNotice(info)
+			context.NoticeListing(info)
 			return nil
 		},
 	}

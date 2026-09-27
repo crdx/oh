@@ -4,6 +4,7 @@
 
 ### Changes
 
+- List model context with /ctx command
 - Show arguments in snippet completion dropdowns
 - Show complete effective grant access
 - Advise on how to detect applied patches

@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/contextfile"
 	"crdx.org/oh/internal/app/feedback"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/shell"
@@ -60,6 +61,64 @@ func TestGoldenCompletionMatchesGolden(t *testing.T) {
 	assertGolden(t, "completion.txt", output.String())
 }
 
+func TestGoldenContextListingMatchesGolden(t *testing.T) {
+	var output strings.Builder
+	for _, test := range []struct {
+		label   string
+		sources ContextSources
+	}{
+		{
+			label: "every context category",
+			sources: ContextSources{
+				SystemFiles: []contextfile.File{{Path: "/config/SYSTEM.md", EstimatedTokens: 12_000}},
+				ProjectFiles: []contextfile.File{{
+					Path: "/workspace/AGENTS.md", EstimatedTokens: 4_000,
+				}},
+				SessionFiles: []contextfile.File{
+					{Path: "/config/skills/golang/SKILL.md", EstimatedTokens: 2_000},
+					{Path: "/config/skills/todo/SKILL.md", EstimatedTokens: 1_000},
+				},
+			},
+		},
+		{
+			label: "project files only",
+			sources: ContextSources{ProjectFiles: []contextfile.File{{
+				Path: "/workspace/AGENTS.md", EstimatedTokens: 4_000,
+			}}},
+		},
+		{
+			label: "session files only",
+			sources: ContextSources{SessionFiles: []contextfile.File{{
+				Path: "/config/skills/todo/SKILL.md", EstimatedTokens: 1_000,
+			}}},
+		},
+		{label: "no file context"},
+	} {
+		commands := newCommandRegistry(t, commandEnvironment{
+			getContextSources: func() ContextSources { return test.sources },
+		})
+		invocation, found := commands.Find("/ctx")
+		if !found {
+			t.Fatal("expected /ctx to be registered")
+		}
+		context := &commandTestContext{}
+		if err := invocation.Command.Run(context, invocation.Arguments); err != nil {
+			t.Fatal(err)
+		}
+		if !context.isListing {
+			t.Error("context files were not marked as a listing")
+		}
+		fmt.Fprintf(
+			&output,
+			"=== %s ===\n%s\n",
+			test.label,
+			renderInformationListing(context.notice, 80),
+		)
+	}
+
+	assertGolden(t, "context.txt", output.String())
+}
+
 func TestEveryCommandIsDescribedInOneLowercaseSentence(t *testing.T) {
 	commands := newCommandRegistryWithSnippets(t, fixtureEnvironment(t), nil)
 
@@ -81,6 +140,16 @@ func TestEveryCommandIsDescribedInOneLowercaseSentence(t *testing.T) {
 			t.Errorf("%s is described as %q", name, description)
 		}
 	}
+}
+
+func renderInformationListing(text string, columns int) string {
+	var shown feedback.State
+	shown.Show(feedback.Command, feedback.Message{
+		Text:      text,
+		Status:    agent.InfoStatus,
+		IsListing: true,
+	}, time.Time{})
+	return strings.Join(shown.Render(columns, time.Time{}), "\n")
 }
 
 func assertGolden(t *testing.T, name string, got string) {
@@ -485,11 +554,14 @@ func TestGoldenInfoMatchesGolden(t *testing.T) {
 		t.Fatal("expected /info to be registered")
 	}
 
-	context := &helpContext{}
+	context := &commandTestContext{}
 	if err := invocation.Command.Run(context, invocation.Arguments); err != nil {
 		t.Fatal(err)
 	}
-	assertGolden(t, "info.txt", context.notice+"\n")
+	if !context.isListing {
+		t.Error("session info was not marked as a listing")
+	}
+	assertGolden(t, "info.txt", renderInformationListing(context.notice, 80)+"\n")
 }
 
 func TestGoldenHelpMatchesGolden(t *testing.T) {

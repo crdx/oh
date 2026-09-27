@@ -18,6 +18,7 @@ import (
 	"crdx.org/oh/pkg/session"
 
 	"crdx.org/oh/internal/app/conditions"
+	"crdx.org/oh/internal/app/contextfile"
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/store"
 )
@@ -31,6 +32,12 @@ func write(t *testing.T, directory string) string {
 		Provider:     "codex",
 		Effort:       "high",
 		SystemPrompt: "You are a coding assistant.",
+		SystemContextFiles: []contextfile.File{{
+			Path: "/config/SYSTEM.md", EstimatedTokens: 1400,
+		}},
+		ProjectContextFiles: []contextfile.File{{
+			Path: "/tmp/somewhere/AGENTS.md", EstimatedTokens: 700,
+		}},
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -101,6 +108,14 @@ func TestASessionReadsBackAsItWasWritten(t *testing.T) {
 
 	if storedSession.Meta.SystemPrompt != "You are a coding assistant." {
 		t.Errorf("expected the context to survive, got %+v", storedSession.Meta)
+	}
+	wantSystemContextFiles := []contextfile.File{{Path: "/config/SYSTEM.md", EstimatedTokens: 1400}}
+	if !reflect.DeepEqual(storedSession.Meta.SystemContextFiles, wantSystemContextFiles) {
+		t.Errorf("expected system context files %v, got %v", wantSystemContextFiles, storedSession.Meta.SystemContextFiles)
+	}
+	wantProjectContextFiles := []contextfile.File{{Path: "/tmp/somewhere/AGENTS.md", EstimatedTokens: 700}}
+	if !reflect.DeepEqual(storedSession.Meta.ProjectContextFiles, wantProjectContextFiles) {
+		t.Errorf("expected project context files %v, got %v", wantProjectContextFiles, storedSession.Meta.ProjectContextFiles)
 	}
 
 	if len(storedSession.Items) != 1 || string(storedSession.Items[0]) != `{"type":"reasoning"}` {

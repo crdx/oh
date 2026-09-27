@@ -37,6 +37,7 @@ import (
 	"crdx.org/oh/internal/app/commands"
 	"crdx.org/oh/internal/app/conditions"
 	"crdx.org/oh/internal/app/config"
+	"crdx.org/oh/internal/app/contextfile"
 	"crdx.org/oh/internal/app/ctl"
 	"crdx.org/oh/internal/app/cycle"
 	"crdx.org/oh/internal/app/demo"
@@ -752,10 +753,15 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	}
 
 	var systemPrompt string
+	var systemContextFiles []contextfile.File
+	var projectContextFiles []contextfile.File
 	if resumedSession != nil && resumedSession.Meta.SystemPrompt != "" {
 		systemPrompt = resumedSession.Meta.SystemPrompt
+		systemContextFiles = slices.Clone(resumedSession.Meta.SystemContextFiles)
+		projectContextFiles = slices.Clone(resumedSession.Meta.ProjectContextFiles)
 	} else {
-		systemPrompt, _, err = prompt.Load(prompt.Config{
+		var contextFiles []prompt.File
+		systemPrompt, contextFiles, err = prompt.Load(prompt.Config{
 			GlobalPath:     location.GetGlobalContextPath(),
 			Workspace:      workspace,
 			SessionName:    log.Name(),
@@ -776,6 +782,14 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		})
 		if err != nil {
 			return "", err
+		}
+		for _, loadedFile := range contextFiles {
+			contextFile := contextfile.FromBytes(loadedFile.Path, len(loadedFile.Body))
+			if loadedFile.IsSystem {
+				systemContextFiles = append(systemContextFiles, contextFile)
+			} else {
+				projectContextFiles = append(projectContextFiles, contextFile)
+			}
 		}
 	}
 	systemPrompt = prompt.WithDropsDirectory(systemPrompt, dropKeeper.GetDirectory())
@@ -936,6 +950,8 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 
 	if resumedSession == nil {
 		meta.SystemPrompt = systemPrompt
+		meta.SystemContextFiles = slices.Clone(systemContextFiles)
+		meta.ProjectContextFiles = slices.Clone(projectContextFiles)
 		meta.Tools = toolset.Names(enabledTools)
 		meta.Conditions = &currentConditions
 		if err := log.SetMeta(meta); err != nil {
@@ -1007,6 +1023,17 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		LimitOutput: func(output string) string { return app.withinToolOutputLimit(output) },
 		GetInfo: func() (string, error) {
 			return app.display.bar.RenderInfo(segment.Context{})
+		},
+		GetContextSources: func() commands.ContextSources {
+			var sessionFiles []contextfile.File
+			if app != nil {
+				sessionFiles = skill.LoadedSkillFiles(app.recordedEvents)
+			}
+			return commands.ContextSources{
+				SystemFiles:  slices.Clone(systemContextFiles),
+				ProjectFiles: slices.Clone(projectContextFiles),
+				SessionFiles: sessionFiles,
+			}
 		},
 		Session: commands.Session{
 			Name:           log.Name(),

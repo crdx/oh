@@ -62,7 +62,9 @@ func TestTheGlobalContextReplacesTheBuiltInOpeningButKeepsTheHarnessState(t *tes
 	if err != nil {
 		t.Fatal(err)
 	}
-	wantcontextFiles := []File{{Name: "SYSTEM.md", Body: configuredGlobalContext}}
+	wantcontextFiles := []File{{
+		Name: "SYSTEM.md", Path: globalContextPath(), Body: configuredGlobalContext, IsSystem: true,
+	}}
 	if !slices.Equal(contextFiles, wantcontextFiles) {
 		t.Errorf("got context files %v, want %v", contextFiles, wantcontextFiles)
 	}
@@ -127,9 +129,12 @@ func TestContextcontextFilesFollowTheOrderTheyAreConcatenatedIn(t *testing.T) {
 		t.Fatal(err)
 	}
 	wantcontextFiles := []File{
-		{Name: "SYSTEM.md", Body: configuredGlobalContext},
-		{Name: "AGENTS.md", Body: "Run the broad checks."},
-		{Name: "AGENTS.local.md", Body: "Never grant more access."},
+		{Name: "SYSTEM.md", Path: globalContextPath(), Body: configuredGlobalContext, IsSystem: true},
+		{Name: "AGENTS.md", Path: filepath.Join(workspace.GetDir(), "AGENTS.md"), Body: "Run the broad checks."},
+		{
+			Name: "AGENTS.local.md", Path: filepath.Join(workspace.GetDir(), "AGENTS.local.md"),
+			Body: "Never grant more access.",
+		},
 	}
 	if !slices.Equal(contextFiles, wantcontextFiles) {
 		t.Errorf("got context files %v, want %v", contextFiles, wantcontextFiles)

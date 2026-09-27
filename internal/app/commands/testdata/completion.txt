@@ -1,6 +1,7 @@
 "/"
   /conf → /conf  (edit the config and system prompt)
   /copy → /copy …  (copy a target to the clipboard)
+  /ctx → /ctx  (list files contributing to model context)
   /edit → /edit …  (open a target in your editor)
   /expose <port> → /expose …  (expose a host loopback port to the sandbox)
   /fork → /fork  (fork this session into a new one, optionally on another model)
@@ -16,6 +17,7 @@
 "/c"
   /conf → /conf  (edit the config and system prompt)
   /copy → /copy …  (copy a target to the clipboard)
+  /ctx → /ctx  (list files contributing to model context)
 "/g"
   /grant → /grant …  (grant temporary access to a path)
   /grants → /grants …  (list effective access and port routes)

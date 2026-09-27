@@ -14,6 +14,7 @@ import (
 	"crdx.org/oh/pkg/session"
 
 	"crdx.org/oh/internal/app/conditions"
+	"crdx.org/oh/internal/app/contextfile"
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/store/transcript"
@@ -21,16 +22,18 @@ import (
 )
 
 type Meta struct {
-	Model        string                 `json:"model"`
-	WorkspaceDir string                 `json:"workspaceDir"`
-	Provider     string                 `json:"provider"`
-	Effort       string                 `json:"effort,omitempty"`
-	IsFast       bool                   `json:"fast,omitempty"`
-	ModelChoice  *model.Choice          `json:"model_choice,omitempty"`
-	SystemPrompt string                 `json:"system_prompt,omitempty"`
-	Tools        []string               `json:"tools,omitempty"`
-	Conditions   *conditions.Conditions `json:"conditions,omitempty"`
-	Yolo         bool                   `json:"yolo,omitempty"`
+	Model               string                 `json:"model"`
+	WorkspaceDir        string                 `json:"workspaceDir"`
+	Provider            string                 `json:"provider"`
+	Effort              string                 `json:"effort,omitempty"`
+	IsFast              bool                   `json:"fast,omitempty"`
+	ModelChoice         *model.Choice          `json:"model_choice,omitempty"`
+	SystemPrompt        string                 `json:"system_prompt,omitempty"`
+	SystemContextFiles  []contextfile.File     `json:"system_context_files,omitempty"`
+	ProjectContextFiles []contextfile.File     `json:"project_context_files,omitempty"`
+	Tools               []string               `json:"tools,omitempty"`
+	Conditions          *conditions.Conditions `json:"conditions,omitempty"`
+	Yolo                bool                   `json:"yolo,omitempty"`
 }
 
 type listingData struct {

@@ -2,6 +2,7 @@ Commands:
   /! <command>
   /conf
   /copy {last-message|session-chat|session-id|session-name|<target>}
+  /ctx
   /edit <target>
   /info
   /open <target>

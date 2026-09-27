@@ -8,7 +8,9 @@ import (
 	"strings"
 	"testing"
 
+	"crdx.org/oh/internal/app/contextfile"
 	"crdx.org/oh/internal/file"
+	"crdx.org/oh/pkg/agent"
 )
 
 func writeSkill(t *testing.T, skillsDirectory string, directory string, body string) string {
@@ -160,6 +162,30 @@ func TestASkillIsRecognisedByThePathItLivesAt(t *testing.T) {
 				)
 			}
 		})
+	}
+}
+
+func TestLoadedSkillFilesIncludeOnlySuccessfulSkillReads(t *testing.T) {
+	one := "/skills/one/SKILL.md"
+	events := []agent.Event{
+		{Kind: agent.ToolCallRequestEvent, ID: "one", Name: readToolName, FallbackRendering: agent.FallbackRendering{Subject: one}},
+		{Kind: agent.ToolCallResultEvent, ID: "one", Name: readToolName, Status: agent.SuccessStatus, Text: strings.Repeat("a", 2_800)},
+		{Kind: agent.ToolCallRequestEvent, ID: "ordinary", Name: readToolName, FallbackRendering: agent.FallbackRendering{Subject: "/workspace/main.go"}},
+		{Kind: agent.ToolCallResultEvent, ID: "ordinary", Name: readToolName, Status: agent.SuccessStatus},
+		{Kind: agent.ToolCallRequestEvent, ID: "failed", Name: readToolName, FallbackRendering: agent.FallbackRendering{Subject: "/skills/failed/SKILL.md"}},
+		{Kind: agent.ToolCallResultEvent, ID: "failed", Name: readToolName, Status: agent.ErrorStatus},
+		{Kind: agent.ToolCallRequestEvent, ID: "two", Name: readToolName, FallbackRendering: agent.FallbackRendering{Subject: ".agents/skills/two/SKILL.md"}},
+		{Kind: agent.ToolCallResultEvent, ID: "two", Name: readToolName, Status: agent.SuccessStatus, Text: strings.Repeat("b", 1_400)},
+		{Kind: agent.ToolCallRequestEvent, ID: "one-again", Name: readToolName, FallbackRendering: agent.FallbackRendering{Subject: one}},
+		{Kind: agent.ToolCallResultEvent, ID: "one-again", Name: readToolName, Status: agent.SuccessStatus, Text: strings.Repeat("a", 5_600)},
+	}
+
+	want := []contextfile.File{
+		{Path: one, EstimatedTokens: 1_001},
+		{Path: ".agents/skills/two/SKILL.md", EstimatedTokens: 501},
+	}
+	if got := LoadedSkillFiles(events); !slices.Equal(got, want) {
+		t.Errorf("got %v, want %v", got, want)
 	}
 }
 
