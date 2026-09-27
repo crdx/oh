@@ -39,14 +39,71 @@ func TestARuleWithBothLabelsIsExactlyAsWideAsTheScreen(t *testing.T) {
 }
 
 func TestLeftContentRoomKeepsAFittingRightLabel(t *testing.T) {
-	if got := LeftContentWidth(20, "right"); got != 7 {
-		t.Errorf("got %d cells, want 7", got)
+	if got := LeftContentWidth(20, "right"); got != 6 {
+		t.Errorf("got %d cells, want 6", got)
 	}
 	if got := LeftContentWidth(20, ""); got != 16 {
 		t.Errorf("got %d cells without a right label, want 16", got)
 	}
 	if got := LeftContentWidth(5, "far too long"); got != 1 {
 		t.Errorf("got %d cells beside an unfit right label, want 1", got)
+	}
+}
+
+func TestCentreContentRoomIsTheGapBetweenTheSides(t *testing.T) {
+	for _, test := range []struct {
+		width int
+		left  string
+		right string
+		want  int
+	}{
+		{width: 40, left: "", right: "", want: 38},
+		{width: 40, left: "abcde", right: "", want: 28},
+		{width: 40, left: "", right: "abcde", want: 28},
+		{width: 40, left: "abcde", right: "abc", want: 20},
+		{width: 40, left: "abc", right: "abcde", want: 20},
+		{width: 10, left: "abcdefgh", right: "", want: 8},
+	} {
+		if got := CenterContentWidth(test.width, test.left, test.right); got != test.want {
+			t.Errorf(
+				"%d columns between %q and %q left %d cells, want %d",
+				test.width, test.left, test.right, got, test.want,
+			)
+		}
+	}
+}
+
+func TestWhateverTheCentreRoomAllowsIsDrawn(t *testing.T) {
+	for _, width := range []int{20, 40, 41, 80} {
+		for _, sides := range [][2]string{
+			{"", ""},
+			{"abc", "abc"},
+			{"a longer label", "a longer label"},
+			{"a longer label", ""},
+			{"", "a longer label"},
+			{"abc", "a longer label"},
+		} {
+			side := sides[0] + "|" + sides[1]
+			cells := CenterContentWidth(width, sides[0], sides[1])
+			if cells == 0 {
+				continue
+			}
+
+			center := strings.Repeat("x", cells)
+			drawn := Ruler{Left: sides[0], Center: center, Right: sides[1]}.render(width, style.Rule)
+			if !strings.Contains(drawn, center) {
+				t.Errorf("%d columns beside %q dropped a centre of %d cells: %q", width, side, cells, drawn)
+			}
+			if got := style.Width(drawn); got != width {
+				t.Errorf("expected a rule of %d columns, got %d", width, got)
+			}
+
+			wider := center + "x"
+			drawn = Ruler{Left: sides[0], Center: wider, Right: sides[1]}.render(width, style.Rule)
+			if strings.Contains(drawn, wider) {
+				t.Errorf("%d columns beside %q drew a centre wider than its room: %q", width, side, drawn)
+			}
+		}
 	}
 }
 
@@ -306,11 +363,51 @@ func TestACentredLabelIsPositionedRelativeToTheRuleEdges(t *testing.T) {
 	}
 }
 
-func TestACentredLabelMeetingAnotherKeepsOneSpaceBetweenThem(t *testing.T) {
+func TestACentredLabelSqueezedBetweenTheSidesKeepsADividerEachSide(t *testing.T) {
 	rule := Ruler{Left: "left", Center: "mid", Right: "right"}
 
-	if want, got := "── left mid ─ right ──", style.Plain(rule.render(22, style.Rule)); got != want {
+	if want, got := "── left ─ mid ─ right ──", style.Plain(rule.render(24, style.Rule)); got != want {
 		t.Errorf("got %q, want %q", got, want)
+	}
+	if got := style.Plain(rule.render(23, style.Rule)); strings.Contains(got, "mid") {
+		t.Errorf("expected the centred label to give way, got %q", got)
+	}
+}
+
+func TestTheSidesKeepADividerBetweenThem(t *testing.T) {
+	rule := Ruler{Left: "left", Right: "right"}
+
+	if want, got := "── left ─ right ──", style.Plain(rule.render(18, style.Rule)); got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+	if got := style.Plain(rule.render(17, style.Rule)); strings.Contains(got, "left") {
+		t.Errorf("expected the left label to give way, got %q", got)
+	}
+}
+
+func TestEveryPairOfLabelsHasADividerBetweenThem(t *testing.T) {
+	labels := []string{"", "a", "mid", "alongerlabel", "⚡wide🦦"}
+	for width := range 61 {
+		for _, left := range labels {
+			for _, center := range labels {
+				for _, right := range labels {
+					got := style.Plain(Ruler{Left: left, Center: center, Right: right}.render(width, style.Rule))
+					if style.Width(got) != width {
+						t.Errorf("%d columns drew %d: %q", width, style.Width(got), got)
+					}
+					if strings.Contains(got, "  ") {
+						t.Errorf("%d columns drew two spaces in a row: %q", width, got)
+					}
+
+					words := strings.Fields(got)
+					for i := 1; i < len(words); i++ {
+						if strings.Trim(words[i-1], "─") != "" && strings.Trim(words[i], "─") != "" {
+							t.Errorf("%d columns drew %q beside %q with no divider: %q", width, words[i-1], words[i], got)
+						}
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -360,12 +457,37 @@ func TestACentredLabelIsKeptWhenThereIsRoomForItBetweenTheEnds(t *testing.T) {
 	}
 }
 
-func TestACentredLabelGivesWayRatherThanMovingOffCentre(t *testing.T) {
+func TestACentredLabelGivesWayWhenNoGapHoldsIt(t *testing.T) {
 	rule := Ruler{Left: "↑ 12", Center: "workspace", Right: "gpt ⠶ io"}
 
-	got := style.Plain(rule.render(30, style.Rule))
+	got := style.Plain(rule.render(28, style.Rule))
 	if strings.Contains(got, "workspace") {
 		t.Errorf("expected the centred label to give way, got %q", got)
+	}
+}
+
+func TestACentredLabelSlidesIntoTheRoomBesideAWideSide(t *testing.T) {
+	rule := Ruler{Left: "a much wider left side", Center: "mid", Right: "r"}
+
+	if want, got := "── a much wider left side ─ mid ─── r ──", style.Plain(rule.render(40, style.Rule)); got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
+func TestACentredLabelSlidesIntoTheRoomBesideAWideRightSide(t *testing.T) {
+	rule := Ruler{Left: "l", Center: "mid", Right: "a much wider right side"}
+
+	if want, got := "── l ─── mid ─ a much wider right side ──", style.Plain(rule.render(41, style.Rule)); got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
+func TestACentredLabelStaysInTheMiddleWheneverItFitsThere(t *testing.T) {
+	rule := Ruler{Left: "a much wider left side", Center: "mid", Right: "r"}
+
+	got := style.Plain(rule.render(80, style.Rule))
+	if before, _, _ := strings.Cut(got, "mid"); style.Width(before) != (80-3)/2 {
+		t.Errorf("expected the label in the middle, got %q", got)
 	}
 }
 

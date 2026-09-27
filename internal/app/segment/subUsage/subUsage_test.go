@@ -13,6 +13,7 @@ import (
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/usage"
+	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/req"
 	"crdx.org/oh/pkg/agent"
 )
@@ -762,4 +763,152 @@ func TestASimulationAsksNobodyAboutUsage(t *testing.T) {
 	if reporter.asked.Load() != 0 {
 		t.Errorf("a simulation asked for usage %d times", reporter.asked.Load())
 	}
+}
+
+func TestEveryRungBelowTheFirstIsNarrowerThanIt(t *testing.T) {
+	for _, test := range segmentCases() {
+		if test.hasImages {
+			continue
+		}
+
+		clock := &testClock{now: testNow}
+		built := &state{
+			modelName:         strings.ToLower(test.modelName),
+			rate:              defaultRate,
+			isSelfRefreshing:  !test.isWaiting,
+			gauges:            usage.NewGauges(nil),
+			now:               clock.read,
+			windows:           test.windows,
+			fetchStartedAt:    test.fetchStartedAt,
+			status:            test.status,
+			statusBeforeFetch: test.statusBeforeFetch,
+		}
+
+		fetchedAt := test.fetchedAt
+		if fetchedAt.IsZero() {
+			fetchedAt = testNow
+		}
+
+		ladder := built.draw(snapshot{
+			windows:   test.windows,
+			fetchedAt: fetchedAt,
+			status:    built.getVisibleStatus(),
+			failure:   test.failure,
+		})
+
+		whole := style.Plain(ladder[0])
+		narrowest := width.Of(whole)
+
+		for _, rung := range ladder[1:] {
+			drawn := style.Plain(rung)
+
+			if width.Of(drawn) >= width.Of(whole) {
+				t.Errorf("%s: rung %q is no narrower than the whole %q", test.name, drawn, whole)
+			}
+
+			narrowest = min(narrowest, width.Of(drawn))
+		}
+
+		if last := width.Of(style.Plain(ladder[len(ladder)-1])); last != narrowest {
+			t.Errorf("%s: the ladder ends %d cells wide, narrower than %d", test.name, last, narrowest)
+		}
+	}
+}
+
+func fuzzedWindows(written []byte) []agent.UsageWindow {
+	const fieldsPerWindow = 4
+
+	durations := []time.Duration{
+		time.Hour, 5 * time.Hour, 7 * 24 * time.Hour, 30 * 24 * time.Hour, 0,
+	}
+
+	var windows []agent.UsageWindow
+
+	for at := 0; at+fieldsPerWindow <= len(written); at += fieldsPerWindow {
+		window := agent.UsageWindow{
+			Duration:  durations[int(written[at])%len(durations)],
+			Percent:   float64(written[at+1]) / 2,
+			IsLimited: written[at+3]&1 == 1,
+		}
+
+		if written[at+3]&2 != 2 {
+			remaining := time.Duration(written[at+2]) * time.Minute
+			if written[at+3]&8 == 8 {
+				remaining = -remaining
+			}
+
+			window.ResetsAt = testNow.Add(remaining)
+		}
+
+		if written[at+3]&4 == 4 {
+			window.Scope = "sol"
+		}
+
+		windows = append(windows, window)
+	}
+
+	return windows
+}
+
+func FuzzEveryLadderOfWindowsNarrowsToNothing(fuzzer *testing.F) {
+	for _, seed := range [][]byte{
+		{1, 80, 120, 0},
+		{1, 80, 120, 0, 2, 24, 100, 0},
+		{1, 200, 250, 1},
+		{1, 80, 120, 4, 2, 24, 100, 5},
+		{4, 0, 0, 2},
+		{1, 80, 200, 2, 3, 30, 60, 6},
+		{},
+	} {
+		fuzzer.Add(seed, byte(usageReady), byte(0))
+	}
+
+	fuzzer.Fuzz(func(t *testing.T, written []byte, status byte, age byte) {
+		if len(written) > 256 {
+			t.Skip("more windows than a provider ever reports")
+		}
+
+		windows := fuzzedWindows(written)
+		clock := &testClock{now: testNow}
+
+		built := &state{
+			modelName:        "gpt-5.6-sol",
+			rate:             defaultRate,
+			isSelfRefreshing: true,
+			gauges:           usage.NewGauges(nil),
+			now:              clock.read,
+			windows:          windows,
+			status:           usageStatus(int(status) % (int(usageRetrying) + 1)),
+			failure:          "429",
+		}
+
+		ladder := built.draw(snapshot{
+			windows:   windows,
+			fetchedAt: testNow.Add(-time.Duration(age) * time.Minute),
+			status:    built.status,
+			failure:   "429",
+		})
+
+		if len(ladder) == 0 {
+			t.Fatal("a snapshot drew no ladder at all")
+		}
+
+		for at, rung := range ladder {
+			if at > 0 && rung == ladder[at-1] {
+				t.Fatalf("%v drew %q twice over", windows, rung)
+			}
+
+			if at > 0 && width.Of(style.Plain(rung)) > width.Of(style.Plain(ladder[0])) {
+				t.Fatalf("%v widened from %q to %q", windows, ladder[0], rung)
+			}
+
+			if rung == "" && at != len(ladder)-1 {
+				t.Fatalf("%v went on drawing after rung %d drew nothing", windows, at)
+			}
+		}
+
+		if len(windows) > 0 && len(ladder) > 1 && ladder[len(ladder)-1] != "" {
+			t.Fatalf("%v ends its ladder at %q rather than nothing", windows, ladder[len(ladder)-1])
+		}
+	})
 }

@@ -2,6 +2,7 @@ package bar
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 	"time"
 
@@ -163,32 +164,81 @@ func RenderWithin(layout segment.Layout, position segment.Position, context segm
 }
 
 func render(layout segment.Layout, position segment.Position, context segment.Context, cells int) string {
-	drawnSegments := make([]string, 0, len(layout[position]))
+	instances := layout[position]
+
+	ladders := make([][]string, len(instances))
+	rungs := make([]int, len(instances))
+
+	for at, instance := range instances {
+		ladders[at] = segment.LadderOf(underlying(instance), context)
+	}
+
+	for cells >= 0 && style.Width(join(ladders, rungs)) > cells && stepDown(ladders, rungs) {
+	}
+
+	return fitted(ladders, rungs, cells)
+}
+
+func stepDown(ladders [][]string, rungs []int) bool {
+	for at := range slices.Backward(rungs) {
+		if rungs[at] < lastDrawnRung(ladders[at]) {
+			rungs[at]++
+
+			return true
+		}
+	}
+
+	for at, ladder := range ladders {
+		if rungs[at] < len(ladder)-1 {
+			rungs[at] = len(ladder) - 1
+
+			return true
+		}
+	}
+
+	return false
+}
+
+func lastDrawnRung(ladder []string) int {
+	if last := len(ladder) - 1; last > 0 && ladder[last] == "" {
+		return last - 1
+	}
+
+	return len(ladder) - 1
+}
+
+func join(ladders [][]string, rungs []int) string {
+	return strings.Join(drawnTexts(ladders, rungs), segmentSeparator())
+}
+
+func drawnTexts(ladders [][]string, rungs []int) []string {
+	texts := make([]string, 0, len(ladders))
+
+	for at, ladder := range ladders {
+		if text := ladder[rungs[at]]; style.Width(text) > 0 {
+			texts = append(texts, text)
+		}
+	}
+
+	return texts
+}
+
+func fitted(ladders [][]string, rungs []int, cells int) string {
+	drawnSegments := make([]string, 0, len(ladders))
 	usedCells := 0
 
-	for _, instance := range layout[position] {
-		instance = underlying(instance)
+	for _, text := range drawnTexts(ladders, rungs) {
 		separatorCells := 0
 		if len(drawnSegments) > 0 {
 			separatorCells = style.Width(segmentSeparator())
 		}
 
-		var text string
-		if fitter, isFitter := instance.(segment.Fitter); isFitter && cells >= 0 {
-			text = fitter.RenderWithin(context, max(cells-usedCells-separatorCells, 0))
-		} else {
-			text = instance.Render(context)
-		}
-		textCells := style.Width(text)
-		if textCells == 0 {
-			continue
-		}
-		if cells >= 0 && usedCells+separatorCells+textCells > cells {
+		if cells >= 0 && usedCells+separatorCells+style.Width(text) > cells {
 			break
 		}
 
 		drawnSegments = append(drawnSegments, text)
-		usedCells += separatorCells + textCells
+		usedCells += separatorCells + style.Width(text)
 	}
 
 	return strings.Join(drawnSegments, segmentSeparator())

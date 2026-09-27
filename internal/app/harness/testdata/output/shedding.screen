@@ -1,0 +1,57 @@
+=== a lone context ===
+ 9      6% 62K/1M
+ 6– 8   6% 62K
+ 2– 5   6%
+ 0– 1   nothing
+=== a lone list of grants ===
+22      r:reference, rw:output
+15–21   r:reference, +1
+ 2–14   +2
+ 1      +
+ 0      nothing
+=== a lone model ===
+13      Opus 5 ·▫▪▫▫▫
+ 9–12   O5 ·▫▪▫▫▫
+ 2– 8   O5
+ 0– 1   nothing
+=== a model beside its context ===
+25      Opus 5 ·▫▪▫▫▫ ─ 6% 62K/1M
+22–24   Opus 5 ·▫▪▫▫▫ ─ 6% 62K
+18–21   Opus 5 ·▫▪▫▫▫ ─ 6%
+14–17   O5 ·▫▪▫▫▫ ─ 6%
+ 7–13   O5 ─ 6%
+ 2– 6   6%
+ 0– 1   nothing
+=== a segment drawn whole after two fitters ===
+52      8000, 8080, ⇠ 3000 ─ r:reference, rw:output ─ ● docs
+45–51   8000, 8080, ⇠ 3000 ─ r:reference, +1 ─ ● docs
+32–44   8000, 8080, ⇠ 3000 ─ +2 ─ ● docs
+31      8000, 8080, ⇠ 3000 ─ + ─ ● docs
+27–30   8000, 8080, +1 ─ + ─ ● docs
+21–26   8000, +2 ─ + ─ ● docs
+15–20   +3 ─ + ─ ● docs
+14      + ─ + ─ ● docs
+ 5–13   + ─ +
+ 1– 4   +
+ 0      nothing
+=== fitters between segments drawn whole ===
+46      rxw ngl ─ currents ─ Opus 5 ·▫▪▫▫▫ ─ 6% 62K/1M
+43–45   rxw ngl ─ currents ─ Opus 5 ·▫▪▫▫▫ ─ 6% 62K
+39–42   rxw ngl ─ currents ─ Opus 5 ·▫▪▫▫▫ ─ 6%
+35–38   rxw ngl ─ currents ─ O5 ·▫▪▫▫▫ ─ 6%
+28–34   rxw ngl ─ currents ─ O5 ─ 6%
+23–27   rxw ngl ─ currents ─ 6%
+18–22   rxw ngl ─ currents
+ 7–17   rxw ngl
+ 0– 6   nothing
+=== two lists of their own ===
+43      8000, 8080, ⇠ 3000 ─ r:reference, rw:output
+36–42   8000, 8080, ⇠ 3000 ─ r:reference, +1
+23–35   8000, 8080, ⇠ 3000 ─ +2
+22      8000, 8080, ⇠ 3000 ─ +
+18–21   8000, 8080, +1 ─ +
+12–17   8000, +2 ─ +
+ 6–11   +3 ─ +
+ 5      + ─ +
+ 1– 4   +
+ 0      nothing

@@ -2,9 +2,12 @@ package model
 
 import (
 	"regexp"
+	"slices"
 	"strings"
 	"unicode"
+	"unicode/utf8"
 
+	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/util"
 )
 
@@ -66,6 +69,87 @@ func DisplayName(id string) []string {
 	}
 
 	return name
+}
+
+func ShortName(id string) []string {
+	name := slices.Clone(DisplayName(id))
+	name[0] = initials(name[0])
+
+	return name
+}
+
+func initials(name string) string {
+	var letters strings.Builder
+
+	for word := range strings.FieldsSeq(name) {
+		clusters := graphemes(word)
+
+		at := firstSeen(clusters)
+		if at == len(clusters) {
+			continue
+		}
+
+		letters.WriteString(clusters[at])
+
+		for _, cluster := range clusters[at+1:] {
+			if isCapital(cluster) {
+				letters.WriteString(cluster)
+			}
+		}
+
+		letters.WriteString(trailingNumber(clusters[at+1:]))
+	}
+
+	if letters.Len() == 0 {
+		return name
+	}
+
+	return letters.String()
+}
+
+func graphemes(word string) []string {
+	var clusters []string
+
+	for cluster := range width.Graphemes(word) {
+		clusters = append(clusters, cluster)
+	}
+
+	return clusters
+}
+
+func firstSeen(clusters []string) int {
+	for at, cluster := range clusters {
+		if width.Of(cluster) > 0 {
+			return at
+		}
+	}
+
+	return len(clusters)
+}
+
+func trailingNumber(clusters []string) string {
+	at := len(clusters)
+
+	for at > 0 && isNumeric(clusters[at-1]) {
+		at--
+	}
+
+	return strings.Join(clusters[at:], "")
+}
+
+func isCapital(cluster string) bool {
+	character, _ := utf8.DecodeRuneInString(cluster)
+
+	return unicode.IsUpper(character)
+}
+
+func isNumeric(cluster string) bool {
+	character, size := utf8.DecodeRuneInString(cluster)
+	if size != len(cluster) {
+		return false
+	}
+
+	return unicode.IsDigit(character) || character == '.'
 }
 
 func readable(name []string) []string {
@@ -233,5 +317,10 @@ func capitalise(word string) string {
 		return strings.ToUpper(word)
 	}
 
-	return strings.ToUpper(word[:1]) + word[1:]
+	first, size := utf8.DecodeRuneInString(word)
+	if size == 0 {
+		return word
+	}
+
+	return string(unicode.ToUpper(first)) + word[size:]
 }

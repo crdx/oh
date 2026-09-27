@@ -1,6 +1,7 @@
 package contextUsage_test
 
 import (
+	"slices"
 	"testing"
 
 	"crdx.org/oh/internal/app/segment"
@@ -85,5 +86,46 @@ func TestContextUsageRoundsAndCapsItsPercentage(t *testing.T) {
 	}
 	if got := render(t, 250_000, 200_000); got != "100% 250K/200K" {
 		t.Errorf("got %q", got)
+	}
+}
+
+func ladder(t *testing.T, usedTokens int, totalTokens int) []string {
+	t.Helper()
+
+	built, err := contextUsage.New(func() (int, int) {
+		return usedTokens, totalTokens
+	})(noOptions{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	fitter, isFitter := built.(segment.Fitter)
+	if !isFitter {
+		t.Fatal("the context usage segment does not fit itself to available room")
+	}
+
+	drawn := []string{}
+	for _, rung := range fitter.Ladder(segment.Context{}) {
+		drawn = append(drawn, style.Plain(rung))
+	}
+
+	return drawn
+}
+
+func TestContextUsageShedsItsTotalThenItsCountThenItself(t *testing.T) {
+	got := ladder(t, 62_000, 1_000_000)
+	want := []string{"6% 62K/1M", "6% 62K", "6%", ""}
+
+	if !slices.Equal(got, want) {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
+func TestAnUnknownWindowShedsTheSameWay(t *testing.T) {
+	got := ladder(t, 0, 0)
+	want := []string{"?% 0/?", "?% 0", "?%", ""}
+
+	if !slices.Equal(got, want) {
+		t.Errorf("got %q, want %q", got, want)
 	}
 }

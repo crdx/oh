@@ -1,26 +1,120 @@
 === windows on an even burn ===
 ● 5h 40% ███░┃░░░ wk 12% ░┃░░░░░░
+● 5h 40% ███░┃░░░ wk 12%
+● 5h 40% ███░┃░░░ 12%
+● 5h 40% ███░┃░░░
+● 5h ███░┃░░░
+● ███░┃░░░
+
 === a window ahead of its pace ===
 ● 5h 28% █┃░░░░░░
+● 5h █┃░░░░░░
+● █┃░░░░░░
+
 === a window far ahead of its pace ===
 ● 5h 60% █┃██░░░░
+● 5h █┃██░░░░
+● █┃██░░░░
+
 === a window near its limit ===
 ● 5h 95% ██████┃░
+● 5h ██████┃░
+● ██████┃░
+
 === a scoped window governing this model ===
 ● 5h 40% ███░┃░░░ ⚡ 5h 70% ████┃░░░
+● 5h 40% ███░┃░░░ ⚡ 5h 70%
+● 5h 40% ███░┃░░░ ⚡ 70%
+● 5h 40% ███░┃░░░
+● 5h ███░┃░░░
+● ███░┃░░░
+
+=== a scoped window and nothing else ===
+● ⚡ 5h 70% ████┃░░░
+● ⚡ 5h ████┃░░░
+● ⚡ ████┃░░░
+
+=== an aged snapshot of a limited window ===
+45m ● 5h 100% ████████ ✖
+● 5h 100% ████████ ✖
+● 5h ████████ ✖
+● ████████ ✖
+
 === a scoped window governing another model ===
 ● 5h 40% ███░┃░░░
+● 5h ███░┃░░░
+● ███░┃░░░
+
 === a window that is over its limit ===
 ● mo 100% ████████ ✖
+● mo ████████ ✖
+● ████████ ✖
+
+=== a limited window behind an unlimited one ===
+● 5h 40% ███░┃░░░ wk 100% ████████ ✖
+● 5h 40% ███░┃░░░ wk 100% ✖
+● 5h 40% ███░┃░░░ 100% ✖
+● wk 100% ████████ ✖
+● wk ████████ ✖
+● ████████ ✖
+
+=== a limited scoped window behind two unlimited ones ===
+● 5h 40% ███░┃░░░ wk 12% ░┃░░░░░░ ⚡ 5h 100% ████████ ✖
+● 5h 40% ███░┃░░░ wk 12% ⚡ 5h 100% ✖
+● 5h 40% ███░┃░░░ 12% ⚡ 100% ✖
+● 5h 40% ███░┃░░░ ⚡ 100% ✖
+● ⚡ 5h 100% ████████ ✖
+● ⚡ 5h ████████ ✖
+● ⚡ ████████ ✖
+
+=== three windows shedding one at a time ===
+● 5h 40% ███░┃░░░ wk 12% ░┃░░░░░░ mo 8% ░░┃░░░░░
+● 5h 40% ███░┃░░░ wk 12% mo 8%
+● 5h 40% ███░┃░░░ 12% 8%
+● 5h 40% ███░┃░░░ 12%
+● 5h 40% ███░┃░░░
+● 5h ███░┃░░░
+● ███░┃░░░
+
+=== a window whose reset has passed beside a live one ===
+● 5h stale wk 12% ░┃░░░░░░
+● 5h stale wk 12%
+● 5h stale 12%
+● wk 12% ░┃░░░░░░
+● wk ░┃░░░░░░
+● ░┃░░░░░░
+
+=== an aged snapshot of two windows ===
+10m ● 5h 40% ███┃░░░░ wk 12% ░┃░░░░░░
+● 5h 40% ███┃░░░░ wk 12% ░┃░░░░░░
+● 5h 40% ███┃░░░░ wk 12%
+● 5h 40% ███┃░░░░ 12%
+● 5h 40% ███┃░░░░
+● 5h ███┃░░░░
+● ███┃░░░░
+
 === a window whose reset has passed ===
 ● 5h stale
+● stale
+
 === a limited window whose reset has passed ===
 ● 5h stale
+● stale
+
 === a window with no reset at all ===
 ● 5h 40% ███░░░░░
+● 5h ███░░░░░
+● ███░░░░░
+
 === a snapshot refreshing in the background ===
 ● 5h 40% ███░┃░░░
+● 5h ███░┃░░░
+● ███░┃░░░
+
 ● 5h 40% ███░┃░░░
+● 5h ███░┃░░░
+● ███░┃░░░
+
 === nothing fetched yet ===
 usage pending
 === an initial fetch waiting for its spinner ===
@@ -29,18 +123,57 @@ usage pending
 usage ✦·
 === a fetch that was refused ===
 ● 5h 40% ███░┃░░░ 429
+● 5h ███░┃░░░ 429
+● ███░┃░░░ 429
+
 === nothing to show at all ===
 usage unavailable
 === a snapshot past its refresh ===
 10m ● 5h 40% ███┃░░░░
+● 5h 40% ███┃░░░░
+● 5h ███┃░░░░
+● ███┃░░░░
+
 === a snapshot long past its refresh ===
 45m ● 5h 40% ██┃░░░░░
+● 5h 40% ██┃░░░░░
+● 5h ██┃░░░░░
+● ██┃░░░░░
+
 === a provider waiting on a turn of its own ===
 45m ⧗ 5h 40% ██┃░░░░░
+⧗ 5h 40% ██┃░░░░░
+⧗ 5h ██┃░░░░░
+⧗ ██┃░░░░░
+
 === windows drawn as pictures ===
 ● 5h 40% 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮 wk 12% 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮
+● 5h 40% 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮 wk 12%
+● 5h 40% 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮 12%
+● 5h 40% 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮
+● 5h 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮
+● 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮
+
 === windows drawn as pictures a second time ===
 ● 5h 40% 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮 wk 12% 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮
+● 5h 40% 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮 wk 12%
+● 5h 40% 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮 12%
+● 5h 40% 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮
+● 5h 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮
+● 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮
+
 ● 5h 40% 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮 wk 12% 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮
+● 5h 40% 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮 wk 12%
+● 5h 40% 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮 12%
+● 5h 40% 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮
+● 5h 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮
+● 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮
+
 === two windows standing at the same figure ===
 ● 5h 40% 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮 5h 40% 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮
+● 5h 40% 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮 5h 40%
+● 5h 40% 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮 40%
+● 5h 40% 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮
+● 5h 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮
+● 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮
+

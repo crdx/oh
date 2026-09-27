@@ -121,7 +121,7 @@ right = [
 
 A segment drawing nothing is left out, and ` ─ ` joins whatever is left. Each of the six positions is independent, a segment may appear in several, and an array replaces rather than merges, so restate the default entries of any position you override.
 
-The right side is drawn whole and the left is then fitted into what remains, so a long right side costs the left its room. `path-grants` and `exposed-ports` are the two that shrink to fit, trading their last entries for a `+3`; every other segment is drawn whole or dropped. The centre is centred against the full width and dropped where it will not sit there without colliding, so it suits something short and steady.
+The right side is drawn whole, and the left and centre are then fitted into what remains, so a long right side costs both of them their room. Within a position the rightmost segment sheds detail first, each one going down to its barest form before any segment is dropped at all, and a segment is then dropped from the left. `path-grants` and `exposed-ports` trade their last entries for a `+3`; `active-model` shortens to its capitals and then drops its squares; `context-usage` sheds its window and then its count; `subscription-usage` sheds its age, then its gauges, then its labels, then whole windows, keeping a limited one over an unlimited one and an unlimited one over a stale one. Every other segment is drawn whole or dropped. The centre must still sit centred against the full width, so it suits something short and steady.
 
 `/info` draws every segment there is with its current value, naming those drawing nothing, which is how to judge one before putting it in the bar.
 

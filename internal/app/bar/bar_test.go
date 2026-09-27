@@ -26,17 +26,18 @@ func fixedFactory(value string) segment.Factory {
 	}
 }
 
-type fittingSegment struct {
-	availableCells *int
-}
+type fittingSegment []string
 
 func (self fittingSegment) Render(segment.Context) string {
-	return "unbounded"
+	if len(self) == 0 {
+		return ""
+	}
+
+	return self[0]
 }
 
-func (self fittingSegment) RenderWithin(_ segment.Context, cells int) string {
-	*self.availableCells = cells
-	return "+50"
+func (self fittingSegment) Ladder(segment.Context) []string {
+	return self
 }
 
 func TestTheFastModeSegmentIsRegisteredWithTheCurrentSelection(t *testing.T) {
@@ -84,24 +85,47 @@ func TestInfoDrawsEveryAvailableNonemptySegmentAndSummarisesTheEmptyOnes(t *test
 	}
 }
 
-func TestRenderWithinHandsAFittingSegmentOnlyTheRoomThatRemains(t *testing.T) {
-	availableCells := 0
+func TestDetailIsShedFromTheRightBeforeAnySegmentIsDroppedFromTheLeft(t *testing.T) {
 	layout := segment.Layout{
 		segment.TopLeft: {
-			segment.Instance{Name: "fixed", Segment: fixedSegment("abc")},
-			segment.Instance{
-				Name:    "fitting",
-				Segment: fittingSegment{availableCells: &availableCells},
-			},
+			segment.Instance{Name: "first", Segment: fittingSegment{"alpha", "al", ""}},
+			segment.Instance{Name: "second", Segment: fittingSegment{"bravo", "br", ""}},
 		},
 	}
 
-	got := RenderWithin(layout, segment.TopLeft, segment.Context{}, 10)
-	if availableCells != 4 {
-		t.Errorf("fitting segment got %d cells, want 4", availableCells)
+	for _, test := range []struct {
+		cells int
+		want  string
+	}{
+		{cells: 13, want: "alpha ─ bravo"},
+		{cells: 12, want: "alpha ─ br"},
+		{cells: 9, want: "al ─ br"},
+		{cells: 4, want: "br"},
+		{cells: 1, want: ""},
+	} {
+		got := RenderWithin(layout, segment.TopLeft, segment.Context{}, test.cells)
+		if style.Plain(got) != test.want || style.Width(got) > test.cells {
+			t.Errorf(
+				"%d cells drew %q at width %d, want %q",
+				test.cells,
+				style.Plain(got),
+				style.Width(got),
+				test.want,
+			)
+		}
 	}
-	if style.Plain(got) != "abc ─ +50" || style.Width(got) > 10 {
-		t.Errorf("got %q at width %d", style.Plain(got), style.Width(got))
+}
+
+func TestAnUnboundedPositionDrawsTheRichestRungOfEverySegment(t *testing.T) {
+	layout := segment.Layout{
+		segment.TopLeft: {
+			segment.Instance{Name: "first", Segment: fittingSegment{"alpha", "al", ""}},
+			segment.Instance{Name: "second", Segment: fixedSegment("bravo")},
+		},
+	}
+
+	if got := style.Plain(Render(layout, segment.TopLeft, segment.Context{})); got != "alpha ─ bravo" {
+		t.Errorf("got %q", got)
 	}
 }
 

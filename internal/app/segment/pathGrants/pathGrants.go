@@ -3,15 +3,13 @@ package pathGrants
 import (
 	"fmt"
 	"path/filepath"
-	"slices"
-	"strconv"
 	"strings"
 
 	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/segment/fit"
 	"crdx.org/oh/internal/app/style"
-	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/util/pathutil"
 )
 
@@ -49,35 +47,17 @@ func New(getGrants func() []pathgrant.Grant) segment.Factory {
 	}
 }
 
-func (self state) Render(segment.Context) string {
-	return strings.Join(self.getParts(), style.Subtle(", "))
-}
-
-func (self state) RenderWithin(_ segment.Context, cells int) string {
-	parts := self.getParts()
-	if len(parts) == 0 || cells <= 0 {
+func (self state) Render(context segment.Context) string {
+	ladder := self.Ladder(context)
+	if len(ladder) == 0 {
 		return ""
 	}
 
-	all := strings.Join(parts, style.Subtle(", "))
-	if style.Width(all) <= cells {
-		return all
-	}
+	return ladder[0]
+}
 
-	for shownCount := range slices.Backward(parts) {
-		hiddenCount := len(parts) - shownCount
-		candidateParts := append([]string(nil), parts[:shownCount]...)
-		candidateParts = append(candidateParts, style.Subtle("+"+strconv.Itoa(hiddenCount)))
-		candidate := strings.Join(candidateParts, style.Subtle(", "))
-		if style.Width(candidate) <= cells {
-			return candidate
-		}
-	}
-
-	if cells == 1 {
-		return style.Subtle("+")
-	}
-	return style.Subtle(width.Elide("+"+strconv.Itoa(len(parts)), cells))
+func (self state) Ladder(segment.Context) []string {
+	return fit.Parts(self.getParts())
 }
 
 func (self state) getParts() []string {

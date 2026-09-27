@@ -7,6 +7,7 @@ import (
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/segment/fastMode"
+	"crdx.org/oh/internal/app/segment/fit"
 	"crdx.org/oh/internal/app/style"
 )
 
@@ -34,22 +35,34 @@ func New(settings Settings) segment.Factory {
 	}
 }
 
-func (self state) Render(segment.Context) string {
-	name := model.DisplayName(self.settings.Name)
+func (self state) Render(context segment.Context) string {
+	return self.Ladder(context)[0]
+}
+
+func (self state) Ladder(segment.Context) []string {
+	spelledName := self.badge(model.DisplayName(self.settings.Name), " ")
+	shortName := self.badge(model.ShortName(self.settings.Name), "")
+
+	squares := thinkingSquares(self.settings.Effort, self.settings.EffortLevels)
+	if squares == "" {
+		return fit.Ladder(spelledName, shortName, "")
+	}
+
+	thinking := " " + styleThinkingSquares(squares)
+
+	return fit.Ladder(spelledName+thinking, shortName+thinking, shortName, "")
+}
+
+func (self state) badge(name []string, gap string) string {
 	badge := self.paint(name[0])
 	if len(name) > 1 {
-		badge += " " + style.Subtle(name[1])
+		badge += gap + style.Subtle(name[1])
 	}
 	if self.settings.IsFast {
 		badge = fastMode.GetMark(true) + " " + badge
 	}
 
-	squares := thinkingSquares(self.settings.Effort, self.settings.EffortLevels)
-	if squares == "" {
-		return badge
-	}
-
-	return badge + " " + styleThinkingSquares(squares)
+	return badge
 }
 
 func (self state) paint(name string) string {

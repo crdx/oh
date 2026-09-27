@@ -1,33 +1,62 @@
 === active-model / deepseek high ===
 DeepSeek Pro 4 ···▪·▫
+DSP4 ···▪·▫
+DSP4
 === active-model / deepseek max ===
 DeepSeek Pro 4 ···▫·▪
+DSP4 ···▫·▪
+DSP4
 === active-model / fast ===
 ⚡ GPT Sol 5.6 ▫▫▫▪▫▫
+⚡ GPTS5.6 ▫▫▫▪▫▫
+⚡ GPTS5.6
 === active-model / high effort ===
 GPT Sol 5.6 ▫▫▫▪▫▫
+GPTS5.6 ▫▫▫▪▫▫
+GPTS5.6
 === active-model / low effort ===
 GPT Sol 5.6 ▫▪▫▫▫▫
+GPTS5.6 ▫▪▫▫▫▫
+GPTS5.6
 === active-model / max effort ===
 GPT Sol 5.6 ▫▫▫▫▫▪
+GPTS5.6 ▫▫▫▫▫▪
+GPTS5.6
 === active-model / medium effort ===
 GPT Sol 5.6 ▫▫▪▫▫▫
+GPTS5.6 ▫▫▪▫▫▫
+GPTS5.6
 === active-model / minimal effort ===
 GPT Sol 5.6 ▪▫▫▫▫▫
+GPTS5.6 ▪▫▫▫▫▫
+GPTS5.6
 === active-model / none effort ===
 GPT Sol 5.6 ▫▫▫▫▫▫
+GPTS5.6 ▫▫▫▫▫▫
+GPTS5.6
 === active-model / ollama thinking off ===
 Qwen 3.8 27B ·▫▫▫··
+Q3.8 27B ·▫▫▫··
+Q3.8 27B
 === active-model / ollama without thinking ===
 Llama 3.3 70B
+L3.3 70B
 === active-model / opus medium ===
 Opus 5 ·▫▪▫▫▫
+O5 ·▫▪▫▫▫
+O5
 === active-model / simulation ===
 Simulation ▫▫▫▪▫▫
+S ▫▫▫▪▫▫
+S
 === active-model / sparse ladder ===
 GPT Sol 5.6 ···▪··
+GPTS5.6 ···▪··
+GPTS5.6
 === active-model / xhigh effort ===
 GPT Sol 5.6 ▫▫▫▫▪▫
+GPTS5.6 ▫▫▫▫▪▫
+GPTS5.6
 === activity-spinner / idle ===
 ✧·
 === activity-spinner / running first frame ===
@@ -48,40 +77,86 @@ GPT Sol 5.6 ▫▫▫▫▪▫
 1%
 === cache-usage / restored with the session ===
 93%
+=== context-usage / full ===
+100% 204K/200K
+100% 204K
+100%
 === context-usage / known ===
 91% 182K/200K
+91% 182K
+91%
+=== context-usage / nothing used yet ===
+0% 0/200K
+0% 0
+0%
 === context-usage / one million ===
 50% 500K/1M
+50% 500K
+50%
 === context-usage / unknown ===
 ?% 0/?
+?% 0
+?%
 === exposed-ports / associated absent job ===
 docs:8000
++1
++
 === exposed-ports / associated complete job ===
 docs:8000
++1
++
 === exposed-ports / associated failed job ===
 docs:8000
++1
++
 === exposed-ports / associated job ended with session ===
 docs:8000
++1
++
 === exposed-ports / associated running job ===
 docs:8000
++1
++
 === exposed-ports / associated starting job ===
 docs:8000
++1
++
 === exposed-ports / associated stopped job ===
 docs:8000
++1
++
 === exposed-ports / associated stopping job ===
 docs:8000
++1
++
 === exposed-ports / both directions ===
 8000, ⇠ 3000
-=== exposed-ports / both directions constrained ===
+8000, +1
++2
++
+=== exposed-ports / both directions shedding routes ===
+8000, 8080, ⇠ 3000, ⇠ 6000
+8000, 8080, ⇠ 3000, +1
 8000, 8080, +2
+8000, +3
++4
++
 === exposed-ports / configured hostname ===
 8000
++1
++
 === exposed-ports / empty ===
 
 === exposed-ports / host to sandbox ===
 8000, 8080
+8000, +1
++2
++
 === exposed-ports / sandbox to host ===
 ⇠ 3000, ⇠ 6000
+⇠ 3000, +1
++2
++
 === fast-mode / fast ===
 ⚡
 === fast-mode / standard ===
@@ -126,14 +201,32 @@ rxw ngl
 rxw ngl
 === path-grants / duplicate basenames ===
 r:/one/reference, rw:/two/reference
+r:/one/reference, +1
++2
++
 === path-grants / empty ===
 
 === path-grants / every access ===
 r:reference, rw:output, rx:tools, rxw:build
-=== path-grants / many constrained ===
-r:path-01, r:path-02, r:path-03, +47
+r:reference, rw:output, rx:tools, +1
+r:reference, rw:output, +2
+r:reference, +3
++4
++
+=== path-grants / many ===
+r:path-01, r:path-02, r:path-03, r:path-04, r:path-05, r:path-06
+r:path-01, r:path-02, r:path-03, r:path-04, r:path-05, +1
+r:path-01, r:path-02, r:path-03, r:path-04, +2
+r:path-01, r:path-02, r:path-03, +3
+r:path-01, r:path-02, +4
+r:path-01, +5
++6
++
 === path-grants / read and write ===
 r:reference, rw:output
+r:reference, +1
++2
++
 === scroll-overflow / down ===
 ↓ 7
 === scroll-overflow / empty ===
@@ -172,20 +265,45 @@ $1.28
 
 === subscription-usage / ahead of pace ===
 ● 5h 28% █┃░░░░░░
+● 5h █┃░░░░░░
+● █┃░░░░░░
 === subscription-usage / another session's snapshot ===
 ● 5h 40% ███░┃░░░ wk 12% ░┃░░░░░░
+● 5h 40% ███░┃░░░ wk 12%
+● 5h 40% ███░┃░░░ 12%
+● 5h 40% ███░┃░░░
+● 5h ███░┃░░░
+● ███░┃░░░
 === subscription-usage / boundless ===
 ∞ ░░░░░░░░
+∞
 === subscription-usage / even burn ===
 ● 5h 40% ███░┃░░░ wk 12% ░┃░░░░░░
+● 5h 40% ███░┃░░░ wk 12%
+● 5h 40% ███░┃░░░ 12%
+● 5h 40% ███░┃░░░
+● 5h ███░┃░░░
+● ███░┃░░░
 === subscription-usage / metered model in use ===
 ● wk 6% ░┃░░░░░░ ⚡ 5h 4% ░┃░░░░░░ wk 2% ░┃░░░░░░
+● wk 6% ░┃░░░░░░ ⚡ 5h 4% wk 2%
+● wk 6% ░┃░░░░░░ ⚡ 4% 2%
+● wk 6% ░┃░░░░░░ ⚡ 4%
+● wk 6% ░┃░░░░░░
+● wk ░┃░░░░░░
+● ░┃░░░░░░
 === subscription-usage / metered model not in use ===
 ● wk 6% ░┃░░░░░░
+● wk ░┃░░░░░░
+● ░┃░░░░░░
 === subscription-usage / near the limit ===
 ● 5h 95% █┃█████░
+● 5h █┃█████░
+● █┃█████░
 === subscription-usage / no reset reported ===
 ● wk 6% ░░░░░░░░
+● wk ░░░░░░░░
+● ░░░░░░░░
 === subscription-usage / not applicable ===
 usage n/a
 === subscription-usage / nothing reported yet ===
@@ -194,20 +312,36 @@ usage pending
 usage unavailable
 === subscription-usage / refreshing keeps the figures ===
 1h ● 5h 40% ███░┃░░░ 429
+● 5h 40% ███░┃░░░ 429
+● 5h ███░┃░░░ 429
+● ███░┃░░░ 429
 === subscription-usage / refused ===
 usage 401
 === subscription-usage / spent ===
 ● 5h 100% ████████ ✖
+● 5h ████████ ✖
+● ████████ ✖
 === subscription-usage / three windows ===
 ● 5h 39% █┃█░░░░░ wk 15% █┃░░░░░░ mo 13% █░┃░░░░░
+● 5h 39% █┃█░░░░░ wk 15% mo 13%
+● 5h 39% █┃█░░░░░ 15% 13%
+● 5h 39% █┃█░░░░░ 15%
+● 5h 39% █┃█░░░░░
+● 5h █┃█░░░░░
+● █┃█░░░░░
 === subscription-usage / unreachable ===
 usage failed
 === subscription-usage / updated by another session ===
 ● 5h 60% ████┃░░░
+● 5h ████┃░░░
+● ████┃░░░
 === subscription-usage / weekly plan window ===
 ● wk 6% ░┃░░░░░░
+● wk ░┃░░░░░░
+● ░┃░░░░░░
 === subscription-usage / window already elapsed ===
 ● 5h stale
+● stale
 === turn-count / nothing asked yet ===
 
 === turn-count / third turn ===

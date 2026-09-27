@@ -3,6 +3,7 @@ package pathGrants
 import (
 	"errors"
 	"fmt"
+	"slices"
 	"strings"
 	"testing"
 
@@ -118,8 +119,8 @@ func TestTheConfiguredPathTypeIsApplied(t *testing.T) {
 	}
 }
 
-func TestManyGrantsShowAsManyAsFitAndThenTheirHiddenCount(t *testing.T) {
-	grants := make([]pathgrant.Grant, 50)
+func TestEachRungHidesOneMoreGrantBehindTheirCount(t *testing.T) {
+	grants := make([]pathgrant.Grant, 4)
 	for i := range grants {
 		grants[i] = pathgrant.Grant{
 			Path:   fmt.Sprintf("/path-%02d", i+1),
@@ -127,20 +128,34 @@ func TestManyGrantsShowAsManyAsFitAndThenTheirHiddenCount(t *testing.T) {
 		}
 	}
 	built := buildSegment(t, &grants, "")
-	fitter, ok := built.(segment.Fitter)
-	if !ok {
+	fitter, isFitter := built.(segment.Fitter)
+	if !isFitter {
 		t.Fatal("path grants segment does not fit itself to available room")
 	}
 
-	got := style.Plain(fitter.RenderWithin(segment.Context{}, 36))
-	if width.Of(got) > 36 || !strings.Contains(got, "r:path-01") || !strings.Contains(got, "+47") {
-		t.Errorf("got %q at width %d", got, width.Of(got))
+	want := []string{
+		"r:path-01, r:path-02, r:path-03, r:path-04",
+		"r:path-01, r:path-02, r:path-03, +1",
+		"r:path-01, r:path-02, +2",
+		"r:path-01, +3",
+		"+4",
+		"+",
 	}
-	if strings.Contains(got, "path-50") {
-		t.Errorf("hidden path leaked into %q", got)
+
+	ladder := fitter.Ladder(segment.Context{})
+	got := make([]string, 0, len(ladder))
+	for _, rung := range ladder {
+		got = append(got, style.Plain(rung))
 	}
-	if got := style.Plain(fitter.RenderWithin(segment.Context{}, 3)); got != "+50" {
-		t.Errorf("got count-only rendering %q", got)
+
+	if !slices.Equal(got, want) {
+		t.Errorf("got %q, want %q", got, want)
+	}
+
+	for at, rung := range got[1:] {
+		if width.Of(rung) >= width.Of(got[at]) {
+			t.Errorf("rung %d (%q) is no narrower than the one above it (%q)", at+1, rung, got[at])
+		}
 	}
 }
 

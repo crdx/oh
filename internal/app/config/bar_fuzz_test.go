@@ -63,8 +63,14 @@ func FuzzABarIsBuiltAndDrawnWithoutFallingOver(fuzzer *testing.F) {
 
 		for _, position := range segment.Positions {
 			context := segment.Context{HiddenLinesAbove: 3, HiddenLinesBelow: 0}
-			_ = bar.RenderWithin(layout, position, context, int(cells))
-			_ = bar.RenderWithin(layout, position, context, 0)
+
+			for _, room := range []int{int(cells), 0} {
+				drawn := bar.RenderWithin(layout, position, context, room)
+
+				if width := style.Width(drawn); width > room {
+					t.Fatalf("%s drew %q in %d cells, %d cells wide", position, drawn, room, width)
+				}
+			}
 		}
 
 		_ = layout.NextRefresh(segment.Phase{At: time.Now(), IsRunning: true})

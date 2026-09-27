@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/segment/fit"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/util"
 )
@@ -29,15 +30,23 @@ func New(usage func() (usedTokens int, totalTokens int)) segment.Factory {
 	}
 }
 
-func (self state) Render(segment.Context) string {
+func (self state) Render(context segment.Context) string {
+	return self.Ladder(context)[0]
+}
+
+func (self state) Ladder(segment.Context) []string {
 	usedTokens, totalTokens := self.usage()
 
-	return style.Quantity(fmt.Sprintf(
-		"%s %s/%s",
-		formatPercentage(usedTokens, totalTokens),
-		util.FormatWholeThousands(usedTokens),
-		formatTotalTokens(totalTokens),
-	))
+	percentage := formatPercentage(usedTokens, totalTokens)
+	usedCount := util.FormatWholeThousands(usedTokens)
+	totalCount := formatTotalTokens(totalTokens)
+
+	return fit.Ladder(
+		style.Quantity(fmt.Sprintf("%s %s/%s", percentage, usedCount, totalCount)),
+		style.Quantity(percentage+" "+usedCount),
+		style.Quantity(percentage),
+		"",
+	)
 }
 
 func formatPercentage(usedTokens int, totalTokens int) string {

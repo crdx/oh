@@ -37,6 +37,13 @@ func limited(duration time.Duration, percent float64, remainingTime time.Duratio
 	return built
 }
 
+func scopedLimit(scope string, percent float64) agent.UsageWindow {
+	built := scoped(scope, percent)
+	built.IsLimited = true
+
+	return built
+}
+
 func scoped(scope string, percent float64) agent.UsageWindow {
 	built := window(5*time.Hour, percent, 2*time.Hour)
 	built.Scope = scope
@@ -74,6 +81,16 @@ func segmentCases() []segmentCase {
 			windows:   []agent.UsageWindow{window(5*time.Hour, 40, 150*time.Minute), scoped("gpt-5.3-codex-spark", 70)},
 		},
 		{
+			name:      "a scoped window and nothing else",
+			modelName: "gpt-5.3-codex-spark",
+			windows:   []agent.UsageWindow{scoped("gpt-5.3-codex-spark", 70)},
+		},
+		{
+			name:      "an aged snapshot of a limited window",
+			windows:   []agent.UsageWindow{limited(5*time.Hour, 100, 2*time.Hour)},
+			fetchedAt: testNow.Add(-45 * time.Minute),
+		},
+		{
 			name:      "a scoped window governing another model",
 			modelName: "claude-sonnet-4-6",
 			windows:   []agent.UsageWindow{window(5*time.Hour, 40, 150*time.Minute), scoped("opus", 70)},
@@ -81,6 +98,42 @@ func segmentCases() []segmentCase {
 		{
 			name:    "a window that is over its limit",
 			windows: []agent.UsageWindow{{Duration: 30 * 24 * time.Hour, Percent: 100, IsLimited: true}},
+		},
+		{
+			name: "a limited window behind an unlimited one",
+			windows: []agent.UsageWindow{
+				window(5*time.Hour, 40, 150*time.Minute),
+				limited(7*24*time.Hour, 100, 6*24*time.Hour),
+			},
+		},
+		{
+			name:      "a limited scoped window behind two unlimited ones",
+			modelName: "gpt-5.3-codex-spark",
+			windows: []agent.UsageWindow{
+				window(5*time.Hour, 40, 150*time.Minute),
+				window(7*24*time.Hour, 12, 6*24*time.Hour),
+				scopedLimit("gpt-5.3-codex-spark", 100),
+			},
+		},
+		{
+			name: "three windows shedding one at a time",
+			windows: []agent.UsageWindow{
+				window(5*time.Hour, 40, 150*time.Minute),
+				window(7*24*time.Hour, 12, 6*24*time.Hour),
+				window(30*24*time.Hour, 8, 20*24*time.Hour),
+			},
+		},
+		{
+			name: "a window whose reset has passed beside a live one",
+			windows: []agent.UsageWindow{
+				window(5*time.Hour, 40, -time.Minute),
+				window(7*24*time.Hour, 12, 6*24*time.Hour),
+			},
+		},
+		{
+			name:      "an aged snapshot of two windows",
+			windows:   []agent.UsageWindow{window(5*time.Hour, 40, 150*time.Minute), window(7*24*time.Hour, 12, 6*24*time.Hour)},
+			fetchedAt: testNow.Add(-10 * time.Minute),
 		},
 		{name: "a window whose reset has passed", windows: []agent.UsageWindow{window(5*time.Hour, 40, -time.Minute)}},
 		{name: "a limited window whose reset has passed", windows: []agent.UsageWindow{limited(5*time.Hour, 100, -time.Minute)}},
@@ -187,19 +240,20 @@ func drawEachCase(t *testing.T, isPlain bool) string {
 		drawn.WriteString(" ===\n")
 
 		for range test.repaints + 1 {
-			text := segment.draw(snapshot{
+			for _, rung := range segment.draw(snapshot{
 				windows:   test.windows,
 				fetchedAt: fetchedAt,
 				status:    segment.getVisibleStatus(),
 				failure:   test.failure,
-			})
+			}) {
+				if isPlain {
+					rung = style.Plain(rung)
+				}
 
-			if isPlain {
-				text = style.Plain(text)
+				drawn.WriteString(withoutPayload(rung))
+				drawn.WriteString("\n")
 			}
 
-			drawn.WriteString(withoutPayload(text))
-			drawn.WriteString("\n")
 			clock.set(clock.read().Add(test.timeStep))
 		}
 	}

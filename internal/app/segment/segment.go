@@ -53,7 +53,17 @@ type Segment interface {
 }
 
 type Fitter interface {
-	RenderWithin(context Context, cells int) string
+	Ladder(context Context) []string
+}
+
+func LadderOf(instance Segment, context Context) []string {
+	if fitter, isFitter := instance.(Fitter); isFitter {
+		if ladder := fitter.Ladder(context); len(ladder) > 0 {
+			return ladder
+		}
+	}
+
+	return []string{instance.Render(context)}
 }
 
 type Options interface {

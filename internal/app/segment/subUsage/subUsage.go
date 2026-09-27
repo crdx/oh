@@ -3,12 +3,14 @@ package subUsage
 import (
 	"context"
 	"fmt"
+	"slices"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 
 	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/segment/fit"
 	"crdx.org/oh/internal/app/spinner"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/usage"
@@ -31,6 +33,13 @@ const (
 	staleLabel       = "stale"
 	failureLabel     = "failed"
 	boundlessMark    = "∞"
+	leadingParts     = 2
+)
+
+const (
+	limitedWorth = iota
+	ordinaryWorth
+	staleWorth
 )
 
 type Settings struct {
@@ -47,8 +56,16 @@ type boundless struct {
 	gauges *usage.Gauges
 }
 
-func (self boundless) Render(segment.Context) string {
-	return style.Simulation(boundlessMark) + " " + self.gauges.Draw(0, nil, usage.PaceEven, barCells)
+func (self boundless) Render(context segment.Context) string {
+	return self.Ladder(context)[0]
+}
+
+func (self boundless) Ladder(segment.Context) []string {
+	return fit.Ladder(
+		style.Simulation(boundlessMark)+" "+self.gauges.Draw(0, nil, usage.PaceEven, barCells),
+		style.Simulation(boundlessMark),
+		"",
+	)
 }
 
 type snapshot struct {
@@ -142,9 +159,13 @@ func (self *state) NextRefresh(phase segment.Phase) time.Time {
 	return phase.At.Truncate(redrawInterval).Add(redrawInterval)
 }
 
-func (self *state) Render(segment.Context) string {
+func (self *state) Render(context segment.Context) string {
+	return self.Ladder(context)[0]
+}
+
+func (self *state) Ladder(segment.Context) []string {
 	if !self.windowTracker.IsAvailable() {
-		return style.Dim("usage n/a")
+		return []string{style.Dim("usage n/a")}
 	}
 
 	self.refreshFromSnapshot()
@@ -248,52 +269,242 @@ func (self *state) waitLonger(first time.Duration) {
 	self.retryAt = self.now().Add(self.waitedTime)
 }
 
-func (self *state) draw(current snapshot) string {
-	var parts, scopedParts []string
+func (self *state) draw(current snapshot) []string {
+	rows := self.windowRows(current)
+	age, mark := self.drawFreshness(current.fetchedAt)
+	status := self.drawStatus(current)
+
+	if len(rows) == 0 {
+		if status == "" {
+			return []string{style.Dim("usage unavailable")}
+		}
+
+		return []string{appendUsageStatus("", "usage", status)}
+	}
+
+	rungs := make([]string, 0, len(rows)+6)
+
+	for _, step := range steps(len(rows)) {
+		rungs = append(rungs, assemble(rows, step, age, mark, status))
+	}
+
+	return fit.Ladder(append(rungs, "")...)
+}
+
+type shape struct {
+	shownRows         int
+	leadingLosses     int
+	hasAge            bool
+	hasTrailingGauges bool
+	hasTrailingLabels bool
+}
+
+func steps(rowCount int) []shape {
+	whole := shape{
+		shownRows:         rowCount,
+		hasAge:            true,
+		hasTrailingGauges: true,
+		hasTrailingLabels: true,
+	}
+
+	withoutAge := whole
+	withoutAge.hasAge = false
+
+	withoutTrailingGauges := withoutAge
+	withoutTrailingGauges.hasTrailingGauges = false
+
+	withoutTrailingLabels := withoutTrailingGauges
+	withoutTrailingLabels.hasTrailingLabels = false
+
+	steps := []shape{whole, withoutAge, withoutTrailingGauges, withoutTrailingLabels}
+
+	for shownRows := rowCount - 1; shownRows >= 1; shownRows-- {
+		fewer := withoutTrailingLabels
+		fewer.shownRows = shownRows
+		steps = append(steps, fewer)
+	}
+
+	alone := withoutTrailingLabels
+	alone.shownRows = 1
+
+	for losses := 1; losses <= leadingParts; losses++ {
+		lesser := alone
+		lesser.leadingLosses = losses
+		steps = append(steps, lesser)
+	}
+
+	return steps
+}
+
+func assemble(rows []windowRow, step shape, age string, mark string, status string) string {
+	keptWindows := keptRows(rows, step.shownRows)
+	drawnRows := make([]string, 0, len(keptWindows)+1)
+	isScopeMarked := false
+
+	for at, row := range keptWindows {
+		drawnRow := row.draw(at == 0, step)
+		if drawnRow == "" {
+			continue
+		}
+
+		if row.isScoped && !isScopeMarked {
+			drawnRows = append(drawnRows, style.Subtle(scopeMark))
+			isScopeMarked = true
+		}
+
+		drawnRows = append(drawnRows, drawnRow)
+	}
+
+	windows := strings.Join(drawnRows, " ")
+
+	if windows != "" && mark != "" {
+		if step.hasAge && age != "" {
+			windows = age + " " + mark + " " + windows
+		} else {
+			windows = mark + " " + windows
+		}
+	}
+
+	if status == "" {
+		return windows
+	}
+
+	return appendUsageStatus(windows, "usage", status)
+}
+
+func keptRows(rows []windowRow, rowCount int) []windowRow {
+	if rowCount >= len(rows) {
+		return rows
+	}
+
+	order := make([]int, len(rows))
+	for at := range order {
+		order[at] = at
+	}
+
+	slices.SortStableFunc(order, func(left int, right int) int {
+		if worth := rows[left].worth() - rows[right].worth(); worth != 0 {
+			return worth
+		}
+
+		return left - right
+	})
+
+	keptOrder := slices.Clone(order[:rowCount])
+	slices.Sort(keptOrder)
+
+	keptWindows := make([]windowRow, 0, rowCount)
+	for _, at := range keptOrder {
+		keptWindows = append(keptWindows, rows[at])
+	}
+
+	return keptWindows
+}
+
+type windowRow struct {
+	label     string
+	percent   string
+	gauge     string
+	mark      string
+	isScoped  bool
+	isLimited bool
+	isStale   bool
+}
+
+func (self windowRow) worth() int {
+	switch {
+	case self.isLimited:
+		return limitedWorth
+	case self.isStale:
+		return staleWorth
+	default:
+		return ordinaryWorth
+	}
+}
+
+type shownParts struct {
+	hasLabel   bool
+	hasPercent bool
+	hasGauge   bool
+}
+
+func (self windowRow) draw(isLeading bool, step shape) string {
+	visible := shownParts{
+		hasLabel:   step.hasTrailingLabels,
+		hasPercent: true,
+		hasGauge:   step.hasTrailingGauges,
+	}
+
+	if isLeading {
+		visible = self.leading(step.leadingLosses)
+	}
+
+	parts := make([]string, 0, 4)
+
+	for _, part := range []struct {
+		text    string
+		isShown bool
+	}{
+		{self.label, visible.hasLabel},
+		{self.percent, visible.hasPercent},
+		{self.gauge, visible.hasGauge},
+		{self.mark, true},
+	} {
+		if part.isShown && part.text != "" {
+			parts = append(parts, part.text)
+		}
+	}
+
+	return strings.Join(parts, " ")
+}
+
+func (self windowRow) leading(losses int) shownParts {
+	if self.gauge == "" {
+		return shownParts{hasLabel: losses < 1, hasPercent: losses < 2}
+	}
+
+	return shownParts{hasLabel: losses < 2, hasPercent: losses < 1, hasGauge: true}
+}
+
+func (self *state) windowRows(current snapshot) []windowRow {
+	var rows, scopedRows []windowRow
 
 	for _, window := range current.windows {
 		if !self.governsThisSession(window) {
 			continue
 		}
 
-		text := self.drawWindow(window, current.fetchedAt, self.now())
+		row := self.readWindow(window, current.fetchedAt, self.now())
 
-		if window.Scope == "" {
-			parts = append(parts, text)
+		if row.isScoped {
+			scopedRows = append(scopedRows, row)
 		} else {
-			scopedParts = append(scopedParts, text)
+			rows = append(rows, row)
 		}
 	}
 
-	if len(scopedParts) > 0 {
-		parts = append(parts, style.Subtle(scopeMark))
-		parts = append(parts, scopedParts...)
-	}
+	return append(rows, scopedRows...)
+}
 
-	windows := strings.Join(parts, " ")
-
-	if windows != "" && !current.fetchedAt.IsZero() {
-		windows = self.drawFreshness(current.fetchedAt) + " " + windows
-	}
-
+func (self *state) drawStatus(current snapshot) string {
 	switch current.status {
 	case usageFetching:
-		return appendUsageStatus(windows, "usage", style.Spinner(self.spinnerFrame()))
+		return style.Spinner(self.spinnerFrame())
 	case usagePending:
-		return appendUsageStatus(windows, "usage", style.Subtle("pending"))
+		return style.Subtle("pending")
 	case usageRetrying:
-		return appendUsageStatus(windows, "usage", style.Failure(current.failure))
+		return style.Failure(current.failure)
 	case usageReady:
 	}
 
-	if windows == "" {
-		return style.Dim("usage unavailable")
-	}
-
-	return windows
+	return ""
 }
 
-func (self *state) drawFreshness(fetchedAt time.Time) string {
+func (self *state) drawFreshness(fetchedAt time.Time) (string, string) {
+	if fetchedAt.IsZero() {
+		return "", ""
+	}
+
 	age := max(0, self.now().Sub(fetchedAt))
 
 	mark, appearance, isAgeWorthSaying := usage.FreshnessMark(usage.FreshnessWithin(
@@ -301,10 +512,10 @@ func (self *state) drawFreshness(fetchedAt time.Time) string {
 	))
 
 	if !isAgeWorthSaying {
-		return appearance(mark)
+		return "", appearance(mark)
 	}
 
-	return style.Normal(util.CoarseDuration(age)) + " " + appearance(mark)
+	return style.Normal(util.CoarseDuration(age)), appearance(mark)
 }
 
 func (self *state) governsThisSession(window agent.UsageWindow) bool {
@@ -326,22 +537,29 @@ func appendUsageStatus(usage string, emptyLabel string, status string) string {
 	return usage + " " + status
 }
 
-func (self *state) drawWindow(
+func (self *state) readWindow(
 	window agent.UsageWindow, fetchedAt time.Time, now time.Time,
-) string {
+) windowRow {
 	label := usage.ShortWindowLabel(window.Duration)
 	usedPercent := int(window.Percent + 0.5)
+	row := windowRow{isScoped: window.Scope != ""}
 
 	if !window.ResetsAt.IsZero() && !window.ResetsAt.After(now) {
-		return style.Dim(label + " " + staleLabel)
+		row.isStale = true
+		row.label = style.Dim(label)
+		row.percent = style.Dim(staleLabel)
+
+		return row
 	}
 
 	if window.IsLimited {
-		return style.Failure(fmt.Sprintf("%s %d%%", label, usedPercent)) +
-			" " +
-			self.gauges.Draw(usedPercent, nil, usage.PaceCritical, barCells) +
-			" " +
-			style.Failure(limitedMark)
+		row.isLimited = true
+		row.label = style.Failure(label)
+		row.percent = style.Failure(fmt.Sprintf("%d%%", usedPercent))
+		row.gauge = self.gauges.Draw(usedPercent, nil, usage.PaceCritical, barCells)
+		row.mark = style.Failure(limitedMark)
+
+		return row
 	}
 
 	var expectedPercent *int
@@ -354,11 +572,11 @@ func (self *state) drawWindow(
 		pace = usage.ClassifyPace(usedPercent, pacePercent)
 	}
 
-	return style.Dim(label) +
-		" " +
-		usage.PaceStyle(pace)(fmt.Sprintf("%d%%", usedPercent)) +
-		" " +
-		self.gauges.Draw(usedPercent, expectedPercent, pace, barCells)
+	row.label = style.Dim(label)
+	row.percent = usage.PaceStyle(pace)(fmt.Sprintf("%d%%", usedPercent))
+	row.gauge = self.gauges.Draw(usedPercent, expectedPercent, pace, barCells)
+
+	return row
 }
 
 func failureReason(err error) string {

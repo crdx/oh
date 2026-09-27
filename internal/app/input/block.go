@@ -9,6 +9,8 @@ import (
 
 const (
 	edgePad                    = 2
+	labelGap                   = 3
+	edgeGap                    = 1
 	feedbackInset              = 1
 	feedbackBorderWidth        = 2*feedbackInset + 2
 	feedbackFrameWidth         = feedbackBorderWidth + 2
@@ -38,11 +40,46 @@ type Ruler struct {
 }
 
 func LeftContentWidth(width int, right string) int {
-	rightWidth := getWidth(right, edgePad)
-	if rightWidth > width {
+	_, rightWidth := keptSides(width, "", right)
+
+	return max(width-rightWidth-getGap(rightWidth > 0)-(edgePad+1), 0)
+}
+
+func CenterContentWidth(width int, left string, right string) int {
+	leftWidth, rightWidth := keptSides(width, left, right)
+
+	return max(width-leftWidth-rightWidth-getGap(leftWidth > 0)-getGap(rightWidth > 0), 0)
+}
+
+func keptSides(width int, left string, right string) (int, int) {
+	rightWidth := getSideWidth(right)
+	if rightWidth+getGap(false) > width {
 		rightWidth = 0
 	}
-	return max(width-rightWidth-edgePad-2, 0)
+
+	leftWidth := getSideWidth(left)
+	if leftWidth > 0 && leftWidth+getGap(rightWidth > 0)+rightWidth > width {
+		leftWidth = 0
+	}
+
+	return leftWidth, rightWidth
+}
+
+func getGap(isBetweenLabels bool) int {
+	if isBetweenLabels {
+		return labelGap
+	}
+
+	return edgeGap
+}
+
+func getSideWidth(text string) int {
+	cells := style.Width(text)
+	if cells == 0 {
+		return 0
+	}
+
+	return edgePad + 1 + cells
 }
 
 type Block struct {
@@ -65,7 +102,7 @@ func (self Block) Rows(width int) ([]string, int, int) {
 	}
 
 	bottom := self.Bottom
-	if getWidth(bottom.Left, edgePad)+getWidth(bottom.Right, edgePad) > width {
+	if leftWidth, rightWidth := getSideWidth(bottom.Left), getSideWidth(bottom.Right); leftWidth > 0 && leftWidth+getGap(rightWidth > 0)+rightWidth > width {
 		bottom.Right = ""
 	}
 
@@ -127,59 +164,47 @@ func (self Block) rule() style.Style {
 }
 
 func (self Ruler) render(width int, rule style.Style) string {
-	leftWidth := getWidth(self.Left, edgePad)
-	rightWidth := getWidth(self.Right, edgePad)
+	leftWidth, rightWidth := keptSides(width, self.Left, self.Right)
+	hasLeft, hasRight := leftWidth > 0, rightWidth > 0
+	middleWidth := width - leftWidth - rightWidth
 
 	head := ""
-	if leftWidth == 0 || leftWidth+rightWidth > width {
-		leftWidth = 0
-	} else {
-		head = rule(strings.Repeat("─", edgePad)) + " " + self.Left + " "
+	if hasLeft {
+		head = rule(strings.Repeat("─", edgePad)) + " " + self.Left
 	}
 
 	tail := ""
-	if rightWidth == 0 || leftWidth+rightWidth > width {
-		rightWidth = 0
-	} else {
-		tail = " " + self.Right + " " + rule(strings.Repeat("─", edgePad))
+	if hasRight {
+		tail = self.Right + " " + rule(strings.Repeat("─", edgePad))
 	}
 
-	middleWidth := max(width-leftWidth-rightWidth, 0)
+	centerWidth := style.Width(self.Center)
+	earliestBefore := getGap(hasLeft)
+	latestBefore := middleWidth - centerWidth - getGap(hasRight)
+	if centerWidth == 0 || latestBefore < earliestBefore {
+		return head + renderGap(middleWidth, hasLeft, hasRight, rule) + tail
+	}
 
-	return head + renderCentredSpan(middleWidth, self.Center, leftWidth, width, rule) + tail
+	before := min(max((width-centerWidth)/2-leftWidth, earliestBefore), latestBefore)
+	after := middleWidth - centerWidth - before
+
+	return head + renderGap(before, hasLeft, true, rule) + self.Center + renderGap(after, true, hasRight, rule) + tail
 }
 
-func renderCentredSpan(availableWidth int, center string, startColumn int, ruleWidth int, rule style.Style) string {
-	centerWidth := getWidth(center, 0)
-	beforeWidth := (ruleWidth-centerWidth)/2 - startColumn
-	if centerWidth == 0 || beforeWidth < 0 || beforeWidth+centerWidth > availableWidth {
-		return rule(strings.Repeat("─", availableWidth))
+func renderGap(cells int, hasLabelBefore bool, hasLabelAfter bool, rule style.Style) string {
+	if cells <= 0 {
+		return ""
 	}
 
-	afterWidth := availableWidth - centerWidth - beforeWidth
-	leadingGap := " "
-	trailingGap := " "
-
-	if beforeWidth == 0 && startColumn > 0 {
-		leadingGap = ""
-		afterWidth++
+	openingSpace, closingSpace := "", ""
+	if hasLabelBefore {
+		openingSpace = " "
+		cells--
 	}
-	if afterWidth == 0 && startColumn+availableWidth < ruleWidth {
-		trailingGap = ""
-		beforeWidth++
+	if hasLabelAfter && cells > 0 {
+		closingSpace = " "
+		cells--
 	}
 
-	before := rule(strings.Repeat("─", beforeWidth))
-	after := rule(strings.Repeat("─", afterWidth))
-
-	return before + leadingGap + center + trailingGap + after
-}
-
-func getWidth(str string, edgePadding int) int {
-	cells := style.Width(str)
-	if cells == 0 {
-		return 0
-	}
-
-	return cells + edgePadding + 2
+	return openingSpace + rule(strings.Repeat("─", cells)) + closingSpace
 }

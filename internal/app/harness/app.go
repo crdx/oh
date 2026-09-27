@@ -911,20 +911,16 @@ func (self *App) show(inputLine *edit.Input) {
 		topWidth = input.FeedbackRuleWidth(columns)
 	}
 
-	topRight := self.renderBar(segment.TopRight, frame)
-	bottomRight := self.renderBar(segment.BottomRight, frame)
 	block := input.Block{
-		Top: input.Ruler{
-			Left:   self.renderBarWithin(segment.TopLeft, frame, input.LeftContentWidth(topWidth, topRight)),
-			Center: self.renderBar(segment.TopCenter, frame),
-			Right:  topRight,
-		},
+		Top: self.renderRuler(
+			frame, topWidth,
+			segment.TopLeft, segment.TopCenter, segment.TopRight,
+		),
 		Input: frame,
-		Bottom: input.Ruler{
-			Left:   self.renderBarWithin(segment.BottomLeft, frame, input.LeftContentWidth(columns, bottomRight)),
-			Center: self.renderBar(segment.BottomCenter, frame),
-			Right:  bottomRight,
-		},
+		Bottom: self.renderRuler(
+			frame, columns,
+			segment.BottomLeft, segment.BottomCenter, segment.BottomRight,
+		),
 		Status:        self.statusRows(statusWidth),
 		FrameFeedback: isFeedbackFramed,
 		Question:      self.questionRows(columns),
@@ -1028,6 +1024,23 @@ func (self *App) renderBar(position segment.Position, frame edit.Frame) string {
 
 func (self *App) renderBarWithin(position segment.Position, frame edit.Frame, cells int) string {
 	return self.display.bar.RenderWithin(position, getBarContext(frame), cells)
+}
+
+func (self *App) renderRuler(
+	frame edit.Frame,
+	width int,
+	left segment.Position,
+	center segment.Position,
+	right segment.Position,
+) input.Ruler {
+	rightText := self.renderBar(right, frame)
+	leftText := self.renderBarWithin(left, frame, input.LeftContentWidth(width, rightText))
+
+	return input.Ruler{
+		Left:   leftText,
+		Center: self.renderBarWithin(center, frame, input.CenterContentWidth(width, leftText, rightText)),
+		Right:  rightText,
+	}
 }
 
 func getBarContext(frame edit.Frame) segment.Context {

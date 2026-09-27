@@ -5129,6 +5129,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"running":                {".ansi", ".screen"},
 		"schedule":               {".ansi", ".screen"},
 		"segments":               {".ansi", ".screen"},
+		"shedding":               {".ansi", ".screen"},
 		"signal-restoration":     {".ansi"},
 		"special-links":          {".ansi", ".screen"},
 		"startup":                {".ansi", ".screen"},
@@ -9465,18 +9466,21 @@ func TestGoldenTheInputBlockDrawsWhatItDrewBefore(t *testing.T) {
 
 				held.display.bar = bar.NewConfiguration(nil, built)
 
+				topWidth := width
+				if len(pass.status) > 0 {
+					topWidth = input.FeedbackRuleWidth(width)
+				}
+
 				block := input.Block{
-					Top: input.Ruler{
-						Left:   held.renderBar(segment.TopLeft, frame),
-						Center: held.renderBar(segment.TopCenter, frame),
-						Right:  held.renderBar(segment.TopRight, frame),
-					},
+					Top: held.renderRuler(
+						frame, topWidth,
+						segment.TopLeft, segment.TopCenter, segment.TopRight,
+					),
 					Input: frame,
-					Bottom: input.Ruler{
-						Left:   held.renderBar(segment.BottomLeft, frame),
-						Center: held.renderBar(segment.BottomCenter, frame),
-						Right:  held.renderBar(segment.BottomRight, frame),
-					},
+					Bottom: held.renderRuler(
+						frame, width,
+						segment.BottomLeft, segment.BottomCenter, segment.BottomRight,
+					),
 					Status:        pass.status,
 					FrameFeedback: len(pass.status) > 0,
 					Rule:          held.ruleStyle(),
@@ -9501,7 +9505,7 @@ func TestGoldenTheInputBlockDrawsWhatItDrewBefore(t *testing.T) {
 		}
 	}
 
-	for _, width := range []int{80, 40, 20} {
+	for _, width := range []int{80, 60, 44, 40, 30, 20} {
 		for name, frame := range frames {
 			addPass(
 				fmt.Sprintf("%s at %d columns", name, width),
@@ -12457,27 +12461,11 @@ func goldenSegmentPass(
 		t.Fatal(err)
 	}
 
-	return func() string { return built.Render(context) }
+	return func() string { return drawLadder(built, context) }
 }
 
-func goldenFittedSegmentPass(
-	t *testing.T,
-	factory segment.Factory,
-	options string,
-	context segment.Context,
-	cells int,
-) func() string {
-	t.Helper()
-
-	built, err := factory(goldenSegmentOptions(options))
-	if err != nil {
-		t.Fatal(err)
-	}
-	fitter, ok := built.(segment.Fitter)
-	if !ok {
-		t.Fatal("segment does not support fitting")
-	}
-	return func() string { return fitter.RenderWithin(context, cells) }
+func drawLadder(instance segment.Segment, context segment.Context) string {
+	return strings.Join(segment.LadderOf(instance, context), "\n")
 }
 
 func goldenRepository(t *testing.T, head string) string {
@@ -12742,6 +12730,126 @@ func TestGoldenTheRedrawScheduleRunsWhenItRanBefore(t *testing.T) {
 	compareWithGolden(t, "schedule", ".screen", shownPasses(t, passes))
 }
 
+func goldenShedPass(t *testing.T, instances ...segment.Segment) func() string {
+	t.Helper()
+
+	const position = segment.TopLeft
+
+	layout := segment.Layout{position: instances}
+
+	return func() string {
+		var drawn strings.Builder
+
+		widest := style.Width(bar.Render(layout, position, segment.Context{}))
+		lastDrawing := ""
+		widestFitting := 0
+
+		writeRow := func(narrowest int) {
+			columns := fmt.Sprintf("%2d", narrowest)
+			if widestFitting != narrowest {
+				columns = fmt.Sprintf("%2d\u2013%2d", narrowest, widestFitting)
+			}
+
+			body := lastDrawing
+			if body == "" {
+				body = "nothing"
+			}
+
+			fmt.Fprintf(&drawn, "%-6s  %s\n", columns, body)
+		}
+
+		for cells := widest; cells >= 0; cells-- {
+			drawing := bar.RenderWithin(layout, position, segment.Context{}, cells)
+
+			if width := style.Width(drawing); width > cells {
+				t.Errorf("%d cells drew %q, %d cells wide", cells, style.Plain(drawing), width)
+			}
+
+			if cells < widest && drawing != lastDrawing {
+				writeRow(cells + 1)
+				widestFitting = cells
+			}
+
+			if cells == widest {
+				widestFitting = cells
+			}
+
+			lastDrawing = drawing
+		}
+
+		writeRow(0)
+
+		return strings.TrimSuffix(drawn.String(), "\n")
+	}
+}
+
+func goldenShedSegment(t *testing.T, factory segment.Factory) segment.Segment {
+	t.Helper()
+
+	built, err := factory(goldenSegmentOptions(""))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return built
+}
+
+func TestGoldenEveryWidthShedsWhatItMustFromTheBar(t *testing.T) {
+	t.Setenv("HOME", "/user/kevin")
+
+	at := time.Date(2026, time.August, 23, 14, 32, 9, 0, time.UTC)
+	effortLevels := []string{"low", "medium", "high", "xhigh", "max"}
+
+	activeModelSegment := goldenShedSegment(t, activeModel.New(activeModel.Settings{
+		Name:         "claude-opus-5",
+		Effort:       "medium",
+		EffortLevels: effortLevels,
+	}))
+	contextUsageSegment := goldenShedSegment(
+		t,
+		contextUsage.New(func() (int, int) { return 62_000, 1_000_000 }),
+	)
+	workspaceSegment := goldenShedSegment(t, workspaceDir.New(work.At("/workspace/currents")))
+	modeSegment := goldenShedSegment(t, modeToggle.New(caps.All, func() bool { return false }))
+	pathGrantsSegment := goldenShedSegment(t, pathGrants.New(func() []pathgrant.Grant {
+		return []pathgrant.Grant{
+			{Path: "/reference", Access: pathgrant.ReadAccess},
+			{Path: "/output", Access: pathgrant.ReadAccess | pathgrant.WriteAccess},
+		}
+	}))
+	exposedPortsSegment := goldenShedSegment(t, exposedPorts.New(
+		goldenExposedPorts(8000, 8080),
+		goldenLocalPorts(3000),
+	))
+	jobsSegment := goldenShedSegment(t, jobNames.New(jobsOf(
+		jobs.Snapshot{Name: "docs", State: jobs.StateRunning},
+	), noPortRoutes, clockAt(at)))
+
+	passes := map[string]func() string{
+		"a model beside its context": goldenShedPass(t, activeModelSegment, contextUsageSegment),
+		"a lone model":               goldenShedPass(t, activeModelSegment),
+		"a lone context":             goldenShedPass(t, contextUsageSegment),
+		"a lone list of grants":      goldenShedPass(t, pathGrantsSegment),
+		"fitters between segments drawn whole": goldenShedPass(
+			t,
+			modeSegment,
+			workspaceSegment,
+			activeModelSegment,
+			contextUsageSegment,
+		),
+		"two lists of their own": goldenShedPass(t, exposedPortsSegment, pathGrantsSegment),
+		"a segment drawn whole after two fitters": goldenShedPass(
+			t,
+			exposedPortsSegment,
+			pathGrantsSegment,
+			jobsSegment,
+		),
+	}
+
+	compareWithGolden(t, "shedding", ".ansi", passes)
+	compareWithGolden(t, "shedding", ".screen", shownPasses(t, passes))
+}
+
 func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 	t.Setenv("HOME", "/user/kevin")
 
@@ -12833,6 +12941,18 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 		"context-usage / unknown": goldenSegmentPass(
 			t,
 			contextUsage.New(func() (int, int) { return 0, 0 }),
+			"",
+			segment.Context{},
+		),
+		"context-usage / nothing used yet": goldenSegmentPass(
+			t,
+			contextUsage.New(func() (int, int) { return 0, 200_000 }),
+			"",
+			segment.Context{},
+		),
+		"context-usage / full": goldenSegmentPass(
+			t,
+			contextUsage.New(func() (int, int) { return 204_000, 200_000 }),
 			"",
 			segment.Context{},
 		),
@@ -13118,7 +13238,7 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			"",
 			segment.Context{},
 		),
-		"exposed-ports / both directions constrained": goldenFittedSegmentPass(
+		"exposed-ports / both directions shedding routes": goldenSegmentPass(
 			t,
 			exposedPorts.New(
 				goldenExposedPorts(8000, 8080),
@@ -13126,7 +13246,6 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			),
 			"",
 			segment.Context{},
-			16,
 		),
 		"path-grants / empty": goldenSegmentPass(
 			t,
@@ -13158,10 +13277,10 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			"",
 			segment.Context{},
 		),
-		"path-grants / many constrained": goldenFittedSegmentPass(
+		"path-grants / many": goldenSegmentPass(
 			t,
 			pathGrants.New(func() []pathgrant.Grant {
-				grants := make([]pathgrant.Grant, 50)
+				grants := make([]pathgrant.Grant, 6)
 				for i := range grants {
 					grants[i] = pathgrant.Grant{
 						Path:   fmt.Sprintf("/path-%02d", i+1),
@@ -13172,7 +13291,6 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			}),
 			"",
 			segment.Context{},
-			36,
 		),
 		"path-grants / duplicate basenames": goldenSegmentPass(
 			t,
@@ -18191,7 +18309,7 @@ func goldenUsageFromCache(
 		t.Fatal(err)
 	}
 
-	return func() string { return built.Render(segment.Context{}) }
+	return func() string { return drawLadder(built, segment.Context{}) }
 }
 
 func goldenUsageUpdatedFromCache(t *testing.T, at time.Time) func() string {
@@ -18230,7 +18348,7 @@ func goldenUsageUpdatedFromCache(t *testing.T, at time.Time) func() string {
 			t.Fatal(err)
 		}
 
-		return built.Render(segment.Context{})
+		return drawLadder(built, segment.Context{})
 	}
 }
 
@@ -18251,7 +18369,7 @@ func settleUsage(
 
 		redrawn := built.Render(segment.Context{})
 		if reporter.answered.Load() >= answers && redrawn == drawn {
-			return redrawn
+			return drawLadder(built, segment.Context{})
 		}
 
 		drawn = redrawn

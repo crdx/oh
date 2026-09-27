@@ -1,9 +1,13 @@
 package model
 
 import (
+	"slices"
 	"strings"
 	"testing"
 	"unicode"
+	"unicode/utf8"
+
+	"crdx.org/oh/internal/app/width"
 )
 
 func TestEveryModelIsWrittenForAPerson(t *testing.T) {
@@ -59,12 +63,54 @@ func TestEveryModelIsWrittenForAPerson(t *testing.T) {
 		"qwen3:30b-a3b":              "Qwen 3 30B",
 		"qwen3:32b":                  "Qwen 3 32B",
 		"qwen3-coder:30b-a3b-q4_K_M": "Qwen Coder 3 30B",
+
+		"日本語-2":       "日本語 2",
+		"français-3":  "Français 3",
+		"ǅungla-2":    "Ǆungla 2",
+		"мистраль-24": "Мистраль 24",
 	}
 
 	for id, want := range cases {
 		if got := strings.Join(DisplayName(id), " "); got != want {
 			t.Errorf("%s is written %q, want %q", id, got, want)
 		}
+	}
+}
+
+func TestAModelTooWideToSpellOutKeepsItsCapitalsAndItsIteration(t *testing.T) {
+	for id, want := range map[string]string{
+		"claude-opus-5":        "O5",
+		"claude-sonnet-4-6":    "S4.6",
+		"gpt-5.6-sol":          "GPTS5.6",
+		"gpt-5.3-codex":        "C5.3",
+		"deepseek-v4-pro":      "DSP4",
+		"glm-5.3-flash":        "GLMF5.3",
+		"longcat-2.0":          "LC2.0",
+		"o3-pro":               "o3P",
+		"hy3":                  "HY3",
+		"qwen3.8:27b-mtp-q8_0": "Q3.8 27B",
+		"simulation":           "S",
+		"日本語-2":                "日2",
+		"français-3":           "F3",
+		"мистраль-24":          "М24",
+		"👨‍👩‍👧‍👦-4":            "👨‍👩‍👧‍👦4",
+		"🇬🇧-5":                 "🇬🇧5",
+		"\u0e01\u0e33-1":       "\u0e01\u0e331",
+	} {
+		if got := strings.Join(ShortName(id), ""); got != want {
+			t.Errorf("%s is shortened to %q, want %q", id, got, want)
+		}
+	}
+}
+
+func TestShorteningAModelLeavesTheNameItWasGiven(t *testing.T) {
+	name := DisplayName("claude-opus-5")
+	if got := strings.Join(ShortName("claude-opus-5"), ""); got != "O5" {
+		t.Errorf("got %q", got)
+	}
+
+	if got := strings.Join(name, " "); got != "Opus 5" {
+		t.Errorf("shortening rewrote the name it was given: %q", got)
 	}
 }
 
@@ -119,7 +165,14 @@ func FuzzDisplayNameReadsAnyIdentifier(f *testing.F) {
 			t.Fatalf("%q is written in %d parts, want one or two", id, len(name))
 		}
 
+		if !utf8.ValidString(id) {
+			return
+		}
+
 		for _, part := range name {
+			if !utf8.ValidString(part) {
+				t.Errorf("%q is written %q, which is not valid UTF-8", id, part)
+			}
 			if strings.ContainsFunc(part, unicode.IsControl) {
 				t.Errorf("%q is written %q, which carries a control character", id, part)
 			}
@@ -159,5 +212,81 @@ func TestEveryProviderThereIsHasAName(t *testing.T) {
 		if _, isFound := providerNames[id]; !isFound {
 			t.Errorf("%s is not written for a person anywhere", id)
 		}
+	}
+}
+
+func FuzzShortNameNeverOutgrowsTheNameItShortens(fuzzer *testing.F) {
+	for _, id := range []string{
+		"claude-opus-5",
+		"gpt-5.6-sol",
+		"ollama/qwen3.8:27b-mtp-q8_0-256k",
+		"",
+		"-",
+		"日本語-2:70b",
+		"français-3",
+		"e\u0301clair-2",
+		"👨‍👩‍👧‍👦-4",
+		"🇬🇧-5",
+		"a\ufe0f\u20e3-6",
+		"ᾈ-7",
+		"ǅ-8",
+		"ＧＰＴ-9",
+		"\u0e01\u0e33-1",
+	} {
+		fuzzer.Add(id)
+	}
+
+	fuzzer.Fuzz(func(t *testing.T, id string) {
+		name := DisplayName(id)
+		short := ShortName(id)
+
+		if len(short) != len(name) {
+			t.Fatalf("%q is written in %d parts and shortened into %d", id, len(name), len(short))
+		}
+
+		if !slices.Equal(short[1:], name[1:]) {
+			t.Fatalf("%q had its iteration rewritten from %q to %q", id, name[1:], short[1:])
+		}
+
+		if !utf8.ValidString(name[0]) {
+			return
+		}
+
+		if !utf8.ValidString(short[0]) {
+			t.Fatalf("%q is shortened to %q, which is not valid UTF-8", id, short[0])
+		}
+
+		if width.Of(short[0]) > width.Of(name[0]) {
+			t.Fatalf("%q is shortened from %q to the wider %q", id, name[0], short[0])
+		}
+
+		if strings.ContainsFunc(short[0], unicode.IsControl) {
+			t.Fatalf("%q is shortened to %q, which carries a control character", id, short[0])
+		}
+
+		if strings.TrimSpace(short[0]) != short[0] {
+			t.Fatalf("%q is shortened to %q, which is padded with space", id, short[0])
+		}
+
+		requireKeptRunes(t, id, name[0], short[0])
+	})
+}
+
+func requireKeptRunes(t *testing.T, id string, name string, short string) {
+	t.Helper()
+
+	kept := []rune(name)
+	at := 0
+
+	for _, character := range short {
+		for at < len(kept) && kept[at] != character {
+			at++
+		}
+
+		if at == len(kept) {
+			t.Fatalf("%q is shortened to %q, which writes %q of its own", id, short, character)
+		}
+
+		at++
 	}
 }

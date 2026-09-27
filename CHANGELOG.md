@@ -37,6 +37,9 @@
 - Keep a running call's clock and hold through a redraw
 - Don't hard-wrap code blocks
 - Render the session emoji with a gap above it after redraw
+- Shed bar segment detail from the right on narrow terminals
+- Move the centre of the bar off-centre into free room rather than hiding it
+- Keep a divider between every pair of bar groups, and never two spaces
 
 ### Sessions and storage
 
@@ -51,6 +54,7 @@
 - List every model context source and token estimate with /ctx
 - Honour explicit server advice to retry a refused request
 - Show if a new model was ignored for some reason
+- Keep model names beginning with a multibyte character intact
 
 ### Jobs
 
