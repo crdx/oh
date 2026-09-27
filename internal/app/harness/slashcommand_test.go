@@ -17,7 +17,8 @@ func slashGoldenRegistry(t *testing.T) slash.Registry {
 		slash.Command{Name: "copy", Description: "copy a session target to the clipboard", Run: slashTestHandler}.
 			WithArguments("session-name", "session-id", "session-dir"),
 		slash.Command{Name: "grant", Description: "grant temporary path access", Run: slashTestHandler}.
-			WithArguments("r", "rw", "rx", "rxw"),
+			WithArguments("r", "rw", "rx", "rxw").
+			WithPathArgumentAfter("r", "rw", "rx", "rxw"),
 		slash.Command{Name: "open", Run: slashTestHandler}.WithArguments("config-dir", "workspace-dir"),
 		slash.Command{Name: "quit", Description: "leave the session, and say goodbye in a line long enough to be cut", Run: slashTestHandler},
 		slash.Command{Name: "revoke", Description: "revoke a grant", Run: slashTestHandler}.
@@ -134,6 +135,19 @@ func slashCommandScenarios(t *testing.T) map[string]pathRefScenario {
 			typing("//rev")(rig)
 			rig.press(tabKey)
 			rig.typeText("the tests")
+		}),
+		"25 tab after grant flags lists paths": commanding(func(rig *pathRefRig) {
+			rig.show()
+			rig.typeText("/grant rx ")
+			rig.press(tabKey)
+			rig.listingArrives()
+		}),
+		"26 tab chooses a grant path": commanding(func(rig *pathRefRig) {
+			rig.show()
+			rig.typeText("/grant rx ")
+			rig.press(tabKey)
+			rig.listingArrives()
+			rig.press(pathRefDown, tabKey)
 		}),
 	}
 }

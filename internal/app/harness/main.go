@@ -1105,6 +1105,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		completer: trigger.New(
 			pathref.NewSource(pathref.NewIndex(workspace.GetDir(), files.ExcludedNames)),
 			slash.NewSource(func() slash.Registry { return app.commands }),
+			slash.NewPathSource(workspace.GetDir(), func() slash.Registry { return app.commands }),
 		),
 		startedAt: util.WallClock(time.Now()),
 		keyboard:  keyboard,

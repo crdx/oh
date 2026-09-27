@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
@@ -336,7 +338,18 @@ func newPathRefRig(t *testing.T, scenario pathRefScenario) *pathRefRig {
 	))}
 	if scenario.commands != nil {
 		rig.app.commands = scenario.commands(t)
-		sources = append(sources, slash.NewSource(func() slash.Registry { return rig.app.commands }))
+		pathDirectory := t.TempDir()
+		if err := os.Mkdir(filepath.Join(pathDirectory, "documents"), 0o700); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(filepath.Join(pathDirectory, "notes.txt"), nil, 0o600); err != nil {
+			t.Fatal(err)
+		}
+		sources = append(
+			sources,
+			slash.NewSource(func() slash.Registry { return rig.app.commands }),
+			slash.NewPathSource(pathDirectory, func() slash.Registry { return rig.app.commands }),
+		)
 	}
 	rig.app.completer = trigger.New(sources...)
 

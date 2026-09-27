@@ -36,7 +36,10 @@ func NewListing(files []string) *Listing {
 			continue
 		}
 		paths = append(paths, file)
-		for directory := path.Dir(file); directory != "." && directory != "/" && !directories[directory]; directory = path.Dir(directory) {
+		if IsDirectory(file) {
+			directories[strings.TrimSuffix(file, "/")] = true
+		}
+		for directory := path.Dir(strings.TrimSuffix(file, "/")); directory != "." && directory != "/" && !directories[directory]; directory = path.Dir(directory) {
 			directories[directory] = true
 			paths = append(paths, directory+"/")
 		}

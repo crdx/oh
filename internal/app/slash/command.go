@@ -55,6 +55,7 @@ type Command struct {
 	Description           string
 	Run                   func(Context, Arguments) error
 	listArguments         func() []string
+	pathArgumentAfter     []string
 	argumentUsage         string
 	takesAttachedArgument bool
 }
@@ -72,6 +73,11 @@ func (self Command) WithArguments(arguments ...string) Command {
 
 func (self Command) WithListedArguments(list func() []string) Command {
 	self.listArguments = list
+	return self
+}
+
+func (self Command) WithPathArgumentAfter(arguments ...string) Command {
+	self.pathArgumentAfter = slices.Clone(arguments)
 	return self
 }
 

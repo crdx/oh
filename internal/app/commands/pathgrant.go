@@ -87,6 +87,8 @@ func exposeCommand(sandboxToHost SandboxToHost) slash.Command {
 }
 
 func grantCommand(grants PathGrants) slash.Command {
+	flagChoices := grantFlagChoices()
+
 	return slash.Command{
 		Name:        "grant",
 		Description: "grant temporary access to a path",
@@ -109,7 +111,8 @@ func grantCommand(grants PathGrants) slash.Command {
 			return nil
 		},
 	}.
-		WithArguments(grantFlagChoices()...).
+		WithArguments(flagChoices...).
+		WithPathArgumentAfter(flagChoices...).
 		WithArgumentUsage(pathgrant.GrantUsage)
 }
 

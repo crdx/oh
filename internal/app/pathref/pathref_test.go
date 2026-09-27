@@ -25,6 +25,15 @@ func TestAListingHoldsEveryDirectoryOnce(t *testing.T) {
 	}
 }
 
+func TestAnExplicitDirectoryIsHeldOnce(t *testing.T) {
+	listing := pathref.NewListing([]string{"a/b/", "a/c.go"})
+
+	want := []string{"a/b/", "a/", "a/c.go"}
+	if !reflect.DeepEqual(listing.Paths, want) {
+		t.Errorf("got %q, want %q", listing.Paths, want)
+	}
+}
+
 func TestScoreNeedsEveryCharacterInOrder(t *testing.T) {
 	if _, isMatch := pathref.Score("internal/app/harness/app.go", "harapp"); !isMatch {
 		t.Error("a subsequence did not match")
