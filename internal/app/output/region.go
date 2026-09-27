@@ -123,6 +123,21 @@ func (self *Screen) showFooter(input footer) {
 
 const leastWindowedRows = 1
 
+func (self *Screen) FooterRoom() (int, bool) {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	if self.lines <= 0 {
+		return 0, false
+	}
+
+	return self.footerRoom(), true
+}
+
+func (self *Screen) footerRoom() int {
+	return max(1, self.lines-1)
+}
+
 func (self *Screen) fitFooter(rows []string, cursorRow int, pinnedRows int, room int) ([]string, int) {
 	room = max(1, room)
 	if len(rows) <= room {

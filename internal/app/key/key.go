@@ -291,6 +291,8 @@ func csi(parameters string, final rune) Key {
 		return Key{Code: FocusIn}
 	case 'O':
 		return Key{Code: FocusOut}
+	case 'Z':
+		return Key{Code: Rune, Value: '\t', Mod: Shift}
 	}
 
 	code, isFound := letters[final]

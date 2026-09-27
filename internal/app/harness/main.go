@@ -53,6 +53,7 @@ import (
 	"crdx.org/oh/internal/app/onboarding"
 	"crdx.org/oh/internal/app/output"
 	"crdx.org/oh/internal/app/pathgrant"
+	"crdx.org/oh/internal/app/pathref"
 	"crdx.org/oh/internal/app/permission"
 	"crdx.org/oh/internal/app/pictures"
 	"crdx.org/oh/internal/app/portgrant"
@@ -71,6 +72,7 @@ import (
 	"crdx.org/oh/internal/app/textsizing"
 	"crdx.org/oh/internal/app/toolresult"
 	"crdx.org/oh/internal/app/toolset"
+	"crdx.org/oh/internal/app/trigger"
 	"crdx.org/oh/internal/app/tty"
 	"crdx.org/oh/internal/app/usage"
 	"crdx.org/oh/internal/app/work"
@@ -1054,6 +1056,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		configObserver: configObserver,
 		runMode:        runMode{isPrinting: args.IsPrinting, isYolo: args.Yolo, isSimulated: isSimulated},
 		question:       questionState{broker: askBroker},
+		completer:      trigger.New(pathref.NewSource(pathref.NewIndex(workspace.GetDir(), files.ExcludedNames))),
 		startedAt:      util.WallClock(time.Now()),
 		keyboard:       keyboard,
 	}

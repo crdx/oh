@@ -163,6 +163,43 @@ func TestStatusRowsSitAboveTheTopRuleWithoutMovingTheInput(t *testing.T) {
 	}
 }
 
+func TestDropdownRowsSitBetweenTheInputAndTheBottomRule(t *testing.T) {
+	block := Block{
+		Input:    edit.Frame{Rows: []string{"@in"}, Row: 0, Column: 3},
+		Dropdown: []string{"› internal/", "  input/"},
+	}
+
+	rows, cursorRow, cursorColumn := block.Rows(20)
+
+	want := []string{"────────────────────", "@in", "› internal/", "  input/", "────────────────────"}
+	plainRows := make([]string, len(rows))
+	for i, row := range rows {
+		plainRows[i] = style.Plain(row)
+	}
+	if !slices.Equal(plainRows, want) {
+		t.Errorf("got rows %q, want %q", plainRows, want)
+	}
+	if cursorRow != 1 || cursorColumn != 3 {
+		t.Errorf("the dropdown moved the cursor to %d,%d within the footer", cursorRow, cursorColumn)
+	}
+}
+
+func TestAQuestionHidesTheDropdown(t *testing.T) {
+	block := Block{
+		Input:    edit.Frame{Rows: []string{"@in"}, Row: 0, Column: 3},
+		Dropdown: []string{"› internal/"},
+		Question: []string{"Allow this?"},
+	}
+
+	rows, _, _ := block.Rows(20)
+
+	for _, row := range rows {
+		if strings.Contains(style.Plain(row), "internal/") {
+			t.Errorf("drew the dropdown beneath a question: %q", rows)
+		}
+	}
+}
+
 func TestFeedbackRowsFormABoxAttachedToTheTopRule(t *testing.T) {
 	const columns = 20
 	block := Block{

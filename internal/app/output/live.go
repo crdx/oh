@@ -303,7 +303,7 @@ func (self *Screen) compose() frameLayout {
 	liveRoom := -1
 	if self.lines > 0 {
 		if len(footerRows) > 0 {
-			room := max(1, self.lines-1)
+			room := self.footerRoom()
 			if len(footerRows)+gap > room {
 				gap = 0
 			}

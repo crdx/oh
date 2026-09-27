@@ -88,6 +88,25 @@ func (self *Input) Insert(text string) {
 	self.buffer.Insert([]rune(text))
 }
 
+func (self *Input) Runes() []rune {
+	return self.buffer.Runes()
+}
+
+func (self *Input) Cursor() int {
+	return self.buffer.Cursor()
+}
+
+func (self *Input) Replace(start int, end int, text string) {
+	self.finishSearch()
+	self.buffer.remove(start, end)
+	self.buffer.cursor = start
+	self.buffer.Insert([]rune(text))
+}
+
+func (self *Input) IsSearching() bool {
+	return self.search != nil
+}
+
 func (self *Input) IsPasting() bool {
 	return self.isPasting
 }

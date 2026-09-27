@@ -166,6 +166,24 @@ func TestRunStopsAndRedraws(t *testing.T) {
 			t.Errorf("handled=%t drawn=%t", wasHandled, wasDrawn)
 		}
 	})
+	t.Run("trigger", func(t *testing.T) {
+		keys := make(chan key.Key)
+		changes := make(chan struct{}, 1)
+		changes <- struct{}{}
+		wasHandled, wasDrawn := false, false
+		run(keys, make(chan os.Signal), make(chan time.Time), func() {}, nil, Handler{
+			GetTurnEvents:  func() <-chan turn.Event { return make(chan turn.Event) },
+			OnKey:          func(key.Key) bool { return false },
+			TriggerChanges: changes,
+			OnTriggerChange: func() {
+				wasHandled = true
+			},
+			OnDraw: func() { wasDrawn = true; close(keys) },
+		})
+		if !wasHandled || !wasDrawn {
+			t.Errorf("handled=%t drawn=%t", wasHandled, wasDrawn)
+		}
+	})
 	t.Run("ignored change", func(t *testing.T) {
 		keys := make(chan key.Key)
 		changes := make(chan error, 1)

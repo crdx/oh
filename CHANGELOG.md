@@ -28,6 +28,7 @@
 - Give the model accurate grant docs
 - Render the session emoji after relayout
 - Show pending access changes notices
+- Complete paths with `@`
 
 ## [0.10.0] - 2026-09-25
 

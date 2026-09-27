@@ -51,6 +51,7 @@ import (
 	"crdx.org/oh/internal/app/cycle"
 	"crdx.org/oh/internal/app/demo"
 	"crdx.org/oh/internal/app/dispatch"
+	"crdx.org/oh/internal/app/dropdown"
 	"crdx.org/oh/internal/app/dynamic"
 	"crdx.org/oh/internal/app/edit"
 	"crdx.org/oh/internal/app/editor"
@@ -5082,6 +5083,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"context-yolo":           {".prompt"},
 		"host-command":           {".ansi", ".screen"},
 		"inputblock":             {".ansi", ".screen"},
+		"pathrefs":               {".ansi", ".screen"},
 		"legacy-alt-enter":       {".ansi", ".screen"},
 		"lifecycle":              {".ansi", ".screen"},
 		"line-resize":            {".screen"},
@@ -9387,10 +9389,11 @@ func TestGoldenLocalConfigsDrawMegathoroughly(t *testing.T) {
 }
 
 type inputBlockPass struct {
-	frame  edit.Frame
-	width  int
-	mode   runMode
-	status []string
+	frame    edit.Frame
+	width    int
+	mode     runMode
+	status   []string
+	dropdown func() *dropdown.Dropdown
 }
 
 func TestGoldenTheInputBlockDrawsWhatItDrewBefore(t *testing.T) {
@@ -9442,6 +9445,9 @@ func TestGoldenTheInputBlockDrawsWhatItDrewBefore(t *testing.T) {
 					FrameFeedback: len(pass.status) > 0,
 					Rule:          held.ruleStyle(),
 				}
+				if pass.dropdown != nil {
+					block.Dropdown = pass.dropdown().Rows(width, dropdown.MaxRows)
+				}
 
 				rows, cursorRow, cursorColumn := block.Rows(width)
 
@@ -9482,6 +9488,52 @@ func TestGoldenTheInputBlockDrawsWhatItDrewBefore(t *testing.T) {
 			status: []string{"Command not found: /unknown"},
 		})
 	}
+
+	pathRefFrame := edit.Frame{Rows: []string{"have a look at @harn"}, Row: 0, Column: 20}
+	pathRefOptions := []string{
+		"internal/app/harness/",
+		"internal/app/harness/app.go",
+		"internal/app/harness/main.go",
+		"internal/app/harness/main_test.go",
+		"internal/app/harness/pathref.go",
+		"internal/app/harness/print.go",
+		"internal/app/harness/replay.go",
+		"internal/app/harness/testdata/",
+		"internal/app/harness/turn.go",
+	}
+	openDropdown := func(options []string, total int, moves int) func() *dropdown.Dropdown {
+		return func() *dropdown.Dropdown {
+			opened := &dropdown.Dropdown{}
+			opened.SetElision(dropdown.ElideStart)
+			opened.Open()
+			opened.SetPlaceholder("no matching paths")
+			opened.SetOptions(options, total)
+			for range moves {
+				opened.Apply(key.Key{Code: key.Down})
+			}
+			return opened
+		}
+	}
+	for _, width := range []int{80, 20} {
+		addPass(fmt.Sprintf("dropdown at %d columns", width), inputBlockPass{
+			frame: pathRefFrame, width: width, dropdown: openDropdown(pathRefOptions, 21, 0),
+		})
+	}
+	addPass("dropdown scrolled at 80 columns", inputBlockPass{
+		frame: pathRefFrame, width: 80, dropdown: openDropdown(pathRefOptions, 21, 8),
+	})
+	addPass("dropdown with few options at 80 columns", inputBlockPass{
+		frame: pathRefFrame, width: 80, dropdown: openDropdown(pathRefOptions[:2], 2, 1),
+	})
+	addPass("dropdown without options at 80 columns", inputBlockPass{
+		frame: pathRefFrame, width: 80, dropdown: openDropdown(nil, 0, 0),
+	})
+	addPass("dropdown beneath framed feedback at 80 columns", inputBlockPass{
+		frame:    pathRefFrame,
+		width:    80,
+		status:   []string{"Command not found: /unknown"},
+		dropdown: openDropdown(pathRefOptions[:3], 3, 0),
+	})
 
 	compareWithGolden(t, "inputblock", ".ansi", passes)
 	compareWithGolden(t, "inputblock", ".screen", shownPassesAtWidth)

@@ -211,6 +211,16 @@ func TestBothLegacyBackspaceBytesAreBackspace(t *testing.T) {
 	}
 }
 
+func TestShiftTabArrivesAsAShiftedTab(t *testing.T) {
+	want := Key{Code: Rune, Value: '\t', Mod: Shift}
+	for _, input := range []string{"\x1b[Z", "\x1b[9;2u"} {
+		got := decode(t, input)
+		if len(got) != 1 || got[0] != want {
+			t.Errorf("%q decoded as %v, want %v", input, got, want)
+		}
+	}
+}
+
 func TestControlCharactersStillCarryTheirModifier(t *testing.T) {
 	got := decode(t, "\x03")
 

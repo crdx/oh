@@ -219,6 +219,29 @@ func TestElidingPlainText(t *testing.T) {
 	}
 }
 
+func TestElidingPlainTextFromTheStartKeepsItsTail(t *testing.T) {
+	const text = "chewy/sardine"
+
+	tests := map[int]string{
+		0:  "",
+		1:  "…",
+		5:  "…dine",
+		12: "…ewy/sardine",
+		13: "chewy/sardine",
+		20: "chewy/sardine",
+	}
+
+	for cells, wanted := range tests {
+		if got := ElideStart(text, cells); got != wanted {
+			t.Errorf("ElideStart(%q, %d) = %q, want %q", text, cells, got, wanted)
+		}
+	}
+
+	if got := ElideStart("ab界", 3); got != "…界" {
+		t.Errorf("ElideStart kept %q of a wide tail", got)
+	}
+}
+
 func TestElidingStyledTextClosesTheStyleItCutsThrough(t *testing.T) {
 	const text = "\x1b[31mchewy-sardine\x1b[0m"
 

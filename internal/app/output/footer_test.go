@@ -230,3 +230,32 @@ func TestAFooterWindowedIntoTwoRowsSaysWhatItHidAboveTheFocus(t *testing.T) {
 		t.Errorf("kept %q focused at %d, want a notice for the 20 rows above over the focus", fitted, cursorRow)
 	}
 }
+
+func TestTheFooterRoomIsWhatAFooterIsFittedTo(t *testing.T) {
+	if _, isBounded := New(&strings.Builder{}).FooterRoom(); isBounded {
+		t.Error("a screen of no known height bounded its footer")
+	}
+
+	screen := NewTerminalOfSize(&strings.Builder{}, 40, 10)
+	screen.Line("said before")
+
+	room, isBounded := screen.FooterRoom()
+	if !isBounded || room != 9 {
+		t.Fatalf("had room for %d rows, want the 9 that leave the terminal a row", room)
+	}
+
+	screen.Footer(footerRows(room), room-1, 0)
+	if got := len(screen.canvas.rows); got != room {
+		t.Errorf("a footer filling the room drew %d rows, want %d", got, room)
+	}
+	for _, row := range drawnTexts(screen) {
+		if strings.Contains(row, "more line") {
+			t.Errorf("a footer filling the room hid rows: %q", drawnTexts(screen))
+		}
+	}
+
+	screen.Footer(footerRows(room+1), room, 0)
+	if !slices.ContainsFunc(drawnTexts(screen), func(row string) bool { return strings.Contains(row, "more line") }) {
+		t.Errorf("a footer beyond the room hid nothing: %q", drawnTexts(screen))
+	}
+}

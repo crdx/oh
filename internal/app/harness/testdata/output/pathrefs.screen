@@ -1,0 +1,338 @@
+=== 01 a sigil before the listing arrives ===
+────────────────────────────────────────────────────────────
+look at @
+  listing files…
+────────────────────────────────────────────────────────────
+=== 02 a sigil once the listing arrives ===
+────────────────────────────────────────────────────────────
+look at @
+› .github/
+  CHANGELOG.md
+  cmd/
+  go.mod
+  internal/
+  Justfile
+  main.go
+  ⋮ 17 more
+────────────────────────────────────────────────────────────
+=== 03 a query typed before the listing arrives ===
+────────────────────────────────────────────────────────────
+look at @harn
+› internal/app/harness/
+  internal/app/harness/app.go
+  internal/app/harness/main.go
+  internal/app/harness/pathref.go
+────────────────────────────────────────────────────────────
+=== 04 a query narrows the paths ===
+────────────────────────────────────────────────────────────
+look at @pathref
+› internal/app/pathref/
+  internal/app/harness/pathref.go
+  internal/app/pathref/index.go
+  internal/app/pathref/match.go
+
+
+
+
+────────────────────────────────────────────────────────────
+=== 05 down moves the selection ===
+────────────────────────────────────────────────────────────
+@pathref
+  internal/app/pathref/
+› internal/app/harness/pathref.go
+  internal/app/pathref/index.go
+  internal/app/pathref/match.go
+────────────────────────────────────────────────────────────
+=== 06 up from the top of a short list wraps to the last path ===
+────────────────────────────────────────────────────────────
+@pathref
+  internal/app/pathref/
+  internal/app/harness/pathref.go
+  internal/app/pathref/index.go
+› internal/app/pathref/match.go
+────────────────────────────────────────────────────────────
+=== 07 down and up move the selection ===
+────────────────────────────────────────────────────────────
+@pathref
+  internal/app/pathref/
+› internal/app/harness/pathref.go
+  internal/app/pathref/index.go
+  internal/app/pathref/match.go
+────────────────────────────────────────────────────────────
+=== 08 moving past the window scrolls it ===
+────────────────────────────────────────────────────────────
+@
+  internal/
+  Justfile
+  main.go
+  README.md
+  .github/workflows/
+  cmd/weather/
+› internal/app/
+  ⋮ 4 above, 13 below
+────────────────────────────────────────────────────────────
+=== 09 enter chooses a file and closes the dropdown ===
+────────────────────────────────────────────────────────────
+look at @internal/app/harness/app.go
+────────────────────────────────────────────────────────────
+=== 10 enter chooses a file before a space ===
+────────────────────────────────────────────────────────────
+@Justfile then
+────────────────────────────────────────────────────────────
+=== 11 enter chooses a directory and lists inside it ===
+────────────────────────────────────────────────────────────
+@internal/app/harness/
+› internal/app/harness/app.go
+  internal/app/harness/main.go
+  internal/app/harness/pathref.go
+
+────────────────────────────────────────────────────────────
+=== 12 a query matching nothing ===
+────────────────────────────────────────────────────────────
+@zzz
+  no matching paths
+────────────────────────────────────────────────────────────
+=== 13 backspace over the sigil closes the dropdown ===
+────────────────────────────────────────────────────────────
+look at
+────────────────────────────────────────────────────────────
+=== 14 escape dismisses the dropdown ===
+────────────────────────────────────────────────────────────
+look at @
+────────────────────────────────────────────────────────────
+=== 15 typing into a closed path reference leaves it closed ===
+────────────────────────────────────────────────────────────
+look at @main
+────────────────────────────────────────────────────────────
+=== 16 a new path reference reopens the dropdown ===
+────────────────────────────────────────────────────────────
+look at @main @go
+› go.mod
+  main.go
+  cmd/weather/main.go
+  internal/app/dropdown/dropdown.go
+  internal/app/edit/input.go
+  internal/app/harness/app.go
+  internal/app/harness/main.go
+  ⋮ 6 more
+────────────────────────────────────────────────────────────
+=== 17 escape clears feedback before the dropdown ===
+────────────────────────────────────────────────────────────
+look at @
+› .github/
+  CHANGELOG.md
+  cmd/
+  go.mod
+  internal/
+  Justfile
+  main.go
+  ⋮ 17 more
+────────────────────────────────────────────────────────────
+=== 18 a sigil within a word opens nothing ===
+────────────────────────────────────────────────────────────
+mail foo@bar
+────────────────────────────────────────────────────────────
+=== 19 a listing that failed ===
+────────────────────────────────────────────────────────────
+@zzz
+  could not list files: rg: not found
+────────────────────────────────────────────────────────────
+=== 20 a narrow terminal keeps the tail of each path ===
+────────────────────
+@pathref
+› …rnal/app/pathref/
+  …arness/pathref.go
+  …/pathref/index.go
+  …/pathref/match.go
+────────────────────
+=== 21 a path reference on the first of several lines ===
+────────────────────────────────────────────────────────────
+first line @main
+second line
+› main.go
+  cmd/weather/main.go
+  internal/app/harness/main.go
+────────────────────────────────────────────────────────────
+=== 22 a terminal too short for the dropdown ===
+────────────────────────────────────────────────────────────
+@
+› .github/
+  CHANGELOG.md
+  cmd/
+  ⋮ 21 more
+────────────────────────────────────────────────────────────
+=== 23 a short terminal scrolls to keep the selection in view ===
+────────────────────────────────────────────────────────────
+@
+  main.go
+  README.md
+› .github/workflows/
+  ⋮ 6 above, 15 below
+────────────────────────────────────────────────────────────
+=== 24 a short terminal beneath the conversation ===
+said before
+────────────────────────────────────────────────────────────
+@
+› .github/
+  CHANGELOG.md
+  cmd/
+  ⋮ 21 more
+────────────────────────────────────────────────────────────
+=== 25 a short terminal beneath a queued message ===
+                                   double-enter to send now
+ ⏳ check the tests too
+
+────────────────────────────────────────────────────────────
+@
+› .github/
+  CHANGELOG.md
+  ⋮ 22 more
+────────────────────────────────────────────────────────────
+=== 26 ctrl+u clears the input and the dropdown ===
+────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────
+=== 27 a pasted path reference opens nothing ===
+────────────────────────────────────────────────────────────
+@harn
+────────────────────────────────────────────────────────────
+=== 28 history search hides the dropdown ===
+── reverse-i-search:  ──────────────────────────────────────
+@harn
+────────────────────────────────────────────────────────────
+=== 29 enter during a running turn chooses rather than queues ===
+────────────────────────────────────────────────────────────
+@internal/app/harness/app.go
+────────────────────────────────────────────────────────────
+=== 30 a question hides the dropdown ===
+────────────────────────────────────────────────────────────
+Continue?
+
+[Yes]  No
+────────────────────────────────────────────────────────────
+=== 31 answering the question brings the dropdown back ===
+────────────────────────────────────────────────────────────
+look at @
+› .github/
+  CHANGELOG.md
+  cmd/
+  go.mod
+  internal/
+  Justfile
+  main.go
+  ⋮ 17 more
+────────────────────────────────────────────────────────────
+=== 32 widening a query grows the dropdown ===
+────────────────────────────────────────────────────────────
+@
+› .github/
+  CHANGELOG.md
+  cmd/
+  go.mod
+  internal/
+  Justfile
+  main.go
+  ⋮ 17 more
+────────────────────────────────────────────────────────────
+=== 33 a listing arriving after escape stays hidden ===
+────────────────────────────────────────────────────────────
+look at @
+────────────────────────────────────────────────────────────
+=== 34 moving onto another path reference closes the dropdown ===
+────────────────────────────────────────────────────────────
+@harn @
+────────────────────────────────────────────────────────────
+=== 35 tab opens the dropdown over a pasted path reference ===
+────────────────────────────────────────────────────────────
+@harn
+› internal/app/harness/
+  internal/app/harness/app.go
+  internal/app/harness/main.go
+  internal/app/harness/pathref.go
+────────────────────────────────────────────────────────────
+=== 36 tab opens the dropdown over the path reference the cursor moved onto ===
+────────────────────────────────────────────────────────────
+@harn @
+› internal/app/harness/
+  internal/app/harness/app.go
+  internal/app/harness/main.go
+  internal/app/harness/pathref.go
+────────────────────────────────────────────────────────────
+=== 37 recalling a path reference opens nothing ===
+────────────────────────────────────────────────────────────
+look at @Justfile
+────────────────────────────────────────────────────────────
+=== 38 tab opens the dropdown over a recalled path reference ===
+────────────────────────────────────────────────────────────
+look at @Just
+› Justfile
+────────────────────────────────────────────────────────────
+=== 39 tab away from a path reference is left to the input ===
+────────────────────────────────────────────────────────────
+@go plain
+────────────────────────────────────────────────────────────
+=== 40 up at the top of a long list stays put ===
+────────────────────────────────────────────────────────────
+@
+› notes/
+  notes/000.md
+  notes/001.md
+  notes/002.md
+  notes/003.md
+  notes/004.md
+  notes/005.md
+  ⋮ 294 more
+────────────────────────────────────────────────────────────
+=== 41 moving past the first page of a long list counts every path ===
+────────────────────────────────────────────────────────────
+@
+  notes/198.md
+  notes/199.md
+  notes/200.md
+  notes/201.md
+  notes/202.md
+  notes/203.md
+› notes/204.md
+  ⋮ 199 above, 95 below
+────────────────────────────────────────────────────────────
+=== 42 the end of a long list stops rather than wrapping ===
+────────────────────────────────────────────────────────────
+@
+  notes/293.md
+  notes/294.md
+  notes/295.md
+  notes/296.md
+  notes/297.md
+  notes/298.md
+› notes/299.md
+  ⋮ 294 above
+────────────────────────────────────────────────────────────
+=== 43 tab chooses the selected path ===
+────────────────────────────────────────────────────────────
+look at @internal/app/harness/pathref.go
+────────────────────────────────────────────────────────────
+=== 44 tab on a directory lists inside it ===
+────────────────────────────────────────────────────────────
+@internal/app/pathref/
+› internal/app/pathref/index.go
+  internal/app/pathref/match.go
+
+
+────────────────────────────────────────────────────────────
+=== 45 tab with nothing to choose does nothing ===
+────────────────────────────────────────────────────────────
+look at @
+  listing files…
+────────────────────────────────────────────────────────────
+=== 46 shift-tab does nothing while the dropdown is open ===
+────────────────────────────────────────────────────────────
+look at @
+› .github/
+  CHANGELOG.md
+  cmd/
+  go.mod
+  internal/
+  Justfile
+  main.go
+  ⋮ 17 more
+────────────────────────────────────────────────────────────

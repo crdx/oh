@@ -35,6 +35,8 @@ type Handler struct {
 	OnHostToSandboxChange func(agent.Event)
 	QuestionChanges       <-chan struct{}
 	OnQuestionChange      func()
+	TriggerChanges        <-chan struct{}
+	OnTriggerChange       func()
 	OnDraw                func()
 	Watch                 func(work string) func()
 }
@@ -60,6 +62,7 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 	conclusions := handler.Conclusions
 	hostToSandboxChanges := handler.HostToSandboxChanges
 	questionChanges := handler.QuestionChanges
+	triggerChanges := handler.TriggerChanges
 	for {
 		schedule()
 
@@ -104,6 +107,12 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 				continue
 			}
 			handler.OnQuestionChange()
+		case _, isOpen := <-triggerChanges:
+			if !isOpen {
+				triggerChanges = nil
+				continue
+			}
+			handler.OnTriggerChange()
 		case failure, isOpen := <-changes:
 			if !isOpen {
 				changes = nil

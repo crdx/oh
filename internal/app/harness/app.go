@@ -45,6 +45,7 @@ import (
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/terminal"
+	"crdx.org/oh/internal/app/trigger"
 	"crdx.org/oh/internal/app/tty"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/work"
@@ -192,6 +193,7 @@ type App struct {
 	display         displayState
 	runMode         runMode
 	slash           slashState
+	completer       *trigger.Completer
 	question        questionState
 	transition      cycle.Transition
 	queuedTurn      turn.Queue
@@ -280,6 +282,8 @@ func (self *App) begin(message string) cycle.Transition {
 		OnHostToSandboxChange: self.holdHostToSandboxChange,
 		QuestionChanges:       self.questionChanges(),
 		OnQuestionChange:      self.onQuestionChange,
+		TriggerChanges:        self.triggerChanges(),
+		OnTriggerChange:       self.receiveTriggerChange,
 		OnDraw:                func() { self.drawAfterEvent(inputLine) },
 		Watch:                 self.watchStalls,
 	})
@@ -382,9 +386,18 @@ func (self *App) apply(inputLine *edit.Input, history *edit.History, keypress ke
 	}
 
 	previousText := inputLine.Text()
+	if self.applyToCompleter(inputLine, keypress) {
+		if inputLine.Text() != previousText {
+			self.feedback.Dismiss()
+		}
+		self.slash.completion.Reset()
+		return true
+	}
+
 	action := inputLine.Apply(keypress, self.currentTurn.Running())
 	if inputLine.Text() != previousText {
 		self.feedback.Dismiss()
+		self.completeTyped(inputLine, keypress)
 	} else if dismissesFeedback(keypress) && self.feedback.Dismiss() {
 		action = edit.DrawInput
 	}
@@ -883,6 +896,7 @@ func (self *App) show(inputLine *edit.Input) {
 	}
 
 	self.feedback.ClearExpired(self.getNow())
+	self.syncCompleter(inputLine)
 
 	columns := self.screen.Columns()
 	frame := inputLine.Frame(columns)
@@ -913,6 +927,7 @@ func (self *App) show(inputLine *edit.Input) {
 		Question:      self.questionRows(columns),
 		Rule:          self.ruleStyle(),
 	}
+	block.Dropdown = self.dropdownRows(block, columns)
 
 	if self.isAwaitingAnswer() {
 		block.Top.Center = painter.QuestionHead(

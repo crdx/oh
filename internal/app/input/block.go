@@ -52,11 +52,12 @@ type Block struct {
 	Status        []string
 	FrameFeedback bool
 	Question      []string
+	Dropdown      []string
 	Rule          style.Style
 }
 
 func (self Block) Rows(width int) ([]string, int, int) {
-	rows := make([]string, 0, len(self.Status)+len(self.Input.Rows)+4)
+	rows := make([]string, 0, len(self.Status)+len(self.Input.Rows)+len(self.Dropdown)+4)
 
 	top := self.Top
 	if self.Input.IsSearching && !self.isAsking() {
@@ -80,6 +81,9 @@ func (self Block) Rows(width int) ([]string, int, int) {
 	}
 	rows = append(rows, topRule)
 	rows = append(rows, body...)
+	if !self.isAsking() {
+		rows = append(rows, self.Dropdown...)
+	}
 	rows = append(rows, bottom.render(width, rule))
 
 	return rows, len(statusRows) + bodyRow + 1, bodyColumn

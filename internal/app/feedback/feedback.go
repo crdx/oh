@@ -59,8 +59,12 @@ func (self *State) Clear(source Source) {
 	}
 }
 
+func (self *State) CanBeDismissed() bool {
+	return !self.IsEmpty() && self.source.CanBeDismissed()
+}
+
 func (self *State) Dismiss() bool {
-	if self.IsEmpty() || !self.source.CanBeDismissed() {
+	if !self.CanBeDismissed() {
 		return false
 	}
 

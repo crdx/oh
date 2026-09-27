@@ -1,3 +1,59 @@
+=== dropdown at 20 columns ===
+── workspace ───────
+have a look at @harn
+› …rnal/app/harness/
+  …pp/harness/app.go
+  …p/harness/main.go
+  …ness/main_test.go
+  …arness/pathref.go
+  …/harness/print.go
+  …harness/replay.go
+  ⋮ 14 more
+────────────────────
+=== dropdown at 80 columns ===
+── workspace ───────────────── GPT Sol 5.6 ▫▫▫▪·· ──────────────────────────────
+have a look at @harn
+› internal/app/harness/
+  internal/app/harness/app.go
+  internal/app/harness/main.go
+  internal/app/harness/main_test.go
+  internal/app/harness/pathref.go
+  internal/app/harness/print.go
+  internal/app/harness/replay.go
+  ⋮ 14 more
+── ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? ─────────────
+=== dropdown beneath framed feedback at 80 columns ===
+ ╭────────────────────────────────────────────────────────────────────────────╮
+ │ Command not found: /unknown                                                │
+─┴── workspace ─────────────── GPT Sol 5.6 ▫▫▫▪·· ────────────────────────────┴─
+have a look at @harn
+› internal/app/harness/
+  internal/app/harness/app.go
+  internal/app/harness/main.go
+── ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? ─────────────
+=== dropdown scrolled at 80 columns ===
+── workspace ───────────────── GPT Sol 5.6 ▫▫▫▪·· ──────────────────────────────
+have a look at @harn
+  internal/app/harness/main.go
+  internal/app/harness/main_test.go
+  internal/app/harness/pathref.go
+  internal/app/harness/print.go
+  internal/app/harness/replay.go
+  internal/app/harness/testdata/
+› internal/app/harness/turn.go
+  ⋮ 2 above, 12 below
+── ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? ─────────────
+=== dropdown with few options at 80 columns ===
+── workspace ───────────────── GPT Sol 5.6 ▫▫▫▪·· ──────────────────────────────
+have a look at @harn
+  internal/app/harness/
+› internal/app/harness/app.go
+── ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? ─────────────
+=== dropdown without options at 80 columns ===
+── workspace ───────────────── GPT Sol 5.6 ▫▫▫▪·· ──────────────────────────────
+have a look at @harn
+  no matching paths
+── ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? ─────────────
 === framed feedback at 40 columns ===
  ╭────────────────────────────────────╮
  │ Command not found: /unknown        │

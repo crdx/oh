@@ -345,6 +345,29 @@ func Elide(text string, cells int) string {
 	return keptText + Ellipsis + closing(keptText)
 }
 
+func ElideStart(text string, cells int) string {
+	if cells <= 0 {
+		return ""
+	}
+
+	if Of(text) <= cells {
+		return text
+	}
+
+	var tail []string
+	tailCells := 0
+	for one := range graphemes(text) {
+		tail = append(tail, one.text)
+		tailCells += one.cells
+		for tailCells > cells-1 {
+			tailCells -= Of(tail[0])
+			tail = tail[1:]
+		}
+	}
+
+	return Ellipsis + strings.Join(tail, "")
+}
+
 func closing(text string) string {
 	isOpen := false
 
