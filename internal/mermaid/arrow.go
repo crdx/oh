@@ -72,7 +72,7 @@ func (self *graph) getPath(from gridCoord, to gridCoord) ([]gridCoord, error) {
 	heap.Push(pq, &priorityQueueItem{coord: from, priority: 0})
 
 	costSoFar := map[gridCoord]int{from: 0}
-	cameFrom := map[gridCoord]*gridCoord{from: nil}
+	cameFrom := map[gridCoord]gridCoord{}
 
 	directions := []gridCoord{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
 
@@ -81,11 +81,17 @@ func (self *graph) getPath(from gridCoord, to gridCoord) ([]gridCoord, error) {
 		current := item.coord
 
 		if current.Equals(to) {
-			path := []gridCoord{}
-			for c := &current; c != nil; c = cameFrom[*c] {
-				path = append([]gridCoord{*c}, path...)
+			path := []gridCoord{current}
+			for step, hasPrevious := cameFrom[current]; hasPrevious; step, hasPrevious = cameFrom[step] {
+				path = append(path, step)
 			}
+			slices.Reverse(path)
 			return path, nil
+		}
+
+		currentCost := costSoFar[current]
+		if item.priority > currentCost+heuristic(current, to) {
+			continue
 		}
 
 		for _, dir := range directions {
@@ -94,12 +100,12 @@ func (self *graph) getPath(from gridCoord, to gridCoord) ([]gridCoord, error) {
 				continue
 			}
 
-			newCost := costSoFar[current] + 1
+			newCost := currentCost + 1
 			if cost, ok := costSoFar[next]; !ok || newCost < cost {
 				costSoFar[next] = newCost
 				priority := newCost + heuristic(next, to)
 				heap.Push(pq, &priorityQueueItem{coord: next, priority: priority})
-				cameFrom[next] = &current
+				cameFrom[next] = current
 			}
 		}
 	}
