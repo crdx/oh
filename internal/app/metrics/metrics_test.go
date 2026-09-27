@@ -137,3 +137,18 @@ func TestSpendIsRestoredFromTheWholeHistory(t *testing.T) {
 		t.Errorf("expected the whole history to be counted, got %v", spend)
 	}
 }
+
+func TestCacheUsageIsRestoredFromTheWholeHistory(t *testing.T) {
+	tracker := New(Settings{})
+	tracker.Record(agent.Event{Kind: agent.ModelMessageEvent, Usage: &agent.Usage{InputTokens: 7}})
+
+	tracker.Restore([]agent.Event{
+		{Kind: agent.ModelMessageEvent, Usage: &agent.Usage{InputTokens: 1_000, Cache: &agent.CacheUsage{ReadTokens: 800}}},
+		{Kind: agent.CacheRebuildEvent, Usage: &agent.Usage{InputTokens: 5_000}},
+		{Kind: agent.ModelMessageEvent, Usage: &agent.Usage{InputTokens: 2_000, Cache: &agent.CacheUsage{ReadTokens: 1_900}}},
+	}, nil)
+
+	if read, asked := tracker.CacheUsage(); read != 2_700 || asked != 3_000 {
+		t.Errorf("got %d read of %d asked, want 2700 of 3000 from the stored requests alone", read, asked)
+	}
+}

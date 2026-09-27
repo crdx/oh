@@ -46,6 +46,8 @@ GPT Sol \e[38;2;150;152;150m5.6\e[0m \e[38;2;150;152;150m▫▫▫▫\e[0m\e[38;
 
 === cache-usage / rebuilt from cold ===
 1\e[38;2;150;152;150m%\e[0m
+=== cache-usage / restored with the session ===
+93\e[38;2;150;152;150m%\e[0m
 === context-usage / known ===
 91\e[38;2;150;152;150m% \e[0m182\e[38;2;150;152;150mK/\e[0m200\e[38;2;150;152;150mK\e[0m
 === context-usage / one million ===

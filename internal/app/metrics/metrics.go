@@ -37,14 +37,8 @@ func (self *Tracker) Record(event agent.Event) {
 	if event.Usage != nil && event.Usage.InputTokens > 0 {
 		self.inputTokens = event.Usage.InputTokens
 	}
-	if event.Usage != nil && event.Usage.InputTokens > 0 {
-		self.cacheAskedTokens += event.Usage.InputTokens
-		if event.Usage.Cache != nil {
-			self.cacheReadTokens += event.Usage.Cache.ReadTokens
-		}
-	}
 
-	self.spend += self.spendOn(event)
+	self.accumulate(event)
 }
 
 func (self *Tracker) CacheUsage() (int, int) {
@@ -63,13 +57,15 @@ func (self *Tracker) Restore(events []agent.Event, turns []session.TurnSummary) 
 	self.inputTokens = 0
 	self.turnsTaken = len(turns)
 	self.spend = 0
+	self.cacheReadTokens = 0
+	self.cacheAskedTokens = 0
 
 	for _, event := range events {
 		if event.Kind == agent.CacheRebuildEvent {
 			continue
 		}
 
-		self.spend += self.spendOn(event)
+		self.accumulate(event)
 	}
 
 	if len(turns) > 0 && turns[len(turns)-1].InputTokens > 0 {
@@ -90,6 +86,17 @@ func (self *Tracker) TurnCount() int {
 
 func (self *Tracker) ContextUsage() (int, int) {
 	return self.inputTokens, self.contextWindowTokens
+}
+
+func (self *Tracker) accumulate(event agent.Event) {
+	if event.Usage != nil && event.Usage.InputTokens > 0 {
+		self.cacheAskedTokens += event.Usage.InputTokens
+		if event.Usage.Cache != nil {
+			self.cacheReadTokens += event.Usage.Cache.ReadTokens
+		}
+	}
+
+	self.spend += self.spendOn(event)
 }
 
 func (self *Tracker) spendOn(event agent.Event) float64 {

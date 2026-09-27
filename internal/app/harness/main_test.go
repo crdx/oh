@@ -12438,6 +12438,21 @@ func (self goldenSegmentOptions) Read(into any) error {
 	return err
 }
 
+func restoredWithEvents(t *testing.T, events ...agent.Event) *App {
+	t.Helper()
+
+	var screenOutput bytes.Buffer
+	restored := &App{
+		agent:    agent.New("", quietProvider{}, nil),
+		screen:   output.New(&screenOutput),
+		recorder: record.New(testLog(t)),
+		metrics:  metrics.New(metrics.Settings{ContextWindowTokens: 200_000}),
+	}
+	restored.restore(&store.Session{Events: events})
+
+	return restored
+}
+
 func goldenSegmentPass(
 	t *testing.T,
 	factory segment.Factory,
@@ -12800,6 +12815,15 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 		"cache-usage / rebuilt from cold": goldenSegmentPass(
 			t,
 			cacheUsage.New(func() (int, int) { return 1_604, 281_033 }),
+			"",
+			segment.Context{},
+		),
+		"cache-usage / restored with the session": goldenSegmentPass(
+			t,
+			cacheUsage.New(restoredWithEvents(t,
+				agent.Event{Kind: agent.ModelMessageEvent, Usage: &agent.Usage{InputTokens: 100_000, Cache: &agent.CacheUsage{ReadTokens: 90_000}}},
+				agent.Event{Kind: agent.ModelMessageEvent, Usage: &agent.Usage{InputTokens: 100_000, Cache: &agent.CacheUsage{ReadTokens: 96_400}}},
+			).cacheUsage),
 			"",
 			segment.Context{},
 		),

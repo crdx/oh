@@ -46,6 +46,8 @@ GPT Sol 5.6 ▫▫▫▫▪▫
 
 === cache-usage / rebuilt from cold ===
 1%
+=== cache-usage / restored with the session ===
+93%
 === context-usage / known ===
 91% 182K/200K
 === context-usage / one million ===
