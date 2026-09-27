@@ -7,7 +7,7 @@ import (
 	"crdx.org/oh/internal/app/width"
 )
 
-const DefaultGap = 2
+const Gap = 2
 
 type Alignment int
 
@@ -27,16 +27,10 @@ type Column struct {
 
 type Table struct {
 	columns []Column
-	gap     int
 }
 
 func New(columns ...Column) *Table {
-	return &Table{columns: columns, gap: DefaultGap}
-}
-
-func (self *Table) Gap(cells int) *Table {
-	self.gap = cells
-	return self
+	return &Table{columns: columns}
 }
 
 func (self *Table) Fit(rows [][]string) *Table {
@@ -87,7 +81,7 @@ func (self *Table) line(cells []string, room int, isPainted bool) string {
 	trailingText := self.join(shownIndexes[flexAt+1:], cells, isPainted, -1)
 	trailingRoom := width.Of(trailingText)
 
-	leadingRoom := room - trailingRoom - self.gap
+	leadingRoom := room - trailingRoom - Gap
 	if leadingRoom <= 0 {
 		return clip(self.join(shownIndexes[:flexAt+1], cells, isPainted, -1), room)
 	}
@@ -116,7 +110,7 @@ func (self *Table) join(shownIndexes []int, cells []string, isPainted bool, _ in
 		parts = append(parts, self.cell(index, cellAt(cells, index), isPainted, isLast))
 	}
 
-	return strings.Join(parts, strings.Repeat(" ", self.gap))
+	return strings.Join(parts, strings.Repeat(" ", Gap))
 }
 
 func (self *Table) cell(index int, text string, isPainted bool, isLast bool) string {

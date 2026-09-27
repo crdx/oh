@@ -2,6 +2,7 @@ package config
 
 import (
 	"errors"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"slices"
@@ -600,5 +601,19 @@ func TestClosingAnObserverClosesItsChanges(t *testing.T) {
 
 	if _, isOpen := <-observer.Changes(); isOpen {
 		t.Error("changes remained open")
+	}
+}
+
+func TestAFileThatIsNotOrdinaryIsNamedForWhatItIs(t *testing.T) {
+	for mode, want := range map[fs.FileMode]string{
+		fs.ModeDir:                        "a directory",
+		fs.ModeNamedPipe:                  "a named pipe",
+		fs.ModeSocket:                     "a socket",
+		fs.ModeDevice | fs.ModeCharDevice: "a device",
+		fs.ModeSymlink:                    "not an ordinary file",
+	} {
+		if got := namedFileKind(mode); got != want {
+			t.Errorf("%s was named %q, want %q", mode, got, want)
+		}
 	}
 }

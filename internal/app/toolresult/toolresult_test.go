@@ -2,6 +2,8 @@ package toolresult
 
 import (
 	"flag"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -118,4 +120,34 @@ func toolResultFixture(t *testing.T) (string, string) {
 	}
 
 	return directory, internaltoolresult.URL(name, "call-1")
+}
+
+func TestAResultIsHandedToThePagerWhole(t *testing.T) {
+	directory := t.TempDir()
+	pagedPath := filepath.Join(directory, "paged")
+	if err := os.WriteFile(filepath.Join(directory, "less"), []byte("#!/bin/sh\ncat > \"$PAGED\"\n"), 0o700); err != nil { //nolint:gosec // a pager this test runs
+		t.Fatal(err)
+	}
+	t.Setenv("PATH", directory+string(os.PathListSeparator)+os.Getenv("PATH"))
+	t.Setenv("PAGED", pagedPath)
+
+	if err := page("first line\nsecond line\n"); err != nil {
+		t.Fatal(err)
+	}
+
+	paged, err := os.ReadFile(pagedPath) //nolint:gosec // the test's own path
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(paged) != "first line\nsecond line\n" {
+		t.Errorf("the pager was handed %q", paged)
+	}
+}
+
+func TestAPagerThatCannotRunIsReported(t *testing.T) {
+	t.Setenv("PATH", t.TempDir())
+
+	if err := page("text"); err == nil || !strings.Contains(err.Error(), "pager failed") {
+		t.Errorf("got %v, want the pager's failure reported", err)
+	}
 }

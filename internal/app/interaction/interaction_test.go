@@ -1,14 +1,19 @@
 package interaction
 
 import (
+	"errors"
 	"io"
 	"os"
+	"slices"
+	"syscall"
 	"testing"
 	"testing/synctest"
 	"time"
 
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/turn"
+	"crdx.org/oh/internal/jobs"
+	"crdx.org/oh/pkg/agent"
 )
 
 func TestABarWithNothingToSayIsNeverRedrawn(t *testing.T) {
@@ -235,6 +240,175 @@ func TestRunStopsAndRedraws(t *testing.T) {
 		}
 	})
 }
+
+func TestRunHandsEachEventToItsHandlerAndRedraws(t *testing.T) {
+	neverEnds := func() <-chan turn.Event { return make(chan turn.Event) }
+
+	t.Run("turn event", func(t *testing.T) {
+		keys := make(chan key.Key)
+		turnEvents := make(chan turn.Event, 1)
+		turnEvents <- turn.Event{Err: errTurn}
+		var got error
+		wasDrawn := false
+		run(keys, make(chan os.Signal), make(chan time.Time), func() {}, nil, Handler{
+			GetTurnEvents: func() <-chan turn.Event { return turnEvents },
+			OnTurn:        func(event turn.Event) { got = event.Err },
+			OnKey:         func(key.Key) bool { return false },
+			OnDraw:        func() { wasDrawn = true; close(keys) },
+		})
+		if !errors.Is(got, errTurn) || !wasDrawn {
+			t.Errorf("event=%v drawn=%t", got, wasDrawn)
+		}
+	})
+	t.Run("finished turn carries on", func(t *testing.T) {
+		keys := make(chan key.Key)
+		turnEvents := make(chan turn.Event)
+		close(turnEvents)
+		finishedTimes := 0
+		run(keys, make(chan os.Signal), make(chan time.Time), func() {}, nil, Handler{
+			GetTurnEvents: func() <-chan turn.Event {
+				if finishedTimes == 0 {
+					return turnEvents
+				}
+				return make(chan turn.Event)
+			},
+			OnTurnFinished: func() bool { finishedTimes++; return true },
+			OnKey:          func(key.Key) bool { return false },
+			OnDraw:         func() { close(keys) },
+		})
+		if finishedTimes != 1 {
+			t.Errorf("finished %d times, want once", finishedTimes)
+		}
+	})
+	t.Run("resize", func(t *testing.T) {
+		synctest.Test(t, func(t *testing.T) {
+			keys := make(chan key.Key)
+			resizes := make(chan os.Signal, 3)
+			for range 3 {
+				resizes <- syscall.SIGWINCH
+			}
+			resizeTimes, wasDrawn := 0, false
+			run(keys, resizes, make(chan time.Time), func() {}, nil, Handler{
+				GetTurnEvents: neverEnds,
+				OnResize:      func() { resizeTimes++ },
+				OnKey:         func(key.Key) bool { return false },
+				OnDraw:        func() { wasDrawn = true; close(keys) },
+			})
+			if resizeTimes != 1 || !wasDrawn {
+				t.Errorf("resized %d times, drawn=%t; want a burst settled into one", resizeTimes, wasDrawn)
+			}
+		})
+	})
+	t.Run("job ended", func(t *testing.T) {
+		keys := make(chan key.Key)
+		conclusions := make(chan jobs.Conclusion, 1)
+		conclusions <- jobs.Conclusion{Output: "done"}
+		var got string
+		wasDrawn := false
+		run(keys, make(chan os.Signal), make(chan time.Time), func() {}, nil, Handler{
+			GetTurnEvents: neverEnds,
+			Conclusions:   conclusions,
+			OnJobEnded:    func(conclusion jobs.Conclusion) { got = conclusion.Output },
+			OnKey:         func(key.Key) bool { return false },
+			OnDraw:        func() { wasDrawn = true; close(keys) },
+		})
+		if got != "done" || !wasDrawn {
+			t.Errorf("output=%q drawn=%t", got, wasDrawn)
+		}
+	})
+	t.Run("host to sandbox change", func(t *testing.T) {
+		keys := make(chan key.Key)
+		changes := make(chan agent.Event, 1)
+		changes <- agent.Event{Text: "exposed"}
+		var got string
+		wasDrawn := false
+		run(keys, make(chan os.Signal), make(chan time.Time), func() {}, nil, Handler{
+			GetTurnEvents:         neverEnds,
+			HostToSandboxChanges:  changes,
+			OnHostToSandboxChange: func(event agent.Event) { got = event.Text },
+			OnKey:                 func(key.Key) bool { return false },
+			OnDraw:                func() { wasDrawn = true; close(keys) },
+		})
+		if got != "exposed" || !wasDrawn {
+			t.Errorf("event=%q drawn=%t", got, wasDrawn)
+		}
+	})
+	t.Run("change without a handler", func(t *testing.T) {
+		keys := make(chan key.Key)
+		changes := make(chan error, 1)
+		changes <- nil
+		wasDrawn := false
+		run(keys, make(chan os.Signal), make(chan time.Time), func() {}, nil, Handler{
+			GetTurnEvents: neverEnds,
+			Changes:       changes,
+			OnKey:         func(key.Key) bool { return false },
+			OnDraw:        func() { wasDrawn = true; close(keys) },
+		})
+		if !wasDrawn {
+			t.Error("a change nobody filters was not drawn")
+		}
+	})
+	t.Run("closed sources are forgotten", func(t *testing.T) {
+		keys := make(chan key.Key, 1)
+		changes := make(chan error)
+		conclusions := make(chan jobs.Conclusion)
+		hostToSandboxChanges := make(chan agent.Event)
+		questionChanges := make(chan struct{})
+		triggerChanges := make(chan struct{})
+		close(changes)
+		close(conclusions)
+		close(hostToSandboxChanges)
+		close(questionChanges)
+		close(triggerChanges)
+		schedules := 0
+		wasDrawn := false
+		run(keys, make(chan os.Signal), make(chan time.Time), func() {
+			schedules++
+			if schedules == 6 {
+				keys <- key.Key{Code: key.Escape}
+			}
+		}, nil, Handler{
+			GetTurnEvents:        neverEnds,
+			Changes:              changes,
+			Conclusions:          conclusions,
+			HostToSandboxChanges: hostToSandboxChanges,
+			QuestionChanges:      questionChanges,
+			TriggerChanges:       triggerChanges,
+			OnKey:                func(key.Key) bool { return false },
+			OnDraw:               func() { wasDrawn = true },
+		})
+		if schedules != 6 || wasDrawn {
+			t.Errorf("scheduled %d times, drawn=%t; want each closed source read once and nothing drawn", schedules, wasDrawn)
+		}
+	})
+}
+
+func TestRunEndsWhenTheLastTurnAsksToLeave(t *testing.T) {
+	terminal := openTerminal(t)
+
+	turnEvents := make(chan turn.Event)
+	close(turnEvents)
+
+	var scheduledWork []string
+	hasFinished := false
+	Run(terminal, func(time.Time) time.Time { return time.Time{} }, Handler{
+		GetTurnEvents:  func() <-chan turn.Event { return turnEvents },
+		OnTurnFinished: func() bool { hasFinished = true; return false },
+		Watch: func(work string) func() {
+			scheduledWork = append(scheduledWork, work)
+			return func() {}
+		},
+	})
+
+	if !hasFinished {
+		t.Error("the finished turn was never handled")
+	}
+	if !slices.Equal(scheduledWork, []string{"schedule", "turn finished"}) {
+		t.Errorf("got %q, want the schedule and the finished turn watched", scheduledWork)
+	}
+}
+
+var errTurn = errors.New("turn failed")
 
 func TestKeypressesGiveTheTerminalBackWhenTheyAreStopped(t *testing.T) {
 	terminal := openTerminal(t)

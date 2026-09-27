@@ -599,6 +599,84 @@ func TestAMalformedGoModuleCacheIsRejected(t *testing.T) {
 	}
 }
 
+func TestTheGoModuleCacheIsFoundWhereGoWouldLook(t *testing.T) {
+	root := t.TempDir()
+	configured := filepath.Join(root, "configured")
+	gopath := filepath.Join(root, "gopath")
+	home := filepath.Join(root, "home")
+	for _, directory := range []string{configured, filepath.Join(gopath, "pkg", "mod"), filepath.Join(home, "go", "pkg", "mod")} {
+		if err := os.MkdirAll(directory, 0o700); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	for name, testCase := range map[string]struct {
+		cache, gopath, home string
+		want                string
+	}{
+		"named outright":         {cache: configured, want: configured},
+		"under the first GOPATH": {gopath: gopath + string(os.PathListSeparator) + root, want: filepath.Join(gopath, "pkg", "mod")},
+		"under the home":         {home: home, want: filepath.Join(home, "go", "pkg", "mod")},
+		"not there yet":          {cache: filepath.Join(root, "missing"), want: ""},
+	} {
+		t.Run(name, func(t *testing.T) {
+			t.Setenv("GOMODCACHE", testCase.cache)
+			t.Setenv("GOPATH", testCase.gopath)
+			t.Setenv("HOME", testCase.home)
+
+			got, err := goModuleCache()
+			if err != nil || got != testCase.want {
+				t.Errorf("got %q, %v; want %q", got, err, testCase.want)
+			}
+		})
+	}
+}
+
+func TestAGoModuleCacheThatIsNotADirectoryIsRejected(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "modules")
+	if err := os.WriteFile(path, nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("GOMODCACHE", path)
+
+	if _, err := goModuleCache(); err == nil {
+		t.Error("a file was taken as the Go module cache")
+	}
+}
+
+func TestWithdrawingACapabilityStopsOnlyTheJobsThatRelyOnIt(t *testing.T) {
+	workspace := t.TempDir()
+	writing := sandbox.Policy{Write: []string{workspace}}
+	reading := sandbox.Policy{}
+
+	for name, testCase := range map[string]struct {
+		withdrawn                  caps.Set
+		isStopping                 bool
+		stopsWriting, stopsReading bool
+	}{
+		"shell":   {withdrawn: caps.Shell, isStopping: true, stopsWriting: true, stopsReading: true},
+		"write":   {withdrawn: caps.Write, isStopping: true, stopsWriting: true},
+		"git":     {withdrawn: caps.Git, isStopping: true, stopsWriting: true},
+		"network": {withdrawn: caps.Network},
+	} {
+		t.Run(name, func(t *testing.T) {
+			isStopped, isStopping := StoppedBy(testCase.withdrawn, workspace)
+			if isStopping != testCase.isStopping {
+				t.Fatalf("stopping=%t, want %t", isStopping, testCase.isStopping)
+			}
+			if !isStopping {
+				return
+			}
+			if got := isStopped(writing); got != testCase.stopsWriting {
+				t.Errorf("a job writing the workspace stopped=%t, want %t", got, testCase.stopsWriting)
+			}
+			if got := isStopped(reading); got != testCase.stopsReading {
+				t.Errorf("a job only reading stopped=%t, want %t", got, testCase.stopsReading)
+			}
+		})
+	}
+}
+
 func TestNoPolicyGrantsMoreThanItsCapsAskFor(t *testing.T) {
 	workspace := t.TempDir()
 	home := t.TempDir()

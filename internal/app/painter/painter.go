@@ -255,10 +255,6 @@ func RenderSubmittedMessage(text string, columns int) string {
 	return renderSubmittedMessage(submittedMessage{text: text}, columns, false, link.Roots{})
 }
 
-func RenderSubmittedMessageWithHyperlinks(text string, columns int) string {
-	return renderSubmittedMessage(submittedMessage{text: text}, columns, true, link.Roots{})
-}
-
 func renderSubmittedMessage(
 	message submittedMessage,
 	columns int,

@@ -7,11 +7,14 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 	"time"
 
 	"crdx.org/oh/internal/auth"
+	"crdx.org/oh/internal/req"
+	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/provider/codex"
 )
 
@@ -237,5 +240,70 @@ func TestStoredReportsMissingCredentials(t *testing.T) {
 
 	if _, err := source.Token(); err == nil {
 		t.Error("expected an error when there are no credentials")
+	}
+}
+
+type exchangeRecorder struct {
+	addresses *[]string
+}
+
+func (self exchangeRecorder) Start(request req.Request) req.ExchangeObserver {
+	*self.addresses = append(*self.addresses, request.Method+" "+request.URL)
+	return self
+}
+
+func (exchangeRecorder) Response(req.Response)         {}
+func (exchangeRecorder) Body(time.Time, []byte)        {}
+func (exchangeRecorder) Finish(time.Time, error, bool) {}
+
+func TestARefreshIsSeenByWhoeverObservesTheTraffic(t *testing.T) {
+	var grants []string
+	tokenEndpoint(t, &grants)
+
+	source := codex.StoredCredentialsAt(writeCredentials(t, -time.Minute))
+	observable, isObservable := source.(interface{ ObserveHTTP(observer req.Observer) })
+	if !isObservable {
+		t.Fatal("stored credentials cannot be observed")
+	}
+
+	var addresses []string
+	observable.ObserveHTTP(exchangeRecorder{addresses: &addresses})
+
+	if _, err := source.Token(); err != nil {
+		t.Fatal(err)
+	}
+
+	if len(addresses) != 1 || addresses[0] != "POST "+codex.TokenURL {
+		t.Errorf("observed %q, want the one refresh", addresses)
+	}
+}
+
+func TestAConversationShowsItsObserverTheRefreshBeforeTheRequest(t *testing.T) {
+	var grants []string
+	tokenEndpoint(t, &grants)
+
+	conversation := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, _ *http.Request) {
+		writer.Header().Set("Content-Type", "text/event-stream")
+		_, _ = fmt.Fprint(writer, "data: {\"type\":\"response.output_text.delta\",\"delta\":\"hi\"}\n\ndata: {\"type\":\"response.completed\"}\n\n")
+	}))
+	t.Cleanup(conversation.Close)
+
+	client, err := codex.New(codex.StoredCredentialsAt(writeCredentials(t, -time.Minute)), "gpt-5.6-sol", "high")
+	if err != nil {
+		t.Fatal(err)
+	}
+	client.URL = conversation.URL
+
+	var addresses []string
+	client.ObserveHTTP(exchangeRecorder{addresses: &addresses})
+
+	client.AddUserMessage("hello")
+	if _, err := client.Send(t.Context(), func(agent.Output) bool { return true }); err != nil {
+		t.Fatal(err)
+	}
+
+	want := []string{"POST " + codex.TokenURL, "POST " + conversation.URL}
+	if !slices.Equal(addresses, want) {
+		t.Errorf("observed %q, want %q", addresses, want)
 	}
 }

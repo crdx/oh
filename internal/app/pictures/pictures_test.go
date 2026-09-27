@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"image"
 	"image/color"
+	"image/gif"
+	"image/jpeg"
 	"image/png"
 	"os"
 	"path/filepath"
@@ -252,5 +254,39 @@ func TestNothingIsDrawnWhenTheOriginalIsGoneToo(t *testing.T) {
 
 	if _, isStored := pictures.Prepare(directory, reference); isStored {
 		t.Error("a picture was drawn with nothing left to draw it from")
+	}
+}
+
+func TestAnOriginalIsKeptUnderTheExtensionItsTypeNames(t *testing.T) {
+	picture := image.NewPaletted(image.Rect(0, 0, 4, 4), color.Palette{color.Black, color.White})
+
+	var jpegData, gifData bytes.Buffer
+	if err := jpeg.Encode(&jpegData, picture, nil); err != nil {
+		t.Fatal(err)
+	}
+	if err := gif.Encode(&gifData, picture, nil); err != nil {
+		t.Fatal(err)
+	}
+
+	for mediaType, testCase := range map[string]struct {
+		data      []byte
+		extension string
+	}{
+		"image/jpeg": {data: jpegData.Bytes(), extension: ".jpg"},
+		"image/gif":  {data: gifData.Bytes(), extension: ".gif"},
+	} {
+		t.Run(mediaType, func(t *testing.T) {
+			directory, ensure := session(t)
+
+			reference, err := pictures.Store(directory, ensure, tool.Image{MediaType: mediaType, Data: testCase.data})
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			original := filepath.Join(pictures.GetDirectory(directory), reference.Digest+testCase.extension)
+			if _, err := os.Stat(original); err != nil {
+				t.Errorf("the original was not kept as %s: %v", testCase.extension, err)
+			}
+		})
 	}
 }

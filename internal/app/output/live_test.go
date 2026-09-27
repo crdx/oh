@@ -367,3 +367,30 @@ func TestAWindowedRegionEndsOnARowThatSaysSomething(t *testing.T) {
 func drawnTexts(screen *Screen) []string {
 	return width.Texts(screen.canvas.rows)
 }
+
+func TestACommitEndsOnARowThatHoldsSomething(t *testing.T) {
+	rowsOf := func(texts ...string) []width.ScreenRow {
+		rows := make([]width.ScreenRow, len(texts))
+		for i, text := range texts {
+			rows[i] = width.ScreenRow{Text: text}
+		}
+		return rows
+	}
+
+	for name, testCase := range map[string]struct {
+		rows  []width.ScreenRow
+		count int
+		want  int
+	}{
+		"nothing to commit":                 {rows: rowsOf("a", "b"), count: 0, want: 0},
+		"a row that holds something":        {rows: rowsOf("a", "b", "c"), count: 2, want: 2},
+		"on past an empty row":              {rows: rowsOf("a", "", "b"), count: 2, want: 3},
+		"back when nothing follows":         {rows: rowsOf("a", "", ""), count: 2, want: 1},
+		"nowhere when every row is empty":   {rows: rowsOf("", "", ""), count: 2, want: 0},
+		"the whole region when it is asked": {rows: rowsOf("a", "b"), count: 2, want: 2},
+	} {
+		if got := endingOnARow(testCase.rows, testCase.count); got != testCase.want {
+			t.Errorf("%s: got %d, want %d", name, got, testCase.want)
+		}
+	}
+}

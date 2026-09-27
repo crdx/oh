@@ -4,7 +4,6 @@ import (
 	"slices"
 	"strings"
 
-	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/width"
 )
 
@@ -25,18 +24,6 @@ func (self *IncrementalRenderer) Render(markdown string, columns int) []string {
 
 func (self *IncrementalRenderer) RenderWithHyperlinks(markdown string, columns int) []string {
 	return width.Texts(self.RenderWith(markdown, Options{Columns: columns, ShouldRenderHyperlinks: true}))
-}
-
-func (self *IncrementalRenderer) RenderWithHyperlinksUnder(
-	markdown string,
-	columns int,
-	linkRoot link.Roots,
-) []string {
-	return width.Texts(self.RenderWith(markdown, Options{
-		Columns:                columns,
-		ShouldRenderHyperlinks: true,
-		LinkRoot:               linkRoot,
-	}))
 }
 
 func (self *IncrementalRenderer) IsTailMermaid() bool {

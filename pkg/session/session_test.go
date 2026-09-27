@@ -849,3 +849,28 @@ func TestASessionKeepsItsOpeningMessageUntilItIsTitled(t *testing.T) {
 		t.Errorf("unexpected metadata: %+v", meta)
 	}
 }
+
+func TestAWriterWhoseDirectoryWasTakenLeavesItToWhoeverTookIt(t *testing.T) {
+	directory := t.TempDir()
+
+	writer, err := session.Create(directory, nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	takenPath := filepath.Join(directory, writer.Name(), "taken")
+	if err := os.Mkdir(filepath.Dir(takenPath), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(takenPath, []byte("mine"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := writer.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "hello"}); err == nil {
+		t.Fatal("a writer wrote into a directory somebody else had taken")
+	}
+
+	if _, err := os.Stat(takenPath); err != nil {
+		t.Errorf("the directory that was taken lost what it held: %v", err)
+	}
+}

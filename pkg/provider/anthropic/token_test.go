@@ -11,17 +11,18 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/auth"
+	"crdx.org/oh/internal/req"
 	"crdx.org/oh/pkg/provider/anthropic"
 )
 
-func writeAnthropicCredentials(t *testing.T, expiresIn time.Duration) string {
+func writeExpiredAnthropicCredentials(t *testing.T) string {
 	t.Helper()
 
 	path := filepath.Join(t.TempDir(), "auth.json")
 
 	credentials := fmt.Sprintf(
 		`{"version":1,"anthropic":{"access":"old","refresh":"refresh-me","expires_at":%d}}`,
-		time.Now().Add(expiresIn).UnixMilli(),
+		time.Now().Add(-time.Minute).UnixMilli(),
 	)
 
 	if err := os.WriteFile(path, []byte(credentials), 0o600); err != nil {
@@ -51,7 +52,7 @@ func anthropicTokenEndpoint(t *testing.T, status int, body string) {
 func TestStoredRefreshesATokenNearExpiry(t *testing.T) {
 	anthropicTokenEndpoint(t, http.StatusOK, `{"access_token":"new","refresh_token":"next","expires_in":3600}`)
 
-	path := writeAnthropicCredentials(t, -time.Minute)
+	path := writeExpiredAnthropicCredentials(t)
 
 	token, err := anthropic.StoredCredentialsAt(path).Token()
 	if err != nil {
@@ -77,7 +78,7 @@ func TestARefusedRefreshSaysToLogInAgain(t *testing.T) {
 		`{"error":"invalid_grant","error_description":"Refresh token not found"}`,
 	)
 
-	path := writeAnthropicCredentials(t, -time.Minute)
+	path := writeExpiredAnthropicCredentials(t)
 
 	_, err := anthropic.StoredCredentialsAt(path).Token()
 	if err == nil {
@@ -92,7 +93,7 @@ func TestARefusedRefreshSaysToLogInAgain(t *testing.T) {
 func TestAFailedRefreshIsNotMistakenForARefusal(t *testing.T) {
 	anthropicTokenEndpoint(t, http.StatusInternalServerError, `{"error":"server_error"}`)
 
-	path := writeAnthropicCredentials(t, -time.Minute)
+	path := writeExpiredAnthropicCredentials(t)
 
 	_, err := anthropic.StoredCredentialsAt(path).Token()
 	if err == nil {
@@ -101,5 +102,39 @@ func TestAFailedRefreshIsNotMistakenForARefusal(t *testing.T) {
 
 	if strings.Contains(err.Error(), "run the login command again") {
 		t.Errorf("expected a passing failure not to send the user to the login command, got %v", err)
+	}
+}
+
+type exchangeRecorder struct {
+	addresses *[]string
+}
+
+func (self exchangeRecorder) Start(request req.Request) req.ExchangeObserver {
+	*self.addresses = append(*self.addresses, request.Method+" "+request.URL)
+	return self
+}
+
+func (exchangeRecorder) Response(req.Response)         {}
+func (exchangeRecorder) Body(time.Time, []byte)        {}
+func (exchangeRecorder) Finish(time.Time, error, bool) {}
+
+func TestARefreshIsSeenByWhoeverObservesTheTraffic(t *testing.T) {
+	anthropicTokenEndpoint(t, http.StatusOK, `{"access_token":"new","refresh_token":"next","expires_in":3600}`)
+
+	source := anthropic.StoredCredentialsAt(writeExpiredAnthropicCredentials(t))
+	observable, isObservable := source.(interface{ ObserveHTTP(observer req.Observer) })
+	if !isObservable {
+		t.Fatal("stored credentials cannot be observed")
+	}
+
+	var addresses []string
+	observable.ObserveHTTP(exchangeRecorder{addresses: &addresses})
+
+	if _, err := source.Token(); err != nil {
+		t.Fatal(err)
+	}
+
+	if len(addresses) != 1 || addresses[0] != "POST "+anthropic.TokenURL {
+		t.Errorf("observed %q, want the one refresh", addresses)
 	}
 }

@@ -21,10 +21,6 @@ func FailedResponse(message string) string {
 	return fmt.Sprintf(`{"type":"response.failed","response":{"error":{"message":%q}}}`, message)
 }
 
-func Error(message string) string {
-	return fmt.Sprintf(`{"type":"error","message":%q}`, message)
-}
-
 func Answer(text string) string {
 	return fmt.Sprintf(`{"type":"response.output_text.delta","delta":%q}`, text)
 }

@@ -1,13 +1,12 @@
 package textsizing
 
 import (
-	"fmt"
 	"io"
 	"os"
 	"testing"
 	"time"
 
-	"golang.org/x/sys/unix"
+	"crdx.org/oh/internal/app/ptytest"
 )
 
 func TestOnlyBothPartsOfTheTextSizingProtocolCountAsSupport(t *testing.T) {
@@ -34,7 +33,7 @@ func TestOnlyBothPartsOfTheTextSizingProtocolCountAsSupport(t *testing.T) {
 
 func TestDetectionLeavesTheScreenBeforeWaitingForTheReply(t *testing.T) {
 	t.Setenv("KITTY_WINDOW_ID", "1")
-	master, slave := openPTY(t)
+	master, slave := ptytest.Open(t)
 
 	written := make(chan string, 1)
 	go func() {
@@ -66,7 +65,7 @@ func TestDetectionLeavesTheScreenBeforeWaitingForTheReply(t *testing.T) {
 
 func TestDetectionTimesOutAndRestoresAnUnsupportedKitty(t *testing.T) {
 	t.Setenv("KITTY_WINDOW_ID", "1")
-	master, slave := openPTY(t)
+	master, slave := ptytest.Open(t)
 
 	written := make(chan string, 1)
 	go func() {
@@ -106,31 +105,6 @@ func TestDetectionRefusesAnythingOutsideKitty(t *testing.T) {
 	if Detect(input, input) {
 		t.Error("non-Kitty input was reported to support text sizing")
 	}
-}
-
-func openPTY(t *testing.T) (*os.File, *os.File) {
-	t.Helper()
-
-	master, err := os.OpenFile("/dev/ptmx", os.O_RDWR|unix.O_NOCTTY, 0)
-	if err != nil {
-		t.Skipf("no pseudo-terminal to test against: %v", err)
-	}
-	t.Cleanup(func() { _ = master.Close() })
-
-	if err := unix.IoctlSetPointerInt(int(master.Fd()), unix.TIOCSPTLCK, 0); err != nil {
-		t.Fatal(err)
-	}
-	number, err := unix.IoctlGetInt(int(master.Fd()), unix.TIOCGPTN)
-	if err != nil {
-		t.Fatal(err)
-	}
-	slave, err := os.OpenFile(fmt.Sprintf("/dev/pts/%d", number), os.O_RDWR|unix.O_NOCTTY, 0)
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() { _ = slave.Close() })
-
-	return master, slave
 }
 
 func FuzzReplies(fuzzer *testing.F) {

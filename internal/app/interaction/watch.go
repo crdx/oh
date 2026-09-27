@@ -42,6 +42,9 @@ func watched(handler Handler) Handler {
 	if onQuestionChange := handler.OnQuestionChange; onQuestionChange != nil {
 		handler.OnQuestionChange = func() { defer watch("question change")(); onQuestionChange() }
 	}
+	if onTriggerChange := handler.OnTriggerChange; onTriggerChange != nil {
+		handler.OnTriggerChange = func() { defer watch("trigger change")(); onTriggerChange() }
+	}
 	if onChange := handler.OnChange; onChange != nil {
 		handler.OnChange = func(failure error) bool { defer watch("config change")(); return onChange(failure) }
 	}

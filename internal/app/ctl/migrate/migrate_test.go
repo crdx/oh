@@ -1087,3 +1087,60 @@ func TestAnArchivedSessionAlreadyCurrentKeepsNoCopy(t *testing.T) {
 		t.Errorf("expected no copy of a session that needed nothing: %v", err)
 	}
 }
+
+func TestFormatElevenMigrationForgetsATotalThatSaysNothingMore(t *testing.T) {
+	directory, name := storedJournal(t,
+		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":11,"id":"one","name":"tame-impala"}`,
+		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"tool_call","stats":{"bytes":10,"total_bytes":10}}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"tool_call","stats":{"bytes":10,"total_bytes":20}}}`,
+	)
+
+	if _, err := migrate.Session(options(directory), name); err != nil {
+		t.Fatal(err)
+	}
+
+	var measurements []string
+	for _, line := range journalLines(t, directory, name) {
+		var event struct {
+			Stats json.RawMessage `json:"stats"`
+		}
+		if raw, hasEvent := line["event"]; hasEvent {
+			if err := json.Unmarshal(raw, &event); err != nil {
+				t.Fatal(err)
+			}
+			measurements = append(measurements, string(event.Stats))
+		}
+	}
+
+	want := []string{`{"bytes":10}`, `{"bytes":10,"total_bytes":20}`}
+	if !slices.Equal(measurements, want) {
+		t.Errorf("got %q, want %q", measurements, want)
+	}
+}
+
+func TestEveryFormatThatReadsEventsRefusesOneItCannotRead(t *testing.T) {
+	for _, testCase := range []struct {
+		version int
+		event   string
+	}{
+		{version: 1, event: `"not an event"`},
+		{version: 5, event: `"not an event"`},
+		{version: 10, event: `"not an event"`},
+		{version: 11, event: `"not an event"`},
+		{version: 11, event: `{"kind":7}`},
+		{version: 11, event: `{"kind":"tool_call","stats":"not measurements"}`},
+		{version: 11, event: `{"kind":"user_message","text":7}`},
+		{version: 12, event: `"not an event"`},
+	} {
+		t.Run(fmt.Sprintf("%d %s", testCase.version, testCase.event), func(t *testing.T) {
+			directory, name := storedJournal(t,
+				fmt.Sprintf(`{"kind":"head","time":"2026-08-01T00:00:00Z","version":%d,"id":"one","name":"tame-impala"}`, testCase.version),
+				`{"kind":"event","time":"2026-08-01T00:00:01Z","event":`+testCase.event+`}`,
+			)
+
+			if _, err := migrate.Session(options(directory), name); err == nil {
+				t.Error("an unreadable event was migrated")
+			}
+		})
+	}
+}

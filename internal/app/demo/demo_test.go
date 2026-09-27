@@ -208,3 +208,22 @@ func TestOneSimulationLeavesAnotherAlone(t *testing.T) {
 		t.Errorf("a second simulation swept away the state of the first: %v", err)
 	}
 }
+
+func TestAStateDirectoryAnotherSimulationHoldsIsNotClaimed(t *testing.T) {
+	stateDir := t.TempDir()
+
+	held, err := claimStateDir(stateDir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = held.Close() })
+
+	if second, err := claimStateDir(stateDir); err == nil {
+		_ = second.Close()
+		t.Error("a state directory already held was claimed again")
+	}
+
+	if _, err := claimStateDir(filepath.Join(stateDir, "missing")); err == nil {
+		t.Error("a state directory that is not there was claimed")
+	}
+}

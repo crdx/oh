@@ -539,3 +539,99 @@ func TestARecoveryProbeTakesTheFreshReset(t *testing.T) {
 		t.Errorf("the reset reads %s, want %s", got[0].ResetsAt, freshResetsAt)
 	}
 }
+
+type recordingProvider struct {
+	providerStub
+
+	calls []string
+}
+
+func (self *recordingProvider) Configure(systemPrompt string, tools []tool.Definition) {
+	self.calls = append(self.calls, "configure "+systemPrompt)
+}
+
+func (self *recordingProvider) AddUserMessage(text string) {
+	self.calls = append(self.calls, "user "+text)
+}
+
+func (self *recordingProvider) AddToolResults(results []agent.ToolCallResult) {
+	self.calls = append(self.calls, "results "+results[0].ID)
+}
+
+type lastingProvider struct {
+	providerStub
+}
+
+func (*lastingProvider) CacheLifetime() time.Duration { return time.Hour }
+
+func TestAGuardHandsTheConversationToTheProviderItGuards(t *testing.T) {
+	clock := &testClock{now: testNow}
+	provider := &recordingProvider{}
+	guarded := usage.Guard(stoppedContext(t), provider, guardSettings(cachePath(t), "gpt-5.6-sol", clock))
+
+	guarded.Configure("be brief", nil)
+	guarded.AddUserMessage("hello")
+	guarded.AddToolResults([]agent.ToolCallResult{{ID: "call"}})
+	guarded.Load([]json.RawMessage{json.RawMessage(`"held"`)})
+
+	want := []string{"configure be brief", "user hello", "results call"}
+	if strings.Join(provider.calls, "|") != strings.Join(want, "|") {
+		t.Errorf("got %q, want %q", provider.calls, want)
+	}
+	if dumped := guarded.Dump(); len(dumped) != 1 || string(dumped[0]) != `"held"` {
+		t.Errorf("got state %q, want what was loaded", dumped)
+	}
+}
+
+func TestAGuardReportsTheCacheLifetimeOfTheProviderItGuards(t *testing.T) {
+	clock := &testClock{now: testNow}
+
+	for name, testCase := range map[string]struct {
+		provider usage.StatefulProvider
+		want     time.Duration
+	}{
+		"a provider that asks for an hour": {provider: &lastingProvider{}, want: time.Hour},
+		"a provider that says nothing":     {provider: &providerStub{}, want: 0},
+	} {
+		t.Run(name, func(t *testing.T) {
+			guarded := usage.Guard(stoppedContext(t), testCase.provider, guardSettings(cachePath(t), "gpt-5.6-sol", clock))
+
+			reporter, isReported := guarded.(agent.CacheLifetimeReporter)
+			if !isReported {
+				t.Fatal("a guarded provider hides its cache lifetime")
+			}
+			if got := reporter.CacheLifetime(); got != testCase.want {
+				t.Errorf("got %s, want %s", got, testCase.want)
+			}
+		})
+	}
+}
+
+func TestASelectionIsAvailableUnlessItsModelIsLimited(t *testing.T) {
+	path := cachePath(t)
+	clock := &testClock{now: testNow}
+	window := agent.UsageWindow{
+		Duration:  time.Hour,
+		Percent:   100,
+		ResetsAt:  testNow.Add(time.Hour),
+		Scope:     "spark",
+		IsLimited: true,
+	}
+	limited := &providerStub{err: &agent.UsageLimitError{Cause: errors.New("limited"), Windows: []agent.UsageWindow{window}}}
+	_, _ = usage.Guard(stoppedContext(t), limited, guardSettings(path, "gpt-5.3-codex-spark", clock)).Send(
+		t.Context(), func(agent.Output) bool { return true },
+	)
+
+	if usage.IsSelectionAvailable(path, "gpt-5.3-codex-spark", testNow) {
+		t.Error("a limited model was offered")
+	}
+	if !usage.IsSelectionAvailable(path, "gpt-5.6-sol", testNow) {
+		t.Error("a model the limit does not name was withheld")
+	}
+	if !usage.IsSelectionAvailable(path, "gpt-5.3-codex-spark", testNow.Add(time.Hour)) {
+		t.Error("a limit was honoured after its reset")
+	}
+	if !usage.IsSelectionAvailable("", "gpt-5.3-codex-spark", testNow) {
+		t.Error("a selection with nowhere to read limits from was withheld")
+	}
+}

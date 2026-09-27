@@ -161,3 +161,41 @@ func TestSearchKeepsTheLastMatchWhenTheQueryFails(t *testing.T) {
 		t.Errorf("got %q, want the last matching entry", got)
 	}
 }
+
+func TestAnEmptySearchStepsBackFromTheNewestEntry(t *testing.T) {
+	history := NewHistory("", 0)
+	for _, line := range []string{"git status", "just test", "git diff"} {
+		history.Add(line)
+	}
+
+	self := history.search("unfinished")
+	var stepped []string
+	for range 3 {
+		self.previous()
+		stepped = append(stepped, self.getText())
+	}
+
+	want := []string{"git diff", "just test", "git status"}
+	if !slices.Equal(stepped, want) {
+		t.Errorf("got %q, want %q", stepped, want)
+	}
+}
+
+func TestASearchThatStopsMatchingKeepsItsLastMatchWhenAskedAgain(t *testing.T) {
+	history := NewHistory("", 0)
+	history.Add("git status")
+	history.Add("just test")
+
+	self := history.search("unfinished")
+	for _, value := range "status!" {
+		self.add(value)
+	}
+	self.previous()
+
+	if got := self.getText(); got != "git status" {
+		t.Errorf("got %q, want the last match kept while nothing matches", got)
+	}
+	if got := self.getQuery(); got != "status!" {
+		t.Errorf("got query %q, want what was typed", got)
+	}
+}

@@ -47,10 +47,10 @@ func widestPriceTier() int {
 }
 
 var costRoom = markWidth + providerColumn + nameColumn + effortColumn +
-	contextColumn + costColumn + shortenedIdentifier + costGaps*table.DefaultGap
+	contextColumn + costColumn + shortenedIdentifier + costGaps*table.Gap
 
 var rateRoom = markWidth + providerColumn + nameColumn + effortColumn + contextColumn +
-	costColumn + inputColumn + outputColumn + identifierColumn + rateGaps*table.DefaultGap
+	costColumn + inputColumn + outputColumn + identifierColumn + rateGaps*table.Gap
 
 type Effort struct {
 	Level  string

@@ -1385,6 +1385,15 @@ type longCacheProvider struct{ usageProvider }
 
 func (*longCacheProvider) CacheLifetime() time.Duration { return time.Hour }
 
+func TestAnAgentSaysWhichCacheLifetimeItHolds(t *testing.T) {
+	if got := agent.New("", &longCacheProvider{}, nil).CacheLifetime(); got != time.Hour {
+		t.Errorf("got %s, want the hour the provider asked for", got)
+	}
+	if got := agent.New("", &usageProvider{}, nil).CacheLifetime(); got != 5*time.Minute {
+		t.Errorf("got %s, want the five minutes a silent provider means", got)
+	}
+}
+
 func TestTheCacheLifetimeIsTheOneTheProviderAsksFor(t *testing.T) {
 	replies := []agent.Usage{cachedAs(48000, 900), cachedAs(0, 49000)}
 

@@ -46,7 +46,6 @@ type interruption struct {
 
 func (self interruption) Error() string { return self.err.Error() }
 func (self interruption) Unwrap() error { return self.err }
-func (self interruption) Cause() Cause  { return self.cause }
 
 func Because(cause Cause) error {
 	return interruption{cause: cause, err: stop.Because(Sentence(cause))}

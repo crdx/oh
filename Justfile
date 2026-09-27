@@ -115,8 +115,12 @@ cov *args:
     #!/bin/bash
     set -euo pipefail
     PROFILE=$(mktemp -t io-cover.XXXXXX)
-    trap 'rm -f "$PROFILE"' EXIT
+    BINARY=$(mktemp -d -t io-cover-binary.XXXXXX)
+    trap 'rm -rf "$PROFILE" "$BINARY"' EXIT
+    export OH_TEST_BINARY_COVERAGE="$BINARY"
     go test ./... -coverpkg=./... -coverprofile="$PROFILE" -count=1 > /dev/null
+    go tool covdata textfmt -i="$BINARY" -o "$BINARY/profile"
+    tail -n +2 "$BINARY/profile" >> "$PROFILE"
     if [[ $# -gt 0 ]]; then
         go tool cover -func="$PROFILE" | grep -E "$1" | grep -v " 100.0%$"
         exit
@@ -128,8 +132,12 @@ covhtml package:
     #!/bin/bash
     set -euo pipefail
     PROFILE=$(mktemp -t io-cover.XXXXXX)
-    trap 'rm -f "$PROFILE"' EXIT
+    BINARY=$(mktemp -d -t io-cover-binary.XXXXXX)
+    trap 'rm -rf "$PROFILE" "$BINARY"' EXIT
+    export OH_TEST_BINARY_COVERAGE="$BINARY"
     go test ./... -coverpkg=./{{ package }}/... -coverprofile="$PROFILE" -count=1 > /dev/null
+    go tool covdata textfmt -i="$BINARY" -pkg=crdx.org/oh/{{ package }}/... -o "$BINARY/profile"
+    tail -n +2 "$BINARY/profile" >> "$PROFILE"
     go tool cover -html="$PROFILE"
 
 check:

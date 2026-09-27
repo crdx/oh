@@ -56,3 +56,17 @@ func TestEverySessionHookReceivesItsTypedEvent(t *testing.T) {
 		t.Errorf("got calls %v", calls)
 	}
 }
+
+func TestEveryTransitionNamesWhyTheSessionStopped(t *testing.T) {
+	for kind, want := range map[cycle.TransitionKind]cycle.StopReason{
+		cycle.Quit:               cycle.StoppedByQuit,
+		cycle.NewSession:         cycle.StoppedForNewSession,
+		cycle.ResumeSession:      cycle.StoppedForResume,
+		cycle.Restart:            cycle.StoppedForRestart,
+		cycle.TransitionKind(-1): cycle.StoppedByFailure,
+	} {
+		if got := (cycle.Transition{Kind: kind}).StopReason(); got != want {
+			t.Errorf("transition %d stopped for %d, want %d", kind, got, want)
+		}
+	}
+}

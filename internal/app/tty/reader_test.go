@@ -202,14 +202,15 @@ func TestClosingAReaderReleasesItsWakePipeAndCanBeAskedForTwice(t *testing.T) {
 		t.Fatal("expected a wake pipe")
 	}
 
-	descriptor := reader.wakeRead.Fd()
-
 	reader.Stop()
 	reader.Close()
 	reader.Close()
 
 	var status [1]byte
-	if _, err := os.NewFile(descriptor, "wake").Read(status[:]); err == nil {
-		t.Error("the wake pipe was still open after closing")
+	if _, err := reader.wakeRead.Read(status[:]); !errors.Is(err, os.ErrClosed) {
+		t.Errorf("the wake pipe's reading end was still open after closing: %v", err)
+	}
+	if _, err := reader.wakeWrite.Write(status[:]); !errors.Is(err, os.ErrClosed) {
+		t.Errorf("the wake pipe's writing end was still open after closing: %v", err)
 	}
 }

@@ -396,3 +396,23 @@ func getInvocation(t *testing.T, configured map[string]snippets.Definition, inpu
 	}
 	return invocation
 }
+
+func TestTheDefaultStandsInForEveryKindOfEmptyValue(t *testing.T) {
+	configured := map[string]snippets.Definition{
+		"kinds": {
+			Prompt: `{{ 0 | default "zero" }} {{ 7 | default "seven" }} {{ false | default "no" }} ` +
+				`{{ true | default "yes" }} {{ 0.0 | default "none" }} {{ 1.5 | default "some" }} ` +
+				`{{ default "nothing" nil }} {{ .Args | default "no words" }}`,
+			Arguments: snippets.ArgumentsOptional,
+		},
+	}
+	invocation := getInvocation(t, configured, "//kinds")
+
+	context := &snippetContext{}
+	if err := invocation.Command.Run(context, invocation.Arguments); err != nil {
+		t.Fatal(err)
+	}
+	if want := "zero 7 no true none 1.5 nothing no words"; context.sent != want {
+		t.Errorf("sent %q, want %q", context.sent, want)
+	}
+}

@@ -201,3 +201,30 @@ func TestSaveOpenCodeGoKeyCreatesCredentials(t *testing.T) {
 		t.Errorf("got OpenCode credentials %+v", stored.OpenCodeGo)
 	}
 }
+
+func TestCredentialsCannotBeUpdatedWhereNothingCanBeWritten(t *testing.T) {
+	blocked := filepath.Join(t.TempDir(), "file")
+	if err := os.WriteFile(blocked, nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	lockedOut := filepath.Join(t.TempDir(), "auth.json")
+	if err := os.Mkdir(lockedOut+".lock", 0o700); err != nil {
+		t.Fatal(err)
+	}
+
+	for name, path := range map[string]string{
+		"nowhere":                   "",
+		"beneath a file":            filepath.Join(blocked, "state", "auth.json"),
+		"whose lock is a directory": lockedOut,
+	} {
+		t.Run(name, func(t *testing.T) {
+			err := auth.Update(path, func(*auth.Credentials) error {
+				t.Error("credentials were updated")
+				return nil
+			})
+			if err == nil {
+				t.Error("an update that could not be locked succeeded")
+			}
+		})
+	}
+}

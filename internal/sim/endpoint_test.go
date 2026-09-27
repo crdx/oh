@@ -578,3 +578,93 @@ func carries(input []sim.Entry, kind string) bool {
 
 	return false
 }
+
+func TestAStrictEndpointRefusesARequestNoRealOneWouldTake(t *testing.T) {
+	server := httptest.NewServer(sim.New(conversation))
+	t.Cleanup(server.Close)
+	addresses := sim.New(conversation).Addresses(server.URL)
+
+	system := `[{"role":"system","content":"You are a helpful assistant"}]`
+	for name, testCase := range map[string]struct {
+		dialect string
+		body    string
+		want    string
+	}{
+		"completions without streaming": {
+			dialect: sim.Completions,
+			body:    `{"model":"fake","messages":` + system + `}`,
+			want:    "only streaming responses are supported",
+		},
+		"completions without usage": {
+			dialect: sim.Completions,
+			body:    `{"model":"fake","stream":true,"messages":` + system + `}`,
+			want:    "stream usage was not requested",
+		},
+		"completions without instructions": {
+			dialect: sim.Completions,
+			body:    `{"model":"fake","stream":true,"stream_options":{"include_usage":true}}`,
+			want:    "the request carried no instructions",
+		},
+		"completions for another model": {
+			dialect: sim.Completions,
+			body:    `{"model":"other","stream":true,"stream_options":{"include_usage":true},"messages":` + system + `}`,
+			want:    `the model "other" is not available`,
+		},
+		"messages without streaming": {
+			dialect: sim.Messages,
+			body:    `{"model":"fake","system":[{"text":"You are a helpful assistant"}]}`,
+			want:    "only streaming responses are supported",
+		},
+		"messages without instructions": {
+			dialect: sim.Messages,
+			body:    `{"model":"fake","stream":true}`,
+			want:    "the request carried no instructions",
+		},
+		"messages for another model": {
+			dialect: sim.Messages,
+			body:    `{"model":"other","stream":true,"system":[{"text":"You are a helpful assistant"}]}`,
+			want:    `the model "other" is not available`,
+		},
+		"responses without streaming": {
+			dialect: sim.Responses,
+			body:    `{"model":"fake","instructions":"You are a helpful assistant"}`,
+			want:    "only streaming responses are supported",
+		},
+		"responses stored": {
+			dialect: sim.Responses,
+			body:    `{"model":"fake","stream":true,"store":true,"instructions":"You are a helpful assistant"}`,
+			want:    "this endpoint does not store conversations",
+		},
+		"responses without instructions": {
+			dialect: sim.Responses,
+			body:    `{"model":"fake","stream":true}`,
+			want:    "the request carried no instructions",
+		},
+		"responses for another model": {
+			dialect: sim.Responses,
+			body:    `{"model":"other","stream":true,"instructions":"You are a helpful assistant"}`,
+			want:    `the model "other" is not available`,
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			response := post(t, addresses[testCase.dialect], testCase.body)
+			defer func() { _ = response.Body.Close() }()
+
+			if response.StatusCode != http.StatusBadRequest {
+				t.Errorf("got status %d, want the request refused", response.StatusCode)
+			}
+
+			var refusal struct {
+				Error struct {
+					Message string `json:"message"`
+				} `json:"error"`
+			}
+			if err := json.NewDecoder(response.Body).Decode(&refusal); err != nil {
+				t.Fatal(err)
+			}
+			if refusal.Error.Message != testCase.want {
+				t.Errorf("got %q, want %q", refusal.Error.Message, testCase.want)
+			}
+		})
+	}
+}

@@ -6254,13 +6254,35 @@ var testBinary = sync.OnceValues(func() (string, error) {
 	testBinaryDirectory = directory
 	binary := filepath.Join(directory, "oh")
 
-	command := exec.Command("go", "build", "-o", binary, "crdx.org/oh") //nolint:gosec // building the binary under test
-	if output, err := command.CombinedOutput(); err != nil {
-		return "", fmt.Errorf("build oh: %w\n%s", err, output)
+	coverageDirectory := os.Getenv(binaryCoverageVariable)
+	if coverageDirectory == "" {
+		return binary, buildBinary(binary)
+	}
+
+	covered := binary + ".covered"
+	if err := buildBinary(covered, "-cover", "-coverpkg=crdx.org/oh/..."); err != nil {
+		return "", err
+	}
+	launcher := fmt.Sprintf("#!/bin/sh\nGOCOVERDIR=%q exec %q \"$@\"\n", coverageDirectory, covered)
+	if err := os.WriteFile(binary, []byte(launcher), 0o700); err != nil { //nolint:gosec // the launcher must be executable
+		return "", err
 	}
 
 	return binary, nil
 })
+
+const binaryCoverageVariable = "OH_TEST_BINARY_COVERAGE"
+
+func buildBinary(binary string, flags ...string) error {
+	arguments := append([]string{"build"}, flags...)
+	arguments = append(arguments, "-o", binary, "crdx.org/oh")
+	command := exec.CommandContext(context.Background(), "go", arguments...) //nolint:gosec // building the binary under test
+	if output, err := command.CombinedOutput(); err != nil {
+		return fmt.Errorf("build oh: %w\n%s", err, output)
+	}
+
+	return nil
+}
 
 func buildTestBinary(t *testing.T) string {
 	t.Helper()

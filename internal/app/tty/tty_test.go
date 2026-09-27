@@ -7,6 +7,8 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"slices"
+	"syscall"
 	"testing"
 
 	"golang.org/x/sys/unix"
@@ -191,4 +193,18 @@ func pipe(t *testing.T) *os.File {
 	})
 
 	return writer
+}
+
+func TestAFatalSignalRestoresTheTerminalBeforeItIsRaisedAgain(t *testing.T) {
+	signals := make(chan os.Signal, 1)
+	signals <- syscall.SIGTERM
+
+	var steps []string
+	watch(signals, make(chan struct{}), func() { steps = append(steps, "restore") }, func(raised os.Signal) {
+		steps = append(steps, "raise "+raised.String())
+	})
+
+	if want := []string{"restore", "raise terminated"}; !slices.Equal(steps, want) {
+		t.Errorf("got %q, want %q", steps, want)
+	}
 }

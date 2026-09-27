@@ -145,3 +145,17 @@ func TestNoTogglesAtAllReadAsTheirFallbacks(t *testing.T) {
 		t.Errorf("label is %q", got)
 	}
 }
+
+func TestEveryKindSaysWhatAToggleOfItHolds(t *testing.T) {
+	for kind, want := range map[Kind]string{
+		BooleanKind:       "true or false",
+		TextKind:          "a string",
+		WholeNumberKind:   "a whole number",
+		DecimalNumberKind: "a number",
+		Kind(-1):          "a value",
+	} {
+		if got := kind.String(); got != want {
+			t.Errorf("kind %d says %q, want %q", int(kind), got, want)
+		}
+	}
+}

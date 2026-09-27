@@ -95,16 +95,6 @@ func NewGroup(tellers ...Teller) Group {
 	return Group{tellers: append([]Teller(nil), tellers...)}
 }
 
-func (self Group) Peek() string {
-	var messages []string
-	for _, teller := range self.tellers {
-		if message := teller.Peek(); message != "" {
-			messages = append(messages, message)
-		}
-	}
-	return strings.Join(messages, " ")
-}
-
 func (self Group) Inject() string {
 	var messages []string
 	for _, teller := range self.tellers {

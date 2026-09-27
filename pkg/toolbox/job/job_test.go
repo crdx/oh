@@ -3,6 +3,7 @@ package job_test
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"reflect"
 	"strings"
 	"testing"
@@ -327,3 +328,47 @@ func TestTheToolSaysWhetherAnEndedJobWakesTheConversation(t *testing.T) {
 }
 
 var _ tool.Tool = job.New(nil, nil, nil, false)
+
+func TestAJobIsReportedByNameForEveryActionThatNamesOne(t *testing.T) {
+	for action, want := range map[string]string{
+		"status": "build: failed",
+		"output": "build: failed",
+		"stop":   "build: failed",
+	} {
+		t.Run(action, func(t *testing.T) {
+			output, err := run(t, withFinishedJobs(t), map[string]string{"action": action, "name": "build"})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !strings.HasPrefix(output, want) {
+				t.Errorf("got %q, want it to begin %q", output, want)
+			}
+		})
+	}
+}
+
+func TestEveryActionThatNamesAJobRefusesOneNobodyStarted(t *testing.T) {
+	for _, action := range []string{"status", "output", "stop", "discard"} {
+		t.Run(action, func(t *testing.T) {
+			if _, err := run(t, withFinishedJobs(t), map[string]string{"action": action, "name": "ghost"}); err == nil {
+				t.Error("a job nobody started was reported")
+			}
+		})
+	}
+}
+
+func TestRestartingAJobFailsWhenItsPolicyCannotBeBuilt(t *testing.T) {
+	built := job.New(withFinishedJobs(t), nil, func(context.Context) (sandbox.Policy, error) {
+		return sandbox.Policy{}, errPolicy
+	}, false)
+
+	call, err := built.Parse(`{"action":"start","name":"build"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := call.Exec(t.Context()); !errors.Is(err, errPolicy) {
+		t.Errorf("got %v, want the policy's failure", err)
+	}
+}
+
+var errPolicy = errors.New("no policy")

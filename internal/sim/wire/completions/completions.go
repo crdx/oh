@@ -18,10 +18,6 @@ func Thought(text string) string {
 	return chunk(fmt.Sprintf(`{"role":"assistant","reasoning_content":%q}`, text))
 }
 
-func Refusal(text string) string {
-	return chunk(fmt.Sprintf(`{"role":"assistant","refusal":%q}`, text))
-}
-
 func Call(index int, id string, name string, arguments string) string {
 	return chunk(fmt.Sprintf(
 		`{"tool_calls":[{"index":%d,"id":%q,"type":"function",`+

@@ -18,6 +18,7 @@ import (
 	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/menu"
 	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/internal/app/ptytest"
 	"crdx.org/oh/internal/app/style"
 )
 
@@ -499,7 +500,7 @@ func TestEnterIsConsumedBeforeTheMenuStarts(t *testing.T) {
 }
 
 func TestEnterDoesNotEchoWhileEndingTheOpeningPause(t *testing.T) {
-	terminal, input := onboardingPTY(t)
+	terminal, input := ptytest.Open(t)
 	pause, stop, err := typingPause(input, input)
 	if err != nil {
 		t.Fatal(err)
@@ -525,31 +526,6 @@ func TestEnterDoesNotEchoWhileEndingTheOpeningPause(t *testing.T) {
 		}
 		t.Errorf("Enter echoed %q into the opening", terminalOutput[:count])
 	}
-}
-
-func onboardingPTY(t *testing.T) (*os.File, *os.File) {
-	t.Helper()
-
-	terminal, err := os.OpenFile("/dev/ptmx", os.O_RDWR|unix.O_NOCTTY, 0)
-	if err != nil {
-		t.Skipf("no pseudo-terminal to test against: %v", err)
-	}
-	t.Cleanup(func() { _ = terminal.Close() })
-
-	if err := unix.IoctlSetPointerInt(int(terminal.Fd()), unix.TIOCSPTLCK, 0); err != nil {
-		t.Fatal(err)
-	}
-	number, err := unix.IoctlGetInt(int(terminal.Fd()), unix.TIOCGPTN)
-	if err != nil {
-		t.Fatal(err)
-	}
-	input, err := os.OpenFile(fmt.Sprintf("/dev/pts/%d", number), os.O_RDWR|unix.O_NOCTTY, 0)
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() { _ = input.Close() })
-
-	return terminal, input
 }
 
 func typingWaits(text string, interval time.Duration) []time.Duration {
