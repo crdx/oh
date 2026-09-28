@@ -71,6 +71,7 @@
 
 ### Models and providers
 
+- Stop inferring partial cache rebuilds when the provider reports no writes
 - List every model context source and token estimate with /ctx
 - Honour explicit server advice to retry a refused request
 - Show if a new model was ignored for some reason

@@ -24,12 +24,6 @@ work: work [ok, 1 line, 4B, call-1]
 
 The cache fell back by one block.
 
-## Cache rebuild · +0s
-
-```
-Cache unsettled: 328t sent.
-```
-
 ## User · +0s
 
 carry on

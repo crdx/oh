@@ -24,12 +24,6 @@ work: work [ok, 1 line, 4B, call-1]
 
 Part of the cache was lost.
 
-## Cache rebuild · +0s
-
-```
-Cache rebuilt: 18Kt sent <1m later.
-```
-
 ## User · +0s
 
 carry on

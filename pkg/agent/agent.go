@@ -309,6 +309,9 @@ func (self *Agent) readCache(usage Usage, at time.Time) (Event, bool) {
 	if !previous.exists() || usage.Cache.ReadTokens >= previous.ReadTokens {
 		return Event{}, false
 	}
+	if usage.Cache.WriteTokens == 0 && usage.Cache.ReadTokens > 0 {
+		return Event{}, false
+	}
 
 	rewrittenTokens := rewrittenTokens(usage)
 	if rewrittenTokens == 0 {

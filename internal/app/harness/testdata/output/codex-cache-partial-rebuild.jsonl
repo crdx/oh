@@ -6,7 +6,6 @@
 {"kind":"event","event":{"kind":"state_change","id":"call-1","state":1}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"done","id":"call-1","name":"work","status":"success","stats":{"kind":"output","lines":1,"bytes":4}}}
 {"kind":"event","event":{"kind":"model_message","text":"Part of the cache was lost.","usage":{"input_tokens":49300,"output_tokens":20,"cache":{"read_tokens":31104}}}}
-{"kind":"event","event":{"kind":"cache_rebuild","name":"rebuilt","usage":{"cache":{"read_tokens":31104,"write_tokens":18196}}}}
 {"kind":"item","payload":{"role":"user","content":"lose part of the prompt cache"}}
 {"kind":"item","payload":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"work","arguments":"{}"}}
 {"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"done"}}
