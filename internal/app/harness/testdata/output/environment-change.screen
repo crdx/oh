@@ -1,0 +1,14 @@
+=== queued on resume ===
+Agent tame-impala 🦌 ready in 1ms with 0 skills ⧸ 0 snippets ⧸ 0t context.
+
+                                                                           double-enter to send now
+ ⏳ Configured read-only paths added: /reference.
+ ⏳ Skills now available: new at /skills/new/SKILL.md: new skill.
+ ⏳ Skills no longer available: old at /skills/old/SKILL.md.
+ ⏳ The workspace is now a Git repository.
+ ⏳ Host-facing URLs for exposed sandbox ports now use new.agent.test instead of old.agent.test.
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────

@@ -25,6 +25,7 @@
 - Show complete effective grant access
 - Keep each session's Go build cache separate
 - Show pending access change notices
+- Tell the model when a host-facing route is revoked
 
 ### Questions and approvals
 
@@ -68,6 +69,7 @@
 - Keep migration copies as hard links
 - Compress recorded wire traffic
 - Reserve archived session names
+- Queue environment changes when a session resumes
 
 ### Models and providers
 
@@ -82,6 +84,7 @@
 - Restyle jobs list output
 - Clarify the reason for jobs stopping
 - Keep job names concise
+- Keep completion-notification guidance accurate across session modes
 
 ### Model guidance
 

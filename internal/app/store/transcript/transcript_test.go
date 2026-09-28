@@ -13,6 +13,8 @@ import (
 	"github.com/yuin/goldmark/text"
 
 	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/conditions"
+	"crdx.org/oh/internal/app/environment"
 	"crdx.org/oh/internal/app/interrupt"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/portgrant"
@@ -84,6 +86,40 @@ func TestTranscriptOmitsReasoningEntirely(t *testing.T) {
 	}
 	if !strings.Contains(transcript, "## Assistant · +4s\n\nanswer\n") {
 		t.Errorf("expected the reasoning to leave the next event untouched, got:\n%s", transcript)
+	}
+}
+
+func TestTranscriptOmitsUnchangedEnvironmentBaselines(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "transcript.md")
+	recorder, err := transcript.Open(path, transcript.Meta{Name: "tame-impala", StartedAt: time.Unix(1, 2), Model: "model"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	conditionState := conditions.Conditions{Interactive: true}
+	conditionEvent, err := conditions.ChangeEvent(conditionState, conditionState)
+	if err != nil {
+		t.Fatal(err)
+	}
+	environmentState := environment.Snapshot{PortHostname: "session.test"}
+	environmentEvent, err := environment.ChangeEvent(environmentState, environmentState)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, event := range []agent.Event{conditionEvent, environmentEvent} {
+		if err := recorder.Event(time.Unix(3, 4), event); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := recorder.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	stored, err := os.ReadFile(path) //nolint:gosec // the test's own path
+	if err != nil {
+		t.Fatal(err)
+	}
+	if output := string(stored); strings.Contains(output, "## Conditions") || strings.Contains(output, "## Environment") {
+		t.Errorf("an unchanged baseline reached the transcript:\n%s", output)
 	}
 }
 

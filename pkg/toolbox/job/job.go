@@ -57,12 +57,11 @@ func New(
 	manager *jobs.Manager,
 	root *file.Root,
 	buildPolicy func(context.Context) (sandbox.Policy, error),
-	doesWake bool,
 ) tool.Tool {
 	return tool.Implement(
 		tool.Definition{
 			Name:        "job",
-			Description: description(doesWake),
+			Description: description,
 			Schema: tool.Schema{
 				tool.Enum("action", "what to do", actions...),
 				tool.String("name", fmt.Sprintf("the job name; for start, use one short role such as 'check', not a specific compound such as 'cachecheck'—a live duplicate is automatically numbered, such as 'check-1'; 1–%d characters from [a-z0-9-] (for all actions except 'list', 'prune')", jobs.NameLengthLimit)).Optional(),
@@ -81,14 +80,7 @@ func New(
 		})
 }
 
-func description(doesWake bool) string {
-	firstSentence := "run a shell command in the background."
-	if doesWake {
-		return firstSentence + " You will be notified automatically when it finishes."
-	}
-
-	return firstSentence + " You will not be notified automatically when it finishes."
-}
+const description = "run a shell command in the background. In an interactive session you will be notified automatically when it finishes; in a non-interactive session you will not."
 
 func Describe(args Args) tool.CallRendering {
 	switch args.Action {

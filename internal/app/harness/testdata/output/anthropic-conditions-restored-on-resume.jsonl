@@ -8,7 +8,7 @@
 {"kind":"event","event":{"kind":"conditions_change","state":{"known":{"unix_sockets":false,"ipv6":false,"interactive":false},"current":{"unix_sockets":true,"ipv6":true,"interactive":true}}}}
 {"kind":"event","event":{"kind":"user_message","text":"try ::1 again"}}
 {"kind":"event","event":{"kind":"model_message","text":"::1 answers now."}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Unix sockets now work under /tmp, not the workspace.\n\nIPv6 available; ::1 reaches the sandbox loopback.\n\nSession is interactive; questions and approvals are available."}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Unix sockets now work under /tmp, not the workspace.\n\nIPv6 available; ::1 reaches the sandbox loopback.\n\nSession is interactive; questions and approvals are available, and a background job can wake the conversation when it finishes."}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"try ::1 again"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"::1 answers now."}]}}
 {"kind":"turn_completion","turn":{}}

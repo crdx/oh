@@ -1,0 +1,12 @@
+{"kind":"head","version":15,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant.","environment":{"sandbox":{"deny":["secret.yml"],"read":["/reference"]},"skills":[{"name":"steady","description":"use the steady process","location":"/skills/steady/SKILL.md"}],"is_repository":true,"port_hostname":"session.agent.test"}}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"user_message","text":"remember the environment"}}
+{"kind":"event","event":{"kind":"model_message","text":"I have it."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"remember the environment"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"I have it."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
+{"kind":"event","event":{"kind":"model_message","text":"Nothing changed."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"carry on"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Nothing changed."}]}}
+{"kind":"turn_completion","turn":{}}

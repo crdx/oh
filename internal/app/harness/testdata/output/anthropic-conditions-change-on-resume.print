@@ -7,7 +7,8 @@ A socket beneath /tmp it is.
 
  🤖 Unix sockets no longer work.
  🤖 IPv6 unavailable; use 127.0.0.1.
- 🤖 Session is non-interactive; questions and approvals are unavailable.
+ 🤖 Session is non-interactive; questions and approvals are unavailable, and a background job will
+    not wake the conversation when it finishes.
 
 
 

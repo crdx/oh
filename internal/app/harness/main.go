@@ -18,6 +18,7 @@ import (
 	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/internal/sandbox/keeper"
 	"crdx.org/oh/internal/util"
+	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/tool/command"
@@ -43,6 +44,7 @@ import (
 	"crdx.org/oh/internal/app/demo"
 	"crdx.org/oh/internal/app/drops"
 	"crdx.org/oh/internal/app/editor"
+	"crdx.org/oh/internal/app/environment"
 	"crdx.org/oh/internal/app/experimental"
 	"crdx.org/oh/internal/app/graphics"
 	"crdx.org/oh/internal/app/link"
@@ -840,6 +842,23 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		return "", err
 	}
 
+	hostToSandboxAddress := portgrant.AddressFor(log.Name())
+	hostToSandboxHostname := settings.Ports.GetHostname(log.Name(), hostToSandboxAddress)
+	currentEnvironment := environment.Capture(
+		settings.Sandbox,
+		availableSkills,
+		pathutil.Exists(filepath.Join(workspace.GetDir(), ".git")),
+		hostToSandboxHostname,
+	)
+	var createdEnvironment *environment.Snapshot
+	if resumedSession != nil {
+		createdEnvironment = resumedSession.Meta.Environment
+	}
+	restoredEnvironment, err := environment.Restore(createdEnvironment, recordedEvents, currentEnvironment)
+	if err != nil {
+		return "", err
+	}
+
 	var systemPrompt string
 	var fixedContextSources staticContextSources
 	var contextFiles []prompt.File
@@ -896,8 +915,6 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		}
 	}
 
-	hostToSandboxAddress := portgrant.AddressFor(log.Name())
-	hostToSandboxHostname := settings.Ports.GetHostname(log.Name(), hostToSandboxAddress)
 	hostToSandboxExposer := newHostToSandboxExposer(ctx, keeperProcess, hostToSandboxAddress)
 	var hostToSandbox *portgrant.HostToSandbox
 	sandboxToHostExposer := newSandboxToHostExposer(ctx, keeperProcess)
@@ -977,7 +994,6 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 			mode,
 			files,
 			args.Yolo,
-			doesWake,
 		))
 	}
 	if keeperProcess != nil {
@@ -1047,6 +1063,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		meta.Tools = toolset.Names(offeredTools)
 		meta.ToolDefinitions = store.FreezeTools(offeredTools)
 		meta.Conditions = &currentConditions
+		meta.Environment = &currentEnvironment
 		if err := log.SetMeta(meta); err != nil {
 			return "", err
 		}
@@ -1191,6 +1208,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		workspace:       workspace,
 		mode:            mode,
 		conditions:      restoredConditions.State,
+		environment:     restoredEnvironment.State,
 		pathGrants:      pathGrants,
 		hostToSandbox:   hostToSandbox,
 		sandboxToHost:   sandboxToHost,
@@ -1210,10 +1228,19 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		keyboard:  keyboard,
 	}
 	if resumedSession == nil && model.SupportsFastMode(selection.Provider) {
-		app.openingEvents = []agent.Event{model.FastModeEvent(selection.IsFast)}
+		app.openingEvents = append(app.openingEvents, model.FastModeEvent(selection.IsFast))
+	}
+	if resumedSession != nil && restoredConditions.NeedsBaseline {
+		app.openingEvents = append(app.openingEvents, restoredConditions.Change)
+	}
+	if resumedSession != nil && restoredEnvironment.NeedsBaseline {
+		app.openingEvents = append(app.openingEvents, restoredEnvironment.Change)
 	}
 	if restoredConditions.IsChanged {
 		app.pendingNotices.add(restoredConditions.Change)
+	}
+	if restoredEnvironment.IsChanged {
+		app.pendingNotices.add(restoredEnvironment.Change)
 	}
 	if availabilityRestoration.IsChanged {
 		app.pendingNotices.add(availabilityRestoration.Change)

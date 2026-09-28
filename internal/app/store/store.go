@@ -15,6 +15,7 @@ import (
 
 	"crdx.org/oh/internal/app/conditions"
 	"crdx.org/oh/internal/app/contextsource"
+	"crdx.org/oh/internal/app/environment"
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/store/transcript"
@@ -36,6 +37,7 @@ type Meta struct {
 	Tools                 []string               `json:"tools,omitempty"`
 	ToolDefinitions       []ToolDefinition       `json:"tool_definitions,omitempty"`
 	Conditions            *conditions.Conditions `json:"conditions,omitempty"`
+	Environment           *environment.Snapshot  `json:"environment,omitempty"`
 	Yolo                  bool                   `json:"yolo,omitempty"`
 }
 

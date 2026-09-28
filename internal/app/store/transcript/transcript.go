@@ -14,6 +14,7 @@ import (
 
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/conditions"
+	"crdx.org/oh/internal/app/environment"
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/interrupt"
 	"crdx.org/oh/internal/app/jobrecord"
@@ -96,6 +97,10 @@ func (self *Recorder) Event(at time.Time, event agent.Event) error {
 	switch event.Kind {
 	case agent.StateChangeEvent, agent.ModelReasoningEvent:
 		return nil
+	case conditions.Change, environment.Change:
+		if _, isSaid := harnessNotice(event); !isSaid {
+			return nil
+		}
 	case agent.ToolCallRequestEvent:
 		self.bufferToolCall(at, event)
 		return nil
@@ -128,7 +133,7 @@ func (self *Recorder) Event(at time.Time, event agent.Event) error {
 	case agent.PrefixRewriteEvent:
 		output.fence(agent.PrefixRewriteNotice + event.Text)
 	case turn.HarnessPoke, jobrecord.Ended, jobrecord.EndedWithSession, caps.JobStop, caps.ModeChange,
-		conditions.Change, toolset.AvailabilityChange, pathgrant.Change,
+		conditions.Change, environment.Change, toolset.AvailabilityChange, pathgrant.Change,
 		portgrant.SandboxToHostChange, portgrant.HostToSandboxChange,
 		hostcommand.Ran:
 		if notice, isSaid := harnessNotice(event); isSaid {
@@ -165,6 +170,8 @@ func harnessNotice(event agent.Event) (string, bool) {
 		return joined(caps.ModeNotice(event))
 	case conditions.Change:
 		return joined(conditions.Notice(event))
+	case environment.Change:
+		return joined(environment.Notice(event))
 	case toolset.AvailabilityChange:
 		return joined(toolset.AvailabilityNotice(event))
 	case pathgrant.Change:
@@ -215,6 +222,9 @@ func heading(event agent.Event) []string {
 		return []string{name, modeFlags(event), prefixed("toggled ", event.Name)}
 	case conditions.Change:
 		summary, _ := conditions.Summary(event)
+		return []string{name, summary}
+	case environment.Change:
+		summary, _ := environment.Summary(event)
 		return []string{name, summary}
 	case toolset.AvailabilityChange:
 		summary, _ := toolset.AvailabilitySummary(event)
@@ -424,6 +434,8 @@ func title(kind agent.Kind) string {
 		return "Mode"
 	case conditions.Change:
 		return "Conditions"
+	case environment.Change:
+		return "Environment"
 	case toolset.AvailabilityChange:
 		return "Tool availability"
 	case pathgrant.Change:

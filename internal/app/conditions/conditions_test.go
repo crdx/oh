@@ -27,6 +27,7 @@ func TestEachLostFacilityIsToldOnce(t *testing.T) {
 		"Unix sockets no longer work",
 		"IPv6 unavailable",
 		"Session is non-interactive",
+		"a background job will not wake the conversation",
 	} {
 		if !strings.Contains(notice, want) {
 			t.Errorf("notice %q does not contain %q", notice, want)
@@ -46,6 +47,7 @@ func TestEachRegainedFacilityIsTold(t *testing.T) {
 		"Unix sockets now work under /tmp",
 		"IPv6 available",
 		"Session is interactive",
+		"a background job can wake the conversation",
 	} {
 		if !strings.Contains(notice, want) {
 			t.Errorf("notice %q does not contain %q", notice, want)
@@ -122,6 +124,9 @@ func TestASessionWithNothingRecordedIsLeftAlone(t *testing.T) {
 
 	if restored.IsChanged {
 		t.Error("a session with nothing recorded reports a change")
+	}
+	if !restored.NeedsBaseline {
+		t.Error("a session with nothing recorded did not request a baseline")
 	}
 	if notice := restored.State.Peek(); notice != "" {
 		t.Errorf("got %q, want nothing to say", notice)

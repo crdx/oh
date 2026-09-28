@@ -20,6 +20,7 @@ import (
 	"crdx.org/oh/internal/app/dynamic"
 	"crdx.org/oh/internal/app/edit"
 	"crdx.org/oh/internal/app/editor"
+	"crdx.org/oh/internal/app/environment"
 	"crdx.org/oh/internal/app/experimental"
 	"crdx.org/oh/internal/app/feedback"
 	"crdx.org/oh/internal/app/hostcommand"
@@ -108,13 +109,28 @@ func (self *pendingNotices) notices() []string {
 	return notices
 }
 
+func (self *pendingNotices) modelNotices() []string {
+	var notices []string
+	for _, item := range self.items {
+		itemNotices, areSaid := painter.HarnessNotices(item.state)
+		if item.state.Kind == environment.Change {
+			itemNotices, areSaid = environment.ModelNotice(item.state)
+		}
+		if areSaid {
+			notices = append(notices, itemNotices...)
+		}
+	}
+	return notices
+}
+
 func (self *pendingNotices) accessNotices() []string {
 	var notices []string
 	for _, item := range self.items {
 		kind := item.state.Kind
 		isAccessChange := kind == caps.ModeChange || kind == caps.JobStop ||
-			kind == toolset.AvailabilityChange || kind == pathgrant.Change ||
-			kind == portgrant.SandboxToHostChange
+			kind == toolset.AvailabilityChange || kind == environment.Change ||
+			kind == pathgrant.Change || kind == portgrant.SandboxToHostChange ||
+			kind == portgrant.HostToSandboxChange
 		if !isAccessChange {
 			continue
 		}
@@ -168,6 +184,7 @@ type App struct {
 	editorConfig    *editor.Config
 	mode            *caps.Mode
 	conditions      *conditions.State
+	environment     *environment.State
 	pathGrants      *pathgrant.Grants
 	hostToSandbox   *portgrant.HostToSandbox
 	sandboxToHost   *portgrant.SandboxToHost
@@ -545,26 +562,30 @@ func (self *App) handleCommand(message string) dispatch.Result {
 }
 
 func (self *App) emitCommandEvent(event agent.Event) {
-	if event.Kind == hostcommand.Ran {
+	switch event.Kind {
+	case hostcommand.Ran:
 		self.hostCommandRan(event)
-		return
-	}
-	if event.Kind == portgrant.SandboxToHostChange {
-		self.pendingNotices.add(event)
-		if self.currentTurn.Running() {
-			self.queuedTurn.MarkAccessChange()
-			self.interruptTurn(interrupt.AccessChange)
-			return
-		}
-		self.refreshPendingMessages()
-		return
-	}
-	if event.Kind != pathgrant.Change {
+	case portgrant.SandboxToHostChange, portgrant.HostToSandboxChange:
+		self.queueAccessChange(event)
+	case pathgrant.Change:
+		self.queuePathGrantChange(event)
+		self.finishAccessChange()
+	case agent.StartupEvent, agent.UserMessageEvent, agent.SilentTurnEvent, agent.PrefixRewriteEvent,
+		agent.CacheRebuildEvent, agent.ModelReasoningEvent, agent.ModelMessageEvent,
+		agent.ToolCallRequestEvent, agent.ToolCallResultEvent, agent.StateChangeEvent,
+		agent.InterruptionEvent, agent.RetryingEvent, agent.FailureEvent:
 		self.notify(event)
-		return
+	default:
+		self.notify(event)
 	}
+}
 
-	self.queuePathGrantChange(event)
+func (self *App) queueAccessChange(event agent.Event) {
+	self.pendingNotices.add(event)
+	self.finishAccessChange()
+}
+
+func (self *App) finishAccessChange() {
 	if self.currentTurn.Running() {
 		self.queuedTurn.MarkAccessChange()
 		self.interruptTurn(interrupt.AccessChange)
@@ -850,7 +871,7 @@ func (self *App) settleAccess() {
 }
 
 func (self *App) settlePendingInput() {
-	self.settledNotes = append(self.settledNotes, self.pendingNotices.notices()...)
+	self.settledNotes = append(self.settledNotes, self.pendingNotices.modelNotices()...)
 	self.markAccessTold()
 
 	wasShown := self.pendingNotices.block != nil
@@ -1718,6 +1739,9 @@ func (self *App) accessTellers() access.Group {
 	tellers := []access.Teller{self.mode}
 	if self.conditions != nil {
 		tellers = append(tellers, self.conditions)
+	}
+	if self.environment != nil {
+		tellers = append(tellers, self.environment)
 	}
 	if self.pathGrants != nil {
 		tellers = append(tellers, self.pathGrants)

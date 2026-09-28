@@ -16,6 +16,7 @@ import (
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/conditions"
 	"crdx.org/oh/internal/app/dynamic"
+	"crdx.org/oh/internal/app/environment"
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/interrupt"
 	"crdx.org/oh/internal/app/jobrecord"
@@ -199,7 +200,7 @@ func (self *Picasso) DrawEvent(event agent.Event) {
 		self.drawNotices(event, self.drawSubmittedPanel)
 
 	case caps.ModeChange, caps.JobStop, portgrant.SandboxToHostChange, jobrecord.EndedWithSession,
-		conditions.Change, toolset.AvailabilityChange, pathgrant.Change, turn.HarnessPoke:
+		conditions.Change, environment.Change, toolset.AvailabilityChange, pathgrant.Change, turn.HarnessPoke:
 		self.drawNotices(event, self.drawSubmitted)
 
 	case agent.RetryingEvent:
@@ -517,7 +518,7 @@ func (self *Picasso) drawNotices(event agent.Event, draw func(submittedMessage))
 func isJoinableNotice(event agent.Event) bool {
 	switch event.Kind {
 	case caps.ModeChange, caps.JobStop, portgrant.SandboxToHostChange, portgrant.HostToSandboxChange,
-		jobrecord.Ended, jobrecord.EndedWithSession, conditions.Change, toolset.AvailabilityChange,
+		jobrecord.Ended, jobrecord.EndedWithSession, conditions.Change, environment.Change, toolset.AvailabilityChange,
 		pathgrant.Change, turn.HarnessPoke,
 		hostcommand.Ran:
 		return true

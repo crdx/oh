@@ -32,9 +32,10 @@ func NewRestored(current Conditions, knownConditions Conditions) *State {
 }
 
 type Restoration struct {
-	State     *State
-	Change    agent.Event
-	IsChanged bool
+	State         *State
+	Change        agent.Event
+	IsChanged     bool
+	NeedsBaseline bool
 }
 
 func Restore(
@@ -43,11 +44,14 @@ func Restore(
 	current Conditions,
 ) (Restoration, error) {
 	knownConditions := current
+	isKnown := false
 	if createdConditions != nil {
 		knownConditions = *createdConditions
+		isKnown = true
 	}
 	if recordedConditions, found := LastRecorded(events); found {
 		knownConditions = recordedConditions
+		isKnown = true
 	}
 
 	change, err := ChangeEvent(knownConditions, current)
@@ -58,9 +62,10 @@ func Restore(
 	_, isChanged := Notice(change)
 
 	return Restoration{
-		State:     NewRestored(current, knownConditions),
-		Change:    change,
-		IsChanged: isChanged,
+		State:         NewRestored(current, knownConditions),
+		Change:        change,
+		IsChanged:     isChanged,
+		NeedsBaseline: !isKnown,
 	}, nil
 }
 
@@ -119,10 +124,10 @@ func addressNotice(isIPv6Reachable bool) string {
 
 func interactionNotice(isInteractive bool) string {
 	if isInteractive {
-		return "Session is interactive; questions and approvals are available."
+		return "Session is interactive; questions and approvals are available, and a background job can wake the conversation when it finishes."
 	}
 
-	return "Session is non-interactive; questions and approvals are unavailable."
+	return "Session is non-interactive; questions and approvals are unavailable, and a background job will not wake the conversation when it finishes."
 }
 
 const Change agent.Kind = "conditions_change"

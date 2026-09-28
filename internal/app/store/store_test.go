@@ -19,6 +19,7 @@ import (
 
 	"crdx.org/oh/internal/app/conditions"
 	"crdx.org/oh/internal/app/contextsource"
+	"crdx.org/oh/internal/app/environment"
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/store"
 )
@@ -179,7 +180,42 @@ func TestTheConditionsAtCreationSurviveWithTheSession(t *testing.T) {
 	}
 }
 
-func TestASessionStoredBeforeConditionsWereRecordedHasNone(t *testing.T) {
+func TestTheEnvironmentAtCreationSurvivesWithTheSession(t *testing.T) {
+	directory := t.TempDir()
+	createdEnvironment := environment.Snapshot{
+		Sandbox: environment.Sandbox{ReadPaths: []string{"/reference"}},
+		Skills: []environment.Skill{{
+			Name:        "review",
+			Description: "review things",
+			Location:    "/skills/review/SKILL.md",
+		}},
+		IsRepository: true,
+		PortHostname: "session.test",
+	}
+	log, err := store.Create(directory, store.Meta{Environment: &createdEnvironment})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := log.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "store it"}); err != nil {
+		t.Fatal(err)
+	}
+	if err := log.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	storedSession, err := store.Read(directory, log.Name())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if storedSession.Meta.Environment == nil {
+		t.Fatal("the environment at creation was not stored")
+	}
+	if !reflect.DeepEqual(*storedSession.Meta.Environment, createdEnvironment) {
+		t.Errorf("got %+v, want %+v", *storedSession.Meta.Environment, createdEnvironment)
+	}
+}
+
+func TestASessionStoredBeforeConditionsAndEnvironmentWereRecordedHasNeither(t *testing.T) {
 	directory := t.TempDir()
 	log, err := store.Create(directory, store.Meta{Model: "gpt-5.6-sol"})
 	if err != nil {
@@ -198,6 +234,9 @@ func TestASessionStoredBeforeConditionsWereRecordedHasNone(t *testing.T) {
 	}
 	if storedSession.Meta.Conditions != nil {
 		t.Errorf("got conditions %+v, want none", *storedSession.Meta.Conditions)
+	}
+	if storedSession.Meta.Environment != nil {
+		t.Errorf("got environment %+v, want none", *storedSession.Meta.Environment)
 	}
 }
 

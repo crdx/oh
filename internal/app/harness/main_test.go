@@ -54,6 +54,7 @@ import (
 	"crdx.org/oh/internal/app/dynamic"
 	"crdx.org/oh/internal/app/edit"
 	"crdx.org/oh/internal/app/editor"
+	"crdx.org/oh/internal/app/environment"
 	"crdx.org/oh/internal/app/escape"
 	"crdx.org/oh/internal/app/experimental"
 	"crdx.org/oh/internal/app/feedback"
@@ -2140,6 +2141,51 @@ func workspaceNowReadOnly() string {
 	withdrawn.Toggle(caps.Write)
 
 	return withdrawn.Inject()
+}
+
+func TestRevokingAHostRouteRestartsTheTurnWithTheChangeAsItsPrompt(t *testing.T) {
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	ports := portgrant.NewHostToSandbox(portgrant.HostToSandboxExposer{
+		Expose: func(uint16) error { return nil },
+		Hide:   func(uint16) error { return nil },
+	}, "session.test")
+	if _, err := ports.Expose(8080); err != nil {
+		t.Fatal(err)
+	}
+	ports.Inject()
+	self.hostToSandbox = ports
+
+	self.start("first")
+	interruptedEvents := self.currentTurn.Events()
+
+	revoked, err := ports.Hide(8080)
+	if err != nil {
+		t.Fatal(err)
+	}
+	self.emitCommandEvent(revoked)
+	if !self.currentTurn.Cancelled() {
+		t.Fatal("the host route change did not interrupt the turn")
+	}
+
+	for report := range interruptedEvents {
+		self.takeTurn(report)
+	}
+	self.finish()
+	if !self.currentTurn.Running() {
+		t.Fatal("the host route change did not start a replacement turn")
+	}
+
+	for report := range self.currentTurn.Events() {
+		self.takeTurn(report)
+	}
+	self.finish()
+
+	messages := submittedTexts(self.recordedEvents)
+	if len(messages) != 2 || messages[0] != "first" ||
+		!strings.Contains(messages[1], "port 8080 no longer exposed") {
+		t.Errorf("got messages %q, want the route revocation after the original prompt", messages)
+	}
 }
 
 func TestTwoReturnsOnAnEmptyLineLeaveTheRunningTurnAlone(t *testing.T) {
@@ -5082,6 +5128,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"corrupt-session":         {".txt"},
 		"default-bar":             {".ansi", ".screen"},
 		"elided-path-links":       {".ansi", ".screen"},
+		"environment-change":      {".ansi", ".screen"},
 		"feedback":                {".ansi", ".screen", ".txt"},
 		"feedback-frame":          {".ansi", ".screen"},
 		"question-notifications":  {".ansi", ".screen", ".txt"},
@@ -5717,6 +5764,44 @@ func TestGoldenPendingModeMessagesAreSeparatedFromStartupAndJoinedToEachOther(t 
 			return takenBackModeMessageDuringCallStream(t)
 		},
 	}))
+}
+
+func TestGoldenEnvironmentChangeIsQueuedOnResume(t *testing.T) {
+	passes := map[string]func() string{
+		"queued on resume": func() string { return pendingEnvironmentChangeStream(t) },
+	}
+	compareWithGolden(t, "environment-change", ".ansi", passes)
+	compareWithGolden(t, "environment-change", ".screen", shownPasses(t, passes))
+}
+
+func pendingEnvironmentChangeStream(t *testing.T) string {
+	t.Helper()
+
+	self, _ := modeFixture(t)
+	var screenOutput strings.Builder
+	self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
+	self.screen.Line(startup.RenderBanner(time.Millisecond, false, startup.Info{Session: "tame-impala"}, replayColumns, false))
+
+	known := environment.Snapshot{
+		Skills:       []environment.Skill{{Name: "old", Description: "old skill", Location: "/skills/old/SKILL.md"}},
+		PortHostname: "old.agent.test",
+	}
+	current := environment.Snapshot{
+		Sandbox:      environment.Sandbox{ReadPaths: []string{"/reference"}},
+		Skills:       []environment.Skill{{Name: "new", Description: "new skill", Location: "/skills/new/SKILL.md"}},
+		IsRepository: true,
+		PortHostname: "new.agent.test",
+	}
+	change, err := environment.ChangeEvent(known, current)
+	if err != nil {
+		t.Fatal(err)
+	}
+	self.pendingNotices.add(change)
+
+	inputLine := edit.NewInput(nil)
+	self.show(inputLine)
+	self.refreshPendingMessages()
+	return screenOutput.String()
 }
 
 const laterHarnessLine = "Job `build` exited: complete after 30s."
@@ -8795,7 +8880,6 @@ func newRig(t *testing.T, openScreen func(*strings.Builder, string) *output.Scre
 			jobs.New(sandbox.Direct()),
 			files,
 			func(context.Context) (sandbox.Policy, error) { return sandbox.Policy{}, nil },
-			false,
 		),
 	)
 	tools = append(tools,
@@ -14259,6 +14343,43 @@ func TestSandboxToHostChangeBecomesPendingAccessAndUpdatesTheModel(t *testing.T)
 	}
 }
 
+func TestALegacyEnvironmentBaselineIsRecordedWithoutAQueuedMessage(t *testing.T) {
+	directory := t.TempDir()
+	log, err := store.Create(directory, store.Meta{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := log.EnsurePersisted(); err != nil {
+		t.Fatal(err)
+	}
+	snapshot := environment.Snapshot{PortHostname: "session.test"}
+	baseline, err := environment.ChangeEvent(snapshot, snapshot)
+	if err != nil {
+		t.Fatal(err)
+	}
+	self := &App{
+		mode:          caps.NewMode(caps.Read),
+		recorder:      record.New(log),
+		openingEvents: []agent.Event{baseline},
+	}
+	self.initialiseAccess()
+	if len(self.pendingNotices.items) != 0 {
+		t.Errorf("the baseline queued notices %#v", self.pendingNotices.items)
+	}
+	if err := log.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	storedSession, err := store.Read(directory, log.Name())
+	if err != nil {
+		t.Fatal(err)
+	}
+	recordedEnvironment, isFound := environment.LastRecorded(storedSession.Events)
+	if !isFound || recordedEnvironment.PortHostname != snapshot.PortHostname {
+		t.Errorf("got recorded environment %+v and found %v", recordedEnvironment, isFound)
+	}
+}
+
 func TestRestoredGrantCorrectionRemainsPendingUntilATurnCanTellTheModel(t *testing.T) {
 	self := testConversation(t, &bytes.Buffer{})
 	workspace := openTestWorkspace(t, t.TempDir())
@@ -14545,6 +14666,9 @@ func TestGoldenPathGrantLifecycleDrawsEveryVisibleState(t *testing.T) {
 
 func TestGoldenPortDirectionNoticesMatchGolden(t *testing.T) {
 	passes := map[string]func() string{
+		"queued host-to-sandbox revocation": func() string {
+			return pendingHostRouteRevocationStream(t)
+		},
 		"pending sandbox to host": func() string {
 			var screenOutput bytes.Buffer
 			self := testConversation(t, &screenOutput)
@@ -14596,6 +14720,43 @@ func TestGoldenPortDirectionNoticesMatchGolden(t *testing.T) {
 	}
 	compareWithGolden(t, "port-directions", ".ansi", passes)
 	compareWithGolden(t, "port-directions", ".screen", shownPasses(t, passes))
+}
+
+func pendingHostRouteRevocationStream(t *testing.T) string {
+	t.Helper()
+
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
+	ports := portgrant.NewHostToSandbox(portgrant.HostToSandboxExposer{
+		Expose: func(uint16) error { return nil },
+		Hide:   func(uint16) error { return nil },
+	}, "session.test")
+	if _, err := ports.Expose(8080); err != nil {
+		t.Fatal(err)
+	}
+	ports.Inject()
+	self.hostToSandbox = ports
+	self.currentTurn = Turn{
+		painter: self.newPainter(true),
+		Stream:  testTurnStream(nil, func(error) {}, turn.State{Running: true}),
+	}
+	call := agent.Event{
+		Kind:              agent.ToolCallRequestEvent,
+		ID:                "1",
+		Name:              "bash",
+		FallbackRendering: agent.FallbackRendering{Subject: "serve 8080"},
+	}
+	self.recordedEvents = append(self.recordedEvents, call)
+	self.currentTurn.painter.DrawEvent(call)
+
+	revoked, err := ports.Hide(8080)
+	if err != nil {
+		t.Fatal(err)
+	}
+	self.emitCommandEvent(revoked)
+	self.show(edit.NewInput(nil))
+	return screenOutput.String()
 }
 
 func recordedPortsInARow(t *testing.T, lines int) string {
@@ -15645,31 +15806,51 @@ type sessionGoldenTool struct {
 	OnResume              string   `toml:"on-resume"`
 }
 
+type sessionGoldenSkill struct {
+	Name        string `toml:"name"`
+	Description string `toml:"description"`
+	Location    string `toml:"location"`
+}
+
+type sessionGoldenEnvironment struct {
+	DenyPatterns    []string             `toml:"deny"`
+	ReadPaths       []string             `toml:"read"`
+	WritePaths      []string             `toml:"write"`
+	ExecutablePaths []string             `toml:"exec"`
+	PathDirectories []string             `toml:"path"`
+	HomePaths       []string             `toml:"home"`
+	Skills          []sessionGoldenSkill `toml:"skill"`
+	IsRepository    bool                 `toml:"repository"`
+	PortHostname    string               `toml:"hostname"`
+}
+
 type sessionGoldenScenario struct {
-	Name                  string              `toml:"-"`
-	Provider              string              `toml:"provider"`
-	Model                 string              `toml:"model"`
-	Effort                string              `toml:"effort"`
-	IsFast                bool                `toml:"fast"`
-	IdleAfter             string              `toml:"idle-after"`
-	Asleep                string              `toml:"asleep"`
-	Grouping              output.Grouping     `toml:"grouping"`
-	Hostname              string              `toml:"hostname"`
-	FirstTokenError       string              `toml:"first-token-error"`
-	CredentialRefresh     string              `toml:"credential-refresh"`
-	ToggleBeforeFirst     string              `toml:"toggle-before-first"`
-	Conditions            string              `toml:"conditions"`
-	ConditionsOnResume    string              `toml:"conditions-on-resume"`
-	EndJobBeforeFirst     string              `toml:"end-job-before-first"`
-	JobHoldingWorkspace   string              `toml:"job-holding-workspace"`
-	JobsRunningIntoResume []string            `toml:"jobs-running-into-resume"`
-	RunBeforeFirst        string              `toml:"run-before-first"`
-	Tools                 []sessionGoldenTool `toml:"tool"`
-	FirstTurn             sessionGoldenTurn   `toml:"first"`
-	ResumeTurn            sessionGoldenTurn   `toml:"resume"`
-	CredentialsPath       string              `toml:"-"`
-	CredentialRecovery    func()              `toml:"-"`
-	ScratchDirectory      string              `toml:"-"`
+	Name                  string                    `toml:"-"`
+	Provider              string                    `toml:"provider"`
+	Model                 string                    `toml:"model"`
+	Effort                string                    `toml:"effort"`
+	IsFast                bool                      `toml:"fast"`
+	IdleAfter             string                    `toml:"idle-after"`
+	Asleep                string                    `toml:"asleep"`
+	Grouping              output.Grouping           `toml:"grouping"`
+	Hostname              string                    `toml:"hostname"`
+	FirstTokenError       string                    `toml:"first-token-error"`
+	CredentialRefresh     string                    `toml:"credential-refresh"`
+	ToggleBeforeFirst     string                    `toml:"toggle-before-first"`
+	Conditions            string                    `toml:"conditions"`
+	ConditionsOnResume    string                    `toml:"conditions-on-resume"`
+	Environment           *sessionGoldenEnvironment `toml:"environment"`
+	EnvironmentOnResume   *sessionGoldenEnvironment `toml:"environment-on-resume"`
+	EndJobBeforeFirst     string                    `toml:"end-job-before-first"`
+	JobHoldingWorkspace   string                    `toml:"job-holding-workspace"`
+	JobsRunningIntoResume []string                  `toml:"jobs-running-into-resume"`
+	RunBeforeFirst        string                    `toml:"run-before-first"`
+	Tools                 []sessionGoldenTool       `toml:"tool"`
+	FirstTurn             sessionGoldenTurn         `toml:"first"`
+	ResumeTurn            sessionGoldenTurn         `toml:"resume"`
+	CredentialsPath       string                    `toml:"-"`
+	CredentialRecovery    func()                    `toml:"-"`
+	ScratchDirectory      string                    `toml:"-"`
 }
 
 func TestGoldenScenariosProduceCanonicalOutputs(t *testing.T) {
@@ -16043,7 +16224,7 @@ func newSessionGoldenTools(
 		}
 
 		if specification.Name == jobToolName {
-			tools = append(tools, job.New(nil, nil, nil, true))
+			tools = append(tools, job.New(nil, nil, nil))
 			continue
 		}
 
@@ -16724,6 +16905,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 
 	directory := t.TempDir()
 	firstConditions := sessionGoldenConditions(t, scenario.Conditions)
+	firstEnvironment := firstEnvironmentOf(scenario)
 	meta := store.Meta{
 		Model:        scenario.Model,
 		Provider:     scenario.Provider,
@@ -16733,6 +16915,9 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	}
 	if scenario.describesConditions() {
 		meta.Conditions = &firstConditions
+	}
+	if scenario.Environment != nil || scenario.EnvironmentOnResume != nil {
+		meta.Environment = &firstEnvironment
 	}
 	log, err := store.Create(directory, meta)
 	if err != nil {
@@ -16771,6 +16956,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		firstHarness.openingEvents = []agent.Event{model.FastModeEvent(scenario.IsFast)}
 	}
 	firstHarness.conditions = conditions.NewRestored(firstConditions, firstConditions)
+	firstHarness.environment = environment.NewRestored(firstEnvironment, firstEnvironment)
 	settleSessionGoldenMode(firstHarness)
 	if scenario.JobHoldingWorkspace != "" {
 		startSessionGoldenJobHoldingTheWorkspace(t, firstHarness, scenario.JobHoldingWorkspace)
@@ -16871,6 +17057,9 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	settleResumedSessionGoldenMode(resumedHarness, storedSession.Events)
 	restoredEvents := restoreSessionGoldenConditions(
 		t, resumedHarness, storedSession, sessionGoldenConditions(t, resumeConditionsOf(scenario)),
+	)
+	restoredEvents = restoreSessionGoldenEnvironment(
+		t, resumedHarness, storedSession, resumeEnvironmentOf(scenario), restoredEvents,
 	)
 	if availabilityRestoration.IsChanged {
 		resumedHarness.pendingNotices.add(availabilityRestoration.Change)
@@ -17231,12 +17420,71 @@ func (self sessionGoldenScenario) describesConditions() bool {
 	return self.Conditions != "" || self.ConditionsOnResume != ""
 }
 
+func (self sessionGoldenEnvironment) snapshot() environment.Snapshot {
+	skills := make([]environment.Skill, len(self.Skills))
+	for index, foundSkill := range self.Skills {
+		skills[index] = environment.Skill{
+			Name:        foundSkill.Name,
+			Description: foundSkill.Description,
+			Location:    foundSkill.Location,
+		}
+	}
+	return environment.Snapshot{
+		Sandbox: environment.Sandbox{
+			DenyPatterns:    self.DenyPatterns,
+			ReadPaths:       self.ReadPaths,
+			WritePaths:      self.WritePaths,
+			ExecutablePaths: self.ExecutablePaths,
+			PathDirectories: self.PathDirectories,
+			HomePaths:       self.HomePaths,
+		},
+		Skills:       skills,
+		IsRepository: self.IsRepository,
+		PortHostname: self.PortHostname,
+	}
+}
+
+func restoreSessionGoldenEnvironment(
+	t *testing.T,
+	testHarness *App,
+	storedSession *store.Session,
+	current environment.Snapshot,
+	restoredEvents []agent.Event,
+) []agent.Event {
+	t.Helper()
+
+	restored, err := environment.Restore(storedSession.Meta.Environment, storedSession.Events, current)
+	if err != nil {
+		t.Fatal(err)
+	}
+	testHarness.environment = restored.State
+	if !restored.IsChanged {
+		return restoredEvents
+	}
+	testHarness.pendingNotices.add(restored.Change)
+	return append(restoredEvents, restored.Change)
+}
+
 func resumeConditionsOf(scenario sessionGoldenScenario) string {
 	if scenario.ConditionsOnResume != "" {
 		return scenario.ConditionsOnResume
 	}
 
 	return scenario.Conditions
+}
+
+func firstEnvironmentOf(scenario sessionGoldenScenario) environment.Snapshot {
+	if scenario.Environment == nil {
+		return environment.Snapshot{}
+	}
+	return scenario.Environment.snapshot()
+}
+
+func resumeEnvironmentOf(scenario sessionGoldenScenario) environment.Snapshot {
+	if scenario.EnvironmentOnResume != nil {
+		return scenario.EnvironmentOnResume.snapshot()
+	}
+	return firstEnvironmentOf(scenario)
 }
 
 func settleResumedSessionGoldenMode(testHarness *App, events []agent.Event) {

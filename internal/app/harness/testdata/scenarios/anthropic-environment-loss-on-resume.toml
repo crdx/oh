@@ -1,0 +1,47 @@
+provider = "anthropic"
+model = "claude-opus-5"
+effort = "medium"
+
+[environment]
+deny = ["secret.yml"]
+read = ["/reference"]
+write = ["/output"]
+exec = ["/opt/tool"]
+path = ["/opt/bin"]
+home = ["/test-home/.toolrc"]
+repository = true
+hostname = "old.agent.test"
+
+[[environment.skill]]
+name = "removed"
+description = "use the removed process"
+location = "/skills/removed/SKILL.md"
+
+[environment-on-resume]
+hostname = "127.9.9.9"
+
+[first]
+prompt = "remember what is available"
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"I have the original environment."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[resume]
+prompt = "what was lost"
+
+[[resume.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"The queued harness update names everything that was lost."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
+    '''{"type":"message_stop"}''',
+]

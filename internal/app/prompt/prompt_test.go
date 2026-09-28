@@ -78,7 +78,7 @@ func TestTheGlobalContextReplacesTheBuiltInOpeningButKeepsTheHarnessState(t *tes
 		t.Errorf("the harness does not come before the global context: %q", got)
 	}
 	for _, want := range []string{
-		"File paths in user messages may be prefixed with `@`; treat that prefix as path-reference syntax rather than part of the path",
+		"File paths in user messages may be prefixed with an \"@\", but it is not part of the path",
 		"The workspace (" + workspace.GetDir() + ") is read-only",
 		"The workspace is not a git repository",
 		"The bash tool is refused",

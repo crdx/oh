@@ -6,6 +6,7 @@ import (
 
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/conditions"
+	"crdx.org/oh/internal/app/environment"
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/jobrecord"
 	"crdx.org/oh/internal/app/link"
@@ -219,6 +220,8 @@ func HarnessNotices(event agent.Event) ([]string, bool) {
 		return oneNotice(hostcommand.Notice(event))
 	case conditions.Change:
 		return conditions.Notice(event)
+	case environment.Change:
+		return environment.Notice(event)
 	case toolset.AvailabilityChange:
 		return toolset.AvailabilityNotice(event)
 	case pathgrant.Change:

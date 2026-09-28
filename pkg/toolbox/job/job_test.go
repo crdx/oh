@@ -25,7 +25,7 @@ func run(t *testing.T, manager *jobs.Manager, arguments any) (string, error) {
 
 	built := job.New(manager, nil, func(context.Context) (sandbox.Policy, error) {
 		return sandbox.Policy{}, nil
-	}, false)
+	})
 
 	call, err := built.Parse(string(encoded))
 	if err != nil {
@@ -172,7 +172,7 @@ func TestEverySingleJobActionNeedsAName(t *testing.T) {
 }
 
 func TestStartingValidatesTheJobName(t *testing.T) {
-	built := job.New(nil, nil, nil, false)
+	built := job.New(nil, nil, nil)
 	testCases := []struct {
 		name    string
 		isValid bool
@@ -331,7 +331,7 @@ func TestAJobCallIsRenderedByItsAction(t *testing.T) {
 
 func TestTheNameParameterGivesConciseNamingAdvice(t *testing.T) {
 	var description string
-	for _, parameter := range job.New(nil, nil, nil, false).Schema() {
+	for _, parameter := range job.New(nil, nil, nil).Schema() {
 		if parameter.Name == "name" {
 			description = parameter.Description
 		}
@@ -344,19 +344,16 @@ func TestTheNameParameterGivesConciseNamingAdvice(t *testing.T) {
 	}
 }
 
-func TestTheToolSaysWhetherAnEndedJobWakesTheConversation(t *testing.T) {
-	waking := job.New(nil, nil, nil, true).Description()
-	if !strings.Contains(waking, "You will be notified automatically when it finishes") {
-		t.Errorf("got %q, want a waking harness to promise the model it will be told", waking)
-	}
-
-	sleeping := job.New(nil, nil, nil, false).Description()
-	if !strings.Contains(sleeping, "You will not be notified automatically when it finishes") {
-		t.Errorf("got %q, want no promise of waking a harness that does not wake", sleeping)
+func TestTheToolExplainsJobNotificationsInBothSessionModes(t *testing.T) {
+	description := job.New(nil, nil, nil).Description()
+	for _, wanted := range []string{"In an interactive session", "in a non-interactive session"} {
+		if !strings.Contains(description, wanted) {
+			t.Errorf("description %q does not contain %q", description, wanted)
+		}
 	}
 }
 
-var _ tool.Tool = job.New(nil, nil, nil, false)
+var _ tool.Tool = job.New(nil, nil, nil)
 
 func TestAJobIsReportedByNameForEveryActionThatNamesOne(t *testing.T) {
 	for action, want := range map[string]string{
@@ -389,7 +386,7 @@ func TestEveryActionThatNamesAJobRefusesOneNobodyStarted(t *testing.T) {
 func TestRestartingAJobFailsWhenItsPolicyCannotBeBuilt(t *testing.T) {
 	built := job.New(withFinishedJobs(t), nil, func(context.Context) (sandbox.Policy, error) {
 		return sandbox.Policy{}, errPolicy
-	}, false)
+	})
 
 	call, err := built.Parse(`{"action":"start","name":"build"}`)
 	if err != nil {
