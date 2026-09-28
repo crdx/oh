@@ -2,9 +2,15 @@ package command
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
+	"os"
 	"os/exec"
+	"path/filepath"
 	"regexp"
 	"slices"
 	"strings"
@@ -47,18 +53,27 @@ type Parameter struct {
 }
 
 type Declaration struct {
-	Name        string
-	Description string
-	Command     []string
-	Parameters  []Parameter
-	Subject     string
-	TimeLimit   time.Duration
-	MustAsk     bool
+	Name          string
+	Description   string
+	Command       []string
+	Parameters    []Parameter
+	Subject       string
+	TimeLimit     time.Duration
+	MustAsk       bool
+	Group         string
+	Compatibility []Compatibility
+}
+
+type Compatibility struct {
+	From string
+	To   string
 }
 
 type Options struct {
-	Directory string
-	Approve   func(ctx context.Context, name string, command string) error
+	Directory      string
+	Approve        func(ctx context.Context, name string, command string) error
+	GroupForTool   func(name string) string
+	IsGroupAllowed func(group string) bool
 }
 
 func New(declaration Declaration, options Options) (tool.Tool, error) {
@@ -92,22 +107,141 @@ func New(declaration Declaration, options Options) (tool.Tool, error) {
 	if timeLimit <= 0 {
 		timeLimit = defaultTimeLimit
 	}
+	compatibilityRevision, err := commandRevision(declaration, executable, timeLimit)
+	if err != nil {
+		return nil, fmt.Errorf("identify command: %w", err)
+	}
+	compatibleRevisions, err := acceptedRevisions(declaration.Compatibility, compatibilityRevision)
+	if err != nil {
+		return nil, err
+	}
 
-	return tool.Implement(
+	builder := tool.Implement(
 		tool.Definition{
 			Name:        declaration.Name,
 			Description: strings.TrimSpace(declaration.Description),
 			Schema:      schema,
 		},
-		func(arguments tool.Arguments) (string, string) {
-			return describe(arguments, subject)
+		func(arguments tool.Arguments) tool.CallRendering {
+			callSubject, qualifier := describe(arguments, subject)
+			return tool.CallRendering{Subject: callSubject, Qualifier: qualifier}
 		},
 	).
 		Decode(schema.Decode).
-		TakesAtMost(func(tool.Arguments) time.Duration { return timeLimit }).
-		Plain(func(ctx context.Context, arguments tool.Arguments) (string, error) {
-			return run(ctx, declaration, executable, arguments, options, timeLimit)
-		}), nil
+		Revision(compatibilityRevision).
+		CompatibleWith(compatibleRevisions...).
+		TakesAtMost(func(tool.Arguments) time.Duration { return timeLimit })
+
+	if declaration.Group != "" {
+		builder = builder.Requires(
+			func() bool {
+				return options.IsGroupAllowed != nil && options.IsGroupAllowed(declaration.Group)
+			},
+			fmt.Errorf(
+				"%s access unavailable; ctrl+x %s grants it",
+				declaration.Name,
+				declaration.Group,
+			),
+		)
+	}
+
+	return builder.Plain(func(ctx context.Context, arguments tool.Arguments) (string, error) {
+		return run(ctx, declaration, executable, arguments, options, timeLimit)
+	}), nil
+}
+
+func acceptedRevisions(compatibility []Compatibility, currentRevision string) ([]string, error) {
+	var revisions []string
+	for _, transition := range compatibility {
+		if !isRevision(transition.From) {
+			return nil, fmt.Errorf("compatible.from %q is not a SHA-256 revision", transition.From)
+		}
+		if !isRevision(transition.To) {
+			return nil, fmt.Errorf("compatible.to %q is not a SHA-256 revision", transition.To)
+		}
+		if transition.To == currentRevision {
+			revisions = append(revisions, transition.From)
+		}
+	}
+	slices.Sort(revisions)
+	return slices.Compact(revisions), nil
+}
+
+func isRevision(value string) bool {
+	decodedRevision, err := hex.DecodeString(value)
+	return err == nil && len(decodedRevision) == sha256.Size
+}
+
+type commandFileIdentity struct {
+	Path   string `json:"path"`
+	Digest string `json:"digest"`
+}
+
+type commandIdentity struct {
+	Executable string                `json:"executable"`
+	Command    []string              `json:"command"`
+	Subject    string                `json:"subject"`
+	TimeLimit  time.Duration         `json:"time_limit"`
+	MustAsk    bool                  `json:"must_ask"`
+	Files      []commandFileIdentity `json:"files,omitempty"`
+}
+
+func commandRevision(declaration Declaration, executable string, timeLimit time.Duration) (string, error) {
+	identity := commandIdentity{
+		Executable: executable,
+		Command:    declaration.Command,
+		Subject:    declaration.Subject,
+		TimeLimit:  timeLimit,
+		MustAsk:    declaration.MustAsk,
+	}
+
+	paths := []string{executable}
+	for _, word := range declaration.Command[1:] {
+		if filepath.IsAbs(word) {
+			paths = append(paths, word)
+		}
+	}
+	seenPaths := make(map[string]struct{}, len(paths))
+	for _, path := range paths {
+		if _, isSeen := seenPaths[path]; isSeen {
+			continue
+		}
+		seenPaths[path] = struct{}{}
+
+		info, err := os.Stat(path)
+		if errors.Is(err, os.ErrNotExist) || err == nil && !info.Mode().IsRegular() {
+			continue
+		}
+		if err != nil {
+			return "", fmt.Errorf("inspect %s: %w", path, err)
+		}
+		digest, err := digestFile(path)
+		if err != nil {
+			return "", err
+		}
+		identity.Files = append(identity.Files, commandFileIdentity{Path: path, Digest: digest})
+	}
+
+	encodedIdentity, err := json.Marshal(identity)
+	if err != nil {
+		return "", err
+	}
+	digest := sha256.Sum256(encodedIdentity)
+	return hex.EncodeToString(digest[:]), nil
+}
+
+func digestFile(path string) (string, error) {
+	file, err := os.Open(path) //nolint:gosec // the user explicitly declared this command file
+	if err != nil {
+		return "", fmt.Errorf("open %s: %w", path, err)
+	}
+	defer func() { _ = file.Close() }()
+
+	digest := sha256.New()
+	if _, err := io.Copy(digest, file); err != nil {
+		return "", fmt.Errorf("read %s: %w", path, err)
+	}
+	return hex.EncodeToString(digest.Sum(nil)), nil
 }
 
 func (self Declaration) buildSchema() (tool.Schema, error) {

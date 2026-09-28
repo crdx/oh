@@ -321,6 +321,17 @@ func TestCapabilitiesAreReadAsTheLettersTheyAreSpelledWith(t *testing.T) {
 	}
 }
 
+func TestConfiguredCustomGroupsAreReadAsCapabilities(t *testing.T) {
+	input := Input{inputFlags: inputFlags{Caps: "rxa"}}
+	options, err := input.Parse(modelCachePath(), model.Defaults{}, "ab")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if options.Caps.Flags() != "rx" || options.GroupFlags != "a" {
+		t.Errorf("got capabilities %q and groups %q", options.Caps.Flags(), options.GroupFlags)
+	}
+}
+
 func TestReadingIsAlwaysGranted(t *testing.T) {
 	grantedCaps, err := caps.Parse("")
 	if err != nil {

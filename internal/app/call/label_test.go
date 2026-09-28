@@ -67,8 +67,9 @@ func TestAReadLinkIncludesItsRangeAndOpensAtTheFirstLine(t *testing.T) {
 		label := call.LabelFor(agent.Event{
 			Name: "read",
 			FallbackRendering: agent.FallbackRendering{
-				Subject: "main.go",
-				Note:    test.lineRange,
+				Subject:  "main.go",
+				Note:     test.lineRange,
+				PathLine: test.lineRange,
 			},
 		}, nil, nil)
 		label.PathRoots = link.Roots{Workspace: workspace}
@@ -98,8 +99,9 @@ func TestAReadOfModelScratchShowsAndLinksTheHostScratchAlias(t *testing.T) {
 	label := call.LabelFor(agent.Event{
 		Name: "read",
 		FallbackRendering: agent.FallbackRendering{
-			Subject: "/tmp/io/cmd/oh/output/region.go",
-			Note:    "100-214",
+			Subject:  "/tmp/io/cmd/oh/output/region.go",
+			Note:     "100-214",
+			PathLine: "100-214",
 		},
 	}, nil, nil).WithHostPathAliases(roots)
 	label.PathRoots = roots
@@ -155,18 +157,33 @@ func TestALabelIsCutToTheCellsItHasRatherThanTheCharacters(t *testing.T) {
 	}
 }
 
-func TestCallNamesAreDrawnFromTheTable(t *testing.T) {
+func TestCallNamesAndRolesComeFromStoredRendering(t *testing.T) {
 	for name, test := range map[string]struct {
-		eventName string
-		want      call.Label
+		event agent.Event
+		want  call.Label
 	}{
-		"shell":    {eventName: "bash", want: call.Label{Name: "$", NameStyle: style.Shell}},
-		"lookup":   {eventName: "lookup", want: call.Label{Name: "lookup", NameStyle: style.Lookup}},
-		"fetch":    {eventName: "fetch", want: call.Label{Name: "fetch", NameStyle: style.Network}},
-		"ordinary": {eventName: "grep", want: call.Label{Name: "grep"}},
+		"shell": {
+			event: agent.Event{Name: "bash", FallbackRendering: agent.FallbackRendering{
+				RenderingKind: "bash",
+			}},
+			want: call.Label{Name: "$", NameStyle: style.Shell, FocusStyle: style.Subject},
+		},
+		"lookup": {
+			event: agent.Event{Name: "lookup", FallbackRendering: agent.FallbackRendering{
+				RenderingKind: "lookup",
+			}},
+			want: call.Label{Name: "lookup", NameStyle: style.Lookup, FocusStyle: style.Subject},
+		},
+		"fetch": {
+			event: agent.Event{Name: "fetch", FallbackRendering: agent.FallbackRendering{
+				RenderingKind: "fetch",
+			}},
+			want: call.Label{Name: "fetch", NameStyle: style.Network, FocusStyle: style.Subject},
+		},
+		"ordinary": {event: agent.Event{Name: "grep"}, want: call.Label{Name: "grep"}},
 	} {
 		t.Run(name, func(t *testing.T) {
-			label := call.LabelFor(agent.Event{Name: test.eventName}, nil, nil)
+			label := call.LabelFor(test.event, nil, nil)
 
 			if got, want := label.Render(), test.want.Render(); got != want {
 				t.Errorf("got %q, want %q", got, want)
@@ -181,7 +198,7 @@ func TestAContinuedShellCallUsesTheShellLabel(t *testing.T) {
 		FallbackRendering: agent.FallbackRendering{
 			Subject: "check",
 			Continuation: []tool.CallRendering{{
-				Name:     "bash",
+				Kind:     "bash",
 				Subject:  "just check",
 				Emphasis: tool.Emphasis{Kind: tool.EmphasisSyntax, Value: "bash"},
 			}},
@@ -191,6 +208,24 @@ func TestAContinuedShellCallUsesTheShellLabel(t *testing.T) {
 	label := call.LabelFor(event, nil, nil)
 	if len(label.Continuation) != 1 || label.Continuation[0].Name != "$" || label.Continuation[0].NameStyle == nil {
 		t.Fatalf("got %#v, want the ordinary shell label as the continuation", label.Continuation)
+	}
+}
+
+func TestRenderingCarriesItsPathLineIntoTheLabel(t *testing.T) {
+	workspace := t.TempDir()
+	if err := os.WriteFile(filepath.Join(workspace, "main.go"), nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	label := call.LabelForRendering(tool.CallRendering{
+		Kind:      "read",
+		Subject:   "main.go",
+		Qualifier: "10-14",
+		PathLine:  "10-14",
+	})
+	label.PathRoots = link.Roots{Workspace: workspace}
+
+	if rendered := label.Render(); !strings.Contains(rendered, "#10") {
+		t.Errorf("got %q, want the link to start at line 10", rendered)
 	}
 }
 
@@ -215,12 +250,14 @@ func TestALabelCarriesTheTimeTheCallGaveItself(t *testing.T) {
 
 func TestOnlyAShellCommandOrAFailureSaysWhatItReturned(t *testing.T) {
 	for name, test := range map[string]struct {
-		event agent.Event
-		want  string
+		event      agent.Event
+		showOutput bool
+		want       string
 	}{
 		"shell": {
-			event: agent.Event{Name: "bash", Status: agent.SuccessStatus, Text: "hello"},
-			want:  "hello",
+			event:      agent.Event{Name: "bash", Status: agent.SuccessStatus, Text: "hello"},
+			showOutput: true,
+			want:       "hello",
 		},
 		"failure": {
 			event: agent.Event{Name: "read", Status: agent.ErrorStatus, Text: "no such file"},
@@ -232,25 +269,30 @@ func TestOnlyAShellCommandOrAFailureSaysWhatItReturned(t *testing.T) {
 		},
 	} {
 		t.Run(name, func(t *testing.T) {
-			if got := call.Summary(test.event); got != test.want {
+			if got := call.Summary(test.event, test.showOutput); got != test.want {
 				t.Errorf("got %q, want %q", got, test.want)
 			}
 		})
 	}
 }
 
-func TestASkillReadIsDrawnAsALoad(t *testing.T) {
+func TestASkillReadUsesItsStoredSemanticRendering(t *testing.T) {
 	label := call.LabelFor(agent.Event{
-		Name:              "read",
-		FallbackRendering: agent.FallbackRendering{Subject: "/skills/guard-basics/SKILL.md"},
+		Name: "read",
+		FallbackRendering: agent.FallbackRendering{
+			RenderingKind: "skill",
+			Subject:       "/skills/guard-basics/SKILL.md",
+			Emphasis:      tool.Emphasis{Kind: tool.EmphasisFocus, Value: "guard-basics"},
+		},
 	}, nil, nil)
 
 	want := call.Label{
-		Name:        "load",
-		Subject:     "/skills/guard-basics/SKILL.md",
-		NameStyle:   style.Skill,
-		Accent:      "guard-basics",
-		AccentStyle: style.Skill,
+		Name:       "load",
+		NameStyle:  style.Skill,
+		FocusStyle: style.Skill,
+		Subject:    "/skills/guard-basics/SKILL.md",
+		Emphasis:   tool.Emphasis{Kind: tool.EmphasisFocus, Value: "guard-basics"},
+		ReadOnly:   false,
 	}
 
 	if got := label.Render(); got != want.Render() {

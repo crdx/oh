@@ -46,6 +46,7 @@ type Sources struct {
 	ModelCachePath string
 	SessionsDir    string
 	ToolNames      []string
+	CustomCapFlags string
 }
 
 func Complete(args []string, sources Sources) ([]string, bool) {
@@ -82,7 +83,7 @@ func completions(kind string, word string, sources Sources) []string {
 	case completeProvider:
 		return withPrefix(word, model.LoginProviderNames())
 	case completeCaps:
-		return withPrefix(word, capsCompletions())
+		return withPrefix(word, capsCompletions(sources.CustomCapFlags))
 	case completeTool:
 		return withPrefix(word, sources.ToolNames)
 	default:
@@ -190,11 +191,15 @@ func sessionNames(directory string) []string {
 	return names
 }
 
-func capsCompletions() []string {
-	sets := make([]string, 0, len(caps.AllFlags))
+func capsCompletions(customFlags ...string) []string {
+	flags := caps.AllFlags
+	if len(customFlags) > 0 {
+		flags += customFlags[0]
+	}
+	sets := make([]string, 0, len(flags))
 
-	for i := range caps.AllFlags {
-		sets = append(sets, caps.AllFlags[:i+1])
+	for i := range flags {
+		sets = append(sets, flags[:i+1])
 	}
 
 	return sets

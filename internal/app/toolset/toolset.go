@@ -84,6 +84,50 @@ func Reduce(availableTools []tool.Tool, enabledToolNames []string) ([]tool.Tool,
 	return tools, nil
 }
 
+type Restoration struct {
+	OfferedTools    []tool.Tool
+	RegisteredTools []tool.Tool
+	Availability    Availability
+	Transitions     map[string]CompatibilityTransition
+	CompatibleNames []string
+}
+
+func Restore(availableTools []tool.Tool, snapshots []tool.Snapshot) Restoration {
+	availableByName := indexByName(availableTools)
+	result := Restoration{
+		OfferedTools:    make([]tool.Tool, 0, len(snapshots)),
+		Availability:    make(Availability, len(snapshots)),
+		Transitions:     make(map[string]CompatibilityTransition),
+		CompatibleNames: make([]string, 0, len(snapshots)),
+	}
+
+	for _, snapshot := range snapshots {
+		currentTool, isInstalled := availableByName[snapshot.Definition.Name]
+		status := ToolMissing
+		offeredTool := tool.Unavailable(snapshot, missingToolReason(snapshot.Definition.Name))
+		if isInstalled {
+			status = ToolChanged
+			offeredTool = tool.Unavailable(snapshot, changedToolReason(snapshot.Definition.Name))
+			if tool.IsCompatible(currentTool, snapshot) {
+				status = ToolAvailable
+				offeredTool = currentTool
+				result.CompatibleNames = append(result.CompatibleNames, currentTool.Name())
+			} else if currentTool.Revision() != snapshot.Revision {
+				result.Transitions[currentTool.Name()] = CompatibilityTransition{
+					From: snapshot.Revision,
+					To:   currentTool.Revision(),
+				}
+			}
+		}
+
+		result.Availability[snapshot.Definition.Name] = status
+		result.OfferedTools = append(result.OfferedTools, offeredTool)
+	}
+
+	result.RegisteredTools = slices.Clone(result.OfferedTools)
+	return result
+}
+
 func indexByName(tools []tool.Tool) map[string]tool.Tool {
 	indexedTools := make(map[string]tool.Tool, len(tools))
 	for _, availableTool := range tools {

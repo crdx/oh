@@ -2,6 +2,7 @@ package tool
 
 import (
 	"encoding/json"
+	"slices"
 	"strings"
 
 	"crdx.org/oh/internal/util/strutil"
@@ -32,6 +33,10 @@ type Parameter struct {
 func (self Parameter) Optional() Parameter {
 	self.isOptional = true
 	return self
+}
+
+func (self Parameter) IsOptional() bool {
+	return self.isOptional
 }
 
 func String(name string, description string) Parameter {
@@ -103,12 +108,63 @@ type Definition struct {
 	Schema      Schema
 }
 
+type Snapshot struct {
+	Definition Definition
+	Revision   string
+}
+
 func Describe(subject Tool) Definition {
-	return Definition{
+	return cloneDefinition(Definition{
 		Name:        subject.Name(),
 		Description: subject.Description(),
 		Schema:      subject.Schema(),
+	})
+}
+
+func TakeSnapshot(subject Tool) Snapshot {
+	return Snapshot{Definition: Describe(subject), Revision: subject.Revision()}
+}
+
+type compatibilityReporter interface {
+	CompatibleWith(revision string) bool
+}
+
+func AcceptsRevision(subject Tool, revision string) bool {
+	reporter, isReported := subject.(compatibilityReporter)
+	return isReported && reporter.CompatibleWith(revision)
+}
+
+func IsCompatible(subject Tool, snapshot Snapshot) bool {
+	isCompatibleRevision := subject.Revision() == snapshot.Revision || AcceptsRevision(subject, snapshot.Revision)
+	return isCompatibleRevision && equalDefinitions(Describe(subject), snapshot.Definition)
+}
+
+func cloneDefinition(definition Definition) Definition {
+	clonedSchema := make(Schema, len(definition.Schema))
+	for i, parameter := range definition.Schema {
+		parameter.Values = slices.Clone(parameter.Values)
+		clonedSchema[i] = parameter
 	}
+	definition.Schema = clonedSchema
+	return definition
+}
+
+func equalDefinitions(left Definition, right Definition) bool {
+	if left.Name != right.Name || left.Description != right.Description || len(left.Schema) != len(right.Schema) {
+		return false
+	}
+	for i, leftParameter := range left.Schema {
+		rightParameter := right.Schema[i]
+		if leftParameter.Name != rightParameter.Name ||
+			leftParameter.Type != rightParameter.Type ||
+			leftParameter.ItemType != rightParameter.ItemType ||
+			leftParameter.Description != rightParameter.Description ||
+			leftParameter.IsOptional() != rightParameter.IsOptional() ||
+			!slices.Equal(leftParameter.Values, rightParameter.Values) {
+			return false
+		}
+	}
+	return true
 }
 
 func DescribeUnparsedArguments(subject Tool, arguments string) string {

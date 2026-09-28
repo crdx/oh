@@ -31,8 +31,8 @@ type Label struct {
 	Qualifier       string
 	ReadOnly        bool
 	NameStyle       style.Style
-	Accent          string
-	AccentStyle     style.Style
+	FocusStyle      style.Style
+	ShowOutput      bool
 	ResultURI       string
 	TimeLimit       time.Duration
 	PathRoots       link.Roots
@@ -191,10 +191,11 @@ func (self Label) renderSubject() string {
 	spans := []span{}
 	focus := self.focus()
 	if at := strings.LastIndex(self.Subject, focus); focus != "" && at >= 0 {
-		spans = append(spans, span{start: at, end: at + len(focus), style: style.Subject})
-	}
-	if at := strings.LastIndex(self.Subject, self.Accent); self.Accent != "" && self.AccentStyle != nil && at >= 0 {
-		spans = append(spans, span{start: at, end: at + len(self.Accent), style: self.AccentStyle})
+		focusStyle := self.FocusStyle
+		if focusStyle == nil {
+			focusStyle = style.Subject
+		}
+		spans = append(spans, span{start: at, end: at + len(focus), style: focusStyle})
 	}
 
 	if len(spans) == 0 {
@@ -271,7 +272,6 @@ func (self Label) style() style.Style {
 	if self.ReadOnly {
 		return style.Call
 	}
-
 	return style.Change
 }
 

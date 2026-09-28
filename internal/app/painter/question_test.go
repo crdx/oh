@@ -118,6 +118,23 @@ func TestACommandIsMarkedTheWayTheToolMarksIt(t *testing.T) {
 	}
 }
 
+func TestACommandMarkFollowsTheToolTheme(t *testing.T) {
+	theme := style.DefaultTheme()
+	theme.Tool["bash"] = style.ToolAppearance{Name: "fire"}
+	t.Cleanup(style.ApplyTheme(theme))
+	question := ask.Confirmation{
+		Label:    "Continue?",
+		Detail:   "curl example.com",
+		Language: "bash",
+	}.Question()
+
+	detail := RenderQuestion(question, 0, 80)[2]
+
+	if !strings.HasPrefix(style.Plain(detail), "fire curl") {
+		t.Errorf("got detail %q, want the themed shell mark", style.Plain(detail))
+	}
+}
+
 func TestALongDetailIsWrappedUnderItsGutter(t *testing.T) {
 	question := ask.Confirmation{
 		Label:  "Continue?",

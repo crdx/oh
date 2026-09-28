@@ -273,18 +273,20 @@ func TestCallHighlightsItsPatternAsRegexpSyntax(t *testing.T) {
 	}
 
 	want := tool.Emphasis{Kind: tool.EmphasisSyntax, Value: "regexp"}
-	if call.Emphasis() != want {
+	if call.Rendering().Emphasis != want {
 		t.Errorf("expected regexp emphasis, got %T", call)
 	}
 }
 
 func TestRenderSaysNothingOfTheWorkingDirectory(t *testing.T) {
-	subject, qualifier := grep.Describe(grep.Args{Pattern: "hello", Path: "."})
+	rendering := grep.Describe(grep.Args{Pattern: "hello", Path: "."})
+	subject, qualifier := rendering.Subject, rendering.Qualifier
 	if subject != "hello" || qualifier != "" {
 		t.Errorf("expected the path to go without saying, got %q and %q", subject, qualifier)
 	}
 
-	subject, qualifier = grep.Describe(grep.Args{Pattern: "hello", Path: "internal", Glob: "*.go"})
+	rendering = grep.Describe(grep.Args{Pattern: "hello", Path: "internal", Glob: "*.go"})
+	subject, qualifier = rendering.Subject, rendering.Qualifier
 	if subject != "hello" || qualifier != "internal *.go" {
 		t.Errorf("expected a path and glob to be named, got %q and %q", subject, qualifier)
 	}

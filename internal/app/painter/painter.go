@@ -27,6 +27,7 @@ import (
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/startup"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/toolset"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/app/work"
@@ -199,7 +200,7 @@ func (self *Picasso) DrawEvent(event agent.Event) {
 		self.drawNotices(event, self.drawSubmittedPanel)
 
 	case caps.ModeChange, caps.JobStop, portgrant.SandboxToHostChange, jobrecord.EndedWithSession,
-		conditions.Change, pathgrant.Change, turn.HarnessPoke:
+		conditions.Change, toolset.AvailabilityChange, pathgrant.Change, turn.HarnessPoke:
 		self.drawNotices(event, self.drawSubmitted)
 
 	case agent.RetryingEvent:
@@ -498,7 +499,8 @@ func (self *Picasso) drawNotices(event agent.Event, draw func(submittedMessage))
 func isJoinableNotice(event agent.Event) bool {
 	switch event.Kind {
 	case caps.ModeChange, caps.JobStop, portgrant.SandboxToHostChange, portgrant.HostToSandboxChange,
-		jobrecord.Ended, jobrecord.EndedWithSession, conditions.Change, pathgrant.Change, turn.HarnessPoke,
+		jobrecord.Ended, jobrecord.EndedWithSession, conditions.Change, toolset.AvailabilityChange,
+		pathgrant.Change, turn.HarnessPoke,
 		hostcommand.Ran:
 		return true
 	case agent.StartupEvent, agent.UserMessageEvent, agent.SilentTurnEvent, agent.PrefixRewriteEvent,
@@ -757,7 +759,7 @@ func (self *Picasso) mark(event agent.Event) {
 		label,
 		getState(event.Status),
 		event.Took,
-		call.Summary(event),
+		call.Summary(event, label.ShowOutput),
 		call.Measurements(event.Metrics),
 	)
 

@@ -9,12 +9,17 @@ import (
 
 type sizedTool struct{}
 
-func (sizedTool) Name() string                        { return "read" }
-func (sizedTool) Description() string                 { return "read a file" }
-func (sizedTool) Schema() tool.Schema                 { return tool.Schema{} }
-func (sizedTool) Concurrent() bool                    { return true }
-func (sizedTool) ReadOnly() bool                      { return true }
-func (sizedTool) StateKey() string                    { return "" }
+func (sizedTool) Name() string               { return "read" }
+func (sizedTool) Description() string        { return "read a file" }
+func (sizedTool) Schema() tool.Schema        { return tool.Schema{} }
+func (sizedTool) Revision() string           { return "1" }
+func (sizedTool) CompatibleWith(string) bool { return false }
+func (sizedTool) Concurrent() bool           { return true }
+func (sizedTool) ReadOnly() bool             { return true }
+func (sizedTool) StateKey() string           { return "" }
+func (sizedTool) Render(string) (tool.CallRendering, bool) {
+	return tool.CallRendering{}, true
+}
 func (sizedTool) Parse(string) (tool.ToolCall, error) { return nil, nil } //nolint:nilnil // the stub is never parsed
 func (sizedTool) Restore(json.RawMessage) error       { return nil }
 

@@ -99,6 +99,57 @@ status_warning = "#cfad00 underline:curly underline:#cc6666"
 dim = "default faint"
 ```
 
+### Tool calls
+
+`[ui.theme.tool]` maps each semantic tool-call kind to an inline appearance. `name` replaces the displayed command name. `paint` colours that name; `focus` colours the focused part of its subject, such as the skill name within a path. Omitted fields inherit from the previous config layer and ultimately the defaults.
+
+A paint is either a direct theme paint or one of `normal`, `dim`, `accent`, `status_success`, `status_info`, `status_warning`, `status_danger`, and `skill`. A direct paint takes the same colour and decorations as an ordinary theme value.
+
+```toml
+[ui.theme.tool]
+skill = { name = "consult-chart", paint = "#e6a8ff bold", focus = "#e6a8ff" }
+job_start = { name = "launch", paint = "status_info" }
+job_stop = { name = "scuttle", paint = "status_danger" }
+expose_add = { name = "open-gangway", paint = "status_warning" }
+expose_remove = { name = "close-gangway", paint = "status_danger" }
+```
+
+| Kind            | Default name | Default paint    | Focus  |
+|-----------------|--------------|------------------|--------|
+| `read`          | `read`       | call default     | accent |
+| `skill`         | `load`       | `skill`          | skill  |
+| `ls`            | `ls`         | call default     | accent |
+| `find`          | `find`       | call default     | accent |
+| `grep`          | `grep`       | call default     | accent |
+| `write`         | `write`      | call default     | accent |
+| `edit`          | `edit`       | call default     | accent |
+| `bash`          | `$`          | `status_info`    | accent |
+| `lookup`        | `lookup`     | `status_info`    | accent |
+| `fetch`         | `fetch`      | `status_info`    | accent |
+| `notify`        | `notify`     | call default     | accent |
+| `title`         | `title`      | call default     | accent |
+| `job_start`     | `start`      | `status_warning` | accent |
+| `job_restart`   | `restart`    | `status_warning` | accent |
+| `job_status`    | `status`     | `status_warning` | accent |
+| `job_output`    | `output`     | `status_warning` | accent |
+| `job_wait_any`  | `wait-for`   | `status_warning` | accent |
+| `job_wait_all`  | `wait-for`   | `status_warning` | accent |
+| `job_stop`      | `stop`       | `status_warning` | accent |
+| `job_list`      | `list`       | `status_warning` | accent |
+| `job_discard`   | `discard`    | `status_warning` | accent |
+| `job_prune`     | `prune`      | `status_warning` | accent |
+| `expose_add`    | `expose`     | `status_warning` | accent |
+| `expose_remove` | `unexpose`   | `status_warning` | accent |
+| `expose_list`   | `list`       | `status_warning` | accent |
+| `job`           | `job`        | call default     | accent |
+| `expose`        | `expose`     | call default     | accent |
+
+The call default is `normal` for a read-only tool and `status_warning` for a tool that may change something. `job` and `expose` are the malformed-call fallbacks; valid calls use their action kind. An unlisted custom or removed tool keeps its recorded name and uses that same default.
+
+A tool records its semantic kind rather than its themed name, so changing `job_start` rewrites old and new start calls alike when the conversation replays. `skill` is an ordinary semantic kind: its `load` name and mauve paint come entirely from this table rather than a renderer exception. Its subject remains the complete linked skill path.
+
+A live theme reload clears and replays the complete conversation, so vocabulary, command colours, and focused argument colours change throughout scrollback at once. Resume, preview, and print also render with the active tool theme.
+
 Some styling is fixed in the binary — the italics on reasoning and preview hints, the bold on a heading, the simulation gradient — and no theme key reaches it. `internal/app/style/theme.go` and `style.go` are canonical.
 
 ## Bar
@@ -151,7 +202,7 @@ A `rate` or a duration takes Go's form, as `125ms`, `10s`, or `5m`. A segment re
 
 ## Capability Flags
 
-`caps.default` is a string of flags, defaulting to `rx`, and applies when the command line names none. Read is implied whatever the string says.
+`caps.default` is a string of flags, defaulting to `rx`, and applies when the command line names none. Read is implied whatever the string says. A custom tool may add another flag through its `group`.
 
 | Flag | Grants                                               |
 |------|------------------------------------------------------|
@@ -172,22 +223,38 @@ Grant the narrowest set that does the job. Leave `caps.default` to the user: pro
 
 The table name is the tool name. Use lowercase letters, digits, and underscores. Start with a letter. A name that a built-in tool already uses stops startup.
 
-The command runs on the host, in the workspace directory. The sandbox does not confine it. The capability flags do not gate it. Only `permission` holds it back.
+The command runs on the host, in the workspace directory. The sandbox does not confine it. A configured `group` gates it through a mode flag, then `permission` decides whether each allowed call needs approval.
 
 Put custom tools in the global config. A workspace `oh.toml` that sets `[tools]` stops startup.
 
-| Key           | Holds                                                     |
-|---------------|-----------------------------------------------------------|
-| `description` | what the tool does; required                              |
-| `command`     | the executable and its fixed arguments; required          |
-| `parameters`  | the arguments the model supplies, each one a table        |
-| `subject`     | the parameter shown in the call row; the first by default |
-| `timeout`     | the limit for one call; `30s` by default                  |
-| `permission`  | `ask` by default, or `allow` to run without a question    |
+| Key           | Holds                                                       |
+|---------------|-------------------------------------------------------------|
+| `description` | what the tool does; required                                |
+| `command`     | the executable and its fixed arguments; required            |
+| `parameters`  | the arguments the model supplies, each one a table          |
+| `subject`     | the parameter shown in the call row; the first by default   |
+| `timeout`     | the limit for one call; `30s` by default                    |
+| `permission`  | `ask` by default, or `allow` to run without a question      |
+| `group`       | one lowercase mode flag that must grant access              |
+| `compatible`  | reviewed compatibility transitions between exact identities |
 
 The model reads the description alone to choose a tool. Write it for the model.
 
-With `ask`, oh shows the command line and waits for a yes or a no. A no tells the model to try something else. Print mode has nobody to ask, so the call fails.
+A group using `x`, `w`, `n`, `g`, `l`, or `r` follows that built-in capability. Any other letter appears in a third section of the mode display, as in `rxw ngl abc`, and ctrl+x followed by that letter toggles every tool in its group. Add the letter to `caps.default` or `-c` to grant it initially. Read is always granted, so a tool in group `r` is always available.
+
+With `ask`, oh shows the command line and waits for a yes or a no after its group grants access. A no tells the model to try something else. Print mode has nobody to ask, so the call fails.
+
+A session freezes each tool's description, parameters, group, and compatibility identity. If the current declaration differs when the session resumes, oh keeps the frozen definition for conversation continuity but disables execution and tells the model. The identity covers the command settings and content of its executable and regular-file arguments, so editing an ordinary script needs no manual revision.
+
+A disabled-tool notice gives the complete old and current identities. After reviewing a change as backward-compatible, add that exact transition:
+
+```toml
+compatible = [
+    { from = "<old identity from the notice>", to = "<current identity from the notice>" },
+]
+```
+
+Both values are SHA-256 identities. The entry enables only that exact old contract with that exact current implementation. A later file change produces another identity and disables the tool again, so a stale entry grants nothing. Leave `compatible` out for incompatible changes; existing sessions then keep refusing the changed implementation while new sessions receive it normally.
 
 Give each parameter a `name`, a `kind`, and a `description`. Add `optional = true` where the model can leave it out. Add `values` for an enum.
 
@@ -208,6 +275,7 @@ command = ["./tools/forecast"]
 subject = "city"
 timeout = "10s"
 permission = "ask"
+group = "a"
 parameters = [
     { name = "city", kind = "string", description = "the city to report on" },
     { name = "days", kind = "integer", description = "how many days ahead to look", optional = true },
@@ -219,7 +287,7 @@ oh resolves the first word of `command` against the config file when the word ho
 
 The result holds standard output and standard error. A non-zero exit reports a failure with that output. A timeout reports a failure the same way.
 
-`-t` selects the tools for a session, custom tools included. `-t weather` offers that tool alone. The session freezes its tool set, so a change here reaches the next session.
+`-t` selects the tools for a session, custom tools included. `-t weather` offers that tool alone. New definitions reach new sessions; an incompatible change disables the tool in sessions that froze its previous contract.
 
 ## Sandbox Paths
 

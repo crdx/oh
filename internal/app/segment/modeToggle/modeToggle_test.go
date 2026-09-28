@@ -40,6 +40,21 @@ func TestOnlyTheStylingSaysWhatIsGranted(t *testing.T) {
 	}
 }
 
+func TestCustomToolGroupsFormAThirdSection(t *testing.T) {
+	built, err := modeToggle.New(
+		func() caps.Set { return caps.Read },
+		func() bool { return false },
+		func() caps.GroupStatus { return caps.GroupStatus{Flags: "abc", GrantedFlags: "b"} },
+	)(noOptions{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if got := style.Plain(built.Render(segment.Context{})); got != "rxw ngl abc" {
+		t.Errorf("got %q", got)
+	}
+}
+
 func TestTheShellLetterFollowsWhateverItMayChange(t *testing.T) {
 	for _, test := range []struct {
 		flags string

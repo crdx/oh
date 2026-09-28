@@ -15,7 +15,6 @@ import (
 	"github.com/BurntSushi/toml"
 	"golang.org/x/sys/unix"
 
-	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/output"
 	"crdx.org/oh/internal/app/permission"
@@ -227,7 +226,7 @@ func TestAMissingConfigFileIsAllowed(t *testing.T) {
 	if config.Input.Continue != "yes" {
 		t.Errorf("got default continue message %q", config.Input.Continue)
 	}
-	if got := caps.Set(config.Caps.Default).Flags(); got != "rx" {
+	if got := string(config.Caps.Default); got != "rx" {
 		t.Errorf("got default capabilities %q", got)
 	}
 	if config.Version != Format {
@@ -274,7 +273,7 @@ func TestAnUnversionedOverrideReplacesOnlyWhatItMentions(t *testing.T) {
 	if settings.Ui.Currency != "EUR" {
 		t.Errorf("got currency %q", settings.Ui.Currency)
 	}
-	if got := caps.Set(settings.Caps.Default).Flags(); got != "rwg" {
+	if got := string(settings.Caps.Default); got != "rwg" {
 		t.Errorf("got default capabilities %q", got)
 	}
 	if !slices.Equal(settings.Model.RoundRobin, []string{"anthropic/global"}) {
@@ -1128,7 +1127,7 @@ func TestAConfigWrittenBeforeThemesExistedNeedsNoMigrating(t *testing.T) {
 	if err != nil {
 		t.Fatalf("a config from before themes existed was refused: %v", err)
 	}
-	if config.Ui.Theme != style.DefaultTheme() {
+	if !config.Ui.Theme.Equal(style.DefaultTheme()) {
 		t.Errorf("got theme %+v, want defaults %+v", config.Ui.Theme, style.DefaultTheme())
 	}
 }
@@ -1144,6 +1143,76 @@ func TestAThemeOverridesOneColourWithoutDroppingTheRest(t *testing.T) {
 	}
 	if config.Ui.Theme.StatusDanger != style.DefaultTheme().StatusDanger {
 		t.Errorf("got status danger colour %q, want default %q", config.Ui.Theme.StatusDanger, style.DefaultTheme().StatusDanger)
+	}
+}
+
+func TestAToolThemeOverridesOnePartWithoutDroppingTheRest(t *testing.T) {
+	config := configFrom(t, `
+		[ui.theme.tool]
+		skill = { name = "consult-chart" }
+	`)
+
+	appearance := config.Ui.Theme.Tool["skill"]
+	if appearance.Name != "consult-chart" {
+		t.Errorf("got tool name %q", appearance.Name)
+	}
+	if appearance.Paint != "skill" || appearance.Focus != "skill" {
+		t.Errorf("got appearance %+v, want the default paints", appearance)
+	}
+	if got := config.Ui.Theme.Tool["bash"].Name; got != "$" {
+		t.Errorf("unrelated bash name became %q", got)
+	}
+}
+
+func TestAProjectToolThemeOverrideInheritsTheGlobalAppearance(t *testing.T) {
+	directory := t.TempDir()
+	globalPath := filepath.Join(directory, "config.toml")
+	if err := writeConfigFile(globalPath, `
+		[ui.theme.tool]
+		skill = { name = "consult-chart", paint = "#010203", focus = "#040506" }
+	`); err != nil {
+		t.Fatal(err)
+	}
+	overridePath := filepath.Join(directory, "oh.toml")
+	if err := os.WriteFile(overridePath, []byte(`
+		[ui.theme.tool]
+		skill = { name = "read-chart" }
+	`), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	config, err := LoadSources(
+		Source{Path: globalPath},
+		Source{Path: overridePath, IsOverride: true},
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	appearance := config.Ui.Theme.Tool["skill"]
+	if appearance.Name != "read-chart" || appearance.Paint != "#010203" || appearance.Focus != "#040506" {
+		t.Errorf("got appearance %+v, want the local name with global paints", appearance)
+	}
+}
+
+func TestAnInvalidToolAppearanceIsRefused(t *testing.T) {
+	for name, body := range map[string]string{
+		"empty name": `[ui.theme.tool]
+read = { name = "" }
+`,
+		"control in name": "[ui.theme.tool]\nread = { name = \"bad\u0007name\" }\n",
+		"invalid paint": `[ui.theme.tool]
+read = { paint = "chartreuse" }
+`,
+	} {
+		t.Run(name, func(t *testing.T) {
+			path := filepath.Join(t.TempDir(), "config.toml")
+			if err := writeConfigFile(path, body); err != nil {
+				t.Fatal(err)
+			}
+			if _, err := Load(path); err == nil {
+				t.Error("invalid tool appearance was accepted")
+			}
+		})
 	}
 }
 

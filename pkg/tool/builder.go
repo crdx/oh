@@ -4,34 +4,43 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"maps"
 	"path"
 	"strings"
 	"time"
 )
 
 type Builder[T any] struct {
-	definition Definition
-	describe   Describer[T]
-	validate   Validator[T]
-	decode     Decoder[T]
+	definition          Definition
+	revision            string
+	compatibleRevisions map[string]struct{}
+	render              Renderer[T]
+	validate            Validator[T]
+	decode              Decoder[T]
 
 	parallel       bool
 	readOnly       bool
 	stateName      string
 	restore        Restorer
-	emphasis       func(call ToolCall) Emphasis
+	emphasis       func(rendering CallRendering) Emphasis
 	emphasisSource func(args T, subject string) string
-	continuation   func(args T) []CallRendering
 	timeLimit      func(args T) time.Duration
 	isAllowed      func() bool
 	withheld       error
+	fallback       CallRendering
 }
 
-func Implement[T any](definition Definition, describe Describer[T]) Builder[T] {
+func Implement[T any](definition Definition, render Renderer[T]) Builder[T] {
 	return Builder[T]{
 		definition: definition,
-		describe:   describe,
+		revision:   "1",
+		render:     render,
 	}
+}
+
+func (self Builder[T]) DefaultsTo(rendering CallRendering) Builder[T] {
+	self.fallback = rendering
+	return self
 }
 
 func (self Builder[T]) Validate(validate Validator[T]) Builder[T] {
@@ -41,6 +50,19 @@ func (self Builder[T]) Validate(validate Validator[T]) Builder[T] {
 
 func (self Builder[T]) Decode(decode Decoder[T]) Builder[T] {
 	self.decode = decode
+	return self
+}
+
+func (self Builder[T]) Revision(revision string) Builder[T] {
+	self.revision = revision
+	return self
+}
+
+func (self Builder[T]) CompatibleWith(revisions ...string) Builder[T] {
+	self.compatibleRevisions = make(map[string]struct{}, len(revisions))
+	for _, revision := range revisions {
+		self.compatibleRevisions[revision] = struct{}{}
+	}
 	return self
 }
 
@@ -62,7 +84,7 @@ func (self Builder[T]) State(name string, restore Restorer) Builder[T] {
 }
 
 func (self Builder[T]) Syntax(language string) Builder[T] {
-	self.emphasis = func(ToolCall) Emphasis {
+	self.emphasis = func(CallRendering) Emphasis {
 		return Emphasis{Kind: EmphasisSyntax, Value: language}
 	}
 	self.emphasisSource = nil
@@ -76,9 +98,9 @@ func (self Builder[T]) SyntaxFrom(language string, source func(args T, subject s
 	return self
 }
 
-func (self Builder[T]) Focuses(pick func(ToolCall) string) Builder[T] {
-	self.emphasis = func(call ToolCall) Emphasis {
-		return Emphasis{Kind: EmphasisFocus, Value: pick(call)}
+func (self Builder[T]) Focuses(pick func(CallRendering) string) Builder[T] {
+	self.emphasis = func(rendering CallRendering) Emphasis {
+		return Emphasis{Kind: EmphasisFocus, Value: pick(rendering)}
 	}
 	self.emphasisSource = nil
 
@@ -86,8 +108,8 @@ func (self Builder[T]) Focuses(pick func(ToolCall) string) Builder[T] {
 }
 
 func (self Builder[T]) FocusPath() Builder[T] {
-	return self.Focuses(func(call ToolCall) string {
-		subject := call.Subject()
+	return self.Focuses(func(rendering CallRendering) string {
+		subject := rendering.Subject
 		if subject == "" {
 			return ""
 		}
@@ -105,11 +127,6 @@ func (self Builder[T]) Requires(isAllowed func() bool, withheld error) Builder[T
 
 func (self Builder[T]) TakesAtMost(limit func(args T) time.Duration) Builder[T] {
 	self.timeLimit = limit
-	return self
-}
-
-func (self Builder[T]) ContinuesWith(render func(args T) []CallRendering) Builder[T] {
-	self.continuation = render
 	return self
 }
 
@@ -152,6 +169,10 @@ func (self Builder[T]) decodeArguments(arguments string) (T, error) {
 		return self.decode(arguments)
 	}
 
+	if _, err := self.definition.Schema.Decode(arguments); err != nil {
+		return args, err
+	}
+
 	if text := strings.TrimSpace(arguments); text != "" {
 		if err := json.Unmarshal([]byte(text), &args); err != nil {
 			return args, fmt.Errorf("could not parse the arguments: %w", err)
@@ -161,18 +182,38 @@ func (self Builder[T]) decodeArguments(arguments string) (T, error) {
 	return args, nil
 }
 
+func (self Builder[T]) renderCall(args T) CallRendering {
+	rendering := self.render(args)
+	if self.emphasis != nil {
+		rendering.Emphasis = self.emphasis(rendering)
+	}
+	if self.emphasisSource != nil {
+		rendering.Emphasis.Source = self.emphasisSource(args, rendering.Subject)
+	}
+	return rendering
+}
+
 func (self Builder[T]) build(exec ResultExecutor[T]) Tool {
 	exec = self.guardAccess(exec)
 
 	return _tool{
-		name:        self.definition.Name,
-		description: self.definition.Description,
-		schema:      self.definition.Schema,
-		parallel:    self.parallel,
-		readOnly:    self.readOnly,
-		stateName:   self.stateName,
-		restore:     self.restore,
-		emphasis:    self.emphasis,
+		name:                self.definition.Name,
+		description:         self.definition.Description,
+		schema:              self.definition.Schema,
+		revision:            self.revision,
+		compatibleRevisions: maps.Clone(self.compatibleRevisions),
+		parallel:            self.parallel,
+		readOnly:            self.readOnly,
+		stateName:           self.stateName,
+		restore:             self.restore,
+		fallback:            self.fallback,
+		render: func(arguments string) (CallRendering, bool) {
+			args, err := self.decodeArguments(arguments)
+			if err != nil {
+				return self.fallback, false
+			}
+			return self.renderCall(args), true
+		},
 		parse: func(arguments string) (_call, error) {
 			args, err := self.decodeArguments(arguments)
 			if err != nil {
@@ -185,25 +226,14 @@ func (self Builder[T]) build(exec ResultExecutor[T]) Tool {
 				}
 			}
 
-			subject, qualifier := self.describe(args)
-			emphasisSource := ""
-			if self.emphasisSource != nil {
-				emphasisSource = self.emphasisSource(args, subject)
-			}
-			var continuation []CallRendering
-			if self.continuation != nil {
-				continuation = self.continuation(args)
-			}
+			rendering := self.renderCall(args)
 			var timeLimit time.Duration
 			if self.timeLimit != nil {
 				timeLimit = self.timeLimit(args)
 			}
 			return _call{
-				subject:        subject,
-				qualifier:      qualifier,
-				emphasisSource: emphasisSource,
-				continuation:   continuation,
-				timeLimit:      timeLimit,
+				rendering: rendering,
+				timeLimit: timeLimit,
 				exec: func(ctx context.Context) (ToolCallResult, error) {
 					return exec(ctx, args)
 				},

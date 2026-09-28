@@ -31,6 +31,35 @@ syntax_operator = "#8abeb7"
 syntax_keyword = "#c9a6d4"
 skill = "#c9a6d4"
 
+[ui.theme.tool]
+read = { name = "read" }
+skill = { name = "load", paint = "skill", focus = "skill" }
+ls = { name = "ls" }
+find = { name = "find" }
+grep = { name = "grep" }
+write = { name = "write" }
+edit = { name = "edit" }
+bash = { name = "$", paint = "status_info" }
+job = { name = "job" }
+job_start = { name = "start", paint = "status_warning" }
+job_restart = { name = "restart", paint = "status_warning" }
+job_status = { name = "status", paint = "status_warning" }
+job_output = { name = "output", paint = "status_warning" }
+job_wait_any = { name = "wait-for", paint = "status_warning" }
+job_wait_all = { name = "wait-for", paint = "status_warning" }
+job_stop = { name = "stop", paint = "status_warning" }
+job_list = { name = "list", paint = "status_warning" }
+job_discard = { name = "discard", paint = "status_warning" }
+job_prune = { name = "prune", paint = "status_warning" }
+expose = { name = "expose" }
+expose_add = { name = "expose", paint = "status_warning" }
+expose_remove = { name = "unexpose", paint = "status_warning" }
+expose_list = { name = "list", paint = "status_warning" }
+lookup = { name = "lookup", paint = "status_info" }
+fetch = { name = "fetch", paint = "status_info" }
+notify = { name = "notify" }
+title = { name = "title" }
+
 [tool]
 output = "12K"
 

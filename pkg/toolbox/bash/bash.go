@@ -55,6 +55,7 @@ func New(
 		},
 		Describe,
 	).
+		DefaultsTo(defaultRendering()).
 		Validate(func(args Args) error { return validate(args, hasNetworkChoice) }).
 		SyntaxFrom("bash", emphasisSource).
 		Exec(func(ctx context.Context, args Args) (string, tool.ToolCallMetrics, error) {
@@ -86,9 +87,8 @@ func ProtectedPolicy(policy sandbox.Policy) sandbox.Policy {
 	return policy.WithRead(readOnlyPaths...)
 }
 
-func Describe(args Args) (string, string) {
-	rendering := DescribeCommand(args.Command)
-	return rendering.Subject, rendering.Qualifier
+func Describe(args Args) tool.CallRendering {
+	return DescribeCommand(args.Command)
 }
 
 func DescribeCommand(command string) tool.CallRendering {
@@ -103,15 +103,21 @@ func DescribeCommand(command string) tool.CallRendering {
 		subject = format(parsedScript)
 	}
 
+	rendering := defaultRendering()
+	rendering.Subject = subject
+	rendering.Qualifier = spread(command)
+	rendering.Emphasis = tool.Emphasis{
+		Kind:   tool.EmphasisSyntax,
+		Value:  "bash",
+		Source: emphasisSource(Args{Command: command}, subject),
+	}
+	return rendering
+}
+
+func defaultRendering() tool.CallRendering {
 	return tool.CallRendering{
-		Name:      "bash",
-		Subject:   subject,
-		Qualifier: spread(command),
-		Emphasis: tool.Emphasis{
-			Kind:   tool.EmphasisSyntax,
-			Value:  "bash",
-			Source: emphasisSource(Args{Command: command}, subject),
-		},
+		Kind:       "bash",
+		ShowOutput: true,
 	}
 }
 

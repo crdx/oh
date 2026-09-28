@@ -78,8 +78,8 @@ func New(writeEscape EscapeWriter, isTerminalFocused func() bool) tool.Tool {
 		})
 }
 
-func Describe(args Args) (string, string) {
-	return args.Title, args.Message
+func Describe(args Args) tool.CallRendering {
+	return tool.CallRendering{Subject: args.Title, Qualifier: "— " + args.Message}
 }
 
 func validate(args Args) error {

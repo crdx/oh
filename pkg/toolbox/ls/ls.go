@@ -33,12 +33,12 @@ func New(root *file.Root) tool.Tool {
 		})
 }
 
-func Describe(args Args) (string, string) {
+func Describe(args Args) tool.CallRendering {
 	if args.Path == "." {
-		return "", ""
+		return tool.CallRendering{}
 	}
 
-	return args.Path, ""
+	return tool.CallRendering{Subject: args.Path}
 }
 
 func exec(root *file.Root, args Args) (string, error) {

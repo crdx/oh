@@ -64,10 +64,11 @@ func newTool(
 				tool.String("type", "one of: markdown, clean_html, text, raw"),
 			},
 		},
-		func(args Args) (string, string) { return args.URL, args.Type },
+		Describe,
 	).
+		DefaultsTo(Describe(Args{})).
 		Validate(validate).
-		Focuses(func(call tool.ToolCall) string { return call.Subject() }).
+		Focuses(func(rendering tool.CallRendering) string { return rendering.Subject }).
 		IsEmbarrassinglyParallel().
 		ChangesNothing().
 		Requires(isAllowed, ErrWithheld).
@@ -108,6 +109,18 @@ func newTool(
 
 			return output, tool.GetMetrics(output), nil
 		})
+}
+
+func Describe(args Args) tool.CallRendering {
+	qualifier := ""
+	if args.Type != "" {
+		qualifier = "as " + args.Type
+	}
+	return tool.CallRendering{
+		Kind:      "fetch",
+		Subject:   args.URL,
+		Qualifier: qualifier,
+	}
 }
 
 func validate(args Args) error {

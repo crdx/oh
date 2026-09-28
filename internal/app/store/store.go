@@ -34,6 +34,7 @@ type Meta struct {
 	SystemContextSources  []contextsource.Source `json:"system_context_sources,omitempty"`
 	SessionContextSources []contextsource.Source `json:"session_context_sources,omitempty"`
 	Tools                 []string               `json:"tools,omitempty"`
+	ToolDefinitions       []ToolDefinition       `json:"tool_definitions,omitempty"`
 	Conditions            *conditions.Conditions `json:"conditions,omitempty"`
 	Yolo                  bool                   `json:"yolo,omitempty"`
 }

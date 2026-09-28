@@ -5,7 +5,6 @@ import (
 	"strings"
 	"time"
 
-	"crdx.org/oh/internal/app/skill"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/util/strutil"
@@ -13,17 +12,10 @@ import (
 	"crdx.org/oh/pkg/tool"
 )
 
-const (
-	readTool   = "read"
-	shellTool  = "bash"
-	lookupTool = "lookup"
-	fetchTool  = "fetch"
-)
-
 type ToolLookup func(string) (tool.Tool, bool)
 
-func Summary(event agent.Event) string {
-	if event.Status != agent.SuccessStatus || event.Name == shellTool {
+func Summary(event agent.Event, shouldShowOutput bool) string {
+	if event.Status != agent.SuccessStatus || shouldShowOutput {
 		return event.Text
 	}
 
@@ -41,21 +33,40 @@ func describe(
 	workspace *work.Space,
 ) (agent.FallbackRendering, time.Duration) {
 	rendering := event.FallbackRendering
-	var timeLimit time.Duration
-
-	if getTool != nil {
-		if calledTool, isKnown := getTool(event.Name); isKnown {
-			rendering.ReadOnly = calledTool.ReadOnly()
-			if parsedToolCall, err := calledTool.Parse(event.Arguments); err == nil {
-				rendering.Describe(parsedToolCall)
-				timeLimit = parsedToolCall.TimeLimit()
-			} else {
-				rendering.Subject = tool.DescribeUnparsedArguments(calledTool, event.Arguments)
-			}
-		}
+	calledTool, isKnown := findTool(getTool, event.Name)
+	if !isKnown {
+		return plain(shortenPaths(rendering, workspace)), 0
 	}
 
+	rendering, timeLimit := describeKnownTool(event, rendering, calledTool)
 	return plain(shortenPaths(rendering, workspace)), timeLimit
+}
+
+func findTool(getTool ToolLookup, name string) (tool.Tool, bool) {
+	if getTool == nil {
+		return nil, false
+	}
+	return getTool(name)
+}
+
+func describeKnownTool(
+	event agent.Event,
+	rendering agent.FallbackRendering,
+	calledTool tool.Tool,
+) (agent.FallbackRendering, time.Duration) {
+	rendering.ReadOnly = calledTool.ReadOnly()
+	parsedToolCall, err := calledTool.Parse(event.Arguments)
+	if err == nil {
+		rendering.Describe(parsedToolCall)
+		return rendering, parsedToolCall.TimeLimit()
+	}
+
+	fallback, argumentsWereDecoded := calledTool.Render(event.Arguments)
+	rendering.SetRendering(fallback)
+	if !argumentsWereDecoded || !fallback.HasArguments() {
+		rendering.Subject = tool.DescribeUnparsedArguments(calledTool, event.Arguments)
+	}
+	return rendering, 0
 }
 
 func plain(rendering agent.FallbackRendering) agent.FallbackRendering {
@@ -83,69 +94,49 @@ func printableCallRendering(rendering tool.CallRendering) tool.CallRendering {
 
 func LabelFor(event agent.Event, getTool ToolLookup, workspace *work.Space) Label {
 	rendering, timeLimit := describe(event, getTool, workspace)
-	label := getLabel(event.Name, rendering.Subject, rendering.Note, rendering.Emphasis, rendering.ReadOnly)
+	renderingKind := rendering.RenderingKind
+	if renderingKind == "" {
+		renderingKind = event.Name
+	}
+	label := getLabel(tool.CallRendering{
+		Kind:       renderingKind,
+		Subject:    rendering.Subject,
+		Qualifier:  rendering.Note,
+		PathLine:   rendering.PathLine,
+		Emphasis:   rendering.Emphasis,
+		ShowOutput: rendering.ShowOutput,
+	}, event.Name, rendering.ReadOnly)
 	label.TimeLimit = timeLimit
+	label.lineRange = rendering.PathLine
 	label.Continuation = make([]Label, 0, len(rendering.Continuation))
 	for _, part := range rendering.Continuation {
-		label.Continuation = append(label.Continuation, getLabel(part.Name, part.Subject, part.Qualifier, part.Emphasis, false))
+		label.Continuation = append(label.Continuation, getLabel(part, part.Kind, false))
 	}
 
-	skillName, isSkillLoad := "", false
-	if event.Name == readTool {
-		label.lineRange = rendering.Note
-		skillName, isSkillLoad = skill.NameFromPath(rendering.Subject)
-	}
-
-	if isSkillLoad {
-		label.Name = "load"
-		label.NameStyle = style.Skill
-		label.Accent = skillName
-		label.AccentStyle = style.Skill
-		label.Emphasis = tool.Emphasis{}
-	}
 	return label
 }
 
 func LabelForRendering(rendering tool.CallRendering) Label {
-	return getLabel(
-		rendering.Name,
-		rendering.Subject,
-		rendering.Qualifier,
-		rendering.Emphasis,
-		false,
-	)
-}
-
-func getLabel(name string, subject string, qualifier string, emphasis tool.Emphasis, isReadOnly bool) Label {
-	label := Label{
-		Name:      name,
-		Subject:   subject,
-		Emphasis:  emphasis,
-		Qualifier: qualifier,
-		ReadOnly:  isReadOnly,
-	}
-
-	if toolLabel, isKnown := toolLabels[name]; isKnown {
-		label.Name = toolLabel.name
-		label.NameStyle = toolLabel.style
-	}
-
+	label := getLabel(rendering, rendering.Kind, false)
+	label.lineRange = rendering.PathLine
 	return label
 }
 
-func ToolMark(name string) (string, style.Style) {
-	if toolLabel, isKnown := toolLabels[name]; isKnown {
-		return toolLabel.name, toolLabel.style
+func getLabel(rendering tool.CallRendering, fallbackName string, isReadOnly bool) Label {
+	name, nameStyle, focusStyle := style.ToolCallAppearance(rendering.Kind, fallbackName, isReadOnly)
+	return Label{
+		Name:       name,
+		Subject:    rendering.Subject,
+		Emphasis:   rendering.Emphasis,
+		Qualifier:  rendering.Qualifier,
+		ReadOnly:   isReadOnly,
+		NameStyle:  nameStyle,
+		FocusStyle: focusStyle,
+		ShowOutput: rendering.ShowOutput,
 	}
-
-	return "", nil
 }
 
-var toolLabels = map[string]struct {
-	name  string
-	style style.Style
-}{
-	shellTool:  {"$", style.Shell},
-	lookupTool: {"lookup", style.Lookup},
-	fetchTool:  {"fetch", style.Network},
+func ToolMark(kind string) (string, style.Style) {
+	name, nameStyle, _ := style.ToolCallAppearance(kind, "", false)
+	return name, nameStyle
 }

@@ -42,6 +42,7 @@ var steps = map[int]step{
 	},
 	12: {migrateLine: lookupFlagReplacesWebFlag},
 	13: {finalise: compressWireTranscript},
+	14: {migrateLine: completeToolCallRendering},
 }
 
 var legacyGrantAccess = map[string]string{

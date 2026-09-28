@@ -1,0 +1,35 @@
+
+ use every original tool
+
+
+I must use the original contracts.
+stable stable ✓ 1L
+changed changed ✓ 1L
+revision revision ✓ 1L
+schema schema ✓ 1L
+compatible compatible ✓ 1L
+missing missing ✓ 1L
+
+Every original tool ran.
+
+
+ 🤖 The changed tool changed since this conversation began and is disabled for this conversation.
+ 🤖 The missing tool is no longer installed and is disabled for this conversation.
+ 🤖 The revision tool changed since this conversation began and is disabled for this conversation.
+    Compatibility changed from 1 to 2.
+ 🤖 The schema tool changed since this conversation began and is disabled for this conversation.
+
+
+
+ try every tool again
+
+
+stable stable ✓ 1L
+changed ✗ 1L the changed tool changed since this conversation began and is disabled for this conver…
+revision ✗ 1L the revision tool changed since this conversation began and is disabled for this conv…
+schema ✗ 1L the schema tool changed since this conversation began and is disabled for this conversa…
+compatible compatible ✓ 1L
+missing ✗ 1L the missing tool is no longer installed and is disabled for this conversation
+added {} ✗ there is no tool called "added"
+
+Stable and explicitly compatible tools ran; every other changed tool was refused.

@@ -2,10 +2,13 @@ package expose
 
 import (
 	"errors"
+	"reflect"
 	"slices"
 	"strconv"
 	"strings"
 	"testing"
+
+	"crdx.org/oh/pkg/tool"
 )
 
 type recordedPorts struct {
@@ -148,20 +151,33 @@ func TestACallIsRefusedBeforeItReachesTheHarness(t *testing.T) {
 	}
 }
 
-func TestACallIsDescribedByItsPortAndWhatItDoesToIt(t *testing.T) {
-	subject, qualifier := Describe(Args{Action: actionAdd, Port: 8080})
-	if subject != "8080" || qualifier != "" {
-		t.Errorf("got %q and %q, want the port alone", subject, qualifier)
-	}
-
-	subject, qualifier = Describe(Args{Action: actionRemove, Port: 8080})
-	if subject != "8080" || qualifier != actionRemove {
-		t.Errorf("got %q and %q", subject, qualifier)
-	}
-
-	subject, qualifier = Describe(Args{Action: actionList})
-	if subject != "" || qualifier != actionList {
-		t.Errorf("got %q and %q", subject, qualifier)
+func TestACallIsRenderedByItsAction(t *testing.T) {
+	for name, shape := range map[string]struct {
+		args Args
+		want tool.CallRendering
+	}{
+		"expose": {
+			args: Args{Action: actionAdd, Port: 8080},
+			want: tool.CallRendering{Kind: "expose_add", Subject: "8080"},
+		},
+		"associated expose": {
+			args: Args{Action: actionAdd, Port: 8080, JobName: "docs"},
+			want: tool.CallRendering{Kind: "expose_add", Subject: "docs:8080"},
+		},
+		"unexpose": {
+			args: Args{Action: actionRemove, Port: 8080},
+			want: tool.CallRendering{Kind: "expose_remove", Subject: "8080"},
+		},
+		"list": {
+			args: Args{Action: actionList},
+			want: tool.CallRendering{Kind: "expose_list", Subject: "exposed ports"},
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			if rendering := Describe(shape.args); !reflect.DeepEqual(rendering, shape.want) {
+				t.Errorf("got %#v, want %#v", rendering, shape.want)
+			}
+		})
 	}
 }
 

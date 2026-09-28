@@ -635,14 +635,19 @@ func (self *Agent) runCalls(
 				ReadOnly: self.readOnly(rawCall),
 			},
 		}
+		fallbackRendering, argumentsWereDecoded := self.fallbackRendering(rawCall)
+		event.SetRendering(fallbackRendering)
 		if i == len(calls)-1 && (usage.InputTokens > 0 || usage.OutputTokens > 0) {
 			event.Usage = &usage
 		}
 
 		if parsedToolCall != nil {
 			event.Describe(parsedToolCall)
-		} else {
+		} else if !argumentsWereDecoded || !fallbackRendering.HasArguments() {
 			event.Subject = self.describeUnparsedToolCall(rawCall)
+		}
+		if event.RenderingKind == event.Name {
+			event.RenderingKind = ""
 		}
 
 		if !yield(event, nil) {
@@ -678,6 +683,15 @@ func (self *Agent) concurrent(call ToolCall) bool {
 	calledTool, isFound := self.registeredTools[call.Name]
 
 	return isFound && calledTool.Concurrent()
+}
+
+func (self *Agent) fallbackRendering(call ToolCall) (tool.CallRendering, bool) {
+	calledTool, isFound := self.registeredTools[call.Name]
+	if !isFound {
+		return tool.CallRendering{}, false
+	}
+
+	return calledTool.Render(call.Arguments)
 }
 
 func (self *Agent) describeUnparsedToolCall(call ToolCall) string {
@@ -821,7 +835,7 @@ func (self *Agent) restoreState(event Event) error {
 
 func (self *Agent) Tool(name string) (tool.Tool, bool) {
 	found, isKnown := self.registeredTools[name]
-	return found, isKnown
+	return found, isKnown && !tool.IsUnavailable(found)
 }
 
 func (self *Agent) IsToolEnabled(name string) bool {

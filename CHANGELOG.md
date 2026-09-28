@@ -15,6 +15,7 @@
 
 ### Grants and sandbox
 
+- Gate custom tools with configurable mode groups
 - Revoke several grants at once
 - Keep grant rows compact
 - Make yolo bypass sandbox fully
@@ -30,6 +31,10 @@
 
 ### Drawing
 
+- Theme tool-call vocabulary and colours
+- Let tools own their complete semantic rendering
+- Render job and port actions as direct verbs
+- Render refused calls from their decoded arguments
 - Make plain reasoning keep underscores
 - Keep streamed redraws proportional
 - Keep empty Markdown blocks from adding blank rows
@@ -45,6 +50,9 @@
 
 ### Sessions and storage
 
+- Migrate stored tool-call renderings to semantic kinds
+- Freeze tool contracts and disable changed tools on resume
+- Refuse undeclared tool parameters
 - Recompute the cache share when a session resumes
 - Open session picker on first available session
 - Show session sizes on disk in picker

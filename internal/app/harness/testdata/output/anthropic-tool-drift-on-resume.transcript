@@ -1,0 +1,59 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+use every original tool
+
+## Tool calls · +0s
+
+```
+stable: stable [ok, 1 line, 13B, toolu_1]
+changed: changed [ok, 1 line, 23B, toolu_2]
+revision: revision [ok, 1 line, 24B, toolu_3]
+schema: schema [ok, 1 line, 22B, toolu_4]
+compatible: compatible [ok, 1 line, 17B, toolu_5]
+missing: missing [ok, 1 line, 23B, toolu_6]
+```
+
+## Assistant · +0s
+
+Every original tool ran.
+
+## Tool availability · changed, missing, revision, schema · +0s
+
+```
+The `changed` tool changed since this conversation began and is disabled for this conversation.
+The `missing` tool is no longer installed and is disabled for this conversation.
+The `revision` tool changed since this conversation began and is disabled for this conversation. Compatibility changed from `1` to `2`.
+The `schema` tool changed since this conversation began and is disabled for this conversation.
+```
+
+## User · +0s
+
+try every tool again
+
+## Tool calls · +0s
+
+```
+stable: stable [ok, 1 line, 13B, toolu_7]
+changed [error, 1 line, 92B, toolu_8]
+revision [error, 1 line, 93B, toolu_9]
+schema [error, 1 line, 91B, toolu_10]
+compatible: compatible [ok, 1 line, 17B, toolu_11]
+missing [error, 1 line, 77B, toolu_12]
+added: {} [error, toolu_13]
+```
+
+## Assistant · +0s
+
+Stable and explicitly compatible tools ran; every other changed tool was refused.

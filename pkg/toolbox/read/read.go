@@ -11,6 +11,7 @@ import (
 	"io"
 	"io/fs"
 	"net/http"
+	"path/filepath"
 	"strings"
 
 	"crdx.org/oh/internal/file"
@@ -65,7 +66,7 @@ func New(root *file.Root, snapshots *file.Snapshots) tool.Tool {
 		Describe,
 	).
 		State(file.FileReadState, restoreReadState).
-		FocusPath().
+		Focuses(focus).
 		IsEmbarrassinglyParallel().
 		ChangesNothing().
 		Run(func(ctx context.Context, args Args) (tool.ToolCallResult, error) {
@@ -73,8 +74,41 @@ func New(root *file.Root, snapshots *file.Snapshots) tool.Tool {
 		})
 }
 
-func Describe(args Args) (string, string) {
-	return args.Path, span(args.Offset, args.Limit)
+func Describe(args Args) tool.CallRendering {
+	lineRange := span(args.Offset, args.Limit)
+	rendering := tool.CallRendering{
+		Kind:      "read",
+		Subject:   args.Path,
+		Qualifier: lineRange,
+		PathLine:  lineRange,
+	}
+	if _, isSkill := skillNameFromPath(args.Path); isSkill {
+		rendering.Kind = "skill"
+	}
+
+	return rendering
+}
+
+func focus(rendering tool.CallRendering) string {
+	if rendering.Kind == "skill" {
+		name, _ := skillNameFromPath(rendering.Subject)
+		return name
+	}
+
+	return filepath.Base(rendering.Subject)
+}
+
+func skillNameFromPath(path string) (string, bool) {
+	if filepath.Base(path) != "SKILL.md" {
+		return "", false
+	}
+
+	directory := filepath.Dir(path)
+	if filepath.Base(filepath.Dir(directory)) != "skills" {
+		return "", false
+	}
+
+	return filepath.Base(directory), true
 }
 
 func span(offset int, limit int) string {

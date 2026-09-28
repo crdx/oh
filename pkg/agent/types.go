@@ -268,18 +268,28 @@ type CallFaulted interface {
 }
 
 type FallbackRendering struct {
-	Subject      string               `json:"render,omitempty"`
-	Note         string               `json:"detail,omitempty"`
-	Emphasis     tool.Emphasis        `json:"emphasis,omitzero"`
-	Continuation []tool.CallRendering `json:"continuation,omitempty"`
-	ReadOnly     bool                 `json:"read_only,omitempty"`
+	RenderingKind string               `json:"rendering_kind,omitempty"`
+	Subject       string               `json:"render,omitempty"`
+	Note          string               `json:"detail,omitempty"`
+	PathLine      string               `json:"path_line,omitempty"`
+	Emphasis      tool.Emphasis        `json:"emphasis,omitzero"`
+	Continuation  []tool.CallRendering `json:"continuation,omitempty"`
+	ShowOutput    bool                 `json:"show_output,omitempty"`
+	ReadOnly      bool                 `json:"read_only,omitempty"`
 }
 
 func (self *FallbackRendering) Describe(toolCall tool.ToolCall) {
-	self.Subject = toolCall.Subject()
-	self.Note = toolCall.Qualifier()
-	self.Emphasis = toolCall.Emphasis()
-	self.Continuation = slices.Clone(toolCall.Continuation())
+	self.SetRendering(toolCall.Rendering())
+}
+
+func (self *FallbackRendering) SetRendering(rendering tool.CallRendering) {
+	self.RenderingKind = rendering.Kind
+	self.Subject = rendering.Subject
+	self.Note = rendering.Qualifier
+	self.PathLine = rendering.PathLine
+	self.Emphasis = rendering.Emphasis
+	self.Continuation = slices.Clone(rendering.Continuation)
+	self.ShowOutput = rendering.ShowOutput
 }
 
 type Status string

@@ -39,7 +39,7 @@ func TestAContinuedCallHasItsPathPrefixesShortened(t *testing.T) {
 	const workspaceDir = "/home/alice/project"
 	rendering := agent.FallbackRendering{
 		Continuation: []tool.CallRendering{{
-			Name:      "bash",
+			Kind:      "bash",
 			Subject:   workspaceDir + "/check",
 			Qualifier: workspaceDir + "/detail",
 			Emphasis:  tool.Emphasis{Source: workspaceDir + "/source"},

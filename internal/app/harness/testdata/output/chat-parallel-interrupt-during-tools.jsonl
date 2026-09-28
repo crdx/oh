@@ -1,4 +1,4 @@
-{"kind":"head","version":14,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"head","version":15,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant.","tools":["alpha","beta"],"tool_definitions":[{"name":"alpha","description":"A deterministic scenario tool.","revision":"1"},{"name":"beta","description":"A scenario tool that blocks.","revision":"1"}]}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"call two tools and interrupt while the second is working"}}
 {"kind":"event","event":{"render":"alpha","kind":"tool_call_request","id":"call-1","name":"alpha","arguments":"{}"}}

@@ -170,8 +170,8 @@ func TestHittingTheByteCapIsSaidOutLoud(t *testing.T) {
 func TestASearchWithNoPatternIsRefused(t *testing.T) {
 	root := testRoot(t, "main.go")
 
-	if _, err := exec(t, root, `{}`); err == nil {
-		t.Error("expected a search with no pattern to be refused")
+	if _, err := find.New(root).Parse(`{}`); err == nil || !strings.Contains(err.Error(), "pattern is required") {
+		t.Errorf("got %v, want a search with no pattern to be refused", err)
 	}
 }
 

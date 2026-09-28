@@ -240,7 +240,7 @@ func TestAWaitRefusesAnUnknownWaitForValue(t *testing.T) {
 		"name":     "build",
 		"wait_for": "most",
 	})
-	if err == nil || !strings.Contains(err.Error(), "must be any or all") {
+	if err == nil || !strings.Contains(err.Error(), "wait_for must be one of: any, all") {
 		t.Errorf("got %v, want the wait_for values to be named", err)
 	}
 }
@@ -267,36 +267,65 @@ func TestOnlyAWaitTakesANumberOfSeconds(t *testing.T) {
 	}
 }
 
-func TestAJobCallIsRenderedByItsSubject(t *testing.T) {
-	subject, qualifier := job.Describe(job.Args{Action: "start", Name: "docs", Command: "python3  -m\nhttp.server"})
-	if subject != "docs" || qualifier != "" {
-		t.Errorf("got %q / %q, want only the job name in the primary rendering", subject, qualifier)
-	}
-
-	parsedCall, err := job.New(nil, nil, nil, false).Parse(
-		`{"action":"start","name":"docs","command":"python3  -m\nhttp.server"}`,
-	)
-	if err != nil {
-		t.Fatal(err)
-	}
-	wantContinuation := []tool.CallRendering{bash.DescribeCommand("python3  -m\nhttp.server")}
-	if continuation := parsedCall.Continuation(); !reflect.DeepEqual(continuation, wantContinuation) {
-		t.Errorf("got %#v, want the bash command continuation %#v", continuation, wantContinuation)
-	}
-
-	subject, qualifier = job.Describe(job.Args{Action: "status", Name: "docs"})
-	if subject != "docs" || qualifier != "status" {
-		t.Errorf("got %q / %q, want the name and the action", subject, qualifier)
-	}
-
-	subject, qualifier = job.Describe(job.Args{Action: "start", Name: "docs"})
-	if subject != "docs" || qualifier != "start" {
-		t.Errorf("got %q / %q, want a restart to read by name", subject, qualifier)
-	}
-
-	subject, qualifier = job.Describe(job.Args{Action: "wait", Names: []string{"build", "lint"}})
-	if subject != "build, lint" || qualifier != "wait" {
-		t.Errorf("got %q / %q, want every watched job named", subject, qualifier)
+func TestAJobCallIsRenderedByItsAction(t *testing.T) {
+	for name, shape := range map[string]struct {
+		args job.Args
+		want tool.CallRendering
+	}{
+		"start": {
+			args: job.Args{Action: "start", Name: "docs", Command: "python3  -m\nhttp.server"},
+			want: tool.CallRendering{
+				Kind:         "job_start",
+				Subject:      "docs",
+				Continuation: []tool.CallRendering{bash.DescribeCommand("python3  -m\nhttp.server")},
+			},
+		},
+		"restart": {
+			args: job.Args{Action: "start", Name: "docs"},
+			want: tool.CallRendering{Kind: "job_restart", Subject: "docs"},
+		},
+		"status": {
+			args: job.Args{Action: "status", Name: "docs"},
+			want: tool.CallRendering{Kind: "job_status", Subject: "docs"},
+		},
+		"output": {
+			args: job.Args{Action: "output", Name: "docs"},
+			want: tool.CallRendering{Kind: "job_output", Subject: "docs"},
+		},
+		"stop": {
+			args: job.Args{Action: "stop", Name: "docs"},
+			want: tool.CallRendering{Kind: "job_stop", Subject: "docs"},
+		},
+		"discard": {
+			args: job.Args{Action: "discard", Name: "docs"},
+			want: tool.CallRendering{Kind: "job_discard", Subject: "docs"},
+		},
+		"wait any": {
+			args: job.Args{Action: "wait", Names: []string{"build", "lint"}},
+			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build || lint", Emphasis: tool.Emphasis{Kind: tool.EmphasisSyntax, Value: "bash"}},
+		},
+		"wait all": {
+			args: job.Args{Action: "wait", Names: []string{"build", "lint"}, WaitFor: "all"},
+			want: tool.CallRendering{Kind: "job_wait_all", Subject: "build && lint", Emphasis: tool.Emphasis{Kind: tool.EmphasisSyntax, Value: "bash"}},
+		},
+		"wait any with limit": {
+			args: job.Args{Action: "wait", Names: []string{"build", "lint"}, WaitFor: "any", WaitSeconds: 20},
+			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build || lint", Qualifier: "up to 20s", Emphasis: tool.Emphasis{Kind: tool.EmphasisSyntax, Value: "bash"}},
+		},
+		"list": {
+			args: job.Args{Action: "list"},
+			want: tool.CallRendering{Kind: "job_list", Subject: "jobs"},
+		},
+		"prune": {
+			args: job.Args{Action: "prune"},
+			want: tool.CallRendering{Kind: "job_prune", Subject: "jobs"},
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			if rendering := job.Describe(shape.args); !reflect.DeepEqual(rendering, shape.want) {
+				t.Errorf("got %#v, want %#v", rendering, shape.want)
+			}
+		})
 	}
 }
 

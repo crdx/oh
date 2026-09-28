@@ -31,8 +31,9 @@ func New(
 				tool.String("query", "web lookup query"),
 			},
 		},
-		func(args Args) (string, string) { return args.Query, "" },
+		Describe,
 	).
+		DefaultsTo(Describe(Args{})).
 		Validate(validate).
 		IsEmbarrassinglyParallel().
 		ChangesNothing().
@@ -52,6 +53,10 @@ func New(
 
 			return output, tool.GetMetrics(output), nil
 		})
+}
+
+func Describe(args Args) tool.CallRendering {
+	return tool.CallRendering{Kind: "lookup", Subject: args.Query}
 }
 
 func validate(args Args) error {

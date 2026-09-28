@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"reflect"
 	"slices"
 	"strings"
 	"sync"
@@ -53,7 +54,9 @@ func noop() tool.Tool {
 			Description: "",
 			Schema:      tool.Schema{},
 		},
-		func(struct{}) (string, string) { return "", "" },
+		func(struct{}) tool.CallRendering {
+			return tool.CallRendering{Subject: "", Qualifier: ""}
+		},
 	).IsEmbarrassinglyParallel().Plain(func(context.Context, struct{}) (string, error) {
 		return "done", nil
 	})
@@ -147,7 +150,9 @@ func TestStreamRunsEveryCallOfAReplyAtOnce(t *testing.T) {
 			Description: "",
 			Schema:      tool.Schema{},
 		},
-		func(struct{}) (string, string) { return "", "" },
+		func(struct{}) tool.CallRendering {
+			return tool.CallRendering{Subject: "", Qualifier: ""}
+		},
 	).IsEmbarrassinglyParallel().Plain(func(context.Context, struct{}) (string, error) {
 		arrivalBarrier.Done()
 
@@ -215,7 +220,9 @@ func TestStreamCapsConcurrentCalls(t *testing.T) {
 				Description: "",
 				Schema:      tool.Schema{},
 			},
-			func(struct{}) (string, string) { return "", "" },
+			func(struct{}) tool.CallRendering {
+				return tool.CallRendering{Subject: "", Qualifier: ""}
+			},
 		).IsEmbarrassinglyParallel().Plain(func(context.Context, struct{}) (string, error) {
 			started <- struct{}{}
 			<-release
@@ -266,7 +273,9 @@ func TestStreamLeavesACallThatIsNotConcurrentOnItsOwn(t *testing.T) {
 				Description: "",
 				Schema:      tool.Schema{},
 			},
-			func(struct{}) (string, string) { return "", "" },
+			func(struct{}) tool.CallRendering {
+				return tool.CallRendering{Subject: "", Qualifier: ""}
+			},
 		).Plain(func(context.Context, struct{}) (string, error) {
 			mutex.Lock()
 			runningCalls++
@@ -308,7 +317,9 @@ func TestAResultSaysHowLongItsCallTook(t *testing.T) {
 				Description: "",
 				Schema:      tool.Schema{},
 			},
-			func(struct{}) (string, string) { return "", "" },
+			func(struct{}) tool.CallRendering {
+				return tool.CallRendering{Subject: "", Qualifier: ""}
+			},
 		).IsEmbarrassinglyParallel().Plain(func(context.Context, struct{}) (string, error) {
 			time.Sleep(slept)
 			return "done", nil
@@ -353,7 +364,9 @@ func TestAResultLeavesOutTheTimeItSpentWaitingOnThePerson(t *testing.T) {
 				Description: "",
 				Schema:      tool.Schema{},
 			},
-			func(struct{}) (string, string) { return "", "" },
+			func(struct{}) tool.CallRendering {
+				return tool.CallRendering{Subject: "", Qualifier: ""}
+			},
 		).IsEmbarrassinglyParallel().Plain(func(ctx context.Context, _ struct{}) (string, error) {
 			askedAt := time.Now()
 			time.Sleep(asked)
@@ -491,7 +504,9 @@ func failingTool() tool.Tool {
 			Description: "",
 			Schema:      tool.Schema{},
 		},
-		func(struct{}) (string, string) { return "", "" },
+		func(struct{}) tool.CallRendering {
+			return tool.CallRendering{Subject: "", Qualifier: ""}
+		},
 	).Plain(func(context.Context, struct{}) (string, error) {
 		return "permission denied\nexit status 1", errors.New("the command failed")
 	})
@@ -542,6 +557,45 @@ func TestAFailedCallIsHandedBackToTheModelAsAFailure(t *testing.T) {
 	}
 }
 
+func TestACompleteSemanticRenderingIsStoredWithTheCall(t *testing.T) {
+	continuation := tool.CallRendering{Kind: "bash", Subject: "echo done"}
+	calledTool := tool.Implement(
+		tool.Definition{Name: "work", Description: "", Schema: tool.Schema{}},
+		func(struct{}) tool.CallRendering {
+			return tool.CallRendering{
+				Kind:         "job_start",
+				Subject:      "/skills/work/SKILL.md",
+				Qualifier:    "detail",
+				PathLine:     "12-14",
+				Emphasis:     tool.Emphasis{Kind: tool.EmphasisFocus, Value: "work"},
+				Continuation: []tool.CallRendering{continuation},
+				ShowOutput:   true,
+			}
+		},
+	).Plain(func(context.Context, struct{}) (string, error) { return "done", nil })
+	provider := &oneCallProvider{call: agent.ToolCall{ID: "a", Name: calledTool.Name(), Arguments: `{}`}}
+	assistant := agent.New("", provider, []tool.Tool{calledTool})
+
+	for update, err := range assistant.Stream(t.Context(), "go", nil) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		if update.Event == nil || update.Event.Kind != agent.ToolCallRequestEvent {
+			continue
+		}
+		event := update.Event
+		if event.RenderingKind != "job_start" ||
+			event.Subject != "/skills/work/SKILL.md" || event.Note != "detail" ||
+			event.PathLine != "12-14" || event.Emphasis.Value != "work" || !event.ShowOutput ||
+			!reflect.DeepEqual(event.Continuation, []tool.CallRendering{continuation}) {
+			t.Errorf("stored incomplete rendering: %+v", event.FallbackRendering)
+		}
+		return
+	}
+
+	t.Fatal("expected a tool call request")
+}
+
 func TestASuccessfulCallIsMarkedSuccessful(t *testing.T) {
 	result := singleResult(t, plainOutputTool("done", nil))
 
@@ -553,7 +607,9 @@ func TestASuccessfulCallIsMarkedSuccessful(t *testing.T) {
 func TestAReadOnlyCallStoresReadOnlyFallbackRendering(t *testing.T) {
 	calledTool := tool.Implement(
 		tool.Definition{Name: "inspect", Description: "", Schema: tool.Schema{}},
-		func(struct{}) (string, string) { return "target", "" },
+		func(struct{}) tool.CallRendering {
+			return tool.CallRendering{Subject: "target", Qualifier: ""}
+		},
 	).ChangesNothing().Plain(func(context.Context, struct{}) (string, error) {
 		return "done", nil
 	})
@@ -580,7 +636,9 @@ func TestAReadOnlyCallStoresReadOnlyFallbackRendering(t *testing.T) {
 func plainOutputTool(output string, executionError error) tool.Tool {
 	return tool.Implement(
 		tool.Definition{Name: "output", Description: "", Schema: tool.Schema{}},
-		func(struct{}) (string, string) { return "", "" },
+		func(struct{}) tool.CallRendering {
+			return tool.CallRendering{Subject: "", Qualifier: ""}
+		},
 	).Plain(func(context.Context, struct{}) (string, error) {
 		return output, executionError
 	})
@@ -589,7 +647,9 @@ func plainOutputTool(output string, executionError error) tool.Tool {
 func metricsOutputTool(output string, metrics tool.ToolCallMetrics) tool.Tool {
 	return tool.Implement(
 		tool.Definition{Name: "output", Description: "", Schema: tool.Schema{}},
-		func(struct{}) (string, string) { return "", "" },
+		func(struct{}) tool.CallRendering {
+			return tool.CallRendering{Subject: "", Qualifier: ""}
+		},
 	).Exec(func(context.Context, struct{}) (string, tool.ToolCallMetrics, error) {
 		return output, metrics, nil
 	})
@@ -625,7 +685,9 @@ func TestACallTheUserStoppedIsMarkedApartFromOneThatFailed(t *testing.T) {
 
 	stoppedTool := tool.Implement(
 		tool.Definition{Name: "output", Description: "", Schema: tool.Schema{}},
-		func(struct{}) (string, string) { return "", "" },
+		func(struct{}) tool.CallRendering {
+			return tool.CallRendering{Subject: "", Qualifier: ""}
+		},
 	).Plain(func(callContext context.Context, _ struct{}) (string, error) {
 		cancel(stop.Because("the user pressed escape"))
 		return "half done", callContext.Err()
@@ -750,7 +812,9 @@ func refusingTool() tool.Tool {
 				tool.String("target", "who to shout at"),
 			},
 		},
-		func(shoutArgs) (string, string) { return "", "" },
+		func(shoutArgs) tool.CallRendering {
+			return tool.CallRendering{Subject: "", Qualifier: ""}
+		},
 	).Validate(func(shoutArgs) error {
 		return errors.New("not in the mood")
 	}).Plain(func(context.Context, shoutArgs) (string, error) { return "", nil })

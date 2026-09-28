@@ -1,0 +1,30 @@
+{"event":{"kind":"user_message","text":"show every action-oriented tool label"}}
+{"event":{"kind":"tool_call_request","id":"expose","name":"expose","arguments":"{\"action\":\"add\",\"port\":8000}","rendering_kind":"expose_add","render":"8000"}}
+{"event":{"kind":"tool_call_result","status":"success","text":"exposed","id":"expose","name":"expose"}}
+{"event":{"kind":"tool_call_request","id":"expose-job","name":"expose","arguments":"{\"action\":\"add\",\"port\":8001,\"job_name\":\"docs\"}","rendering_kind":"expose_add","render":"docs:8001"}}
+{"event":{"kind":"tool_call_result","status":"success","text":"exposed","id":"expose-job","name":"expose"}}
+{"event":{"kind":"tool_call_request","id":"unexpose","name":"expose","arguments":"{\"action\":\"remove\",\"port\":8000}","rendering_kind":"expose_remove","render":"8000"}}
+{"event":{"kind":"tool_call_result","status":"success","text":"removed","id":"unexpose","name":"expose"}}
+{"event":{"kind":"tool_call_request","id":"list-ports","name":"expose","arguments":"{\"action\":\"list\"}","rendering_kind":"expose_list","render":"exposed ports"}}
+{"event":{"kind":"tool_call_result","status":"success","text":"listed","id":"list-ports","name":"expose"}}
+{"event":{"kind":"tool_call_request","id":"start","name":"job","arguments":"{\"action\":\"start\",\"name\":\"docs\",\"command\":\"serve docs\"}"}}
+{"event":{"kind":"tool_call_result","status":"success","text":"started","id":"start","name":"job"}}
+{"event":{"kind":"tool_call_request","id":"restart","name":"job","arguments":"{\"action\":\"start\",\"name\":\"docs\"}"}}
+{"event":{"kind":"tool_call_result","status":"success","text":"restarted","id":"restart","name":"job"}}
+{"event":{"kind":"tool_call_request","id":"status","name":"job","arguments":"{\"action\":\"status\",\"name\":\"docs\"}"}}
+{"event":{"kind":"tool_call_result","status":"success","text":"status","id":"status","name":"job"}}
+{"event":{"kind":"tool_call_request","id":"output","name":"job","arguments":"{\"action\":\"output\",\"name\":\"docs\"}"}}
+{"event":{"kind":"tool_call_result","status":"success","text":"output","id":"output","name":"job"}}
+{"event":{"kind":"tool_call_request","id":"wait-any","name":"job","arguments":"{\"action\":\"wait\",\"names\":[\"docs\",\"build\"]}"}}
+{"event":{"kind":"tool_call_result","status":"success","text":"waited","id":"wait-any","name":"job"}}
+{"event":{"kind":"tool_call_request","id":"wait-all","name":"job","arguments":"{\"action\":\"wait\",\"names\":[\"docs\",\"build\"],\"wait_for\":\"all\",\"wait_seconds\":20}"}}
+{"event":{"kind":"tool_call_result","status":"success","text":"waited","id":"wait-all","name":"job"}}
+{"event":{"kind":"tool_call_request","id":"stop","name":"job","arguments":"{\"action\":\"stop\",\"name\":\"docs\"}"}}
+{"event":{"kind":"tool_call_result","status":"success","text":"stopped","id":"stop","name":"job"}}
+{"event":{"kind":"tool_call_request","id":"list-jobs","name":"job","arguments":"{\"action\":\"list\"}"}}
+{"event":{"kind":"tool_call_result","status":"success","text":"listed","id":"list-jobs","name":"job"}}
+{"event":{"kind":"tool_call_request","id":"discard","name":"job","arguments":"{\"action\":\"discard\",\"name\":\"docs\"}"}}
+{"event":{"kind":"tool_call_result","status":"success","text":"discarded","id":"discard","name":"job"}}
+{"event":{"kind":"tool_call_request","id":"prune","name":"job","arguments":"{\"action\":\"prune\"}"}}
+{"event":{"kind":"tool_call_result","status":"success","text":"pruned","id":"prune","name":"job"}}
+{"event":{"kind":"model_message","text":"Those are every action label."}}

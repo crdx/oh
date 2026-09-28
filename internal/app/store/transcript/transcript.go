@@ -19,6 +19,7 @@ import (
 	"crdx.org/oh/internal/app/jobrecord"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/portgrant"
+	"crdx.org/oh/internal/app/toolset"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/pkg/agent"
@@ -127,7 +128,8 @@ func (self *Recorder) Event(at time.Time, event agent.Event) error {
 	case agent.PrefixRewriteEvent:
 		output.fence(agent.PrefixRewriteNotice + event.Text)
 	case turn.HarnessPoke, jobrecord.Ended, jobrecord.EndedWithSession, caps.JobStop, caps.ModeChange,
-		conditions.Change, pathgrant.Change, portgrant.SandboxToHostChange, portgrant.HostToSandboxChange,
+		conditions.Change, toolset.AvailabilityChange, pathgrant.Change,
+		portgrant.SandboxToHostChange, portgrant.HostToSandboxChange,
 		hostcommand.Ran:
 		if notice, isSaid := harnessNotice(event); isSaid {
 			output.fence(notice)
@@ -163,6 +165,8 @@ func harnessNotice(event agent.Event) (string, bool) {
 		return joined(caps.ModeNotice(event))
 	case conditions.Change:
 		return joined(conditions.Notice(event))
+	case toolset.AvailabilityChange:
+		return joined(toolset.AvailabilityNotice(event))
 	case pathgrant.Change:
 		return pathgrant.Notice(event)
 	case portgrant.SandboxToHostChange:
@@ -211,6 +215,9 @@ func heading(event agent.Event) []string {
 		return []string{name, modeFlags(event), prefixed("toggled ", event.Name)}
 	case conditions.Change:
 		summary, _ := conditions.Summary(event)
+		return []string{name, summary}
+	case toolset.AvailabilityChange:
+		summary, _ := toolset.AvailabilitySummary(event)
 		return []string{name, summary}
 	case pathgrant.Change:
 		summary, _ := pathgrant.Summary(event)
@@ -391,12 +398,12 @@ func (self *Recorder) offset(at time.Time) string {
 }
 
 func modeFlags(event agent.Event) string {
-	grantedCaps, err := caps.GrantedBy(event)
+	flags, err := caps.FlagsBy(event)
 	if err != nil {
 		return ""
 	}
 
-	return grantedCaps.Flags()
+	return flags
 }
 
 func title(kind agent.Kind) string {
@@ -417,6 +424,8 @@ func title(kind agent.Kind) string {
 		return "Mode"
 	case conditions.Change:
 		return "Conditions"
+	case toolset.AvailabilityChange:
+		return "Tool availability"
 	case pathgrant.Change:
 		return "Path grant"
 	case portgrant.SandboxToHostChange:

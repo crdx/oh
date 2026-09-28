@@ -1,4 +1,4 @@
-{"kind":"head","version":14,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"head","version":15,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant.","tools":["title"],"tool_definitions":[{"name":"title","description":"name the task this session is doing, in a few words, as soon as the task is clear; ensure to retitle as the session evolves","revision":"1","parameters":[{"name":"title","type":"string","description":"a 3-word slug description of the task, like \"fix-picker-clipping\""}]}]}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"have a look at the picker"}}
 {"kind":"event","event":{"render":"fix the picker clipping","read_only":true,"kind":"tool_call_request","id":"call-1","name":"title","arguments":"{\"title\":\"fix the picker clipping\"}"}}

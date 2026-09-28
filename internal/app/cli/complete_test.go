@@ -154,8 +154,8 @@ func TestEffortCompletionsAreBareLevels(t *testing.T) {
 }
 
 func TestCapabilityCompletionsGrowOneAtATime(t *testing.T) {
-	sets := capsCompletions()
-	if sets[0] != "r" || sets[len(sets)-1] != "rxwngl" {
+	sets := capsCompletions("ab")
+	if sets[0] != "r" || sets[len(sets)-1] != "rxwnglab" {
 		t.Errorf("got %v", sets)
 	}
 }

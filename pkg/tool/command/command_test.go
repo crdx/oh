@@ -74,6 +74,111 @@ func call(t *testing.T, subject tool.Tool, arguments string) (string, error) {
 	return result.Output, err
 }
 
+func TestACommandRevisionCoversItsEffectiveDeclaration(t *testing.T) {
+	declaration := echoingDeclaration(t)
+	first, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	second, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !tool.IsCompatible(second, tool.TakeSnapshot(first)) {
+		t.Fatal("the same declaration did not keep its identity")
+	}
+
+	//nolint:gosec // the fixture remains executable while its content changes
+	if err := os.WriteFile(declaration.Command[0], []byte("#!/bin/bash\necho changed\n"), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	changedContents, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tool.IsCompatible(changedContents, tool.TakeSnapshot(first)) {
+		t.Error("changed executable contents kept their identity")
+	}
+
+	declaration.Compatibility = []command.Compatibility{{
+		From: first.Revision(),
+		To:   changedContents.Revision(),
+	}}
+	approvedContents, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !tool.IsCompatible(approvedContents, tool.TakeSnapshot(first)) {
+		t.Error("the exact compatibility transition was not accepted")
+	}
+
+	//nolint:gosec // the fixture remains executable while its content changes again
+	if err := os.WriteFile(declaration.Command[0], []byte("#!/bin/bash\necho changed again\n"), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	changedAgain, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tool.IsCompatible(changedAgain, tool.TakeSnapshot(first)) {
+		t.Error("a stale compatibility transition accepted later contents")
+	}
+
+	declaration.Command = append(declaration.Command, "--quiet")
+	changedCommand, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tool.IsCompatible(changedCommand, tool.TakeSnapshot(first)) {
+		t.Error("a changed command kept its identity")
+	}
+}
+
+func TestACommandRevisionCoversRegularFileArguments(t *testing.T) {
+	inputPath := filepath.Join(t.TempDir(), "tool.ts")
+	if err := os.WriteFile(inputPath, []byte("first"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	declaration := command.Declaration{
+		Name:        "worker",
+		Description: "run the worker",
+		Command:     []string{"true", inputPath},
+	}
+	first, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if err := os.WriteFile(inputPath, []byte("second"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	second, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if tool.IsCompatible(second, tool.TakeSnapshot(first)) {
+		t.Error("changed file argument contents kept their identity")
+	}
+}
+
+func TestACompatibilityTransitionNeedsTwoSHA256Revisions(t *testing.T) {
+	declaration := echoingDeclaration(t)
+	current, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	for name, transition := range map[string]command.Compatibility{
+		"from": {From: "old", To: current.Revision()},
+		"to":   {From: current.Revision(), To: "new"},
+	} {
+		declaration.Compatibility = []command.Compatibility{transition}
+		if _, err := command.New(declaration, command.Options{}); err == nil || !strings.Contains(err.Error(), "SHA-256") {
+			t.Errorf("%s: got %v", name, err)
+		}
+	}
+}
+
 func TestADeclarationCarriesItsNameDescriptionAndSchema(t *testing.T) {
 	subject, err := command.New(echoingDeclaration(t), command.Options{})
 	if err != nil {
@@ -240,6 +345,42 @@ func TestTheApprovalSeesTheWholeCommandAndCanRefuseIt(t *testing.T) {
 	}
 }
 
+func TestAGroupRefusesACommandBeforeApproval(t *testing.T) {
+	declaration := echoingDeclaration(t)
+	declaration.Group = "a"
+	declaration.MustAsk = true
+	isGranted := false
+	approvalCount := 0
+
+	subject, err := command.New(declaration, command.Options{
+		IsGroupAllowed: func(group string) bool {
+			return group == "a" && isGranted
+		},
+		Approve: func(context.Context, string, string) error {
+			approvalCount++
+			return nil
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := call(t, subject, `{"environment":"live"}`); err == nil || !strings.Contains(err.Error(), "ctrl+x a") {
+		t.Errorf("got %v", err)
+	}
+	if approvalCount != 0 {
+		t.Errorf("a refused group reached approval %d times", approvalCount)
+	}
+
+	isGranted = true
+	if _, err := call(t, subject, `{"environment":"live"}`); err != nil {
+		t.Errorf("the granted group was refused: %v", err)
+	}
+	if approvalCount != 1 {
+		t.Errorf("a granted call asked %d times", approvalCount)
+	}
+}
+
 func TestAToolTheDeclarationDoesNotGateIsNeverAskedAbout(t *testing.T) {
 	subject, err := command.New(echoingDeclaration(t), command.Options{
 		Approve: func(context.Context, string, string) error {
@@ -290,11 +431,11 @@ func TestACallIsHeadedByItsSubjectAndTrailedByTheRest(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if parsed.Subject() != "live" {
-		t.Errorf("got subject %q", parsed.Subject())
+	if parsed.Rendering().Subject != "live" {
+		t.Errorf("got subject %q", parsed.Rendering().Subject)
 	}
-	if parsed.Qualifier() != "2" {
-		t.Errorf("got qualifier %q", parsed.Qualifier())
+	if parsed.Rendering().Qualifier != "2" {
+		t.Errorf("got qualifier %q", parsed.Rendering().Qualifier)
 	}
 }
 
@@ -315,8 +456,8 @@ func TestABooleanIsNamedRatherThanValuedInACallRow(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
-		if parsed.Qualifier() != wanted {
-			t.Errorf("got qualifier %q, wanted %q", parsed.Qualifier(), wanted)
+		if parsed.Rendering().Qualifier != wanted {
+			t.Errorf("got qualifier %q, wanted %q", parsed.Rendering().Qualifier, wanted)
 		}
 	}
 }

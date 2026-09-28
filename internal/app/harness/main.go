@@ -202,6 +202,18 @@ func completableTools() []string {
 	return names
 }
 
+func completableCustomCapFlags() string {
+	settings, err := config.Load(location.GetConfigFile())
+	if err != nil {
+		return ""
+	}
+	toolGroups, err := settings.CustomToolGroups()
+	if err != nil {
+		return ""
+	}
+	return toolGroups.CustomFlags()
+}
+
 func Main() {
 	if len(os.Args) > 1 && os.Args[1] == ctl.Flag {
 		os.Exit(ctl.Run(os.Args[2:]))
@@ -225,6 +237,7 @@ func Main() {
 		ModelCachePath: location.GetModelCachePath(),
 		SessionsDir:    location.GetSessionsDir(),
 		ToolNames:      completableTools(),
+		CustomCapFlags: completableCustomCapFlags(),
 	}) {
 		return
 	}
@@ -292,10 +305,70 @@ func sessionDefaults(selection model.Selection) model.Defaults {
 	return model.Defaults{Effort: model.Effort(selection.Effort), IsFast: selection.IsFast}
 }
 
-func applyDefaultCaps(options *cli.Options, settings config.Config) {
-	if !options.WereCapsChosen {
-		options.Caps = caps.Set(settings.Caps.Default)
+func applyDefaultCaps(options *cli.Options, settings config.Config) error {
+	if options.WereCapsChosen {
+		return nil
 	}
+
+	grantedCaps, grantedGroups, err := settings.ParseCaps(string(settings.Caps.Default))
+	if err != nil {
+		return err
+	}
+	options.Caps = grantedCaps
+	options.GroupFlags = grantedGroups
+	return nil
+}
+
+type preparedTools struct {
+	registeredTools         []tool.Tool
+	offeredTools            []tool.Tool
+	compatibleNames         []string
+	availabilityRestoration toolset.AvailabilityRestoration
+}
+
+func prepareFrozenTools(resumedSession *store.Session, toolboxTools []tool.Tool) (preparedTools, error) {
+	restoredTools := toolset.Restore(
+		toolboxTools,
+		store.RestoreTools(resumedSession.Meta.ToolDefinitions),
+	)
+	availabilityRestoration, err := toolset.RestoreAvailability(
+		resumedSession.Events,
+		restoredTools.Availability,
+		restoredTools.Transitions,
+	)
+	if err != nil {
+		return preparedTools{}, err
+	}
+	return preparedTools{
+		registeredTools:         restoredTools.RegisteredTools,
+		offeredTools:            restoredTools.OfferedTools,
+		compatibleNames:         restoredTools.CompatibleNames,
+		availabilityRestoration: availabilityRestoration,
+	}, nil
+}
+
+func prepareLegacyTools(
+	resumedSession *store.Session,
+	toolboxTools []tool.Tool,
+	requestedNames []string,
+	notices io.Writer,
+) (preparedTools, error) {
+	enabledNames := requestedNames
+	if resumedSession != nil && len(resumedSession.Meta.Tools) > 0 {
+		var absentNames []string
+		enabledNames, absentNames = toolset.Partition(toolboxTools, resumedSession.Meta.Tools)
+		if len(absentNames) > 0 {
+			_, _ = fmt.Fprintln(notices, style.Change(
+				"tools used by this conversation are no longer offered, so its prompt cache will be "+
+					"rebuilt: "+strings.Join(absentNames, ", "),
+			))
+		}
+	}
+	offeredTools, err := toolset.Reduce(toolboxTools, enabledNames)
+	if err != nil {
+		return preparedTools{}, err
+	}
+	return preparedTools{registeredTools: toolboxTools, offeredTools: offeredTools}, nil
 }
 
 func ensureCurrency(ctx context.Context, output io.Writer, code string, isSimulated bool) money.Currency {
@@ -481,11 +554,21 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		inputArgs.Model = chosenModel.String()
 	}
 
-	args, err := inputArgs.Parse(modelCachePath, settings.Model.GetDefaults())
+	configuredToolGroups, err := settings.CustomToolGroups()
 	if err != nil {
 		return "", err
 	}
-	applyDefaultCaps(&args, settings)
+	args, err := inputArgs.Parse(
+		modelCachePath,
+		settings.Model.GetDefaults(),
+		configuredToolGroups.CustomFlags(),
+	)
+	if err != nil {
+		return "", err
+	}
+	if err := applyDefaultCaps(&args, settings); err != nil {
+		return "", err
+	}
 
 	if isSimulated {
 		applySimulationOptions(&args)
@@ -516,6 +599,27 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	if err != nil {
 		return "", err
 	}
+
+	args.GroupFlags, err = sessions.OpeningToolGroups(args.GroupFlags, args.WereCapsChosen, resumedSession)
+	if err != nil {
+		return "", err
+	}
+	frozenToolGroups := configuredToolGroups
+	if resumedSession != nil {
+		_, recordedToolGroups, _ := caps.LastRecordedToolGroups(resumedSession.Events)
+		frozenToolGroups = recordedToolGroups
+	}
+	enabledToolNamesForGroups := args.Tools
+	if resumedSession != nil && len(resumedSession.Meta.Tools) > 0 {
+		enabledToolNamesForGroups = resumedSession.Meta.Tools
+	}
+	selectedCustomToolNames := slices.DeleteFunc(settings.CustomToolNames(), func(name string) bool {
+		return !toolset.Offers(enabledToolNamesForGroups, name)
+	})
+	if resumedSession == nil {
+		frozenToolGroups = frozenToolGroups.Only(selectedCustomToolNames)
+	}
+	activeToolGroups := frozenToolGroups.Only(selectedCustomToolNames)
 
 	args.Yolo, err = sessions.OpeningConfinement(args.Yolo, resumedSession)
 	if err != nil {
@@ -553,7 +657,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		return "", fmt.Errorf("could not prepare the shell home: %w", err)
 	}
 
-	mode := caps.NewMode(args.Caps)
+	mode := caps.NewModeWithGroups(args.Caps, args.GroupFlags, frozenToolGroups, activeToolGroups)
 
 	files := file.New(workspace.GetRoot(), caps.RefuseWrite(mode))
 	homeRoot, err := shell.MountHomeDirectory(files, homeDir, mode)
@@ -764,6 +868,8 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 			Conditions:     currentConditions,
 			JobsGranted:    jobManager != nil,
 			NetworkGranted: args.Caps.Has(caps.Network),
+			ToolGroups:     activeToolGroups,
+			GroupStatus:    mode.Groups(),
 			Yolo:           args.Yolo,
 		})
 		if err != nil {
@@ -898,7 +1004,9 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		),
 	)
 	customTools, err := settings.BuildCustomTools(command.Options{
-		Directory: workspace.GetDir(),
+		Directory:      workspace.GetDir(),
+		GroupForTool:   frozenToolGroups.GroupOf,
+		IsGroupAllowed: mode.Allows,
 		Approve: func(ctx context.Context, name string, line string) error {
 			return customToolApproval(name).confirm(ctx, askBroker, line)
 		},
@@ -912,22 +1020,22 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 
 	toolboxTools = truncate.Tools(toolboxTools, toolOutputLimit)
 
-	enabledToolNames := args.Tools
-	if resumedSession != nil && len(resumedSession.Meta.Tools) > 0 {
-		var absentToolNames []string
-		enabledToolNames, absentToolNames = toolset.Partition(toolboxTools, resumedSession.Meta.Tools)
-		if len(absentToolNames) > 0 {
-			_, _ = fmt.Fprintln(notices, style.Change(
-				"tools used by this conversation are no longer offered, so its prompt cache will be "+
-					"rebuilt: "+strings.Join(absentToolNames, ", "),
-			))
-		}
+	var preparedToolbox preparedTools
+	hasFrozenDefinitions := resumedSession != nil && len(resumedSession.Meta.ToolDefinitions) > 0
+	if hasFrozenDefinitions {
+		preparedToolbox, err = prepareFrozenTools(resumedSession, toolboxTools)
+	} else {
+		preparedToolbox, err = prepareLegacyTools(resumedSession, toolboxTools, args.Tools, notices)
 	}
-
-	enabledTools, err := toolset.Reduce(toolboxTools, enabledToolNames)
 	if err != nil {
 		return "", err
 	}
+	if hasFrozenDefinitions {
+		mode.RestrictTools(preparedToolbox.compatibleNames)
+	}
+	registeredTools := preparedToolbox.registeredTools
+	offeredTools := preparedToolbox.offeredTools
+	availabilityRestoration := preparedToolbox.availabilityRestoration
 
 	if resumedSession == nil {
 		meta.SystemPrompt = systemPrompt
@@ -935,17 +1043,18 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		meta.ProjectContextFiles = slices.Clone(fixedContextSources.projectFiles)
 		meta.SystemContextSources = slices.Clone(fixedContextSources.systemSources)
 		meta.SessionContextSources = slices.Clone(fixedContextSources.sessionSources)
-		meta.Tools = toolset.Names(enabledTools)
+		meta.Tools = toolset.Names(offeredTools)
+		meta.ToolDefinitions = store.FreezeTools(offeredTools)
 		meta.Conditions = &currentConditions
 		if err := log.SetMeta(meta); err != nil {
 			return "", err
 		}
 	}
 
-	toolContextBytes := client.ToolsSize(enabledTools)
+	toolContextBytes := client.ToolsSize(offeredTools)
 	var toolContextSource *contextsource.Source
 	if toolContextBytes > 0 {
-		toolCount := len(enabledTools)
+		toolCount := len(offeredTools)
 		source := contextsource.NamedFromBytes(
 			fmt.Sprintf(toolDefinitionsSourceNameFormat, toolCount, util.PluralNoun(toolCount, "tool")),
 			toolContextBytes,
@@ -1067,7 +1176,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	})
 
 	app = &App{
-		agent:    agent.NewWithEnabledTools(systemPrompt, providerClient, toolboxTools, enabledTools),
+		agent:    agent.NewWithEnabledTools(systemPrompt, providerClient, registeredTools, offeredTools),
 		screen:   screen,
 		terminal: terminal.New(os.Stdout, workspace),
 		metrics: metrics.New(metrics.Settings{
@@ -1104,6 +1213,9 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	}
 	if restoredConditions.IsChanged {
 		app.pendingNotices.add(restoredConditions.Change)
+	}
+	if availabilityRestoration.IsChanged {
+		app.pendingNotices.add(availabilityRestoration.Change)
 	}
 	app.onFailure = func(failure error) {
 		_ = notification.SendTurnError(

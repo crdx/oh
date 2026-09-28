@@ -60,8 +60,9 @@ func New(root *file.Root, snapshots *file.Snapshots) tool.Tool {
 		})
 }
 
-func Describe(args Args) (string, string) {
-	return util.DescribeSearch(args.Pattern, args.Path, args.Glob)
+func Describe(args Args) tool.CallRendering {
+	subject, qualifier := util.DescribeSearch(args.Pattern, args.Path, args.Glob)
+	return tool.CallRendering{Subject: subject, Qualifier: qualifier}
 }
 
 func confined(root *file.Root, name string) error {

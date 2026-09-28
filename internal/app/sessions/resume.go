@@ -178,6 +178,25 @@ func OpeningCaps(requestedCaps caps.Set, wereCapsChosen bool, resumedSession *st
 	return lastCaps, nil
 }
 
+func OpeningToolGroups(requestedGroups string, wereCapsChosen bool, resumedSession *store.Session) (string, error) {
+	if resumedSession == nil {
+		return requestedGroups, nil
+	}
+
+	lastGroups, _, found := caps.LastRecordedToolGroups(resumedSession.Events)
+	if !found {
+		return requestedGroups, nil
+	}
+	if wereCapsChosen && requestedGroups != lastGroups {
+		return "", fmt.Errorf(
+			"a resumed conversation opens with the custom tool groups it was left with, which were %q rather than %q",
+			lastGroups,
+			requestedGroups,
+		)
+	}
+	return lastGroups, nil
+}
+
 func OpeningConfinement(wasYoloChosen bool, resumedSession *store.Session) (bool, error) {
 	if resumedSession == nil {
 		return wasYoloChosen, nil

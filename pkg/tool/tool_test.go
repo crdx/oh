@@ -46,7 +46,9 @@ func newToolBuilder(t *testing.T) tool.Builder[Params] {
 			Description: "report weather in a city",
 			Schema:      tool.Schema{tool.String("city", "the city to look up")},
 		},
-		func(args Params) (string, string) { return args.City, "" },
+		func(args Params) tool.CallRendering {
+			return tool.CallRendering{Subject: args.City, Qualifier: ""}
+		},
 	)
 }
 
@@ -67,7 +69,7 @@ func TestParseBindsTheArgumentsToTheCall(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if subject := call.Subject(); subject != "London" {
+	if subject := call.Rendering().Subject; subject != "London" {
 		t.Errorf("expected the bound arguments, got %q", subject)
 	}
 
@@ -129,10 +131,10 @@ func TestARequiredAccessIsConsultedWhenTheCallExecutes(t *testing.T) {
 func TestParseDescribesTheCallOnce(t *testing.T) {
 	descriptions := 0
 	definedTool := tool.Implement(
-		tool.Definition{Name: "weather"},
-		func(args Params) (string, string) {
+		tool.Definition{Name: "weather", Schema: tool.Schema{tool.String("city", "the city to look up")}},
+		func(args Params) tool.CallRendering {
 			descriptions++
-			return args.City, "today"
+			return tool.CallRendering{Subject: args.City, Qualifier: "today"}
 		},
 	).Plain(func(_ context.Context, _ Params) (string, error) {
 		return "", nil
@@ -142,10 +144,10 @@ func TestParseDescribesTheCallOnce(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if subject := call.Subject(); subject != "London" {
+	if subject := call.Rendering().Subject; subject != "London" {
 		t.Errorf("got subject %q, want London", subject)
 	}
-	if qualifier := call.Qualifier(); qualifier != "today" {
+	if qualifier := call.Rendering().Qualifier; qualifier != "today" {
 		t.Errorf("got qualifier %q, want today", qualifier)
 	}
 	if descriptions != 1 {
@@ -155,7 +157,7 @@ func TestParseDescribesTheCallOnce(t *testing.T) {
 
 func TestAnOuterEmphasisReplacesAnInnerOne(t *testing.T) {
 	subject := newToolBuilder(t).
-		Focuses(func(tool.ToolCall) string { return "London" }).
+		Focuses(func(tool.CallRendering) string { return "London" }).
 		Syntax("bash").
 		Plain(func(_ context.Context, args Params) (string, error) {
 			return "raining in " + args.City, nil
@@ -167,7 +169,7 @@ func TestAnOuterEmphasisReplacesAnInnerOne(t *testing.T) {
 	}
 
 	want := tool.Emphasis{Kind: tool.EmphasisSyntax, Value: "bash"}
-	if got := call.Emphasis(); got != want {
+	if got := call.Rendering().Emphasis; got != want {
 		t.Errorf("got %#v, want %#v", got, want)
 	}
 }
@@ -183,7 +185,7 @@ func TestSyntaxCanUseDecodedArgumentsAsItsSource(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if got, want := call.Emphasis().Source, "London\nLondon"; got != want {
+	if got, want := call.Rendering().Emphasis.Source, "London\nLondon"; got != want {
 		t.Errorf("got source %q, want %q", got, want)
 	}
 }
@@ -205,15 +207,26 @@ func TestParseRefusesArgumentsItCannotRead(t *testing.T) {
 	}
 }
 
-func TestParseTakesAbsentArgumentsAsEmpty(t *testing.T) {
-	var didRun bool
+func newOptionalCityBuilder() tool.Builder[Params] {
+	return tool.Implement(
+		tool.Definition{
+			Name:        "weather",
+			Description: "report weather in a city",
+			Schema:      tool.Schema{tool.String("city", "the city to look up").Optional()},
+		},
+		func(args Params) tool.CallRendering { return tool.CallRendering{Subject: args.City} },
+	)
+}
 
-	call, err := newTool(t, &didRun).Parse("")
+func TestParseTakesAbsentArgumentsAsEmpty(t *testing.T) {
+	call, err := newOptionalCityBuilder().Plain(func(context.Context, Params) (string, error) {
+		return "", nil
+	}).Parse("")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if subject := call.Subject(); subject != "" {
+	if subject := call.Rendering().Subject; subject != "" {
 		t.Errorf("expected nothing rendered, got %q", subject)
 	}
 }
@@ -221,7 +234,7 @@ func TestParseTakesAbsentArgumentsAsEmpty(t *testing.T) {
 func TestValidationRunsForAbsentArguments(t *testing.T) {
 	validationError := errors.New("city is required")
 	wasValidated := false
-	subject := newToolBuilder(t).Validate(func(args Params) error {
+	subject := newOptionalCityBuilder().Validate(func(args Params) error {
 		wasValidated = true
 		if args.City != "" {
 			t.Errorf("expected empty arguments, got %#v", args)
@@ -254,9 +267,9 @@ func TestDefineMetricsValidatesDecodedArgumentsWhenAsked(t *testing.T) {
 			Description: "report weather in a city",
 			Schema:      tool.Schema{tool.String("city", "the city to look up")},
 		},
-		func(_ Params) (string, string) {
+		func(_ Params) tool.CallRendering {
 			wasRendered = true
-			return "", ""
+			return tool.CallRendering{}
 		},
 	).Validate(func(args Params) error {
 		if args.City != "London" {
@@ -287,7 +300,9 @@ func TestDefineMetricsDoesNotRequireValidation(t *testing.T) {
 			Description: "report weather in a city",
 			Schema:      tool.Schema{tool.String("city", "the city to look up")},
 		},
-		func(args Params) (string, string) { return args.City, "" },
+		func(args Params) tool.CallRendering {
+			return tool.CallRendering{Subject: args.City, Qualifier: ""}
+		},
 	).Exec(func(_ context.Context, args Params) (string, tool.ToolCallMetrics, error) {
 		return args.City, tool.ToolCallMetrics{}, nil
 	})
@@ -296,7 +311,49 @@ func TestDefineMetricsDoesNotRequireValidation(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if subject := call.Subject(); subject != "London" {
+	if subject := call.Rendering().Subject; subject != "London" {
 		t.Errorf("expected the bound arguments, got %q", subject)
+	}
+}
+
+func TestParseRefusesArgumentsTheSchemaDoesNotDeclare(t *testing.T) {
+	for name, test := range map[string]struct {
+		arguments string
+		want      string
+	}{
+		"an unknown parameter":    {arguments: `{"city":"London","country":"England"}`, want: "unknown parameter: country"},
+		"a missing parameter":     {arguments: `{}`, want: "city is required"},
+		"absent arguments":        {arguments: "", want: "city is required"},
+		"a value of another type": {arguments: `{"city":7}`, want: "city must be a string, not 7"},
+	} {
+		t.Run(name, func(t *testing.T) {
+			var didRun bool
+
+			call, err := newTool(t, &didRun).Parse(test.arguments)
+			if err == nil || err.Error() != test.want {
+				t.Errorf("got %v, want %q", err, test.want)
+			}
+			if call != nil || didRun {
+				t.Error("expected no call to be made")
+			}
+		})
+	}
+}
+
+func TestParseRefusesAValueOutsideAnEnum(t *testing.T) {
+	type Forecast struct {
+		Sky string `json:"sky"`
+	}
+
+	subject := tool.Implement(
+		tool.Definition{
+			Name:   "forecast",
+			Schema: tool.Schema{tool.Enum("sky", "the sky to expect", "clear", "cloudy")},
+		},
+		func(args Forecast) tool.CallRendering { return tool.CallRendering{Subject: args.Sky} },
+	).Plain(func(context.Context, Forecast) (string, error) { return "", nil })
+
+	if _, err := subject.Parse(`{"sky":"green"}`); err == nil || err.Error() != "sky must be one of: clear, cloudy" {
+		t.Errorf("got %v, want the value refused", err)
 	}
 }

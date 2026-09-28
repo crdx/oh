@@ -224,7 +224,7 @@ I checked each boundary without crossing it.
 
 read huge.log ✗ 0L ~96Mt file is larger than the 20971520-byte limit
 grep secret linked ✗ linked: path escapes from parent
-fetch http://[2001:db8::1]/private text ✗ the fetch failed: Get "http://[2001:db8::1]/private": dia…
+fetch http://[2001:db8::1]/private as text ✗ the fetch failed: Get "http://[2001:db8::1]/private": …
 $ echo ready ✗ the shell cannot be confined: writable policy unsupported
 
 Each boundary stayed closed.
@@ -271,7 +271,7 @@ I checked each boundary without crossing it.
 
 read huge.log ✗ 0L ~96Mt file is larger than the 20971520-byte limit
 grep secret linked ✗ linked: path escapes from parent
-fetch http://[2001:db8::1]/private text ✗ the fetch failed: Get "http://[2001:db8::1]/private": dia…
+fetch http://[2001:db8::1]/private as text ✗ the fetch failed: Get "http://[2001:db8::1]/private": …
 $ echo ready ✗ the shell cannot be confined: writable policy unsupported
 
 Each boundary stayed closed.

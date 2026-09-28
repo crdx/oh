@@ -198,6 +198,38 @@ func TestDisabledCapabilitiesTakeTheMutedColour(t *testing.T) {
 	}
 }
 
+func TestAToolAppearanceCanConfigureItsNameAndPaints(t *testing.T) {
+	theme := DefaultTheme()
+	theme.Tool["skill"] = ToolAppearance{
+		Name:  "consult-chart",
+		Paint: "#010203 bold",
+		Focus: "status_danger",
+	}
+	t.Cleanup(ApplyTheme(theme))
+
+	name, nameStyle, focusStyle := ToolCallAppearance("skill", "read", true)
+	if name != "consult-chart" {
+		t.Errorf("got name %q", name)
+	}
+	if got := nameStyle("name"); got != "\x1b[1;38;2;1;2;3mname\x1b[0m" {
+		t.Errorf("got name paint %q", got)
+	}
+	if got, want := focusStyle("focus"), Failure("focus"); got != want {
+		t.Errorf("got focus paint %q, want %q", got, want)
+	}
+}
+
+func TestAnUnknownToolAppearanceUsesItsCallDefaults(t *testing.T) {
+	name, readStyle, _ := ToolCallAppearance("custom", "inspect", true)
+	if name != "inspect" || readStyle("call") != Call("call") {
+		t.Errorf("got %q and %q", name, readStyle("call"))
+	}
+	_, changeStyle, _ := ToolCallAppearance("custom", "change", false)
+	if changeStyle("call") != Change("call") {
+		t.Errorf("got change style %q", changeStyle("call"))
+	}
+}
+
 func TestTheShellPromptMatchesACommandName(t *testing.T) {
 	enableColor(t)
 

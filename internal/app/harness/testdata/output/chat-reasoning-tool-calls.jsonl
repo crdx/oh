@@ -1,16 +1,16 @@
-{"kind":"head","version":14,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"head","version":15,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant.","tools":["alpha","beta"],"tool_definitions":[{"name":"alpha","description":"A deterministic scenario tool.","revision":"1"},{"name":"beta","description":"A deterministic scenario tool.","revision":"1"}]}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"reason, then call two tools in fragments"}}
 {"kind":"event","event":{"kind":"model_reasoning","text":"Use both tools."}}
-{"kind":"event","event":{"render":"alpha","kind":"tool_call_request","id":"call-1","name":"alpha","arguments":"{\"x\":1}"}}
-{"kind":"event","event":{"render":"beta","kind":"tool_call_request","id":"call-2","name":"beta","arguments":"{\"y\":2}"}}
+{"kind":"event","event":{"render":"alpha","kind":"tool_call_request","id":"call-1","name":"alpha","arguments":"{}"}}
+{"kind":"event","event":{"render":"beta","kind":"tool_call_request","id":"call-2","name":"beta","arguments":"{}"}}
 {"kind":"event","event":{"kind":"state_change","id":"call-1","name":"alpha-count","state":1}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"alpha result","id":"call-1","name":"alpha","status":"success","stats":{"kind":"output","lines":1,"bytes":12}}}
 {"kind":"event","event":{"kind":"state_change","id":"call-2","name":"beta-count","state":1}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"beta result","id":"call-2","name":"beta","status":"success","stats":{"kind":"output","lines":1,"bytes":11}}}
 {"kind":"event","event":{"kind":"model_message","text":"Tools done."}}
 {"kind":"item","payload":{"role":"user","content":"reason, then call two tools in fragments"}}
-{"kind":"item","payload":{"role":"assistant","content":"","reasoning_content":"Use both tools.","tool_calls":[{"id":"call-1","type":"function","function":{"name":"alpha","arguments":"{\"x\":1}"}},{"id":"call-2","type":"function","function":{"name":"beta","arguments":"{\"y\":2}"}}]}}
+{"kind":"item","payload":{"role":"assistant","content":"","reasoning_content":"Use both tools.","tool_calls":[{"id":"call-1","type":"function","function":{"name":"alpha","arguments":"{}"}},{"id":"call-2","type":"function","function":{"name":"beta","arguments":"{}"}}]}}
 {"kind":"item","payload":{"role":"tool","content":"alpha result","tool_call_id":"call-1"}}
 {"kind":"item","payload":{"role":"tool","content":"beta result","tool_call_id":"call-2"}}
 {"kind":"item","payload":{"role":"assistant","content":"Tools done."}}

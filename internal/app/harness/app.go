@@ -46,6 +46,7 @@ import (
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/terminal"
+	"crdx.org/oh/internal/app/toolset"
 	"crdx.org/oh/internal/app/trigger"
 	"crdx.org/oh/internal/app/tty"
 	"crdx.org/oh/internal/app/turn"
@@ -112,7 +113,8 @@ func (self *pendingNotices) accessNotices() []string {
 	for _, item := range self.items {
 		kind := item.state.Kind
 		isAccessChange := kind == caps.ModeChange || kind == caps.JobStop ||
-			kind == pathgrant.Change || kind == portgrant.SandboxToHostChange
+			kind == toolset.AvailabilityChange || kind == pathgrant.Change ||
+			kind == portgrant.SandboxToHostChange
 		if !isAccessChange {
 			continue
 		}
@@ -435,6 +437,9 @@ func (self *App) apply(inputLine *edit.Input, history *edit.History, keypress ke
 	case edit.ToggleLookup:
 		self.toggleCap(caps.Lookup)
 
+	case edit.ToggleToolGroup:
+		self.toggleToolGroup(inputLine.ToolGroup())
+
 	case edit.DrawInput:
 	}
 
@@ -718,44 +723,62 @@ func (self *App) toggleCap(whichCaps caps.Set) {
 	self.terminal.SetMode(self.mode.Current())
 
 	isWithdrawn := !self.mode.Current().Has(whichCaps)
-
-	if i, isPending := self.pendingModeChange(whichCaps); isPending {
-		self.takeBackModeChange(i, whichCaps)
-	} else {
-		self.showModeChange(whichCaps)
-	}
+	self.queueModeChange(whichCaps.Flag(), whichCaps)
 
 	if isWithdrawn {
 		self.stopJobsLosingAccess(whichCaps)
 	}
 
+	self.interruptForAccessChange()
+}
+
+func (self *App) toggleToolGroup(flag string) {
+	if !self.mode.ToggleGroup(flag) {
+		return
+	}
+
+	self.queueModeChange(flag, 0)
+	self.interruptForAccessChange()
+}
+
+func (self *App) interruptForAccessChange() {
 	if self.currentTurn.Running() {
 		self.queuedTurn.MarkAccessChange()
 		self.interruptTurn(interrupt.AccessChange)
 	}
 }
 
-func (self *App) pendingModeChange(whichCaps caps.Set) (int, bool) {
+func (self *App) queueModeChange(flag string, stoppedJobsCaps caps.Set) {
+	if i, isPending := self.pendingModeChange(flag, stoppedJobsCaps); isPending {
+		self.takeBackModeChange(i, flag)
+	} else {
+		self.showModeChange(flag)
+	}
+}
+
+func (self *App) pendingModeChange(flag string, stoppedJobsCaps caps.Set) (int, bool) {
 	for index, item := range slices.Backward(self.pendingNotices.items) {
-		if item.state.Kind != caps.ModeChange || item.state.Name != whichCaps.Flag() {
+		if item.state.Kind != caps.ModeChange || item.state.Name != flag {
 			continue
 		}
 
-		return index, !self.pendingNotices.hasStoppedJobsAfter(index, whichCaps)
+		isTakebackPreventedByStoppedJobs := stoppedJobsCaps != 0 &&
+			self.pendingNotices.hasStoppedJobsAfter(index, stoppedJobsCaps)
+		return index, !isTakebackPreventedByStoppedJobs
 	}
 
 	return 0, false
 }
 
-func (self *App) showModeChange(whichCaps caps.Set) {
-	self.pendingNotices.add(caps.ModeToggleEvent(whichCaps, self.mode.Current()))
+func (self *App) showModeChange(flag string) {
+	self.pendingNotices.add(self.mode.Event(flag))
 
 	if !self.currentTurn.Running() {
 		self.refreshPendingMessages()
 	}
 }
 
-func (self *App) takeBackModeChange(index int, whichCaps caps.Set) {
+func (self *App) takeBackModeChange(index int, flag string) {
 	self.pendingNotices.takeBack(index)
 
 	for other := index; other < len(self.pendingNotices.items); other++ {
@@ -763,7 +786,7 @@ func (self *App) takeBackModeChange(index int, whichCaps caps.Set) {
 		if item.state.Kind != caps.ModeChange {
 			continue
 		}
-		item.state = caps.ModeWithout(item.state, whichCaps)
+		item.state = caps.ModeWithoutFlag(item.state, flag)
 	}
 
 	if self.currentTurn.Running() {
@@ -810,7 +833,7 @@ func (self *App) initialiseAccess() {
 		return
 	}
 	self.settledCaps = self.mode.Current()
-	self.recordModeEvent(caps.ModeEvent(self.settledCaps))
+	self.recordModeEvent(self.mode.Event(""))
 	for _, event := range self.openingEvents {
 		self.storeEvent(event)
 	}
@@ -1059,6 +1082,7 @@ func (self *App) getBarSources() bar.Sources {
 		GetCacheUsage:          self.cacheUsage,
 		GetSessionSpend:        self.sessionSpend,
 		GetGrantedCaps:         self.grantedCaps,
+		GetGroupStatus:         self.mode.Groups,
 		GetPathGrants:          self.getPathGrants,
 		GetHostToSandboxRoutes: self.getHostToSandboxRoutes,
 		GetSandboxToHostPorts:  self.getSandboxToHostPorts,
@@ -1288,7 +1312,7 @@ func (self *App) reloadConfig(watchFailure error) bool {
 			})
 			return true
 		}
-		isThemeChanged := self.display.theme != result.LiveConfig.Theme
+		isThemeChanged := !self.display.theme.Equal(result.LiveConfig.Theme)
 		if isThemeChanged {
 			style.ApplyTheme(result.LiveConfig.Theme)
 			self.display.theme = result.LiveConfig.Theme

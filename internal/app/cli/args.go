@@ -81,6 +81,7 @@ type Options struct {
 	SourceSession  string
 	Selection      model.Selection
 	Caps           caps.Set
+	GroupFlags     string
 	WereCapsChosen bool
 	Tools          []string
 	AddedFiles     []startup.InitialFile
@@ -139,7 +140,11 @@ func (self Options) StartingFromSession() bool {
 	return self.SourceSession != ""
 }
 
-func (self Input) Parse(modelCachePath string, defaults model.Defaults) (Options, error) {
+func (self Input) Parse(
+	modelCachePath string,
+	defaults model.Defaults,
+	customGroupFlags ...string,
+) (Options, error) {
 	options := Options{
 		Message:       strings.Join(self.Message, " "),
 		Session:       self.Session,
@@ -162,11 +167,19 @@ func (self Input) Parse(modelCachePath string, defaults model.Defaults) (Options
 		capFlags = defaultCapFlags
 	}
 
-	grantedCaps, err := caps.Parse(capFlags)
+	allowedGroups := ""
+	if len(customGroupFlags) > 0 {
+		allowedGroups = customGroupFlags[0]
+	}
+	if options.Resuming() {
+		allowedGroups = "abcdefghijklmnopqrstuvwxyz"
+	}
+	grantedCaps, grantedGroups, err := caps.ParseWithGroups(capFlags, allowedGroups)
 	if err != nil {
 		return options, err
 	}
 	options.Caps = grantedCaps
+	options.GroupFlags = grantedGroups
 	options.WereCapsChosen = self.Caps != ""
 
 	if options.Resuming() && options.StartingFromSession() {

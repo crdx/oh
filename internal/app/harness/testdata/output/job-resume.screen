@@ -3,7 +3,7 @@
  start the docs server and a watcher
 
 
-job docs $ python3 -m http.server … ✓ 1L
+start docs $ python3 -m http.serve… ✓ 1L
 
 Both are up.
 
@@ -20,8 +20,8 @@ Both are up.
  carry on
 
 
-job list ✓ 2L
-job docs start ✓ 1L
+list jobs ✓ 2L
+restart docs ✓ 1L
 
 Restarted docs from the command it was
 remembered with.
@@ -455,7 +455,7 @@ h
  start the docs server and a watcher
 
 
-job docs $ python3 -m http.server 8080 ✓ 1L
+start docs $ python3 -m http.server 8080 ✓ 1L
 
 Both are up.
 
@@ -468,8 +468,8 @@ Both are up.
  carry on
 
 
-job list ✓ 2L
-job docs start ✓ 1L
+list jobs ✓ 2L
+restart docs ✓ 1L
 
 Restarted docs from the command it was remembered with.
 === tiny ===
@@ -480,7 +480,7 @@ Restarted docs from the command it was remembered with.
  watcher
 
 
-job do… ✓ 1L
+start … ✓ 1L
 
 Both are up.
 
@@ -516,8 +516,8 @@ Both are up.
  carry on
 
 
-job l… ✓ 2L
-job do… ✓ 1L
+list j… ✓ 2L
+restart ✓ 1L
 
 Restarted
 docs from
@@ -530,7 +530,7 @@ with.
  start the docs server and a watcher
 
 
-job docs $ python3 -m http.server 8080 ✓ 1L
+start docs $ python3 -m http.server 8080 ✓ 1L
 
 Both are up.
 
@@ -543,7 +543,7 @@ Both are up.
  carry on
 
 
-job list ✓ 2L
-job docs start ✓ 1L
+list jobs ✓ 2L
+restart docs ✓ 1L
 
 Restarted docs from the command it was remembered with.

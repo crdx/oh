@@ -54,7 +54,9 @@ func newToolBuilder(t *testing.T) tool.Builder[Args] {
 			Description: "generate output",
 			Schema:      tool.Schema{tool.Integer("size", "how many lines to generate")},
 		},
-		func(args Args) (string, string) { return "generate", "" },
+		func(args Args) tool.CallRendering {
+			return tool.CallRendering{Subject: "generate", Qualifier: ""}
+		},
 	)
 }
 
@@ -87,7 +89,9 @@ func TestStatisticsPassThroughTheOutputCap(t *testing.T) {
 			Description: "measure something",
 			Schema:      tool.Schema{},
 		},
-		func(Args) (string, string) { return "measured", "" },
+		func(Args) tool.CallRendering {
+			return tool.CallRendering{Subject: "measured", Qualifier: ""}
+		},
 	).Exec(func(context.Context, Args) (string, tool.ToolCallMetrics, error) {
 		return "done", tool.ToolCallMetrics{Kind: tool.MetricRead, Lines: 3, Bytes: 12}, nil
 	})
@@ -114,7 +118,9 @@ func TestTruncatedStatisticsReportReturnedAndTotalOutput(t *testing.T) {
 			Description: "measure something",
 			Schema:      tool.Schema{},
 		},
-		func(Args) (string, string) { return "measured", "" },
+		func(Args) tool.CallRendering {
+			return tool.CallRendering{Subject: "measured", Qualifier: ""}
+		},
 	).Exec(func(context.Context, Args) (string, tool.ToolCallMetrics, error) {
 		return whole, tool.ToolCallMetrics{Kind: tool.MetricResources}, nil
 	})
@@ -141,7 +147,9 @@ func TestAnAttachedImagePassesThroughTheOutputCap(t *testing.T) {
 			Description: "return an image",
 			Schema:      tool.Schema{},
 		},
-		func(Args) (string, string) { return "image", "" },
+		func(Args) tool.CallRendering {
+			return tool.CallRendering{Subject: "image", Qualifier: ""}
+		},
 	).Run(func(context.Context, Args) (tool.ToolCallResult, error) {
 		return tool.ToolCallResult{
 			Output: "image/png image",
@@ -250,7 +258,7 @@ func fileLinesTool(output string, lines tool.FileLines) tool.Tool {
 			Description: "read lines of a file",
 			Schema:      tool.Schema{},
 		},
-		func(Args) (string, string) { return "read", "" },
+		func(Args) tool.CallRendering { return tool.CallRendering{Subject: "read"} },
 	).Run(func(context.Context, Args) (tool.ToolCallResult, error) {
 		return tool.ToolCallResult{Output: output, FileLines: lines}, nil
 	})
@@ -317,20 +325,20 @@ func TestAWrappedToolKeepsItsSyntaxHighlighting(t *testing.T) {
 	}
 
 	want := tool.Emphasis{Kind: tool.EmphasisSyntax, Value: "bash"}
-	if call.Emphasis() != want {
+	if call.Rendering().Emphasis != want {
 		t.Errorf("expected the emphasis to survive, got %T", call)
 	}
 }
 
 func TestAWrappedToolKeepsItsFocusedRendering(t *testing.T) {
-	subject := buildTool(newToolBuilder(t).Focuses(func(tool.ToolCall) string { return "generate" }))
+	subject := buildTool(newToolBuilder(t).Focuses(func(tool.CallRendering) string { return "generate" }))
 	call, err := truncate.Tool(subject, newLimit(t, limitBytes)).Parse(`{"size":2}`)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
 	want := tool.Emphasis{Kind: tool.EmphasisFocus, Value: "generate"}
-	if call.Emphasis() != want {
+	if call.Rendering().Emphasis != want {
 		t.Errorf("expected the focus to survive, got %T", call)
 	}
 }

@@ -71,7 +71,8 @@ func TestAFileIsWrittenWithItsParentDirectories(t *testing.T) {
 
 func TestWriteSizesUseCompactBytes(t *testing.T) {
 	content := strings.Repeat("x", 1536)
-	path, size := write.Describe(write.Args{Path: "result.txt", Content: content})
+	rendering := write.Describe(write.Args{Path: "result.txt", Content: content})
+	path, size := rendering.Subject, rendering.Qualifier
 	if path != "result.txt" || size != "1.5K" {
 		t.Errorf("got path %q and size %q, want result.txt and 1.5K", path, size)
 	}
@@ -152,8 +153,9 @@ func TestAMountedRootFollowsItsWriteMode(t *testing.T) {
 func TestAWriteWithNoPathIsRefused(t *testing.T) {
 	root, _ := testRoot(t)
 
-	if _, err := exec(t, root, `{"content":"hello\n"}`); err == nil {
-		t.Error("expected a write with no path to be refused")
+	_, err := write.New(root, file.NewSnapshots()).Parse(`{"content":"hello\n"}`)
+	if err == nil || !strings.Contains(err.Error(), "path is required") {
+		t.Errorf("got %v, want a write with no path to be refused", err)
 	}
 }
 

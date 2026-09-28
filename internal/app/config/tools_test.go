@@ -139,6 +139,85 @@ func TestACustomToolOnThePathIsLeftForThePathToFind(t *testing.T) {
 	}
 }
 
+func TestCustomToolsCanShareAModeGroup(t *testing.T) {
+	config, _ := configWithACustomTool(t, `
+		[caps]
+		default = "rxa"
+
+		[tools.weather]
+		description = "report the weather for a city"
+		command = ["true"]
+		group = "a"
+		compatible = [{ from = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", to = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" }]
+
+		[tools.forecast]
+		description = "forecast the weather"
+		command = ["true"]
+		group = "a"
+	`)
+
+	groups, err := config.CustomToolGroups()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := strings.Join(groups["a"], ","); got != "forecast,weather" {
+		t.Errorf("got grouped tools %q", got)
+	}
+	declaration, err := config.declare("weather")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(declaration.Compatibility) != 1 ||
+		declaration.Compatibility[0].From != strings.Repeat("a", 64) ||
+		declaration.Compatibility[0].To != strings.Repeat("b", 64) {
+		t.Errorf("got compatibility %#v", declaration.Compatibility)
+	}
+	if _, grantedGroups, err := config.ParseCaps(string(config.Caps.Default)); err != nil {
+		t.Fatal(err)
+	} else if grantedGroups != "a" {
+		t.Errorf("got granted groups %q", grantedGroups)
+	}
+}
+
+func TestASessionCanPreserveAnUngroupedCustomTool(t *testing.T) {
+	config, _ := configWithACustomTool(t, `
+		[tools.weather]
+		description = "report the weather"
+		command = ["true"]
+		group = "a"
+	`)
+
+	tools, err := config.BuildCustomTools(command.Options{
+		GroupForTool: func(string) string { return "" },
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	call, err := tools[0].Parse("{}")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := call.Exec(t.Context()); err != nil {
+		t.Errorf("the session's ungrouped tool was refused: %v", err)
+	}
+}
+
+func TestACustomToolGroupIsOneLowercaseLetter(t *testing.T) {
+	for _, group := range []string{"ab", "A", "é"} {
+		t.Run(group, func(t *testing.T) {
+			directory := t.TempDir()
+			path := filepath.Join(directory, "config.toml")
+			body := "[tools.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\ngroup = \"" + group + "\"\n"
+			if err := writeConfigFile(path, body); err != nil {
+				t.Fatal(err)
+			}
+			if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "is not one lowercase letter") {
+				t.Errorf("got %v", err)
+			}
+		})
+	}
+}
+
 func TestACustomToolAsksUnlessItSaysOtherwise(t *testing.T) {
 	for written, mustAsk := range map[string]bool{"": true, "ask": true, "allow": false} {
 		t.Run("permission "+written, func(t *testing.T) {

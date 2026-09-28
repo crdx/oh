@@ -13,8 +13,8 @@ prompt = "call a tool through Ollama"
 [[first.response]]
 event = [
     '''{"choices":[{"delta":{"role":"assistant","content":"","reasoning":"Call the tool."}}]}''',
-    '''{"choices":[{"delta":{"tool_calls":[{"index":0,"id":"call-1","type":"function","function":{"name":"alpha","arguments":"{\"x\":"}}]}}]}''',
-    '''{"choices":[{"delta":{"tool_calls":[{"index":0,"function":{"arguments":"1}"}}]}}]}''',
+    '''{"choices":[{"delta":{"tool_calls":[{"index":0,"id":"call-1","type":"function","function":{"name":"alpha","arguments":"{"}}]}}]}''',
+    '''{"choices":[{"delta":{"tool_calls":[{"index":0,"function":{"arguments":"}"}}]}}]}''',
     '''{"choices":[{"delta":{},"finish_reason":"tool_calls"}]}''',
     '''[DONE]''',
 ]

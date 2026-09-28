@@ -68,7 +68,7 @@ func TestTitlingFlattensWhatItIsGiven(t *testing.T) {
 	if err != nil {
 		t.Fatalf("could not parse: %v", err)
 	}
-	if subject := parsedCall.Subject(); subject != "fix the picker clipping" {
+	if subject := parsedCall.Rendering().Subject; subject != "fix the picker clipping" {
 		t.Errorf("drew %q", subject)
 	}
 }

@@ -13,6 +13,7 @@ import (
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/toolset"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/util/strutil"
@@ -218,6 +219,8 @@ func HarnessNotices(event agent.Event) ([]string, bool) {
 		return oneNotice(hostcommand.Notice(event))
 	case conditions.Change:
 		return conditions.Notice(event)
+	case toolset.AvailabilityChange:
+		return toolset.AvailabilityNotice(event)
 	case pathgrant.Change:
 		return oneNotice(pathgrant.Notice(event))
 	case portgrant.SandboxToHostChange:

@@ -109,6 +109,21 @@ func TestAResumedConversationOpensInTheModeItWasLeftIn(t *testing.T) {
 	}
 }
 
+func TestAResumedConversationRestoresItsCustomToolGroups(t *testing.T) {
+	mode := caps.NewModeWithGroups(caps.Read, "a", caps.ToolGroups{"a": {"weather"}})
+	resumedSession := &store.Session{Events: []agent.Event{mode.Event("")}}
+
+	if got, err := OpeningToolGroups("", false, resumedSession); err != nil || got != "a" {
+		t.Errorf("got groups %q and %v", got, err)
+	}
+	if _, err := OpeningToolGroups("", true, resumedSession); err == nil {
+		t.Error("expected another custom-tool mode to be refused")
+	}
+	if got, err := OpeningToolGroups("a", true, resumedSession); err != nil || got != "a" {
+		t.Errorf("got groups %q and %v", got, err)
+	}
+}
+
 func TestAResumedConversationCannotBeAskedForAnotherMode(t *testing.T) {
 	leftCaps := caps.Read | caps.Git
 	resumedSession := &store.Session{Events: []agent.Event{caps.ModeEvent(leftCaps)}}

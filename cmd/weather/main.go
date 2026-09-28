@@ -21,7 +21,9 @@ func main() {
 			Description: "report weather in a city",
 			Schema:      tool.Schema{tool.String("city", "the city to look up")},
 		},
-		func(args WeatherParams) (string, string) { return args.City, "" },
+		func(args WeatherParams) tool.CallRendering {
+			return tool.CallRendering{Subject: args.City, Qualifier: ""}
+		},
 	).Plain(func(_ context.Context, _ WeatherParams) (string, error) {
 		return "Cloudy with a chance of meatballs.", nil
 	})

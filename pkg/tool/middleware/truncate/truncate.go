@@ -64,6 +64,10 @@ type truncatedTool struct {
 	limit *Limit
 }
 
+func (self truncatedTool) CompatibleWith(revision string) bool {
+	return tool.AcceptsRevision(self.Tool, revision)
+}
+
 func (self truncatedTool) Parse(arguments string) (tool.ToolCall, error) {
 	call, err := self.Tool.Parse(arguments)
 	if err != nil {

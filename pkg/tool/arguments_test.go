@@ -114,7 +114,7 @@ func TestAValueOutsideAnEnumIsRefusedWithTheWholeChoice(t *testing.T) {
 
 func TestAParameterTheSchemaDoesNotDeclareIsRefused(t *testing.T) {
 	_, err := declaredSchema().Decode(`{"path":"a.go","colour":"red"}`)
-	if err == nil || err.Error() != "colour is not a parameter of this tool" {
+	if err == nil || err.Error() != "unknown parameter: colour" {
 		t.Errorf("got %v", err)
 	}
 }

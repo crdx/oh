@@ -12,27 +12,33 @@ type Tool interface {
 	Name() string
 	Description() string
 	Schema() Schema
+	Revision() string
 	Concurrent() bool
 	ReadOnly() bool
 	StateKey() string
+	Render(arguments string) (CallRendering, bool)
 	Parse(arguments string) (ToolCall, error)
 	Restore(state json.RawMessage) error
 }
 
 type ToolCall interface {
-	Subject() string
-	Qualifier() string
-	Emphasis() Emphasis
-	Continuation() []CallRendering
+	Rendering() CallRendering
 	TimeLimit() time.Duration
 	Exec(ctx context.Context) (ToolCallResult, error)
 }
 
 type CallRendering struct {
-	Name      string   `json:"name"`
-	Subject   string   `json:"render,omitempty"`
-	Qualifier string   `json:"detail,omitempty"`
-	Emphasis  Emphasis `json:"emphasis,omitzero"`
+	Kind         string          `json:"kind,omitempty"`
+	Subject      string          `json:"render,omitempty"`
+	Qualifier    string          `json:"detail,omitempty"`
+	PathLine     string          `json:"path_line,omitempty"`
+	Emphasis     Emphasis        `json:"emphasis,omitzero"`
+	Continuation []CallRendering `json:"continuation,omitempty"`
+	ShowOutput   bool            `json:"show_output,omitempty"`
+}
+
+func (self CallRendering) HasArguments() bool {
+	return self.Subject != "" || self.Qualifier != "" || len(self.Continuation) > 0
 }
 
 type ToolCallResult struct {
@@ -95,7 +101,7 @@ type Emphasis struct {
 	Source string       `json:"-"`
 }
 
-type Describer[T any] func(args T) (string, string)
+type Renderer[T any] func(args T) CallRendering
 
 type Validator[T any] func(args T) error
 

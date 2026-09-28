@@ -35,7 +35,7 @@ func (self Schema) Decode(text string) (Arguments, error) {
 
 	for _, name := range slices.Sorted(maps.Keys(fields)) {
 		if self.Find(name) == nil {
-			return Arguments{}, fmt.Errorf("%s is not a parameter of this tool", name)
+			return Arguments{}, fmt.Errorf("unknown parameter: %s", name)
 		}
 	}
 

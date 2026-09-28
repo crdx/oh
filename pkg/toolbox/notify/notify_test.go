@@ -304,8 +304,9 @@ func TestIconParameterDescriptionListsEveryChoice(t *testing.T) {
 }
 
 func TestDescribeReportsTheTitleAndMessage(t *testing.T) {
-	subject, qualifier := notify.Describe(notify.Args{Title: "Greeting", Message: "hello"})
-	if subject != "Greeting" || qualifier != "hello" {
+	rendering := notify.Describe(notify.Args{Title: "Greeting", Message: "hello"})
+	subject, qualifier := rendering.Subject, rendering.Qualifier
+	if subject != "Greeting" || qualifier != "— hello" {
 		t.Errorf("got subject %q and qualifier %q", subject, qualifier)
 	}
 }

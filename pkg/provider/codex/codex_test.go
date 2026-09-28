@@ -151,7 +151,9 @@ func weatherTool(t *testing.T, callCount *int) tool.Tool {
 			Description: "report weather in a city",
 			Schema:      tool.Schema{tool.String("city", "the city to look up")},
 		},
-		func(args WeatherParams) (string, string) { return args.City, "" },
+		func(args WeatherParams) tool.CallRendering {
+			return tool.CallRendering{Subject: args.City, Qualifier: ""}
+		},
 	).Plain(func(_ context.Context, args WeatherParams) (string, error) {
 		*callCount++
 
@@ -449,7 +451,9 @@ func TestAnImageReturnedByAToolIsSentForTheModelToInspect(t *testing.T) {
 			Description: "view an image",
 			Schema:      tool.Schema{},
 		},
-		func(nothing) (string, string) { return "picture.png", "" },
+		func(nothing) tool.CallRendering {
+			return tool.CallRendering{Subject: "picture.png", Qualifier: ""}
+		},
 	).Run(func(context.Context, nothing) (tool.ToolCallResult, error) {
 		return tool.ToolCallResult{
 			Output: "image/png image (3 bytes)",
@@ -536,7 +540,9 @@ func TestAToolWithNoArgumentsIsStillGivenASchema(t *testing.T) {
 			Description: "wait for something to happen",
 			Schema:      tool.Schema{},
 		},
-		func(nothing) (string, string) { return "", "" },
+		func(nothing) tool.CallRendering {
+			return tool.CallRendering{Subject: "", Qualifier: ""}
+		},
 	).Plain(func(context.Context, nothing) (string, error) { return "", nil })
 
 	assistant := newAgent(t, server.URL, []tool.Tool{waitingTool})

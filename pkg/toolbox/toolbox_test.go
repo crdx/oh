@@ -66,7 +66,7 @@ func TestEveryPathShowingToolFocusesItsLastComponent(t *testing.T) {
 		}
 
 		want := tool.Emphasis{Kind: tool.EmphasisFocus, Value: test.focus}
-		if call.Emphasis() != want {
+		if call.Rendering().Emphasis != want {
 			t.Errorf("%s: expected %q to be focused, got %T", subject.Name(), test.focus, call)
 		}
 	}

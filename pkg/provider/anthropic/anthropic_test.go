@@ -499,7 +499,9 @@ func weatherTool(t *testing.T, callCount *int) tool.Tool {
 			Description: "report weather in a city",
 			Schema:      tool.Schema{tool.String("city", "the city to look up")},
 		},
-		func(args WeatherParams) (string, string) { return args.City, "" },
+		func(args WeatherParams) tool.CallRendering {
+			return tool.CallRendering{Subject: args.City, Qualifier: ""}
+		},
 	).Plain(func(_ context.Context, args WeatherParams) (string, error) {
 		*callCount++
 
@@ -512,7 +514,9 @@ type nothing struct{}
 func emptyTool(name string) tool.Tool {
 	return tool.Implement(
 		tool.Definition{Name: name, Description: "do the thing", Schema: tool.Schema{}},
-		func(nothing) (string, string) { return "", "" },
+		func(nothing) tool.CallRendering {
+			return tool.CallRendering{Subject: "", Qualifier: ""}
+		},
 	).Plain(func(context.Context, nothing) (string, error) { return "done", nil })
 }
 
@@ -748,7 +752,9 @@ func TestAFailedCallIsMarkedAsOneOnTheWire(t *testing.T) {
 
 	failing := tool.Implement(
 		tool.Definition{Name: "weather", Description: "report weather in a city", Schema: tool.Schema{}},
-		func(struct{}) (string, string) { return "", "" },
+		func(struct{}) tool.CallRendering {
+			return tool.CallRendering{Subject: "", Qualifier: ""}
+		},
 	).Plain(func(context.Context, struct{}) (string, error) {
 		return "the city is not known", errors.New("lookup failed")
 	})
@@ -1089,7 +1095,9 @@ func TestAnImageReturnedByAToolIsSentForTheModelToInspect(t *testing.T) {
 
 	viewTool := tool.Implement(
 		tool.Definition{Name: "view", Description: "view an image", Schema: tool.Schema{}},
-		func(nothing) (string, string) { return "picture.png", "" },
+		func(nothing) tool.CallRendering {
+			return tool.CallRendering{Subject: "picture.png", Qualifier: ""}
+		},
 	).Run(func(context.Context, nothing) (tool.ToolCallResult, error) {
 		return tool.ToolCallResult{
 			Output: "image/png image (3 bytes)",
@@ -1153,7 +1161,9 @@ func TestAToolReturningOnlyAnImageStillSaysSomething(t *testing.T) {
 
 	viewTool := tool.Implement(
 		tool.Definition{Name: "view", Description: "view an image", Schema: tool.Schema{}},
-		func(nothing) (string, string) { return "picture.png", "" },
+		func(nothing) tool.CallRendering {
+			return tool.CallRendering{Subject: "picture.png", Qualifier: ""}
+		},
 	).Run(func(context.Context, nothing) (tool.ToolCallResult, error) {
 		return tool.ToolCallResult{
 			Image: tool.Image{MediaType: "image/png", Data: []byte{1, 2, 3}},

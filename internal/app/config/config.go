@@ -86,15 +86,19 @@ type Caps struct {
 	Default DefaultCaps `toml:"default"`
 }
 
-type DefaultCaps caps.Set
+type DefaultCaps string
 
 func (self *DefaultCaps) UnmarshalText(text []byte) error {
-	grantedCaps, err := caps.Parse(string(text))
-	if err != nil {
-		return err
-	}
-	*self = DefaultCaps(grantedCaps)
+	*self = DefaultCaps(text)
 	return nil
+}
+
+func (self Config) ParseCaps(flags string) (caps.Set, string, error) {
+	toolGroups, err := self.CustomToolGroups()
+	if err != nil {
+		return 0, "", err
+	}
+	return caps.ParseWithGroups(flags, toolGroups.CustomFlags())
 }
 
 type Editor struct {
@@ -519,7 +523,38 @@ func loadSnapshots(sources []sourceSnapshot) (Config, error) {
 		}
 	}
 
+	toolGroups, err := config.CustomToolGroups()
+	if err != nil {
+		return config, err
+	}
+	if _, _, err := caps.ParseWithGroups(string(config.Caps.Default), toolGroups.CustomFlags()); err != nil {
+		return config, fmt.Errorf("caps.default: %w", err)
+	}
+
 	return config, nil
+}
+
+func mergeToolAppearances(
+	current map[string]style.ToolAppearance,
+	previous map[string]style.ToolAppearance,
+	meta toml.MetaData,
+) {
+	for kind, appearance := range current {
+		before, didExist := previous[kind]
+		if !didExist {
+			continue
+		}
+		if !meta.IsDefined("ui", "theme", "tool", kind, "name") {
+			appearance.Name = before.Name
+		}
+		if !meta.IsDefined("ui", "theme", "tool", kind, "paint") {
+			appearance.Paint = before.Paint
+		}
+		if !meta.IsDefined("ui", "theme", "tool", kind, "focus") {
+			appearance.Focus = before.Focus
+		}
+		current[kind] = appearance
+	}
 }
 
 func applySnapshot(config *Config, source sourceSnapshot) error {
@@ -543,10 +578,13 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 
 	previousVersion := config.Version
 	previousSnippets := maps.Clone(config.Snippets)
+	previousToolAppearances := maps.Clone(config.Ui.Theme.Tool)
 	meta, err := toml.Decode(string(source.snapshot.data), config)
 	if err != nil {
 		return fmt.Errorf("%s: %w", displayPath, err)
 	}
+
+	mergeToolAppearances(config.Ui.Theme.Tool, previousToolAppearances, meta)
 
 	if source.source.IsOverride {
 		config.Version = previousVersion

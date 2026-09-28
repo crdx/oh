@@ -14,7 +14,7 @@ The preview is exposed at the address in the tool result above.
  take it down
 
 
-expose 8080 remove ✓ 1L
+unexpose 8080 ✓ 1L
 
 
  🤖 Sandbox port 8080 no longer exposed to host.

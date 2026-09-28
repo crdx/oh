@@ -22,6 +22,7 @@ const (
 	ToggleGit
 	ToggleLookup
 	ToggleNetwork
+	ToggleToolGroup
 )
 
 type Input struct {
@@ -40,6 +41,7 @@ type Input struct {
 	continueAfter   time.Time
 	continueBefore  time.Time
 	currentTime     func() time.Time
+	toolGroup       string
 	wasRunning      bool
 }
 
@@ -112,6 +114,10 @@ func (self *Input) IsPasting() bool {
 
 func (self *Input) IsPrefixPending() bool {
 	return self.isPrefixPending
+}
+
+func (self *Input) ToolGroup() string {
+	return self.toolGroup
 }
 
 type Frame struct {
@@ -418,6 +424,7 @@ func (self *Input) rune(keypress key.Key, isRunning bool) Action {
 
 func (self *Input) toggleMode(button key.Key) Action {
 	self.isPrefixPending = false
+	self.toolGroup = ""
 
 	if button.Code != key.Rune || button.Mod != 0 {
 		return DrawInput
@@ -440,7 +447,8 @@ func (self *Input) toggleMode(button key.Key) Action {
 		return ToggleLookup
 	}
 
-	return DrawInput
+	self.toolGroup = string(button.Value)
+	return ToggleToolGroup
 }
 
 func (self *Input) paste(keypress key.Key) {

@@ -195,18 +195,16 @@ func TestOnlyTheFocusedPartOfArgumentsIsPainted(t *testing.T) {
 	}
 }
 
-func TestAnAccentAndTheFocusedPartOfArgumentsArePainted(t *testing.T) {
+func TestASkillNameAndItsFullPathArePainted(t *testing.T) {
 	label := Label{
-		Name:        "skill",
-		NameStyle:   style.Skill,
-		Subject:     "/skills/guard-basics/SKILL.md",
-		Emphasis:    tool.Emphasis{Kind: tool.EmphasisFocus, Value: "SKILL.md"},
-		Accent:      "guard-basics",
-		AccentStyle: style.Skill,
+		Name:       "load",
+		NameStyle:  style.Skill,
+		FocusStyle: style.Skill,
+		Subject:    "/skills/guard-basics/SKILL.md",
+		Emphasis:   tool.Emphasis{Kind: tool.EmphasisFocus, Value: "guard-basics"},
 	}
-	want := style.Skill("skill") + " " +
-		style.Subtle("/skills/") + style.Skill("guard-basics") +
-		style.Subtle("/") + style.Subject("SKILL.md")
+	want := style.Skill("load") + " " +
+		style.Subtle("/skills/") + style.Skill("guard-basics") + style.Subtle("/SKILL.md")
 
 	if got := label.Render(); got != want {
 		t.Errorf("got %q, want %q", got, want)

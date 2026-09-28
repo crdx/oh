@@ -44,8 +44,8 @@ func New() tool.Tool {
 		Run(givenTitles.exec)
 }
 
-func Describe(args Args) (string, string) {
-	return strutil.Flatten(args.Title), ""
+func Describe(args Args) tool.CallRendering {
+	return tool.CallRendering{Subject: strutil.Flatten(args.Title)}
 }
 
 func validate(args Args) error {

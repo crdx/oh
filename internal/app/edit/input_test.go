@@ -823,13 +823,16 @@ func TestThePrefixAndALetterAskForOneSwap(t *testing.T) {
 	}
 }
 
-func TestALetterNamingNoModeIsSwallowed(t *testing.T) {
+func TestACustomModeLetterIsReportedAndSwallowed(t *testing.T) {
 	self := NewInput(nil)
 
 	self.Apply(key.Key{Code: key.Rune, Value: 'x', Mod: key.Ctrl}, false)
 
-	if got := self.Apply(key.Key{Code: key.Rune, Value: 'q'}, false); got != DrawInput {
-		t.Errorf("expected nothing to be asked for, got %v", got)
+	if got := self.Apply(key.Key{Code: key.Rune, Value: 'q'}, false); got != ToggleToolGroup {
+		t.Errorf("expected a custom group toggle, got %v", got)
+	}
+	if got := self.ToolGroup(); got != "q" {
+		t.Errorf("expected group q, got %q", got)
 	}
 
 	if got := self.Text(); got != "" {

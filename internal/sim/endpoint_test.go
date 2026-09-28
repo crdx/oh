@@ -29,7 +29,9 @@ func weather(callCount *int) tool.Tool {
 			Description: "report weather in a city",
 			Schema:      tool.Schema{tool.String("city", "the city to look up")},
 		},
-		func(args params) (string, string) { return args.City, "" },
+		func(args params) tool.CallRendering {
+			return tool.CallRendering{Subject: args.City, Qualifier: ""}
+		},
 	).Plain(func(_ context.Context, args params) (string, error) {
 		*callCount++
 		return "raining in " + args.City, nil

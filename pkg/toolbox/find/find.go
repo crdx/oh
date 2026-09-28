@@ -39,8 +39,9 @@ func New(root *file.Root) tool.Tool {
 		})
 }
 
-func Describe(args Args) (string, string) {
-	return util.DescribeSearch(args.Pattern, args.Path, "")
+func Describe(args Args) tool.CallRendering {
+	subject, qualifier := util.DescribeSearch(args.Pattern, args.Path, "")
+	return tool.CallRendering{Subject: subject, Qualifier: qualifier}
 }
 
 func exec(root *file.Root, args Args) (string, tool.ToolCallMetrics, error) {

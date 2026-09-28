@@ -1,7 +1,7 @@
-{"kind":"head","version":14,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"head","version":15,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant.","tools":["lookup","fetch"],"tool_definitions":[{"name":"lookup","description":"search the web using OpenAI and return a cited answer","revision":"1","parameters":[{"name":"query","type":"string","description":"web lookup query"}]},{"name":"fetch","description":"fetch a web page as markdown, clean HTML, text, or raw","revision":"1","parameters":[{"name":"url","type":"string","description":"URL to fetch"},{"name":"type","type":"string","description":"one of: markdown, clean_html, text, raw"}]}]}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"fetch a page while network access is withheld"}}
-{"kind":"event","event":{"render":"https://example.com/news","detail":"markdown","emphasis":{"kind":"focus","value":"https://example.com/news"},"read_only":true,"kind":"tool_call_request","id":"call-1","name":"fetch","arguments":"{\"url\":\"https://example.com/news\",\"type\":\"markdown\"}"}}
+{"kind":"event","event":{"render":"https://example.com/news","detail":"as markdown","emphasis":{"kind":"focus","value":"https://example.com/news"},"read_only":true,"kind":"tool_call_request","id":"call-1","name":"fetch","arguments":"{\"url\":\"https://example.com/news\",\"type\":\"markdown\"}"}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"network access unavailable; ctrl+x n grants it","id":"call-1","name":"fetch","status":"error","stats":{"kind":"output","lines":1,"bytes":46}}}
 {"kind":"event","event":{"kind":"model_message","text":"Network access is unavailable."}}
 {"kind":"item","payload":{"role":"user","content":"fetch a page while network access is withheld"}}

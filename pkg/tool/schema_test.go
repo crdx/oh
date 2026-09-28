@@ -97,7 +97,9 @@ func newDescriptionTool() tool.Tool {
 				tool.String("detail", "more detail").Optional(),
 			},
 		},
-		func(titleArguments) (string, string) { return "", "" },
+		func(titleArguments) tool.CallRendering {
+			return tool.CallRendering{Subject: "", Qualifier: ""}
+		},
 	).Plain(func(context.Context, titleArguments) (string, error) { return "", nil })
 }
 

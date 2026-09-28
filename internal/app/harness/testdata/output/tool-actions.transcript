@@ -1,0 +1,37 @@
+=== written down ===
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `high`
+- **Provider:** `codex`
+- **Workspace:** `/workspace`
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## User · +0s
+
+show every action-oriented tool label
+
+## Tool calls · +1s
+
+```
+expose: 8000 [ok, expose]
+expose: docs:8001 [ok, expose-job]
+expose: 8000 [ok, unexpose]
+expose: exposed ports [ok, list-ports]
+job [ok, start]
+job [ok, restart]
+job [ok, status]
+job [ok, output]
+job [ok, wait-any]
+job [ok, wait-all]
+job [ok, stop]
+job [ok, list-jobs]
+job [ok, discard]
+job [ok, prune]
+```
+
+## Assistant · +29s
+
+Those are every action label.

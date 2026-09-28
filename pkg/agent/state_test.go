@@ -114,7 +114,9 @@ func statefulTool(restored *json.RawMessage) tool.Tool {
 			Description: "",
 			Schema:      tool.Schema{},
 		},
-		func(struct{}) (string, string) { return "", "" },
+		func(struct{}) tool.CallRendering {
+			return tool.CallRendering{Subject: "", Qualifier: ""}
+		},
 	).State("test_state", func(state json.RawMessage) error {
 		*restored = append((*restored)[:0], state...)
 		return nil
@@ -172,7 +174,9 @@ func TestAFailedCallDoesNotEmitDurableState(t *testing.T) {
 	provider := &callProvider{}
 	failedTool := tool.Implement(
 		tool.Definition{Name: "noop", Description: "", Schema: tool.Schema{}},
-		func(struct{}) (string, string) { return "", "" },
+		func(struct{}) tool.CallRendering {
+			return tool.CallRendering{Subject: "", Qualifier: ""}
+		},
 	).Run(func(context.Context, struct{}) (tool.ToolCallResult, error) {
 		return tool.ToolCallResult{State: json.RawMessage(`{"answer":42}`)}, errors.New("failed")
 	})

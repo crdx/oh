@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -478,8 +479,8 @@ func TestAFileInAMountedRootCanBeRead(t *testing.T) {
 func TestAReadWithNoPathIsRefused(t *testing.T) {
 	root := testRoot(t, "notes.txt", "one\n")
 
-	if _, err := exec(t, root, `{}`); err == nil {
-		t.Error("expected a read with no path to be refused")
+	if _, err := read.New(root, file.NewSnapshots()).Parse(`{}`); err == nil || !strings.Contains(err.Error(), "path is required") {
+		t.Errorf("got %v, want a read with no path to be refused", err)
 	}
 }
 
@@ -491,13 +492,14 @@ func TestAReadFocusesTheFileName(t *testing.T) {
 	}
 
 	want := tool.Emphasis{Kind: tool.EmphasisFocus, Value: "notes.txt"}
-	if call.Emphasis() != want {
+	if call.Rendering().Emphasis != want {
 		t.Errorf("expected the file name to be focused, got %T", call)
 	}
 }
 
 func TestRenderSaysWhichLinesAreBeingRead(t *testing.T) {
-	subject, qualifier := read.Describe(read.Args{Path: "notes.txt", Offset: 10, Limit: 5})
+	rendering := read.Describe(read.Args{Path: "notes.txt", Offset: 10, Limit: 5})
+	subject, qualifier := rendering.Subject, rendering.Qualifier
 
 	if subject != "notes.txt" {
 		t.Errorf("expected the path, got %q", subject)
@@ -508,10 +510,42 @@ func TestRenderSaysWhichLinesAreBeingRead(t *testing.T) {
 	}
 }
 
+func TestASkillReadOwnsItsCompleteRendering(t *testing.T) {
+	for name, shape := range map[string]struct {
+		path      string
+		skillName string
+		isSkill   bool
+	}{
+		"absolute":            {path: "/skills/golang/SKILL.md", skillName: "golang", isSkill: true},
+		"project":             {path: ".agents/skills/oh-config/SKILL.md", skillName: "oh-config", isSkill: true},
+		"relative":            {path: "skills/guard-basics/SKILL.md", skillName: "guard-basics", isSkill: true},
+		"another file":        {path: "cmd/oh/draw.go"},
+		"another parent":      {path: "docs/golang/SKILL.md"},
+		"no skill of its own": {path: "skills/SKILL.md"},
+	} {
+		t.Run(name, func(t *testing.T) {
+			call, err := read.New(nil, nil).Parse(`{"path":` + strconv.Quote(shape.path) + `}`)
+			if err != nil {
+				t.Fatal(err)
+			}
+			rendering := call.Rendering()
+			if shape.isSkill {
+				if rendering.Kind != "skill" || rendering.Subject != shape.path || rendering.Emphasis.Value != shape.skillName {
+					t.Errorf("got %#v, want the complete skill rendering", rendering)
+				}
+				return
+			}
+			if rendering.Kind != "read" {
+				t.Errorf("got %#v, want an ordinary read rendering", rendering)
+			}
+		})
+	}
+}
+
 func TestRenderLeavesPathDisplayProcessingToThePainter(t *testing.T) {
 	const path = "/home/alice/.agents/skills/golang/SKILL.md"
 
-	subject, _ := read.Describe(read.Args{Path: path})
+	subject := read.Describe(read.Args{Path: path}).Subject
 
 	if subject != path {
 		t.Errorf("got %q, want the unprocessed path %q", subject, path)
@@ -519,7 +553,7 @@ func TestRenderLeavesPathDisplayProcessingToThePainter(t *testing.T) {
 }
 
 func TestRenderLeavesAnOpenRangeOpen(t *testing.T) {
-	_, qualifier := read.Describe(read.Args{Path: "notes.txt", Offset: 10})
+	qualifier := read.Describe(read.Args{Path: "notes.txt", Offset: 10}).Qualifier
 
 	if qualifier != "10+" {
 		t.Errorf("expected an open range, got %q", qualifier)
@@ -527,7 +561,7 @@ func TestRenderLeavesAnOpenRangeOpen(t *testing.T) {
 }
 
 func TestRenderSaysNothingAboutAWholeFile(t *testing.T) {
-	_, qualifier := read.Describe(read.Args{Path: "notes.txt"})
+	qualifier := read.Describe(read.Args{Path: "notes.txt"}).Qualifier
 
 	if qualifier != "" {
 		t.Errorf("expected no range, got %q", qualifier)

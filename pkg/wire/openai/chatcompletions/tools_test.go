@@ -22,7 +22,9 @@ func weather() tool.Tool {
 			Description: "report weather in a city",
 			Schema:      tool.Schema{tool.String("city", "the city to look up")},
 		},
-		func(arguments weatherArguments) (string, string) { return arguments.City, "" },
+		func(arguments weatherArguments) tool.CallRendering {
+			return tool.CallRendering{Subject: arguments.City, Qualifier: ""}
+		},
 	).Plain(func(context.Context, weatherArguments) (string, error) { return "raining", nil })
 }
 

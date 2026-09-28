@@ -107,6 +107,7 @@ import (
 	"crdx.org/oh/internal/app/store/transcript"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/terminal"
+	"crdx.org/oh/internal/app/toolset"
 	"crdx.org/oh/internal/app/trigger"
 	"crdx.org/oh/internal/app/tty"
 	"crdx.org/oh/internal/app/turn"
@@ -4074,7 +4075,9 @@ func TestRestoringAConversationRestoresStateBeforeReturning(t *testing.T) {
 	var restored string
 	statefulTool := tool.Implement(
 		tool.Definition{Name: "stateful", Description: "", Schema: tool.Schema{}},
-		func(struct{}) (string, string) { return "", "" },
+		func(struct{}) tool.CallRendering {
+			return tool.CallRendering{Subject: "", Qualifier: ""}
+		},
 	).State("test_state", func(state json.RawMessage) error {
 		restored = string(state)
 		return nil
@@ -4171,14 +4174,19 @@ func TestAReadOfASkillIsDrawnAsTheSkill(t *testing.T) {
 			var screenOutput bytes.Buffer
 			callPainter := newTestPainter(output.New(&screenOutput), false)
 
+			fallback := agent.FallbackRendering{
+				Subject:  test.path,
+				Emphasis: tool.Emphasis{Kind: tool.EmphasisFocus, Value: path.Base(test.path)},
+			}
+			if test.want == "load "+skillPath {
+				fallback.RenderingKind = "skill"
+				fallback.Emphasis.Value = "golang"
+			}
 			callPainter.DrawEvent(agent.Event{
-				Kind: agent.ToolCallRequestEvent,
-				ID:   "1",
-				Name: test.tool,
-				FallbackRendering: agent.FallbackRendering{
-					Subject:  test.path,
-					Emphasis: tool.Emphasis{Kind: tool.EmphasisFocus, Value: path.Base(test.path)},
-				},
+				Kind:              agent.ToolCallRequestEvent,
+				ID:                "1",
+				Name:              test.tool,
+				FallbackRendering: fallback,
 			})
 			callPainter.Close(dynamic.Done)
 
@@ -4201,8 +4209,9 @@ func TestTheFileASkillIsKeptInIsNotStoodOut(t *testing.T) {
 		ID:   "1",
 		Name: "read",
 		FallbackRendering: agent.FallbackRendering{
-			Subject:  "/skills/golang/SKILL.md",
-			Emphasis: tool.Emphasis{Kind: tool.EmphasisFocus, Value: "SKILL.md"},
+			RenderingKind: "skill",
+			Subject:       "/skills/golang/SKILL.md",
+			Emphasis:      tool.Emphasis{Kind: tool.EmphasisFocus, Value: "golang"},
 		},
 	})
 	callPainter.Close(dynamic.Done)
@@ -4441,7 +4450,7 @@ func TestAStoredCallIsShownTheWayItsToolShowsItNow(t *testing.T) {
 	var screenOutput bytes.Buffer
 
 	current := truncate.Tool(buildSlowTool(
-		slowToolBuilder("read").Focuses(func(tool.ToolCall) string { return "one.go" }),
+		slowToolBuilder("read").Focuses(func(tool.CallRendering) string { return "one.go" }),
 	), truncate.NewLimit(12*1024))
 	testConversation := &App{
 		agent:  agent.New("", quietProvider{}, []tool.Tool{current}),
@@ -4616,7 +4625,7 @@ func TestAShellCallIsDrawnAsAShellPrompt(t *testing.T) {
 	var screenOutput bytes.Buffer
 	callPainter := newTestPainter(output.New(&screenOutput), false)
 
-	callPainter.DrawEvent(agent.Event{Kind: agent.ToolCallRequestEvent, ID: "1", Name: "bash", FallbackRendering: agent.FallbackRendering{Subject: "echo hello"}})
+	callPainter.DrawEvent(agent.Event{Kind: agent.ToolCallRequestEvent, ID: "1", Name: "bash", FallbackRendering: agent.FallbackRendering{RenderingKind: "bash", Subject: "echo hello", ShowOutput: true}})
 	callPainter.Close(dynamic.Done)
 
 	plain := style.Plain(screenOutput.String())
@@ -4796,9 +4805,9 @@ func TestCallEmphasisSourceIsDerivedFromRecordedArguments(t *testing.T) {
 			Description: "",
 			Schema:      tool.Schema{tool.String("path", "command")},
 		},
-		func(args fakeArgs) (string, string) {
+		func(args fakeArgs) tool.CallRendering {
 			subject, _, _ := strings.Cut(args.Path, "\n")
-			return subject, ""
+			return tool.CallRendering{Subject: subject}
 		},
 	).SyntaxFrom("bash", func(args fakeArgs, _ string) string {
 		return args.Path
@@ -4826,7 +4835,9 @@ func TestWorkspacePrefixIsOmittedFromRenderedCallPaths(t *testing.T) {
 			Description: "",
 			Schema:      tool.Schema{tool.String("path", "file")},
 		},
-		func(args fakeArgs) (string, string) { return args.Path, pathutil.Shorten(args.Path) },
+		func(args fakeArgs) tool.CallRendering {
+			return tool.CallRendering{Subject: args.Path, Qualifier: pathutil.Shorten(args.Path)}
+		},
 	).FocusPath().Plain(func(context.Context, fakeArgs) (string, error) { return "", nil })
 	testConversation := &App{
 		agent:     agent.New("", quietProvider{}, []tool.Tool{current}),
@@ -4870,7 +4881,9 @@ func TestARefusedCallIsDescribedAgainRatherThanFromTheRecord(t *testing.T) {
 			Description: "",
 			Schema:      tool.Schema{tool.String("message", "what to shout")},
 		},
-		func(struct{}) (string, string) { return "", "" },
+		func(struct{}) tool.CallRendering {
+			return tool.CallRendering{Subject: "", Qualifier: ""}
+		},
 	).Validate(func(struct{}) error {
 		return errors.New("not in the mood")
 	}).Plain(func(context.Context, struct{}) (string, error) { return "", nil })
@@ -5138,6 +5151,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"startup-sized-output":   {".ansi", ".screen"},
 		"terminal-escape":        {".ansi", ".screen"},
 		"theme-reload":           {".ansi", ".screen"},
+		"tool-availability":      {".ansi", ".screen"},
 		"usage":                  {".json"},
 		"usage-arguments":        {".txt"},
 		"vertical-movement":      {".ansi", ".screen"},
@@ -5397,6 +5411,36 @@ func TestGoldenAResumedConversationDrawsItsRecordedConfinement(t *testing.T) {
 	})
 }
 
+func TestGoldenToolAvailabilityChanges(t *testing.T) {
+	change := func(known toolset.ToolStatus, current toolset.ToolStatus) func() string {
+		return func() string {
+			event, err := toolset.AvailabilityChangeEvent(
+				toolset.Availability{"weather": known},
+				toolset.Availability{"weather": current},
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			var screenOutput strings.Builder
+			screen := output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
+			picasso := newTestPainter(screen, false)
+			picasso.DrawEvent(event)
+			picasso.Close(dynamic.Done)
+			screen.Seal()
+			return screenOutput.String()
+		}
+	}
+
+	passes := map[string]func() string{
+		"changed":   change(toolset.ToolAvailable, toolset.ToolChanged),
+		"missing":   change(toolset.ToolAvailable, toolset.ToolMissing),
+		"available": change(toolset.ToolMissing, toolset.ToolAvailable),
+	}
+	compareWithGolden(t, "tool-availability", ".ansi", passes)
+	compareWithGolden(t, "tool-availability", ".screen", shownPasses(t, passes))
+}
+
 func modeFixture(t *testing.T) (*App, string) {
 	t.Helper()
 
@@ -5456,6 +5500,20 @@ func TestAModeChangeIsWrittenDownOnceItSettles(t *testing.T) {
 	want := caps.Read | caps.Write | caps.Shell | caps.Git
 	if got, said := caps.LastRecordedMode(recorded); !said || got != want {
 		t.Errorf("expected %s, got %s and %t", want.Flags(), got.Flags(), said)
+	}
+}
+
+func TestACustomToolGroupChangeIsWrittenDownOnceItSettles(t *testing.T) {
+	self, directory := modeFixture(t)
+	self.mode = caps.NewModeWithGroups(self.mode.Current(), "", caps.ToolGroups{"a": {"weather"}})
+
+	self.toggleToolGroup("a")
+	self.settleAccess()
+
+	recorded := recordedModes(t, self, directory)
+	grantedGroups, toolGroups, found := caps.LastRecordedToolGroups(recorded)
+	if !found || grantedGroups != "a" || !slices.Equal(toolGroups["a"], []string{"weather"}) {
+		t.Errorf("got groups %q, %#v and found %v", grantedGroups, toolGroups, found)
 	}
 }
 
@@ -7246,20 +7304,41 @@ func TestTheSimulationAnswersInPlaceOfTheConfiguredRotation(t *testing.T) {
 
 func TestConfiguredCapabilitiesReplaceTheCommandLineDefault(t *testing.T) {
 	options := cli.Options{Caps: caps.Read | caps.Shell}
-	settings := config.Config{Caps: config.Caps{Default: config.DefaultCaps(caps.Read | caps.Write | caps.Git)}}
+	settings := config.Config{Caps: config.Caps{Default: "rwg"}}
 
-	applyDefaultCaps(&options, settings)
+	if err := applyDefaultCaps(&options, settings); err != nil {
+		t.Fatal(err)
+	}
 
 	if got := options.Caps.Flags(); got != "rwg" {
 		t.Errorf("got capabilities %q", got)
 	}
 }
 
+func TestConfiguredCapabilitiesIncludeCustomToolGroups(t *testing.T) {
+	options := cli.Options{Caps: caps.Read | caps.Shell}
+	settings := config.Config{
+		Caps: config.Caps{Default: "rxa"},
+		Tools: map[string]config.CustomTool{
+			"weather": {Group: "a"},
+		},
+	}
+
+	if err := applyDefaultCaps(&options, settings); err != nil {
+		t.Fatal(err)
+	}
+	if got := options.Caps.Flags(); got != "rx" || options.GroupFlags != "a" {
+		t.Errorf("got capabilities %q and groups %q", got, options.GroupFlags)
+	}
+}
+
 func TestExplicitCommandLineCapabilitiesOverrideTheConfig(t *testing.T) {
 	options := cli.Options{Caps: caps.Read | caps.Shell, WereCapsChosen: true}
-	settings := config.Config{Caps: config.Caps{Default: config.DefaultCaps(caps.Read | caps.Write | caps.Git)}}
+	settings := config.Config{Caps: config.Caps{Default: "rwg"}}
 
-	applyDefaultCaps(&options, settings)
+	if err := applyDefaultCaps(&options, settings); err != nil {
+		t.Fatal(err)
+	}
 
 	if got := options.Caps.Flags(); got != "rx" {
 		t.Errorf("got capabilities %q", got)
@@ -9982,6 +10061,7 @@ func TestGoldenReloadingAThemeReplaysTheWholeConversation(t *testing.T) {
 		"invalid theme left untouched": func() string { return invalidThemeReloadStream(t) },
 		"every palette role":           func() string { return themePaletteStream(t) },
 		"decorated palette roles":      func() string { return decoratedThemeStream(t) },
+		"tool vocabulary and paints":   func() string { return toolThemeReloadStream(t) },
 	}
 	compareWithGolden(t, "theme-reload", ".ansi", passes)
 	compareWithGolden(t, "theme-reload", ".screen", shownPasses(t, passes))
@@ -10012,6 +10092,50 @@ func themeReloadStream(t *testing.T) string {
 	`)
 	settleLiveConfig(t, self)
 
+	return screenOutput.String()
+}
+
+func toolThemeReloadStream(t *testing.T) string {
+	t.Helper()
+	restoreTheme := style.ApplyTheme(style.DefaultTheme())
+	defer restoreTheme()
+
+	path := filepath.Join(t.TempDir(), "config.toml")
+	writeLiveConfig(t, path, "")
+
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	self.recorder = nil
+	self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
+	prepareLiveConfig(t, self, path)
+	self.recordedEvents = []agent.Event{
+		{Kind: agent.UserMessageEvent, Text: "show themed tools"},
+		{
+			Kind: agent.ToolCallRequestEvent, ID: "job", Name: "job",
+			FallbackRendering: agent.FallbackRendering{RenderingKind: "job_status", Subject: "docs"},
+		},
+		{Kind: agent.ToolCallResultEvent, ID: "job", Name: "job", Status: agent.SuccessStatus},
+		{
+			Kind: agent.ToolCallRequestEvent, ID: "skill", Name: "read",
+			FallbackRendering: agent.FallbackRendering{
+				RenderingKind: "skill",
+				Subject:       "skills/tidy/SKILL.md",
+				Emphasis:      tool.Emphasis{Kind: tool.EmphasisFocus, Value: "tidy"},
+				ReadOnly:      true,
+			},
+		},
+		{Kind: agent.ToolCallResultEvent, ID: "skill", Name: "read", Status: agent.SuccessStatus},
+		{Kind: agent.ModelMessageEvent, Text: "themed"},
+	}
+	self.redraw()
+	screenOutput.Reset()
+
+	writeLiveConfig(t, path, `
+		[ui.theme.tool]
+		job_status = { name = "captain", paint = "#010203 bold" }
+		skill = { name = "consult-chart", paint = "#040506", focus = "#070809" }
+	`)
+	settleLiveConfig(t, self)
 	return screenOutput.String()
 }
 
@@ -12867,6 +12991,18 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 		frames = ["✦·", "·✦"]
 		rate = "125ms"
 	`
+	partlyCompatibleGroup := caps.NewModeWithGroups(
+		caps.Read,
+		"",
+		caps.ToolGroups{"a": {"compatible", "disabled"}},
+	)
+	partlyCompatibleGroup.RestrictTools([]string{"compatible"})
+	fullyDisabledGroup := caps.NewModeWithGroups(
+		caps.Read,
+		"",
+		caps.ToolGroups{"a": {"disabled"}},
+	)
+	fullyDisabledGroup.RestrictTools(nil)
 
 	passes := map[string]func() string{
 		"activity-spinner / idle": goldenSegmentPass(
@@ -13097,6 +13233,28 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 		"mode-toggle / all granted": goldenSegmentPass(
 			t,
 			modeToggle.New(caps.All, func() bool { return false }),
+			"",
+			segment.Context{},
+		),
+		"mode-toggle / custom groups": goldenSegmentPass(
+			t,
+			modeToggle.New(
+				func() caps.Set { return caps.Read },
+				func() bool { return false },
+				func() caps.GroupStatus { return caps.GroupStatus{Flags: "abc", GrantedFlags: "b"} },
+			),
+			"",
+			segment.Context{},
+		),
+		"mode-toggle / custom group with compatible peer": goldenSegmentPass(
+			t,
+			modeToggle.New(partlyCompatibleGroup.Current, func() bool { return false }, partlyCompatibleGroup.Groups),
+			"",
+			segment.Context{},
+		),
+		"mode-toggle / custom group fully disabled": goldenSegmentPass(
+			t,
+			modeToggle.New(fullyDisabledGroup.Current, func() bool { return false }, fullyDisabledGroup.Groups),
 			"",
 			segment.Context{},
 		),
@@ -15290,6 +15448,7 @@ type sessionGoldenTool struct {
 	StoppedOutput         string   `toml:"stopped-output"`
 	IsLargeRead           bool     `toml:"large-read"`
 	Declared              string   `toml:"declared"`
+	OnResume              string   `toml:"on-resume"`
 }
 
 type sessionGoldenScenario struct {
@@ -15335,6 +15494,50 @@ func TestGoldenScenariosProduceCanonicalOutputs(t *testing.T) {
 				compareScenarioGolden(t, scenario.Name+extension, got)
 			}
 		})
+	}
+}
+
+func TestToolDriftGoldenKeepsWireDefinitionsByteIdentical(t *testing.T) {
+	path := filepath.Join("testdata", "output", "anthropic-tool-drift-on-resume.requests.jsonl")
+	contents, err := os.ReadFile(path) //nolint:gosec // fixed golden path
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var first json.RawMessage
+	requestCount := 0
+	for line := range strings.Lines(string(contents)) {
+		var request struct {
+			Tools json.RawMessage `json:"tools"`
+		}
+		if err := json.Unmarshal([]byte(line), &request); err != nil {
+			t.Fatal(err)
+		}
+		if requestCount == 0 {
+			first = bytes.Clone(request.Tools)
+			var definitions []map[string]any
+			if err := json.Unmarshal(request.Tools, &definitions); err != nil {
+				t.Fatal(err)
+			}
+			var names []string
+			for _, definition := range definitions {
+				name, _ := definition["name"].(string)
+				names = append(names, name)
+			}
+			wantNames := []string{"stable", "changed", "revision", "schema", "compatible", "missing"}
+			if !slices.Equal(names, wantNames) {
+				t.Errorf("got frozen tools %v, want %v", names, wantNames)
+			}
+		} else if !bytes.Equal(first, request.Tools) {
+			t.Errorf("request %d changed the frozen tools\nfirst: %s\n got: %s", requestCount+1, first, request.Tools)
+		}
+		if requestCount >= 2 && !strings.Contains(line, `"signature":"frozen-seal"`) {
+			t.Errorf("resumed request %d lost the preserved thinking signature", requestCount+1)
+		}
+		requestCount++
+	}
+	if requestCount != 4 {
+		t.Errorf("got %d requests, want four across the original and resumed turns", requestCount)
 	}
 }
 
@@ -15624,16 +15827,27 @@ func newSessionGoldenPorts(sessionName string, hostnameTemplate string) *portgra
 	}, hostname)
 }
 
+//nolint:gocyclo // one fixture builds every real and deliberately altered tool shape
 func newSessionGoldenTools(
 	t *testing.T,
 	specifications []sessionGoldenTool,
 	ports *portgrant.HostToSandbox,
 	scratchDirectory string,
+	toolDirectory string,
+	isResume ...bool,
 ) []tool.Tool {
 	t.Helper()
 
 	tools := make([]tool.Tool, 0, len(specifications))
 	for _, specification := range specifications {
+		isResuming := len(isResume) > 0 && isResume[0]
+		if isResuming && specification.OnResume == "missing" || !isResuming && specification.OnResume == "added" {
+			continue
+		}
+		if !slices.Contains([]string{"", "added", "changed", "compatible", "missing", "revision", "schema"}, specification.OnResume) {
+			t.Fatalf("unknown on-resume state %q", specification.OnResume)
+		}
+
 		if specification.Name == jobToolName {
 			tools = append(tools, job.New(nil, nil, nil, true))
 			continue
@@ -15696,7 +15910,7 @@ func newSessionGoldenTools(
 		}
 
 		if specification.Declared != "" {
-			tools = append(tools, newSessionGoldenDeclaredTool(t, specification))
+			tools = append(tools, newSessionGoldenDeclaredTool(t, specification, toolDirectory))
 			continue
 		}
 
@@ -15706,10 +15920,26 @@ func newSessionGoldenTools(
 		}
 
 		callCount := 0
+		description := "A deterministic scenario tool."
+		if isResuming && specification.OnResume == "changed" {
+			description = "A changed deterministic scenario tool."
+		}
+		var schema tool.Schema
+		if isResuming && specification.OnResume == "schema" {
+			schema = tool.Schema{tool.String("new_option", "a newly added option").Optional()}
+		}
 		builder := tool.Implement(
-			tool.Definition{Name: specification.Name, Description: "A deterministic scenario tool."},
-			func(struct{}) (string, string) { return specification.Name, "" },
+			tool.Definition{Name: specification.Name, Description: description, Schema: schema},
+			func(struct{}) tool.CallRendering {
+				return tool.CallRendering{Subject: specification.Name}
+			},
 		)
+		if isResuming && specification.OnResume == "revision" {
+			builder = builder.Revision("2")
+		}
+		if isResuming && specification.OnResume == "compatible" {
+			builder = builder.Revision("2").CompatibleWith("1")
+		}
 		if specification.StateKey != "" {
 			builder = builder.State(specification.StateKey, func(state json.RawMessage) error {
 				return json.Unmarshal(state, &callCount)
@@ -15802,10 +16032,16 @@ func sessionGoldenImage(t *testing.T, size string, byteCount int64) (tool.Image,
 
 var errSessionGoldenToolStopped = errors.New("the tool was stopped")
 
-func newSessionGoldenDeclaredTool(t *testing.T, specification sessionGoldenTool) tool.Tool {
+type sessionGoldenRevision struct {
+	tool.Tool
+}
+
+func (sessionGoldenRevision) Revision() string { return "scenario/v1" }
+
+func newSessionGoldenDeclaredTool(t *testing.T, specification sessionGoldenTool, directory string) tool.Tool {
 	t.Helper()
 
-	script := filepath.Join(t.TempDir(), "declared")
+	script := filepath.Join(directory, specification.Name)
 	//nolint:gosec // a tool the scenario declares has to be runnable
 	if err := os.WriteFile(script, []byte("#!/bin/bash\n"+specification.Declared+"\n"), 0o700); err != nil {
 		t.Fatal(err)
@@ -15841,13 +16077,15 @@ func newSessionGoldenDeclaredTool(t *testing.T, specification sessionGoldenTool)
 		t.Fatal(err)
 	}
 
-	return declared
+	return sessionGoldenRevision{Tool: declared}
 }
 
 func newSessionGoldenBlockingTool(specification sessionGoldenTool) tool.Tool {
 	return tool.Implement(
 		tool.Definition{Name: specification.Name, Description: "A scenario tool that blocks."},
-		func(struct{}) (string, string) { return specification.Name, "" },
+		func(struct{}) tool.CallRendering {
+			return tool.CallRendering{Subject: specification.Name, Qualifier: ""}
+		},
 	).Run(func(ctx context.Context, _ struct{}) (tool.ToolCallResult, error) {
 		<-ctx.Done()
 		return tool.ToolCallResult{Output: specification.StoppedOutput}, errSessionGoldenToolStopped
@@ -16253,6 +16491,7 @@ func prepareSessionGoldenCredentials(t *testing.T, scenario *sessionGoldenScenar
 	})
 }
 
+//nolint:gocyclo // one path drives every canonical live, resumed, replayed, printed and wire form
 func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[string]string {
 	t.Helper()
 
@@ -16306,12 +16545,21 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		t.Fatal(err)
 	}
 	goldenPorts := newSessionGoldenPorts(goldenSessionName, scenario.Hostname)
+	toolDirectory := t.TempDir()
+	firstTools := newSessionGoldenTools(
+		t, scenario.Tools, goldenPorts, scenario.ScratchDirectory, toolDirectory,
+	)
+	meta.ToolDefinitions = store.FreezeTools(firstTools)
+	meta.Tools = toolset.Names(firstTools)
+	if err := log.SetMeta(meta); err != nil {
+		t.Fatal(err)
+	}
 	firstAssistant := agent.New(
 		sessionGoldenSystemPrompt,
 		sessionGoldenProviderFor(
 			t, scenario, server.URL, scenario.FirstTokenError, log.Name(),
 		),
-		newSessionGoldenTools(t, scenario.Tools, goldenPorts, scenario.ScratchDirectory),
+		firstTools,
 	)
 	firstAssistant.TakeRetryWaitsAtOnce()
 	settleClock := newSessionGoldenClock(t, scenario)
@@ -16383,10 +16631,23 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	if err != nil {
 		t.Fatal(err)
 	}
-	resumedAssistant := agent.New(
+	currentTools := newSessionGoldenTools(
+		t, scenario.Tools, goldenPorts, scenario.ScratchDirectory, toolDirectory, true,
+	)
+	restoredTools := toolset.Restore(currentTools, store.RestoreTools(storedSession.Meta.ToolDefinitions))
+	availabilityRestoration, err := toolset.RestoreAvailability(
+		storedSession.Events,
+		restoredTools.Availability,
+		restoredTools.Transitions,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	resumedAssistant := agent.NewWithEnabledTools(
 		storedSession.Meta.SystemPrompt,
 		sessionGoldenProviderFor(t, scenario, server.URL, "", sessionName),
-		newSessionGoldenTools(t, scenario.Tools, goldenPorts, scenario.ScratchDirectory),
+		restoredTools.RegisteredTools,
+		restoredTools.OfferedTools,
 	)
 	resumedAssistant.TakeRetryWaitsAtOnce()
 	settleClock(resumedAssistant)
@@ -16417,6 +16678,10 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	restoredEvents := restoreSessionGoldenConditions(
 		t, resumedHarness, storedSession, sessionGoldenConditions(t, resumeConditionsOf(scenario)),
 	)
+	if availabilityRestoration.IsChanged {
+		resumedHarness.pendingNotices.add(availabilityRestoration.Change)
+		restoredEvents = append(restoredEvents, availabilityRestoration.Change)
+	}
 	if len(scenario.JobsRunningIntoResume) > 0 {
 		restoredEvents = restoreSessionGoldenRunningJobs(t, resumedHarness, storedSession.Events, restoredEvents)
 	}
@@ -17636,7 +17901,9 @@ func slowToolBuilder(name string) tool.Builder[fakeArgs] {
 			Description: "",
 			Schema:      tool.Schema{tool.String("path", "file")},
 		},
-		func(args fakeArgs) (string, string) { return args.Path, "" },
+		func(args fakeArgs) tool.CallRendering {
+			return tool.CallRendering{Subject: args.Path, Qualifier: ""}
+		},
 	)
 }
 
@@ -20665,6 +20932,7 @@ func TestADeclaredToolRunsItsOwnCommandAndReportsWhatItSaid(t *testing.T) {
 description = "report the weather for a city"
 command = ["`+script+`"]
 permission = "allow"
+group = "a"
 parameters = [
     { name = "city", kind = "string", description = "the city to report on" },
     { name = "days", kind = "integer", description = "how many days ahead to look", optional = true },
@@ -20673,7 +20941,7 @@ parameters = [
 
 	output := runTestBinary(
 		t, binary, reachableWorkspaceDir(t), environment,
-		"-p", "--yolo", "-m", "anthropic/fake", "what is the weather",
+		"-p", "--yolo", "-m", "anthropic/fake", "-c", "rxa", "what is the weather",
 	)
 
 	if !strings.Contains(output, "weather London 2") {
@@ -20699,6 +20967,136 @@ parameters = [
 	}
 	if reported != "forecast for --city London --days 2" {
 		t.Errorf("the model was told %q", reported)
+	}
+}
+
+func TestAChangedCustomToolIsDisabledWhenTheBinaryResumes(t *testing.T) {
+	binary := buildTestBinary(t)
+	script := declaredToolScript(t)
+	endpoint := sim.New(&sim.Scenario{
+		Model: "fake",
+		Turns: []sim.Turn{
+			{Calls: []sim.Call{{Name: "weather", Arguments: `{"city":"London"}`}}},
+			{Say: "The original tool ran."},
+			{Calls: []sim.Call{{Name: "weather", Arguments: `{"city":"London"}`}}},
+			{Say: "The changed tool was disabled."},
+			{Calls: []sim.Call{{Name: "weather", Arguments: `{"city":"London"}`}}},
+			{Say: "The reviewed compatible tool ran."},
+		},
+	})
+	server := httptest.NewServer(endpoint)
+	t.Cleanup(server.Close)
+
+	stateDirectory := t.TempDir()
+	workspaceDirectory := reachableWorkspaceDir(t)
+	environment := append(
+		testBinaryEnvironment(t, stateDirectory),
+		backend.EndpointVariable+"="+endpoint.Addresses(server.URL)[sim.Messages],
+	)
+	writeConfig := func(compatibility string) {
+		writeDeclaredToolConfig(t, environment, fmt.Sprintf(`[tools.weather]
+description = "report the weather"
+command = [%q]
+permission = "allow"
+group = "a"
+%sparameters = [{ name = "city", kind = "string", description = "the city to report on" }]
+`, script, compatibility))
+	}
+	writeConfig("")
+
+	runTestBinary(
+		t, binary, workspaceDirectory, environment,
+		"-p", "--yolo", "-m", "anthropic/fake", "-c", "rxa", "run weather",
+	)
+
+	sessionDirectory := filepath.Join(stateDirectory, "org.crdx", "oh", "sessions")
+	entries, err := os.ReadDir(sessionDirectory)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(entries) != 1 {
+		t.Fatalf("got %d session entries", len(entries))
+	}
+	sessionName := entries[0].Name()
+	storedSession, err := store.Read(sessionDirectory, sessionName)
+	if err != nil {
+		t.Fatal(err)
+	}
+	frozenWeather := slices.IndexFunc(storedSession.Meta.ToolDefinitions, func(definition store.ToolDefinition) bool {
+		return definition.Name == "weather"
+	})
+	if frozenWeather < 0 || storedSession.Meta.ToolDefinitions[frozenWeather].Description != "report the weather" {
+		t.Fatalf("got frozen definitions %#v", storedSession.Meta.ToolDefinitions)
+	}
+
+	//nolint:gosec // the declared tool must remain executable after its content changes
+	if err := os.WriteFile(script, []byte("#!/bin/bash\necho changed tool ran\n"), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	output := runTestBinary(
+		t, binary, workspaceDirectory, environment,
+		"-p", "-r", sessionName, "run weather again",
+	)
+	if !strings.Contains(output, "weather tool changed since this conversation began") {
+		t.Errorf("the resume did not announce the drift: %q", output)
+	}
+
+	requests := endpoint.Requests()
+	var disabledResult string
+	for _, request := range requests {
+		for _, entry := range request.Input {
+			if entry.Type == sim.CallOutput && strings.Contains(entry.Output, "disabled for this conversation") {
+				disabledResult = entry.Output
+			}
+		}
+	}
+	if disabledResult == "" {
+		t.Errorf("the model was not told the tool was disabled: %#v", requests)
+	}
+
+	storedSession, err = store.Read(sessionDirectory, sessionName)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var transition toolset.CompatibilityTransition
+	for _, event := range storedSession.Events {
+		if event.Kind != toolset.AvailabilityChange {
+			continue
+		}
+		var state map[string]json.RawMessage
+		if err := json.Unmarshal(event.State, &state); err != nil {
+			t.Fatal(err)
+		}
+		var transitions map[string]toolset.CompatibilityTransition
+		if err := json.Unmarshal(state["transitions"], &transitions); err != nil {
+			t.Fatal(err)
+		}
+		transition = transitions["weather"]
+	}
+	if transition.From == "" || transition.To == "" {
+		t.Fatalf("no compatibility transition was recorded: %#v", transition)
+	}
+
+	writeConfig(fmt.Sprintf("compatible = [{ from = %q, to = %q }]\n", transition.From, transition.To))
+	output = runTestBinary(
+		t, binary, workspaceDirectory, environment,
+		"-p", "-r", sessionName, "run reviewed weather again",
+	)
+	if !strings.Contains(output, "weather tool is available again") {
+		t.Errorf("the resume did not announce restored compatibility: %q", output)
+	}
+
+	requests = endpoint.Requests()
+	var compatibleResult string
+	for _, request := range requests {
+		for _, entry := range request.Input {
+			if entry.Type == sim.CallOutput && strings.Contains(entry.Output, "changed tool ran") {
+				compatibleResult = entry.Output
+			}
+		}
+	}
+	if compatibleResult == "" {
+		t.Errorf("the reviewed implementation did not run: %#v", requests)
 	}
 }
 

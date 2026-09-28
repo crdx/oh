@@ -4,8 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"io/fs"
+	"maps"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"text/template"
 
@@ -135,6 +137,9 @@ type harnessContextTemplateData struct {
 	LookupGranted     bool
 	JobsGranted       bool
 	NetworkGranted    bool
+	CurrentCaps       caps.Set
+	ToolGroups        caps.ToolGroups
+	GroupStatus       caps.GroupStatus
 	Yolo              bool
 }
 
@@ -170,6 +175,8 @@ type Config struct {
 	Conditions     conditions.Conditions
 	JobsGranted    bool
 	NetworkGranted bool
+	ToolGroups     caps.ToolGroups
+	GroupStatus    caps.GroupStatus
 	Yolo           bool
 }
 
@@ -279,7 +286,10 @@ func harnessContext(config Config) string {
 		ShellGranted:      currentCaps.Has(caps.Shell),
 		JobsGranted:       config.JobsGranted && toolset.Offers(config.OfferedTools, jobToolName),
 		NetworkGranted:    config.NetworkGranted,
+		CurrentCaps:       currentCaps,
 		LookupGranted:     currentCaps.Has(caps.Lookup),
+		ToolGroups:        config.ToolGroups,
+		GroupStatus:       config.GroupStatus,
 		Yolo:              config.Yolo,
 	}
 
@@ -506,7 +516,34 @@ func stateRules(data harnessContextTemplateData) string {
 		}
 	}
 
+	for _, flag := range slices.Sorted(maps.Keys(data.ToolGroups)) {
+		isGranted := data.GroupStatus.Has(flag)
+		if groupedCaps, isBuiltIn := caps.Named(flag); isBuiltIn {
+			isGranted = data.CurrentCaps.Has(groupedCaps)
+		}
+		for _, toolName := range data.ToolGroups[flag] {
+			lines = append(lines, customToolAccessRule(toolName, flag, isGranted, data.Conditions.Interactive))
+		}
+	}
+
 	return strings.Join(lines, "\n")
+}
+
+func customToolAccessRule(toolName string, flag string, isGranted bool, isInteractive bool) string {
+	if flag == caps.Read.Flag() {
+		return "- When offered, the " + toolName + " tool belongs to the always-available mode group r"
+	}
+
+	state := "refused"
+	if isGranted {
+		state = "available"
+	}
+	rule := "- When offered, the " + toolName + " tool belongs to mode group " + flag +
+		"; it started this conversation " + state
+	if isInteractive {
+		rule += ", and ctrl+x " + flag + " controls it"
+	}
+	return rule
 }
 
 func jobSurvival(areJobsGranted bool) string {

@@ -808,6 +808,92 @@ func TestFormatTwelveMigrationRenamesTheWebFlagToLookup(t *testing.T) {
 	}
 }
 
+func TestFormatFifteenMigrationCompletesToolCallRenderings(t *testing.T) {
+	directory, name := storedJournal(t,
+		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":14,"id":"one","name":"tame-impala"}`,
+		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"tool_call_request","id":"bash","name":"bash","arguments":"{\"command\":\"echo hi\"}","render":"echo hi"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"tool_call_request","id":"read","name":"read","arguments":"{\"path\":\"main.go\",\"offset\":10,\"limit\":5}","render":"main.go","detail":"10-14"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"tool_call_request","id":"read-open","name":"read","arguments":"{\"path\":\"main.go\",\"offset\":10}","render":"main.go","detail":"10+"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"tool_call_request","id":"read-limit","name":"read","arguments":"{\"path\":\"main.go\",\"limit\":5}","render":"main.go","detail":"1-5"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:03Z","event":{"kind":"tool_call_request","id":"skill","name":"read","arguments":"{\"path\":\"/skills/golang/SKILL.md\"}","render":"/skills/golang/SKILL.md","emphasis":{"kind":"focus","value":"SKILL.md"}}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:04Z","event":{"kind":"tool_call_request","id":"job-start","name":"job","arguments":"{\"action\":\"start\",\"name\":\"docs\",\"command\":\"serve\"}","render":"docs","continuation":[{"name":"bash","render":"serve"}]}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:05Z","event":{"kind":"tool_call_request","id":"job-restart","name":"job","arguments":"{\"action\":\"start\",\"name\":\"docs\"}","render":"docs","detail":"start"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:06Z","event":{"kind":"tool_call_request","id":"job-wait","name":"job","arguments":"{\"action\":\"wait\",\"names\":[\"build\",\"lint\"],\"wait_for\":\"all\",\"wait_seconds\":20}","render":"build, lint","detail":"wait"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:07Z","event":{"kind":"tool_call_request","id":"job-list","name":"job","arguments":"{\"action\":\"list\"}","detail":"list"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:08Z","event":{"kind":"tool_call_request","id":"job-stop","name":"job","arguments":"{\"action\":\"stop\",\"name\":\"docs\"}","render":"docs","detail":"stop"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:08Z","event":{"kind":"tool_call_request","id":"job-status","name":"job","arguments":"{\"action\":\"status\",\"name\":\"docs\"}","render":"docs","detail":"status"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:08Z","event":{"kind":"tool_call_request","id":"job-output","name":"job","arguments":"{\"action\":\"output\",\"name\":\"docs\"}","render":"docs","detail":"output"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:08Z","event":{"kind":"tool_call_request","id":"job-discard","name":"job","arguments":"{\"action\":\"discard\",\"name\":\"docs\"}","render":"docs","detail":"discard"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:08Z","event":{"kind":"tool_call_request","id":"job-prune","name":"job","arguments":"{\"action\":\"prune\"}","detail":"prune"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:08Z","event":{"kind":"tool_call_request","id":"job-wait-any","name":"job","arguments":"{\"action\":\"wait\",\"name\":\"docs\"}","render":"docs","detail":"wait"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:09Z","event":{"kind":"tool_call_request","id":"expose-plain","name":"expose","arguments":"{\"action\":\"add\",\"port\":3000}","render":"3000"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:09Z","event":{"kind":"tool_call_request","id":"expose","name":"expose","arguments":"{\"action\":\"add\",\"port\":8000,\"job_name\":\"docs\"}","render":"8000"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:10Z","event":{"kind":"tool_call_request","id":"unexpose","name":"expose","arguments":"{\"action\":\"remove\",\"port\":8000}","render":"8000","detail":"remove"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:11Z","event":{"kind":"tool_call_request","id":"expose-list","name":"expose","arguments":"{\"action\":\"list\"}","detail":"list"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:12Z","event":{"kind":"tool_call_request","id":"lookup","name":"lookup","arguments":"{\"query\":\"Go\"}","render":"Go"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:13Z","event":{"kind":"tool_call_request","id":"fetch","name":"fetch","arguments":"{\"url\":\"https://example.test\",\"type\":\"markdown\"}","render":"https://example.test","detail":"markdown"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:14Z","event":{"kind":"tool_call_request","id":"notify","name":"notify","arguments":"{\"title\":\"Done\",\"message\":\"All green\"}","render":"Done","detail":"All green"}}`,
+	)
+
+	if _, err := migrate.Session(options(directory), name); err != nil {
+		t.Fatal(err)
+	}
+	storedSession, err := store.Read(directory, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	calls := make(map[string]agent.Event)
+	for _, event := range storedSession.Events {
+		if event.Kind == agent.ToolCallRequestEvent {
+			calls[event.ID] = event
+		}
+	}
+
+	assertRendering := func(id string, renderingKind string, subject string, detail string) {
+		t.Helper()
+		event := calls[id]
+		if event.RenderingKind != renderingKind || event.Subject != subject || event.Note != detail {
+			t.Errorf("%s migrated to %+v", id, event.FallbackRendering)
+		}
+	}
+	assertRendering("bash", "", "echo hi", "")
+	if !calls["bash"].ShowOutput {
+		t.Error("bash no longer says to show its output")
+	}
+	assertRendering("read", "", "main.go", "10-14")
+	for id, pathLine := range map[string]string{"read": "10-14", "read-open": "10+", "read-limit": "1-5"} {
+		if calls[id].PathLine != pathLine {
+			t.Errorf("%s path line is %q, want %q", id, calls[id].PathLine, pathLine)
+		}
+	}
+	assertRendering("skill", "skill", "/skills/golang/SKILL.md", "")
+	if calls["skill"].Emphasis.Value != "golang" {
+		t.Errorf("skill emphasis is %+v", calls["skill"].Emphasis)
+	}
+	assertRendering("job-start", "job_start", "docs", "")
+	continuation := calls["job-start"].Continuation
+	if len(continuation) != 1 || continuation[0].Kind != "bash" {
+		t.Errorf("job continuation is %+v", continuation)
+	}
+	assertRendering("job-restart", "job_restart", "docs", "")
+	assertRendering("job-wait", "job_wait_all", "build && lint", "up to 20s")
+	assertRendering("job-list", "job_list", "jobs", "")
+	assertRendering("job-stop", "job_stop", "docs", "")
+	assertRendering("job-status", "job_status", "docs", "")
+	assertRendering("job-output", "job_output", "docs", "")
+	assertRendering("job-discard", "job_discard", "docs", "")
+	assertRendering("job-prune", "job_prune", "jobs", "")
+	assertRendering("job-wait-any", "job_wait_any", "docs", "")
+	assertRendering("expose-plain", "expose_add", "3000", "")
+	assertRendering("expose", "expose_add", "docs:8000", "")
+	assertRendering("unexpose", "expose_remove", "8000", "")
+	assertRendering("expose-list", "expose_list", "exposed ports", "")
+	assertRendering("lookup", "", "Go", "")
+	assertRendering("fetch", "", "https://example.test", "as markdown")
+	assertRendering("notify", "", "Done", "— All green")
+}
+
 func firstFormatJournal() []string {
 	return []string{
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","id":"one","name":"tame-impala",` +
@@ -859,7 +945,7 @@ func TestAJournalMigratesToTheSameBytesWhetherStoredOrArchived(t *testing.T) {
 	}
 
 	for _, wanted := range []string{
-		`"version":14`,
+		`"version":15`,
 		`"emphasis":{"kind":"syntax","value":"a.go"}`,
 		`"access":"rw"`,
 		`{"kind":"turn_interruption","name":"escape"}`,

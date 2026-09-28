@@ -59,15 +59,21 @@ func New(ports Ports) tool.Tool {
 		})
 }
 
-func Describe(args Args) (string, string) {
-	if args.Action == actionList {
-		return "", args.Action
-	}
-	if args.Action == actionAdd {
-		return strconv.Itoa(args.Port), ""
+func Describe(args Args) tool.CallRendering {
+	port := strconv.Itoa(args.Port)
+	switch args.Action {
+	case actionAdd:
+		if args.JobName != "" {
+			port = args.JobName + ":" + port
+		}
+		return tool.CallRendering{Kind: "expose_add", Subject: port}
+	case actionRemove:
+		return tool.CallRendering{Kind: "expose_remove", Subject: port}
+	case actionList:
+		return tool.CallRendering{Kind: "expose_list", Subject: "exposed ports"}
 	}
 
-	return strconv.Itoa(args.Port), args.Action
+	return tool.CallRendering{}
 }
 
 func validate(args Args) error {

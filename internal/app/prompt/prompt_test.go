@@ -289,6 +289,32 @@ func TestTheHarnessGivesTheSessionItsAnimalPersonality(t *testing.T) {
 	}
 }
 
+func TestTheHarnessDisclosesCustomToolGroupAccess(t *testing.T) {
+	got := harnessContext(Config{
+		Workspace:   work.At("/workspace"),
+		SessionName: "session-id",
+		TmpDir:      "/tmp/x",
+		HomeDir:     "/state/home",
+		CurrentCaps: caps.Read | caps.Network,
+		ExtraPaths:  shell.Paths{},
+		Conditions:  conditions.Conditions{Interactive: true},
+		ToolGroups: caps.ToolGroups{
+			"a": {"weather"},
+			"n": {"publish"},
+		},
+		GroupStatus: caps.GroupStatus{Flags: "a"},
+	})
+
+	for _, want := range []string{
+		"When offered, the weather tool belongs to mode group a; it started this conversation refused, and ctrl+x a controls it",
+		"When offered, the publish tool belongs to mode group n; it started this conversation available, and ctrl+x n controls it",
+	} {
+		if !strings.Contains(got, want) {
+			t.Errorf("harness context does not contain %q: %q", want, got)
+		}
+	}
+}
+
 func TestTheHarnessDisclosesLookupAndFetchAccess(t *testing.T) {
 	for name, test := range map[string]struct {
 		currentCaps      caps.Set

@@ -707,7 +707,7 @@ Searching first, then reading the announcement the search cites.
 Let me search, then read the announcement.
 
 lookup latest Go release ✓ 1L
-fetch https://go.dev/blog/go1.26 markdown ✓ 11L ~100t
+fetch https://go.dev/blog/go1.26 as markdown ✓ 11L ~100t
 
 Go 1.26 is current. The announcement calls out iterators in container/heap, flaky-run reporting in
 go test, and a smaller allocation header.
@@ -721,7 +721,7 @@ go test, and a smaller allocation header.
  🤖 Fetch is now refused.
 
 
-fetch https://go.dev/doc/go1.26 text ✗ network access is not granted; the user can grant it with ct…
+fetch https://go.dev/doc/go1.26 as text ✗ network access is not granted; the user can grant it with…
 
 Fetching is refused, so I cannot read the notes until you grant access again.
 === tiny ===
@@ -816,7 +816,7 @@ Searching first, then reading the announcement the search cites.
 Let me search, then read the announcement.
 
 lookup latest Go release ✓ 1L
-fetch https://go.dev/blog/go1.26 markdown ✓ 11L ~100t
+fetch https://go.dev/blog/go1.26 as markdown ✓ 11L ~100t
 
 Go 1.26 is current. The announcement calls out iterators in container/heap, flaky-run reporting in
 go test, and a smaller allocation header.
@@ -830,6 +830,6 @@ go test, and a smaller allocation header.
  🤖 Fetch is now refused.
 
 
-fetch https://go.dev/doc/go1.26 text ✗ network access is not granted; the user can grant it with ct…
+fetch https://go.dev/doc/go1.26 as text ✗ network access is not granted; the user can grant it with…
 
 Fetching is refused, so I cannot read the notes until you grant access again.

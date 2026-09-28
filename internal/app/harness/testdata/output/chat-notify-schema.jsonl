@@ -1,4 +1,4 @@
-{"kind":"head","version":14,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"head","version":15,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant.","tools":["notify"],"tool_definitions":[{"name":"notify","description":"send a desktop notification when the terminal is not focused","revision":"1","parameters":[{"name":"title","type":"string","description":"notification title, as plain text"},{"name":"message","type":"string","description":"notification text, as plain text: write \u003c and \u0026 as themselves, never as HTML entities"},{"name":"icon","type":"string","description":"notification icon: (one of success, info, warning, error, question, progress)"}]}]}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"offer the notification tool without calling it"}}
 {"kind":"event","event":{"kind":"model_message","text":"The notification tool is there when it is wanted."}}

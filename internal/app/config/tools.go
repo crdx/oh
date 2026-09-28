@@ -6,7 +6,9 @@ import (
 	"slices"
 	"strings"
 	"time"
+	"unicode/utf8"
 
+	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/permission"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/tool/command"
@@ -15,12 +17,19 @@ import (
 const toolsSetting = "tools"
 
 type CustomTool struct {
-	Description string            `toml:"description"`
-	Command     []string          `toml:"command"`
-	Parameters  []CustomParameter `toml:"parameters"`
-	Subject     string            `toml:"subject"`
-	Timeout     time.Duration     `toml:"timeout"`
-	Permission  string            `toml:"permission"`
+	Description   string                `toml:"description"`
+	Command       []string              `toml:"command"`
+	Parameters    []CustomParameter     `toml:"parameters"`
+	Subject       string                `toml:"subject"`
+	Timeout       time.Duration         `toml:"timeout"`
+	Permission    string                `toml:"permission"`
+	Group         string                `toml:"group"`
+	Compatibility []CustomCompatibility `toml:"compatible"`
+}
+
+type CustomCompatibility struct {
+	From string `toml:"from"`
+	To   string `toml:"to"`
 }
 
 type CustomParameter struct {
@@ -50,6 +59,21 @@ func (self Config) CustomToolNames() []string {
 	return slices.Sorted(maps.Keys(self.Tools))
 }
 
+func (self Config) CustomToolGroups() (caps.ToolGroups, error) {
+	groups := make(caps.ToolGroups)
+	for _, name := range self.CustomToolNames() {
+		group := self.Tools[name].Group
+		if group == "" {
+			continue
+		}
+		if utf8.RuneCountInString(group) != 1 || group[0] < 'a' || group[0] > 'z' {
+			return nil, self.complain(name, fmt.Errorf("group %q is not one lowercase letter", group))
+		}
+		groups[group] = append(groups[group], name)
+	}
+	return groups, nil
+}
+
 func (self Config) complain(name string, err error) error {
 	setting := toolsSetting + "." + name
 	if path := self.getSourcePath(toolsSetting, name); path != "" {
@@ -64,12 +88,18 @@ func (self Config) buildCustomTool(name string, options command.Options) (tool.T
 	if err != nil {
 		return nil, err
 	}
+	if options.GroupForTool != nil {
+		declaration.Group = options.GroupForTool(name)
+	}
 
 	return command.New(declaration, options)
 }
 
 func (self Config) declare(name string) (command.Declaration, error) {
 	setting := self.Tools[name]
+	if setting.Group != "" && (utf8.RuneCountInString(setting.Group) != 1 || setting.Group[0] < 'a' || setting.Group[0] > 'z') {
+		return command.Declaration{}, fmt.Errorf("group %q is not one lowercase letter", setting.Group)
+	}
 
 	rule := permission.Ask
 	if strings.TrimSpace(setting.Permission) != "" {
@@ -96,14 +126,24 @@ func (self Config) declare(name string) (command.Declaration, error) {
 		})
 	}
 
+	compatibility := make([]command.Compatibility, 0, len(setting.Compatibility))
+	for _, compatible := range setting.Compatibility {
+		compatibility = append(compatibility, command.Compatibility{
+			From: compatible.From,
+			To:   compatible.To,
+		})
+	}
+
 	return command.Declaration{
-		Name:        name,
-		Description: setting.Description,
-		Command:     resolvedCommand,
-		Parameters:  parameters,
-		Subject:     setting.Subject,
-		TimeLimit:   setting.Timeout,
-		MustAsk:     rule != permission.Allow,
+		Name:          name,
+		Description:   setting.Description,
+		Command:       resolvedCommand,
+		Parameters:    parameters,
+		Subject:       setting.Subject,
+		TimeLimit:     setting.Timeout,
+		MustAsk:       rule != permission.Allow,
+		Group:         setting.Group,
+		Compatibility: compatibility,
 	}, nil
 }
 

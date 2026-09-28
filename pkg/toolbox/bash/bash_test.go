@@ -5,6 +5,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"reflect"
 	"slices"
 	"strings"
 	"testing"
@@ -208,7 +209,7 @@ func TestACommandIsRenderedOnOneLine(t *testing.T) {
 		"blank between":  "echo one\n\n\necho two",
 		"leading indent": "  echo one\n    echo two",
 	} {
-		subject, _ := bash.Describe(bash.Args{Command: command})
+		subject := bash.Describe(bash.Args{Command: command}).Subject
 
 		if strings.ContainsAny(subject, "\n\r\t") {
 			t.Errorf("%s: expected one line, got %q", name, subject)
@@ -224,7 +225,7 @@ func TestACommandRenderingIsMarkedAsBash(t *testing.T) {
 	}
 
 	want := tool.Emphasis{Kind: tool.EmphasisSyntax, Value: "bash"}
-	if call.Emphasis() != want {
+	if call.Rendering().Emphasis != want {
 		t.Errorf("expected bash emphasis, got %T", call)
 	}
 }
@@ -240,9 +241,8 @@ func TestTheSharedCommandRenderingMatchesTheBashTool(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if rendering.Name != "bash" || rendering.Subject != parsedCall.Subject() ||
-		rendering.Qualifier != parsedCall.Qualifier() || rendering.Emphasis != parsedCall.Emphasis() {
-		t.Errorf("got %#v, want the bash tool's complete rendering", rendering)
+	if parsedRendering := parsedCall.Rendering(); !reflect.DeepEqual(rendering, parsedRendering) {
+		t.Errorf("got %#v, want the bash tool's complete rendering %#v", parsedRendering, rendering)
 	}
 }
 
@@ -264,7 +264,7 @@ func TestCommandsAreFormattedOnOneLine(t *testing.T) {
 		"assignment":           {"GOCACHE=/tmp/io-go-cache go   list", "GOCACHE=/tmp/io-go-cache go list"},
 		"blank lines":          {"echo one\n\n\necho two", "echo one; echo two"},
 	} {
-		subject, _ := bash.Describe(bash.Args{Command: test.command})
+		subject := bash.Describe(bash.Args{Command: test.command}).Subject
 		if subject != test.want {
 			t.Errorf("%s: got %q, want %q", name, subject, test.want)
 		}
@@ -273,7 +273,7 @@ func TestCommandsAreFormattedOnOneLine(t *testing.T) {
 
 func TestCommentsAreOmittedFromTheRenderedSummary(t *testing.T) {
 	command := "echo one # not displayed\necho two"
-	subject, _ := bash.Describe(bash.Args{Command: command})
+	subject := bash.Describe(bash.Args{Command: command}).Subject
 
 	if subject != "echo one; echo two" {
 		t.Errorf("got %q, want comments omitted", subject)
@@ -284,7 +284,8 @@ func TestCommentsAreOmittedFromTheRenderedSummary(t *testing.T) {
 }
 
 func TestAHereDocumentIsShownByItsOpeningLineAlone(t *testing.T) {
-	subject, qualifier := bash.Describe(bash.Args{Command: "cat <<'EOF'\none\nEOF"})
+	rendering := bash.Describe(bash.Args{Command: "cat <<'EOF'\none\nEOF"})
+	subject, qualifier := rendering.Subject, rendering.Qualifier
 
 	if strings.ContainsAny(subject, "\n\r\t") {
 		t.Errorf("expected one line, got %q", subject)
@@ -306,7 +307,7 @@ func TestAHereDocumentKeepsItsCompleteEmphasisSource(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if got, want := call.Emphasis().Source, "cat <<EOF\none\nEOF"; got != want {
+	if got, want := call.Rendering().Emphasis.Source, "cat <<EOF\none\nEOF"; got != want {
 		t.Errorf("got source %q, want %q", got, want)
 	}
 }
@@ -318,7 +319,7 @@ func TestACommandOverSeveralLinesSaysHowMany(t *testing.T) {
 		"echo one\necho two":        "2L",
 		"echo one\necho two\nls -l": "3L",
 	} {
-		if _, qualifier := bash.Describe(bash.Args{Command: command}); qualifier != want {
+		if qualifier := bash.Describe(bash.Args{Command: command}).Qualifier; qualifier != want {
 			t.Errorf("%q: expected %q, got %q", command, want, qualifier)
 		}
 	}
@@ -466,14 +467,8 @@ func TestAnUnconfinedShellOffersNoNetworkChoice(t *testing.T) {
 		}
 	}
 
-	call, err := shell.Parse(`{"command":"true","network":"host"}`)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if _, err := call.Exec(t.Context()); err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if runner.policy.Network {
-		t.Error("an unconfined shell took the network argument as a request")
+	_, err := shell.Parse(`{"command":"true","network":"host"}`)
+	if err == nil || !strings.Contains(err.Error(), "unknown parameter: network") {
+		t.Errorf("got %v, want the network argument refused", err)
 	}
 }

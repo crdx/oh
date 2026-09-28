@@ -34,8 +34,8 @@ func New(root *file.Root, snapshots *file.Snapshots) tool.Tool {
 	})
 }
 
-func Describe(args Args) (string, string) {
-	return args.Path, ""
+func Describe(args Args) tool.CallRendering {
+	return tool.CallRendering{Subject: args.Path}
 }
 
 func exec(root *file.Root, snapshots *file.Snapshots, args Args) (string, tool.ToolCallMetrics, error) {

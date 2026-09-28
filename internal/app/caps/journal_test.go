@@ -63,6 +63,29 @@ func TestAModeChangeSaysWhatItSwapped(t *testing.T) {
 	}
 }
 
+func TestACustomGroupModeCanBeRestoredAndRendered(t *testing.T) {
+	mode := NewModeWithGroups(Read, "", ToolGroups{"a": {"weather"}})
+	mode.ToggleGroup("a")
+	event := mode.Event("a")
+
+	grantedGroups, toolGroups, found := LastRecordedToolGroups([]agent.Event{event})
+	if !found || grantedGroups != "a" || !slices.Equal(toolGroups["a"], []string{"weather"}) {
+		t.Errorf("got groups %q, %#v and found %v", grantedGroups, toolGroups, found)
+	}
+	if notices, isShown := ModeNotice(event); !isShown || !slices.Equal(notices, []string{
+		"The weather tool is now available.",
+	}) {
+		t.Errorf("got notices %q and shown %v", notices, isShown)
+	}
+
+	takenBack := ModeWithoutFlag(event, "a")
+	if notices, isShown := ModeNotice(takenBack); !isShown || !slices.Equal(notices, []string{
+		"The weather tool is now refused.",
+	}) {
+		t.Errorf("got taken-back notices %q and shown %v", notices, isShown)
+	}
+}
+
 func TestAChangeTakenBackLeavesTheOnesAfterItSayingWhatTheySaid(t *testing.T) {
 	event := ModeToggleEvent(Write, Read|Git)
 	said, _ := ModeNotice(event)

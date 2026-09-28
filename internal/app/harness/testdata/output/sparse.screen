@@ -4,7 +4,7 @@
 
 
 status ✓
-notify done nothing to report ✓
+notify done — nothing to report ✓
 
 Nothing came back.
 === one column ===
@@ -98,7 +98,7 @@ k
 
 
 status ✓
-notify done nothing to report ✓
+notify done — nothing to report ✓
 
 Nothing came back.
 === tiny ===
@@ -120,6 +120,6 @@ back.
 
 
 status ✓
-notify done nothing to report ✓
+notify done — nothing to report ✓
 
 Nothing came back.

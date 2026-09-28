@@ -137,8 +137,13 @@ func TestEveryThemeKeyIsCompiledWithItsDecorations(t *testing.T) {
 	theme := Theme{}
 	keys := reflect.ValueOf(&theme).Elem()
 
+	wanted := 0
 	for _, key := range keys.Fields() {
+		if key.Kind() != reflect.String {
+			continue
+		}
 		key.SetString("bold #010203")
+		wanted++
 	}
 
 	written := 0
@@ -155,8 +160,8 @@ func TestEveryThemeKeyIsCompiledWithItsDecorations(t *testing.T) {
 		}
 	}
 
-	if written != keys.NumField() {
-		t.Errorf("%d of the %d theme keys were compiled", written, keys.NumField())
+	if written != wanted {
+		t.Errorf("%d of the %d colour keys were compiled", written, wanted)
 	}
 }
 
@@ -164,6 +169,9 @@ func TestEveryThemeKeyCanBeWrittenInAConfig(t *testing.T) {
 	theme := DefaultTheme()
 
 	for field, key := range reflect.ValueOf(&theme).Elem().Fields() {
+		if key.Kind() != reflect.String {
+			continue
+		}
 		written := key.String()
 
 		var value Paint

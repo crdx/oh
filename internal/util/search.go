@@ -34,8 +34,8 @@ func DescribeSearch(pattern string, path string, globPattern string) (string, st
 	return pattern, qualifier
 }
 
-func SearchPath(call tool.ToolCall) string {
-	qualifier := strings.TrimSpace(call.Qualifier())
+func SearchPath(rendering tool.CallRendering) string {
+	qualifier := strings.TrimSpace(rendering.Qualifier)
 	if qualifier == "" {
 		return ""
 	}

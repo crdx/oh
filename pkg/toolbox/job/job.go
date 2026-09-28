@@ -75,7 +75,6 @@ func New(
 		Describe,
 	).
 		Validate(validate).
-		ContinuesWith(describeContinuation).
 		TakesAtMost(getTimeLimit).
 		Exec(func(ctx context.Context, args Args) (string, tool.ToolCallMetrics, error) {
 			return run(ctx, manager, root, buildPolicy, args)
@@ -91,23 +90,45 @@ func description(doesWake bool) string {
 	return firstSentence + " You will not be notified automatically when it finishes."
 }
 
-func Describe(args Args) (string, string) {
-	if args.Action == actionStart && strings.TrimSpace(args.Command) != "" {
-		return args.Name, ""
-	}
-	if args.Action == actionWait {
-		return strings.Join(getWaitNames(args), ", "), args.Action
+func Describe(args Args) tool.CallRendering {
+	switch args.Action {
+	case actionStart:
+		if strings.TrimSpace(args.Command) == "" {
+			return tool.CallRendering{Kind: "job_restart", Subject: args.Name}
+		}
+		return tool.CallRendering{
+			Kind:         "job_start",
+			Subject:      args.Name,
+			Continuation: []tool.CallRendering{bash.DescribeCommand(args.Command)},
+		}
+	case actionWait:
+		qualifier := ""
+		if args.WaitSeconds > 0 {
+			qualifier = fmt.Sprintf("up to %ds", args.WaitSeconds)
+		}
+		separator := " || "
+		if getWaitFor(args) == waitForAll {
+			separator = " && "
+		}
+		kind := "job_wait_any"
+		if getWaitFor(args) == waitForAll {
+			kind = "job_wait_all"
+		}
+		return tool.CallRendering{
+			Kind:      kind,
+			Subject:   strings.Join(getWaitNames(args), separator),
+			Qualifier: qualifier,
+			Emphasis:  tool.Emphasis{Kind: tool.EmphasisSyntax, Value: "bash"},
+		}
+	case actionList:
+		return tool.CallRendering{Kind: "job_list", Subject: "jobs"}
+	case actionPrune:
+		return tool.CallRendering{Kind: "job_prune", Subject: "jobs"}
+	case actionStatus, actionOutput, actionStop, actionDiscard:
+		return tool.CallRendering{Kind: "job_" + args.Action, Subject: args.Name}
 	}
 
-	return args.Name, args.Action
-}
-
-func describeContinuation(args Args) []tool.CallRendering {
-	if args.Action != actionStart || strings.TrimSpace(args.Command) == "" {
-		return nil
-	}
-
-	return []tool.CallRendering{bash.DescribeCommand(args.Command)}
+	return tool.CallRendering{}
 }
 
 func validate(args Args) error {
