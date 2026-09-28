@@ -45,7 +45,7 @@ The docs server is up.\r
 \e[48;2;52;53;65m what happened to it                    \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mstatus\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 \e[48;2;48;58;67m                                        \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped from the keyboard. \e[0m\r
@@ -1433,7 +1433,7 @@ note: the oldest 1K of output was dropped to keep the spool bounded.\e[0m
 \e[48;2;52;53;65m\e[0m
 \e[48;2;52;53;65m what happened to it\e[0m
 \e[48;2;52;53;65m\e[0m
-\e[38;2;207;173;0mstatus\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
+status \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
 
 \e[48;2;48;58;67m\e[0m
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped from the keyboard.\e[0m
@@ -1480,7 +1480,7 @@ The docs server is up.\r
 \e[48;2;52;53;65m what happened to it                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mstatus\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped from the keyboard.                                                             \e[0m\r
@@ -1528,7 +1528,7 @@ The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs\e[K\r\e[8C\e[?25h\e[?20
 \e[48;2;52;53;65m what happened to it                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[38;2;207;173;0mstatus\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mstatus\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+status \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped from the keyboard.                                                             \e[0m\r
@@ -1576,7 +1576,7 @@ The docs server is up.\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25
 \e[48;2;52;53;65m what happened to it                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[38;2;207;173;0mstatus\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mstatus\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+status \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped from the keyboard.                                                             \e[0m\r
@@ -1624,7 +1624,7 @@ The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs\e[K\r\e[8C\e[?25h\e[?20
 \e[48;2;52;53;65m what happened to it                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[38;2;207;173;0mstatus\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mstatus\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+status \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped from the keyboard.                                                             \e[0m\r
@@ -1760,7 +1760,7 @@ up.\r
 \e[48;2;52;53;65m it         \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mstatus\e[0m\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 \e[48;2;48;58;67m            \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m\e[0m\r
@@ -1811,7 +1811,7 @@ note: the oldest 1K of output was dropped to keep the spool bounded.\e[0m\r
 \e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
 \e[48;2;52;53;65m what happened to it\e[0m\r
 \e[48;2;52;53;65m\e[0m\r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mstatus\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 \e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped from the keyboard.\e[0m\r
@@ -1858,7 +1858,7 @@ The docs server is up.\r
 \e[48;2;52;53;65m what happened to it                                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;207;173;0mstatus\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped from the keyboard.                                                             \e[0m\r

@@ -300,7 +300,7 @@ func TestAJobWaitPaintsJobNamesAsItsSubject(t *testing.T) {
 		WaitFor:     "all",
 		WaitSeconds: 20,
 	}))
-	want := style.Change("await") + " " + style.Subject("build && lint") + " " + style.Qualifier("for up to 20s")
+	want := style.Call("await") + " " + style.Subject("build && lint") + " " + style.Qualifier("for up to 20s")
 
 	if got := label.Render(); got != want {
 		t.Errorf("got %q, want %q", got, want)

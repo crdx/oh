@@ -47,16 +47,16 @@ job_stop = { name = "stop", paint = "status_warning" }
 job_restart = { name = "restart", paint = "status_warning" }
 job_discard = { name = "discard", paint = "status_warning" }
 job_prune = { name = "prune", paint = "status_warning" }
-job_status = { name = "status" }
-job_output = { name = "output" }
-job_wait_any = { name = "await" }
-job_wait_all = { name = "await" }
-job_list = { name = "list" }
+job_status = { name = "status", paint = "normal" }
+job_output = { name = "output", paint = "normal" }
+job_wait_any = { name = "await", paint = "normal" }
+job_wait_all = { name = "await", paint = "normal" }
+job_list = { name = "list", paint = "normal" }
 
 expose = { name = "expose" }
 expose_add = { name = "forward", paint = "status_warning" }
 expose_remove = { name = "close", paint = "status_warning" }
-expose_list = { name = "list" }
+expose_list = { name = "list", paint = "normal" }
 
 lookup = { name = "lookup", paint = "status_info" }
 fetch = { name = "fetch", paint = "status_info" }

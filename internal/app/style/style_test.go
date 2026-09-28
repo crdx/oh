@@ -230,6 +230,24 @@ func TestAnUnknownToolAppearanceUsesItsCallDefaults(t *testing.T) {
 	}
 }
 
+func TestObservationalActionsUseNormalPaintWithinToolsThatMayChangeThings(t *testing.T) {
+	enableColor(t)
+
+	for _, kind := range []string{
+		"job_status",
+		"job_output",
+		"job_wait_any",
+		"job_wait_all",
+		"job_list",
+		"expose_list",
+	} {
+		_, nameStyle, _ := ToolCallAppearance(kind, "", false)
+		if got, want := nameStyle("call"), Normal("call"); got != want {
+			t.Errorf("%s used %q, want normal paint %q", kind, got, want)
+		}
+	}
+}
+
 func TestTheShellPromptMatchesACommandName(t *testing.T) {
 	enableColor(t)
 

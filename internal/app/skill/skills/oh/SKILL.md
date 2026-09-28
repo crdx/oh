@@ -130,17 +130,17 @@ expose_remove = { name = "close-gangway", paint = "status_danger" }
 | `title`         | `title`      | call default     | accent |
 | `job_start`     | `start`      | `status_warning` | accent |
 | `job_restart`   | `restart`    | `status_warning` | accent |
-| `job_status`    | `status`     | `status_warning` | accent |
-| `job_output`    | `output`     | `status_warning` | accent |
-| `job_wait_any`  | `wait for`   | `status_warning` | accent |
-| `job_wait_all`  | `wait for`   | `status_warning` | accent |
+| `job_status`    | `status`     | `normal`         | accent |
+| `job_output`    | `output`     | `normal`         | accent |
+| `job_wait_any`  | `await`      | `normal`         | accent |
+| `job_wait_all`  | `await`      | `normal`         | accent |
 | `job_stop`      | `stop`       | `status_warning` | accent |
-| `job_list`      | `list`       | `status_warning` | accent |
+| `job_list`      | `list`       | `normal`         | accent |
 | `job_discard`   | `discard`    | `status_warning` | accent |
 | `job_prune`     | `prune`      | `status_warning` | accent |
-| `expose_add`    | `expose`     | `status_warning` | accent |
-| `expose_remove` | `unexpose`   | `status_warning` | accent |
-| `expose_list`   | `list`       | `status_warning` | accent |
+| `expose_add`    | `forward`    | `status_warning` | accent |
+| `expose_remove` | `close`      | `status_warning` | accent |
+| `expose_list`   | `list`       | `normal`         | accent |
 | `job`           | `job`        | call default     | accent |
 | `expose`        | `expose`     | call default     | accent |
 
