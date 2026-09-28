@@ -578,7 +578,7 @@ func TestARowTooNarrowForWhatItMeasuredKeepsItsLabelAndItsMark(t *testing.T) {
 	block := testBlock()
 
 	index := block.Add(rowLabel("bash", "if [[ -f one ]]; then echo one; fi"), 0)
-	block.FinaliseRow(index, Done, time.Second, "", "900L+ ~500t (of ~225Kt)")
+	block.FinaliseRow(index, Done, time.Second, "", "900L+ ~500t of ~225Kt")
 
 	row := block.Rows(tiny)[index]
 

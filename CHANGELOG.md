@@ -36,6 +36,7 @@
 
 ### Drawing
 
+- Drop parentheses around tool output measurements
 - Theme tool-call vocabulary and colours
 - Let tools own their complete semantic rendering
 - Keep wrapped and truncated paths hyperlinked

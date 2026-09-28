@@ -10,7 +10,7 @@ $ COUNT=0; for NAME in *.g… ✓ 2s 3L 700M
 ls ✓ 2L
 read diagram.png ✓ ~1.6Kt
 edit screen.go ✓ +12 −5
-grep ^func\\s+(N… ✓ 7L+ ~100t (of ~3.4Kt)
+grep ^func\\s+(New… ✓ 7L+ ~100t of ~3.4Kt
 read README.md ✓ 3L
 
 Here is a script, and a pattern beside
@@ -378,7 +378,7 @@ $ COUNT=0; for NAME in *.go; do COUNT=$((COUNT + 1)); done; echo $COUNT ✓ 2s 3
 ls ✓ 2L
 read diagram.png ✓ ~1.6Kt
 edit screen.go ✓ +12 −5
-grep ^func\\s+(New|Draw)[A-Z]\\w{2,8}\\( *.go ✓ 7L+ ~100t (of ~3.4Kt)
+grep ^func\\s+(New|Draw)[A-Z]\\w{2,8}\\( *.go ✓ 7L+ ~100t of ~3.4Kt
 read README.md ✓ 3L
 
 Here is a script, and a pattern beside it:
@@ -449,7 +449,7 @@ $ COUNT=0; for NAME in *.go; do COUNT=$((COUNT + 1)); done; echo $COUNT ✓ 2s 3
 ls ✓ 2L
 read diagram.png ✓ ~1.6Kt
 edit screen.go ✓ +12 −5
-grep ^func\\s+(New|Draw)[A-Z]\\w{2,8}\\( *.go ✓ 7L+ ~100t (of ~3.4Kt)
+grep ^func\\s+(New|Draw)[A-Z]\\w{2,8}\\( *.go ✓ 7L+ ~100t of ~3.4Kt
 read README.md ✓ 3L
 
 Here is a script, and a pattern beside it:

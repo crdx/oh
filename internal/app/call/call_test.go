@@ -109,7 +109,7 @@ func TestMetricsAreShownAfterCalls(t *testing.T) {
 				TotalBytes:  1200,
 				IsTruncated: true,
 			},
-			want: []string{"2L+ ~100t (of ~400t)"},
+			want: []string{"2L+ ~100t of ~400t"},
 		},
 		"capped search": {
 			metrics: tool.ToolCallMetrics{
@@ -119,7 +119,7 @@ func TestMetricsAreShownAfterCalls(t *testing.T) {
 				TotalBytes:  80_000,
 				IsTruncated: true,
 			},
-			want: []string{"100L+ ~11Kt (of ~29Kt)"},
+			want: []string{"100L+ ~11Kt of ~29Kt"},
 		},
 	} {
 		t.Run(name, func(t *testing.T) {
@@ -161,7 +161,7 @@ func TestMetricsUseTheirExpectedStyles(t *testing.T) {
 		TotalBytes:  2400,
 		IsTruncated: true,
 	})
-	if want := style.Subtle("23L+ ~400t (of ~900t)"); !strings.Contains(search, want) {
+	if want := style.Subtle("23L+ ~400t of ~900t"); !strings.Contains(search, want) {
 		t.Errorf("search metrics got %q, want styled %q", search, want)
 	}
 

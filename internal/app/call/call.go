@@ -389,7 +389,7 @@ func tokenEstimate(metrics *tool.ToolCallMetrics) string {
 
 	returnedText := util.FormatEstimatedTokens(returnedTokens)
 	if isTotalSaid {
-		return returnedText + " (of " + util.FormatEstimatedTokens(util.EstimateTokenCount(metrics.TotalBytes)) + ")"
+		return returnedText + " of " + util.FormatEstimatedTokens(util.EstimateTokenCount(metrics.TotalBytes))
 	}
 
 	return returnedText

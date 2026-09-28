@@ -7,9 +7,9 @@ divine one.go lines 1-400 ✓
 conjure func Draw(rows []string, colu… ✓
 $ for do done esac fi "u… ✗ syntax error
 summon nothing ✓ no output
-summon plenty ✓ 900L+ ~700t (of ~321Kt)
+summon plenty ✓ 900L+ ~700t of ~321Kt
 summon japanese ✓ 1L ~1.9Kt
-summon too mu… ✓ 900L+ ~4.4Kt (of ~21Kt)
+summon too much ✓ 900L+ ~4.4Kt of ~21Kt
 
 Turn stopped because the user asked
 something else.
@@ -139,9 +139,9 @@ divine one.go lines 1-400 ✓
 conjure func Draw(rows []string, columns int) ([]string, error) { return rows, nil } ✓
 $ for do done esac fi "unclosed ✗ syntax error
 summon nothing ✓ no output
-summon plenty ✓ 900L+ ~700t (of ~321Kt)
+summon plenty ✓ 900L+ ~700t of ~321Kt
 summon japanese ✓ 1L ~1.9Kt
-summon too much ✓ 900L+ ~4.4Kt (of ~21Kt)
+summon too much ✓ 900L+ ~4.4Kt of ~21Kt
 
 Turn stopped because the user asked something else.
 
@@ -179,9 +179,9 @@ divine one.go lines 1-400 ✓
 conjure func Draw(rows []string, columns int) ([]string, error) { return rows, nil } ✓
 $ for do done esac fi "unclosed ✗ syntax error
 summon nothing ✓ no output
-summon plenty ✓ 900L+ ~700t (of ~321Kt)
+summon plenty ✓ 900L+ ~700t of ~321Kt
 summon japanese ✓ 1L ~1.9Kt
-summon too much ✓ 900L+ ~4.4Kt (of ~21Kt)
+summon too much ✓ 900L+ ~4.4Kt of ~21Kt
 
 Turn stopped because the user asked something else.
 

@@ -7,9 +7,9 @@
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\conjure\e]8;;\e\\ \e[38;2;201;166;212mfunc\e[0m \e[38;2;129;162;190mDraw\e[0m(rows []\e[38;2;240;198;116mstring\e[0m, colu\e[38;2;150;152;150m…\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mfor do done esac fi "u…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msyntax error\e[0m\r
 \e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mnothing\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150mno output\e[0m\r
-\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mplenty\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~700t (of ~321Kt)\e[0m\r
+\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mplenty\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~700t of ~321Kt\e[0m\r
 \e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mjapanese\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L ~1.9Kt\e[0m\r
-\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mtoo mu…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~4.4Kt (of ~21Kt)\e[0m\r
+\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mtoo much\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~4.4Kt of ~21Kt\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped because the user asked\e[0m\r
 \e[38;2;207;173;0msomething else.\e[0m\r
@@ -140,9 +140,9 @@ divine \e[38;2;192;128;80mone.go\e[0m \e[38;2;150;152;150mlines \e[0m\e[38;2;192
 conjure \e[38;2;201;166;212mfunc\e[0m \e[38;2;129;162;190mDraw\e[0m(rows []\e[38;2;240;198;116mstring\e[0m, columns \e[38;2;240;198;116mint\e[0m) ([]\e[38;2;240;198;116mstring\e[0m, \e[38;2;240;198;116merror\e[0m) { \e[38;2;201;166;212mreturn\e[0m rows, \e[38;2;201;166;212mnil\e[0m } \e[38;2;76;154;44m✓\e[0m
 \e[38;2;129;162;190m$\e[0m \e[38;2;150;152;150mfor do done esac fi "unclosed\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msyntax error\e[0m
 summon \e[38;2;192;128;80mnothing\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150mno output\e[0m
-summon \e[38;2;192;128;80mplenty\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~700t (of ~321Kt)\e[0m
+summon \e[38;2;192;128;80mplenty\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~700t of ~321Kt\e[0m
 summon \e[38;2;192;128;80mjapanese\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L ~1.9Kt\e[0m
-summon \e[38;2;192;128;80mtoo much\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~4.4Kt (of ~21Kt)\e[0m
+summon \e[38;2;192;128;80mtoo much\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~4.4Kt of ~21Kt\e[0m
 
 \e[38;2;207;173;0mTurn stopped because the user asked something else.\e[0m
 
@@ -157,9 +157,9 @@ That is all of the awkward ones.
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\conjure\e]8;;\e\\ \e[38;2;201;166;212mfunc\e[0m \e[38;2;129;162;190mDraw\e[0m(rows []\e[38;2;240;198;116mstring\e[0m, columns \e[38;2;240;198;116mint\e[0m) ([]\e[38;2;240;198;116mstring\e[0m, \e[38;2;240;198;116merror\e[0m) { \e[38;2;201;166;212mreturn\e[0m rows, \e[38;2;201;166;212mnil\e[0m } \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mfor do done esac fi "unclosed\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msyntax error\e[0m\r
 \e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mnothing\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150mno output\e[0m\r
-\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mplenty\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~700t (of ~321Kt)\e[0m\r
+\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mplenty\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~700t of ~321Kt\e[0m\r
 \e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mjapanese\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L ~1.9Kt\e[0m\r
-\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mtoo much\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~4.4Kt (of ~21Kt)\e[0m\r
+\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mtoo much\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~4.4Kt of ~21Kt\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped because the user asked something else.\e[0m\r
 \r
@@ -174,9 +174,9 @@ divine \e[38;2;192;128;80m\e]8;;file:///workspace/one.go\e\\one.go\e]8;;\e\\\e[0
 \rconjure \e[38;2;201;166;212mfunc\e[0m \e[38;2;129;162;190mDraw\e[0m(rows []\e[38;2;240;198;116mstring\e[0m, columns \e[38;2;240;198;116mint\e[0m) ([]\e[38;2;240;198;116mstring\e[0m, \e[38;2;240;198;116merror\e[0m) { \e[38;2;201;166;212mreturn\e[0m rows, \e[38;2;201;166;212mnil\e[0m }\e[K\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\conjure\e]8;;\e\\ \e[38;2;201;166;212mfunc\e[0m \e[38;2;129;162;190mDraw\e[0m(rows []\e[38;2;240;198;116mstring\e[0m, columns \e[38;2;240;198;116mint\e[0m) ([]\e[38;2;240;198;116mstring\e[0m, \e[38;2;240;198;116merror\e[0m) { \e[38;2;201;166;212mreturn\e[0m rows, \e[38;2;201;166;212mnil\e[0m } \e[38;2;76;154;44m✓\e[0m\e[K\r\e[86C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[86C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[38;2;129;162;190m$\e[0m \e[38;2;150;152;150mfor do done esac fi "unclosed\e[0m\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mfor do done esac fi "unclosed\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msyntax error\e[0m\e[K\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \rsummon \e[38;2;192;128;80mnothing\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mnothing\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150mno output\e[0m\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\rsummon \e[38;2;192;128;80mplenty\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mplenty\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~700t (of ~321Kt)\e[0m\e[K\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\rsummon \e[38;2;192;128;80mplenty\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mplenty\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~700t of ~321Kt\e[0m\e[K\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \rsummon \e[38;2;192;128;80mjapanese\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mjapanese\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L ~1.9Kt\e[0m\e[K\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\rsummon \e[38;2;192;128;80mtoo much\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mtoo much\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~4.4Kt (of ~21Kt)\e[0m\e[K\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[41C\e[?25h\e[?2026l\r
+\rsummon \e[38;2;192;128;80mtoo much\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mtoo much\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~4.4Kt of ~21Kt\e[0m\e[K\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[39C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mTurn stopped because the user asked something else.\e[0m\e[?2026h\e[?25l\r
 \r\e[K\r
@@ -191,9 +191,9 @@ divine \e[38;2;192;128;80m\e]8;;file:///workspace/one.go\e\\one.go\e]8;;\e\\\e[0
 \rconjure \e[38;2;201;166;212mfunc\e[0m \e[38;2;129;162;190mDraw\e[0m(rows []\e[38;2;240;198;116mstring\e[0m, columns \e[38;2;240;198;116mint\e[0m) ([]\e[38;2;240;198;116mstring\e[0m, \e[38;2;240;198;116merror\e[0m) { \e[38;2;201;166;212mreturn\e[0m rows, \e[38;2;201;166;212mnil\e[0m }\e[K\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\conjure\e]8;;\e\\ \e[38;2;201;166;212mfunc\e[0m \e[38;2;129;162;190mDraw\e[0m(rows []\e[38;2;240;198;116mstring\e[0m, columns \e[38;2;240;198;116mint\e[0m) ([]\e[38;2;240;198;116mstring\e[0m, \e[38;2;240;198;116merror\e[0m) { \e[38;2;201;166;212mreturn\e[0m rows, \e[38;2;201;166;212mnil\e[0m } \e[38;2;76;154;44m✓\e[0m\e[K\r\e[86C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[86C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[38;2;129;162;190m$\e[0m \e[38;2;150;152;150mfor do done esac fi "unclosed\e[0m\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mfor do done esac fi "unclosed\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msyntax error\e[0m\e[K\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \rsummon \e[38;2;192;128;80mnothing\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mnothing\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150mno output\e[0m\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\rsummon \e[38;2;192;128;80mplenty\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mplenty\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~700t (of ~321Kt)\e[0m\e[K\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\rsummon \e[38;2;192;128;80mplenty\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mplenty\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~700t of ~321Kt\e[0m\e[K\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \rsummon \e[38;2;192;128;80mjapanese\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mjapanese\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L ~1.9Kt\e[0m\e[K\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\rsummon \e[38;2;192;128;80mtoo much\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mtoo much\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~4.4Kt (of ~21Kt)\e[0m\e[K\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[41C\e[?25h\e[?2026l\r
+\rsummon \e[38;2;192;128;80mtoo much\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mtoo much\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~4.4Kt of ~21Kt\e[0m\e[K\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[39C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mTurn stopped because the user asked something else.\e[0m\e[?2026h\e[?25l\r
 \r\e[K\r
@@ -208,9 +208,9 @@ divine \e[38;2;192;128;80m\e]8;;file:///workspace/one.go\e\\one.go\e]8;;\e\\\e[0
 \rconjure \e[38;2;201;166;212mfunc\e[0m \e[38;2;129;162;190mDraw\e[0m(rows []\e[38;2;240;198;116mstring\e[0m, columns \e[38;2;240;198;116mint\e[0m) ([]\e[38;2;240;198;116mstring\e[0m, \e[38;2;240;198;116merror\e[0m) { \e[38;2;201;166;212mreturn\e[0m rows, \e[38;2;201;166;212mnil\e[0m }\e[K\r\e[84C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\conjure\e]8;;\e\\ \e[38;2;201;166;212mfunc\e[0m \e[38;2;129;162;190mDraw\e[0m(rows []\e[38;2;240;198;116mstring\e[0m, columns \e[38;2;240;198;116mint\e[0m) ([]\e[38;2;240;198;116mstring\e[0m, \e[38;2;240;198;116merror\e[0m) { \e[38;2;201;166;212mreturn\e[0m rows, \e[38;2;201;166;212mnil\e[0m } \e[38;2;76;154;44m✓\e[0m\e[K\r\e[86C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[86C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[38;2;129;162;190m$\e[0m \e[38;2;150;152;150mfor do done esac fi "unclosed\e[0m\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mfor do done esac fi "unclosed\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msyntax error\e[0m\e[K\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \rsummon \e[38;2;192;128;80mnothing\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mnothing\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150mno output\e[0m\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\rsummon \e[38;2;192;128;80mplenty\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mplenty\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~700t (of ~321Kt)\e[0m\e[K\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\rsummon \e[38;2;192;128;80mplenty\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mplenty\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~700t of ~321Kt\e[0m\e[K\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[37C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \rsummon \e[38;2;192;128;80mjapanese\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mjapanese\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L ~1.9Kt\e[0m\e[K\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\rsummon \e[38;2;192;128;80mtoo much\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mtoo much\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~4.4Kt (of ~21Kt)\e[0m\e[K\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[41C\e[?25h\e[?2026l\r
+\rsummon \e[38;2;192;128;80mtoo much\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mtoo much\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~4.4Kt of ~21Kt\e[0m\e[K\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[39C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mTurn stopped because the user asked something else.\e[0m\e[?2026h\e[?25l\r
 \r\e[K\r
@@ -249,9 +249,9 @@ ones.\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\conjure\e]8;;\e\\ \e[38;2;201;166;212mfunc\e[0m \e[38;2;129;162;190mDraw\e[0m(rows []\e[38;2;240;198;116mstring\e[0m, columns \e[38;2;240;198;116mint\e[0m) ([]\e[38;2;240;198;116mstring\e[0m, \e[38;2;240;198;116merror\e[0m) { \e[38;2;201;166;212mreturn\e[0m rows, \e[38;2;201;166;212mnil\e[0m } \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mfor do done esac fi "unclosed\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msyntax error\e[0m\r
 \e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mnothing\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150mno output\e[0m\r
-\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mplenty\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~700t (of ~321Kt)\e[0m\r
+\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mplenty\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~700t of ~321Kt\e[0m\r
 \e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mjapanese\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L ~1.9Kt\e[0m\r
-\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mtoo much\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~4.4Kt (of ~21Kt)\e[0m\r
+\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mtoo much\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~4.4Kt of ~21Kt\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped because the user asked something else.\e[0m\r
 \r
@@ -266,9 +266,9 @@ That is all of the awkward ones.\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\conjure\e]8;;\e\\ \e[38;2;201;166;212mfunc\e[0m \e[38;2;129;162;190mDraw\e[0m(rows []\e[38;2;240;198;116mstring\e[0m, columns \e[38;2;240;198;116mint\e[0m) ([]\e[38;2;240;198;116mstring\e[0m, \e[38;2;240;198;116merror\e[0m) { \e[38;2;201;166;212mreturn\e[0m rows, \e[38;2;201;166;212mnil\e[0m } \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mfor do done esac fi "unclosed\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msyntax error\e[0m\r
 \e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mnothing\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150mno output\e[0m\r
-\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mplenty\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~700t (of ~321Kt)\e[0m\r
+\e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mplenty\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~700t of ~321Kt\e[0m\r
 \e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mjapanese\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L ~1.9Kt\e[0m\r
-\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mtoo much\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~4.4Kt (of ~21Kt)\e[0m\r
+\e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mtoo much\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m900L+ ~4.4Kt of ~21Kt\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped because the user asked something else.\e[0m\r
 \r
