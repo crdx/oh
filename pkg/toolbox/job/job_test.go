@@ -302,15 +302,15 @@ func TestAJobCallIsRenderedByItsAction(t *testing.T) {
 		},
 		"wait any": {
 			args: job.Args{Action: "wait", Names: []string{"build", "lint"}},
-			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build || lint", Emphasis: tool.Emphasis{Kind: tool.EmphasisSyntax, Value: "bash"}},
+			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build || lint"},
 		},
 		"wait all": {
 			args: job.Args{Action: "wait", Names: []string{"build", "lint"}, WaitFor: "all"},
-			want: tool.CallRendering{Kind: "job_wait_all", Subject: "build && lint", Emphasis: tool.Emphasis{Kind: tool.EmphasisSyntax, Value: "bash"}},
+			want: tool.CallRendering{Kind: "job_wait_all", Subject: "build && lint"},
 		},
 		"wait any with limit": {
 			args: job.Args{Action: "wait", Names: []string{"build", "lint"}, WaitFor: "any", WaitSeconds: 20},
-			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build || lint", Qualifier: "up to 20s", Emphasis: tool.Emphasis{Kind: tool.EmphasisSyntax, Value: "bash"}},
+			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build || lint", Qualifier: "for up to 20s"},
 		},
 		"list": {
 			args: job.Args{Action: "list"},

@@ -104,7 +104,7 @@ func Describe(args Args) tool.CallRendering {
 	case actionWait:
 		qualifier := ""
 		if args.WaitSeconds > 0 {
-			qualifier = fmt.Sprintf("up to %ds", args.WaitSeconds)
+			qualifier = fmt.Sprintf("for up to %ds", args.WaitSeconds)
 		}
 		separator := " || "
 		if getWaitFor(args) == waitForAll {
@@ -118,7 +118,6 @@ func Describe(args Args) tool.CallRendering {
 			Kind:      kind,
 			Subject:   strings.Join(getWaitNames(args), separator),
 			Qualifier: qualifier,
-			Emphasis:  tool.Emphasis{Kind: tool.EmphasisSyntax, Value: "bash"},
 		}
 	case actionList:
 		return tool.CallRendering{Kind: "job_list", Subject: "jobs"}

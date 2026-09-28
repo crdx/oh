@@ -45,8 +45,8 @@ job_start = { name = "start", paint = "status_warning" }
 job_restart = { name = "restart", paint = "status_warning" }
 job_status = { name = "status", paint = "status_warning" }
 job_output = { name = "output", paint = "status_warning" }
-job_wait_any = { name = "wait", paint = "status_warning" }
-job_wait_all = { name = "wait", paint = "status_warning" }
+job_wait_any = { name = "wait for", paint = "status_warning" }
+job_wait_all = { name = "wait for", paint = "status_warning" }
 job_stop = { name = "stop", paint = "status_warning" }
 job_list = { name = "list", paint = "status_warning" }
 job_discard = { name = "discard", paint = "status_warning" }

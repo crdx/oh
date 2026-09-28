@@ -11,8 +11,8 @@ start docs $ serve docs ✓
 restart docs ✓
 status docs ✓
 output docs ✓
-wait-for docs || build ✓
-wait-for docs && build up to 20s ✓
+wait for docs || build ✓
+wait for docs && build for up to 20s ✓
 stop docs ✓
 list jobs ✓
 discard docs ✓
@@ -142,8 +142,8 @@ start docs $ serve docs ✓
 restart docs ✓
 status docs ✓
 output docs ✓
-wait-for docs || build ✓
-wait-for docs && build up to 20s ✓
+wait for docs || build ✓
+wait for docs && build for up to 20s ✓
 stop docs ✓
 list jobs ✓
 discard docs ✓
@@ -166,8 +166,8 @@ start docs ✓
 restart d… ✓
 status do… ✓
 output do… ✓
-wait-for … ✓
-wait-for … ✓
+wait for … ✓
+wait for … ✓
 stop docs ✓
 list jobs ✓
 discard d… ✓
@@ -189,8 +189,8 @@ start docs $ serve docs ✓
 restart docs ✓
 status docs ✓
 output docs ✓
-wait-for docs || build ✓
-wait-for docs && build up to 20s ✓
+wait for docs || build ✓
+wait for docs && build for up to 20s ✓
 stop docs ✓
 list jobs ✓
 discard docs ✓

@@ -132,8 +132,8 @@ expose_remove = { name = "close-gangway", paint = "status_danger" }
 | `job_restart`   | `restart`    | `status_warning` | accent |
 | `job_status`    | `status`     | `status_warning` | accent |
 | `job_output`    | `output`     | `status_warning` | accent |
-| `job_wait_any`  | `wait-for`   | `status_warning` | accent |
-| `job_wait_all`  | `wait-for`   | `status_warning` | accent |
+| `job_wait_any`  | `wait for`   | `status_warning` | accent |
+| `job_wait_all`  | `wait for`   | `status_warning` | accent |
 | `job_stop`      | `stop`       | `status_warning` | accent |
 | `job_list`      | `list`       | `status_warning` | accent |
 | `job_discard`   | `discard`    | `status_warning` | accent |

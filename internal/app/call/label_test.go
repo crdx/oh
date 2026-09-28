@@ -211,6 +211,20 @@ func TestAContinuedShellCallUsesTheShellLabel(t *testing.T) {
 	}
 }
 
+func TestAJobWaitPaintsJobNamesAsItsSubject(t *testing.T) {
+	label := call.LabelForRendering(job.Describe(job.Args{
+		Action:      "wait",
+		Names:       []string{"build", "lint"},
+		WaitFor:     "all",
+		WaitSeconds: 20,
+	}))
+	want := style.Change("wait for") + " " + style.Subject("build && lint") + " " + style.Qualifier("for up to 20s")
+
+	if got := label.Render(); got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
 func TestRenderingCarriesItsPathLineIntoTheLabel(t *testing.T) {
 	workspace := t.TempDir()
 	if err := os.WriteFile(filepath.Join(workspace, "main.go"), nil, 0o600); err != nil {
