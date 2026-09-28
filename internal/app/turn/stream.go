@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	"crdx.org/oh/internal/util"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -37,7 +36,7 @@ type Timing struct {
 
 func Start(assistant *agent.Agent, message string, timing Timing) *Stream {
 	streamContext, cancel := context.WithCancelCause(context.Background())
-	stream := Adopt(make(chan Event), cancel, State{Running: true, StartedAt: util.WallClock(time.Now()), Timing: timing})
+	stream := Adopt(make(chan Event), cancel, State{Running: true, StartedAt: time.Now(), Timing: timing})
 
 	go func() {
 		defer close(stream.events)
@@ -161,7 +160,7 @@ func (self *Stream) Observe(event Event) bool {
 }
 
 func (self *Stream) SetCancelled(isCancelled bool) { self.state.IsCancelled = isCancelled }
-func (self *Stream) MarkFinished(at time.Time)     { self.state.FinishedAt = util.WallClock(at) }
+func (self *Stream) MarkFinished(at time.Time)     { self.state.FinishedAt = at }
 
 func (self *Stream) Finish() {
 	self.state.Running = false

@@ -121,7 +121,7 @@ func TestAbsentStreamIsIdle(t *testing.T) {
 	}
 }
 
-func TestATurnIsTimedOnTheWallClockAcrossASuspendedMachine(t *testing.T) {
+func TestATurnUsesMonotonicTimeSoSuspensionDoesNotCount(t *testing.T) {
 	const monotonicReading = " m=+"
 
 	assistant := agent.New("", streamProvider{
@@ -135,8 +135,8 @@ func TestATurnIsTimedOnTheWallClockAcrossASuspendedMachine(t *testing.T) {
 		"the moment the turn started":  stream.state.StartedAt,
 		"the moment the turn finished": stream.state.FinishedAt,
 	} {
-		if got := at.String(); strings.Contains(got, monotonicReading) {
-			t.Errorf("%s: got %q, want no monotonic reading", name, got)
+		if got := at.String(); !strings.Contains(got, monotonicReading) {
+			t.Errorf("%s: got %q, want a monotonic reading", name, got)
 		}
 	}
 }

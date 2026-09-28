@@ -5,6 +5,7 @@
 ### Completion and input
 
 - Keep keys typed while a session starts
+- Exclude system suspension from turn durations
 - Send a command typed out in full on the first enter
 - Redraw the screen and dismiss feedback with ctrl+l
 - Show arguments of snippet definitions
