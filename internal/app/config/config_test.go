@@ -32,7 +32,7 @@ func TestConfiguredSkillDirectoriesResolvesAbsoluteRelativeAndHomePaths(t *testi
 	absolute := filepath.Join(t.TempDir(), "skills")
 	home := t.TempDir()
 	t.Setenv("HOME", home)
-	contents := "[input]\ncontinue = \"carry on\"\n[model]\nround_robin = [\"opencode/deepseek@hi\"]\n[editor]\ncommand = \"  subl  \"\n[skills]\ninclude = [\"" + absolute + "\", \"shared/skills\", \"~/.system/config/pi/agent/skills\"]\n"
+	contents := "[input]\nnudge = \"carry on\"\n[model]\nround_robin = [\"opencode/deepseek@hi\"]\n[editor]\ncommand = \"  subl  \"\n[skills]\ninclude = [\"" + absolute + "\", \"shared/skills\", \"~/.system/config/pi/agent/skills\"]\n"
 	if err := writeConfigFile(path, contents); err != nil {
 		t.Fatal(err)
 	}
@@ -47,8 +47,8 @@ func TestConfiguredSkillDirectoriesResolvesAbsoluteRelativeAndHomePaths(t *testi
 	if !slices.Equal(config.Editor.Command, []string{"subl"}) {
 		t.Errorf("got editor %q", config.Editor.Command)
 	}
-	if config.Input.Continue != "carry on" {
-		t.Errorf("got continue message %q", config.Input.Continue)
+	if config.Input.Nudge != "carry on" {
+		t.Errorf("got nudge %q", config.Input.Nudge)
 	}
 	directories := config.Skills.Include
 	want := []string{
@@ -223,8 +223,11 @@ func TestAMissingConfigFileIsAllowed(t *testing.T) {
 	if len(config.Editor.Command) != 0 {
 		t.Errorf("got default editor %q", config.Editor.Command)
 	}
-	if config.Input.Continue != "yes" {
-		t.Errorf("got default continue message %q", config.Input.Continue)
+	if config.Input.Nudge != "continue" {
+		t.Errorf("got default nudge %q", config.Input.Nudge)
+	}
+	if want := []string{"yes", "no"}; !slices.Equal(config.Input.SpeedDial, want) {
+		t.Errorf("got default speed dial %q, want %q", config.Input.SpeedDial, want)
 	}
 	if got := string(config.Caps.Default); got != "rx" {
 		t.Errorf("got default capabilities %q", got)
@@ -566,11 +569,13 @@ func TestConfiguredSkillExclusionsRejectAnEmptyDirectory(t *testing.T) {
 
 func TestConfiguredStringsCannotBeEmpty(t *testing.T) {
 	for name, contents := range map[string]string{
-		"model round robin":          "[model]\nround_robin = []\n",
-		"model selection":            "[model]\nround_robin = [\"\"]\n",
-		"model selection whitespace": "[model]\nround_robin = [\"  \"]\n",
-		"input continue":             "[input]\ncontinue = \"\"\n",
-		"input continue whitespace":  "[input]\ncontinue = \"  \"\n",
+		"model round robin":           "[model]\nround_robin = []\n",
+		"model selection":             "[model]\nround_robin = [\"\"]\n",
+		"model selection whitespace":  "[model]\nround_robin = [\"  \"]\n",
+		"input nudge":                 "[input]\nnudge = \"\"\n",
+		"input nudge whitespace":      "[input]\nnudge = \"  \"\n",
+		"speed dial entry":            "[input]\nspeed_dial = [\"\"]\n",
+		"speed dial entry whitespace": "[input]\nspeed_dial = [\"  \"]\n",
 	} {
 		t.Run(name, func(t *testing.T) {
 			path := filepath.Join(t.TempDir(), "config.toml")
@@ -584,9 +589,9 @@ func TestConfiguredStringsCannotBeEmpty(t *testing.T) {
 	}
 }
 
-func TestTheConfiguredContinueMessageIsTrimmed(t *testing.T) {
+func TestTheConfiguredNudgeIsTrimmed(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := writeConfigFile(path, "[input]\ncontinue = \"  carry on  \"\n"); err != nil {
+	if err := writeConfigFile(path, "[input]\nnudge = \"  carry on  \"\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -594,8 +599,28 @@ func TestTheConfiguredContinueMessageIsTrimmed(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if config.Input.Continue != "carry on" {
-		t.Errorf("got continue message %q", config.Input.Continue)
+	if config.Input.Nudge != "carry on" {
+		t.Errorf("got nudge %q", config.Input.Nudge)
+	}
+}
+
+func TestTheConfiguredSpeedDialIsTrimmed(t *testing.T) {
+	config := configFrom(t, `
+		[input]
+		speed_dial = ["  continue  ", "foo"]
+	`)
+
+	if want := []string{"continue", "foo"}; !slices.Equal(config.Input.SpeedDial, want) {
+		t.Errorf("got speed dial %q, want %q", config.Input.SpeedDial, want)
+	}
+
+	live, err := config.BuildLive(testSegments())
+	if err != nil {
+		t.Fatal(err)
+	}
+	config.Input.SpeedDial[0] = "changed"
+	if want := []string{"continue", "foo"}; !slices.Equal(live.SpeedDial, want) {
+		t.Errorf("live speed dial %q changed with its source", live.SpeedDial)
 	}
 }
 
@@ -1119,7 +1144,7 @@ func brokenLayout(t *testing.T, body string) (segment.Layout, error) {
 
 func TestAConfigWrittenBeforeThemesExistedNeedsNoMigrating(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := os.WriteFile(path, []byte("version = 10\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte("version = 11\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1300,7 +1325,7 @@ func TestTheStreamingModeDefaultsToWholeLines(t *testing.T) {
 
 func TestAConfigWrittenBeforeTheStreamingModeExistedNeedsNoMigrating(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := os.WriteFile(path, []byte("version = 10\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte("version = 11\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1366,7 +1391,7 @@ func TestAToolOutputLimitThatIsNotASizeIsRefused(t *testing.T) {
 
 func TestAConfigWrittenBeforeTheToolOutputLimitExistedNeedsNoMigrating(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := os.WriteFile(path, []byte("version = 10\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte("version = 11\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1487,7 +1512,7 @@ func TestTheGroupingDefaultsToReasoningRunningOnFromTools(t *testing.T) {
 
 func TestAConfigWrittenBeforeTheGroupingExistedNeedsNoMigrating(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := os.WriteFile(path, []byte("version = 10\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte("version = 11\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1637,7 +1662,7 @@ func TestAPermissionNobodyOffersIsRefusedWithItsKey(t *testing.T) {
 
 func TestAConfigNobodyCouldHaveWrittenIsRefusedRatherThanParsed(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	body := append([]byte("version = 10\nx = "), bytes.Repeat([]byte("["), readableBytes)...)
+	body := append([]byte("version = 11\nx = "), bytes.Repeat([]byte("["), readableBytes)...)
 	if err := os.WriteFile(path, body, 0o600); err != nil {
 		t.Fatal(err)
 	}

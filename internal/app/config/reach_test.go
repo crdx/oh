@@ -7,6 +7,7 @@ import (
 
 func TestReachOfNamesWhenASettingLands(t *testing.T) {
 	cases := map[string]Reach{
+		"input.speed_dial":  ReachLive,
 		"ui.theme.dim":      ReachLive,
 		"editor.command":    ReachLive,
 		"snippets.fix":      ReachLive,

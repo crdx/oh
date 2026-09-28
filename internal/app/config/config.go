@@ -106,7 +106,8 @@ type Editor struct {
 }
 
 type Input struct {
-	Continue string `toml:"continue"`
+	Nudge     string   `toml:"nudge"`
+	SpeedDial []string `toml:"speed_dial"`
 }
 
 type Model struct {
@@ -201,7 +202,8 @@ type Rule struct {
 }
 
 type LiveConfig struct {
-	ContinueMessage    string
+	Nudge              string
+	SpeedDial          []string
 	EditorCommand      editor.Command
 	SegmentLayout      segment.Layout
 	SnippetCommandSet  slash.CommandSet
@@ -237,7 +239,8 @@ func (self Config) BuildLive(registry segment.Registry) (LiveConfig, error) {
 		return LiveConfig{}, fmt.Errorf("%s: %w", path, err)
 	}
 	return LiveConfig{
-		ContinueMessage:    self.Input.Continue,
+		Nudge:              self.Input.Nudge,
+		SpeedDial:          slices.Clone(self.Input.SpeedDial),
 		EditorCommand:      self.Editor.Command,
 		SegmentLayout:      layout,
 		SnippetCommandSet:  snippetCommandSet,
@@ -614,9 +617,8 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 	); err != nil {
 		return fmt.Errorf("%s: %w", displayPath, err)
 	}
-	config.Input.Continue = strings.TrimSpace(config.Input.Continue)
-	if meta.IsDefined("input", "continue") && config.Input.Continue == "" {
-		return fmt.Errorf("%s: input.continue is empty", displayPath)
+	if err := normaliseInput(config, meta, displayPath); err != nil {
+		return err
 	}
 	if meta.IsDefined("tool", "output") && config.Tool.Output.Bytes < minimumToolOutputBytes {
 		return fmt.Errorf(
@@ -693,6 +695,25 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 				"%s: sandbox.home: %s is not below the home directory, so it has nowhere to land",
 				displayPath, mappedPath,
 			)
+		}
+	}
+
+	return nil
+}
+
+func normaliseInput(config *Config, meta toml.MetaData, displayPath string) error {
+	config.Input.Nudge = strings.TrimSpace(config.Input.Nudge)
+	if meta.IsDefined("input", "nudge") && config.Input.Nudge == "" {
+		return fmt.Errorf("%s: input.nudge is empty", displayPath)
+	}
+	if !meta.IsDefined("input", "speed_dial") {
+		return nil
+	}
+
+	for i, entry := range config.Input.SpeedDial {
+		config.Input.SpeedDial[i] = strings.TrimSpace(entry)
+		if config.Input.SpeedDial[i] == "" {
+			return fmt.Errorf("%s: input.speed_dial contains an empty entry", displayPath)
 		}
 	}
 

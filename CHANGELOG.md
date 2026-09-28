@@ -4,6 +4,8 @@
 
 ### Completion and input
 
+- Add speed dial concept for quick inputs
+- Rename continue message to nudge
 - Complete completions with tab only
 - Keep keys typed while a session starts
 - Exclude system suspension from turn durations

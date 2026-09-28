@@ -211,7 +211,8 @@ type App struct {
 	watchStalls     func(work string) func()
 	pasteExchange   paste.Exchange
 	workspace       *work.Space
-	continueMessage string
+	nudge           string
+	speedDial       speedDial
 	display         displayState
 	runMode         runMode
 	commands        slash.Registry
@@ -416,7 +417,7 @@ func (self *App) apply(inputLine *edit.Input, history *edit.History, keypress ke
 	}
 
 	previousText := inputLine.Text()
-	if self.applyToCompleter(inputLine, keypress) {
+	if self.speedDial.Apply(inputLine, keypress) || self.applyToCompleter(inputLine, keypress) {
 		if inputLine.Text() != previousText {
 			self.feedback.Dismiss()
 		}
@@ -425,6 +426,7 @@ func (self *App) apply(inputLine *edit.Input, history *edit.History, keypress ke
 
 	action := inputLine.Apply(keypress, self.currentTurn.Running())
 	if inputLine.Text() != previousText {
+		self.speedDial.stop()
 		self.feedback.Dismiss()
 		self.completeTyped(inputLine, keypress)
 	} else if dismissesFeedback(keypress) && self.feedback.Dismiss() {
@@ -722,7 +724,7 @@ func (self *App) continueOrFlush(inputLine *edit.Input, history *edit.History) {
 		return
 	}
 
-	self.sendInput(inputLine, history, self.continueMessage)
+	self.sendInput(inputLine, history, self.nudge)
 }
 
 func (self *App) hasUntoldPendingNotices() bool {
@@ -1358,7 +1360,8 @@ func (self *App) reloadConfig(watchFailure error) bool {
 			self.display.theme = result.LiveConfig.Theme
 			defer self.redraw()
 		}
-		self.continueMessage = result.LiveConfig.ContinueMessage
+		self.nudge = result.LiveConfig.Nudge
+		self.speedDial.Configure(result.LiveConfig.SpeedDial)
 		self.editorConfig.ReplaceCommand(result.LiveConfig.EditorCommand)
 		self.display.streamingMode = result.LiveConfig.StreamingMode
 		self.display.reasoningRendering = result.LiveConfig.ReasoningRendering

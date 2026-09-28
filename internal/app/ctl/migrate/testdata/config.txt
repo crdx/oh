@@ -1,5 +1,5 @@
 === screen ===
-[38;2;150;152;150mcopy kept in [0m/config/config.toml.pre-v10
-[38;2;150;152;150mmigrated[0m config [38;2;150;152;150m1 → 10[0m
+[38;2;150;152;150mcopy kept in [0m/config/config.toml.pre-v11
+[38;2;150;152;150mmigrated[0m config [38;2;150;152;150m1 → 11[0m
 [38;2;150;152;150mthere are no sessions in [0m/state/sessions
 === failure ===

@@ -19,7 +19,7 @@ Three sources load in order, each overriding the last:
 | Global    | `~/.config/org.crdx/oh/config.toml`           | Every session            |
 | Workspace | `<workspace>/oh.toml`                         | Sessions in that project |
 
-Global and workspace files are watched and auto-reload. A reload applies live to the theme, bar, snippets, permissions, streaming, editor command, and tool output cap. Everything else waits, and waits for one of two things:
+Global and workspace files are watched and auto-reload. A reload applies live to the theme, bar, snippets, permissions, streaming, editor command, speed dial, and tool output cap. Everything else waits, and waits for one of two things:
 
 | Setting                                           | Lands               |
 |---------------------------------------------------|---------------------|
@@ -46,7 +46,8 @@ Where `~/.config/org.crdx/oh/` is a symlink into a dotfiles repository, edit the
 - `[tools]` — custom tools, each `[tools.<name>]` naming a `command` to run and the parameters the model supplies
 - `[caps]`, `[sandbox]`, `[skills]` — defaults each workspace then overrides
 - `[bar.top]`, `[bar.bottom]` — status bar segments, each naming a `segment` and its options
-- `[editor]`, `[input]`, `[tool]`, `[ports]` — editor command, continue behaviour, tool output cap, exposed-port hostname
+- `[input]` — `nudge`, defaulting to `"continue"`, is sent by double-enter on an empty input; `speed_dial`, defaulting to `["yes"]`, places messages there through successive tab presses until the input is edited
+- `[editor]`, `[tool]`, `[ports]` — editor command, tool output cap, exposed-port hostname
 
 ## Workspace Config
 

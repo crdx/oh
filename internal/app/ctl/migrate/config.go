@@ -80,6 +80,17 @@ var configSteps = map[int]configStep{
 	config.TurnTimerFormat:         migrateConfigFromVersionSeven,
 	config.OllamaHostFormat:        migrateConfigFromVersionEight,
 	config.ContinueMessageFormat:   migrateConfigFromVersionNine,
+	config.StreamingNameFormat:     migrateConfigFromVersionTen,
+}
+
+func migrateConfigFromVersionTen(data []byte) ([]byte, error) {
+	if _, _, err := readConfigDocument(data); err != nil {
+		return nil, err
+	}
+
+	migratedData := renameTableKey(data, "input", "continue", "nudge")
+
+	return rewriteConfigVersion(migratedData, config.NudgeFormat), nil
 }
 
 func migrateConfigFromVersionNine(data []byte) ([]byte, error) {

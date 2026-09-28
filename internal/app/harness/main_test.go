@@ -2037,10 +2037,10 @@ func TestControlDIsTheWayOutAgainOnceTheFeedbackHasGone(t *testing.T) {
 	}
 }
 
-func TestTwoReturnsOnAnEmptyIdleLineSendTheContinueMessage(t *testing.T) {
+func TestTwoReturnsOnAnEmptyIdleLineSendTheNudge(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
-	self.continueMessage = "carry on"
+	self.nudge = "carry on"
 	history := edit.NewHistory("", historyLimit)
 	inputLine := edit.NewInput(history)
 
@@ -2068,10 +2068,10 @@ func TestTwoReturnsOnAnEmptyIdleLineSendTheContinueMessage(t *testing.T) {
 	t.Error("expected the configured prompt")
 }
 
-func TestTwoReturnsWithAPendingNoticeSubmitItRatherThanTheContinueMessage(t *testing.T) {
+func TestTwoReturnsWithAPendingNoticeSubmitItRatherThanTheNudge(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
-	self.continueMessage = "carry on"
+	self.nudge = "carry on"
 	self.settleAccess()
 	history := edit.NewHistory("", historyLimit)
 	inputLine := edit.NewInput(history)
@@ -2098,10 +2098,10 @@ func TestTwoReturnsWithAPendingNoticeSubmitItRatherThanTheContinueMessage(t *tes
 	}
 }
 
-func TestTwoReturnsWithARestoredJobNoticeSubmitItRatherThanTheContinueMessage(t *testing.T) {
+func TestTwoReturnsWithARestoredJobNoticeSubmitItRatherThanTheNudge(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
-	self.continueMessage = "carry on"
+	self.nudge = "carry on"
 	self.settleAccess()
 	self.jobs = jobState{manager: jobs.New(nil)}
 	self.restoreJobs([]agent.Event{
@@ -2130,10 +2130,10 @@ func TestTwoReturnsWithARestoredJobNoticeSubmitItRatherThanTheContinueMessage(t 
 	}
 }
 
-func TestTwoReturnsWithAnEndedJobNoticeSubmitItRatherThanTheContinueMessage(t *testing.T) {
+func TestTwoReturnsWithAnEndedJobNoticeSubmitItRatherThanTheNudge(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
-	self.continueMessage = "carry on"
+	self.nudge = "carry on"
 	self.settleAccess()
 	self.jobs = jobState{manager: jobs.New(nil)}
 	self.jobEnded(jobs.Conclusion{
@@ -2593,7 +2593,7 @@ func TestAStopKeyTakesAFlushedMessageBackWhileTheTurnIsStillStopping(t *testing.
 	}
 }
 
-func TestADoubleEnterWithNothingQueuedNeverSendsTheContinueMessageDuringATurn(t *testing.T) {
+func TestADoubleEnterWithNothingQueuedNeverSendsTheNudgeDuringATurn(t *testing.T) {
 	tests := map[string]turn.State{
 		"a running turn":  {Running: true},
 		"a stopping turn": {Running: true, IsCancelled: true},
@@ -2603,7 +2603,7 @@ func TestADoubleEnterWithNothingQueuedNeverSendsTheContinueMessageDuringATurn(t 
 		t.Run(name, func(t *testing.T) {
 			cancellations := 0
 			self := &App{
-				continueMessage: "carry on",
+				nudge: "carry on",
 				currentTurn: Turn{
 					Stream: testTurnStream(nil, func(error) { cancellations++ }, state),
 				},
@@ -4687,7 +4687,7 @@ func testConversation(t *testing.T, screenOutput *bytes.Buffer) *App {
 		recorder:        record.New(log),
 		mode:            caps.NewMode(caps.Read | caps.Write),
 		commands:        fixtureSnippetRegistry(t, nil),
-		continueMessage: settings.Input.Continue,
+		nudge:           settings.Input.Nudge,
 		editorConfig:    editor.NewConfiguration(settings.Editor.Command),
 		toolOutputLimit: truncate.NewLimit(settings.Tool.Output.Bytes),
 	}
@@ -10253,7 +10253,8 @@ func prepareLiveConfigSources(t *testing.T, self *App, sources ...config.Source)
 	} else {
 		self.experimental.Replace(live.Experimental)
 	}
-	self.continueMessage = live.ContinueMessage
+	self.nudge = live.Nudge
+	self.speedDial.Configure(live.SpeedDial)
 	self.display.streamingMode = live.StreamingMode
 	self.display.reasoningRendering = live.ReasoningRendering
 	self.display.theme = live.Theme
@@ -10665,11 +10666,11 @@ func decoratedThemeStream(t *testing.T) string {
 	}, "\r\n") + "\r\n"
 }
 
-func TestReloadingConfigChangesTheContinueMessage(t *testing.T) {
+func TestReloadingConfigChangesTheNudge(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
 	writeLiveConfig(t, path, `
 		[input]
-		continue = "first"
+		nudge = "first"
 	`)
 
 	var screenOutput bytes.Buffer
@@ -10678,12 +10679,12 @@ func TestReloadingConfigChangesTheContinueMessage(t *testing.T) {
 
 	writeLiveConfig(t, path, `
 		[input]
-		continue = "second"
+		nudge = "second"
 	`)
 	settleLiveConfig(t, self)
 	writeLiveConfig(t, path, `
 		[input]
-		continue = "carry on from the reloaded config"
+		nudge = "carry on from the reloaded config"
 	`)
 	settleLiveConfig(t, self)
 
@@ -10708,6 +10709,29 @@ func TestReloadingConfigChangesTheContinueMessage(t *testing.T) {
 	}
 	if !hasSentReloadedMessage {
 		t.Error("the reloaded message was not sent")
+	}
+}
+
+func TestReloadingConfigChangesTheSpeedDial(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "config.toml")
+	writeLiveConfig(t, path, "[input]\nspeed_dial = [\"first\"]")
+
+	self := testConversation(t, &bytes.Buffer{})
+	prepareLiveConfig(t, self, path)
+
+	inputLine := edit.NewInput(nil)
+	self.apply(inputLine, nil, tabKey)
+	if got := inputLine.Text(); got != "first" {
+		t.Fatalf("initial speed dial showed %q", got)
+	}
+
+	writeLiveConfig(t, path, "[input]\nspeed_dial = [\"second\", \"third\"]")
+	settleLiveConfig(t, self)
+	inputLine.Reset()
+	self.apply(inputLine, nil, tabKey)
+	self.apply(inputLine, nil, tabKey)
+	if got := inputLine.Text(); got != "third" {
+		t.Errorf("reloaded speed dial showed %q", got)
 	}
 }
 
@@ -17126,12 +17150,12 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	settleClock(firstAssistant)
 	var firstScreenOutput bytes.Buffer
 	firstHarness := &App{
-		agent:           firstAssistant,
-		screen:          scenario.screen(&firstScreenOutput),
-		recorder:        record.New(log),
-		hostToSandbox:   goldenPorts,
-		display:         displayState{modelName: scenario.Model},
-		continueMessage: builtInConfig(t).Input.Continue,
+		agent:         firstAssistant,
+		screen:        scenario.screen(&firstScreenOutput),
+		recorder:      record.New(log),
+		hostToSandbox: goldenPorts,
+		display:       displayState{modelName: scenario.Model},
+		nudge:         builtInConfig(t).Input.Nudge,
 	}
 	if scenario.Provider == model.CodexProvider {
 		firstHarness.openingEvents = []agent.Event{model.FastModeEvent(scenario.IsFast)}
@@ -18561,26 +18585,79 @@ func (self *frameRecordingWriter) Write(value []byte) (int, error) {
 	return len(value), nil
 }
 
-func TestGoldenOrdinaryTabDrawsWhatItDrewBefore(t *testing.T) {
-	pass := func() string {
-		self := slashCommandFixture(t, caps.Read)
-		var screenOutput strings.Builder
-		self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
+func TestSpeedDialCyclesWhileItsEntryIsUntouched(t *testing.T) {
+	self := slashCommandFixture(t, caps.Read)
+	self.speedDial.Configure([]string{"continue", "foo"})
+	inputLine := edit.NewInput(nil)
 
-		history := edit.NewHistory("", historyLimit)
-		inputLine := edit.NewInput(history)
-		inputLine.SetText("ordinary input")
-
-		self.screen.Line("conversation remains in scrollback")
-		self.show(inputLine)
-		self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Rune, Value: '\t'})
-		for _, value := range "after tab" {
-			self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Rune, Value: value})
+	for _, want := range []string{"continue", "foo", "continue"} {
+		self.apply(inputLine, nil, tabKey)
+		if got := inputLine.Text(); got != want {
+			t.Errorf("got %q, want %q", got, want)
 		}
-
-		return screenOutput.String()
 	}
-	passes := map[string]func() string{"tab inserts four spaces": pass}
+
+	inputLine.Reset()
+	self.apply(inputLine, nil, tabKey)
+	if got := inputLine.Text(); got != "continue" {
+		t.Errorf("a fresh input started at %q", got)
+	}
+}
+
+func TestTypingEndsTheSpeedDialCycle(t *testing.T) {
+	self := slashCommandFixture(t, caps.Read)
+	self.speedDial.Configure([]string{"continue", "foo"})
+	inputLine := edit.NewInput(nil)
+
+	self.apply(inputLine, nil, tabKey)
+	self.apply(inputLine, nil, key.Key{Code: key.Rune, Value: '!'})
+	self.apply(inputLine, nil, tabKey)
+
+	if got, want := inputLine.Text(), "continue!    "; got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
+func TestGoldenOrdinaryTabDrawsWhatItDrewBefore(t *testing.T) {
+	pass := func(speedDial []string, initial string, keypresses ...key.Key) func() string {
+		return func() string {
+			self := slashCommandFixture(t, caps.Read)
+			self.speedDial.Configure(speedDial)
+			var screenOutput strings.Builder
+			self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
+
+			history := edit.NewHistory("", historyLimit)
+			inputLine := edit.NewInput(history)
+			inputLine.SetText(initial)
+
+			self.screen.Line("conversation remains in scrollback")
+			self.show(inputLine)
+			for _, keypress := range keypresses {
+				self.handleKeypressAndShowInput(inputLine, history, keypress)
+			}
+
+			return screenOutput.String()
+		}
+	}
+	typeKeys := func(text string) []key.Key {
+		keypresses := make([]key.Key, len([]rune(text)))
+		for i, value := range []rune(text) {
+			keypresses[i] = key.Key{Code: key.Rune, Value: value}
+		}
+		return keypresses
+	}
+
+	ordinaryKeys := append([]key.Key{tabKey}, typeKeys("after tab")...)
+	typedSpeedDialKeys := append([]key.Key{tabKey}, typeKeys("!")...)
+	typedSpeedDialKeys = append(typedSpeedDialKeys, tabKey)
+	passes := map[string]func() string{
+		"tab inserts four spaces":      pass(nil, "ordinary input", ordinaryKeys...),
+		"default speed dial shows yes": pass(builtInConfig(t).Input.SpeedDial, "", tabKey),
+		"speed dial shows first entry": pass([]string{"continue", "foo"}, "", tabKey),
+		"speed dial shows next entry":  pass([]string{"continue", "foo"}, "", tabKey, tabKey),
+		"speed dial wraps":             pass([]string{"continue", "foo"}, "", tabKey, tabKey, tabKey),
+		"typing ends speed dial":       pass([]string{"continue", "foo"}, "", typedSpeedDialKeys...),
+	}
 
 	compareWithGolden(t, "ordinary-tab", ".ansi", passes)
 	compareWithGolden(t, "ordinary-tab", ".screen", shownPasses(t, passes))
@@ -20422,7 +20499,7 @@ func TestGoldenHostCommandNoticesMatchGolden(t *testing.T) {
 	compareWithGolden(t, "host-command", ".screen", shownPasses(t, passes))
 }
 
-func TestGoldenADoubleReturnFlushesPendingNoticesWithoutTheContinueMessage(t *testing.T) {
+func TestGoldenADoubleReturnFlushesPendingNoticesWithoutTheNudge(t *testing.T) {
 	const doubleReturnWindow = 250 * time.Millisecond
 
 	drawnAtWithDelays := func(build func(*App), delays ...time.Duration) func() string {
@@ -20430,7 +20507,7 @@ func TestGoldenADoubleReturnFlushesPendingNoticesWithoutTheContinueMessage(t *te
 			var screenOutput bytes.Buffer
 			self := testConversation(t, &screenOutput)
 			self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
-			self.continueMessage = "."
+			self.nudge = "."
 			self.settleAccess()
 
 			history := edit.NewHistory("", historyLimit)
@@ -20583,9 +20660,9 @@ func TestTheModelIsToldAboutAStoppedJobEvenWhenTheCapabilityComesBack(t *testing
 	}
 }
 
-func TestTwoReturnsWithAStoppedJobNoticeSubmitItRatherThanTheContinueMessage(t *testing.T) {
+func TestTwoReturnsWithAStoppedJobNoticeSubmitItRatherThanTheNudge(t *testing.T) {
 	self := appWithOneWritableJob(t)
-	self.continueMessage = "carry on"
+	self.nudge = "carry on"
 
 	self.toggleCap(caps.Write)
 	self.toggleCap(caps.Write)

@@ -1356,7 +1356,8 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	app.commands = commandRegistry
 	app.permissions = permissions
 	app.notifyUnknownSettings(liveConfig.UnknownSettings)
-	app.continueMessage = liveConfig.ContinueMessage
+	app.nudge = liveConfig.Nudge
+	app.speedDial.Configure(liveConfig.SpeedDial)
 	app.display.streamingMode = liveConfig.StreamingMode
 	app.display.reasoningRendering = liveConfig.ReasoningRendering
 	app.display.theme = liveConfig.Theme

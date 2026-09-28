@@ -11,6 +11,7 @@ const (
 	OllamaHostFormat        = 8
 	ContinueMessageFormat   = 9
 	StreamingNameFormat     = 10
+	NudgeFormat             = 11
 
-	Format = StreamingNameFormat
+	Format = NudgeFormat
 )

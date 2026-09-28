@@ -43,7 +43,7 @@ func soundSettings() []setting {
 		}},
 		{"input", []string{
 			"",
-			"[input]\ncontinue = \"carry on\"\n",
+			"[input]\nnudge = \"carry on\"\nspeed_dial = [\"yes\", \"no\"]\n",
 		}},
 		{"model", []string{
 			"",

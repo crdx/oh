@@ -1,4 +1,4 @@
-version = 10
+version = 11
 
 [caps]
 default = "rx"
@@ -7,7 +7,8 @@ default = "rx"
 command = []
 
 [input]
-continue = "yes"
+nudge = "continue"
+speed_dial = ["yes", "no"]
 
 [ui]
 streaming = "line"
