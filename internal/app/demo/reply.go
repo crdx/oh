@@ -13,9 +13,10 @@ func Tools() []string {
 }
 
 const (
-	readTool = "read"
-	listTool = "ls"
-	grepTool = "grep"
+	readTool         = "read"
+	listTool         = "ls"
+	grepTool         = "grep"
+	punctuationMarks = "`'\"\u201c\u201d\u2018\u2019.,:;!?()[]"
 )
 
 const (
@@ -305,7 +306,7 @@ func isWordRune(character rune) bool {
 
 func pathIn(message string) (string, bool) {
 	for word := range strings.FieldsSeq(message) {
-		candidate := strings.Trim(word, "`'\"“”‘’.,:;!?()[]")
+		candidate := strings.Trim(word, punctuationMarks)
 		if candidate == "" {
 			continue
 		}
@@ -326,13 +327,13 @@ func patternIn(message string) (string, bool) {
 	for i, word := range words {
 		if strings.EqualFold(word, "for") || strings.EqualFold(word, "is") {
 			if i+1 < len(words) {
-				return strings.Trim(words[i+1], "`'\"“”‘’.,:;!?()[]"), true
+				return strings.Trim(words[i+1], punctuationMarks), true
 			}
 		}
 	}
 
 	if len(words) > 1 {
-		return strings.Trim(words[len(words)-1], "`'\"“”‘’.,:;!?()[]"), true
+		return strings.Trim(words[len(words)-1], punctuationMarks), true
 	}
 
 	return "", false

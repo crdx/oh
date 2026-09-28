@@ -26,6 +26,13 @@ import (
 	"crdx.org/oh/internal/app/work"
 )
 
+func TestInitialDocumentUsesTheCurrentFormat(t *testing.T) {
+	want := fmt.Sprintf("version = %d\n\n", Format)
+	if got := InitialDocument(); got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
 func TestConfiguredSkillDirectoriesResolvesAbsoluteRelativeAndHomePaths(t *testing.T) {
 	configDir := t.TempDir()
 	path := filepath.Join(configDir, "config.toml")

@@ -54,6 +54,10 @@ func GetAnalysisCachePath() string {
 	return xdg.CachePath(namespace, app, "analysis.json")
 }
 
+func GetDefaultsCachePath() string {
+	return xdg.CachePath(namespace, app, "defaults.toml")
+}
+
 func GetExchangeRateCachePath() string {
 	return GetStateDir("rates.json")
 }

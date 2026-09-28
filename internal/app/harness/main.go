@@ -1071,15 +1071,18 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	}
 
 	systemCommands, err := commands.New(commands.Options{
-		ConfigDir:        location.GetConfigDir(),
-		ConfigFile:       configPath,
-		SystemPromptFile: location.GetGlobalContextPath(),
-		SkillDirs:        globalSkillDirs,
-		Workspace:        workspace,
-		ScratchDir:       tmpDir,
-		HomeDir:          homeDir,
-		Editor:           editorConfiguration,
-		Output:           os.Stdout,
+		ConfigDir:             location.GetConfigDir(),
+		ConfigFile:            configPath,
+		DefaultsFile:          location.GetDefaultsCachePath(),
+		DefaultsContents:      config.DefaultsDocument(),
+		InitialConfigContents: config.InitialDocument(),
+		SystemPromptFile:      location.GetGlobalContextPath(),
+		SkillDirs:             globalSkillDirs,
+		Workspace:             workspace,
+		ScratchDir:            tmpDir,
+		HomeDir:               homeDir,
+		Editor:                editorConfiguration,
+		Output:                os.Stdout,
 		PathGrants: commands.PathGrants{
 			DenyPatterns: settings.Sandbox.Deny,
 			Grant:        pathGrants.Grant,

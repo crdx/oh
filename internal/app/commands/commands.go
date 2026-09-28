@@ -34,14 +34,17 @@ const (
 )
 
 type Options struct {
-	ConfigDir        string
-	ConfigFile       string
-	SystemPromptFile string
-	SkillDirs        []string
-	Workspace        *work.Space
-	ScratchDir       string
-	HomeDir          string
-	Session          Session
+	ConfigDir             string
+	ConfigFile            string
+	DefaultsFile          string
+	DefaultsContents      string
+	InitialConfigContents string
+	SystemPromptFile      string
+	SkillDirs             []string
+	Workspace             *work.Space
+	ScratchDir            string
+	HomeDir               string
+	Session               Session
 
 	Editor            *editor.Config
 	Output            io.Writer
@@ -85,6 +88,7 @@ type commandEnvironment struct {
 	session          commandSession
 
 	openEditor        func([]string) error
+	openConfiguration func([]string) error
 	openTarget        func([]string) error
 	copyText          func([]string) error
 	runHostCommand    func(string, string) (hostcommand.Result, error)
@@ -134,6 +138,16 @@ func New(options Options) (slash.CommandSet, error) {
 		openEditor: func(paths []string) error {
 			return editorConfiguration.Open(paths...)
 		},
+		openConfiguration: func(additionalPaths []string) error {
+			return editorConfiguration.OpenConfiguration(editor.ConfigurationFiles{
+				DefaultsContents: options.DefaultsContents,
+				DefaultsPath:     options.DefaultsFile,
+				Directory:        options.ConfigDir,
+				UserPath:         options.ConfigFile,
+				UserContents:     options.InitialConfigContents,
+				AdditionalPaths:  additionalPaths,
+			})
+		},
 		openTarget: openDesktopTargets,
 		copyText: func(values []string) error {
 			return terminal.Copy(options.Output, strings.Join(values, "\n"))
@@ -160,6 +174,14 @@ func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 	if environment.getContextSources == nil {
 		environment.getContextSources = func() ContextSources { return ContextSources{} }
 	}
+	if environment.openConfiguration == nil {
+		environment.openConfiguration = func(additionalPaths []string) error {
+			paths := []string{environment.configDir}
+			paths = append(paths, additionalPaths...)
+			paths = append(paths, environment.configPath)
+			return environment.openEditor(paths)
+		}
+	}
 
 	targets := locationTargets(environment)
 	targetNames := slices.Sorted(maps.Keys(targets))
@@ -171,7 +193,12 @@ func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 	})
 	commands := []slash.Command{
 		shellCommand(environment),
-		editorCommand("conf", "edit the config and system prompt", configTarget(environment), environment.openEditor),
+		editorCommand(
+			"conf",
+			"edit the config and system prompt",
+			configTarget(environment),
+			environment.openConfiguration,
+		),
 		targetCommand(
 			"copy",
 			"copy a target to the clipboard",
@@ -245,12 +272,24 @@ func copyTargets(environment commandEnvironment, targets map[string]commandTarge
 }
 
 func configTarget(environment commandEnvironment) commandTarget {
-	return preparedTarget(
-		prepareConfigDir(environment),
-		environment.configDir,
-		environment.systemPromptPath,
-		environment.configPath,
-	)
+	prepareDirectory := prepareConfigDir(environment)
+	return commandTarget{
+		resolveValues: func() ([]string, error) {
+			if err := prepareDirectory(); err != nil {
+				return nil, err
+			}
+
+			var paths []string
+			switch _, err := os.Stat(environment.systemPromptPath); {
+			case errors.Is(err, fs.ErrNotExist):
+			case err != nil:
+				return nil, fmt.Errorf("could not inspect System prompt: %w", err)
+			default:
+				paths = append(paths, environment.systemPromptPath)
+			}
+			return paths, nil
+		},
+	}
 }
 
 func prepareConfigDir(environment commandEnvironment) func() error {

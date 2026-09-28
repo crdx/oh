@@ -583,7 +583,7 @@ response.output.each do |tool_call|
 end
 ```
 
-In the example above, we have a hypothetical `call_function` to route each call. Here’s a possible implementation:
+In the example above, we have a hypothetical `call_function` to route each call. Here's a possible implementation:
 
 Execute function calls and append results
 
@@ -1487,7 +1487,7 @@ start: sentence
 sentence: /[A-Za-z, ]+/ subject /[A-Za-z, ]+/ verb /[A-Za-z, ]+/ object /[A-Za-z, ]+/
 ```
 
-Lowercase rules don't influence how terminals are cut from the input—only terminal definitions do. When you need “free text between anchors,” make it one giant regex terminal so the lexer matches it exactly once with the structure you intend.
+Lowercase rules don't influence how terminals are cut from the input—only terminal definitions do. When you need "free text between anchors," make it one giant regex terminal so the lexer matches it exactly once with the structure you intend.
 
 ### Terminals versus rules
 
@@ -1503,7 +1503,7 @@ Terminals are matched by the lexer (greedily / longest match wins) before any CF
 
 **Prefer one terminal when you're carving text out of freeform spans**
 
-If you need to recognize a pattern embedded in arbitrary text (e.g., natural language with “anything” between anchors), express that as a single terminal. Do not try to interleave free‑text terminals with parser rules; the greedy lexer will not respect your intended boundaries and it is highly likely the model will go out of distribution.
+If you need to recognize a pattern embedded in arbitrary text (e.g., natural language with "anything" between anchors), express that as a single terminal. Do not try to interleave free‑text terminals with parser rules; the greedy lexer will not respect your intended boundaries and it is highly likely the model will go out of distribution.
 
 **Use rules to compose discrete tokens**
 
@@ -1533,7 +1533,7 @@ Don't rely on open-ended `%ignore` directives. Using unbounded ignore directives
 ### Troubleshooting
 
 - If the API rejects the grammar because it is too complex, simplify the rules and terminals and remove unbounded `%ignore`s.
-- If custom tools are called with unexpected tokens, confirm terminals aren’t overlapping; check greedy lexer.
+- If custom tools are called with unexpected tokens, confirm terminals aren't overlapping; check greedy lexer.
 - When the model drifts "out‑of‑distribution" (shows up as the model producing excessively long or repetitive outputs, it is syntactically valid but is semantically wrong):
   - Tighten the grammar.
   - Iterate on the prompt (add few-shot examples) and tool description (explain the grammar and instruct the model to reason and conform to it).

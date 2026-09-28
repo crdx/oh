@@ -553,7 +553,7 @@ const res1 = await client.responses.create({
   input: context,
 });
 
-// Append the first response’s output to context
+// Append the first response's output to context
 context = context.concat(res1.output);
 
 // Add the next user message

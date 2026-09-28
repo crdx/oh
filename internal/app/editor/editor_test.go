@@ -57,6 +57,85 @@ func TestEveryPathIsPassedToTheEditor(t *testing.T) {
 	}
 }
 
+func TestSublimeOpensConfigurationInAPairedSettingsWindow(t *testing.T) {
+	files := ConfigurationFiles{
+		DefaultsPath:    "/cache/defaults.toml",
+		Directory:       "/config",
+		UserPath:        "/config/config.toml",
+		UserContents:    "version = 10\n\n",
+		AdditionalPaths: []string{"/config/SYSTEM.md"},
+	}
+	commands, usesDefaults, err := buildConfigurationCommands(
+		Command{"/usr/bin/subl", "--wait", "--background"},
+		files,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !usesDefaults {
+		t.Fatal("Sublime configuration did not use the defaults document")
+	}
+
+	wantSettings := []string{
+		"/usr/bin/subl",
+		"--background",
+		"--command",
+		`edit_settings {"base_file":"/cache/defaults.toml","user_file":"/config/config.toml","default":"version = 10\n\n$0"}`,
+	}
+	if !slices.Equal(commands[0].Args, wantSettings) {
+		t.Errorf("got settings arguments %v, want %v", commands[0].Args, wantSettings)
+	}
+	wantAdditional := []string{"/usr/bin/subl", "--wait", "--background", "/config/SYSTEM.md"}
+	if !slices.Equal(commands[1].Args, wantAdditional) {
+		t.Errorf("got additional arguments %v, want %v", commands[1].Args, wantAdditional)
+	}
+}
+
+func TestOtherEditorsOpenTheConfigurationAsOrdinaryPaths(t *testing.T) {
+	files := ConfigurationFiles{
+		DefaultsPath:    "/cache/defaults.toml",
+		Directory:       "/config",
+		UserPath:        "/config/config.toml",
+		AdditionalPaths: []string{"/config/SYSTEM.md"},
+	}
+	commands, usesDefaults, err := buildConfigurationCommands(Command{"code", "--wait"}, files)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if usesDefaults {
+		t.Fatal("an ordinary editor used the defaults document")
+	}
+	want := []string{"code", "--wait", "/config", "/config/SYSTEM.md", "/config/config.toml"}
+	if !slices.Equal(commands[0].Args, want) {
+		t.Errorf("got arguments %v, want %v", commands[0].Args, want)
+	}
+}
+
+func TestMaterialisedDefaultsAreCurrentAndReadOnly(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "cache", "defaults.toml")
+	if err := materialiseDefaults(path, "first\n"); err != nil {
+		t.Fatal(err)
+	}
+	if err := materialiseDefaults(path, "second\n"); err != nil {
+		t.Fatal(err)
+	}
+
+	contents, err := os.ReadFile(path) //nolint:gosec // the test owns this path
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(contents) != "second\n" {
+		t.Errorf("got contents %q", contents)
+	}
+	info, err := os.Stat(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if permissions := info.Mode().Perm(); permissions != 0o400 {
+		t.Errorf("got permissions %o, want 400", permissions)
+	}
+}
+
 func TestAnEditorIsDetectedWhenNoneIsConfigured(t *testing.T) {
 	directory := t.TempDir()
 	writeExecutable(t, directory, "code")

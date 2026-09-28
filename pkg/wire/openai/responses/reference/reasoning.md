@@ -133,7 +133,7 @@ The `reasoning.effort` parameter guides the model on how much to think when perf
 
 Supported values are model-dependent and can include `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, and `max`. Lower effort favors speed and lower token usage, while at higher effort the model thinks more completely to provide higher quality responses. The models also reason adaptively across reasoning efforts, using fewer tokens for simpler tasks and thinking harder for complex tasks.
 
-Defaults are also model-dependent rather than universal. `gpt-5.5` defaults to `medium` reasoning effort. This is the best starting point for `gpt-5.5`’s full balance of quality, reliability and performance.
+Defaults are also model-dependent rather than universal. `gpt-5.5` defaults to `medium` reasoning effort. This is the best starting point for `gpt-5.5`'s full balance of quality, reliability and performance.
 
 | Effort   | Best for                                                                                                                                                                                                                                                                                                                                                             |
 |----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -836,7 +836,7 @@ const response = await client.responses.create({
       role: "assistant",
       phase: "commentary",
       content:
-        "I’ll inspect the logs and then summarize root cause and remediation.",
+        "I'll inspect the logs and then summarize root cause and remediation.",
     },
     {
       role: "assistant",
@@ -864,7 +864,7 @@ response = client.responses.create(
         {
             "role": "assistant",
             "phase": "commentary",
-            "content": "I’ll inspect the logs and then summarize root cause and remediation.",
+            "content": "I'll inspect the logs and then summarize root cause and remediation.",
         },
         {
             "role": "assistant",
@@ -895,7 +895,7 @@ import (
 func main() {
 	client := openai.NewClient()
 	commentary := responses.ResponseInputItemParamOfMessage(
-		"I’ll inspect the logs and then summarize root cause and remediation.",
+		"I'll inspect the logs and then summarize root cause and remediation.",
 		responses.EasyInputMessageRoleAssistant,
 	)
 	commentary.OfMessage.Phase = responses.EasyInputMessagePhaseCommentary

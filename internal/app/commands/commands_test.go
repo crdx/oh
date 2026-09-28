@@ -176,7 +176,7 @@ func TestCommandsRunWithoutStoppingTheHarness(t *testing.T) {
 	})
 
 	tests := map[string]string{
-		"/conf":                    "edit:" + strings.Join([]string{configDirectory, systemPromptPath, configPath}, ","),
+		"/conf":                    "edit:" + strings.Join([]string{configDirectory, configPath}, ","),
 		"/edit config-file":        "edit:" + configPath,
 		"/edit system-prompt-file": "edit:" + systemPromptPath,
 		"/edit workspace-dir":      "edit:" + workspaceDirectory,
@@ -262,13 +262,15 @@ func TestSnippetsDirectoryTargetRequiresAnExistingDirectory(t *testing.T) {
 	}
 }
 
-func TestConfCreatesTheConfigDirBeforeOpeningIt(t *testing.T) {
+func TestConfCreatesTheConfigDirWithoutCreatingASystemPrompt(t *testing.T) {
 	configDirectory := filepath.Join(t.TempDir(), "org.crdx", "oh")
+	configPath := filepath.Join(configDirectory, "config.toml")
+	systemPromptPath := filepath.Join(configDirectory, "SYSTEM.md")
 	var opened []string
 	commands := newCommandRegistry(t, commandEnvironment{
 		configDir:        configDirectory,
-		configPath:       filepath.Join(configDirectory, "config.toml"),
-		systemPromptPath: filepath.Join(configDirectory, "SYSTEM.md"),
+		configPath:       configPath,
+		systemPromptPath: systemPromptPath,
 		openEditor: func(paths []string) error {
 			opened = paths
 			return nil
@@ -286,11 +288,43 @@ func TestConfCreatesTheConfigDirBeforeOpeningIt(t *testing.T) {
 	if info, err := os.Stat(configDirectory); err != nil || !info.IsDir() {
 		t.Errorf("config directory was not created: %v", err)
 	}
-	want := []string{
-		configDirectory,
-		filepath.Join(configDirectory, "SYSTEM.md"),
-		filepath.Join(configDirectory, "config.toml"),
+	if _, err := os.Stat(systemPromptPath); !errors.Is(err, os.ErrNotExist) {
+		t.Errorf("SYSTEM.md was created: %v", err)
 	}
+	want := []string{configDirectory, configPath}
+	if !slices.Equal(opened, want) {
+		t.Errorf("got %v, want %v", opened, want)
+	}
+}
+
+func TestConfIncludesAnExistingSystemPrompt(t *testing.T) {
+	configDirectory := t.TempDir()
+	configPath := filepath.Join(configDirectory, "config.toml")
+	systemPromptPath := filepath.Join(configDirectory, "SYSTEM.md")
+	if err := os.WriteFile(systemPromptPath, nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	var opened []string
+	commands := newCommandRegistry(t, commandEnvironment{
+		configDir:        configDirectory,
+		configPath:       configPath,
+		systemPromptPath: systemPromptPath,
+		openConfiguration: func(paths []string) error {
+			opened = paths
+			return nil
+		},
+	})
+
+	invocation, found := commands.Find("/conf")
+	if !found {
+		t.Fatal("expected /conf to be registered")
+	}
+	if err := invocation.Command.Run(nil, invocation.Arguments); err != nil {
+		t.Fatal(err)
+	}
+
+	want := []string{systemPromptPath}
 	if !slices.Equal(opened, want) {
 		t.Errorf("got %v, want %v", opened, want)
 	}

@@ -13,6 +13,7 @@
 - Stop sending continue message during a turn
 - Complete paths with `@` notation
 - Complete slash commands and arguments
+- Open config beside read-only defaults in Sublime Text
 
 ### Grants and sandbox
 
