@@ -88,7 +88,7 @@ type Restoration struct {
 	OfferedTools    []tool.Tool
 	RegisteredTools []tool.Tool
 	Availability    Availability
-	Transitions     map[string]CompatibilityTransition
+	VersionChanges  map[string]VersionChange
 	CompatibleNames []string
 }
 
@@ -97,7 +97,7 @@ func Restore(availableTools []tool.Tool, snapshots []tool.Snapshot) Restoration 
 	result := Restoration{
 		OfferedTools:    make([]tool.Tool, 0, len(snapshots)),
 		Availability:    make(Availability, len(snapshots)),
-		Transitions:     make(map[string]CompatibilityTransition),
+		VersionChanges:  make(map[string]VersionChange),
 		CompatibleNames: make([]string, 0, len(snapshots)),
 	}
 
@@ -107,13 +107,16 @@ func Restore(availableTools []tool.Tool, snapshots []tool.Snapshot) Restoration 
 		offeredTool := tool.Unavailable(snapshot, missingToolReason(snapshot.Definition.Name))
 		if isInstalled {
 			status = ToolChanged
-			offeredTool = tool.Unavailable(snapshot, changedToolReason(snapshot.Definition.Name))
+			offeredTool = tool.Unavailable(
+				snapshot,
+				changedToolReason(snapshot.Definition.Name, snapshot.Revision, currentTool.Revision()),
+			)
 			if tool.IsCompatible(currentTool, snapshot) {
 				status = ToolAvailable
-				offeredTool = currentTool
+				offeredTool = tool.WithSnapshot(currentTool, snapshot)
 				result.CompatibleNames = append(result.CompatibleNames, currentTool.Name())
-			} else if currentTool.Revision() != snapshot.Revision {
-				result.Transitions[currentTool.Name()] = CompatibilityTransition{
+			} else {
+				result.VersionChanges[currentTool.Name()] = VersionChange{
 					From: snapshot.Revision,
 					To:   currentTool.Revision(),
 				}

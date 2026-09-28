@@ -227,16 +227,16 @@ The command runs on the host, in the workspace directory. The sandbox does not c
 
 Put custom tools in the global config. A workspace `oh.toml` that sets `[tools]` stops startup.
 
-| Key           | Holds                                                       |
-|---------------|-------------------------------------------------------------|
-| `description` | what the tool does; required                                |
-| `command`     | the executable and its fixed arguments; required            |
-| `parameters`  | the arguments the model supplies, each one a table          |
-| `subject`     | the parameter shown in the call row; the first by default   |
-| `timeout`     | the limit for one call; `30s` by default                    |
-| `permission`  | `ask` by default, or `allow` to run without a question      |
-| `group`       | one lowercase mode flag that must grant access              |
-| `compatible`  | reviewed compatibility transitions between exact identities |
+| Key           | Holds                                                     |
+|---------------|-----------------------------------------------------------|
+| `version`     | positive compatibility version; `1` by default            |
+| `description` | what the tool does; required                              |
+| `command`     | the executable and its fixed arguments; required          |
+| `parameters`  | the arguments the model supplies, each one a table        |
+| `subject`     | the parameter shown in the call row; the first by default |
+| `timeout`     | the limit for one call; `30s` by default                  |
+| `permission`  | `ask` by default, or `allow` to run without a question    |
+| `group`       | one lowercase mode flag that must grant access            |
 
 The model reads the description alone to choose a tool. Write it for the model.
 
@@ -244,17 +244,7 @@ A group using `x`, `w`, `n`, `g`, `l`, or `r` follows that built-in capability. 
 
 With `ask`, oh shows the command line and waits for a yes or a no after its group grants access. A no tells the model to try something else. Print mode has nobody to ask, so the call fails.
 
-A session freezes each tool's description, parameters, group, and compatibility identity. If the current declaration differs when the session resumes, oh keeps the frozen definition for conversation continuity but disables execution and tells the model. The identity covers the command settings and content of its executable and regular-file arguments, so editing an ordinary script needs no manual revision.
-
-A disabled-tool notice gives the complete old and current identities. After reviewing a change as backward-compatible, add that exact transition:
-
-```toml
-compatible = [
-    { from = "<old identity from the notice>", to = "<current identity from the notice>" },
-]
-```
-
-Both values are SHA-256 identities. The entry enables only that exact old contract with that exact current implementation. A later file change produces another identity and disables the tool again, so a stale entry grants nothing. Leave `compatible` out for incompatible changes; existing sessions then keep refusing the changed implementation while new sessions receive it normally.
+A session freezes each tool's description, parameters, group, and version. Keep the version when edits remain compatible with calls using the frozen definition. Increase it when the tool interprets a call differently or changes its effects or guarantees. A resumed session delegates a matching version to the current implementation while continuing to show the model its frozen definition. A changed version disables the tool for that conversation and tells the model both versions.
 
 Give each parameter a `name`, a `kind`, and a `description`. Add `optional = true` where the model can leave it out. Add `values` for an enum.
 
@@ -270,6 +260,7 @@ An underscore in a parameter name becomes a dash in the option, so `max_lines` a
 
 ```toml
 [tools.weather]
+version = 1
 description = "report the weather for a city"
 command = ["./tools/forecast"]
 subject = "city"

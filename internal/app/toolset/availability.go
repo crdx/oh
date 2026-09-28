@@ -21,7 +21,7 @@ const (
 
 type Availability map[string]ToolStatus
 
-type CompatibilityTransition struct {
+type VersionChange struct {
 	From string `json:"from"`
 	To   string `json:"to"`
 }
@@ -34,15 +34,15 @@ type AvailabilityRestoration struct {
 const AvailabilityChange agent.Kind = "tool_availability_change"
 
 type availabilityEventState struct {
-	KnownAvailability   Availability                       `json:"known"`
-	CurrentAvailability Availability                       `json:"current"`
-	Transitions         map[string]CompatibilityTransition `json:"transitions,omitempty"`
+	KnownAvailability   Availability             `json:"known"`
+	CurrentAvailability Availability             `json:"current"`
+	VersionChanges      map[string]VersionChange `json:"version_changes,omitempty"`
 }
 
 func RestoreAvailability(
 	events []agent.Event,
 	current Availability,
-	transitions ...map[string]CompatibilityTransition,
+	versionChanges ...map[string]VersionChange,
 ) (AvailabilityRestoration, error) {
 	knownAvailability := make(Availability, len(current))
 	for name := range current {
@@ -52,7 +52,7 @@ func RestoreAvailability(
 		knownAvailability = recordedAvailability
 	}
 
-	change, err := AvailabilityChangeEvent(knownAvailability, current, transitions...)
+	change, err := AvailabilityChangeEvent(knownAvailability, current, versionChanges...)
 	if err != nil {
 		return AvailabilityRestoration{}, err
 	}
@@ -63,16 +63,16 @@ func RestoreAvailability(
 func AvailabilityChangeEvent(
 	knownAvailability Availability,
 	current Availability,
-	transitions ...map[string]CompatibilityTransition,
+	versionChanges ...map[string]VersionChange,
 ) (agent.Event, error) {
-	var compatibilityTransitions map[string]CompatibilityTransition
-	if len(transitions) > 0 {
-		compatibilityTransitions = maps.Clone(transitions[0])
+	var recordedVersionChanges map[string]VersionChange
+	if len(versionChanges) > 0 {
+		recordedVersionChanges = maps.Clone(versionChanges[0])
 	}
 	state, err := json.Marshal(availabilityEventState{
 		KnownAvailability:   maps.Clone(knownAvailability),
 		CurrentAvailability: maps.Clone(current),
-		Transitions:         compatibilityTransitions,
+		VersionChanges:      recordedVersionChanges,
 	})
 	if err != nil {
 		return agent.Event{}, err
@@ -109,7 +109,7 @@ func AvailabilityNotice(event agent.Event) ([]string, bool) {
 		if knownStatus == currentStatus {
 			continue
 		}
-		notices = append(notices, availabilityNotice(name, currentStatus, state.Transitions[name]))
+		notices = append(notices, availabilityNotice(name, currentStatus, state.VersionChanges[name]))
 	}
 	return notices, len(notices) > 0
 }
@@ -144,18 +144,17 @@ func availabilityNames(left Availability, right Availability) []string {
 	return slices.Sorted(maps.Keys(names))
 }
 
-func availabilityNotice(name string, status ToolStatus, transition CompatibilityTransition) string {
+func availabilityNotice(name string, status ToolStatus, versionChange VersionChange) string {
 	markedName := markdown.CodeSpan(name)
 	switch status {
 	case ToolAvailable:
 		return "The " + markedName + " tool is available again."
 	case ToolChanged:
-		notice := "The " + markedName + " tool changed since this conversation began and is disabled for this conversation."
-		if transition.From != "" && transition.To != "" {
-			notice += " Compatibility changed from " + markdown.CodeSpan(transition.From) +
-				" to " + markdown.CodeSpan(transition.To) + "."
+		if versionChange.From != "" && versionChange.To != "" {
+			return "The " + markedName + " tool changed from version " + markdown.CodeSpan(versionChange.From) +
+				" to version " + markdown.CodeSpan(versionChange.To) + " and is disabled for the remainder of this conversation."
 		}
-		return notice
+		return "The " + markedName + " tool changed since this conversation began and is disabled for this conversation."
 	case ToolMissing:
 		return "The " + markedName + " tool is no longer installed and is disabled for this conversation."
 	default:
@@ -163,8 +162,9 @@ func availabilityNotice(name string, status ToolStatus, transition Compatibility
 	}
 }
 
-func changedToolReason(name string) string {
-	return "the " + name + " tool changed since this conversation began and is disabled for this conversation"
+func changedToolReason(name string, fromVersion string, toVersion string) string {
+	return "the " + name + " tool changed from version " + fromVersion + " to version " + toVersion +
+		" and is disabled for the remainder of this conversation"
 }
 
 func missingToolReason(name string) string {

@@ -16638,7 +16638,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	availabilityRestoration, err := toolset.RestoreAvailability(
 		storedSession.Events,
 		restoredTools.Availability,
-		restoredTools.Transitions,
+		restoredTools.VersionChanges,
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -20970,7 +20970,7 @@ parameters = [
 	}
 }
 
-func TestAChangedCustomToolIsDisabledWhenTheBinaryResumes(t *testing.T) {
+func TestACustomToolVersionControlsCompatibilityWhenTheBinaryResumes(t *testing.T) {
 	binary := buildTestBinary(t)
 	script := declaredToolScript(t)
 	endpoint := sim.New(&sim.Scenario{
@@ -20979,9 +20979,9 @@ func TestAChangedCustomToolIsDisabledWhenTheBinaryResumes(t *testing.T) {
 			{Calls: []sim.Call{{Name: "weather", Arguments: `{"city":"London"}`}}},
 			{Say: "The original tool ran."},
 			{Calls: []sim.Call{{Name: "weather", Arguments: `{"city":"London"}`}}},
-			{Say: "The changed tool was disabled."},
+			{Say: "The compatible implementation ran."},
 			{Calls: []sim.Call{{Name: "weather", Arguments: `{"city":"London"}`}}},
-			{Say: "The reviewed compatible tool ran."},
+			{Say: "The new version was disabled."},
 		},
 	})
 	server := httptest.NewServer(endpoint)
@@ -20993,16 +20993,17 @@ func TestAChangedCustomToolIsDisabledWhenTheBinaryResumes(t *testing.T) {
 		testBinaryEnvironment(t, stateDirectory),
 		backend.EndpointVariable+"="+endpoint.Addresses(server.URL)[sim.Messages],
 	)
-	writeConfig := func(compatibility string) {
+	writeConfig := func(version int, description string) {
 		writeDeclaredToolConfig(t, environment, fmt.Sprintf(`[tools.weather]
-description = "report the weather"
+version = %d
+description = %q
 command = [%q]
 permission = "allow"
 group = "a"
-%sparameters = [{ name = "city", kind = "string", description = "the city to report on" }]
-`, script, compatibility))
+parameters = [{ name = "city", kind = "string", description = "the city to report on" }]
+`, version, description, script))
 	}
-	writeConfig("")
+	writeConfig(1, "report the weather")
 
 	runTestBinary(
 		t, binary, workspaceDirectory, environment,
@@ -21033,60 +21034,16 @@ group = "a"
 	if err := os.WriteFile(script, []byte("#!/bin/bash\necho changed tool ran\n"), 0o700); err != nil {
 		t.Fatal(err)
 	}
+	writeConfig(1, "forecast the weather")
 	output := runTestBinary(
 		t, binary, workspaceDirectory, environment,
 		"-p", "-r", sessionName, "run weather again",
 	)
-	if !strings.Contains(output, "weather tool changed since this conversation began") {
-		t.Errorf("the resume did not announce the drift: %q", output)
+	if strings.Contains(output, "weather tool changed") {
+		t.Errorf("the compatible edit was announced as a change: %q", output)
 	}
 
 	requests := endpoint.Requests()
-	var disabledResult string
-	for _, request := range requests {
-		for _, entry := range request.Input {
-			if entry.Type == sim.CallOutput && strings.Contains(entry.Output, "disabled for this conversation") {
-				disabledResult = entry.Output
-			}
-		}
-	}
-	if disabledResult == "" {
-		t.Errorf("the model was not told the tool was disabled: %#v", requests)
-	}
-
-	storedSession, err = store.Read(sessionDirectory, sessionName)
-	if err != nil {
-		t.Fatal(err)
-	}
-	var transition toolset.CompatibilityTransition
-	for _, event := range storedSession.Events {
-		if event.Kind != toolset.AvailabilityChange {
-			continue
-		}
-		var state map[string]json.RawMessage
-		if err := json.Unmarshal(event.State, &state); err != nil {
-			t.Fatal(err)
-		}
-		var transitions map[string]toolset.CompatibilityTransition
-		if err := json.Unmarshal(state["transitions"], &transitions); err != nil {
-			t.Fatal(err)
-		}
-		transition = transitions["weather"]
-	}
-	if transition.From == "" || transition.To == "" {
-		t.Fatalf("no compatibility transition was recorded: %#v", transition)
-	}
-
-	writeConfig(fmt.Sprintf("compatible = [{ from = %q, to = %q }]\n", transition.From, transition.To))
-	output = runTestBinary(
-		t, binary, workspaceDirectory, environment,
-		"-p", "-r", sessionName, "run reviewed weather again",
-	)
-	if !strings.Contains(output, "weather tool is available again") {
-		t.Errorf("the resume did not announce restored compatibility: %q", output)
-	}
-
-	requests = endpoint.Requests()
 	var compatibleResult string
 	for _, request := range requests {
 		for _, entry := range request.Input {
@@ -21096,7 +21053,29 @@ group = "a"
 		}
 	}
 	if compatibleResult == "" {
-		t.Errorf("the reviewed implementation did not run: %#v", requests)
+		t.Errorf("the compatible implementation did not run: %#v", requests)
+	}
+
+	writeConfig(2, "forecast the weather")
+	output = runTestBinary(
+		t, binary, workspaceDirectory, environment,
+		"-p", "-r", sessionName, "run version two weather",
+	)
+	if !strings.Contains(output, "weather tool changed from version 1 to version 2") {
+		t.Errorf("the resume did not announce the version change: %q", output)
+	}
+
+	requests = endpoint.Requests()
+	var disabledResult string
+	for _, request := range requests {
+		for _, entry := range request.Input {
+			if entry.Type == sim.CallOutput && strings.Contains(entry.Output, "disabled for the remainder of this conversation") {
+				disabledResult = entry.Output
+			}
+		}
+	}
+	if disabledResult == "" {
+		t.Errorf("the model was not told the new version was disabled: %#v", requests)
 	}
 }
 

@@ -113,7 +113,7 @@ event = [
 event = [
     '''{"type":"message_start","message":{}}''',
     '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
-    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Stable and explicitly compatible tools ran; every other changed tool was refused."}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Tools at compatible versions ran with their frozen definitions; the changed version was refused."}}''',
     '''{"type":"content_block_stop","index":0}''',
     '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
     '''{"type":"message_stop"}''',

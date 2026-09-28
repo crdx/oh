@@ -17,19 +17,14 @@ import (
 const toolsSetting = "tools"
 
 type CustomTool struct {
-	Description   string                `toml:"description"`
-	Command       []string              `toml:"command"`
-	Parameters    []CustomParameter     `toml:"parameters"`
-	Subject       string                `toml:"subject"`
-	Timeout       time.Duration         `toml:"timeout"`
-	Permission    string                `toml:"permission"`
-	Group         string                `toml:"group"`
-	Compatibility []CustomCompatibility `toml:"compatible"`
-}
-
-type CustomCompatibility struct {
-	From string `toml:"from"`
-	To   string `toml:"to"`
+	Description string            `toml:"description"`
+	Command     []string          `toml:"command"`
+	Parameters  []CustomParameter `toml:"parameters"`
+	Subject     string            `toml:"subject"`
+	Timeout     time.Duration     `toml:"timeout"`
+	Permission  string            `toml:"permission"`
+	Group       string            `toml:"group"`
+	Version     int               `toml:"version"`
 }
 
 type CustomParameter struct {
@@ -126,24 +121,16 @@ func (self Config) declare(name string) (command.Declaration, error) {
 		})
 	}
 
-	compatibility := make([]command.Compatibility, 0, len(setting.Compatibility))
-	for _, compatible := range setting.Compatibility {
-		compatibility = append(compatibility, command.Compatibility{
-			From: compatible.From,
-			To:   compatible.To,
-		})
-	}
-
 	return command.Declaration{
-		Name:          name,
-		Description:   setting.Description,
-		Command:       resolvedCommand,
-		Parameters:    parameters,
-		Subject:       setting.Subject,
-		TimeLimit:     setting.Timeout,
-		MustAsk:       rule != permission.Allow,
-		Group:         setting.Group,
-		Compatibility: compatibility,
+		Name:        name,
+		Description: setting.Description,
+		Command:     resolvedCommand,
+		Parameters:  parameters,
+		Subject:     setting.Subject,
+		TimeLimit:   setting.Timeout,
+		MustAsk:     rule != permission.Allow,
+		Group:       setting.Group,
+		Version:     setting.Version,
 	}, nil
 }
 

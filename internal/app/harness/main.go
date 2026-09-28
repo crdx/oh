@@ -334,7 +334,7 @@ func prepareFrozenTools(resumedSession *store.Session, toolboxTools []tool.Tool)
 	availabilityRestoration, err := toolset.RestoreAvailability(
 		resumedSession.Events,
 		restoredTools.Availability,
-		restoredTools.Transitions,
+		restoredTools.VersionChanges,
 	)
 	if err != nil {
 		return preparedTools{}, err

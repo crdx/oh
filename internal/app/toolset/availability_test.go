@@ -41,6 +41,20 @@ func TestToolAvailabilityChangesAreAnnouncedOnce(t *testing.T) {
 	}
 }
 
+func TestAToolVersionChangeIsAnnounced(t *testing.T) {
+	current := Availability{"weather": ToolChanged}
+	versions := map[string]VersionChange{"weather": {From: "1", To: "2"}}
+	restored, err := RestoreAvailability(nil, current, versions)
+	if err != nil {
+		t.Fatal(err)
+	}
+	notices, isShown := AvailabilityNotice(restored.Change)
+	wanted := "The `weather` tool changed from version `1` to version `2` and is disabled for the remainder of this conversation."
+	if !isShown || !slices.Equal(notices, []string{wanted}) {
+		t.Errorf("got notices %q and shown %v", notices, isShown)
+	}
+}
+
 func TestACompatibleToolReturningIsAnnounced(t *testing.T) {
 	missing := Availability{"weather": ToolMissing}
 	first, err := AvailabilityChangeEvent(Availability{"weather": ToolAvailable}, missing)

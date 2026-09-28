@@ -135,8 +135,7 @@ func AcceptsRevision(subject Tool, revision string) bool {
 }
 
 func IsCompatible(subject Tool, snapshot Snapshot) bool {
-	isCompatibleRevision := subject.Revision() == snapshot.Revision || AcceptsRevision(subject, snapshot.Revision)
-	return isCompatibleRevision && equalDefinitions(Describe(subject), snapshot.Definition)
+	return subject.Revision() == snapshot.Revision || AcceptsRevision(subject, snapshot.Revision)
 }
 
 func cloneDefinition(definition Definition) Definition {
@@ -147,24 +146,6 @@ func cloneDefinition(definition Definition) Definition {
 	}
 	definition.Schema = clonedSchema
 	return definition
-}
-
-func equalDefinitions(left Definition, right Definition) bool {
-	if left.Name != right.Name || left.Description != right.Description || len(left.Schema) != len(right.Schema) {
-		return false
-	}
-	for i, leftParameter := range left.Schema {
-		rightParameter := right.Schema[i]
-		if leftParameter.Name != rightParameter.Name ||
-			leftParameter.Type != rightParameter.Type ||
-			leftParameter.ItemType != rightParameter.ItemType ||
-			leftParameter.Description != rightParameter.Description ||
-			leftParameter.IsOptional() != rightParameter.IsOptional() ||
-			!slices.Equal(leftParameter.Values, rightParameter.Values) {
-			return false
-		}
-	}
-	return true
 }
 
 func DescribeUnparsedArguments(subject Tool, arguments string) string {

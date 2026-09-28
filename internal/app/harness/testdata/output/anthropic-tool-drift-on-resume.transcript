@@ -29,13 +29,11 @@ missing: missing [ok, 1 line, 23B, toolu_6]
 
 Every original tool ran.
 
-## Tool availability · changed, missing, revision, schema · +0s
+## Tool availability · missing, revision · +0s
 
 ```
-The `changed` tool changed since this conversation began and is disabled for this conversation.
 The `missing` tool is no longer installed and is disabled for this conversation.
-The `revision` tool changed since this conversation began and is disabled for this conversation. Compatibility changed from `1` to `2`.
-The `schema` tool changed since this conversation began and is disabled for this conversation.
+The `revision` tool changed from version `1` to version `2` and is disabled for the remainder of this conversation.
 ```
 
 ## User · +0s
@@ -46,9 +44,9 @@ try every tool again
 
 ```
 stable: stable [ok, 1 line, 13B, toolu_7]
-changed [error, 1 line, 92B, toolu_8]
-revision [error, 1 line, 93B, toolu_9]
-schema [error, 1 line, 91B, toolu_10]
+changed: changed [ok, 1 line, 23B, toolu_8]
+revision [error, 1 line, 108B, toolu_9]
+schema: schema [ok, 1 line, 22B, toolu_10]
 compatible: compatible [ok, 1 line, 17B, toolu_11]
 missing [error, 1 line, 77B, toolu_12]
 added: {} [error, toolu_13]
@@ -56,4 +54,4 @@ added: {} [error, toolu_13]
 
 ## Assistant · +0s
 
-Stable and explicitly compatible tools ran; every other changed tool was refused.
+Tools at compatible versions ran with their frozen definitions; the changed version was refused.

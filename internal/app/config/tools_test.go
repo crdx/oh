@@ -40,6 +40,7 @@ func configWithACustomTool(t *testing.T, body string) (Config, string) {
 func TestACustomToolBecomesAToolTheModelIsOffered(t *testing.T) {
 	config, _ := configWithACustomTool(t, `
 		[tools.weather]
+		version = 3
 		description = "report the weather for a city"
 		command = ["./forecast"]
 		parameters = [
@@ -60,6 +61,9 @@ func TestACustomToolBecomesAToolTheModelIsOffered(t *testing.T) {
 	}
 	if tools[0].Description() != "report the weather for a city" {
 		t.Errorf("got description %q", tools[0].Description())
+	}
+	if tools[0].Revision() != "3" {
+		t.Errorf("got version %q", tools[0].Revision())
 	}
 }
 
@@ -145,10 +149,10 @@ func TestCustomToolsCanShareAModeGroup(t *testing.T) {
 		default = "rxa"
 
 		[tools.weather]
+		version = 2
 		description = "report the weather for a city"
 		command = ["true"]
 		group = "a"
-		compatible = [{ from = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", to = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" }]
 
 		[tools.forecast]
 		description = "forecast the weather"
@@ -167,10 +171,8 @@ func TestCustomToolsCanShareAModeGroup(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(declaration.Compatibility) != 1 ||
-		declaration.Compatibility[0].From != strings.Repeat("a", 64) ||
-		declaration.Compatibility[0].To != strings.Repeat("b", 64) {
-		t.Errorf("got compatibility %#v", declaration.Compatibility)
+	if declaration.Version != 2 {
+		t.Errorf("got version %d", declaration.Version)
 	}
 	if _, grantedGroups, err := config.ParseCaps(string(config.Caps.Default)); err != nil {
 		t.Fatal(err)

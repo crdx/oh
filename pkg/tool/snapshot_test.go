@@ -17,20 +17,41 @@ func revisionedWeather(revision string, description string, schema tool.Schema) 
 	})
 }
 
-func TestCompatibilityIncludesTheWholeDefinitionAndRevision(t *testing.T) {
+func TestCompatibilityIsDeclaredByTheRevision(t *testing.T) {
 	original := revisionedWeather("2", "report weather", tool.Schema{tool.String("city", "the city")})
 	snapshot := tool.TakeSnapshot(original)
 
 	for name, candidate := range map[string]tool.Tool{
 		"same":        revisionedWeather("2", "report weather", tool.Schema{tool.String("city", "the city")}),
 		"revision":    revisionedWeather("3", "report weather", tool.Schema{tool.String("city", "the city")}),
-		"description": revisionedWeather("2", "forecast weather", tool.Schema{tool.String("city", "the city")}),
+		"description": revisionedWeather("2", "forecast weather", tool.Schema{tool.String("city", "a place")}),
 		"schema":      revisionedWeather("2", "report weather", tool.Schema{tool.String("place", "the city")}),
 	} {
-		isWanted := name == "same"
+		isWanted := name != "revision"
 		if got := tool.IsCompatible(candidate, snapshot); got != isWanted {
 			t.Errorf("%s: got compatibility %v, want %v", name, got, isWanted)
 		}
+	}
+}
+
+func TestASnapshotKeepsItsDefinitionWhileDelegatingToTheCurrentTool(t *testing.T) {
+	original := revisionedWeather("2", "report weather", tool.Schema{tool.String("city", "the city")})
+	current := revisionedWeather("2", "forecast weather", tool.Schema{tool.String("city", "a place")})
+	bound := tool.WithSnapshot(current, tool.TakeSnapshot(original))
+
+	if bound.Description() != "report weather" || bound.Schema()[0].Description != "the city" {
+		t.Errorf("got definition %#v", tool.Describe(bound))
+	}
+	call, err := bound.Parse(`{"city":"London"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	result, err := call.Exec(t.Context())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if result.Output != "sunny" {
+		t.Errorf("got output %q", result.Output)
 	}
 }
 

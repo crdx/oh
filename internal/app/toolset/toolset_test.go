@@ -102,51 +102,60 @@ func TestAConversationOpensWithoutTheToolsThatHaveGoneAway(t *testing.T) {
 	}
 }
 
-func TestFrozenToolsKeepTheirOrderAndDisableDrift(t *testing.T) {
+func TestFrozenToolsKeepTheirOrderAndBindCompatibleImplementations(t *testing.T) {
 	readTool := namedTool("read")
 	bashTool := namedTool("bash")
+	changedTool := namedTool("changed")
 	snapshots := []tool.Snapshot{
 		tool.TakeSnapshot(bashTool),
 		tool.TakeSnapshot(namedTool("gone")),
 		tool.TakeSnapshot(readTool),
+		tool.TakeSnapshot(changedTool),
 	}
 	readTool = tool.Implement(
 		tool.Definition{Name: "read", Description: "changed", Schema: readTool.Schema()},
 		func(fakeArgs) tool.CallRendering { return tool.CallRendering{} },
-	).Plain(func(context.Context, fakeArgs) (string, error) { return "", nil })
+	).Plain(func(context.Context, fakeArgs) (string, error) { return "current", nil })
+	changedTool = tool.Implement(
+		tool.Describe(changedTool),
+		func(fakeArgs) tool.CallRendering { return tool.CallRendering{} },
+	).Revision("2").Plain(func(context.Context, fakeArgs) (string, error) { return "", nil })
 
-	restored := Restore([]tool.Tool{readTool, bashTool}, snapshots)
-	if got := namesOf(restored.OfferedTools); !slices.Equal(got, []string{"bash", "gone", "read"}) {
+	restored := Restore([]tool.Tool{readTool, bashTool, changedTool}, snapshots)
+	if got := namesOf(restored.OfferedTools); !slices.Equal(got, []string{"bash", "gone", "read", "changed"}) {
 		t.Errorf("got offered order %v", got)
 	}
-	if !slices.Equal(restored.CompatibleNames, []string{"bash"}) {
+	if !slices.Equal(restored.CompatibleNames, []string{"bash", "read"}) {
 		t.Errorf("got compatible tools %v", restored.CompatibleNames)
 	}
 	if restored.Availability["bash"] != ToolAvailable ||
 		restored.Availability["gone"] != ToolMissing ||
-		restored.Availability["read"] != ToolChanged {
+		restored.Availability["read"] != ToolAvailable ||
+		restored.Availability["changed"] != ToolChanged {
 		t.Errorf("got availability %#v", restored.Availability)
 	}
-	if _, isPresent := restored.Transitions["read"]; isPresent {
-		t.Error("a definition-only change was presented as an implementation transition")
+	if restored.OfferedTools[2].Description() != "" {
+		t.Errorf("the frozen description changed to %q", restored.OfferedTools[2].Description())
+	}
+	if got := restored.VersionChanges["changed"]; got.From != "1" || got.To != "2" {
+		t.Errorf("got version change %#v", got)
 	}
 
-	for _, name := range []string{"gone", "read"} {
-		var restoredTool tool.Tool
-		for _, candidate := range restored.RegisteredTools {
-			if candidate.Name() == name {
-				restoredTool = candidate
-			}
-		}
-		if restoredTool == nil {
-			t.Fatalf("%s was not registered", name)
-		}
+	readCall, err := restored.RegisteredTools[2].Parse(`{"path":"x"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if result, err := readCall.Exec(t.Context()); err != nil || result.Output != "current" {
+		t.Errorf("got result %#v and error %v", result, err)
+	}
+
+	for _, restoredTool := range []tool.Tool{restored.RegisteredTools[1], restored.RegisteredTools[3]} {
 		call, err := restoredTool.Parse(`{"path":"x"}`)
 		if err != nil {
 			t.Fatal(err)
 		}
 		if _, err := call.Exec(t.Context()); err == nil || !strings.Contains(err.Error(), "disabled") {
-			t.Errorf("%s got %v", name, err)
+			t.Errorf("%s got %v", restoredTool.Name(), err)
 		}
 	}
 }

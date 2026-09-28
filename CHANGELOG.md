@@ -52,7 +52,9 @@
 ### Sessions and storage
 
 - Migrate stored tool-call renderings to semantic kinds
-- Freeze tool contracts and disable changed tools on resume
+- Freeze tool contracts and disable changed tool versions on resume
+- Keep frozen tool descriptions while running compatible implementations
+- Give custom tools explicit compatibility versions
 - Refuse undeclared tool parameters
 - Recompute the cache share when a session resumes
 - Open session picker on first available session
