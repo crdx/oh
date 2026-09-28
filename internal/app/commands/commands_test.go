@@ -310,7 +310,7 @@ func TestConfIncludesAnExistingSystemPrompt(t *testing.T) {
 		configDir:        configDirectory,
 		configPath:       configPath,
 		systemPromptPath: systemPromptPath,
-		openConfiguration: func(paths []string) error {
+		openEditor: func(paths []string) error {
 			opened = paths
 			return nil
 		},
@@ -324,7 +324,7 @@ func TestConfIncludesAnExistingSystemPrompt(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	want := []string{systemPromptPath}
+	want := []string{configDirectory, systemPromptPath, configPath}
 	if !slices.Equal(opened, want) {
 		t.Errorf("got %v, want %v", opened, want)
 	}

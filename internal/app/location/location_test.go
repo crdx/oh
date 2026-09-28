@@ -32,16 +32,6 @@ func TestAnAbsoluteStateDirectoryIsTakenOverTheHomeDirectory(t *testing.T) {
 	}
 }
 
-func TestTheDefaultsCacheUsesTheXDGCacheDirectory(t *testing.T) {
-	root := t.TempDir()
-	t.Setenv("XDG_CACHE_HOME", root)
-
-	want := filepath.Join(root, "org.crdx", "oh", "defaults.toml")
-	if got := location.GetDefaultsCachePath(); got != want {
-		t.Errorf("got %q, want %q", got, want)
-	}
-}
-
 func TestARelativeStateDirectoryIsIgnored(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)
