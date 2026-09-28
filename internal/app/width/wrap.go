@@ -171,6 +171,68 @@ type presentationState struct {
 }
 
 func wrapLine(line string, cells int, base int) []Row {
+	if _, isPlain := plainWidth(line); isPlain {
+		return wrapPlainLine(line, cells, base)
+	}
+
+	return wrapLineWithPresentation(line, cells, base)
+}
+
+func wrapPlainLine(line string, cells int, base int) []Row {
+	row := func(begin int, end int, next int) Row {
+		return Row{
+			Text:  line[begin:end],
+			Begin: base + begin,
+			End:   base + end,
+			Next:  base + next,
+		}
+	}
+
+	if cells <= 0 {
+		return []Row{row(0, len(line), len(line))}
+	}
+
+	var rows []Row
+	for begin := 0; begin < len(line); {
+		end := min(begin+cells, len(line))
+		if end == len(line) {
+			rows = append(rows, row(begin, end, end))
+			break
+		}
+
+		searchEnd := min(end+1, len(line))
+		space := strings.LastIndexByte(line[begin:searchEnd], ' ')
+		if space > 0 {
+			space += begin
+			from, after := space, space
+			for from > 0 && line[from-1] == ' ' {
+				from--
+			}
+			for after < len(line) && line[after] == ' ' {
+				after++
+			}
+			if from == begin {
+				from = end
+				after = max(after, end)
+			}
+
+			rows = append(rows, row(begin, from, after))
+			begin = after
+			continue
+		}
+
+		rows = append(rows, row(begin, end, end))
+		begin = end
+	}
+
+	if len(rows) == 0 {
+		return []Row{row(0, 0, 0)}
+	}
+
+	return rows
+}
+
+func wrapLineWithPresentation(line string, cells int, base int) []Row {
 	atoms := split(line)
 	states := statesAt(atoms)
 	offsets := offsetsOf(atoms)

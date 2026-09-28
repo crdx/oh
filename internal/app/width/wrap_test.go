@@ -34,6 +34,27 @@ func TestWrappingBreaksAtSpacesAndMidWordWhereThereAreNone(t *testing.T) {
 	}
 }
 
+func TestPlainWrappingMatchesPresentationWrapping(t *testing.T) {
+	for _, text := range []string{
+		"",
+		"hello",
+		"one two three",
+		"    unbroken",
+		"  x",
+		"words   with spaces",
+		"trailing spaces   ",
+		"averylongidentifier",
+	} {
+		for cells := -1; cells <= len(text)+1; cells++ {
+			got := wrapPlainLine(text, cells, 7)
+			want := wrapLineWithPresentation(text, cells, 7)
+			if !slices.Equal(got, want) {
+				t.Errorf("wrapPlainLine(%q, %d) = %+v, want %+v", text, cells, got, want)
+			}
+		}
+	}
+}
+
 func TestIndentedWrappingAlignsContinuationRows(t *testing.T) {
 	got := WrapIndented("one two three four\nfive six seven", 10, 4)
 	want := []string{"one two", "    three", "    four", "five six", "    seven"}

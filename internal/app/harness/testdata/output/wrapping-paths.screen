@@ -1,0 +1,28 @@
+=== settled narrow ===
+Plain ASCII words break at spaces and
+inside-oneverylongword.
+
+Unicode still wraps by grapheme: 日本語
+and 🐆.
+
+PATCH=changes.patch, PATCH=changes.patch
+=== settled wide ===
+Plain ASCII words break at spaces and inside-oneverylongword.
+
+Unicode still wraps by grapheme: 日本語 and 🐆.
+
+PATCH=changes.patch, PATCH=changes.patch
+=== streamed narrow ===
+Plain ASCII words break at spaces and
+inside-oneverylongword.
+
+Unicode still wraps by grapheme: 日本語
+and 🐆.
+
+PATCH=changes.patch, PATCH=changes.patch
+=== streamed wide ===
+Plain ASCII words break at spaces and inside-oneverylongword.
+
+Unicode still wraps by grapheme: 日本語 and 🐆.
+
+PATCH=changes.patch, PATCH=changes.patch

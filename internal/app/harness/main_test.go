@@ -188,6 +188,76 @@ func TestGoldenSpecialLinksDrawWhatTheyDrewBefore(t *testing.T) {
 	compareWithGolden(t, "special-links", ".screen", screenPasses)
 }
 
+func TestGoldenPlainAndPresentedWrappingDrawWhatTheyDrewBefore(t *testing.T) {
+	columnsByName := map[string]int{
+		"wide":   replayColumns,
+		"narrow": narrowColumns,
+	}
+	ansiPasses := map[string]func() string{}
+	screenPasses := map[string]func() string{}
+	for widthName, columns := range columnsByName {
+		for streamName, shouldStream := range map[string]bool{"settled": false, "streamed": true} {
+			name := streamName + " " + widthName
+			ansiPasses[name] = func() string {
+				return drawWrappingPaths(t, columns, shouldStream)
+			}
+			screenPasses[name] = func() string {
+				return shown(t, drawWrappingPaths(t, columns, shouldStream), columns)
+			}
+		}
+	}
+
+	compareWithGolden(t, "wrapping-paths", ".ansi", ansiPasses)
+	compareWithGolden(t, "wrapping-paths", ".screen", screenPasses)
+}
+
+func TestStreamedPlainAndPresentedWrappingMatchesSettledWrapping(t *testing.T) {
+	for name, columns := range map[string]int{"wide": replayColumns, "narrow": narrowColumns} {
+		t.Run(name, func(t *testing.T) {
+			requireSameVisibleScreenInColumns(
+				t,
+				"streaming changed plain, Unicode, or repeatedly linked text",
+				columns,
+				drawWrappingPaths(t, columns, false),
+				drawWrappingPaths(t, columns, true),
+			)
+		})
+	}
+}
+
+func drawWrappingPaths(t *testing.T, columns int, shouldStream bool) string {
+	t.Helper()
+
+	workspaceDir := filepath.Dir(stableGoldenPath(t, "wrapping", false))
+	if err := os.WriteFile(filepath.Join(workspaceDir, "changes.patch"), nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	var screenOutput strings.Builder
+	screen := output.NewTerminalOfSize(&screenOutput, columns, replayLines)
+	screen.LinkPathsUnder(link.Roots{Workspace: workspaceDir})
+	paint := painter.New(screen, shouldStream, nil, work.At(workspaceDir), output.StreamingModeASAP)
+	answer := "Plain ASCII words break at spaces and inside-oneverylongword.\n\nUnicode still wraps by grapheme: 日本語 and 🐆.\n\nPATCH=changes.patch, PATCH=changes.patch"
+
+	if shouldStream {
+		for _, delta := range []string{
+			"Plain ASCII words ",
+			"break at spaces and ",
+			"inside-oneverylongword.",
+			"\n\nUnicode still wraps ",
+			"by grapheme: 日本",
+			"語 and 🐆.",
+			"\n\nPATCH=changes.patch",
+			", PATCH=changes.patch",
+		} {
+			paint.DrawDelta(agent.Delta{Kind: agent.ModelMessageEvent, Text: delta})
+		}
+	}
+	paint.DrawEvent(agent.Event{Kind: agent.ModelMessageEvent, Text: answer})
+
+	return strings.ReplaceAll(screenOutput.String(), goldenProcessIdentity(), stableProcessIdentity)
+}
+
 func drawEmailLink(t *testing.T) string {
 	t.Helper()
 
@@ -5267,6 +5337,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"user-path-links":         {".ansi", ".screen"},
 		"workspace-paths":         {".ansi", ".screen"},
 		"wrapped-reasoning-paths": {".ansi", ".screen"},
+		"wrapping-paths":          {".ansi", ".screen"},
 		"pending-mode-messages":   {".ansi", ".screen"},
 		"pending-notices":         {".ansi", ".screen"},
 		"paste":                   {".ansi", ".screen"},

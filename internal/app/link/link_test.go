@@ -249,6 +249,26 @@ func TestAPathAfterAnAssignmentIsLinkedWithoutItsName(t *testing.T) {
 	}
 }
 
+func TestRepeatedAssignmentsLinkEachPathAtItsOwnPosition(t *testing.T) {
+	workspace := t.TempDir()
+	path := prepareFile(t, workspace, "changes.patch")
+	text := "PATCH=changes.patch, PATCH=changes.patch"
+
+	got := Render(text, Roots{Workspace: workspace})
+	addresses := linkAddresses(t, got)
+	if len(addresses) != 2 {
+		t.Fatalf("got %d links in %q, want two", len(addresses), got)
+	}
+	for _, address := range addresses {
+		if address.Path != filepath.ToSlash(path) {
+			t.Errorf("got address %q, want path %q", address, path)
+		}
+	}
+	if stripEscapes(got) != text {
+		t.Errorf("expected the visible text unchanged, got %q", stripEscapes(got))
+	}
+}
+
 func TestAFilenameHoldingAnEqualsSignIsLinkedWhole(t *testing.T) {
 	workspace := t.TempDir()
 	prepareFile(t, workspace, "a=b/c.txt")

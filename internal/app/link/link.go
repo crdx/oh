@@ -148,10 +148,14 @@ func commonPrefixEnd(first string, second string) int {
 func locations(text string, roots Roots) []location {
 	matches := pathPattern.FindAllStringSubmatchIndex(text, -1)
 	foundLocations := make([]location, 0, len(matches))
+	var candidateLocations map[string]candidateLocation
+	if len(matches) > 1 {
+		candidateLocations = make(map[string]candidateLocation, len(matches))
+	}
 	lastEnd := 0
 
 	for _, match := range matches {
-		found, exists := locateAround(text, match[0], match[1], roots)
+		found, exists := locateAround(text, match[0], match[1], roots, candidateLocations)
 		if !exists || found.begin < lastEnd {
 			continue
 		}
@@ -353,14 +357,25 @@ type location struct {
 	column string
 }
 
-func locateAround(text string, begin int, end int, roots Roots) (location, bool) {
+type candidateLocation struct {
+	value  location
+	exists bool
+}
+
+func locateAround(
+	text string,
+	begin int,
+	end int,
+	roots Roots,
+	candidateLocations map[string]candidateLocation,
+) (location, bool) {
 	starts, ends := candidateBounds(text, begin, end)
 	best := location{}
 	wasFound := false
 
 	for _, start := range starts {
 		for _, finish := range ends {
-			found, exists := locate(text[start:finish], roots)
+			found, exists := locateCandidate(text[start:finish], roots, candidateLocations)
 			if !exists {
 				continue
 			}
@@ -375,6 +390,24 @@ func locateAround(text string, begin int, end int, roots Roots) (location, bool)
 	}
 
 	return best, wasFound
+}
+
+func locateCandidate(
+	candidate string,
+	roots Roots,
+	candidateLocations map[string]candidateLocation,
+) (location, bool) {
+	if candidateLocations == nil {
+		return locate(candidate, roots)
+	}
+
+	if found, isCached := candidateLocations[candidate]; isCached {
+		return found.value, found.exists
+	}
+
+	value, exists := locate(candidate, roots)
+	candidateLocations[candidate] = candidateLocation{value: value, exists: exists}
+	return value, exists
 }
 
 func candidateBounds(text string, begin int, end int) ([]int, []int) {
