@@ -166,6 +166,7 @@ func TestConfiguredPathsAreDisclosedInTheHarnessContext(t *testing.T) {
 	for _, want := range []string{
 		"cannot access any file or directory named by the configured deny pattern *.env",
 		"A denied path appears as an empty unreadable file or directory",
+		"Ignore these artefacts silently: do not mention them in progress updates, summaries, or handoffs unless the user's request explicitly concerns a denied path",
 		"configured path /reference is read-only",
 		"configured path /output is read-write.",
 		"shell can execute files at or under /commands",

@@ -78,6 +78,7 @@
 
 ### Model guidance
 
+- Keep denied-path artefacts silent
 - Advise on how to detect applied patches
 - Give the model accurate grant docs
 - Document the supported mermaid syntax and features
