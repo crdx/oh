@@ -32,8 +32,8 @@ func TestAnUnfinishedCommandKeepsItsOutputAndSaysWhyItEnded(t *testing.T) {
 		},
 		"a timeout": {
 			output: "compiling\n",
-			err:    errors.New("the command did not finish within 2m0s"),
-			want:   "compiling\nnote: the command did not finish within 2m0s.",
+			err:    errors.New("the command did not finish within 2m"),
+			want:   "compiling\nnote: the command did not finish within 2m.",
 		},
 		"nothing written": {
 			output: "",
@@ -103,7 +103,7 @@ func TestACommandKilledForItsProcessorTimeIsToldTheLimitAndWhatItUsed(t *testing
 		"each process 1h of processor time",
 		"counted across every thread it runs",
 		"after 5m of wall clock",
-		"used 1h30m of processor time between them",
+		"used 1h 30m of processor time between them",
 	} {
 		if !strings.Contains(got, want) {
 			t.Errorf("got %q, want it to mention %q", got, want)

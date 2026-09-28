@@ -458,7 +458,7 @@ func TestGoldenJobListingMatchesGolden(t *testing.T) {
 		snapshot := finishedJob(name, command)
 		snapshot.State = jobs.StateStopped
 		snapshot.ExitCode = -1
-		snapshot.Failure = "the command was stopped after 22m46s\nnote: the command was killed by SIGKILL."
+		snapshot.Failure = "the command was stopped after 22m 46s\nnote: the command was killed by SIGKILL."
 		return snapshot
 	}
 

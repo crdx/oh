@@ -30,10 +30,10 @@ Conversation
 
 Provider    Sessions  Turns  Prompts  Replies  Reasoning  Tool Calls  Average Turn  Longest Turn  Open For
 Anthropic          2      8        8        8         12          35           56s            2m       50m
-Codex              1     10       11        9         44         120         2m30s            5m     1h35m
+Codex              1     10       11        9         44         120        2m 30s            5m    1h 35m
 Ollama             1      4        4        4          0           6           30s           45s       12m
 Openrouter         1      0        1        0          0           0             —             —        3m
-Total              5     22       24       21         56         161         1m34s            5m     2h40m
+Total              5     22       24       21         56         161        1m 34s            5m    2h 40m
 
 Faults
 
@@ -46,9 +46,9 @@ Total             4              2         2             1         2         4  
 Tools
 
 Tool   Calls  Failures  Cancelled  Failure Rate  Total Time  Average Call
-bash      72         6          1          8.3%       9m40s            8s
+bash      72         6          1          8.3%      9m 40s            8s
 read      49         0          0          0.0%          8s          0.2s
 edit      40         1          0          2.5%         20s          0.5s
-Total    161         7          1          4.3%      10m08s            3s
+Total    161         7          1          4.3%      10m 8s            3s
 
 12 sessions are in a legacy format and were not considered.

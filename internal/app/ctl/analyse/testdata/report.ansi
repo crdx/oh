@@ -30,10 +30,10 @@ Openrouter  kimi-k2-thinking          1         1         12Kt           0t     
 
 \e[4m\e[38;2;150;152;150mProvider    Sessions  Turns  Prompts  Replies  Reasoning  Tool Calls  Average Turn  Longest Turn  Open For\e[0m\e[0m
 Anthropic          2      8        8        8         12          35           56s            2m       50m
-Codex              1     10       11        9         44         120         2m30s            5m     1h35m
+Codex              1     10       11        9         44         120        2m 30s            5m    1h 35m
 Ollama             1      4        4        4          0           6           30s           45s       12m
 Openrouter         1      0        1        0          0           0             —             —        3m
-\e[38;2;129;162;190mTotal              5     22       24       21         56         161         1m34s            5m     2h40m\e[0m
+\e[38;2;129;162;190mTotal              5     22       24       21         56         161        1m 34s            5m    2h 40m\e[0m
 
 \e[1m\e[38;2;207;173;0mFaults\e[0m\e[0m
 
@@ -46,17 +46,17 @@ Openrouter        0              0         1             0         0         0  
 \e[1m\e[38;2;207;173;0mTools\e[0m\e[0m
 
 \e[4m\e[38;2;150;152;150mTool   Calls  Failures  Cancelled  Failure Rate  Total Time  Average Call\e[0m\e[0m
-bash      72         6          1          8.3%       9m40s            8s
+bash      72         6          1          8.3%      9m 40s            8s
 read      49         0          0          0.0%          8s          0.2s
 edit      40         1          0          2.5%         20s          0.5s
-\e[38;2;129;162;190mTotal    161         7          1          4.3%      10m08s            3s\e[0m
+\e[38;2;129;162;190mTotal    161         7          1          4.3%      10m 8s            3s\e[0m
 
 \e[1m\e[38;2;207;173;0mSessions\e[0m\e[0m
 
 \e[4m\e[38;2;150;152;150mSession         Model              Turns  Requests  Hit Rate  Input  Output  Tool Calls  Open For  Spend\e[0m\e[0m
 amber-wolf      claude-sonnet-4-6      5         5     80.0%  300Kt     9Kt          31       42m  $0.32
 quiet-otter     claude-sonnet-4-6      3         3     66.7%  200Kt     4Kt           4        8m  $0.18
-rustic-giraffe  gpt-5.6-sol           10        10     70.0%  250Kt    22Kt         120     1h35m  $0.32
+rustic-giraffe  gpt-5.6-sol           10        10     70.0%  250Kt    22Kt         120    1h 35m  $0.32
 wise-lemur      kimi-k2-thinking       0         1      0.0%   12Kt    150t           0        3m      —
 still-ibex      qwen3.8:27b            4         4      0.0%   60Kt   2.5Kt           6       12m      —
 

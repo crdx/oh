@@ -40,6 +40,7 @@
 
 ### Drawing
 
+- Separate duration units with spaces
 - Drop parentheses around tool output measurements
 - Theme tool-call vocabulary and colours
 - Let tools own their complete semantic rendering

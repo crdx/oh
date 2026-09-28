@@ -355,15 +355,15 @@ func TestALabelIsColouredByWhetherItsCallWrites(t *testing.T) {
 
 func TestFormatDuration(t *testing.T) {
 	for want, took := range map[string]time.Duration{
-		"0.0s":   0,
-		"0.9s":   999 * time.Millisecond,
-		"1s":     1200 * time.Millisecond,
-		"43s":    43*time.Second + 800*time.Millisecond,
-		"59s":    59*time.Second + 999*time.Millisecond,
-		"1m00s":  time.Minute,
-		"12m34s": 12*time.Minute + 34*time.Second,
-		"1h40m":  100 * time.Minute,
-		"4d04h":  100 * time.Hour,
+		"0.0s":    0,
+		"0.9s":    999 * time.Millisecond,
+		"1s":      1200 * time.Millisecond,
+		"43s":     43*time.Second + 800*time.Millisecond,
+		"59s":     59*time.Second + 999*time.Millisecond,
+		"1m 0s":   time.Minute,
+		"12m 34s": 12*time.Minute + 34*time.Second,
+		"1h 40m":  100 * time.Minute,
+		"4d 4h":   100 * time.Hour,
 	} {
 		if got := util.FormatDuration(took); got != want {
 			t.Errorf("expected %q, got %q", want, got)

@@ -16,7 +16,7 @@ run the linter, write the big file, then copy the readme over the host's hosts f
 ## Tool calls · +1s
 
 ```
-bash: just lint [error in 1m11s, 5 lines, 358B, 1h01m CPU, 1.12G peak, call_1]
+bash: just lint [error in 1m 11s, 5 lines, 358B, 1h 1m CPU, 1.12G peak, call_1]
 bash: dd if=/dev/zero of=big bs=1M count=4096 [error, 4 lines, 183B, 2s CPU, 8M peak, call_2]
 bash: cp README.md /etc/hosts [error, 6 lines, 289B, 2M peak, call_3]
 ```

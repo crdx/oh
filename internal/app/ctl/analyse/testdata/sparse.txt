@@ -39,5 +39,5 @@ Codex             172Kt       614Kt        3.8Bt        3.8Bt            0t     
 Conversation
 
 Provider  Sessions  Turns  Prompts  Replies  Reasoning  Tool Calls  Average Turn  Longest Turn  Open For
-Codex          186   4.1K     4.1K       4K        51K         88K        10m49s           52m    87d12h
+Codex          186   4.1K     4.1K       4K        51K         88K       10m 49s           52m   87d 12h
 

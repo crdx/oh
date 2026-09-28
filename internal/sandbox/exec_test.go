@@ -134,9 +134,9 @@ func TestACommandStoppedByItsTimeoutSaysSo(t *testing.T) {
 	defer cancel()
 	<-ctx.Done()
 
-	result, err := stoppedResult(ctx, Policy{Timeout: time.Second}, Result{Output: "partial"}, time.Now())
+	result, err := stoppedResult(ctx, Policy{Timeout: time.Minute + 2*time.Second}, Result{Output: "partial"}, time.Now())
 
-	if err == nil || !strings.Contains(err.Error(), "did not finish within 1s") {
+	if err == nil || !strings.Contains(err.Error(), "did not finish within 1m 2s") {
 		t.Errorf("got %v, want a complaint about the timeout", err)
 	}
 	if result.Output != "partial" {

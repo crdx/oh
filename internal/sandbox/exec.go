@@ -208,7 +208,7 @@ func validate(ctx context.Context, policy Policy) error {
 
 func stoppedResult(ctx context.Context, policy Policy, result Result, startedAt time.Time) (Result, error) {
 	if errors.Is(ctx.Err(), context.DeadlineExceeded) {
-		return result, fmt.Errorf("the command did not finish within %s", policy.Timeout)
+		return result, fmt.Errorf("the command did not finish within %s", util.CompactDuration(policy.Timeout))
 	}
 
 	return result, fmt.Errorf(

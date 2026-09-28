@@ -17,7 +17,7 @@ $ curl example.com ✦· 5s
 Writing it.
 $ curl example.com ✦·
 
-─────────────────────────────────────── auto-denies in 4m20s ───────────────────────────────────────
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
 Run the commit tool?
 
 patch: /tmp/layout.patch

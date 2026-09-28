@@ -343,9 +343,9 @@ all checks passed
     "command": \e[38;2;181;189;104m""\e[0m
 }
 
-build: running for 5m05s
-lint: running for 5m01s
-note: the wait gave up after 5m00s before any watched job ended.
+build: running for 5m 5s
+lint: running for 5m 1s
+note: the wait gave up after 5m before any watched job ended.
 
 
 === job wait on several jobs until all finish ===
@@ -384,8 +384,8 @@ all checks passed
 }
 
 build: complete after 37s
-lint: running for 5m05s
-note: the wait gave up after 5m00s before all watched jobs ended.
+lint: running for 5m 5s
+note: the wait gave up after 5m before all watched jobs ended.
 
 
 === job wait that gave up on a job still running ===
@@ -397,8 +397,8 @@ note: the wait gave up after 5m00s before all watched jobs ended.
     "command": \e[38;2;181;189;104m""\e[0m
 }
 
-docs: running for 5m05s
-note: the wait gave up after 5m00s, and the job is still running.
+docs: running for 5m 5s
+note: the wait gave up after 5m, and the job is still running.
 Serving HTTP on localhost port 8080 ...
 
 

@@ -36,7 +36,7 @@
 [38;2;129;162;190m  [38;2;192;128;80mbroken[0m[38;2;129;162;190m  [38;2;150;152;150mcomplete after 3s[0m[38;2;129;162;190m  [38;2;129;162;190m…[0m
 === multiline failure (120 columns) ===
 [38;2;129;162;190mBackground jobs:[0m
-[38;2;129;162;190m  [38;2;192;128;80mwitness[0m[38;2;129;162;190m  stopped after 3s, exit(-1), the command was stopped after 22m46s note: the command was killed by SIGKILL.  [38;2;129;162;190m$[0m[38;2;129;162;190m…[0m
+[38;2;129;162;190m  [38;2;192;128;80mwitness[0m[38;2;129;162;190m  stopped after 3s, exit(-1), the command was stopped after 22m 46s note: the command was killed by SIGKILL.  [38;2;129;162;190m…[0m
 === multiline failure (60 columns) ===
 [38;2;129;162;190mBackground jobs:[0m
 [38;2;129;162;190m  [38;2;192;128;80mwitness[0m[38;2;129;162;190m  stopped after 3s, exit(-1), the command was stop…[0m

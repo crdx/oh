@@ -55,15 +55,15 @@ func FormatDuration(elapsedTime time.Duration) string {
 	case elapsedTime < time.Minute:
 		return fmt.Sprintf("%ds", int(elapsedTime.Seconds()))
 	case elapsedTime < time.Hour:
-		return fmt.Sprintf("%dm%02ds", int(elapsedTime.Minutes()), int(elapsedTime.Seconds())%60)
+		return fmt.Sprintf("%dm %ds", int(elapsedTime.Minutes()), int(elapsedTime.Seconds())%60)
 	case elapsedTime < 100*time.Hour:
-		return fmt.Sprintf("%dh%02dm", int(elapsedTime.Hours()), int(elapsedTime.Minutes())%60)
+		return fmt.Sprintf("%dh %dm", int(elapsedTime.Hours()), int(elapsedTime.Minutes())%60)
 	}
 
 	days := int(elapsedTime.Hours()) / 24
 	switch {
 	case days < 100:
-		return fmt.Sprintf("%dd%02dh", days, int(elapsedTime.Hours())%24)
+		return fmt.Sprintf("%dd %dh", days, int(elapsedTime.Hours())%24)
 	case days <= 9999:
 		return fmt.Sprintf("%dd", days)
 	default:

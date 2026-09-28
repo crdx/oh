@@ -21,7 +21,7 @@ That will take a moment.
 
 ```
 grep [ok in 9s, 1 line, 44B, call_1]
-find [error in 1m02s, call_2]
+find [error in 1m 2s, call_2]
 ```
 
 ## Assistant · +6s

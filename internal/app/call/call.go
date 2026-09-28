@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	durationWidth    = 6
+	durationWidth    = 7
 	bytesPerMegabyte = 1 << 20
 
 	noTimeAtAll = "0s"

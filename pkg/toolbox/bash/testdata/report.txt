@@ -13,21 +13,21 @@ exit(2)
 exit(-1)
 note: the command was killed by SIGKILL.
 the sandbox gives each process 1h of processor time, counted across every thread it runs, and stops the whole command after 5m of wall clock.
-every process this command started used 1h30m of processor time between them.
+every process this command started used 1h 30m of processor time between them.
 
 === a kill only the shell saw ===
 exit(137):
 error: recipe `lint` was terminated on line 104 by signal 9
 note: the shell reports that a process was killed by SIGKILL.
 the sandbox gives each process 1h of processor time, counted across every thread it runs, and stops the whole command after 5m of wall clock.
-every process this command started used 1h01m of processor time between them.
+every process this command started used 1h 1m of processor time between them.
 
 === a processor limit only the shell saw ===
 exit(152):
 /workspace/script: line 3:  41 Cpu time limit exceeded  ./spin
 note: the shell reports that a process was killed by SIGXCPU.
 the sandbox gives each process 1h of processor time, counted across every thread it runs, and stops the whole command after 5m of wall clock.
-every process this command started used 59m58s of processor time between them.
+every process this command started used 59m 58s of processor time between them.
 
 === a processor limit the sandbox saw itself ===
 exit(-1)

@@ -6,7 +6,7 @@
 That will take a moment.
 
 grep spinner *.go ✓ 9s 1L
-find **/*.go ✗ 1m02s the search went on…
+find **/*.go ✗ 1m 2s the search went on…
 
 The grep took nine seconds and the find
 gave up after a minute.
@@ -155,7 +155,7 @@ e
 That will take a moment.
 
 grep spinner *.go ✓ 9s 1L
-find **/*.go ✗ 1m02s the search went on too long
+find **/*.go ✗ 1m 2s the search went on too long
 
 The grep took nine seconds and the find gave up after a minute.
 === tiny ===
@@ -171,7 +171,7 @@ take a
 moment.
 
 grep ✓ 9s 1L
-… ✗ 1m02s t…
+… ✗ 1m 2s t…
 
 The grep
 took nine
@@ -188,6 +188,6 @@ minute.
 That will take a moment.
 
 grep spinner *.go ✓ 9s 1L
-find **/*.go ✗ 1m02s the search went on too long
+find **/*.go ✗ 1m 2s the search went on too long
 
 The grep took nine seconds and the find gave up after a minute.

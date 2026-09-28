@@ -17,10 +17,10 @@ func TestCompactDurationDropsAnEmptySmallerUnit(t *testing.T) {
 		9500 * time.Millisecond:            "9s",
 		5 * time.Minute:                    "5m",
 		time.Hour + 400*time.Millisecond:   "1h",
-		90 * time.Second:                   "1m30s",
+		90 * time.Second:                   "1m 30s",
 		time.Hour:                          "1h",
-		time.Hour + 30*time.Minute:         "1h30m",
-		100 * time.Hour:                    "4d04h",
+		time.Hour + 30*time.Minute:         "1h 30m",
+		100 * time.Hour:                    "4d 4h",
 	}
 
 	for took, want := range cases {
