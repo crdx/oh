@@ -99,6 +99,15 @@ func (self *modelList) Len() int { return len(self.models) }
 
 func (self *modelList) IsChoosable(int) bool { return true }
 
+func (self *modelList) KeyboardHelp() []menu.Shortcut {
+	return []menu.Shortcut{
+		{Key: "↑↓", Description: "move"},
+		{Key: "← →", Description: "effort"},
+		{Key: "enter", Description: "choose"},
+		{Key: "esc", Description: "close"},
+	}
+}
+
 func (self *modelList) Text(index int) string {
 	model := self.models[index]
 

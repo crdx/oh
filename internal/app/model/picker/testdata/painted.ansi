@@ -1,5 +1,5 @@
 === a wide terminal, with the columns kept to the left ===
-\e[H\e[38;2;150;152;150mFilter: \e[0m\e[K\r
+\e[H\e[38;2;150;152;150mFilter: \e[0m                                                                                               ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m effort\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context  Cost      Input     Output  Identifier\e[0m\e[0m\e[K\r
 \e[38;2;192;128;80m› Anthropic     Sonnet 5                      medium        200K  \e[38;2;129;162;190m◼◼\e[0m\e[38;2;192;128;80m        $3.00     $15.00  \e[38;2;150;152;150mclaude-sonnet-5\e[0m\e[K\r
   Codex         Codex 5.3                     medium ⚡     272K  \e[38;2;129;162;190m◼◼\e[0m        $1.30     $10.00  \e[38;2;150;152;150mgpt-5.3-codex\e[0m\e[K\r
@@ -24,7 +24,7 @@
 \e[K\r
 \e[K\e[J
 === a terminal the columns fill exactly ===
-\e[H\e[38;2;150;152;150mFilter: \e[0m\e[K\r
+\e[H\e[38;2;150;152;150mFilter: \e[0m                         ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m effort\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context  Identifier\e[0m\e[0m\e[K\r
   Anthropic     Sonnet 5                      medium        200K  \e[38;2;150;152;150mclaude-sonnet…\e[0m\e[K\r
 \e[38;2;192;128;80m› Codex         Codex 5.3                     medium ⚡     272K  \e[38;2;150;152;150mgpt-5.3-codex\e[0m\e[K\r
@@ -49,7 +49,7 @@
 \e[K\r
 \e[K\e[J
 === no room for every row, so the list is scrolled to the cursor ===
-\e[H\e[38;2;150;152;150mFilter: \e[0m\e[K\r
+\e[H\e[38;2;150;152;150mFilter: \e[0m                         ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m effort\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context  Identifier\e[0m\e[0m\e[K\r
 \e[38;2;192;128;80m› OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M  \e[38;2;150;152;150mdeepseek-v4-f…\e[0m\e[K\e[J
 === a narrow terminal, with the columns clipped ===
@@ -78,7 +78,7 @@
 \e[K\r
 \e[K\e[J
 === a filter narrowing the list to one provider ===
-\e[H\e[38;2;150;152;150mFilter: \e[0mopencode\e[K\r
+\e[H\e[38;2;150;152;150mFilter: \e[0mopencode                 ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m effort\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context  Identifier\e[0m\e[0m\e[K\r
 \e[38;2;192;128;80m› OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M  \e[38;2;150;152;150mdeepseek-v4-f…\e[0m\e[K\r
 \e[K\r
@@ -103,7 +103,7 @@
 \e[K\r
 \e[K\e[J
 === a filter no model answers to ===
-\e[H\e[38;2;150;152;150mFilter: \e[0mgemini\e[K\r
+\e[H\e[38;2;150;152;150mFilter: \e[0mgemini                   ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m effort\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context  Identifier\e[0m\e[0m\e[K\r
 \e[K\r
 \e[K\r

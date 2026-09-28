@@ -14010,7 +14010,7 @@ func TestChoosingWithoutStoredSessionsFails(t *testing.T) {
 	}
 }
 
-func TestChoosingOnlyOffersTheSessionsOfTheCurrentWorkspace(t *testing.T) {
+func TestFilteringSessionsToTheCurrentWorkspace(t *testing.T) {
 	directory := t.TempDir()
 	workspaceDir := t.TempDir()
 
@@ -14036,10 +14036,6 @@ func TestChoosingOnlyOffersTheSessionsOfTheCurrentWorkspace(t *testing.T) {
 	chosen := sessions.InWorkspace(loadedSessions, work.At(workspaceDir))
 	if len(chosen) != 1 || chosen[0].WorkspaceDir != workspaceDir {
 		t.Fatalf("expected only the session of this workspace, got %+v", chosen)
-	}
-
-	if _, err := sessions.Choose(directory, work.At(t.TempDir()), nil, nil); err == nil {
-		t.Error("expected a workspace without sessions to fail")
 	}
 }
 

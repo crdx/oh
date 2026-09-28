@@ -1,5 +1,5 @@
 === the cursor resting on the first row that can be chosen ===
-\e[H\e[38;2;150;152;150mFilter: \e[0m\e[K\r
+\e[H\e[38;2;150;152;150mFilter: \e[0m                                      ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Agent  Title\e[0m\e[0m\e[K\r
   chewy-sardine   why does the spinner stutter when a tool runs\e[K\r
 › thick-poodle    add support for reasoning traces\e[K\r
@@ -24,7 +24,7 @@
 \e[K\r
 \e[K\e[J
 === the cursor further down the list ===
-\e[H\e[38;2;150;152;150mFilter: \e[0m\e[K\r
+\e[H\e[38;2;150;152;150mFilter: \e[0m                                      ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Agent  Title\e[0m\e[0m\e[K\r
   chewy-sardine   why does the spinner stutter when a tool runs\e[K\r
   thick-poodle    add support for reasoning traces\e[K\r
@@ -49,7 +49,7 @@
 \e[K\r
 \e[K\e[J
 === no room for every row, so the list is scrolled to the cursor ===
-\e[H\e[38;2;150;152;150mFilter: \e[0m\e[K\r
+\e[H\e[38;2;150;152;150mFilter: \e[0m                                      ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Agent  Title\e[0m\e[0m\e[K\r
   thick-poodle    add support for reasoning traces\e[K\r
   funny-badger    the cancelled turn leaves a tool call unanswered\e[K\r
@@ -81,11 +81,11 @@
 \e[K\r
 \e[K\e[J
 === one row of room, which is as small as the list goes ===
-\e[H\e[38;2;150;152;150mFilter: \e[0m\e[K\r
+\e[H\e[38;2;150;152;150mFilter: \e[0m                                      ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Agent  Title\e[0m\e[0m\e[K\r
 › funny-badger    the cancelled turn leaves a tool call unanswered\e[K\e[J
 === a filter narrowing the list to what was typed ===
-\e[H\e[38;2;150;152;150mFilter: \e[0mthe\e[K\r
+\e[H\e[38;2;150;152;150mFilter: \e[0mthe                                   ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Agent  Title\e[0m\e[0m\e[K\r
   chewy-sardine   why does the spinner stutter when a tool runs\e[K\r
 › funny-badger    the cancelled turn leaves a tool call unanswered\e[K\r
@@ -110,7 +110,7 @@
 \e[K\r
 \e[K\e[J
 === a filter nothing answers to ===
-\e[H\e[38;2;150;152;150mFilter: \e[0mnothing at all\e[K\r
+\e[H\e[38;2;150;152;150mFilter: \e[0mnothing at all                        ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Agent  Title\e[0m\e[0m\e[K\r
 \e[K\r
 \e[K\r

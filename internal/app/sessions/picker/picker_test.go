@@ -47,6 +47,20 @@ func TestEveryConversationIsDrawnAlikeWhateverItHolds(t *testing.T) {
 	}
 }
 
+func TestAChosenSessionFromAnotherWorkspaceUsesTheOrdinaryChosenStyle(t *testing.T) {
+	storedSession := &Session{Name: "wiry-turtle", IsOtherWorkspace: true}
+	self := &sessionList{
+		store:               Store{Sessions: []*Session{storedSession}},
+		isAllWorkspacesView: true,
+	}
+
+	got := self.Row(0, true, 120)
+	want := style.ChosenRow.Over(rowInView(storedSession, true, 120, true))
+	if got != want {
+		t.Errorf("expected the ordinary chosen style, got %q", got)
+	}
+}
+
 func archiveKeypress() key.Key {
 	return key.Key{Code: key.Rune, Value: 'a', Mod: key.Ctrl}
 }
@@ -129,6 +143,88 @@ func archivingStore() (*sessionList, *[]string) {
 		Archive:          record,
 		Restore:          record,
 	}}, &moved
+}
+
+func TestTheFirstPopulatedViewOpensWhenThisWorkspaceHasNoSessions(t *testing.T) {
+	self := &sessionList{store: Store{Sessions: []*Session{{
+		Name:             "wiry-turtle",
+		IsOtherWorkspace: true,
+	}}}}
+
+	self.openFirstPopulatedView()
+	if !self.isAllWorkspacesView || self.isArchivedView || self.Len() != 1 {
+		t.Errorf("expected all stored workspaces, got all=%t archived=%t rows=%d", self.isAllWorkspacesView, self.isArchivedView, self.Len())
+	}
+}
+
+func TestTheArchivedViewOpensWhenItIsAllThisWorkspaceHas(t *testing.T) {
+	self := &sessionList{store: Store{ArchivedSessions: []*Session{{Name: "tame-impala"}}}}
+
+	self.openFirstPopulatedView()
+	if self.isAllWorkspacesView || !self.isArchivedView || self.Len() != 1 {
+		t.Errorf("expected this workspace's archives, got all=%t archived=%t rows=%d", self.isAllWorkspacesView, self.isArchivedView, self.Len())
+	}
+}
+
+func TestTabSwitchesBetweenThisWorkspaceAndAllWorkspaces(t *testing.T) {
+	self := &sessionList{store: Store{Sessions: []*Session{
+		{Name: "thick-poodle"},
+		{Name: "wiry-turtle", WorkspaceDir: "/home/alice/another", IsOtherWorkspace: true},
+	}}}
+
+	if self.Len() != 1 || self.at(0).Name != "thick-poodle" {
+		t.Fatalf("expected only this workspace first, got %+v", self.rows())
+	}
+	if !self.SwitchScope() {
+		t.Fatal("expected the scope to switch")
+	}
+	if self.Len() != 2 || !strings.Contains(self.ColumnHeader(120), "Workspace") {
+		t.Fatalf("expected every workspace and its column, got %+v", self.rows())
+	}
+	if self.IsChoosable(1) {
+		t.Error("expected another workspace's session not to be openable")
+	}
+
+	self.SwitchScope()
+	if self.Len() != 1 {
+		t.Errorf("expected this workspace again, got %d rows", self.Len())
+	}
+}
+
+func TestAnotherWorkspacesSessionCanOnlyBeRead(t *testing.T) {
+	self := &sessionList{
+		store: Store{
+			Sessions: []*Session{{
+				Name:             "wiry-turtle",
+				WorkspaceDir:     "/home/alice/another",
+				IsOtherWorkspace: true,
+			}},
+			Archive: func(*Session) (int64, error) { return 0, nil },
+			Delete:  func(*Session) error { return nil },
+			Read:    func(*Session, int) ([]string, error) { return []string{"a line"}, nil },
+		},
+		isAllWorkspacesView: true,
+	}
+
+	if !self.IsReachable(0) {
+		t.Fatal("expected another workspace's session to be reachable for reading")
+	}
+	if self.IsChoosable(0) {
+		t.Error("expected another workspace's session not to be openable")
+	}
+	if _, err := self.chosen(0); err == nil {
+		t.Error("expected another workspace's session to refuse direct opening")
+	}
+	for _, keypress := range []key.Key{archiveKeypress(), deleteKeypress()} {
+		if _, isBound := self.Removal(0, keypress); isBound {
+			t.Errorf("expected %v not to mutate another workspace's session", keypress)
+		}
+	}
+	preview, isBound := self.Preview(0, key.Key{Code: key.Enter})
+	if !isBound || preview.UnavailableLabel != "other workspace" ||
+		preview.UnavailableMessage != "Session belongs to /home/alice/another" {
+		t.Errorf("unexpected preview: %+v, bound %t", preview, isBound)
+	}
 }
 
 func TestTheViewSwitchesBetweenTheStoredSessionsAndTheArchivedOnes(t *testing.T) {

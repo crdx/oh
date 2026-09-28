@@ -1,8 +1,10 @@
 package picker
 
 import (
+	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"slices"
 	"strconv"
 	"strings"
@@ -14,12 +16,14 @@ import (
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/table"
 	"crdx.org/oh/internal/util"
+	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/session"
 )
 
 const (
 	animalColumn      = 20
+	workspaceColumn   = 20
 	modelColumn       = 20
 	messageColumn     = 8
 	lengthColumn      = 6
@@ -36,19 +40,20 @@ const (
 )
 
 type Session struct {
-	Name         string
-	WorkspaceDir string
-	StartedAt    time.Time
-	TouchedAt    time.Time
-	Title        string
-	Model        string
-	ModelID      string
-	Effort       string
-	MessageCount int
-	Bytes        int64
-	IsRunning    bool
-	IsFast       bool
-	IsArchived   bool
+	Name             string
+	WorkspaceDir     string
+	StartedAt        time.Time
+	TouchedAt        time.Time
+	Title            string
+	Model            string
+	ModelID          string
+	Effort           string
+	MessageCount     int
+	Bytes            int64
+	IsRunning        bool
+	IsFast           bool
+	IsArchived       bool
+	IsOtherWorkspace bool
 }
 
 func (self *Session) Messages() int { return self.MessageCount }
@@ -64,6 +69,7 @@ type Store struct {
 
 func Choose(store Store, terminal *os.File, screen io.Writer) (*Session, error) {
 	rows := &sessionList{store: store}
+	rows.openFirstPopulatedView()
 
 	chosenIndex, err := menu.Choose(rows, terminal, screen)
 	if err != nil {
@@ -74,13 +80,17 @@ func Choose(store Store, terminal *os.File, screen io.Writer) (*Session, error) 
 }
 
 type sessionList struct {
-	store          Store
-	isArchivedView bool
+	store               Store
+	isArchivedView      bool
+	isAllWorkspacesView bool
 }
 
 func (self *sessionList) Len() int { return len(self.rows()) }
 
-func (self *sessionList) IsChoosable(index int) bool { return !self.at(index).IsRunning }
+func (self *sessionList) IsChoosable(index int) bool {
+	storedSession := self.at(index)
+	return !storedSession.IsRunning && !storedSession.IsOtherWorkspace
+}
 
 func (self *sessionList) IsReachable(index int) bool {
 	return self.IsChoosable(index) || self.canRead(index)
@@ -93,7 +103,25 @@ func (self *sessionList) Switch(int) bool {
 	return true
 }
 
+func (self *sessionList) SwitchScope() bool {
+	self.isAllWorkspacesView = !self.isAllWorkspacesView
+	return true
+}
+
+func (self *sessionList) KeyboardHelp() []menu.Shortcut {
+	return []menu.Shortcut{
+		{Key: "tab", Description: "scope"},
+		{Key: "← →", Description: "view"},
+		{Key: "enter", Description: "preview"},
+		{Key: "ctrl+a", Description: "archive/restore"},
+		{Key: "del", Description: "delete"},
+	}
+}
+
 func (self *sessionList) IsRemovable(index int) bool {
+	if self.at(index).IsOtherWorkspace {
+		return false
+	}
 	if self.isArchivedView {
 		return self.store.Restore != nil
 	}
@@ -103,13 +131,13 @@ func (self *sessionList) IsRemovable(index int) bool {
 
 func (self *sessionList) Removal(index int, keypress key.Key) (menu.Removal, bool) {
 	movedSession := self.at(index)
-	if movedSession.IsRunning {
+	if movedSession.IsRunning || movedSession.IsOtherWorkspace {
 		return menu.Removal{}, false
 	}
 
 	switch {
 	case isArchiveKey(keypress):
-		return self.archival(index, movedSession)
+		return self.archival(movedSession)
 	case isDeleteKey(keypress):
 		return self.deletion(index, movedSession)
 	default:
@@ -124,10 +152,16 @@ func (self *sessionList) Preview(index int, keypress key.Key) (menu.Preview, boo
 
 	readSession := self.at(index)
 
-	return menu.Preview{
+	preview := menu.Preview{
 		Title: previewTitle(readSession),
 		Read:  func(room int) ([]string, error) { return self.store.Read(readSession, room) },
-	}, true
+	}
+	if readSession.IsOtherWorkspace {
+		preview.UnavailableLabel = "other workspace"
+		preview.UnavailableMessage = "Session belongs to " + pathutil.Shorten(readSession.WorkspaceDir)
+	}
+
+	return preview, true
 }
 
 func previewTitle(readSession *Session) string {
@@ -167,19 +201,24 @@ func (self *Session) Text() string {
 		self.Model,
 		self.ModelID,
 		self.Effort,
+		self.WorkspaceDir,
 		mode,
 	}, " ")
 }
 
 func (self *sessionList) ColumnHeader(room int) string {
-	return sessionTable(self.agentColumn()).Header(room)
+	return sessionTable(self.agentColumn(), self.isAllWorkspacesView).Header(room)
 }
 
 func (self *sessionList) Row(index int, isChosen bool, room int) string {
 	storedSession := self.at(index)
-	line := row(storedSession, isChosen, room)
+	line := rowInView(storedSession, isChosen, room, self.isAllWorkspacesView)
 
 	switch {
+	case isChosen && storedSession.IsOtherWorkspace:
+		return style.ChosenRow.Over(line)
+	case storedSession.IsOtherWorkspace:
+		return style.OtherWorkspaceSession.Over(line)
 	case isChosen && storedSession.IsRunning:
 		return style.ChosenRunningSession.Over(line)
 	case isChosen:
@@ -195,7 +234,7 @@ func (self *sessionList) canRead(index int) bool {
 	return self.store.Read != nil && !self.at(index).IsArchived
 }
 
-func (self *sessionList) archival(index int, movedSession *Session) (menu.Removal, bool) {
+func (self *sessionList) archival(movedSession *Session) (menu.Removal, bool) {
 	if self.isArchivedView {
 		if self.store.Restore == nil {
 			return menu.Removal{}, false
@@ -211,7 +250,7 @@ func (self *sessionList) archival(index int, movedSession *Session) (menu.Remova
 				restoredBytes = bytes
 				return err
 			},
-			Apply: func() { self.restore(index, movedSession, restoredBytes) },
+			Apply: func() { self.restore(movedSession, restoredBytes) },
 		}, true
 	}
 
@@ -229,7 +268,7 @@ func (self *sessionList) archival(index int, movedSession *Session) (menu.Remova
 			archivedBytes = bytes
 			return err
 		},
-		Apply: func() { self.archive(index, movedSession, archivedBytes) },
+		Apply: func() { self.archive(movedSession, archivedBytes) },
 	}, true
 }
 
@@ -247,50 +286,95 @@ func (self *sessionList) deletion(index int, movedSession *Session) (menu.Remova
 }
 
 func (self *sessionList) forget(index int) {
+	movedSession := self.at(index)
 	if self.isArchivedView {
-		self.store.ArchivedSessions = slices.Delete(self.store.ArchivedSessions, index, index+1)
+		self.store.ArchivedSessions = deleteSession(self.store.ArchivedSessions, movedSession)
 		return
 	}
 
-	self.store.Sessions = slices.Delete(self.store.Sessions, index, index+1)
+	self.store.Sessions = deleteSession(self.store.Sessions, movedSession)
 }
 
-func (self *sessionList) restore(index int, movedSession *Session, restoredBytes int64) {
+func deleteSession(sessions []*Session, deletedSession *Session) []*Session {
+	index := slices.Index(sessions, deletedSession)
+	if index < 0 {
+		return sessions
+	}
+
+	return slices.Delete(sessions, index, index+1)
+}
+
+func (self *sessionList) restore(movedSession *Session, restoredBytes int64) {
 	movedSession.IsArchived = false
 	movedSession.Bytes = restoredBytes
-	self.store.ArchivedSessions = slices.Delete(self.store.ArchivedSessions, index, index+1)
+	self.store.ArchivedSessions = deleteSession(self.store.ArchivedSessions, movedSession)
 	self.store.Sessions = append(self.store.Sessions, movedSession)
 	newestFirst(self.store.Sessions)
 }
 
-func (self *sessionList) archive(index int, movedSession *Session, archivedBytes int64) {
+func (self *sessionList) archive(movedSession *Session, archivedBytes int64) {
 	movedSession.IsArchived = true
 	movedSession.Bytes = archivedBytes
-	self.store.Sessions = slices.Delete(self.store.Sessions, index, index+1)
+	self.store.Sessions = deleteSession(self.store.Sessions, movedSession)
 	self.store.ArchivedSessions = append(self.store.ArchivedSessions, movedSession)
 	newestFirst(self.store.ArchivedSessions)
 }
 
 func (self *sessionList) rows() []*Session {
+	sessions := self.store.Sessions
 	if self.isArchivedView {
-		return self.store.ArchivedSessions
+		sessions = self.store.ArchivedSessions
+	}
+	if self.isAllWorkspacesView {
+		return sessions
 	}
 
-	return self.store.Sessions
+	return slices.DeleteFunc(slices.Clone(sessions), func(storedSession *Session) bool {
+		return storedSession.IsOtherWorkspace
+	})
+}
+
+func (self *sessionList) openFirstPopulatedView() {
+	if self.Len() > 0 {
+		return
+	}
+
+	self.isArchivedView = true
+	if self.Len() > 0 {
+		return
+	}
+
+	self.isArchivedView = false
+	self.isAllWorkspacesView = true
+	if self.Len() > 0 {
+		return
+	}
+
+	self.isArchivedView = true
 }
 
 func (self *sessionList) at(index int) *Session { return self.rows()[index] }
 
 func (self *sessionList) agentColumn() string {
+	qualifiers := make([]string, 0, 2)
+	if self.isAllWorkspacesView {
+		qualifiers = append(qualifiers, "all")
+	}
 	if self.isArchivedView {
-		return "Agent (archived)"
+		qualifiers = append(qualifiers, "archived")
+	}
+	if len(qualifiers) == 0 {
+		return "Agent"
 	}
 
-	return "Agent"
+	return "Agent (" + strings.Join(qualifiers, " ") + ")"
 }
 
 func (self *sessionList) chosen(index int) (*Session, error) {
 	chosenSession := self.at(index)
+	if chosenSession.IsOtherWorkspace {
+		return nil, fmt.Errorf("session %s belongs to another workspace", chosenSession.Name)
+	}
 	if !chosenSession.IsArchived {
 		return chosenSession, nil
 	}
@@ -303,9 +387,14 @@ func (self *sessionList) chosen(index int) (*Session, error) {
 	return chosenSession, nil
 }
 
-func sessionTable(agentTitle string) *table.Table {
-	return table.New(
-		table.Column{Title: strings.Repeat(" ", markWidth) + agentTitle, Width: markWidth + animalColumn},
+func sessionTable(agentTitle string, isWorkspaceShown bool) *table.Table {
+	columns := []table.Column{
+		{Title: strings.Repeat(" ", markWidth) + agentTitle, Width: markWidth + animalColumn},
+	}
+	if isWorkspaceShown {
+		columns = append(columns, table.Column{Title: "Workspace", Width: workspaceColumn})
+	}
+	columns = append(columns,
 		table.Column{Title: "Title", IsFlex: true},
 		table.Column{Title: "Model", Width: modelColumn, MinRoom: roomForModel},
 		table.Column{Title: "Effort", Width: menu.EffortColumn, Align: table.Right, MinRoom: roomForModel},
@@ -314,11 +403,20 @@ func sessionTable(agentTitle string) *table.Table {
 		table.Column{Title: "Length", Width: lengthColumn, Align: table.Right},
 		table.Column{Title: "Last Message", Width: lastMessageColumn, Align: table.Right},
 	)
+
+	return table.New(columns...)
 }
 
 func row(storedSession *Session, isChosen bool, room int) string {
-	return sessionTable("Agent").Row([]string{
-		menu.Mark(isChosen) + " " + sessionAnimal(storedSession),
+	return rowInView(storedSession, isChosen, room, false)
+}
+
+func rowInView(storedSession *Session, isChosen bool, room int, isWorkspaceShown bool) string {
+	cells := []string{menu.Mark(isChosen) + " " + sessionAnimal(storedSession)}
+	if isWorkspaceShown {
+		cells = append(cells, filepath.Base(storedSession.WorkspaceDir))
+	}
+	cells = append(cells,
 		sessionTitle(storedSession),
 		sessionModel(storedSession),
 		storedSession.Effort,
@@ -326,7 +424,9 @@ func row(storedSession *Session, isChosen bool, room int) string {
 		FormatSize(storedSession.Bytes),
 		util.CoarseDuration(storedSession.TouchedAt.Sub(storedSession.StartedAt)),
 		util.Ago(storedSession.TouchedAt),
-	}, room)
+	)
+
+	return sessionTable("Agent", isWorkspaceShown).Row(cells, room)
 }
 
 func sessionModel(storedSession *Session) string {

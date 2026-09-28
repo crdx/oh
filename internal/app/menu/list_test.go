@@ -458,6 +458,43 @@ func TestAFailedRemovalIsReportedInPlaceOfTheFilter(t *testing.T) {
 	}
 }
 
+type scopeSwitchableList struct {
+	fakeList
+
+	other []string
+}
+
+func (self *scopeSwitchableList) SwitchScope() bool {
+	self.rows, self.other = self.other, self.rows
+	return true
+}
+
+func TestTabSwitchesScopeAndRefilters(t *testing.T) {
+	rows := &scopeSwitchableList{
+		fakeList: fakeList{rows: []string{"first", "second"}},
+		other:    []string{"another"},
+	}
+	self := listState(rows, 1)
+
+	self.apply(key.Key{Code: key.Rune, Value: '\t'})
+	if len(self.matches) != 1 || rows.rows[0] != "another" {
+		t.Fatalf("expected the other scope, got %v", rows.rows)
+	}
+	if self.cursor != 0 || self.query != "" {
+		t.Errorf("expected the new scope at its first row with no tab in the filter, got cursor %d and %q", self.cursor, self.query)
+	}
+}
+
+func TestKeyboardHelpKeepsRoomForAFilter(t *testing.T) {
+	self := defaultState()
+	if got := style.Plain(self.filterLine(80)); !strings.Contains(got, "↑↓ move") {
+		t.Errorf("expected keyboard help in a wide menu, got %q", got)
+	}
+	if got := style.Plain(self.filterLine(46)); got != filterPrompt {
+		t.Errorf("expected a narrow menu to leave room for filtering, got %q", got)
+	}
+}
+
 func TestSwitchingTheViewRefiltersAndTakesTheCursorToTheTop(t *testing.T) {
 	rows := &switchableList{
 		removableList: removableList{fakeList: fakeList{rows: []string{"first", "second", "third"}}},

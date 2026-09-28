@@ -17,9 +17,11 @@ import (
 )
 
 const (
-	archivedBytes = 6_291_456
-	restoredBytes = 7_340_032
-	sizesRoom     = 150
+	currentWorkspaceDir = "/home/alice/project"
+	otherWorkspaceDir   = "/home/alice/another"
+	archivedBytes       = 6_291_456
+	restoredBytes       = 7_340_032
+	sizesRoom           = 150
 )
 
 var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")
@@ -27,7 +29,7 @@ var updateGoldens = flag.Bool("update", false, "write what was drawn back to the
 func storedSessions() []*Session {
 	now := time.Now()
 
-	return []*Session{
+	sessions := []*Session{
 		{
 			Name:         "chewy-sardine",
 			Bytes:        1_258_291,
@@ -82,12 +84,17 @@ func storedSessions() []*Session {
 			TouchedAt:    now.Add(-300 * time.Hour),
 		},
 	}
+	for _, storedSession := range sessions {
+		storedSession.WorkspaceDir = currentWorkspaceDir
+	}
+
+	return sessions
 }
 
 func archivedSessions() []*Session {
 	now := time.Now()
 
-	return []*Session{
+	sessions := []*Session{
 		{
 			Name:         "tame-impala",
 			Bytes:        831_488,
@@ -112,6 +119,20 @@ func archivedSessions() []*Session {
 			IsArchived:   true,
 		},
 	}
+	for _, storedSession := range sessions {
+		storedSession.WorkspaceDir = currentWorkspaceDir
+	}
+
+	return sessions
+}
+
+func otherWorkspaceSession() *Session {
+	storedSession := storedSessions()[1]
+	storedSession.Name = "wiry-turtle"
+	storedSession.WorkspaceDir = otherWorkspaceDir
+	storedSession.IsOtherWorkspace = true
+	storedSession.Title = "work in another project"
+	return storedSession
 }
 
 func compareWithGolden(t *testing.T, name string, drawn string) {
@@ -164,7 +185,7 @@ func TestGoldenEverySizeASessionCanOccupyIsDrawnWithinItsColumn(t *testing.T) {
 	sizes := []int64{0, 1, megabyte - 1, megabyte, 1_572_863, 1_572_864, 11_010_048, 1_073_217_535, 1_073_217_536, gigabyte, 1_610_612_735, 1_610_612_736, 1 << 40}
 
 	var output strings.Builder
-	_, _ = fmt.Fprintln(&output, sessionTable("Agent").Header(sizesRoom))
+	_, _ = fmt.Fprintln(&output, sessionTable("Agent", false).Header(sizesRoom))
 	for _, bytes := range sizes {
 		_, _ = fmt.Fprintln(&output, row(&Session{
 			Name:         "thick-poodle",
@@ -189,9 +210,12 @@ func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
 		keypress *key.Key
 		read     func(*Session, int) ([]string, error)
 
-		isArchivedView     bool
-		hasNothingArchived bool
-		movedIndex         *int
+		isArchivedView      bool
+		isAllWorkspacesView bool
+		hasNothingArchived  bool
+		hasOtherWorkspace   bool
+		hasOtherArchive     bool
+		movedIndex          *int
 	}{
 		{name: "a wide terminal, with room for the title", room: 150, height: 24, cursor: 1},
 		{name: "a terminal wide enough for the model that answered", room: 120, height: 24, cursor: 1},
@@ -205,6 +229,10 @@ func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
 		{name: "the confirmation taking the place of a filter being typed", room: 120, height: 24, cursor: 1, query: "codex", keypress: new(archiveKeypress())},
 		{name: "a running session under the cursor, which is never offered for archiving", room: 120, height: 24, cursor: 0, query: "codex", keypress: new(archiveKeypress())},
 		{name: "the archived view, switched to with left or right", room: 120, height: 24, cursor: 0, isArchivedView: true},
+		{name: "all workspaces, switched to with tab", room: 150, height: 24, cursor: 1, isAllWorkspacesView: true, hasOtherWorkspace: true},
+		{name: "another workspace selected without running italics", room: 150, height: 24, cursor: 5, isAllWorkspacesView: true, hasOtherWorkspace: true},
+		{name: "archived sessions from all workspaces", room: 150, height: 24, cursor: 1, isArchivedView: true, isAllWorkspacesView: true, hasOtherArchive: true},
+		{name: "another workspace's conversation read but not opened", room: 120, height: 12, cursor: 5, isAllWorkspacesView: true, hasOtherWorkspace: true, keypress: new(openKeypress()), read: reading()},
 		{name: "the confirmation asked before an archived session is restored", room: 120, height: 24, cursor: 1, isArchivedView: true, keypress: new(archiveKeypress())},
 		{name: "the archived view with nothing archived", room: 120, height: 24, cursor: 0, isArchivedView: true, hasNothingArchived: true},
 		{name: "the confirmation asked before a session is deleted for good", room: 120, height: 24, cursor: 1, keypress: new(deleteKeypress())},
@@ -236,10 +264,21 @@ func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
 		if frame.hasNothingArchived {
 			archived = nil
 		}
+		if frame.hasOtherArchive {
+			otherArchive := archivedSessions()[0]
+			otherArchive.Name = "calm-lemur"
+			otherArchive.WorkspaceDir = otherWorkspaceDir
+			otherArchive.IsOtherWorkspace = true
+			archived = append(archived, otherArchive)
+		}
 
+		stored := storedSessions()
+		if frame.hasOtherWorkspace {
+			stored = append(stored, otherWorkspaceSession())
+		}
 		sessions := &sessionList{
 			store: Store{
-				Sessions:         storedSessions(),
+				Sessions:         stored,
 				ArchivedSessions: archived,
 				Archive:          archiving(),
 				Restore:          restoring(),
@@ -252,6 +291,7 @@ func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
 			move(t, sessions, *frame.movedIndex)
 		}
 		sessions.isArchivedView = frame.isArchivedView
+		sessions.isAllWorkspacesView = frame.isAllWorkspacesView
 
 		fmt.Fprintf(&output, "=== %s ===\n%s\n", frame.name, strutil.VisibleEscapes(
 			paint(

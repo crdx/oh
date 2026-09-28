@@ -33,9 +33,10 @@ const (
 const EffortColumn = 8
 
 const (
-	minimumGap     = 2
-	defaultColumns = 80
-	defaultRows    = 24
+	minimumGap        = 2
+	minimumFilterRoom = 20
+	defaultColumns    = 80
+	defaultRows       = 24
 )
 
 const filterPrompt = "Filter: "
@@ -53,6 +54,19 @@ type List interface {
 
 type Switchable interface {
 	Switch(direction int) bool
+}
+
+type ScopeSwitchable interface {
+	SwitchScope() bool
+}
+
+type KeyboardHelp interface {
+	KeyboardHelp() []Shortcut
+}
+
+type Shortcut struct {
+	Key         string
+	Description string
 }
 
 type Reachable interface {
@@ -75,8 +89,10 @@ type Previewable interface {
 }
 
 type Preview struct {
-	Title string
-	Read  func(room int) ([]string, error)
+	Title              string
+	Read               func(room int) ([]string, error)
+	UnavailableLabel   string
+	UnavailableMessage string
 }
 
 func Choose(rows List, terminal *os.File, screen io.Writer) (int, error) {
@@ -257,6 +273,10 @@ func (self *state) apply(keypress key.Key) action {
 		if keypress.Value == 'c' && keypress.Mod.Has(key.Ctrl) {
 			return choiceCancelled
 		}
+		if keypress.Value == '\t' && !keypress.Mod.Has(key.Shift) {
+			self.switchScope()
+			return continuePicking
+		}
 		if isTypeable(keypress) {
 			self.narrow(self.query + string(keypress.Value))
 		}
@@ -431,6 +451,15 @@ func (self *state) page(direction int) {
 	}
 }
 
+func (self *state) switchScope() {
+	rows, isScopeSwitchable := self.list.(ScopeSwitchable)
+	if !isScopeSwitchable || !rows.SwitchScope() {
+		return
+	}
+
+	self.refilter()
+}
+
 func (self *state) adjust(direction int) {
 	if rows, isSwitchable := self.list.(Switchable); isSwitchable {
 		if rows.Switch(direction) {
@@ -572,7 +601,32 @@ func (self *state) promptLine(room int) string {
 }
 
 func (self *state) filterLine(room int) string {
-	return style.Subtle(Clip(filterPrompt, room)) + style.Answer(Clip(self.query, room-len(filterPrompt)))
+	filter := style.Subtle(Clip(filterPrompt, room)) + style.Answer(Clip(self.query, room-len(filterPrompt)))
+	shortcuts := []Shortcut{
+		{Key: "↑↓", Description: "move"},
+		{Key: "enter", Description: "choose"},
+		{Key: "esc", Description: "close"},
+	}
+	if rows, hasKeyboardHelp := self.list.(KeyboardHelp); hasKeyboardHelp {
+		shortcuts = rows.KeyboardHelp()
+	}
+	help := renderKeyboardHelp(shortcuts)
+
+	gap := room - width.Of(filter) - width.Of(help)
+	if help == "" || gap < minimumGap || room-width.Of(help)-len(filterPrompt) < minimumFilterRoom {
+		return filter
+	}
+
+	return filter + strings.Repeat(" ", gap) + help
+}
+
+func renderKeyboardHelp(shortcuts []Shortcut) string {
+	parts := make([]string, 0, len(shortcuts))
+	for _, shortcut := range shortcuts {
+		parts = append(parts, style.Normal(shortcut.Key)+style.Subtle(" "+shortcut.Description))
+	}
+
+	return strings.Join(parts, style.Subtle(" · "))
 }
 
 func Mark(isChosen bool) string {

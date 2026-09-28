@@ -54,6 +54,8 @@
 
 ### Sessions and storage
 
+- Browse stored and archived sessions from every workspace
+- Show keyboard shortcuts in pickers
 - Migrate stored tool-call renderings to semantic kinds
 - Freeze tool contracts and disable changed tool versions on resume
 - Keep frozen tool descriptions while running compatible implementations

@@ -15,6 +15,7 @@ import (
 	"crdx.org/oh/pkg/session"
 
 	"crdx.org/oh/internal/app/model"
+	sessionpicker "crdx.org/oh/internal/app/sessions/picker"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/work"
 )
@@ -305,29 +306,34 @@ func TestASessionRecordedThroughALinkBelongsToTheWorkspaceItNames(t *testing.T) 
 	}
 }
 
-func TestAWorkspaceWithNothingStoredSaysSo(t *testing.T) {
-	directory := t.TempDir()
-	workspaceDir := t.TempDir()
-
-	writer, err := store.Create(directory, store.Meta{WorkspaceDir: t.TempDir()})
-	if err != nil {
-		t.Fatal(err)
-	}
-	if err := writer.Close(); err != nil {
-		t.Fatal(err)
-	}
-
+func TestNoStoredConversationAnywhereSaysSo(t *testing.T) {
 	var screen strings.Builder
 
-	_, err = Choose(directory, work.At(workspaceDir), nil, &screen)
+	_, err := Choose(t.TempDir(), work.At(t.TempDir()), nil, &screen)
 	if err == nil {
-		t.Fatal("expected the empty workspace to be reported")
+		t.Fatal("expected the empty store to be reported")
 	}
-	if err.Error() != "there are no stored conversations for this workspace" {
-		t.Errorf("expected the workspace to be named as the empty one, got %v", err)
+	if err.Error() != "there are no stored conversations" {
+		t.Errorf("unexpected empty-store error: %v", err)
 	}
 	if screen.String() != "" {
 		t.Errorf("expected nothing to be drawn, got %q", screen.String())
+	}
+}
+
+func TestSessionsOutsideTheCurrentWorkspaceAreMarked(t *testing.T) {
+	workspaceDir := t.TempDir()
+	sessions := []*sessionpicker.Session{
+		{WorkspaceDir: workspaceDir},
+		{WorkspaceDir: t.TempDir()},
+	}
+
+	markOtherWorkspaces(sessions, work.At(workspaceDir))
+	if sessions[0].IsOtherWorkspace {
+		t.Error("expected this workspace's session to stay local")
+	}
+	if !sessions[1].IsOtherWorkspace {
+		t.Error("expected the other workspace's session to be marked")
 	}
 }
 

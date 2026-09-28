@@ -33,19 +33,19 @@ func Choose(directory string, workspace *work.Space, terminal *os.File, screen i
 		}
 		return "", err
 	}
-	sessions = InWorkspace(sessions, workspace)
+	markOtherWorkspaces(sessions, workspace)
 
 	archivedSessions, err := LoadArchived(directory)
 	if err != nil {
 		return "", err
 	}
-	archivedSessions = InWorkspace(archivedSessions, workspace)
+	markOtherWorkspaces(archivedSessions, workspace)
 
 	Measure(directory, sessions)
 	Measure(directory, archivedSessions)
 
 	if len(sessions) == 0 && len(archivedSessions) == 0 {
-		return "", errors.New("there are no stored conversations for this workspace")
+		return "", errors.New("there are no stored conversations")
 	}
 
 	store := picker.Store{
@@ -73,7 +73,7 @@ func Choose(directory string, workspace *work.Space, terminal *os.File, screen i
 			return os.RemoveAll(location.GetTmpDir(storedSession.Name))
 		},
 		Read: func(storedSession *picker.Session, room int) ([]string, error) {
-			return preview.Read(directory, storedSession.Name, workspace, room)
+			return preview.Read(directory, storedSession.Name, work.At(storedSession.WorkspaceDir), room)
 		},
 	}
 
@@ -86,6 +86,12 @@ func Choose(directory string, workspace *work.Space, terminal *os.File, screen i
 	}
 
 	return chosenSession.Name, nil
+}
+
+func markOtherWorkspaces(sessions []*picker.Session, workspace *work.Space) {
+	for _, storedSession := range sessions {
+		storedSession.IsOtherWorkspace = !workspace.IsAt(storedSession.WorkspaceDir)
+	}
 }
 
 func InWorkspace(sessions []*picker.Session, workspace *work.Space) []*picker.Session {

@@ -33,13 +33,14 @@ var (
 	Call       Style = Normal
 	TypedInput Style = Normal
 
-	PreviewLoadHint    Style = decorate(col.Italic, decorate(col.Dim, Success))
-	PreviewRunningHint Style = decorate(col.Italic, decorate(col.Dim, Change))
-	Reasoning          Style = decorate(col.Italic, Dim)
-	RunningSession     Style = decorate(col.Italic, Dim)
-	Column             Style = decorate(col.Underline, Dim)
-	Greeting           Style = col.Italic
-	PendingPrefix      Style = col.Underline
+	PreviewLoadHint       Style = decorate(col.Italic, decorate(col.Dim, Success))
+	PreviewRunningHint    Style = decorate(col.Italic, decorate(col.Dim, Change))
+	Reasoning             Style = decorate(col.Italic, Dim)
+	RunningSession        Style = decorate(col.Italic, Dim)
+	OtherWorkspaceSession Style = Dim
+	Column                Style = decorate(col.Underline, Dim)
+	Greeting              Style = col.Italic
+	PendingPrefix         Style = col.Underline
 
 	Success Style = success()
 	Read    Style = success()

@@ -24,15 +24,17 @@ const (
 )
 
 type previewState struct {
-	title        string
-	read         func(room int) ([]string, error)
-	rows         []string
-	room         int
-	offset       int
-	failure      string
-	isOpen       bool
-	isOpenable   bool
-	isTailWanted bool
+	title              string
+	read               func(room int) ([]string, error)
+	unavailableLabel   string
+	unavailableMessage string
+	rows               []string
+	room               int
+	offset             int
+	failure            string
+	isOpen             bool
+	isOpenable         bool
+	isTailWanted       bool
 }
 
 func (self *state) askToPreview(keypress key.Key) bool {
@@ -47,11 +49,13 @@ func (self *state) askToPreview(keypress key.Key) bool {
 	}
 
 	self.preview = previewState{
-		title:        work.Title,
-		read:         work.Read,
-		isOpen:       true,
-		isOpenable:   self.list.IsChoosable(self.chosen()),
-		isTailWanted: true,
+		title:              work.Title,
+		read:               work.Read,
+		unavailableLabel:   work.UnavailableLabel,
+		unavailableMessage: work.UnavailableMessage,
+		isOpen:             true,
+		isOpenable:         self.list.IsChoosable(self.chosen()),
+		isTailWanted:       true,
 	}
 
 	return true
@@ -154,6 +158,9 @@ func (self *state) drawPreview(room int, height int) string {
 	output.WriteString(eraseLine + "\r\n")
 
 	inputHint := style.PreviewRunningHint(Clip(previewRunningInputHint, room))
+	if self.preview.unavailableMessage != "" {
+		inputHint = style.PreviewRunningHint(Clip(self.preview.unavailableMessage, room))
+	}
 	if self.preview.isOpenable {
 		inputHint = style.PreviewLoadHint(Clip(previewLoadInputHint, room))
 	}
@@ -178,12 +185,20 @@ func (self *state) previewHint(room int) string {
 		return style.Subtle(Clip(openablePreviewHint, room))
 	}
 
-	mark, rest, isMarked := strings.Cut(Clip(runningPreviewHint, room), " ")
+	hint := runningPreviewHint
+	if self.preview.unavailableLabel != "" {
+		hint = self.preview.unavailableLabel + " · esc return · ↑↓ scroll"
+	}
+	mark, rest, isMarked := strings.Cut(Clip(hint, room), " ")
+	paint := style.Success
+	if self.preview.unavailableLabel != "" {
+		paint = style.Info
+	}
 	if !isMarked {
-		return style.Success(mark)
+		return paint(mark)
 	}
 
-	return style.Success(mark) + style.Subtle(" "+rest)
+	return paint(mark) + style.Subtle(" "+rest)
 }
 
 func (self *state) previewTitle(room int) string {
