@@ -40,7 +40,7 @@ func TestOnlyTheStylingSaysWhatIsGranted(t *testing.T) {
 	}
 }
 
-func TestCustomToolGroupsFormAThirdSection(t *testing.T) {
+func TestCustomToolGroupsJoinTheSecondSection(t *testing.T) {
 	built, err := modeToggle.New(
 		func() caps.Set { return caps.Read },
 		func() bool { return false },
@@ -50,7 +50,7 @@ func TestCustomToolGroupsFormAThirdSection(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if got := style.Plain(built.Render(segment.Context{})); got != "rxw ngl abc" {
+	if got := style.Plain(built.Render(segment.Context{})); got != "rxw nglabc" {
 		t.Errorf("got %q", got)
 	}
 }

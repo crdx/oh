@@ -310,7 +310,8 @@ func applyDefaultCaps(options *cli.Options, settings config.Config) error {
 		return nil
 	}
 
-	grantedCaps, grantedGroups, err := settings.ParseCaps(string(settings.Caps.Default))
+	defaultFlags := string(settings.Caps.Default) + settings.DefaultToolGroupFlags(options.Tools)
+	grantedCaps, grantedGroups, err := settings.ParseCaps(defaultFlags)
 	if err != nil {
 		return err
 	}

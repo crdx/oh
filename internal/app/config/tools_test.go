@@ -181,6 +181,32 @@ func TestCustomToolsCanShareAModeGroup(t *testing.T) {
 	}
 }
 
+func TestACustomToolCanEnableItsModeGroupByDefault(t *testing.T) {
+	config, _ := configWithACustomTool(t, `
+		[tools.weather]
+		description = "report the weather"
+		command = ["true"]
+		group = "c"
+		enabled = true
+
+		[tools.forecast]
+		description = "forecast the weather"
+		command = ["true"]
+		group = "d"
+		enabled = true
+	`)
+
+	if got := config.DefaultToolGroupFlags(nil); got != "cd" {
+		t.Errorf("got default groups %q", got)
+	}
+	if got := config.DefaultToolGroupFlags([]string{"weather"}); got != "c" {
+		t.Errorf("got selected default groups %q", got)
+	}
+	if got := config.DefaultToolGroupFlags([]string{"read"}); got != "" {
+		t.Errorf("got unselected default groups %q", got)
+	}
+}
+
 func TestASessionCanPreserveAnUngroupedCustomTool(t *testing.T) {
 	config, _ := configWithACustomTool(t, `
 		[tools.weather]

@@ -191,12 +191,18 @@ feature/bars
 14:32
 === mode-toggle / all granted ===
 rxw ngl
+=== mode-toggle / custom group disabled by default ===
+rxw nglc
+=== mode-toggle / custom group enabled by tool ===
+rxw nglc
 === mode-toggle / custom group fully disabled ===
 rxw ngl
+=== mode-toggle / custom group pending prefix ===
+rxw nglc
 === mode-toggle / custom group with compatible peer ===
-rxw ngl a
+rxw ngla
 === mode-toggle / custom groups ===
-rxw ngl abc
+rxw nglabc
 === mode-toggle / lookup only ===
 rxw ngl
 === mode-toggle / network only ===

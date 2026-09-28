@@ -17,14 +17,15 @@ import (
 const toolsSetting = "tools"
 
 type CustomTool struct {
-	Description string            `toml:"description"`
-	Command     []string          `toml:"command"`
-	Parameters  []CustomParameter `toml:"parameters"`
-	Subject     string            `toml:"subject"`
-	Timeout     time.Duration     `toml:"timeout"`
-	Permission  string            `toml:"permission"`
-	Group       string            `toml:"group"`
-	Version     int               `toml:"version"`
+	Description        string            `toml:"description"`
+	Command            []string          `toml:"command"`
+	Parameters         []CustomParameter `toml:"parameters"`
+	Subject            string            `toml:"subject"`
+	Timeout            time.Duration     `toml:"timeout"`
+	Permission         string            `toml:"permission"`
+	Group              string            `toml:"group"`
+	IsEnabledByDefault bool              `toml:"enabled"`
+	Version            int               `toml:"version"`
 }
 
 type CustomParameter struct {
@@ -67,6 +68,21 @@ func (self Config) CustomToolGroups() (caps.ToolGroups, error) {
 		groups[group] = append(groups[group], name)
 	}
 	return groups, nil
+}
+
+func (self Config) DefaultToolGroupFlags(selectedToolNames []string) string {
+	flags := make(map[string]struct{})
+	for _, name := range self.CustomToolNames() {
+		setting := self.Tools[name]
+		if !setting.IsEnabledByDefault || setting.Group == "" {
+			continue
+		}
+		if len(selectedToolNames) > 0 && !slices.Contains(selectedToolNames, name) {
+			continue
+		}
+		flags[setting.Group] = struct{}{}
+	}
+	return strings.Join(slices.Sorted(maps.Keys(flags)), "")
 }
 
 func (self Config) complain(name string, err error) error {

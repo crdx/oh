@@ -17,6 +17,7 @@
 
 ### Grants and sandbox
 
+- Let custom tools enable themselves by default
 - Gate custom tools with configurable mode groups
 - Revoke several grants at once
 - Keep grant rows compact

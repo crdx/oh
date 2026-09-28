@@ -60,7 +60,7 @@ func (self state) Render(segment.Context) string {
 	for _, flag := range groups.Flags {
 		groupLetters.WriteString(self.groupLetter(string(flag), groups.Has(string(flag)), isPrefixPending))
 	}
-	return renderedMode + gap + groupLetters.String()
+	return renderedMode + groupLetters.String()
 }
 
 func (self state) groupLetter(flag string, isGranted bool, isPrefixPending bool) string {

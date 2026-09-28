@@ -7334,16 +7334,42 @@ func TestConfiguredCapabilitiesIncludeCustomToolGroups(t *testing.T) {
 	}
 }
 
+func TestACustomToolCanEnableItsModeGroupByDefault(t *testing.T) {
+	options := cli.Options{Caps: caps.Read | caps.Shell}
+	settings := config.Config{
+		Caps: config.Caps{Default: "rx"},
+		Tools: map[string]config.CustomTool{
+			"weather": {Group: "c", IsEnabledByDefault: true},
+		},
+	}
+
+	if err := applyDefaultCaps(&options, settings); err != nil {
+		t.Fatal(err)
+	}
+	if got := options.Caps.Flags(); got != "rx" || options.GroupFlags != "c" {
+		t.Errorf("got capabilities %q and groups %q", got, options.GroupFlags)
+	}
+}
+
 func TestExplicitCommandLineCapabilitiesOverrideTheConfig(t *testing.T) {
-	options := cli.Options{Caps: caps.Read | caps.Shell, WereCapsChosen: true}
-	settings := config.Config{Caps: config.Caps{Default: "rwg"}}
+	options := cli.Options{
+		Caps:           caps.Read | caps.Shell,
+		GroupFlags:     "a",
+		WereCapsChosen: true,
+	}
+	settings := config.Config{
+		Caps: config.Caps{Default: "rwg"},
+		Tools: map[string]config.CustomTool{
+			"weather": {Group: "c", IsEnabledByDefault: true},
+		},
+	}
 
 	if err := applyDefaultCaps(&options, settings); err != nil {
 		t.Fatal(err)
 	}
 
-	if got := options.Caps.Flags(); got != "rx" {
-		t.Errorf("got capabilities %q", got)
+	if got := options.Caps.Flags(); got != "rx" || options.GroupFlags != "a" {
+		t.Errorf("got capabilities %q and groups %q", got, options.GroupFlags)
 	}
 }
 
@@ -13100,6 +13126,26 @@ func TestGoldenEveryWidthShedsWhatItMustFromTheBar(t *testing.T) {
 	compareWithGolden(t, "shedding", ".screen", shownPasses(t, passes))
 }
 
+func customToolDefaultMode(t *testing.T, isEnabled bool) *caps.Mode {
+	t.Helper()
+
+	options := cli.Options{Caps: caps.Read | caps.Shell}
+	settings := config.Config{
+		Caps: config.Caps{Default: "rx"},
+		Tools: map[string]config.CustomTool{
+			"weather": {Group: "c", IsEnabledByDefault: isEnabled},
+		},
+	}
+	if err := applyDefaultCaps(&options, settings); err != nil {
+		t.Fatal(err)
+	}
+	toolGroups, err := settings.CustomToolGroups()
+	if err != nil {
+		t.Fatal(err)
+	}
+	return caps.NewModeWithGroups(options.Caps, options.GroupFlags, toolGroups)
+}
+
 func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 	t.Setenv("HOME", "/user/kevin")
 
@@ -13123,6 +13169,8 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 		caps.ToolGroups{"a": {"disabled"}},
 	)
 	fullyDisabledGroup.RestrictTools(nil)
+	defaultDisabledToolGroup := customToolDefaultMode(t, false)
+	defaultEnabledToolGroup := customToolDefaultMode(t, true)
 
 	passes := map[string]func() string{
 		"activity-spinner / idle": goldenSegmentPass(
@@ -13362,6 +13410,36 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 				func() caps.Set { return caps.Read },
 				func() bool { return false },
 				func() caps.GroupStatus { return caps.GroupStatus{Flags: "abc", GrantedFlags: "b"} },
+			),
+			"",
+			segment.Context{},
+		),
+		"mode-toggle / custom group disabled by default": goldenSegmentPass(
+			t,
+			modeToggle.New(
+				defaultDisabledToolGroup.Current,
+				func() bool { return false },
+				defaultDisabledToolGroup.Groups,
+			),
+			"",
+			segment.Context{},
+		),
+		"mode-toggle / custom group enabled by tool": goldenSegmentPass(
+			t,
+			modeToggle.New(
+				defaultEnabledToolGroup.Current,
+				func() bool { return false },
+				defaultEnabledToolGroup.Groups,
+			),
+			"",
+			segment.Context{},
+		),
+		"mode-toggle / custom group pending prefix": goldenSegmentPass(
+			t,
+			modeToggle.New(
+				defaultEnabledToolGroup.Current,
+				func() bool { return true },
+				defaultEnabledToolGroup.Groups,
 			),
 			"",
 			segment.Context{},

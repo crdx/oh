@@ -237,10 +237,11 @@ Put custom tools in the global config. A workspace `oh.toml` that sets `[tools]`
 | `timeout`     | the limit for one call; `30s` by default                  |
 | `permission`  | `ask` by default, or `allow` to run without a question    |
 | `group`       | one lowercase mode flag that must grant access            |
+| `enabled`     | grant the tool's group initially; `false` by default      |
 
 The model reads the description alone to choose a tool. Write it for the model.
 
-A group using `x`, `w`, `n`, `g`, `l`, or `r` follows that built-in capability. Any other letter appears in a third section of the mode display, as in `rxw ngl abc`, and ctrl+x followed by that letter toggles every tool in its group. Add the letter to `caps.default` or `-c` to grant it initially. Read is always granted, so a tool in group `r` is always available.
+A group using `x`, `w`, `n`, `g`, `l`, or `r` follows that built-in capability. Any other letter appears directly after those letters in the mode display, as in `rxw nglabc`, and ctrl+x followed by that letter toggles every tool in its group. Set `enabled = true` on a tool or add its letter to `caps.default` to grant the group initially. Enabling one tool grants every tool sharing its group. An explicit `-c` overrides both defaults. Read is always granted, so a tool in group `r` is always available.
 
 With `ask`, oh shows the command line and waits for a yes or a no after its group grants access. A no tells the model to try something else. Print mode has nobody to ask, so the call fails.
 
@@ -267,6 +268,7 @@ subject = "city"
 timeout = "10s"
 permission = "ask"
 group = "a"
+enabled = true
 parameters = [
     { name = "city", kind = "string", description = "the city to report on" },
     { name = "days", kind = "integer", description = "how many days ahead to look", optional = true },
