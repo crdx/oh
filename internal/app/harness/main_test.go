@@ -5070,91 +5070,93 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		".transcript",
 	})
 	for name, extensions := range map[string][]string{
-		"app-plain-resume":       {".jsonl", ".transcript"},
-		"app-plain-turn":         {".jsonl", ".transcript"},
-		"approval-queue":         {".ansi", ".screen"},
-		"authorisation-url":      {".ansi", ".screen"},
-		"banner":                 {".ansi", ".screen"},
-		"banner-relayout":        {".ansi", ".screen"},
-		"clearing":               {".ansi", ".screen"},
-		"completion":             {".txt"},
-		"config-reload":          {".ansi", ".screen"},
-		"corrupt-session":        {".txt"},
-		"default-bar":            {".ansi", ".screen"},
-		"feedback":               {".ansi", ".screen", ".txt"},
-		"feedback-frame":         {".ansi", ".screen"},
-		"question-notifications": {".ansi", ".screen", ".txt"},
-		"fork-message":           {".txt"},
-		"context":                {".prompt"},
-		"context-deny":           {".prompt"},
-		"context-drops":          {".prompt"},
-		"context-jobs":           {".prompt"},
-		"context-network":        {".prompt"},
-		"context-network-print":  {".prompt"},
-		"context-print":          {".prompt"},
-		"context-file-tools":     {".prompt"},
-		"context-no-telling":     {".prompt"},
-		"context-no-sockets":     {".prompt"},
-		"context-no-paths":       {".prompt"},
-		"context-path-kinds":     {".prompt"},
-		"context-repository":     {".prompt"},
-		"context-scratch-root":   {".prompt"},
-		"context-simulation":     {".prompt"},
-		"context-yolo":           {".prompt"},
-		"host-command":           {".ansi", ".screen"},
-		"inputblock":             {".ansi", ".screen"},
-		"pathrefs":               {".ansi", ".screen"},
-		"slashcommands":          {".ansi", ".screen"},
-		"legacy-alt-enter":       {".ansi", ".screen"},
-		"lifecycle":              {".ansi", ".screen"},
-		"line-resize":            {".screen"},
-		"short-terminal":         {".screen"},
-		"streaming-modes":        {".screen"},
-		"groupings":              {".screen"},
-		"reasonings":             {".ansi", ".screen"},
-		"mermaid-streaming":      {".screen"},
-		"message-marks":          {".screen"},
-		"mode-takeback":          {".ansi", ".screen"},
-		"model-arguments":        {".txt"},
-		"new-session":            {".txt"},
-		"ordinary-tab":           {".ansi", ".screen"},
-		"path-grant-lifecycle":   {".ansi", ".screen"},
-		"port-directions":        {".ansi", ".screen"},
-		"path-message":           {".ansi", ".screen"},
-		"user-path-links":        {".ansi", ".screen"},
-		"workspace-paths":        {".ansi", ".screen"},
-		"pending-mode-messages":  {".ansi", ".screen"},
-		"pending-notices":        {".ansi", ".screen"},
-		"paste":                  {".ansi", ".screen"},
-		"pictures":               {".ansi", ".screen"},
-		"picker-menu":            {".ansi", ".screen"},
-		"plain-input":            {".ansi", ".screen"},
-		"print-arguments":        {".txt"},
-		"queued-messages":        {".ansi", ".screen"},
-		"question-over-call":     {".screen"},
-		"footer-over-calls":      {".screen"},
-		"frame-edges":            {".screen"},
-		"readline-bindings":      {".ansi", ".screen"},
-		"resume-arguments":       {".txt"},
-		"resume-model-arguments": {".txt"},
-		"resume-mode":            {".ansi"},
-		"resume-confinement":     {".ansi"},
-		"running":                {".ansi", ".screen"},
-		"schedule":               {".ansi", ".screen"},
-		"segments":               {".ansi", ".screen"},
-		"shedding":               {".ansi", ".screen"},
-		"signal-restoration":     {".ansi"},
-		"special-links":          {".ansi", ".screen"},
-		"startup":                {".ansi", ".screen"},
-		"startup-local-config":   {".ansi", ".screen"},
-		"startup-sized":          {".ansi", ".screen"},
-		"startup-sized-output":   {".ansi", ".screen"},
-		"terminal-escape":        {".ansi", ".screen"},
-		"theme-reload":           {".ansi", ".screen"},
-		"tool-availability":      {".ansi", ".screen"},
-		"usage":                  {".json"},
-		"usage-arguments":        {".txt"},
-		"vertical-movement":      {".ansi", ".screen"},
+		"app-plain-resume":        {".jsonl", ".transcript"},
+		"app-plain-turn":          {".jsonl", ".transcript"},
+		"approval-queue":          {".ansi", ".screen"},
+		"authorisation-url":       {".ansi", ".screen"},
+		"banner":                  {".ansi", ".screen"},
+		"banner-relayout":         {".ansi", ".screen"},
+		"clearing":                {".ansi", ".screen"},
+		"completion":              {".txt"},
+		"config-reload":           {".ansi", ".screen"},
+		"corrupt-session":         {".txt"},
+		"default-bar":             {".ansi", ".screen"},
+		"elided-path-links":       {".ansi", ".screen"},
+		"feedback":                {".ansi", ".screen", ".txt"},
+		"feedback-frame":          {".ansi", ".screen"},
+		"question-notifications":  {".ansi", ".screen", ".txt"},
+		"fork-message":            {".txt"},
+		"context":                 {".prompt"},
+		"context-deny":            {".prompt"},
+		"context-drops":           {".prompt"},
+		"context-jobs":            {".prompt"},
+		"context-network":         {".prompt"},
+		"context-network-print":   {".prompt"},
+		"context-print":           {".prompt"},
+		"context-file-tools":      {".prompt"},
+		"context-no-telling":      {".prompt"},
+		"context-no-sockets":      {".prompt"},
+		"context-no-paths":        {".prompt"},
+		"context-path-kinds":      {".prompt"},
+		"context-repository":      {".prompt"},
+		"context-scratch-root":    {".prompt"},
+		"context-simulation":      {".prompt"},
+		"context-yolo":            {".prompt"},
+		"host-command":            {".ansi", ".screen"},
+		"inputblock":              {".ansi", ".screen"},
+		"pathrefs":                {".ansi", ".screen"},
+		"slashcommands":           {".ansi", ".screen"},
+		"legacy-alt-enter":        {".ansi", ".screen"},
+		"lifecycle":               {".ansi", ".screen"},
+		"line-resize":             {".screen"},
+		"short-terminal":          {".screen"},
+		"streaming-modes":         {".screen"},
+		"groupings":               {".screen"},
+		"reasonings":              {".ansi", ".screen"},
+		"mermaid-streaming":       {".screen"},
+		"message-marks":           {".screen"},
+		"mode-takeback":           {".ansi", ".screen"},
+		"model-arguments":         {".txt"},
+		"new-session":             {".txt"},
+		"ordinary-tab":            {".ansi", ".screen"},
+		"path-grant-lifecycle":    {".ansi", ".screen"},
+		"port-directions":         {".ansi", ".screen"},
+		"path-message":            {".ansi", ".screen"},
+		"user-path-links":         {".ansi", ".screen"},
+		"workspace-paths":         {".ansi", ".screen"},
+		"wrapped-reasoning-paths": {".ansi", ".screen"},
+		"pending-mode-messages":   {".ansi", ".screen"},
+		"pending-notices":         {".ansi", ".screen"},
+		"paste":                   {".ansi", ".screen"},
+		"pictures":                {".ansi", ".screen"},
+		"picker-menu":             {".ansi", ".screen"},
+		"plain-input":             {".ansi", ".screen"},
+		"print-arguments":         {".txt"},
+		"queued-messages":         {".ansi", ".screen"},
+		"question-over-call":      {".screen"},
+		"footer-over-calls":       {".screen"},
+		"frame-edges":             {".screen"},
+		"readline-bindings":       {".ansi", ".screen"},
+		"resume-arguments":        {".txt"},
+		"resume-model-arguments":  {".txt"},
+		"resume-mode":             {".ansi"},
+		"resume-confinement":      {".ansi"},
+		"running":                 {".ansi", ".screen"},
+		"schedule":                {".ansi", ".screen"},
+		"segments":                {".ansi", ".screen"},
+		"shedding":                {".ansi", ".screen"},
+		"signal-restoration":      {".ansi"},
+		"special-links":           {".ansi", ".screen"},
+		"startup":                 {".ansi", ".screen"},
+		"startup-local-config":    {".ansi", ".screen"},
+		"startup-sized":           {".ansi", ".screen"},
+		"startup-sized-output":    {".ansi", ".screen"},
+		"terminal-escape":         {".ansi", ".screen"},
+		"theme-reload":            {".ansi", ".screen"},
+		"tool-availability":       {".ansi", ".screen"},
+		"usage":                   {".json"},
+		"usage-arguments":         {".txt"},
+		"vertical-movement":       {".ansi", ".screen"},
 	} {
 		claimFixtureName(t, expected, "special replay", name, extensions)
 	}
@@ -7996,6 +7998,37 @@ func TestGoldenEveryReasoningRenderingDrawsAThoughtAsItSays(t *testing.T) {
 	compareWithGolden(t, "reasonings", ".ansi", writtenPasses)
 }
 
+func TestGoldenWrappedReasoningPathsKeepTheirCompleteTargets(t *testing.T) {
+	ansiPasses := map[string]func() string{}
+	screenPasses := map[string]func() string{}
+	for renderingName, rendering := range everyReasoningRendering() {
+		for widthName, columns := range map[string]int{"wide": 40, "narrow": 20} {
+			name := renderingName + " " + widthName
+			ansiPasses[name] = func() string {
+				return drawWrappedReasoningPath(t, rendering, columns)
+			}
+			screenPasses[name] = func() string {
+				return shown(t, drawWrappedReasoningPath(t, rendering, columns), columns)
+			}
+		}
+	}
+
+	compareWithGolden(t, "wrapped-reasoning-paths", ".ansi", ansiPasses)
+	compareWithGolden(t, "wrapped-reasoning-paths", ".screen", screenPasses)
+}
+
+func drawWrappedReasoningPath(t *testing.T, rendering output.ReasoningRendering, columns int) string {
+	t.Helper()
+
+	rig := newThinkingRig(t, rendering, false, columns)
+	event := agent.Event{
+		Kind: agent.ModelReasoningEvent,
+		Text: "Inspecting cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch before answering.",
+	}
+
+	return replayInto(rig, []replayEntry{{Event: &event}})
+}
+
 func TestAKeptThoughtClosesEveryRowSoItCannotBleed(t *testing.T) {
 	for name, columns := range everyThinkingWidth() {
 		t.Run(name, func(t *testing.T) {
@@ -10535,6 +10568,93 @@ func TestReloadingConfigReplacesSnippetsAtomically(t *testing.T) {
 	if inputLine.Text() != "//new " {
 		t.Errorf("reloaded completion is %q", inputLine.Text())
 	}
+}
+
+const elidedPathColumns = 38
+
+func TestGoldenElidedCallPathsKeepTheirCompleteTargets(t *testing.T) {
+	passes := map[string]func() string{
+		"elided path links": func() string { return drawElidedPathLinks(t) },
+	}
+	screenPasses := map[string]func() string{
+		"elided path links": func() string {
+			return shown(t, drawElidedPathLinks(t), elidedPathColumns)
+		},
+	}
+
+	compareWithGolden(t, "elided-path-links", ".ansi", passes)
+	compareWithGolden(t, "elided-path-links", ".screen", screenPasses)
+}
+
+func drawElidedPathLinks(t *testing.T) string {
+	t.Helper()
+
+	rig := newReplayRig(t, elidedPathColumns)
+	existingPath := "cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch"
+	calls := []agent.Event{
+		{
+			Name: "commit",
+			FallbackRendering: agent.FallbackRendering{
+				Subject: "record progress",
+				Note:    existingPath,
+			},
+		},
+		{
+			Name: "commit",
+			FallbackRendering: agent.FallbackRendering{
+				Subject: "record progress",
+				Note:    "cmd/oh/line/a-missing-patch-path-that-is-long-enough-to-be-elided.patch",
+			},
+		},
+		{
+			Name: "old_read",
+			FallbackRendering: agent.FallbackRendering{
+				RenderingKind: "read",
+				Subject:       existingPath,
+				ReadOnly:      true,
+			},
+		},
+		{
+			Name: "old_read",
+			FallbackRendering: agent.FallbackRendering{
+				RenderingKind: "read",
+				Subject:       existingPath,
+				Note:          "10-14",
+				PathLine:      "10-14",
+				ReadOnly:      true,
+			},
+		},
+		{
+			Name: "old_shell",
+			FallbackRendering: agent.FallbackRendering{
+				RenderingKind: "bash",
+				Subject:       "cat " + existingPath,
+				Emphasis: tool.Emphasis{
+					Kind:  tool.EmphasisSyntax,
+					Value: "bash",
+				},
+			},
+		},
+	}
+
+	for i, callEvent := range calls {
+		identifier := strconv.Itoa(i)
+		callEvent.Kind = agent.ToolCallRequestEvent
+		callEvent.ID = identifier
+		rig.chat.recordedEvents = append(
+			rig.chat.recordedEvents,
+			callEvent,
+			agent.Event{
+				Kind:   agent.ToolCallResultEvent,
+				Status: agent.SuccessStatus,
+				ID:     identifier,
+				Name:   callEvent.Name,
+			},
+		)
+	}
+	rig.chat.replay()
+
+	return rig.drawn()
 }
 
 func TestGoldenWorkspacePathsInCallLabelsLoseTheirPrefix(t *testing.T) {

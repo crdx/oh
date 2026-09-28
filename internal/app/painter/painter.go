@@ -47,7 +47,6 @@ type Picasso struct {
 	reasoningPlain    plainThought
 	reasoningReflow   paragraphReflow
 	reasoningStyles   rowMemory
-	reasoningLinks    rowLinks
 	previousKind      agent.Kind
 
 	isStale               bool
@@ -155,7 +154,7 @@ func (self *Picasso) DrawEvent(event agent.Event) {
 		self.answer.Reset()
 		self.answer.Write(event.Text)
 		renderedAnswer := markdown.RenderWith(self.answer.Text(), self.answerOptions())
-		if !self.screen.DrawAnswer(renderedAnswer) {
+		if !self.screen.DrawLinkedAnswer(renderedAnswer) {
 			self.isStale = true
 		}
 		self.screen.Seal()
@@ -291,10 +290,6 @@ func submittedContentRows(
 		content = markdown.Render(strutil.StripControl(message.text), contentColumns)
 	}
 	for i, row := range content {
-		if shouldRenderHyperlinks && !roots.IsEmpty() {
-			row = link.Render(row, roots)
-		}
-
 		prefix := " "
 		switch {
 		case marker == "":
@@ -360,7 +355,18 @@ func RenderReasoning(thought string, columns int, rendering output.ReasoningRend
 	var reflow paragraphReflow
 	var styles rowMemory
 
-	return renderReasoningWith(&renderer, &plain, &reflow, &styles, thought, columns, rendering, true)
+	return renderReasoningWith(
+		&renderer,
+		&plain,
+		&reflow,
+		&styles,
+		thought,
+		columns,
+		rendering,
+		true,
+		false,
+		link.Roots{},
+	)
 }
 
 func renderReasoningWith(
@@ -372,6 +378,8 @@ func renderReasoningWith(
 	columns int,
 	rendering output.ReasoningRendering,
 	isSettled bool,
+	shouldRenderHyperlinks bool,
+	pathRoots link.Roots,
 ) []string {
 	if rendering == output.ReasoningPlain {
 		settledText, tail := plain.Text(thought, isSettled)
@@ -382,11 +390,21 @@ func renderReasoningWith(
 			}
 			text += tailText
 		}
+		settledLength := len(settledText)
+		if shouldRenderHyperlinks {
+			settledLength = len(link.Render(settledText, pathRoots))
+			text = link.Render(text, pathRoots)
+		}
 
-		return reflow.Wrap(text, len(settledText), columns)
+		return reflow.Wrap(text, settledLength, columns)
 	}
 
-	renderedRows := renderer.Render(thought, columns)
+	options := markdown.Options{Columns: columns}
+	if shouldRenderHyperlinks {
+		options.ShouldRenderHyperlinks = true
+		options.LinkRoot = pathRoots
+	}
+	renderedRows := width.Texts(renderer.RenderWith(thought, options))
 
 	if rendering == output.ReasoningMarkdown {
 		return styles.Render(renderedRows, style.Reasoning.Over)
@@ -621,6 +639,7 @@ func (self *Picasso) drawReasoning(isSettled bool) {
 		self.reasoning.Text(),
 		isSettled,
 	)
+	shouldRenderHyperlinks := self.screen.IsTerminal()
 	rows := renderReasoningWith(
 		&self.reasoningRenderer,
 		&self.reasoningPlain,
@@ -630,10 +649,9 @@ func (self *Picasso) drawReasoning(isSettled bool) {
 		self.screen.Columns(),
 		self.reasoningRendering,
 		isSettled,
+		shouldRenderHyperlinks,
+		self.linkRoots(),
 	)
-	if self.screen.IsTerminal() {
-		rows = self.reasoningLinks.Render(rows, self.linkRoots())
-	}
 
 	isTailHidden := !isSettled && self.streamingMode == output.StreamingModeLine
 	if isTailHidden {
@@ -661,7 +679,7 @@ func (self *Picasso) drawAnswer(isSettled bool) {
 	}
 
 	self.answer.MarkRowsDrawn(len(rows), isTailHeldBack || isRowArriving)
-	if !self.screen.DrawAnswer(rows) {
+	if !self.screen.DrawLinkedAnswer(rows) {
 		self.isStale = true
 	}
 }
@@ -734,7 +752,6 @@ func (self *Picasso) resetReasoning() {
 	self.reasoningPlain.Reset()
 	self.reasoningReflow.Reset()
 	self.reasoningStyles.Reset()
-	self.reasoningLinks.Reset()
 }
 
 func (self *Picasso) mark(event agent.Event) {

@@ -370,8 +370,8 @@ The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe prev\e[K\r\e[8C\e[?25h\e[?20
 \e[3m\e[38;2;150;152;150mfirst, then\e[0m\r
 \e[3m\e[38;2;150;152;150mexposing the\e[0m\r
 \e[3m\e[38;2;150;152;150mpreview.\e[0m\e[0m\r
-\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mt…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mR…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\t…\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\R…\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
 \r
 \e[48;2;48;58;67m            \e[0m\r

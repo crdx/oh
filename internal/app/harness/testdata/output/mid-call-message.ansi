@@ -388,7 +388,7 @@ It h\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds\e[K\r\e[8C\e[?25h\e[?2
 Reading it\r
 now.\r
 \r
-read \e[38;2;192;128;80mcmd/…\e[0m \e[38;2;150;152;150m–\e[0m\r
+read \e[38;2;192;128;80m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/…\e]8;;\e\\\e[0m \e[38;2;150;152;150m–\e[0m\r
 \r
 \e[38;2;207;173;0mTurn\e[0m\r
 \e[38;2;207;173;0mstopped.\e[0m\r
@@ -399,7 +399,7 @@ read \e[38;2;192;128;80mcmd/…\e[0m \e[38;2;150;152;150m–\e[0m\r
 \e[48;2;52;53;65m \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\?\e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mt…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\t…\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 It holds the\r
 word \e[38;2;192;128;80mone\e[0m,\r

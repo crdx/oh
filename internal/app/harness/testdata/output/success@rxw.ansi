@@ -623,7 +623,7 @@ Reading the\r
 renderer\r
 now.\r
 \r
-\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mc…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\c…\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
 \r
 The prompt\r
 is drawn by\r

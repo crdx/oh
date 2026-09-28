@@ -624,7 +624,7 @@ Let me read\r
 the\r
 renderer.\r
 \r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mc…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\c…\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
 \r
 The prompt\r
 is built in\r
@@ -641,7 +641,7 @@ about it in\r
 \e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\,\r
 and nothing\r
 at all in\r
-\e]8;;file:///workspace/cmd/oh/line\e\\cmd/oh/line\e]8;;\e\\/\r
+cmd/oh/line/\r
 missing.go,\r
 which is\r
 where I\r

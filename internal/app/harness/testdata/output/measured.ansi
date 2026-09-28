@@ -397,7 +397,7 @@ then.\r
 \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\re…\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m~1.6Kt\e[0m\r
 \e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0med…\e[0m\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;76;154;44m+12\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;204;102;102m−5\e[0m\r
 \e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;201;166;212m^\e[0m\e[38;2;150;152;150mfun\e[0m\e[38;2;150;152;150m…\e[0m \e[38;2;76;154;44m✓\e[0m\r
-\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mR…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\R…\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
 \r
 Here is a\r
 script, and\r

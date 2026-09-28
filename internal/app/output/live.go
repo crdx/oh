@@ -12,12 +12,13 @@ import (
 const eraseRow = ansi.EraseLine
 
 type liveRegion struct {
-	rows          []width.ScreenRow
-	firstGroup    Group
-	lastGroup     Group
-	height        int
-	committedRows []width.ScreenRow
-	isStarted     bool
+	rows            []width.ScreenRow
+	firstGroup      Group
+	lastGroup       Group
+	height          int
+	committedRows   []width.ScreenRow
+	isStarted       bool
+	shouldLinkPaths bool
 }
 
 func spansOneGroup(firstGroup Group, lastGroup Group, group Group) bool {
@@ -25,11 +26,15 @@ func spansOneGroup(firstGroup Group, lastGroup Group, group Group) bool {
 }
 
 func (self *Screen) DrawAnswer(rows []width.ScreenRow) bool {
-	return self.draw(rows, AnswerGroup)
+	return self.draw(rows, AnswerGroup, true)
+}
+
+func (self *Screen) DrawLinkedAnswer(rows []width.ScreenRow) bool {
+	return self.draw(rows, AnswerGroup, false)
 }
 
 func (self *Screen) DrawReasoning(rows []string) bool {
-	return self.draw(width.HardRows(rows), ReasoningGroup)
+	return self.draw(width.HardRows(rows), ReasoningGroup, false)
 }
 
 func (self *Screen) DiscardLive() bool {
@@ -48,7 +53,7 @@ func (self *Screen) DiscardLive() bool {
 	return true
 }
 
-func (self *Screen) draw(rows []width.ScreenRow, group Group) bool {
+func (self *Screen) draw(rows []width.ScreenRow, group Group, shouldLinkPaths bool) bool {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 
@@ -75,6 +80,7 @@ func (self *Screen) draw(rows []width.ScreenRow, group Group) bool {
 
 	self.live.rows = rows
 	self.live.lastGroup = group
+	self.live.shouldLinkPaths = shouldLinkPaths
 	self.changed()
 
 	return true
@@ -101,7 +107,7 @@ func (self *Screen) seal() {
 	}
 
 	rows, firstGroup, lastGroup := self.liveContent()
-	isAnswer := spansOneGroup(firstGroup, lastGroup, AnswerGroup)
+	shouldLinkPaths := spansOneGroup(firstGroup, lastGroup, AnswerGroup) && self.live.shouldLinkPaths
 	rest := rows[min(len(self.live.committedRows), len(rows)):]
 
 	switch {
@@ -111,14 +117,14 @@ func (self *Screen) seal() {
 		self.newline()
 	}
 
-	self.writeRows(rest, isAnswer)
+	self.writeRows(rest, shouldLinkPaths)
 
 	self.lastGroup = lastGroup
 	self.blocks = nil
 	self.live = liveRegion{}
 }
 
-func (self *Screen) commit(rows []width.ScreenRow, firstGroup Group, isAnswer bool) {
+func (self *Screen) commit(rows []width.ScreenRow, firstGroup Group, shouldLinkPaths bool) {
 	if !self.live.isStarted {
 		self.begin(firstGroup)
 		self.live.isStarted = true
@@ -132,12 +138,12 @@ func (self *Screen) commit(rows []width.ScreenRow, firstGroup Group, isAnswer bo
 		self.newline()
 	}
 
-	self.writeRows(rows, isAnswer)
+	self.writeRows(rows, shouldLinkPaths)
 	self.live.committedRows = append(self.live.committedRows, rows...)
 }
 
-func (self *Screen) linkifyRows(text string, isAnswer bool) string {
-	if !isAnswer {
+func (self *Screen) linkifyRows(text string, shouldLinkPaths bool) string {
+	if !shouldLinkPaths {
 		return text
 	}
 
@@ -177,7 +183,7 @@ func (self *Screen) liveFrameRows(room int) []width.ScreenRow {
 	}
 
 	rows, firstGroup, lastGroup := self.liveContent()
-	isAnswer := spansOneGroup(firstGroup, lastGroup, AnswerGroup)
+	shouldLinkPaths := spansOneGroup(firstGroup, lastGroup, AnswerGroup) && self.live.shouldLinkPaths
 
 	if padding := self.live.height - len(rows); padding > 0 {
 		rows = append(slices.Clone(rows), make([]width.ScreenRow, padding)...)
@@ -196,14 +202,17 @@ func (self *Screen) liveFrameRows(room int) []width.ScreenRow {
 
 	if room >= 0 && gap+len(visible) > room {
 		overflow := endingOnARow(visible, max(0, len(visible)-room))
-		self.commit(visible[:overflow], firstGroup, isAnswer)
+		self.commit(visible[:overflow], firstGroup, shouldLinkPaths)
 		visible = visible[overflow:]
 		gap = 0
 	}
 
 	frameRows := make([]width.ScreenRow, gap, gap+len(visible))
 	for _, row := range visible {
-		frameRows = append(frameRows, width.ScreenRow{Text: self.linkifyRows(row.Text, isAnswer), HasSoftBreak: row.HasSoftBreak})
+		frameRows = append(frameRows, width.ScreenRow{
+			Text:         self.linkifyRows(row.Text, shouldLinkPaths),
+			HasSoftBreak: row.HasSoftBreak,
+		})
 	}
 
 	return frameRows

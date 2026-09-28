@@ -38,6 +38,8 @@ type Label struct {
 	PathRoots       link.Roots
 	Continuation    []Label
 	lineRange       string
+	pathSubject     string
+	linkSource      string
 	renderedSubject string
 }
 
@@ -63,7 +65,8 @@ func (self Label) Render() string {
 				subject += " " + self.renderQualifier()
 				isQualifierLinked = true
 			}
-			subject = link.RenderPathAtLine(subject, self.Subject, self.PathRoots, firstLine)
+			pathSubject := cmp.Or(self.pathSubject, self.Subject)
+			subject = link.RenderPathAtLine(subject, pathSubject, self.PathRoots, firstLine)
 		}
 		line += " " + subject
 	}
@@ -79,6 +82,10 @@ func (self Label) Render() string {
 			}
 			line += part
 		}
+	}
+
+	if self.linkSource != "" {
+		return link.RenderFromSource(line, self.linkSource, self.PathRoots)
 	}
 
 	return link.Render(line, self.PathRoots)
@@ -121,7 +128,13 @@ func (self Label) Width() int {
 }
 
 func (self Label) elide(room int) Label {
+	self.linkSource = ""
+	linkSource := self.Render()
 	self.renderedSubject = ""
+	if lineRangeStart(self.lineRange) != "" {
+		self.pathSubject = self.Subject
+	}
+
 	self.Name = width.Elide(self.Name, room)
 	room -= width.Of(self.Name) + 1
 
@@ -163,6 +176,7 @@ func (self Label) elide(room int) Label {
 		room -= partWidth + 1
 	}
 
+	self.linkSource = linkSource
 	return self
 }
 

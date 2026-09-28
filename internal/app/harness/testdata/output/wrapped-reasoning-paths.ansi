@@ -1,0 +1,34 @@
+=== markdown narrow ===
+\e[?2026h\e[?25l\e[3m\e[38;2;150;152;150mInspecting\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\cmd/oh/line/a-patch-\e]8;;\e\\\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\path-that-is-long-en\e]8;;\e\\\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\ough-to-wrap-after-l\e]8;;\e\\\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\eading-indentation-a\e]8;;\e\\\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\nd-remain-clickable.\e]8;;\e\\\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\patch\e]8;;\e\\ before\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150manswering.\e[0m\e[0m\r
+\e[?25h\e[?2026l
+=== markdown wide ===
+\e[?2026h\e[?25l\e[3m\e[38;2;150;152;150mInspecting\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\cmd/oh/line/a-patch-path-that-is-long-en\e]8;;\e\\\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\ough-to-wrap-after-leading-indentation-a\e]8;;\e\\\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\nd-remain-clickable.patch\e]8;;\e\\ before\e[0m\e[0m\r
+\e[3m\e[38;2;150;152;150manswering.\e[0m\e[0m\r
+\e[?25h\e[?2026l
+=== plain narrow ===
+\e[?2026h\e[?25l\e[3m\e[38;2;150;152;150mInspecting\e[0m\r
+\e[3m\e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\cmd/oh/line/a-patch-\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[3m\e[38;2;150;152;150mpath-that-is-long-en\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[3m\e[38;2;150;152;150mough-to-wrap-after-l\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[3m\e[38;2;150;152;150meading-indentation-a\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[3m\e[38;2;150;152;150mnd-remain-clickable.\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[3m\e[38;2;150;152;150mpatch\e]8;;\e\\ before\e[0m\r
+\e[3m\e[38;2;150;152;150manswering.\e[0m\e[0m\r
+\e[?25h\e[?2026l
+=== plain wide ===
+\e[?2026h\e[?25l\e[3m\e[38;2;150;152;150mInspecting\e[0m\r
+\e[3m\e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\cmd/oh/line/a-patch-path-that-is-long-en\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[3m\e[38;2;150;152;150mough-to-wrap-after-leading-indentation-a\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch\e\\\e[3m\e[38;2;150;152;150mnd-remain-clickable.patch\e]8;;\e\\ before\e[0m\r
+\e[3m\e[38;2;150;152;150manswering.\e[0m\e[0m\r
+\e[?25h\e[?2026l

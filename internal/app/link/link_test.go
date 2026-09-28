@@ -70,6 +70,35 @@ func TestSourceLocationsBecomeFileFragmentsWithoutChangingTheirText(t *testing.T
 	}
 }
 
+func TestAShortenedPathUsesItsCompleteSourceAsTheTarget(t *testing.T) {
+	workspace := t.TempDir()
+	parent := filepath.Join(workspace, "parent")
+	path := prepareFile(t, workspace, "parent/changes.patch")
+	shown := parent + "…"
+
+	got := RenderFromSource(shown, path, Roots{})
+	if address := linkAddress(t, got); address.Path != filepath.ToSlash(path) {
+		t.Errorf("got address %q, want complete path %q", address, path)
+	}
+	if Plain(got) != shown {
+		t.Errorf("visible path is %q, want %q", Plain(got), shown)
+	}
+}
+
+func TestAShortenedMissingPathDoesNotLinkAnExistingSourcePrefix(t *testing.T) {
+	workspace := t.TempDir()
+	parent := filepath.Join(workspace, "parent")
+	if err := os.MkdirAll(parent, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	missingPath := filepath.Join(parent, "missing.patch")
+	shown := parent + "…"
+
+	if got := RenderFromSource(shown, missingPath, Roots{}); got != shown {
+		t.Errorf("missing path gained a link to its existing prefix in %q", got)
+	}
+}
+
 func TestAPathCanLinkItsLabelAtALine(t *testing.T) {
 	workspace := t.TempDir()
 	path := prepareFile(t, workspace, "cmd/oh/draw.go")

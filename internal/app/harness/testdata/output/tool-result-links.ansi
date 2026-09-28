@@ -213,7 +213,7 @@ Ever\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery fi\e[K\r\e[8C\e[?25h\e[?2
 \e[48;2;52;53;65m link state \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e]8;;oh://tool-result?call=call%2Fa%3F%26&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mR…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call%2Fa%3F%26&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\R…\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mrege…\e[0m\r
 \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m0L\e[0m\r
 \e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190ms\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe …\e[0m\r

@@ -18,6 +18,7 @@ import (
 	"crdx.org/oh/internal/app/startup"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/width"
+	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -98,6 +99,44 @@ func TestOnlyTerminalConversationMessagesContainHyperlinks(t *testing.T) {
 				}
 			})
 		}
+	}
+}
+
+func TestAWrappedMissingPathDoesNotLinkItsExistingPrefix(t *testing.T) {
+	workspace := t.TempDir()
+	parent := filepath.Join(workspace, "parent")
+	if err := os.MkdirAll(parent, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	missingPath := filepath.Join(parent, "missing.patch")
+	rows := submittedContentRows(
+		submittedMessage{text: missingPath},
+		style.Width(parent)+1,
+		true,
+		link.Roots{Workspace: workspace},
+	)
+
+	if rendered := strings.Join(rows, "\n"); strings.Contains(rendered, "\x1b]8;;file://") {
+		t.Errorf("wrapped missing path gained a link to its existing prefix in %q", rendered)
+	}
+}
+
+func TestAWrappedMissingAnswerPathDoesNotLinkItsExistingPrefix(t *testing.T) {
+	workspaceDirectory := t.TempDir()
+	parent := filepath.Join(workspaceDirectory, "parent")
+	if err := os.MkdirAll(parent, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	missingPath := filepath.Join(parent, "missing.patch")
+
+	var screenOutput bytes.Buffer
+	screen := output.NewTerminalOfSize(&screenOutput, style.Width(parent), 24).
+		LinkPathsUnder(link.Roots{Workspace: workspaceDirectory})
+	paint := New(screen, false, nil, work.At(workspaceDirectory), output.StreamingModeLine)
+	paint.DrawEvent(agent.Event{Kind: agent.ModelMessageEvent, Text: missingPath})
+
+	if rendered := screenOutput.String(); strings.Contains(rendered, "\x1b]8;;file://") {
+		t.Errorf("wrapped missing path gained a link to its existing prefix in %q", rendered)
 	}
 }
 
@@ -497,6 +536,87 @@ func TestRenderContextExceededNamesNoForkWithoutAModel(t *testing.T) {
 	}
 }
 
+func TestReasoningLinksAPathBeforeItWraps(t *testing.T) {
+	workspace := t.TempDir()
+	relativePath := "somewhere/a-very-long-patch-file-name.patch"
+	path := filepath.Join(workspace, relativePath)
+	if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(path, nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	for name, rendering := range map[string]output.ReasoningRendering{
+		"plain":    output.ReasoningPlain,
+		"markdown": output.ReasoningMarkdown,
+	} {
+		t.Run(name, func(t *testing.T) {
+			var renderer markdown.IncrementalRenderer
+			var plain plainThought
+			var reflow paragraphReflow
+			var styles rowMemory
+			rows := renderReasoningWith(
+				&renderer,
+				&plain,
+				&reflow,
+				&styles,
+				"Inspect "+relativePath+" before answering.",
+				20,
+				rendering,
+				true,
+				true,
+				link.Roots{Workspace: workspace},
+			)
+			drawn := strings.Join(rows, "\n")
+			completeOpening := "\x1b]8;;" + link.PathURL(path) + "\x1b\\"
+			completeLinks := strings.Count(drawn, completeOpening)
+			if completeLinks < 2 {
+				t.Errorf("wrapped path has %d complete links in %q", completeLinks, drawn)
+			}
+			if fileLinks := strings.Count(drawn, "\x1b]8;;file://"); fileLinks != completeLinks {
+				t.Errorf("wrapped path has %d file links but %d complete targets in %q", fileLinks, completeLinks, drawn)
+			}
+		})
+	}
+}
+
+func TestWrappedMissingReasoningPathDoesNotLinkItsExistingPrefix(t *testing.T) {
+	workspace := t.TempDir()
+	parent := filepath.Join(workspace, "parent")
+	if err := os.MkdirAll(parent, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	missingPath := filepath.Join(parent, "missing.patch")
+
+	for name, rendering := range map[string]output.ReasoningRendering{
+		"plain":    output.ReasoningPlain,
+		"markdown": output.ReasoningMarkdown,
+	} {
+		t.Run(name, func(t *testing.T) {
+			var renderer markdown.IncrementalRenderer
+			var plain plainThought
+			var reflow paragraphReflow
+			var styles rowMemory
+			rows := renderReasoningWith(
+				&renderer,
+				&plain,
+				&reflow,
+				&styles,
+				missingPath,
+				style.Width(parent),
+				rendering,
+				true,
+				true,
+				link.Roots{Workspace: workspace},
+			)
+			if drawn := strings.Join(rows, "\n"); strings.Contains(drawn, "\x1b]8;;file://") {
+				t.Errorf("wrapped missing path gained a link to its existing prefix in %q", drawn)
+			}
+		})
+	}
+}
+
 func TestRenderContextExceededStaysSilentForOtherFailures(t *testing.T) {
 	for name, event := range map[string]agent.Event{
 		"another refusal": {
@@ -508,6 +628,67 @@ func TestRenderContextExceededStaysSilentForOtherFailures(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			if notice, isSaid := RenderContextExceeded(event, "qwen4:70b"); isSaid {
 				t.Errorf("expected silence, got %q", notice)
+			}
+		})
+	}
+}
+
+func TestLinkedReasoningDrawnADeltaAtATimeMatchesAFreshDraw(t *testing.T) {
+	workspace := t.TempDir()
+	relativePath := "somewhere/a-very-long-patch-file-name.patch"
+	path := filepath.Join(workspace, relativePath)
+	if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(path, nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	thought := "Inspect " + relativePath + " before answering."
+	pathRoots := link.Roots{Workspace: workspace}
+
+	for name, rendering := range map[string]output.ReasoningRendering{
+		"plain":    output.ReasoningPlain,
+		"markdown": output.ReasoningMarkdown,
+	} {
+		t.Run(name, func(t *testing.T) {
+			var renderer markdown.IncrementalRenderer
+			var plain plainThought
+			var reflow paragraphReflow
+			var styles rowMemory
+
+			for at := 1; at <= len(thought); at++ {
+				got := renderReasoningWith(
+					&renderer,
+					&plain,
+					&reflow,
+					&styles,
+					thought[:at],
+					20,
+					rendering,
+					false,
+					true,
+					pathRoots,
+				)
+
+				var freshRenderer markdown.IncrementalRenderer
+				var freshPlain plainThought
+				var freshReflow paragraphReflow
+				var freshStyles rowMemory
+				want := renderReasoningWith(
+					&freshRenderer,
+					&freshPlain,
+					&freshReflow,
+					&freshStyles,
+					thought[:at],
+					20,
+					rendering,
+					false,
+					true,
+					pathRoots,
+				)
+				if strings.Join(got, "\n") != strings.Join(want, "\n") {
+					t.Fatalf("byte %d drew\n%q\nwant\n%q", at, got, want)
+				}
 			}
 		})
 	}
@@ -529,7 +710,18 @@ func TestReasoningDrawnADeltaAtATimeIsTheReasoningDrawnAtOnce(t *testing.T) {
 			var styles rowMemory
 
 			for at := 1; at <= len(thought); at++ {
-				got := renderReasoningWith(&renderer, &plain, &reflow, &styles, thought[:at], 30, rendering, false)
+				got := renderReasoningWith(
+					&renderer,
+					&plain,
+					&reflow,
+					&styles,
+					thought[:at],
+					30,
+					rendering,
+					false,
+					false,
+					link.Roots{},
+				)
 
 				var freshRenderer markdown.IncrementalRenderer
 				var freshPlain plainThought
@@ -544,6 +736,8 @@ func TestReasoningDrawnADeltaAtATimeIsTheReasoningDrawnAtOnce(t *testing.T) {
 					30,
 					rendering,
 					false,
+					false,
+					link.Roots{},
 				)
 				if strings.Join(got, "\n") != strings.Join(want, "\n") {
 					t.Fatalf("byte %d drew\n%q\nwant\n%q", at, got, want)

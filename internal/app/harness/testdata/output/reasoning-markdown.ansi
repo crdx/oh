@@ -125,12 +125,12 @@ The read came first, and the file holds\r
 \e[3m\e[38;2;150;152;150mi\e[0m\r
 \e[3m\e[38;2;150;152;150mn\e[0m\r
 \e[3m\e[38;2;150;152;150mg\e[0m\r
-\e[3m\e[38;2;150;152;150mo\e[0m\r
-\e[3m\e[38;2;150;152;150mn\e[0m\r
-\e[3m\e[38;2;150;152;150me\e[0m\r
-\e[3m\e[38;2;150;152;150m.\e[0m\r
-\e[3m\e[38;2;150;152;150mg\e[0m\r
-\e[3m\e[38;2;150;152;150mo\e[0m\r
+\e[3m\e[38;2;150;152;150m\e]8;;file:///workspace/one.go\e\\o\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/one.go\e\\\e[3m\e[38;2;150;152;150mn\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/one.go\e\\\e[3m\e[38;2;150;152;150me\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/one.go\e\\\e[3m\e[38;2;150;152;150m.\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/one.go\e\\\e[3m\e[38;2;150;152;150mg\e[0m\e]8;;\e\\\r
+\e]8;;file:///workspace/one.go\e\\\e[3m\e[38;2;150;152;150mo\e]8;;\e\\\e[0m\r
 \e[3m\e[38;2;150;152;150mT\e[0m\r
 \e[3m\e[38;2;150;152;150mh\e[0m\r
 \e[3m\e[38;2;150;152;150me\e[0m\r
@@ -1174,7 +1174,7 @@ The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read\e[K\r\e[8C\e[?25h\e[?20
 \e[3m\e[38;2;150;152;150mhas to come\e[0m\r
 \e[3m\e[38;2;150;152;150mbefore\e[0m\r
 \e[3m\e[38;2;150;152;150mwrite_file.\e[0m\e[0m\r
-\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mt…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\t…\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e[3m\e[38;2;150;152;150mA plain\e[0m\r
 \e[3m\e[38;2;150;152;150mthought with\e[0m\r
 \e[3m\e[38;2;150;152;150mno markup in\e[0m\r

@@ -35,6 +35,7 @@
 
 - Theme tool-call vocabulary and colours
 - Let tools own their complete semantic rendering
+- Keep wrapped and truncated paths hyperlinked
 - Render job and port actions as direct verbs
 - Colour job names consistently across actions
 - Render refused calls from their decoded arguments

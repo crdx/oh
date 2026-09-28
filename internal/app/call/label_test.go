@@ -10,6 +10,7 @@ import (
 	"crdx.org/oh/internal/app/call"
 	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tool"
@@ -46,6 +47,87 @@ func TestAResultLinkWrapsOnlyTheCallName(t *testing.T) {
 	}
 	if strings.Index(rendered, "\x1b]8;;\x1b\\") > strings.Index(rendered, "main.go") {
 		t.Errorf("subject is inside the result link in %q", rendered)
+	}
+}
+
+func TestAnElidedPathKeepsItsCompleteLinkTarget(t *testing.T) {
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+	parent := filepath.Join(home, "parent")
+	if err := os.MkdirAll(parent, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(parent, "changes.patch")
+	if err := os.WriteFile(path, nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	shownParent := "~/parent"
+	label := call.Label{
+		Name:      "commit",
+		Subject:   "record progress",
+		Qualifier: shownParent + "/changes.patch",
+		PathRoots: link.Roots{},
+	}
+	qualifierRoom := style.Width(shownParent) + 1
+	room := style.Width(label.Name) + 1 + style.Width(label.Subject) + 1 + qualifierRoom
+	elidedLabel, _ := label.Elide(room).(call.Label)
+	rendered := elidedLabel.Render()
+
+	if got := link.Plain(rendered); got != "commit record progress "+shownParent+width.Ellipsis {
+		t.Errorf("visible call is %q", got)
+	}
+	wantAddress := "\x1b]8;;" + link.PathURL(path) + "\x1b\\"
+	if !strings.Contains(rendered, wantAddress) {
+		t.Errorf("complete path URI is missing from %q", rendered)
+	}
+}
+
+func TestAnElidedMissingPathDoesNotLinkItsExistingPrefix(t *testing.T) {
+	workspace := t.TempDir()
+	parent := filepath.Join(workspace, "parent")
+	if err := os.MkdirAll(parent, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(parent, "missing.patch")
+
+	label := call.Label{Name: "read", Subject: path, PathRoots: link.Roots{}}
+	room := style.Width(label.Name) + 1 + style.Width(parent) + 1
+	elidedLabel, _ := label.Elide(room).(call.Label)
+	rendered := elidedLabel.Render()
+
+	if got := link.Plain(rendered); got != "read "+parent+width.Ellipsis {
+		t.Errorf("visible call is %q", got)
+	}
+	if strings.Contains(rendered, "\x1b]8;;file://") {
+		t.Errorf("missing path gained a URI for its existing prefix in %q", rendered)
+	}
+}
+
+func TestAnElidedReadPathKeepsItsCompleteTargetAndLine(t *testing.T) {
+	workspace := t.TempDir()
+	parent := filepath.Join(workspace, "parent")
+	if err := os.MkdirAll(parent, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(parent, "main.go")
+	if err := os.WriteFile(path, nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	label := call.LabelForRendering(tool.CallRendering{
+		Kind:      "read",
+		Subject:   path,
+		Qualifier: "10-14",
+		PathLine:  "10-14",
+	})
+	room := style.Width(label.Name) + 1 + style.Width(parent) + 1
+	elidedLabel, _ := label.Elide(room).(call.Label)
+	rendered := elidedLabel.Render()
+
+	wantAddress := "\x1b]8;;" + link.PathURL(path) + "#10\x1b\\"
+	if !strings.Contains(rendered, wantAddress) {
+		t.Errorf("complete path URI with its line is missing from %q", rendered)
 	}
 }
 

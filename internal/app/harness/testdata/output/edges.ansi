@@ -222,7 +222,7 @@ That\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThat is\e[K\r\e[7C\e[?25h\e[?20
 \e[48;2;52;53;65m shapes     \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\divine\e]8;;\e\\ \e[38;2;192;128;80mon…\e[0m \e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\divine\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/one.go\e\\on…\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\conjure\e]8;;\e\\ f\e[38;2;150;152;150m…\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150mf…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msynt…\e[0m\r
 \e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\summon\e]8;;\e\\ \e[38;2;192;128;80mno…\e[0m \e[38;2;76;154;44m✓\e[0m\r

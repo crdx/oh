@@ -411,11 +411,11 @@ fun\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38;2;201;166;212mfunc\e[0m co
 \e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;201;166;212msele\e[0m\e[38;2;201;166;212m…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e]8;;oh://tool-result?call=call_6&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mls\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e]8;;oh://tool-result?call=call_7&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;201;166;212m^\e[0m\e[38;2;201;166;212m…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\e]8;;oh://tool-result?call=call_8&session=tame-impala\e\\\e[38;2;201;166;212mload\e[0m\e]8;;\e\\ \e[38;2;192;128;80ms…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m8L\e[0m\r
-\e]8;;oh://tool-result?call=call_9&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mw…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
-\e]8;;oh://tool-result?call=call_10&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80ms…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
-\e]8;;oh://tool-result?call=call_11&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80ms…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
-\e]8;;oh://tool-result?call=call_12&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80ms…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e]8;;oh://tool-result?call=call_8&session=tame-impala\e\\\e[38;2;201;166;212mload\e[0m\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/skills/tidy/SKILL.md\e\\s…\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m8L\e[0m\r
+\e]8;;oh://tool-result?call=call_9&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/wide.md\e\\w…\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\e]8;;oh://tool-result?call=call_10&session=tame-impala\e\\read\e]8;;\e\\ \e]8;;file:///workspace/screen.go#10\e\\\e[38;2;192;128;80ms…\e[0m\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e]8;;oh://tool-result?call=call_11&session=tame-impala\e\\read\e]8;;\e\\ \e]8;;file:///workspace/screen.go#10\e\\\e[38;2;192;128;80ms…\e[0m\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e]8;;oh://tool-result?call=call_12&session=tame-impala\e\\read\e]8;;\e\\ \e]8;;file:///workspace/screen.go#1\e\\\e[38;2;192;128;80ms…\e[0m\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
 \r
 The listing\r
 is\r

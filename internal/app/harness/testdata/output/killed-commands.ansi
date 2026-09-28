@@ -6,8 +6,8 @@
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mju\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;192;128;80m1m11s\e[0m \e[38;2;150;152;150m1h01m 5L ~100t 1144M\e[0m \e[38;2;204;102;102mexit…\e[0m\r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mdd\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mif=\e]8;;file:///dev\e\\/dev\e]8;;\e\\/\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m2s 4L 8M\e[0m \e[38;2;204;102;102mexit(153): dd…\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcp\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mREADME\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m6L ~100t 2M\e[0m \e[38;2;204;102;102mexit(1): cp:…\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mdd\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mif=\e]8;;file:///dev/zero\e\\/dev/\e[0m\e[38;2;129;162;190m…\e]8;;\e\\\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m2s 4L 8M\e[0m \e[38;2;204;102;102mexit(153): dd…\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcp\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m\e]8;;file:///workspace/README.md\e\\README\e[0m\e[38;2;129;162;190m…\e]8;;\e\\\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m6L ~100t 2M\e[0m \e[38;2;204;102;102mexit(1): cp:…\e[0m\r
 \r
 The linter was killed for its processor\r
 time, the write for its size, and the\r

@@ -111,17 +111,66 @@ func (self Roots) underScratchAlias(path string) (string, bool) {
 
 func Render(text string, roots Roots) string {
 	visible := visibleTextOf(text)
-	matches := pathPattern.FindAllStringSubmatchIndex(visible.text, -1)
-	if len(matches) == 0 {
-		return text
+
+	return renderLocations(text, visible, locations(visible.text, roots))
+}
+
+func RenderFromSource(text string, source string, roots Roots) string {
+	visible := visibleTextOf(text)
+	sourceText := visibleTextOf(source).text
+	prefixEnd := commonPrefixEnd(visible.text, sourceText)
+	if prefixEnd == len(sourceText) {
+		return Render(text, roots)
 	}
 
+	foundLocations := locations(sourceText, roots)
+	shownLocations := make([]location, 0, len(foundLocations))
+	for _, found := range foundLocations {
+		if found.begin >= prefixEnd {
+			continue
+		}
+		if found.end > prefixEnd {
+			found.end = len(visible.text)
+		}
+		shownLocations = append(shownLocations, found)
+	}
+
+	return renderLocations(text, visible, shownLocations)
+}
+
+func commonPrefixEnd(first string, second string) int {
+	end := 0
+	for end < len(first) && end < len(second) && first[end] == second[end] {
+		end++
+	}
+
+	return end
+}
+
+func locations(text string, roots Roots) []location {
+	matches := pathPattern.FindAllStringSubmatchIndex(text, -1)
+	foundLocations := make([]location, 0, len(matches))
+	lastEnd := 0
+
+	for _, match := range matches {
+		found, exists := locateAround(text, match[0], match[1], roots)
+		if !exists || found.begin < lastEnd {
+			continue
+		}
+
+		foundLocations = append(foundLocations, found)
+		lastEnd = found.end
+	}
+
+	return foundLocations
+}
+
+func renderLocations(text string, visible visibleText, foundLocations []location) string {
 	var output strings.Builder
 	sourceAt := 0
 
-	for _, match := range matches {
-		found, exists := locateAround(visible.text, match[0], match[1], roots)
-		if !exists || visible.hasLink(found.begin, found.end) {
+	for _, found := range foundLocations {
+		if visible.hasLink(found.begin, found.end) {
 			continue
 		}
 

@@ -1,0 +1,30 @@
+=== markdown narrow ===
+Inspecting
+cmd/oh/line/a-patch-
+path-that-is-long-en
+ough-to-wrap-after-l
+eading-indentation-a
+nd-remain-clickable.
+patch before
+answering.
+=== markdown wide ===
+Inspecting
+cmd/oh/line/a-patch-path-that-is-long-en
+ough-to-wrap-after-leading-indentation-a
+nd-remain-clickable.patch before
+answering.
+=== plain narrow ===
+Inspecting
+cmd/oh/line/a-patch-
+path-that-is-long-en
+ough-to-wrap-after-l
+eading-indentation-a
+nd-remain-clickable.
+patch before
+answering.
+=== plain wide ===
+Inspecting
+cmd/oh/line/a-patch-path-that-is-long-en
+ough-to-wrap-after-leading-indentation-a
+nd-remain-clickable.patch before
+answering.

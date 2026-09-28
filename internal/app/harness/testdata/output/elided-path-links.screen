@@ -1,0 +1,6 @@
+=== elided path links ===
+commit record progress cmd/oh/line/… ✓
+commit record progress cmd/oh/line/… ✓
+read cmd/oh/line/a-patch-path-that-… ✓
+read cmd/oh/line/a-patch-path-that-… ✓
+$ cat cmd/oh/line/a-patch-path-that… ✓

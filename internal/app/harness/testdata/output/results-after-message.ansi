@@ -212,7 +212,7 @@ Both\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth sti\e[K\r\e[8C\e[?25h\e[?2
 Taking them\r
 together.\r
 \r
-\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80ms…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\s…\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m3L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150ms\e[0m\e[38;2;150;152;150m…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 Both still\r
