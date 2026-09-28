@@ -56,6 +56,7 @@
 
 ### Sessions and storage
 
+- Normalise session titles to lowercase
 - Browse stored and archived sessions from every workspace
 - Show keyboard shortcuts in pickers
 - Migrate stored tool-call renderings to semantic kinds

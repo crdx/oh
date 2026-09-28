@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 	"sync"
 	"unicode/utf8"
 
@@ -45,11 +46,15 @@ func New() tool.Tool {
 }
 
 func Describe(args Args) tool.CallRendering {
-	return tool.CallRendering{Subject: strutil.Flatten(args.Title)}
+	return tool.CallRendering{Subject: normalise(args)}
+}
+
+func normalise(args Args) string {
+	return strings.ToLower(strutil.Flatten(args.Title))
 }
 
 func validate(args Args) error {
-	title := strutil.Flatten(args.Title)
+	title := normalise(args)
 	if title == "" {
 		return errors.New("title is required")
 	}
@@ -66,7 +71,7 @@ type titles struct {
 }
 
 func (self *titles) exec(_ context.Context, args Args) (tool.ToolCallResult, error) {
-	title := strutil.Flatten(args.Title)
+	title := normalise(args)
 
 	self.mutex.Lock()
 	isUnchanged := title == self.current

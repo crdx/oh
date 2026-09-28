@@ -56,15 +56,15 @@ func TestTitlingASessionRecordsDurableState(t *testing.T) {
 	}
 }
 
-func TestTitlingFlattensWhatItIsGiven(t *testing.T) {
+func TestTitlingNormalisesWhatItIsGiven(t *testing.T) {
 	titleTool := title.New()
 
-	result := call(t, titleTool, `{"title": "  fix\tthe\npicker \u001b[31mclipping  "}`)
+	result := call(t, titleTool, `{"title": "  FIX\tthe\nPicker \u001b[31mCLIPPING  "}`)
 	if got := titleOf(t, result.State); got != "fix the picker clipping" {
 		t.Errorf("recorded %q", got)
 	}
 
-	parsedCall, err := titleTool.Parse(`{"title": "  fix\tthe\npicker clipping  "}`)
+	parsedCall, err := titleTool.Parse(`{"title": "  FIX\tthe\nPicker CLIPPING  "}`)
 	if err != nil {
 		t.Fatalf("could not parse: %v", err)
 	}
@@ -81,7 +81,7 @@ func TestTitlingASessionWhatItIsCalledChangesNothing(t *testing.T) {
 		t.Fatalf("could not apply the title: %v", err)
 	}
 
-	again := call(t, titleTool, `{"title": "fix the picker clipping"}`)
+	again := call(t, titleTool, `{"title": "FIX THE PICKER CLIPPING"}`)
 	if len(again.State) != 0 {
 		t.Errorf("titling it the same thing recorded %s", again.State)
 	}
