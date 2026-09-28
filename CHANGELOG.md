@@ -12,6 +12,7 @@
 - Require double-enter in quick succession
 - Stop sending continue message during a turn
 - Complete paths with `@` notation
+- Explain `@`-prefixed path references to models
 - Complete slash commands and arguments
 
 ### Grants and sandbox

@@ -66,6 +66,7 @@ var (
 		- "wire.http.zst" is the raw traffic between the harness and the model endpoint, read through zstdcat or zstdgrep
 		- The user's settings are in {{ .ConfigFile }}, and their instructions in {{ .GlobalPath }}
 		- A session name said with no other context is a hint to read that session's files
+		- File paths in user messages may be prefixed with ` + "`@`" + `; treat that prefix as path-reference syntax rather than part of the path
 
 		# Scope
 
