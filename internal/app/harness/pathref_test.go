@@ -103,7 +103,7 @@ func TestChoosingAFileCompletesItAndClosesTheDropdown(t *testing.T) {
 		t.Fatalf("selected %q", got)
 	}
 
-	pressForPathRef(self, inputLine, key.Key{Code: key.Enter})
+	pressForPathRef(self, inputLine, tabKey)
 	if got := inputLine.Text(); got != "look at @internal/app/harness/app.go " {
 		t.Errorf("completed to %q", got)
 	}
@@ -122,7 +122,7 @@ func TestChoosingAFileBeforeASpaceAddsNoSpace(t *testing.T) {
 	awaitPathRefListing(t, self, inputLine)
 
 	typeIntoPathRef(t, self, inputLine, "READ")
-	pressForPathRef(self, inputLine, key.Key{Code: key.Enter})
+	pressForPathRef(self, inputLine, tabKey)
 	if got := inputLine.Text(); got != "@README.md then" {
 		t.Errorf("completed to %q", got)
 	}
@@ -181,7 +181,7 @@ func TestChoosingADirectoryKeepsListingItsContents(t *testing.T) {
 		t.Fatalf("selected %q", got)
 	}
 
-	pressForPathRef(self, inputLine, key.Key{Code: key.Enter})
+	pressForPathRef(self, inputLine, tabKey)
 	if got := inputLine.Text(); got != "@internal/app/harness/" {
 		t.Errorf("completed to %q", got)
 	}
@@ -457,11 +457,11 @@ func pathRefScenarios(t *testing.T) map[string]pathRefScenario {
 				rig.press(pathRefDown)
 			}
 		}),
-		"09 enter chooses a file and closes the dropdown": at(60, 24, func(rig *pathRefRig) {
+		"09 tab chooses a file and closes the dropdown": at(60, 24, func(rig *pathRefRig) {
 			rig.typeAndList("look at @harapp")
-			rig.press(pathRefEnter)
+			rig.press(tabKey)
 		}),
-		"10 enter chooses a file before a space": at(60, 24, func(rig *pathRefRig) {
+		"10 tab chooses a file before a space": at(60, 24, func(rig *pathRefRig) {
 			rig.show()
 			rig.typeText("@ then")
 			for range len(" then") {
@@ -470,11 +470,11 @@ func pathRefScenarios(t *testing.T) map[string]pathRefScenario {
 			rig.press(tabKey)
 			rig.listingArrives()
 			rig.typeText("Just")
-			rig.press(pathRefEnter)
+			rig.press(tabKey)
 		}),
-		"11 enter chooses a directory and lists inside it": at(60, 24, func(rig *pathRefRig) {
+		"11 tab chooses a directory and lists inside it": at(60, 24, func(rig *pathRefRig) {
 			rig.typeAndList("@harness")
-			rig.press(pathRefEnter)
+			rig.press(tabKey)
 		}),
 		"12 a query matching nothing": at(60, 24, func(rig *pathRefRig) {
 			rig.typeAndList("@zzz")
@@ -567,7 +567,7 @@ func pathRefScenarios(t *testing.T) map[string]pathRefScenario {
 				rig.press(key.Key{Code: key.Rune, Value: 'r', Mod: key.Ctrl})
 			},
 		},
-		"29 enter during a running turn chooses rather than queues": {
+		"29 enter during a running turn queues rather than chooses": {
 			columns:       60,
 			lines:         24,
 			isTurnRunning: true,
@@ -783,7 +783,7 @@ func TestAClosedDropdownLeavesTheScreenAsAFreshDrawWould(t *testing.T) {
 	for name, steps := range map[string]func(rig *pathRefRig){
 		"chosen file": func(rig *pathRefRig) {
 			rig.typeAndList("look at @harapp")
-			rig.press(pathRefEnter)
+			rig.press(tabKey)
 		},
 		"escape": func(rig *pathRefRig) {
 			rig.typeAndList("look at @")

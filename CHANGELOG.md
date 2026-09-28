@@ -4,6 +4,7 @@
 
 ### Completion and input
 
+- Complete completions with tab only
 - Keep keys typed while a session starts
 - Exclude system suspension from turn durations
 - Send a command typed out in full on the first enter

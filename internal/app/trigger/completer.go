@@ -1,9 +1,6 @@
 package trigger
 
 import (
-	"strings"
-	"unicode"
-
 	"crdx.org/oh/internal/app/dropdown"
 	"crdx.org/oh/internal/app/key"
 )
@@ -72,10 +69,6 @@ func (self *Completer) Apply(editor Editor, keypress key.Key) bool {
 	case dropdown.Chosen:
 		result, _ := self.Selected()
 		word := self.current
-		if keypress.Code == key.Enter && self.offersOnlyAsWritten(string(editor.Runes()[word.Start:word.End])) {
-			self.close()
-			return false
-		}
 		editor.Replace(word.Start, word.End, Replacement(word, result, editor.Runes()))
 		if result.IsOpenEnded {
 			self.Sync(editor)
@@ -154,10 +147,6 @@ func (self *Completer) Receive() {
 
 func (self *Completer) offersOnly(text string) bool {
 	return self.offersOne() && self.results[0].Text == text
-}
-
-func (self *Completer) offersOnlyAsWritten(text string) bool {
-	return self.offersOne() && strings.TrimRightFunc(self.results[0].Text, unicode.IsSpace) == text
 }
 
 func (self *Completer) offersOne() bool {

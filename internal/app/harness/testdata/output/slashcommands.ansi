@@ -68,7 +68,7 @@
   /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
   /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/c\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m  edit the configuration file\e[0m\e[K\e[1B\r  /copy\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/co\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/cop\e[K\e[1B\r\e[38;2;192;128;80m› /copy\e[0m\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[2A\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy \e[K\e[1B\r\e[38;2;192;128;80m› session-dir\e[0m\e[K\e[1B\r  session-id\e[K\e[1B\r  session-name\e[K\e[3A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r  session-dir\e[K\e[1B\r\e[38;2;192;128;80m› session-id\e[0m\e[K\e[2A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy session-id \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[17C\e[?25h\e[?2026l
-=== 08 enter chooses rather than sends ===
+=== 08 enter submits rather than chooses ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
@@ -77,7 +77,9 @@
   /open\e[K\r
   /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
   /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/q\e[K\e[1B\r\e[38;2;192;128;80m› /quit\e[0m\e[38;2;150;152;150m  leave the session, and say goodbye in a line long …\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/qu\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/quit \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[6C\e[?25h\e[?2026l
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/q\e[K\e[1B\r\e[38;2;192;128;80m› /quit\e[0m\e[38;2;150;152;150m  leave the session, and say goodbye in a line long …\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/qu\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r \e[38;2;150;152;150m╭────────────────────────────────────────────────────────╮\e[0m\e[K\e[1B\r \e[38;2;150;152;150m│\e[0m \e[38;2;204;102;102mCommand not found: /qu (alt+enter to send)\e[0m             \e[38;2;150;152;150m│\e[0m\e[K\e[1B\r\e[38;2;150;152;150m─┴\e[0m\e[38;2;150;152;150m────────────────────────────────────────────────────────\e[0m\e[38;2;150;152;150m┴─\e[0m\e[1B\r/qu\e[K\e[1B\r\e[38;2;192;128;80m› /quit\e[0m\e[38;2;150;152;150m  leave the session, and say goodbye in a line long …\e[0m\e[4B\r\e[K\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[3C\e[?25h\e[?2026l
 === 09 two slashes list the snippets ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r

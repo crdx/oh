@@ -74,9 +74,12 @@ func slashCommandScenarios(t *testing.T) map[string]pathRefScenario {
 			typing("/copy ")(rig)
 			rig.press(pathRefDown, tabKey)
 		}),
-		"08 enter chooses rather than sends": commanding(func(rig *pathRefRig) {
+		"08 enter submits rather than chooses": commanding(func(rig *pathRefRig) {
 			typing("/qu")(rig)
 			rig.press(pathRefEnter)
+			if got := rig.input.Text(); got != "/qu" {
+				rig.t.Errorf("enter changed the input to %q", got)
+			}
 		}),
 		"09 two slashes list the snippets":                  commanding(typing("//")),
 		"10 a path closes the dropdown at its second slash": commanding(typing("/tmp/notes")),

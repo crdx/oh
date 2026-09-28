@@ -253,8 +253,8 @@ func TestChoosingAnOpenEndedResultKeepsCompleting(t *testing.T) {
 	editor := &fakeEditor{}
 
 	typeInto(completer, editor, "@c")
-	if !completer.Apply(editor, key.Key{Code: key.Enter}) {
-		t.Fatal("enter was not taken")
+	if !completer.Apply(editor, key.Key{Code: key.Rune, Value: '\t'}) {
+		t.Fatal("tab was not taken")
 	}
 
 	if got := string(editor.runes); got != "@cmd/" {
@@ -270,7 +270,7 @@ func TestChoosingAClosedResultEndsTheWord(t *testing.T) {
 	editor := &fakeEditor{}
 
 	typeInto(completer, editor, "@go")
-	completer.Apply(editor, key.Key{Code: key.Enter})
+	completer.Apply(editor, key.Key{Code: key.Rune, Value: '\t'})
 
 	if got := string(editor.runes); got != "@go.mod " {
 		t.Errorf("completed to %q", got)
@@ -295,7 +295,7 @@ func TestTypingOutTheOnlyResultClosesTheDropdown(t *testing.T) {
 	}
 }
 
-func TestEnterLeavesAWordTypedOutWholeToBeSent(t *testing.T) {
+func TestEnterIsLeftToTheInput(t *testing.T) {
 	completer := trigger.New(&fakeSource{symbol: '#', items: []trigger.Result{{Text: "bug"}, {Text: "build"}}, textSuffix: " "})
 	editor := &fakeEditor{}
 
@@ -305,13 +305,10 @@ func TestEnterLeavesAWordTypedOutWholeToBeSent(t *testing.T) {
 	}
 
 	if completer.Apply(editor, key.Key{Code: key.Enter}) {
-		t.Error("enter was taken to choose what was already written")
+		t.Error("enter was taken by the dropdown")
 	}
 	if got := string(editor.runes); got != "#bug" {
 		t.Errorf("the word became %q", got)
-	}
-	if completer.IsOpen() {
-		t.Error("the dropdown stayed open over a word being sent")
 	}
 }
 
@@ -328,13 +325,16 @@ func TestTabStillCarriesAWordTypedOutWholeOnToItsArguments(t *testing.T) {
 	}
 }
 
-func TestEnterStillChoosesAmongSeveralResults(t *testing.T) {
+func TestEnterDoesNotChooseAmongSeveralResults(t *testing.T) {
 	completer := trigger.New(&fakeSource{symbol: '#', items: []trigger.Result{{Text: "bug"}, {Text: "bugs"}}, textSuffix: " "})
 	editor := &fakeEditor{}
 
 	typeInto(completer, editor, "#bug")
-	if !completer.Apply(editor, key.Key{Code: key.Enter}) {
-		t.Error("enter was left alone while a longer result still extends the word")
+	if completer.Apply(editor, key.Key{Code: key.Enter}) {
+		t.Error("enter was taken by the dropdown")
+	}
+	if got := string(editor.runes); got != "#bug" {
+		t.Errorf("the word became %q", got)
 	}
 }
 
@@ -575,7 +575,7 @@ func TestChoosingAPathWithASpaceQuotesIt(t *testing.T) {
 	editor := &fakeEditor{}
 
 	typeInto(completer, editor, "see @a")
-	completer.Apply(editor, key.Key{Code: key.Enter})
+	completer.Apply(editor, key.Key{Code: key.Rune, Value: '\t'})
 
 	if got := string(editor.runes); got != `see @"a b.txt" ` {
 		t.Errorf("completed to %q", got)
@@ -590,7 +590,7 @@ func TestAQuotedDirectoryKeepsCompletingInsideItsQuotes(t *testing.T) {
 	editor := &fakeEditor{}
 
 	typeInto(completer, editor, "@my")
-	completer.Apply(editor, key.Key{Code: key.Enter})
+	completer.Apply(editor, key.Key{Code: key.Rune, Value: '\t'})
 	if got := string(editor.runes); got != `@"my docs/` {
 		t.Fatalf("completed the directory to %q", got)
 	}
@@ -602,7 +602,7 @@ func TestAQuotedDirectoryKeepsCompletingInsideItsQuotes(t *testing.T) {
 	}
 
 	completer.Apply(editor, key.Key{Code: key.Down})
-	completer.Apply(editor, key.Key{Code: key.Enter})
+	completer.Apply(editor, key.Key{Code: key.Rune, Value: '\t'})
 	if got := string(editor.runes); got != `@"my docs/q r.txt" ` {
 		t.Errorf("completed the file to %q", got)
 	}
@@ -619,7 +619,7 @@ func TestOpeningAQuoteAsksAgain(t *testing.T) {
 	}
 
 	completer.Apply(editor, key.Key{Code: key.Down})
-	completer.Apply(editor, key.Key{Code: key.Enter})
+	completer.Apply(editor, key.Key{Code: key.Rune, Value: '\t'})
 	if got := string(editor.runes); got != `@"cmd/main.go" ` {
 		t.Errorf("completed to %q", got)
 	}

@@ -71,15 +71,15 @@ look at @pathref
 › internal/app/
   ⋮ 4 above, 13 below
 ────────────────────────────────────────────────────────────
-=== 09 enter chooses a file and closes the dropdown ===
+=== 09 tab chooses a file and closes the dropdown ===
 ────────────────────────────────────────────────────────────
 look at @internal/app/harness/app.go
 ────────────────────────────────────────────────────────────
-=== 10 enter chooses a file before a space ===
+=== 10 tab chooses a file before a space ===
 ────────────────────────────────────────────────────────────
 @Justfile then
 ────────────────────────────────────────────────────────────
-=== 11 enter chooses a directory and lists inside it ===
+=== 11 tab chooses a directory and lists inside it ===
 ────────────────────────────────────────────────────────────
 @internal/app/harness/
 › internal/app/harness/app.go
@@ -200,9 +200,12 @@ said before
 ── reverse-i-search:  ──────────────────────────────────────
 @harn
 ────────────────────────────────────────────────────────────
-=== 29 enter during a running turn chooses rather than queues ===
+=== 29 enter during a running turn queues rather than chooses ===
+                                   double-enter to send now
+ ⏳ @harapp
+
 ────────────────────────────────────────────────────────────
-@internal/app/harness/app.go
+
 ────────────────────────────────────────────────────────────
 === 30 a question hides the dropdown ===
 ────────────────────────────────────────────────────────────

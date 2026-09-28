@@ -80,7 +80,7 @@ func TestKeysMoveTheSelectionAroundTheOptions(t *testing.T) {
 	}
 }
 
-func TestTabChoosesAsEnterDoes(t *testing.T) {
+func TestTabChoosesTheSelection(t *testing.T) {
 	menu := opened(numbered(2), 2)
 	menu.Apply(down)
 
@@ -98,10 +98,10 @@ func TestTabChoosesAsEnterDoes(t *testing.T) {
 	}
 }
 
-func TestEnterChoosesAndEscapeDismisses(t *testing.T) {
+func TestEnterIsIgnoredAndEscapeDismisses(t *testing.T) {
 	menu := opened(numbered(2), 2)
 
-	if outcome := menu.Apply(enter); outcome != dropdown.Chosen {
+	if outcome := menu.Apply(enter); outcome != dropdown.Ignored {
 		t.Errorf("enter gave %v", outcome)
 	}
 	if outcome := menu.Apply(escape); outcome != dropdown.Dismissed {

@@ -107,7 +107,7 @@ func (self *Dropdown) Apply(keypress key.Key) Outcome {
 	switch {
 	case keypress.Code == key.Escape:
 		return Dismissed
-	case (isTab || keypress.Code == key.Enter && keypress.Mod == 0) && len(self.options) > 0:
+	case isTab && len(self.options) > 0:
 		return Chosen
 	case isTab, isShiftTab:
 		return Swallowed
