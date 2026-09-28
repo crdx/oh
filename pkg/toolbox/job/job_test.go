@@ -329,7 +329,7 @@ func TestAJobCallIsRenderedByItsAction(t *testing.T) {
 	}
 }
 
-func TestTheNameParameterStatesTheNameLimit(t *testing.T) {
+func TestTheNameParameterGivesConciseNamingAdvice(t *testing.T) {
 	var description string
 	for _, parameter := range job.New(nil, nil, nil, false).Schema() {
 		if parameter.Name == "name" {
@@ -337,7 +337,7 @@ func TestTheNameParameterStatesTheNameLimit(t *testing.T) {
 		}
 	}
 
-	for _, wanted := range []string{"1–10", "[a-z0-9-]"} {
+	for _, wanted := range []string{"'check'", "'cachecheck'", "automatically numbered", "'check-1'", "1–10", "[a-z0-9-]"} {
 		if !strings.Contains(description, wanted) {
 			t.Errorf("name description %q does not contain %q", description, wanted)
 		}

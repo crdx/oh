@@ -2,7 +2,7 @@
 \e[48;2;52;53;65m state the job name rules                                                                           \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-Job names use one to ten lowercase letters, digits, or hyphens.\e[?25h\e[?2026l\r
+Use one short role such as \e[38;2;192;128;80mcheck\e[0m; a simultaneous duplicate is automatically named \e[38;2;192;128;80mcheck-1\e[0m.\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[48;2;52;53;65m carry on                                                                                           \e[0m\r

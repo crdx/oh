@@ -40,6 +40,47 @@ func TestTheManagerRefusesAnInvalidNameBeforeStarting(t *testing.T) {
 	}
 }
 
+func TestLiveJobNamesAreNumbered(t *testing.T) {
+	manager := New(nil)
+
+	for _, expected := range []string{"check", "check-1", "check-2"} {
+		claimed, err := manager.claim("check", "just check", sandbox.Policy{})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if claimed.name != expected {
+			t.Errorf("got %q, want %q", claimed.name, expected)
+		}
+	}
+}
+
+func TestNumberedJobNamesStayWithinTheLimit(t *testing.T) {
+	manager := New(nil)
+
+	for _, expected := range []string{"abcdefghij", "abcdefgh-1", "abcdefgh-2"} {
+		claimed, err := manager.claim("abcdefghij", "true", sandbox.Policy{})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if claimed.name != expected {
+			t.Errorf("got %q, want %q", claimed.name, expected)
+		}
+	}
+}
+
+func TestAFinishedJobNameIsReusedWithoutANumber(t *testing.T) {
+	manager := New(nil)
+	manager.Restore([]Snapshot{{Name: "check", State: StateComplete}})
+
+	claimed, err := manager.claim("check", "just check", sandbox.Policy{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if claimed.name != "check" {
+		t.Errorf("got %q, want the finished job's name reused", claimed.name)
+	}
+}
+
 func TestARestoredLegacyNameRemainsAddressable(t *testing.T) {
 	manager := New(nil)
 	manager.Restore([]Snapshot{{Name: "legacy-name", State: StateComplete}})

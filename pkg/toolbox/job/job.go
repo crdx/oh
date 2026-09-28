@@ -65,7 +65,7 @@ func New(
 			Description: description(doesWake),
 			Schema: tool.Schema{
 				tool.Enum("action", "what to do", actions...),
-				tool.String("name", fmt.Sprintf("the job name; 1–%d characters from [a-z0-9-] (for all actions except 'list', 'prune')", jobs.NameLengthLimit)).Optional(),
+				tool.String("name", fmt.Sprintf("the job name; for start, use one short role such as 'check', not a specific compound such as 'cachecheck'—a live duplicate is automatically numbered, such as 'check-1'; 1–%d characters from [a-z0-9-] (for all actions except 'list', 'prune')", jobs.NameLengthLimit)).Optional(),
 				tool.StringArray("names", "the job names to watch for wait").Optional(),
 				tool.Enum("wait_for", "whether wait returns after any or all watched jobs end", waitForAny, waitForAll).Optional(),
 				tool.Integer("wait_seconds", fmt.Sprintf("how many seconds to wait at most — max %d (default)", int(waitLimit.Seconds()))).Optional(),

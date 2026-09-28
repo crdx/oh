@@ -36,7 +36,6 @@ const (
 
 var (
 	ErrClosed   = errors.New("session is closed to new jobs")
-	ErrTaken    = errors.New("job already running")
 	ErrNotFound = errors.New("job not found")
 )
 
@@ -435,6 +434,24 @@ func (self *Manager) remove(name string) {
 	self.order = slices.DeleteFunc(self.order, func(remainingName string) bool { return remainingName == name })
 }
 
+func (self *Manager) availableName(name string) (string, error) {
+	if found := self.jobs[name]; found == nil || !isLive(found.state) {
+		return name, nil
+	}
+
+	for number := 1; ; number++ {
+		suffix := fmt.Sprintf("-%d", number)
+		if len(suffix) > NameLengthLimit {
+			return "", errors.New("job name space exhausted")
+		}
+		prefixLength := min(len(name), NameLengthLimit-len(suffix))
+		candidate := name[:prefixLength] + suffix
+		if found := self.jobs[candidate]; found == nil || !isLive(found.state) {
+			return candidate, nil
+		}
+	}
+}
+
 func (self *Manager) claim(name string, command string, policy sandbox.Policy) (*job, error) {
 	if err := ValidateName(name); err != nil {
 		return nil, err
@@ -447,8 +464,9 @@ func (self *Manager) claim(name string, command string, policy sandbox.Policy) (
 		return nil, ErrClosed
 	}
 
-	if found, isKnown := self.jobs[name]; isKnown && isLive(found.state) {
-		return nil, ErrTaken
+	name, err := self.availableName(name)
+	if err != nil {
+		return nil, err
 	}
 
 	openingJob := &job{

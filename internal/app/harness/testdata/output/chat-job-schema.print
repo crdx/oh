@@ -2,7 +2,7 @@
  state the job name rules
 
 
-Job names use one to ten lowercase letters, digits, or hyphens.
+Use one short role such as check; a simultaneous duplicate is automatically named check-1.
 
 
  carry on

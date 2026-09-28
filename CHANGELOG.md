@@ -81,6 +81,7 @@
 
 - Restyle jobs list output
 - Clarify the reason for jobs stopping
+- Keep job names concise
 
 ### Model guidance
 

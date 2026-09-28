@@ -10,7 +10,7 @@ prompt = "state the job name rules"
 
 [[first.response]]
 event = [
-    '''{"choices":[{"delta":{"role":"assistant","content":"Job names use one to ten lowercase letters, digits, or hyphens."}}]}''',
+    '''{"choices":[{"delta":{"role":"assistant","content":"Use one short role such as `check`; a simultaneous duplicate is automatically named `check-1`."}}]}''',
     '''{"choices":[{"delta":{},"finish_reason":"stop"}]}''',
     '''[DONE]''',
 ]
