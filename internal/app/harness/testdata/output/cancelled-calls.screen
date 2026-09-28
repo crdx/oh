@@ -6,7 +6,7 @@
 
 read one.txt ✓ 1L
 read two.txt – the call was cancelled b…
-wait for check f… – 1L stopped because …
+await check for … – 1L stopped because …
 
 Turn stopped.
 
@@ -147,7 +147,7 @@ d
 
 read one.txt ✓ 1L
 read two.txt – the call was cancelled because the user pressed escape
-wait for check for up to 270s – 1L stopped because the user pressed escape
+await check for up to 270s – 1L stopped because the user pressed escape
 
 Turn stopped.
 
@@ -164,7 +164,7 @@ Turn stopped.
 
 read o… ✓ 1L
 read – the …
-wa… – 1L st…
+aw… – 1L st…
 
 Turn
 stopped.
@@ -179,7 +179,7 @@ stopped.
 
 read one.txt ✓ 1L
 read two.txt – the call was cancelled because the user pressed escape
-wait for check for up to 270s – 1L stopped because the user pressed escape
+await check for up to 270s – 1L stopped because the user pressed escape
 
 Turn stopped.
 

@@ -3,16 +3,16 @@
  show every action-oriented tool label
 
 
-expose 8000 ✓
-expose docs:8001 ✓
-unexpose 8000 ✓
+forward 8000 ✓
+forward docs:8001 ✓
+close 8000 ✓
 list exposed ports ✓
 start docs $ serve docs ✓
 restart docs ✓
 status docs ✓
 output docs ✓
-wait for docs || build ✓
-wait for docs && build for up to 20s ✓
+await docs || build ✓
+await docs && build for up to 20s ✓
 stop docs ✓
 list jobs ✓
 discard docs ✓
@@ -134,16 +134,16 @@ l
  show every action-oriented tool label
 
 
-expose 8000 ✓
-expose docs:8001 ✓
-unexpose 8000 ✓
+forward 8000 ✓
+forward docs:8001 ✓
+close 8000 ✓
 list exposed ports ✓
 start docs $ serve docs ✓
 restart docs ✓
 status docs ✓
 output docs ✓
-wait for docs || build ✓
-wait for docs && build for up to 20s ✓
+await docs || build ✓
+await docs && build for up to 20s ✓
 stop docs ✓
 list jobs ✓
 discard docs ✓
@@ -158,16 +158,16 @@ Those are every action label.
  label
 
 
-expose 80… ✓
-expose do… ✓
-unexpose … ✓
+forward 8… ✓
+forward d… ✓
+close 8000 ✓
 list expo… ✓
 start docs ✓
 restart d… ✓
 status do… ✓
 output do… ✓
-wait for … ✓
-wait for … ✓
+await doc… ✓
+await doc… ✓
 stop docs ✓
 list jobs ✓
 discard d… ✓
@@ -181,16 +181,16 @@ label.
  show every action-oriented tool label
 
 
-expose 8000 ✓
-expose docs:8001 ✓
-unexpose 8000 ✓
+forward 8000 ✓
+forward docs:8001 ✓
+close 8000 ✓
 list exposed ports ✓
 start docs $ serve docs ✓
 restart docs ✓
 status docs ✓
 output docs ✓
-wait for docs || build ✓
-wait for docs && build for up to 20s ✓
+await docs || build ✓
+await docs && build for up to 20s ✓
 stop docs ✓
 list jobs ✓
 discard docs ✓
