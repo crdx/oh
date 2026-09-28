@@ -19,6 +19,7 @@ import (
 const (
 	defaultProbeInterval = 15 * time.Minute
 	maximumProbeBackoff  = time.Hour
+	retryProbeInterval   = 30 * time.Second
 	probeJitterDivisor   = 10
 )
 
@@ -96,6 +97,7 @@ func (self *guardedProvider) Load(items []json.RawMessage) {
 
 func (self *guardedProvider) Send(ctx context.Context, yield agent.Yield) (agent.Reply, error) {
 	storedCache := self.refreshIfDue(ctx)
+	storedCache = self.refreshForRetry(ctx, storedCache)
 	if windows := activeLimitedWindows(storedCache.Windows, self.settings.ModelName, self.settings.Now()); len(windows) > 0 {
 		return agent.Reply{}, limitedError(self.settings.ProviderName, windows, self.settings.Now())
 	}
@@ -184,6 +186,25 @@ func (self *guardedProvider) refreshIfDue(ctx context.Context) cache {
 	return self.store.read()
 }
 
+func (self *guardedProvider) refreshForRetry(ctx context.Context, storedCache cache) cache {
+	if ctx.Err() != nil || self.prober == nil || !retryProbeIsDue(storedCache, self.settings.ModelName, self.settings.Now()) {
+		return storedCache
+	}
+
+	_, _ = self.store.tryUpdate(func(currentCache *cache) error {
+		now := self.settings.Now()
+		if !retryProbeIsDue(*currentCache, self.settings.ModelName, now) {
+			return nil
+		}
+
+		self.updateFromProbe(ctx, currentCache, now)
+
+		return nil
+	})
+
+	return self.store.read()
+}
+
 func (self *guardedProvider) updateFromProbe(ctx context.Context, storedCache *cache, now time.Time) {
 	probe, err := self.prober.ProbeUsage(ctx)
 	if ctx.Err() != nil {
@@ -199,6 +220,7 @@ func (self *guardedProvider) updateFromProbe(ctx context.Context, storedCache *c
 		storedCache.Probe = &probeState{
 			AttemptedAt: now,
 			NextAt:      now.Add(probeDelay(wait, self.settings.CachePath, now)),
+			NextRetryAt: now.Add(retryProbeDelay(err)),
 			Failures:    failures,
 			Failure:     err.Error(),
 		}
@@ -209,6 +231,7 @@ func (self *guardedProvider) updateFromProbe(ctx context.Context, storedCache *c
 	storedCache.Probe = &probeState{
 		AttemptedAt: now,
 		NextAt:      now.Add(probeDelay(probeInterval(probe), self.settings.CachePath, now)),
+		NextRetryAt: now.Add(retryProbeInterval),
 	}
 	applyProbe(storedCache, probe, now)
 }
@@ -256,6 +279,23 @@ func probeIsDue(storedCache cache, modelName string, now time.Time) bool {
 	}
 
 	return storedCache.Probe == nil || !now.Before(storedCache.Probe.NextAt)
+}
+
+func retryProbeIsDue(storedCache cache, modelName string, now time.Time) bool {
+	if len(activeLimitedWindows(storedCache.Windows, modelName, now)) == 0 {
+		return false
+	}
+
+	return storedCache.Probe == nil || !now.Before(storedCache.Probe.NextRetryAt)
+}
+
+func retryProbeDelay(err error) time.Duration {
+	wait := retryProbeInterval
+	if retriable, isRetriable := errors.AsType[agent.Retriable](err); isRetriable {
+		wait = max(wait, retriable.RetryAfter())
+	}
+
+	return wait
 }
 
 func failedProbeDelay(err error, failures int) time.Duration {

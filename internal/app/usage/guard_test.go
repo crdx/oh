@@ -224,7 +224,7 @@ func TestATemporaryRefusalIsNotProbedRepeatedly(t *testing.T) {
 	}
 }
 
-func TestAProviderUsageLimitIsNotProbedAgainBeforeTheSharedInterval(t *testing.T) {
+func TestARetryRechecksALimitAndContinuesAfterAnEarlyReset(t *testing.T) {
 	path := cachePath(t)
 	clock := &testClock{now: testNow}
 	window := agent.UsageWindow{
@@ -243,11 +243,57 @@ func TestAProviderUsageLimitIsNotProbedAgainBeforeTheSharedInterval(t *testing.T
 	_, err := usage.Guard(stoppedContext(t), second, guardSettings(path, "gpt-5.6-sol", clock)).Send(
 		t.Context(), func(agent.Output) bool { return true },
 	)
-	if err == nil {
-		t.Fatal("expected the recorded limit to stand")
+	if err != nil {
+		t.Fatal(err)
 	}
-	if second.probeCount != 0 || second.sendCount != 0 {
+	if second.probeCount != 1 || second.sendCount != 1 {
 		t.Errorf("got %d probes and %d sends", second.probeCount, second.sendCount)
+	}
+}
+
+func TestRepeatedRetriesDebounceUsageProbes(t *testing.T) {
+	path := cachePath(t)
+	clock := &testClock{now: testNow}
+	limitedWindow := agent.UsageWindow{
+		Duration:  time.Hour,
+		Percent:   100,
+		ResetsAt:  testNow.Add(time.Hour),
+		IsLimited: true,
+	}
+
+	first := &providerStub{err: &agent.UsageLimitError{Cause: errors.New("limited"), Windows: []agent.UsageWindow{limitedWindow}}}
+	_, _ = usage.Guard(stoppedContext(t), first, guardSettings(path, "gpt-5.6-sol", clock)).Send(
+		t.Context(), func(agent.Output) bool { return true },
+	)
+
+	stillLimited := &providerStub{probe: agent.UsageProbe{
+		Windows:      []agent.UsageWindow{limitedWindow},
+		Availability: agent.UsageAvailabilityLimited,
+	}}
+	_, _ = usage.Guard(stoppedContext(t), stillLimited, guardSettings(path, "gpt-5.6-sol", clock)).Send(
+		t.Context(), func(agent.Output) bool { return true },
+	)
+	if stillLimited.probeCount != 1 {
+		t.Fatalf("the first retry made %d probes", stillLimited.probeCount)
+	}
+
+	tooSoon := &providerStub{probe: agent.UsageProbe{Availability: agent.UsageAvailabilityAllowed}}
+	_, _ = usage.Guard(stoppedContext(t), tooSoon, guardSettings(path, "gpt-5.6-sol", clock)).Send(
+		t.Context(), func(agent.Output) bool { return true },
+	)
+	if tooSoon.probeCount != 0 || tooSoon.sendCount != 0 {
+		t.Errorf("the immediate retry made %d probes and %d sends", tooSoon.probeCount, tooSoon.sendCount)
+	}
+
+	clock.set(testNow.Add(31 * time.Second))
+	afterDebounce := &providerStub{probe: agent.UsageProbe{Availability: agent.UsageAvailabilityAllowed}}
+	if _, err := usage.Guard(stoppedContext(t), afterDebounce, guardSettings(path, "gpt-5.6-sol", clock)).Send(
+		t.Context(), func(agent.Output) bool { return true },
+	); err != nil {
+		t.Fatal(err)
+	}
+	if afterDebounce.probeCount != 1 || afterDebounce.sendCount != 1 {
+		t.Errorf("the later retry made %d probes and %d sends", afterDebounce.probeCount, afterDebounce.sendCount)
 	}
 }
 
@@ -318,7 +364,7 @@ func TestAProviderWideRecoveryDoesNotClearAModelScopedLimit(t *testing.T) {
 	}
 }
 
-func TestAProbeHonoursTheProvidersRefreshInterval(t *testing.T) {
+func TestARetryProbeDoesNotWaitForTheProvidersBackgroundRefreshInterval(t *testing.T) {
 	path := cachePath(t)
 	clock := &testClock{now: testNow}
 	limitedWindow := agent.UsageWindow{
@@ -351,8 +397,8 @@ func TestAProbeHonoursTheProvidersRefreshInterval(t *testing.T) {
 	_, _ = usage.Guard(stoppedContext(t), third, guardSettings(path, "gpt-5.6-sol", clock)).Send(
 		t.Context(), func(agent.Output) bool { return true },
 	)
-	if third.probeCount != 0 {
-		t.Errorf("the provider was probed %d times before its interval", third.probeCount)
+	if third.probeCount != 1 {
+		t.Errorf("the retry made %d probes", third.probeCount)
 	}
 }
 

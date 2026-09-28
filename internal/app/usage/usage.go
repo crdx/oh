@@ -96,6 +96,7 @@ func (self *sharedReporter) UsageWindows(ctx context.Context) ([]agent.UsageWind
 			storedCache.Probe = &probeState{
 				AttemptedAt: fetchedAt,
 				NextAt:      fetchedAt.Add(probeDelay(probeInterval(probe), self.store.path, fetchedAt)),
+				NextRetryAt: fetchedAt.Add(retryProbeInterval),
 			}
 		}
 

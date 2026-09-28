@@ -17,6 +17,7 @@ type cache struct {
 type probeState struct {
 	AttemptedAt time.Time `json:"attempted_at"`
 	NextAt      time.Time `json:"next_at"`
+	NextRetryAt time.Time `json:"next_retry_at,omitzero"`
 	Failures    int       `json:"failures,omitempty"`
 	Failure     string    `json:"failure,omitempty"`
 }

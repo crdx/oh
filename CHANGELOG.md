@@ -89,6 +89,7 @@
 
 ### Models and providers
 
+- Recheck a provider's usage limit when a turn retries
 - Stop inferring partial cache rebuilds when the provider reports no writes
 - List every model context source and token estimate with /ctx
 - Honour explicit server advice to retry a refused request
