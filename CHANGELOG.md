@@ -66,6 +66,7 @@
 
 ### Sessions and storage
 
+- Speed up opening the session picker
 - Add session health check command
 - Keep interrupted print sessions resumable
 - Normalise session titles to lowercase

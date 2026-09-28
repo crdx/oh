@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"flag"
+	"io"
 	"os"
 	"path/filepath"
 	"slices"
@@ -50,6 +51,26 @@ func TestLoadingSessionsIdentifiesThoseThatAreRunning(t *testing.T) {
 	}
 	if len(loadedSessions) != 1 || loadedSessions[0].IsRunning {
 		t.Errorf("expected one stopped session, got %+v", loadedSessions)
+	}
+}
+
+func TestPickerLoadsStoredAndArchivedSessionsTogether(t *testing.T) {
+	directory := t.TempDir()
+	storedName := writeIdleSession(t, directory, store.Meta{})
+	archivedName := writeIdleSession(t, directory, store.Meta{})
+	if err := session.Archive(directory, archivedName); err != nil {
+		t.Fatal(err)
+	}
+
+	storedSessions, archivedSessions, err := loadPickerSessions(directory, io.Discard)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(storedSessions) != 1 || storedSessions[0].Name != storedName {
+		t.Errorf("loaded stored sessions %+v", storedSessions)
+	}
+	if len(archivedSessions) != 1 || archivedSessions[0].Name != archivedName || !archivedSessions[0].IsArchived {
+		t.Errorf("loaded archived sessions %+v", archivedSessions)
 	}
 }
 

@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"runtime"
 	"slices"
 	"strings"
+	"sync"
 
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/app/menu"
@@ -22,27 +24,12 @@ import (
 )
 
 func Choose(directory string, workspace *work.Space, terminal *os.File, screen io.Writer) (string, error) {
-	if err := RefreshListings(directory, screen); err != nil {
-		return "", err
-	}
-
-	sessions, err := Load(directory)
+	sessions, archivedSessions, err := loadPickerSessions(directory, screen)
 	if err != nil {
-		if migrationError := ValidateFormats(directory); migrationError != nil {
-			return "", migrationError
-		}
 		return "", err
 	}
 	markOtherWorkspaces(sessions, workspace)
-
-	archivedSessions, err := LoadArchived(directory)
-	if err != nil {
-		return "", err
-	}
 	markOtherWorkspaces(archivedSessions, workspace)
-
-	Measure(directory, sessions)
-	Measure(directory, archivedSessions)
 
 	if len(sessions) == 0 && len(archivedSessions) == 0 {
 		return "", errors.New("there are no stored conversations")
@@ -74,6 +61,9 @@ func Choose(directory string, workspace *work.Space, terminal *os.File, screen i
 		},
 		Read: func(storedSession *picker.Session, room int) ([]string, error) {
 			return preview.Read(directory, storedSession.Name, work.At(storedSession.WorkspaceDir), room)
+		},
+		Measure: func(storedSession *picker.Session) int64 {
+			return Occupied(Path(directory, storedSession))
 		},
 	}
 
@@ -160,13 +150,29 @@ func NamesInWorkspace(directory string, workspace *work.Space) ([]string, error)
 	return names, nil
 }
 
+type metadataKey struct {
+	name       string
+	isArchived bool
+}
+
+type metadataResult struct {
+	metadata *session.Meta
+	err      error
+}
+
 func RefreshListings(directory string, screen io.Writer) error {
-	names, err := session.AllNames(directory)
+	storedNames, err := session.StoredNames(directory)
+	if err != nil {
+		return err
+	}
+	archivedNames, err := session.ArchivedNames(directory)
 	if err != nil {
 		return err
 	}
 
-	return refreshListings(directory, screen, names, ValidateFormats)
+	keys := append(metadataKeys(storedNames, false), metadataKeys(archivedNames, true)...)
+	_, err = refreshMetadata(directory, screen, keys, ValidateFormats)
+	return err
 }
 
 func RefreshListing(directory string, screen io.Writer, name string) error {
@@ -174,38 +180,129 @@ func RefreshListing(directory string, screen io.Writer, name string) error {
 		return nil
 	}
 
-	return refreshListings(directory, screen, []string{name}, ValidateStoredFormats)
+	_, err := refreshMetadata(
+		directory,
+		screen,
+		[]metadataKey{{name: name}},
+		ValidateStoredFormats,
+	)
+	return err
 }
 
-func refreshListings(
+func refreshMetadata(
 	directory string,
 	screen io.Writer,
-	names []string,
+	keys []metadataKey,
 	validate func(directory string) error,
-) error {
-	stale := store.StaleMetaOf(directory, names)
+) (map[metadataKey]metadataResult, error) {
+	metadata := readMetadata(directory, keys)
+	stale := make([]metadataKey, 0)
+	for _, key := range keys {
+		if metadata[key].err != nil {
+			stale = append(stale, key)
+		}
+	}
 	if len(stale) == 0 {
-		return nil
+		return metadata, nil
 	}
 
 	if formatError := validate(directory); formatError != nil {
-		return formatError
+		return nil, formatError
 	}
 
 	rebuilt := 0
-	for _, name := range stale {
-		wasRebuilt, err := store.RebuildMetaIfIdle(directory, name)
+	for _, key := range stale {
+		wasRebuilt, err := store.RebuildMetaIfIdle(directory, key.name)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		if wasRebuilt {
 			rebuilt++
 		}
+		metadata[key] = readOneMetadata(directory, key)
 	}
 	if rebuilt > 0 {
 		_, _ = fmt.Fprintln(screen, style.Subtle("writing the session listing again from the journals"))
 	}
-	return nil
+	return metadata, nil
+}
+
+func metadataKeys(names []string, isArchived bool) []metadataKey {
+	keys := make([]metadataKey, 0, len(names))
+	for _, name := range names {
+		keys = append(keys, metadataKey{name: name, isArchived: isArchived})
+	}
+	return keys
+}
+
+func readMetadata(directory string, keys []metadataKey) map[metadataKey]metadataResult {
+	results := make([]metadataResult, len(keys))
+	indexes := make(chan int)
+	readerCount := min(len(keys), runtime.GOMAXPROCS(0))
+	var readers sync.WaitGroup
+	for range readerCount {
+		readers.Go(func() {
+			for index := range indexes {
+				results[index] = readOneMetadata(directory, keys[index])
+			}
+		})
+	}
+	for index := range keys {
+		indexes <- index
+	}
+	close(indexes)
+	readers.Wait()
+
+	metadata := make(map[metadataKey]metadataResult, len(keys))
+	for index, key := range keys {
+		metadata[key] = results[index]
+	}
+	return metadata
+}
+
+func readOneMetadata(directory string, key metadataKey) metadataResult {
+	var storedMeta *session.Meta
+	var err error
+	if key.isArchived {
+		storedMeta, err = session.ArchivedMeta(directory, key.name)
+	} else {
+		storedMeta, err = session.ReadMeta(directory, key.name)
+	}
+	return metadataResult{metadata: storedMeta, err: err}
+}
+
+func loadPickerSessions(
+	directory string,
+	screen io.Writer,
+) ([]*picker.Session, []*picker.Session, error) {
+	storedNames, err := session.StoredNames(directory)
+	if err != nil {
+		return nil, nil, err
+	}
+	archivedNames, err := session.ArchivedNames(directory)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	keys := append(metadataKeys(storedNames, false), metadataKeys(archivedNames, true)...)
+	readResults, err := refreshMetadata(directory, screen, keys, ValidateFormats)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	storedMetadata, err := loadNamedMetadataFrom(directory, storedNames, readResults)
+	if err != nil {
+		return nil, nil, err
+	}
+	if err := inspect(directory, storedMetadata); err != nil {
+		return nil, nil, err
+	}
+	archivedSessions, err := loadArchivedMetadataFrom(archivedNames, readResults)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return listings(storedMetadata), archivedSessions, nil
 }
 
 func Load(directory string) ([]*picker.Session, error) {
@@ -256,10 +353,20 @@ func loadMetadata(directory string) ([]sessionMetadata, error) {
 }
 
 func loadNamedMetadata(directory string, names []string) ([]sessionMetadata, error) {
+	return loadNamedMetadataFrom(directory, names, readMetadata(directory, metadataKeys(names, false)))
+}
+
+func loadNamedMetadataFrom(
+	directory string,
+	names []string,
+	readResults map[metadataKey]metadataResult,
+) ([]sessionMetadata, error) {
 	metadata := make([]sessionMetadata, 0, len(names))
 
 	for _, name := range names {
-		storedMeta, metaError := session.ReadMeta(directory, name)
+		result := readResults[metadataKey{name: name}]
+		storedMeta := result.metadata
+		metaError := result.err
 		isRunning := false
 		isRunningKnown := false
 		if metaError != nil {
@@ -321,14 +428,21 @@ func LoadArchived(directory string) ([]*picker.Session, error) {
 		return nil, err
 	}
 
+	return loadArchivedMetadataFrom(names, readMetadata(directory, metadataKeys(names, true)))
+}
+
+func loadArchivedMetadataFrom(
+	names []string,
+	readResults map[metadataKey]metadataResult,
+) ([]*picker.Session, error) {
 	sessions := make([]*picker.Session, 0, len(names))
 	for _, name := range names {
-		storedMeta, err := session.ArchivedMeta(directory, name)
-		if err != nil {
-			return nil, fmt.Errorf("could not read archived session %s metadata: %w", name, err)
+		result := readResults[metadataKey{name: name, isArchived: true}]
+		if result.err != nil {
+			return nil, fmt.Errorf("could not read archived session %s metadata: %w", name, result.err)
 		}
 
-		listing, isDescribed := describe(storedMeta)
+		listing, isDescribed := describe(result.metadata)
 		if !isDescribed {
 			continue
 		}

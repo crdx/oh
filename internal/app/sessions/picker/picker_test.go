@@ -485,3 +485,48 @@ func TestASessionWhoseSizeIsUnknownIsDrawnWithADash(t *testing.T) {
 		t.Errorf("got %q", got)
 	}
 }
+
+func TestOnlyASizeThatIsDrawnIsMeasured(t *testing.T) {
+	measured := 0
+	first := &Session{Name: "thick-poodle"}
+	second := &Session{Name: "tame-impala"}
+	self := &sessionList{store: Store{
+		Sessions: []*Session{first, second},
+		Measure: func(*Session) int64 {
+			measured++
+			return 2 << 20
+		},
+	}}
+
+	self.Row(0, false, roomForSize-1)
+	self.Row(0, false, roomForSize)
+	self.Row(0, false, roomForSize)
+
+	if measured != 1 {
+		t.Errorf("measured %d sessions, want only the one drawn with its size", measured)
+	}
+	if first.Bytes != 2<<20 {
+		t.Errorf("first session has %d bytes after measurement", first.Bytes)
+	}
+	if second.Bytes != 0 {
+		t.Errorf("second session was measured before it was drawn: %d bytes", second.Bytes)
+	}
+}
+
+func TestAnUnavailableSizeIsMeasuredOnlyOnce(t *testing.T) {
+	measured := 0
+	self := &sessionList{store: Store{
+		Sessions: []*Session{{Name: "thick-poodle"}},
+		Measure: func(*Session) int64 {
+			measured++
+			return 0
+		},
+	}}
+
+	self.Row(0, false, roomForSize)
+	self.Row(0, false, roomForSize)
+
+	if measured != 1 {
+		t.Errorf("attempted the measurement %d times", measured)
+	}
+}

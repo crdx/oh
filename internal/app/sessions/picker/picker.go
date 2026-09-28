@@ -65,6 +65,7 @@ type Store struct {
 	Restore          func(*Session) (int64, error)
 	Delete           func(*Session) error
 	Read             func(*Session, int) ([]string, error)
+	Measure          func(*Session) int64
 }
 
 func Choose(store Store, terminal *os.File, screen io.Writer) (*Session, error) {
@@ -81,6 +82,7 @@ func Choose(store Store, terminal *os.File, screen io.Writer) (*Session, error) 
 
 type sessionList struct {
 	store               Store
+	sizeMeasurements    map[*Session]struct{}
 	isArchivedView      bool
 	isAllWorkspacesView bool
 }
@@ -212,6 +214,7 @@ func (self *sessionList) ColumnHeader(room int) string {
 
 func (self *sessionList) Row(index int, isChosen bool, room int) string {
 	storedSession := self.at(index)
+	self.measure(storedSession, room)
 	line := rowInView(storedSession, isChosen, room, self.isAllWorkspacesView)
 
 	switch {
@@ -228,6 +231,21 @@ func (self *sessionList) Row(index int, isChosen bool, room int) string {
 	}
 
 	return style.Answer.Over(line)
+}
+
+func (self *sessionList) measure(storedSession *Session, room int) {
+	if self.store.Measure == nil || room > 0 && room < roomForSize {
+		return
+	}
+	_, hasMeasurement := self.sizeMeasurements[storedSession]
+	if storedSession.Bytes > 0 || hasMeasurement {
+		return
+	}
+	if self.sizeMeasurements == nil {
+		self.sizeMeasurements = make(map[*Session]struct{})
+	}
+	storedSession.Bytes = self.store.Measure(storedSession)
+	self.sizeMeasurements[storedSession] = struct{}{}
 }
 
 func (self *sessionList) canRead(index int) bool {

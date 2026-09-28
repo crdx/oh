@@ -284,6 +284,7 @@ func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
 				Restore:          restoring(),
 				Delete:           deleting(),
 				Read:             frame.read,
+				Measure:          measurementsFor(stored, archived),
 			},
 		}
 		if frame.movedIndex != nil {
@@ -305,6 +306,20 @@ func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
 	}
 
 	compareWithGolden(t, "painted.ansi", output.String())
+}
+
+func measurementsFor(groups ...[]*Session) func(*Session) int64 {
+	measurements := make(map[*Session]int64)
+	for _, sessions := range groups {
+		for _, storedSession := range sessions {
+			measurements[storedSession] = storedSession.Bytes
+			storedSession.Bytes = 0
+		}
+	}
+
+	return func(storedSession *Session) int64 {
+		return measurements[storedSession]
+	}
 }
 
 func archiving() func(*Session) (int64, error) {
