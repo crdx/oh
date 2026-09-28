@@ -498,7 +498,7 @@ func TestEscapeAtRestDoesNotPanic(t *testing.T) {
 	}
 }
 
-func TestAConfirmationAcceptsYesAndDeniesNoEnterOrEscape(t *testing.T) {
+func TestAConfirmationAcceptsYesAndEnterAndDeniesNoEscapeOrControlC(t *testing.T) {
 	for name, test := range map[string]struct {
 		keypress key.Key
 		wantErr  error
@@ -508,6 +508,7 @@ func TestAConfirmationAcceptsYesAndDeniesNoEnterOrEscape(t *testing.T) {
 		"no":          {keypress: key.Key{Code: key.Rune, Value: 'n'}, wantErr: ask.ErrDenied},
 		"enter":       {keypress: key.Key{Code: key.Enter}},
 		"escape":      {keypress: key.Key{Code: key.Escape}, wantErr: ask.ErrDenied},
+		"ctrl+c":      {keypress: key.Key{Code: key.Rune, Value: 'c', Mod: key.Ctrl}, wantErr: ask.ErrDenied},
 	} {
 		t.Run(name, func(t *testing.T) {
 			broker := ask.New()
@@ -989,6 +990,7 @@ type firstApprovalOutcome int
 
 const (
 	firstApprovalAnswer firstApprovalOutcome = iota
+	firstApprovalCancellation
 	firstApprovalLapse
 )
 
@@ -1017,13 +1019,23 @@ func queuedApprovalStream(t *testing.T, firstOutcome firstApprovalOutcome) strin
 		<-broker.Changes()
 		synctest.Wait()
 
-		if firstOutcome == firstApprovalLapse {
+		switch firstOutcome {
+		case firstApprovalCancellation:
+			self.handleKeypressAndShowInput(
+				inputLine,
+				nil,
+				key.Key{Code: key.Rune, Value: 'c', Mod: key.Ctrl},
+			)
+			if err := <-firstResult; err == nil || !strings.Contains(err.Error(), "fetch refused") {
+				t.Fatalf("ctrl+c did not cancel the first approval: %v", err)
+			}
+		case firstApprovalLapse:
 			time.Sleep(approvalLimit)
 			synctest.Wait()
 			if err := <-firstResult; err == nil || !strings.Contains(err.Error(), "timed out after 1m") {
 				t.Fatalf("the first approval did not lapse as expected: %v", err)
 			}
-		} else {
+		case firstApprovalAnswer:
 			time.Sleep(45 * time.Second)
 			self.show(inputLine)
 			self.answerQuestion(key.Key{Code: key.Rune, Value: 'y'})
@@ -1046,10 +1058,11 @@ func queuedApprovalStream(t *testing.T, firstOutcome firstApprovalOutcome) strin
 	return stream
 }
 
-func TestGoldenQueuedApprovalsEachGetTheirWholeLapse(t *testing.T) {
+func TestGoldenQueuedApprovalsAdvanceAfterAnAnswerCancellationOrLapse(t *testing.T) {
 	passes := map[string]func() string{
-		"after the first is answered": func() string { return queuedApprovalStream(t, firstApprovalAnswer) },
-		"after the first lapses":      func() string { return queuedApprovalStream(t, firstApprovalLapse) },
+		"after the first is answered":          func() string { return queuedApprovalStream(t, firstApprovalAnswer) },
+		"after the first is cancelled with ^C": func() string { return queuedApprovalStream(t, firstApprovalCancellation) },
+		"after the first lapses":               func() string { return queuedApprovalStream(t, firstApprovalLapse) },
 	}
 	for name, pass := range passes {
 		requireNothingDrawnAboveTheScreen(t, name, pass(), replayLines)

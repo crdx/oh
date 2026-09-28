@@ -376,7 +376,8 @@ func (self *App) answerQuestion(keypress key.Key) {
 	options := len(request.Question.Options)
 
 	switch {
-	case keypress.Code == key.Escape:
+	case keypress.Code == key.Escape ||
+		keypress.Code == key.Rune && keypress.Value == 'c' && keypress.Mod == key.Ctrl:
 		request.Cancel()
 	case keypress.Code == key.Enter:
 		request.Choose(self.question.cursor)
