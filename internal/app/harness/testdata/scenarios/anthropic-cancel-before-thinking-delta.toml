@@ -5,6 +5,7 @@ effort = "medium"
 [first]
 prompt = "interrupt before thought text"
 is-cancelled = true
+cancel-with-signal = true
 
 [[first.response]]
 cancel-after-wire-event = 2

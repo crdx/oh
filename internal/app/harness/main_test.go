@@ -6928,6 +6928,91 @@ func TestOpenCodeRequestsUseTheStoredSessionIdentifier(t *testing.T) {
 	}
 }
 
+func TestAnInterruptedPrintSessionCanBeResumed(t *testing.T) {
+	binary := buildTestBinary(t)
+	endpoint := sim.New(&sim.Scenario{Model: "fake", Turns: []sim.Turn{{Say: "Resumed."}}})
+	requestStarted := make(chan struct{})
+	releaseRequest := make(chan struct{})
+	defer close(releaseRequest)
+	var conversationRequests atomic.Int32
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		if strings.HasSuffix(request.URL.Path, "/chat/completions") && conversationRequests.Add(1) == 1 {
+			close(requestStarted)
+			select {
+			case <-request.Context().Done():
+			case <-releaseRequest:
+			}
+			return
+		}
+		endpoint.ServeHTTP(writer, request)
+	}))
+	t.Cleanup(server.Close)
+
+	stateDirectory := t.TempDir()
+	workspaceDirectory := reachableWorkspaceDir(t)
+	environment := append(
+		testBinaryEnvironment(t, stateDirectory),
+		backend.EndpointVariable+"="+endpoint.Addresses(server.URL)[sim.Completions],
+	)
+	command := exec.CommandContext( //nolint:gosec // running the binary under test
+		t.Context(), binary, "-p", "--yolo", "-m", "opencode-go/fake", "first question",
+	)
+	command.Dir = workspaceDirectory
+	command.Env = environment
+	var output bytes.Buffer
+	command.Stdout = &output
+	command.Stderr = &output
+	if err := command.Start(); err != nil {
+		t.Fatal(err)
+	}
+
+	select {
+	case <-requestStarted:
+	case <-time.After(interactiveDeadline):
+		_ = command.Process.Kill()
+		t.Fatalf("the print session made no request, having drawn %q", output.String())
+	}
+	if err := command.Process.Signal(os.Interrupt); err != nil {
+		t.Fatal(err)
+	}
+	processError := command.Wait()
+
+	exitError, isExit := errors.AsType[*exec.ExitError](processError)
+	if !isExit {
+		t.Fatalf("the interrupted process returned %v, having drawn %q", processError, output.String())
+	}
+	status, hasWaitStatus := exitError.Sys().(syscall.WaitStatus)
+	if !hasWaitStatus || !status.Signaled() || status.Signal() != syscall.SIGINT {
+		t.Fatalf("the interrupted process ended with %v, want SIGINT", exitError.Sys())
+	}
+	if !strings.Contains(output.String(), interrupt.Sentence(interrupt.SignalInterrupt)) {
+		t.Errorf("the interruption was not explained, in %q", output.String())
+	}
+
+	sessionsDirectory := filepath.Join(stateDirectory, "org.crdx", "oh", "sessions")
+	storedSessions, err := store.List(sessionsDirectory)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(storedSessions) != 1 {
+		t.Fatalf("got %d stored sessions, want one", len(storedSessions))
+	}
+	storedSession := storedSessions[0]
+	if !storedSession.CanResume() || storedSession.TurnCompletions != 1 {
+		t.Fatalf(
+			"interrupted session has CanResume() = %v and %d completions",
+			storedSession.CanResume(), storedSession.TurnCompletions,
+		)
+	}
+
+	resumed := runTestBinary(
+		t, binary, workspaceDirectory, environment, "-p", "-r", storedSession.Name, "continue",
+	)
+	if !strings.Contains(resumed, "Resumed.") {
+		t.Errorf("the interrupted session did not resume: %q", resumed)
+	}
+}
+
 func TestASessionResumesWithTheModelItWasCreatedWithAfterTheModelListForgetsIt(t *testing.T) {
 	binary := buildTestBinary(t)
 	endpoint := sim.New(&sim.Scenario{
@@ -15810,6 +15895,7 @@ type sessionGoldenTurn struct {
 	Timeout                      string                  `toml:"timeout"`
 	IsCancelled                  bool                    `toml:"is-cancelled"`
 	CancelWithCtrlD              bool                    `toml:"cancel-with-ctrl-d"`
+	CancelWithSignal             bool                    `toml:"cancel-with-signal"`
 	CancelAfterReasoningDelta    int                     `toml:"cancel-after-reasoning-delta"`
 	CancelAfterReasoningEvent    int                     `toml:"cancel-after-reasoning-event"`
 	CancelAfterMessageDelta      int                     `toml:"cancel-after-message-delta"`
@@ -17765,7 +17851,13 @@ func runSessionGoldenTurn(
 	if turn.CancelWithCtrlD {
 		stopKey = key.Key{Code: key.Rune, Value: 'd', Mod: key.Ctrl}
 	}
+	interruptionCause := stopKeyCause(stopKey)
 	interruptWithStopKey := func() {
+		if turn.CancelWithSignal {
+			interruptionCause = interrupt.SignalInterrupt
+			testHarness.interruptTurn(interruptionCause)
+			return
+		}
 		if !testHarness.apply(inputLine, nil, stopKey) {
 			t.Fatal("the stop key closed the harness")
 		}
@@ -17837,7 +17929,10 @@ func runSessionGoldenTurn(
 		}
 	}
 	if turn.IsCancelled && !testHarness.currentTurn.Cancelled() {
-		testHarness.interruptTurn(stopKeyCause(stopKey))
+		if turn.CancelWithSignal {
+			interruptionCause = interrupt.SignalInterrupt
+		}
+		testHarness.interruptTurn(interruptionCause)
 	}
 	testHarness.finish()
 

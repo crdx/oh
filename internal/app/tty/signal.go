@@ -19,7 +19,7 @@ func RestoreOnSignal(restore func()) func() {
 
 	stoppedChannel := make(chan struct{})
 
-	go watch(signals, stoppedChannel, restore, reraise)
+	go watch(signals, stoppedChannel, restore, Reraise)
 
 	return func() {
 		signal.Stop(signals)
@@ -36,7 +36,7 @@ func watch(signals <-chan os.Signal, stoppedChannel <-chan struct{}, restore fun
 	}
 }
 
-func reraise(receivedSignal os.Signal) {
+func Reraise(receivedSignal os.Signal) {
 	signal.Reset(receivedSignal)
 
 	process, err := os.FindProcess(os.Getpid())
@@ -44,5 +44,9 @@ func reraise(receivedSignal os.Signal) {
 		os.Exit(1)
 	}
 
-	_ = process.Signal(receivedSignal)
+	if err := process.Signal(receivedSignal); err != nil {
+		os.Exit(1)
+	}
+
+	select {}
 }

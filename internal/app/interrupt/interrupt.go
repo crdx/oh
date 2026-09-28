@@ -10,19 +10,21 @@ import (
 type Cause string
 
 const (
-	Escape       Cause = "escape"
-	ControlD     Cause = "ctrl_d"
-	Replacement  Cause = "replacement"
-	AccessChange Cause = "access_change"
-	SessionClose Cause = "session_close"
+	Escape          Cause = "escape"
+	ControlD        Cause = "ctrl_d"
+	Replacement     Cause = "replacement"
+	AccessChange    Cause = "access_change"
+	SessionClose    Cause = "session_close"
+	SignalInterrupt Cause = "signal_interrupt"
 )
 
 var sentences = map[Cause]string{
-	Escape:       "the user pressed escape",
-	ControlD:     "the user pressed ctrl+d",
-	Replacement:  "the user sent another message",
-	AccessChange: "access changed",
-	SessionClose: "the session closed",
+	Escape:          "the user pressed escape",
+	ControlD:        "the user pressed ctrl+d",
+	Replacement:     "the user sent another message",
+	AccessChange:    "access changed",
+	SessionClose:    "the session closed",
+	SignalInterrupt: "the process received SIGINT",
 }
 
 func Sentence(cause Cause) string {
@@ -75,7 +77,7 @@ func IsAnnounced(event agent.Event) bool {
 	switch Cause(event.Name) {
 	case Replacement, AccessChange, SessionClose:
 		return false
-	case Escape, ControlD:
+	case Escape, ControlD, SignalInterrupt:
 		return true
 	}
 

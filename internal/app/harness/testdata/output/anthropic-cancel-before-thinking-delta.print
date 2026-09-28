@@ -2,7 +2,7 @@
  interrupt before thought text
 
 
-Turn stopped because the user pressed escape.
+Turn stopped because the process received SIGINT.
 
 
  continue after the interruption

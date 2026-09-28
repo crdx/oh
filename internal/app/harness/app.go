@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/signal"
 	"slices"
 	"strings"
 	"time"
@@ -166,6 +167,11 @@ type runMode struct {
 	isSimulated bool
 }
 
+type terminationState struct {
+	signals        <-chan os.Signal
+	receivedSignal os.Signal
+}
+
 type questionState struct {
 	broker      *ask.Broker
 	request     *ask.Request
@@ -216,6 +222,7 @@ type App struct {
 	currentTurn     Turn
 	startedAt       time.Time
 	keyboard        *os.File
+	termination     terminationState
 	now             func() time.Time
 }
 
@@ -1532,6 +1539,14 @@ func (self *App) print(history *edit.History, message string) {
 	defer func() { self.runMode.isPlain = false }()
 	defer self.screen.End()
 
+	terminationSignals := make(chan os.Signal, 1)
+	signal.Notify(terminationSignals, os.Interrupt)
+	self.termination.signals = terminationSignals
+	defer func() {
+		signal.Stop(terminationSignals)
+		self.termination.signals = nil
+	}()
+
 	self.acceptPlainInput(history, message)
 }
 
@@ -1590,8 +1605,19 @@ func (self *App) ask(history *edit.History, message string) {
 
 func (self *App) waitForCurrentTurn() {
 	for self.currentTurn.Running() {
-		for event := range self.currentTurn.Events() {
-			self.takeTurn(event)
+		turnEvents := self.currentTurn.Events()
+		isTurnEventsOpen := true
+		for isTurnEventsOpen {
+			select {
+			case event, isOpen := <-turnEvents:
+				isTurnEventsOpen = isOpen
+				if isOpen {
+					self.takeTurn(event)
+				}
+			case receivedSignal := <-self.termination.signals:
+				self.termination.receivedSignal = receivedSignal
+				self.interruptTurn(interrupt.SignalInterrupt)
+			}
 		}
 		self.finish()
 	}

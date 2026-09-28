@@ -240,6 +240,14 @@ func completableCustomCapFlags() string {
 	return toolGroups.CustomFlags()
 }
 
+type terminationSignalError struct {
+	signal os.Signal
+}
+
+func (self terminationSignalError) Error() string {
+	return self.signal.String()
+}
+
 func Main() {
 	if len(os.Args) > 1 && os.Args[1] == ctl.Flag {
 		os.Exit(ctl.Run(os.Args[2:]))
@@ -276,6 +284,10 @@ func Main() {
 	transition := cycle.Transition{}
 	chosenSession, err := run(hooks, &transition)
 	if err != nil {
+		if interruption, isSignal := errors.AsType[terminationSignalError](err); isSignal {
+			tty.Reraise(interruption.signal)
+			return
+		}
 		fmt.Fprintln(os.Stderr, style.Error(err))
 		os.Exit(1)
 	}
@@ -1413,6 +1425,9 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 
 	if isSessionLeftToResume(log.IsPersisted(), isSimulated, transition.Kind) {
 		_, _ = fmt.Fprintf(notices, "\n%s\n", style.Subtle(sessions.ResumeCommand(os.Args[0], log.Name())))
+	}
+	if app.termination.receivedSignal != nil {
+		return "", terminationSignalError{signal: app.termination.receivedSignal}
 	}
 
 	return "", nil

@@ -16,7 +16,7 @@ interrupt before thought text
 
 ## Interrupted · +0s
 
-Turn stopped because the user pressed escape.
+Turn stopped because the process received SIGINT.
 
 ## User · +0s
 
