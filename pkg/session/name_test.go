@@ -1,6 +1,7 @@
 package session
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
 	"slices"
@@ -97,6 +98,51 @@ func TestATakenNameIsPassedOverForTheNextFreeOne(t *testing.T) {
 	slices.Sort(names)
 	if want := []string{"brave-otter", "brisk-otter"}; !slices.Equal(names, want) {
 		t.Fatalf("the two sessions are named %v, want %v", names, want)
+	}
+}
+
+func TestAnArchivedNameRemainsTaken(t *testing.T) {
+	directory := t.TempDir()
+
+	restoreWordsAfterwards(t)
+	adjectives = []string{"brave"}
+	animals = []string{"otter"}
+
+	stored := storeSession(t, directory)
+	if err := Archive(directory, stored.Name()); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := Create(directory, nil, nil); err == nil {
+		t.Error("expected the archived name to remain taken")
+	}
+}
+
+func TestALazySessionDoesNotReuseANameArchivedAfterItWasChosen(t *testing.T) {
+	directory := t.TempDir()
+
+	restoreWordsAfterwards(t)
+	adjectives = []string{"brave"}
+	animals = []string{"otter"}
+
+	lazy, err := Create(directory, nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	stored := storeSession(t, directory)
+	if err := Archive(directory, stored.Name()); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := lazy.EnsurePersisted(); !errors.Is(err, ErrArchived) {
+		t.Errorf("persisting the lazy session got %v, want an archived-name refusal", err)
+	}
+	if !IsArchived(directory, lazy.Name()) {
+		t.Error("the existing archive disappeared")
+	}
+	if _, err := os.Stat(Dir(directory, lazy.Name())); !errors.Is(err, os.ErrNotExist) {
+		t.Errorf("the lazy session left a directory beside the archive: %v", err)
 	}
 }
 

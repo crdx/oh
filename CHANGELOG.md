@@ -59,6 +59,7 @@
 - Show session sizes on disk in picker
 - Keep migration copies as hard links
 - Compress recorded wire traffic
+- Reserve archived session names
 
 ### Models and providers
 

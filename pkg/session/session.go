@@ -311,6 +311,10 @@ func (self *Writer) ensureOpen() error {
 	if err := os.Mkdir(directory, 0o700); err != nil {
 		return err
 	}
+	if IsArchived(self.directory, self.name) {
+		_ = os.Remove(directory)
+		return fmt.Errorf("%w %q", ErrArchived, self.name)
+	}
 
 	sessionDir, err := openSessionDir(self.directory, self.name)
 	if err != nil {
