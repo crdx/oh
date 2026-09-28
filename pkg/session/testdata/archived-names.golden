@@ -1,0 +1,8 @@
+=== after archiving ===
+create: every session name is taken
+directory: absent
+archive: regular file
+=== name archived after selection ===
+persist: the session is archived "brave-otter"
+directory: absent
+archive: regular file
