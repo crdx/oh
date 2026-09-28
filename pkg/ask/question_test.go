@@ -70,7 +70,12 @@ func TestConfirmationCarriesCancellationThrough(t *testing.T) {
 }
 
 func TestConfirmationOffersYesAndNoAndPrefersYes(t *testing.T) {
-	question := ask.Confirmation{Label: "Continue?", Detail: "rm -rf /", Language: "bash"}.Question()
+	question := ask.Confirmation{
+		Label:    "Continue?",
+		Detail:   "rm -rf /",
+		Language: "bash",
+		Fields:   []ask.Field{{Name: "target", Value: "/"}},
+	}.Question()
 
 	if len(question.Options) != 2 {
 		t.Fatalf("got %d options, want two", len(question.Options))
@@ -83,6 +88,9 @@ func TestConfirmationOffersYesAndNoAndPrefersYes(t *testing.T) {
 	}
 	if question.Detail != "rm -rf /" || question.Language != "bash" {
 		t.Errorf("got detail %q in %q", question.Detail, question.Language)
+	}
+	if len(question.Fields) != 1 || question.Fields[0] != (ask.Field{Name: "target", Value: "/"}) {
+		t.Errorf("got fields %+v", question.Fields)
 	}
 }
 

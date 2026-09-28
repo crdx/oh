@@ -20,11 +20,17 @@ type Option struct {
 	Label string
 }
 
+type Field struct {
+	Name  string
+	Value string
+}
+
 type Question struct {
 	Label    string
 	Lapse    string
 	Detail   string
 	Language string
+	Fields   []Field
 	Options  []Option
 	Default  int
 }
@@ -51,6 +57,7 @@ type Confirmation struct {
 	Label    string
 	Detail   string
 	Language string
+	Fields   []Field
 }
 
 const confirmationLapse = "auto-denies"
@@ -66,6 +73,7 @@ func (self Confirmation) Question() Question {
 		Lapse:    confirmationLapse,
 		Detail:   self.Detail,
 		Language: self.Language,
+		Fields:   slices.Clone(self.Fields),
 		Options:  slices.Clone(confirmationOptions),
 		Default:  yesIndex,
 	}

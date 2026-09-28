@@ -102,6 +102,32 @@ func TestQuestionNotificationNamesTheWorkspaceAndAsksTheQuestion(t *testing.T) {
 	}
 }
 
+func TestQuestionNotificationShowsTheFirstNamedField(t *testing.T) {
+	capturePath := fakeNotifySend(t)
+	question := ask.Confirmation{
+		Label: "Run the commit tool?",
+		Fields: []ask.Field{
+			{Name: "patch", Value: "/tmp/layout.patch"},
+			{Name: "message", Value: "Align header controls consistently"},
+		},
+	}.Question()
+
+	if err := notification.SendQuestion(
+		t.Context(),
+		nil,
+		neverFocused,
+		work.At("/workspace/io"),
+		question,
+	); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	got := capturedArguments(t, capturePath)
+	if message := strings.Join(got[4:], "\n"); message != "Run the commit tool?\npatch: /tmp/layout.patch …" {
+		t.Errorf("got message %q", message)
+	}
+}
+
 func TestQuestionNotificationShortensWhatItCannotShow(t *testing.T) {
 	for name, test := range map[string]struct {
 		detail string

@@ -121,11 +121,10 @@ var (
 
 func customToolApproval(name string) approval {
 	return approval{
-		label:    "Run the " + name + " tool?",
-		language: "bash",
-		action:   name,
-		outcome:  name + " did not run",
-		advice:   "choose another approach",
+		label:   "Run the " + name + " tool?",
+		action:  name,
+		outcome: name + " did not run",
+		advice:  "choose another approach",
 	}
 }
 
@@ -143,11 +142,36 @@ func (self approval) ask(
 }
 
 func (self approval) confirm(ctx context.Context, broker *ask.Broker, subject string) error {
-	err := ask.ConfirmWithin(ctx, broker, ask.Confirmation{
+	return self.confirmWith(ctx, broker, ask.Confirmation{
 		Label:    self.label,
 		Detail:   subject,
 		Language: self.language,
-	}, approvalLimit)
+	})
+}
+
+func (self approval) confirmArguments(
+	ctx context.Context,
+	broker *ask.Broker,
+	arguments tool.Arguments,
+) error {
+	fields := make([]ask.Field, 0, len(arguments.Schema()))
+	for _, parameter := range arguments.Schema() {
+		if !arguments.IsPresent(parameter.Name) {
+			continue
+		}
+
+		value := arguments.GetText(parameter.Name)
+		if parameter.Type == tool.TypeArray {
+			value = strings.Join(arguments.GetStrings(parameter.Name), ", ")
+		}
+		fields = append(fields, ask.Field{Name: parameter.Name, Value: value})
+	}
+
+	return self.confirmWith(ctx, broker, ask.Confirmation{Label: self.label, Fields: fields})
+}
+
+func (self approval) confirmWith(ctx context.Context, broker *ask.Broker, confirmation ask.Confirmation) error {
+	err := ask.ConfirmWithin(ctx, broker, confirmation, approvalLimit)
 
 	switch {
 	case errors.Is(err, ask.ErrDenied):
@@ -1024,8 +1048,8 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		Directory:      workspace.GetDir(),
 		GroupForTool:   frozenToolGroups.GroupOf,
 		IsGroupAllowed: mode.Allows,
-		Approve: func(ctx context.Context, name string, line string) error {
-			return customToolApproval(name).confirm(ctx, askBroker, line)
+		Approve: func(ctx context.Context, name string, arguments tool.Arguments) error {
+			return customToolApproval(name).confirmArguments(ctx, askBroker, arguments)
 		},
 	})
 	if err != nil {

@@ -29,6 +29,7 @@ import (
 	"crdx.org/oh/internal/app/interrupt"
 	"crdx.org/oh/internal/app/jobrecord"
 	"crdx.org/oh/internal/app/key"
+	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/app/metrics"
 	"crdx.org/oh/internal/app/output"
@@ -1002,7 +1003,17 @@ func (self *App) questionRows(columns int) []string {
 		return nil
 	}
 
-	return painter.RenderQuestion(request.Question, self.question.cursor, columns)
+	if self.screen == nil {
+		return painter.RenderQuestion(request.Question, self.question.cursor, columns, false, link.Roots{})
+	}
+
+	return painter.RenderQuestion(
+		request.Question,
+		self.question.cursor,
+		columns,
+		self.screen.IsTerminal(),
+		self.screen.LinkRoots().WithoutScratch(),
+	)
 }
 
 func (self *App) remainingAnswerTime(at time.Time) time.Duration {

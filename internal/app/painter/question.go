@@ -6,10 +6,12 @@ import (
 	"unicode"
 
 	"crdx.org/oh/internal/app/call"
+	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/markdown"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/util"
+	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/ask"
 )
@@ -21,12 +23,20 @@ const (
 	shellLanguage = "bash"
 )
 
-func RenderQuestion(question ask.Question, cursor int, columns int) []string {
+func RenderQuestion(
+	question ask.Question,
+	cursor int,
+	columns int,
+	shouldRenderHyperlinks bool,
+	pathRoots link.Roots,
+) []string {
 	rows := renderQuestionLabel(question.Label, columns)
+	details := renderQuestionDetail(question, columns)
+	details = append(details, renderQuestionFields(question.Fields, columns, shouldRenderHyperlinks, pathRoots)...)
 
-	if detail := renderQuestionDetail(question, columns); len(detail) > 0 {
+	if len(details) > 0 {
 		rows = append(rows, "")
-		rows = append(rows, detail...)
+		rows = append(rows, details...)
 	}
 
 	return append(rows, "", renderOptions(question, cursor, columns))
@@ -69,6 +79,29 @@ func renderQuestionDetail(question ask.Question, columns int) []string {
 			rows = append(rows, gutter+row)
 			gutter = indent
 		}
+	}
+
+	return rows
+}
+
+func renderQuestionFields(
+	fields []ask.Field,
+	columns int,
+	shouldRenderHyperlinks bool,
+	pathRoots link.Roots,
+) []string {
+	var rows []string
+
+	for _, field := range fields {
+		value := strutil.StripControl(field.Value)
+		if shouldRenderHyperlinks {
+			value = link.Render(value, pathRoots)
+		}
+
+		name := strutil.StripControl(field.Name)
+		prefix := style.Subject(name+":") + " "
+		indent := min(style.Width(prefix), max(columns-1, 0))
+		rows = append(rows, width.WrapIndented(prefix+value, columns, indent)...)
 	}
 
 	return rows

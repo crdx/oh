@@ -47,12 +47,28 @@ func title(workspace *work.Space) string {
 }
 
 func questionMessage(question ask.Question) string {
-	detail := detailLine(question.Detail)
+	detail := questionDetail(question)
 	if detail == "" {
 		return question.Label
 	}
 
 	return question.Label + "\n" + detail
+}
+
+func questionDetail(question ask.Question) string {
+	if question.Detail != "" {
+		return detailLine(question.Detail)
+	}
+	if len(question.Fields) == 0 {
+		return ""
+	}
+
+	detail := question.Fields[0].Name + ": " + question.Fields[0].Value
+	if len(question.Fields) > 1 {
+		detail += "\n" + question.Fields[1].Name
+	}
+
+	return detailLine(detail)
 }
 
 func detailLine(detail string) string {

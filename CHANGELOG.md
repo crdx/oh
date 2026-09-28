@@ -29,6 +29,7 @@
 
 ### Questions and approvals
 
+- Show custom tool arguments instead of their executable commands
 - Keep tall questions and approvals in view
 - Notify about a waiting question if unfocused
 - Give each queued approval its full timeout

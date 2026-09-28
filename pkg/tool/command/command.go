@@ -11,8 +11,6 @@ import (
 	"strings"
 	"time"
 
-	"mvdan.cc/sh/v3/syntax"
-
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/tool"
 )
@@ -61,7 +59,7 @@ type Declaration struct {
 
 type Options struct {
 	Directory      string
-	Approve        func(ctx context.Context, name string, command string) error
+	Approve        func(ctx context.Context, name string, arguments tool.Arguments) error
 	GroupForTool   func(name string) string
 	IsGroupAllowed func(group string) bool
 }
@@ -241,20 +239,6 @@ func argv(executable string, command []string, arguments tool.Arguments) []strin
 	return line
 }
 
-func render(line []string) string {
-	words := make([]string, 0, len(line))
-
-	for _, word := range line {
-		quotation, err := syntax.Quote(word, syntax.LangBash)
-		if err != nil {
-			quotation = word
-		}
-		words = append(words, quotation)
-	}
-
-	return strings.Join(words, " ")
-}
-
 func describe(arguments tool.Arguments, subject string) (string, string) {
 	var values []string
 
@@ -294,7 +278,7 @@ func run(
 	line := argv(executable, declaration.Command, arguments)
 
 	if declaration.MustAsk && options.Approve != nil {
-		if err := options.Approve(ctx, declaration.Name, render(line)); err != nil {
+		if err := options.Approve(ctx, declaration.Name, arguments); err != nil {
 			return "", err
 		}
 	}

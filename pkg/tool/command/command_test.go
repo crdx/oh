@@ -261,17 +261,18 @@ func TestTheCommandRunsInTheDirectoryItWasGiven(t *testing.T) {
 	}
 }
 
-func TestTheApprovalSeesTheWholeCommandAndCanRefuseIt(t *testing.T) {
+func TestTheApprovalSeesEverySuppliedArgumentAndCanRefuseIt(t *testing.T) {
 	refusal := errors.New("the user said no")
-	var askedName, asked string
+	var askedName string
+	var askedArguments tool.Arguments
 
 	declaration := echoingDeclaration(t)
 	declaration.MustAsk = true
 
 	subject, err := command.New(declaration, command.Options{
-		Approve: func(_ context.Context, name string, command string) error {
+		Approve: func(_ context.Context, name string, arguments tool.Arguments) error {
 			askedName = name
-			asked = command
+			askedArguments = arguments
 			return refusal
 		},
 	})
@@ -279,11 +280,18 @@ func TestTheApprovalSeesTheWholeCommandAndCanRefuseIt(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if _, err := call(t, subject, `{"environment":"live","tag":["a b"]}`); !errors.Is(err, refusal) {
+	if _, err := call(
+		t,
+		subject,
+		`{"environment":"live","dry_run":false,"retries":2,"tag":["a b","release"]}`,
+	); !errors.Is(err, refusal) {
 		t.Fatalf("got %v", err)
 	}
-	if !strings.HasSuffix(asked, "--environment live --tag 'a b'") {
-		t.Errorf("got %q", asked)
+	if askedArguments.GetString("environment") != "live" ||
+		askedArguments.GetBoolean("dry_run") ||
+		askedArguments.GetInteger("retries") != 2 ||
+		strings.Join(askedArguments.GetStrings("tag"), "|") != "a b|release" {
+		t.Errorf("got the wrong arguments")
 	}
 	if askedName != "deploy" {
 		t.Errorf("got %q", askedName)
@@ -301,7 +309,7 @@ func TestAGroupRefusesACommandBeforeApproval(t *testing.T) {
 		IsGroupAllowed: func(group string) bool {
 			return group == "a" && isGranted
 		},
-		Approve: func(context.Context, string, string) error {
+		Approve: func(context.Context, string, tool.Arguments) error {
 			approvalCount++
 			return nil
 		},
@@ -328,7 +336,7 @@ func TestAGroupRefusesACommandBeforeApproval(t *testing.T) {
 
 func TestAToolTheDeclarationDoesNotGateIsNeverAskedAbout(t *testing.T) {
 	subject, err := command.New(echoingDeclaration(t), command.Options{
-		Approve: func(context.Context, string, string) error {
+		Approve: func(context.Context, string, tool.Arguments) error {
 			t.Error("the tool was asked about")
 			return nil
 		},
@@ -347,7 +355,7 @@ func TestACallTheSchemaRefusesNeverReachesTheCommand(t *testing.T) {
 	declaration.MustAsk = true
 
 	subject, err := command.New(declaration, command.Options{
-		Approve: func(context.Context, string, string) error {
+		Approve: func(context.Context, string, tool.Arguments) error {
 			t.Error("the command was approved")
 			return nil
 		},

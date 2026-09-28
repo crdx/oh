@@ -1,10 +1,14 @@
 package painter
 
 import (
+	"os"
+	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 	"time"
 
+	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/pkg/ask"
 )
@@ -29,7 +33,7 @@ func TestAConfirmationDrawsItsLabelDetailAndOptions(t *testing.T) {
 		Language: "bash",
 	}.Question()
 
-	rows := plainRows(RenderQuestion(question, question.DefaultIndex(), 80))
+	rows := plainRows(RenderQuestion(question, question.DefaultIndex(), 80, false, link.Roots{}))
 
 	want := []string{
 		"Run this command with host networking?",
@@ -45,6 +49,42 @@ func TestAConfirmationDrawsItsLabelDetailAndOptions(t *testing.T) {
 		if rows[index] != row {
 			t.Errorf("got row %d as %q, want %q", index, rows[index], row)
 		}
+	}
+}
+
+func TestAConfirmationDrawsNamedFieldsAndLinksTheirPaths(t *testing.T) {
+	patchPath := filepath.Join(t.TempDir(), "layout.patch")
+	if err := os.WriteFile(patchPath, nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	question := ask.Confirmation{
+		Label: "Run the commit tool?",
+		Fields: []ask.Field{
+			{Name: "patch", Value: patchPath},
+			{Name: "message", Value: "Align header controls consistently"},
+		},
+	}.Question()
+
+	rows := RenderQuestion(question, question.DefaultIndex(), 120, true, link.Roots{})
+	plain := plainRows(rows)
+	want := []string{
+		"Run the commit tool?",
+		"",
+		"patch: " + patchPath,
+		"message: Align header controls consistently",
+		"",
+		"[Yes]  No ",
+	}
+	if !slices.Equal(plain, want) {
+		t.Errorf("got rows %q, want %q", plain, want)
+	}
+	if !strings.Contains(rows[2], link.RenderPath(patchPath, patchPath)) {
+		t.Errorf("got patch row %q, want the patch path linked", rows[2])
+	}
+
+	unlinked := RenderQuestion(question, question.DefaultIndex(), 120, false, link.Roots{})
+	if strings.Contains(unlinked[2], link.RenderPath(patchPath, patchPath)) {
+		t.Errorf("got patch row %q without terminal hyperlinks", unlinked[2])
 	}
 }
 
@@ -71,7 +111,7 @@ func TestTheHeadOfAQuestionCountsDownWhereThereIsADeadline(t *testing.T) {
 func TestAQuestionDrawsNothingButItsLabelAndOptions(t *testing.T) {
 	question := ask.Confirmation{Label: "Continue?"}.Question()
 
-	rows := plainRows(RenderQuestion(question, 0, 80))
+	rows := plainRows(RenderQuestion(question, 0, 80, false, link.Roots{}))
 
 	if len(rows) != 3 {
 		t.Fatalf("got %d rows %q, want a label, a blank row and its options", len(rows), rows)
@@ -91,7 +131,7 @@ func TestACommandMarksTheURLItReaches(t *testing.T) {
 		Language: "bash",
 	}.Question()
 
-	detail := RenderQuestion(question, 0, 80)[2]
+	detail := RenderQuestion(question, 0, 80, false, link.Roots{})[2]
 
 	if !strings.Contains(detail, style.Hazard("https://example.com/drop")) {
 		t.Errorf("got detail %q, want the url marked", detail)
@@ -108,7 +148,7 @@ func TestACommandIsMarkedTheWayTheToolMarksIt(t *testing.T) {
 		Language: "bash",
 	}.Question()
 
-	detail := RenderQuestion(question, 0, 80)[2]
+	detail := RenderQuestion(question, 0, 80, false, link.Roots{})[2]
 
 	if !strings.HasPrefix(style.Plain(detail), "$ curl") {
 		t.Errorf("got detail %q, want the shell mark the tool uses", style.Plain(detail))
@@ -128,7 +168,7 @@ func TestACommandMarkFollowsTheToolTheme(t *testing.T) {
 		Language: "bash",
 	}.Question()
 
-	detail := RenderQuestion(question, 0, 80)[2]
+	detail := RenderQuestion(question, 0, 80, false, link.Roots{})[2]
 
 	if !strings.HasPrefix(style.Plain(detail), "fire curl") {
 		t.Errorf("got detail %q, want the themed shell mark", style.Plain(detail))
@@ -141,7 +181,7 @@ func TestALongDetailIsWrappedUnderItsGutter(t *testing.T) {
 		Detail: strings.Repeat("word ", 12),
 	}.Question()
 
-	rows := plainRows(RenderQuestion(question, 0, 30))
+	rows := plainRows(RenderQuestion(question, 0, 30, false, link.Roots{}))
 
 	for _, row := range rows {
 		if style.Width(row) > 30 {
@@ -159,7 +199,7 @@ func TestALongDetailIsWrappedUnderItsGutter(t *testing.T) {
 func TestTheChosenOptionIsTheOnlyOnePainted(t *testing.T) {
 	question := ask.Choice{Label: "Which one?", Labels: []string{"first", "second"}}.Question()
 
-	options := lastRow(RenderQuestion(question, 1, 80))
+	options := lastRow(RenderQuestion(question, 1, 80, false, link.Roots{}))
 
 	if !strings.Contains(style.Plain(options), "1 first") {
 		t.Errorf("got options %q, want numbered labels", style.Plain(options))
@@ -183,7 +223,7 @@ func TestOnlyTheBracketsMoveBetweenOptions(t *testing.T) {
 		"resting on no":  {cursor: 1, want: "Yes  [No]"},
 	} {
 		t.Run(name, func(t *testing.T) {
-			options := style.Plain(lastRow(RenderQuestion(question, test.cursor, 80)))
+			options := style.Plain(lastRow(RenderQuestion(question, test.cursor, 80, false, link.Roots{})))
 			if strings.TrimSpace(options) != test.want {
 				t.Errorf("got options %q, want %q", strings.TrimSpace(options), test.want)
 			}
@@ -194,7 +234,7 @@ func TestOnlyTheBracketsMoveBetweenOptions(t *testing.T) {
 func TestAnOptionWithoutAKeyStandsAlone(t *testing.T) {
 	question := ask.Question{Options: []ask.Option{{Label: "carry on"}, {Label: "stop"}}}
 
-	options := style.Plain(lastRow(RenderQuestion(question, 1, 80)))
+	options := style.Plain(lastRow(RenderQuestion(question, 1, 80, false, link.Roots{})))
 
 	if strings.TrimSpace(options) != "carry on  [stop]" {
 		t.Errorf("got options %q, want bare labels but for the brackets", options)

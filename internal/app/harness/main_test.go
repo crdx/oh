@@ -1117,6 +1117,7 @@ const questionLines = 12
 
 type questionOverCall struct {
 	command               string
+	fields                []ask.Field
 	isAskedFirst          bool
 	isRedrawn             bool
 	isRedrawnWhileRunning bool
@@ -1187,7 +1188,16 @@ func drawQuestionOverCall(t *testing.T, scene questionOverCall) drawnQuestionOve
 		chat.question.broker = broker
 
 		result := make(chan error, 1)
-		go func() { result <- approveHostNetwork(t.Context(), broker, permission.Ask, scene.command) }()
+		go func() {
+			if scene.fields != nil {
+				result <- ask.ConfirmWithin(t.Context(), broker, ask.Confirmation{
+					Label:  "Run the commit tool?",
+					Fields: scene.fields,
+				}, approvalLimit)
+				return
+			}
+			result <- approveHostNetwork(t.Context(), broker, permission.Ask, scene.command)
+		}()
 		<-broker.Changes()
 		chat.onQuestionChange()
 		chat.show(chat.inputLine)
@@ -1236,6 +1246,13 @@ func drawQuestionOverCall(t *testing.T, scene questionOverCall) drawnQuestionOve
 
 func TestGoldenAQuestionOverARunningCallDrawsEveryVisibleState(t *testing.T) {
 	scenes := map[string]questionOverCall{
+		"a question with fields": {
+			command: "curl example.com",
+			fields: []ask.Field{
+				{Name: "patch", Value: "/tmp/layout.patch"},
+				{Name: "message", Value: "Align header controls consistently"},
+			},
+		},
 		"a short question":                                                     {command: "curl example.com"},
 		"a short question asked before its call":                               {command: "curl example.com", isAskedFirst: true},
 		"a short question redrawn while it stands":                             {command: "curl example.com", isRedrawn: true},
@@ -1749,6 +1766,53 @@ func TestARefusedHostNetworkSaysSoInWordsTheModelCanAct(t *testing.T) {
 				t.Errorf("got %q, want words rather than plumbing", err)
 			}
 		})
+	}
+}
+
+func TestACustomToolApprovalCarriesNamedArguments(t *testing.T) {
+	broker := ask.New()
+	t.Cleanup(broker.Open())
+	arguments, err := (tool.Schema{
+		tool.String("patch", ""),
+		tool.String("message", ""),
+		tool.StringArray("labels", ""),
+		tool.Boolean("force", ""),
+		tool.Integer("retries", ""),
+		tool.String("omitted", "").Optional(),
+	}).Decode(`{
+		"patch":"/tmp/layout.patch",
+		"message":"Align header controls consistently",
+		"labels":["one","two words"],
+		"force":false,
+		"retries":2
+	}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	result := make(chan error, 1)
+
+	go func() {
+		result <- customToolApproval("commit").confirmArguments(t.Context(), broker, arguments)
+	}()
+	<-broker.Changes()
+
+	request := broker.Current()
+	if request == nil {
+		t.Fatal("the custom tool asked no question")
+	}
+	question := request.Question
+	if question.Label != "Run the commit tool?" || !slices.Equal(question.Fields, []ask.Field{
+		{Name: "patch", Value: "/tmp/layout.patch"},
+		{Name: "message", Value: "Align header controls consistently"},
+		{Name: "labels", Value: "one, two words"},
+		{Name: "force", Value: "false"},
+		{Name: "retries", Value: "2"},
+	}) {
+		t.Errorf("got question %+v", question)
+	}
+	request.Choose(0)
+	if err := <-result; err != nil {
+		t.Errorf("the approved tool was refused: %v", err)
 	}
 }
 

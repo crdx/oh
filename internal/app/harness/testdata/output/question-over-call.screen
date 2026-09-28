@@ -1,3 +1,30 @@
+=== a question with fields, answered ===
+
+ write the script
+
+
+Writing it.
+$ curl example.com ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a question with fields, standing ===
+
+ write the script
+
+
+Writing it.
+$ curl example.com ✦·
+
+──────────────────────────────────────── auto-denies in 20s ────────────────────────────────────────
+Run the commit tool?
+
+patch: /tmp/layout.patch
+message: Align header controls consistently
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
 === a short question asked before its call and redrawn, answered ===
 
  write the script
