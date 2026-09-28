@@ -62,6 +62,7 @@
 
 ### Sessions and storage
 
+- Add session health check command
 - Keep interrupted print sessions resumable
 - Normalise session titles to lowercase
 - Browse stored and archived sessions from every workspace

@@ -413,6 +413,10 @@ func Read(directory string, name string) (*Session, error) {
 }
 
 func Records(directory string, name string, visit func(Line) error) error {
+	return records(directory, name, true, visit)
+}
+
+func records(directory string, name string, allowsIncompleteTail bool, visit func(Line) error) error {
 	if err := validateName(name); err != nil {
 		return err
 	}
@@ -442,7 +446,7 @@ func Records(directory string, name string, visit func(Line) error) error {
 
 		var line Line
 		err := json.Unmarshal(encodedLine, &line)
-		if err != nil && errors.Is(readErr, io.EOF) && !hasTrailingNewline && isIncompleteJSON(encodedLine) {
+		if err != nil && allowsIncompleteTail && errors.Is(readErr, io.EOF) && !hasTrailingNewline && isIncompleteJSON(encodedLine) {
 			break
 		}
 		if err != nil {

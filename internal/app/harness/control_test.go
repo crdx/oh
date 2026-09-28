@@ -19,6 +19,7 @@ func TestEveryControlCommandRunsThroughTheBinary(t *testing.T) {
 
 	for _, arguments := range [][]string{
 		{"sessions"},
+		{"check", name},
 		{"analyse", name},
 		{"regenerate", name},
 		{"migrate", "--dry-run"},

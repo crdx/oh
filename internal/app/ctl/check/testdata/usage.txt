@@ -1,0 +1,11 @@
+oh --ctl check — check configuration and stored session health
+
+Usage:
+    oh --ctl check [<session>...]
+
+Options:
+    -h, --help    Show this help
+
+The global configuration and the oh.toml in the current directory are checked. Sessions are named
+on the command line, or every stored and archived session is checked when none is named. A session
+check reads its complete journal and listing metadata, and verifies the contents of an archive.

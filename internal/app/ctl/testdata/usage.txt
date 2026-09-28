@@ -2,6 +2,7 @@ oh --ctl — oh control
 
 Usage:
     oh --ctl sessions [options] [<filter>]
+    oh --ctl check [<session>...]
     oh --ctl analyse [options] [<session>...]
     oh --ctl regenerate [<session>...]
     oh --ctl migrate [options] [<session>...]
@@ -9,6 +10,7 @@ Usage:
 
 Commands:
     sessions      List the stored sessions
+    check         Check configuration and stored session health
     analyse       Analyse stored sessions
     regenerate    Write stored transcripts again from their journals
     migrate       Bring configuration and stored sessions up to their current formats

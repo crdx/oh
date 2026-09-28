@@ -1,0 +1,8 @@
+=== screen ===
+[38;2;76;154;44mok[0m configuration
+[38;2;150;152;150mchecked 4 sessions[0m
+=== failure ===
+[38;2;204;102;102mfailed[0m 000-unfinished.tgz: unrecognised entry in the session store
+[38;2;204;102;102mfailed[0m broken-newt: session broken-newt: malformed journal line 3: invalid character 'o' in literal null (expecting 'u')
+=== error ===
+2 health checks failed

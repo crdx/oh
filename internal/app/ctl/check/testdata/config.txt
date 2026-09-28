@@ -1,0 +1,6 @@
+=== screen ===
+[38;2;76;154;44mok[0m session store (no sessions)
+=== failure ===
+[38;2;204;102;102mfailed[0m configuration: /config/config.toml: toml: line 1 (last key "version"): expected value but found "nope" instead
+=== error ===
+1 health check failed

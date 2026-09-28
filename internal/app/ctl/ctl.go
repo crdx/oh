@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"crdx.org/oh/internal/app/ctl/analyse"
+	"crdx.org/oh/internal/app/ctl/check"
 	"crdx.org/oh/internal/app/ctl/complete"
 	"crdx.org/oh/internal/app/ctl/gc"
 	"crdx.org/oh/internal/app/ctl/migrate"
@@ -19,6 +20,7 @@ const usage = `oh --ctl — oh control
 
 Usage:
     oh --ctl sessions [options] [<filter>]
+    oh --ctl check [<session>...]
     oh --ctl analyse [options] [<session>...]
     oh --ctl regenerate [<session>...]
     oh --ctl migrate [options] [<session>...]
@@ -26,6 +28,7 @@ Usage:
 
 Commands:
     sessions      List the stored sessions
+    check         Check configuration and stored session health
     analyse       Analyse stored sessions
     regenerate    Write stored transcripts again from their journals
     migrate       Bring configuration and stored sessions up to their current formats
@@ -52,6 +55,8 @@ func Run(arguments []string) int {
 	switch arguments[0] {
 	case "sessions":
 		err = sessions.Run()
+	case "check":
+		err = check.Run()
 	case "analyse":
 		err = analyse.Run()
 	case "regenerate":
