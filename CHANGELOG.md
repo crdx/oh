@@ -42,6 +42,7 @@
 
 ### Drawing
 
+- Mark host-network Bash calls in the danger colour
 - Separate duration units with spaces
 - Drop parentheses around tool output measurements
 - Theme tool-call vocabulary and colours

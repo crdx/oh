@@ -230,6 +230,20 @@ func TestACommandRenderingIsMarkedAsBash(t *testing.T) {
 	}
 }
 
+func TestAHostNetworkCommandUsesHostNetworkRendering(t *testing.T) {
+	root, _ := testRoot(t)
+	call, err := fixedShell(root, func() sandbox.Policy { return sandbox.Policy{} }).Parse(
+		`{"command":"echo one","network":"host"}`,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if got, want := call.Rendering().Kind, "bash_host_network"; got != want {
+		t.Errorf("got rendering kind %q, want %q", got, want)
+	}
+}
+
 func TestTheSharedCommandRenderingMatchesTheBashTool(t *testing.T) {
 	command := "echo one\necho two"
 	rendering := bash.DescribeCommand(command)

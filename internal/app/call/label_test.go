@@ -250,6 +250,12 @@ func TestCallNamesAndRolesComeFromStoredRendering(t *testing.T) {
 			}},
 			want: call.Label{Name: "$", NameStyle: style.Shell, FocusStyle: style.Subject},
 		},
+		"host network shell": {
+			event: agent.Event{Name: "bash", FallbackRendering: agent.FallbackRendering{
+				RenderingKind: "bash_host_network",
+			}},
+			want: call.Label{Name: "$", NameStyle: style.Hazard, FocusStyle: style.Subject},
+		},
 		"lookup": {
 			event: agent.Event{Name: "lookup", FallbackRendering: agent.FallbackRendering{
 				RenderingKind: "lookup",

@@ -115,35 +115,36 @@ expose_add = { name = "open-gangway", paint = "status_warning" }
 expose_remove = { name = "close-gangway", paint = "status_danger" }
 ```
 
-| Kind            | Default name | Default paint    | Focus  |
-|-----------------|--------------|------------------|--------|
-| `read`          | `read`       | call default     | accent |
-| `skill`         | `load`       | `skill`          | skill  |
-| `ls`            | `ls`         | call default     | accent |
-| `find`          | `find`       | call default     | accent |
-| `grep`          | `grep`       | call default     | accent |
-| `write`         | `write`      | call default     | accent |
-| `edit`          | `edit`       | call default     | accent |
-| `bash`          | `$`          | `status_info`    | accent |
-| `lookup`        | `lookup`     | `status_info`    | accent |
-| `fetch`         | `fetch`      | `status_info`    | accent |
-| `notify`        | `notify`     | call default     | accent |
-| `title`         | `title`      | call default     | accent |
-| `job_start`     | `start`      | `status_warning` | accent |
-| `job_restart`   | `restart`    | `status_warning` | accent |
-| `job_status`    | `status`     | `normal`         | accent |
-| `job_output`    | `output`     | `normal`         | accent |
-| `job_wait_any`  | `await`      | `normal`         | accent |
-| `job_wait_all`  | `await`      | `normal`         | accent |
-| `job_stop`      | `stop`       | `status_warning` | accent |
-| `job_list`      | `list`       | `normal`         | accent |
-| `job_discard`   | `discard`    | `status_warning` | accent |
-| `job_prune`     | `prune`      | `status_warning` | accent |
-| `expose_add`    | `forward`    | `status_warning` | accent |
-| `expose_remove` | `close`      | `status_warning` | accent |
-| `expose_list`   | `list`       | `normal`         | accent |
-| `job`           | `job`        | call default     | accent |
-| `expose`        | `expose`     | call default     | accent |
+| Kind                | Default name | Default paint    | Focus  |
+|---------------------|--------------|------------------|--------|
+| `read`              | `read`       | call default     | accent |
+| `skill`             | `load`       | `skill`          | skill  |
+| `ls`                | `ls`         | call default     | accent |
+| `find`              | `find`       | call default     | accent |
+| `grep`              | `grep`       | call default     | accent |
+| `write`             | `write`      | call default     | accent |
+| `edit`              | `edit`       | call default     | accent |
+| `bash`              | `$`          | `status_info`    | accent |
+| `bash_host_network` | `$`          | `status_danger`  | accent |
+| `lookup`            | `lookup`     | `status_info`    | accent |
+| `fetch`             | `fetch`      | `status_info`    | accent |
+| `notify`            | `notify`     | call default     | accent |
+| `title`             | `title`      | call default     | accent |
+| `job_start`         | `start`      | `status_warning` | accent |
+| `job_restart`       | `restart`    | `status_warning` | accent |
+| `job_status`        | `status`     | `normal`         | accent |
+| `job_output`        | `output`     | `normal`         | accent |
+| `job_wait_any`      | `await`      | `normal`         | accent |
+| `job_wait_all`      | `await`      | `normal`         | accent |
+| `job_stop`          | `stop`       | `status_warning` | accent |
+| `job_list`          | `list`       | `normal`         | accent |
+| `job_discard`       | `discard`    | `status_warning` | accent |
+| `job_prune`         | `prune`      | `status_warning` | accent |
+| `expose_add`        | `forward`    | `status_warning` | accent |
+| `expose_remove`     | `close`      | `status_warning` | accent |
+| `expose_list`       | `list`       | `normal`         | accent |
+| `job`               | `job`        | call default     | accent |
+| `expose`            | `expose`     | call default     | accent |
 
 The call default is `normal` for a read-only tool and `status_warning` for a tool that may change something. `job` and `expose` are the malformed-call fallbacks; valid calls use their action kind. An unlisted custom or removed tool keeps its recorded name and uses that same default.
 

@@ -23,6 +23,9 @@ type Network string
 const (
 	LoopbackNetwork Network = "loopback"
 	HostNetwork     Network = "host"
+
+	bashRenderingKind        = "bash"
+	hostNetworkRenderingKind = "bash_host_network"
 )
 
 type Args struct {
@@ -88,7 +91,11 @@ func ProtectedPolicy(policy sandbox.Policy) sandbox.Policy {
 }
 
 func Describe(args Args) tool.CallRendering {
-	return DescribeCommand(args.Command)
+	rendering := DescribeCommand(args.Command)
+	if args.Network == HostNetwork {
+		rendering.Kind = hostNetworkRenderingKind
+	}
+	return rendering
 }
 
 func DescribeCommand(command string) tool.CallRendering {
@@ -116,7 +123,7 @@ func DescribeCommand(command string) tool.CallRendering {
 
 func defaultRendering() tool.CallRendering {
 	return tool.CallRendering{
-		Kind:       "bash",
+		Kind:       bashRenderingKind,
 		ShowOutput: true,
 	}
 }

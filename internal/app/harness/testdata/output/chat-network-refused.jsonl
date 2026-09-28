@@ -1,7 +1,7 @@
 {"kind":"head","version":15,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant.","tools":["bash"],"tool_definitions":[{"name":"bash","description":"run a shell command","revision":"1","parameters":[{"name":"command","type":"string","description":"the command line"},{"name":"network","type":"string","description":"the networking state available to run on: loopback (default, your sandbox env) or host (the user's)","values":["loopback","host"],"optional":true}]}]}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"run a command the user will refuse the host network"}}
-{"kind":"event","event":{"render":"curl example.com","emphasis":{"kind":"syntax","value":"bash"},"show_output":true,"kind":"tool_call_request","id":"call-1","name":"bash","arguments":"{\"command\":\"curl example.com\",\"network\":\"host\"}"}}
+{"kind":"event","event":{"rendering_kind":"bash_host_network","render":"curl example.com","emphasis":{"kind":"syntax","value":"bash"},"show_output":true,"kind":"tool_call_request","id":"call-1","name":"bash","arguments":"{\"command\":\"curl example.com\",\"network\":\"host\"}"}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"host-network access refused; command did not run; retry without it or choose another approach","id":"call-1","name":"bash","status":"error","stats":{"kind":"output","lines":1,"bytes":93}}}
 {"kind":"event","event":{"kind":"model_message","text":"I will not run that command."}}
 {"kind":"item","payload":{"role":"user","content":"run a command the user will refuse the host network"}}

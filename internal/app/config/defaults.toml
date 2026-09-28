@@ -41,6 +41,7 @@ grep = { name = "grep" }
 write = { name = "write" }
 edit = { name = "edit" }
 bash = { name = "$", paint = "status_info" }
+bash_host_network = { name = "$", paint = "status_danger" }
 
 job = { name = "job" }
 job_start = { name = "start", paint = "status_warning" }
