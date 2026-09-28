@@ -1012,9 +1012,8 @@ func TestWaitingForTheUserFollowsJobAvailability(t *testing.T) {
 				"about to end your turn while waiting for the user",
 				"completion can be detected from the filesystem",
 				"must start a job watcher before ending the turn",
-				"command whose success proves completion",
-				"recheck after each relevant event until the command succeeds",
-				"if unavailable, poll with a modest delay",
+				"Use a ready continuous `inotifywait --monitor` if available",
+				"otherwise poll with a 2s delay",
 				"Once the job completes, continue",
 			} {
 				present := strings.Contains(got, rule)

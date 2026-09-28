@@ -712,9 +712,7 @@ func waitingForUserSection(data harnessContextTemplateData) string {
 		"# Waiting for the User",
 		"",
 		"- If you are about to end your turn while waiting for the user, and completion can be detected from the filesystem, you must start a job watcher before ending the turn",
-		"- Define a command whose success proves completion, and have the job check it immediately",
-		"- Have the job recheck after each relevant event until the command succeeds",
-		"- Prefer inotifywait on relevant paths; if unavailable, poll with a modest delay",
+		"- Use a ready continuous `inotifywait --monitor` if available, otherwise poll with a 2s delay",
 		"- Once the job completes, continue where you left off",
 	}, "\n") + "\n\n"
 }
