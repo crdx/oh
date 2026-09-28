@@ -367,7 +367,7 @@ func scopeRules(data harnessContextTemplateData) string {
 			lines = append(lines, "- Path tools and shell commands cannot access any file or directory named by the configured deny pattern "+pattern+".")
 		}
 		if len(extraPaths.Deny) > 0 {
-			lines = append(lines, "- A denied path appears as an empty unreadable file or directory, so tools (e.g. git) may show the file with modifications. Ignore these artefacts silently: do not mention them in progress updates, summaries, or handoffs unless the user's request explicitly concerns a denied path.")
+			lines = append(lines, "- A denied path appears as an empty unreadable file or directory, so tools (e.g. git) may falsely show it as modified. Treat that status as a sandbox artefact: exclude the path and keep it out of progress updates, summaries, and handoffs. A broad request to handle all changes does not make a denied path part of the task. Ask for access only when the user names the path or the requested work cannot exclude it.")
 		}
 	}
 	for _, path := range extraPaths.Read {
