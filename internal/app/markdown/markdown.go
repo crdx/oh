@@ -315,7 +315,7 @@ func (self *renderer) mermaid(lines []string, block int) bool {
 	if rows, isDrawable := renderMermaidRows(lines); isDrawable {
 		if neededColumns := widestRow(rows); neededColumns > self.columns {
 			self.forgetMermaidRows(block)
-			self.appendWrapped(over(col.Italic, style.Subtle(diagramWidthNotice(neededColumns))))
+			self.appendWrapped(style.Warning(diagramWidthNotice(neededColumns)))
 			return false
 		}
 

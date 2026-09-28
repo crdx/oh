@@ -411,11 +411,13 @@ func TestAMermaidFenceFallsBackToSourceWhenItCannotBeDrawn(t *testing.T) {
 
 func TestADiagramTooWideToDrawSaysWhatItNeeded(t *testing.T) {
 	source := "```mermaid\ngraph LR\nAlpha --> Bravo --> Charlie\n```"
+	const notice = "Diagram needs 39 columns."
 
-	got := style.Plain(strings.Join(Render(source, 30), "\n"))
+	rows := Render(source, 30)
+	got := style.Plain(strings.Join(rows, "\n"))
 
-	if !strings.Contains(got, "Diagram needs 39 columns.") {
-		t.Errorf("got %q, want it to say the columns the diagram needed", got)
+	if rows[0] != style.Warning(notice) {
+		t.Errorf("got %q, want the unitalicised warning %q", rows[0], style.Warning(notice))
 	}
 	if !strings.Contains(got, "Alpha -->") {
 		t.Errorf("got %q, want the source beneath what it said", got)
