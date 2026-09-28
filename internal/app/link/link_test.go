@@ -70,6 +70,30 @@ func TestSourceLocationsBecomeFileFragmentsWithoutChangingTheirText(t *testing.T
 	}
 }
 
+func TestSourceLocationsSplitFromTheRight(t *testing.T) {
+	for _, test := range []struct {
+		value      string
+		path       string
+		line       string
+		column     string
+		isLocation bool
+	}{
+		{value: "draw.go:42", path: "draw.go", line: "42", isLocation: true},
+		{value: "draw.go:42:7", path: "draw.go", line: "42", column: "7", isLocation: true},
+		{value: "a:place/draw.go:42", path: "a:place/draw.go", line: "42", isLocation: true},
+		{value: "a:12:place/draw.go:42", path: "a:12:place/draw.go", line: "42", isLocation: true},
+		{value: "draw.go"},
+		{value: "draw.go:"},
+		{value: "draw.go:line"},
+		{value: "draw.go:42:column"},
+	} {
+		path, line, column, isLocation := splitSourceLocation(test.value)
+		if path != test.path || line != test.line || column != test.column || isLocation != test.isLocation {
+			t.Errorf("%q split as (%q, %q, %q, %t)", test.value, path, line, column, isLocation)
+		}
+	}
+}
+
 func TestAShortenedPathUsesItsCompleteSourceAsTheTarget(t *testing.T) {
 	workspace := t.TempDir()
 	parent := filepath.Join(workspace, "parent")
@@ -261,6 +285,16 @@ func TestMissingPathsAndOrdinaryDottedWordsStayPlain(t *testing.T) {
 
 	if got := Render(text, Roots{Workspace: t.TempDir()}); got != text {
 		t.Errorf("got %q, want unchanged text", got)
+	}
+}
+
+func BenchmarkRenderMissingPathsInProse(benchmark *testing.B) {
+	text := strings.Repeat("Consider missing.go among ordinary words in a long explanation, then continue. ", 40)
+	roots := Roots{Workspace: benchmark.TempDir()}
+
+	benchmark.ReportAllocs()
+	for benchmark.Loop() {
+		Render(text, roots)
 	}
 }
 

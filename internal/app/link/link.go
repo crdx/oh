@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strings"
 
 	"crdx.org/oh/internal/app/escape"
@@ -24,10 +25,7 @@ const (
 	pathExpression = ScratchAlias + `(?:/` + pathSegment + `)*|(?:~|\.{1,2})?/(?:` + pathSegment + `/)*` + pathSegment + `|` + pathSegment + `(?:/` + pathSegment + `)+|[[:alnum:]_@+%=-]+(?:\.[[:alnum:]_@+%=-]+)+|\.[[:alnum:]_@+%=-]+`
 )
 
-var (
-	pathPattern           = regexp.MustCompile(`(` + pathExpression + `)(?::([0-9]+)(?::([0-9]+))?)?`)
-	sourceLocationPattern = regexp.MustCompile(`^(.*?):([0-9]+)(?::([0-9]+))?$`)
-)
+var pathPattern = regexp.MustCompile(`(` + pathExpression + `)(?::([0-9]+)(?::([0-9]+))?)?`)
 
 func RenderURL(text string, address string) string {
 	return openPrefix + address + terminator + text + closeLink
@@ -174,8 +172,8 @@ func renderLocations(text string, visible visibleText, foundLocations []location
 			continue
 		}
 
-		begin := visible.starts[found.begin]
-		end := visible.ends[found.end]
+		begin := visible.sourceStart(found.begin)
+		end := visible.sourceEnd(found.end)
 		if begin < sourceAt {
 			continue
 		}
@@ -215,49 +213,108 @@ func RenderPathAtLine(text string, path string, roots Roots, line string) string
 }
 
 type visibleText struct {
-	text     string
-	starts   []int
-	ends     []int
-	isLinked []bool
+	text         string
+	spans        []visibleSpan
+	sourceLength int
+	isPlain      bool
+}
+
+type visibleSpan struct {
+	visibleBegin int
+	visibleEnd   int
+	sourceBegin  int
+	isLinked     bool
 }
 
 func (self visibleText) hasLink(begin int, end int) bool {
-	for _, isLinked := range self.isLinked[begin:end] {
-		if isLinked {
+	if self.isPlain {
+		return false
+	}
+
+	at := sort.Search(len(self.spans), func(index int) bool {
+		return self.spans[index].visibleEnd > begin
+	})
+	for at < len(self.spans) && self.spans[at].visibleBegin < end {
+		if self.spans[at].isLinked {
 			return true
 		}
+		at++
 	}
 
 	return false
 }
 
+func (self visibleText) sourceStart(at int) int {
+	if self.isPlain {
+		return at
+	}
+
+	index := sort.Search(len(self.spans), func(index int) bool {
+		return self.spans[index].visibleEnd > at
+	})
+	if index == len(self.spans) {
+		return self.sourceLength
+	}
+
+	span := self.spans[index]
+	return span.sourceBegin + at - span.visibleBegin
+}
+
+func (self visibleText) sourceEnd(at int) int {
+	if self.isPlain {
+		return at
+	}
+
+	index := sort.Search(len(self.spans), func(index int) bool {
+		return self.spans[index].visibleEnd >= at
+	})
+	if index == len(self.spans) {
+		return self.sourceLength
+	}
+
+	span := self.spans[index]
+	return span.sourceBegin + at - span.visibleBegin
+}
+
 func visibleTextOf(text string) visibleText {
+	if !strings.ContainsRune(text, '\x1b') {
+		return visibleText{text: text, sourceLength: len(text), isPlain: true}
+	}
+
 	var plain strings.Builder
-	starts := []int{0}
-	ends := []int{0}
-	var isLinked []bool
+	var spans []visibleSpan
 	isLinkActive := false
 
-	for i := 0; i < len(text); {
-		if text[i] == '\x1b' {
-			end := escapeEnd(text, i)
-			sequence := text[i:end]
+	for sourceAt := 0; sourceAt < len(text); {
+		if text[sourceAt] == '\x1b' {
+			end := escapeEnd(text, sourceAt)
+			sequence := text[sourceAt:end]
 			if strings.HasPrefix(sequence, openPrefix) {
 				isLinkActive = sequence != closeLink
 			}
-			i = end
-			starts[len(starts)-1] = i
+			sourceAt = end
 			continue
 		}
 
-		plain.WriteByte(text[i])
-		isLinked = append(isLinked, isLinkActive)
-		i++
-		starts = append(starts, i)
-		ends = append(ends, i)
+		end := strings.IndexByte(text[sourceAt:], '\x1b')
+		if end < 0 {
+			end = len(text)
+		} else {
+			end += sourceAt
+		}
+
+		visibleBegin := plain.Len()
+		plain.WriteString(text[sourceAt:end])
+		spans = append(spans, visibleSpan{
+			visibleBegin: visibleBegin,
+			visibleEnd:   plain.Len(),
+			sourceBegin:  sourceAt,
+			isLinked:     isLinkActive,
+		})
+		sourceAt = end
 	}
 
-	return visibleText{text: plain.String(), starts: starts, ends: ends, isLinked: isLinked}
+	return visibleText{text: plain.String(), spans: spans, sourceLength: len(text)}
 }
 
 func escapeEnd(text string, start int) int {
@@ -331,9 +388,10 @@ func candidateBounds(text string, begin int, end int) ([]int, []int) {
 	}
 
 	starts := []int{begin}
-	for at := segmentBegin; at < begin; at++ {
+	lastSpace := strings.LastIndexByte(text[segmentBegin:begin], ' ') + segmentBegin
+	for at := segmentBegin; at < lastSpace; at++ {
 		isWordStart := text[at] != ' ' && (at == segmentBegin || text[at-1] == ' ')
-		if isWordStart && strings.Contains(text[at:begin], " ") {
+		if isWordStart {
 			starts = append(starts, at)
 		}
 	}
@@ -376,21 +434,52 @@ func locate(candidate string, roots Roots) (location, bool) {
 			return found, true
 		}
 
-		locationIndexes := sourceLocationPattern.FindStringSubmatchIndex(path)
-		if locationIndexes == nil {
+		sourcePath, line, column, isLocation := splitSourceLocation(path)
+		if !isLocation {
 			continue
 		}
-		if found, exists := locatePath(path[locationIndexes[2]:locationIndexes[3]], roots); exists {
+		if found, exists := locatePath(sourcePath, roots); exists {
 			found.end = end
-			found.line = path[locationIndexes[4]:locationIndexes[5]]
-			if locationIndexes[6] >= 0 {
-				found.column = path[locationIndexes[6]:locationIndexes[7]]
-			}
+			found.line = line
+			found.column = column
 			return found, true
 		}
 	}
 
 	return location{}, false
+}
+
+func splitSourceLocation(value string) (string, string, string, bool) {
+	lastColon := strings.LastIndexByte(value, ':')
+	if lastColon < 0 || !isDecimal(value[lastColon+1:]) {
+		return "", "", "", false
+	}
+
+	sourcePath := value[:lastColon]
+	line := value[lastColon+1:]
+	column := ""
+
+	if previousColon := strings.LastIndexByte(sourcePath, ':'); previousColon >= 0 && isDecimal(sourcePath[previousColon+1:]) {
+		column = line
+		line = sourcePath[previousColon+1:]
+		sourcePath = sourcePath[:previousColon]
+	}
+
+	return sourcePath, line, column, true
+}
+
+func isDecimal(value string) bool {
+	if value == "" {
+		return false
+	}
+
+	for i := range len(value) {
+		if value[i] < '0' || value[i] > '9' {
+			return false
+		}
+	}
+
+	return true
 }
 
 func locatePath(path string, roots Roots) (location, bool) {
@@ -449,11 +538,13 @@ func resolve(path string, roots Roots) (string, bool) {
 		resolvedPath = filepath.Join(roots.Workspace, resolvedPath)
 	}
 
-	absolutePath, err := filepath.Abs(resolvedPath)
-	if err != nil {
-		return "", false
+	if !filepath.IsAbs(resolvedPath) {
+		absolutePath, err := filepath.Abs(resolvedPath)
+		if err != nil {
+			return "", false
+		}
+		resolvedPath = absolutePath
 	}
-	resolvedPath = absolutePath
 
 	if _, err := os.Stat(resolvedPath); err != nil {
 		return "", false

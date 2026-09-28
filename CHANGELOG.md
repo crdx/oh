@@ -49,6 +49,7 @@
 - Colour job names consistently across actions
 - Render refused calls from their decoded arguments
 - Make plain reasoning keep underscores
+- Speed up full conversation redraws
 - Keep streamed redraws proportional
 - Keep empty Markdown blocks from adding blank rows
 - Keep live output within the terminal

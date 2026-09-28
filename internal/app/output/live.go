@@ -357,6 +357,7 @@ func (self *Screen) paint() {
 	isFromMidLine := self.isOwedTextFromMidLine
 	softBreaks := self.owedSoftBreaks
 	self.owedText.Reset()
+	self.owedNewlines = 0
 	self.owedSoftBreaks = nil
 
 	if len(self.canvas.rows) == 0 && len(layout.rows) == 0 {

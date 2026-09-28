@@ -2,6 +2,7 @@ package painter
 
 import (
 	"strings"
+	"unicode/utf8"
 
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/width"
@@ -25,11 +26,13 @@ func (self *paragraphReflow) Wrap(text string, settledLength int, columns int) [
 	}
 
 	tail := text[len(self.settledText):]
-	rows := width.Wrap(style.Reasoning(tail), columns)
+	wrappedRows := width.Rows(style.Reasoning(tail), columns)
+	rows := rowTexts(wrappedRows)
 
 	if len(rows) > 1 {
-		if advance := self.reach(tail, len(rows)-1, columns); advance > 0 &&
-			len(self.settledText)+advance <= settledLength {
+		advanceRunes := wrappedRows[len(wrappedRows)-2].Next - reasoningPrefixRunes()
+		advance := runeOffset(tail, advanceRunes)
+		if advance > 0 && len(self.settledText)+advance <= settledLength {
 			self.settledRows = append(self.settledRows, rows[:len(rows)-1]...)
 			self.settledText = text[:len(self.settledText)+advance]
 			tail = text[len(self.settledText):]
@@ -43,13 +46,20 @@ func (self *paragraphReflow) Wrap(text string, settledLength int, columns int) [
 	return append(output, rows...)
 }
 
-func (self *paragraphReflow) reach(tail string, rowCount int, columns int) int {
-	rows := width.Rows(tail, columns)
-	if len(rows) < rowCount {
-		return 0
+func rowTexts(wrappedRows []width.Row) []string {
+	rows := make([]string, len(wrappedRows))
+	for index, row := range wrappedRows {
+		rows[index] = row.Text
 	}
 
-	return runeOffset(tail, rows[rowCount-1].Next)
+	return rows
+}
+
+func reasoningPrefixRunes() int {
+	const marker = '\x00'
+
+	markedText := style.Reasoning(string(marker))
+	return utf8.RuneCountInString(markedText[:strings.IndexByte(markedText, marker)])
 }
 
 func runeOffset(text string, runes int) int {

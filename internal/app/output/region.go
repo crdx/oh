@@ -334,6 +334,7 @@ func (self *Screen) Reset() {
 	self.blocks = nil
 	self.live = liveRegion{}
 	self.owedText.Reset()
+	self.owedNewlines = 0
 	self.owedSoftBreaks = nil
 	self.canvas = canvas{}
 	self.isFrameOwed = false

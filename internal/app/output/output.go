@@ -46,6 +46,7 @@ type Screen struct {
 	input footer
 
 	owedText              strings.Builder
+	owedNewlines          int
 	owedSoftBreaks        []int
 	isOwedTextFromMidLine bool
 	canvas                canvas
@@ -244,6 +245,7 @@ func (self *Screen) emit(text string) {
 	}
 
 	self.owedText.WriteString(fittedText)
+	self.owedNewlines += strings.Count(fittedText, "\n")
 }
 
 func (self *Screen) writeRows(rows []width.ScreenRow, shouldLinkPaths bool) {
@@ -271,7 +273,7 @@ func (self *Screen) writeRows(rows []width.ScreenRow, shouldLinkPaths bool) {
 		self.emit(text)
 
 		if rows[at].HasSoftBreak {
-			self.owedSoftBreaks = append(self.owedSoftBreaks, strings.Count(self.owedText.String(), "\n"))
+			self.owedSoftBreaks = append(self.owedSoftBreaks, self.owedNewlines)
 		}
 	}
 }
