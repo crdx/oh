@@ -31,6 +31,7 @@
 ### Questions and approvals
 
 - Cancel approval prompts with ctrl+c
+- Configure custom-tool approval waits
 - Show custom tool arguments instead of their executable commands
 - Keep tall questions and approvals in view
 - Notify about a waiting question if unfocused

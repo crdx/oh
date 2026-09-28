@@ -146,13 +146,14 @@ func (self approval) confirm(ctx context.Context, broker *ask.Broker, subject st
 		Label:    self.label,
 		Detail:   subject,
 		Language: self.language,
-	})
+	}, approvalLimit)
 }
 
 func (self approval) confirmArguments(
 	ctx context.Context,
 	broker *ask.Broker,
 	arguments tool.Arguments,
+	timeout time.Duration,
 ) error {
 	fields := make([]ask.Field, 0, len(arguments.Schema()))
 	for _, parameter := range arguments.Schema() {
@@ -167,18 +168,23 @@ func (self approval) confirmArguments(
 		fields = append(fields, ask.Field{Name: parameter.Name, Value: value})
 	}
 
-	return self.confirmWith(ctx, broker, ask.Confirmation{Label: self.label, Fields: fields})
+	return self.confirmWith(ctx, broker, ask.Confirmation{Label: self.label, Fields: fields}, timeout)
 }
 
-func (self approval) confirmWith(ctx context.Context, broker *ask.Broker, confirmation ask.Confirmation) error {
-	err := ask.ConfirmWithin(ctx, broker, confirmation, approvalLimit)
+func (self approval) confirmWith(
+	ctx context.Context,
+	broker *ask.Broker,
+	confirmation ask.Confirmation,
+	timeout time.Duration,
+) error {
+	err := ask.ConfirmWithin(ctx, broker, confirmation, timeout)
 
 	switch {
 	case errors.Is(err, ask.ErrDenied):
 		return errors.New(self.action + " refused; " + self.outcome + "; " + self.advice)
 	case errors.Is(err, context.DeadlineExceeded):
 		return errors.New(
-			"approval timed out after " + util.CompactDuration(approvalLimit) + "; " + self.outcome,
+			"approval timed out after " + util.CompactDuration(timeout) + "; " + self.outcome,
 		)
 	case errors.Is(err, ask.ErrUnavailable):
 		return errors.New("approval unavailable; " + self.outcome)
@@ -1060,8 +1066,13 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		Directory:      workspace.GetDir(),
 		GroupForTool:   frozenToolGroups.GroupOf,
 		IsGroupAllowed: mode.Allows,
-		Approve: func(ctx context.Context, name string, arguments tool.Arguments) error {
-			return customToolApproval(name).confirmArguments(ctx, askBroker, arguments)
+		Approve: func(
+			ctx context.Context,
+			name string,
+			arguments tool.Arguments,
+			timeout time.Duration,
+		) error {
+			return customToolApproval(name).confirmArguments(ctx, askBroker, arguments, timeout)
 		},
 	})
 	if err != nil {

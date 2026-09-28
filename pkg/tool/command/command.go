@@ -28,9 +28,10 @@ const (
 var kinds = []Kind{KindString, KindInteger, KindBoolean, KindStrings, KindEnum}
 
 const (
-	defaultTimeLimit = 30 * time.Second
-	waitDelay        = time.Second
-	toolVariable     = "OH_TOOL"
+	defaultApprovalTimeout = time.Minute
+	defaultTimeLimit       = 30 * time.Second
+	waitDelay              = time.Second
+	toolVariable           = "OH_TOOL"
 )
 
 var namePattern = regexp.MustCompile(`^[a-z][a-z0-9_]*$`)
@@ -46,20 +47,21 @@ type Parameter struct {
 }
 
 type Declaration struct {
-	Name        string
-	Description string
-	Command     []string
-	Parameters  []Parameter
-	Subject     string
-	TimeLimit   time.Duration
-	MustAsk     bool
-	Group       string
-	Version     int
+	Name            string
+	Description     string
+	Command         []string
+	Parameters      []Parameter
+	Subject         string
+	TimeLimit       time.Duration
+	MustAsk         bool
+	ApprovalTimeout time.Duration
+	Group           string
+	Version         int
 }
 
 type Options struct {
 	Directory      string
-	Approve        func(ctx context.Context, name string, arguments tool.Arguments) error
+	Approve        func(ctx context.Context, name string, arguments tool.Arguments, timeout time.Duration) error
 	GroupForTool   func(name string) string
 	IsGroupAllowed func(group string) bool
 }
@@ -94,6 +96,10 @@ func New(declaration Declaration, options Options) (tool.Tool, error) {
 	timeLimit := declaration.TimeLimit
 	if timeLimit <= 0 {
 		timeLimit = defaultTimeLimit
+	}
+	approvalTimeout := declaration.ApprovalTimeout
+	if approvalTimeout <= 0 {
+		approvalTimeout = defaultApprovalTimeout
 	}
 	version := declaration.Version
 	if version == 0 {
@@ -132,7 +138,7 @@ func New(declaration Declaration, options Options) (tool.Tool, error) {
 	}
 
 	return builder.Plain(func(ctx context.Context, arguments tool.Arguments) (string, error) {
-		return run(ctx, declaration, executable, arguments, options, timeLimit)
+		return run(ctx, declaration, executable, arguments, options, timeLimit, approvalTimeout)
 	}), nil
 }
 
@@ -274,11 +280,12 @@ func run(
 	arguments tool.Arguments,
 	options Options,
 	timeLimit time.Duration,
+	approvalTimeout time.Duration,
 ) (string, error) {
 	line := argv(executable, declaration.Command, arguments)
 
 	if declaration.MustAsk && options.Approve != nil {
-		if err := options.Approve(ctx, declaration.Name, arguments); err != nil {
+		if err := options.Approve(ctx, declaration.Name, arguments, approvalTimeout); err != nil {
 			return "", err
 		}
 	}

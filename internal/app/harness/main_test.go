@@ -1131,6 +1131,7 @@ const questionLines = 12
 type questionOverCall struct {
 	command               string
 	fields                []ask.Field
+	approvalTimeout       time.Duration
 	isAskedFirst          bool
 	isRedrawn             bool
 	isRedrawnWhileRunning bool
@@ -1203,10 +1204,14 @@ func drawQuestionOverCall(t *testing.T, scene questionOverCall) drawnQuestionOve
 		result := make(chan error, 1)
 		go func() {
 			if scene.fields != nil {
+				timeout := scene.approvalTimeout
+				if timeout == 0 {
+					timeout = approvalLimit
+				}
 				result <- ask.ConfirmWithin(t.Context(), broker, ask.Confirmation{
 					Label:  "Run the commit tool?",
 					Fields: scene.fields,
-				}, approvalLimit)
+				}, timeout)
 				return
 			}
 			result <- approveHostNetwork(t.Context(), broker, permission.Ask, scene.command)
@@ -1265,6 +1270,11 @@ func TestGoldenAQuestionOverARunningCallDrawsEveryVisibleState(t *testing.T) {
 				{Name: "patch", Value: "/tmp/layout.patch"},
 				{Name: "message", Value: "Align header controls consistently"},
 			},
+		},
+		"a question with a configured timeout": {
+			command:         "curl example.com",
+			fields:          []ask.Field{{Name: "patch", Value: "/tmp/layout.patch"}},
+			approvalTimeout: 5 * time.Minute,
 		},
 		"a short question":                                                     {command: "curl example.com"},
 		"a short question asked before its call":                               {command: "curl example.com", isAskedFirst: true},
@@ -1782,7 +1792,9 @@ func TestARefusedHostNetworkSaysSoInWordsTheModelCanAct(t *testing.T) {
 	}
 }
 
-func TestACustomToolApprovalCarriesNamedArguments(t *testing.T) {
+func TestACustomToolApprovalCarriesNamedArgumentsAndItsTimeout(t *testing.T) {
+	const approvalTimeout = 5 * time.Minute
+
 	broker := ask.New()
 	t.Cleanup(broker.Open())
 	arguments, err := (tool.Schema{
@@ -1803,15 +1815,21 @@ func TestACustomToolApprovalCarriesNamedArguments(t *testing.T) {
 		t.Fatal(err)
 	}
 	result := make(chan error, 1)
+	startedAt := time.Now()
 
 	go func() {
-		result <- customToolApproval("commit").confirmArguments(t.Context(), broker, arguments)
+		result <- customToolApproval("commit").confirmArguments(t.Context(), broker, arguments, approvalTimeout)
 	}()
 	<-broker.Changes()
+	reachedAt := time.Now()
 
 	request := broker.Current()
 	if request == nil {
 		t.Fatal("the custom tool asked no question")
+	}
+	deadline, hasDeadline := request.Deadline()
+	if !hasDeadline || deadline.Before(startedAt.Add(approvalTimeout)) || deadline.After(reachedAt.Add(approvalTimeout)) {
+		t.Errorf("got deadline %v", deadline)
 	}
 	question := request.Question
 	if question.Label != "Run the commit tool?" || !slices.Equal(question.Fields, []ask.Field{

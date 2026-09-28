@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"maps"
 	"slices"
@@ -22,10 +23,15 @@ type CustomTool struct {
 	Parameters         []CustomParameter `toml:"parameters"`
 	Subject            string            `toml:"subject"`
 	Timeout            time.Duration     `toml:"timeout"`
-	Permission         string            `toml:"permission"`
+	Permission         CustomPermission  `toml:"permission"`
 	Group              string            `toml:"group"`
 	IsEnabledByDefault bool              `toml:"enabled"`
 	Version            int               `toml:"version"`
+}
+
+type CustomPermission struct {
+	Rule    string
+	Timeout time.Duration
 }
 
 type CustomParameter struct {
@@ -34,6 +40,76 @@ type CustomParameter struct {
 	Description string   `toml:"description"`
 	Values      []string `toml:"values"`
 	IsOptional  bool     `toml:"optional"`
+}
+
+func (self *CustomPermission) UnmarshalTOML(value any) error {
+	switch configuredValue := value.(type) {
+	case string:
+		*self = CustomPermission{Rule: configuredValue}
+		return nil
+	case map[string]any:
+		return self.unmarshalTable(configuredValue)
+	default:
+		return errors.New("permission is not a rule or a table")
+	}
+}
+
+func (self *CustomPermission) unmarshalTable(configuredTable map[string]any) error {
+	var unknown []string
+	for name := range configuredTable {
+		if name != "rule" && name != "timeout" {
+			unknown = append(unknown, name)
+		}
+	}
+	if len(unknown) > 0 {
+		slices.Sort(unknown)
+		return fmt.Errorf("unknown: %s", strings.Join(unknown, ", "))
+	}
+
+	ruleValue, hasRule := configuredTable["rule"]
+	if !hasRule {
+		return errors.New("rule is missing")
+	}
+	rule, isText := ruleValue.(string)
+	if !isText {
+		return errors.New("rule is not text")
+	}
+	if strings.TrimSpace(rule) == "" {
+		return errors.New("rule is empty")
+	}
+
+	var timeout time.Duration
+	if timeoutValue, hasTimeout := configuredTable["timeout"]; hasTimeout {
+		configuredTimeout, isText := timeoutValue.(string)
+		if !isText {
+			return errors.New("timeout is not a duration")
+		}
+		var err error
+		if timeout, err = time.ParseDuration(configuredTimeout); err != nil {
+			return fmt.Errorf("timeout: %w", err)
+		}
+		if timeout <= 0 {
+			return fmt.Errorf("timeout must be positive, got %q", configuredTimeout)
+		}
+	}
+
+	*self = CustomPermission{Rule: rule, Timeout: timeout}
+	return nil
+}
+
+func (self *CustomPermission) settings() (permission.Rule, time.Duration, error) {
+	rule := permission.Ask
+	if strings.TrimSpace(self.Rule) != "" {
+		var err error
+		if rule, err = permission.ParseRule(self.Rule); err != nil {
+			return "", 0, err
+		}
+	}
+	if rule == permission.Allow && self.Timeout != 0 {
+		return "", 0, fmt.Errorf("timeout applies only when rule is %q", permission.Ask)
+	}
+
+	return rule, self.Timeout, nil
 }
 
 func (self Config) BuildCustomTools(options command.Options) ([]tool.Tool, error) {
@@ -112,12 +188,9 @@ func (self Config) declare(name string) (command.Declaration, error) {
 		return command.Declaration{}, fmt.Errorf("group %q is not one lowercase letter", setting.Group)
 	}
 
-	rule := permission.Ask
-	if strings.TrimSpace(setting.Permission) != "" {
-		var err error
-		if rule, err = permission.ParseRule(setting.Permission); err != nil {
-			return command.Declaration{}, fmt.Errorf("permission: %w", err)
-		}
+	rule, approvalTimeout, err := setting.Permission.settings()
+	if err != nil {
+		return command.Declaration{}, fmt.Errorf("permission: %w", err)
 	}
 
 	resolvedCommand, err := self.resolveCommand(name, setting.Command)
@@ -138,15 +211,16 @@ func (self Config) declare(name string) (command.Declaration, error) {
 	}
 
 	return command.Declaration{
-		Name:        name,
-		Description: setting.Description,
-		Command:     resolvedCommand,
-		Parameters:  parameters,
-		Subject:     setting.Subject,
-		TimeLimit:   setting.Timeout,
-		MustAsk:     rule != permission.Allow,
-		Group:       setting.Group,
-		Version:     setting.Version,
+		Name:            name,
+		Description:     setting.Description,
+		Command:         resolvedCommand,
+		Parameters:      parameters,
+		Subject:         setting.Subject,
+		TimeLimit:       setting.Timeout,
+		MustAsk:         rule != permission.Allow,
+		ApprovalTimeout: approvalTimeout,
+		Group:           setting.Group,
+		Version:         setting.Version,
 	}, nil
 }
 

@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"crdx.org/oh/pkg/tool/command"
 )
@@ -247,15 +248,27 @@ func TestACustomToolGroupIsOneLowercaseLetter(t *testing.T) {
 }
 
 func TestACustomToolAsksUnlessItSaysOtherwise(t *testing.T) {
-	for written, mustAsk := range map[string]bool{"": true, "ask": true, "allow": false} {
-		t.Run("permission "+written, func(t *testing.T) {
+	tests := map[string]struct {
+		written         string
+		mustAsk         bool
+		approvalTimeout time.Duration
+	}{
+		"omitted":         {mustAsk: true},
+		"ask":             {written: `"ask"`, mustAsk: true},
+		"allow":           {written: `"allow"`, mustAsk: false},
+		"allow table":     {written: `{ rule = "allow" }`, mustAsk: false},
+		"ask table":       {written: `{ rule = "ask" }`, mustAsk: true},
+		"timed ask table": {written: `{ rule = "ask", timeout = "5m" }`, mustAsk: true, approvalTimeout: 5 * time.Minute},
+	}
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
 			body := `
 				[tools.weather]
 				description = "report the weather for a city"
 				command = ["true"]
 			`
-			if written != "" {
-				body += "permission = \"" + written + "\"\n"
+			if test.written != "" {
+				body += "permission = " + test.written + "\n"
 			}
 
 			config, _ := configWithACustomTool(t, body)
@@ -263,8 +276,11 @@ func TestACustomToolAsksUnlessItSaysOtherwise(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if declaration.MustAsk != mustAsk {
-				t.Errorf("got %v", declaration.MustAsk)
+			if declaration.MustAsk != test.mustAsk {
+				t.Errorf("got must ask %v", declaration.MustAsk)
+			}
+			if declaration.ApprovalTimeout != test.approvalTimeout {
+				t.Errorf("got approval timeout %s", declaration.ApprovalTimeout)
 			}
 		})
 	}
@@ -297,6 +313,64 @@ func TestAnUnreadablePermissionIsRefusedByName(t *testing.T) {
 	_, err := config.BuildCustomTools(command.Options{})
 	if err == nil || !strings.Contains(err.Error(), "tools.weather: permission:") {
 		t.Errorf("got %v", err)
+	}
+}
+
+func TestAnInvalidCustomToolPermissionTableIsRefused(t *testing.T) {
+	tests := map[string]struct {
+		written string
+		want    string
+	}{
+		"missing rule": {
+			written: `{ timeout = "5m" }`,
+			want:    "rule is missing",
+		},
+		"empty rule": {
+			written: `{ rule = "" }`,
+			want:    "rule is empty",
+		},
+		"invalid rule": {
+			written: `{ rule = "whenever" }`,
+			want:    `must be "ask" or "allow"`,
+		},
+		"timeout with allow": {
+			written: `{ rule = "allow", timeout = "5m" }`,
+			want:    `timeout applies only when rule is "ask"`,
+		},
+		"invalid timeout": {
+			written: `{ rule = "ask", timeout = "later" }`,
+			want:    "invalid duration",
+		},
+		"non-duration timeout": {
+			written: `{ rule = "ask", timeout = 5 }`,
+			want:    "timeout is not a duration",
+		},
+		"zero timeout": {
+			written: `{ rule = "ask", timeout = "0s" }`,
+			want:    "timeout must be positive",
+		},
+		"unknown field": {
+			written: `{ rule = "ask", waiting = "5m" }`,
+			want:    "unknown: waiting",
+		},
+	}
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			directory := t.TempDir()
+			path := filepath.Join(directory, "config.toml")
+			body := "[tools.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\npermission = " + test.written + "\n"
+			if err := writeConfigFile(path, body); err != nil {
+				t.Fatal(err)
+			}
+
+			settings, err := Load(path)
+			if err == nil {
+				_, err = settings.BuildCustomTools(command.Options{})
+			}
+			if err == nil || !strings.Contains(err.Error(), test.want) {
+				t.Errorf("got %v", err)
+			}
+		})
 	}
 }
 

@@ -1,3 +1,29 @@
+=== a question with a configured timeout, answered ===
+
+ write the script
+
+
+Writing it.
+$ curl example.com ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a question with a configured timeout, standing ===
+
+ write the script
+
+
+Writing it.
+$ curl example.com ✦·
+
+─────────────────────────────────────── auto-denies in 4m20s ───────────────────────────────────────
+Run the commit tool?
+
+patch: /tmp/layout.patch
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
 === a question with fields, answered ===
 
  write the script

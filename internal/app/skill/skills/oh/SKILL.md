@@ -235,7 +235,7 @@ Put custom tools in the global config. A workspace `oh.toml` that sets `[tools]`
 | `parameters`  | the arguments the model supplies, each one a table        |
 | `subject`     | the parameter shown in the call row; the first by default |
 | `timeout`     | the limit for one call; `30s` by default                  |
-| `permission`  | `ask` by default, or `allow` to run without a question    |
+| `permission`  | `ask` by default; a table can set its optional timeout    |
 | `group`       | one lowercase mode flag that must grant access            |
 | `enabled`     | grant the tool's group initially; `false` by default      |
 
@@ -243,7 +243,7 @@ The model reads the description alone to choose a tool. Write it for the model.
 
 A group using `x`, `w`, `n`, `g`, `l`, or `r` follows that built-in capability. Any other letter appears directly after those letters in the mode display, as in `rxw nglabc`, and ctrl+x followed by that letter toggles every tool in its group. Set `enabled = true` on a tool or add its letter to `caps.default` to grant the group initially. Enabling one tool grants every tool sharing its group. An explicit `-c` overrides both defaults. Read is always granted, so a tool in group `r` is always available.
 
-With `ask`, oh shows the command line and waits for a yes or a no after its group grants access. A no tells the model to try something else. Print mode has nobody to ask, so the call fails.
+With `ask`, oh shows the supplied argument names and values after the tool's group grants access. A no tells the model to try something else. Print mode has nobody to ask, so the call fails. The string `permission = "ask"` uses the one-minute approval timeout. To change it, write `permission = { rule = "ask", timeout = "5m" }`; `rule` is required, and the optional positive `timeout` defaults to one minute. The countdown starts when a queued question reaches the front. This timeout covers approval only; the tool's top-level `timeout` starts after approval and limits the command. `permission = "allow"` runs without a question, and a permission table that combines `allow` with a timeout is refused.
 
 A session freezes each tool's description, parameters, group, and version. Keep the version when edits remain compatible with calls using the frozen definition. Increase it when the tool interprets a call differently or changes its effects or guarantees. A resumed session delegates a matching version to the current implementation while continuing to show the model its frozen definition. A changed version disables the tool for that conversation and tells the model both versions.
 
@@ -266,7 +266,7 @@ description = "report the weather for a city"
 command = ["./tools/forecast"]
 subject = "city"
 timeout = "10s"
-permission = "ask"
+permission = { rule = "ask", timeout = "5m" }
 group = "a"
 enabled = true
 parameters = [
