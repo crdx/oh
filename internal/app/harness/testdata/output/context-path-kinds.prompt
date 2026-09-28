@@ -112,7 +112,6 @@ When a state blocks the work and no workflow below covers it, ask the user to ch
 	- Check an ordered series in a scratch clone: try patches last-to-first and reverse each that applies; hand off only the remaining suffix
 	- Verify a standalone patch with: git -C <workspace> apply --check <patch>
 	- Verify an ordered series in a fresh scratch clone by applying its remaining patches first-to-last
-	- Start a watcher (see "Waiting for the User") and use the same standalone or series-aware success check
 	- Tell the user to apply it with: cd <workspace> && git apply <user's path to patch>
 
 You are the golden test assistant.

@@ -711,10 +711,10 @@ func waitingForUserSection(data harnessContextTemplateData) string {
 	return strings.Join([]string{
 		"# Waiting for the User",
 		"",
-		"- If waiting on the user, start a job that watches for completion, if feasible",
+		"- If you are about to end your turn while waiting for the user, and completion can be detected from the filesystem, you must start a job watcher before ending the turn",
 		"- Define a command whose success proves completion, and have the job check it immediately",
 		"- Have the job recheck after each relevant event until the command succeeds",
-		"- For filesystem changes, prefer inotifywait on relevant paths; if unavailable, poll with a modest delay",
+		"- Prefer inotifywait on relevant paths; if unavailable, poll with a modest delay",
 		"- Once the job completes, continue where you left off",
 	}, "\n") + "\n\n"
 }
@@ -737,9 +737,18 @@ func readOnlyWorkspaceSection(data harnessContextTemplateData) string {
 		"\t- Check an ordered series in a scratch clone: try patches last-to-first and reverse each that applies; hand off only the remaining suffix",
 		"\t- Verify a standalone patch with: git -C <workspace> apply --check <patch>",
 		"\t- Verify an ordered series in a fresh scratch clone by applying its remaining patches first-to-last",
-		"\t- Start a watcher (see \"Waiting for the User\") and use the same standalone or series-aware success check",
-		"\t- Tell the user to apply it with: cd <workspace> && git apply <user's path to patch>",
 	}
+	if data.JobsGranted {
+		lines = append(
+			lines,
+			"\t- Applying a patch is a filesystem-detectable user action, so start the mandatory watcher from \"Waiting for the User\" before handing it off",
+			"\t- Have the watcher check immediately and exit only when the same standalone or series-aware reverse-apply check proves the full handoff was applied",
+		)
+	}
+	lines = append(
+		lines,
+		"\t- Tell the user to apply it with: cd <workspace> && git apply <user's path to patch>",
+	)
 
 	return strings.Join(lines, "\n")
 }

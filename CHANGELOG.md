@@ -18,6 +18,7 @@
 
 ### Grants and sandbox
 
+- Push for the model to use an fs watcher before handoff
 - Let custom tools enable themselves by default
 - Gate custom tools with configurable mode groups
 - Revoke several grants at once

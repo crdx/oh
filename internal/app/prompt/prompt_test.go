@@ -948,7 +948,8 @@ func TestTheReadOnlyWorkspaceWorkflowHasItsOwnSection(t *testing.T) {
 		TmpDir:       "/state/farm/session",
 		HomeDir:      "/state/home",
 		CurrentCaps:  caps.Read | caps.Shell,
-		OfferedTools: []string{"bash"},
+		OfferedTools: []string{"bash", "job"},
+		JobsGranted:  true,
 	})
 
 	for _, rule := range []string{
@@ -964,7 +965,10 @@ func TestTheReadOnlyWorkspaceWorkflowHasItsOwnSection(t *testing.T) {
 		"hand off only the remaining suffix",
 		"fresh scratch clone",
 		"first-to-last",
-		"same standalone or series-aware success check",
+		"Applying a patch is a filesystem-detectable user action",
+		"start the mandatory watcher",
+		"before handing it off",
+		"same standalone or series-aware reverse-apply check",
 		"git -C <workspace> apply --check <patch>",
 	} {
 		if !strings.Contains(got, rule) {
@@ -976,6 +980,11 @@ func TestTheReadOnlyWorkspaceWorkflowHasItsOwnSection(t *testing.T) {
 	workflow := strings.Index(got, "# Read-only Workspaces")
 	if state == -1 || workflow <= state {
 		t.Errorf("read-only workspace workflow is not its own section after state: %q", got)
+	}
+	watcher := strings.Index(got, "Applying a patch is a filesystem-detectable user action")
+	handoff := strings.Index(got, "Tell the user to apply it")
+	if watcher == -1 || handoff <= watcher {
+		t.Errorf("read-only workspace workflow does not start its watcher before handoff: %q", got)
 	}
 }
 
@@ -1000,7 +1009,9 @@ func TestWaitingForTheUserFollowsJobAvailability(t *testing.T) {
 
 			for _, rule := range []string{
 				"# Waiting for the User",
-				"If waiting on the user, start a job",
+				"about to end your turn while waiting for the user",
+				"completion can be detected from the filesystem",
+				"must start a job watcher before ending the turn",
 				"command whose success proves completion",
 				"recheck after each relevant event until the command succeeds",
 				"if unavailable, poll with a modest delay",
@@ -1011,8 +1022,12 @@ func TestWaitingForTheUserFollowsJobAvailability(t *testing.T) {
 					t.Errorf("waiting rule presence is %t, want %t: %q", present, testCase.expected, got)
 				}
 			}
+			patchWatcher := strings.Contains(got, "Applying a patch is a filesystem-detectable user action")
+			if patchWatcher != testCase.expected {
+				t.Errorf("patch watcher presence is %t, want %t: %q", patchWatcher, testCase.expected, got)
+			}
 			if unwanted := "Before handing a patch off, start a background job"; strings.Contains(got, unwanted) {
-				t.Errorf("patch-specific waiting rule remains in the harness context: %q", got)
+				t.Errorf("old patch-specific waiting rule remains in the harness context: %q", got)
 			}
 		})
 	}
