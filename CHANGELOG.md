@@ -2,15 +2,17 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+## [0.11.0] - 2026-09-29
+
 ### Completion and input
 
-- Add speed dial concept for quick inputs
+- Add a configurable speed dial for quick inputs
 - Rename continue message to nudge
-- Complete completions with tab only
+- Choose completions with tab only
 - Keep keys typed while a session starts
 - Exclude system suspension from turn durations
 - Send a command typed out in full on the first enter
-- Redraw the screen and dismiss feedback with ctrl+l
+- Redraw the screen and dismiss feedback with `ctrl+l`
 - Show arguments of snippet definitions
 - Require double-enter in quick succession
 - Stop sending continue message during a turn
@@ -20,12 +22,12 @@
 
 ### Grants and sandbox
 
-- Push for the model to use an fs watcher before handoff
+- Prompt the model to use a filesystem watcher before handoff
 - Let custom tools enable themselves by default
 - Gate custom tools with configurable mode groups
 - Revoke several grants at once
 - Keep grant rows compact
-- Make yolo bypass sandbox fully
+- Make `--yolo` bypass the sandbox fully
 - Show complete effective grant access
 - Keep each session's Go build cache separate
 - Show pending access change notices
@@ -33,7 +35,7 @@
 
 ### Questions and approvals
 
-- Cancel approval prompts with ctrl+c
+- Cancel approval prompts with `ctrl+c`
 - Configure custom-tool approval waits
 - Show custom tool arguments instead of their executable commands
 - Keep tall questions and approvals in view
@@ -91,14 +93,14 @@
 
 - Recheck a provider's usage limit when a turn retries
 - Stop inferring partial cache rebuilds when the provider reports no writes
-- List every model context source and token estimate with /ctx
+- List every model context source and token estimate with `/ctx`
 - Honour explicit server advice to retry a refused request
 - Show if a new model was ignored for some reason
 - Keep model names beginning with a multibyte character intact
 
 ### Jobs
 
-- Restyle jobs list output
+- Restyle job list output
 - Clarify the reason for jobs stopping
 - Keep job names concise
 - Keep completion-notification guidance accurate across session modes
@@ -108,7 +110,7 @@
 - Keep denied-path artefacts silent
 - Advise on how to detect applied patches
 - Give the model accurate grant docs
-- Document the supported mermaid syntax and features
+- Document the supported Mermaid syntax and features
 
 ## [0.10.0] - 2026-09-25
 
