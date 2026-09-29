@@ -440,7 +440,7 @@ func sessionCommand(name string, description string, startSession func(string) e
 			}
 			return startSession(arguments.Fields[0])
 		},
-	}.WithArgumentUsage("[model]")
+	}.WithArgumentUsage("[<model>]")
 }
 
 func commandsRequiringPersistedSession(isSessionPersisted func() bool, commands ...slash.Command) []slash.Command {

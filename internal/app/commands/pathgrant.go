@@ -184,7 +184,7 @@ func revokeCommand(grants PathGrants, hostToSandbox HostToSandbox, sandboxToHost
 	}.
 		WithListedArguments(func() []string { return revocableSubjects(grants, hostToSandbox, sandboxToHost) }).
 		WithManyArguments().
-		WithArgumentUsage("{<path>|<port>}...")
+		WithArgumentUsage("<target>...")
 }
 
 func revokedSubjects(
