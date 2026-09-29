@@ -2,6 +2,10 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+### Theme
+
+- Apply the active theme before picking sessions
+
 ## [0.11.0] - 2026-09-29
 
 ### Completion and input

@@ -13,6 +13,7 @@ import (
 
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/menu"
+	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/util/strutil"
 )
 
@@ -201,6 +202,9 @@ func TestGoldenEverySizeASessionCanOccupyIsDrawnWithinItsColumn(t *testing.T) {
 }
 
 func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
+	configuredTheme := style.DefaultTheme()
+	configuredTheme.Accent = "#010203"
+
 	frames := []struct {
 		name     string
 		room     int
@@ -209,6 +213,7 @@ func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
 		query    string
 		keypress *key.Key
 		read     func(*Session, int) ([]string, error)
+		theme    *style.Theme
 
 		isArchivedView      bool
 		isAllWorkspacesView bool
@@ -218,6 +223,7 @@ func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
 		movedIndex          *int
 	}{
 		{name: "a wide terminal, with room for the title", room: 150, height: 24, cursor: 1},
+		{name: "a picker following a configured theme", room: 120, height: 24, cursor: 1, theme: &configuredTheme},
 		{name: "a terminal wide enough for the model that answered", room: 120, height: 24, cursor: 1},
 		{name: "no room for the model, so the room goes to the title", room: 80, height: 24, cursor: 3},
 		{name: "a narrow terminal, with the columns clipped", room: 46, height: 24, cursor: 1},
@@ -294,15 +300,20 @@ func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
 		sessions.isArchivedView = frame.isArchivedView
 		sessions.isAllWorkspacesView = frame.isAllWorkspacesView
 
-		fmt.Fprintf(&output, "=== %s ===\n%s\n", frame.name, strutil.VisibleEscapes(
-			paint(
-				sessions,
-				frame.room,
-				frame.height,
-				frame.cursor,
-				frame.query,
-			),
-		))
+		restoreTheme := func() {}
+		if frame.theme != nil {
+			restoreTheme = style.ApplyTheme(*frame.theme)
+		}
+		drawn := paint(
+			sessions,
+			frame.room,
+			frame.height,
+			frame.cursor,
+			frame.query,
+		)
+		restoreTheme()
+
+		fmt.Fprintf(&output, "=== %s ===\n%s\n", frame.name, strutil.VisibleEscapes(drawn))
 	}
 
 	compareWithGolden(t, "painted.ansi", output.String())

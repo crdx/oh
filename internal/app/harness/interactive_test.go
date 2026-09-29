@@ -75,6 +75,31 @@ func TestAConversationChosenFromThePickerResumesWhereItLeftOff(t *testing.T) {
 	}
 }
 
+func TestTheSessionPickerUsesTheWorkspaceTheme(t *testing.T) {
+	rig := newInteractiveRig(t, "First answer.")
+	runTestBinary(t, rig.binary, rig.workspace, rig.environment, "-p", "--yolo", "-m", "opencode-go/fake", "first question")
+
+	storedSessions := rig.storedSessions()
+	if len(storedSessions) != 1 {
+		t.Fatalf("got %d stored sessions, want one to choose", len(storedSessions))
+	}
+	if err := os.WriteFile(
+		filepath.Join(rig.workspace, "oh.toml"),
+		[]byte("[ui.theme]\naccent = \"#010203\"\n"),
+		0o600,
+	); err != nil {
+		t.Fatal(err)
+	}
+
+	session := rig.start("-r")
+	session.waitFor(storedSessions[0].Name)
+	if stream := session.String(); !strings.Contains(stream, "\x1b[38;2;1;2;3m") {
+		t.Errorf("session picker did not use the workspace accent: %q", stream)
+	}
+	session.typeText("\x03")
+	session.waitToExit()
+}
+
 func TestAModelChosenFromThePickerAnswersTheConversation(t *testing.T) {
 	rig := newInteractiveRig(t, "Picked answer.")
 

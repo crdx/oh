@@ -23,6 +23,31 @@
 \e[K\r
 \e[K\r
 \e[K\e[J
+=== a picker following a configured theme ===
+\e[H\e[38;2;150;152;150mFilter: \e[0m                                      tab\e[38;2;150;152;150m scope\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m view\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m preview\e[0m\e[38;2;150;152;150m · \e[0mctrl+a\e[38;2;150;152;150m archive/restore\e[0m\e[38;2;150;152;150m · \e[0mdel\e[38;2;150;152;150m delete\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent                 Title                      Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
+\e[3m\e[38;2;150;152;150m  🐟 chewy-sardine      why does the spinner stu…  \e[38;2;1;2;3m⚡\e[0m\e[3m\e[38;2;150;152;150m Codex 5.3              high        12     1M      8m      just now\e[0m\e[0m\e[K\r
+\e[38;2;1;2;3m› 🐩 thick-poodle       add support for reasonin…  \e[38;2;1;2;3m⚡\e[0m\e[38;2;1;2;3m Sonnet 5             medium         4    <1M      1h       37m ago\e[0m\e[K\r
+  🦡 funny-badger       the cancelled turn leave…  \e[38;2;1;2;3m⚡\e[0m Qwen Coder 3 30B…    medium       148    23M      3h        5h ago\e[K\r
+  🐬 able-dolphin       (untitled)                 —                                      1      —      4h        3d ago\e[K\r
+  🦌 tame-impala        rename the harness to oh   Codex 5.3                             26     4M      1d       12d ago\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\r
+\e[K\e[J
 === a terminal wide enough for the model that answered ===
 \e[H\e[38;2;150;152;150mFilter: \e[0m                                      tab\e[38;2;150;152;150m scope\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m view\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m preview\e[0m\e[38;2;150;152;150m · \e[0mctrl+a\e[38;2;150;152;150m archive/restore\e[0m\e[38;2;150;152;150m · \e[0mdel\e[38;2;150;152;150m delete\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Agent                 Title                      Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r

@@ -283,6 +283,7 @@ func Main() {
 	}
 
 	style.Init(os.Stdout)
+	applyAvailableTheme()
 
 	hooks := cycle.NewHooks(func(err error) {
 		fmt.Fprintln(os.Stderr, style.Error(fmt.Errorf("session hook: %w", err)))
@@ -335,6 +336,18 @@ func getConfigSources(workspaceDir string) []config.Source {
 		{Path: location.GetConfigFile()},
 		{Path: filepath.Join(workspaceDir, "oh.toml"), IsOverride: true},
 	}
+}
+
+func applyAvailableTheme() {
+	workspace, err := work.Current()
+	if err != nil {
+		return
+	}
+	settings, err := config.LoadSources(getConfigSources(workspace.GetDir())...)
+	if err != nil {
+		return
+	}
+	style.ApplyTheme(settings.Ui.Theme)
 }
 
 func configuredRotation(settings config.Config, isSimulated bool) []string {
