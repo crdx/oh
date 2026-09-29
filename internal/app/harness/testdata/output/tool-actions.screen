@@ -6,7 +6,7 @@
 forward 8000 ✓
 forward docs:8001 ✓
 close 8000 ✓
-list exposed ports ✓
+list forwards ✓
 start docs:8002 $ serve docs ✓
 restart docs ✓
 status docs ✓
@@ -137,7 +137,7 @@ l
 forward 8000 ✓
 forward docs:8001 ✓
 close 8000 ✓
-list exposed ports ✓
+list forwards ✓
 start docs:8002 $ serve docs ✓
 restart docs ✓
 status docs ✓
@@ -161,7 +161,7 @@ Those are every action label.
 forward 8… ✓
 forward d… ✓
 close 8000 ✓
-list expo… ✓
+list forw… ✓
 start doc… ✓
 restart d… ✓
 status do… ✓
@@ -184,7 +184,7 @@ label.
 forward 8000 ✓
 forward docs:8001 ✓
 close 8000 ✓
-list exposed ports ✓
+list forwards ✓
 start docs:8002 $ serve docs ✓
 restart docs ✓
 status docs ✓

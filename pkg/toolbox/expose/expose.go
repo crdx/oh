@@ -70,7 +70,7 @@ func Describe(args Args) tool.CallRendering {
 	case actionRemove:
 		return tool.CallRendering{Kind: "expose_remove", Subject: port}
 	case actionList:
-		return tool.CallRendering{Kind: "expose_list", Subject: "exposed ports"}
+		return tool.CallRendering{Kind: "expose_list", Subject: "forwards"}
 	}
 
 	return tool.CallRendering{}

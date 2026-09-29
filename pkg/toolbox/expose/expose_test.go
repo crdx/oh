@@ -170,7 +170,7 @@ func TestACallIsRenderedByItsAction(t *testing.T) {
 		},
 		"list": {
 			args: Args{Action: actionList},
-			want: tool.CallRendering{Kind: "expose_list", Subject: "exposed ports"},
+			want: tool.CallRendering{Kind: "expose_list", Subject: "forwards"},
 		},
 	} {
 		t.Run(name, func(t *testing.T) {

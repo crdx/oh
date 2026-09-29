@@ -5,7 +5,7 @@
 {"event":{"kind":"tool_call_result","status":"success","text":"exposed","id":"expose-job","name":"expose"}}
 {"event":{"kind":"tool_call_request","id":"unexpose","name":"expose","arguments":"{\"action\":\"remove\",\"port\":8000}","rendering_kind":"expose_remove","render":"8000"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"removed","id":"unexpose","name":"expose"}}
-{"event":{"kind":"tool_call_request","id":"list-ports","name":"expose","arguments":"{\"action\":\"list\"}","rendering_kind":"expose_list","render":"exposed ports"}}
+{"event":{"kind":"tool_call_request","id":"list-ports","name":"expose","arguments":"{\"action\":\"list\"}","rendering_kind":"expose_list","render":"forwards"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"listed","id":"list-ports","name":"expose"}}
 {"event":{"kind":"tool_call_request","id":"start","name":"job","arguments":"{\"action\":\"start\",\"name\":\"docs\",\"port\":8002,\"command\":\"serve docs\"}"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"started","id":"start","name":"job"}}

@@ -19,7 +19,7 @@ show every action-oriented tool label
 expose: 8000 [ok, expose]
 expose: docs:8001 [ok, expose-job]
 expose: 8000 [ok, unexpose]
-expose: exposed ports [ok, list-ports]
+expose: forwards [ok, list-ports]
 job [ok, start]
 job [ok, restart]
 job [ok, status]
