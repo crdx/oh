@@ -337,7 +337,7 @@ func TestALabelCarriesTheTimeTheCallGaveItself(t *testing.T) {
 		Arguments: `{"action":"wait","name":"check","wait_seconds":20}`,
 	}
 	getTool := func(string) (tool.Tool, bool) {
-		return job.New(jobs.New(nil), nil, nil), true
+		return job.New(jobs.New(nil), nil, nil, nil), true
 	}
 
 	if got := call.LabelFor(waitEvent, getTool, nil).TimeLimit; got != 20*time.Second {

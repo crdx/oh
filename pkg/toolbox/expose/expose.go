@@ -111,13 +111,8 @@ func run(ports Ports, args Args) (string, tool.ToolCallMetrics, error) {
 
 	switch args.Action {
 	case actionAdd:
-		address, err := ports.Expose(port, args.JobName)
-		if err != nil {
-			return "", tool.ToolCallMetrics{}, err
-		}
-
-		return "Use " + address + " for the user; use localhost:" + strconv.Itoa(args.Port) +
-			" inside the sandbox.", tool.ToolCallMetrics{}, nil
+		report, err := Publish(ports, port, args.JobName)
+		return report, tool.ToolCallMetrics{}, err
 	case actionRemove:
 		if err := ports.Hide(port); err != nil {
 			return "", tool.ToolCallMetrics{}, err
@@ -129,6 +124,16 @@ func run(ports Ports, args Args) (string, tool.ToolCallMetrics, error) {
 	}
 
 	return "", tool.ToolCallMetrics{}, fmt.Errorf("unknown action %q", args.Action)
+}
+
+func Publish(ports Ports, port uint16, jobName string) (string, error) {
+	address, err := ports.Expose(port, jobName)
+	if err != nil {
+		return "", err
+	}
+
+	return "Use " + address + " for the user; use localhost:" + strconv.Itoa(int(port)) +
+		" inside the sandbox.", nil
 }
 
 func portOf(args Args) (uint16, error) {

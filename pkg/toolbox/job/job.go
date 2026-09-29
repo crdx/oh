@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"slices"
+	"strconv"
 	"strings"
 	"time"
 
@@ -15,6 +16,7 @@ import (
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/bash"
+	"crdx.org/oh/pkg/toolbox/expose"
 )
 
 const (
@@ -47,6 +49,7 @@ var actions = []string{
 type Args struct {
 	Action      string   `json:"action"`
 	Name        string   `json:"name"`
+	Port        int      `json:"port,omitempty"`
 	Names       []string `json:"names,omitempty"`
 	WaitFor     string   `json:"wait_for,omitempty"`
 	WaitSeconds int      `json:"wait_seconds,omitempty"`
@@ -57,6 +60,7 @@ func New(
 	manager *jobs.Manager,
 	root *file.Root,
 	buildPolicy func(context.Context) (sandbox.Policy, error),
+	ports expose.Ports,
 ) tool.Tool {
 	return tool.Implement(
 		tool.Definition{
@@ -65,6 +69,7 @@ func New(
 			Schema: tool.Schema{
 				tool.Enum("action", "what to do", actions...),
 				tool.String("name", fmt.Sprintf("the job name; for start, use one short role such as 'check', not a specific compound such as 'cachecheck'—a live duplicate is automatically numbered, such as 'check-1'; 1–%d characters from [a-z0-9-] (for all actions except 'list', 'prune')", jobs.NameLengthLimit)).Optional(),
+				tool.Integer("port", "an optional TCP port inside the sandbox to expose to the user (for start)").Optional(),
 				tool.StringArray("names", "the job names to watch for wait").Optional(),
 				tool.Enum("wait_for", "whether wait returns after any or all watched jobs end", waitForAny, waitForAll).Optional(),
 				tool.Integer("wait_seconds", fmt.Sprintf("how many seconds to wait at most — max %s (default)", util.CompactDuration(waitLimit))).Optional(),
@@ -76,7 +81,7 @@ func New(
 		Validate(validate).
 		TakesAtMost(getTimeLimit).
 		Exec(func(ctx context.Context, args Args) (string, tool.ToolCallMetrics, error) {
-			return run(ctx, manager, root, buildPolicy, args)
+			return run(ctx, manager, root, buildPolicy, ports, args)
 		})
 }
 
@@ -85,12 +90,16 @@ const description = "run a shell command in the background. In an interactive se
 func Describe(args Args) tool.CallRendering {
 	switch args.Action {
 	case actionStart:
+		subject := args.Name
+		if args.Port != 0 {
+			subject += ":" + strconv.Itoa(args.Port)
+		}
 		if strings.TrimSpace(args.Command) == "" {
-			return tool.CallRendering{Kind: "job_restart", Subject: args.Name}
+			return tool.CallRendering{Kind: "job_restart", Subject: subject}
 		}
 		return tool.CallRendering{
 			Kind:         "job_start",
-			Subject:      args.Name,
+			Subject:      subject,
 			Continuation: []tool.CallRendering{bash.DescribeCommand(args.Command)},
 		}
 	case actionWait:
@@ -127,6 +136,15 @@ func validate(args Args) error {
 		return fmt.Errorf("action must be %s (got %q)", actionChoices, args.Action)
 	}
 
+	if args.Action != actionStart && args.Port != 0 {
+		return errors.New(`port requires action="start"`)
+	}
+	if args.Action == actionStart && args.Port != 0 {
+		if _, err := getPort(args.Port); err != nil {
+			return err
+		}
+	}
+
 	if args.Action == actionWait {
 		return validateWait(args)
 	}
@@ -151,6 +169,14 @@ func validate(args Args) error {
 	}
 
 	return nil
+}
+
+func getPort(port int) (uint16, error) {
+	if port < 1 || port > 65535 {
+		return 0, fmt.Errorf("port must be 1–65535 (got %d)", port)
+	}
+
+	return uint16(port), nil
 }
 
 func validateWait(args Args) error {
@@ -225,9 +251,10 @@ func run(
 	manager *jobs.Manager,
 	root *file.Root,
 	buildPolicy func(context.Context) (sandbox.Policy, error),
+	ports expose.Ports,
 	args Args,
 ) (string, tool.ToolCallMetrics, error) {
-	report, err := act(ctx, manager, root, buildPolicy, args)
+	report, err := act(ctx, manager, root, buildPolicy, ports, args)
 	if err != nil {
 		return report, tool.ToolCallMetrics{}, err
 	}
@@ -240,6 +267,7 @@ func act(
 	manager *jobs.Manager,
 	root *file.Root,
 	buildPolicy func(context.Context) (sandbox.Policy, error),
+	ports expose.Ports,
 	args Args,
 ) (string, error) {
 	switch args.Action {
@@ -263,7 +291,38 @@ func act(
 			return "", err
 		}
 
-		return snapshot.Describe(), nil
+		report := snapshot.Describe()
+		if args.Port == 0 {
+			return report, nil
+		}
+
+		port, portErr := getPort(args.Port)
+		switch {
+		case portErr != nil:
+			err = portErr
+		case ports == nil:
+			err = errors.New("port exposure is unavailable")
+		default:
+			var publication string
+			publication, err = expose.Publish(ports, port, snapshot.Name)
+			if err == nil {
+				return report + "\n" + publication, nil
+			}
+		}
+
+		if _, discardErr := manager.Discard(snapshot.Name); discardErr != nil {
+			return "", errors.Join(
+				fmt.Errorf("could not expose port %d for job %q: %w", args.Port, snapshot.Name, err),
+				fmt.Errorf("could not discard job %q after the exposure failed: %w", snapshot.Name, discardErr),
+			)
+		}
+
+		return "", fmt.Errorf(
+			"could not expose port %d for job %q, which was stopped and discarded: %w",
+			args.Port,
+			snapshot.Name,
+			err,
+		)
 
 	case actionStatus:
 		snapshot, err := manager.Status(args.Name)

@@ -7,7 +7,7 @@ forward 8000 ✓
 forward docs:8001 ✓
 close 8000 ✓
 list exposed ports ✓
-start docs $ serve docs ✓
+start docs:8002 $ serve docs ✓
 restart docs ✓
 status docs ✓
 cat docs ✓
@@ -138,7 +138,7 @@ forward 8000 ✓
 forward docs:8001 ✓
 close 8000 ✓
 list exposed ports ✓
-start docs $ serve docs ✓
+start docs:8002 $ serve docs ✓
 restart docs ✓
 status docs ✓
 cat docs ✓
@@ -162,7 +162,7 @@ forward 8… ✓
 forward d… ✓
 close 8000 ✓
 list expo… ✓
-start docs ✓
+start doc… ✓
 restart d… ✓
 status do… ✓
 cat docs ✓
@@ -185,7 +185,7 @@ forward 8000 ✓
 forward docs:8001 ✓
 close 8000 ✓
 list exposed ports ✓
-start docs $ serve docs ✓
+start docs:8002 $ serve docs ✓
 restart docs ✓
 status docs ✓
 cat docs ✓

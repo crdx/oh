@@ -8,6 +8,7 @@
 
 ### Tool calls
 
+- Let a background job associate to a port
 - Name background job output calls `cat`
 - Format background job wait limits as durations
 

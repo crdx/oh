@@ -21,6 +21,7 @@ import (
 	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/bash"
+	"crdx.org/oh/pkg/toolbox/expose"
 	"crdx.org/oh/pkg/toolbox/job"
 )
 
@@ -491,6 +492,7 @@ func NewJob(
 	mode *caps.Mode,
 	files *file.Root,
 	isYolo bool,
+	ports expose.Ports,
 ) tool.Tool {
 	fresh := func(ctx context.Context) (sandbox.Policy, error) {
 		policy, err := freshPolicy(ctx, workspaceDir, homeDir, tmpDir, pathAccess, mode, isYolo)
@@ -504,7 +506,7 @@ func NewJob(
 		return policy, nil
 	}
 
-	return job.New(manager, files, fresh)
+	return job.New(manager, files, fresh, ports)
 }
 
 func StoppedBy(withdrawnCaps caps.Set, workspaceDir string) (func(sandbox.Policy) bool, bool) {

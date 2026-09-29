@@ -144,7 +144,7 @@ func TestAWaitEndsWhenTheTurnDoes(t *testing.T) {
 }
 
 func TestAJobFailureLeavesTheFinalOutputForTheAgentToMeasure(t *testing.T) {
-	_, metrics, err := run(t.Context(), jobs.New(nil), nil, nil, Args{Action: actionStatus, Name: "ghost"})
+	_, metrics, err := run(t.Context(), jobs.New(nil), nil, nil, nil, Args{Action: actionStatus, Name: "ghost"})
 	if err == nil {
 		t.Fatal("the unknown job was accepted")
 	}

@@ -4,14 +4,20 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"os"
 	"reflect"
+	"strconv"
 	"strings"
+	"sync"
+	"syscall"
 	"testing"
 
+	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/bash"
+	"crdx.org/oh/pkg/toolbox/expose"
 	"crdx.org/oh/pkg/toolbox/job"
 )
 
@@ -25,7 +31,7 @@ func run(t *testing.T, manager *jobs.Manager, arguments any) (string, error) {
 
 	built := job.New(manager, nil, func(context.Context) (sandbox.Policy, error) {
 		return sandbox.Policy{}, nil
-	})
+	}, nil)
 
 	call, err := built.Parse(string(encoded))
 	if err != nil {
@@ -47,6 +53,86 @@ func withFinishedJobs(t *testing.T) *jobs.Manager {
 	})
 
 	return manager
+}
+
+type heldRunner struct{}
+
+func (heldRunner) Run(context.Context, string, string, sandbox.Policy) (sandbox.Result, error) {
+	panic("unexpected foreground run")
+}
+
+func (heldRunner) Start(
+	context.Context,
+	string,
+	string,
+	sandbox.Policy,
+	sandbox.Output,
+) (sandbox.Command, error) {
+	return &heldCommand{over: make(chan struct{})}, nil
+}
+
+type heldCommand struct {
+	over chan struct{}
+	once sync.Once
+}
+
+func (self *heldCommand) Wait() (sandbox.Result, error) {
+	<-self.over
+	return sandbox.Result{}, nil
+}
+
+func (self *heldCommand) Signal(syscall.Signal) error {
+	self.Stop()
+	return nil
+}
+
+func (self *heldCommand) Stop() {
+	self.once.Do(func() { close(self.over) })
+}
+
+type recordedPorts struct {
+	publications []expose.Publication
+	refusal      error
+}
+
+func (self *recordedPorts) Expose(port uint16, jobName string) (string, error) {
+	if self.refusal != nil {
+		return "", self.refusal
+	}
+	self.publications = append(self.publications, expose.Publication{Port: port, JobName: jobName})
+	return "http://session.test:" + strconv.Itoa(int(port)), nil
+}
+
+func (self *recordedPorts) Hide(uint16) error { return nil }
+
+func (self *recordedPorts) List() []expose.Publication { return self.publications }
+
+func newJobTool(t *testing.T, manager *jobs.Manager, ports expose.Ports) tool.Tool {
+	t.Helper()
+
+	openedRoot, err := os.OpenRoot(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = openedRoot.Close() })
+
+	return job.New(
+		manager,
+		file.New(openedRoot, func(string) error { return nil }),
+		func(context.Context) (sandbox.Policy, error) { return sandbox.Policy{}, nil },
+		ports,
+	)
+}
+
+func callJob(t *testing.T, built tool.Tool, arguments string) (tool.ToolCallResult, error) {
+	t.Helper()
+
+	call, err := built.Parse(arguments)
+	if err != nil {
+		return tool.ToolCallResult{}, err
+	}
+
+	return call.Exec(t.Context())
 }
 
 func TestPruningNamesWhatItRemoved(t *testing.T) {
@@ -113,6 +199,57 @@ func TestStartingAnUnknownNameWithNoCommandIsRefused(t *testing.T) {
 	}
 }
 
+func TestStartingAJobCanExposeAndAssociateItsPort(t *testing.T) {
+	manager := jobs.New(heldRunner{})
+	t.Cleanup(func() { _ = manager.Close() })
+
+	if _, err := manager.Start(t.Context(), "docs", t.TempDir(), "serve old docs", sandbox.Policy{}); err != nil {
+		t.Fatal(err)
+	}
+
+	ports := &recordedPorts{}
+	result, err := callJob(
+		t,
+		newJobTool(t, manager, ports),
+		`{"action":"start","name":"docs","port":8080,"command":"serve docs"}`,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	wantPublications := []expose.Publication{{Port: 8080, JobName: "docs-1"}}
+	if !reflect.DeepEqual(ports.publications, wantPublications) {
+		t.Errorf("got publications %#v, want %#v", ports.publications, wantPublications)
+	}
+	for _, wanted := range []string{
+		"docs-1: running",
+		"Use http://session.test:8080 for the user",
+		"use localhost:8080 inside the sandbox",
+	} {
+		if !strings.Contains(result.Output, wanted) {
+			t.Errorf("got %q, want it to contain %q", result.Output, wanted)
+		}
+	}
+}
+
+func TestAJobIsDiscardedWhenItsPortCannotBeExposed(t *testing.T) {
+	manager := jobs.New(heldRunner{})
+	t.Cleanup(func() { _ = manager.Close() })
+	refused := errors.New("port is occupied")
+
+	_, err := callJob(
+		t,
+		newJobTool(t, manager, &recordedPorts{refusal: refused}),
+		`{"action":"start","name":"docs","port":8080,"command":"serve docs"}`,
+	)
+	if !errors.Is(err, refused) || !strings.Contains(err.Error(), "stopped and discarded") {
+		t.Errorf("got %v, want the exposure refusal and rollback", err)
+	}
+	if listing := manager.List(); len(listing) != 0 {
+		t.Errorf("got jobs %#v, want the failed start discarded", listing)
+	}
+}
+
 func TestWaitingOnAFinishedJobReportsItAtOnce(t *testing.T) {
 	output, err := run(t, withFinishedJobs(t), map[string]string{"action": "wait", "name": "build"})
 	if err != nil {
@@ -172,7 +309,7 @@ func TestEverySingleJobActionNeedsAName(t *testing.T) {
 }
 
 func TestStartingValidatesTheJobName(t *testing.T) {
-	built := job.New(nil, nil, nil)
+	built := job.New(nil, nil, nil, nil)
 	testCases := []struct {
 		name    string
 		isValid bool
@@ -267,6 +404,25 @@ func TestOnlyAWaitTakesANumberOfSeconds(t *testing.T) {
 	}
 }
 
+func TestOnlyAStartTakesAValidPort(t *testing.T) {
+	built := job.New(nil, nil, nil, nil)
+	for name, arguments := range map[string]string{
+		"port with status": `{"action":"status","name":"docs","port":8080}`,
+		"negative port":    `{"action":"start","name":"docs","port":-1,"command":"serve"}`,
+		"large port":       `{"action":"start","name":"docs","port":65536,"command":"serve"}`,
+	} {
+		t.Run(name, func(t *testing.T) {
+			if _, err := built.Parse(arguments); err == nil {
+				t.Error("the port was accepted")
+			}
+		})
+	}
+
+	if _, err := built.Parse(`{"action":"start","name":"docs","port":8080,"command":"serve"}`); err != nil {
+		t.Errorf("a valid start port was refused: %v", err)
+	}
+}
+
 func TestAJobCallIsRenderedByItsAction(t *testing.T) {
 	for name, shape := range map[string]struct {
 		args job.Args
@@ -280,9 +436,21 @@ func TestAJobCallIsRenderedByItsAction(t *testing.T) {
 				Continuation: []tool.CallRendering{bash.DescribeCommand("python3  -m\nhttp.server")},
 			},
 		},
+		"start with port": {
+			args: job.Args{Action: "start", Name: "docs", Port: 8080, Command: "serve docs"},
+			want: tool.CallRendering{
+				Kind:         "job_start",
+				Subject:      "docs:8080",
+				Continuation: []tool.CallRendering{bash.DescribeCommand("serve docs")},
+			},
+		},
 		"restart": {
 			args: job.Args{Action: "start", Name: "docs"},
 			want: tool.CallRendering{Kind: "job_restart", Subject: "docs"},
+		},
+		"restart with port": {
+			args: job.Args{Action: "start", Name: "docs", Port: 8080},
+			want: tool.CallRendering{Kind: "job_restart", Subject: "docs:8080"},
 		},
 		"status": {
 			args: job.Args{Action: "status", Name: "docs"},
@@ -339,7 +507,7 @@ func TestAJobCallIsRenderedByItsAction(t *testing.T) {
 
 func TestTheNameParameterGivesConciseNamingAdvice(t *testing.T) {
 	var description string
-	for _, parameter := range job.New(nil, nil, nil).Schema() {
+	for _, parameter := range job.New(nil, nil, nil, nil).Schema() {
 		if parameter.Name == "name" {
 			description = parameter.Description
 		}
@@ -354,7 +522,7 @@ func TestTheNameParameterGivesConciseNamingAdvice(t *testing.T) {
 
 func TestTheWaitParameterFormatsItsMaximumAsADuration(t *testing.T) {
 	var description string
-	for _, parameter := range job.New(nil, nil, nil).Schema() {
+	for _, parameter := range job.New(nil, nil, nil, nil).Schema() {
 		if parameter.Name == "wait_seconds" {
 			description = parameter.Description
 		}
@@ -366,7 +534,7 @@ func TestTheWaitParameterFormatsItsMaximumAsADuration(t *testing.T) {
 }
 
 func TestTheToolExplainsJobNotificationsInBothSessionModes(t *testing.T) {
-	description := job.New(nil, nil, nil).Description()
+	description := job.New(nil, nil, nil, nil).Description()
 	for _, wanted := range []string{"In an interactive session", "in a non-interactive session"} {
 		if !strings.Contains(description, wanted) {
 			t.Errorf("description %q does not contain %q", description, wanted)
@@ -374,7 +542,7 @@ func TestTheToolExplainsJobNotificationsInBothSessionModes(t *testing.T) {
 	}
 }
 
-var _ tool.Tool = job.New(nil, nil, nil)
+var _ tool.Tool = job.New(nil, nil, nil, nil)
 
 func TestAJobIsReportedByNameForEveryActionThatNamesOne(t *testing.T) {
 	for action, want := range map[string]string{
@@ -407,7 +575,7 @@ func TestEveryActionThatNamesAJobRefusesOneNobodyStarted(t *testing.T) {
 func TestRestartingAJobFailsWhenItsPolicyCannotBeBuilt(t *testing.T) {
 	built := job.New(withFinishedJobs(t), nil, func(context.Context) (sandbox.Policy, error) {
 		return sandbox.Policy{}, errPolicy
-	})
+	}, nil)
 
 	call, err := built.Parse(`{"action":"start","name":"build"}`)
 	if err != nil {

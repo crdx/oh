@@ -1049,6 +1049,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 			mode,
 			files,
 			args.Yolo,
+			hostToSandbox.ForModel(),
 		))
 	}
 	if keeperProcess != nil {

@@ -9131,6 +9131,7 @@ func newRig(t *testing.T, openScreen func(*strings.Builder, string) *output.Scre
 			jobs.New(sandbox.Direct()),
 			files,
 			func(context.Context) (sandbox.Policy, error) { return sandbox.Policy{}, nil },
+			nil,
 		),
 	)
 	tools = append(tools,
@@ -16500,7 +16501,7 @@ func newSessionGoldenTools(
 		}
 
 		if specification.Name == jobToolName {
-			tools = append(tools, job.New(nil, nil, nil))
+			tools = append(tools, job.New(nil, nil, nil, nil))
 			continue
 		}
 
