@@ -10,7 +10,7 @@
 \e[38;2;150;152;150menter to open · esc return · ↑↓ scroll\e[0m\e[K\r
 \e[38;2;150;152;150m──────────────────────────────────────────────\e[0m\e[K\r
 The prompt is drawn by layout, which wraps th…\e[0m\e[K\r
-the terminal width and reports where the curs…\e[0m\e[K\r
+\e]8;;file:///workspace/layout.go\e\\the terminal width and reports where the curs…\e]8;;\e\\\e[0m\e[K\r
 \e[K\r
 \e[38;2;150;152;150m──────────────────────────────────────────────\e[0m\e[K\r
 \e[3m\e[2m\e[38;2;76;154;44mPress enter to load...\e[0m\e[0m\e[0m\e[K\r
@@ -34,7 +34,7 @@ grep prompt *.go ✓ 1L\e[0m\e[K\r
 \e[38;2;150;152;150menter to open · esc return · ↑↓ scroll\e[0m\e[K\r
 \e[38;2;150;152;150m──────────────────────────────────────────────\e[0m\e[K\r
 The prompt is drawn by layout, which wraps th…\e[0m\e[K\r
-the terminal width and reports where the curs…\e[0m\e[K\r
+\e]8;;file:///workspace/layout.go\e\\the terminal width and reports where the curs…\e]8;;\e\\\e[0m\e[K\r
 \e[K\r
 \e[38;2;150;152;150m──────────────────────────────────────────────\e[0m\e[K\r
 \e[3m\e[2m\e[38;2;76;154;44mPress enter to load...\e[0m\e[0m\e[0m\e[K\r
@@ -58,7 +58,7 @@ the terminal width and reports where the curs…\e[0m\e[K\r
 \e[38;2;150;152;150menter to open · esc return · ↑↓ scroll\e[0m\e[K\r
 \e[38;2;150;152;150m──────────────────────────────────────────────\e[0m\e[K\r
 The prompt is drawn by layout, which wraps th…\e[0m\e[K\r
-the terminal width and reports where the curs…\e[0m\e[K\r
+\e]8;;file:///workspace/layout.go\e\\the terminal width and reports where the curs…\e]8;;\e\\\e[0m\e[K\r
 \e[K\r
 \e[38;2;150;152;150m──────────────────────────────────────────────\e[0m\e[K\r
 \e[3m\e[2m\e[38;2;76;154;44mPress enter to load...\e[0m\e[0m\e[0m\e[K\r

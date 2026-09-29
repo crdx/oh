@@ -481,7 +481,8 @@ func ElideStart(text string, cells int) string {
 }
 
 func closing(text string) string {
-	isOpen := false
+	isStyleOpen := false
+	isHyperlinkOpen := false
 
 	runes := []rune(text)
 	for i := 0; i < len(runes); {
@@ -492,16 +493,23 @@ func closing(text string) string {
 
 		sequence := escape.GetSequence(runes, i)
 		if isSGR(string(runes[i:sequence.End])) {
-			isOpen = !isReset(string(runes[i:sequence.End]))
+			isStyleOpen = !isReset(string(runes[i:sequence.End]))
+		}
+		if sequence.IsHyperlink {
+			isHyperlinkOpen = sequence.Hyperlink != ""
 		}
 		i = sequence.End
 	}
 
-	if isOpen {
-		return reset
+	var result string
+	if isStyleOpen {
+		result += reset
+	}
+	if isHyperlinkOpen {
+		result += escape.HyperlinkClose
 	}
 
-	return ""
+	return result
 }
 
 func isSGR(sequence string) bool {

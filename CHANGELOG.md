@@ -6,6 +6,10 @@
 
 - Apply the active theme before picking sessions
 
+### Drawing
+
+- Ensure clipped hyperlinks don't leak
+
 ### Tool calls
 
 - Let a background job associate to a port

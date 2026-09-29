@@ -307,6 +307,29 @@ func TestElidingLeavesAlreadyClosedStylingAlone(t *testing.T) {
 	}
 }
 
+func TestElidingHyperlinkedTextClosesTheLinkItCutsThrough(t *testing.T) {
+	const opening = "\x1b]8;;file:///workspace/chewy-sardine.txt\x1b\\"
+	text := opening + "chewy-sardine.txt" + escape.HyperlinkClose
+
+	got := Elide(text, 6)
+	if want := opening + "chewy…" + escape.HyperlinkClose; got != want {
+		t.Errorf("Elide(hyperlinked, 6) = %q, want %q", got, want)
+	}
+}
+
+func TestElidingLeavesAlreadyClosedHyperlinksAlone(t *testing.T) {
+	const opening = "\x1b]8;;file:///workspace/red.txt\x1b\\"
+	text := opening + "red.txt" + escape.HyperlinkClose + " and more text"
+
+	got := Elide(text, 11)
+	if want := opening + "red.txt" + escape.HyperlinkClose + " an…"; got != want {
+		t.Errorf("Elide(%q, 11) = %q, want %q", text, got, want)
+	}
+	if strings.Count(got, escape.HyperlinkClose) != 1 {
+		t.Errorf("expected the one hyperlink close it already had, got %q", got)
+	}
+}
+
 func TestElidingNeverCutsThroughAnEscapeSequence(t *testing.T) {
 	const text = "abc\x1b[38;2;150;152;150mdefghij\x1b[0m"
 

@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"crdx.org/oh/internal/app/key"
+	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/util/strutil"
 )
 
@@ -241,7 +242,7 @@ func TestGoldenTheCompletePreviewLifecycleMatchesTheGolden(t *testing.T) {
 				"grep prompt *.go ✓ 1L",
 				"",
 				"The prompt is drawn by layout, which wraps the buffer against",
-				"the terminal width and reports where the cursor landed.",
+				link.RenderURL("the terminal width and reports where the cursor landed.", "file:///workspace/layout.go"),
 			},
 		},
 	}
