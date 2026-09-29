@@ -14,8 +14,9 @@ import (
 )
 
 const (
-	stdinMarker     = "-"
-	defaultCapFlags = "rx"
+	stdinMarker      = "-"
+	optionTerminator = "--"
+	defaultCapFlags  = "rx"
 )
 
 var usage = `
@@ -96,6 +97,10 @@ func Bind() *Input {
 	isSessionPicker := false
 	isModelPicker := false
 	for i := 1; i < len(arguments); i++ {
+		if arguments[i] == optionTerminator {
+			break
+		}
+
 		switch {
 		case (arguments[i] == "-r" || arguments[i] == "--resume") && (i+1 == len(arguments) || strings.HasPrefix(arguments[i+1], "-")):
 			isSessionPicker = true
@@ -120,8 +125,18 @@ func Bind() *Input {
 	parsedFlags := duckopt.MustBind[inputFlags](usage, "$0")
 	parsedFlags.IsSessionPicker = isSessionPicker
 	parsedFlags.IsModelPicker = isModelPicker
+	parsedFlags.Message = promptWithoutOptionTerminator(parsedFlags.Message)
 	parsedFlags.Message = promptAfterStdinMarker(parsedFlags.Message)
 	return &Input{inputFlags: *parsedFlags, SourceSession: sourceSession}
+}
+
+func promptWithoutOptionTerminator(words []string) []string {
+	index := slices.Index(words, optionTerminator)
+	if index == -1 {
+		return words
+	}
+
+	return slices.Delete(words, index, index+1)
 }
 
 func promptAfterStdinMarker(words []string) []string {

@@ -10,6 +10,10 @@
 
 - Ensure clipped hyperlinks don't leak
 
+### Completion and input
+
+- Keep option terminators out of messages
+
 ### Tool calls
 
 - Let a background job associate to a port

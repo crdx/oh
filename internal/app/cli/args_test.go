@@ -240,6 +240,32 @@ func TestALeadingDashNamesThePipeRatherThanThePrompt(t *testing.T) {
 	}
 }
 
+func TestTheOptionTerminatorIsNotPartOfThePrompt(t *testing.T) {
+	for name, example := range map[string]struct {
+		arguments []string
+		want      string
+	}{
+		"before the prompt":        {arguments: []string{"--", "run", "ls", "-la"}, want: "run ls -la"},
+		"within the prompt":        {arguments: []string{"run", "--", "ls", "-la"}, want: "run ls -la"},
+		"before another delimiter": {arguments: []string{"--", "--"}, want: "--"},
+	} {
+		if got := parseOptions(t, example.arguments...).Message; got != example.want {
+			t.Errorf("%s: got %q, want %q", name, got, example.want)
+		}
+	}
+}
+
+func TestOptionsAfterTheOptionTerminatorArePromptWords(t *testing.T) {
+	parsedOptions := parseOptions(t, "--", "-r", "--from", "earlier-session")
+
+	if parsedOptions.Resuming() || parsedOptions.StartingFromSession() {
+		t.Error("expected option-like prompt words not to select a session")
+	}
+	if parsedOptions.Message != "-r --from earlier-session" {
+		t.Errorf("got prompt %q", parsedOptions.Message)
+	}
+}
+
 func TestAPrintedSessionNeedsMoreThanTheStdinMarker(t *testing.T) {
 	if err := bind(t, "-p", "-").Check(false); err == nil {
 		t.Error("expected a printed session with nothing piped to be refused")

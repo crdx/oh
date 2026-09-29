@@ -1,0 +1,5 @@
+"run ls all"                         message="run ls all" picker=false source=""
+"-- run ls -la"                      message="run ls -la" picker=false source=""
+"run -- ls -la"                      message="run ls -la" picker=false source=""
+"-- --"                              message="--" picker=false source=""
+"-- -r --from earlier-session"       message="-r --from earlier-session" picker=false source=""

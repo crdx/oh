@@ -3935,6 +3935,35 @@ func TestGoldenCompletionProtocolMatchesTheGolden(t *testing.T) {
 	}
 }
 
+func TestGoldenPromptArgumentsMatchTheGolden(t *testing.T) {
+	originalArgs := os.Args
+	t.Cleanup(func() { os.Args = originalArgs })
+
+	cases := [][]string{
+		{"run", "ls", "all"},
+		{"--", "run", "ls", "-la"},
+		{"run", "--", "ls", "-la"},
+		{"--", "--"},
+		{"--", "-r", "--from", "earlier-session"},
+	}
+
+	var output strings.Builder
+	for _, arguments := range cases {
+		os.Args = append([]string{"oh"}, arguments...)
+		input := cli.Bind()
+		fmt.Fprintf(
+			&output,
+			"%-36q message=%q picker=%t source=%q\n",
+			strings.Join(arguments, " "),
+			strings.Join(input.Message, " "),
+			input.IsSessionPicker,
+			input.SourceSession,
+		)
+	}
+
+	compareTextWithGolden(t, "prompt-arguments.txt", output.String())
+}
+
 func TestGoldenResumeArgumentsMatchTheGolden(t *testing.T) {
 	originalArgs := os.Args
 	t.Cleanup(func() { os.Args = originalArgs })
@@ -5345,6 +5374,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"picker-menu":             {".ansi", ".screen"},
 		"plain-input":             {".ansi", ".screen"},
 		"print-arguments":         {".txt"},
+		"prompt-arguments":        {".txt"},
 		"queued-messages":         {".ansi", ".screen"},
 		"question-over-call":      {".screen"},
 		"footer-over-calls":       {".screen"},
