@@ -111,7 +111,7 @@ var defaultTheme = Theme{
 		"job_discard":       {Name: "discard", Paint: "status_warning"},
 		"job_prune":         {Name: "prune", Paint: "status_warning"},
 		"job_status":        {Name: "status", Paint: "normal"},
-		"job_output":        {Name: "output", Paint: "normal"},
+		"job_output":        {Name: "cat", Paint: "normal"},
 		"job_wait_any":      {Name: "await", Paint: "normal"},
 		"job_wait_all":      {Name: "await", Paint: "normal"},
 		"job_list":          {Name: "list", Paint: "normal"},

@@ -67,7 +67,7 @@ func New(
 				tool.String("name", fmt.Sprintf("the job name; for start, use one short role such as 'check', not a specific compound such as 'cachecheck'—a live duplicate is automatically numbered, such as 'check-1'; 1–%d characters from [a-z0-9-] (for all actions except 'list', 'prune')", jobs.NameLengthLimit)).Optional(),
 				tool.StringArray("names", "the job names to watch for wait").Optional(),
 				tool.Enum("wait_for", "whether wait returns after any or all watched jobs end", waitForAny, waitForAll).Optional(),
-				tool.Integer("wait_seconds", fmt.Sprintf("how many seconds to wait at most — max %d (default)", int(waitLimit.Seconds()))).Optional(),
+				tool.Integer("wait_seconds", fmt.Sprintf("how many seconds to wait at most — max %s (default)", util.CompactDuration(waitLimit))).Optional(),
 				tool.String("command", "the command line (for action 'start'); if omitted, re-runs previous job by name").Optional(),
 			},
 		},
@@ -96,7 +96,7 @@ func Describe(args Args) tool.CallRendering {
 	case actionWait:
 		qualifier := ""
 		if args.WaitSeconds > 0 {
-			qualifier = fmt.Sprintf("for up to %ds", args.WaitSeconds)
+			qualifier = "for up to " + util.CompactDuration(getWaitLimit(args))
 		}
 		separator := " || "
 		if getWaitFor(args) == waitForAll {

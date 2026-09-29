@@ -10,7 +10,7 @@ list exposed ports ✓
 start docs $ serve docs ✓
 restart docs ✓
 status docs ✓
-output docs ✓
+cat docs ✓
 await docs || build ✓
 await docs && build for up to 20s ✓
 stop docs ✓
@@ -141,7 +141,7 @@ list exposed ports ✓
 start docs $ serve docs ✓
 restart docs ✓
 status docs ✓
-output docs ✓
+cat docs ✓
 await docs || build ✓
 await docs && build for up to 20s ✓
 stop docs ✓
@@ -165,7 +165,7 @@ list expo… ✓
 start docs ✓
 restart d… ✓
 status do… ✓
-output do… ✓
+cat docs ✓
 await doc… ✓
 await doc… ✓
 stop docs ✓
@@ -188,7 +188,7 @@ list exposed ports ✓
 start docs $ serve docs ✓
 restart docs ✓
 status docs ✓
-output docs ✓
+cat docs ✓
 await docs || build ✓
 await docs && build for up to 20s ✓
 stop docs ✓

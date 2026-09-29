@@ -6,6 +6,11 @@
 
 - Apply the active theme before picking sessions
 
+### Tool calls
+
+- Name background job output calls `cat`
+- Format background job wait limits as durations
+
 ## [0.11.0] - 2026-09-29
 
 ### Completion and input

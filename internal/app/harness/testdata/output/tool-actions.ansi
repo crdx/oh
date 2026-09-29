@@ -10,7 +10,7 @@
 \e]8;;oh://tool-result?call=start&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mserve\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=restart&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=status&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
-\e]8;;oh://tool-result?call=output&session=tame-impala\e\\output\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=output&session=tame-impala\e\\cat\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=wait-any&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mdocs || build\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=wait-all&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mdocs && build\e[0m \e[38;2;150;152;150mfor up to 20s\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=stop&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
@@ -142,7 +142,7 @@ list \e[38;2;192;128;80mexposed ports\e[0m \e[38;2;76;154;44m✓\e[0m
 \e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mserve\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mdocs\e[0m \e[38;2;76;154;44m✓\e[0m
 \e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m
 status \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m
-output \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m
+cat \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m
 await \e[38;2;192;128;80mdocs || build\e[0m \e[38;2;76;154;44m✓\e[0m
 await \e[38;2;192;128;80mdocs && build\e[0m \e[38;2;150;152;150mfor up to 20s\e[0m \e[38;2;76;154;44m✓\e[0m
 \e[38;2;207;173;0mstop\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m
@@ -164,7 +164,7 @@ Those are every action label.
 \e]8;;oh://tool-result?call=start&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mserve\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=restart&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=status&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
-\e]8;;oh://tool-result?call=output&session=tame-impala\e\\output\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=output&session=tame-impala\e\\cat\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=wait-any&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mdocs || build\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=wait-all&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mdocs && build\e[0m \e[38;2;150;152;150mfor up to 20s\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=stop&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
@@ -186,7 +186,7 @@ Those are every action label.\r
 \r\e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mserve\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mdocs\e[0m\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=start&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mserve\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=restart&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \rstatus \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=status&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\routput \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=output&session=tame-impala\e\\output\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\rcat \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=output&session=tame-impala\e\\cat\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \rawait \e[38;2;192;128;80mdocs || build\e[0m\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=wait-any&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mdocs || build\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \rawait \e[38;2;192;128;80mdocs && build\e[0m \e[38;2;150;152;150mfor up to 20s\e[0m\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=wait-all&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mdocs && build\e[0m \e[38;2;150;152;150mfor up to 20s\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[38;2;207;173;0mstop\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=stop&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
@@ -208,7 +208,7 @@ Thos\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThose ar\e[K\r\e[8C\e[?25h\e[?2
 \r\e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mserve\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mdocs\e[0m\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=start&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mserve\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=restart&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \rstatus \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=status&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\routput \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=output&session=tame-impala\e\\output\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\rcat \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=output&session=tame-impala\e\\cat\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \rawait \e[38;2;192;128;80mdocs || build\e[0m\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=wait-any&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mdocs || build\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \rawait \e[38;2;192;128;80mdocs && build\e[0m \e[38;2;150;152;150mfor up to 20s\e[0m\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=wait-all&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mdocs && build\e[0m \e[38;2;150;152;150mfor up to 20s\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[38;2;207;173;0mstop\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=stop&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
@@ -230,7 +230,7 @@ Those are every action label.\e[K\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[29
 \r\e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mserve\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mdocs\e[0m\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=start&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mserve\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=restart&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \rstatus \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=status&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\routput \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=output&session=tame-impala\e\\output\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\rcat \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=output&session=tame-impala\e\\cat\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \rawait \e[38;2;192;128;80mdocs || build\e[0m\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=wait-any&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mdocs || build\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \rawait \e[38;2;192;128;80mdocs && build\e[0m \e[38;2;150;152;150mfor up to 20s\e[0m\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=wait-all&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mdocs && build\e[0m \e[38;2;150;152;150mfor up to 20s\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[38;2;207;173;0mstop\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=stop&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
@@ -255,7 +255,7 @@ Thos\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThose ar\e[K\r\e[8C\e[?25h\e[?2
 \e]8;;oh://tool-result?call=start&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=restart&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80md…\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=status&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdo…\e[0m \e[38;2;76;154;44m✓\e[0m\r
-\e]8;;oh://tool-result?call=output&session=tame-impala\e\\output\e]8;;\e\\ \e[38;2;192;128;80mdo…\e[0m \e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=output&session=tame-impala\e\\cat\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=wait-any&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mdoc…\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=wait-all&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mdoc…\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=stop&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
@@ -278,7 +278,7 @@ label.\r
 \e]8;;oh://tool-result?call=start&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mserve\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=restart&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=status&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
-\e]8;;oh://tool-result?call=output&session=tame-impala\e\\output\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=output&session=tame-impala\e\\cat\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=wait-any&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mdocs || build\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=wait-all&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mdocs && build\e[0m \e[38;2;150;152;150mfor up to 20s\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=stop&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
@@ -300,7 +300,7 @@ Those are every action label.\r
 \e]8;;oh://tool-result?call=start&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mserve\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=restart&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=status&session=tame-impala\e\\status\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
-\e]8;;oh://tool-result?call=output&session=tame-impala\e\\output\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=output&session=tame-impala\e\\cat\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=wait-any&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mdocs || build\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=wait-all&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mdocs && build\e[0m \e[38;2;150;152;150mfor up to 20s\e[0m \e[38;2;76;154;44m✓\e[0m\r
 \e]8;;oh://tool-result?call=stop&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;76;154;44m✓\e[0m\r

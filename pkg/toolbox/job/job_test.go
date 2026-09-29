@@ -312,6 +312,14 @@ func TestAJobCallIsRenderedByItsAction(t *testing.T) {
 			args: job.Args{Action: "wait", Names: []string{"build", "lint"}, WaitFor: "any", WaitSeconds: 20},
 			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build || lint", Qualifier: "for up to 20s"},
 		},
+		"wait with formatted limit": {
+			args: job.Args{Action: "wait", Name: "build", WaitSeconds: 270},
+			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build", Qualifier: "for up to 4m 30s"},
+		},
+		"wait with clamped limit": {
+			args: job.Args{Action: "wait", Name: "build", WaitSeconds: 300},
+			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build", Qualifier: "for up to 4m 30s"},
+		},
 		"list": {
 			args: job.Args{Action: "list"},
 			want: tool.CallRendering{Kind: "job_list", Subject: "jobs"},
@@ -341,6 +349,19 @@ func TestTheNameParameterGivesConciseNamingAdvice(t *testing.T) {
 		if !strings.Contains(description, wanted) {
 			t.Errorf("name description %q does not contain %q", description, wanted)
 		}
+	}
+}
+
+func TestTheWaitParameterFormatsItsMaximumAsADuration(t *testing.T) {
+	var description string
+	for _, parameter := range job.New(nil, nil, nil).Schema() {
+		if parameter.Name == "wait_seconds" {
+			description = parameter.Description
+		}
+	}
+
+	if !strings.Contains(description, "max 4m 30s") {
+		t.Errorf("wait_seconds description %q does not format its maximum as a duration", description)
 	}
 }
 

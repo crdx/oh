@@ -6,7 +6,7 @@
 
 start docs $ python3 -m http.serve… ✓ 1L
 status docs ✓ 1L
-output docs ✓ 3L
+cat docs ✓ 3L
 await docs ✓ 3L
 start docs $ pyt… ✗ 1L a job of that na…
 list jobs ✓ 4L ~100t
@@ -230,7 +230,7 @@ t
 
 start docs $ python3 -m http.server 8080; --bind localhost 2L ✓ 1L
 status docs ✓ 1L
-output docs ✓ 3L
+cat docs ✓ 3L
 await docs ✓ 3L
 start docs $ python3 -m http.server 8080 ✗ 1L a job of that name is already running
 list jobs ✓ 4L ~100t
@@ -253,7 +253,7 @@ exceeding its 2s processor limit.
 
 start … ✓ 1L
 status ✓ 1L
-output ✓ 3L
+cat do… ✓ 3L
 await … ✓ 3L
 st… ✗ 1L a …
 … ✓ 4L ~100t
@@ -284,7 +284,7 @@ limit.
 
 start docs $ python3 -m http.server 8080; --bind localhost 2L ✓ 1L
 status docs ✓ 1L
-output docs ✓ 3L
+cat docs ✓ 3L
 await docs ✓ 3L
 start docs $ python3 -m http.server 8080 ✗ 1L a job of that name is already running
 list jobs ✓ 4L ~100t

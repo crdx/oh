@@ -50,7 +50,7 @@ job_restart = { name = "restart", paint = "status_warning" }
 job_discard = { name = "discard", paint = "status_warning" }
 job_prune = { name = "prune", paint = "status_warning" }
 job_status = { name = "status", paint = "normal" }
-job_output = { name = "output", paint = "normal" }
+job_output = { name = "cat", paint = "normal" }
 job_wait_any = { name = "await", paint = "normal" }
 job_wait_all = { name = "await", paint = "normal" }
 job_list = { name = "list", paint = "normal" }
