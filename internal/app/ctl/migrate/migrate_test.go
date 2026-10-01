@@ -18,6 +18,7 @@ import (
 	"github.com/klauspost/compress/zstd"
 
 	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/contextsource"
 	"crdx.org/oh/internal/app/ctl/migrate"
 	"crdx.org/oh/internal/app/interrupt"
 	"crdx.org/oh/internal/app/pathgrant"
@@ -704,6 +705,56 @@ func TestFormatSixteenMigrationMakesExecutionImplicitInTemporaryPathGrants(t *te
 	}
 	if !found || !slices.Equal(restored, want) {
 		t.Errorf("recovered %#v and %t", restored, found)
+	}
+}
+
+func TestFormatSeventeenMigrationStoresContextSourceKindsRatherThanTheirNames(t *testing.T) {
+	directory, name := storedJournal(t,
+		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":17,"id":"one","name":"tame-impala","meta":{`+
+			`"system_context_files":[{"path":"/config/SYSTEM.md","estimated_tokens":700}],`+
+			`"system_context_sources":[{"name":"harness","estimated_tokens":3379}],`+
+			`"session_context_sources":[{"name":"skill catalogue (25 skills)","estimated_tokens":3276},`+
+			`{"name":"skill catalogue (1 skill)","estimated_tokens":30},`+
+			`{"name":"2 skill definitions","estimated_tokens":60},`+
+			`{"name":"harness instructions","estimated_tokens":10}]}}`,
+	)
+
+	if _, err := migrate.Session(options(directory), name); err != nil {
+		t.Fatal(err)
+	}
+
+	storedSession, err := store.Read(directory, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	wantFiles := []contextsource.Source{{Path: "/config/SYSTEM.md", EstimatedTokens: 700}}
+	if !slices.Equal(storedSession.Meta.SystemContextFiles, wantFiles) {
+		t.Errorf("got system files %#v", storedSession.Meta.SystemContextFiles)
+	}
+	wantSystem := []contextsource.Source{{Kind: contextsource.HarnessInstructions, EstimatedTokens: 3379}}
+	if !slices.Equal(storedSession.Meta.SystemContextSources, wantSystem) {
+		t.Errorf("got system sources %#v", storedSession.Meta.SystemContextSources)
+	}
+	wantSession := []contextsource.Source{
+		{Kind: contextsource.SkillDefinitions, Count: 25, EstimatedTokens: 3276},
+		{Kind: contextsource.SkillDefinitions, Count: 1, EstimatedTokens: 30},
+		{Kind: contextsource.SkillDefinitions, Count: 2, EstimatedTokens: 60},
+		{Kind: contextsource.HarnessInstructions, EstimatedTokens: 10},
+	}
+	if !slices.Equal(storedSession.Meta.SessionContextSources, wantSession) {
+		t.Errorf("got session sources %#v", storedSession.Meta.SessionContextSources)
+	}
+}
+
+func TestFormatSeventeenMigrationRefusesAContextSourceItDoesNotKnow(t *testing.T) {
+	directory, name := storedJournal(t,
+		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":17,"id":"one","name":"tame-impala","meta":{`+
+			`"system_context_sources":[{"name":"something else","estimated_tokens":10}]}}`,
+	)
+
+	if _, err := migrate.Session(options(directory), name); err == nil {
+		t.Error("an unknown context source was migrated")
 	}
 }
 

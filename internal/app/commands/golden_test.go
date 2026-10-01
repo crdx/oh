@@ -106,15 +106,15 @@ func TestGoldenContextListingMatchesGolden(t *testing.T) {
 			label: "every context category",
 			sources: ContextSources{
 				SystemSources: []contextsource.Source{
-					{Name: "harness", EstimatedTokens: 12_000},
+					{Kind: contextsource.HarnessInstructions, EstimatedTokens: 12_000},
 					{Path: "/config/SYSTEM.md", EstimatedTokens: 2_000},
-					{Name: "tool definitions (12 tools)", EstimatedTokens: 300},
+					{Kind: contextsource.ToolDefinitions, Count: 12, EstimatedTokens: 300},
 				},
 				ProjectSources: []contextsource.Source{{
 					Path: "/workspace/AGENTS.md", EstimatedTokens: 4_000,
 				}},
 				SessionSources: []contextsource.Source{
-					{Name: "skill catalogue (29 skills)", EstimatedTokens: 300},
+					{Kind: contextsource.SkillDefinitions, Count: 29, EstimatedTokens: 300},
 					{Path: "/config/skills/golang/SKILL.md", EstimatedTokens: 1_000},
 				},
 			},
@@ -122,8 +122,8 @@ func TestGoldenContextListingMatchesGolden(t *testing.T) {
 		{
 			label: "system sources only",
 			sources: ContextSources{SystemSources: []contextsource.Source{
-				{Name: "harness", EstimatedTokens: 4_000},
-				{Name: "tool definitions (4 tools)", EstimatedTokens: 300},
+				{Kind: contextsource.HarnessInstructions, EstimatedTokens: 4_000},
+				{Kind: contextsource.ToolDefinitions, Count: 4, EstimatedTokens: 300},
 			}},
 		},
 		{

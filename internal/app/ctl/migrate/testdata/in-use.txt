@@ -1,6 +1,6 @@
 === screen ===
 [38;2;150;152;150mrebuilt[0m listing metadata of 1 session
-[38;2;150;152;150mcopies kept in [0m/state/sessions_pre_v17
+[38;2;150;152;150mcopies kept in [0m/state/sessions_pre_v18
 [38;2;150;152;150mskipped[0m tame-impala [38;2;150;152;150min use[0m
 [38;2;150;152;150m0 of 1 migrated[0m
 === failure ===

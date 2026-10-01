@@ -30,9 +30,9 @@ func TestStaticContextSourcesAccountForEveryPromptContribution(t *testing.T) {
 	got := identifyStaticContextSources(systemPrompt, files, skills)
 	wantSystemFiles := []contextsource.Source{contextsource.FileFromBytes("/config/SYSTEM.md", len(systemBody))}
 	wantProjectFiles := []contextsource.Source{contextsource.FileFromBytes("/workspace/AGENTS.md", len(projectBody))}
-	wantSystemSources := []contextsource.Source{contextsource.NamedFromBytes("harness", len(harnessBody))}
+	wantSystemSources := []contextsource.Source{contextsource.KindFromBytes(contextsource.HarnessInstructions, len(harnessBody))}
 	wantSessionSources := []contextsource.Source{
-		contextsource.NamedFromBytes("skill catalogue (2 skills)", len(skillCatalogue)),
+		contextsource.CountedFromBytes(contextsource.SkillDefinitions, 2, len(skillCatalogue)),
 	}
 
 	if !slices.Equal(got.systemFiles, wantSystemFiles) {
@@ -53,7 +53,7 @@ func TestStaticContextWithNoFilesOrSkillsIsEntirelyHarness(t *testing.T) {
 	const systemPrompt = "generated context"
 
 	got := identifyStaticContextSources(systemPrompt, nil, nil)
-	want := []contextsource.Source{contextsource.NamedFromBytes("harness", len(systemPrompt))}
+	want := []contextsource.Source{contextsource.KindFromBytes(contextsource.HarnessInstructions, len(systemPrompt))}
 	if !slices.Equal(got.systemSources, want) {
 		t.Errorf("system sources = %v, want %v", got.systemSources, want)
 	}
@@ -66,10 +66,10 @@ func TestCurrentContextSourcesCombineEveryKindWithoutChangingTheFixedSources(t *
 	staticSources := staticContextSources{
 		systemFiles:    []contextsource.Source{{Path: "/config/SYSTEM.md", EstimatedTokens: 700}},
 		projectFiles:   []contextsource.Source{{Path: "/workspace/AGENTS.md", EstimatedTokens: 400}},
-		systemSources:  []contextsource.Source{{Name: "harness", EstimatedTokens: 2_000}},
-		sessionSources: []contextsource.Source{{Name: "skill catalogue (1 skill)", EstimatedTokens: 300}},
+		systemSources:  []contextsource.Source{{Kind: contextsource.HarnessInstructions, EstimatedTokens: 2_000}},
+		sessionSources: []contextsource.Source{{Kind: contextsource.SkillDefinitions, Count: 1, EstimatedTokens: 300}},
 	}
-	toolSource := contextsource.Source{Name: "tool definitions (3 tools)", EstimatedTokens: 500}
+	toolSource := contextsource.Source{Kind: contextsource.ToolDefinitions, Count: 3, EstimatedTokens: 500}
 	events := []agent.Event{
 		{
 			Kind: agent.ToolCallRequestEvent, ID: "skill", Name: "read",
@@ -84,13 +84,13 @@ func TestCurrentContextSourcesCombineEveryKindWithoutChangingTheFixedSources(t *
 	got := currentContextSources(staticSources, &toolSource, events)
 	want := commands.ContextSources{
 		SystemSources: []contextsource.Source{
-			{Name: "harness", EstimatedTokens: 2_000},
+			{Kind: contextsource.HarnessInstructions, EstimatedTokens: 2_000},
 			{Path: "/config/SYSTEM.md", EstimatedTokens: 700},
-			{Name: "tool definitions (3 tools)", EstimatedTokens: 500},
+			{Kind: contextsource.ToolDefinitions, Count: 3, EstimatedTokens: 500},
 		},
 		ProjectSources: []contextsource.Source{{Path: "/workspace/AGENTS.md", EstimatedTokens: 400}},
 		SessionSources: []contextsource.Source{
-			{Name: "skill catalogue (1 skill)", EstimatedTokens: 300},
+			{Kind: contextsource.SkillDefinitions, Count: 1, EstimatedTokens: 300},
 			{Path: "/skills/review/SKILL.md", EstimatedTokens: 501},
 		},
 	}

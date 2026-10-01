@@ -45,6 +45,7 @@ var steps = map[int]step{
 	14: {migrateLine: completeToolCallRendering},
 	15: {migrateLine: forwardKindsReplaceExposeKinds, migrateJournal: dropHostLoopbackPorts},
 	16: {migrateLine: temporaryPathGrantsImplyExecution},
+	17: {migrateLine: contextKindsReplaceNames},
 }
 
 var legacyGrantAccess = map[string]string{

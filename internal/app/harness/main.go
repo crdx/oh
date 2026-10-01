@@ -84,11 +84,8 @@ import (
 )
 
 const (
-	approvalLimit                   = 5 * time.Minute
-	harnessContextSourceName        = "harness"
-	notificationWithdrawalGrace     = 2 * time.Second
-	skillCatalogueSourceNameFormat  = "skill catalogue (%d %s)"
-	toolDefinitionsSourceNameFormat = "tool definitions (%d %s)"
+	approvalLimit               = 5 * time.Minute
+	notificationWithdrawalGrace = 2 * time.Second
 )
 
 type approval struct {
@@ -1141,9 +1138,9 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	toolContextBytes := client.ToolsSize(offeredTools)
 	var toolContextSource *contextsource.Source
 	if toolContextBytes > 0 {
-		toolCount := len(offeredTools)
-		source := contextsource.NamedFromBytes(
-			fmt.Sprintf(toolDefinitionsSourceNameFormat, toolCount, util.PluralNoun(toolCount, "tool")),
+		source := contextsource.CountedFromBytes(
+			contextsource.ToolDefinitions,
+			len(offeredTools),
 			toolContextBytes,
 		)
 		toolContextSource = &source

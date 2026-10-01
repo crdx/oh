@@ -40,10 +40,10 @@ func write(t *testing.T, directory string) string {
 			Path: "/tmp/somewhere/AGENTS.md", EstimatedTokens: 700,
 		}},
 		SystemContextSources: []contextsource.Source{{
-			Name: "harness", EstimatedTokens: 600,
+			Kind: contextsource.HarnessInstructions, EstimatedTokens: 600,
 		}},
 		SessionContextSources: []contextsource.Source{{
-			Name: "skill catalogue (3 skills)", EstimatedTokens: 300,
+			Kind: contextsource.SkillDefinitions, Count: 3, EstimatedTokens: 300,
 		}},
 	})
 	if err != nil {
@@ -124,11 +124,11 @@ func TestASessionReadsBackAsItWasWritten(t *testing.T) {
 	if !reflect.DeepEqual(storedSession.Meta.ProjectContextFiles, wantProjectContextFiles) {
 		t.Errorf("expected project context files %v, got %v", wantProjectContextFiles, storedSession.Meta.ProjectContextFiles)
 	}
-	wantSystemContextSources := []contextsource.Source{{Name: "harness", EstimatedTokens: 600}}
+	wantSystemContextSources := []contextsource.Source{{Kind: contextsource.HarnessInstructions, EstimatedTokens: 600}}
 	if !reflect.DeepEqual(storedSession.Meta.SystemContextSources, wantSystemContextSources) {
 		t.Errorf("expected system context sources %v, got %v", wantSystemContextSources, storedSession.Meta.SystemContextSources)
 	}
-	wantSessionContextSources := []contextsource.Source{{Name: "skill catalogue (3 skills)", EstimatedTokens: 300}}
+	wantSessionContextSources := []contextsource.Source{{Kind: contextsource.SkillDefinitions, Count: 3, EstimatedTokens: 300}}
 	if !reflect.DeepEqual(storedSession.Meta.SessionContextSources, wantSessionContextSources) {
 		t.Errorf("expected session context sources %v, got %v", wantSessionContextSources, storedSession.Meta.SessionContextSources)
 	}

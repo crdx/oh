@@ -1,14 +1,12 @@
 package harness
 
 import (
-	"fmt"
 	"slices"
 
 	"crdx.org/oh/internal/app/commands"
 	"crdx.org/oh/internal/app/contextsource"
 	"crdx.org/oh/internal/app/prompt"
 	"crdx.org/oh/internal/app/skill"
-	"crdx.org/oh/internal/util"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -40,12 +38,12 @@ func identifyStaticContextSources(
 	skillCatalogue := skill.Context(skills)
 	harnessBytes := max(len(systemPrompt)-contextFileBytes-len(skillCatalogue), 0)
 	sources.systemSources = []contextsource.Source{
-		contextsource.NamedFromBytes(harnessContextSourceName, harnessBytes),
+		contextsource.KindFromBytes(contextsource.HarnessInstructions, harnessBytes),
 	}
 	if skillCatalogue != "" {
-		skillCount := len(skills)
-		sources.sessionSources = append(sources.sessionSources, contextsource.NamedFromBytes(
-			fmt.Sprintf(skillCatalogueSourceNameFormat, skillCount, util.PluralNoun(skillCount, "skill")),
+		sources.sessionSources = append(sources.sessionSources, contextsource.CountedFromBytes(
+			contextsource.SkillDefinitions,
+			len(skills),
 			len(skillCatalogue),
 		))
 	}

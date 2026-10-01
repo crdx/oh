@@ -322,7 +322,7 @@ func TestCommandsTypedIntoAnInteractiveSessionAreAnsweredInPlace(t *testing.T) {
 
 	session.typeAndSettle("/ctx")
 	session.typeAndSettle(pressEnter)
-	session.requireShown("tool definitions (")
+	session.requireShown(" tool definitions")
 	session.typeAndSettle(pressEscape)
 
 	session.typeAndSettle("/grants")
