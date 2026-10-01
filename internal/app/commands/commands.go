@@ -15,7 +15,6 @@ import (
 	"crdx.org/oh/internal/app/column"
 	"crdx.org/oh/internal/app/contextsource"
 	"crdx.org/oh/internal/app/editor"
-	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/prompt"
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/style"
@@ -32,6 +31,8 @@ const (
 
 	targetPlaceholder = "<target>"
 )
+
+var errHostCommandsUnavailable = errors.New("commands cannot run on the host here")
 
 type Options struct {
 	ConfigDir        string
@@ -52,7 +53,7 @@ type Options struct {
 	GetInfo           func() (string, error)
 	GetContextSources func() ContextSources
 	StartSession      func(SessionStart) error
-	LimitOutput       func(string) string
+	StartHostCommand  func(directory string, command string) error
 }
 
 type Session struct {
@@ -87,8 +88,7 @@ type commandEnvironment struct {
 	openEditor        func([]string) error
 	openTarget        func([]string) error
 	copyText          func([]string) error
-	runHostCommand    func(string, string) (hostcommand.Result, error)
-	limitOutput       func(string) string
+	startHostCommand  func(directory string, command string) error
 	pathGrants        PathGrants
 	hostToSandbox     HostToSandbox
 	sandboxToHost     SandboxToHost
@@ -138,8 +138,7 @@ func New(options Options) (slash.CommandSet, error) {
 		copyText: func(values []string) error {
 			return terminal.Copy(options.Output, strings.Join(values, "\n"))
 		},
-		runHostCommand:    hostcommand.Run,
-		limitOutput:       options.LimitOutput,
+		startHostCommand:  options.StartHostCommand,
 		pathGrants:        options.PathGrants,
 		hostToSandbox:     options.HostToSandbox,
 		sandboxToHost:     options.SandboxToHost,
@@ -151,11 +150,8 @@ func New(options Options) (slash.CommandSet, error) {
 }
 
 func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
-	if environment.runHostCommand == nil {
-		environment.runHostCommand = hostcommand.Run
-	}
-	if environment.limitOutput == nil {
-		environment.limitOutput = func(output string) string { return output }
+	if environment.startHostCommand == nil {
+		environment.startHostCommand = func(string, string) error { return errHostCommandsUnavailable }
 	}
 	if environment.getContextSources == nil {
 		environment.getContextSources = func() ContextSources { return ContextSources{} }

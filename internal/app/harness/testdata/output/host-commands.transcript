@@ -69,13 +69,13 @@ Exit code: 0
 ## Host command · +5s
 
 ````
-The user ran the following command on the host, producing no output:
+The user started the following command on the host, which was killed at its time limit before it finished or printed anything:
 
 ```bash
 $ sleep 600
 ```
 
-Stopped after its limit of 30s.
+Killed at its time limit of 30s, so it has no exit code. Anything it had not yet done was not done.
 ````
 
 ## Host command · +6s

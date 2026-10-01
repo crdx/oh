@@ -3,6 +3,7 @@ package interaction
 import (
 	"time"
 
+	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/jobs"
@@ -44,6 +45,9 @@ func watched(handler Handler) Handler {
 	}
 	if onTriggerChange := handler.OnTriggerChange; onTriggerChange != nil {
 		handler.OnTriggerChange = func() { defer watch("trigger change")(); onTriggerChange() }
+	}
+	if onHostCommand := handler.OnHostCommand; onHostCommand != nil {
+		handler.OnHostCommand = func(outcome hostcommand.Outcome) { defer watch("host command")(); onHostCommand(outcome) }
 	}
 	if onChange := handler.OnChange; onChange != nil {
 		handler.OnChange = func(failure error) bool { defer watch("config change")(); return onChange(failure) }

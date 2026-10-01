@@ -7,6 +7,7 @@ import (
 	"syscall"
 	"time"
 
+	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/tty"
 	"crdx.org/oh/internal/app/turn"
@@ -39,6 +40,8 @@ type Handler struct {
 	OnTriggerChange       func()
 	OnDraw                func()
 	Watch                 func(work string) func()
+	HostCommands     <-chan hostcommand.Outcome
+	OnHostCommand    func(hostcommand.Outcome)
 }
 
 func Run(terminal *os.File, getNextRefresh func(time.Time) time.Time, handler Handler) {
@@ -63,6 +66,7 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 	hostToSandboxChanges := handler.HostToSandboxChanges
 	questionChanges := handler.QuestionChanges
 	triggerChanges := handler.TriggerChanges
+	hostCommands := handler.HostCommands
 	for {
 		schedule()
 
@@ -113,6 +117,8 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 				continue
 			}
 			handler.OnTriggerChange()
+		case outcome := <-hostCommands:
+			handler.OnHostCommand(outcome)
 		case failure, isOpen := <-changes:
 			if !isOpen {
 				changes = nil

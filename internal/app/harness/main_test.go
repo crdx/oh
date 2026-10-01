@@ -5344,6 +5344,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"context-simulation":      {".prompt"},
 		"context-yolo":            {".prompt"},
 		"host-command":            {".ansi", ".screen"},
+		"host-command-running":    {".ansi", ".screen"},
 		"inputblock":              {".ansi", ".screen"},
 		"pathrefs":                {".ansi", ".screen"},
 		"slashcommands":           {".ansi", ".screen"},
@@ -20481,7 +20482,7 @@ func TestAHostCommandWakesTheConversationWithATurnOfItsOwn(t *testing.T) {
 	self := testConversation(t, &screenOutput)
 	completeTurn(self)
 
-	self.emitCommandEvent(hostCommandRun())
+	self.hostCommandRan(hostCommandRun())
 
 	if !self.currentTurn.Running() {
 		t.Fatal("the command left the conversation asleep, want a turn of its own")
@@ -20509,7 +20510,7 @@ func TestAHostCommandRunDuringATurnJoinsItRatherThanStartingAnother(t *testing.T
 		Stream:  testTurnStream(nil, func(error) {}, turn.State{Running: true}),
 	}
 
-	self.emitCommandEvent(hostCommandRun())
+	self.hostCommandRan(hostCommandRun())
 
 	if len(self.pendingNotices.items) != 0 {
 		t.Errorf("got pending notices %+v, want the running turn to have taken it", self.pendingNotices.items)
@@ -20593,6 +20594,14 @@ func TestGoldenHostCommandNoticesMatchGolden(t *testing.T) {
 			self.notify(hostcommand.RanEvent(hostcommand.Result{
 				Command:      "sleep 600",
 				StoppedAfter: 30 * time.Second,
+			}))
+		}),
+		"interrupted by the user": drawnAt(func(self *App) {
+			self.notify(hostcommand.RanEvent(hostcommand.Result{
+				Command:         "git push",
+				Output:          "Enumerating objects: 5, done.\n",
+				StoppedAfter:    4 * time.Second,
+				IsStoppedByUser: true,
 			}))
 		}),
 	}

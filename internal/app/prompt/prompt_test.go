@@ -1165,3 +1165,40 @@ func TestTitlesAndNotificationsFollowTheirOwnTools(t *testing.T) {
 		})
 	}
 }
+
+func TestCommandsForTheUserAreOfferedAsBangLinesOnlyWhenSomebodyCanTypeThem(t *testing.T) {
+	for name, testCase := range map[string]struct {
+		isInteractive bool
+		handoff       string
+	}{
+		"interactive":     {isInteractive: true, handoff: "Tell the user to apply it with: /!git apply <user's path to patch>"},
+		"non-interactive": {handoff: "Tell the user to apply it with: cd <workspace> && git apply <user's path to patch>"},
+	} {
+		t.Run(name, func(t *testing.T) {
+			got := harnessContext(Config{
+				Workspace:    work.At("/workspace"),
+				SessionName:  "session-id",
+				TmpDir:       "/state/farm/session",
+				HomeDir:      "/state/home",
+				CurrentCaps:  caps.Read | caps.Shell,
+				OfferedTools: []string{"bash"},
+				Conditions:   conditions.Conditions{Interactive: testCase.isInteractive},
+			})
+
+			for _, rule := range []string{
+				"# Commands for the User",
+				"give it as a /! line, such as /!git push, for them to paste into their input",
+				"with bash on the host in the workspace, so leave out any cd to the workspace",
+				"You receive the command, what it printed, and its exit code",
+				"no terminal to read from and is killed after 30s",
+			} {
+				if isPresent := strings.Contains(got, rule); isPresent != testCase.isInteractive {
+					t.Errorf("rule %q presence is %t, want %t: %q", rule, isPresent, testCase.isInteractive, got)
+				}
+			}
+			if !strings.Contains(got, testCase.handoff) {
+				t.Errorf("system prompt does not contain %q: %q", testCase.handoff, got)
+			}
+		})
+	}
+}

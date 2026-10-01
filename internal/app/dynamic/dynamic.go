@@ -79,6 +79,17 @@ func (self *Block) Add(label Label, timeLimit time.Duration) int {
 	return index
 }
 
+func RunningLine(label Label, elapsedTime time.Duration, timeLimit time.Duration, columns int) string {
+	startedAt := time.Unix(0, 0)
+	block := Block{
+		isSlow:       elapsedTime >= reveal,
+		spinnerFrame: int(elapsedTime / spinner.Activity.RefreshInterval()),
+		heldAt:       startedAt.Add(elapsedTime),
+	}
+
+	return block.line(row{label: label, startedAt: startedAt, timeLimit: timeLimit}, columns)
+}
+
 func (self *Block) HoldTiming() {
 	self.change(func() {
 		if self.heldAt.IsZero() {

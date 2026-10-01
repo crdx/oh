@@ -4,9 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"os"
 	"os/exec"
 	"strconv"
 	"strings"
+	"syscall"
 	"time"
 
 	"crdx.org/oh/internal/util"
@@ -17,37 +19,60 @@ import (
 const Ran agent.Kind = "host_command_ran"
 
 const (
-	timeLimit = 30 * time.Second
+	TimeLimit = 30 * time.Second
 	waitDelay = time.Second
+
+	stopPrecision = 100 * time.Millisecond
 
 	shortestFence      = 3
 	shellLanguage      = "bash"
 	commandPrompt      = "$ "
 	continuationPrompt = "> "
+
+	killedNote = ", so it has no exit code. Anything it had not yet done was not done."
 )
 
 type Result struct {
-	Command      string        `json:"command"`
-	Output       string        `json:"output,omitempty"`
-	ExitCode     int           `json:"exit_code,omitempty"`
-	StoppedAfter time.Duration `json:"stopped_after,omitempty"`
+	Command         string        `json:"command"`
+	Output          string        `json:"output,omitempty"`
+	ExitCode        int           `json:"exit_code,omitempty"`
+	StoppedAfter    time.Duration `json:"stopped_after,omitempty"`
+	IsStoppedByUser bool          `json:"stopped_by_user,omitempty"`
 }
 
-func Run(directory string, command string) (Result, error) {
-	runContext, cancel := context.WithTimeout(context.Background(), timeLimit)
+type Outcome struct {
+	Result  Result
+	Failure error
+}
+
+func Run(stopContext context.Context, directory string, command string, output *Output) (Result, error) {
+	startedAt := time.Now()
+	runContext, cancel := context.WithTimeout(stopContext, TimeLimit)
 	defer cancel()
 
 	//nolint:gosec // the person at the keyboard typed this command themselves
 	shell := exec.CommandContext(runContext, "bash", "-c", command)
 	shell.Dir = directory
 	shell.Stdin = nil
+	shell.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
+	shell.Cancel = func() error {
+		return syscall.Kill(-shell.Process.Pid, syscall.SIGKILL)
+	}
 	shell.WaitDelay = waitDelay
+	shell.Stdout = output
+	shell.Stderr = output
 
-	output, err := shell.CombinedOutput()
-	result := Result{Command: command, Output: string(output)}
+	err := runBesideTerminal(shell, output)
+	result := Result{Command: command, Output: output.Settled()}
 
-	if errors.Is(runContext.Err(), context.DeadlineExceeded) {
-		result.StoppedAfter = timeLimit
+	switch {
+	case stopContext.Err() != nil:
+		result.StoppedAfter = time.Since(startedAt).Round(stopPrecision)
+		result.IsStoppedByUser = true
+
+		return result, nil
+	case errors.Is(runContext.Err(), context.DeadlineExceeded):
+		result.StoppedAfter = TimeLimit
 
 		return result, nil
 	}
@@ -63,6 +88,26 @@ func Run(directory string, command string) (Result, error) {
 	return result, nil
 }
 
+func runBesideTerminal(shell *exec.Cmd, output *Output) error {
+	commandTerminal, err := openTerminal()
+	if err != nil {
+		return shell.Run()
+	}
+	defer commandTerminal.close()
+
+	shell.ExtraFiles = []*os.File{commandTerminal.device}
+	shell.SysProcAttr.Setctty = true
+	shell.SysProcAttr.Ctty = terminalDescriptor
+	commandTerminal.copyTo(output)
+
+	if err := shell.Start(); err != nil {
+		return err
+	}
+	commandTerminal.started()
+
+	return shell.Wait()
+}
+
 func RanEvent(result Result) agent.Event {
 	encodedResult, err := json.Marshal(result)
 	if err != nil {
@@ -72,25 +117,61 @@ func RanEvent(result Result) agent.Event {
 	return agent.Event{Kind: Ran, Name: result.Command, State: encodedResult}
 }
 
-func Notice(event agent.Event) (string, bool) {
+func IsStoppedByUser(event agent.Event) bool {
+	result, isRead := read(event)
+
+	return isRead && result.IsStoppedByUser
+}
+
+func read(event agent.Event) (Result, bool) {
 	var result Result
 	if err := json.Unmarshal(event.State, &result); err != nil || result.Command == "" {
+		return Result{}, false
+	}
+
+	return result, true
+}
+
+func Notice(event agent.Event) (string, bool) {
+	result, isRead := read(event)
+	if !isRead {
 		return "", false
 	}
 
 	output := strings.TrimRight(result.Output, "\n")
-	lede := "The user ran the following command on the host:"
-	if strings.TrimSpace(output) == "" {
-		lede = "The user ran the following command on the host, producing no output:"
-	}
+	hasOutput := strings.TrimSpace(output) != ""
+	paragraphs := []string{lede(result, hasOutput), fenced(shellLanguage, prompted(result.Command))}
 
-	paragraphs := []string{lede, fenced(shellLanguage, prompted(result.Command))}
-
-	if strings.TrimSpace(output) != "" {
-		paragraphs = append(paragraphs, "Output:", fenced("", output))
+	if hasOutput {
+		paragraphs = append(paragraphs, outputHeading(result), fenced("", output))
 	}
 
 	return strings.Join(append(paragraphs, statusNote(result)), "\n\n"), true
+}
+
+func lede(result Result, hasOutput bool) string {
+	switch {
+	case result.IsStoppedByUser && hasOutput:
+		return "The user started the following command on the host, then interrupted it before it finished:"
+	case result.IsStoppedByUser:
+		return "The user started the following command on the host, then interrupted it before it finished or printed anything:"
+	case result.StoppedAfter > 0 && hasOutput:
+		return "The user started the following command on the host, which was killed at its time limit before it finished:"
+	case result.StoppedAfter > 0:
+		return "The user started the following command on the host, which was killed at its time limit before it finished or printed anything:"
+	case hasOutput:
+		return "The user ran the following command on the host:"
+	}
+
+	return "The user ran the following command on the host, producing no output:"
+}
+
+func outputHeading(result Result) string {
+	if result.StoppedAfter > 0 || result.IsStoppedByUser {
+		return "Output up to the point it was killed, which may be incomplete:"
+	}
+
+	return "Output:"
 }
 
 func fenced(language string, body string) string {
@@ -126,8 +207,12 @@ func prompted(command string) string {
 }
 
 func statusNote(result Result) string {
+	if result.IsStoppedByUser {
+		return "Interrupted by the user after " + util.CompactDuration(result.StoppedAfter) + killedNote
+	}
+
 	if result.StoppedAfter > 0 {
-		return "Stopped after its limit of " + util.CompactDuration(result.StoppedAfter) + "."
+		return "Killed at its time limit of " + util.CompactDuration(result.StoppedAfter) + killedNote
 	}
 
 	return "Exit code: " + strconv.Itoa(result.ExitCode)

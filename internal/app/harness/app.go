@@ -24,7 +24,6 @@ import (
 	"crdx.org/oh/internal/app/environment"
 	"crdx.org/oh/internal/app/experimental"
 	"crdx.org/oh/internal/app/feedback"
-	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/input"
 	"crdx.org/oh/internal/app/interaction"
 	"crdx.org/oh/internal/app/interrupt"
@@ -224,6 +223,7 @@ type App struct {
 	startedAt       time.Time
 	keyboard        *os.File
 	termination     terminationState
+	hostCommand     hostCommandState
 	now             func() time.Time
 }
 
@@ -310,7 +310,10 @@ func (self *App) begin(message string) cycle.Transition {
 		OnTriggerChange:       self.receiveTriggerChange,
 		OnDraw:                func() { self.drawAfterEvent(inputLine) },
 		Watch:                 self.watchStalls,
+		HostCommands:     self.hostCommandOutcomes(),
+		OnHostCommand:    self.hostCommandEnded,
 	})
+	self.endHostCommand()
 
 	return self.transition
 }
@@ -424,7 +427,7 @@ func (self *App) apply(inputLine *edit.Input, history *edit.History, keypress ke
 		return true
 	}
 
-	action := inputLine.Apply(keypress, self.currentTurn.Running())
+	action := inputLine.Apply(keypress, self.currentTurn.Running() || self.isHostCommandUnderway())
 	if inputLine.Text() != previousText {
 		self.speedDial.stop()
 		self.feedback.Dismiss()
@@ -443,6 +446,9 @@ func (self *App) apply(inputLine *edit.Input, history *edit.History, keypress ke
 		self.continueOrFlush(inputLine, history)
 
 	case edit.CancelTurn:
+		if self.stopHostCommand() {
+			break
+		}
 		if !self.takeBackInterjection(inputLine) {
 			self.cancelTurn(stopKeyCause(keypress))
 		}
@@ -574,8 +580,6 @@ func (self *App) handleCommand(message string) dispatch.Result {
 
 func (self *App) emitCommandEvent(event agent.Event) {
 	switch event.Kind {
-	case hostcommand.Ran:
-		self.hostCommandRan(event)
 	case portgrant.SandboxToHostChange, portgrant.HostToSandboxChange:
 		self.queueAccessChange(event)
 	case pathgrant.Change:
@@ -603,12 +607,6 @@ func (self *App) finishAccessChange() {
 		return
 	}
 	self.refreshPendingMessages()
-}
-
-func (self *App) hostCommandRan(event agent.Event) {
-	if self.holdNotice(event) {
-		self.startTurn()
-	}
 }
 
 func (self *App) holdNotice(event agent.Event) bool {
@@ -977,6 +975,7 @@ func (self *App) show(inputLine *edit.Input) {
 			frame, columns,
 			segment.BottomLeft, segment.BottomCenter, segment.BottomRight,
 		),
+		Activity:      self.hostCommandRows(columns),
 		Status:        self.statusRows(statusWidth),
 		FrameFeedback: isFeedbackFramed,
 		Question:      self.questionRows(columns),
@@ -1324,6 +1323,7 @@ func (self *App) nextRefresh(at time.Time) time.Time {
 		self.feedback.NextRefresh(at),
 		self.nextAnswerRefresh(at),
 		self.nextQuestionAnnouncement(),
+		self.nextHostCommandRefresh(at),
 	)
 }
 
@@ -1595,6 +1595,7 @@ func (self *App) acceptPlainInput(history *edit.History, message string) {
 	}
 
 	history.Add(message)
+	self.awaitHostCommand()
 	if self.currentTurn.Running() {
 		self.waitForCurrentTurn()
 	}

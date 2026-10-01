@@ -1,4 +1,4 @@
-{"kind":"head","version":15,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant.","conditions":{"unix_sockets":true,"ipv6":true,"interactive":true}}}
+{"kind":"head","version":17,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant.","conditions":{"unix_sockets":true,"ipv6":true,"interactive":true}}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"listen on a Unix socket"}}
 {"kind":"event","event":{"kind":"model_message","text":"A socket beneath /tmp it is."}}
@@ -8,7 +8,7 @@
 {"kind":"event","event":{"kind":"conditions_change","state":{"known":{"unix_sockets":true,"ipv6":true,"interactive":true},"current":{"unix_sockets":false,"ipv6":false,"interactive":false}}}}
 {"kind":"event","event":{"kind":"user_message","text":"listen on it again"}}
 {"kind":"event","event":{"kind":"model_message","text":"Not any more, so 127.0.0.1 it is."}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Unix sockets no longer work.\n\nIPv6 unavailable; use 127.0.0.1.\n\nSession is non-interactive; questions and approvals are unavailable, and a background job will not wake the conversation when it finishes."}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Unix sockets no longer work.\n\nIPv6 unavailable; use 127.0.0.1.\n\nSession is non-interactive; questions, approvals, and /! commands for the user to run are unavailable, and a background job will not wake the conversation when it finishes."}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"listen on it again"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Not any more, so 127.0.0.1 it is."}]}}
 {"kind":"turn_completion","turn":{}}

@@ -124,10 +124,10 @@ func addressNotice(isIPv6Reachable bool) string {
 
 func interactionNotice(isInteractive bool) string {
 	if isInteractive {
-		return "Session is interactive; questions and approvals are available, and a background job can wake the conversation when it finishes."
+		return "Session is interactive; questions, approvals, and /! commands for the user to run are available, and a background job can wake the conversation when it finishes."
 	}
 
-	return "Session is non-interactive; questions and approvals are unavailable, and a background job will not wake the conversation when it finishes."
+	return "Session is non-interactive; questions, approvals, and /! commands for the user to run are unavailable, and a background job will not wake the conversation when it finishes."
 }
 
 const Change agent.Kind = "conditions_change"

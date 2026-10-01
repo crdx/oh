@@ -86,6 +86,7 @@ type Block struct {
 	Top           Ruler
 	Input         edit.Frame
 	Bottom        Ruler
+	Activity      []string
 	Status        []string
 	FrameFeedback bool
 	Question      []string
@@ -94,7 +95,7 @@ type Block struct {
 }
 
 func (self Block) Rows(width int) ([]string, int, int) {
-	rows := make([]string, 0, len(self.Status)+len(self.Input.Rows)+len(self.Dropdown)+4)
+	rows := make([]string, 0, len(self.Activity)+len(self.Status)+len(self.Input.Rows)+len(self.Dropdown)+4)
 
 	top := self.Top
 	if self.Input.IsSearching && !self.isAsking() {
@@ -110,6 +111,7 @@ func (self Block) Rows(width int) ([]string, int, int) {
 	rule := self.rule()
 	statusRows, topWidth := self.renderStatus(width, rule)
 
+	rows = append(rows, self.Activity...)
 	rows = append(rows, statusRows...)
 	topRule := top.render(topWidth, rule)
 	if topWidth != width {
@@ -123,7 +125,7 @@ func (self Block) Rows(width int) ([]string, int, int) {
 	}
 	rows = append(rows, bottom.render(width, rule))
 
-	return rows, len(statusRows) + bodyRow + 1, bodyColumn
+	return rows, len(self.Activity) + len(statusRows) + bodyRow + 1, bodyColumn
 }
 
 func (self Block) renderStatus(width int, rule style.Style) ([]string, int) {

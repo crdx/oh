@@ -2,31 +2,29 @@ package commands
 
 import (
 	"errors"
-	"strings"
 	"testing"
 
-	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/work"
 )
 
-func TestTheShellCommandRunsWhatFollowsItVerbatim(t *testing.T) {
+func TestTheShellCommandStartsWhatFollowsItVerbatim(t *testing.T) {
 	workspaceDirectory := t.TempDir()
-	var ranIn string
-	var ranCommand string
+	var startedIn string
+	var startedCommand string
 	commands := newCommandRegistry(t, commandEnvironment{
 		workspace: work.At(workspaceDirectory),
-		runHostCommand: func(directory string, command string) (hostcommand.Result, error) {
-			ranIn = directory
-			ranCommand = command
+		startHostCommand: func(directory string, command string) error {
+			startedIn = directory
+			startedCommand = command
 
-			return hostcommand.Result{Command: command, Output: "readme\n"}, nil
+			return nil
 		},
 	})
 
 	for _, input := range []string{"/!ls -la | wc -l", "/! ls -la | wc -l"} {
 		t.Run(input, func(t *testing.T) {
-			ranIn, ranCommand = "", ""
+			startedIn, startedCommand = "", ""
 			invocation, found := commands.Find(input)
 			if !found {
 				t.Fatal("expected the shell command to be found")
@@ -36,52 +34,25 @@ func TestTheShellCommandRunsWhatFollowsItVerbatim(t *testing.T) {
 			if err := invocation.Command.Run(context, invocation.Arguments); err != nil {
 				t.Fatal(err)
 			}
-			if ranCommand != "ls -la | wc -l" {
-				t.Errorf("got command %q", ranCommand)
+			if startedCommand != "ls -la | wc -l" {
+				t.Errorf("got command %q", startedCommand)
 			}
-			if ranIn != workspaceDirectory {
-				t.Errorf("got directory %q, want %q", ranIn, workspaceDirectory)
+			if startedIn != workspaceDirectory {
+				t.Errorf("got directory %q, want %q", startedIn, workspaceDirectory)
 			}
-			if len(context.events) != 1 || context.events[0].Kind != hostcommand.Ran {
-				t.Fatalf("got events %+v", context.events)
-			}
-			notice, isSaid := hostcommand.Notice(context.events[0])
-			if !isSaid || !strings.Contains(notice, "ls -la | wc -l") {
-				t.Errorf("got notice %q", notice)
+			if len(context.events) != 0 {
+				t.Errorf("got events %+v, want the command's end to be reported when it comes", context.events)
 			}
 		})
 	}
 }
 
-func TestTheShellCommandCapsWhatItTellsTheModel(t *testing.T) {
-	commands := newCommandRegistry(t, commandEnvironment{
-		runHostCommand: func(string, string) (hostcommand.Result, error) {
-			return hostcommand.Result{Command: "ls", Output: "a very long listing"}, nil
-		},
-		limitOutput: func(string) string { return "a very…" },
-	})
-
-	invocation, found := commands.Find("/!ls")
-	if !found {
-		t.Fatal("expected the shell command to be found")
-	}
-	context := &commandTestContext{}
-	if err := invocation.Command.Run(context, invocation.Arguments); err != nil {
-		t.Fatal(err)
-	}
-
-	notice, isSaid := hostcommand.Notice(context.events[0])
-	if !isSaid || !strings.Contains(notice, "\na very…\n") {
-		t.Errorf("got notice %q", notice)
-	}
-}
-
 func TestTheShellCommandNeedsSomethingToRun(t *testing.T) {
 	commands := newCommandRegistry(t, commandEnvironment{
-		runHostCommand: func(string, string) (hostcommand.Result, error) {
+		startHostCommand: func(string, string) error {
 			t.Error("the command ran with nothing to run")
 
-			return hostcommand.Result{}, nil
+			return nil
 		},
 	})
 
@@ -98,23 +69,29 @@ func TestTheShellCommandNeedsSomethingToRun(t *testing.T) {
 	}
 }
 
-func TestAShellThatCannotStartIsReportedRatherThanSent(t *testing.T) {
-	failure := errors.New("bash could not start")
+func TestAShellThatCannotStartIsReported(t *testing.T) {
+	failure := errors.New("a command is already running")
 	commands := newCommandRegistry(t, commandEnvironment{
-		runHostCommand: func(string, string) (hostcommand.Result, error) {
-			return hostcommand.Result{}, failure
-		},
+		startHostCommand: func(string, string) error { return failure },
 	})
 
 	invocation, found := commands.Find("/!ls")
 	if !found {
 		t.Fatal("expected the shell command to be found")
 	}
-	context := &commandTestContext{}
-	if err := invocation.Command.Run(context, invocation.Arguments); !errors.Is(err, failure) {
+	if err := invocation.Command.Run(&commandTestContext{}, invocation.Arguments); !errors.Is(err, failure) {
 		t.Fatalf("got error %v", err)
 	}
-	if len(context.events) != 0 {
-		t.Errorf("got events %+v", context.events)
+}
+
+func TestTheShellCommandIsRefusedWhereNothingCanRunIt(t *testing.T) {
+	commands := newCommandRegistry(t, commandEnvironment{workspace: work.At(t.TempDir())})
+
+	invocation, found := commands.Find("/!ls")
+	if !found {
+		t.Fatal("expected the shell command to be found")
+	}
+	if err := invocation.Command.Run(&commandTestContext{}, invocation.Arguments); !errors.Is(err, errHostCommandsUnavailable) {
+		t.Fatalf("got error %v", err)
 	}
 }

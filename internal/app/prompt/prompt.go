@@ -14,11 +14,13 @@ import (
 	"crdx.org/hereduck"
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/conditions"
+	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/shell"
 	"crdx.org/oh/internal/app/skill"
 	"crdx.org/oh/internal/app/toolset"
 	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/internal/util/strutil"
 )
@@ -48,6 +50,7 @@ var (
 		"stateRules":               stateRules,
 		"scratchRules":             scratchRules,
 		"waitingForUserSection":    waitingForUserSection,
+		"userCommandSection":       userCommandSection,
 		"readOnlyWorkspaceSection": readOnlyWorkspaceSection,
 		"homeWriteRule":            homeWriteRule,
 		"shellSandbox":             shellSandbox,
@@ -110,7 +113,7 @@ var (
 		These states can change at any time. You will be told what changed when it does.
 		When a state blocks the work and no workflow below covers it, ask the user to change that state.
 
-		{{ titleSection . }}{{ notifySection . }}{{ waitingForUserSection . }}{{ readOnlyWorkspaceSection . }}
+		{{ titleSection . }}{{ notifySection . }}{{ userCommandSection . }}{{ waitingForUserSection . }}{{ readOnlyWorkspaceSection . }}
 	`)))
 )
 
@@ -717,6 +720,22 @@ func waitingForUserSection(data harnessContextTemplateData) string {
 	}, "\n") + "\n\n"
 }
 
+func userCommandSection(data harnessContextTemplateData) string {
+	if !data.Conditions.Interactive {
+		return ""
+	}
+
+	return strings.Join([]string{
+		"# Commands for the User",
+		"",
+		"- When the user needs to run a command, give it as a /! line, such as /!git push, for them to paste into their input",
+		"- /! runs the rest of its line, and any lines after it, with bash on the host in the workspace, so leave out any cd to the workspace",
+		"- You receive the command, what it printed, and its exit code, or are told it was interrupted or killed, so you can carry on from its result",
+		"- It has no terminal to read from and is killed after " + util.CompactDuration(hostcommand.TimeLimit) +
+			", so give anything interactive or longer-running as an ordinary command for the user's own terminal",
+	}, "\n") + "\n\n"
+}
+
 func readOnlyWorkspaceSection(data harnessContextTemplateData) string {
 	if !data.ShellOffered {
 		return ""
@@ -743,12 +762,17 @@ func readOnlyWorkspaceSection(data harnessContextTemplateData) string {
 			"\t- Have the watcher check immediately and exit only when the same standalone or series-aware reverse-apply check proves the full handoff was applied",
 		)
 	}
-	lines = append(
-		lines,
-		"\t- Tell the user to apply it with: cd <workspace> && git apply <user's path to patch>",
-	)
+	lines = append(lines, patchHandoffRule(data.Conditions.Interactive))
 
 	return strings.Join(lines, "\n")
+}
+
+func patchHandoffRule(isInteractive bool) string {
+	if isInteractive {
+		return "\t- Tell the user to apply it with: /!git apply <user's path to patch>"
+	}
+
+	return "\t- Tell the user to apply it with: cd <workspace> && git apply <user's path to patch>"
 }
 
 func shellSandbox(isYolo bool) string {

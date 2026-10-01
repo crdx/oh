@@ -1195,13 +1195,10 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 			GetCurrent: hostToSandbox.GetCurrent,
 			GetURL:     hostToSandbox.URL,
 		},
-		SandboxToHost: commands.SandboxToHost{
-			Expose:     sandboxToHost.Expose,
-			Revoke:     sandboxToHost.Revoke,
-			GetCurrent: sandboxToHost.GetCurrent,
+		Jobs: managedJobs(jobManager),
+		StartHostCommand: func(directory string, command string) error {
+			return app.startHostCommand(directory, command)
 		},
-		Jobs:        managedJobs(jobManager),
-		LimitOutput: func(output string) string { return app.withinToolOutputLimit(output) },
 		GetInfo: func() (string, error) {
 			return app.display.bar.RenderInfo(segment.Context{})
 		},
