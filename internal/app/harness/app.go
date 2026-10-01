@@ -532,8 +532,18 @@ func (self *App) pasteImage(inputLine *edit.Input, result paste.Result) bool {
 
 	self.feedback.Dismiss()
 	inputLine.Insert(path)
+	if !isWhitespaceAtCursor(inputLine) {
+		inputLine.Insert(" ")
+	}
 
 	return true
+}
+
+func isWhitespaceAtCursor(inputLine *edit.Input) bool {
+	runes := inputLine.Runes()
+	cursor := inputLine.Cursor()
+
+	return cursor < len(runes) && unicode.IsSpace(runes[cursor])
 }
 
 func (self *App) showPasteFailure(message string) {

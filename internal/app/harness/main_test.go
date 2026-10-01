@@ -19494,6 +19494,45 @@ func TestAPastedImageIsSavedAndItsPathInsertedAtTheCursor(t *testing.T) {
 	}
 }
 
+func TestAPastedImagePathIsFollowedByASpaceUnlessWhitespaceFollowsIt(t *testing.T) {
+	cases := []struct {
+		name   string
+		before string
+		after  string
+		want   string
+	}{
+		{"at the end", "look at ", "", "look at /drops/image.png "},
+		{"before a word", "look at ", "now", "look at /drops/image.png now"},
+		{"before a space", "look at ", " now", "look at /drops/image.png now"},
+		{"before a new line", "look at ", "\nnow", "look at /drops/image.png\nnow"},
+	}
+
+	for _, testCase := range cases {
+		t.Run(testCase.name, func(t *testing.T) {
+			self := slashCommandFixture(t, caps.Read)
+			self.screen = output.New(&bytes.Buffer{})
+			self.savePastedImage = savedAs("/drops/image.png")
+
+			inputLine := edit.NewInput(nil)
+			inputLine.SetText(testCase.before + testCase.after)
+			for range len([]rune(testCase.after)) {
+				inputLine.Apply(key.Key{Code: key.Left}, false)
+			}
+
+			for _, keypress := range slices.Concat(
+				pasteEvent("image/png"),
+				pasteContent("image/png", []byte("\x89PNG")),
+			) {
+				self.handleKeypressAndShowInput(inputLine, nil, keypress)
+			}
+
+			if got := inputLine.Text(); got != testCase.want {
+				t.Errorf("pasted input is %q, want %q", got, testCase.want)
+			}
+		})
+	}
+}
+
 func TestAPastedImageIsAskedForWithTheOneTimeTokenTheTerminalGave(t *testing.T) {
 	self := slashCommandFixture(t, caps.Read)
 	var screenOutput strings.Builder

@@ -40,6 +40,7 @@
 - Hide the "no matches" dropdown on `/!`
 - Fix input wrapping cursor position issue
 - Scroll a tall block with up and down keys
+- Add a space after a pasted image's path
 
 ### Host commands
 

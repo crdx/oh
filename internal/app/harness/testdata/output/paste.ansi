@@ -100,13 +100,13 @@ conversation remains in scrollback\e[?2026h\e[?25l\e[?7l\r
 \r\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 review \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[7C\e[?25h\e[?2026l\e]5522;type=read:pw=b25lLXRpbWUtdG9rZW4=:name=UGFzdGUgZXZlbnQ=;aW1hZ2UvcG5n\e\\\e[?2026h\e[?25l\rreview /state/sessions/tame-impala/drops/image-123.png\e[K\r\e[54C\e[?25h\e[?2026l
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[7C\e[?25h\e[?2026l\e]5522;type=read:pw=b25lLXRpbWUtdG9rZW4=:name=UGFzdGUgZXZlbnQ=;aW1hZ2UvcG5n\e\\\e[?2026h\e[?25l\rreview /state/sessions/tame-impala/drops/image-123.png \e[K\r\e[55C\e[?25h\e[?2026l
 === 8 an image arriving in chunks ===
 conversation remains in scrollback\e[?2026h\e[?25l\e[?7l\r
 \r\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 review \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[7C\e[?25h\e[?2026l\e]5522;type=read:pw=b25lLXRpbWUtdG9rZW4=:name=UGFzdGUgZXZlbnQ=;aW1hZ2UvcG5n\e\\\e[?2026h\e[?25l\rreview /state/sessions/tame-impala/drops/image-456.png\e[K\r\e[54C\e[?25h\e[?2026l
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[7C\e[?25h\e[?2026l\e]5522;type=read:pw=b25lLXRpbWUtdG9rZW4=:name=UGFzdGUgZXZlbnQ=;aW1hZ2UvcG5n\e\\\e[?2026h\e[?25l\rreview /state/sessions/tame-impala/drops/image-456.png \e[K\r\e[55C\e[?25h\e[?2026l
 === 9 a long pasted text after typed prose ===
 conversation remains in scrollback\e[?2026h\e[?25l\e[?7l\r
 \r\e[K\r
