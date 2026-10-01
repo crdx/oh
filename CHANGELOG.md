@@ -89,6 +89,7 @@
 - Mandate tall Mermaid diagrams, not wide
 - Give a workspace that isn't a repository its own read-only workflow
 - Tell the model whether the session is interactive
+- Say how to get a refused lookup or fetch tool granted
 - Keep git from finding a repository above a read-only workspace when applying its patches
 
 ## [0.11.0] - 2026-09-29

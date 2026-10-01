@@ -1270,6 +1270,57 @@ func TestTheStateSaysWhetherTheSessionIsInteractive(t *testing.T) {
 	}
 }
 
+func TestARefusedNetworkToolSaysHowItIsGranted(t *testing.T) {
+	for name, testCase := range map[string]struct {
+		currentCaps   caps.Set
+		isInteractive bool
+		wanted        []string
+	}{
+		"interactive": {
+			currentCaps:   caps.Read,
+			isInteractive: true,
+			wanted: []string{
+				"The lookup tool is refused; do not call it unless the user grants it with ctrl+x l",
+				"The fetch tool is refused; do not call it unless the user grants it with ctrl+x n",
+			},
+		},
+		"non-interactive": {
+			currentCaps: caps.Read,
+			wanted: []string{
+				"The lookup tool is refused; do not call it\n",
+				"The fetch tool is refused; do not call it\n",
+			},
+		},
+		"granted": {
+			currentCaps:   caps.Read | caps.Lookup | caps.Network,
+			isInteractive: true,
+			wanted: []string{
+				"The lookup tool is granted external network access\n",
+				"The fetch tool is granted external network access\n",
+			},
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			got := harnessContext(Config{
+				Workspace:      work.At("/workspace"),
+				SessionName:    "session-id",
+				TmpDir:         "/state/farm/session",
+				HomeDir:        "/state/home",
+				CurrentCaps:    testCase.currentCaps,
+				OfferedTools:   []string{"lookup", "fetch"},
+				NetworkGranted: testCase.currentCaps.Has(caps.Network),
+				Conditions:     conditions.Conditions{Interactive: testCase.isInteractive},
+			})
+
+			for _, want := range testCase.wanted {
+				if !strings.Contains(got, want) {
+					t.Errorf("harness context does not contain %q: %q", want, got)
+				}
+			}
+		})
+	}
+}
+
 func TestAWorkspaceInsideARepositoryIsKeptFromIt(t *testing.T) {
 	repository := t.TempDir()
 	if err := os.MkdirAll(filepath.Join(repository, ".git"), 0o700); err != nil {

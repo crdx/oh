@@ -644,13 +644,26 @@ func networkToolRules(data harnessContextTemplateData) []string {
 	var lines []string
 
 	if data.LookupOffered {
-		lines = append(lines, "- The lookup tool is "+lookupAccess(data.LookupGranted))
+		lines = append(lines, "- The lookup tool is "+lookupAccess(data.LookupGranted)+
+			grantHint(data.LookupGranted, data.Conditions.Interactive, caps.Lookup))
 	}
 	if data.FetchOffered {
-		lines = append(lines, "- The fetch tool is "+lookupAccess(data.NetworkGranted))
+		lines = append(lines, "- The fetch tool is "+lookupAccess(data.NetworkGranted)+
+			grantHint(data.NetworkGranted, data.Conditions.Interactive, caps.Network))
 	}
 
 	return lines
+}
+
+func grantHint(isGranted bool, isInteractive bool, capability caps.Set) string {
+	if isGranted {
+		return ""
+	}
+	if !isInteractive {
+		return "; do not call it"
+	}
+
+	return "; do not call it unless the user grants it with ctrl+x " + capability.Flag()
 }
 
 func hostNetworkRules(isNetworkGranted bool, isInteractive bool) []string {
