@@ -3,13 +3,13 @@
  the awkward shapes
 
 
-divine one.go lines 1-400 ✓
-conjure func Draw(rows []string, colu… ✓
+divine one.go lines 1-400
+conjure func Draw(rows []string, column…
 $ for do done esac fi "u… ✗ syntax error
-summon nothing ✓ no output
-summon plenty ✓ 900L+ ~700t of ~321Kt
-summon japanese ✓ 1L ~1.9Kt
-summon too much ✓ 900L+ ~4.4Kt of ~21Kt
+summon nothing no output
+summon plenty 900L+ ~700t of ~321Kt
+summon japanese 1L ~1.9Kt
+summon too much 900L+ ~4.4Kt of ~21Kt
 
 Turn stopped because the user asked
 something else.
@@ -51,13 +51,13 @@ e
 s
 
 
-✓
-✓
+…
+…
 ✗
-✓
-✓
-✓
-✓
+…
+…
+…
+…
 
 T
 u
@@ -135,13 +135,13 @@ s
  the awkward shapes
 
 
-divine one.go lines 1-400 ✓
-conjure func Draw(rows []string, columns int) ([]string, error) { return rows, nil } ✓
+divine one.go lines 1-400
+conjure func Draw(rows []string, columns int) ([]string, error) { return rows, nil }
 $ for do done esac fi "unclosed ✗ syntax error
-summon nothing ✓ no output
-summon plenty ✓ 900L+ ~700t of ~321Kt
-summon japanese ✓ 1L ~1.9Kt
-summon too much ✓ 900L+ ~4.4Kt of ~21Kt
+summon nothing no output
+summon plenty 900L+ ~700t of ~321Kt
+summon japanese 1L ~1.9Kt
+summon too much 900L+ ~4.4Kt of ~21Kt
 
 Turn stopped because the user asked something else.
 
@@ -152,13 +152,13 @@ That is all of the awkward ones.
  shapes
 
 
-divine on… ✓
-conjure f… ✓
+divine one.…
+conjure fun…
 $ f… ✗ synt…
-summon no… ✓
-summon pl… ✓
-summon ja… ✓
-summon to… ✓
+s… no output
+summon plen…
+s… 1L ~1.9Kt
+summon too …
 
 Turn stopped
 because the
@@ -175,13 +175,13 @@ ones.
  the awkward shapes
 
 
-divine one.go lines 1-400 ✓
-conjure func Draw(rows []string, columns int) ([]string, error) { return rows, nil } ✓
+divine one.go lines 1-400
+conjure func Draw(rows []string, columns int) ([]string, error) { return rows, nil }
 $ for do done esac fi "unclosed ✗ syntax error
-summon nothing ✓ no output
-summon plenty ✓ 900L+ ~700t of ~321Kt
-summon japanese ✓ 1L ~1.9Kt
-summon too much ✓ 900L+ ~4.4Kt of ~21Kt
+summon nothing no output
+summon plenty 900L+ ~700t of ~321Kt
+summon japanese 1L ~1.9Kt
+summon too much 900L+ ~4.4Kt of ~21Kt
 
 Turn stopped because the user asked something else.
 

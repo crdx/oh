@@ -3,12 +3,12 @@
 
 
 I must use the original contracts.
-stable stable ✓ 1L
-changed changed ✓ 1L
-revision revision ✓ 1L
-schema schema ✓ 1L
-compatible compatible ✓ 1L
-missing missing ✓ 1L
+stable stable 1L
+changed changed 1L
+revision revision 1L
+schema schema 1L
+compatible compatible 1L
+missing missing 1L
 
 Every original tool ran.
 
@@ -22,11 +22,11 @@ Every original tool ran.
  try every tool again
 
 
-stable stable ✓ 1L
-changed changed ✓ 1L
+stable stable 1L
+changed changed 1L
 revision ✗ 1L the revision tool changed from version 1 to version 2 and is disabled for the remaind…
-schema schema ✓ 1L
-compatible compatible ✓ 1L
+schema schema 1L
+compatible compatible 1L
 missing ✗ 1L the missing tool is no longer installed and is disabled for this conversation
 added {} ✗ there is no tool called "added"
 

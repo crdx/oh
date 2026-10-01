@@ -9,12 +9,12 @@ Looking for where the prompt is drawn.
 
 I'll have a look at how the editor draws its prompt.
 
-grep prompt *.go ✓ 1L
+grep prompt *.go 1L
 The prompt is drawn by the renderer, so that is the file to read.
 
 Found it. Reading the renderer now.
 
-read cmd/oh/line/render.go ✓ 5L
+read cmd/oh/line/render.go 5L
 
 The prompt is drawn by layout, which wraps the buffer against the terminal width and reports where
 the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output
@@ -32,12 +32,12 @@ Looking for where the prompt is drawn.
 
 I'll have a look at how the editor draws its prompt.
 
-grep prompt *.go ✓ 1L
+grep prompt *.go 1L
 The prompt is drawn by the renderer, so that is the file to read.
 
 Found it. Reading the renderer now.
 
-read cmd/oh/line/render.go ✓ 5L
+read cmd/oh/line/render.go 5L
 
 The prompt is drawn by layout, which wraps the buffer against the terminal width and reports where
 the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output
@@ -55,12 +55,12 @@ Looking for where the prompt is drawn.
 
 I'll have a look at how the editor draws its prompt.
 
-grep prompt *.go ✓ 1L
+grep prompt *.go 1L
 The prompt is drawn by the renderer, so that is the file to read.
 
 Found it. Reading the renderer now.
 
-read cmd/oh/line/render.go ✓ 5L
+read cmd/oh/line/render.go 5L
 
 The prompt is drawn by layout, which wraps the buffer against the terminal width and reports where
 the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output
@@ -88,12 +88,12 @@ Looking for where the prompt is drawn.
 
 I'll have a look at how the editor draws its prompt.
 
-grep prompt *.go ✓ 1L
+grep prompt *.go 1L
 The prompt is drawn by the renderer, so that is the file to read.
 
 Found it. Reading the renderer now.
 
-read cmd/oh/line/render.go ✓ 5L
+read cmd/oh/line/render.go 5L
 
 The prompt is drawn by layout, which wraps the buffer against the terminal width and reports where
 the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output

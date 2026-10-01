@@ -6,20 +6,20 @@
 Model returned no reply.
 [#1] Request failed; retrying: The stream ended before the response did
 
-read target.txt ✓ 1L
-ls ✓ 2L
+read target.txt 1L
+ls 2L
 
 
- 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.
+ 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
 
 
 A tool ran, and an answer followed it.
 
-read README.md ✓ 1L
+read README.md 1L
 
 A thought after a tool call.
 
-ls cmd ✓ 1L
+ls cmd 1L
 
 Model returned no reply.
 An answer after a notice.
@@ -39,18 +39,18 @@ Model returned no reply.
 Model returned no reply.
 [#1] Request failed; retrying: The stream ended before the response did
 
-read target.txt ✓ 1L
-ls ✓ 2L
+read target.txt 1L
+ls 2L
 
 
- 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.
+ 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
 
 
 A tool ran, and an answer followed it.
 
-read README.md ✓ 1L
+read README.md 1L
 A thought after a tool call.
-ls cmd ✓ 1L
+ls cmd 1L
 
 Model returned no reply.
 An answer after a notice.
@@ -74,20 +74,20 @@ Model returned no reply.
 Model returned no reply.
 [#1] Request failed; retrying: The stream ended before the response did
 
-read target.txt ✓ 1L
-ls ✓ 2L
+read target.txt 1L
+ls 2L
 
 
- 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.
+ 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
 
 
 A tool ran, and an answer followed it.
 
-read README.md ✓ 1L
+read README.md 1L
 
 A thought after a tool call.
 
-ls cmd ✓ 1L
+ls cmd 1L
 
 Model returned no reply.
 An answer after a notice.
@@ -111,19 +111,19 @@ Model returned no reply.
 Model returned no reply.
 [#1] Request failed; retrying: The stream ended before the response did
 
-read target.txt ✓ 1L
-ls ✓ 2L
+read target.txt 1L
+ls 2L
 
 
- 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.
+ 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
 
 
 A tool ran, and an answer followed it.
-read README.md ✓ 1L
+read README.md 1L
 
 A thought after a tool call.
 
-ls cmd ✓ 1L
+ls cmd 1L
 
 Model returned no reply.
 
@@ -147,20 +147,20 @@ Model returned no reply.
 Model returned no reply.
 [#1] Request failed; retrying: The stream ended before the response did
 
-read target.txt ✓ 1L
-ls ✓ 2L
+read target.txt 1L
+ls 2L
 
 
- 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.
+ 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
 
 
 A tool ran, and an answer followed it.
 
-read README.md ✓ 1L
+read README.md 1L
 
 A thought after a tool call.
 
-ls cmd ✓ 1L
+ls cmd 1L
 
 Model returned no reply.
 
@@ -183,17 +183,17 @@ Model returned no reply.
 
 Model returned no reply.
 [#1] Request failed; retrying: The stream ended before the response did
-read target.txt ✓ 1L
-ls ✓ 2L
+read target.txt 1L
+ls 2L
 
 
- 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.
+ 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
 
 
 A tool ran, and an answer followed it.
-read README.md ✓ 1L
+read README.md 1L
 A thought after a tool call.
-ls cmd ✓ 1L
+ls cmd 1L
 Model returned no reply.
 An answer after a notice.
 
@@ -211,19 +211,19 @@ Model returned no reply.
 
 Model returned no reply.
 [#1] Request failed; retrying: The stream ended before the response did
-read target.txt ✓ 1L
-ls ✓ 2L
+read target.txt 1L
+ls 2L
 
 
- 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.
+ 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
 
 
 A tool ran, and an answer followed it.
-read README.md ✓ 1L
+read README.md 1L
 
 A thought after a tool call.
 
-ls cmd ✓ 1L
+ls cmd 1L
 Model returned no reply.
 An answer after a notice.
 
@@ -245,18 +245,18 @@ Model returned no reply.
 
 Model returned no reply.
 [#1] Request failed; retrying: The stream ended before the response did
-read target.txt ✓ 1L
-ls ✓ 2L
+read target.txt 1L
+ls 2L
 
 
- 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.
+ 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
 
 
 A tool ran, and an answer followed it.
 
-read README.md ✓ 1L
+read README.md 1L
 A thought after a tool call.
-ls cmd ✓ 1L
+ls cmd 1L
 Model returned no reply.
 
 An answer after a notice.
@@ -278,20 +278,20 @@ Model returned no reply.
 
 Model returned no reply.
 [#1] Request failed; retrying: The stream ended before the response did
-read target.txt ✓ 1L
-ls ✓ 2L
+read target.txt 1L
+ls 2L
 
 
- 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.
+ 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
 
 
 A tool ran, and an answer followed it.
 
-read README.md ✓ 1L
+read README.md 1L
 
 A thought after a tool call.
 
-ls cmd ✓ 1L
+ls cmd 1L
 Model returned no reply.
 
 An answer after a notice.
@@ -313,20 +313,20 @@ Model returned no reply.
 
 Model returned no reply.
 [#1] Request failed; retrying: The stream ended before the response did
-read target.txt ✓ 1L
-ls ✓ 2L
+read target.txt 1L
+ls 2L
 
 
- 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.
+ 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
 
 
 A tool ran, and an answer followed it.
 
-read README.md ✓ 1L
+read README.md 1L
 
 A thought after a tool call.
 
-ls cmd ✓ 1L
+ls cmd 1L
 Model returned no reply.
 
 An answer after a notice.
@@ -351,17 +351,17 @@ Model returned no reply.
 Model returned no reply.
 [#1] Request failed; retrying: The stream ended before the response did
 
-read target.txt ✓ 1L
-ls ✓ 2L
+read target.txt 1L
+ls 2L
 
 
- 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.
+ 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
 
 
 A tool ran, and an answer followed it.
-read README.md ✓ 1L
+read README.md 1L
 A thought after a tool call.
-ls cmd ✓ 1L
+ls cmd 1L
 
 Model returned no reply.
 
@@ -385,19 +385,19 @@ Model returned no reply.
 Model returned no reply.
 [#1] Request failed; retrying: The stream ended before the response did
 
-read target.txt ✓ 1L
-ls ✓ 2L
+read target.txt 1L
+ls 2L
 
 
- 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.
+ 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
 
 
 A tool ran, and an answer followed it.
-read README.md ✓ 1L
+read README.md 1L
 
 A thought after a tool call.
 
-ls cmd ✓ 1L
+ls cmd 1L
 
 Model returned no reply.
 
@@ -423,18 +423,18 @@ Model returned no reply.
 Model returned no reply.
 [#1] Request failed; retrying: The stream ended before the response did
 
-read target.txt ✓ 1L
-ls ✓ 2L
+read target.txt 1L
+ls 2L
 
 
- 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.
+ 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
 
 
 A tool ran, and an answer followed it.
 
-read README.md ✓ 1L
+read README.md 1L
 A thought after a tool call.
-ls cmd ✓ 1L
+ls cmd 1L
 
 Model returned no reply.
 
@@ -460,20 +460,20 @@ Model returned no reply.
 Model returned no reply.
 [#1] Request failed; retrying: The stream ended before the response did
 
-read target.txt ✓ 1L
-ls ✓ 2L
+read target.txt 1L
+ls 2L
 
 
- 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.
+ 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
 
 
 A tool ran, and an answer followed it.
 
-read README.md ✓ 1L
+read README.md 1L
 
 A thought after a tool call.
 
-ls cmd ✓ 1L
+ls cmd 1L
 
 Model returned no reply.
 
@@ -497,20 +497,20 @@ Model returned no reply.
 Model returned no reply.
 [#1] Request failed; retrying: The stream ended before the response did
 
-read target.txt ✓ 1L
-ls ✓ 2L
+read target.txt 1L
+ls 2L
 
 
- 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.
+ 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
 
 
 A tool ran, and an answer followed it.
 
-read README.md ✓ 1L
+read README.md 1L
 
 A thought after a tool call.
 
-ls cmd ✓ 1L
+ls cmd 1L
 
 Model returned no reply.
 

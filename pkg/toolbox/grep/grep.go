@@ -144,7 +144,7 @@ func run(ctx context.Context, root *file.Root, args Args) (string, tool.ToolCall
 	}
 
 	if isTruncated {
-		output, metrics := searchReport(matches, true)
+		output, metrics := util.SearchReport(matches, true)
 		return output, metrics, nil
 	}
 	if waitErr != nil {
@@ -152,7 +152,7 @@ func run(ctx context.Context, root *file.Root, args Args) (string, tool.ToolCall
 
 		var exitError *exec.ExitError
 		if errors.As(waitErr, &exitError) && exitError.ExitCode() == 1 && message == "" {
-			output, metrics := searchReport(nil, false)
+			output, metrics := util.SearchReport(nil, false)
 			return output, metrics, nil
 		}
 
@@ -166,16 +166,8 @@ func run(ctx context.Context, root *file.Root, args Args) (string, tool.ToolCall
 		return "", tool.ToolCallMetrics{}, fmt.Errorf("grep failed: %w", waitErr)
 	}
 
-	output, metrics := searchReport(matches, false)
+	output, metrics := util.SearchReport(matches, false)
 	return output, metrics, nil
-}
-
-func searchReport(matches []string, isTruncated bool) (string, tool.ToolCallMetrics) {
-	output := util.ReportSearchResults(matches, isTruncated)
-	metrics := tool.GetMetrics(output)
-	metrics.IsTruncated = isTruncated
-
-	return output, metrics
 }
 
 func readStateForMatches(root *file.Root, args Args, output string) json.RawMessage {

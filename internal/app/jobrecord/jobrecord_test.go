@@ -78,9 +78,9 @@ func TestSeveralEndedJobsAreNamedInThePlural(t *testing.T) {
 }
 
 func TestAnEndedJobNoticeAgreesWithItsOwnNumber(t *testing.T) {
-	const reopened = "The session was closed and reopened after your last turn. "
+	const reopened = "The session was closed and reopened after the last turn. "
 	const closed = " stopped when it closed. Restart "
-	const remedy = " with `job(action=\"start\", name=…)` if still needed."
+	const remedy = " if still needed."
 
 	for _, test := range []struct {
 		names   []string
@@ -97,6 +97,17 @@ func TestAnEndedJobNoticeAgreesWithItsOwnNumber(t *testing.T) {
 		if notice != test.expects {
 			t.Errorf("got %q, want %q", notice, test.expects)
 		}
+	}
+}
+
+func TestTheModelIsToldHowToRestartAJobEndedWithTheSession(t *testing.T) {
+	event := jobrecord.EndedWithSessionEvent([]string{"docs"})
+	notice, isSaid := jobrecord.EndedWithSessionModelNotice(event)
+	if !isSaid {
+		t.Fatal("the ended job said nothing to the model")
+	}
+	if want := "Restart it with `job(action=\"start\", name=…)` if still needed."; !strings.Contains(notice, want) {
+		t.Errorf("got %q, want it to say %q", notice, want)
 	}
 }
 

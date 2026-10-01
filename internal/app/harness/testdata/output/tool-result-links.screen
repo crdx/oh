@@ -3,9 +3,9 @@
  show every tool result link state
 
 
-read README.md ✓ 1L
+read README.md 1L
 grep [ ✗ regex parse error: [ ^ error: …
-ls ✓ 0L
+ls 0L
 $ sleep 10 – the command was stopped be…
 $ touch marker ✓ no output
 
@@ -71,9 +71,9 @@ t
 e
 
 
-✓
+…
 ✗
-✓
+…
 –
 ✓
 
@@ -145,9 +145,9 @@ g
  show every tool result link state
 
 
-read README.md ✓ 1L
+read README.md 1L
 grep [ ✗ regex parse error: [ ^ error: unclosed character class
-ls ✓ 0L
+ls 0L
 $ sleep 10 – the command was stopped because the user pressed escape
 $ touch marker ✓ no output
 
@@ -159,9 +159,9 @@ Every finished call has a result link, whether or not it returned anything.
  link state
 
 
-read R… ✓ 1L
+read REA… 1L
 grep ✗ rege…
-ls ✓ 0L
+ls 0L
 $ s… – the …
 $ touch m… ✓
 
@@ -178,9 +178,9 @@ anything.
  show every tool result link state
 
 
-read README.md ✓ 1L
+read README.md 1L
 grep [ ✗ regex parse error: [ ^ error: unclosed character class
-ls ✓ 0L
+ls 0L
 $ sleep 10 – the command was stopped because the user pressed escape
 $ touch marker ✓ no output
 

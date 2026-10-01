@@ -3,7 +3,7 @@
  start the docs server and keep it up
 
 
-start docs $ python3 -m http.serve… ✓ 1L
+start docs $ python3 -m http.server … 1L
 
 The docs server is up.
 
@@ -45,14 +45,14 @@ Cache expired: 97Kt sent after 7m.
  what happened to it
 
 
-status docs ✓ 1L
+status docs 1L
 
 
  🤖 Job docs stopped from the keyboard.
 
 
-discard docs ✓ 1L
-prune jobs ✓ 1L
+discard docs 1L
+prune jobs 1L
 
 It was stopped when write access was
 withdrawn.
@@ -118,7 +118,7 @@ u
 p
 
 
-✓
+…
 
 T
 h
@@ -1289,7 +1289,7 @@ i
 t
 
 
-✓
+…
 
 
 
@@ -1356,8 +1356,8 @@ d
 .
 
 
-✓
-✓
+…
+…
 
 I
 t
@@ -1404,7 +1404,7 @@ n
  start the docs server and keep it up
 
 
-start docs $ python3 -m http.server 8080 ✓ 1L
+start docs $ python3 -m http.server 8080 1L
 
 The docs server is up.
 
@@ -1436,14 +1436,14 @@ Cache expired: 97Kt sent after 7m.
  what happened to it
 
 
-status docs ✓ 1L
+status docs 1L
 
 
  🤖 Job docs stopped from the keyboard.
 
 
-discard docs ✓ 1L
-prune jobs ✓ 1L
+discard docs 1L
+prune jobs 1L
 
 It was stopped when write access was withdrawn.
 === tiny ===
@@ -1454,7 +1454,7 @@ It was stopped when write access was withdrawn.
  up
 
 
-start … ✓ 1L
+start do… 1L
 
 The docs
 server is
@@ -1571,7 +1571,7 @@ after 7m.
  it
 
 
-status ✓ 1L
+status d… 1L
 
 
  🤖 Job docs
@@ -1581,8 +1581,8 @@ status ✓ 1L
     .
 
 
-discard ✓ 1L
-prune … ✓ 1L
+discard … 1L
+prune jo… 1L
 
 It was
 stopped when
@@ -1594,7 +1594,7 @@ withdrawn.
  start the docs server and keep it up
 
 
-start docs $ python3 -m http.server 8080 ✓ 1L
+start docs $ python3 -m http.server 8080 1L
 
 The docs server is up.
 
@@ -1626,13 +1626,13 @@ Cache expired: 97Kt sent after 7m.
  what happened to it
 
 
-status docs ✓ 1L
+status docs 1L
 
 
  🤖 Job docs stopped from the keyboard.
 
 
-discard docs ✓ 1L
-prune jobs ✓ 1L
+discard docs 1L
+prune jobs 1L
 
 It was stopped when write access was withdrawn.

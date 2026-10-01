@@ -635,7 +635,8 @@ func (self *Agent) runCalls(
 			Arguments: rawCall.Arguments,
 			Name:      rawCall.Name,
 			FallbackRendering: FallbackRendering{
-				ReadOnly: self.readOnly(rawCall),
+				ReadOnly:     self.readOnly(rawCall),
+				MarksSuccess: self.marksSuccess(rawCall),
 			},
 		}
 		fallbackRendering, argumentsWereDecoded := self.fallbackRendering(rawCall)
@@ -710,6 +711,12 @@ func (self *Agent) readOnly(call ToolCall) bool {
 	calledTool, isFound := self.registeredTools[call.Name]
 
 	return isFound && calledTool.ReadOnly()
+}
+
+func (self *Agent) marksSuccess(call ToolCall) bool {
+	calledTool, isFound := self.registeredTools[call.Name]
+
+	return isFound && tool.MarksSuccess(calledTool)
 }
 
 type completedToolCall struct {

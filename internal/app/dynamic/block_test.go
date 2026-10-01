@@ -129,10 +129,31 @@ func TestAQuickRowIsMarkedWithoutATime(t *testing.T) {
 
 	block.Add(rowLabel("read", "main.go"), 0)
 
-	block.FinaliseRow(0, Done, 500*time.Millisecond, "", "")
+	block.FinaliseRow(0, Succeeded, 500*time.Millisecond, "", "")
 
 	if got := block.Rows(wide)[0]; !strings.Contains(got, "✓") || strings.Contains(got, "s") {
 		t.Errorf("expected a mark and no time, got %q", got)
+	}
+}
+
+func TestARowExpectedToSucceedIsLeftUnmarked(t *testing.T) {
+	block := testBlock()
+
+	block.Add(rowLabel("read", "main.go"), 0)
+
+	block.FinaliseRow(0, Done, 500*time.Millisecond, "", "")
+
+	if got := block.Rows(wide)[0]; got != "read main.go" {
+		t.Errorf("expected the label and nothing else, got %q", got)
+	}
+}
+
+func TestARowExpectedToSucceedStillSaysWhatItTookAndMeasured(t *testing.T) {
+	block := &Block{}
+	item := row{state: Done, timeTaken: 8 * time.Second, metrics: "1L"}
+
+	if got := style.Plain(block.getResult(item)); got != "8s 1L" {
+		t.Errorf("expected what it took and measured without a mark, got %q", got)
 	}
 }
 
@@ -215,7 +236,7 @@ func TestABoundedRowDrawsItsBoundBeneathTheTimeItHasTaken(t *testing.T) {
 
 func TestARowThatFinishedNeverNamesTheTimeItWasGiven(t *testing.T) {
 	block := &Block{}
-	item := row{state: Done, timeTaken: 12 * time.Second, timeLimit: 20 * time.Second}
+	item := row{state: Succeeded, timeTaken: 12 * time.Second, timeLimit: 20 * time.Second}
 
 	if got := style.Plain(block.getResult(item)); got != "✓ 12s" {
 		t.Errorf("expected the settled row to say only what it took, got %q", got)
@@ -228,7 +249,7 @@ func TestARowThatFailedIsMarkedApartFromOneThatDidNot(t *testing.T) {
 	block.Add(rowLabel("read", "main.go"), 0)
 	block.Add(rowLabel("read", "nowhere.go"), 0)
 
-	block.FinaliseRow(0, Done, 0, "", "")
+	block.FinaliseRow(0, Succeeded, 0, "", "")
 	block.FinaliseRow(1, Failed, 0, "", "")
 
 	rows := block.Rows(wide)
@@ -371,7 +392,7 @@ func TestClosingTheBlockMarksWhateverWasStillRunning(t *testing.T) {
 
 	block.Add(rowLabel("read", "main.go"), 0)
 	block.Add(rowLabel("grep", "spinner"), 0)
-	block.FinaliseRow(0, Done, 0, "", "")
+	block.FinaliseRow(0, Succeeded, 0, "", "")
 
 	block.Close(Cancelled)
 
@@ -407,7 +428,7 @@ func TestARunningRowLeavesOutTheTimeItWasHeldFor(t *testing.T) {
 
 	block.Add(rowLabel("bash", "curl example.com"), 20*time.Second)
 	block.Add(rowLabel("read", "main.go"), 0)
-	block.FinaliseRow(1, Done, 8*time.Second, "", "")
+	block.FinaliseRow(1, Succeeded, 8*time.Second, "", "")
 	block.rows[0].startedAt = time.Now().Add(-70 * time.Second)
 
 	block.HoldTiming()
@@ -561,7 +582,7 @@ func TestACompletedOutcomeReachesTheTerminalEdge(t *testing.T) {
 
 	block.Add(rowLabel("grep", "RESOLVE_UNIX|resolve_unix|unix.*socket|Landlock|landlock"), 0)
 
-	block.FinaliseRow(0, Done, 7420*time.Millisecond, "", "")
+	block.FinaliseRow(0, Succeeded, 7420*time.Millisecond, "", "")
 
 	row := block.Rows(narrow)[0]
 	if got := style.Plain(row); !strings.HasSuffix(got, "✓ 7s") {
@@ -578,7 +599,7 @@ func TestARowTooNarrowForWhatItMeasuredKeepsItsLabelAndItsMark(t *testing.T) {
 	block := testBlock()
 
 	index := block.Add(rowLabel("bash", "if [[ -f one ]]; then echo one; fi"), 0)
-	block.FinaliseRow(index, Done, time.Second, "", "900L+ ~500t of ~225Kt")
+	block.FinaliseRow(index, Succeeded, time.Second, "", "900L+ ~500t of ~225Kt")
 
 	row := block.Rows(tiny)[index]
 
@@ -596,7 +617,7 @@ func TestARowWideEnoughKeepsEverythingItMeasured(t *testing.T) {
 	block := testBlock()
 
 	index := block.Add(rowLabel("bash", "echo one"), 0)
-	block.FinaliseRow(index, Done, time.Second, "", "1L ~1t")
+	block.FinaliseRow(index, Succeeded, time.Second, "", "1L ~1t")
 
 	if plain := style.Plain(block.Rows(wide)[index]); !strings.HasSuffix(plain, "✓ 1L ~1t") {
 		t.Errorf("expected everything the call measured, got %q", plain)
@@ -607,7 +628,7 @@ func TestTheOutcomeAppearsAsSoonAsOneLabelCellFitsBesideIt(t *testing.T) {
 	block := testBlock()
 
 	index := block.Add(rowLabel("bash", "echo one"), 0)
-	block.FinaliseRow(index, Done, 3*time.Second, "", "1L ~1t")
+	block.FinaliseRow(index, Succeeded, 3*time.Second, "", "1L ~1t")
 
 	drawn := style.Plain(block.Rows(wide)[index])
 	at := strings.Index(drawn, "✓")

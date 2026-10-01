@@ -156,10 +156,14 @@ func compactOrdered(values []string) []string {
 }
 
 func describeChanges(knownEnvironment Snapshot, current Snapshot) string {
-	return strings.Join(changeNotices(knownEnvironment, current), " ")
+	return strings.Join(changeNotices(knownEnvironment, current, modelSkillWording), " ")
 }
 
-func changeNotices(knownEnvironment Snapshot, current Snapshot) []string {
+func changeNotices(
+	knownEnvironment Snapshot,
+	current Snapshot,
+	wording skillWording,
+) []string {
 	var notices []string
 	notices = append(notices, setChangeNotices("Sandbox deny patterns", knownEnvironment.Sandbox.DenyPatterns, current.Sandbox.DenyPatterns)...)
 	if len(difference(current.Sandbox.DenyPatterns, knownEnvironment.Sandbox.DenyPatterns)) > 0 {
@@ -172,7 +176,7 @@ func changeNotices(knownEnvironment Snapshot, current Snapshot) []string {
 		notices = append(notices, "Configured PATH directories are now, in order: "+listedOrNone(current.Sandbox.PathDirectories)+".")
 	}
 	notices = append(notices, setChangeNotices("Configured home paths", knownEnvironment.Sandbox.HomePaths, current.Sandbox.HomePaths)...)
-	notices = append(notices, skillChangeNotices(knownEnvironment.Skills, current.Skills)...)
+	notices = append(notices, skillChangeNotices(knownEnvironment.Skills, current.Skills, wording)...)
 	if knownEnvironment.IsRepository != current.IsRepository {
 		if current.IsRepository {
 			notices = append(notices, "The workspace is now a Git repository.")
@@ -235,7 +239,11 @@ func listedOrNone(values []string) string {
 	return listed(values)
 }
 
-func skillChangeNotices(knownSkills []Skill, current []Skill) []string {
+func skillChangeNotices(
+	knownSkills []Skill,
+	current []Skill,
+	wording skillWording,
+) []string {
 	knownByLocation := make(map[string]Skill, len(knownSkills))
 	for _, foundSkill := range knownSkills {
 		knownByLocation[foundSkill.Location] = foundSkill
@@ -250,14 +258,14 @@ func skillChangeNotices(knownSkills []Skill, current []Skill) []string {
 		previous, wasKnown := knownByLocation[foundSkill.Location]
 		switch {
 		case !wasKnown:
-			addedSkills = append(addedSkills, describeSkill(foundSkill))
+			addedSkills = append(addedSkills, wording.addedSkill(foundSkill))
 		case previous != foundSkill:
-			changedSkills = append(changedSkills, describeSkillChange(previous, foundSkill))
+			changedSkills = append(changedSkills, wording.changedSkill(previous, foundSkill))
 		}
 	}
 	for _, foundSkill := range knownSkills {
 		if _, isCurrent := currentByLocation[foundSkill.Location]; !isCurrent {
-			removedSkills = append(removedSkills, markdown.CodeSpan(foundSkill.Name)+" at "+markdown.CodeSpan(foundSkill.Location))
+			removedSkills = append(removedSkills, identifySkill(foundSkill))
 		}
 	}
 
@@ -274,16 +282,34 @@ func skillChangeNotices(knownSkills []Skill, current []Skill) []string {
 	return notices
 }
 
-func describeSkill(foundSkill Skill) string {
-	return markdown.CodeSpan(foundSkill.Name) + " at " + markdown.CodeSpan(foundSkill.Location) + ": " + compactText(foundSkill.Description)
+type skillWording struct {
+	addedSkill   func(Skill) string
+	changedSkill func(Skill, Skill) string
 }
 
-func describeSkillChange(previous Skill, current Skill) string {
+var (
+	userSkillWording  = skillWording{addedSkill: identifySkill, changedSkill: identifySkillChange}
+	modelSkillWording = skillWording{addedSkill: describeSkill, changedSkill: describeSkillChange}
+)
+
+func identifySkill(foundSkill Skill) string {
+	return markdown.CodeSpan(foundSkill.Name) + " at " + markdown.CodeSpan(foundSkill.Location)
+}
+
+func describeSkill(foundSkill Skill) string {
+	return identifySkill(foundSkill) + ": " + compactText(foundSkill.Description)
+}
+
+func identifySkillChange(previous Skill, current Skill) string {
 	identity := markdown.CodeSpan(current.Name)
 	if previous.Name != current.Name {
 		identity = markdown.CodeSpan(previous.Name) + " is now " + identity
 	}
-	return identity + " at " + markdown.CodeSpan(current.Location) + ": " + compactText(current.Description)
+	return identity + " at " + markdown.CodeSpan(current.Location)
+}
+
+func describeSkillChange(previous Skill, current Skill) string {
+	return identifySkillChange(previous, current) + ": " + compactText(current.Description)
 }
 
 func compactText(text string) string {
@@ -326,6 +352,20 @@ func LastRecorded(events []agent.Event) (Snapshot, bool) {
 }
 
 func Notice(event agent.Event) ([]string, bool) {
+	return notices(event, userSkillWording)
+}
+
+const modelIntroduction = "The session environment changed since this conversation last ran. This is what changed:"
+
+func ModelNotice(event agent.Event) ([]string, bool) {
+	modelNotices, isSaid := notices(event, modelSkillWording)
+	if !isSaid {
+		return nil, false
+	}
+	return append([]string{modelIntroduction}, modelNotices...), true
+}
+
+func notices(event agent.Event, wording skillWording) ([]string, bool) {
 	if event.Kind != Change {
 		return nil, false
 	}
@@ -333,18 +373,8 @@ func Notice(event agent.Event) ([]string, bool) {
 	if err != nil {
 		return nil, false
 	}
-	notices := changeNotices(state.KnownEnvironment, state.Current)
-	return notices, len(notices) > 0
-}
-
-const modelIntroduction = "The session environment changed since this conversation last ran. This is what changed:"
-
-func ModelNotice(event agent.Event) ([]string, bool) {
-	notices, isSaid := Notice(event)
-	if !isSaid {
-		return nil, false
-	}
-	return append([]string{modelIntroduction}, notices...), true
+	changeDescriptions := changeNotices(state.KnownEnvironment, state.Current, wording)
+	return changeDescriptions, len(changeDescriptions) > 0
 }
 
 func sandboxEqual(left Sandbox, right Sandbox) bool {

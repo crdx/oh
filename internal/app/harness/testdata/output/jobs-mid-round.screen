@@ -6,8 +6,8 @@
 
 Reading both in one round so the jobs
 have time to settle.
-read README.md ✓ 1L
-read target.txt ✓ 1L
+read README.md 1L
+read target.txt 1L
 
 
  🤖 Job build exited: failed after 12s,
@@ -18,7 +18,7 @@ read target.txt ✓ 1L
     exit status 1
  🤖 Job docs exited: complete after 14s.
     docs written
- 🤖 Sandbox port 8080 exposed at
+ 🤖 Port 8080 is now forwarded to
     http://127.27.192.223:8080.
 
 
@@ -160,8 +160,8 @@ t
 l
 e
 .
-✓
-✓
+…
+…
 
 
 
@@ -453,21 +453,7 @@ n
 
 🤖
 
-S
-
-a
-
-n
-
-d
-
-b
-
-o
-
-x
-
-p
+P
 
 o
 
@@ -483,23 +469,37 @@ t
 
 0
 
-e
+i
 
-x
+s
 
-p
+n
 
 o
 
-s
+w
+
+f
+
+o
+
+r
+
+w
+
+a
+
+r
+
+d
 
 e
 
 d
 
-a
-
 t
+
+o
 
 h
 
@@ -636,8 +636,8 @@ n
 
 
 Reading both in one round so the jobs have time to settle.
-read README.md ✓ 1L
-read target.txt ✓ 1L
+read README.md 1L
+read target.txt 1L
 
 
  🤖 Job build exited: failed after 12s, exit(2).
@@ -646,7 +646,7 @@ read target.txt ✓ 1L
     exit status 1
  🤖 Job docs exited: complete after 14s.
     docs written
- 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.
+ 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
 
 
 Both files are read. The build failed on an undefined getWidth, and the docs are written.
@@ -664,8 +664,8 @@ in one round
 so the jobs
 have time to
 settle.
-read R… ✓ 1L
-read t… ✓ 1L
+read REA… 1L
+read tar… 1L
 
 
  🤖 Job
@@ -692,11 +692,11 @@ read t… ✓ 1L
     14s.
     docs
     written
- 🤖 Sandbox
-    port
-    8080
-    exposed
-    at
+ 🤖 Port
+    8080 is
+    now
+    forwarde
+    d to
     http://1
     27.27.19
     2.223:80
@@ -717,8 +717,8 @@ are written.
 
 
 Reading both in one round so the jobs have time to settle.
-read README.md ✓ 1L
-read target.txt ✓ 1L
+read README.md 1L
+read target.txt 1L
 
 
  🤖 Job build exited: failed after 12s, exit(2).
@@ -727,7 +727,7 @@ read target.txt ✓ 1L
     exit status 1
  🤖 Job docs exited: complete after 14s.
     docs written
- 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.
+ 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
 
 
 Both files are read. The build failed on an undefined getWidth, and the docs are written.

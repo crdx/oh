@@ -7,6 +7,9 @@ Could not read /tmp/zoom-on.png
 it is at /tmp/zoom-on.png
 === a path under the scratch the model sees as /tmp ===
 it is at /tmp/zoom-on.png
+=== a web address in code closing a sentence ===
+Trellis is at
+http://trellis.heroic-ibex.agent:12006/.
 === email autolink ===
 person-at-example.test
 === pending message ===

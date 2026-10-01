@@ -20,7 +20,7 @@ func main() {
 
 So read_file has to come before
 write_file.
-read target.txt ✓ 1L
+read target.txt 1L
 A plain thought with no markup in it at
 all.
 Every way markup can stand in a thought
@@ -341,7 +341,7 @@ i
 l
 e
 .
-✓
+…
 A
 p
 l
@@ -1099,7 +1099,7 @@ func main() {
 }
 
 So read_file has to come before write_file.
-read target.txt ✓ 1L
+read target.txt 1L
 A plain thought with no markup in it at all.
 Every way markup can stand in a thought
 
@@ -1160,7 +1160,7 @@ func main() {
 }
 
 So read_file has to come before write_file.
-read target.txt ✓ 1L
+read target.txt 1L
 A plain thought with no markup in it at all.
 Every way markup can stand in a thought
 
@@ -1221,7 +1221,7 @@ func main() {
 }
 
 So read_file has to come before write_file.
-read target.txt ✓ 1L
+read target.txt 1L
 A plain thought with no markup in it at all.
 Every way markup can stand in a thought
 
@@ -1282,7 +1282,7 @@ func main() {
 }
 
 So read_file has to come before write_file.
-read target.txt ✓ 1L
+read target.txt 1L
 A plain thought with no markup in it at all.
 Every way markup can stand in a thought
 
@@ -1365,7 +1365,7 @@ So read_file
 has to come
 before
 write_file.
-read t… ✓ 1L
+read tar… 1L
 A plain
 thought with
 no markup in
@@ -1575,7 +1575,7 @@ func main() {
 }
 
 So read_file has to come before write_file.
-read target.txt ✓ 1L
+read target.txt 1L
 A plain thought with no markup in it at all.
 Every way markup can stand in a thought
 
@@ -1631,7 +1631,7 @@ file was read before it was written •
 the file was written before it was read
 func main() { println("one") } So
 read_file has to come before write_file.
-read target.txt ✓ 1L
+read target.txt 1L
 A plain thought with no markup in it at
 all.
 Every way markup can stand in a thought
@@ -1921,7 +1921,7 @@ i
 l
 e
 .
-✓
+…
 A
 p
 l
@@ -2661,7 +2661,7 @@ e
 Checking one.go The first thing to settle is which of these holds: • the file was read before it was
 written • the file was written before it was read func main() { println("one") } So read_file has to
 come before write_file.
-read target.txt ✓ 1L
+read target.txt 1L
 A plain thought with no markup in it at all.
 Every way markup can stand in a thought • intraword foo_bar_baz and snake_case_name • leading
 _private • trailing trailing_ • dunder init • emphasis one two three four five six • nested foo_bar
@@ -2684,7 +2684,7 @@ The read came first, and the file holds one.
 Checking one.go The first thing to settle is which of these holds: • the file was read before it was
 written • the file was written before it was read func main() { println("one") } So read_file has to
 come before write_file.
-read target.txt ✓ 1L
+read target.txt 1L
 A plain thought with no markup in it at all.
 Every way markup can stand in a thought • intraword foo_bar_baz and snake_case_name • leading
 _private • trailing trailing_ • dunder init • emphasis one two three four five six • nested foo_bar
@@ -2707,7 +2707,7 @@ The read came first, and the file holds one.
 Checking one.go The first thing to settle is which of these holds: • the file was read before it was
 written • the file was written before it was read func main() { println("one") } So read_file has to
 come before write_file.
-read target.txt ✓ 1L
+read target.txt 1L
 A plain thought with no markup in it at all.
 Every way markup can stand in a thought • intraword foo_bar_baz and snake_case_name • leading
 _private • trailing trailing_ • dunder init • emphasis one two three four five six • nested foo_bar
@@ -2730,7 +2730,7 @@ The read came first, and the file holds one.
 Checking one.go The first thing to settle is which of these holds: • the file was read before it was
 written • the file was written before it was read func main() { println("one") } So read_file has to
 come before write_file.
-read target.txt ✓ 1L
+read target.txt 1L
 A plain thought with no markup in it at all.
 Every way markup can stand in a thought • intraword foo_bar_baz and snake_case_name • leading
 _private • trailing trailing_ • dunder init • emphasis one two three four five six • nested foo_bar
@@ -2776,7 +2776,7 @@ read_file
 has to come
 before
 write_file.
-read t… ✓ 1L
+read tar… 1L
 A plain
 thought with
 no markup in
@@ -2925,7 +2925,7 @@ The build failed on an undefined getWidth, and the read has to come first.
 Checking one.go The first thing to settle is which of these holds: • the file was read before it was
 written • the file was written before it was read func main() { println("one") } So read_file has to
 come before write_file.
-read target.txt ✓ 1L
+read target.txt 1L
 A plain thought with no markup in it at all.
 Every way markup can stand in a thought • intraword foo_bar_baz and snake_case_name • leading
 _private • trailing trailing_ • dunder init • emphasis one two three four five six • nested foo_bar

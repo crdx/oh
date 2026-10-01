@@ -12,7 +12,7 @@ anything about it.
 
 Let me read the renderer.
 
-read cmd/oh/line/render.go ✓ 5L
+read cmd/oh/line/render.go 5L
 
 The prompt is built in
 cmd/oh/line/render.go:4:9, and screen.go
@@ -206,7 +206,7 @@ e
 r
 .
 
-✓
+…
 
 T
 h
@@ -613,7 +613,7 @@ Reading the renderer before saying anything about it.
 
 Let me read the renderer.
 
-read cmd/oh/line/render.go ✓ 5L
+read cmd/oh/line/render.go 5L
 
 The prompt is built in cmd/oh/line/render.go:4:9, and screen.go holds the spinner beside it. There
 is nothing about it in README.md, and nothing at all in cmd/oh/line/missing.go, which is where I
@@ -650,7 +650,7 @@ Let me read
 the
 renderer.
 
-read c… ✓ 5L
+read cmd… 5L
 
 The prompt
 is built in
@@ -709,7 +709,7 @@ Reading the renderer before saying anything about it.
 
 Let me read the renderer.
 
-read cmd/oh/line/render.go ✓ 5L
+read cmd/oh/line/render.go 5L
 
 The prompt is built in cmd/oh/line/render.go:4:9, and screen.go holds the spinner beside it. There
 is nothing about it in README.md, and nothing at all in cmd/oh/line/missing.go, which is where I

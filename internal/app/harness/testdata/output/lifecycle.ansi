@@ -11,12 +11,12 @@
 \r
 I'll have a look at how the editor draws its prompt.\r
 \r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r
 \r
 Found it. Reading the renderer now.\r
 \r
-\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m5L\e[0m\r
 \r
 The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r
 the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
@@ -33,12 +33,12 @@ layer instead.\r
 
 I'll have a look at how the editor draws its prompt.
 
-grep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
+grep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m
 \e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m
 
 Found it. Reading the renderer now.
 
-read \e[38;2;150;152;150mcmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m
+read \e[38;2;150;152;150mcmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e[0m \e[38;2;150;152;150m5L\e[0m
 
 The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output layer instead.
 
@@ -53,12 +53,12 @@ The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer ag
 \r
 I'll have a look at how the editor draws its prompt.\r
 \r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r
 \r
 Found it. Reading the renderer now.\r
 \r
-\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m5L\e[0m\r
 \r
 The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r
 the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
@@ -75,12 +75,12 @@ layer instead.\r
 
 I'll have a look at how the editor draws its prompt.
 
-grep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
+grep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m
 \e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m
 
 Found it. Reading the renderer now.
 
-read \e[38;2;150;152;150mcmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m
+read \e[38;2;150;152;150mcmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e[0m \e[38;2;150;152;150m5L\e[0m
 
 The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output layer instead.
 
@@ -95,12 +95,12 @@ The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer ag
 \r
 I'll have a look at how the editor draws its prompt.\r
 \r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r
 \r
 Found it. Reading the renderer now.\r
 \r
-\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m5L\e[0m\r
 \r
 The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r
 the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
@@ -137,12 +137,12 @@ layer instead.\r
 
 I'll have a look at how the editor draws its prompt.
 
-grep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
+grep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m
 \e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m
 
 Found it. Reading the renderer now.
 
-read \e[38;2;150;152;150mcmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m
+read \e[38;2;150;152;150mcmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e[0m \e[38;2;150;152;150m5L\e[0m
 
 The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output layer instead.
 
@@ -157,12 +157,12 @@ The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer ag
 \r
 I'll have a look at how the editor draws its prompt.\r
 \r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r
 \r
 Found it. Reading the renderer now.\r
 \r
-\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m5L\e[0m\r
 \r
 The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r
 the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
@@ -177,12 +177,12 @@ layer instead.\r
 \r
 I'll have a look at how the editor draws its prompt.\r
 \r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\r
 \r
 Found it. Reading the renderer now.\r
 \r
-\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m5L\e[0m\r
 \r
 The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\r
 the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\r
@@ -242,12 +242,12 @@ grep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;1
 
 I'll have a look at how the editor draws its prompt.
 
-grep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
+grep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m
 \e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m
 
 Found it. Reading the renderer now.
 
-read \e[38;2;150;152;150mcmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m
+read \e[38;2;150;152;150mcmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e[0m \e[38;2;150;152;150m5L\e[0m
 
 The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output layer instead.
 
@@ -260,12 +260,12 @@ The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer ag
 
 I'll have a look at how the editor draws its prompt.
 
-grep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
+grep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m
 \e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m
 
 Found it. Reading the renderer now.
 
-read \e[38;2;150;152;150mcmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m
+read \e[38;2;150;152;150mcmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e[0m \e[38;2;150;152;150m5L\e[0m
 
 The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output layer instead.
 
@@ -280,12 +280,12 @@ The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer ag
 \e[K\r
 I'll have a look at how the editor draws its prompt.\e[K\r
 \e[K\r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r
 \e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m\e[K\r
 \e[K\r
 Found it. Reading the renderer now.\e[K\r
 \e[K\r
-\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m\e[K\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m5L\e[0m\e[K\r
 \e[K\r
 The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where\e[K\r
 the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output\e[K\r
@@ -303,11 +303,11 @@ layer instead.\e[K\r
 
 I'll have a look at how the editor draws its prompt.
 
-grep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
+grep \e[38;2;150;152;150mprompt\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m
 \e[3m\e[38;2;150;152;150mThe prompt is drawn by the renderer, so that is the file to read.\e[0m\e[0m
 
 Found it. Reading the renderer now.
 
-read \e[38;2;150;152;150mcmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m5L\e[0m
+read \e[38;2;150;152;150mcmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e[0m \e[38;2;150;152;150m5L\e[0m
 
 The prompt is drawn by \e[38;2;192;128;80mlayout\e[0m, which wraps the buffer against the terminal width and reports where the cursor landed. Nothing there needs changing to make it sticky: the work belongs in the output layer instead.

@@ -169,7 +169,27 @@ func TestToolCallPathsAreLinkedToTheModelFacingFile(t *testing.T) {
 	}
 }
 
-func TestModelReasoningPathsAreLinkedToTheModelFacingFile(t *testing.T) {
+func TestPlainReasoningLinksNothing(t *testing.T) {
+	scratchDirectory := t.TempDir()
+	if err := os.WriteFile(filepath.Join(scratchDirectory, "notes.txt"), nil, 0o600); err != nil {
+		t.Fatalf("prepare file: %v", err)
+	}
+
+	var screenOutput bytes.Buffer
+	screen := output.NewTerminalOfSize(&screenOutput, 80, 24).LinkPathsUnder(link.Roots{Scratch: scratchDirectory})
+	paint := New(screen, false, nil, nil, output.StreamingModeLine)
+	paint.RenderReasoningAs(output.ReasoningPlain)
+	paint.DrawEvent(agent.Event{
+		Kind: agent.ModelReasoningEvent,
+		Text: "checking /tmp/notes.txt against <https://example.test/notes> and https://example.test/more",
+	})
+
+	if drawn := screenOutput.String(); strings.Contains(drawn, "\x1b]8;;") {
+		t.Errorf("plain reasoning gained a link in %q", drawn)
+	}
+}
+
+func TestMarkdownReasoningPathsAreLinkedToTheModelFacingFile(t *testing.T) {
 	scratchDirectory := t.TempDir()
 	path := filepath.Join(scratchDirectory, "notes.txt")
 	if err := os.WriteFile(path, nil, 0o600); err != nil {
@@ -179,6 +199,7 @@ func TestModelReasoningPathsAreLinkedToTheModelFacingFile(t *testing.T) {
 	var screenOutput bytes.Buffer
 	screen := output.NewTerminalOfSize(&screenOutput, 80, 24).LinkPathsUnder(link.Roots{Scratch: scratchDirectory})
 	paint := New(screen, false, nil, nil, output.StreamingModeLine)
+	paint.RenderReasoningAs(output.ReasoningMarkdown)
 	paint.DrawEvent(agent.Event{Kind: agent.ModelReasoningEvent, Text: "checking /tmp/notes.txt"})
 
 	wantTarget := "file://" + filepath.ToSlash(path)
@@ -536,7 +557,7 @@ func TestRenderContextExceededNamesNoForkWithoutAModel(t *testing.T) {
 	}
 }
 
-func TestReasoningLinksAPathBeforeItWraps(t *testing.T) {
+func TestMarkdownReasoningLinksAPathBeforeItWraps(t *testing.T) {
 	workspace := t.TempDir()
 	relativePath := "somewhere/a-very-long-patch-file-name.patch"
 	path := filepath.Join(workspace, relativePath)
@@ -547,37 +568,30 @@ func TestReasoningLinksAPathBeforeItWraps(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	for name, rendering := range map[string]output.ReasoningRendering{
-		"plain":    output.ReasoningPlain,
-		"markdown": output.ReasoningMarkdown,
-	} {
-		t.Run(name, func(t *testing.T) {
-			var renderer markdown.IncrementalRenderer
-			var plain plainThought
-			var reflow paragraphReflow
-			var styles rowMemory
-			rows := renderReasoningWith(
-				&renderer,
-				&plain,
-				&reflow,
-				&styles,
-				"Inspect "+relativePath+" before answering.",
-				20,
-				rendering,
-				true,
-				true,
-				link.Roots{Workspace: workspace},
-			)
-			drawn := strings.Join(rows, "\n")
-			completeOpening := "\x1b]8;;" + link.PathURL(path) + "\x1b\\"
-			completeLinks := strings.Count(drawn, completeOpening)
-			if completeLinks < 2 {
-				t.Errorf("wrapped path has %d complete links in %q", completeLinks, drawn)
-			}
-			if fileLinks := strings.Count(drawn, "\x1b]8;;file://"); fileLinks != completeLinks {
-				t.Errorf("wrapped path has %d file links but %d complete targets in %q", fileLinks, completeLinks, drawn)
-			}
-		})
+	var renderer markdown.IncrementalRenderer
+	var plain plainThought
+	var reflow paragraphReflow
+	var styles rowMemory
+	rows := renderReasoningWith(
+		&renderer,
+		&plain,
+		&reflow,
+		&styles,
+		"Inspect "+relativePath+" before answering.",
+		20,
+		output.ReasoningMarkdown,
+		true,
+		true,
+		link.Roots{Workspace: workspace},
+	)
+	drawn := strings.Join(rows, "\n")
+	completeOpening := "\x1b]8;;" + link.PathURL(path) + "\x1b\\"
+	completeLinks := strings.Count(drawn, completeOpening)
+	if completeLinks < 2 {
+		t.Errorf("wrapped path has %d complete links in %q", completeLinks, drawn)
+	}
+	if fileLinks := strings.Count(drawn, "\x1b]8;;file://"); fileLinks != completeLinks {
+		t.Errorf("wrapped path has %d file links but %d complete targets in %q", fileLinks, completeLinks, drawn)
 	}
 }
 

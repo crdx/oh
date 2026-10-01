@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"crdx.org/oh/internal/file"
+	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/edit"
 )
 
@@ -206,5 +207,14 @@ func TestTheToolSaysItWritesEvenOverAReadOnlyTree(t *testing.T) {
 
 	if edit.New(root, file.NewSnapshots()).ReadOnly() {
 		t.Error("expected an edit tool to say it writes whatever the tree of the moment allows")
+	}
+}
+
+func TestTheToolLeavesASuccessfulEditUnmarked(t *testing.T) {
+	isWritable := true
+	root, _ := switchableRoot(t, &isWritable)
+
+	if tool.MarksSuccess(edit.New(root, file.NewSnapshots())) {
+		t.Error("expected an edit, which is expected to succeed, to leave its success unmarked")
 	}
 }

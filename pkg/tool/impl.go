@@ -15,11 +15,12 @@ type _tool struct {
 	parse               func(arguments string) (_call, error)
 	render              func(arguments string) (CallRendering, bool)
 
-	parallel  bool
-	readOnly  bool
-	stateName string
-	restore   Restorer
-	fallback  CallRendering
+	parallel        bool
+	readOnly        bool
+	isSuccessMarked bool
+	stateName       string
+	restore         Restorer
+	fallback        CallRendering
 }
 
 func (self _tool) Name() string        { return self.name }
@@ -33,6 +34,7 @@ func (self _tool) CompatibleWith(revision string) bool {
 func (self _tool) Concurrent() bool                              { return self.parallel }
 func (self _tool) ReadOnly() bool                                { return self.readOnly }
 func (self _tool) StateKey() string                              { return self.stateName }
+func (self _tool) MarksSuccess() bool                            { return self.isSuccessMarked }
 func (self _tool) Render(arguments string) (CallRendering, bool) { return self.render(arguments) }
 
 func (self _tool) Restore(state json.RawMessage) error {

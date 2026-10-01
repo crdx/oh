@@ -5,7 +5,7 @@
 
 $ git status --short ✓ 2L 4M M cmd/oh/m…
 $ touch build.lock ✓ no output 2M
-read cmd/oh/dynamic/dynamic.go ✓ 1L
+read cmd/oh/dynamic/dynamic.go 1L
 $ printf 'one\\ttwo\\r\\n\\n\\tthree… ✓ 3L 2M
 $ ls /usr/bin ✓ 1L 6M awk basename bash…
 $ for NAME in cmd/oh/dynam… ✓ 1s 1L 400M
@@ -68,7 +68,7 @@ t
 
 ✓
 ✓
-✓
+…
 ✓
 ✓
 ✓
@@ -116,7 +116,7 @@ n
 
 $ git status --short ✓ 2L 4M M cmd/oh/main.go M cmd/oh/dynamic/dynamic.go
 $ touch build.lock ✓ no output 2M
-read cmd/oh/dynamic/dynamic.go ✓ 1L
+read cmd/oh/dynamic/dynamic.go 1L
 $ printf 'one\\ttwo\\r\\n\\n\\tthree\\n' ✓ 3L 2M one two three
 $ ls /usr/bin ✓ 1L 6M awk basename bash cat chmod cp date diff du echo env find grep gzip head id j…
 $ for NAME in cmd/oh/dynamic cmd/oh/painter cmd/oh/call; do go vet ./$NAME; done ✓ 1s 1L 400M ok
@@ -133,7 +133,7 @@ The tree is dirty and the build is broken.
 
 $ g… ✓ 2L 4M
 $ touch b… ✓
-read c… ✓ 1L
+read cmd… 1L
 $ p… ✓ 3L 2M
 $ l… ✓ 1L 6M
 $ for NAM… ✓
@@ -151,7 +151,7 @@ broken.
 
 $ git status --short ✓ 2L 4M M cmd/oh/main.go M cmd/oh/dynamic/dynamic.go
 $ touch build.lock ✓ no output 2M
-read cmd/oh/dynamic/dynamic.go ✓ 1L
+read cmd/oh/dynamic/dynamic.go 1L
 $ printf 'one\\ttwo\\r\\n\\n\\tthree\\n' ✓ 3L 2M one two three
 $ ls /usr/bin ✓ 1L 6M awk basename bash cat chmod cp date diff du echo env find grep gzip head id j…
 $ for NAME in cmd/oh/dynamic cmd/oh/painter cmd/oh/call; do go vet ./$NAME; done ✓ 1s 1L 400M ok

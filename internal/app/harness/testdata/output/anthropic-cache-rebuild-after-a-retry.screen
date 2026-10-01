@@ -2,7 +2,7 @@
  go quiet until the cache has gone cold
 
 
-work work ✓ 1L
+work work 1L
 
 [#1] Request failed; retrying in 1s: The stream sent nothing for 0.2s
 

@@ -86,7 +86,8 @@ func TestTheNumberOfMatchingLinesIsReported(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if want := tool.GetMetrics(output); metrics != want {
+	want := tool.ToolCallMetrics{Kind: tool.MetricSearch, Lines: 2, Bytes: int64(len(output))}
+	if metrics != want {
 		t.Errorf("got metrics %+v, want %+v", metrics, want)
 	}
 }
@@ -140,13 +141,16 @@ func TestAPatternThatWillNotCompileIsRefused(t *testing.T) {
 func TestASearchThatFindsNothingSaysSo(t *testing.T) {
 	root := testRoot(t, map[string]string{"main.go": "hello\n"})
 
-	output, err := exec(t, root, `{"pattern":"goodbye"}`)
+	output, metrics, err := execWithMetrics(t, root, `{"pattern":"goodbye"}`)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
 	if output != "(no matches)" {
 		t.Errorf("expected no matches to say so, got %q", output)
+	}
+	if metrics.Lines != 0 {
+		t.Errorf("got %d lines, want the placeholder left uncounted", metrics.Lines)
 	}
 }
 
@@ -223,8 +227,13 @@ func TestHittingTheByteCapIsSaidOutLoud(t *testing.T) {
 	if !strings.Contains(output, "matching output exceeded 16K") {
 		t.Errorf("expected the byte cap to be reported, got the last of %q", output[len(output)-100:])
 	}
-	wantMetrics := tool.GetMetrics(output)
-	wantMetrics.IsTruncated = true
+	matches, _, _ := strings.Cut(output, "\n\n")
+	wantMetrics := tool.ToolCallMetrics{
+		Kind:        tool.MetricSearch,
+		Lines:       int64(len(strings.Split(matches, "\n"))),
+		Bytes:       int64(len(output)),
+		IsTruncated: true,
+	}
 	if metrics != wantMetrics {
 		t.Errorf("got metrics %+v, want %+v", metrics, wantMetrics)
 	}

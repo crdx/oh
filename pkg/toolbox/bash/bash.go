@@ -65,6 +65,7 @@ func New(
 		DefaultsTo(defaultRendering()).
 		Validate(func(args Args) error { return validate(args, hasNetworkChoice) }).
 		SyntaxFrom("bash", emphasisSource).
+		MarksSuccess().
 		Exec(func(ctx context.Context, args Args) (string, tool.ToolCallMetrics, error) {
 			isHostNetwork := hasNetworkChoice && args.Network == HostNetwork
 			if isHostNetwork {

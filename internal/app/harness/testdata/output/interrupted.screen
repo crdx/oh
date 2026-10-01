@@ -14,7 +14,7 @@ Turn stopped.
  never mind, what is in target.txt?
 
 
-read target.txt ✓ 1L
+read target.txt 1L
 
 It holds the word one, and nothing else.
 === one column ===
@@ -179,7 +179,7 @@ t
 ?
 
 
-✓
+…
 
 I
 t
@@ -229,7 +229,7 @@ Turn stopped.
  never mind, what is in target.txt?
 
 
-read target.txt ✓ 1L
+read target.txt 1L
 
 It holds the word one, and nothing else.
 === tiny ===
@@ -255,7 +255,7 @@ stopped.
  target.txt?
 
 
-read t… ✓ 1L
+read tar… 1L
 
 It holds the
 word one,
@@ -276,6 +276,6 @@ Turn stopped.
  never mind, what is in target.txt?
 
 
-read target.txt ✓ 1L
+read target.txt 1L
 
 It holds the word one, and nothing else.

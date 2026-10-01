@@ -1,6 +1,7 @@
 package call_test
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 	"strings"
@@ -399,5 +400,32 @@ func TestASkillReadUsesItsStoredSemanticRendering(t *testing.T) {
 
 	if got := label.Render(); got != want.Render() {
 		t.Errorf("got %q, want %q", got, want.Render())
+	}
+}
+
+func TestALabelMarksSuccessOnlyWhenItsToolSaysTo(t *testing.T) {
+	marking := tool.Implement(
+		tool.Definition{Name: "run", Schema: tool.Schema{}},
+		func(struct{}) tool.CallRendering { return tool.CallRendering{} },
+	).MarksSuccess().Plain(func(context.Context, struct{}) (string, error) { return "", nil })
+	getTool := func(string) (tool.Tool, bool) { return marking, true }
+
+	if !call.LabelFor(agent.Event{Name: "run", Arguments: `{}`}, getTool, nil).MarksSuccess {
+		t.Error("expected a tool that marks success to mark it on its label")
+	}
+
+	stored := agent.Event{Name: "run", FallbackRendering: agent.FallbackRendering{MarksSuccess: true}}
+	if !call.LabelFor(stored, nil, nil).MarksSuccess {
+		t.Error("expected a tool nobody can look up to fall back on what was stored")
+	}
+
+	quiet := tool.Implement(
+		tool.Definition{Name: "edit", Schema: tool.Schema{}},
+		func(struct{}) tool.CallRendering { return tool.CallRendering{} },
+	).Plain(func(context.Context, struct{}) (string, error) { return "", nil })
+	getQuietTool := func(string) (tool.Tool, bool) { return quiet, true }
+
+	if call.LabelFor(stored, getQuietTool, nil).MarksSuccess {
+		t.Error("expected the tool of the moment to outrank what was stored")
 	}
 }

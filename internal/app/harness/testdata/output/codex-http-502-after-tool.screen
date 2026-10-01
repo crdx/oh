@@ -3,7 +3,7 @@
 
 
 Use the tool.
-work work ✓ 1L
+work work 1L
 
 [#1] Request failed; retrying in 1s: Request failed with status 502: upstream connect error or
 disconnect/reset before headers. reset reason: connection termination

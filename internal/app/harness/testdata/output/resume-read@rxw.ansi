@@ -10,7 +10,7 @@
 Reading the target before the process\r
 restarts.\r
 \r
-\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 The target is now safely recorded.\r
 \e[?25h\e[?2026l
@@ -164,7 +164,7 @@ t\r
 s\r
 .\r
 \r
-\e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\…\e]8;;\e\\\r
 \r
 T\r
 h\r
@@ -204,7 +204,7 @@ d\r
 \e[48;2;52;53;65m\e[0m
 Reading the target before the process restarts.
 
-read \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mtarget.txt\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
+read \e[38;2;192;128;80mtarget.txt\e[0m \e[38;2;150;152;150m1L\e[0m
 
 The target is now safely recorded.
 
@@ -217,7 +217,7 @@ The target is now safely recorded.
 \r
 Reading the target before the process restarts.\r
 \r
-\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 The target is now safely recorded.\r
 
@@ -230,7 +230,7 @@ The target is now safely recorded.\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
 Read\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading the\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading the targ\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading the target b\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading the target befor\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading the target before th\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading the target before the pr\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading the target before the proces\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading the target before the process re\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading the target before the process restar\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading the target before the process restarts.\e[K\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-read \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+read \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe targ\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe target i\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe target is no\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe target is now sa\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe target is now safely\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe target is now safely rec\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe target is now safely recorde\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe target is now safely recorded.\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[34C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
@@ -243,7 +243,7 @@ The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe targ\e[K\r\e[8C\e[?25h\e[?20
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
 Reading the target before the process restarts.\e[K\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-read \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+read \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 The target is now safely recorded.\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[34C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
@@ -256,7 +256,7 @@ The target is now safely recorded.\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
 Read\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading the\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading the targ\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading the target b\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading the target befor\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading the target before th\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading the target before the pr\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading the target before the proces\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading the target before the process re\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading the target before the process restar\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\rReading the target before the process restarts.\e[K\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[47C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-read \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+read \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe targ\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe target i\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe target is no\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe target is now sa\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe target is now safely\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe target is now safely rec\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe target is now safely recorde\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe target is now safely recorded.\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[34C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
@@ -282,7 +282,7 @@ before the\r
 process\r
 restarts.\r
 \r
-\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\t…\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\tar…\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 The target\r
 is now\r
@@ -297,7 +297,7 @@ recorded.\r
 \e[48;2;52;53;65m\e[0m\r
 Reading the target before the process restarts.\r
 \r
-\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 The target is now safely recorded.\r
 \e[?25h\e[?2026l
@@ -310,7 +310,7 @@ The target is now safely recorded.\r
 \r
 Reading the target before the process restarts.\r
 \r
-\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 The target is now safely recorded.\r
 \e[?25h\e[?2026l

@@ -68,6 +68,10 @@ func (self truncatedTool) CompatibleWith(revision string) bool {
 	return tool.AcceptsRevision(self.Tool, revision)
 }
 
+func (self truncatedTool) MarksSuccess() bool {
+	return tool.MarksSuccess(self.Tool)
+}
+
 func (self truncatedTool) Parse(arguments string) (tool.ToolCall, error) {
 	call, err := self.Tool.Parse(arguments)
 	if err != nil {

@@ -78,6 +78,17 @@ func AppendSearchResult(results []string, returnedBytes int64, result string) ([
 	return append(results, result), returnedBytes + resultBytes, false
 }
 
+func SearchReport(results []string, isTruncated bool) (string, tool.ToolCallMetrics) {
+	output := ReportSearchResults(results, isTruncated)
+
+	return output, tool.ToolCallMetrics{
+		Kind:        tool.MetricSearch,
+		Lines:       int64(len(results)),
+		Bytes:       int64(len(output)),
+		IsTruncated: isTruncated,
+	}
+}
+
 func ReportSearchResults(results []string, isTruncated bool) string {
 	joinedResults := strings.Join(results, "\n")
 	if isTruncated {

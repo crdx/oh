@@ -14,8 +14,8 @@ announcement the search cites.
 Let me search, then read the
 announcement.
 
-lookup latest Go release ✓ 1L
-fetch https://go.dev/blog/g… ✓ 11L ~100t
+lookup latest Go release 1L
+fetch https://go.dev/blog/go1… 11L ~100t
 
 Go 1.26 is current. The announcement
 calls out iterators in container/heap,
@@ -319,8 +319,8 @@ n
 t
 .
 
-✓
-✓
+…
+…
 
 G
 o
@@ -706,8 +706,8 @@ Searching first, then reading the announcement the search cites.
 
 Let me search, then read the announcement.
 
-lookup latest Go release ✓ 1L
-fetch https://go.dev/blog/go1.26 as markdown ✓ 11L ~100t
+lookup latest Go release 1L
+fetch https://go.dev/blog/go1.26 as markdown 11L ~100t
 
 Go 1.26 is current. The announcement calls out iterators in container/heap, flaky-run reporting in
 go test, and a smaller allocation header.
@@ -758,8 +758,8 @@ read the
 announcement
 .
 
-lookup ✓ 1L
-fetch htt… ✓
+lookup l… 1L
+f… 11L ~100t
 
 Go 1.26 is
 current. The
@@ -815,8 +815,8 @@ Searching first, then reading the announcement the search cites.
 
 Let me search, then read the announcement.
 
-lookup latest Go release ✓ 1L
-fetch https://go.dev/blog/go1.26 as markdown ✓ 11L ~100t
+lookup latest Go release 1L
+fetch https://go.dev/blog/go1.26 as markdown 11L ~100t
 
 Go 1.26 is current. The announcement calls out iterators in container/heap, flaky-run reporting in
 go test, and a smaller allocation header.

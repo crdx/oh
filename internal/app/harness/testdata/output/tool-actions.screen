@@ -3,20 +3,21 @@
  show every action-oriented tool label
 
 
-forward 8000 ✓
-forward docs:8001 ✓
-close 8000 ✓
-list forwards ✓
-start docs:8002 $ serve docs ✓
-restart docs ✓
-status docs ✓
-cat docs ✓
-await docs || build ✓
-await docs && build for up to 20s ✓
-stop docs ✓
-list jobs ✓
-discard docs ✓
-prune jobs ✓
+forward 8000
+forward docs:8001
+close 8000
+list forwards
+forward ✗ action must be add, remove, o…
+start docs:8002 $ serve docs
+restart docs
+status docs
+cat docs
+await docs || build
+await docs && build for up to 20s
+stop docs
+list jobs
+discard docs
+prune jobs
 
 Those are every action label.
 === one column ===
@@ -89,20 +90,21 @@ e
 l
 
 
-✓
-✓
-✓
-✓
-✓
-✓
-✓
-✓
-✓
-✓
-✓
-✓
-✓
-✓
+…
+…
+…
+…
+✗
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
 
 T
 h
@@ -134,20 +136,21 @@ l
  show every action-oriented tool label
 
 
-forward 8000 ✓
-forward docs:8001 ✓
-close 8000 ✓
-list forwards ✓
-start docs:8002 $ serve docs ✓
-restart docs ✓
-status docs ✓
-cat docs ✓
-await docs || build ✓
-await docs && build for up to 20s ✓
-stop docs ✓
-list jobs ✓
-discard docs ✓
-prune jobs ✓
+forward 8000
+forward docs:8001
+close 8000
+list forwards
+forward ✗ action must be add, remove, or list (got "bogus")
+start docs:8002 $ serve docs
+restart docs
+status docs
+cat docs
+await docs || build
+await docs && build for up to 20s
+stop docs
+list jobs
+discard docs
+prune jobs
 
 Those are every action label.
 === tiny ===
@@ -158,20 +161,21 @@ Those are every action label.
  label
 
 
-forward 8… ✓
-forward d… ✓
-close 8000 ✓
-list forw… ✓
-start doc… ✓
-restart d… ✓
-status do… ✓
-cat docs ✓
-await doc… ✓
-await doc… ✓
-stop docs ✓
-list jobs ✓
-discard d… ✓
-prune jobs ✓
+forward 8000
+forward doc…
+close 8000
+list forwar…
+for… ✗ acti…
+start docs:…
+restart docs
+status docs
+cat docs
+await docs …
+await docs …
+stop docs
+list jobs
+discard docs
+prune jobs
 
 Those are
 every action
@@ -181,19 +185,20 @@ label.
  show every action-oriented tool label
 
 
-forward 8000 ✓
-forward docs:8001 ✓
-close 8000 ✓
-list forwards ✓
-start docs:8002 $ serve docs ✓
-restart docs ✓
-status docs ✓
-cat docs ✓
-await docs || build ✓
-await docs && build for up to 20s ✓
-stop docs ✓
-list jobs ✓
-discard docs ✓
-prune jobs ✓
+forward 8000
+forward docs:8001
+close 8000
+list forwards
+forward ✗ action must be add, remove, or list (got "bogus")
+start docs:8002 $ serve docs
+restart docs
+status docs
+cat docs
+await docs || build
+await docs && build for up to 20s
+stop docs
+list jobs
+discard docs
+prune jobs
 
 Those are every action label.

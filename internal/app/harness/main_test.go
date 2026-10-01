@@ -143,6 +143,7 @@ import (
 	"crdx.org/oh/pkg/toolbox/bash"
 	"crdx.org/oh/pkg/toolbox/expose"
 	"crdx.org/oh/pkg/toolbox/fetch"
+	"crdx.org/oh/pkg/toolbox/grep"
 	"crdx.org/oh/pkg/toolbox/job"
 	"crdx.org/oh/pkg/toolbox/lookup"
 	"crdx.org/oh/pkg/toolbox/notify"
@@ -175,6 +176,12 @@ func TestGoldenSpecialLinksDrawWhatTheyDrewBefore(t *testing.T) {
 		},
 		"a path under the scratch in an answer only appended": func() string {
 			return drawAppendedScratchPathLink(t)
+		},
+		"a web address in code closing a sentence": func() string {
+			return drawScratchPath(t, agent.Event{
+				Kind: agent.ModelMessageEvent,
+				Text: "Trellis is at `http://trellis.heroic-ibex.agent:12006/`.",
+			}, false)
 		},
 	}
 	compareWithGolden(t, "special-links", ".ansi", passes)
@@ -5041,9 +5048,9 @@ func TestARedrawDuringATurnKeepsTheOpenBlockWithTheTurn(t *testing.T) {
 			t.Fatal("expected the turn to keep the painter holding its open block")
 		}
 
-		testConversation.currentTurn.painter.DrawEvent(agent.Event{Kind: agent.ToolCallResultEvent, ID: "1", Name: "read", Took: time.Second})
+		testConversation.currentTurn.painter.DrawEvent(agent.Event{Kind: agent.ToolCallResultEvent, ID: "1", Name: "read", Took: 7 * time.Second})
 
-		if plain := style.Plain(screenOutput.String()); !strings.Contains(plain, "read one.go ✓") {
+		if plain := style.Plain(screenOutput.String()); !strings.Contains(plain, "read one.go 7s") {
 			t.Errorf("expected the call to be answered on the block the redraw kept, got %q", plain)
 		}
 	})
@@ -5308,7 +5315,7 @@ func TestAnAsideStandsBetweenTheCallsItArrivedAmong(t *testing.T) {
 	})
 	painter.DrawEvent(agent.Event{Kind: agent.SilentTurnEvent})
 
-	painter.DrawEvent(agent.Event{Kind: agent.ToolCallResultEvent, ID: "1", Took: time.Second})
+	painter.DrawEvent(agent.Event{Kind: agent.ToolCallResultEvent, ID: "1", Took: 7 * time.Second})
 
 	rows := visibleScreen(t, screenOutput.String(), 80)
 	rows = slices.DeleteFunc(rows, func(row string) bool { return strings.TrimSpace(row) == "" })
@@ -5316,7 +5323,7 @@ func TestAnAsideStandsBetweenTheCallsItArrivedAmong(t *testing.T) {
 	if len(rows) != 2 {
 		t.Fatalf("expected the call and the aside on rows of their own, got %q", rows)
 	}
-	if !strings.Contains(rows[0], "one.txt") || !strings.Contains(rows[0], "✓") {
+	if !strings.Contains(rows[0], "one.txt") || !strings.Contains(rows[0], "7s") {
 		t.Errorf("expected the call to keep its result above the aside, got %q", rows[0])
 	}
 	if !strings.Contains(rows[1], agent.SilentTurnNotice) {
@@ -6118,12 +6125,20 @@ func pendingEnvironmentChangeStream(t *testing.T) string {
 	self.screen.Line(startup.RenderBanner(time.Millisecond, false, startup.Info{Session: "tame-impala"}, replayColumns, false))
 
 	known := environment.Snapshot{
-		Skills:       []environment.Skill{{Name: "old", Description: "old skill", Location: "/skills/old/SKILL.md"}},
+		Skills: []environment.Skill{
+			{Name: "old", Description: "old skill", Location: "/skills/old/SKILL.md"},
+			{Name: "revised", Description: "revised skill before", Location: "/skills/revised/SKILL.md"},
+			{Name: "renamed-before", Description: "renamed skill", Location: "/skills/renamed/SKILL.md"},
+		},
 		PortHostname: "old.agent.test",
 	}
 	current := environment.Snapshot{
-		Sandbox:      environment.Sandbox{ReadPaths: []string{"/reference"}},
-		Skills:       []environment.Skill{{Name: "new", Description: "new skill", Location: "/skills/new/SKILL.md"}},
+		Sandbox: environment.Sandbox{ReadPaths: []string{"/reference"}},
+		Skills: []environment.Skill{
+			{Name: "new", Description: "new skill", Location: "/skills/new/SKILL.md"},
+			{Name: "revised", Description: "revised skill after", Location: "/skills/revised/SKILL.md"},
+			{Name: "renamed-after", Description: "renamed skill", Location: "/skills/renamed/SKILL.md"},
+		},
 		IsRepository: true,
 		PortHostname: "new.agent.test",
 	}
@@ -16439,6 +16454,8 @@ const exposeToolName = "expose"
 
 const jobToolName = "job"
 
+const grepToolName = "grep"
+
 const notifyToolName = "notify"
 
 const printedSessionIsImpossible = "this scenario drives the interface, which a printed session has none of\n"
@@ -16921,6 +16938,11 @@ func newSessionGoldenTools(
 			continue
 		}
 
+		if specification.Name == grepToolName {
+			tools = append(tools, newSessionGoldenGrepTool(t))
+			continue
+		}
+
 		if specification.ShellWithheld {
 			tools = append(tools, newSessionGoldenShell(t, caps.Read, false))
 			continue
@@ -17056,6 +17078,22 @@ func newSessionGoldenLargeReadTool(t *testing.T, scratchDirectory string) tool.T
 	return read.New(root, file.NewSnapshots())
 }
 
+func newSessionGoldenGrepTool(t *testing.T) tool.Tool {
+	t.Helper()
+
+	searched := t.TempDir()
+	if err := os.WriteFile(filepath.Join(searched, "main.go"), []byte("package main\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	rootHandle, err := os.OpenRoot(searched)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = rootHandle.Close() })
+
+	return grep.New(file.New(rootHandle, func(string) error { return nil }), file.NewSnapshots())
+}
+
 func sessionGoldenImage(t *testing.T, size string, byteCount int64) (tool.Image, tool.ToolCallMetrics) {
 	t.Helper()
 
@@ -17095,6 +17133,8 @@ type sessionGoldenRevision struct {
 }
 
 func (sessionGoldenRevision) Revision() string { return "scenario/v1" }
+
+func (self sessionGoldenRevision) MarksSuccess() bool { return tool.MarksSuccess(self.Tool) }
 
 func newSessionGoldenDeclaredTool(t *testing.T, specification sessionGoldenTool, directory string) tool.Tool {
 	t.Helper()
@@ -21158,7 +21198,7 @@ func TestTwoReturnsWithAStoppedJobNoticeSubmitItRatherThanTheNudge(t *testing.T)
 	}
 }
 
-func TestTheModelIsToldExactlyWhatTheScreenDrew(t *testing.T) {
+func TestTheModelIsToldTheDetailedFormOfAUserNotice(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
 	self.settleAccess()
@@ -21174,11 +21214,21 @@ func TestTheModelIsToldExactlyWhatTheScreenDrew(t *testing.T) {
 	if len(drawn) != 3 {
 		t.Fatalf("got %d notices drawn, want the restored job, the ended job and the change: %q", len(drawn), drawn)
 	}
+	modelNotices := self.pendingNotices.modelNotices()
+	if len(modelNotices) != 3 {
+		t.Fatalf("got %d model notices, want the restored job, the ended job and the change: %q", len(modelNotices), modelNotices)
+	}
+	if strings.Contains(drawn[0], "job(action") || !strings.Contains(modelNotices[0], "job(action") {
+		t.Errorf("got user notice %q and model notice %q, want only the model to receive the tool instruction", drawn[0], modelNotices[0])
+	}
+	if !slices.Equal(drawn[1:], modelNotices[1:]) {
+		t.Errorf("got remaining user notices %q and model notices %q, want them equal", drawn[1:], modelNotices[1:])
+	}
 
 	self.settleAccess()
 
-	if told := self.prelude(); told != strings.Join(drawn, noticeSeparator) {
-		t.Errorf("the model was told\n%q\nwhile the screen drew\n%q", told, drawn)
+	if told := self.prelude(); told != strings.Join(modelNotices, noticeSeparator) {
+		t.Errorf("the model was told\n%q\nwant\n%q", told, modelNotices)
 	}
 }
 

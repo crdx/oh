@@ -8,19 +8,19 @@
 \e[38;2;207;173;0m[#1] Request failed; retrying: The\e[0m\r
 \e[38;2;207;173;0mstream ended before the response did\e[0m\r
 \r
-\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;150;152;150m2L\e[0m\r
 \r
 \e[48;2;48;58;67m                                        \e[0m\r
-\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at        \e[0m\r
-\e[48;2;48;58;67m    http://127.27.192.223:8080.         \e[0m\r
+\e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to       \e[0m\r
+\e[48;2;48;58;67m    \e]8;;http://127.27.192.223:8080\e\\http://127.27.192.223:8080\e]8;;\e\\.         \e[0m\r
 \e[48;2;48;58;67m                                        \e[0m\r
 \r
 A tool ran, and an answer followed it.\r
 \r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e[3m\e[38;2;150;152;150mA thought after a tool call.\e[0m\e[0m\r
-\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mcmd\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;192;128;80mcmd\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 \e[38;2;207;173;0mModel returned no reply.\e[0m\r
 \r
@@ -240,28 +240,14 @@ An answer after a thought.\r
 \e[38;2;207;173;0mi\e[0m\r
 \e[38;2;207;173;0md\e[0m\r
 \r
-\e[38;2;76;154;44m✓\e[0m\r
-\e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\…\e]8;;\e\\\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\…\e]8;;\e\\\r
 \r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67m🤖\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mS\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67ma\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mn\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67md\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mb\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mo\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mx\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mp\e[0m\r
+\e[48;2;48;58;67mP\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67mo\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
@@ -277,75 +263,89 @@ An answer after a thought.\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67m0\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67mi\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mx\e[0m\r
+\e[48;2;48;58;67ms\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mp\e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67mo\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67mw\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mf\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mr\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mw\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ma\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mr\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67md\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67me\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67md\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67ma\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67mt\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mh\e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\h\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\t\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mp\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\t\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m:\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\p\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m/\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\:\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m/\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\/\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m1\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\/\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m2\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\1\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m7\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\2\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m.\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\7\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m2\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\.\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m7\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\2\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m.\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\7\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m1\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\.\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m9\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\1\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m2\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\9\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m.\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\2\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m2\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\.\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m2\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\2\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m3\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\2\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m:\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\3\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m8\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\:\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m0\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\8\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m8\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\0\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m0\e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\8\e]8;;\e\\\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e]8;;http://127.27.192.223:8080\e\\0\e]8;;\e\\\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67m.\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
@@ -382,7 +382,7 @@ i\r
 t\r
 .\r
 \r
-\e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\…\e]8;;\e\\\r
 \e[3m\e[38;2;150;152;150mA\e[0m\r
 \e[3m\e[38;2;150;152;150mt\e[0m\r
 \e[3m\e[38;2;150;152;150mh\e[0m\r
@@ -406,7 +406,7 @@ t\r
 \e[3m\e[38;2;150;152;150ml\e[0m\r
 \e[3m\e[38;2;150;152;150ml\e[0m\r
 \e[3m\e[38;2;150;152;150m.\e[0m\e[0m\r
-\e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\…\e]8;;\e\\\r
 \r
 \e[38;2;207;173;0mM\e[0m\r
 \e[38;2;207;173;0mo\e[0m\r
@@ -632,17 +632,17 @@ t\r
 \e[38;2;207;173;0mModel returned no reply.\e[0m
 \e[38;2;207;173;0m[#1] Request failed; retrying: The stream ended before the response did\e[0m
 
-read \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mtarget.txt\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
-ls \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m
+read \e[38;2;192;128;80mtarget.txt\e[0m \e[38;2;150;152;150m1L\e[0m
+ls \e[38;2;150;152;150m2L\e[0m
 
 \e[48;2;48;58;67m\e[0m
-\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.\e[0m
+\e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.\e[0m
 \e[48;2;48;58;67m\e[0m
 A tool ran, and an answer followed it.
 
-read \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mREADME.md\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
+read \e[38;2;192;128;80mREADME.md\e[0m \e[38;2;150;152;150m1L\e[0m
 \e[3m\e[38;2;150;152;150mA thought after a tool call.\e[0m\e[0m
-ls \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mcmd\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
+ls \e[38;2;192;128;80mcmd\e[0m \e[38;2;150;152;150m1L\e[0m
 
 \e[38;2;207;173;0mModel returned no reply.\e[0m
 
@@ -669,18 +669,18 @@ An answer after a thought.
 \e[38;2;207;173;0mModel returned no reply.\e[0m\r
 \e[38;2;207;173;0m[#1] Request failed; retrying: The stream ended before the response did\e[0m\r
 \r
-\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;150;152;150m2L\e[0m\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.                                        \e[0m\r
+\e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to \e]8;;http://127.27.192.223:8080\e\\http://127.27.192.223:8080\e]8;;\e\\.                                       \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
 A tool ran, and an answer followed it.\r
 \r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e[3m\e[38;2;150;152;150mA thought after a tool call.\e[0m\e[0m\r
-\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mcmd\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;192;128;80mcmd\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 \e[38;2;207;173;0mModel returned no reply.\e[0m\r
 \r
@@ -707,18 +707,18 @@ An answer after a thought.\r
 \e[38;2;207;173;0mModel returned no reply.\e[0m\r
 \e[38;2;207;173;0m[#1] Request failed; retrying: The stream ended before the response did\e[0m\e[?2026h\e[?25l\e[?7l\r
 \r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-read \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\rls\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+read \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\rls\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;150;152;150m2L\e[0m\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.                                        \e[0m\r
+\e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to \e]8;;http://127.27.192.223:8080\e\\http://127.27.192.223:8080\e]8;;\e\\.                                       \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 A to\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA tool r\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA tool ran,\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA tool ran, and\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA tool ran, and an a\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA tool ran, and an answe\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA tool ran, and an answer fo\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA tool ran, and an answer follow\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA tool ran, and an answer followed i\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA tool ran, and an answer followed it.\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-read \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+read \e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[3m\e[38;2;150;152;150mA th\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA though\e[0m\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought af\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought after\e[0m\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought after a to\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought after a tool c\e[0m\e[0m\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought after a tool call.\e[0m\e[0m\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\rls \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mcmd\e[0m\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mcmd\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[11C\e[?25h\e[?2026l\r
+\rls \e[38;2;192;128;80mcmd\e[0m\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;192;128;80mcmd\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[9C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mModel returned no reply.\e[0m\e[?2026h\e[?25l\r
 \r\e[K\r
@@ -745,18 +745,18 @@ An a\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAn answe\e[K\r\e[8C\e[?25h\e[?2
 \e[38;2;207;173;0mModel returned no reply.\e[0m\r
 \e[38;2;207;173;0m[#1] Request failed; retrying: The stream ended before the response did\e[0m\e[?2026h\e[?25l\e[?7l\r
 \r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-read \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\rls\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+read \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\rls\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;150;152;150m2L\e[0m\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.                                        \e[0m\r
+\e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to \e]8;;http://127.27.192.223:8080\e\\http://127.27.192.223:8080\e]8;;\e\\.                                       \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 A tool ran, and an answer followed it.\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-read \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+read \e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[3m\e[38;2;150;152;150mA thought after a tool call.\e[0m\e[0m\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\rls \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mcmd\e[0m\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mcmd\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[11C\e[?25h\e[?2026l\r
+\rls \e[38;2;192;128;80mcmd\e[0m\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;192;128;80mcmd\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[9C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mModel returned no reply.\e[0m\e[?2026h\e[?25l\r
 \r\e[K\r
@@ -783,18 +783,18 @@ An answer after a thought.\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[26C\e
 \e[38;2;207;173;0mModel returned no reply.\e[0m\r
 \e[38;2;207;173;0m[#1] Request failed; retrying: The stream ended before the response did\e[0m\e[?2026h\e[?25l\e[?7l\r
 \r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-read \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\rls\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+read \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\rls\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;150;152;150m2L\e[0m\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.                                        \e[0m\r
+\e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to \e]8;;http://127.27.192.223:8080\e\\http://127.27.192.223:8080\e]8;;\e\\.                                       \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 A to\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA tool r\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA tool ran,\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA tool ran, and\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA tool ran, and an a\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA tool ran, and an answe\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA tool ran, and an answer fo\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA tool ran, and an answer follow\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA tool ran, and an answer followed i\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rA tool ran, and an answer followed it.\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-read \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+read \e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[3m\e[38;2;150;152;150mA th\e[0m\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA though\e[0m\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought af\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought after\e[0m\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought after a to\e[0m\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought after a tool c\e[0m\e[0m\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mA thought after a tool call.\e[0m\e[0m\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\rls \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mcmd\e[0m\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mcmd\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[11C\e[?25h\e[?2026l\r
+\rls \e[38;2;192;128;80mcmd\e[0m\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;192;128;80mcmd\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[9C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mModel returned no reply.\e[0m\e[?2026h\e[?25l\r
 \r\e[K\r
@@ -836,19 +836,19 @@ An a\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAn answe\e[K\r\e[8C\e[?25h\e[?2
 \e[38;2;207;173;0mthe response\e[0m\r
 \e[38;2;207;173;0mdid\e[0m\r
 \r
-\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\t…\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\tar…\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;150;152;150m2L\e[0m\r
 \r
 \e[48;2;48;58;67m            \e[0m\r
-\e[48;2;48;58;67m 🤖 Sandbox \e[0m\r
-\e[48;2;48;58;67m    port    \e[0m\r
-\e[48;2;48;58;67m    8080    \e[0m\r
-\e[48;2;48;58;67m    exposed \e[0m\r
-\e[48;2;48;58;67m    at      \e[0m\r
-\e[48;2;48;58;67m    http://1\e[0m\r
-\e[48;2;48;58;67m    27.27.19\e[0m\r
-\e[48;2;48;58;67m    2.223:80\e[0m\r
-\e[48;2;48;58;67m    80.     \e[0m\r
+\e[48;2;48;58;67m 🤖 Port    \e[0m\r
+\e[48;2;48;58;67m    8080 is \e[0m\r
+\e[48;2;48;58;67m    now     \e[0m\r
+\e[48;2;48;58;67m    forwarde\e[0m\r
+\e[48;2;48;58;67m    d to    \e[0m\r
+\e[48;2;48;58;67m    \e]8;;http://127.27.192.223:8080\e\\http://1\e]8;;\e\\\e[0m\r
+\e[48;2;48;58;67m    \e]8;;http://127.27.192.223:8080\e\\27.27.19\e]8;;\e\\\e[0m\r
+\e[48;2;48;58;67m    \e]8;;http://127.27.192.223:8080\e\\2.223:80\e]8;;\e\\\e[0m\r
+\e[48;2;48;58;67m    \e]8;;http://127.27.192.223:8080\e\\80\e]8;;\e\\.     \e[0m\r
 \e[48;2;48;58;67m            \e[0m\r
 \r
 A tool ran,\r
@@ -856,11 +856,11 @@ and an\r
 answer\r
 followed it.\r
 \r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\R…\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\REA…\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e[3m\e[38;2;150;152;150mA thought\e[0m\r
 \e[3m\e[38;2;150;152;150mafter a tool\e[0m\r
 \e[3m\e[38;2;150;152;150mcall.\e[0m\e[0m\r
-\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mcmd\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;192;128;80mcmd\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 \e[38;2;207;173;0mModel\e[0m\r
 \e[38;2;207;173;0mreturned no\e[0m\r
@@ -905,17 +905,17 @@ thought.\r
 \e[38;2;207;173;0mModel returned no reply.\e[0m\r
 \e[38;2;207;173;0m[#1] Request failed; retrying: The stream ended before the response did\e[0m\r
 \r
-\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;150;152;150m2L\e[0m\r
 \r
 \e[48;2;48;58;67m\e[0m\r
-\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.\e[0m\r
+\e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to \e]8;;http://127.27.192.223:8080\e\\http://127.27.192.223:8080\e]8;;\e\\.\e[0m\r
 \e[48;2;48;58;67m\e[0m\r
 A tool ran, and an answer followed it.\r
 \r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e[3m\e[38;2;150;152;150mA thought after a tool call.\e[0m\e[0m\r
-\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mcmd\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;192;128;80mcmd\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 \e[38;2;207;173;0mModel returned no reply.\e[0m\r
 \r
@@ -942,18 +942,18 @@ An answer after a thought.\r
 \e[38;2;207;173;0mModel returned no reply.\e[0m\r
 \e[38;2;207;173;0m[#1] Request failed; retrying: The stream ended before the response did\e[0m\r
 \r
-\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m2L\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;150;152;150m2L\e[0m\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.                                        \e[0m\r
+\e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to \e]8;;http://127.27.192.223:8080\e\\http://127.27.192.223:8080\e]8;;\e\\.                                       \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
 A tool ran, and an answer followed it.\r
 \r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e[3m\e[38;2;150;152;150mA thought after a tool call.\e[0m\e[0m\r
-\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mcmd\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\ls\e]8;;\e\\ \e[38;2;192;128;80mcmd\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 \e[38;2;207;173;0mModel returned no reply.\e[0m\r
 \r

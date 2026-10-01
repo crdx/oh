@@ -175,6 +175,96 @@ func TestAPathAlreadyLinkedToTheWebIsNotNestedInAFileLink(t *testing.T) {
 	}
 }
 
+func TestAWebAddressClosingASentenceLinksToTheAddressAlone(t *testing.T) {
+	address := "http://trellis.heroic-ibex.agent:12006/"
+	text := "Trellis is at " + address + "."
+
+	got := Render(text, Roots{Workspace: t.TempDir()})
+
+	addresses := linkAddresses(t, got)
+	if len(addresses) != 1 || addresses[0].String() != address {
+		t.Errorf("got addresses %q, want only %q", addresses, address)
+	}
+	if Plain(got) != text {
+		t.Errorf("visible text is %q, want %q", Plain(got), text)
+	}
+	if want := "Trellis is at " + RenderURL(address, address) + "."; got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
+func TestAWebAddressSplitAcrossStylesBecomesOneLink(t *testing.T) {
+	address := "https://example.test/page"
+	styled := "see \x1b[36m" + address + "\x1b[0m."
+
+	got := Render(styled, Roots{Workspace: t.TempDir()})
+
+	if addresses := linkAddresses(t, got); len(addresses) != 1 || addresses[0].String() != address {
+		t.Errorf("got addresses %q, want only %q", addresses, address)
+	}
+	if withoutLinks := stripHyperlinks(got); withoutLinks != styled {
+		t.Errorf("expected the styles unchanged, got %q", withoutLinks)
+	}
+}
+
+func TestAnExistingPathWithinAWebAddressIsNotLinkedAsAFile(t *testing.T) {
+	workspace := t.TempDir()
+	path := prepareFile(t, workspace, "page.html")
+	address := "https://example.test" + filepath.ToSlash(path)
+
+	got := Render("open "+address+" and "+path, Roots{Workspace: workspace})
+
+	addresses := linkAddresses(t, got)
+	if len(addresses) != 2 {
+		t.Fatalf("expected two links, got %q", got)
+	}
+	if addresses[0].String() != address {
+		t.Errorf("first address is %q, want %q", addresses[0], address)
+	}
+	if addresses[1].Scheme != "file" || addresses[1].Path != filepath.ToSlash(path) {
+		t.Errorf("second address is %q, want the file %q", addresses[1], path)
+	}
+}
+
+func TestAWebAddressAlreadyLinkedIsNotLinkedAgain(t *testing.T) {
+	address := "https://example.test/page"
+	linked := RenderURL(address, address)
+
+	if got := Render("see "+linked+".", Roots{Workspace: t.TempDir()}); got != "see "+linked+"." {
+		t.Errorf("already-linked address changed: %q", got)
+	}
+}
+
+func TestAddressesOfOtherSchemesAreLeftAlone(t *testing.T) {
+	text := "fetch ftp://example.test/file and ssh://example.test"
+
+	if got := Render(text, Roots{Workspace: t.TempDir()}); got != text {
+		t.Errorf("got %q, want the text unchanged", got)
+	}
+}
+
+func TestAddressesLeaveOutTheirClosingPunctuation(t *testing.T) {
+	for _, test := range []struct {
+		text    string
+		address string
+	}{
+		{text: "at https://example.test/.", address: "https://example.test/"},
+		{text: "at https://example.test/a, then", address: "https://example.test/a"},
+		{text: "is it https://example.test/?", address: "https://example.test/"},
+		{text: "go to https://example.test/a?b=c!", address: "https://example.test/a?b=c"},
+		{text: "(https://example.test/a)", address: "https://example.test/a"},
+		{text: "(https://example.test/a_(b))", address: "https://example.test/a_(b)"},
+		{text: "see https://example.test/a_(b).", address: "https://example.test/a_(b)"},
+		{text: "$(curl -s https://example.test/a)", address: "https://example.test/a"},
+		{text: "at `https://example.test/a`", address: "https://example.test/a"},
+	} {
+		found := Addresses(test.text)
+		if len(found) != 1 || test.text[found[0].Begin:found[0].End] != test.address {
+			t.Errorf("%q: got %v, want %q", test.text, found, test.address)
+		}
+	}
+}
+
 func TestAPathSplitAcrossStylesBecomesOneLink(t *testing.T) {
 	workspace := t.TempDir()
 	prepareFile(t, workspace, "cmd/oh/draw.go")

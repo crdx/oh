@@ -2,7 +2,7 @@
 \e[48;2;52;53;65m go quiet until the cache has gone cold                                                             \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 \e[38;2;207;173;0m[#1] Request failed; retrying in 1s: The stream sent nothing for 0.2s\e[0m\r
 \r

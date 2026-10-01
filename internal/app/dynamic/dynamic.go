@@ -28,6 +28,7 @@ type RowState int
 const (
 	Running RowState = iota
 	Done
+	Succeeded
 	Failed
 	Cancelled
 )
@@ -383,8 +384,10 @@ func glyph(state RowState) string {
 		return style.Failure("✗")
 	case Cancelled:
 		return style.CancelledCall("–")
-	case Done, Running:
+	case Succeeded:
 		return style.Success("✓")
+	case Running, Done:
+		return ""
 	}
 
 	return ""

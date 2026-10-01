@@ -514,3 +514,14 @@ func TestADeclarationIsRefusedForTheReasonItIsUnusable(t *testing.T) {
 		})
 	}
 }
+
+func TestACommandMarksItsSuccess(t *testing.T) {
+	subject, err := command.New(echoingDeclaration(t), command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !tool.MarksSuccess(subject) {
+		t.Error("expected a command that exits cleanly to mark its success")
+	}
+}

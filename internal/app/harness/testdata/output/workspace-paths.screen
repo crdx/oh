@@ -1,8 +1,8 @@
 === paths named against the workspace ===
-read named-in-full.md ✓
-read named-by-tilde.md ✓
-read ✓
-read ✓
-read /etc/hosts ✓
-grep in-full **/*.go ✓
-grep by-tilde **/*.md ✓
+read named-in-full.md
+read named-by-tilde.md
+read
+read
+read /etc/hosts
+grep in-full **/*.go
+grep by-tilde **/*.md

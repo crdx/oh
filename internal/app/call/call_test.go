@@ -101,6 +101,10 @@ func TestMetricsAreShownAfterCalls(t *testing.T) {
 			metrics: tool.ToolCallMetrics{Kind: tool.MetricSearch, Lines: 17, Bytes: 1200},
 			want:    []string{"17L ~400t"},
 		},
+		"search that matched nothing": {
+			metrics: tool.ToolCallMetrics{Kind: tool.MetricSearch, Bytes: 12},
+			want:    []string{"no matches"},
+		},
 		"small capped output with a large total": {
 			metrics: tool.ToolCallMetrics{
 				Kind:        tool.MetricSearch,

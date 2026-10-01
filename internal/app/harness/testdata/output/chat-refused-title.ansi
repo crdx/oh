@@ -4,7 +4,7 @@
 \r
 \e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\title\e]8;;\e\\ \e[38;2;192;128;80mwork out why the session picker clips a really very long title\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mtitle exceeds 50 characters\e[0m\r
 \e]8;;oh://tool-result?call=call-2&session=tame-impala\e\\title\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mtitle is required\e[0m\r
-\e]8;;oh://tool-result?call=call-3&session=tame-impala\e\\title\e]8;;\e\\ \e[38;2;192;128;80mfix picker clipping\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-3&session=tame-impala\e\\title\e]8;;\e\\ \e[38;2;192;128;80mfix picker clipping\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 Third time lucky.\e[?25h\e[?2026l\r
 \r

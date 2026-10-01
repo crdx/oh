@@ -3,8 +3,8 @@
  run the thing that takes no arguments
 
 
-status ✓
-notify done — nothing to report ✓
+status
+notify done — nothing to report
 
 Nothing came back.
 === one column ===
@@ -73,8 +73,8 @@ t
 s
 
 
-✓
-✓
+…
+…
 
 N
 o
@@ -97,8 +97,8 @@ k
  run the thing that takes no arguments
 
 
-status ✓
-notify done — nothing to report ✓
+status
+notify done — nothing to report
 
 Nothing came back.
 === tiny ===
@@ -109,8 +109,8 @@ Nothing came back.
  arguments
 
 
-status ✓
-notify do… ✓
+status
+notify done
 
 Nothing came
 back.
@@ -119,7 +119,7 @@ back.
  run the thing that takes no arguments
 
 
-status ✓
-notify done — nothing to report ✓
+status
+notify done — nothing to report
 
 Nothing came back.

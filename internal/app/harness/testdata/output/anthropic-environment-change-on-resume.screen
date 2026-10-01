@@ -18,14 +18,13 @@ I have the original environment.
  🤖 Configured PATH directories are now, in order: /shared/path, /new/path.
  🤖 Configured home paths added: /test-home/.newrc.
  🤖 Configured home paths removed: /test-home/.oldrc.
- 🤖 Skills now available: added at /skills/added/SKILL.md: use the added process; moved at
-    /skills/moved-new/SKILL.md: use the moved process.
+ 🤖 Skills now available: added at /skills/added/SKILL.md; moved at /skills/moved-new/SKILL.md.
  🤖 Skills no longer available: moved at /skills/moved-old/SKILL.md; removed at
     /skills/removed/SKILL.md.
- 🤖 Skills changed: changed at /skills/changed/SKILL.md: use the new process; renamed-old is now
-    renamed-new at /skills/renamed/SKILL.md: use the renamed process.
+ 🤖 Skills changed: changed at /skills/changed/SKILL.md; renamed-old is now renamed-new at
+    /skills/renamed/SKILL.md.
  🤖 The workspace is now a Git repository.
- 🤖 Host-facing URLs for exposed sandbox ports now use new.agent.test instead of old.agent.test.
+ 🤖 Host-facing URLs for forwarded sandbox ports now use new.agent.test instead of old.agent.test.
 
 
 

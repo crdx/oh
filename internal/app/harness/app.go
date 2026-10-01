@@ -117,6 +117,10 @@ func (self *pendingNotices) modelNotices() []string {
 		if item.state.Kind == environment.Change {
 			itemNotices, areSaid = environment.ModelNotice(item.state)
 		}
+		if item.state.Kind == jobrecord.EndedWithSession {
+			modelNotice, isSaid := jobrecord.EndedWithSessionModelNotice(item.state)
+			itemNotices, areSaid = []string{modelNotice}, isSaid
+		}
 		if areSaid {
 			notices = append(notices, itemNotices...)
 		}

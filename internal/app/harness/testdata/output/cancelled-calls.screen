@@ -4,7 +4,7 @@
  check
 
 
-read one.txt ✓ 1L
+read one.txt 1L
 read two.txt – the call was cancelled b…
 await check for … – 1L stopped because …
 
@@ -90,7 +90,7 @@ c
 k
 
 
-✓
+…
 –
 –
 
@@ -145,7 +145,7 @@ d
  read both of those files, then wait for check
 
 
-read one.txt ✓ 1L
+read one.txt 1L
 read two.txt – the call was cancelled because the user pressed escape
 await check for up to 4m 30s – 1L stopped because the user pressed escape
 
@@ -162,7 +162,7 @@ Turn stopped.
  check
 
 
-read o… ✓ 1L
+read one… 1L
 read – the …
 aw… – 1L st…
 
@@ -177,7 +177,7 @@ stopped.
  read both of those files, then wait for check
 
 
-read one.txt ✓ 1L
+read one.txt 1L
 read two.txt – the call was cancelled because the user pressed escape
 await check for up to 4m 30s – 1L stopped because the user pressed escape
 

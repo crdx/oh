@@ -7,11 +7,11 @@
 One of each, then.
 
 $ COUNT=0; for NAME in *.g… ✓ 2s 3L 700M
-ls ✓ 2L
-read diagram.png ✓ ~1.6Kt
-edit screen.go ✓ +12 −5
-grep ^func\\s+(New… ✓ 7L+ ~100t of ~3.4Kt
-read README.md ✓ 3L
+ls 2L
+read diagram.png ~1.6Kt
+edit screen.go +12 −5
+grep ^func\\s+(New|D… 7L+ ~100t of ~3.4Kt
+read README.md 3L
 
 Here is a script, and a pattern beside
 it:
@@ -152,11 +152,11 @@ n
 .
 
 ✓
-✓
-✓
-✓
-✓
-✓
+…
+…
+…
+…
+…
 
 H
 e
@@ -375,11 +375,11 @@ e
 One of each, then.
 
 $ COUNT=0; for NAME in *.go; do COUNT=$((COUNT + 1)); done; echo $COUNT ✓ 2s 3L 700M
-ls ✓ 2L
-read diagram.png ✓ ~1.6Kt
-edit screen.go ✓ +12 −5
-grep ^func\\s+(New|Draw)[A-Z]\\w{2,8}\\( *.go ✓ 7L+ ~100t of ~3.4Kt
-read README.md ✓ 3L
+ls 2L
+read diagram.png ~1.6Kt
+edit screen.go +12 −5
+grep ^func\\s+(New|Draw)[A-Z]\\w{2,8}\\( *.go 7L+ ~100t of ~3.4Kt
+read README.md 3L
 
 Here is a script, and a pattern beside it:
 
@@ -406,11 +406,11 @@ One of each,
 then.
 
 $ COUNT=0… ✓
-ls ✓ 2L
-re… ✓ ~1.6Kt
-ed… ✓ +12 −5
-grep ^fun… ✓
-read R… ✓ 3L
+ls 2L
+read ~1.6Kt
+edit +12 −5
+grep ^func\\…
+read REA… 3L
 
 Here is a
 script, and
@@ -446,11 +446,11 @@ measure.
 One of each, then.
 
 $ COUNT=0; for NAME in *.go; do COUNT=$((COUNT + 1)); done; echo $COUNT ✓ 2s 3L 700M
-ls ✓ 2L
-read diagram.png ✓ ~1.6Kt
-edit screen.go ✓ +12 −5
-grep ^func\\s+(New|Draw)[A-Z]\\w{2,8}\\( *.go ✓ 7L+ ~100t of ~3.4Kt
-read README.md ✓ 3L
+ls 2L
+read diagram.png ~1.6Kt
+edit screen.go +12 −5
+grep ^func\\s+(New|Draw)[A-Z]\\w{2,8}\\( *.go 7L+ ~100t of ~3.4Kt
+read README.md 3L
 
 Here is a script, and a pattern beside it:
 

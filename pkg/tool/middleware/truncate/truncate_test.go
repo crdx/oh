@@ -439,3 +439,14 @@ func TestAWrappedToolKeepsOwningItsDurableState(t *testing.T) {
 		t.Errorf("the wrapped tool restored %q: %v", restored, err)
 	}
 }
+
+func TestTheCapMarksSuccessAsTheToolItWrapsDoes(t *testing.T) {
+	limit := newLimit(t, 1024)
+
+	if !tool.MarksSuccess(truncate.Tool(buildTool(newToolBuilder(t).MarksSuccess()), limit)) {
+		t.Error("expected the cap to mark success when the tool it wraps does")
+	}
+	if tool.MarksSuccess(truncate.Tool(buildTool(newToolBuilder(t)), limit)) {
+		t.Error("expected the cap to leave success unmarked when the tool it wraps does")
+	}
+}

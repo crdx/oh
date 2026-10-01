@@ -2,7 +2,7 @@
  read lines two and three from the large file
 
 
-read <s>/io/cmd/oh/output/region.go 2-3 ✓ 2L
+read <s>/io/cmd/oh/output/region.go 2-3 2L
 
 The ranged read succeeded.
 

@@ -21,6 +21,15 @@ type Tool interface {
 	Restore(state json.RawMessage) error
 }
 
+type SuccessMarker interface {
+	MarksSuccess() bool
+}
+
+func MarksSuccess(subject Tool) bool {
+	marker, isMarker := subject.(SuccessMarker)
+	return isMarker && marker.MarksSuccess()
+}
+
 type ToolCall interface {
 	Rendering() CallRendering
 	TimeLimit() time.Duration

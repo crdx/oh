@@ -28,7 +28,7 @@ Both are up.
 ## jobs_ended_with_session · +5s
 
 ```
-The session was closed and reopened after your last turn. Jobs `docs` and `watch` stopped when it closed. Restart each with `job(action="start", name=…)` if still needed.
+The session was closed and reopened after the last turn. Jobs `docs` and `watch` stopped when it closed. Restart each if still needed.
 ```
 
 ## User · +6s

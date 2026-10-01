@@ -519,3 +519,15 @@ func TestAnUnconfinedShellOffersNoNetworkChoice(t *testing.T) {
 		t.Errorf("got %v, want the network argument refused", err)
 	}
 }
+
+func TestTheToolMarksASuccessfulCommand(t *testing.T) {
+	root, directory := testRoot(t)
+
+	shell := fixedShell(root, func() sandbox.Policy {
+		return sandbox.Policy{Write: []string{directory}}
+	})
+
+	if !tool.MarksSuccess(shell) {
+		t.Errorf("a command that exits cleanly has said something worth marking")
+	}
+}

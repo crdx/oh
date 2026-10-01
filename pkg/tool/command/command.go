@@ -122,6 +122,7 @@ func New(declaration Declaration, options Options) (tool.Tool, error) {
 	).
 		Decode(schema.Decode).
 		Revision(strconv.Itoa(version)).
+		MarksSuccess().
 		TakesAtMost(func(tool.Arguments) time.Duration { return timeLimit })
 
 	if declaration.Group != "" {

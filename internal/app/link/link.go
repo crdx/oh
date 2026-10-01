@@ -25,7 +25,30 @@ const (
 	pathExpression = ScratchAlias + `(?:/` + pathSegment + `)*|(?:~|\.{1,2})?/(?:` + pathSegment + `/)*` + pathSegment + `|` + pathSegment + `(?:/` + pathSegment + `)+|[[:alnum:]_@+%=-]+(?:\.[[:alnum:]_@+%=-]+)+|\.[[:alnum:]_@+%=-]+`
 )
 
-var pathPattern = regexp.MustCompile(`(` + pathExpression + `)(?::([0-9]+)(?::([0-9]+))?)?`)
+var (
+	pathPattern    = regexp.MustCompile(`(` + pathExpression + `)(?::([0-9]+)(?::([0-9]+))?)?`)
+	addressPattern = regexp.MustCompile("[a-zA-Z][a-zA-Z0-9+.-]*://[^\\s'\"`<>|;]+")
+)
+
+const addressClosingPunctuation = ".,;:!?"
+
+type Bounds struct {
+	Begin int
+	End   int
+}
+
+func Addresses(text string) []Bounds {
+	if !strings.Contains(text, "://") {
+		return nil
+	}
+
+	var found []Bounds
+	for _, place := range addressPattern.FindAllStringIndex(text, -1) {
+		found = append(found, Bounds{Begin: place[0], End: addressEnd(text[place[0]:place[1]]) + place[0]})
+	}
+
+	return found
+}
 
 func RenderURL(text string, address string) string {
 	return openPrefix + address + terminator + text + closeLink
@@ -146,8 +169,9 @@ func commonPrefixEnd(first string, second string) int {
 }
 
 func locations(text string, roots Roots) []location {
+	addresses := webAddresses(text)
 	matches := pathPattern.FindAllStringSubmatchIndex(text, -1)
-	foundLocations := make([]location, 0, len(matches))
+	foundLocations := make([]location, 0, len(matches)+len(addresses))
 	var candidateLocations map[string]candidateLocation
 	if len(matches) > 1 {
 		candidateLocations = make(map[string]candidateLocation, len(matches))
@@ -155,8 +179,12 @@ func locations(text string, roots Roots) []location {
 	lastEnd := 0
 
 	for _, match := range matches {
+		if overlapsAny(addresses, match[0], match[1]) {
+			continue
+		}
+
 		found, exists := locateAround(text, match[0], match[1], roots, candidateLocations)
-		if !exists || found.begin < lastEnd {
+		if !exists || found.begin < lastEnd || overlapsAny(addresses, found.begin, found.end) {
 			continue
 		}
 
@@ -164,7 +192,56 @@ func locations(text string, roots Roots) []location {
 		lastEnd = found.end
 	}
 
+	if len(addresses) == 0 {
+		return foundLocations
+	}
+
+	foundLocations = append(foundLocations, addresses...)
+	sort.Slice(foundLocations, func(first int, second int) bool {
+		return foundLocations[first].begin < foundLocations[second].begin
+	})
+
 	return foundLocations
+}
+
+func addressEnd(address string) int {
+	end := len(address)
+	for end > 0 {
+		switch last := address[end-1]; {
+		case strings.IndexByte(addressClosingPunctuation, last) >= 0:
+			end--
+		case last == ')' && strings.Count(address[:end], ")") > strings.Count(address[:end], "("):
+			end--
+		default:
+			return end
+		}
+	}
+
+	return end
+}
+
+func webAddresses(text string) []location {
+	var found []location
+	for _, bounds := range Addresses(text) {
+		target, isSupported := webURL(text[bounds.Begin:bounds.End])
+		if !isSupported {
+			continue
+		}
+
+		found = append(found, location{begin: bounds.Begin, end: bounds.End, address: target})
+	}
+
+	return found
+}
+
+func overlapsAny(addresses []location, begin int, end int) bool {
+	for _, address := range addresses {
+		if address.begin < end && begin < address.end {
+			return true
+		}
+	}
+
+	return false
 }
 
 func renderLocations(text string, visible visibleText, foundLocations []location) string {
@@ -184,7 +261,7 @@ func renderLocations(text string, visible visibleText, foundLocations []location
 
 		output.WriteString(text[sourceAt:begin])
 		output.WriteString(openPrefix)
-		output.WriteString(linkURL(found.target, found.line, found.column))
+		output.WriteString(found.url())
 		output.WriteString(terminator)
 		output.WriteString(text[begin:end])
 		output.WriteString(closeLink)
@@ -350,11 +427,20 @@ func escapeEnd(text string, start int) int {
 }
 
 type location struct {
-	begin  int
-	end    int
-	target string
-	line   string
-	column string
+	begin   int
+	end     int
+	target  string
+	line    string
+	column  string
+	address string
+}
+
+func (self location) url() string {
+	if self.address != "" {
+		return self.address
+	}
+
+	return linkURL(self.target, self.line, self.column)
 }
 
 type candidateLocation struct {

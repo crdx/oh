@@ -559,7 +559,7 @@ An\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAn inde\e[K\r\e[7C\e[?25h\e[?2026
 \e[K\r
 \e[38;2;150;152;150m[not\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38;2;150;152;150m[note]:\e[0m\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
-http\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rhttps://\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rhttps://exam\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rhttps://example.\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;https://example.com/\e\\\e[38;2;129;162;190mhttps://example.com/\e[0m\e]8;;\e\\\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;https://example.com/note\e\\\e[38;2;129;162;190mhttps://example.com/note\e[0m\e]8;;\e\\\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+http\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rhttps://\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;https://exam\e\\https://exam\e]8;;\e\\\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;https://example\e\\https://example\e]8;;\e\\.\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;https://example.com/\e\\\e[38;2;129;162;190mhttps://example.com/\e[0m\e]8;;\e\\\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;https://example.com/note\e\\\e[38;2;129;162;190mhttps://example.com/note\e[0m\e]8;;\e\\\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 An\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd th\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd the an\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd the answer\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd the answer car\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd the answer carries\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd the answer carries on\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd the answer carries on afte\e[K\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd the answer carries on after it\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd the answer carries on after it.\e[K\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[35C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
@@ -625,7 +625,7 @@ An\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAn indented\e[K\r\e[11C\e[?25h\e[
 \e[K\r
 \e[38;2;150;152;150m[not\e[0m\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38;2;150;152;150m[note]:\e[0m\e[K\r
 \e[K\r
-http\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rhttps://exam\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;https://example.com/\e\\\e[38;2;129;162;190mhttps://example.com/\e[0m\e]8;;\e\\\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;https://example.com/note\e\\\e[38;2;129;162;190mhttps://example.com/note\e[0m\e]8;;\e\\\e[K\r
+http\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;https://exam\e\\https://exam\e]8;;\e\\\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;https://example.com/\e\\\e[38;2;129;162;190mhttps://example.com/\e[0m\e]8;;\e\\\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;https://example.com/note\e\\\e[38;2;129;162;190mhttps://example.com/note\e[0m\e]8;;\e\\\e[K\r
 \e[K\r
 An\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd the an\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd the answer car\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd the answer carries on afte\e[K\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd the answer carries on after it.\e[K\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[35C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\

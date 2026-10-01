@@ -18,16 +18,17 @@ type Builder[T any] struct {
 	validate            Validator[T]
 	decode              Decoder[T]
 
-	parallel       bool
-	readOnly       bool
-	stateName      string
-	restore        Restorer
-	emphasis       func(rendering CallRendering) Emphasis
-	emphasisSource func(args T, subject string) string
-	timeLimit      func(args T) time.Duration
-	isAllowed      func() bool
-	withheld       error
-	fallback       CallRendering
+	parallel        bool
+	readOnly        bool
+	isSuccessMarked bool
+	stateName       string
+	restore         Restorer
+	emphasis        func(rendering CallRendering) Emphasis
+	emphasisSource  func(args T, subject string) string
+	timeLimit       func(args T) time.Duration
+	isAllowed       func() bool
+	withheld        error
+	fallback        CallRendering
 }
 
 func Implement[T any](definition Definition, render Renderer[T]) Builder[T] {
@@ -73,6 +74,11 @@ func (self Builder[T]) IsEmbarrassinglyParallel() Builder[T] {
 
 func (self Builder[T]) ChangesNothing() Builder[T] {
 	self.readOnly = true
+	return self
+}
+
+func (self Builder[T]) MarksSuccess() Builder[T] {
+	self.isSuccessMarked = true
 	return self
 }
 
@@ -204,6 +210,7 @@ func (self Builder[T]) build(exec ResultExecutor[T]) Tool {
 		compatibleRevisions: maps.Clone(self.compatibleRevisions),
 		parallel:            self.parallel,
 		readOnly:            self.readOnly,
+		isSuccessMarked:     self.isSuccessMarked,
 		stateName:           self.stateName,
 		restore:             self.restore,
 		fallback:            self.fallback,

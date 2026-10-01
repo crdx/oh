@@ -10,7 +10,7 @@ context.
 Reading the target before the process
 restarts.
 
-read target.txt ✓ 1L
+read target.txt 1L
 
 The target is now safely recorded.
 === one column ===
@@ -163,7 +163,7 @@ t
 s
 .
 
-✓
+…
 
 T
 h
@@ -203,7 +203,7 @@ Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800
 
 Reading the target before the process restarts.
 
-read target.txt ✓ 1L
+read target.txt 1L
 
 The target is now safely recorded.
 === tiny ===
@@ -228,7 +228,7 @@ before the
 process
 restarts.
 
-read t… ✓ 1L
+read tar… 1L
 
 The target
 is now
@@ -243,6 +243,6 @@ Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800
 
 Reading the target before the process restarts.
 
-read target.txt ✓ 1L
+read target.txt 1L
 
 The target is now safely recorded.

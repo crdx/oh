@@ -3,9 +3,9 @@
 
 
 Plan first.
-work work ✓ 1L
+work work 1L
 Plan second.
-work work ✓ 1L
+work work 1L
 
 Turn stopped because the user pressed escape.
 
@@ -14,6 +14,6 @@ Turn stopped because the user pressed escape.
 
 
 Check restored state.
-work work ✓ 1L
+work work 1L
 
 Recovered.

@@ -14,7 +14,7 @@ read \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh
 \e[48;2;52;53;65m never mind, what is in \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\?     \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 It holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\r
 \e[?25h\e[?2026l
@@ -180,7 +180,7 @@ w\r
 \e[48;2;52;53;65m?\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\…\e]8;;\e\\\r
 \r
 I\r
 t\r
@@ -229,7 +229,7 @@ read \e[38;2;150;152;150mcmd/oh/line/\e[0m\e[38;2;192;128;80mrender.go\e[0m \e[3
 \e[48;2;52;53;65m\e[0m
 \e[48;2;52;53;65m never mind, what is in target.txt?\e[0m
 \e[48;2;52;53;65m\e[0m
-read \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mtarget.txt\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
+read \e[38;2;192;128;80mtarget.txt\e[0m \e[38;2;150;152;150m1L\e[0m
 
 It holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.
 
@@ -248,7 +248,7 @@ read \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh
 \e[48;2;52;53;65m never mind, what is in \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\?                                                                 \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 It holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\r
 
@@ -267,7 +267,7 @@ read \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh
 \e[48;2;52;53;65m never mind, what is in \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\?                                                                 \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-read \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+read \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 It h\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds the\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds the wor\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds the word `o\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds the word \e[38;2;192;128;80mone\e[0m,\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds the word \e[38;2;192;128;80mone\e[0m, and\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds the word \e[38;2;192;128;80mone\e[0m, and not\e[K\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing els\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[40C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
@@ -286,7 +286,7 @@ read \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh
 \e[48;2;52;53;65m never mind, what is in \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\?                                                                 \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-read \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+read \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 It holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[40C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
@@ -305,7 +305,7 @@ read \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh
 \e[48;2;52;53;65m never mind, what is in \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\?                                                                 \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-read \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+read \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 It h\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds the\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds the wor\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds the word `o\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds the word \e[38;2;192;128;80mone\e[0m,\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds the word \e[38;2;192;128;80mone\e[0m, and\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds the word \e[38;2;192;128;80mone\e[0m, and not\e[K\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing els\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[40C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
@@ -332,7 +332,7 @@ read \e[38;2;192;128;80m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/…
 \e[48;2;52;53;65m \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\?\e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\t…\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\tar…\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 It holds the\r
 word \e[38;2;192;128;80mone\e[0m,\r
@@ -352,7 +352,7 @@ read \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh
 \e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
 \e[48;2;52;53;65m never mind, what is in \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\?\e[0m\r
 \e[48;2;52;53;65m\e[0m\r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 It holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\r
 \e[?25h\e[?2026l
@@ -371,7 +371,7 @@ read \e[38;2;150;152;150m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/oh
 \e[48;2;52;53;65m never mind, what is in \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\?                                                                 \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 It holds the word \e[38;2;192;128;80mone\e[0m, and nothing else.\r
 \e[?25h\e[?2026l

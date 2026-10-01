@@ -1,25 +1,25 @@
 === narrow ===
 
- expose the five preview ports
+ forward the five preview ports
 
 
-Exposing each port in turn.
-expose 8001 ✓
-expose 8002 ✓
-expose 8003 ✓
-expose 8004 ✓
-expose 8005 ✓
+Forwarding each port in turn.
+forward 8001
+forward 8002
+forward 8003
+forward 8004
+forward 8005
 
 
- 🤖 Sandbox port 8001 exposed at
+ 🤖 Port 8001 is now forwarded to
     http://127.27.192.223:8001.
- 🤖 Sandbox port 8002 exposed at
+ 🤖 Port 8002 is now forwarded to
     http://127.27.192.223:8002.
- 🤖 Sandbox port 8003 exposed at
+ 🤖 Port 8003 is now forwarded to
     http://127.27.192.223:8003.
- 🤖 Sandbox port 8004 exposed at
+ 🤖 Port 8004 is now forwarded to
     http://127.27.192.223:8004.
- 🤖 Sandbox port 8005 exposed at
+ 🤖 Port 8005 is now forwarded to
     http://127.27.192.223:8005.
 
 
@@ -27,17 +27,19 @@ All five previews are up.
 === one column ===
 
 
-e
-
-x
-
-p
+f
 
 o
 
-s
+r
 
-e
+w
+
+a
+
+r
+
+d
 
 t
 
@@ -78,11 +80,13 @@ t
 s
 
 
-E
-x
-p
+F
 o
-s
+r
+w
+a
+r
+d
 i
 n
 g
@@ -101,31 +105,17 @@ u
 r
 n
 .
-✓
-✓
-✓
-✓
-✓
+…
+…
+…
+…
+…
 
 
 
 🤖
 
-S
-
-a
-
-n
-
-d
-
-b
-
-o
-
-x
-
-p
+P
 
 o
 
@@ -141,23 +131,37 @@ t
 
 1
 
-e
+i
 
-x
+s
 
-p
+n
 
 o
 
-s
+w
+
+f
+
+o
+
+r
+
+w
+
+a
+
+r
+
+d
 
 e
 
 d
 
-a
-
 t
+
+o
 
 h
 
@@ -215,21 +219,7 @@ p
 
 🤖
 
-S
-
-a
-
-n
-
-d
-
-b
-
-o
-
-x
-
-p
+P
 
 o
 
@@ -245,23 +235,37 @@ t
 
 2
 
-e
+i
 
-x
+s
 
-p
+n
 
 o
 
-s
+w
+
+f
+
+o
+
+r
+
+w
+
+a
+
+r
+
+d
 
 e
 
 d
 
-a
-
 t
+
+o
 
 h
 
@@ -319,21 +323,7 @@ p
 
 🤖
 
-S
-
-a
-
-n
-
-d
-
-b
-
-o
-
-x
-
-p
+P
 
 o
 
@@ -349,23 +339,37 @@ t
 
 3
 
-e
+i
 
-x
+s
 
-p
+n
 
 o
 
-s
+w
+
+f
+
+o
+
+r
+
+w
+
+a
+
+r
+
+d
 
 e
 
 d
 
-a
-
 t
+
+o
 
 h
 
@@ -423,21 +427,7 @@ p
 
 🤖
 
-S
-
-a
-
-n
-
-d
-
-b
-
-o
-
-x
-
-p
+P
 
 o
 
@@ -453,23 +443,37 @@ t
 
 4
 
-e
+i
 
-x
+s
 
-p
+n
 
 o
 
-s
+w
+
+f
+
+o
+
+r
+
+w
+
+a
+
+r
+
+d
 
 e
 
 d
 
-a
-
 t
+
+o
 
 h
 
@@ -527,21 +531,7 @@ p
 
 🤖
 
-S
-
-a
-
-n
-
-d
-
-b
-
-o
-
-x
-
-p
+P
 
 o
 
@@ -557,23 +547,37 @@ t
 
 5
 
-e
+i
 
-x
+s
 
-p
+n
 
 o
 
-s
+w
+
+f
+
+o
+
+r
+
+w
+
+a
+
+r
+
+d
 
 e
 
 d
 
-a
-
 t
+
+o
 
 h
 
@@ -653,84 +657,84 @@ p
 .
 === printed ===
 
- expose the five preview ports
+ forward the five preview ports
 
 
-Exposing each port in turn.
-expose 8001 ✓
-expose 8002 ✓
-expose 8003 ✓
-expose 8004 ✓
-expose 8005 ✓
+Forwarding each port in turn.
+forward 8001
+forward 8002
+forward 8003
+forward 8004
+forward 8005
 
 
- 🤖 Sandbox port 8001 exposed at http://127.27.192.223:8001.
- 🤖 Sandbox port 8002 exposed at http://127.27.192.223:8002.
- 🤖 Sandbox port 8003 exposed at http://127.27.192.223:8003.
- 🤖 Sandbox port 8004 exposed at http://127.27.192.223:8004.
- 🤖 Sandbox port 8005 exposed at http://127.27.192.223:8005.
+ 🤖 Port 8001 is now forwarded to http://127.27.192.223:8001.
+ 🤖 Port 8002 is now forwarded to http://127.27.192.223:8002.
+ 🤖 Port 8003 is now forwarded to http://127.27.192.223:8003.
+ 🤖 Port 8004 is now forwarded to http://127.27.192.223:8004.
+ 🤖 Port 8005 is now forwarded to http://127.27.192.223:8005.
 
 
 All five previews are up.
 === tiny ===
 
- expose the
+ forward the
  five
  preview
  ports
 
 
-Exposing
+Forwarding
 each port in
 turn.
-expose 80… ✓
-expose 80… ✓
-expose 80… ✓
-expose 80… ✓
-expose 80… ✓
+forward 8001
+forward 8002
+forward 8003
+forward 8004
+forward 8005
 
 
- 🤖 Sandbox
-    port
-    8001
-    exposed
-    at
+ 🤖 Port
+    8001 is
+    now
+    forwarde
+    d to
     http://1
     27.27.19
     2.223:80
     01.
- 🤖 Sandbox
-    port
-    8002
-    exposed
-    at
+ 🤖 Port
+    8002 is
+    now
+    forwarde
+    d to
     http://1
     27.27.19
     2.223:80
     02.
- 🤖 Sandbox
-    port
-    8003
-    exposed
-    at
+ 🤖 Port
+    8003 is
+    now
+    forwarde
+    d to
     http://1
     27.27.19
     2.223:80
     03.
- 🤖 Sandbox
-    port
-    8004
-    exposed
-    at
+ 🤖 Port
+    8004 is
+    now
+    forwarde
+    d to
     http://1
     27.27.19
     2.223:80
     04.
- 🤖 Sandbox
-    port
-    8005
-    exposed
-    at
+ 🤖 Port
+    8005 is
+    now
+    forwarde
+    d to
     http://1
     27.27.19
     2.223:80
@@ -742,22 +746,22 @@ previews are
 up.
 === wide ===
 
- expose the five preview ports
+ forward the five preview ports
 
 
-Exposing each port in turn.
-expose 8001 ✓
-expose 8002 ✓
-expose 8003 ✓
-expose 8004 ✓
-expose 8005 ✓
+Forwarding each port in turn.
+forward 8001
+forward 8002
+forward 8003
+forward 8004
+forward 8005
 
 
- 🤖 Sandbox port 8001 exposed at http://127.27.192.223:8001.
- 🤖 Sandbox port 8002 exposed at http://127.27.192.223:8002.
- 🤖 Sandbox port 8003 exposed at http://127.27.192.223:8003.
- 🤖 Sandbox port 8004 exposed at http://127.27.192.223:8004.
- 🤖 Sandbox port 8005 exposed at http://127.27.192.223:8005.
+ 🤖 Port 8001 is now forwarded to http://127.27.192.223:8001.
+ 🤖 Port 8002 is now forwarded to http://127.27.192.223:8002.
+ 🤖 Port 8003 is now forwarded to http://127.27.192.223:8003.
+ 🤖 Port 8004 is now forwarded to http://127.27.192.223:8004.
+ 🤖 Port 8005 is now forwarded to http://127.27.192.223:8005.
 
 
 All five previews are up.

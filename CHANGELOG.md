@@ -9,6 +9,11 @@
 ### Drawing
 
 - Ensure clipped hyperlinks don't leak
+- Don't show `1L` for the grep tool's `(no output)` line
+- Keep skill and reopened-job notices conciser
+- Link web addresses in code and tool lines
+- Remove hyperlinking in plain reasoning, for perf
+- Show success tick only on shell and custom tool calls
 
 ### Completion and input
 

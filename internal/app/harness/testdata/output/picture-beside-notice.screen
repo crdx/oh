@@ -1,17 +1,17 @@
 === narrow ===
 
- read the screenshot and expose the
+ read the screenshot and forward the
  preview
 
 
-read screenshot.png ✓
+read screenshot.png
 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮
 􎻮̍̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮
 􎻮̎̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮
-read notes.md ✓
+read notes.md
 
 
- 🤖 Sandbox port 8080 exposed at
+ 🤖 Port 8080 is now forwarded to
     http://127.27.192.223:8080.
 
 
@@ -60,17 +60,19 @@ n
 
 d
 
-e
-
-x
-
-p
+f
 
 o
 
-s
+r
 
-e
+w
+
+a
+
+r
+
+d
 
 t
 
@@ -93,29 +95,15 @@ e
 w
 
 
-✓
+…
 􎻮̅̅
-✓
+…
 
 
 
 🤖
 
-S
-
-a
-
-n
-
-d
-
-b
-
-o
-
-x
-
-p
+P
 
 o
 
@@ -131,23 +119,37 @@ t
 
 0
 
-e
+i
 
-x
+s
 
-p
+n
 
 o
 
-s
+w
+
+f
+
+o
+
+r
+
+w
+
+a
+
+r
+
+d
 
 e
 
 d
 
-a
-
 t
+
+o
 
 h
 
@@ -245,17 +247,17 @@ p
 .
 === printed ===
 
- read the screenshot and expose the preview
+ read the screenshot and forward the preview
 
 
-read screenshot.png ✓
+read screenshot.png
 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮
 􎻮̍̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮
 􎻮̎̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮
-read notes.md ✓
+read notes.md
 
 
- 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.
+ 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
 
 
 The gradient is in place, and the preview is up.
@@ -263,22 +265,22 @@ The gradient is in place, and the preview is up.
 
  read the
  screenshot
- and expose
+ and forward
  the preview
 
 
-read scre… ✓
+read screen…
 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮
 􎻮̍̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮
 􎻮̎̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮
-read note… ✓
+read notes.…
 
 
- 🤖 Sandbox
-    port
-    8080
-    exposed
-    at
+ 🤖 Port
+    8080 is
+    now
+    forwarde
+    d to
     http://1
     27.27.19
     2.223:80
@@ -292,17 +294,17 @@ preview is
 up.
 === wide ===
 
- read the screenshot and expose the preview
+ read the screenshot and forward the preview
 
 
-read screenshot.png ✓
+read screenshot.png
 􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮
 􎻮̍̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮
 􎻮̎̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮
-read notes.md ✓
+read notes.md
 
 
- 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.
+ 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
 
 
 The gradient is in place, and the preview is up.

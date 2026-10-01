@@ -3,7 +3,7 @@
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
 \e[3m\e[38;2;150;152;150mAuditing what the goldens draw.\e[0m\e[0m\r
-\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0maudit\e[0m\e]8;;\e\\ \e[38;2;192;128;80maudit\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0maudit\e[0m\e]8;;\e\\ \e[38;2;192;128;80maudit\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e[3m\e[38;2;150;152;150mI am adding the two missing cases and wiring them up.\e[0m\e[0m\r
 \r
 \e[38;2;207;173;0mModel returned no reply.\e[0m\r

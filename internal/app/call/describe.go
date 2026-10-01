@@ -55,6 +55,7 @@ func describeKnownTool(
 	calledTool tool.Tool,
 ) (agent.FallbackRendering, time.Duration) {
 	rendering.ReadOnly = calledTool.ReadOnly()
+	rendering.MarksSuccess = tool.MarksSuccess(calledTool)
 	parsedToolCall, err := calledTool.Parse(event.Arguments)
 	if err == nil {
 		rendering.Describe(parsedToolCall)
@@ -107,6 +108,7 @@ func LabelFor(event agent.Event, getTool ToolLookup, workspace *work.Space) Labe
 		ShowOutput: rendering.ShowOutput,
 	}, event.Name, rendering.ReadOnly)
 	label.TimeLimit = timeLimit
+	label.MarksSuccess = rendering.MarksSuccess
 	label.lineRange = rendering.PathLine
 	label.Continuation = make([]Label, 0, len(rendering.Continuation))
 	for _, part := range rendering.Continuation {

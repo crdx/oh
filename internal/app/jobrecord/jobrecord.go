@@ -70,6 +70,14 @@ func EndedWithSessionEvent(names []string) agent.Event {
 }
 
 func EndedWithSessionNotice(event agent.Event) (string, bool) {
+	return endedWithSessionNotice(event, "")
+}
+
+func EndedWithSessionModelNotice(event agent.Event) (string, bool) {
+	return endedWithSessionNotice(event, " with `job(action=\"start\", name=…)`")
+}
+
+func endedWithSessionNotice(event agent.Event, instruction string) (string, bool) {
 	var names []string
 	if err := json.Unmarshal(event.State, &names); err != nil || len(names) == 0 {
 		return "", false
@@ -89,7 +97,7 @@ func EndedWithSessionNotice(event agent.Event) (string, bool) {
 		pronoun = "each"
 	}
 
-	return "The session was closed and reopened after your last turn. " +
+	return "The session was closed and reopened after the last turn. " +
 		subject + " stopped when it closed. " +
-		"Restart " + pronoun + " with `job(action=\"start\", name=…)` if still needed.", true
+		"Restart " + pronoun + instruction + " if still needed.", true
 }

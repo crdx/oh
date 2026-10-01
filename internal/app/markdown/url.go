@@ -1,14 +1,11 @@
 package markdown
 
 import (
-	"regexp"
 	"slices"
-	"strings"
 
+	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/style"
 )
-
-var urlPattern = regexp.MustCompile("[a-zA-Z][a-zA-Z0-9+.-]*://[^\\s'\"`<>|;()]+")
 
 func HighlightURLs(command string) string {
 	spans, err := bashCommandSpans(command)
@@ -22,13 +19,8 @@ func HighlightURLs(command string) string {
 func urlSpans(command string) []sourceSpan {
 	var spans []sourceSpan
 
-	for _, place := range urlPattern.FindAllStringIndex(command, -1) {
-		end := place[1]
-		for end > place[0] && strings.ContainsRune(".,;:", rune(command[end-1])) {
-			end--
-		}
-
-		spans = append(spans, sourceSpan{start: place[0], end: end, style: style.Hazard})
+	for _, bounds := range link.Addresses(command) {
+		spans = append(spans, sourceSpan{start: bounds.Begin, end: bounds.End, style: style.Hazard})
 	}
 
 	return spans

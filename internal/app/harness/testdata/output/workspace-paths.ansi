@@ -1,9 +1,9 @@
 === paths named against the workspace ===
-\e[?2026h\e[?25l\e]8;;oh://tool-result?call=0&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mnamed-in-full.md\e[0m \e[38;2;76;154;44m✓\e[0m\r
-\e]8;;oh://tool-result?call=1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e[0m\e[38;2;192;128;80mnamed-by-tilde.md\e[0m \e[38;2;76;154;44m✓\e[0m\r
-\e]8;;oh://tool-result?call=2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m\r
-\e]8;;oh://tool-result?call=3&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m\r
-\e]8;;oh://tool-result?call=4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///etc/hosts\e\\/etc/\e[0m\e[38;2;192;128;80mhosts\e]8;;\e\\\e[0m \e[38;2;76;154;44m✓\e[0m\r
-\e]8;;oh://tool-result?call=5&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150min-full\e[0m \e[38;2;150;152;150m**/*.go\e[0m \e[38;2;76;154;44m✓\e[0m\r
-\e]8;;oh://tool-result?call=6&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mby-tilde\e[0m \e[38;2;150;152;150m**/*.md\e[0m \e[38;2;76;154;44m✓\e[0m\r
+\e[?2026h\e[?25l\e]8;;oh://tool-result?call=0&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mnamed-in-full.md\e[0m\r
+\e]8;;oh://tool-result?call=1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mnamed-by-tilde.md\e[0m\r
+\e]8;;oh://tool-result?call=2&session=tame-impala\e\\read\e]8;;\e\\\r
+\e]8;;oh://tool-result?call=3&session=tame-impala\e\\read\e]8;;\e\\\r
+\e]8;;oh://tool-result?call=4&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m\e]8;;file:///etc/hosts\e\\/etc/\e[0m\e[38;2;192;128;80mhosts\e]8;;\e\\\e[0m\r
+\e]8;;oh://tool-result?call=5&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150min-full\e[0m \e[38;2;150;152;150m**/*.go\e[0m\r
+\e]8;;oh://tool-result?call=6&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mby-tilde\e[0m \e[38;2;150;152;150m**/*.md\e[0m\r
 \e[?25h\e[?2026l

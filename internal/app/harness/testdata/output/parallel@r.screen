@@ -12,22 +12,22 @@ than one after another.
 
 Let me get the shape of this first.
 
-ls ✓ 7L
-find **/*.go ✓ 2L
-find **/*.toml ✓ 1L
-grep package *.go ✓ 2L
+ls 7L
+find **/*.go 2L
+find **/*.toml 1L
+grep package *.go 2L
 Three searches, all at once.
 
 Now to find where the drawing happens.
 
-grep spinner *.go ✓ 1L
-grep footer *.go ✓ 1L
-grep cursor *.go ✓ 1L
+grep spinner *.go 1L
+grep footer *.go 1L
+grep cursor *.go 1L
 
 One more pair, and one of them will not
 be there.
 
-ls ✓ 7L
+ls 7L
 read nowhere/at/… ✗ 1L nowhere/at/all.g…
 
 That is the lot: four together, then
@@ -224,10 +224,10 @@ s
 t
 .
 
-✓
-✓
-✓
-✓
+…
+…
+…
+…
 T
 h
 r
@@ -286,9 +286,9 @@ n
 s
 .
 
-✓
-✓
-✓
+…
+…
+…
 
 O
 n
@@ -330,7 +330,7 @@ r
 e
 .
 
-✓
+…
 ✗
 
 T
@@ -431,21 +431,21 @@ Taking the four of them together rather than one after another.
 
 Let me get the shape of this first.
 
-ls ✓ 7L
-find **/*.go ✓ 2L
-find **/*.toml ✓ 1L
-grep package *.go ✓ 2L
+ls 7L
+find **/*.go 2L
+find **/*.toml 1L
+grep package *.go 2L
 Three searches, all at once.
 
 Now to find where the drawing happens.
 
-grep spinner *.go ✓ 1L
-grep footer *.go ✓ 1L
-grep cursor *.go ✓ 1L
+grep spinner *.go 1L
+grep footer *.go 1L
+grep cursor *.go 1L
 
 One more pair, and one of them will not be there.
 
-ls ✓ 7L
+ls 7L
 read nowhere/at/all.go ✗ 1L nowhere/at/all.go: no such file or directory
 
 That is the lot: four together, then three together, then a pair where only one of them could be
@@ -477,10 +477,10 @@ Let me get
 the shape of
 this first.
 
-ls ✓ 7L
-find *… ✓ 2L
-find *… ✓ 1L
-grep p… ✓ 2L
+ls 7L
+find **/… 2L
+find **/… 1L
+grep pac… 2L
 Three
 searches,
 all at once.
@@ -490,9 +490,9 @@ where the
 drawing
 happens.
 
-grep s… ✓ 1L
-grep f… ✓ 1L
-grep c… ✓ 1L
+grep spi… 1L
+grep foo… 1L
+grep cur… 1L
 
 One more
 pair, and
@@ -500,7 +500,7 @@ one of them
 will not be
 there.
 
-ls ✓ 7L
+ls 7L
 re… ✗ 1L no…
 
 That is the
@@ -524,21 +524,21 @@ Taking the four of them together rather than one after another.
 
 Let me get the shape of this first.
 
-ls ✓ 7L
-find **/*.go ✓ 2L
-find **/*.toml ✓ 1L
-grep package *.go ✓ 2L
+ls 7L
+find **/*.go 2L
+find **/*.toml 1L
+grep package *.go 2L
 Three searches, all at once.
 
 Now to find where the drawing happens.
 
-grep spinner *.go ✓ 1L
-grep footer *.go ✓ 1L
-grep cursor *.go ✓ 1L
+grep spinner *.go 1L
+grep footer *.go 1L
+grep cursor *.go 1L
 
 One more pair, and one of them will not be there.
 
-ls ✓ 7L
+ls 7L
 read nowhere/at/all.go ✗ 1L nowhere/at/all.go: no such file or directory
 
 That is the lot: four together, then three together, then a pair where only one of them could be

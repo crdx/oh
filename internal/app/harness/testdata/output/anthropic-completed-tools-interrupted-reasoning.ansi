@@ -3,9 +3,9 @@
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
 \e[3m\e[38;2;150;152;150mPlan first.\e[0m\e[0m\r
-\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e[3m\e[38;2;150;152;150mPlan second.\e[0m\e[0m\r
-\e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped because the user pressed escape.\e[0m\e[?25h\e[?2026l\r
 \r
@@ -14,6 +14,6 @@
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
 \e[3m\e[38;2;150;152;150mCheck restored state.\e[0m\e[0m\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[38;2;207;173;0mwork\e[0m \e[38;2;192;128;80mwork\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=toolu_3&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[38;2;207;173;0mwork\e[0m \e[38;2;192;128;80mwork\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=toolu_3&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 Recovered.\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[10C\e[?25h\e[?2026l\r

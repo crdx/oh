@@ -2,7 +2,7 @@
  call two tools and interrupt while the second is working
 
 
-alpha alpha ✓ 1L
+alpha alpha 1L
 beta beta – 1L the tool was stopped
 
 Turn stopped because the user pressed escape.

@@ -33,6 +33,7 @@ type Label struct {
 	NameStyle       style.Style
 	FocusStyle      style.Style
 	ShowOutput      bool
+	MarksSuccess    bool
 	ResultURI       string
 	TimeLimit       time.Duration
 	PathRoots       link.Roots
@@ -369,6 +370,10 @@ func diffMetricsText(metrics *tool.ToolCallMetrics) string {
 }
 
 func searchMetricsText(metrics *tool.ToolCallMetrics) string {
+	if metrics.Lines == 0 && !metrics.IsTruncated {
+		return style.Subtle("no matches")
+	}
+
 	capMarker := ""
 	if metrics.IsTruncated {
 		capMarker = "+"

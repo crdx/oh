@@ -83,9 +83,6 @@ func exec(root *file.Root, args Args) (string, tool.ToolCallMetrics, error) {
 		return "", tool.ToolCallMetrics{}, err
 	}
 
-	output := util.ReportSearchResults(matches, isTruncated)
-	metrics := tool.GetMetrics(output)
-	metrics.IsTruncated = isTruncated
-
+	output, metrics := util.SearchReport(matches, isTruncated)
 	return output, metrics, nil
 }

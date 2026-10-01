@@ -19,7 +19,7 @@ Now to read it, add to it, and read it
 back.
 
 read notes.md ✗ 1L notes.md: no such fi…
-ls ✓ 7L
+ls 7L
 write notes.md 3… ✗ 1L the filesystem i…
 read notes.md ✗ 1L notes.md: no such fi…
 
@@ -283,7 +283,7 @@ k
 .
 
 ✗
-✓
+…
 ✗
 ✗
 
@@ -482,7 +482,7 @@ Reading, then writing, then reading what was written.
 Now to read it, add to it, and read it back.
 
 read notes.md ✗ 1L notes.md: no such file or directory
-ls ✓ 7L
+ls 7L
 write notes.md 32B ✗ 1L the filesystem is read-only
 read notes.md ✗ 1L notes.md: no such file or directory
 
@@ -528,7 +528,7 @@ it, and read
 it back.
 
 re… ✗ 1L no…
-ls ✓ 7L
+ls 7L
 wr… ✗ 1L th…
 re… ✗ 1L no…
 
@@ -570,7 +570,7 @@ Reading, then writing, then reading what was written.
 Now to read it, add to it, and read it back.
 
 read notes.md ✗ 1L notes.md: no such file or directory
-ls ✓ 7L
+ls 7L
 write notes.md 32B ✗ 1L the filesystem is read-only
 read notes.md ✗ 1L notes.md: no such file or directory
 

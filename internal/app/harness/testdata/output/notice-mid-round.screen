@@ -1,16 +1,16 @@
 === narrow ===
 
- expose the preview and read the notes
+ forward the preview and read the notes
 
 
 Looking at the notes first, then
-exposing the preview.
-read target.txt ✓ 1L
-read README.md ✓ 1L
-ls ✓ 2L
+forwarding the preview.
+read target.txt 1L
+read README.md 1L
+ls 2L
 
 
- 🤖 Sandbox port 8080 exposed at
+ 🤖 Port 8080 is now forwarded to
     http://127.27.192.223:8080.
 
 
@@ -19,17 +19,19 @@ one line.
 === one column ===
 
 
-e
-
-x
-
-p
+f
 
 o
 
-s
+r
 
-e
+w
+
+a
+
+r
+
+d
 
 t
 
@@ -109,11 +111,13 @@ t
 h
 e
 n
-e
-x
-p
+f
 o
-s
+r
+w
+a
+r
+d
 i
 n
 g
@@ -128,29 +132,15 @@ i
 e
 w
 .
-✓
-✓
-✓
+…
+…
+…
 
 
 
 🤖
 
-S
-
-a
-
-n
-
-d
-
-b
-
-o
-
-x
-
-p
+P
 
 o
 
@@ -166,23 +156,37 @@ t
 
 0
 
-e
+i
 
-x
+s
 
-p
+n
 
 o
 
-s
+w
+
+f
+
+o
+
+r
+
+w
+
+a
+
+r
+
+d
 
 e
 
 d
 
-a
-
 t
+
+o
 
 h
 
@@ -279,22 +283,22 @@ e
 .
 === printed ===
 
- expose the preview and read the notes
+ forward the preview and read the notes
 
 
-Looking at the notes first, then exposing the preview.
-read target.txt ✓ 1L
-read README.md ✓ 1L
-ls ✓ 2L
+Looking at the notes first, then forwarding the preview.
+read target.txt 1L
+read README.md 1L
+ls 2L
 
 
- 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.
+ 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
 
 
 The preview is up, and the notes hold one line.
 === tiny ===
 
- expose the
+ forward the
  preview and
  read the
  notes
@@ -303,18 +307,18 @@ The preview is up, and the notes hold one line.
 Looking at
 the notes
 first, then
-exposing the
-preview.
-read t… ✓ 1L
-read R… ✓ 1L
-ls ✓ 2L
+forwarding
+the preview.
+read tar… 1L
+read REA… 1L
+ls 2L
 
 
- 🤖 Sandbox
-    port
-    8080
-    exposed
-    at
+ 🤖 Port
+    8080 is
+    now
+    forwarde
+    d to
     http://1
     27.27.19
     2.223:80
@@ -328,16 +332,16 @@ hold one
 line.
 === wide ===
 
- expose the preview and read the notes
+ forward the preview and read the notes
 
 
-Looking at the notes first, then exposing the preview.
-read target.txt ✓ 1L
-read README.md ✓ 1L
-ls ✓ 2L
+Looking at the notes first, then forwarding the preview.
+read target.txt 1L
+read README.md 1L
+ls 2L
 
 
- 🤖 Sandbox port 8080 exposed at http://127.27.192.223:8080.
+ 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
 
 
 The preview is up, and the notes hold one line.

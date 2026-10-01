@@ -86,12 +86,23 @@ func TestEveryEnvironmentChangeIsDescribed(t *testing.T) {
 	if !isModelTold || !strings.HasPrefix(modelNotices[0], "The session environment changed since this conversation last ran") {
 		t.Errorf("got model notices %q and told %v", modelNotices, isModelTold)
 	}
+	joinedModelNotices := strings.Join(modelNotices, "\n")
+	for _, description := range []string{"new skill", "new description"} {
+		if !strings.Contains(joinedModelNotices, description) {
+			t.Errorf("model notice omits the skill description %q:\n%s", description, joinedModelNotices)
+		}
+	}
+	for _, description := range []string{"new skill", "new description", "renamed description"} {
+		if strings.Contains(joined, description) {
+			t.Errorf("user-facing notice contains the skill description %q:\n%s", description, joined)
+		}
+	}
 	for _, wanted := range []string{
 		"new-secret", "old-secret", "/new-read", "/old-read", "/new-write", "/old-write",
 		"/new-executable", "/old-executable", "/new-path", "/second-path", "/new-home", "/old-home",
 		"Skills now available", "`added`", "/skills/moved-new/SKILL.md",
 		"Skills no longer available", "`removed`", "/skills/moved-old/SKILL.md",
-		"Skills changed", "new description", "`renamed-old` is now `renamed-new`",
+		"Skills changed", "`renamed-old` is now `renamed-new`",
 		"now a Git repository", "`new.test`", "`old.test`",
 	} {
 		if !strings.Contains(joined, wanted) {

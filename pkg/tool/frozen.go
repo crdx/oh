@@ -18,6 +18,7 @@ func (self frozenTool) Revision() string    { return self.snapshot.Revision }
 func (self frozenTool) Concurrent() bool    { return self.current.Concurrent() }
 func (self frozenTool) ReadOnly() bool      { return self.current.ReadOnly() }
 func (self frozenTool) StateKey() string    { return self.current.StateKey() }
+func (self frozenTool) MarksSuccess() bool  { return MarksSuccess(self.current) }
 
 func (self frozenTool) Render(arguments string) (CallRendering, bool) {
 	return self.current.Render(arguments)

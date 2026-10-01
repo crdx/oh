@@ -1,0 +1,32 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[tool]]
+name = "grep"
+
+[first]
+prompt = "search for passata"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"type":"function_call","call_id":"call-1","name":"grep","arguments":"{\"pattern\":\"(?i)passata\"}"}}''',
+    '''{"type":"response.completed"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_text.delta","delta":"Nothing mentions it."}''',
+    '''{"type":"response.output_item.done","item":{"type":"message","role":"assistant","content":[{"type":"output_text","text":"Nothing mentions it."}]}}''',
+    '''{"type":"response.completed"}''',
+]
+
+[resume]
+prompt = "finish"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_text.delta","delta":"Done."}''',
+    '''{"type":"response.output_item.done","item":{"type":"message","role":"assistant","content":[{"type":"output_text","text":"Done."}]}}''',
+    '''{"type":"response.completed"}''',
+]

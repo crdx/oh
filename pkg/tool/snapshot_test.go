@@ -73,3 +73,23 @@ func TestAnUnavailableToolKeepsItsFrozenContractAndRefusesExecution(t *testing.T
 		t.Errorf("got %v", err)
 	}
 }
+
+func TestASnapshotMarksSuccessAsTheCurrentToolDoes(t *testing.T) {
+	original := revisionedWeather("2", "report weather", tool.Schema{})
+	marking := tool.Implement(
+		tool.Definition{Name: "weather", Description: "report weather", Schema: tool.Schema{}},
+		func(struct{}) tool.CallRendering { return tool.CallRendering{} },
+	).Revision("2").MarksSuccess().Plain(func(context.Context, struct{}) (string, error) {
+		return "sunny", nil
+	})
+
+	if !tool.MarksSuccess(tool.WithSnapshot(marking, tool.TakeSnapshot(original))) {
+		t.Error("expected a snapshot to mark success when the current tool does")
+	}
+	if tool.MarksSuccess(tool.WithSnapshot(original, tool.TakeSnapshot(marking))) {
+		t.Error("expected a snapshot to leave success unmarked when the current tool does")
+	}
+	if tool.MarksSuccess(tool.Unavailable(tool.TakeSnapshot(marking), "weather changed")) {
+		t.Error("expected an unavailable tool, which never succeeds, to mark nothing")
+	}
+}

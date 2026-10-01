@@ -37,12 +37,16 @@ notes.txt is not tracked yet.
     $ touch notes.txt
 
     Exit code: 0
- 🤖 The user ran the following command
-    on the host, producing no output:
+ 🤖 The user started the following
+    command on the host, which was
+    killed at its time limit before it
+    finished or printed anything:
 
     $ sleep 600
 
-    Stopped after its limit of 30s.
+    Killed at its time limit of 30s, so
+    it has no exit code. Anything it had
+    not yet done was not done.
  🤖 The user ran the following command
     on the host, producing no output:
 
@@ -89,7 +93,7 @@ The push was refused, so pull first.
  check the notes while that runs
 
 
-read notes.txt ✓ 2L
+read notes.txt 2L
 
 
  🤖 The user ran the following command
@@ -866,11 +870,19 @@ e
 
 r
 
-r
+s
+
+t
 
 a
 
-n
+r
+
+t
+
+e
+
+d
 
 t
 
@@ -930,39 +942,127 @@ t
 
 ,
 
+w
+
+h
+
+i
+
+c
+
+h
+
+w
+
+a
+
+s
+
+k
+
+i
+
+l
+
+l
+
+e
+
+d
+
+a
+
+t
+
+i
+
+t
+
+s
+
+t
+
+i
+
+m
+
+e
+
+l
+
+i
+
+m
+
+i
+
+t
+
+b
+
+e
+
+f
+
+o
+
+r
+
+e
+
+i
+
+t
+
+f
+
+i
+
+n
+
+i
+
+s
+
+h
+
+e
+
+d
+
+o
+
+r
+
 p
 
 r
 
-o
+i
+
+n
+
+t
+
+e
 
 d
 
-u
+a
 
-c
+n
+
+y
+
+t
+
+h
 
 i
 
 n
 
 g
-
-n
-
-o
-
-o
-
-u
-
-t
-
-p
-
-u
-
-t
 
 :
 
@@ -986,15 +1086,13 @@ p
 0
 
 
-S
+K
 
-t
+i
 
-o
+l
 
-p
-
-p
+l
 
 e
 
@@ -1002,19 +1100,21 @@ d
 
 a
 
-f
-
 t
-
-e
-
-r
 
 i
 
 t
 
 s
+
+t
+
+i
+
+m
+
+e
 
 l
 
@@ -1035,6 +1135,110 @@ f
 0
 
 s
+
+,
+
+s
+
+o
+
+i
+
+t
+
+h
+
+a
+
+s
+
+n
+
+o
+
+e
+
+x
+
+i
+
+t
+
+c
+
+o
+
+d
+
+e
+
+.
+
+A
+
+n
+
+y
+
+t
+
+h
+
+i
+
+n
+
+g
+
+i
+
+t
+
+h
+
+a
+
+d
+
+n
+
+o
+
+t
+
+y
+
+e
+
+t
+
+d
+
+o
+
+n
+
+e
+
+w
+
+a
+
+s
+
+n
+
+o
+
+t
+
+d
+
+o
+
+n
+
+e
 
 .
 
@@ -1883,7 +2087,7 @@ n
 s
 
 
-✓
+…
 
 
 
@@ -3680,11 +3884,13 @@ One tracked file has changed and notes.txt is not tracked yet.
     $ touch notes.txt
 
     Exit code: 0
- 🤖 The user ran the following command on the host, producing no output:
+ 🤖 The user started the following command on the host, which was killed at its time limit before it
+    finished or printed anything:
 
     $ sleep 600
 
-    Stopped after its limit of 30s.
+    Killed at its time limit of 30s, so it has no exit code. Anything it had not yet done was not
+    done.
  🤖 The user ran the following command on the host, producing no output:
 
     $ cat <<'EOF' > notes.txt
@@ -3726,7 +3932,7 @@ The push was refused, so pull first.
  check the notes while that runs
 
 
-read notes.txt ✓ 2L
+read notes.txt 2L
 
 
  🤖 The user ran the following command on the host:
@@ -3882,24 +4088,44 @@ yet.
     Exit
     code: 0
  🤖 The user
-    ran the
+    started
+    the
     followin
     g
     command
     on the
     host,
-    producin
-    g no
-    output:
+    which
+    was
+    killed
+    at its
+    time
+    limit
+    before
+    it
+    finished
+    or
+    printed
+    anything
+    :
 
     $ sleep
     600
 
-    Stopped
-    after
-    its
+    Killed
+    at its
+    time
     limit of
-    30s.
+    30s, so
+    it has
+    no exit
+    code.
+    Anything
+    it had
+    not yet
+    done was
+    not
+    done.
  🤖 The user
     ran the
     followin
@@ -3991,7 +4217,7 @@ pull first.
  that runs
 
 
-read n… ✓ 2L
+read not… 2L
 
 
  🤖 The user
@@ -4222,11 +4448,13 @@ One tracked file has changed and notes.txt is not tracked yet.
     $ touch notes.txt
 
     Exit code: 0
- 🤖 The user ran the following command on the host, producing no output:
+ 🤖 The user started the following command on the host, which was killed at its time limit before it
+    finished or printed anything:
 
     $ sleep 600
 
-    Stopped after its limit of 30s.
+    Killed at its time limit of 30s, so it has no exit code. Anything it had not yet done was not
+    done.
  🤖 The user ran the following command on the host, producing no output:
 
     $ cat <<'EOF' > notes.txt
@@ -4268,7 +4496,7 @@ The push was refused, so pull first.
  check the notes while that runs
 
 
-read notes.txt ✓ 2L
+read notes.txt 2L
 
 
  🤖 The user ran the following command on the host:

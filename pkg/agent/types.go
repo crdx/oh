@@ -277,6 +277,7 @@ type FallbackRendering struct {
 	Continuation  []tool.CallRendering `json:"continuation,omitempty"`
 	ShowOutput    bool                 `json:"show_output,omitempty"`
 	ReadOnly      bool                 `json:"read_only,omitempty"`
+	MarksSuccess  bool                 `json:"marks_success,omitempty"`
 }
 
 func (self *FallbackRendering) Describe(toolCall tool.ToolCall) {

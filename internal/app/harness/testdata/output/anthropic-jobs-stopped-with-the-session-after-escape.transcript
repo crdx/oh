@@ -29,7 +29,7 @@ Turn stopped because the user pressed escape.
 ## jobs_ended_with_session · +0s
 
 ```
-The session was closed and reopened after your last turn. Job `docs` stopped when it closed. Restart it with `job(action="start", name=…)` if still needed.
+The session was closed and reopened after the last turn. Job `docs` stopped when it closed. Restart it if still needed.
 ```
 
 ## Assistant · +0s

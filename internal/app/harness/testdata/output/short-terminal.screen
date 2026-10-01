@@ -6,7 +6,7 @@
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a notice beside a region taller than the terminal, sealed ===
-read ✓
+read
 read –
 read –
 read –
@@ -48,22 +48,22 @@ read –
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === a panel grown taller than the terminal ===
 
- expose the five preview ports
+ forward the five preview ports
 
 
-Exposing each port in turn.
-expose 8001 ✓
-expose 8002 ✓
-expose 8003 ✓
-expose 8004 ✓
-expose 8005 ✓
+Forwarding each port in turn.
+forward 8001
+forward 8002
+forward 8003
+forward 8004
+forward 8005
 
 
- 🤖 Sandbox port 8001 exposed at http://127.27.192.223:8001.
- 🤖 Sandbox port 8002 exposed at http://127.27.192.223:8002.
- 🤖 Sandbox port 8003 exposed at http://127.27.192.223:8003.
- 🤖 Sandbox port 8004 exposed at http://127.27.192.223:8004.
- 🤖 Sandbox port 8005 exposed at http://127.27.192.223:8005.
+ 🤖 Port 8001 is now forwarded to http://127.27.192.223:8001.
+ 🤖 Port 8002 is now forwarded to http://127.27.192.223:8002.
+ 🤖 Port 8003 is now forwarded to http://127.27.192.223:8003.
+ 🤖 Port 8004 is now forwarded to http://127.27.192.223:8004.
+ 🤖 Port 8005 is now forwarded to http://127.27.192.223:8005.
 
 
 All five previews are up.
@@ -78,21 +78,21 @@ Taking the four of them together rather than one after another.
 
 Let me get the shape of this first.
 
-ls ✓ 7L
-find **/*.go ✓ 2L
-find **/*.toml ✓ 1L
-grep package *.go ✓ 2L
+ls 7L
+find **/*.go 2L
+find **/*.toml 1L
+grep package *.go 2L
 Three searches, all at once.
 
 Now to find where the drawing happens.
 
-grep spinner *.go ✓ 1L
-grep footer *.go ✓ 1L
-grep cursor *.go ✓ 1L
+grep spinner *.go 1L
+grep footer *.go 1L
+grep cursor *.go 1L
 
 One more pair, and one of them will not be there.
 
-ls ✓ 7L
+ls 7L
 read nowhere/at/all.go ✗ 1L nowhere/at/all.go: no such file or directory
 
 That is the lot: four together, then three together, then a pair where only one of them could be

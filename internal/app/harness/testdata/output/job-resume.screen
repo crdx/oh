@@ -3,25 +3,23 @@
  start the docs server and a watcher
 
 
-start docs $ python3 -m http.serve… ✓ 1L
+start docs $ python3 -m http.server … 1L
 
 Both are up.
 
 
  🤖 The session was closed and reopened
-    after your last turn. Jobs docs and
+    after the last turn. Jobs docs and
     watch stopped when it closed.
-    Restart each with
-    job(action="start", name=…) if still
-    needed.
+    Restart each if still needed.
 
 
 
  carry on
 
 
-list jobs ✓ 2L
-restart docs ✓ 1L
+list jobs 2L
+restart docs 1L
 
 Restarted docs from the command it was
 remembered with.
@@ -87,7 +85,7 @@ e
 r
 
 
-✓
+…
 
 B
 o
@@ -174,13 +172,11 @@ e
 
 r
 
-y
+t
 
-o
+h
 
-u
-
-r
+e
 
 l
 
@@ -294,66 +290,6 @@ c
 
 h
 
-w
-
-i
-
-t
-
-h
-
-j
-
-o
-
-b
-
-(
-
-a
-
-c
-
-t
-
-i
-
-o
-
-n
-
-=
-
-"
-
-s
-
-t
-
-a
-
-r
-
-t
-
-"
-
-,
-
-n
-
-a
-
-m
-
-e
-
-=
-
-…
-
-)
-
 i
 
 f
@@ -400,8 +336,8 @@ o
 n
 
 
-✓
-✓
+…
+…
 
 R
 e
@@ -455,21 +391,21 @@ h
  start the docs server and a watcher
 
 
-start docs $ python3 -m http.server 8080 ✓ 1L
+start docs $ python3 -m http.server 8080 1L
 
 Both are up.
 
 
- 🤖 The session was closed and reopened after your last turn. Jobs docs and watch stopped when it
-    closed. Restart each with job(action="start", name=…) if still needed.
+ 🤖 The session was closed and reopened after the last turn. Jobs docs and watch stopped when it
+    closed. Restart each if still needed.
 
 
 
  carry on
 
 
-list jobs ✓ 2L
-restart docs ✓ 1L
+list jobs 2L
+restart docs 1L
 
 Restarted docs from the command it was remembered with.
 === tiny ===
@@ -480,7 +416,7 @@ Restarted docs from the command it was remembered with.
  watcher
 
 
-start … ✓ 1L
+start do… 1L
 
 Both are up.
 
@@ -492,8 +428,7 @@ Both are up.
     and
     reopened
     after
-    your
-    last
+    the last
     turn.
     Jobs
     docs and
@@ -502,13 +437,8 @@ Both are up.
     when it
     closed.
     Restart
-    each
-    with
-    job(acti
-    on="star
-    t",
-    name=…)
-    if still
+    each if
+    still
     needed.
 
 
@@ -516,8 +446,8 @@ Both are up.
  carry on
 
 
-list j… ✓ 2L
-restart ✓ 1L
+list jobs 2L
+restart … 1L
 
 Restarted
 docs from
@@ -530,20 +460,20 @@ with.
  start the docs server and a watcher
 
 
-start docs $ python3 -m http.server 8080 ✓ 1L
+start docs $ python3 -m http.server 8080 1L
 
 Both are up.
 
 
- 🤖 The session was closed and reopened after your last turn. Jobs docs and watch stopped when it
-    closed. Restart each with job(action="start", name=…) if still needed.
+ 🤖 The session was closed and reopened after the last turn. Jobs docs and watch stopped when it
+    closed. Restart each if still needed.
 
 
 
  carry on
 
 
-list jobs ✓ 2L
-restart docs ✓ 1L
+list jobs 2L
+restart docs 1L
 
 Restarted docs from the command it was remembered with.

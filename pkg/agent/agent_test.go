@@ -1568,3 +1568,30 @@ func TestAResumedConversationJudgesItsCacheAsAnOpenOneDoes(t *testing.T) {
 		})
 	}
 }
+
+func TestACallWhoseToolMarksSuccessStoresIt(t *testing.T) {
+	calledTool := tool.Implement(
+		tool.Definition{Name: "run", Description: "", Schema: tool.Schema{}},
+		func(struct{}) tool.CallRendering { return tool.CallRendering{Subject: "target"} },
+	).MarksSuccess().Plain(func(context.Context, struct{}) (string, error) {
+		return "done", nil
+	})
+	provider := &oneCallProvider{
+		call: agent.ToolCall{ID: "a", Name: calledTool.Name(), Arguments: `{}`},
+	}
+	assistant := agent.New("", provider, []tool.Tool{calledTool})
+
+	for update, err := range assistant.Stream(t.Context(), "go", nil) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		if update.Event != nil && update.Event.Kind == agent.ToolCallRequestEvent {
+			if !update.Event.MarksSuccess {
+				t.Error("a call whose tool marks success did not store it")
+			}
+			return
+		}
+	}
+
+	t.Fatal("expected a tool call request")
+}

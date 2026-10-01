@@ -4,8 +4,8 @@
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mred\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L 2M\e[0m \e[38;2;150;152;150mred\e[0m\r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\screenshot\e]8;;\e\\ \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone two\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\screenshot\e]8;;\e\\ \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone two\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 \e[38;2;207;173;0m[#1] Request failed; retrying in 2s:\e[0m\r
 \e[38;2;207;173;0mUpstream said no\e[0m\r
@@ -53,8 +53,8 @@ Nothing moved.\r
 \e[48;2;52;53;65m \e[0m\r
 \r
 \e[38;2;76;154;44m✓\e[0m\r
-\e[38;2;76;154;44m✓\e[0m\r
-\e[38;2;76;154;44m✓\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\…\e]8;;\e\\\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\…\e]8;;\e\\\r
 \r
 \e[38;2;207;173;0m[\e[0m\r
 \e[38;2;207;173;0m#\e[0m\r
@@ -121,8 +121,8 @@ d\r
 \e[48;2;52;53;65m run whatever you like\e[0m
 \e[48;2;52;53;65m\e[0m
 \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mred\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L 2M\e[0m \e[38;2;150;152;150mred\e[0m
-screenshot \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
-grep \e[38;2;150;152;150mone two\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m
+screenshot \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m \e[38;2;150;152;150m1L\e[0m
+grep \e[38;2;150;152;150mone two\e[0m \e[38;2;150;152;150m1L\e[0m
 
 \e[38;2;207;173;0m[#1] Request failed; retrying in 2s: Upstream said no\e[0m
 
@@ -134,8 +134,8 @@ Nothing moved.
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mred\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L 2M\e[0m \e[38;2;150;152;150mred\e[0m\r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\screenshot\e]8;;\e\\ \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone two\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\screenshot\e]8;;\e\\ \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone two\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 \e[38;2;207;173;0m[#1] Request failed; retrying in 2s: Upstream said no\e[0m\r
 \r
@@ -147,8 +147,8 @@ Nothing moved.\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mred\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mred\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L 2M\e[0m \e[38;2;150;152;150mred\e[0m\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\rscreenshot \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\screenshot\e]8;;\e\\ \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\rgrep \e[38;2;150;152;150mone two\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone two\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[17C\e[?25h\e[?2026l\r
+\rscreenshot \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\screenshot\e]8;;\e\\ \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\rgrep \e[38;2;150;152;150mone two\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone two\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0m[#1] Request failed; retrying in 2s: Upstream said no\e[0m\e[?2026h\e[?25l\r
 \r\e[K\r
@@ -160,8 +160,8 @@ Noth\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rNothing\e[K\r\e[7C\e[?25h\e[?20
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mred\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mred\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L 2M\e[0m \e[38;2;150;152;150mred\e[0m\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\rscreenshot \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\screenshot\e]8;;\e\\ \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\rgrep \e[38;2;150;152;150mone two\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone two\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[17C\e[?25h\e[?2026l\r
+\rscreenshot \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\screenshot\e]8;;\e\\ \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\rgrep \e[38;2;150;152;150mone two\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone two\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0m[#1] Request failed; retrying in 2s: Upstream said no\e[0m\e[?2026h\e[?25l\r
 \r\e[K\r
@@ -173,8 +173,8 @@ Nothing moved.\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[14C\e[?25h\e[?202
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mred\e[0m\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mred\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L 2M\e[0m \e[38;2;150;152;150mred\e[0m\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\rscreenshot \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\screenshot\e]8;;\e\\ \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\rgrep \e[38;2;150;152;150mone two\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone two\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[17C\e[?25h\e[?2026l\r
+\rscreenshot \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\screenshot\e]8;;\e\\ \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\rgrep \e[38;2;150;152;150mone two\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone two\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0m[#1] Request failed; retrying in 2s: Upstream said no\e[0m\e[?2026h\e[?25l\r
 \r\e[K\r
@@ -188,8 +188,8 @@ Noth\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rNothing\e[K\r\e[7C\e[?25h\e[?20
 \e[48;2;52;53;65m            \e[0m\r
 \r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190me\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L 2M\e[0m\r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\screen…\e]8;;\e\\ \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mo\e[0m\e[38;2;150;152;150m…\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\screensh…\e]8;;\e\\ \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone\e[0m\e[38;2;150;152;150m…\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 \e[38;2;207;173;0m[#1] Request\e[0m\r
 \e[38;2;207;173;0mfailed;\e[0m\r
@@ -205,8 +205,8 @@ moved.\r
 \e[48;2;52;53;65m run whatever you like\e[0m\r
 \e[48;2;52;53;65m\e[0m\r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mred\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L 2M\e[0m \e[38;2;150;152;150mred\e[0m\r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\screenshot\e]8;;\e\\ \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone two\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\screenshot\e]8;;\e\\ \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone two\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 \e[38;2;207;173;0m[#1] Request failed; retrying in 2s: Upstream said no\e[0m\r
 \r
@@ -218,8 +218,8 @@ Nothing moved.\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mecho\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mred\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L 2M\e[0m \e[38;2;150;152;150mred\e[0m\r
-\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\screenshot\e]8;;\e\\ \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone two\e[0m \e[38;2;76;154;44m✓\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\screenshot\e]8;;\e\\ \e[38;2;192;128;80mnotes.md\e[0m \e[38;2;150;152;150mlines 1 to 40\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mone two\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 \e[38;2;207;173;0m[#1] Request failed; retrying in 2s: Upstream said no\e[0m\r
 \r

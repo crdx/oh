@@ -5,9 +5,9 @@
 
 
 $ NAME=alpha; case "$NAME" in alph… ✓ 2L
-notify command finished — alpha an… ✓ 1L
-lookup how to quote a shell variab… ✓ 1L
-fetch https://gnu.org/bash as clea… ✓ 1L
+notify command finished — alpha and … 1L
+lookup how to quote a shell variable 1L
+fetch https://gnu.org/bash as clean_… 1L
 
 done.
 === one column ===
@@ -105,9 +105,9 @@ s
 
 
 ✓
-✓
-✓
-✓
+…
+…
+…
 
 d
 o
@@ -120,9 +120,9 @@ e
 
 
 $ NAME=alpha; case "$NAME" in alpha) echo alpha ;; esac; (echo beta) 3L ✓ 2L alpha beta
-notify command finished — alpha and beta were printed ✓ 1L
-lookup how to quote a shell variable ✓ 1L
-fetch https://gnu.org/bash as clean_html ✓ 1L
+notify command finished — alpha and beta were printed 1L
+lookup how to quote a shell variable 1L
+fetch https://gnu.org/bash as clean_html 1L
 
 done.
 === tiny ===
@@ -136,9 +136,9 @@ done.
 
 
 $ NAME… ✓ 2L
-notify ✓ 1L
-lookup ✓ 1L
-fetch … ✓ 1L
+notify c… 1L
+lookup h… 1L
+fetch ht… 1L
 
 done.
 === wide ===
@@ -147,8 +147,8 @@ done.
 
 
 $ NAME=alpha; case "$NAME" in alpha) echo alpha ;; esac; (echo beta) 3L ✓ 2L alpha beta
-notify command finished — alpha and beta were printed ✓ 1L
-lookup how to quote a shell variable ✓ 1L
-fetch https://gnu.org/bash as clean_html ✓ 1L
+notify command finished — alpha and beta were printed 1L
+lookup how to quote a shell variable 1L
+fetch https://gnu.org/bash as clean_html 1L
 
 done.

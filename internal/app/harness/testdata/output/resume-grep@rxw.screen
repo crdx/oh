@@ -10,7 +10,7 @@ context.
 Searching the target before the process
 restarts.
 
-grep one target.txt ✓ 1L
+grep one target.txt 1L
 
 The matching target is now safely
 recorded.
@@ -166,7 +166,7 @@ t
 s
 .
 
-✓
+…
 
 T
 h
@@ -214,7 +214,7 @@ Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800
 
 Searching the target before the process restarts.
 
-grep one target.txt ✓ 1L
+grep one target.txt 1L
 
 The matching target is now safely recorded.
 === tiny ===
@@ -239,7 +239,7 @@ before the
 process
 restarts.
 
-grep o… ✓ 1L
+grep one 1L
 
 The matching
 target is
@@ -254,6 +254,6 @@ Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800
 
 Searching the target before the process restarts.
 
-grep one target.txt ✓ 1L
+grep one target.txt 1L
 
 The matching target is now safely recorded.

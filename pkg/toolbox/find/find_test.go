@@ -110,13 +110,16 @@ func TestTheGitDirectoryIsNotSearched(t *testing.T) {
 func TestASearchThatFindsNothingSaysSo(t *testing.T) {
 	root := testRoot(t, "main.go")
 
-	output, err := exec(t, root, `{"pattern":"**/*.rb"}`)
+	output, metrics, err := execWithMetrics(t, root, `{"pattern":"**/*.rb"}`)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
 	if output != "(no matches)" {
 		t.Errorf("expected no matches to say so, got %q", output)
+	}
+	if metrics.Lines != 0 {
+		t.Errorf("got %d lines, want the placeholder left uncounted", metrics.Lines)
 	}
 }
 
@@ -160,8 +163,13 @@ func TestHittingTheByteCapIsSaidOutLoud(t *testing.T) {
 	if strings.Contains(output, paths[pathCount-1]) {
 		t.Errorf("expected later results to be omitted, got %q", output)
 	}
-	wantMetrics := tool.GetMetrics(output)
-	wantMetrics.IsTruncated = true
+	matches, _, _ := strings.Cut(output, "\n\n")
+	wantMetrics := tool.ToolCallMetrics{
+		Kind:        tool.MetricSearch,
+		Lines:       int64(len(strings.Split(matches, "\n"))),
+		Bytes:       int64(len(output)),
+		IsTruncated: true,
+	}
 	if metrics != wantMetrics {
 		t.Errorf("got metrics %+v, want %+v", metrics, wantMetrics)
 	}

@@ -35,7 +35,7 @@ harness background
  │ "strikethrough", "overline", or a shaped or coloured underline such as "underline:curly"       │
 ─┴── ·✦· ────────────────────────── GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? ──────────────────────────────────┴─
 
-── rxw ngl ─ workspace ───────────────────── usage n/a ─────────────────────────── tame-impala 🦌 ──
+── rxw ngl ───────────────────────────────── usage n/a ─────────────── workspace ─ tame-impala 🦌 ──
 === live turn and input draft ===
 
  explain it
@@ -55,12 +55,24 @@ half written
 
 
 model answer
+=== tool actions inherit a tool ===
+
+ show themed actions
+
+
+start docs
+scuttle docs
+cat docs
+forward 8080
+close-gangway 8080
+
+themed
 === tool vocabulary and paints ===
 
  show themed tools
 
 
-captain docs ✓
-consult-chart skills/tidy/SKILL.md ✓
+captain docs
+consult-chart skills/tidy/SKILL.md
 
 themed

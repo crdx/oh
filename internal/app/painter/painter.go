@@ -337,17 +337,20 @@ func NoticeStyle(severity agent.Status) style.Style {
 	}
 }
 
-func getState(status agent.Status) dynamic.RowState {
+func getState(status agent.Status, isSuccessMarked bool) dynamic.RowState {
 	switch status {
 	case agent.ErrorStatus:
 		return dynamic.Failed
 	case agent.CancelledStatus:
 		return dynamic.Cancelled
 	case agent.InfoStatus, agent.SuccessStatus, agent.WarningStatus:
-		return dynamic.Done
-	default:
-		return dynamic.Done
 	}
+
+	if isSuccessMarked {
+		return dynamic.Succeeded
+	}
+
+	return dynamic.Done
 }
 
 func RenderReasoning(thought string, columns int, rendering output.ReasoningRendering) []string {
@@ -391,13 +394,7 @@ func renderReasoningWith(
 			}
 			text += tailText
 		}
-		settledLength := len(settledText)
-		if shouldRenderHyperlinks {
-			settledLength = len(link.Render(settledText, pathRoots))
-			text = link.Render(text, pathRoots)
-		}
-
-		return reflow.Wrap(text, settledLength, columns)
+		return reflow.Wrap(text, len(settledText), columns)
 	}
 
 	options := markdown.Options{Columns: columns}
@@ -775,7 +772,7 @@ func (self *Picasso) mark(event agent.Event) {
 	self.toolBlock.FinaliseRowWithLabel(
 		index,
 		label,
-		getState(event.Status),
+		getState(event.Status, label.MarksSuccess),
 		event.Took,
 		call.Summary(event, label.ShowOutput),
 		call.Measurements(event.Metrics),
