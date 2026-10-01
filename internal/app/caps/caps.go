@@ -371,10 +371,10 @@ func withdrawal(withdrawnCaps Set) string {
 
 func workspaceNotice(isWritable bool) string {
 	if isWritable {
-		return "Workspace is now read-write."
+		return "The workspace is now read-write."
 	}
 
-	return "Workspace is now read-only."
+	return "The workspace is now read-only."
 }
 
 func shellNotice(isGranted bool) string {

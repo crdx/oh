@@ -56,7 +56,7 @@
 # /tmp
 
 - /tmp is the machine's own /tmp, shared with everything else running on it
-- Your persistent scratch space is /state/farm/tame-impala, which you can always read and write to
+- Your persistent, always-writable scratch space is /state/farm/tame-impala
 - Give the user that path exactly as it is written here
 
 # Home

@@ -4,24 +4,24 @@ Agent tame-impala 🦌 ready in 1ms with 0 skills ⧸ 0 snippets ⧸ 0t context.
 Agent tame-impala 🦌 ready in 1ms with 0 skills ⧸ 0 snippets ⧸ 0t context.
 
                                                                            double-enter to send now
- ⏳ Workspace is now read-only.
+ ⏳ The workspace is now read-only.
 === 3 workspace and git messages ===
 Agent tame-impala 🦌 ready in 1ms with 0 skills ⧸ 0 snippets ⧸ 0t context.
 
                                                                            double-enter to send now
- ⏳ Workspace is now read-only.
+ ⏳ The workspace is now read-only.
  ⏳ .git is now read-write.
 === 4 carried by a new turn ===
 Agent tame-impala 🦌 ready in 1ms with 0 skills ⧸ 0 snippets ⧸ 0t context.
 
 
- 🤖 Workspace is now read-only.
+ 🤖 The workspace is now read-only.
  🤖 .git is now read-write.
 === 5 carried by a new turn beside a later line ===
 Agent tame-impala 🦌 ready in 1ms with 0 skills ⧸ 0 snippets ⧸ 0t context.
 
 
- 🤖 Workspace is now read-only.
+ 🤖 The workspace is now read-only.
  🤖 .git is now read-write.
 
 
@@ -30,7 +30,7 @@ Job `build` exited: complete after 30s.
 $ sleep 600
 
                                                                                            sending…
- ⏳ Workspace is now read-only.
+ ⏳ The workspace is now read-only.
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -39,7 +39,7 @@ $ sleep 600
 $ sleep 600
 
                                                                                            sending…
- ⏳ Workspace is now read-only.
+ ⏳ The workspace is now read-only.
  ⏳ do this instead
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -49,7 +49,7 @@ $ sleep 600
 $ sleep 600
 
                                                                                            sending…
- ⏳ Workspace is now read-only.
+ ⏳ The workspace is now read-only.
  ⏳ .git is now read-write.
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────

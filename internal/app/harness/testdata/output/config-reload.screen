@@ -2,7 +2,7 @@
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ Configuration reloaded automatically                                                           │
  │ config.toml: sandbox.read                                                                      │
- │ sandbox.read lands when oh next starts (dismissing in 10s)                                     │
+ │ applies when oh next starts: sandbox.read (dismissing in 10s)                                  │
 ─┴── tame-impala ─────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -42,7 +42,7 @@
  │ bar.top.center, bar.top.left, bar.top.right, ui.currency (dismissing in 10s)                   │
 ─┴── ·✦· ────────────────────────── GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? ──────────────────────────────────┴─
 
-── rxw ngl ─ workspace ───────────────────── usage n/a ─────────────────────────── tame-impala 🦌 ──
+── rxw ngl ───────────────────────────────── usage n/a ─────────────── workspace ─ tame-impala 🦌 ──
 === failure showing when the reload lands ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ The conversation could not be stored: no space left on device                                  │
@@ -63,6 +63,14 @@
 ─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ──────────────────────────────────────── GPT Sol 5.6 ▫▫▫▪·· ────────────────────────────────────────
+=== reloaded model rotation file ===
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ Configuration reloaded automatically                                                           │
+ │ models.txt: model.round_robin                                                                  │
+ │ applies to new sessions: model.round_robin (dismissing in 10s)                                 │
+─┴── tame-impala ─────────────────────────────────────────────────────────────────────────────────┴─
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
 === reloaded snippet file ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ Configuration reloaded automatically                                                           │
@@ -85,7 +93,7 @@
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ Configuration reloaded automatically                                                           │
  │ config.toml: model.round_robin                                                                 │
- │ model.round_robin lands in a new session (dismissing in 10s)                                   │
+ │ applies to new sessions: model.round_robin (dismissing in 10s)                                 │
 ─┴── tame-impala ─────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────

@@ -1433,8 +1433,8 @@ func reloadConfirmation(changes []config.SourceChange) string {
 }
 
 var reachDescriptions = map[config.Reach]string{
-	config.ReachNextRun:     "when oh next starts",
-	config.ReachNextSession: "in a new session",
+	config.ReachNextRun:     "applies when oh next starts",
+	config.ReachNextSession: "applies to new sessions",
 }
 
 func reachRows(changes []config.SourceChange) []string {
@@ -1460,12 +1460,7 @@ func reachRows(changes []config.SourceChange) []string {
 			continue
 		}
 
-		verb := "land"
-		if len(settings) == 1 {
-			verb = "lands"
-		}
-
-		rows = append(rows, strings.Join(settings, ", ")+" "+verb+" "+reachDescriptions[reach])
+		rows = append(rows, reachDescriptions[reach]+": "+strings.Join(settings, ", "))
 	}
 
 	return rows

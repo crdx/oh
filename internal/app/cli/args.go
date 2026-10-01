@@ -28,22 +28,22 @@ Usage:
     $0 --ctl <command> [<args>...]
 
 Options:
-    -r, --resume [<session>]    Resume a session
-    -m, --model [<model>]       Choose a model
-    -c, --caps <flags>          Set capabilities
-    -t, --tool <tool>           Replace the toolbox
-    -p, --print                 Stream non-interactively
-        --ctl                   Run maintenance
-        --demo                  Enter the matrix
-        --yolo                  Disable the sandbox
-    -l, --list                  List available models
-    -u, --update                Update model cache
-    -L, --login                 Manage provider sign-ins
-    -U, --usage                 Show subscription usage
-    -I, --ignored               Show ignored items
-    -J, --json                  Output as JSON
-    -v, --version               Show version
-    -h, --help                  Show this help
+    -r, --resume [<session>]    Resume a stored session
+    -m, --model [<model>]       Pick which model to use
+    -c, --caps <flags>          Configure access rights
+    -t, --tool <tool>           Replace current toolbox
+    -p, --print                 Stream in headless mode
+        --ctl                   Run maintenance command
+        --demo                  Follow the white rabbit
+        --yolo                  Run outside the sandbox
+    -l, --list                  Show every usable model
+    -u, --update                Refresh the model cache
+    -L, --login                 Control provider logins
+    -U, --usage                 View subscription usage
+    -I, --ignored               Display ignored entries
+    -J, --json                  Format output into JSON
+    -v, --version               Print this version info
+    -h, --help                  Print this help message
 `
 
 type inputFlags struct {

@@ -3528,7 +3528,7 @@ func TestModeChangesAcrossFailedTurnsDoNotAccumulate(t *testing.T) {
 }
 
 const (
-	nowReadOnlyNote         = "Workspace is now read-only."
+	nowReadOnlyNote         = "The workspace is now read-only."
 	historyNowReadWriteNote = ".git is now read-write."
 )
 
@@ -10758,7 +10758,7 @@ func TestTheReloadConfirmationNamesEveryFileAndWhatItChanged(t *testing.T) {
 			},
 			want: "Configuration reloaded automatically\n" +
 				"config.toml: sandbox.read, sandbox.write\n" +
-				"sandbox.read, sandbox.write land when oh next starts",
+				"applies when oh next starts: sandbox.read, sandbox.write",
 		},
 		"a grant withdrawn is no more immediate": {
 			changes: []config.SourceChange{
@@ -10766,7 +10766,7 @@ func TestTheReloadConfirmationNamesEveryFileAndWhatItChanged(t *testing.T) {
 			},
 			want: "Configuration reloaded automatically\n" +
 				"config.toml: gone, dropping sandbox.read\n" +
-				"sandbox.read lands when oh next starts",
+				"applies when oh next starts: sandbox.read",
 		},
 		"both waits beside a setting that landed": {
 			changes: []config.SourceChange{
@@ -10779,8 +10779,8 @@ func TestTheReloadConfirmationNamesEveryFileAndWhatItChanged(t *testing.T) {
 			},
 			want: "Configuration reloaded automatically\n" +
 				"config.toml: caps.default, model.round_robin, sandbox.exec, ui.streaming\n" +
-				"sandbox.exec lands when oh next starts\n" +
-				"caps.default, model.round_robin land in a new session",
+				"applies when oh next starts: sandbox.exec\n" +
+				"applies to new sessions: caps.default, model.round_robin",
 		},
 		"one setting named by two files is said once": {
 			changes: []config.SourceChange{
@@ -10790,7 +10790,7 @@ func TestTheReloadConfirmationNamesEveryFileAndWhatItChanged(t *testing.T) {
 			want: "Configuration reloaded automatically\n" +
 				"config.toml: skills.include\n" +
 				"oh.toml: skills.include\n" +
-				"skills.include lands when oh next starts",
+				"applies when oh next starts: skills.include",
 		},
 	}
 
@@ -21146,7 +21146,7 @@ func TestAWithdrawalIsAnnouncedBeforeTheJobsItStopped(t *testing.T) {
 	if len(notices) != 2 {
 		t.Fatalf("got %d notices, want the change and the job it stopped: %v", len(notices), notices)
 	}
-	if !strings.Contains(notices[0], "Workspace is now read-only") {
+	if !strings.Contains(notices[0], "The workspace is now read-only") {
 		t.Errorf("got %q first, want the change that caused the stop", notices[0])
 	}
 	if !strings.Contains(notices[1], "Job `web` stopped") {
@@ -21161,7 +21161,7 @@ func TestTheModelIsToldAboutTheJobsAWithdrawalStopped(t *testing.T) {
 	self.settleAccess()
 
 	note := self.prelude()
-	change := strings.Index(note, "Workspace is now read-only")
+	change := strings.Index(note, "The workspace is now read-only")
 	stop := strings.Index(note, "Job `web` stopped")
 	if change < 0 || stop < 0 {
 		t.Fatalf("got note %q, want the change and the job it stopped", note)
@@ -21284,7 +21284,7 @@ func TestAModeChangeThatStoppedAJobIsNotTakenBack(t *testing.T) {
 	if len(notices) != 3 {
 		t.Fatalf("got %d notices, want both changes and the stop: %v", len(notices), notices)
 	}
-	if !strings.Contains(notices[2], "Workspace is now read-write") {
+	if !strings.Contains(notices[2], "The workspace is now read-write") {
 		t.Errorf("got %q last, want the capability being granted again", notices[2])
 	}
 }
@@ -21329,7 +21329,7 @@ func TestTogglingOnPastAStoppedJobStillSubtracts(t *testing.T) {
 	}
 
 	notices := self.pendingNotices.notices()
-	if !strings.Contains(notices[0], "Workspace is now read-only") {
+	if !strings.Contains(notices[0], "The workspace is now read-only") {
 		t.Errorf("got %q first, want the change that stopped the job", notices[0])
 	}
 	if !strings.Contains(notices[1], "Job `web` stopped") {

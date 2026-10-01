@@ -8,7 +8,7 @@ conversation remains in scrollback
 conversation remains in scrollback
 
 
- 🤖 Workspace is now read-only.
+ 🤖 The workspace is now read-only.
  🤖 .git is now read-write.
 
 
@@ -17,21 +17,21 @@ conversation remains in scrollback
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 11 toggled once past a stopped job ===
                                                                            double-enter to send now
- ⏳ Workspace is now read-only.
+ ⏳ The workspace is now read-only.
  ⏳ Job web stopped because the workspace was made read-only.
- ⏳ Workspace is now read-write.
+ ⏳ The workspace is now read-write.
 === 12 toggled twice past a stopped job ===
                                                                            double-enter to send now
- ⏳ Workspace is now read-only.
+ ⏳ The workspace is now read-only.
  ⏳ Job web stopped because the workspace was made read-only.
 === 13 toggled thrice past a stopped job ===
                                                                            double-enter to send now
- ⏳ Workspace is now read-only.
+ ⏳ The workspace is now read-only.
  ⏳ Job web stopped because the workspace was made read-only.
- ⏳ Workspace is now read-write.
+ ⏳ The workspace is now read-write.
 === 14 toggled four times past a stopped job ===
                                                                            double-enter to send now
- ⏳ Workspace is now read-only.
+ ⏳ The workspace is now read-only.
  ⏳ Job web stopped because the workspace was made read-only.
 === 15 toggled past a job another capability stopped ===
                                                                            double-enter to send now
@@ -80,7 +80,7 @@ Job `build` exited: complete after 30s.
 conversation remains in scrollback
 
                                                                            double-enter to send now
- ⏳ Workspace is now read-only.
+ ⏳ The workspace is now read-only.
 
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -90,7 +90,7 @@ conversation remains in scrollback
 conversation remains in scrollback
 
                                                                            double-enter to send now
- ⏳ Workspace is now read-only.
+ ⏳ The workspace is now read-only.
  ⏳ Lookup can now access the internet.
  ⏳ .git is now read-write.
 
@@ -102,7 +102,7 @@ conversation remains in scrollback
 conversation remains in scrollback
 
                                                                            double-enter to send now
- ⏳ Workspace is now read-only.
+ ⏳ The workspace is now read-only.
  ⏳ .git is now read-write.
 
 

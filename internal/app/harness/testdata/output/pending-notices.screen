@@ -1,7 +1,7 @@
 === 1 a restored job standing ===
                                                                            double-enter to send now
- ⏳ The session was closed and reopened after your last turn. Job docs stopped when it closed.
-    Restart it with job(action="start", name=…) if still needed.
+ ⏳ The session was closed and reopened after the last turn. Job docs stopped when it closed.
+    Restart it if still needed.
 
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -9,8 +9,8 @@
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 2 a restored job flushed ===
 
- 🤖 The session was closed and reopened after your last turn. Job docs stopped when it closed.
-    Restart it with job(action="start", name=…) if still needed.
+ 🤖 The session was closed and reopened after the last turn. Job docs stopped when it closed.
+    Restart it if still needed.
 
 
 Model returned no reply.
@@ -38,7 +38,7 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 5 a mode change flushed ===
 
- 🤖 Workspace is now read-only.
+ 🤖 The workspace is now read-only.
 
 
 Model returned no reply.
@@ -58,8 +58,8 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 7 a restored job and one return ===
                                                                            double-enter to send now
- ⏳ The session was closed and reopened after your last turn. Job docs stopped when it closed.
-    Restart it with job(action="start", name=…) if still needed.
+ ⏳ The session was closed and reopened after the last turn. Job docs stopped when it closed.
+    Restart it if still needed.
 
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -67,8 +67,8 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 7b a restored job flushed at the window boundary ===
 
- 🤖 The session was closed and reopened after your last turn. Job docs stopped when it closed.
-    Restart it with job(action="start", name=…) if still needed.
+ 🤖 The session was closed and reopened after the last turn. Job docs stopped when it closed.
+    Restart it if still needed.
 
 
 Model returned no reply.
@@ -78,8 +78,8 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 7c a restored job after an expired return pair ===
                                                                            double-enter to send now
- ⏳ The session was closed and reopened after your last turn. Job docs stopped when it closed.
-    Restart it with job(action="start", name=…) if still needed.
+ ⏳ The session was closed and reopened after the last turn. Job docs stopped when it closed.
+    Restart it if still needed.
 
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -87,8 +87,8 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 7d a restored job flushed after an expired pair ===
 
- 🤖 The session was closed and reopened after your last turn. Job docs stopped when it closed.
-    Restart it with job(action="start", name=…) if still needed.
+ 🤖 The session was closed and reopened after the last turn. Job docs stopped when it closed.
+    Restart it if still needed.
 
 
 Model returned no reply.
@@ -98,9 +98,9 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 8 a stopped job standing ===
                                                                            double-enter to send now
- ⏳ Workspace is now read-only.
+ ⏳ The workspace is now read-only.
  ⏳ Job web stopped because the workspace was made read-only.
- ⏳ Workspace is now read-write.
+ ⏳ The workspace is now read-write.
 
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -108,9 +108,9 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 9 a stopped job flushed ===
 
- 🤖 Workspace is now read-only.
+ 🤖 The workspace is now read-only.
  🤖 Job web stopped because the workspace was made read-only.
- 🤖 Workspace is now read-write.
+ 🤖 The workspace is now read-write.
 
 
 Model returned no reply.

@@ -1,5 +1,5 @@
 \e[?2026h\e[?25l\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Workspace is now read-only.                                                                     \e[0m\r
+\e[48;2;48;58;67m 🤖 The workspace is now read-only.                                                                 \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mweb\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                       \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r

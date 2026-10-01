@@ -407,7 +407,7 @@ func scopeRules(data harnessContextTemplateData) string {
 			lines = append(lines, "- The shell can execute files at or under "+path+".")
 		}
 		for _, path := range extraPaths.Path {
-			lines = append(lines, "- The shell can execute files at or under "+path+", which is in PATH.")
+			lines = append(lines, "- The shell can execute files at or under the PATH directory "+path+".")
 		}
 	} else if data.ShellOffered && data.Yolo {
 		lines = append(lines, "- The shell is unconfined in --yolo mode; path tools remain limited to the paths above.")
@@ -431,7 +431,7 @@ func scratchException(path string, data harnessContextTemplateData) string {
 		return ""
 	}
 
-	return ", apart from your scratch space at " + data.TmpDir + ", which is writable"
+	return ", apart from your writable scratch space at " + data.TmpDir
 }
 
 func projectContext(files []File) string {
@@ -696,12 +696,12 @@ func scratchRules(data harnessContextTemplateData) string {
 	if data.Yolo {
 		lines = []string{
 			"- /tmp is the machine's own /tmp, shared with everything else running on it",
-			"- Your persistent scratch space is " + data.TmpDir + ", which you can always read and write to",
+			"- Your persistent, always-writable scratch space is " + data.TmpDir,
 			"- Give the user that path exactly as it is written here",
 		}
 	} else {
 		lines = []string{
-			"- /tmp is your persistent scratch space, which you can always read and write to",
+			"- /tmp is your persistent, always-writable scratch space",
 			"- It maps to " + data.TmpDir + " on the user's machine, so bear that in mind",
 			"- Always translate /tmp paths to the user's equivalent path before giving it to them",
 			"\t- For example: /tmp/foo.png → " + filepath.Join(data.TmpDir, "foo.png"),

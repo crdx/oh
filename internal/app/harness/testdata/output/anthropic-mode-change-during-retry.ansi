@@ -7,7 +7,7 @@ Half an ans\r
 \e[38;2;207;173;0m[#1] Request failed; retrying in 1s: The stream ended before the response did\e[0m\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Workspace is now read-only.                                                                     \e[0m\r
+\e[48;2;48;58;67m 🤖 The workspace is now read-only.                                                                 \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
 \e[38;2;207;173;0m[#1] Request failed; retrying in 1s: The stream ended before the response did\e[0m\r

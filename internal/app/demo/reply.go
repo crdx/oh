@@ -22,24 +22,23 @@ const (
 const (
 	openingThought  = "Somebody is trying oh out, so I should say what I am."
 	readingThought  = "They named a path, so the read tool is the one to reach for."
-	listingThought  = "They want to know what is here, and ls answers that."
-	searchThought   = "They are looking for something, so grep it is."
-	refusalThought  = "That needs a model that can think, and I cannot."
-	reportThought   = "The tool has answered, so I should say what came back."
-	markdownThought = "Markdown is where the drawing earns its keep."
-	doctorThought   = "Nothing I know matched, so the doctor can take it from here."
+	listingThought  = "They wanna know what's here. This is a job for ls."
+	searchThought   = "They are looking for something, so I'll grep."
+	refusalThought  = "That needs a model that can think."
+	reportThought   = "The tool has answered."
+	markdownThought = "Markdown is great. I'm great."
+	doctorThought   = "No idea what they mean. I'll pass them on to the doctor."
 )
 
-const introduction = "I'm a simulation, and not a model at all. " +
-	"I match a few words in what you write and reach for a tool when I recognise one, " +
-	"so you can watch how oh draws a conversation. Nothing here is saved."
+const introduction = "I'm a simulation. " +
+	"I match what you say against a few basic keywords, and use tools if requested. " +
+	"Nothing here is saved."
 
-const abilities = "I know how to do three things, and only by the words you use:\n\n" +
-	"- **read** a path you name, as in `read main.go`\n" +
-	"- **list** what is here, as in `what files are here`\n" +
-	"- **search** for a word, as in `grep for wizard`\n\n" +
-	"Anything else and you'll be answered by the DOCTOR script Weizenbaum published in 1966, " +
-	"which listens rather better than I do."
+const abilities = "I know how to do 3 things:\n\n" +
+	"- **read** a path, like `read main.go`\n" +
+	"- **list** what files, like `what files are here`\n" +
+	"- **search** for stuff, like `grep for wizard`\n\n" +
+	"Anything else and you'll be answered by the DOCTOR script Weizenbaum published in 1966."
 
 const markdownShowcase = `# What you're looking at
 
@@ -62,7 +61,7 @@ graph LR
 you[you] --> oh[oh] --> simulation[simulation]
 ` + "```" + `
 
-> A model would have read your message first. I only matched a word in it.`
+> A real model would have read your message first. I only matched a word in it.`
 
 type request struct {
 	messages   []string
@@ -183,7 +182,7 @@ func readReply(message string) sim.Turn {
 	if !hasPath {
 		return sim.Turn{
 			Think: []string{refusalThought},
-			Say:   "Name a path and I'll read it, as in `read main.go`.",
+			Say:   "Name a path and I'll read it, like `read main.go`.",
 		}
 	}
 
@@ -212,7 +211,7 @@ func searchReply(message string) sim.Turn {
 	if !hasPattern {
 		return sim.Turn{
 			Think: []string{refusalThought},
-			Say:   "Give me a word to look for, as in `search for wizard`.",
+			Say:   "Give me a word to look for, like `search for wizard`.",
 		}
 	}
 
@@ -231,7 +230,7 @@ func report(enquiry request) sim.Turn {
 		return sim.Turn{
 			Think: []string{reportThought},
 			Say: fmt.Sprintf(
-				"That's %s. A model would tell you what it means; I can only tell you it arrived.",
+				"That's %s of output.",
 				measured(lines, "line", "lines"),
 			),
 		}
@@ -247,7 +246,7 @@ func report(enquiry request) sim.Turn {
 
 	case grepTool:
 		if lines == 0 {
-			return sim.Turn{Think: []string{reportThought}, Say: "Nothing matched, so there's nothing to say about it."}
+			return sim.Turn{Think: []string{reportThought}, Say: "Nothing matched."}
 		}
 
 		return sim.Turn{
@@ -256,7 +255,7 @@ func report(enquiry request) sim.Turn {
 		}
 	}
 
-	return sim.Turn{Think: []string{reportThought}, Say: "The tool answered, and I have nothing to add to it."}
+	return sim.Turn{Think: []string{reportThought}, Say: "The tool answered."}
 }
 
 func mentions(message string, phrases ...string) bool {

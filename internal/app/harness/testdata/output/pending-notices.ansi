@@ -1,7 +1,7 @@
 === 1 a restored job standing ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m ⏳ The session was closed and reopened after your last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.      \e[0m\r
-\e[48;2;48;58;67m    Restart it with \e[38;2;192;128;80mjob(action="start", name=…)\e[0m\e[48;2;48;58;67m if still needed.                                    \e[0m\r
+\e[48;2;48;58;67m ⏳ The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\r
+\e[48;2;48;58;67m    Restart it if still needed.                                                                     \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
@@ -9,13 +9,13 @@
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[?25h\e[?2026l
 === 2 a restored job flushed ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m ⏳ The session was closed and reopened after your last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.      \e[0m\r
-\e[48;2;48;58;67m    Restart it with \e[38;2;192;128;80mjob(action="start", name=…)\e[0m\e[48;2;48;58;67m if still needed.                                    \e[0m\r
+\e[48;2;48;58;67m ⏳ The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\r
+\e[48;2;48;58;67m    Restart it if still needed.                                                                     \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[6A\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[1B\r\e[48;2;48;58;67m 🤖 The session was closed and reopened after your last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.      \e[0m\e[5B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[6A\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[1B\r\e[48;2;48;58;67m 🤖 The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\e[5B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e]9;4;0\e\\\e[?2026h\e[?25l\r\e[?25h\e[?2026l
 === 3 an ended job standing ===
@@ -38,12 +38,12 @@
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e]9;4;0\e\\\e[?2026h\e[?25l\r\e[?25h\e[?2026l
 === 5 a mode change flushed ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m ⏳ Workspace is now read-only.                                                                     \e[0m\r
+\e[48;2;48;58;67m ⏳ The workspace is now read-only.                                                                 \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[5A\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[1B\r\e[48;2;48;58;67m 🤖 Workspace is now read-only.                                                                     \e[0m\e[4B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[5A\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[1B\r\e[48;2;48;58;67m 🤖 The workspace is now read-only.                                                                 \e[0m\e[4B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e]9;4;0\e\\\e[?2026h\e[?25l\r\e[?25h\e[?2026l
 === 6 nothing standing carries on ===
@@ -58,8 +58,8 @@
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e]9;4;0\e\\\e[?2026h\e[?25l\r\e[?25h\e[?2026l
 === 7 a restored job and one return ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m ⏳ The session was closed and reopened after your last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.      \e[0m\r
-\e[48;2;48;58;67m    Restart it with \e[38;2;192;128;80mjob(action="start", name=…)\e[0m\e[48;2;48;58;67m if still needed.                                    \e[0m\r
+\e[48;2;48;58;67m ⏳ The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\r
+\e[48;2;48;58;67m    Restart it if still needed.                                                                     \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
@@ -67,19 +67,19 @@
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[?25h\e[?2026l
 === 7b a restored job flushed at the window boundary ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m ⏳ The session was closed and reopened after your last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.      \e[0m\r
-\e[48;2;48;58;67m    Restart it with \e[38;2;192;128;80mjob(action="start", name=…)\e[0m\e[48;2;48;58;67m if still needed.                                    \e[0m\r
+\e[48;2;48;58;67m ⏳ The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\r
+\e[48;2;48;58;67m    Restart it if still needed.                                                                     \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[6A\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[1B\r\e[48;2;48;58;67m 🤖 The session was closed and reopened after your last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.      \e[0m\e[5B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[6A\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[1B\r\e[48;2;48;58;67m 🤖 The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\e[5B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e]9;4;0\e\\\e[?2026h\e[?25l\r\e[?25h\e[?2026l
 === 7c a restored job after an expired return pair ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m ⏳ The session was closed and reopened after your last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.      \e[0m\r
-\e[48;2;48;58;67m    Restart it with \e[38;2;192;128;80mjob(action="start", name=…)\e[0m\e[48;2;48;58;67m if still needed.                                    \e[0m\r
+\e[48;2;48;58;67m ⏳ The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\r
+\e[48;2;48;58;67m    Restart it if still needed.                                                                     \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
@@ -87,20 +87,20 @@
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[?25h\e[?2026l
 === 7d a restored job flushed after an expired pair ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m ⏳ The session was closed and reopened after your last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.      \e[0m\r
-\e[48;2;48;58;67m    Restart it with \e[38;2;192;128;80mjob(action="start", name=…)\e[0m\e[48;2;48;58;67m if still needed.                                    \e[0m\r
+\e[48;2;48;58;67m ⏳ The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\r
+\e[48;2;48;58;67m    Restart it if still needed.                                                                     \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[6A\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[1B\r\e[48;2;48;58;67m 🤖 The session was closed and reopened after your last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.      \e[0m\e[5B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[6A\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[1B\r\e[48;2;48;58;67m 🤖 The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\e[5B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e]9;4;0\e\\\e[?2026h\e[?25l\r\e[?25h\e[?2026l
 === 8 a stopped job standing ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m ⏳ Workspace is now read-only.                                                                     \e[0m\r
+\e[48;2;48;58;67m ⏳ The workspace is now read-only.                                                                 \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m ⏳ Job \e[38;2;192;128;80mweb\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                       \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m ⏳ Workspace is now read-write.                                                                    \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m ⏳ The workspace is now read-write.                                                                \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
@@ -108,13 +108,13 @@
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[?25h\e[?2026l
 === 9 a stopped job flushed ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m ⏳ Workspace is now read-only.                                                                     \e[0m\r
+\e[48;2;48;58;67m ⏳ The workspace is now read-only.                                                                 \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m ⏳ Job \e[38;2;192;128;80mweb\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                       \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m ⏳ Workspace is now read-write.                                                                    \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m ⏳ The workspace is now read-write.                                                                \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[7A\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[1B\r\e[48;2;48;58;67m 🤖 Workspace is now read-only.                                                                     \e[0m\e[1B\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mweb\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                       \e[0m\e[1B\r\e[48;2;48;58;67m 🤖 Workspace is now read-write.                                                                    \e[0m\e[4B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e]9;4;3\e\\\e[7A\r\e[48;2;48;58;67m                                                                                                    \e[0m\e[1B\r\e[48;2;48;58;67m 🤖 The workspace is now read-only.                                                                 \e[0m\e[1B\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mweb\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                       \e[0m\e[1B\r\e[48;2;48;58;67m 🤖 The workspace is now read-write.                                                                \e[0m\e[4B\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[38;2;207;173;0mModel returned no reply.\e[0m\e[K\e[2B\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e]9;4;0\e\\\e[?2026h\e[?25l\r\e[?25h\e[?2026l

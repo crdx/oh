@@ -1,4 +1,4 @@
-{"kind":"head","version":15,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant.","tools":["work"],"tool_definitions":[{"name":"work","description":"A scenario tool that blocks.","revision":"1"}]}}
+{"kind":"head","version":17,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant.","tools":["work"],"tool_definitions":[{"name":"work","description":"A scenario tool that blocks.","revision":"1"}]}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"change what I am allowed to do while the tool is working"}}
 {"kind":"event","event":{"render":"work","kind":"tool_call_request","id":"toolu_1","name":"work","arguments":"{}"}}
@@ -10,7 +10,7 @@
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"mode_change","name":"w","state":"rxngl"}}
 {"kind":"event","event":{"kind":"model_message","text":"Noted, the workspace is read-only now."}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Turn stopped because access changed. Workspace is now read-only."}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Turn stopped because access changed. The workspace is now read-only."}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Noted, the workspace is read-only now."}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"carry on"}}

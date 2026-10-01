@@ -1,4 +1,4 @@
-{"kind":"head","version":15,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"head","version":17,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant."}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"change two capabilities while the answer is streaming"}}
@@ -10,7 +10,7 @@
 {"kind":"event","event":{"kind":"mode_change","name":"w","state":"rxngl"}}
 {"kind":"event","event":{"kind":"mode_change","name":"g","state":"rxnl"}}
 {"kind":"event","event":{"kind":"model_message","text":"The workspace and history are read-only now."}}
-{"kind":"item","payload":{"role":"user","content":"Turn stopped because access changed. Workspace is now read-only.\n\n.git is now read-only."}}
+{"kind":"item","payload":{"role":"user","content":"Turn stopped because access changed. The workspace is now read-only.\n\n.git is now read-only."}}
 {"kind":"item","payload":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"The workspace and history are read-only now."}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"continue"}}

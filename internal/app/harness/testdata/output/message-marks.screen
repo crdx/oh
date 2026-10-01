@@ -37,12 +37,16 @@
       $ touch notes.txt
 
       Exit code: 0
-   🤖 The user ran the following command
-      on the host, producing no output:
+   🤖 The user started the following
+      command on the host, which was
+      killed at its time limit before it
+      finished or printed anything:
 
       $ sleep 600
 
-      Stopped after its limit of 30s.
+      Killed at its time limit of 30s, so
+      it has no exit code. Anything it had
+      not yet done was not done.
    🤖 The user ran the following command
       on the host, producing no output:
 
@@ -89,7 +93,7 @@
    check the notes while that runs
 
 
-  read notes.txt ✓ 2L
+  read notes.txt 2L
 
 
    🤖 The user ran the following command
@@ -211,11 +215,13 @@
       $ touch notes.txt
 
       Exit code: 0
-   🤖 The user ran the following command on the host, producing no output:
+   🤖 The user started the following command on the host, which was killed at its time limit before it
+   finished or printed anything:
 
       $ sleep 600
 
-      Stopped after its limit of 30s.
+      Killed at its time limit of 30s, so it has no exit code. Anything it had not yet done was not do
+  ne.
    🤖 The user ran the following command on the host, producing no output:
 
       $ cat <<'EOF' > notes.txt
@@ -255,7 +261,7 @@
 
    check the notes while that runs
 
-  read notes.txt ✓ 2L
+  read notes.txt 2L
 
 
    🤖 The user ran the following command on the host:
@@ -361,11 +367,13 @@
       $ touch notes.txt
 
       Exit code: 0
-   🤖 The user ran the following command on the host, producing no output:
+   🤖 The user started the following command on the host, which was killed at its time limit before it
+      finished or printed anything:
 
       $ sleep 600
 
-      Stopped after its limit of 30s.
+      Killed at its time limit of 30s, so it has no exit code. Anything it had not yet done was not
+      done.
    🤖 The user ran the following command on the host, producing no output:
 
       $ cat <<'EOF' > notes.txt
@@ -407,7 +415,7 @@
    check the notes while that runs
 
 
-  read notes.txt ✓ 2L
+  read notes.txt 2L
 
 
    🤖 The user ran the following command on the host:
@@ -517,11 +525,13 @@
       $ touch notes.txt
 
       Exit code: 0
-   🤖 The user ran the following command on the host, producing no output:
+   🤖 The user started the following command on the host, which was killed at its time limit before it
+      finished or printed anything:
 
       $ sleep 600
 
-      Stopped after its limit of 30s.
+      Killed at its time limit of 30s, so it has no exit code. Anything it had not yet done was not
+      done.
    🤖 The user ran the following command on the host, producing no output:
 
       $ cat <<'EOF' > notes.txt
@@ -563,7 +573,7 @@
    check the notes while that runs
 
 
-  read notes.txt ✓ 2L
+  read notes.txt 2L
 
 
    🤖 The user ran the following command on the host:
@@ -719,24 +729,44 @@
       Exit
       code: 0
    🤖 The user
-      ran the
+      started
+      the
       followin
       g
       command
       on the
       host,
-      producin
-      g no
-      output:
+      which
+      was
+      killed
+      at its
+      time
+      limit
+      before
+      it
+      finished
+      or
+      printed
+      anything
+      :
 
       $ sleep
       600
 
-      Stopped
-      after
-      its
+      Killed
+      at its
+      time
       limit of
-      30s.
+      30s, so
+      it has
+      no exit
+      code.
+      Anything
+      it had
+      not yet
+      done was
+      not
+      done.
    🤖 The user
       ran the
       followin
@@ -828,7 +858,7 @@
    that runs
 
 
-  read n… ✓ 2L
+  read not… 2L
 
 
    🤖 The user
@@ -1059,11 +1089,13 @@
       $ touch notes.txt
 
       Exit code: 0
-   🤖 The user ran the following command on the host, producing no output:
+   🤖 The user started the following command on the host, which was killed at its time limit before it
+      finished or printed anything:
 
       $ sleep 600
 
-      Stopped after its limit of 30s.
+      Killed at its time limit of 30s, so it has no exit code. Anything it had not yet done was not
+      done.
    🤖 The user ran the following command on the host, producing no output:
 
       $ cat <<'EOF' > notes.txt
@@ -1105,7 +1137,7 @@
    check the notes while that runs
 
 
-  read notes.txt ✓ 2L
+  read notes.txt 2L
 
 
    🤖 The user ran the following command on the host:
@@ -1199,7 +1231,7 @@
    never mind, what is in target.txt?
 
 
-  read target.txt ✓ 1L
+  read target.txt 1L
 
   It holds the word one, and nothing else.
 === mid-call-message, plain ===
@@ -1217,7 +1249,7 @@
 
    never mind, what is in target.txt?
 
-  read target.txt ✓ 1L
+  read target.txt 1L
 
   It holds the word one, and nothing else.
 === mid-call-message, printed ===
@@ -1237,7 +1269,7 @@
    never mind, what is in target.txt?
 
 
-  read target.txt ✓ 1L
+  read target.txt 1L
 
   It holds the word one, and nothing else.
 === mid-call-message, streamed ===
@@ -1257,7 +1289,7 @@
    never mind, what is in target.txt?
 
 
-  read target.txt ✓ 1L
+  read target.txt 1L
 
   It holds the word one, and nothing else.
 === mid-call-message, tiny ===
@@ -1290,7 +1322,7 @@
    target.txt?
 
 
-  read t… ✓ 1L
+  read tar… 1L
 
   It holds the
   word one,
@@ -1313,7 +1345,7 @@
    never mind, what is in target.txt?
 
 
-  read target.txt ✓ 1L
+  read target.txt 1L
 
   It holds the word one, and nothing else.
 === modes, narrow ===
@@ -1325,7 +1357,7 @@
   writing.
 
 
-   🤖 Workspace is now read-write.
+   🤖 The workspace is now read-write.
 
 
 ▸
@@ -1346,7 +1378,7 @@
   Reading and running commands, but not writing.
 
 
-   🤖 Workspace is now read-write.
+   🤖 The workspace is now read-write.
 
 
    now write it down
@@ -1365,7 +1397,7 @@
   Reading and running commands, but not writing.
 
 
-   🤖 Workspace is now read-write.
+   🤖 The workspace is now read-write.
 
 
 ▸
@@ -1387,7 +1419,7 @@
   Reading and running commands, but not writing.
 
 
-   🤖 Workspace is now read-write.
+   🤖 The workspace is now read-write.
 
 
 ▸
@@ -1415,7 +1447,8 @@
   writing.
 
 
-   🤖 Workspac
+   🤖 The
+      workspac
       e is now
       read-wri
       te.
@@ -1444,7 +1477,7 @@
   Reading and running commands, but not writing.
 
 
-   🤖 Workspace is now read-write.
+   🤖 The workspace is now read-write.
 
 
 ▸

@@ -1,4 +1,4 @@
-{"kind":"head","version":15,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"high","system_prompt":"You are a test assistant.","tools":["work"],"tool_definitions":[{"name":"work","description":"A scenario tool that blocks.","revision":"1"}]}}
+{"kind":"head","version":17,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"high","system_prompt":"You are a test assistant.","tools":["work"],"tool_definitions":[{"name":"work","description":"A scenario tool that blocks.","revision":"1"}]}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"queue a message and then change what I am allowed to do"}}
@@ -12,7 +12,7 @@
 {"kind":"event","event":{"kind":"mode_change","name":"w","state":"rxngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"do this instead"}}
 {"kind":"event","event":{"kind":"model_message","text":"Doing that instead, read-only."}}
-{"kind":"item","payload":{"role":"user","content":"Turn stopped because access changed. Workspace is now read-only."}}
+{"kind":"item","payload":{"role":"user","content":"Turn stopped because access changed. The workspace is now read-only."}}
 {"kind":"item","payload":{"role":"user","content":"do this instead"}}
 {"kind":"item","payload":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"Doing that instead, read-only."}]}}
 {"kind":"turn_completion","turn":{}}

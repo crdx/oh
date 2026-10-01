@@ -7,7 +7,7 @@ Reading and running commands, but not
 writing.
 
 
- 🤖 Workspace is now read-write.
+ 🤖 The workspace is now read-write.
 
 
 
@@ -116,7 +116,13 @@ g
 
 🤖
 
-W
+T
+
+h
+
+e
+
+w
 
 o
 
@@ -265,7 +271,7 @@ e
 Reading and running commands, but not writing.
 
 
- 🤖 Workspace is now read-write.
+ 🤖 The workspace is now read-write.
 
 
 
@@ -293,7 +299,8 @@ but not
 writing.
 
 
- 🤖 Workspac
+ 🤖 The
+    workspac
     e is now
     read-wri
     te.
@@ -322,7 +329,7 @@ Done.
 Reading and running commands, but not writing.
 
 
- 🤖 Workspace is now read-write.
+ 🤖 The workspace is now read-write.
 
 
 

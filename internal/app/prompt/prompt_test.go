@@ -600,7 +600,7 @@ func TestPromptSeparatesTheWorkspaceFromTmp(t *testing.T) {
 		t.Errorf("expected the absent repository to be reported as %q, got %q", want, system)
 	}
 
-	if !strings.Contains(system, "which you can always read and write") {
+	if !strings.Contains(system, "always-writable scratch space") {
 		t.Errorf("expected the scratch to be writable whatever the workspace is, got %q", system)
 	}
 
@@ -661,7 +661,7 @@ func TestAWaivedSandboxIsDisclosedRatherThanImplied(t *testing.T) {
 		"the bash tool runs with no sandbox",
 		"There is no network sandbox: everything runs on the host network",
 		"/tmp is the machine's own /tmp",
-		"Your persistent scratch space is /state/farm/session",
+		"Your persistent, always-writable scratch space is /state/farm/session",
 		"The bash tool is granted, and runs unconfined",
 	} {
 		if !strings.Contains(got, want) {
@@ -824,8 +824,8 @@ func TestAReadOnlyPathHoldingTheScratchReportsTheScratchAsWritable(t *testing.T)
 	})
 
 	for _, want := range []string{
-		"The configured path /state/farm is read-only, apart from your scratch space at " +
-			"/state/farm/tame-impala, which is writable.",
+		"The configured path /state/farm is read-only, apart from your writable scratch space at " +
+			"/state/farm/tame-impala.",
 		"The configured path /state/sessions is read-only.",
 	} {
 		if !strings.Contains(got, want) {
@@ -1096,7 +1096,7 @@ func TestEveryConfiguredPathKindHasItsFileToolAccessDocumented(t *testing.T) {
 		"The configured home path " + homePath + " is read-only and exposed at HOME/.config/git/ignore.",
 		"The configured home path " + outsideHomePath + " is read-only to path tools but cannot be exposed in private HOME because it is outside the user's home.",
 		"The shell can execute files at or under /commands.",
-		"The shell can execute files at or under /toolbox/bin, which is in PATH.",
+		"The shell can execute files at or under the PATH directory /toolbox/bin.",
 	} {
 		if !strings.Contains(got, want) {
 			t.Errorf("harness context does not contain %q: %q", want, got)

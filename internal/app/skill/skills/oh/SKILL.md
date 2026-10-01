@@ -21,14 +21,14 @@ Three sources load in order, each overriding the last:
 
 Global and workspace files are watched and auto-reload. A reload applies live to the theme, bar, snippets, permissions, streaming, editor command, speed dial, and tool output cap. Everything else waits, and waits for one of two things:
 
-| Setting                                           | Lands               |
+| Setting                                           | Applies             |
 |---------------------------------------------------|---------------------|
 | `[sandbox]`, `[skills]`, `[provider]`, `[ports]`  | when oh next starts |
-| `caps.default`, `[model]`, `[tools]`, the toolbox | in a new session    |
+| `caps.default`, `[model]`, `[tools]`, the toolbox | to new sessions     |
 
 The first group belongs to the process, so a restart that resumes this very conversation picks it up. The second is frozen into the session when it is first created, and a resumed conversation restores what was frozen, so only a new session reads it afresh.
 
-A sandbox grant added mid-session is therefore neither refused nor half-applied: this process never reads it. Nor is one removed mid-session revoked. Say "when oh next starts", not "in a new session", because the two are not the same thing.
+A sandbox grant added mid-session is therefore neither refused nor half-applied: this process never reads it. Nor is one removed mid-session revoked. Say "when oh next starts", not "to new sessions", because the two are not the same thing.
 
 A key nothing reads, including an option a bar segment does not know, is ignored and named in a warning at startup rather than being fatal. A key that is read but holds something invalid does stop startup.
 

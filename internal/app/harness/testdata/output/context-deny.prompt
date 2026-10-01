@@ -60,7 +60,7 @@
 
 # /tmp
 
-- /tmp is your persistent scratch space, which you can always read and write to
+- /tmp is your persistent, always-writable scratch space
 - It maps to /state/farm/tame-impala on the user's machine, so bear that in mind
 - Always translate /tmp paths to the user's equivalent path before giving it to them
 	- For example: /tmp/foo.png → /state/farm/tame-impala/foo.png
