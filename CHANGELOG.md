@@ -84,6 +84,10 @@
 - Show command intent in the prompt
 - Clarify that a host networking command is still sandboxed
 
+### Model guidance
+
+- Mandate tall Mermaid diagrams, not wide
+
 ## [0.11.0] - 2026-09-29
 
 ### Completion and input
