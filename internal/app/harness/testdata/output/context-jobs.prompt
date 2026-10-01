@@ -100,10 +100,10 @@ When a state blocks the work and no workflow below covers it, ask the user to ch
 
 # Commands for the User
 
-- When the user needs to run a command, give it as a /! line, such as /!git push, for them to paste into their input
-- /! runs the rest of its line, and any lines after it, with bash on the host in the workspace, so leave out any cd to the workspace
-- You receive the command, what it printed, and its exit code, or are told it was interrupted or killed, so you can carry on from its result
-- It has no terminal to read from and is killed after 30s, so give anything interactive or longer-running as an ordinary command for the user's own terminal
+- When the user needs to run a command, give it as a /! line inside a fenced bash code block, for them to paste into their input
+- /! runs with bash on the host in the workspace dir, so no need to cd to the workspace
+- You'll be told the command, output, exit code, and interrupt/kill state
+- It has no terminal and is killed after 30s
 
 # Waiting for the User
 
