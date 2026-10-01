@@ -44,7 +44,7 @@ func fixedShell(root *file.Root, policy func() sandbox.Policy) tool.Tool {
 	return bash.New(
 		root,
 		func(context.Context) (sandbox.Policy, error) { return policy(), nil },
-		func(context.Context, string) error { return nil },
+		func(context.Context, string, string) error { return nil },
 		sandbox.Direct(),
 		true,
 	)
@@ -92,9 +92,9 @@ func TestNetworkingFollowsTheArgument(t *testing.T) {
 		arguments string
 		want      bool
 	}{
-		{name: "omitted", arguments: `{"command":"true"}`},
-		{name: "loopback", arguments: `{"command":"true","network":"loopback"}`},
-		{name: "host", arguments: `{"command":"true","network":"host"}`, want: true},
+		{name: "omitted", arguments: `{"intent":"try it","command":"true"}`},
+		{name: "loopback", arguments: `{"intent":"try it","command":"true","network":"loopback"}`},
+		{name: "host", arguments: `{"intent":"try it","command":"true","network":"host"}`, want: true},
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			runner := &recordingRunner{}
@@ -104,7 +104,7 @@ func TestNetworkingFollowsTheArgument(t *testing.T) {
 				func(context.Context) (sandbox.Policy, error) {
 					return sandbox.Policy{Network: true}, nil
 				},
-				func(_ context.Context, command string) error {
+				func(_ context.Context, command string, _ string) error {
 					approvalCount++
 					if command != "true" {
 						t.Errorf("got approval for %q, want %q", command, "true")
@@ -141,12 +141,12 @@ func TestANetworkNobodyOffersIsRefused(t *testing.T) {
 	shell := bash.New(
 		root,
 		func(context.Context) (sandbox.Policy, error) { return sandbox.Policy{}, nil },
-		func(context.Context, string) error { return nil },
+		func(context.Context, string, string) error { return nil },
 		&recordingRunner{},
 		true,
 	)
 
-	if _, err := shell.Parse(`{"command":"true","network":"elsewhere"}`); err == nil {
+	if _, err := shell.Parse(`{"intent":"try it","command":"true","network":"elsewhere"}`); err == nil {
 		t.Fatal("a network nobody offers was accepted")
 	}
 }
@@ -158,12 +158,12 @@ func TestDeniedNetworkingDoesNotRun(t *testing.T) {
 	shell := bash.New(
 		root,
 		func(context.Context) (sandbox.Policy, error) { return sandbox.Policy{}, nil },
-		func(context.Context, string) error { return approvalFailure },
+		func(context.Context, string, string) error { return approvalFailure },
 		runner,
 		true,
 	)
 
-	call, err := shell.Parse(`{"command":"true","network":"host"}`)
+	call, err := shell.Parse(`{"intent":"try it","command":"true","network":"host"}`)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -175,9 +175,42 @@ func TestDeniedNetworkingDoesNotRun(t *testing.T) {
 	}
 }
 
+func TestTheIntentReachesTheNetworkApproval(t *testing.T) {
+	root, _ := testRoot(t)
+	var approvedIntent string
+	shell := bash.New(
+		root,
+		func(context.Context) (sandbox.Policy, error) { return sandbox.Policy{}, nil },
+		func(_ context.Context, _ string, intent string) error {
+			approvedIntent = intent
+			return nil
+		},
+		&recordingRunner{},
+		true,
+	)
+
+	call, err := shell.Parse(`{"intent":"fetch the example page","command":"true","network":"host"}`)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if _, err := call.Exec(t.Context()); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if approvedIntent != "fetch the example page" {
+		t.Errorf("got intent %q, want %q", approvedIntent, "fetch the example page")
+	}
+}
+
+func TestACallWithoutAnIntentStillParses(t *testing.T) {
+	if _, err := fixedShell(nil, func() sandbox.Policy { return sandbox.Policy{} }).
+		Parse(`{"command":"true"}`); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
 func TestAnEmptyCommandIsRefusedDuringParsing(t *testing.T) {
 	call, err := fixedShell(nil, func() sandbox.Policy { return sandbox.Policy{} }).
-		Parse(`{"command": "   "}`)
+		Parse(`{"intent":"try it","command":"   "}`)
 
 	if err == nil || err.Error() != "command is required" {
 		t.Fatalf("expected the required-command error, got %v", err)
@@ -189,7 +222,7 @@ func TestAnEmptyCommandIsRefusedDuringParsing(t *testing.T) {
 
 func TestInvalidBashIsRefusedDuringParsing(t *testing.T) {
 	call, err := fixedShell(nil, func() sandbox.Policy { return sandbox.Policy{} }).
-		Parse(`{"command": "if true; then"}`)
+		Parse(`{"intent":"try it","command":"if true; then"}`)
 
 	if err == nil || !strings.Contains(err.Error(), "invalid Bash command") {
 		t.Fatalf("expected an invalid Bash error, got %v", err)
@@ -219,7 +252,7 @@ func TestACommandIsRenderedOnOneLine(t *testing.T) {
 
 func TestACommandRenderingIsMarkedAsBash(t *testing.T) {
 	root, _ := testRoot(t)
-	call, err := fixedShell(root, func() sandbox.Policy { return sandbox.Policy{} }).Parse(`{"command":"echo one"}`)
+	call, err := fixedShell(root, func() sandbox.Policy { return sandbox.Policy{} }).Parse(`{"intent":"try it","command":"echo one"}`)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -233,7 +266,7 @@ func TestACommandRenderingIsMarkedAsBash(t *testing.T) {
 func TestAHostNetworkCommandUsesHostNetworkRendering(t *testing.T) {
 	root, _ := testRoot(t)
 	call, err := fixedShell(root, func() sandbox.Policy { return sandbox.Policy{} }).Parse(
-		`{"command":"echo one","network":"host"}`,
+		`{"intent":"try it","command":"echo one","network":"host"}`,
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -249,7 +282,7 @@ func TestTheSharedCommandRenderingMatchesTheBashTool(t *testing.T) {
 	rendering := bash.DescribeCommand(command)
 
 	parsedCall, err := fixedShell(nil, func() sandbox.Policy { return sandbox.Policy{} }).Parse(
-		`{"command":"echo one\necho two"}`,
+		`{"intent":"try it","command":"echo one\necho two"}`,
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -315,7 +348,7 @@ func TestAHereDocumentIsShownByItsOpeningLineAlone(t *testing.T) {
 func TestAHereDocumentKeepsItsCompleteEmphasisSource(t *testing.T) {
 	root, _ := testRoot(t)
 	call, err := fixedShell(root, func() sandbox.Policy { return sandbox.Policy{} }).Parse(
-		`{"command":"cat <<EOF\none\nEOF"}`,
+		`{"intent":"try it","command":"cat <<EOF\none\nEOF"}`,
 	)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -467,7 +500,7 @@ func TestAnUnconfinedShellOffersNoNetworkChoice(t *testing.T) {
 	shell := bash.New(
 		root,
 		func(context.Context) (sandbox.Policy, error) { return sandbox.Policy{Yolo: true}, nil },
-		func(context.Context, string) error {
+		func(context.Context, string, string) error {
 			t.Error("an unconfined shell asked for approval")
 			return nil
 		},
@@ -481,7 +514,7 @@ func TestAnUnconfinedShellOffersNoNetworkChoice(t *testing.T) {
 		}
 	}
 
-	_, err := shell.Parse(`{"command":"true","network":"host"}`)
+	_, err := shell.Parse(`{"intent":"try it","command":"true","network":"host"}`)
 	if err == nil || !strings.Contains(err.Error(), "unknown parameter: network") {
 		t.Errorf("got %v, want the network argument refused", err)
 	}

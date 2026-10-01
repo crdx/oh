@@ -30,17 +30,21 @@ const (
 
 type Args struct {
 	Command string  `json:"command"`
+	Intent  string  `json:"intent,omitempty"`
 	Network Network `json:"network,omitempty"`
 }
 
 func New(
 	root *file.Root,
 	buildPolicy func(context.Context) (sandbox.Policy, error),
-	approveNetwork func(context.Context, string) error,
+	approveNetwork func(ctx context.Context, command string, intent string) error,
 	runner sandbox.Runner,
 	hasNetworkChoice bool,
 ) tool.Tool {
-	schema := tool.Schema{tool.String("command", "the command line")}
+	schema := tool.Schema{
+		tool.String("command", "the command line"),
+		tool.String("intent", "what you intend the command to do, in words").Optional(),
+	}
 	if hasNetworkChoice {
 		schema = append(schema, tool.Enum(
 			"network",
@@ -64,7 +68,7 @@ func New(
 		Exec(func(ctx context.Context, args Args) (string, tool.ToolCallMetrics, error) {
 			isHostNetwork := hasNetworkChoice && args.Network == HostNetwork
 			if isHostNetwork {
-				if err := approveNetwork(ctx, args.Command); err != nil {
+				if err := approveNetwork(ctx, args.Command, args.Intent); err != nil {
 					return "", tool.ToolCallMetrics{}, err
 				}
 			}

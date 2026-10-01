@@ -90,38 +90,75 @@ type footer struct {
 	cursorRow      int
 	cursorColumn   int
 	pinnedRows     int
+	tailRows       int
+	yieldingStart  int
+	yieldingRows   int
+	scroll         int
 	isCursorHidden bool
+}
+
+type Pins struct {
+	Head          int
+	Tail          int
+	YieldingStart int
+	YieldingRows  int
 }
 
 func (self *Screen) Footer(rows []string, cursorRow int, cursorColumn int) {
 	self.showFooter(footer{rows: rows, cursorRow: cursorRow, cursorColumn: cursorColumn})
 }
 
-func (self *Screen) InertFooter(rows []string, focusRow int, pinnedRows int) {
-	self.showFooter(footer{rows: rows, cursorRow: focusRow, pinnedRows: pinnedRows, isCursorHidden: true})
+func (self *Screen) InertFooter(rows []string, focusRow int, pins Pins, scroll int) int {
+	return self.showFooter(footer{
+		rows:           rows,
+		cursorRow:      focusRow,
+		pinnedRows:     pins.Head,
+		tailRows:       pins.Tail,
+		yieldingStart:  pins.YieldingStart,
+		yieldingRows:   pins.YieldingRows,
+		scroll:         scroll,
+		isCursorHidden: true,
+	})
 }
 
-func (self *Screen) showFooter(input footer) {
+func (self *Screen) showFooter(input footer) int {
 	if !self.canRepaint {
-		return
+		return 0
 	}
 
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 
+	if self.lines > 0 {
+		if window, isScrolled := self.scrollFooter(input, self.footerRoom()); isScrolled {
+			input.scroll = window.scroll
+		} else {
+			input.scroll = 0
+		}
+	}
+
 	if slices.Equal(self.input.rows, input.rows) &&
 		self.input.cursorRow == input.cursorRow &&
 		self.input.cursorColumn == input.cursorColumn &&
 		self.input.pinnedRows == input.pinnedRows &&
+		self.input.tailRows == input.tailRows &&
+		self.input.yieldingStart == input.yieldingStart &&
+		self.input.yieldingRows == input.yieldingRows &&
+		self.input.scroll == input.scroll &&
 		self.input.isCursorHidden == input.isCursorHidden {
-		return
+		return input.scroll
 	}
 
 	self.input = input
 	self.changed()
+
+	return input.scroll
 }
 
-const leastWindowedRows = 1
+const (
+	leastWindowedRows     = 1
+	windowWithNoticesRows = 3
+)
 
 func (self *Screen) FooterRoom() (int, bool) {
 	self.mutex.Lock()
@@ -138,10 +175,90 @@ func (self *Screen) footerRoom() int {
 	return max(1, self.lines-1)
 }
 
+type scrolledFooter struct {
+	rows      []string
+	cursorRow int
+	scroll    int
+}
+
+func (self *Screen) fitInertFooter(input footer, room int) ([]string, int) {
+	if window, isScrolled := self.scrollFooter(input, room); isScrolled {
+		return window.rows, window.cursorRow
+	}
+
+	input = input.yielded(room)
+
+	return self.fitFooter(input.rows, input.cursorRow, input.pinnedRows, room)
+}
+
+func (self footer) yielded(room int) footer {
+	start := self.yieldingStart
+	end := start + self.yieldingRows
+	if self.yieldingRows <= 0 || start < 0 || end > self.pinnedRows || end > self.cursorRow ||
+		len(self.rows) <= room || self.canScroll(room) {
+		return self
+	}
+
+	self.rows = slices.Concat(self.rows[:start], self.rows[end:])
+	self.pinnedRows -= self.yieldingRows
+	self.cursorRow -= self.yieldingRows
+	self.yieldingRows = 0
+
+	return self
+}
+
+func (self footer) canScroll(room int) bool {
+	tailStart := len(self.rows) - self.tailRows
+	detailRoom := room - self.pinnedRows - self.tailRows
+
+	return len(self.rows) > room && self.tailRows > 0 && self.pinnedRows < tailStart &&
+		self.cursorRow >= tailStart && detailRoom >= windowWithNoticesRows
+}
+
+func (self *Screen) scrollFooter(input footer, room int) (scrolledFooter, bool) {
+	input = input.yielded(room)
+	if !input.canScroll(room) {
+		return scrolledFooter{}, false
+	}
+
+	rows := input.rows
+	tailStart := len(rows) - input.tailRows
+	detailRoom := room - input.pinnedRows - input.tailRows
+
+	detail := rows[input.pinnedRows:tailStart]
+	bottomStart := len(detail) - detailRoom + 1
+	scroll := min(max(input.scroll, 0), bottomStart)
+	start := bottomStart - scroll
+
+	window := make([]string, 0, detailRoom)
+	if start > 0 {
+		window = append(window, self.hiddenRowsNotice(start))
+	}
+	if visibleRows := detailRoom - len(window); len(detail)-start <= visibleRows {
+		window = append(window, detail[start:]...)
+	} else {
+		end := start + visibleRows - 1
+		window = append(window, detail[start:end]...)
+		window = append(window, self.hiddenRowsNotice(len(detail)-end))
+	}
+
+	footerRows := slices.Concat(rows[:input.pinnedRows], window, rows[tailStart:])
+
+	return scrolledFooter{
+		rows:      footerRows,
+		cursorRow: input.pinnedRows + len(window) + input.cursorRow - tailStart,
+		scroll:    scroll,
+	}, true
+}
+
 func (self *Screen) fitFooter(rows []string, cursorRow int, pinnedRows int, room int) ([]string, int) {
 	room = max(1, room)
 	if len(rows) <= room {
 		return rows, cursorRow
+	}
+
+	if pinnedRows > 0 && pinnedRows <= len(rows) && rows[pinnedRows-1] == "" && room-pinnedRows < windowWithNoticesRows {
+		pinnedRows--
 	}
 
 	if pinnedRows > 0 && pinnedRows <= cursorRow && room-pinnedRows >= leastWindowedRows {

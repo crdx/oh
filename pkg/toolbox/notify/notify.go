@@ -2,10 +2,12 @@ package notify
 
 import (
 	"context"
+	"crypto/rand"
 	"errors"
 	"fmt"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 
 	"crdx.org/oh/internal/stop"
@@ -29,6 +31,52 @@ var desktopIconNames = map[string]string{
 
 type EscapeWriter func(escape string) bool
 
+type Expiry int
+
+const (
+	ExpiresAsUsual Expiry = iota
+	NeverExpires
+)
+
+type Notification struct {
+	identifier string
+	isEscape   bool
+	isSent     bool
+}
+
+func (self Notification) IsSent() bool {
+	return self.isSent
+}
+
+func (self Notification) Withdraw(ctx context.Context, writeEscape EscapeWriter) error {
+	if self.identifier == "" {
+		return nil
+	}
+
+	if self.isEscape {
+		if writeEscape == nil || !writeEscape("\x1b]99;i="+self.identifier+":p=close;\x1b\\") {
+			return errors.New("withdrawing the notification failed: its terminal is gone")
+		}
+
+		return nil
+	}
+
+	//nolint:gosec // the executable and options are fixed, and the identifier is a number
+	command := exec.CommandContext(
+		ctx,
+		"gdbus", "call", "--session",
+		"--dest", "org.freedesktop.Notifications",
+		"--object-path", "/org/freedesktop/Notifications",
+		"--method", "org.freedesktop.Notifications.CloseNotification",
+		self.identifier,
+	)
+	if err := command.Run(); err != nil {
+		return fmt.Errorf("withdrawing the notification failed: %w", err)
+	}
+
+	return nil
+}
+
 func IsAvailable() bool {
 	if isKitty() {
 		_, err := exec.LookPath("kitten")
@@ -39,14 +87,36 @@ func IsAvailable() bool {
 	return err == nil
 }
 
-func Command(ctx context.Context, title string, message string, icon string) (*exec.Cmd, bool) {
+func Command(
+	ctx context.Context,
+	title string,
+	message string,
+	icon string,
+	expiry Expiry,
+	identifier string,
+) (*exec.Cmd, bool) {
+	options := []string{"--icon=" + icon, "--app-name=" + applicationName}
+
 	if isKitty() {
+		if expiry == NeverExpires {
+			options = append(options, "--expire-after=never")
+		}
+		if identifier != "" {
+			options = append(options, "--identifier="+identifier)
+		}
+		arguments := append([]string{"notify", "--only-print-escape-code"}, options...)
 		//nolint:gosec // the executable and options are fixed, and the arguments are inert
-		return exec.CommandContext(ctx, "kitten", "notify", "--only-print-escape-code", "--icon="+icon, "--app-name="+applicationName, "--", title, message), true
+		return exec.CommandContext(ctx, "kitten", append(arguments, "--", title, message)...), true
 	}
 
+	if expiry == NeverExpires {
+		options = append(options, "--expire-time=0")
+	}
+	if identifier != "" {
+		options = append(options, "--print-id")
+	}
 	//nolint:gosec // the executable and options are fixed, and the arguments are inert
-	return exec.CommandContext(ctx, "notify-send", "--icon="+icon, "--app-name="+applicationName, "--", title, message), false
+	return exec.CommandContext(ctx, "notify-send", append(options, "--", title, message)...), false
 }
 
 func isKitty() bool {
@@ -96,35 +166,54 @@ func validate(args Args) error {
 	return nil
 }
 
-func Send(ctx context.Context, writeEscape EscapeWriter, args Args) error {
+func Send(ctx context.Context, writeEscape EscapeWriter, args Args, expiry Expiry) (Notification, error) {
 	if err := validate(args); err != nil {
-		return err
+		return Notification{}, err
 	}
 
-	command, printsEscapeCode := Command(ctx, args.Title, args.Message, desktopIconNames[args.Icon])
+	var identifier string
+	if expiry == NeverExpires {
+		identifier = rand.Text()
+	}
 
-	var escape strings.Builder
-	if printsEscapeCode {
-		if writeEscape == nil {
-			return errors.New("notification failed: nothing to write it to")
-		}
+	command, printsEscapeCode := Command(ctx, args.Title, args.Message, desktopIconNames[args.Icon], expiry, identifier)
 
-		command.Stdout = &escape
+	var output strings.Builder
+	command.Stdout = &output
+	if printsEscapeCode && writeEscape == nil {
+		return Notification{}, errors.New("notification failed: nothing to write it to")
 	}
 
 	if err := command.Run(); err != nil {
 		if ctx.Err() != nil {
-			return stop.Error(ctx, "the notification")
+			return Notification{}, stop.Error(ctx, "the notification")
 		}
 
-		return fmt.Errorf("notification failed: %w", err)
+		return Notification{}, fmt.Errorf("notification failed: %w", err)
 	}
 
-	if printsEscapeCode && !writeEscape(escape.String()) {
-		return errors.New("notification failed: its terminal is gone")
+	if printsEscapeCode {
+		if !writeEscape(output.String()) {
+			return Notification{}, errors.New("notification failed: its terminal is gone")
+		}
+
+		return Notification{identifier: identifier, isEscape: true, isSent: true}, nil
 	}
 
-	return nil
+	if identifier == "" {
+		return Notification{isSent: true}, nil
+	}
+
+	return Notification{identifier: printedIdentifier(output.String()), isSent: true}, nil
+}
+
+func printedIdentifier(output string) string {
+	identifier := strings.TrimSpace(output)
+	if _, err := strconv.ParseUint(identifier, 10, 32); err != nil {
+		return ""
+	}
+
+	return identifier
 }
 
 func SendIfUnfocused(
@@ -132,15 +221,16 @@ func SendIfUnfocused(
 	writeEscape EscapeWriter,
 	isTerminalFocused func() bool,
 	args Args,
-) (bool, error) {
+	expiry Expiry,
+) (Notification, error) {
 	if err := validate(args); err != nil {
-		return false, err
+		return Notification{}, err
 	}
 	if isTerminalFocused != nil && isTerminalFocused() {
-		return false, nil
+		return Notification{}, nil
 	}
 
-	return true, Send(ctx, writeEscape, args)
+	return Send(ctx, writeEscape, args, expiry)
 }
 
 func run(
@@ -149,11 +239,11 @@ func run(
 	isTerminalFocused func() bool,
 	args Args,
 ) (string, error) {
-	wasSent, err := SendIfUnfocused(ctx, writeEscape, isTerminalFocused, args)
+	notification, err := SendIfUnfocused(ctx, writeEscape, isTerminalFocused, args, ExpiresAsUsual)
 	if err != nil {
 		return "", err
 	}
-	if !wasSent {
+	if !notification.IsSent() {
 		return focusedResult, nil
 	}
 

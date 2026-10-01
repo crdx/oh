@@ -27,6 +27,7 @@ type Field struct {
 
 type Question struct {
 	Label    string
+	Intent   string
 	Lapse    string
 	Detail   string
 	Language string
@@ -55,6 +56,7 @@ func (self Question) IndexForKey(key rune) int {
 
 type Confirmation struct {
 	Label    string
+	Intent   string
 	Detail   string
 	Language string
 	Fields   []Field
@@ -70,6 +72,7 @@ var confirmationOptions = []Option{
 func (self Confirmation) Question() Question {
 	return Question{
 		Label:    self.Label,
+		Intent:   self.Intent,
 		Lapse:    confirmationLapse,
 		Detail:   self.Detail,
 		Language: self.Language,

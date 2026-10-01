@@ -270,7 +270,7 @@ Plain page.
 
 
 \e[38;2;204;102;102mError\e[0m
-\e[38;2;204;102;102mfetch refused; fetch did not run; choose another approach\e[0m
+\e[38;2;204;102;102mfetch refused; fetch did not run\e[0m
 
 === fetch approval timed out ===
 \e[38;2;207;173;0mfetch\e[0m · \e[38;2;192;128;80mhttps://example.test/article\e[0m · \e[38;2;150;152;150mmarkdown\e[0m

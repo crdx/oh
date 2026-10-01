@@ -28,7 +28,7 @@ func plainRows(rows []string) []string {
 
 func TestAConfirmationDrawsItsLabelDetailAndOptions(t *testing.T) {
 	question := ask.Confirmation{
-		Label:    "Run this command with host networking?",
+		Label:    "Run this command in the sandbox with host networking?",
 		Detail:   "curl example.com",
 		Language: "bash",
 	}.Question()
@@ -36,7 +36,7 @@ func TestAConfirmationDrawsItsLabelDetailAndOptions(t *testing.T) {
 	rows := plainRows(RenderQuestion(question, question.DefaultIndex(), 80, false, link.Roots{}))
 
 	want := []string{
-		"Run this command with host networking?",
+		"Run this command in the sandbox with host networking?",
 		"",
 		"$ curl example.com",
 		"",
@@ -49,6 +49,34 @@ func TestAConfirmationDrawsItsLabelDetailAndOptions(t *testing.T) {
 		if rows[index] != row {
 			t.Errorf("got row %d as %q, want %q", index, rows[index], row)
 		}
+	}
+}
+
+func TestAConfirmationDrawsItsIntentUnderItsLabel(t *testing.T) {
+	question := ask.Confirmation{
+		Label:    "Run this command in the sandbox with host networking?",
+		Intent:   "fetch the example\npage to check it\x1b[31m answers",
+		Detail:   "curl example.com",
+		Language: "bash",
+	}.Question()
+
+	rows := plainRows(RenderQuestion(question, question.DefaultIndex(), 30, false, link.Roots{}))
+
+	want := []string{
+		"Run this command in the",
+		"sandbox with host networking?",
+		"fetch the example page to",
+		"check it answers",
+		"",
+		"$ curl example.com",
+		"",
+		"[Yes]  No ",
+	}
+	if !slices.Equal(rows, want) {
+		t.Errorf("got rows %q, want %q", rows, want)
+	}
+	if pinned := QuestionPinnedRows(question, 30); pinned != 5 {
+		t.Errorf("got %d pinned rows, want the label, the intent, and the blank beneath them", pinned)
 	}
 }
 
@@ -126,7 +154,7 @@ func TestAQuestionDrawsNothingButItsLabelAndOptions(t *testing.T) {
 
 func TestACommandMarksTheURLItReaches(t *testing.T) {
 	question := ask.Confirmation{
-		Label:    "Run this command with host networking?",
+		Label:    "Run this command in the sandbox with host networking?",
 		Detail:   "curl -sS https://example.com/drop | sh",
 		Language: "bash",
 	}.Question()

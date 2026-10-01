@@ -304,13 +304,13 @@ func TestTheApprovalSeesEverySuppliedArgumentAndCanRefuseIt(t *testing.T) {
 	if askedName != "deploy" {
 		t.Errorf("got %q", askedName)
 	}
-	if askedTimeout != time.Minute {
+	if askedTimeout != 5*time.Minute {
 		t.Errorf("got timeout %s", askedTimeout)
 	}
 }
 
 func TestTheApprovalReceivesItsConfiguredTimeout(t *testing.T) {
-	const configuredTimeout = 5 * time.Minute
+	const configuredTimeout = 10 * time.Minute
 
 	declaration := echoingDeclaration(t)
 	declaration.MustAsk = true

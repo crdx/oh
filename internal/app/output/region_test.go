@@ -373,7 +373,7 @@ func TestAnInertFooterLeavesTheCursorHidden(t *testing.T) {
 	screenOutput := &strings.Builder{}
 	screen := &Screen{writer: screenOutput, isTerminal: true, canRepaint: true}
 
-	screen.InertFooter([]string{"> hi"}, 0, 0)
+	screen.InertFooter([]string{"> hi"}, 0, Pins{}, 0)
 
 	got := screenOutput.String()
 	if strings.Contains(got, showCursor) {
@@ -388,7 +388,7 @@ func TestTheCursorComesBackWhenTheInputIsTakenAgain(t *testing.T) {
 	screenOutput := &strings.Builder{}
 	screen := &Screen{writer: screenOutput, isTerminal: true, canRepaint: true}
 
-	screen.InertFooter([]string{"> hi"}, 0, 0)
+	screen.InertFooter([]string{"> hi"}, 0, Pins{}, 0)
 	screenOutput.Reset()
 
 	screen.Footer([]string{"> hi"}, 0, 3)

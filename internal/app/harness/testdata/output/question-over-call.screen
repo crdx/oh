@@ -43,7 +43,7 @@ $ curl example.com ✦· 5s
 Writing it.
 $ curl example.com ✦·
 
-──────────────────────────────────────── auto-denies in 20s ────────────────────────────────────────
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
 Run the commit tool?
 
 patch: /tmp/layout.patch
@@ -70,8 +70,8 @@ $ curl example.com ✦· 5s
 Writing it.
 $ curl example.com ✦·
 
-──────────────────────────────────────── auto-denies in 20s ────────────────────────────────────────
-Run this command with host networking?
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
 
 $ curl example.com
 
@@ -96,8 +96,8 @@ $ curl example.com ✦· 5s
 Writing it.
 $ curl example.com ✦·
 
-──────────────────────────────────────── auto-denies in 20s ────────────────────────────────────────
-Run this command with host networking?
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
 
 $ curl example.com
 
@@ -136,8 +136,8 @@ Writing it.
 $ sleep 60 ✦·
 $ curl example.com ✦·
 
-──────────────────────────────────────── auto-denies in 20s ────────────────────────────────────────
-Run this command with host networking?
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
 
 $ curl example.com
 
@@ -164,8 +164,8 @@ Writing it.
 $ sleep 60 ✦·
 $ curl example.com ✦·
 
-──────────────────────────────────────── auto-denies in 20s ────────────────────────────────────────
-Run this command with host networking?
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
 
 $ curl example.com
 
@@ -180,8 +180,8 @@ Writing it.
 $ sleep 60 ✦·
 $ curl example.com ✦·
 
-──────────────────────────────────────── auto-denies in 20s ────────────────────────────────────────
-Run this command with host networking?
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
 
 $ curl example.com
 
@@ -206,8 +206,200 @@ $ curl example.com ✦· 5s
 Writing it.
 $ curl example.com ✦·
 
-──────────────────────────────────────── auto-denies in 20s ────────────────────────────────────────
-Run this command with host networking?
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+
+$ curl example.com
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a short question with a blank intent, answered ===
+
+ write the script
+
+
+Writing it.
+$ curl example.com ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a short question with a blank intent, standing ===
+
+ write the script
+
+
+Writing it.
+$ curl example.com ✦·
+
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+
+$ curl example.com
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a short question with a long intent, answered ===
+
+ write the script
+
+
+Writing it.
+$ curl example.com ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a short question with a long intent, standing ===
+
+ write the script
+
+
+Writing it.
+$ curl example.com ✦·
+
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+write a script that greets the world many times over, so the greeting is impossible to miss, and
+check every line of it reads the same before anything runs it, since a script nobody has read is not
+one anybody should run with the host network
+
+$ curl example.com
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a short question with an intent beside another call, answered ===
+
+ write the script
+
+
+Writing it.
+$ sleep 60 ✦· 5s
+$ curl example.com ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a short question with an intent beside another call, standing ===
+
+ write the script
+
+
+Writing it.
+$ sleep 60 ✦·
+$ curl example.com ✦·
+
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+write a script that greets the world
+
+$ curl example.com
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a short question with an intent of control characters, answered ===
+
+ write the script
+
+
+Writing it.
+$ curl example.com ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a short question with an intent of control characters, standing ===
+
+ write the script
+
+
+Writing it.
+$ curl example.com ✦·
+
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+greet the world
+
+$ curl example.com
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a short question with an intent, answered ===
+
+ write the script
+
+
+Writing it.
+$ curl example.com ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a short question with an intent, asked before its call, answered ===
+
+ write the script
+
+
+Writing it.
+$ curl example.com ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a short question with an intent, asked before its call, standing ===
+
+ write the script
+
+
+Writing it.
+$ curl example.com ✦·
+
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+write a script that greets the world
+
+$ curl example.com
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a short question with an intent, redrawn, answered ===
+
+ write the script
+
+
+Writing it.
+$ curl example.com ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a short question with an intent, redrawn, standing ===
+
+ write the script
+
+
+Writing it.
+$ curl example.com ✦·
+
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+write a script that greets the world
+
+$ curl example.com
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a short question with an intent, standing ===
+
+ write the script
+
+
+Writing it.
+$ curl example.com ✦·
+
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+write a script that greets the world
 
 $ curl example.com
 
@@ -243,8 +435,8 @@ $ curl example.com ✦· 5s
 Writing it.
 $ curl example.com ✦·
 
-──────────────────────────────────────── auto-denies in 20s ────────────────────────────────────────
-Run this command with host networking?
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
 
 $ curl example.com
 
@@ -258,8 +450,8 @@ $ curl example.com
 Writing it.
 $ curl example.com ✦·
 
-──────────────────────────────────────── auto-denies in 20s ────────────────────────────────────────
-Run this command with host networking?
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
 
 $ curl example.com
 
@@ -283,17 +475,17 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-──────────────────────────────────────── auto-denies in 20s ────────────────────────────────────────
-Run this command with host networking?
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+
 ⋮ 34 more lines
-  print('hello')
   print('hello')
   print('hello')
   print('hello')
   EOF
 
 [Yes]  No
-⋮ 1 more line
+────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question asked before its call, answered ===
 
  write the script
@@ -312,17 +504,17 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-──────────────────────────────────────── auto-denies in 20s ────────────────────────────────────────
-Run this command with host networking?
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+
 ⋮ 34 more lines
-  print('hello')
   print('hello')
   print('hello')
   print('hello')
   EOF
 
 [Yes]  No
-⋮ 1 more line
+────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question beside another call, answered ===
 
  write the script
@@ -354,17 +546,17 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-──────────────────────────────────────── auto-denies in 20s ────────────────────────────────────────
-Run this command with host networking?
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+
 ⋮ 34 more lines
-  print('hello')
   print('hello')
   print('hello')
   print('hello')
   EOF
 
 [Yes]  No
-⋮ 1 more line
+────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question beside another call, its calls redrawn once answered, answered ===
 
  write the script
@@ -384,17 +576,17 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-──────────────────────────────────────── auto-denies in 20s ────────────────────────────────────────
-Run this command with host networking?
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+
 ⋮ 34 more lines
-  print('hello')
   print('hello')
   print('hello')
   print('hello')
   EOF
 
 [Yes]  No
-⋮ 1 more line
+────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question beside another call, redrawn, answered ===
 
  write the script
@@ -414,17 +606,17 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-──────────────────────────────────────── auto-denies in 20s ────────────────────────────────────────
-Run this command with host networking?
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+
 ⋮ 34 more lines
-  print('hello')
   print('hello')
   print('hello')
   print('hello')
   EOF
 
 [Yes]  No
-⋮ 1 more line
+────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question beside another call, standing ===
 
  write the script
@@ -432,17 +624,17 @@ Run this command with host networking?
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-──────────────────────────────────────── auto-denies in 20s ────────────────────────────────────────
-Run this command with host networking?
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+
 ⋮ 34 more lines
-  print('hello')
   print('hello')
   print('hello')
   print('hello')
   EOF
 
 [Yes]  No
-⋮ 1 more line
+────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question redrawn while it stands, answered ===
 
  write the script
@@ -461,17 +653,423 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-──────────────────────────────────────── auto-denies in 20s ────────────────────────────────────────
-Run this command with host networking?
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+
 ⋮ 34 more lines
-  print('hello')
   print('hello')
   print('hello')
   print('hello')
   EOF
 
 [Yes]  No
-⋮ 1 more line
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question scrolled past its bottom, answered ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question scrolled past its bottom, standing ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦·
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+
+⋮ 34 more lines
+  print('hello')
+  print('hello')
+  print('hello')
+  EOF
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question scrolled to its top and back down, answered ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question scrolled to its top and back down, standing ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦·
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+
+⋮ 2 more lines
+  print('hello')
+  print('hello')
+  print('hello')
+⋮ 33 more lines
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question scrolled to its top, answered ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question scrolled to its top, standing ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦·
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+
+$ cat > script.py <<'EOF'
+  print('hello')
+  print('hello')
+  print('hello')
+⋮ 34 more lines
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question scrolled up, answered ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question scrolled up, its option moved, answered ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question scrolled up, its option moved, standing ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦·
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+
+⋮ 33 more lines
+  print('hello')
+  print('hello')
+  print('hello')
+⋮ 2 more lines
+
+ Yes  [No]
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question scrolled up, standing ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦·
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+
+⋮ 31 more lines
+  print('hello')
+  print('hello')
+  print('hello')
+⋮ 4 more lines
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question with a long intent scrolled to its top, answered ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question with a long intent scrolled to its top, standing ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦·
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+
+$ cat > script.py <<'EOF'
+  print('hello')
+  print('hello')
+  print('hello')
+⋮ 34 more lines
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question with a long intent, answered ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question with a long intent, standing ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦·
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+
+⋮ 34 more lines
+  print('hello')
+  print('hello')
+  print('hello')
+  EOF
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question with an intent scrolled past its bottom, answered ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question with an intent scrolled past its bottom, standing ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦·
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+write a script that greets the world
+
+⋮ 35 more lines
+  print('hello')
+  print('hello')
+  EOF
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question with an intent scrolled to its top, answered ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question with an intent scrolled to its top, standing ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦·
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+write a script that greets the world
+
+$ cat > script.py <<'EOF'
+  print('hello')
+  print('hello')
+⋮ 35 more lines
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question with an intent scrolled up, answered ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question with an intent scrolled up, standing ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦·
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+write a script that greets the world
+
+⋮ 32 more lines
+  print('hello')
+  print('hello')
+⋮ 4 more lines
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question with an intent, answered ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question with an intent, asked before its call, answered ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question with an intent, asked before its call, standing ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦·
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+write a script that greets the world
+
+⋮ 35 more lines
+  print('hello')
+  print('hello')
+  EOF
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question with an intent, its call redrawn once answered, answered ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question with an intent, its call redrawn once answered, standing ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦·
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+write a script that greets the world
+
+⋮ 35 more lines
+  print('hello')
+  print('hello')
+  EOF
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question with an intent, redrawn, answered ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question with an intent, redrawn, standing ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦·
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+write a script that greets the world
+
+⋮ 35 more lines
+  print('hello')
+  print('hello')
+  EOF
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question with an intent, standing ===
+
+ write the script
+
+
+Writing it.
+$ cat > script.py <<'EOF' 38L ✦·
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+write a script that greets the world
+
+⋮ 35 more lines
+  print('hello')
+  print('hello')
+  EOF
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question, answered ===
 
  write the script
@@ -501,17 +1099,17 @@ $ cat > script.py <<'EOF' 38L ✦· 5s
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-──────────────────────────────────────── auto-denies in 20s ────────────────────────────────────────
-Run this command with host networking?
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+
 ⋮ 34 more lines
-  print('hello')
   print('hello')
   print('hello')
   print('hello')
   EOF
 
 [Yes]  No
-⋮ 1 more line
+────────────────────────────────────────────────────────────────────────────────────────────────────
 === a tall question, standing ===
 
  write the script
@@ -519,14 +1117,14 @@ Run this command with host networking?
 
 Writing it.
 $ cat > script.py <<'EOF' 38L ✦·
-──────────────────────────────────────── auto-denies in 20s ────────────────────────────────────────
-Run this command with host networking?
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run this command in the sandbox with host networking?
+
 ⋮ 34 more lines
-  print('hello')
   print('hello')
   print('hello')
   print('hello')
   EOF
 
 [Yes]  No
-⋮ 1 more line
+────────────────────────────────────────────────────────────────────────────────────────────────────

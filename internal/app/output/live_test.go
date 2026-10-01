@@ -340,7 +340,7 @@ func TestTheFrameNeverOutgrowsTheTerminal(t *testing.T) {
 			block.rows = append(block.rows, "call "+strconv.Itoa(i))
 		}
 		screen.OpenTool(block)
-		screen.InertFooter(footerRows(30), 29, 0)
+		screen.InertFooter(footerRows(30), 29, Pins{}, 0)
 
 		if got := len(screen.canvas.rows); got > lines {
 			t.Errorf("height %d painted %d rows", lines, got)

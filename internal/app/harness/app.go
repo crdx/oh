@@ -175,8 +175,10 @@ type questionState struct {
 	broker      *ask.Broker
 	request     *ask.Request
 	cursor      int
+	scroll      int
 	isAnnounced bool
 	announceAt  time.Time
+	withdraw    func()
 }
 
 type App struct {
@@ -205,7 +207,7 @@ type App struct {
 	experimental    *experimental.Toggles
 	permissions     *permission.Live
 	onFailure       func(failure error)
-	onQuestion      func(question ask.Question)
+	onQuestion      func(question ask.Question) func()
 	savePastedImage func(mediaType string, data []byte) (string, error)
 	watchStalls     func(work string) func()
 	pasteExchange   paste.Exchange
@@ -392,10 +394,16 @@ func (self *App) answerQuestion(keypress key.Key) {
 		request.Cancel()
 	case keypress.Code == key.Enter:
 		request.Choose(self.question.cursor)
-	case keypress.Code == key.Up || keypress.Code == key.Left:
+	case keypress.Code == key.Up:
+		self.question.scroll++
+		return
+	case keypress.Code == key.Down:
+		self.question.scroll = max(self.question.scroll-1, 0)
+		return
+	case keypress.Code == key.Left:
 		self.question.cursor = (self.question.cursor + options - 1) % max(options, 1)
 		return
-	case keypress.Code == key.Down || keypress.Code == key.Right:
+	case keypress.Code == key.Right:
 		self.question.cursor = (self.question.cursor + 1) % max(options, 1)
 		return
 	case keypress.Code == key.Rune && keypress.Value == '\t':
@@ -994,8 +1002,15 @@ func (self *App) show(inputLine *edit.Input) {
 
 	if self.isAwaitingAnswer() {
 		firstQuestionRow := cursorRow - (len(block.Question) - 1)
-		labelRows := painter.QuestionLabelRows(self.question.request.Question, columns)
-		self.screen.InertFooter(rows, cursorRow, firstQuestionRow+labelRows)
+		question := self.question.request.Question
+		yieldingOffset, yieldingRows := painter.QuestionYieldingRows(question, columns)
+		pins := output.Pins{
+			Head:          firstQuestionRow + painter.QuestionPinnedRows(question, columns),
+			Tail:          len(rows) - cursorRow + 1,
+			YieldingStart: firstQuestionRow + yieldingOffset,
+			YieldingRows:  yieldingRows,
+		}
+		self.question.scroll = self.screen.InertFooter(rows, cursorRow, pins, self.question.scroll)
 		return
 	}
 
@@ -1168,6 +1183,7 @@ func (self *App) onQuestionChange() {
 	}
 
 	self.question.cursor = request.Question.DefaultIndex()
+	self.question.scroll = 0
 
 	if self.currentTurn.painter != nil {
 		self.currentTurn.painter.HoldTiming()
@@ -1183,7 +1199,7 @@ func (self *App) announceQuestion() {
 	self.question.announceAt = time.Time{}
 
 	if self.onQuestion != nil {
-		self.onQuestion(self.question.request.Question)
+		self.question.withdraw = self.onQuestion(self.question.request.Question)
 	}
 }
 
@@ -1219,6 +1235,10 @@ func (self *App) finishQuestion() {
 	self.question.request = nil
 	self.question.isAnnounced = false
 	self.question.announceAt = time.Time{}
+	if self.question.withdraw != nil {
+		self.question.withdraw()
+		self.question.withdraw = nil
+	}
 
 	if self.currentTurn.painter != nil {
 		self.currentTurn.painter.ResumeTiming()

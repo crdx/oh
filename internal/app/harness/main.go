@@ -83,8 +83,9 @@ import (
 )
 
 const (
-	approvalLimit                   = time.Minute
+	approvalLimit                   = 5 * time.Minute
 	harnessContextSourceName        = "harness"
+	notificationWithdrawalGrace     = 2 * time.Second
 	skillCatalogueSourceNameFormat  = "skill catalogue (%d %s)"
 	toolDefinitionsSourceNameFormat = "tool definitions (%d %s)"
 )
@@ -94,28 +95,24 @@ type approval struct {
 	language string
 	action   string
 	outcome  string
-	advice   string
 }
 
 var (
 	hostNetworkApproval = approval{
-		label:    "Run this command with host networking?",
+		label:    "Run this command in the sandbox with host networking?",
 		language: "bash",
 		action:   "host-network access",
 		outcome:  "command did not run",
-		advice:   "retry without it or choose another approach",
 	}
 	lookupApproval = approval{
 		label:   "Look this up on the web?",
 		action:  "lookup",
 		outcome: "lookup did not run",
-		advice:  "choose another approach",
 	}
 	fetchApproval = approval{
 		label:   "Fetch this page?",
 		action:  "fetch",
 		outcome: "fetch did not run",
-		advice:  "choose another approach",
 	}
 )
 
@@ -124,7 +121,6 @@ func customToolApproval(name string) approval {
 		label:   "Run the " + name + " tool?",
 		action:  name,
 		outcome: name + " did not run",
-		advice:  "choose another approach",
 	}
 }
 
@@ -134,19 +130,28 @@ func (self approval) ask(
 	rule permission.Rule,
 	subject string,
 ) error {
+	return self.askFor(ctx, broker, rule, self.confirmation(subject))
+}
+
+func (self approval) askFor(
+	ctx context.Context,
+	broker *ask.Broker,
+	rule permission.Rule,
+	confirmation ask.Confirmation,
+) error {
 	if rule == permission.Allow {
 		return nil
 	}
 
-	return self.confirm(ctx, broker, subject)
+	return self.confirmWith(ctx, broker, confirmation, approvalLimit)
 }
 
-func (self approval) confirm(ctx context.Context, broker *ask.Broker, subject string) error {
-	return self.confirmWith(ctx, broker, ask.Confirmation{
+func (self approval) confirmation(subject string) ask.Confirmation {
+	return ask.Confirmation{
 		Label:    self.label,
 		Detail:   subject,
 		Language: self.language,
-	}, approvalLimit)
+	}
 }
 
 func (self approval) confirmArguments(
@@ -181,7 +186,7 @@ func (self approval) confirmWith(
 
 	switch {
 	case errors.Is(err, ask.ErrDenied):
-		return errors.New(self.action + " refused; " + self.outcome + "; " + self.advice)
+		return errors.New(self.action + " refused; " + self.outcome)
 	case errors.Is(err, context.DeadlineExceeded):
 		return errors.New(
 			"approval timed out after " + util.CompactDuration(timeout) + "; " + self.outcome,
@@ -198,8 +203,11 @@ func approveHostNetwork(
 	broker *ask.Broker,
 	rule permission.Rule,
 	command string,
+	intent string,
 ) error {
-	return hostNetworkApproval.ask(ctx, broker, rule, strings.Join(bash.Steps(command), "\n"))
+	confirmation := hostNetworkApproval.confirmation(strings.Join(bash.Steps(command), "\n"))
+	confirmation.Intent = intent
+	return hostNetworkApproval.askFor(ctx, broker, rule, confirmation)
 }
 
 var completableToolNames = []string{
@@ -1040,8 +1048,8 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		return "", err
 	}
 	permissions := permission.New(permissionSet)
-	approveNetwork := func(ctx context.Context, command string) error {
-		return approveHostNetwork(ctx, askBroker, permissions.Network(), command)
+	approveNetwork := func(ctx context.Context, command string, intent string) error {
+		return approveHostNetwork(ctx, askBroker, permissions.Network(), command, intent)
 	}
 	shellTool := shell.New(
 		workspace.GetDir(), homeDir, tmpDir, pathAccess, mode, files, args.Yolo, approveNetwork, sandboxRunner,
@@ -1321,13 +1329,8 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 			context.Background(), screen.WriteEscape, isTerminalFocused, workspace, failure,
 		)
 	}
-	app.onQuestion = func(question ask.Question) {
-		go func() {
-			_ = notification.SendQuestion(
-				context.Background(), screen.WriteEscape, isTerminalFocused, workspace, question,
-			)
-		}()
-	}
+	questionNotifications := notification.NewQuestions(screen.WriteEscape, isTerminalFocused, workspace)
+	app.onQuestion = questionNotifications.Announce
 	app.savePastedImage = dropKeeper.SaveImage
 	stallWatchdog := stall.Watch(filepath.Join(sessionInfo.Directory, stall.LogName))
 	defer stallWatchdog.Close()
@@ -1455,6 +1458,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	hasStarted = true
 	hooks.EmitSessionStarted(ctx, cycle.SessionStarted{Session: sessionInfo})
 	transition := app.begin(args.Message)
+	questionNotifications.WithdrawAll(notificationWithdrawalGrace)
 	*requestedTransition = transition
 	stopReason = transition.StopReason()
 	hooks.EmitSessionStopping(ctx, cycle.SessionStopping{Session: sessionInfo, Reason: stopReason})

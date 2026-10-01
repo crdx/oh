@@ -21,6 +21,7 @@
 - Add completion for `/new`, `/fork`, and `/job`
 - Hide the "no matches" dropdown on `/!`
 - Fix input wrapping cursor position issue
+- Scroll a tall block with up and down keys
 - Grant several paths at once with `/grant`
 
 ### Tool calls

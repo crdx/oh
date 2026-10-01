@@ -208,7 +208,7 @@ func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
 		{
 			name: "fetch refused",
 			exchange: resultExchange("fetch", fetch.Args{URL: "https://example.test/article", Type: "markdown"}, agent.ErrorStatus,
-				"fetch refused; fetch did not run; choose another approach"),
+				"fetch refused; fetch did not run"),
 		},
 		{
 			name: "fetch approval timed out",

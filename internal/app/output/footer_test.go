@@ -2,8 +2,11 @@ package output
 
 import (
 	"slices"
+	"strconv"
 	"strings"
 	"testing"
+
+	"crdx.org/oh/internal/app/style"
 )
 
 func footerRows(count int) []string {
@@ -204,6 +207,42 @@ func TestAFooterWithRoomForOnlyItsFocusBesideItsPinnedRowsKeepsBoth(t *testing.T
 	}
 }
 
+func TestAPinnedBlankStandsBetweenTheLabelAndWhatWasHidden(t *testing.T) {
+	screen := NewTerminalOfSize(&strings.Builder{}, 40, 10)
+	rows := append([]string{"head", "label", ""}, footerRows(30)...)
+	rows[len(rows)-1] = "focus"
+
+	fitted, cursorRow := screen.fitFooter(rows, len(rows)-1, 3, 8)
+
+	if !slices.Equal(fitted[:3], []string{"head", "label", ""}) {
+		t.Errorf("kept %q at the head, want the pinned rows and their blank", fitted[:3])
+	}
+	if !strings.Contains(fitted[3], "more lines") {
+		t.Errorf("row after the blank is %q, want it to say what was hidden", fitted[3])
+	}
+	if fitted[cursorRow] != "focus" {
+		t.Errorf("focused on %q, want the focus", fitted[cursorRow])
+	}
+}
+
+func TestAPinnedBlankIsGivenUpBeforeANoticeIs(t *testing.T) {
+	screen := NewTerminalOfSize(&strings.Builder{}, 40, 10)
+	rows := append([]string{"head", "label", ""}, footerRows(30)...)
+	rows[len(rows)-2] = "focus"
+
+	fitted, cursorRow := screen.fitFooter(rows, len(rows)-2, 3, 5)
+
+	if !slices.Equal(fitted[:2], []string{"head", "label"}) || fitted[2] == "" {
+		t.Errorf("kept %q at the head, want the pinned rows without their blank", fitted[:3])
+	}
+	if !strings.Contains(fitted[2], "more lines") || !strings.Contains(fitted[4], "more line") {
+		t.Errorf("kept %q, want a notice either side of the focus", fitted)
+	}
+	if fitted[cursorRow] != "focus" {
+		t.Errorf("focused on %q, want the focus", fitted[cursorRow])
+	}
+}
+
 func TestAFooterWithNoRoomBesideItsPinnedRowsIsWindowedWhole(t *testing.T) {
 	screen := NewTerminalOfSize(&strings.Builder{}, 40, 10)
 	rows := append([]string{"head", "label"}, footerRows(30)...)
@@ -258,4 +297,81 @@ func TestTheFooterRoomIsWhatAFooterIsFittedTo(t *testing.T) {
 	if !slices.ContainsFunc(drawnTexts(screen), func(row string) bool { return strings.Contains(row, "more line") }) {
 		t.Errorf("a footer beyond the room hid nothing: %q", drawnTexts(screen))
 	}
+}
+
+func questionFooter(detailRows int) []string {
+	rows := []string{"ruler", "label", ""}
+	for i := range detailRows {
+		rows = append(rows, "detail "+strconv.Itoa(i))
+	}
+
+	return append(rows, "", "options", "ruler")
+}
+
+var questionPins = Pins{Head: 3, Tail: 3}
+
+func TestAnInertFooterScrollsItsDetailBetweenItsPinnedEnds(t *testing.T) {
+	screen := NewTerminalOfSize(&strings.Builder{}, 40, 12)
+	rows := questionFooter(30)
+	focus := len(rows) - 2
+
+	for scroll, want := range map[int][]string{
+		0:  {"ruler", "label", "", "⋮ 26 more lines", "detail 26", "detail 27", "detail 28", "detail 29", "", "options", "ruler"},
+		1:  {"ruler", "label", "", "⋮ 25 more lines", "detail 25", "detail 26", "detail 27", "⋮ 2 more lines", "", "options", "ruler"},
+		26: {"ruler", "label", "", "detail 0", "detail 1", "detail 2", "detail 3", "⋮ 26 more lines", "", "options", "ruler"},
+	} {
+		got := screen.InertFooter(rows, focus, questionPins, scroll)
+
+		if got != scroll {
+			t.Errorf("scrolled by %d, reported %d", scroll, got)
+		}
+		if drawn := plainTexts(drawnTexts(screen)); !slices.Equal(drawn, want) {
+			t.Errorf("scrolled by %d drew %q, want %q", scroll, drawn, want)
+		}
+		if drawnTexts(screen)[screen.canvas.cursorRow] != "options" {
+			t.Errorf("scrolled by %d focused on %q, want the options", scroll, drawnTexts(screen)[screen.canvas.cursorRow])
+		}
+	}
+}
+
+func TestAnInertFooterScrollsNoFurtherThanItsTop(t *testing.T) {
+	screen := NewTerminalOfSize(&strings.Builder{}, 40, 12)
+	rows := questionFooter(30)
+
+	if got := screen.InertFooter(rows, len(rows)-2, questionPins, 100); got != 26 {
+		t.Errorf("scrolling past the top settled at %d, want 26", got)
+	}
+}
+
+func TestAnInertFooterThatFitsHasNothingToScroll(t *testing.T) {
+	screen := NewTerminalOfSize(&strings.Builder{}, 40, 12)
+	rows := questionFooter(3)
+
+	if got := screen.InertFooter(rows, len(rows)-2, questionPins, 5); got != 0 {
+		t.Errorf("a footer that fits scrolled by %d", got)
+	}
+}
+
+func TestAnInertFooterTooShortForItsPinnedEndsIsWindowedAsBefore(t *testing.T) {
+	screen := NewTerminalOfSize(&strings.Builder{}, 40, 8)
+	rows := questionFooter(30)
+	focus := len(rows) - 2
+
+	if got := screen.InertFooter(rows, focus, questionPins, 4); got != 0 {
+		t.Errorf("a footer with no room to scroll scrolled by %d", got)
+	}
+
+	want, _ := screen.fitFooter(rows, focus, questionPins.Head, screen.footerRoom())
+	if drawn := drawnTexts(screen); !slices.Equal(drawn, want) {
+		t.Errorf("drew %q, want the unscrolled window %q", drawn, want)
+	}
+}
+
+func plainTexts(rows []string) []string {
+	plain := make([]string, len(rows))
+	for i, row := range rows {
+		plain[i] = style.Plain(row)
+	}
+
+	return plain
 }

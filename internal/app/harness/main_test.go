@@ -668,7 +668,10 @@ func TestEveryQuestionSendsOneDesktopNotification(t *testing.T) {
 
 	var notified []string
 	self := &App{question: questionState{broker: broker}}
-	self.onQuestion = func(question ask.Question) { notified = append(notified, question.Label) }
+	self.onQuestion = func(question ask.Question) func() {
+		notified = append(notified, question.Label)
+		return nil
+	}
 
 	first := make(chan error, 1)
 	go func() { first <- ask.Confirm(t.Context(), broker, ask.Confirmation{Label: "Continue?"}) }()
@@ -708,7 +711,10 @@ func standingQuestionWithFocus(t *testing.T, notified *[]string) *App {
 	t.Cleanup(trackedTerminal.Begin(caps.Read))
 
 	self := &App{question: questionState{broker: broker}, terminal: trackedTerminal}
-	self.onQuestion = func(question ask.Question) { *notified = append(*notified, question.Label) }
+	self.onQuestion = func(question ask.Question) func() {
+		*notified = append(*notified, question.Label)
+		return nil
+	}
 
 	result := make(chan error, 1)
 	go func() { result <- ask.Confirm(t.Context(), broker, ask.Confirmation{Label: "Fetch this page?"}) }()
@@ -809,6 +815,7 @@ const (
 	questionFocusReturningWithinTheGrace
 	questionAnsweredWithinTheGrace
 	questionLapsingWithinTheGrace
+	questionAnsweredOnceAnnounced
 	questionAnnouncedThenLeftAgain
 	questionNextArrivingFocused
 	questionNextArrivingUnfocused
@@ -820,6 +827,7 @@ var questionNotificationScenarios = map[string]questionNotificationScenario{
 	"focus returning within the grace":  questionFocusReturningWithinTheGrace,
 	"answered within the grace":         questionAnsweredWithinTheGrace,
 	"lapsing within the grace":          questionLapsingWithinTheGrace,
+	"answered once announced":           questionAnsweredOnceAnnounced,
 	"announced then left again":         questionAnnouncedThenLeftAgain,
 	"next question arriving in focus":   questionNextArrivingFocused,
 	"next question arriving while away": questionNextArrivingUnfocused,
@@ -828,11 +836,15 @@ var questionNotificationScenarios = map[string]questionNotificationScenario{
 const (
 	notifiedFetchLabel        = "Fetch this page?"
 	notifiedFetchAddress      = "https://example.com/news"
-	notifiedCurlLabel         = "Run this command with host networking?"
+	notifiedCurlLabel         = "Run this command in the sandbox with host networking?"
 	notifiedCurlCommand       = "curl -sI https://example.com"
 	notificationEscapeOpening = "\x1b]99;;"
 	notificationEscapeClosing = "\x1b\\"
+	notificationWithdrawal    = ":p=close;"
+	stableNotificationName    = "QUESTIONNOTIFICATIONNUMBER"
 )
+
+var notificationIdentifier = regexp.MustCompile(`\x1b\]99;i=[A-Z2-7]{26}:p=close;`)
 
 func fakeKitten(t *testing.T) {
 	t.Helper()
@@ -877,11 +889,18 @@ func newQuestionNotificationRig(t *testing.T) *questionNotificationRig {
 	self.terminal = terminal.New(io.Discard, workspace)
 	t.Cleanup(self.terminal.Begin(caps.Read))
 	self.question.broker = rig.broker
-	self.onQuestion = func(question ask.Question) {
-		if err := notification.SendQuestion(
+	self.onQuestion = func(question ask.Question) func() {
+		notice, err := notification.SendQuestion(
 			t.Context(), self.screen.WriteEscape, self.terminal.IsFocused, workspace, question,
-		); err != nil {
+		)
+		if err != nil {
 			t.Errorf("the notification failed: %v", err)
+		}
+
+		return func() {
+			if err := notice.Withdraw(t.Context(), self.screen.WriteEscape); err != nil {
+				t.Errorf("withdrawing the notification failed: %v", err)
+			}
 		}
 	}
 	self.inputLine = edit.NewInput(nil)
@@ -899,7 +918,11 @@ func (self *questionNotificationRig) step(description string, event func()) {
 	self.app.drawAfterEvent(self.inputLine)
 
 	fmt.Fprintf(&self.timeline, "+%-4s %s", self.current.Sub(self.startedAt), description)
-	for _, sent := range sentNotifications(self.screenOutput.String()[written:]) {
+	stream := self.screenOutput.String()[written:]
+	for range strings.Count(stream, notificationWithdrawal) {
+		self.timeline.WriteString("\n      withdrawn")
+	}
+	for _, sent := range sentNotifications(stream) {
 		fmt.Fprintf(&self.timeline, "\n      notified: %s", strings.ReplaceAll(sent, "\n", " / "))
 	}
 	self.timeline.WriteString("\n")
@@ -1010,6 +1033,12 @@ func questionNotificationStream(t *testing.T, scenario questionNotificationScena
 		rig.wait(focusLossGrace - time.Second)
 		rig.lapse(cancel, result)
 		rig.wait(2 * focusLossGrace)
+	case questionAnsweredOnceAnnounced:
+		rig.press("focus leaves", key.FocusOut)
+		rig.arrive()
+		rig.press("focus returns", key.FocusIn)
+		rig.answer()
+		rig.wait(2 * focusLossGrace)
 	case questionAnnouncedThenLeftAgain:
 		rig.arrive()
 		rig.press("focus leaves", key.FocusOut)
@@ -1033,7 +1062,11 @@ func questionNotificationStream(t *testing.T, scenario questionNotificationScena
 		rig.wait(2 * focusLossGrace)
 	}
 
-	return rig.screenOutput.String(), rig.timeline.String()
+	stream := notificationIdentifier.ReplaceAllString(
+		rig.screenOutput.String(), "\x1b]99;i="+stableNotificationName+notificationWithdrawal,
+	)
+
+	return stream, rig.timeline.String()
 }
 
 func TestGoldenQuestionNotificationsWaitForFocusToStayAway(t *testing.T) {
@@ -1079,13 +1112,13 @@ func queuedApprovalStream(t *testing.T, firstOutcome firstApprovalOutcome) strin
 		self.question.broker = broker
 
 		firstResult := make(chan error, 1)
-		go func() { firstResult <- fetchApproval.confirm(t.Context(), broker, "first page") }()
+		go func() { firstResult <- fetchApproval.ask(t.Context(), broker, permission.Ask, "first page") }()
 		<-broker.Changes()
 		self.onQuestionChange()
 		self.show(inputLine)
 
 		secondResult := make(chan error, 1)
-		go func() { secondResult <- fetchApproval.confirm(t.Context(), broker, "second page") }()
+		go func() { secondResult <- fetchApproval.ask(t.Context(), broker, permission.Ask, "second page") }()
 		<-broker.Changes()
 		synctest.Wait()
 
@@ -1102,7 +1135,7 @@ func queuedApprovalStream(t *testing.T, firstOutcome firstApprovalOutcome) strin
 		case firstApprovalLapse:
 			time.Sleep(approvalLimit)
 			synctest.Wait()
-			if err := <-firstResult; err == nil || !strings.Contains(err.Error(), "timed out after 1m") {
+			if err := <-firstResult; err == nil || !strings.Contains(err.Error(), "timed out after 5m") {
 				t.Fatalf("the first approval did not lapse as expected: %v", err)
 			}
 		case firstApprovalAnswer:
@@ -1160,7 +1193,7 @@ func TestACallIsNotTimedWhileItsQuestionStands(t *testing.T) {
 		result := make(chan error, 1)
 		go func() {
 			result <- ask.Confirm(t.Context(), broker, ask.Confirmation{
-				Label:  "Run this command with host networking?",
+				Label:  "Run this command in the sandbox with host networking?",
 				Detail: "curl example.com",
 			})
 		}()
@@ -1200,12 +1233,14 @@ const questionLines = 12
 
 type questionOverCall struct {
 	command               string
+	intent                string
 	fields                []ask.Field
 	approvalTimeout       time.Duration
 	isAskedFirst          bool
 	isRedrawn             bool
 	isRedrawnWhileRunning bool
 	hasNeighbour          bool
+	keypresses            []key.Key
 }
 
 type drawnQuestionOverCall struct {
@@ -1213,8 +1248,24 @@ type drawnQuestionOverCall struct {
 	answered string
 }
 
+const (
+	questionIntent     = "write a script that greets the world"
+	longQuestionIntent = "write a script that greets the world many times over, so the greeting is " +
+		"impossible to miss, and check every line of it reads the same before anything runs it, " +
+		"since a script nobody has read is not one anybody should run with the host network"
+)
+
 func tallQuestionCommand() string {
 	return "cat > script.py <<'EOF'\n" + strings.Repeat("print('hello')\n", 3*questionLines) + "EOF"
+}
+
+func repeatedKey(code key.Code, count int) []key.Key {
+	keypresses := make([]key.Key, count)
+	for i := range keypresses {
+		keypresses[i] = key.Key{Code: code}
+	}
+
+	return keypresses
 }
 
 func drawQuestionOverCall(t *testing.T, scene questionOverCall) drawnQuestionOverCall {
@@ -1284,7 +1335,7 @@ func drawQuestionOverCall(t *testing.T, scene questionOverCall) drawnQuestionOve
 				}, timeout)
 				return
 			}
-			result <- approveHostNetwork(t.Context(), broker, permission.Ask, scene.command)
+			result <- approveHostNetwork(t.Context(), broker, permission.Ask, scene.command, scene.intent)
 		}()
 		<-broker.Changes()
 		chat.onQuestionChange()
@@ -1304,6 +1355,12 @@ func drawQuestionOverCall(t *testing.T, scene questionOverCall) drawnQuestionOve
 		time.Sleep(20 * time.Second)
 		synctest.Wait()
 		chat.show(chat.inputLine)
+		for _, keypress := range scene.keypresses {
+			chat.screen.Sync(func() {
+				chat.answerQuestion(keypress)
+				chat.show(chat.inputLine)
+			})
+		}
 		drawn.standing = written.String()
 
 		chat.screen.Sync(func() {
@@ -1363,13 +1420,36 @@ func TestGoldenAQuestionOverARunningCallDrawsEveryVisibleState(t *testing.T) {
 		"a tall question beside another call, asked before its call":           {command: tallQuestionCommand(), hasNeighbour: true, isAskedFirst: true},
 		"a tall question beside another call, redrawn":                         {command: tallQuestionCommand(), hasNeighbour: true, isRedrawn: true},
 		"a tall question beside another call, its calls redrawn once answered": {command: tallQuestionCommand(), hasNeighbour: true, isRedrawnWhileRunning: true},
+		"a tall question scrolled up":                                          {command: tallQuestionCommand(), keypresses: repeatedKey(key.Up, 3)},
+		"a tall question scrolled to its top":                                  {command: tallQuestionCommand(), keypresses: repeatedKey(key.Up, 50)},
+		"a tall question scrolled to its top and back down":                    {command: tallQuestionCommand(), keypresses: slices.Concat(repeatedKey(key.Up, 50), repeatedKey(key.Down, 2))},
+		"a tall question scrolled past its bottom":                             {command: tallQuestionCommand(), keypresses: slices.Concat(repeatedKey(key.Up, 2), repeatedKey(key.Down, 5))},
+		"a tall question scrolled up, its option moved":                        {command: tallQuestionCommand(), keypresses: []key.Key{{Code: key.Up}, {Code: key.Right}}},
+		"a short question with an intent":                                      {command: "curl example.com", intent: questionIntent},
+		"a short question with an intent, asked before its call":               {command: "curl example.com", intent: questionIntent, isAskedFirst: true},
+		"a short question with an intent, redrawn":                             {command: "curl example.com", intent: questionIntent, isRedrawn: true},
+		"a short question with an intent beside another call":                  {command: "curl example.com", intent: questionIntent, hasNeighbour: true},
+		"a short question with a long intent":                                  {command: "curl example.com", intent: longQuestionIntent},
+		"a short question with an intent of control characters":                {command: "curl example.com", intent: "\x1b[31mgreet\n\tthe\x07   world\x1b[0m"},
+		"a short question with a blank intent":                                 {command: "curl example.com", intent: " \n\t "},
+		"a tall question with an intent":                                       {command: tallQuestionCommand(), intent: questionIntent},
+		"a tall question with an intent, asked before its call":                {command: tallQuestionCommand(), intent: questionIntent, isAskedFirst: true},
+		"a tall question with an intent, redrawn":                              {command: tallQuestionCommand(), intent: questionIntent, isRedrawn: true},
+		"a tall question with an intent, its call redrawn once answered":       {command: tallQuestionCommand(), intent: questionIntent, isRedrawnWhileRunning: true},
+		"a tall question with an intent scrolled up":                           {command: tallQuestionCommand(), intent: questionIntent, keypresses: repeatedKey(key.Up, 3)},
+		"a tall question with an intent scrolled to its top":                   {command: tallQuestionCommand(), intent: questionIntent, keypresses: repeatedKey(key.Up, 50)},
+		"a tall question with an intent scrolled past its bottom":              {command: tallQuestionCommand(), intent: questionIntent, keypresses: slices.Concat(repeatedKey(key.Up, 2), repeatedKey(key.Down, 5))},
+		"a tall question with a long intent":                                   {command: tallQuestionCommand(), intent: longQuestionIntent},
+		"a tall question with a long intent scrolled to its top":               {command: tallQuestionCommand(), intent: longQuestionIntent, keypresses: repeatedKey(key.Up, 50)},
 	}
 
 	passes := map[string]func() string{}
 	answered := map[string]string{}
+	standing := map[string]string{}
 
 	for name, scene := range scenes {
 		drawn := drawQuestionOverCall(t, scene)
+		standing[name] = drawn.standing
 
 		requireNothingDrawnAboveTheScreen(t, name+", standing", drawn.standing, questionLines)
 		requireNothingDrawnAboveTheScreen(t, name+", answered", drawn.answered, questionLines)
@@ -1401,6 +1481,15 @@ func TestGoldenAQuestionOverARunningCallDrawsEveryVisibleState(t *testing.T) {
 			answered[name],
 		)
 	}
+
+	requireSameVisibleScreenOfSize(
+		t,
+		"a blank intent differs from no intent",
+		replayColumns,
+		questionLines,
+		standing["a short question"],
+		standing["a short question with a blank intent"],
+	)
 
 	compareWithGolden(t, "question-over-call", ".screen", passes)
 }
@@ -1681,7 +1770,9 @@ func drawRowsEndingInBlanks(lines int) frameEdgeStreams {
 	return frameEdgeStreams{live: live, sealed: screenOutput.String()}
 }
 
-func drawQuestionOnATinyTerminal(t *testing.T, lines int) string {
+const intentStandingLines = 11
+
+func drawQuestionOnATinyTerminal(t *testing.T, lines int, intent string) string {
 	t.Helper()
 
 	var drawn string
@@ -1695,7 +1786,7 @@ func drawQuestionOnATinyTerminal(t *testing.T, lines int) string {
 		t.Cleanup(broker.Open())
 		self.question.broker = broker
 
-		go func() { _ = approveHostNetwork(t.Context(), broker, permission.Ask, tallQuestionCommand()) }()
+		go func() { _ = approveHostNetwork(t.Context(), broker, permission.Ask, tallQuestionCommand(), intent) }()
 		<-broker.Changes()
 		self.onQuestionChange()
 		self.show(self.inputLine)
@@ -1759,7 +1850,22 @@ func TestGoldenTheFrameAtItsEdgesDrawsEveryVisibleState(t *testing.T) {
 	}
 
 	for _, lines := range []int{4, 5, 6} {
-		add(fmt.Sprintf("a tall question on a terminal of %d lines", lines), drawQuestionOnATinyTerminal(t, lines), lines)
+		add(fmt.Sprintf("a tall question on a terminal of %d lines", lines), drawQuestionOnATinyTerminal(t, lines, ""), lines)
+	}
+
+	for lines := 4; lines <= intentStandingLines+1; lines++ {
+		withIntent := drawQuestionOnATinyTerminal(t, lines, questionIntent)
+		add(fmt.Sprintf("a tall question with an intent on a terminal of %02d lines", lines), withIntent, lines)
+		if lines < intentStandingLines {
+			requireSameVisibleScreenOfSize(
+				t,
+				fmt.Sprintf("an intent yielding at %d lines", lines),
+				replayColumns,
+				lines,
+				drawQuestionOnATinyTerminal(t, lines, ""),
+				withIntent,
+			)
+		}
 	}
 
 	compareWithGolden(t, "frame-edges", ".screen", passes)
@@ -1779,7 +1885,10 @@ func TestAQuestionMovesItsCursorAndAnswersWhereItRests(t *testing.T) {
 			wantErr:    ask.ErrDenied,
 		},
 		"right and back again": {
-			keypresses: []key.Key{{Code: key.Right}, {Code: key.Up}, {Code: key.Enter}},
+			keypresses: []key.Key{{Code: key.Right}, {Code: key.Left}, {Code: key.Enter}},
+		},
+		"up and down leave the option where it rests": {
+			keypresses: []key.Key{{Code: key.Up}, {Code: key.Down}, {Code: key.Down}, {Code: key.Enter}},
 		},
 	} {
 		t.Run(name, func(t *testing.T) {
@@ -1833,7 +1942,7 @@ func TestARefusedHostNetworkSaysSoInWordsTheModelCanAct(t *testing.T) {
 
 				return ctx
 			},
-			want: "approval timed out after 1m",
+			want: "approval timed out after 5m",
 		},
 		"nobody to ask": {
 			prepare: func(t *testing.T, _ *ask.Broker) context.Context {
@@ -1848,7 +1957,7 @@ func TestARefusedHostNetworkSaysSoInWordsTheModelCanAct(t *testing.T) {
 			broker := ask.New()
 			ctx := test.prepare(t, broker)
 
-			err := approveHostNetwork(ctx, broker, permission.Ask, "curl example.com")
+			err := approveHostNetwork(ctx, broker, permission.Ask, "curl example.com", "")
 			if err == nil {
 				t.Fatal("a command nobody allowed was approved")
 			}
@@ -1926,8 +2035,28 @@ func TestAnApprovedHostNetworkRunsTheCommand(t *testing.T) {
 		broker.Current().Choose(0)
 	}()
 
-	if err := approveHostNetwork(t.Context(), broker, permission.Ask, "curl example.com"); err != nil {
+	if err := approveHostNetwork(t.Context(), broker, permission.Ask, "curl example.com", ""); err != nil {
 		t.Errorf("got %v, want the approved command to run", err)
+	}
+}
+
+func TestAHostNetworkQuestionCarriesTheIntent(t *testing.T) {
+	broker := ask.New()
+	t.Cleanup(broker.Open())
+
+	asked := make(chan ask.Question, 1)
+	go func() {
+		<-broker.Changes()
+		asked <- broker.Current().Question
+		broker.Current().Choose(0)
+	}()
+
+	if err := approveHostNetwork(t.Context(), broker, permission.Ask, "curl example.com", "fetch the page"); err != nil {
+		t.Fatalf("got %v, want the approved command to run", err)
+	}
+
+	if question := <-asked; question.Intent != "fetch the page" {
+		t.Errorf("got intent %q, want %q", question.Intent, "fetch the page")
 	}
 }
 
@@ -1946,7 +2075,7 @@ func TestAnApprovalChargesTheTimeItStoodToTheCallThatAskedForIt(t *testing.T) {
 			broker.Current().Choose(0)
 		}()
 
-		if err := approveHostNetwork(ctx, broker, permission.Ask, "curl example.com"); err != nil {
+		if err := approveHostNetwork(ctx, broker, permission.Ask, "curl example.com", ""); err != nil {
 			t.Fatalf("got %v, want the approved command to run", err)
 		}
 
@@ -9303,7 +9432,7 @@ func newRig(t *testing.T, openScreen func(*strings.Builder, string) *output.Scre
 		bash.New(
 			files,
 			func(context.Context) (sandbox.Policy, error) { return sandbox.Policy{}, nil },
-			func(context.Context, string) error { return nil },
+			func(context.Context, string, string) error { return nil },
 			sandbox.Direct(),
 			true,
 		),
@@ -9579,7 +9708,7 @@ func replayAfterAQuestion(t *testing.T, entries []replayEntry) string {
 		result := make(chan error, 1)
 		go func() {
 			result <- ask.Confirm(t.Context(), broker, ask.Confirmation{
-				Label:    "Run this command with host networking?",
+				Label:    "Run this command in the sandbox with host networking?",
 				Detail:   "grep prompt *.go",
 				Language: "bash",
 			})
@@ -11647,7 +11776,7 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 		}
 		go func() {
 			_ = ask.Confirm(t.Context(), broker, ask.Confirmation{
-				Label:    "Run this command with host networking?",
+				Label:    "Run this command in the sandbox with host networking?",
 				Detail:   strings.Join(bash.Steps(command), "\n"),
 				Language: "bash",
 			})
@@ -11664,7 +11793,8 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 		defer cancelQuestion()
 		go func() {
 			_ = ask.Confirm(questionContext, broker, ask.Confirmation{
-				Label:    "Run this command with host networking?",
+				Label:    "Run this command in the sandbox with host networking?",
+				Intent:   "see what the status endpoint reports",
 				Detail:   "curl https://example.com/status",
 				Language: "bash",
 			})
@@ -11781,7 +11911,7 @@ func drawApprovalTallerThanTheTerminal(
 
 	go func() {
 		_ = ask.Confirm(t.Context(), broker, ask.Confirmation{
-			Label:    "Run this command with host networking?",
+			Label:    "Run this command in the sandbox with host networking?",
 			Detail:   strings.Join(bash.Steps(command), "\n"),
 			Language: "bash",
 		})
@@ -11812,7 +11942,7 @@ func drawApprovalDuringACall(
 			bash.New(
 				nil,
 				func(context.Context) (sandbox.Policy, error) { return sandbox.Policy{}, nil },
-				func(context.Context, string) error { return nil },
+				func(context.Context, string, string) error { return nil },
 				sandbox.Direct(),
 				true,
 			),
@@ -11835,7 +11965,7 @@ func drawApprovalDuringACall(
 		result := make(chan error, 1)
 		go func() {
 			result <- ask.Confirm(t.Context(), broker, ask.Confirmation{
-				Label:    "Run this command with host networking?",
+				Label:    "Run this command in the sandbox with host networking?",
 				Detail:   "curl https://example.com/status",
 				Language: "bash",
 			})
@@ -17048,7 +17178,7 @@ func newSessionGoldenShell(t *testing.T, grantedCaps caps.Set, isYolo bool) tool
 
 	return shell.New(
 		workspace, t.TempDir(), t.TempDir(), pathAccess, mode, files, isYolo,
-		func(context.Context, string) error { return nil }, sandbox.Direct(),
+		func(context.Context, string, string) error { return nil }, sandbox.Direct(),
 	)
 }
 
@@ -17097,8 +17227,8 @@ func newSessionGoldenRefusingShell(t *testing.T) tool.Tool {
 
 	return shell.New(
 		workspace, t.TempDir(), t.TempDir(), pathAccess, mode, files, false,
-		func(ctx context.Context, command string) error {
-			return approveHostNetwork(ctx, broker, permission.Ask, command)
+		func(ctx context.Context, command string, intent string) error {
+			return approveHostNetwork(ctx, broker, permission.Ask, command, intent)
 		},
 		sandbox.Direct(),
 	)
@@ -21838,7 +21968,7 @@ func TestAnAllowedPermissionAsksNobody(t *testing.T) {
 
 	for name, ask := range map[string]func() error{
 		"network": func() error {
-			return approveHostNetwork(t.Context(), broker, permission.Allow, "curl example.com")
+			return approveHostNetwork(t.Context(), broker, permission.Allow, "curl example.com", "")
 		},
 		"lookup": func() error {
 			return lookupApproval.ask(t.Context(), broker, permission.Allow, "weather")
@@ -21862,7 +21992,7 @@ func TestEveryPermissionRefusesInWordsOfItsOwn(t *testing.T) {
 	}{
 		"network": {
 			ask: func(broker *ask.Broker) error {
-				return approveHostNetwork(t.Context(), broker, permission.Ask, "curl example.com")
+				return approveHostNetwork(t.Context(), broker, permission.Ask, "curl example.com", "")
 			},
 			want: "command did not run",
 		},

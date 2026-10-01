@@ -283,16 +283,16 @@ prose off the screen. And a fifth rounds it off, which is where a redraw is aske
  run them
 
 $ sleep 61
-──────────────────────────────────────── auto-denies in 1m ─────────────────────────────────────────
-Run this command with host networking?
+──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
+Run this command in the sandbox with host networking?
 [Yes]  No
 === a tall question on a terminal of 5 lines ===
 
  run them
 
 $ sleep 61
-──────────────────────────────────────── auto-denies in 1m ─────────────────────────────────────────
-Run this command with host networking?
+──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
+Run this command in the sandbox with host networking?
 ⋮ 40 more lines
 [Yes]  No
 === a tall question on a terminal of 6 lines ===
@@ -300,11 +300,119 @@ Run this command with host networking?
  run them
 
 $ sleep 61
-──────────────────────────────────────── auto-denies in 1m ─────────────────────────────────────────
-Run this command with host networking?
+──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
+Run this command in the sandbox with host networking?
 ⋮ 40 more lines
 [Yes]  No
 ⋮ 1 more line
+=== a tall question with an intent on a terminal of 04 lines ===
+
+ run them
+
+$ sleep 61
+──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
+Run this command in the sandbox with host networking?
+[Yes]  No
+=== a tall question with an intent on a terminal of 05 lines ===
+
+ run them
+
+$ sleep 61
+──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
+Run this command in the sandbox with host networking?
+⋮ 40 more lines
+[Yes]  No
+=== a tall question with an intent on a terminal of 06 lines ===
+
+ run them
+
+$ sleep 61
+──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
+Run this command in the sandbox with host networking?
+⋮ 40 more lines
+[Yes]  No
+⋮ 1 more line
+=== a tall question with an intent on a terminal of 07 lines ===
+
+ run them
+
+$ sleep 61
+──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
+Run this command in the sandbox with host networking?
+
+⋮ 39 more lines
+[Yes]  No
+⋮ 1 more line
+=== a tall question with an intent on a terminal of 08 lines ===
+
+ run them
+
+$ sleep 61
+──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
+Run this command in the sandbox with host networking?
+
+⋮ 38 more lines
+
+[Yes]  No
+⋮ 1 more line
+=== a tall question with an intent on a terminal of 09 lines ===
+
+ run them
+
+$ sleep 61
+──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
+Run this command in the sandbox with host networking?
+
+⋮ 37 more lines
+  EOF
+
+[Yes]  No
+⋮ 1 more line
+=== a tall question with an intent on a terminal of 10 lines ===
+
+ run them
+
+$ sleep 61
+──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
+Run this command in the sandbox with host networking?
+
+⋮ 36 more lines
+  print('hello')
+  EOF
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question with an intent on a terminal of 11 lines ===
+
+ run them
+
+$ sleep 61
+──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
+Run this command in the sandbox with host networking?
+write a script that greets the world
+
+⋮ 36 more lines
+  print('hello')
+  EOF
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a tall question with an intent on a terminal of 12 lines ===
+
+ run them
+
+$ sleep 61
+──────────────────────────────────────── auto-denies in 5m ─────────────────────────────────────────
+Run this command in the sandbox with host networking?
+write a script that greets the world
+
+⋮ 35 more lines
+  print('hello')
+  print('hello')
+  EOF
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
 === an answer whose top changes after it was committed at 24 lines ===
 
  run them

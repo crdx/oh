@@ -466,18 +466,18 @@ func New(
 	mode *caps.Mode,
 	files *file.Root,
 	isYolo bool,
-	approveNetwork func(context.Context, string) error,
+	approveNetwork func(ctx context.Context, command string, intent string) error,
 	runner sandbox.Runner,
 ) tool.Tool {
 	fresh := func(ctx context.Context) (sandbox.Policy, error) {
 		return freshPolicy(ctx, workspaceDir, homeDir, tmpDir, pathAccess, mode, isYolo)
 	}
-	networkApproval := func(ctx context.Context, command string) error {
+	networkApproval := func(ctx context.Context, command string, intent string) error {
 		if !mode.Current().Has(caps.Network) {
 			return ErrNetworkWithheld
 		}
 
-		return approveNetwork(ctx, command)
+		return approveNetwork(ctx, command, intent)
 	}
 
 	return bash.New(files, fresh, networkApproval, runner, !isYolo)

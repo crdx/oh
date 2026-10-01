@@ -7,6 +7,15 @@
 +5s   focus leaves
 +15s  drawn
 
+=== answered once announced ===
++0s   focus leaves
++0s   question arrives: Fetch this page?
+      notified: oh — io: Fetch this page? / https://example.com/news
++0s   focus returns
++0s   answered
+      withdrawn
++10s  drawn
+
 === answered within the grace ===
 +0s   question arrives: Fetch this page?
 +0s   focus leaves
@@ -46,19 +55,20 @@
 
 === next question arriving in focus ===
 +0s   question arrives: Fetch this page?
-+0s   question queued: Run this command with host networking?
++0s   question queued: Run this command in the sandbox with host networking?
 +0s   answered
 +10s  drawn
 +10s  focus leaves
 +15s  drawn
-      notified: oh — io: Run this command with host networking? / curl -sI https://example.com
+      notified: oh — io: Run this command in the sandbox with host networking? / curl -sI https://example.com
 
 === next question arriving while away ===
 +0s   question arrives: Fetch this page?
-+0s   question queued: Run this command with host networking?
++0s   question queued: Run this command in the sandbox with host networking?
 +0s   focus leaves
 +5s   drawn
       notified: oh — io: Fetch this page? / https://example.com/news
 +5s   question lapses
-      notified: oh — io: Run this command with host networking? / curl -sI https://example.com
+      withdrawn
+      notified: oh — io: Run this command in the sandbox with host networking? / curl -sI https://example.com
 +15s  drawn

@@ -17,7 +17,7 @@ run a command the user will refuse the host network
 ## Tool calls · +0s
 
 ```
-bash: curl example.com [error, 1 line, 93B, call-1]
+bash: curl example.com [error, 1 line, 48B, call-1]
 ```
 
 ## Assistant · +0s

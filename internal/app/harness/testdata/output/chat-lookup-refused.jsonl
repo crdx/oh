@@ -1,12 +1,12 @@
-{"kind":"head","version":15,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant.","tools":["lookup"],"tool_definitions":[{"name":"lookup","description":"search the web using OpenAI and return a cited answer","revision":"1","parameters":[{"name":"query","type":"string","description":"web lookup query"}]}]}}
+{"kind":"head","version":17,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant.","tools":["lookup"],"tool_definitions":[{"name":"lookup","description":"search the web using OpenAI and return a cited answer","revision":"1","parameters":[{"name":"query","type":"string","description":"web lookup query"}]}]}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"look up a topic the user will refuse"}}
 {"kind":"event","event":{"render":"current weather","read_only":true,"kind":"tool_call_request","id":"call-1","name":"lookup","arguments":"{\"query\":\"current weather\"}"}}
-{"kind":"event","event":{"kind":"tool_call_result","text":"lookup refused; lookup did not run; choose another approach","id":"call-1","name":"lookup","status":"error","stats":{"kind":"output","lines":1,"bytes":59}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"lookup refused; lookup did not run","id":"call-1","name":"lookup","status":"error","stats":{"kind":"output","lines":1,"bytes":34}}}
 {"kind":"event","event":{"kind":"model_message","text":"I will not look that up then."}}
 {"kind":"item","payload":{"role":"user","content":"look up a topic the user will refuse"}}
 {"kind":"item","payload":{"role":"assistant","content":"","tool_calls":[{"id":"call-1","type":"function","function":{"name":"lookup","arguments":"{\"query\":\"current weather\"}"}}]}}
-{"kind":"item","payload":{"role":"tool","content":"lookup refused; lookup did not run; choose another approach","tool_call_id":"call-1"}}
+{"kind":"item","payload":{"role":"tool","content":"lookup refused; lookup did not run","tool_call_id":"call-1"}}
 {"kind":"item","payload":{"role":"assistant","content":"I will not look that up then."}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"continue after the refusal"}}

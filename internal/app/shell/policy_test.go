@@ -20,7 +20,7 @@ import (
 	"crdx.org/oh/internal/sandbox"
 )
 
-func allowNetworking(context.Context, string) error { return nil }
+func allowNetworking(context.Context, string, string) error { return nil }
 
 func TestMain(testingMain *testing.M) {
 	sandbox.Init()
@@ -133,7 +133,7 @@ func TestAWithheldShellIsStillOfferedAndTurnsCommandsAway(t *testing.T) {
 		t.Errorf("expected the shell to be offered as bash, got %q", shell.Name())
 	}
 
-	call, err := shell.Parse(`{"command":"echo one"}`)
+	call, err := shell.Parse(`{"intent":"try it","command":"echo one"}`)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -163,15 +163,18 @@ func TestHostNetworkingRequiresItsCapability(t *testing.T) {
 		mode,
 		files,
 		false,
-		func(context.Context, string) error {
+		func(_ context.Context, _ string, intent string) error {
 			approvalCount++
+			if intent != "try it" {
+				t.Errorf("got intent %q, want %q", intent, "try it")
+			}
 			return approvalFailure
 		},
 		sandbox.Direct(),
 	)
 
 	execute := func() error {
-		call, parseErr := shell.Parse(`{"command":"true","network":"host"}`)
+		call, parseErr := shell.Parse(`{"intent":"try it","command":"true","network":"host"}`)
 		if parseErr != nil {
 			t.Fatal(parseErr)
 		}
@@ -1107,7 +1110,7 @@ func TestASymlinkedCacheIsReportedToWhoeverAskedForTheCommand(t *testing.T) {
 	pathAccess := newTestPathAccess(t, files, mode)
 	shell := New(workspace, home, t.TempDir(), pathAccess, mode, files, false, allowNetworking, sandbox.Direct())
 
-	call, err := shell.Parse(`{"command":"echo one"}`)
+	call, err := shell.Parse(`{"intent":"try it","command":"echo one"}`)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1135,7 +1138,7 @@ func TestAWaivedSandboxStillWithholdsAnUngrantedShell(t *testing.T) {
 	mode := caps.NewMode(caps.Read)
 	shell := New(t.TempDir(), t.TempDir(), t.TempDir(), newTestPathAccess(t, files, mode), mode, files, true, allowNetworking, sandbox.Direct())
 
-	call, err := shell.Parse(`{"command":"echo one"}`)
+	call, err := shell.Parse(`{"intent":"try it","command":"echo one"}`)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1159,7 +1162,7 @@ func TestAWaivedSandboxRunsACommandWhereTheSandboxCouldNot(t *testing.T) {
 	mode := caps.NewMode(caps.Read | caps.Shell)
 	shell := New(workspace, home, tmp, newTestPathAccess(t, files, mode), mode, files, true, allowNetworking, sandbox.Direct())
 
-	call, err := shell.Parse(`{"command":"printf %s \"$HOME:$TMPDIR\""}`)
+	call, err := shell.Parse(`{"intent":"try it","command":"printf %s \"$HOME:$TMPDIR\""}`)
 	if err != nil {
 		t.Fatal(err)
 	}

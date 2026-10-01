@@ -257,7 +257,7 @@ $ curl example.com ✗ approval timed out after 1m; command did not run
 $ curl example.com ✗ approval unavailable; command did not run
 lookup modern Go release ✗ approval timed out after 1m; lookup did not run
 lookup modern Go release ✗ approval unavailable; lookup did not run
-fetch https://example.test/article as markdown ✗ fetch refused; fetch did not run; choose another a…
+fetch https://example.test/article as markdown ✗ fetch refused; fetch did not run
 fetch https://example.test/article as markdown ✗ approval timed out after 1m; fetch did not run
 fetch https://example.test/article as markdown ✗ approval unavailable; fetch did not run
 fetch https://example.test/teapot as text ✗ fetch returned HTTP 418: not today (raw HTML saved to /…
@@ -324,7 +324,7 @@ $ curl example.com ✗ approval timed out after 1m; command did not run
 $ curl example.com ✗ approval unavailable; command did not run
 lookup modern Go release ✗ approval timed out after 1m; lookup did not run
 lookup modern Go release ✗ approval unavailable; lookup did not run
-fetch https://example.test/article as markdown ✗ fetch refused; fetch did not run; choose another a…
+fetch https://example.test/article as markdown ✗ fetch refused; fetch did not run
 fetch https://example.test/article as markdown ✗ approval timed out after 1m; fetch did not run
 fetch https://example.test/article as markdown ✗ approval unavailable; fetch did not run
 fetch https://example.test/teapot as text ✗ fetch returned HTTP 418: not today (raw HTML saved to /…

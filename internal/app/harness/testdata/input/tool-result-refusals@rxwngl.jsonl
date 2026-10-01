@@ -18,7 +18,7 @@
 {"event":{"kind":"tool_call_request","id":"call_8","name":"lookup","arguments":"{\"query\":\"modern Go release\"}","render":"modern Go release","read_only":true}}
 {"event":{"kind":"tool_call_result","status":"error","text":"approval unavailable; lookup did not run","id":"call_8","name":"lookup","took":0}}
 {"event":{"kind":"tool_call_request","id":"call_9","name":"fetch","arguments":"{\"url\":\"https://example.test/article\",\"type\":\"markdown\"}","render":"https://example.test/article","detail":"markdown","read_only":true}}
-{"event":{"kind":"tool_call_result","status":"error","text":"fetch refused; fetch did not run; choose another approach","id":"call_9","name":"fetch","took":0}}
+{"event":{"kind":"tool_call_result","status":"error","text":"fetch refused; fetch did not run","id":"call_9","name":"fetch","took":0}}
 {"event":{"kind":"tool_call_request","id":"call_10","name":"fetch","arguments":"{\"url\":\"https://example.test/article\",\"type\":\"markdown\"}","render":"https://example.test/article","detail":"markdown","read_only":true}}
 {"event":{"kind":"tool_call_result","status":"error","text":"approval timed out after 1m; fetch did not run","id":"call_10","name":"fetch","took":0}}
 {"event":{"kind":"tool_call_request","id":"call_11","name":"fetch","arguments":"{\"url\":\"https://example.test/article\",\"type\":\"markdown\"}","render":"https://example.test/article","detail":"markdown","read_only":true}}

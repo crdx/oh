@@ -316,7 +316,7 @@ func (self *Screen) compose() frameLayout {
 			if len(footerRows)+gap > room {
 				gap = 0
 			}
-			footerRows, footerCursorRow = self.fitFooter(footerRows, footerCursorRow, self.input.pinnedRows, room-gap)
+			footerRows, footerCursorRow = self.fitInertFooter(self.input, room-gap)
 		}
 
 		liveRoom = max(0, self.lines-len(footerRows)-gap)

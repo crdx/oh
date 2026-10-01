@@ -30,7 +30,7 @@ func RenderQuestion(
 	shouldRenderHyperlinks bool,
 	pathRoots link.Roots,
 ) []string {
-	rows := renderQuestionLabel(question.Label, columns)
+	rows := renderQuestionHead(question, columns)
 	details := renderQuestionDetail(question, columns)
 	details = append(details, renderQuestionFields(question.Fields, columns, shouldRenderHyperlinks, pathRoots)...)
 
@@ -42,8 +42,31 @@ func RenderQuestion(
 	return append(rows, "", renderOptions(question, cursor, columns))
 }
 
-func QuestionLabelRows(question ask.Question, columns int) int {
-	return len(renderQuestionLabel(question.Label, columns))
+func QuestionPinnedRows(question ask.Question, columns int) int {
+	headRows := len(renderQuestionHead(question, columns))
+	if question.Detail == "" && len(question.Fields) == 0 {
+		return headRows
+	}
+
+	return headRows + 1
+}
+
+func QuestionYieldingRows(question ask.Question, columns int) (int, int) {
+	return len(renderQuestionLabel(question.Label, columns)), len(renderQuestionIntent(question.Intent, columns))
+}
+
+func renderQuestionHead(question ask.Question, columns int) []string {
+	rows := renderQuestionLabel(question.Label, columns)
+	return append(rows, renderQuestionIntent(question.Intent, columns)...)
+}
+
+func renderQuestionIntent(intent string, columns int) []string {
+	intent = strings.Join(strings.Fields(strutil.StripControl(intent)), " ")
+	if intent == "" {
+		return nil
+	}
+
+	return width.Wrap(intent, columns)
 }
 
 func QuestionHead(question ask.Question, remainingTime time.Duration) string {

@@ -7,6 +7,7 @@ import (
 	"slices"
 	"strings"
 	"testing"
+	"time"
 
 	"crdx.org/oh/internal/app/notification"
 	"crdx.org/oh/internal/app/work"
@@ -74,11 +75,11 @@ func TestQuestionNotificationNamesTheWorkspaceAndAsksTheQuestion(t *testing.T) {
 	capturePath := fakeNotifySend(t)
 
 	question := ask.Confirmation{
-		Label:  "Run this command with host networking?",
+		Label:  "Run this command in the sandbox with host networking?",
 		Detail: "curl example.com",
 	}.Question()
 
-	if err := notification.SendQuestion(
+	if _, err := notification.SendQuestion(
 		t.Context(),
 		nil,
 		neverFocused,
@@ -92,9 +93,11 @@ func TestQuestionNotificationNamesTheWorkspaceAndAsksTheQuestion(t *testing.T) {
 	want := []string{
 		"--icon=dialog-question",
 		"--app-name=oh",
+		"--expire-time=0",
+		"--print-id",
 		"--",
 		"oh — io",
-		"Run this command with host networking?",
+		"Run this command in the sandbox with host networking?",
 		"curl example.com",
 	}
 	if !slices.Equal(got, want) {
@@ -112,7 +115,7 @@ func TestQuestionNotificationShowsTheFirstNamedField(t *testing.T) {
 		},
 	}.Question()
 
-	if err := notification.SendQuestion(
+	if _, err := notification.SendQuestion(
 		t.Context(),
 		nil,
 		neverFocused,
@@ -123,7 +126,7 @@ func TestQuestionNotificationShowsTheFirstNamedField(t *testing.T) {
 	}
 
 	got := capturedArguments(t, capturePath)
-	if message := strings.Join(got[4:], "\n"); message != "Run the commit tool?\npatch: /tmp/layout.patch …" {
+	if message := strings.Join(got[6:], "\n"); message != "Run the commit tool?\npatch: /tmp/layout.patch …" {
 		t.Errorf("got message %q", message)
 	}
 }
@@ -143,7 +146,7 @@ func TestQuestionNotificationShortensWhatItCannotShow(t *testing.T) {
 			capturePath := fakeNotifySend(t)
 
 			question := ask.Confirmation{Label: "Continue?", Detail: test.detail}.Question()
-			if err := notification.SendQuestion(
+			if _, err := notification.SendQuestion(
 				t.Context(),
 				nil,
 				neverFocused,
@@ -154,9 +157,103 @@ func TestQuestionNotificationShortensWhatItCannotShow(t *testing.T) {
 			}
 
 			got := capturedArguments(t, capturePath)
-			if message := strings.Join(got[4:], "\n"); message != test.want {
+			if message := strings.Join(got[6:], "\n"); message != test.want {
 				t.Errorf("got message %q, want %q", message, test.want)
 			}
 		})
+	}
+}
+
+func fakeSessionBus(t *testing.T, gdbusBody string) string {
+	t.Helper()
+
+	bin := t.TempDir()
+	closedPath := filepath.Join(t.TempDir(), "closed")
+	fixtures := map[string]string{
+		"notify-send": "#!/bin/bash\nset -euo pipefail\nprintf 42\n",
+		"gdbus":       "#!/bin/bash\nset -euo pipefail\n" + gdbusBody,
+	}
+	for name, fixture := range fixtures {
+		//nolint:gosec // an executable test fixture
+		if err := os.WriteFile(filepath.Join(bin, name), []byte(fixture), 0o700); err != nil {
+			t.Fatalf("could not write fake %s: %v", name, err)
+		}
+	}
+	t.Setenv("PATH", bin)
+	t.Setenv("KITTY_WINDOW_ID", "")
+	t.Setenv("CLOSED_CAPTURE", closedPath)
+
+	return closedPath
+}
+
+const recordClosed = "printf '%s\\n' \"${!#}\" >> \"$CLOSED_CAPTURE\"\n"
+
+func closedNotifications(t *testing.T, closedPath string) []string {
+	t.Helper()
+
+	//nolint:gosec // the path is a test fixture below t.TempDir
+	closed, err := os.ReadFile(closedPath)
+	if errors.Is(err, os.ErrNotExist) {
+		return nil
+	}
+	if err != nil {
+		t.Fatalf("could not read closed notifications: %v", err)
+	}
+
+	return strings.Split(strings.TrimSuffix(string(closed), "\n"), "\n")
+}
+
+func standingQuestion() ask.Question {
+	return ask.Confirmation{Label: "Continue?"}.Question()
+}
+
+func TestEveryStandingQuestionIsWithdrawnAtTheEnd(t *testing.T) {
+	closedPath := fakeSessionBus(t, recordClosed)
+	questions := notification.NewQuestions(nil, neverFocused, work.At("/workspace/io"))
+
+	questions.Announce(standingQuestion())
+	questions.WithdrawAll(time.Minute)
+
+	if got := closedNotifications(t, closedPath); !slices.Equal(got, []string{"42"}) {
+		t.Errorf("got closed notifications %q, want the one standing", got)
+	}
+}
+
+func TestASettledQuestionIsWithdrawnOnlyOnce(t *testing.T) {
+	closedPath := fakeSessionBus(t, recordClosed)
+	questions := notification.NewQuestions(nil, neverFocused, work.At("/workspace/io"))
+
+	withdraw := questions.Announce(standingQuestion())
+	withdraw()
+	withdraw()
+	questions.WithdrawAll(time.Minute)
+
+	if got := closedNotifications(t, closedPath); !slices.Equal(got, []string{"42"}) {
+		t.Errorf("got closed notifications %q, want it closed once", got)
+	}
+}
+
+func TestWithdrawingAtTheEndGivesUpOnASulkingDaemon(t *testing.T) {
+	fakeSessionBus(t, "exec /bin/sleep 5\n")
+	questions := notification.NewQuestions(nil, neverFocused, work.At("/workspace/io"))
+
+	questions.Announce(standingQuestion())
+
+	startedAt := time.Now()
+	questions.WithdrawAll(100 * time.Millisecond)
+	if took := time.Since(startedAt); took > 2*time.Second {
+		t.Errorf("waited %s for the daemon, want the grace alone", took)
+	}
+}
+
+func TestAQuestionAskedInFocusHasNothingToWithdraw(t *testing.T) {
+	closedPath := fakeSessionBus(t, recordClosed)
+	questions := notification.NewQuestions(nil, func() bool { return true }, work.At("/workspace/io"))
+
+	questions.Announce(standingQuestion())
+	questions.WithdrawAll(time.Minute)
+
+	if got := closedNotifications(t, closedPath); len(got) != 0 {
+		t.Errorf("got closed notifications %q, want none", got)
 	}
 }

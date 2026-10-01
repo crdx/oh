@@ -28,7 +28,7 @@ const (
 var kinds = []Kind{KindString, KindInteger, KindBoolean, KindStrings, KindEnum}
 
 const (
-	defaultApprovalTimeout = time.Minute
+	defaultApprovalTimeout = 5 * time.Minute
 	defaultTimeLimit       = 30 * time.Second
 	waitDelay              = time.Second
 	toolVariable           = "OH_TOOL"

@@ -17,7 +17,7 @@ look up a topic the user will refuse
 ## Tool calls · +0s
 
 ```
-lookup: current weather [error, 1 line, 59B, call-1]
+lookup: current weather [error, 1 line, 34B, call-1]
 ```
 
 ## Assistant · +0s

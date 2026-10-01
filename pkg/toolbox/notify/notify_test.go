@@ -312,7 +312,7 @@ func TestDescribeReportsTheTitleAndMessage(t *testing.T) {
 }
 
 func TestATitleThatLooksLikeAnOptionIsPassedAsText(t *testing.T) {
-	command, _ := notify.Command(t.Context(), "--wait", "--urgency=critical", "dialog-error")
+	command, _ := notify.Command(t.Context(), "--wait", "--urgency=critical", "dialog-error", notify.ExpiresAsUsual, "")
 
 	arguments := command.Args[len(command.Args)-3:]
 	if want := []string{"--", "--wait", "--urgency=critical"}; !slices.Equal(arguments, want) {
@@ -330,12 +330,188 @@ func TestMarkupCharactersReachTheNotifierUnaltered(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Setenv("KITTY_WINDOW_ID", kittyWindow)
 
-			command, _ := notify.Command(t.Context(), title, message, "dialog-information")
+			command, _ := notify.Command(t.Context(), title, message, "dialog-information", notify.ExpiresAsUsual, "")
 
 			arguments := command.Args[len(command.Args)-2:]
 			if want := []string{title, message}; !slices.Equal(arguments, want) {
 				t.Errorf("got trailing arguments %q, want %q", arguments, want)
 			}
 		})
+	}
+}
+
+func TestANotificationThatNeverExpiresAsksTheNotifierToKeepIt(t *testing.T) {
+	for name, test := range map[string]struct {
+		kittyWindow string
+		option      string
+	}{
+		"kitty":       {kittyWindow: "1", option: "--expire-after=never"},
+		"notify-send": {kittyWindow: "", option: "--expire-time=0"},
+	} {
+		t.Run(name, func(t *testing.T) {
+			t.Setenv("KITTY_WINDOW_ID", test.kittyWindow)
+
+			lasting, _ := notify.Command(t.Context(), "Title", "Message", "dialog-question", notify.NeverExpires, "")
+			if !slices.Contains(lasting.Args, test.option) {
+				t.Errorf("got arguments %q, want %q among them", lasting.Args, test.option)
+			}
+			if trailing := lasting.Args[len(lasting.Args)-3:]; !slices.Equal(trailing, []string{"--", "Title", "Message"}) {
+				t.Errorf("got trailing arguments %q", trailing)
+			}
+
+			usual, _ := notify.Command(t.Context(), "Title", "Message", "dialog-question", notify.ExpiresAsUsual, "")
+			if slices.Contains(usual.Args, test.option) {
+				t.Errorf("got arguments %q, want no %q among them", usual.Args, test.option)
+			}
+		})
+	}
+}
+
+func capturingFixture(t *testing.T, name string, printed string) string {
+	t.Helper()
+
+	bin := t.TempDir()
+	capturePath := filepath.Join(t.TempDir(), name)
+	variable := strings.ToUpper(strings.ReplaceAll(name, "-", "_")) + "_CAPTURE"
+	fixture := "#!/bin/bash\nset -euo pipefail\nprintf '%s\\n' \"$@\" > \"$" + variable + "\"\n" +
+		"printf '%s' " + fmt.Sprintf("%q", printed) + "\n"
+	//nolint:gosec // an executable test fixture
+	if err := os.WriteFile(filepath.Join(bin, name), []byte(fixture), 0o700); err != nil {
+		t.Fatalf("could not write fake %s: %v", name, err)
+	}
+	t.Setenv(variable, capturePath)
+
+	return bin
+}
+
+func capturedLines(t *testing.T, capturePath string) []string {
+	t.Helper()
+
+	//nolint:gosec // the path is a test fixture below t.TempDir
+	captured, err := os.ReadFile(capturePath)
+	if err != nil {
+		t.Fatalf("could not read captured arguments: %v", err)
+	}
+
+	return strings.Split(strings.TrimSuffix(string(captured), "\n"), "\n")
+}
+
+var lastingArgs = notify.Args{Title: "Continue?", Message: "curl example.com", Icon: "question"}
+
+func TestALastingKittyNotificationIsWithdrawnByItsIdentifier(t *testing.T) {
+	bin := capturingFixture(t, "kitten", "escape")
+	t.Setenv("PATH", bin)
+	t.Setenv("KITTY_WINDOW_ID", "1")
+
+	var written []string
+	writeEscape := func(escape string) bool {
+		written = append(written, escape)
+		return true
+	}
+
+	notification, err := notify.Send(t.Context(), writeEscape, lastingArgs, notify.NeverExpires)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	var identifier string
+	for _, argument := range capturedLines(t, os.Getenv("KITTEN_CAPTURE")) {
+		if value, isIdentifier := strings.CutPrefix(argument, "--identifier="); isIdentifier {
+			identifier = value
+		}
+	}
+	if identifier == "" {
+		t.Fatal("the notification was sent with no identifier")
+	}
+
+	if err := notification.Withdraw(t.Context(), writeEscape); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	want := []string{"escape", "\x1b]99;i=" + identifier + ":p=close;\x1b\\"}
+	if !slices.Equal(written, want) {
+		t.Errorf("got escape codes %q, want %q", written, want)
+	}
+
+	if err := notification.Withdraw(t.Context(), func(string) bool { return false }); err == nil {
+		t.Error("expected a terminal that is gone to be reported")
+	}
+}
+
+func TestALastingNotifySendNotificationIsWithdrawnOverTheSessionBus(t *testing.T) {
+	notifySend := capturingFixture(t, "notify-send", "42")
+	gdbus := capturingFixture(t, "gdbus", "")
+	t.Setenv("PATH", notifySend+string(os.PathListSeparator)+gdbus)
+	t.Setenv("KITTY_WINDOW_ID", "")
+
+	notification, err := notify.Send(t.Context(), discardEscape, lastingArgs, notify.NeverExpires)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if arguments := capturedLines(t, os.Getenv("NOTIFY_SEND_CAPTURE")); !slices.Contains(arguments, "--print-id") {
+		t.Errorf("got arguments %q, want --print-id among them", arguments)
+	}
+
+	if err := notification.Withdraw(t.Context(), nil); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	want := []string{
+		"call", "--session",
+		"--dest", "org.freedesktop.Notifications",
+		"--object-path", "/org/freedesktop/Notifications",
+		"--method", "org.freedesktop.Notifications.CloseNotification",
+		"42",
+	}
+	if got := capturedLines(t, os.Getenv("GDBUS_CAPTURE")); !slices.Equal(got, want) {
+		t.Errorf("got arguments %q, want %q", got, want)
+	}
+}
+
+func TestANotificationThatExpiresIsNeverWithdrawn(t *testing.T) {
+	for name, kittyWindow := range map[string]string{"kitty": "1", "notify-send": ""} {
+		t.Run(name, func(t *testing.T) {
+			bin := t.TempDir()
+			fixture := "#!/bin/bash\nset -euo pipefail\nprintf 42\n"
+			for _, executable := range []string{"kitten", "notify-send"} {
+				//nolint:gosec // an executable test fixture
+				if err := os.WriteFile(filepath.Join(bin, executable), []byte(fixture), 0o700); err != nil {
+					t.Fatalf("could not write fake %s: %v", executable, err)
+				}
+			}
+			t.Setenv("PATH", bin)
+			t.Setenv("KITTY_WINDOW_ID", kittyWindow)
+
+			notification, err := notify.Send(t.Context(), discardEscape, lastingArgs, notify.ExpiresAsUsual)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if !notification.IsSent() {
+				t.Error("expected the notification to be sent")
+			}
+
+			var written []string
+			if err := notification.Withdraw(t.Context(), func(escape string) bool {
+				written = append(written, escape)
+				return true
+			}); err != nil {
+				t.Errorf("unexpected error: %v", err)
+			}
+			if len(written) != 0 {
+				t.Errorf("got escape codes %q, want none", written)
+			}
+		})
+	}
+}
+
+func TestANotificationWithNoPrintedIdentifierIsNeverWithdrawn(t *testing.T) {
+	bin := capturingFixture(t, "notify-send", "")
+	t.Setenv("PATH", bin)
+	t.Setenv("KITTY_WINDOW_ID", "")
+
+	notification, err := notify.Send(t.Context(), discardEscape, lastingArgs, notify.NeverExpires)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if err := notification.Withdraw(t.Context(), nil); err != nil {
+		t.Errorf("expected nothing to withdraw, got %v", err)
 	}
 }
