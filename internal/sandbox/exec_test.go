@@ -4,6 +4,9 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
+	"os"
+	"path/filepath"
 	"slices"
 	"strings"
 	"testing"
@@ -221,5 +224,37 @@ func TestAYoloCommandIsStoppedWhenItRunsOutOfTime(t *testing.T) {
 	)
 	if err == nil || !strings.Contains(err.Error(), "did not finish within") {
 		t.Fatalf("got %v and %v, want the command stopped at its deadline", result, err)
+	}
+}
+
+func TestAMissingShellIsNamedWithItsRemedy(t *testing.T) {
+	err := requireShell(filepath.Join(t.TempDir(), "bash"))
+
+	if !errors.Is(err, ErrNoShell) {
+		t.Fatalf("got %v, want %v", err, ErrNoShell)
+	}
+
+	if !strings.Contains(err.Error(), "install bash") {
+		t.Errorf("got %q, want it to say how to install bash", err)
+	}
+}
+
+func TestAShellThatCannotBeRunIsMissing(t *testing.T) {
+	directory := t.TempDir()
+	notExecutable := filepath.Join(directory, "bash")
+	if err := os.WriteFile(notExecutable, nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	for _, path := range []string{directory, notExecutable} {
+		if err := requireShell(path); !errors.Is(err, ErrNoShell) {
+			t.Errorf("%s: got %v, want %v", path, err, ErrNoShell)
+		}
+	}
+}
+
+func TestThePresentShellIsAccepted(t *testing.T) {
+	if err := requireShell(shell); err != nil {
+		t.Fatalf("got %v, want %s accepted", err, shell)
 	}
 }

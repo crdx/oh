@@ -4,9 +4,9 @@
  2– 5   6%
  0– 1   nothing
 === a lone list of grants ===
-22      r:reference, rw:output
-15–21   r:reference, +1
- 2–14   +2
+24      r[reference], rw[output]
+16–23   r[reference], +1
+ 2–15   +2
  1      +
  0      nothing
 === a lone model ===
@@ -23,11 +23,11 @@
  2– 6   6%
  0– 1   nothing
 === a segment drawn whole after two fitters ===
-52      8000, 8080, ⇠ 3000 ─ r:reference, rw:output ─ ● docs
-45–51   8000, 8080, ⇠ 3000 ─ r:reference, +1 ─ ● docs
-32–44   8000, 8080, ⇠ 3000 ─ +2 ─ ● docs
-31      8000, 8080, ⇠ 3000 ─ + ─ ● docs
-27–30   8000, 8080, +1 ─ + ─ ● docs
+52      8000, 8080, 3000 ─ r[reference], rw[output] ─ ● docs
+44–51   8000, 8080, 3000 ─ r[reference], +1 ─ ● docs
+30–43   8000, 8080, 3000 ─ +2 ─ ● docs
+29      8000, 8080, 3000 ─ + ─ ● docs
+27–28   8000, 8080, +1 ─ + ─ ● docs
 21–26   8000, +2 ─ + ─ ● docs
 15–20   +3 ─ + ─ ● docs
 14      + ─ + ─ ● docs
@@ -45,11 +45,11 @@
  7–17   rxw ngl
  0– 6   nothing
 === two lists of their own ===
-43      8000, 8080, ⇠ 3000 ─ r:reference, rw:output
-36–42   8000, 8080, ⇠ 3000 ─ r:reference, +1
-23–35   8000, 8080, ⇠ 3000 ─ +2
-22      8000, 8080, ⇠ 3000 ─ +
-18–21   8000, 8080, +1 ─ +
+43      8000, 8080, 3000 ─ r[reference], rw[output]
+35–42   8000, 8080, 3000 ─ r[reference], +1
+21–34   8000, 8080, 3000 ─ +2
+20      8000, 8080, 3000 ─ +
+18–19   8000, 8080, +1 ─ +
 12–17   8000, +2 ─ +
  6–11   +3 ─ +
  5      + ─ +

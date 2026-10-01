@@ -40,7 +40,7 @@ z/.git
 write:
 <root>
 
-=== live read and execute grant ===
+=== live read grant ===
 read: true
 write: false
 execute: true
@@ -49,10 +49,10 @@ optional: true
 === live read and write grant ===
 read: false
 write: true
-execute: false
+execute: true
 optional: true
 
-=== vanished read and execute grant ===
+=== vanished read grant ===
 read: false
 write: false
 execute: false
@@ -67,7 +67,7 @@ optional: false
 === configured path with temporary write access ===
 read: false
 write: true
-execute: false
+execute: true
 optional: false
 
 === missing protection root ===

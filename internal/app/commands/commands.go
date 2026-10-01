@@ -48,8 +48,7 @@ type Options struct {
 	Editor            *editor.Config
 	Output            io.Writer
 	PathGrants        PathGrants
-	HostToSandbox     HostToSandbox
-	SandboxToHost     SandboxToHost
+	Forwards          Forwards
 	Jobs              Jobs
 	GetInfo           func() (string, error)
 	GetContextSources func() ContextSources
@@ -92,8 +91,7 @@ type commandEnvironment struct {
 	copyText          func([]string) error
 	startHostCommand  func(directory string, command string) error
 	pathGrants        PathGrants
-	hostToSandbox     HostToSandbox
-	sandboxToHost     SandboxToHost
+	forwards          Forwards
 	jobs              Jobs
 	getInfo           func() (string, error)
 	getContextSources func() ContextSources
@@ -143,8 +141,7 @@ func New(options Options) (slash.CommandSet, error) {
 		},
 		startHostCommand:  options.StartHostCommand,
 		pathGrants:        options.PathGrants,
-		hostToSandbox:     options.HostToSandbox,
-		sandboxToHost:     options.SandboxToHost,
+		forwards:          options.Forwards,
 		jobs:              options.Jobs,
 		getInfo:           options.GetInfo,
 		getContextSources: options.GetContextSources,
@@ -210,8 +207,7 @@ func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 	if environment.pathGrants.isConfigured() {
 		commands = append(commands, pathGrantCommands(
 			environment.pathGrants,
-			environment.hostToSandbox,
-			environment.sandboxToHost,
+			environment.forwards,
 		)...)
 	}
 	if environment.jobs.isConfigured() {

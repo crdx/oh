@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"errors"
 	"slices"
 	"strings"
 	"testing"
@@ -41,9 +42,9 @@ func invokePathGrantCommand(t *testing.T, grants PathGrants, input string) (*com
 	return context, invocation.Command.Run(context, invocation.Arguments)
 }
 
-func TestGrantCommandPreservesSpacesInThePath(t *testing.T) {
+func TestGrantCommandPreservesSpacesInAQuotedPath(t *testing.T) {
 	grants, current := fixturePathGrants()
-	context, err := invokePathGrantCommand(t, grants, "/grant rw /reference/path with spaces")
+	context, err := invokePathGrantCommand(t, grants, `/grant rw "/reference/path with spaces"`)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -56,27 +57,81 @@ func TestGrantCommandPreservesSpacesInThePath(t *testing.T) {
 	}
 }
 
-func TestGrantCommandPassesOnAnExecutableGrant(t *testing.T) {
+func TestGrantCommandGrantsEveryPathOnce(t *testing.T) {
 	grants, current := fixturePathGrants()
-	context, err := invokePathGrantCommand(t, grants, "/grant rx /reference")
+	context, err := invokePathGrantCommand(t, grants, `/grant r /one "/two words" /one ~/three`)
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := []pathgrant.Grant{{Path: "/reference", Access: pathgrant.ReadAccess | pathgrant.ExecAccess}}
+	want := []pathgrant.Grant{
+		{Path: "/one", Access: pathgrant.ReadAccess},
+		{Path: "/two words", Access: pathgrant.ReadAccess},
+		{Path: "~/three", Access: pathgrant.ReadAccess},
+	}
 	if !slices.Equal(*current, want) {
 		t.Errorf("got grants %#v", *current)
 	}
-	if len(context.events) != 1 || context.events[0].Kind != pathgrant.Change {
+	if len(context.events) != len(want) {
 		t.Errorf("got events %#v", context.events)
 	}
 }
 
-func TestGrantPathCompletionAcceptsNonCanonicalValidAccessOrders(t *testing.T) {
+func TestGrantCommandGrantsWhatItCanAndNamesEveryFailure(t *testing.T) {
+	grants, current := fixturePathGrants()
+	grant := grants.Grant
+	grants.Grant = func(path string, access pathgrant.Access) (agent.Event, error) {
+		if strings.HasPrefix(path, "/missing") {
+			return agent.Event{}, errors.New("could not resolve " + path)
+		}
+		return grant(path, access)
+	}
+	context, err := invokePathGrantCommand(t, grants, "/grant r /missing/one /present /missing/two")
+	if err == nil || err.Error() != "could not resolve /missing/one; could not resolve /missing/two" {
+		t.Errorf("got error %v", err)
+	}
+	want := []pathgrant.Grant{{Path: "/present", Access: pathgrant.ReadAccess}}
+	if !slices.Equal(*current, want) {
+		t.Errorf("got grants %#v", *current)
+	}
+	if len(context.events) != 1 {
+		t.Errorf("got events %#v", context.events)
+	}
+}
+
+func TestGrantCommandRefusesAnUnclosedQuote(t *testing.T) {
+	grants, current := fixturePathGrants()
+	_, err := invokePathGrantCommand(t, grants, `/grant r /one "/two words`)
+	if !slash.IsUsageError(err) {
+		t.Errorf("got %v", err)
+	}
+	if len(*current) != 0 {
+		t.Errorf("got grants %#v", *current)
+	}
+}
+
+func TestGrantCommandRefusesNoPath(t *testing.T) {
+	grants, _ := fixturePathGrants()
+	for _, input := range []string{"/grant r", "/grant r   "} {
+		if _, err := invokePathGrantCommand(t, grants, input); !slash.IsUsageError(err) {
+			t.Errorf("%q gave %v", input, err)
+		}
+	}
+}
+
+func TestGrantCommandRejectsExecutableAccess(t *testing.T) {
+	grants, _ := fixturePathGrants()
+	_, err := invokePathGrantCommand(t, grants, "/grant rx /reference")
+	if !slash.IsUsageError(err) {
+		t.Errorf("got %v", err)
+	}
+}
+
+func TestGrantPathCompletionAcceptsReadAndReadWriteAccess(t *testing.T) {
 	grants, _ := fixturePathGrants()
 	registry := newCommandRegistry(t, commandEnvironment{pathGrants: grants})
 	source := slash.NewPathSource(t.TempDir(), func() slash.Registry { return registry })
 
-	for _, access := range []string{"rxw", "rwx", "xwr"} {
+	for _, access := range []string{"r", "rw"} {
 		text := "/grant " + access + " ~/reference"
 		if _, found := source.Find([]rune(text), len([]rune(text))); !found {
 			t.Errorf("did not find the path after %q", access)
@@ -99,8 +154,8 @@ func TestGrantsCommandListsEffectivePermanentAndTemporaryAccess(t *testing.T) {
 		{Path: "/write", Access: pathgrant.ReadAccess | pathgrant.WriteAccess, Kind: shell.ConfiguredGrant},
 	}
 	*current = []pathgrant.Grant{
-		{Path: "/read", Access: pathgrant.ReadAccess | pathgrant.ExecAccess},
-		{Path: "/tools", Access: pathgrant.ReadAccess | pathgrant.WriteAccess | pathgrant.ExecAccess},
+		{Path: "/read", Access: pathgrant.ReadAccess},
+		{Path: "/tools", Access: pathgrant.ReadAccess | pathgrant.WriteAccess},
 	}
 	context, err := invokePathGrantCommand(t, grants, "/grants")
 	if err != nil {

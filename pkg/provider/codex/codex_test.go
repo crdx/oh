@@ -670,7 +670,7 @@ func TestACacheLostWithNoWritesReportedIsStillNoticed(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 		if update.Event != nil && update.Event.Kind == agent.CacheRebuildEvent {
-			notices = append(notices, agent.CacheRebuildNotice(*update.Event))
+			notices = append(notices, agent.CacheRebuildNotice(*update.Event, ""))
 		}
 	}
 

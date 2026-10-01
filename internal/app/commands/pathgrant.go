@@ -53,30 +53,29 @@ func (self PathGrants) getCurrentCaps() caps.Set {
 
 func pathGrantCommands(
 	grants PathGrants,
-	hostToSandbox HostToSandbox,
-	sandboxToHost SandboxToHost,
+	forwards Forwards,
 ) []slash.Command {
 	return []slash.Command{
-		exposeCommand(sandboxToHost),
+		forwardCommand(forwards),
 		grantCommand(grants),
-		grantsCommand(grants, hostToSandbox, sandboxToHost),
-		revokeCommand(grants, hostToSandbox, sandboxToHost),
+		grantsCommand(grants, forwards),
+		revokeCommand(grants, forwards),
 	}
 }
 
-func exposeCommand(sandboxToHost SandboxToHost) slash.Command {
+func forwardCommand(forwards Forwards) slash.Command {
 	return slash.Command{
-		Name:        "expose",
-		Description: "expose a host loopback port to the sandbox",
+		Name:        "forward",
+		Description: "forward a sandbox port to the host",
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			port, err := portgrant.ParsePort(arguments.Text)
 			if err != nil {
 				return slash.Usage()
 			}
-			if !sandboxToHost.isConfigured() {
-				return errors.New("a host loopback port needs the sandbox's own network, which this session does not have")
+			if !forwards.isConfigured() {
+				return errors.New("a forwarded port needs the sandbox's own network, which this session does not have")
 			}
-			event, err := sandboxToHost.Expose(port)
+			event, err := forwards.Forward(port)
 			if err != nil {
 				return err
 			}
@@ -100,7 +99,7 @@ func grantCommand(grants PathGrants) slash.Command {
 			}
 
 			access, err := shell.ParseAccess(strings.TrimSpace(accessText))
-			if err != nil {
+			if err != nil || !pathgrant.IsTemporaryAccess(access) {
 				return slash.Usage()
 			}
 			var failures []string
@@ -126,15 +125,13 @@ func grantCommand(grants PathGrants) slash.Command {
 
 func isGrantAccess(argument string) bool {
 	access, err := shell.ParseAccess(argument)
-	return err == nil && shell.IsAccess(access)
+	return err == nil && pathgrant.IsTemporaryAccess(access)
 }
 
 func grantFlagChoices() []string {
 	choices := []pathgrant.Access{
 		pathgrant.ReadAccess,
-		pathgrant.ReadAccess | pathgrant.ExecAccess,
 		pathgrant.ReadAccess | pathgrant.WriteAccess,
-		pathgrant.ReadAccess | pathgrant.ExecAccess | pathgrant.WriteAccess,
 	}
 
 	flags := make([]string, 0, len(choices))
@@ -145,15 +142,15 @@ func grantFlagChoices() []string {
 	return flags
 }
 
-func grantsCommand(grants PathGrants, hostToSandbox HostToSandbox, sandboxToHost SandboxToHost) slash.Command {
+func grantsCommand(grants PathGrants, forwards Forwards) slash.Command {
 	return slash.Command{
 		Name:        "grants",
-		Description: "list effective access and port routes",
+		Description: "list effective access and forwarded ports",
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if arguments.Text != "" && arguments.Text != grantsAllArgument {
 				return slash.Usage()
 			}
-			listing := formatGrants(grants, hostToSandbox, sandboxToHost)
+			listing := formatGrants(grants, forwards)
 			if arguments.Text == grantsAllArgument {
 				context.PlainNoticeIndented(listing, pathGrantContinuationIndent)
 			} else {
@@ -166,17 +163,17 @@ func grantsCommand(grants PathGrants, hostToSandbox HostToSandbox, sandboxToHost
 		WithArgumentUsage("[all]")
 }
 
-func revokeCommand(grants PathGrants, hostToSandbox HostToSandbox, sandboxToHost SandboxToHost) slash.Command {
+func revokeCommand(grants PathGrants, forwards Forwards) slash.Command {
 	return slash.Command{
 		Name:        "revoke",
-		Description: "revoke temporary path grants or port routes",
+		Description: "revoke temporary path grants or forwarded ports",
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			if arguments.Text == "" {
 				return slash.Usage()
 			}
 			var failures []string
-			for _, subject := range revokedSubjects(grants, hostToSandbox, sandboxToHost, arguments) {
-				event, err := revoke(grants, hostToSandbox, sandboxToHost, subject)
+			for _, subject := range revokedSubjects(grants, forwards, arguments) {
+				event, err := revoke(grants, forwards, subject)
 				if err != nil {
 					failures = append(failures, err.Error())
 					continue
@@ -189,18 +186,17 @@ func revokeCommand(grants PathGrants, hostToSandbox HostToSandbox, sandboxToHost
 			return nil
 		},
 	}.
-		WithListedArguments(func() []string { return revocableSubjects(grants, hostToSandbox, sandboxToHost) }).
+		WithListedArguments(func() []string { return revocableSubjects(grants, forwards) }).
 		WithManyArguments().
 		WithArgumentUsage("<target>...")
 }
 
 func revokedSubjects(
 	grants PathGrants,
-	hostToSandbox HostToSandbox,
-	sandboxToHost SandboxToHost,
+	forwards Forwards,
 	arguments slash.Arguments,
 ) []string {
-	if slices.Contains(revocableSubjects(grants, hostToSandbox, sandboxToHost), arguments.Text) {
+	if slices.Contains(revocableSubjects(grants, forwards), arguments.Text) {
 		return []string{arguments.Text}
 	}
 
@@ -219,32 +215,23 @@ func distinct(values []string) []string {
 
 func revoke(
 	grants PathGrants,
-	hostToSandbox HostToSandbox,
-	sandboxToHost SandboxToHost,
+	forwards Forwards,
 	subject string,
 ) (agent.Event, error) {
 	if port, err := portgrant.ParsePort(subject); err == nil {
-		if sandboxToHost.isConfigured() && slices.Contains(sandboxToHost.GetCurrent(), port) {
-			return sandboxToHost.Revoke(port)
+		if forwards.isConfigured() {
+			return forwards.Revoke(port)
 		}
-		if hostToSandbox.isConfigured() {
-			return hostToSandbox.Hide(port)
-		}
-		return agent.Event{}, fmt.Errorf("port %d is not exposed", port)
+		return agent.Event{}, fmt.Errorf("port %d is not forwarded", port)
 	}
 
 	return grants.Revoke(subject)
 }
 
-func revocableSubjects(grants PathGrants, hostToSandbox HostToSandbox, sandboxToHost SandboxToHost) []string {
+func revocableSubjects(grants PathGrants, forwards Forwards) []string {
 	subjects := pathGrantPaths(grants.GetCurrent())
-	if hostToSandbox.isConfigured() {
-		for _, port := range hostToSandbox.GetCurrent() {
-			subjects = append(subjects, strconv.Itoa(int(port)))
-		}
-	}
-	if sandboxToHost.isConfigured() {
-		for _, port := range sandboxToHost.GetCurrent() {
+	if forwards.isConfigured() {
+		for _, port := range forwards.GetCurrent() {
 			subjects = append(subjects, strconv.Itoa(int(port)))
 		}
 	}
@@ -262,8 +249,7 @@ func pathGrantPaths(grants []pathgrant.Grant) []string {
 
 func formatGrants(
 	grants PathGrants,
-	hostToSandbox HostToSandbox,
-	sandboxToHost SandboxToHost,
+	forwards Forwards,
 ) string {
 	effective := effectivePathGrants(grants)
 	sections := make([]string, 0, 3)
@@ -273,11 +259,11 @@ func formatGrants(
 	if listing := formatDeniedPaths(grants); listing != "" {
 		sections = append(sections, listing)
 	}
-	if listing := formatPortGrants(hostToSandbox, sandboxToHost); listing != "" {
+	if listing := formatForwards(forwards); listing != "" {
 		sections = append(sections, listing)
 	}
 	if len(sections) == 0 {
-		return "No grants or routes."
+		return "No grants or forwarded ports."
 	}
 
 	return strings.Join(sections, "\n\n")
@@ -295,8 +281,8 @@ func effectivePathGrants(grants PathGrants) []effectivePathGrant {
 	allGrants := slices.Clone(permanent)
 	for _, grant := range temporary {
 		access := grant.Access
-		if !grants.getCurrentCaps().Has(caps.Shell) {
-			access &^= pathgrant.ExecAccess
+		if grants.getCurrentCaps().Has(caps.Shell) {
+			access |= shell.ExecAccess
 		}
 		allGrants = append(allGrants, shell.ScopedPathGrant{
 			Path: grant.Path, Access: access, Kind: shell.TemporaryGrant,
@@ -330,23 +316,14 @@ func formatDeniedPaths(grants PathGrants) string {
 	return style.Info("Denied:") + "\n  " + strings.Join(grants.DenyPatterns, ", ")
 }
 
-func formatPortGrants(hostToSandbox HostToSandbox, sandboxToHost SandboxToHost) string {
+func formatForwards(forwards Forwards) string {
 	var lines []string
-	if hostToSandbox.isConfigured() {
-		for _, port := range hostToSandbox.GetCurrent() {
+	if forwards.isConfigured() {
+		for _, port := range forwards.GetCurrent() {
 			lines = append(lines, fmt.Sprintf(
-				"  Host %s → Sandbox %d",
-				hostToSandbox.GetURL(port),
+				"  %d → %s",
 				port,
-			))
-		}
-	}
-	if sandboxToHost.isConfigured() {
-		for _, port := range sandboxToHost.GetCurrent() {
-			lines = append(lines, fmt.Sprintf(
-				"  Sandbox %d → Host 127.0.0.1:%d",
-				port,
-				port,
+				forwards.GetURL(port),
 			))
 		}
 	}
@@ -354,7 +331,7 @@ func formatPortGrants(hostToSandbox HostToSandbox, sandboxToHost SandboxToHost) 
 		return ""
 	}
 
-	return style.Info("Ports:") + "\n" + strings.Join(lines, "\n")
+	return style.Info("Forwarded:") + "\n" + strings.Join(lines, "\n")
 }
 
 type pathGrantGroup struct {

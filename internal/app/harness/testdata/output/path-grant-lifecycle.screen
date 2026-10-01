@@ -7,7 +7,7 @@ still working
 
 Model returned no reply.
 
-── ·✦· ─ r:reference ──────────────────────────────────────────────────────────────── tame-impala ──
+── ·✦· ─ r[reference] ─────────────────────────────────────────────────────────────── tame-impala ──
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === duplicate grant rejected ===
@@ -18,15 +18,22 @@ Model returned no reply.
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ /grant: /tmp/oh-golden-reference-0000000000/reference already has temporary read-only access   │
  │ (alt+enter to send)                                                                            │
-─┴── ·✦· ─ r:reference ──────────────────────────────────────────────────────────── tame-impala ──┴─
+─┴── ·✦· ─ r[reference] ─────────────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
-=== executable grant ===
-                                                                           double-enter to send now
- ⏳ Granted temporary read and execute access to /tmp/oh-golden-reference-0000000000/reference.
+=== every path missing ===
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ /grant: Could not resolve /tmp/oh-golden-missing-0000000000/missing: lstat                     │
+ │ /tmp/oh-golden-missing-0000000000/missing: no such file or directory; could not resolve        │
+ │ /tmp/oh-golden-missing-0000000000/missing/deeper: lstat                                        │
+ │ /tmp/oh-golden-missing-0000000000/missing: no such file or directory (alt+enter to send)       │
+─┴── ·✦· ────────────────────────────────────────────────────────────────────────── tame-impala ──┴─
 
-
-── ·✦· ─ rx:reference ─────────────────────────────────────────────────────────────── tame-impala ──
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== executable access rejected ===
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ Usage: /grant {r|rw} <path>... (alt+enter to send)                                             │
+─┴── ·✦· ────────────────────────────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === grant replaced before sending ===
@@ -34,7 +41,7 @@ Model returned no reply.
  ⏳ Granted temporary read and write access to /tmp/oh-golden-reference-0000000000/reference.
 
 
-── ·✦· ─ rw:reference ─────────────────────────────────────────────────────────────── tame-impala ──
+── ·✦· ─ rw[reference] ────────────────────────────────────────────────────────────── tame-impala ──
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === grant taken back before sending ===
@@ -46,11 +53,11 @@ Model returned no reply.
  ⏳ Granted temporary read-only access to /tmp/oh-golden-user-0000000000/user/reference.
 
 
-── ·✦· ─ r:reference ──────────────────────────────────────────────────────────────── tame-impala ──
+── ·✦· ─ r[reference] ─────────────────────────────────────────────────────────────── tame-impala ──
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === many grants truncated ===
-── ·✦· ─ r:path-01, rw:path-02, r:path-03, rw:path-04, r:path-05, rw:path-06, +44 ─── tame-impala ──
+── ·✦· ─ r[path-01 path-03 path-05 path-07], rw[path-02 path-04 path-06], +43 ─────── tame-impala ──
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === missing home path rejected ===
@@ -72,7 +79,24 @@ Model returned no reply.
  ⏳ Granted temporary read-only access to /tmp/oh-golden-reference-0000000000/reference.
 
 
-── ·✦· ─ r:reference ──────────────────────────────────────────────────────────────── tame-impala ──
+── ·✦· ─ r[reference] ─────────────────────────────────────────────────────────────── tame-impala ──
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== quoted path with a space ===
+                                                                           double-enter to send now
+ ⏳ Granted temporary read-only access to /tmp/oh-golden-reference-0000000000/reference/meeting
+    notes.
+
+
+── ·✦· ─ r[meeting notes] ─────────────────────────────────────────────────────────── tame-impala ──
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== repeated path granted once ===
+                                                                           double-enter to send now
+ ⏳ Granted temporary read-only access to /tmp/oh-golden-reference-0000000000/reference.
+
+
+── ·✦· ─ r[reference] ─────────────────────────────────────────────────────────────── tame-impala ──
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === restoration correction pending ===
@@ -119,7 +143,19 @@ Model returned no reply.
 
 Model returned no reply.
 
-── ·✦· ─ r:reference ──────────────────────────────────────────────────────────────── tame-impala ──
+── ·✦· ─ r[reference] ─────────────────────────────────────────────────────────────── tame-impala ──
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== several granted at once ===
+                                                                           double-enter to send now
+ ⏳ Granted temporary read-only access to /tmp/oh-golden-reference-0000000000/reference.
+ ⏳ Granted temporary read-only access to /tmp/oh-golden-user-0000000000/user.
+
+
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ /grant: Could not resolve /tmp/oh-golden-missing-0000000000/missing: lstat                     │
+ │ /tmp/oh-golden-missing-0000000000/missing: no such file or directory (alt+enter to send)       │
+─┴── ·✦· ─ r[reference user] ────────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === several revoked at once ===
@@ -144,9 +180,30 @@ Model returned no reply.
 ─┴── ·✦· ────────────────────────────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
+=== several settled into next turn ===
+
+ 🤖 Granted temporary read and write access to /tmp/oh-golden-reference-0000000000/reference.
+ 🤖 Granted temporary read and write access to /tmp/oh-golden-user-0000000000/user.
+
+
+
+ continue
+
+
+Model returned no reply.
+
+── ·✦· ─ rw[reference user] ───────────────────────────────────────────────────────── tame-impala ──
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== unclosed quote rejected ===
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ Usage: /grant {r|rw} <path>... (alt+enter to send)                                             │
+─┴── ·✦· ────────────────────────────────────────────────────────────────────────── tame-impala ──┴─
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
 === unknown access rejected ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
- │ Usage: /grant {r|rx|rw|rxw} <path> (alt+enter to send)                                         │
+ │ Usage: /grant {r|rw} <path>... (alt+enter to send)                                             │
 ─┴── ·✦· ────────────────────────────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────

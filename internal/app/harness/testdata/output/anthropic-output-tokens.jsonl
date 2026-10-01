@@ -1,4 +1,4 @@
-{"kind":"head","version":15,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"head","version":17,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant."}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"count what the answer cost"}}
 {"kind":"event","event":{"kind":"model_reasoning","text":"Thinking about the cost.","usage":{"input_tokens":5000,"cache":{"read_tokens":4000,"write_tokens":800}}}}

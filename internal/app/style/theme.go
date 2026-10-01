@@ -3,7 +3,6 @@ package style
 import (
 	"errors"
 	"image/color"
-	"maps"
 	"reflect"
 	"strings"
 	"sync/atomic"
@@ -11,21 +10,21 @@ import (
 )
 
 type Theme struct {
-	Normal         Paint                     `toml:"normal"`
-	Dim            Paint                     `toml:"dim"`
-	Accent         Paint                     `toml:"accent"`
-	StatusSuccess  Paint                     `toml:"status_success"`
-	StatusInfo     Paint                     `toml:"status_info"`
-	StatusWarning  Paint                     `toml:"status_warning"`
-	StatusDanger   Paint                     `toml:"status_danger"`
-	SyntaxType     Paint                     `toml:"syntax_type"`
-	SyntaxLiteral  Paint                     `toml:"syntax_literal"`
-	SyntaxOperator Paint                     `toml:"syntax_operator"`
-	SyntaxKeyword  Paint                     `toml:"syntax_keyword"`
-	Skill          Paint                     `toml:"skill"`
-	User           Paint                     `toml:"user"`
-	Harness        Paint                     `toml:"harness"`
-	Tool           map[string]ToolAppearance `toml:"tool"`
+	Normal         Paint     `toml:"normal"`
+	Dim            Paint     `toml:"dim"`
+	Accent         Paint     `toml:"accent"`
+	StatusSuccess  Paint     `toml:"status_success"`
+	StatusInfo     Paint     `toml:"status_info"`
+	StatusWarning  Paint     `toml:"status_warning"`
+	StatusDanger   Paint     `toml:"status_danger"`
+	SyntaxType     Paint     `toml:"syntax_type"`
+	SyntaxLiteral  Paint     `toml:"syntax_literal"`
+	SyntaxOperator Paint     `toml:"syntax_operator"`
+	SyntaxKeyword  Paint     `toml:"syntax_keyword"`
+	Skill          Paint     `toml:"skill"`
+	User           Paint     `toml:"user"`
+	Harness        Paint     `toml:"harness"`
+	Tool           ToolTheme `toml:"tool"`
 }
 
 type ToolAppearance struct {
@@ -94,35 +93,47 @@ var defaultTheme = Theme{
 	Skill:          "#c9a6d4",
 	User:           "#343541",
 	Harness:        "#303a43",
-	Tool: map[string]ToolAppearance{
-		"read":              {Name: "read"},
-		"skill":             {Name: "load", Paint: "skill", Focus: "skill"},
-		"ls":                {Name: "ls"},
-		"find":              {Name: "find"},
-		"grep":              {Name: "grep"},
-		"write":             {Name: "write"},
-		"edit":              {Name: "edit"},
-		"bash":              {Name: "$", Paint: "status_info"},
-		"bash_host_network": {Name: "$", Paint: "status_danger"},
-		"job":               {Name: "job"},
-		"job_start":         {Name: "start", Paint: "status_warning"},
-		"job_stop":          {Name: "stop", Paint: "status_warning"},
-		"job_restart":       {Name: "restart", Paint: "status_warning"},
-		"job_discard":       {Name: "discard", Paint: "status_warning"},
-		"job_prune":         {Name: "prune", Paint: "status_warning"},
-		"job_status":        {Name: "status", Paint: "normal"},
-		"job_output":        {Name: "cat", Paint: "normal"},
-		"job_wait_any":      {Name: "await", Paint: "normal"},
-		"job_wait_all":      {Name: "await", Paint: "normal"},
-		"job_list":          {Name: "list", Paint: "normal"},
-		"expose":            {Name: "expose"},
-		"expose_add":        {Name: "forward", Paint: "status_warning"},
-		"expose_remove":     {Name: "close", Paint: "status_warning"},
-		"expose_list":       {Name: "list", Paint: "normal"},
-		"lookup":            {Name: "lookup", Paint: "status_info"},
-		"fetch":             {Name: "fetch", Paint: "status_info"},
-		"notify":            {Name: "notify"},
-		"title":             {Name: "title"},
+	Tool: ToolTheme{
+		"read":  {Default: ToolAppearance{Name: "read"}},
+		"skill": {Default: ToolAppearance{Name: "load", Paint: "skill", Focus: "skill"}},
+		"ls":    {Default: ToolAppearance{Name: "ls"}},
+		"find":  {Default: ToolAppearance{Name: "find"}},
+		"grep":  {Default: ToolAppearance{Name: "grep"}},
+		"write": {Default: ToolAppearance{Name: "write"}},
+		"edit":  {Default: ToolAppearance{Name: "edit"}},
+		"bash": {
+			Default: ToolAppearance{Name: "$", Paint: "status_info"},
+			Actions: map[string]ToolAppearance{
+				"host_network": {Name: "$", Paint: "status_danger"},
+			},
+		},
+		"job": {
+			Default: ToolAppearance{Name: "job", Paint: "status_warning"},
+			Actions: map[string]ToolAppearance{
+				"start":    {},
+				"stop":     {},
+				"restart":  {},
+				"discard":  {},
+				"prune":    {},
+				"status":   {Paint: "normal"},
+				"output":   {Name: "cat", Paint: "normal"},
+				"wait_any": {Name: "await", Paint: "normal"},
+				"wait_all": {Name: "await", Paint: "normal"},
+				"list":     {Paint: "normal"},
+			},
+		},
+		"forward": {
+			Default: ToolAppearance{Name: "forward", Paint: "status_warning"},
+			Actions: map[string]ToolAppearance{
+				"add":    {Name: "forward"},
+				"remove": {Name: "close"},
+				"list":   {Paint: "normal"},
+			},
+		},
+		"lookup": {Default: ToolAppearance{Name: "lookup", Paint: "status_info"}},
+		"fetch":  {Default: ToolAppearance{Name: "fetch", Paint: "status_info"}},
+		"notify": {Default: ToolAppearance{Name: "notify"}},
+		"title":  {Default: ToolAppearance{Name: "title"}},
 	},
 }
 
@@ -131,7 +142,7 @@ func DefaultTheme() Theme {
 }
 
 func cloneTheme(theme Theme) Theme {
-	theme.Tool = maps.Clone(theme.Tool)
+	theme.Tool = theme.Tool.Clone()
 	return theme
 }
 
@@ -211,7 +222,7 @@ func compileTheme(theme Theme) *compiledTheme {
 		statusDangerColour:  statusDangerColour,
 		tool:                make(map[string]compiledToolAppearance),
 	}
-	for kind, configuredAppearance := range theme.Tool {
+	for kind, configuredAppearance := range theme.Tool.Resolved() {
 		appearance := compiledToolAppearance{name: string(configuredAppearance.Name)}
 		if configuredAppearance.Paint != "" {
 			appearance.paint = resolveToolPaint(compiledThemeValue, configuredAppearance.Paint)

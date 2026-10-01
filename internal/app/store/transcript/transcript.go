@@ -22,6 +22,7 @@ import (
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/toolset"
 	"crdx.org/oh/internal/app/turn"
+	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tool"
@@ -45,11 +46,13 @@ var markdownSafetyParser = goldmark.New().Parser()
 type Meta struct {
 	Name, Model, Effort, Provider, Workspace string
 	StartedAt                                time.Time
+	Prices                                   *agent.TokenPrices
 }
 
 type Recorder struct {
 	file          *os.File
 	startedAt     time.Time
+	prices        *agent.TokenPrices
 	pendingCalls  []*toolCallEntry
 	pendingCallAt time.Time
 	callByID      map[string]*toolCallEntry
@@ -69,7 +72,7 @@ func Open(path string, meta Meta) (*Recorder, error) {
 	if err != nil {
 		return nil, err
 	}
-	recorder := &Recorder{file: file, startedAt: meta.StartedAt}
+	recorder := &Recorder{file: file, startedAt: meta.StartedAt, prices: meta.Prices}
 	info, err := file.Stat()
 	if err != nil {
 		_ = file.Close()
@@ -111,9 +114,13 @@ func (self *Recorder) Event(at time.Time, event agent.Event) error {
 	case agent.ToolCallResultEvent:
 		self.bufferToolResult(at, event)
 		return nil
+	case agent.CacheRebuildEvent:
+		if !agent.IsCacheRebuildWorthNoticing(event, self.prices) {
+			return nil
+		}
 	case agent.StartupEvent, agent.UserMessageEvent, agent.ModelMessageEvent,
 		agent.InterruptionEvent, agent.RetryingEvent, agent.FailureEvent, agent.SilentTurnEvent,
-		agent.CacheRebuildEvent, agent.PrefixRewriteEvent:
+		agent.PrefixRewriteEvent:
 	}
 
 	if err := self.flushToolCalls(); err != nil {
@@ -133,13 +140,12 @@ func (self *Recorder) Event(at time.Time, event agent.Event) error {
 	case agent.SilentTurnEvent:
 		output.fence(agent.SilentTurnNotice)
 	case agent.CacheRebuildEvent:
-		output.fence(agent.CacheRebuildNotice(event))
+		output.fence(agent.CacheRebuildNotice(event, self.cacheRebuildCost(event)))
 	case agent.PrefixRewriteEvent:
 		output.fence(agent.PrefixRewriteNotice + event.Text)
 	case turn.HarnessPoke, jobrecord.Ended, jobrecord.EndedWithSession, caps.JobStop, caps.ModeChange,
 		conditions.Change, environment.Change, toolset.AvailabilityChange, pathgrant.Change,
-		portgrant.SandboxToHostChange, portgrant.HostToSandboxChange,
-		hostcommand.Ran:
+		portgrant.ForwardChange, hostcommand.Ran:
 		if notice, isSaid := harnessNotice(event); isSaid {
 			output.fence(notice)
 		}
@@ -180,10 +186,8 @@ func harnessNotice(event agent.Event) (string, bool) {
 		return joined(toolset.AvailabilityNotice(event))
 	case pathgrant.Change:
 		return pathgrant.Notice(event)
-	case portgrant.SandboxToHostChange:
-		return portgrant.SandboxToHostNotice(event)
-	case portgrant.HostToSandboxChange:
-		return portgrant.HostToSandboxNotice(event)
+	case portgrant.ForwardChange:
+		return portgrant.ForwardNotice(event)
 	case agent.StartupEvent, agent.UserMessageEvent, agent.SilentTurnEvent, agent.PrefixRewriteEvent,
 		agent.CacheRebuildEvent, agent.ModelReasoningEvent, agent.ModelMessageEvent,
 		agent.ToolCallRequestEvent, agent.ToolCallResultEvent, agent.StateChangeEvent,
@@ -236,11 +240,8 @@ func heading(event agent.Event) []string {
 	case pathgrant.Change:
 		summary, _ := pathgrant.Summary(event)
 		return []string{name, summary, prefixed("changed ", event.Name)}
-	case portgrant.SandboxToHostChange:
-		summary, _ := portgrant.SandboxToHostSummary(event)
-		return []string{name, summary, prefixed("changed host port ", event.Name)}
-	case portgrant.HostToSandboxChange:
-		summary, _ := portgrant.HostToSandboxSummary(event)
+	case portgrant.ForwardChange:
+		summary, _ := portgrant.ForwardSummary(event)
 		return []string{name, summary, prefixed("changed port ", event.Name)}
 	case agent.RetryingEvent:
 		return []string{name, "attempt " + strconv.Itoa(event.Attempt), prefixed("waited ", util.CompactDuration(event.Took))}
@@ -411,6 +412,15 @@ func (self *Recorder) offset(at time.Time) string {
 	return "+" + util.CompactDuration(at.Sub(self.startedAt))
 }
 
+func (self *Recorder) cacheRebuildCost(event agent.Event) string {
+	dollars, isPriced := agent.CacheRebuildCost(event, self.prices)
+	if !isPriced {
+		return ""
+	}
+
+	return money.Dollar().Format(dollars)
+}
+
 func modeFlags(event agent.Event) string {
 	flags, err := caps.FlagsBy(event)
 	if err != nil {
@@ -444,10 +454,8 @@ func title(kind agent.Kind) string {
 		return "Tool availability"
 	case pathgrant.Change:
 		return "Path grant"
-	case portgrant.SandboxToHostChange:
-		return "Sandbox → host"
-	case portgrant.HostToSandboxChange:
-		return "Host → sandbox"
+	case portgrant.ForwardChange:
+		return "Port forward"
 	case turn.HarnessPoke:
 		return "Poke"
 	case hostcommand.Ran:

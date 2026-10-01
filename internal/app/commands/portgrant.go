@@ -4,22 +4,13 @@ import (
 	"crdx.org/oh/pkg/agent"
 )
 
-type HostToSandbox struct {
-	Hide       func(port uint16) (agent.Event, error)
+type Forwards struct {
+	Forward    func(port uint16) (agent.Event, error)
+	Revoke     func(port uint16) (agent.Event, error)
 	GetCurrent func() []uint16
 	GetURL     func(port uint16) string
 }
 
-type SandboxToHost struct {
-	Expose     func(port uint16) (agent.Event, error)
-	Revoke     func(port uint16) (agent.Event, error)
-	GetCurrent func() []uint16
-}
-
-func (self HostToSandbox) isConfigured() bool {
-	return self.Hide != nil && self.GetCurrent != nil && self.GetURL != nil
-}
-
-func (self SandboxToHost) isConfigured() bool {
-	return self.Expose != nil && self.Revoke != nil && self.GetCurrent != nil
+func (self Forwards) isConfigured() bool {
+	return self.Forward != nil && self.Revoke != nil && self.GetCurrent != nil && self.GetURL != nil
 }

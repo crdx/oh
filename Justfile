@@ -37,7 +37,13 @@ sandbox *args:
         echo -e "${GREEN}this machine can map a namespace, so the sandbox tests ran for real${NC}"
         exit 0
     fi
-    PACKAGES=(./internal/sandbox ./internal/jobs ./internal/app/shell ./pkg/toolbox/bash)
+    PACKAGES=(
+        ./internal/sandbox
+        ./internal/sandbox/keeper
+        ./internal/jobs
+        ./internal/app/shell
+        ./pkg/toolbox/bash
+    )
     if [[ $# -gt 0 ]]; then
         PACKAGES=("$@")
     fi

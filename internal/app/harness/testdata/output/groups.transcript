@@ -32,10 +32,10 @@ read: target.txt [ok, 1 line, 4B, call_1]
 ls: . [ok, 2 lines, 21B, call_2]
 ```
 
-## Host → sandbox · 1 sandbox port · changed port 8080 · +7s
+## Port forward · 1 forwarded port · changed port 8080 · +7s
 
 ```
-Sandbox port 8080 exposed at http://127.27.192.223:8080.
+Port 8080 is now forwarded to http://127.27.192.223:8080.
 ```
 
 ## Assistant · +8s

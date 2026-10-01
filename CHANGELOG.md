@@ -4,7 +4,17 @@
 
 ### Theme
 
-- Apply the active theme before picking sessions
+- Apply the theme in the session picker
+- Improve config format for theming tool calls
+
+### Models
+
+- Load model rotations from a file
+- Keep using a superseded model if the new one can't be used
+- Add OpenCode Go's Grok, Luna and Muse models over the Responses API
+- Add OpenCode Go's Qwen models over the Messages API
+- Offer OpenCode Go models that don't have effort levels
+- Only list and complete modelsfor logged in providers
 
 ### Drawing
 
@@ -13,6 +23,8 @@
 - Keep skill and reopened-job notices conciser
 - Link web addresses in code and tool lines
 - Remove hyperlinking in plain reasoning, for perf
+- Hide prompt cache rebuilds costing under an arbitrary $0.20
+- Show what lost prompt caches cost us in API pricing
 - Show success tick only on shell and custom tool calls
 
 ### Completion and input
@@ -27,12 +39,32 @@
 - Hide the "no matches" dropdown on `/!`
 - Fix input wrapping cursor position issue
 - Scroll a tall block with up and down keys
+
+### Host commands
+
+- Run `/!` without freezing the interface
+- Stop a running `/!` command with escape or `ctrl+d`
+- Show the last line a running `/!` command printed, such as a fingerprint prompt
+- Keep only the final state of progress lines in `/!` output
+- Tell the model to produce commands as `/!` lines
+
+### Grants and sandbox
+
+- Make temporary grants shell-executable and accept only `r` or `rw`
+- Remove host loopback ports
+- Add `/forward` and drop `/expose`
+- Rename terminology to "forward"
+- Rename the `forwarded-ports` bar segment to `forwards`
+- Rename the `path-grants` bar segment to `grants`
+- Group up path grants in the bar by their access role
 - Grant several paths at once with `/grant`
+- Fail faster if bash is missing
 
 ### Tool calls
 
-- Let a background job associate to a port
-- Name background job output calls `cat`
+- Allow a background job associate to a port
+- Allow a background job take over a forwarded port
+- Call background job output calls `cat`
 - Format background job wait limits as durations
 - Fence `fetch` and `lookup` results as untrusted data
 - Tell the model that session drops are untrusted
@@ -41,6 +73,14 @@
 
 - Count empty directories in `oh --ctl gc`
 - Browse session previews with left and right keys
+
+### Questions and approvals
+
+- Keep question notifications on screen until dealt with
+- Keep the blank row under a question's label
+- Give approvals 5 minutes before they lapse
+- Show command intent in the prompt
+- Clarify that a host networking command is still sandboxed
 
 ## [0.11.0] - 2026-09-29
 

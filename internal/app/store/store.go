@@ -41,6 +41,14 @@ type Meta struct {
 	Yolo                  bool                   `json:"yolo,omitempty"`
 }
 
+func (self Meta) Prices() *agent.TokenPrices {
+	if self.ModelChoice == nil {
+		return nil
+	}
+
+	return self.ModelChoice.Prices
+}
+
 type listingData struct {
 	WorkspaceDir string `json:"workspaceDir"`
 	Provider     string `json:"provider,omitempty"`
@@ -310,6 +318,7 @@ func (self *Writer) startRecorders() {
 			Effort:    self.meta.Effort,
 			Provider:  self.meta.Provider,
 			Workspace: self.meta.WorkspaceDir,
+			Prices:    self.meta.Prices(),
 		})
 		if err != nil {
 			self.transcriptLoggingEnabled = false
@@ -560,6 +569,7 @@ func rebuildTranscript(directory string, name string) error {
 		Effort:    storedSession.Meta.Effort,
 		Provider:  storedSession.Meta.Provider,
 		Workspace: storedSession.Meta.WorkspaceDir,
+		Prices:    storedSession.Meta.Prices(),
 	})
 	if err != nil {
 		return err

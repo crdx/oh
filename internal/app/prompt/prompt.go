@@ -418,7 +418,7 @@ func scopeRules(data harnessContextTemplateData) string {
 
 func pathGrantRules() []string {
 	return []string{
-		"- The user can grant access to a path with /grant " + pathgrant.GrantUsage + ", where r is read, x is execute, and w is write, and take it back with /revoke <path>.",
+		"- The user can grant access to a path with /grant " + pathgrant.GrantUsage + ", where r is read and w is write, and take it back with /revoke <path>. When shell access is enabled, the shell can execute files at or under every temporarily granted path.",
 		"- Ask the user to grant a needed path rather than working around it or giving up, giving the full command with its flags, such as /grant rw /some/path.",
 	}
 }

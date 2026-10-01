@@ -43,6 +43,8 @@ var steps = map[int]step{
 	12: {migrateLine: lookupFlagReplacesWebFlag},
 	13: {finalise: compressWireTranscript},
 	14: {migrateLine: completeToolCallRendering},
+	15: {migrateLine: forwardKindsReplaceExposeKinds, migrateJournal: dropHostLoopbackPorts},
+	16: {migrateLine: temporaryPathGrantsImplyExecution},
 }
 
 var legacyGrantAccess = map[string]string{
@@ -78,6 +80,46 @@ func pathGrantFlagsReplaceWords(line map[string]json.RawMessage) error {
 				continue
 			}
 			state.Grants[index].Access = flags
+		}
+
+		restatedState, err := json.Marshal(state)
+		if err != nil {
+			return err
+		}
+		event["state"] = restatedState
+
+		return nil
+	})
+}
+
+func temporaryPathGrantsImplyExecution(line map[string]json.RawMessage) error {
+	return with(line, func(event map[string]json.RawMessage) error {
+		if string(event["kind"]) != `"path_grant_change"` {
+			return nil
+		}
+
+		raw, ok := event["state"]
+		if !ok {
+			return nil
+		}
+
+		var state struct {
+			Grants []struct {
+				Path   string `json:"path"`
+				Access string `json:"access"`
+			} `json:"grants"`
+		}
+		if err := json.Unmarshal(raw, &state); err != nil {
+			return fmt.Errorf("the path grants could not be read: %w", err)
+		}
+
+		for index, grant := range state.Grants {
+			switch grant.Access {
+			case "rx":
+				state.Grants[index].Access = "r"
+			case "rxw":
+				state.Grants[index].Access = "rw"
+			}
 		}
 
 		restatedState, err := json.Marshal(state)
@@ -140,6 +182,59 @@ func announces(mode string, text string) bool {
 }
 
 const legacyBackgroundFlag = "b"
+
+const legacyHostLoopbackPortChange agent.Kind = "sandbox_to_host_change"
+
+var renamedExposeKinds = map[string]string{
+	"expose":        "forward",
+	"expose_add":    "forward_add",
+	"expose_remove": "forward_remove",
+	"expose_list":   "forward_list",
+}
+
+const (
+	legacyExposeListSubject = "exposed ports"
+	forwardListSubject      = "forwards"
+)
+
+func forwardKindsReplaceExposeKinds(line map[string]json.RawMessage) error {
+	return with(line, func(event map[string]json.RawMessage) error {
+		if string(event["kind"]) != `"tool_call_request"` {
+			return nil
+		}
+
+		kind, isNamed := historicalString(event["rendering_kind"])
+		renamedKind, isRenamed := renamedExposeKinds[kind]
+		if !isNamed || !isRenamed {
+			return nil
+		}
+
+		setHistoricalString(event, "rendering_kind", renamedKind)
+		if subject, hasSubject := historicalString(event["render"]); hasSubject && subject == legacyExposeListSubject {
+			setHistoricalString(event, "render", forwardListSubject)
+		}
+
+		return nil
+	})
+}
+
+func dropHostLoopbackPorts(lines []map[string]json.RawMessage) ([]map[string]json.RawMessage, error) {
+	migratedLines := make([]map[string]json.RawMessage, 0, len(lines))
+
+	for index, line := range lines {
+		event, hasEvent, err := eventOf(line)
+		if err != nil {
+			return nil, fmt.Errorf("line %d: %w", index+1, err)
+		}
+		if hasEvent && event.Kind == legacyHostLoopbackPortChange {
+			continue
+		}
+
+		migratedLines = append(migratedLines, line)
+	}
+
+	return migratedLines, nil
+}
 
 func dropBackgroundCapability(lines []map[string]json.RawMessage) ([]map[string]json.RawMessage, error) {
 	migratedLines := make([]map[string]json.RawMessage, 0, len(lines))

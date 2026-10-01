@@ -341,7 +341,7 @@ func TestRevokingANewTemporaryPathRemovesItFromBothEnforcers(t *testing.T) {
 	}
 }
 
-func TestAnExecutableGrantIsReadableAndReplacesTheMountBeneathIt(t *testing.T) {
+func TestAReadGrantIsExecutableByTheShell(t *testing.T) {
 	mode := caps.NewMode(caps.Read)
 	files := configuredPathTestRoot(t, mode)
 	access, err := NewPathAccess(files, mode, Paths{})
@@ -355,14 +355,7 @@ func TestAnExecutableGrantIsReadableAndReplacesTheMountBeneathIt(t *testing.T) {
 		t.Fatalf("grant changed=%t: %v", hasChanged, err)
 	}
 	if _, _, err := files.Resolve(temporaryDirectory); err != nil {
-		t.Fatal(err)
-	}
-
-	if hasChanged, err := access.Grant(temporaryDirectory, ReadAccess|ExecAccess); err != nil || !hasChanged {
-		t.Fatalf("executable grant changed=%t: %v", hasChanged, err)
-	}
-	if _, _, err := files.Resolve(temporaryDirectory); err != nil {
-		t.Errorf("executable path did not resolve through file tools: %v", err)
+		t.Errorf("temporary path did not resolve through file tools: %v", err)
 	}
 	paths := access.GetPaths()
 	if !slices.Contains(paths.Exec, temporaryDirectory) {
@@ -380,7 +373,7 @@ func TestAnExecutableGrantIsReadableAndReplacesTheMountBeneathIt(t *testing.T) {
 	}
 }
 
-func TestAnExecutableGrantNeedsAPathThatExists(t *testing.T) {
+func TestATemporaryGrantNeedsAPathThatExists(t *testing.T) {
 	mode := caps.NewMode(caps.Read)
 	files := configuredPathTestRoot(t, mode)
 	access, err := NewPathAccess(files, mode, Paths{})
@@ -389,7 +382,7 @@ func TestAnExecutableGrantNeedsAPathThatExists(t *testing.T) {
 	}
 	defer access.Close()
 
-	if _, err := access.Grant(filepath.Join(t.TempDir(), "absent"), ReadAccess|ExecAccess); err == nil {
+	if _, err := access.Grant(filepath.Join(t.TempDir(), "absent"), ReadAccess); err == nil {
 		t.Error("expected an absent path not to be granted")
 	}
 }

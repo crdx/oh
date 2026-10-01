@@ -120,8 +120,8 @@ func soundSettings() []setting {
 			"[bar.top]\nleft = [{ segment = \"cache-usage\" }, { segment = \"context-usage\" }," +
 				" { segment = \"turn-timer\" }, { segment = \"turn-count\" }," +
 				" { segment = \"session-spend\" }, { segment = \"fast-mode\" }," +
-				" { segment = \"mode-toggle\" }, { segment = \"path-grants\" }," +
-				" { segment = \"exposed-ports\" }, { segment = \"jobs\" }," +
+				" { segment = \"mode-toggle\" }, { segment = \"grants\" }," +
+				" { segment = \"forwards\" }, { segment = \"jobs\" }," +
 				" { segment = \"active-model\" }]\n",
 		}},
 	}
@@ -169,19 +169,18 @@ func testRegistry() segment.Registry {
 		Currency:          money.Dollar(),
 		SandboxHostname:   "127.0.0.1",
 		Sources: bar.Sources{
-			IsTurnRunning:          func() bool { return false },
-			IsSessionPersisted:     func() bool { return true },
-			GetContextUsage:        func() (int, int) { return 1, 2 },
-			GetCacheUsage:          func() (int, int) { return 1, 2 },
-			GetSessionSpend:        func() (float64, bool) { return 0, false },
-			GetGrantedCaps:         caps.All,
-			GetPathGrants:          func() []pathgrant.Grant { return nil },
-			GetHostToSandboxRoutes: func() []portgrant.Route { return nil },
-			GetSandboxToHostPorts:  func() []uint16 { return nil },
-			IsPrefixPending:        func() bool { return false },
-			GetTurnTiming:          func() turn.Timing { return turn.Timing{} },
-			GetTurnCount:           func() int { return 0 },
-			GetJobs:                func() []jobs.Snapshot { return nil },
+			IsTurnRunning:      func() bool { return false },
+			IsSessionPersisted: func() bool { return true },
+			GetContextUsage:    func() (int, int) { return 1, 2 },
+			GetCacheUsage:      func() (int, int) { return 1, 2 },
+			GetSessionSpend:    func() (float64, bool) { return 0, false },
+			GetGrantedCaps:     caps.All,
+			GetPathGrants:      func() []pathgrant.Grant { return nil },
+			GetForwardedRoutes: func() []portgrant.Route { return nil },
+			IsPrefixPending:    func() bool { return false },
+			GetTurnTiming:      func() turn.Timing { return turn.Timing{} },
+			GetTurnCount:       func() int { return 0 },
+			GetJobs:            func() []jobs.Snapshot { return nil },
 		},
 	})
 }

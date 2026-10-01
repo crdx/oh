@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/toolresult"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/strutil"
@@ -59,6 +60,7 @@ type Picasso struct {
 	reasoningRendering    output.ReasoningRendering
 	resultLinkSessionName string
 	forkModelName         string
+	tariff                Tariff
 
 	getTool       func(string) (tool.Tool, bool)
 	workspace     *work.Space
@@ -66,6 +68,20 @@ type Picasso struct {
 	pictureDrawer markdown.PictureDrawer
 
 	heldPictures []heldPicture
+}
+
+type Tariff struct {
+	Prices   *agent.TokenPrices
+	Currency money.Currency
+}
+
+func (self Tariff) cacheRebuildCost(event agent.Event) string {
+	dollars, isPriced := agent.CacheRebuildCost(event, self.Prices)
+	if !isPriced {
+		return ""
+	}
+
+	return self.Currency.Format(dollars)
 }
 
 type heldPicture struct {
@@ -111,12 +127,20 @@ func (self *Picasso) SuggestForkingWith(modelName string) {
 	self.forkModelName = modelName
 }
 
+func (self *Picasso) PriceCacheRebuildsAt(tariff Tariff) {
+	self.tariff = tariff
+}
+
 func (self *Picasso) DrawDelta(delta agent.Delta) {
 	self.drawDeltaWithAnswerRendererReset(delta, true)
 }
 
 func (self *Picasso) DrawEvent(event agent.Event) {
 	self.drawnEvents++
+
+	if self.isTooCheapToNotice(event) {
+		return
+	}
 
 	if !isJoinableNotice(event) {
 		self.screen.SealOpenPanel()
@@ -194,12 +218,12 @@ func (self *Picasso) DrawEvent(event agent.Event) {
 		self.screen.Line(style.Failure(agent.PrefixRewriteNotice + event.Text))
 
 	case agent.CacheRebuildEvent:
-		self.screen.Line(style.Change(agent.CacheRebuildNotice(event)))
+		self.screen.Line(style.Change(agent.CacheRebuildNotice(event, self.tariff.cacheRebuildCost(event))))
 
-	case portgrant.HostToSandboxChange, hostcommand.Ran, jobrecord.Ended:
+	case portgrant.ForwardChange, hostcommand.Ran, jobrecord.Ended:
 		self.drawNotices(event, self.drawSubmittedPanel)
 
-	case caps.ModeChange, caps.JobStop, portgrant.SandboxToHostChange, jobrecord.EndedWithSession,
+	case caps.ModeChange, caps.JobStop, jobrecord.EndedWithSession,
 		conditions.Change, environment.Change, toolset.AvailabilityChange, pathgrant.Change, turn.HarnessPoke:
 		self.drawNotices(event, self.drawSubmitted)
 
@@ -448,7 +472,7 @@ func (self *Picasso) Redraw(liveEvents []agent.Event) {
 
 func isDrawnBesideAnOpenBlock(event agent.Event) bool {
 	switch event.Kind { //nolint:exhaustive // Only these notices arrive while a call is in flight.
-	case portgrant.HostToSandboxChange, hostcommand.Ran, jobrecord.Ended:
+	case portgrant.ForwardChange, hostcommand.Ran, jobrecord.Ended:
 		return true
 	default:
 		return false
@@ -501,6 +525,10 @@ func (self *Picasso) Stop() {
 	}
 }
 
+func (self *Picasso) isTooCheapToNotice(event agent.Event) bool {
+	return event.Kind == agent.CacheRebuildEvent && !agent.IsCacheRebuildWorthNoticing(event, self.tariff.Prices)
+}
+
 func (self *Picasso) drawNotices(event agent.Event, draw func(submittedMessage)) {
 	notices, areSaid := HarnessNotices(event)
 	if !areSaid {
@@ -514,7 +542,7 @@ func (self *Picasso) drawNotices(event agent.Event, draw func(submittedMessage))
 
 func isJoinableNotice(event agent.Event) bool {
 	switch event.Kind {
-	case caps.ModeChange, caps.JobStop, portgrant.SandboxToHostChange, portgrant.HostToSandboxChange,
+	case caps.ModeChange, caps.JobStop, portgrant.ForwardChange,
 		jobrecord.Ended, jobrecord.EndedWithSession, conditions.Change, environment.Change, toolset.AvailabilityChange,
 		pathgrant.Change, turn.HarnessPoke,
 		hostcommand.Ran:

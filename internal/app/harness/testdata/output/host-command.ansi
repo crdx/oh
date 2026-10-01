@@ -21,8 +21,7 @@
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mEnumerating objects: 5, done.\e[0m\e[48;2;48;58;67m                                                                   \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m    Interrupted by the user after 4s, so it has no exit code. Anything it had not yet done was not  \e[0m\r
-\e[48;2;48;58;67m    done.                                                                                           \e[0m\r
+\e[48;2;48;58;67m    Interrupted by the user after 4s                                                                \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[?25h\e[?2026l
 === pending before the turn it wakes ===
@@ -69,8 +68,7 @@
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150m$\e[0m\e[48;2;48;58;67m \e[38;2;150;152;150msleep\e[0m\e[48;2;48;58;67m \e[38;2;192;128;80m600\e[0m\e[48;2;48;58;67m                                                                                     \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m    Killed at its time limit of 30s, so it has no exit code. Anything it had not yet done was not   \e[0m\r
-\e[48;2;48;58;67m    done.                                                                                           \e[0m\r
+\e[48;2;48;58;67m    Killed at its time limit of 30s                                                                 \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[?25h\e[?2026l
 === stopped in the turn it woke ===

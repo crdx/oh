@@ -251,6 +251,9 @@ func TestFreshPoliciesFollowTemporaryPathAccess(t *testing.T) {
 	if !slices.Contains(policy.Write, temporaryDirectory) {
 		t.Errorf("temporary write path is absent from %#v", policy)
 	}
+	if !slices.Contains(policy.Exec, temporaryDirectory) {
+		t.Errorf("temporary executable path is absent from %#v", policy)
+	}
 	if !slices.Contains(policy.OptionalPaths, temporaryDirectory) {
 		t.Errorf("temporary write path is required in %#v", policy)
 	}
@@ -271,6 +274,7 @@ func TestFreshPoliciesFollowTemporaryPathAccess(t *testing.T) {
 	}
 	if slices.Contains(policy.Read, temporaryDirectory) ||
 		slices.Contains(policy.Write, temporaryDirectory) ||
+		slices.Contains(policy.Exec, temporaryDirectory) ||
 		slices.Contains(policy.OptionalPaths, temporaryDirectory) {
 		t.Errorf("revoked path survived in %#v", policy)
 	}

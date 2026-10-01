@@ -75,7 +75,7 @@ The user started the following command on the host, which was killed at its time
 $ sleep 600
 ```
 
-Killed at its time limit of 30s, so it has no exit code. Anything it had not yet done was not done.
+Killed at its time limit of 30s
 ````
 
 ## Host command · +6s

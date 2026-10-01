@@ -25,7 +25,14 @@ const (
 	WriteAccess = shell.WriteAccess
 )
 
-const GrantUsage = "{r|rx|rw|rxw} <path>"
+const (
+	GrantUsage           = "{r|rw} <path>..."
+	temporaryAccessFlags = "rw"
+)
+
+func IsTemporaryAccess(access Access) bool {
+	return access == ReadAccess || access == ReadAccess|WriteAccess
+}
 
 type Grant = shell.PathGrant
 
@@ -64,7 +71,7 @@ func NewRestored(
 		var err error
 		if !filepath.IsAbs(grant.Path) || filepath.Clean(grant.Path) != grant.Path {
 			err = fmt.Errorf("invalid recorded path %q", grant.Path)
-		} else if !shell.IsAccess(grant.Access) {
+		} else if !IsTemporaryAccess(grant.Access) {
 			err = fmt.Errorf("invalid recorded access %q", grant.Access.Flags())
 		}
 		canonicalPath := ""
@@ -114,9 +121,9 @@ func (self *Grants) Grant(path string, access Access) (agent.Event, error) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 
-	if !shell.IsAccess(access) {
+	if !IsTemporaryAccess(access) {
 		return agent.Event{}, fmt.Errorf(
-			"access is %q, want some of %q", access.Flags(), shell.AllAccessFlags,
+			"access is %q, want some of %q", access.Flags(), temporaryAccessFlags,
 		)
 	}
 	canonicalPath, err := self.canonicalPath(path, true)
@@ -262,6 +269,9 @@ type writtenGrant struct {
 func ChangeEvent(path string, grants []Grant) (agent.Event, error) {
 	writtenGrants := make([]writtenGrant, 0, len(grants))
 	for _, grant := range canonicalGrants(grants) {
+		if !IsTemporaryAccess(grant.Access) {
+			return agent.Event{}, fmt.Errorf("invalid path grant access %q", grant.Access.Flags())
+		}
 		writtenGrants = append(writtenGrants, writtenGrant{
 			Path:   grant.Path,
 			Access: grant.Access.Flags(),
@@ -304,7 +314,7 @@ func decodeEvent(event agent.Event) ([]Grant, error) {
 	for _, entry := range state.Grants {
 		grantedAccess, err := shell.ParseAccess(entry.Access)
 		if err != nil || !filepath.IsAbs(entry.Path) || filepath.Clean(entry.Path) != entry.Path ||
-			!shell.IsAccess(grantedAccess) {
+			!IsTemporaryAccess(grantedAccess) {
 			return nil, errors.New("invalid path grant state")
 		}
 		grants = append(grants, Grant{Path: entry.Path, Access: grantedAccess})

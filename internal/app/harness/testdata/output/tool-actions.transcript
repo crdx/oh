@@ -16,10 +16,11 @@ show every action-oriented tool label
 ## Tool calls · +1s
 
 ```
-expose: 8000 [ok, expose]
-expose: docs:8001 [ok, expose-job]
-expose: 8000 [ok, unexpose]
-expose: forwards [ok, list-ports]
+forward: 8000 [ok, forward]
+forward: docs:8001 [ok, forward-job]
+forward: 8000 [ok, unforward]
+forward: forwards [ok, list-ports]
+forward [error, forward-malformed]
 job [ok, start]
 job [ok, restart]
 job [ok, status]
@@ -32,6 +33,6 @@ job [ok, discard]
 job [ok, prune]
 ```
 
-## Assistant · +29s
+## Assistant · +31s
 
 Those are every action label.

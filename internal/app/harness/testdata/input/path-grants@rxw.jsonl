@@ -3,11 +3,11 @@
 {"event":{"kind":"model_message","text":"I can read the external reference now."}}
 {"event":{"kind":"path_grant_change","name":"/reference","state":{"grants":[{"path":"/reference","access":"rw"}]}}}
 {"event":{"kind":"model_message","text":"I can also change it now."}}
-{"event":{"kind":"path_grant_change","name":"/tools","state":{"grants":[{"path":"/reference","access":"rw"},{"path":"/tools","access":"rx"}]}}}
+{"event":{"kind":"path_grant_change","name":"/tools","state":{"grants":[{"path":"/reference","access":"rw"},{"path":"/tools","access":"r"}]}}}
 {"event":{"kind":"model_message","text":"I can run what is in the tools directory now."}}
-{"event":{"kind":"path_grant_change","name":"/build","state":{"grants":[{"path":"/build","access":"rwx"},{"path":"/reference","access":"rw"},{"path":"/tools","access":"rx"}]}}}
+{"event":{"kind":"path_grant_change","name":"/build","state":{"grants":[{"path":"/build","access":"rw"},{"path":"/reference","access":"rw"},{"path":"/tools","access":"r"}]}}}
 {"event":{"kind":"model_message","text":"I can build in place and run what comes out of it."}}
-{"event":{"kind":"path_grant_change","name":"/build","state":{"grants":[{"path":"/reference","access":"rw"},{"path":"/tools","access":"rx"}]}}}
+{"event":{"kind":"path_grant_change","name":"/build","state":{"grants":[{"path":"/reference","access":"rw"},{"path":"/tools","access":"r"}]}}}
 {"event":{"kind":"path_grant_change","name":"/tools","state":{"grants":[{"path":"/reference","access":"rw"}]}}}
 {"event":{"kind":"model_message","text":"I will use the reference alone from here."}}
 {"event":{"kind":"path_grant_change","name":"/reference","state":{"grants":[]}}}

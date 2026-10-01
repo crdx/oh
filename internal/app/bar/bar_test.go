@@ -164,3 +164,23 @@ func TestEverySegmentTheDefaultsNameIsRegistered(t *testing.T) {
 		t.Fatalf("the built-in layout names a segment nothing supplies: %v", err)
 	}
 }
+
+func TestTheForwardsAndGrantsSegmentsReplaceTheRetiredOnes(t *testing.T) {
+	registry := NewRegistry(Options{Workspace: work.At(t.TempDir())})
+
+	if _, isRegistered := registry[forwardsSegment]; !isRegistered {
+		t.Errorf("no segment is registered as %q", forwardsSegment)
+	}
+	if _, isRegistered := registry[grantsSegment]; !isRegistered {
+		t.Errorf("no segment is registered as %q", grantsSegment)
+	}
+	if _, isRegistered := registry["exposed-ports"]; isRegistered {
+		t.Error("the retired exposed-ports segment is still registered")
+	}
+	if _, isRegistered := registry["forwarded-ports"]; isRegistered {
+		t.Error("the retired forwarded-ports segment is still registered")
+	}
+	if _, isRegistered := registry["path-grants"]; isRegistered {
+		t.Error("the retired path-grants segment is still registered")
+	}
+}

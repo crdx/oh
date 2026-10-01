@@ -28,8 +28,6 @@ const (
 	shellLanguage      = "bash"
 	commandPrompt      = "$ "
 	continuationPrompt = "> "
-
-	killedNote = ", so it has no exit code. Anything it had not yet done was not done."
 )
 
 type Result struct {
@@ -208,11 +206,11 @@ func prompted(command string) string {
 
 func statusNote(result Result) string {
 	if result.IsStoppedByUser {
-		return "Interrupted by the user after " + util.CompactDuration(result.StoppedAfter) + killedNote
+		return "Interrupted by the user after " + util.CompactDuration(result.StoppedAfter)
 	}
 
 	if result.StoppedAfter > 0 {
-		return "Killed at its time limit of " + util.CompactDuration(result.StoppedAfter) + killedNote
+		return "Killed at its time limit of " + util.CompactDuration(result.StoppedAfter)
 	}
 
 	return "Exit code: " + strconv.Itoa(result.ExitCode)

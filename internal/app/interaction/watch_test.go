@@ -40,17 +40,17 @@ func TestEveryPieceOfWorkIsWatchedFromItsStartToItsEnd(t *testing.T) {
 func TestEveryHandlerIsWatchedUnderItsOwnName(t *testing.T) {
 	var watchedWork []string
 	handler := watched(Handler{
-		OnKey:                 func(key.Key) bool { return true },
-		OnTurn:                func(turn.Event) {},
-		OnTurnFinished:        func() bool { return true },
-		OnResize:              func() {},
-		OnBeat:                func() {},
-		OnDraw:                func() {},
-		OnJobEnded:            func(jobs.Conclusion) {},
-		OnHostToSandboxChange: func(agent.Event) {},
-		OnQuestionChange:      func() {},
-		OnTriggerChange:       func() {},
-		OnChange:              func(error) bool { return true },
+		OnKey:            func(key.Key) bool { return true },
+		OnTurn:           func(turn.Event) {},
+		OnTurnFinished:   func() bool { return true },
+		OnResize:         func() {},
+		OnBeat:           func() {},
+		OnDraw:           func() {},
+		OnJobEnded:       func(jobs.Conclusion) {},
+		OnForwardChange:  func(agent.Event) {},
+		OnQuestionChange: func() {},
+		OnTriggerChange:  func() {},
+		OnChange:         func(error) bool { return true },
 		Watch: func(work string) func() {
 			watchedWork = append(watchedWork, work)
 			return func() {}
@@ -64,7 +64,7 @@ func TestEveryHandlerIsWatchedUnderItsOwnName(t *testing.T) {
 	handler.OnBeat()
 	handler.OnDraw()
 	handler.OnJobEnded(jobs.Conclusion{})
-	handler.OnHostToSandboxChange(agent.Event{})
+	handler.OnForwardChange(agent.Event{})
 	handler.OnQuestionChange()
 	handler.OnTriggerChange()
 	handler.OnChange(nil)

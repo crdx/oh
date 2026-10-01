@@ -1,5 +1,5 @@
-{"event":{"kind":"user_message","text":"expose the preview and read the notes"}}
-{"event":{"kind":"model_reasoning","text":"Looking at the notes first, then exposing the preview."}}
+{"event":{"kind":"user_message","text":"forward the preview and read the notes"}}
+{"event":{"kind":"model_reasoning","text":"Looking at the notes first, then forwarding the preview."}}
 {"event":{"kind":"tool_call_request","id":"call_1","name":"read","arguments":"{\"path\":\"target.txt\"}","render":"target.txt","read_only":true}}
 {"event":{"kind":"tool_call_result","status":"success","text":"one\n","id":"call_1","name":"read","took":0,"stats":{"kind":"read","lines":1,"bytes":4}}}
 {"event":{"kind":"tool_call_request","id":"call_2","name":"read","arguments":"{\"path\":\"README.md\"}","render":"README.md","read_only":true}}

@@ -25,8 +25,8 @@ import (
 	"crdx.org/oh/pkg/tool/middleware/truncate"
 	"crdx.org/oh/pkg/toolbox"
 	"crdx.org/oh/pkg/toolbox/bash"
-	"crdx.org/oh/pkg/toolbox/expose"
 	"crdx.org/oh/pkg/toolbox/fetch"
+	"crdx.org/oh/pkg/toolbox/forward"
 	"crdx.org/oh/pkg/toolbox/lookup"
 	"crdx.org/oh/pkg/toolbox/notify"
 	"crdx.org/oh/pkg/toolbox/title"
@@ -55,6 +55,7 @@ import (
 	"crdx.org/oh/internal/app/notification"
 	"crdx.org/oh/internal/app/onboarding"
 	"crdx.org/oh/internal/app/output"
+	"crdx.org/oh/internal/app/painter"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/pathref"
 	"crdx.org/oh/internal/app/permission"
@@ -442,8 +443,21 @@ func prepareLegacyTools(
 	return preparedTools{registeredTools: toolboxTools, offeredTools: offeredTools}, nil
 }
 
+func availableCurrency(workspaceDir string) money.Currency {
+	settings, err := config.LoadSources(getConfigSources(workspaceDir)...)
+	if err != nil {
+		return money.Dollar()
+	}
+
+	return money.Load(location.GetExchangeRateCachePath(), currencyCode(settings.Ui.Currency))
+}
+
+func currencyCode(code string) string {
+	return strings.ToUpper(strings.TrimSpace(code))
+}
+
 func ensureCurrency(ctx context.Context, output io.Writer, code string, isSimulated bool) money.Currency {
-	code = strings.ToUpper(strings.TrimSpace(code))
+	code = currencyCode(code)
 	if code == "" || code == money.DollarCode || isSimulated {
 		return money.Dollar()
 	}
@@ -534,7 +548,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	workspaceDir := workspace.GetDir()
 
 	if inputArgs.IsSessionPicker {
-		return sessions.Choose(sessionsDir, workspace, keyboard, os.Stdout)
+		return sessions.Choose(sessionsDir, workspace, availableCurrency(workspaceDir), keyboard, os.Stdout)
 	}
 
 	configSources := getConfigSources(workspaceDir)
@@ -917,13 +931,13 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		return "", err
 	}
 
-	hostToSandboxAddress := portgrant.AddressFor(log.Name())
-	hostToSandboxHostname := settings.Ports.GetHostname(log.Name(), hostToSandboxAddress)
+	forwardsAddress := portgrant.AddressFor(log.Name())
+	forwardsHostname := settings.Ports.GetHostname(log.Name(), forwardsAddress)
 	currentEnvironment := environment.Capture(
 		settings.Sandbox,
 		availableSkills,
 		pathutil.Exists(filepath.Join(workspace.GetDir(), ".git")),
-		hostToSandboxHostname,
+		forwardsHostname,
 	)
 	var createdEnvironment *environment.Snapshot
 	if resumedSession != nil {
@@ -990,40 +1004,14 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		}
 	}
 
-	hostToSandboxExposer := newHostToSandboxExposer(ctx, keeperProcess, hostToSandboxAddress)
-	var hostToSandbox *portgrant.HostToSandbox
-	sandboxToHostExposer := newSandboxToHostExposer(ctx, keeperProcess)
-	sandboxToHost := portgrant.NewSandboxToHost(sandboxToHostExposer, func() []uint16 {
-		if hostToSandbox == nil {
-			return nil
-		}
-		return hostToSandbox.GetCurrent()
-	})
-	var sandboxToHostRestoreResult portgrant.SandboxToHostRestoreResult
+	forwarder := newForwarder(ctx, keeperProcess, forwardsAddress)
+	forwards := portgrant.NewForwards(forwarder, forwardsHostname)
+	var forwardsRestoreResult portgrant.ForwardsRestoreResult
 	if resumedSession != nil {
-		if recordedPorts, found := portgrant.LastRecordedSandboxToHost(resumedSession.Events); found {
-			sandboxToHost, sandboxToHostRestoreResult = portgrant.NewRestoredSandboxToHost(
-				sandboxToHostExposer,
-				func() []uint16 {
-					if hostToSandbox == nil {
-						return nil
-					}
-					return hostToSandbox.GetCurrent()
-				},
-				recordedPorts,
+		if recordedPorts, found := portgrant.LastRecordedForwards(resumedSession.Events); found {
+			forwards, forwardsRestoreResult = portgrant.NewRestoredForwards(
+				forwarder, forwardsHostname, recordedPorts,
 			)
-		}
-	}
-
-	hostToSandbox = portgrant.NewHostToSandbox(hostToSandboxExposer, hostToSandboxHostname)
-	hostToSandbox.SetSandboxToHostPorts(sandboxToHost.GetCurrent)
-	var hostToSandboxRestoreResult portgrant.HostToSandboxRestoreResult
-	if resumedSession != nil {
-		if recordedPorts, found := portgrant.LastRecordedHostToSandbox(resumedSession.Events); found {
-			hostToSandbox, hostToSandboxRestoreResult = portgrant.NewRestoredHostToSandbox(
-				hostToSandboxExposer, hostToSandboxHostname, recordedPorts,
-			)
-			hostToSandbox.SetSandboxToHostPorts(sandboxToHost.GetCurrent)
 		}
 	}
 
@@ -1069,11 +1057,11 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 			mode,
 			files,
 			args.Yolo,
-			hostToSandbox.ForModel(),
+			forwards.ForModel(),
 		))
 	}
 	if keeperProcess != nil {
-		toolboxTools = append(toolboxTools, expose.New(hostToSandbox.ForModel()))
+		toolboxTools = append(toolboxTools, forward.New(forwards.ForModel()))
 	}
 	if notify.IsAvailable() {
 		toolboxTools = append(toolboxTools, notify.New(screen.WriteEscape, isTerminalFocused))
@@ -1210,10 +1198,11 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 			},
 			GetCurrentCaps: mode.Current,
 		},
-		HostToSandbox: commands.HostToSandbox{
-			Hide:       hostToSandbox.Hide,
-			GetCurrent: hostToSandbox.GetCurrent,
-			GetURL:     hostToSandbox.URL,
+		Forwards: commands.Forwards{
+			Forward:    forwards.Forward,
+			Revoke:     forwards.Revoke,
+			GetCurrent: forwards.GetCurrent,
+			GetURL:     forwards.URL,
 		},
 		Jobs: managedJobs(jobManager),
 		StartHostCommand: func(directory string, command string) error {
@@ -1289,8 +1278,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		conditions:      restoredConditions.State,
 		environment:     restoredEnvironment.State,
 		pathGrants:      pathGrants,
-		hostToSandbox:   hostToSandbox,
-		sandboxToHost:   sandboxToHost,
+		forwards:        forwards,
 		jobs: jobState{
 			manager:  jobManager,
 			doesWake: doesWake,
@@ -1369,7 +1357,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		UsageIsSelfRefreshing: usageReporter != nil,
 		UsageGauges:           usage.TerminalGauges(keyboard, os.Stdout),
 		Currency:              currency,
-		SandboxHostname:       hostToSandboxHostname,
+		SandboxHostname:       forwardsHostname,
 		Sources:               app.getBarSources(),
 	})
 	liveConfig, err := settings.BuildLive(barRegistry)
@@ -1389,34 +1377,25 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	app.display.reasoningRendering = liveConfig.ReasoningRendering
 	app.display.theme = liveConfig.Theme
 	app.display.modelName = selection.Model
+	app.display.tariff = painter.Tariff{Prices: choice.Prices, Currency: currency}
 	screen.SetGrouping(liveConfig.Grouping)
 	app.display.bar = bar.NewConfiguration(barRegistry, liveConfig.SegmentLayout)
 
 	if resumedSession != nil {
 		app.restore(resumedSession)
 	}
-	for _, failure := range hostToSandboxRestoreResult.Failures {
-		correction, err := portgrant.HostToSandboxChangeEvent(
-			hostToSandboxAddress,
+	for _, failure := range forwardsRestoreResult.Failures {
+		correction, err := portgrant.ForwardChangeEvent(
+			forwardsAddress,
 			failure.Port,
-			hostToSandbox.GetRoutes(),
+			forwards.GetRoutes(),
 		)
 		if err != nil {
 			return "", err
 		}
 		app.pendingNotices.add(correction)
 		app.notifyFailure(fmt.Sprintf(
-			"Port %d could not be exposed again: %v", failure.Port, failure.Err,
-		))
-	}
-	for _, failure := range sandboxToHostRestoreResult.Failures {
-		correction, err := portgrant.SandboxToHostChangeEvent(failure.Port, sandboxToHost.GetCurrent())
-		if err != nil {
-			return "", err
-		}
-		app.pendingNotices.add(correction)
-		app.notifyFailure(fmt.Sprintf(
-			"Host loopback port %d could not be exposed again: %v", failure.Port, failure.Err,
+			"Port %d could not be forwarded again: %v", failure.Port, failure.Err,
 		))
 	}
 	for _, failure := range pathGrantRestoreResult.Failures {
@@ -1494,27 +1473,16 @@ func openRunner(
 	return runner, jobs.New(runner), keeperProcess, func() { _ = keeperProcess.Close() }, nil
 }
 
-func newHostToSandboxExposer(
+func newForwarder(
 	ctx context.Context, keeperProcess *keeper.Keeper, host string,
-) portgrant.HostToSandboxExposer {
+) portgrant.Forwarder {
 	if keeperProcess == nil {
-		return portgrant.HostToSandboxExposer{}
+		return portgrant.Forwarder{}
 	}
 
-	return portgrant.HostToSandboxExposer{
-		Expose: func(port uint16) error { return keeperProcess.OpenHostToSandbox(ctx, host, port) },
-		Hide:   keeperProcess.CloseHostToSandbox,
-	}
-}
-
-func newSandboxToHostExposer(ctx context.Context, keeperProcess *keeper.Keeper) portgrant.SandboxToHostExposer {
-	if keeperProcess == nil {
-		return portgrant.SandboxToHostExposer{}
-	}
-
-	return portgrant.SandboxToHostExposer{
-		Expose: func(port uint16) error { return keeperProcess.OpenSandboxToHost(ctx, port) },
-		Hide:   keeperProcess.CloseSandboxToHost,
+	return portgrant.Forwarder{
+		Forward: func(port uint16) error { return keeperProcess.OpenForward(ctx, host, port) },
+		Revoke:  keeperProcess.CloseForward,
 	}
 }
 

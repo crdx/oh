@@ -10,6 +10,10 @@ import (
 )
 
 func runYolo(ctx context.Context, directory string, command string, policy Policy) (Result, error) {
+	if err := requireShell(shell); err != nil {
+		return Result{}, err
+	}
+
 	if policy.Timeout > 0 {
 		var cancel context.CancelFunc
 		ctx, cancel = context.WithTimeout(ctx, policy.Timeout)

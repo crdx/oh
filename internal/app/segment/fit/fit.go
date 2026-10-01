@@ -32,16 +32,19 @@ func Ladder(rungs ...string) []string {
 }
 
 func Parts(parts []string) []string {
-	if len(parts) == 0 {
+	return Shown(len(parts), func(shownCount int) []string { return parts[:shownCount] })
+}
+
+func Shown(count int, partsShowing func(int) []string) []string {
+	if count == 0 {
 		return nil
 	}
 
-	rungs := make([]string, 0, len(parts)+2)
-	rungs = append(rungs, join(parts))
+	rungs := make([]string, 0, count+2)
+	rungs = append(rungs, join(partsShowing(count)))
 
-	for shownCount := range slices.Backward(parts) {
-		hiddenCount := len(parts) - shownCount
-		shownParts := append(slices.Clone(parts[:shownCount]), hidden(hiddenCount))
+	for shownCount := count - 1; shownCount >= 0; shownCount-- {
+		shownParts := append(slices.Clone(partsShowing(shownCount)), hidden(count-shownCount))
 		rungs = append(rungs, join(shownParts))
 	}
 

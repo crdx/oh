@@ -691,3 +691,180 @@ stream = "asap"
 		t.Errorf("migration disturbed another table in:\n%s", written)
 	}
 }
+
+func TestTheEleventhConfigMigrationNestsToolThemesAndRenamesExposeToForward(t *testing.T) {
+	original := `version = 11
+
+[bar.top]
+left = [
+    { segment = "jobs" },
+    { segment = "exposed-ports" },
+]
+
+[bar.bottom]
+left = [{ segment = "path-grants", type = "base" }]
+
+[ui.theme.tool]
+skill = { name = "consult-chart", paint = "#e6a8ff bold", focus = "#e6a8ff" }
+job = { name = "tasks" }
+job_start = { name = "launch", paint = "status_info" } # starting
+job_wait_any.name = "hold"
+bash_host_network = { paint = "status_danger" }
+expose = { name = "share" }
+expose_add = { name = "open-gangway", paint = "status_warning" } # opening
+expose_remove.name = "close-gangway"
+deploy = { name = "ship" }
+
+[ui.theme.tool.expose_list]
+name = "peek"
+
+[ui.theme.tool.read]
+name = "look"
+
+[model]
+round_robin = ["codex/gpt@high"]
+`
+	path := configFile(t, original)
+
+	from, isPresent, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !isPresent || from != config.NudgeFormat {
+		t.Errorf("got present %t from format %d", isPresent, from)
+	}
+
+	body, err := os.ReadFile(path) //nolint:gosec // the test's own path
+	if err != nil {
+		t.Fatal(err)
+	}
+	written := string(body)
+	for _, expected := range []string{
+		currentVersionLine(),
+		`{ segment = "forwards" }`,
+		`{ segment = "grants", type = "base" }`,
+		`skill.default = { name = "consult-chart", paint = "#e6a8ff bold", focus = "#e6a8ff" }`,
+		`job.default = { name = "tasks" }`,
+		`job.start = { name = "launch", paint = "status_info" } # starting`,
+		`job.wait_any.name = "hold"`,
+		`bash.host_network = { paint = "status_danger" }`,
+		`forward.default = { name = "share" }`,
+		`forward.add = { name = "open-gangway", paint = "status_warning" } # opening`,
+		`forward.remove.name = "close-gangway"`,
+		`deploy.default = { name = "ship" }`,
+		`[ui.theme.tool.forward.list]`,
+		`[ui.theme.tool.read.default]`,
+		`round_robin = ["codex/gpt@high"]`,
+	} {
+		if !strings.Contains(written, expected) {
+			t.Errorf("migration omitted %q from:\n%s", expected, written)
+		}
+	}
+	for _, legacy := range []string{`exposed-ports`, `path-grants`, `expose`, `job_start`, `job_wait_any`, `bash_host_network`, "\nskill =", "\njob ="} {
+		if strings.Contains(written, legacy) {
+			t.Errorf("migration kept %q in:\n%s", legacy, written)
+		}
+	}
+
+	loaded, err := config.Load(path)
+	if err != nil {
+		t.Fatalf("migrated config cannot be loaded: %v", err)
+	}
+	resolved := loaded.Ui.Theme.Tool.Resolved()
+	for kind, want := range map[string]struct{ name, paint string }{
+		"skill":             {name: "consult-chart", paint: "#e6a8ff bold"},
+		"job":               {name: "tasks", paint: "status_warning"},
+		"job_start":         {name: "launch", paint: "status_info"},
+		"job_wait_any":      {name: "hold", paint: "normal"},
+		"bash_host_network": {name: "$", paint: "status_danger"},
+		"forward":           {name: "share", paint: "status_warning"},
+		"forward_add":       {name: "open-gangway", paint: "status_warning"},
+		"forward_remove":    {name: "close-gangway", paint: "status_warning"},
+		"forward_list":      {name: "peek", paint: "normal"},
+		"read":              {name: "look", paint: ""},
+		"deploy":            {name: "ship", paint: ""},
+	} {
+		if got := resolved[kind]; string(got.Name) != want.name || string(got.Paint) != want.paint {
+			t.Errorf("%s resolves to %+v after migrating, want %+v", kind, got, want)
+		}
+	}
+
+	backup, err := os.ReadFile(backupPath(path))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(backup) != original {
+		t.Errorf("backup changed:\n%s", backup)
+	}
+}
+
+func TestTheEleventhConfigMigrationLeavesEverythingElseAlone(t *testing.T) {
+	original := `version = 11
+
+[bar.top]
+left = [{ segment = 'exposed-ports' }, { segment = "jobs" }, { segment = 'path-grants' }]
+
+[tools.expose]
+command = "expose-thing"
+
+[other]
+expose_add = { name = "kept" }
+job_start = { name = "kept" }
+`
+	path := configFile(t, original)
+
+	if _, _, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path}); err != nil {
+		t.Fatal(err)
+	}
+
+	body, err := os.ReadFile(path) //nolint:gosec // the test's own path
+	if err != nil {
+		t.Fatal(err)
+	}
+	written := string(body)
+	for _, expected := range []string{
+		currentVersionLine(),
+		`{ segment = 'forwards' }`,
+		`{ segment = 'grants' }`,
+		"[tools.expose]\ncommand = \"expose-thing\"",
+		"[other]\nexpose_add = { name = \"kept\" }\njob_start = { name = \"kept\" }",
+	} {
+		if !strings.Contains(written, expected) {
+			t.Errorf("migration omitted %q from:\n%s", expected, written)
+		}
+	}
+}
+
+func TestTheEleventhConfigMigrationOnlyRaisesTheVersionWhereNothingNeedsRenaming(t *testing.T) {
+	original := "version = 11 # current\n\n[model]\nround_robin = [\"codex/gpt@high\"]\n"
+	path := configFile(t, original)
+
+	if _, _, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path}); err != nil {
+		t.Fatal(err)
+	}
+
+	body, err := os.ReadFile(path) //nolint:gosec // the test's own path
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := currentVersionLine() + " # current\n\n[model]\nround_robin = [\"codex/gpt@high\"]\n"; string(body) != want {
+		t.Errorf("got:\n%s\nwant:\n%s", body, want)
+	}
+}
+
+func TestAMigratedConfigDrawsTheForwardsAndGrantsSegments(t *testing.T) {
+	original := "version = 11\n\n[bar.top]\nleft = [{ segment = \"exposed-ports\" }, { segment = \"path-grants\" }]\n"
+	path := configFile(t, original)
+
+	if _, _, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path}); err != nil {
+		t.Fatal(err)
+	}
+
+	loaded, err := config.Load(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if left := fmt.Sprint(loaded.Bar.Top.Left); !strings.Contains(left, "forwards") || !strings.Contains(left, "grants") {
+		t.Errorf("got the top left of the bar %+v", loaded.Bar.Top.Left)
+	}
+}

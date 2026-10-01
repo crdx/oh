@@ -18,16 +18,16 @@ I can read the external reference now.\r
 I can also change it now.\r
 \r
 \e[48;2;48;58;67m                                        \e[0m\r
-\e[48;2;48;58;67m 🤖 Granted temporary read and execute  \e[0m\r
-\e[48;2;48;58;67m    access to /tools.                   \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read-only access  \e[0m\r
+\e[48;2;48;58;67m    to /tools.                          \e[0m\r
 \e[48;2;48;58;67m                                        \e[0m\r
 \r
 I can run what is in the tools directory\r
 now.\r
 \r
 \e[48;2;48;58;67m                                        \e[0m\r
-\e[48;2;48;58;67m 🤖 Granted temporary read, execute, and\e[0m\r
-\e[48;2;48;58;67m    write access to /build.             \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read and write    \e[0m\r
+\e[48;2;48;58;67m    access to /build.                   \e[0m\r
 \e[48;2;48;58;67m                                        \e[0m\r
 \r
 I can build in place and run what comes\r
@@ -388,25 +388,15 @@ w\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67md\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67ma\e[0m\r
+\e[48;2;48;58;67m-\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67mn\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67ml\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67me\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mx\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67me\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mc\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mu\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mt\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67my\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67ma\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
@@ -519,24 +509,6 @@ w\r
 \e[48;2;48;58;67ma\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67md\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m,\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67me\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mx\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67me\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mc\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mu\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mt\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67me\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m,\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67ma\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
@@ -901,12 +873,12 @@ I can read the external reference now.
 I can also change it now.
 
 \e[48;2;48;58;67m\e[0m
-\e[48;2;48;58;67m 🤖 Granted temporary read and execute access to /tools.\e[0m
+\e[48;2;48;58;67m 🤖 Granted temporary read-only access to /tools.\e[0m
 \e[48;2;48;58;67m\e[0m
 I can run what is in the tools directory now.
 
 \e[48;2;48;58;67m\e[0m
-\e[48;2;48;58;67m 🤖 Granted temporary read, execute, and write access to /build.\e[0m
+\e[48;2;48;58;67m 🤖 Granted temporary read and write access to /build.\e[0m
 \e[48;2;48;58;67m\e[0m
 I can build in place and run what comes out of it.
 
@@ -939,13 +911,13 @@ I can read the external reference now.\r
 I can also change it now.\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Granted temporary read and execute access to /tools.                                            \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read-only access to /tools.                                                   \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
 I can run what is in the tools directory now.\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Granted temporary read, execute, and write access to /build.                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read and write access to /build.                                              \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
 I can build in place and run what comes out of it.\r
@@ -981,13 +953,13 @@ I ca\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can re\e[K\r\e[8C\e[?25h\e[?2
 I ca\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can al\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can also c\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can also chang\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can also change it\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can also change it now\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can also change it now.\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Granted temporary read and execute access to /tools.                                            \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read-only access to /tools.                                                   \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 I ca\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can ru\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run wh\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what i\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the too\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the tools d\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the tools direc\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the tools directory\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the tools directory now\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the tools directory now.\e[K\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Granted temporary read, execute, and write access to /build.                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read and write access to /build.                                              \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 I ca\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can bu\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in p\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run wha\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run what co\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run what comes\e[K\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run what comes out\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run what comes out of i\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run what comes out of it.\e[K\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
@@ -1023,13 +995,13 @@ I can read the external reference now.\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?2
 I can also change it now.\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Granted temporary read and execute access to /tools.                                            \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read-only access to /tools.                                                   \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 I can run what is in the tools directory now.\e[K\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Granted temporary read, execute, and write access to /build.                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read and write access to /build.                                              \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 I can build in place and run what comes out of it.\e[K\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
@@ -1065,13 +1037,13 @@ I ca\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can re\e[K\r\e[8C\e[?25h\e[?2
 I ca\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can al\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can also c\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can also chang\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can also change it\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can also change it now\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can also change it now.\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Granted temporary read and execute access to /tools.                                            \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read-only access to /tools.                                                   \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 I ca\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can ru\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run wh\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what i\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the too\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the tools d\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the tools direc\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the tools directory\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the tools directory now\e[K\r\e[44C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can run what is in the tools directory now.\e[K\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Granted temporary read, execute, and write access to /build.                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read and write access to /build.                                              \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 I ca\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can bu\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in p\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run wha\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run what co\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run what comes\e[K\r\e[39C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run what comes out\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run what comes out of i\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can build in place and run what comes out of it.\e[K\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
@@ -1131,10 +1103,9 @@ now.\r
 \e[48;2;48;58;67m            \e[0m\r
 \e[48;2;48;58;67m 🤖 Granted \e[0m\r
 \e[48;2;48;58;67m    temporar\e[0m\r
-\e[48;2;48;58;67m    y read  \e[0m\r
-\e[48;2;48;58;67m    and     \e[0m\r
-\e[48;2;48;58;67m    execute \e[0m\r
-\e[48;2;48;58;67m    access  \e[0m\r
+\e[48;2;48;58;67m    y       \e[0m\r
+\e[48;2;48;58;67m    read-onl\e[0m\r
+\e[48;2;48;58;67m    y access\e[0m\r
 \e[48;2;48;58;67m    to      \e[0m\r
 \e[48;2;48;58;67m    /tools. \e[0m\r
 \e[48;2;48;58;67m            \e[0m\r
@@ -1148,8 +1119,7 @@ now.\r
 \e[48;2;48;58;67m            \e[0m\r
 \e[48;2;48;58;67m 🤖 Granted \e[0m\r
 \e[48;2;48;58;67m    temporar\e[0m\r
-\e[48;2;48;58;67m    y read, \e[0m\r
-\e[48;2;48;58;67m    execute,\e[0m\r
+\e[48;2;48;58;67m    y read  \e[0m\r
 \e[48;2;48;58;67m    and     \e[0m\r
 \e[48;2;48;58;67m    write   \e[0m\r
 \e[48;2;48;58;67m    access  \e[0m\r
@@ -1210,12 +1180,12 @@ I can read the external reference now.\r
 I can also change it now.\r
 \r
 \e[48;2;48;58;67m\e[0m\r
-\e[48;2;48;58;67m 🤖 Granted temporary read and execute access to /tools.\e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read-only access to /tools.\e[0m\r
 \e[48;2;48;58;67m\e[0m\r
 I can run what is in the tools directory now.\r
 \r
 \e[48;2;48;58;67m\e[0m\r
-\e[48;2;48;58;67m 🤖 Granted temporary read, execute, and write access to /build.\e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read and write access to /build.\e[0m\r
 \e[48;2;48;58;67m\e[0m\r
 I can build in place and run what comes out of it.\r
 \r
@@ -1248,13 +1218,13 @@ I can read the external reference now.\r
 I can also change it now.\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Granted temporary read and execute access to /tools.                                            \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read-only access to /tools.                                                   \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
 I can run what is in the tools directory now.\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Granted temporary read, execute, and write access to /build.                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Granted temporary read and write access to /build.                                              \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
 I can build in place and run what comes out of it.\r

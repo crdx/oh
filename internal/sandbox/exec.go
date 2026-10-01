@@ -32,6 +32,8 @@ const (
 	probeName   = "oh (probe)"
 )
 
+var ErrNoShell = errors.New("commands require " + shell + "; please install bash")
+
 const (
 	notice         = "sandbox: "
 	notStarted     = 125
@@ -106,7 +108,20 @@ func execSandboxed(encodedPolicy string, command string) error {
 	}
 
 	//nolint:gosec // running the command is the point, and the sandbox is why that is safe to do
-	return syscall.Exec(shell, []string{shell, "-c", command}, environment)
+	if err := syscall.Exec(shell, []string{shell, "-c", command}, environment); err != nil {
+		return fmt.Errorf("could not start %s: %w", shell, err)
+	}
+
+	return nil
+}
+
+func requireShell(path string) error {
+	info, err := os.Stat(path)
+	if err != nil || info.IsDir() || info.Mode().Perm()&0o111 == 0 {
+		return ErrNoShell
+	}
+
+	return nil
 }
 
 func getEnvironment(allowedNames []string) []string {
@@ -189,6 +204,10 @@ func collect(child *exec.Cmd) keeper.Status {
 }
 
 func validate(ctx context.Context, policy Policy) error {
+	if err := requireShell(shell); err != nil {
+		return err
+	}
+
 	if err := policy.sane(); err != nil {
 		return err
 	}

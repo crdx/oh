@@ -179,32 +179,21 @@ func TestAHomePathIsExpandedRatherThanJoinedToTheWorkspace(t *testing.T) {
 	}
 }
 
-func TestAnExecutableGrantIsToldToTheModelAndReadableByTheFileTools(t *testing.T) {
-	grants, files, _ := newTestGrants(t)
-	directory := t.TempDir()
-
-	event, err := grants.Grant(directory, ReadAccess|ExecAccess)
-	if err != nil {
-		t.Fatal(err)
-	}
-	want := "Granted temporary read and execute access to " + directory + "."
-	if notice, found := Notice(event); !found || notice != want {
-		t.Errorf("got notice %q and %t", notice, found)
-	}
-	if _, _, err := files.Resolve(directory); err != nil {
-		t.Errorf("executable path did not resolve through file tools: %v", err)
-	}
-	if injection := grants.Inject(); injection != want {
-		t.Errorf("got injection %q", injection)
-	}
-}
-
-func TestAnAccessWithoutReadIsRefused(t *testing.T) {
+func TestTemporaryGrantsAcceptOnlyReadAndReadWriteAccess(t *testing.T) {
 	grants, _, _ := newTestGrants(t)
 
-	if _, err := grants.Grant(t.TempDir(), WriteAccess); err == nil ||
-		!strings.Contains(err.Error(), `want some of "rxw"`) {
-		t.Errorf("got %v", err)
+	for _, access := range []Access{WriteAccess, ReadAccess | shell.ExecAccess} {
+		if _, err := grants.Grant(t.TempDir(), access); err == nil ||
+			!strings.Contains(err.Error(), `want some of "rw"`) {
+			t.Errorf("access %q got %v", access.Flags(), err)
+		}
+	}
+
+	if _, err := ChangeEvent("/reference", []Grant{{
+		Path:   "/reference",
+		Access: ReadAccess | shell.ExecAccess,
+	}}); err == nil {
+		t.Error("an executable path grant event was written")
 	}
 }
 

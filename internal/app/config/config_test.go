@@ -1128,8 +1128,8 @@ func testSegments() segment.Registry {
 		"context-usage":      inertFactory,
 		"fast-mode":          inertFactory,
 		"mode-toggle":        inertFactory,
-		"path-grants":        inertFactory,
-		"exposed-ports":      inertFactory,
+		"grants":             inertFactory,
+		"forwards":           inertFactory,
 		"workspace-dir":      workspaceDir.New(work.At("/tmp/somewhere")),
 		"active-model":       inertFactory,
 		"scroll-overflow":    scrollOverflow.New,
@@ -1204,7 +1204,7 @@ func brokenLayout(t *testing.T, body string) (segment.Layout, error) {
 
 func TestAConfigWrittenBeforeThemesExistedNeedsNoMigrating(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := os.WriteFile(path, []byte("version = 11\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte("version = 12\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1231,37 +1231,108 @@ func TestAThemeOverridesOneColourWithoutDroppingTheRest(t *testing.T) {
 	}
 }
 
+func TestTheDefaultsFileSpellsTheBuiltInTheme(t *testing.T) {
+	config := configFrom(t, "")
+
+	if !config.Ui.Theme.Equal(style.DefaultTheme()) {
+		t.Errorf("the defaults file draws %+v, but the built-in theme is %+v", config.Ui.Theme.Tool, style.DefaultTheme().Tool)
+	}
+}
+
 func TestAToolThemeOverridesOnePartWithoutDroppingTheRest(t *testing.T) {
 	config := configFrom(t, `
-		[ui.theme.tool]
-		skill = { name = "consult-chart" }
+		[ui.theme.tool.skill]
+		default = { name = "consult-chart" }
 	`)
 
-	appearance := config.Ui.Theme.Tool["skill"]
+	appearance := config.Ui.Theme.Tool["skill"].Default
 	if appearance.Name != "consult-chart" {
 		t.Errorf("got tool name %q", appearance.Name)
 	}
 	if appearance.Paint != "skill" || appearance.Focus != "skill" {
 		t.Errorf("got appearance %+v, want the default paints", appearance)
 	}
-	if got := config.Ui.Theme.Tool["bash"].Name; got != "$" {
+	if got := config.Ui.Theme.Tool["bash"].Default.Name; got != "$" {
 		t.Errorf("unrelated bash name became %q", got)
 	}
 }
 
-func TestAProjectToolThemeOverrideInheritsTheGlobalAppearance(t *testing.T) {
+func TestAToolDefaultReachesEveryActionThatSetsNothingOfItsOwn(t *testing.T) {
+	config := configFrom(t, `
+		[ui.theme.tool.job]
+		default = { paint = "status_danger" }
+	`)
+
+	resolved := config.Ui.Theme.Tool.Resolved()
+	for kind, want := range map[string]style.ToolPaint{
+		"job":          "status_danger",
+		"job_start":    "status_danger",
+		"job_restart":  "status_danger",
+		"job_status":   "normal",
+		"job_output":   "normal",
+		"job_wait_all": "normal",
+	} {
+		if got := resolved[kind].Paint; got != want {
+			t.Errorf("%s is painted %q, want %q", kind, got, want)
+		}
+	}
+	if got := resolved["job_output"].Name; got != "cat" {
+		t.Errorf("the output action was renamed %q", got)
+	}
+	if got := resolved["forward_add"].Paint; got != "status_warning" {
+		t.Errorf("another tool was repainted %q", got)
+	}
+}
+
+func TestAnActionCanBeRestyledAlone(t *testing.T) {
+	config := configFrom(t, `
+		[ui.theme.tool.job]
+		start = { name = "launch" }
+		output = { paint = "dim" }
+	`)
+
+	resolved := config.Ui.Theme.Tool.Resolved()
+	if got := resolved["job_start"]; got.Name != "launch" || got.Paint != "status_warning" {
+		t.Errorf("job_start resolves to %+v, want the new name and the inherited paint", got)
+	}
+	if got := resolved["job_output"]; got.Name != "cat" || got.Paint != "dim" {
+		t.Errorf("job_output resolves to %+v, want the default name and the new paint", got)
+	}
+	if got := resolved["job_stop"]; got.Name != "stop" {
+		t.Errorf("an untouched action was renamed %q", got.Name)
+	}
+}
+
+func TestAToolTheNamesAreNotBuiltInCanBeThemedWithActions(t *testing.T) {
+	config := configFrom(t, `
+		[ui.theme.tool.deploy]
+		default = { name = "ship", paint = "status_danger" }
+		dry_run = { paint = "dim" }
+	`)
+
+	resolved := config.Ui.Theme.Tool.Resolved()
+	if got := resolved["deploy"]; got.Name != "ship" || got.Paint != "status_danger" {
+		t.Errorf("deploy resolves to %+v", got)
+	}
+	if got := resolved["deploy_dry_run"]; got.Name != "dry_run" || got.Paint != "dim" {
+		t.Errorf("deploy_dry_run resolves to %+v", got)
+	}
+}
+
+func TestAProjectActionOverrideInheritsTheGlobalAppearance(t *testing.T) {
 	directory := t.TempDir()
 	globalPath := filepath.Join(directory, "config.toml")
 	if err := writeConfigFile(globalPath, `
-		[ui.theme.tool]
-		skill = { name = "consult-chart", paint = "#010203", focus = "#040506" }
+		[ui.theme.tool.job]
+		default = { paint = "#010203" }
+		start = { name = "launch", paint = "#040506" }
 	`); err != nil {
 		t.Fatal(err)
 	}
 	overridePath := filepath.Join(directory, "oh.toml")
 	if err := os.WriteFile(overridePath, []byte(`
-		[ui.theme.tool]
-		skill = { name = "read-chart" }
+		[ui.theme.tool.job]
+		start = { name = "kick-off" }
 	`), 0o600); err != nil {
 		t.Fatal(err)
 	}
@@ -1273,7 +1344,56 @@ func TestAProjectToolThemeOverrideInheritsTheGlobalAppearance(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	appearance := config.Ui.Theme.Tool["skill"]
+
+	resolved := config.Ui.Theme.Tool.Resolved()
+	if got := resolved["job_start"]; got.Name != "kick-off" || got.Paint != "#040506" {
+		t.Errorf("job_start resolves to %+v, want the local name with the global paint", got)
+	}
+	if got := resolved["job_stop"]; got.Paint != "#010203" {
+		t.Errorf("job_stop is painted %q, want the global default", got.Paint)
+	}
+}
+
+func TestLoadingAConfigDoesNotChangeTheBuiltInTheme(t *testing.T) {
+	configFrom(t, `
+		[ui.theme.tool.job]
+		start = { name = "launch" }
+		default = { paint = "dim" }
+	`)
+
+	if got := style.DefaultTheme().Tool["job"].Actions["start"].Name; got != "" {
+		t.Errorf("a loaded config changed the built-in theme: %q", got)
+	}
+	if got := style.DefaultTheme().Tool["job"].Default.Paint; got != "status_warning" {
+		t.Errorf("a loaded config changed the built-in paint to %q", got)
+	}
+}
+
+func TestAProjectToolThemeOverrideInheritsTheGlobalAppearance(t *testing.T) {
+	directory := t.TempDir()
+	globalPath := filepath.Join(directory, "config.toml")
+	if err := writeConfigFile(globalPath, `
+		[ui.theme.tool.skill]
+		default = { name = "consult-chart", paint = "#010203", focus = "#040506" }
+	`); err != nil {
+		t.Fatal(err)
+	}
+	overridePath := filepath.Join(directory, "oh.toml")
+	if err := os.WriteFile(overridePath, []byte(`
+		[ui.theme.tool.skill]
+		default = { name = "read-chart" }
+	`), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	config, err := LoadSources(
+		Source{Path: globalPath},
+		Source{Path: overridePath, IsOverride: true},
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	appearance := config.Ui.Theme.Tool["skill"].Default
 	if appearance.Name != "read-chart" || appearance.Paint != "#010203" || appearance.Focus != "#040506" {
 		t.Errorf("got appearance %+v, want the local name with global paints", appearance)
 	}
@@ -1281,12 +1401,30 @@ func TestAProjectToolThemeOverrideInheritsTheGlobalAppearance(t *testing.T) {
 
 func TestAnInvalidToolAppearanceIsRefused(t *testing.T) {
 	for name, body := range map[string]string{
-		"empty name": `[ui.theme.tool]
-read = { name = "" }
+		"empty name": `[ui.theme.tool.read]
+default = { name = "" }
 `,
-		"control in name": "[ui.theme.tool]\nread = { name = \"bad\u0007name\" }\n",
-		"invalid paint": `[ui.theme.tool]
-read = { paint = "chartreuse" }
+		"control in name": "[ui.theme.tool.read]\ndefault = { name = \"bad\u0007name\" }\n",
+		"invalid paint": `[ui.theme.tool.read]
+default = { paint = "chartreuse" }
+`,
+		"invalid action paint": `[ui.theme.tool.job]
+start = { paint = "chartreuse" }
+`,
+		"unknown key": `[ui.theme.tool.read]
+default = { colour = "dim" }
+`,
+		"number for a name": `[ui.theme.tool.read]
+default = { name = 7 }
+`,
+		"tool that is not a table": `[ui.theme.tool]
+read = "read"
+`,
+		"appearance beside the actions": `[ui.theme.tool.read]
+name = "read"
+`,
+		"tools that are not a table": `[ui.theme]
+tool = "read"
 `,
 	} {
 		t.Run(name, func(t *testing.T) {
@@ -1385,7 +1523,7 @@ func TestTheStreamingModeDefaultsToWholeLines(t *testing.T) {
 
 func TestAConfigWrittenBeforeTheStreamingModeExistedNeedsNoMigrating(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := os.WriteFile(path, []byte("version = 11\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte("version = 12\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1451,7 +1589,7 @@ func TestAToolOutputLimitThatIsNotASizeIsRefused(t *testing.T) {
 
 func TestAConfigWrittenBeforeTheToolOutputLimitExistedNeedsNoMigrating(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := os.WriteFile(path, []byte("version = 11\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte("version = 12\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1572,7 +1710,7 @@ func TestTheGroupingDefaultsToReasoningRunningOnFromTools(t *testing.T) {
 
 func TestAConfigWrittenBeforeTheGroupingExistedNeedsNoMigrating(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := os.WriteFile(path, []byte("version = 11\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte("version = 12\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1722,7 +1860,7 @@ func TestAPermissionNobodyOffersIsRefusedWithItsKey(t *testing.T) {
 
 func TestAConfigNobodyCouldHaveWrittenIsRefusedRatherThanParsed(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	body := append([]byte("version = 11\nx = "), bytes.Repeat([]byte("["), readableBytes)...)
+	body := append([]byte("version = 12\nx = "), bytes.Repeat([]byte("["), readableBytes)...)
 	if err := os.WriteFile(path, body, 0o600); err != nil {
 		t.Fatal(err)
 	}

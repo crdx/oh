@@ -11,76 +11,76 @@
 
 ## User · +0s
 
-expose the five preview ports
+forward the five preview ports
 
 ## Tool calls · +2s
 
 ```
-expose: 8001 [call_1]
-expose: 8002 [call_2]
-expose: 8003 [call_3]
-expose: 8004 [call_4]
-expose: 8005 [call_5]
+forward: 8001 [call_1]
+forward: 8002 [call_2]
+forward: 8003 [call_3]
+forward: 8004 [call_4]
+forward: 8005 [call_5]
 ```
 
-## Host → sandbox · 1 sandbox port · changed port 8001 · +7s
+## Port forward · 1 forwarded port · changed port 8001 · +7s
 
 ```
-Sandbox port 8001 exposed at http://127.27.192.223:8001.
+Port 8001 is now forwarded to http://127.27.192.223:8001.
 ```
 
 ## Tool calls · +8s
 
 ```
-expose [ok, call_1]
+forward [ok, call_1]
 ```
 
-## Host → sandbox · 2 sandbox ports · changed port 8002 · +9s
+## Port forward · 2 forwarded ports · changed port 8002 · +9s
 
 ```
-Sandbox port 8002 exposed at http://127.27.192.223:8002.
+Port 8002 is now forwarded to http://127.27.192.223:8002.
 ```
 
 ## Tool calls · +10s
 
 ```
-expose [ok, call_2]
+forward [ok, call_2]
 ```
 
-## Host → sandbox · 3 sandbox ports · changed port 8003 · +11s
+## Port forward · 3 forwarded ports · changed port 8003 · +11s
 
 ```
-Sandbox port 8003 exposed at http://127.27.192.223:8003.
+Port 8003 is now forwarded to http://127.27.192.223:8003.
 ```
 
 ## Tool calls · +12s
 
 ```
-expose [ok, call_3]
+forward [ok, call_3]
 ```
 
-## Host → sandbox · 4 sandbox ports · changed port 8004 · +13s
+## Port forward · 4 forwarded ports · changed port 8004 · +13s
 
 ```
-Sandbox port 8004 exposed at http://127.27.192.223:8004.
+Port 8004 is now forwarded to http://127.27.192.223:8004.
 ```
 
 ## Tool calls · +14s
 
 ```
-expose [ok, call_4]
+forward [ok, call_4]
 ```
 
-## Host → sandbox · 5 sandbox ports · changed port 8005 · +15s
+## Port forward · 5 forwarded ports · changed port 8005 · +15s
 
 ```
-Sandbox port 8005 exposed at http://127.27.192.223:8005.
+Port 8005 is now forwarded to http://127.27.192.223:8005.
 ```
 
 ## Tool calls · +16s
 
 ```
-expose [ok, call_5]
+forward [ok, call_5]
 ```
 
 ## Assistant · +17s

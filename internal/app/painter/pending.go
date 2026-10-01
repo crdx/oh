@@ -226,10 +226,8 @@ func HarnessNotices(event agent.Event) ([]string, bool) {
 		return toolset.AvailabilityNotice(event)
 	case pathgrant.Change:
 		return oneNotice(pathgrant.Notice(event))
-	case portgrant.SandboxToHostChange:
-		return oneNotice(portgrant.SandboxToHostNotice(event))
-	case portgrant.HostToSandboxChange:
-		return oneNotice(portgrant.HostToSandboxNotice(event))
+	case portgrant.ForwardChange:
+		return oneNotice(portgrant.ForwardNotice(event))
 	case turn.HarnessPoke:
 		return oneNotice(turn.PokeNotice(event))
 	case agent.StartupEvent, agent.UserMessageEvent, agent.SilentTurnEvent, agent.CacheRebuildEvent, agent.PrefixRewriteEvent,

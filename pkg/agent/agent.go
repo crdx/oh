@@ -231,7 +231,11 @@ const (
 	CacheSettling CacheCause = "settling"
 )
 
-const cacheSettlingGap = 30 * time.Second
+const (
+	cacheSettlingGap              = 30 * time.Second
+	noticeableCacheRebuildDollars = 0.20
+	TokensPerPricedUnit           = 1_000_000
+)
 
 type CacheReading struct {
 	ReadTokens int
@@ -242,7 +246,7 @@ func (self CacheReading) exists() bool {
 	return !self.At.IsZero()
 }
 
-func CacheRebuildNotice(event Event) string {
+func CacheRebuildNotice(event Event, cost string) string {
 	var rewrittenTokens int
 	if event.Usage != nil && event.Usage.Cache != nil {
 		rewrittenTokens = event.Usage.Cache.WriteTokens
@@ -251,18 +255,52 @@ func CacheRebuildNotice(event Event) string {
 	tokens := util.FormatTokens(rewrittenTokens)
 	gap := util.CoarseDuration(event.Took)
 
+	var notice string
 	switch CacheCause(event.Name) {
 	case CacheReopened:
-		return fmt.Sprintf("Cache gone: %s sent.", tokens)
+		notice = fmt.Sprintf("Cache gone: %s sent", tokens)
 	case CacheExpired:
-		return fmt.Sprintf("Cache expired: %s sent after %s.", tokens, gap)
+		notice = fmt.Sprintf("Cache expired: %s sent after %s", tokens, gap)
 	case CacheSettling:
-		return fmt.Sprintf("Cache unsettled: %s sent.", tokens)
+		notice = fmt.Sprintf("Cache unsettled: %s sent", tokens)
 	case CacheRebuilt:
-		return fmt.Sprintf("Cache rebuilt: %s sent %s later.", tokens, gap)
+		notice = fmt.Sprintf("Cache rebuilt: %s sent %s later", tokens, gap)
+	default:
+		notice = fmt.Sprintf("Cache rebuilt: %s sent", tokens)
 	}
 
-	return fmt.Sprintf("Cache rebuilt: %s sent.", tokens)
+	if cost != "" {
+		notice += " for " + cost
+	}
+
+	return notice + "."
+}
+
+func CacheRebuildCost(event Event, prices *TokenPrices) (float64, bool) {
+	if prices == nil || !prices.IsKnown() {
+		return 0, false
+	}
+
+	return CacheRebuildDollars(event, *prices), true
+}
+
+func IsCacheRebuildWorthNoticing(event Event, prices *TokenPrices) bool {
+	dollars, isPriced := CacheRebuildCost(event, prices)
+
+	return !isPriced || dollars >= noticeableCacheRebuildDollars
+}
+
+func CacheRebuildDollars(event Event, prices TokenPrices) float64 {
+	if event.Usage == nil || event.Usage.Cache == nil {
+		return 0
+	}
+
+	writePrice := prices.CacheWrite
+	if writePrice == 0 {
+		writePrice = prices.Input
+	}
+
+	return float64(event.Usage.Cache.WriteTokens) * max(writePrice-prices.CacheRead, 0) / TokensPerPricedUnit
 }
 
 func cacheCause(gap time.Duration, lifetime time.Duration, previousRead int, rewrittenTokens int) CacheCause {

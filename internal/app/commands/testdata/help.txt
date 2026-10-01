@@ -7,8 +7,8 @@ Commands:
   /info
   /open <target>
   /new [<model>]
-  /expose <port>
-  /grant {r|rx|rw|rxw} <path>
+  /forward <port>
+  /grant {r|rw} <path>...
   /grants [all]
   /revoke <target>...
   /jobs

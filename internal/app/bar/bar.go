@@ -15,8 +15,8 @@ import (
 	"crdx.org/oh/internal/app/segment/activitySpinner"
 	"crdx.org/oh/internal/app/segment/cacheUsage"
 	"crdx.org/oh/internal/app/segment/contextUsage"
-	"crdx.org/oh/internal/app/segment/exposedPorts"
 	"crdx.org/oh/internal/app/segment/fastMode"
+	"crdx.org/oh/internal/app/segment/forwardedPorts"
 	"crdx.org/oh/internal/app/segment/gitBranch"
 	"crdx.org/oh/internal/app/segment/jobNames"
 	"crdx.org/oh/internal/app/segment/localTime"
@@ -44,8 +44,8 @@ const (
 	cacheUsageSegment      = "cache-usage"
 	contextUsageSegment    = "context-usage"
 	modeToggleSegment      = "mode-toggle"
-	pathGrantsSegment      = "path-grants"
-	exposedPortsSegment    = "exposed-ports"
+	grantsSegment          = "grants"
+	forwardsSegment        = "forwards"
 	workspaceDirSegment    = "workspace-dir"
 	activeModelSegment     = "active-model"
 	fastModeSegment        = "fast-mode"
@@ -77,20 +77,19 @@ type Options struct {
 }
 
 type Sources struct {
-	IsTurnRunning          func() bool
-	IsSessionPersisted     func() bool
-	GetContextUsage        func() (int, int)
-	GetCacheUsage          func() (int, int)
-	GetSessionSpend        func() (float64, bool)
-	GetGrantedCaps         func() caps.Set
-	GetGroupStatus         func() caps.GroupStatus
-	GetPathGrants          func() []pathgrant.Grant
-	GetHostToSandboxRoutes func() []portgrant.Route
-	GetSandboxToHostPorts  func() []uint16
-	IsPrefixPending        func() bool
-	GetTurnTiming          func() turn.Timing
-	GetTurnCount           func() int
-	GetJobs                func() []jobs.Snapshot
+	IsTurnRunning      func() bool
+	IsSessionPersisted func() bool
+	GetContextUsage    func() (int, int)
+	GetCacheUsage      func() (int, int)
+	GetSessionSpend    func() (float64, bool)
+	GetGrantedCaps     func() caps.Set
+	GetGroupStatus     func() caps.GroupStatus
+	GetPathGrants      func() []pathgrant.Grant
+	GetForwardedRoutes func() []portgrant.Route
+	IsPrefixPending    func() bool
+	GetTurnTiming      func() turn.Timing
+	GetTurnCount       func() int
+	GetJobs            func() []jobs.Snapshot
 }
 
 func NewRegistry(options Options) segment.Registry {
@@ -104,25 +103,12 @@ func NewRegistry(options Options) segment.Registry {
 			options.Sources.IsPrefixPending,
 			options.Sources.GetGroupStatus,
 		),
-		pathGrantsSegment: pathGrants.New(options.Sources.GetPathGrants),
-		exposedPortsSegment: exposedPorts.New(
-			exposedPorts.Routes{
-				GetRoutes: options.Sources.GetHostToSandboxRoutes,
-				GetJobs:   options.Sources.GetJobs,
-				Hostname:  options.SandboxHostname,
-			},
-			exposedPorts.Routes{
-				GetRoutes: func() []portgrant.Route {
-					ports := options.Sources.GetSandboxToHostPorts()
-					routes := make([]portgrant.Route, 0, len(ports))
-					for _, port := range ports {
-						routes = append(routes, portgrant.Route{Port: port})
-					}
-					return routes
-				},
-				Hostname: portgrant.LocalHost,
-			},
-		),
+		grantsSegment: pathGrants.New(options.Sources.GetPathGrants),
+		forwardsSegment: forwardedPorts.New(forwardedPorts.Routes{
+			GetRoutes: options.Sources.GetForwardedRoutes,
+			GetJobs:   options.Sources.GetJobs,
+			Hostname:  options.SandboxHostname,
+		}),
 		workspaceDirSegment: workspaceDir.New(options.Workspace),
 		activeModelSegment: activeModel.New(activeModel.Settings{
 			Name:         options.Session.Model,
@@ -143,7 +129,7 @@ func NewRegistry(options Options) segment.Registry {
 		turnTimerSegment:    turnTimer.New(options.Sources.GetTurnTiming, options.Sources.IsTurnRunning),
 		turnCountSegment:    turnCount.New(options.Sources.GetTurnCount),
 		gitBranchSegment:    gitBranch.New(options.Workspace.GetDir()),
-		jobNamesSegment:     jobNames.New(options.Sources.GetJobs, options.Sources.GetHostToSandboxRoutes, time.Now),
+		jobNamesSegment:     jobNames.New(options.Sources.GetJobs, options.Sources.GetForwardedRoutes, time.Now),
 		subUsageSegment: subUsage.New(subUsage.Settings{
 			Reporter:         options.UsageReporter,
 			CachePath:        options.UsageCachePath,

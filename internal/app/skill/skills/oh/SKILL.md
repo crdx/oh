@@ -47,7 +47,7 @@ Where `~/.config/org.crdx/oh/` is a symlink into a dotfiles repository, edit the
 - `[caps]`, `[sandbox]`, `[skills]` — defaults each workspace then overrides
 - `[bar.top]`, `[bar.bottom]` — status bar segments, each naming a `segment` and its options
 - `[input]` — `nudge`, defaulting to `"continue"`, is sent by double-enter on an empty input; `speed_dial`, defaulting to `["yes"]`, places messages there through successive tab presses until the input is edited
-- `[editor]`, `[tool]`, `[ports]` — editor command, tool output cap, exposed-port hostname
+- `[editor]`, `[tool]`, `[ports]` — editor command, tool output cap, forwarded-port hostname
 
 ## Workspace Config
 
@@ -102,53 +102,60 @@ dim = "default faint"
 
 ### Tool calls
 
-`[ui.theme.tool]` maps each semantic tool-call kind to an inline appearance. `name` replaces the displayed command name. `paint` colours that name; `focus` colours the focused part of its subject, such as the skill name within a path. Omitted fields inherit from the previous config layer and ultimately the defaults.
+`[ui.theme.tool.<tool>]` styles one tool's calls. Its `default` holds the tool's own appearance, and every other key is one of the tool's actions. An appearance takes `name`, which replaces the displayed command name; `paint`, which colours that name; and `focus`, which colours the focused part of its subject, such as the skill name within a path. Omitted fields inherit from the previous config layer and ultimately the defaults.
+
+An action inherits `paint` and `focus` from its tool's `default`, and is named after its own key unless it sets a `name`, so `start = {}` says "the tool's paint, called start". A tool with no actions takes only a `default`. Every action key is read as an action, so `default` is reserved and no tool has an action called `default`, `name`, `paint`, or `focus`.
 
 A paint is either a direct theme paint or one of `normal`, `dim`, `accent`, `status_success`, `status_info`, `status_warning`, `status_danger`, and `skill`. A direct paint takes the same colour and decorations as an ordinary theme value.
 
 ```toml
-[ui.theme.tool]
-skill = { name = "consult-chart", paint = "#e6a8ff bold", focus = "#e6a8ff" }
-job_start = { name = "launch", paint = "status_info" }
-job_stop = { name = "scuttle", paint = "status_danger" }
-expose_add = { name = "open-gangway", paint = "status_warning" }
-expose_remove = { name = "close-gangway", paint = "status_danger" }
+[ui.theme.tool.skill]
+default = { name = "consult-chart", paint = "#e6a8ff bold", focus = "#e6a8ff" }
+
+[ui.theme.tool.job]
+default = { paint = "status_info" }     # every job action that sets no paint of its own
+start = { name = "launch" }
+stop = { name = "scuttle", paint = "status_danger" }
+
+[ui.theme.tool.forward]
+add = { name = "open-gangway" }
+remove = { name = "close-gangway", paint = "status_danger" }
 ```
 
-| Kind                | Default name | Default paint    | Focus  |
-|---------------------|--------------|------------------|--------|
-| `read`              | `read`       | call default     | accent |
-| `skill`             | `load`       | `skill`          | skill  |
-| `ls`                | `ls`         | call default     | accent |
-| `find`              | `find`       | call default     | accent |
-| `grep`              | `grep`       | call default     | accent |
-| `write`             | `write`      | call default     | accent |
-| `edit`              | `edit`       | call default     | accent |
-| `bash`              | `$`          | `status_info`    | accent |
-| `bash_host_network` | `$`          | `status_danger`  | accent |
-| `lookup`            | `lookup`     | `status_info`    | accent |
-| `fetch`             | `fetch`      | `status_info`    | accent |
-| `notify`            | `notify`     | call default     | accent |
-| `title`             | `title`      | call default     | accent |
-| `job_start`         | `start`      | `status_warning` | accent |
-| `job_restart`       | `restart`    | `status_warning` | accent |
-| `job_status`        | `status`     | `normal`         | accent |
-| `job_output`        | `cat`        | `normal`         | accent |
-| `job_wait_any`      | `await`      | `normal`         | accent |
-| `job_wait_all`      | `await`      | `normal`         | accent |
-| `job_stop`          | `stop`       | `status_warning` | accent |
-| `job_list`          | `list`       | `normal`         | accent |
-| `job_discard`       | `discard`    | `status_warning` | accent |
-| `job_prune`         | `prune`      | `status_warning` | accent |
-| `expose_add`        | `forward`    | `status_warning` | accent |
-| `expose_remove`     | `close`      | `status_warning` | accent |
-| `expose_list`       | `list`       | `normal`         | accent |
-| `job`               | `job`        | call default     | accent |
-| `expose`            | `expose`     | call default     | accent |
+| Tool      | Action         | Default name | Default paint    | Focus  |
+|-----------|----------------|--------------|------------------|--------|
+| `read`    | `default`      | `read`       | call default     | accent |
+| `skill`   | `default`      | `load`       | `skill`          | skill  |
+| `ls`      | `default`      | `ls`         | call default     | accent |
+| `find`    | `default`      | `find`       | call default     | accent |
+| `grep`    | `default`      | `grep`       | call default     | accent |
+| `write`   | `default`      | `write`      | call default     | accent |
+| `edit`    | `default`      | `edit`       | call default     | accent |
+| `bash`    | `default`      | `$`          | `status_info`    | accent |
+| `bash`    | `host_network` | `$`          | `status_danger`  | accent |
+| `lookup`  | `default`      | `lookup`     | `status_info`    | accent |
+| `fetch`   | `default`      | `fetch`      | `status_info`    | accent |
+| `notify`  | `default`      | `notify`     | call default     | accent |
+| `title`   | `default`      | `title`      | call default     | accent |
+| `job`     | `default`      | `job`        | `status_warning` | accent |
+| `job`     | `start`        | `start`      | `status_warning` | accent |
+| `job`     | `restart`      | `restart`    | `status_warning` | accent |
+| `job`     | `status`       | `status`     | `normal`         | accent |
+| `job`     | `output`       | `cat`        | `normal`         | accent |
+| `job`     | `wait_any`     | `await`      | `normal`         | accent |
+| `job`     | `wait_all`     | `await`      | `normal`         | accent |
+| `job`     | `stop`         | `stop`       | `status_warning` | accent |
+| `job`     | `list`         | `list`       | `normal`         | accent |
+| `job`     | `discard`      | `discard`    | `status_warning` | accent |
+| `job`     | `prune`        | `prune`      | `status_warning` | accent |
+| `forward` | `default`      | `forward`    | `status_warning` | accent |
+| `forward` | `add`          | `forward`    | `status_warning` | accent |
+| `forward` | `remove`       | `close`      | `status_warning` | accent |
+| `forward` | `list`         | `list`       | `normal`         | accent |
 
-The call default is `normal` for a read-only tool and `status_warning` for a tool that may change something. `job` and `expose` are the malformed-call fallbacks; valid calls use their action kind. An unlisted custom or removed tool keeps its recorded name and uses that same default.
+The call default is `normal` for a read-only tool and `status_warning` for a tool that may change something. A tool's `default` is also the malformed-call fallback for `job` and `forward`; valid calls use their action. An unlisted custom or removed tool keeps its recorded name and uses that same default, and a custom tool is themed the same way, by its own name.
 
-A tool records its semantic kind rather than its themed name, so changing `job_start` rewrites old and new start calls alike when the conversation replays. `skill` is an ordinary semantic kind: its `load` name and mauve paint come entirely from this table rather than a renderer exception. Its subject remains the complete linked skill path.
+A tool records its semantic kind rather than its themed name, joining the tool and the action with an underscore as in `job_start`, so changing `job.start` rewrites old and new start calls alike when the conversation replays. `skill` is an ordinary tool: its `load` name and mauve paint come entirely from this table rather than a renderer exception. Its subject remains the complete linked skill path.
 
 A live theme reload clears and replays the complete conversation, so vocabulary, command colours, and focused argument colours change throughout scrollback at once. Resume, preview, and print also render with the active tool theme.
 
@@ -174,31 +181,31 @@ right = [
 
 A segment drawing nothing is left out, and ` ─ ` joins whatever is left. Each of the six positions is independent, a segment may appear in several, and an array replaces rather than merges, so restate the default entries of any position you override.
 
-The right side is drawn whole, and the left and centre are then fitted into what remains, so a long right side costs both of them their room. Within a position the rightmost segment sheds detail first, each one going down to its barest form before any segment is dropped at all, and a segment is then dropped from the left. `path-grants` and `exposed-ports` trade their last entries for a `+3`; `active-model` shortens to its capitals and then drops its squares; `context-usage` sheds its window and then its count; `subscription-usage` sheds its age, then its gauges, then its labels, then whole windows, keeping a limited one over an unlimited one and an unlimited one over a stale one. Every other segment is drawn whole or dropped. The centre must still sit centred against the full width, so it suits something short and steady.
+The right side is drawn whole, and the left and centre are then fitted into what remains, so a long right side costs both of them their room. Within a position the rightmost segment sheds detail first, each one going down to its barest form before any segment is dropped at all, and a segment is then dropped from the left. `grants` and `forwards` trade their last entries for a `+3`; `active-model` shortens to its capitals and then drops its squares; `context-usage` sheds its window and then its count; `subscription-usage` sheds its age, then its gauges, then its labels, then whole windows, keeping a limited one over an unlimited one and an unlimited one over a stale one. Every other segment is drawn whole or dropped. The centre must still sit centred against the full width, so it suits something short and steady.
 
 `/info` draws every segment there is with its current value, naming those drawing nothing, which is how to judge one before putting it in the bar.
 
-| Segment              | Draws                                                                 | Options                                     |
-|----------------------|-----------------------------------------------------------------------|---------------------------------------------|
-| `activity-spinner`   | `frames` in turn while a turn runs, and `idle` otherwise              | `idle`, `frames`, `rate`                    |
-| `active-model`       | the model, its effort as a ladder of squares, and `⚡` when fast      | none                                        |
-| `cache-usage`        | what share of the last request the provider read from cache           | none                                        |
-| `context-usage`      | the context filled, as a percentage and used over total tokens        | none                                        |
-| `exposed-ports`      | ports as links, prefixed by associated jobs; `⇠` marks routes to host | none                                        |
-| `fast-mode`          | `⚡` for the fast model, `·` for the standard one                     | none                                        |
-| `git-branch`         | the workspace's branch, or a short hash when detached                 | `rate`, default `5s`                        |
-| `jobs`               | a mark and name per job, a finished one lingering 30 seconds          | none                                        |
-| `local-time`         | the clock, its refresh following the format's finest field            | `format`, a Go layout, default `15:04`      |
-| `mode-toggle`        | the capability letters, lit where granted and dim where not           | none                                        |
-| `path-grants`        | each granted path with its access flags, linked to the path it names  | `type`: `base`, `short`, or `full`          |
-| `scroll-overflow`    | how many input lines are hidden that way, and nothing where none are  | `direction`: `up` or `down`, and no default |
-| `session-emoji`      | the emoji drawn from the session name                                 | none                                        |
-| `session-name`       | the session name linked to its directory                              | `emoji`, `true` to append it                |
-| `session-spend`      | what the session has cost, in `ui.currency`                           | none                                        |
-| `subscription-usage` | a gauge per subscription window, with its freshness and any limit     | `rate`, default `5m`                        |
-| `turn-count`         | `#n`, and nothing before the first turn                               | none                                        |
-| `turn-timer`         | minutes waited then minutes worked, the running one of the two lit    | none                                        |
-| `workspace-dir`      | the workspace directory, linked to it                                 | `type`: `base`, `short`, or `full`          |
+| Segment              | Draws                                                                          | Options                                     |
+|----------------------|--------------------------------------------------------------------------------|---------------------------------------------|
+| `active-model`       | the model, its effort as a ladder of squares, and `⚡` when fast               | none                                        |
+| `activity-spinner`   | `frames` in turn while a turn runs, and `idle` otherwise                       | `idle`, `frames`, `rate`                    |
+| `cache-usage`        | what share of the last request the provider read from cache                    | none                                        |
+| `context-usage`      | the context filled, as a percentage and used over total tokens                 | none                                        |
+| `fast-mode`          | `⚡` for the fast model, `·` for the standard one                              | none                                        |
+| `forwards`           | ports as links, prefixed by associated jobs                                    | none                                        |
+| `git-branch`         | the workspace's branch, or a short hash when detached                          | `rate`, default `5s`                        |
+| `grants`             | each granted path, grouped under its access flags, linked to the path it names | `type`: `base`, `short`, or `full`          |
+| `jobs`               | a mark and name per job, a finished one lingering 30 seconds                   | none                                        |
+| `local-time`         | the clock, its refresh following the format's finest field                     | `format`, a Go layout, default `15:04`      |
+| `mode-toggle`        | the capability letters, lit where granted and dim where not                    | none                                        |
+| `scroll-overflow`    | how many input lines are hidden that way, and nothing where none are           | `direction`: `up` or `down`, and no default |
+| `session-emoji`      | the emoji drawn from the session name                                          | none                                        |
+| `session-name`       | the session name linked to its directory                                       | `emoji`, `true` to append it                |
+| `session-spend`      | what the session has cost, in `ui.currency`                                    | none                                        |
+| `subscription-usage` | a gauge per subscription window, with its freshness and any limit              | `rate`, default `5m`                        |
+| `turn-count`         | `#n`, and nothing before the first turn                                        | none                                        |
+| `turn-timer`         | minutes waited then minutes worked, the running one of the two lit             | none                                        |
+| `workspace-dir`      | the workspace directory, linked to it                                          | `type`: `base`, `short`, or `full`          |
 
 A `rate` or a duration takes Go's form, as `125ms`, `10s`, or `5m`. A segment refusing an option says which position it sits in and what the option wanted instead, and startup stops there.
 
@@ -296,6 +303,8 @@ The result holds standard output and standard error. A non-zero exit reports a f
 - `home` — expose a real-home file at the same relative location in private `HOME`; it is read-only to path tools and shell commands
 
 Access combines when the same path is named more than once: `write` adds writing and `exec` or `path` adds execution.
+
+Temporary `/grant` access takes `r` or `rw`; both let the shell execute files at or under the path whenever shell capability is enabled.
 
 Two implicit sets use the same source functions for both enforcement paths: the system paths needed to run commands (such as `/usr` and selected runtime configuration under `/etc`), and existing directories inherited through `PATH`. Path tools can read both sets; shell commands can also execute the executable directories. Beyond those sets and the exceptions below, a path absent from `[sandbox]` is unreachable however generous the caps.
 

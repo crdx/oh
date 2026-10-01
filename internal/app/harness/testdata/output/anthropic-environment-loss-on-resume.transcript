@@ -29,7 +29,7 @@ Configured PATH directories are now, in order: none.
 Configured home paths removed: `/test-home/.toolrc`.
 Skills no longer available: `removed` at `/skills/removed/SKILL.md`.
 The workspace is no longer a Git repository.
-Host-facing URLs for exposed sandbox ports now use `127.9.9.9` instead of `old.agent.test`.
+Host-facing URLs for forwarded sandbox ports now use `127.9.9.9` instead of `old.agent.test`.
 ```
 
 ## User · +0s

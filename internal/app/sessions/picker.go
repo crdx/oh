@@ -19,11 +19,12 @@ import (
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/util/diskutil"
 	"crdx.org/oh/pkg/session"
 )
 
-func Choose(directory string, workspace *work.Space, terminal *os.File, screen io.Writer) (string, error) {
+func Choose(directory string, workspace *work.Space, currency money.Currency, terminal *os.File, screen io.Writer) (string, error) {
 	sessions, archivedSessions, err := loadPickerSessions(directory, screen)
 	if err != nil {
 		return "", err
@@ -60,7 +61,7 @@ func Choose(directory string, workspace *work.Space, terminal *os.File, screen i
 			return os.RemoveAll(location.GetTmpDir(storedSession.Name))
 		},
 		Read: func(storedSession *picker.Session, room int) ([]string, error) {
-			return preview.Read(directory, storedSession.Name, work.At(storedSession.WorkspaceDir), room)
+			return preview.Read(directory, storedSession.Name, work.At(storedSession.WorkspaceDir), currency, room)
 		},
 		Measure: func(storedSession *picker.Session) int64 {
 			return Occupied(Path(directory, storedSession))

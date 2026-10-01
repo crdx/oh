@@ -19,6 +19,7 @@ import (
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/internal/money"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -758,5 +759,25 @@ func TestReasoningDrawnADeltaAtATimeIsTheReasoningDrawnAtOnce(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestACacheRebuildIsCostedInTheChosenCurrency(t *testing.T) {
+	var screenOutput bytes.Buffer
+	paint := New(output.NewTerminalOfSize(&screenOutput, 80, 24), false, nil, nil, output.StreamingModeLine)
+	paint.PriceCacheRebuildsAt(Tariff{
+		Prices:   &agent.TokenPrices{Input: 5, Output: 25, CacheRead: 0.5, CacheWrite: 6.25},
+		Currency: money.In("GBP", 0.5),
+	})
+
+	paint.DrawEvent(agent.Event{
+		Kind:  agent.CacheRebuildEvent,
+		Name:  string(agent.CacheRebuilt),
+		Took:  45 * time.Second,
+		Usage: &agent.Usage{Cache: &agent.CacheUsage{WriteTokens: 40_000}},
+	})
+
+	if want := "Cache rebuilt: 40Kt sent <1m later for £0.12."; !strings.Contains(screenOutput.String(), want) {
+		t.Errorf("got %q, want it to contain %q", screenOutput.String(), want)
 	}
 }

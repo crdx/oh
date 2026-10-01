@@ -168,3 +168,31 @@ func TestEveryToolStillThereIsKeptInTheOrderItWasHeld(t *testing.T) {
 		t.Errorf("got %v and %v, want %v and nothing", present, absent, held)
 	}
 }
+
+func TestAToolRetiredUnderItsOldNameStaysOnTheWireAndIsRefused(t *testing.T) {
+	snapshots := []tool.Snapshot{tool.TakeSnapshot(namedTool("expose")), tool.TakeSnapshot(namedTool("read"))}
+
+	restored := Restore([]tool.Tool{namedTool("read"), namedTool("forward")}, snapshots)
+
+	if got := namesOf(restored.OfferedTools); !slices.Equal(got, []string{"expose", "read"}) {
+		t.Errorf("got offered tools %v, want the frozen set and nothing new", got)
+	}
+	if restored.Availability["expose"] != ToolMissing || restored.Availability["read"] != ToolAvailable {
+		t.Errorf("got availability %#v", restored.Availability)
+	}
+	if _, isOffered := restored.Availability["forward"]; isOffered {
+		t.Error("a tool the session never froze was offered")
+	}
+	if !tool.IsUnavailable(restored.OfferedTools[0]) {
+		t.Error("the retired tool can still be run")
+	}
+
+	event, err := AvailabilityChangeEvent(Availability{"expose": ToolAvailable}, restored.Availability)
+	if err != nil {
+		t.Fatal(err)
+	}
+	notices, isSaid := AvailabilityNotice(event)
+	if !isSaid || !strings.Contains(strings.Join(notices, " "), "expose") {
+		t.Errorf("got notices %q and %t, want the model told the tool is gone", notices, isSaid)
+	}
+}

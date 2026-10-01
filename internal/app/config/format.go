@@ -12,6 +12,7 @@ const (
 	ContinueMessageFormat   = 9
 	StreamingNameFormat     = 10
 	NudgeFormat             = 11
+	ForwardNameFormat       = 12
 
-	Format = NudgeFormat
+	Format = ForwardNameFormat
 )

@@ -1,16 +1,14 @@
-=== effective paths and ports in both directions ===
+=== effective paths and ports ===
 Paths:
   rx   PATH                  /commands
   r    config                /configuration/first-long-reference-directory
                              /somewhere-else/second-long-reference-directory
-  rw   config + temporary    /reference
-  rw   temporary             /output
+  rxw  config + temporary    /reference
+  rxw  temporary             /output
 
-Ports:
-  Host http://127.9.9.9:3000 → Sandbox 3000
-  Host http://127.9.9.9:3001 → Sandbox 3001
-  Sandbox 8080 → Host 127.0.0.1:8080
-  Sandbox 8081 → Host 127.0.0.1:8081
+Forwarded:
+  3000 → http://127.9.9.9:3000
+  3001 → http://127.9.9.9:3001
 === every permanent path kind ===
 Paths:
   rw   cache + sockets       /cache
@@ -48,11 +46,8 @@ Denied:
 Paths:
   rxw  workspace             /workspace
   rxw  yolo shell            /
-=== host to sandbox alone ===
-Ports:
-  Host http://127.9.9.9:8080 → Sandbox 8080
-=== sandbox to host alone ===
-Ports:
-  Sandbox 3000 → Host 127.0.0.1:3000
+=== ports alone ===
+Forwarded:
+  8080 → http://127.9.9.9:8080
 === nothing granted ===
-No grants or routes.
+No grants or forwarded ports.

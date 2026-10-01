@@ -587,29 +587,6 @@ func loadSnapshots(sources []sourceSnapshot) (Config, error) {
 	return config, nil
 }
 
-func mergeToolAppearances(
-	current map[string]style.ToolAppearance,
-	previous map[string]style.ToolAppearance,
-	meta toml.MetaData,
-) {
-	for kind, appearance := range current {
-		before, didExist := previous[kind]
-		if !didExist {
-			continue
-		}
-		if !meta.IsDefined("ui", "theme", "tool", kind, "name") {
-			appearance.Name = before.Name
-		}
-		if !meta.IsDefined("ui", "theme", "tool", kind, "paint") {
-			appearance.Paint = before.Paint
-		}
-		if !meta.IsDefined("ui", "theme", "tool", kind, "focus") {
-			appearance.Focus = before.Focus
-		}
-		current[kind] = appearance
-	}
-}
-
 func applySnapshot(config *Config, source sourceSnapshot) error {
 	displayPath := pathutil.Shorten(source.source.Path)
 
@@ -631,13 +608,10 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 
 	previousVersion := config.Version
 	previousSnippets := maps.Clone(config.Snippets)
-	previousToolAppearances := maps.Clone(config.Ui.Theme.Tool)
 	meta, err := toml.Decode(string(source.snapshot.data), config)
 	if err != nil {
 		return fmt.Errorf("%s: %w", displayPath, err)
 	}
-
-	mergeToolAppearances(config.Ui.Theme.Tool, previousToolAppearances, meta)
 
 	if source.source.IsOverride {
 		config.Version = previousVersion

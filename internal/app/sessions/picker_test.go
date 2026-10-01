@@ -19,6 +19,7 @@ import (
 	sessionpicker "crdx.org/oh/internal/app/sessions/picker"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/internal/money"
 )
 
 var updateGoldens = flag.Bool("update", false, "update golden files")
@@ -330,7 +331,7 @@ func TestASessionRecordedThroughALinkBelongsToTheWorkspaceItNames(t *testing.T) 
 func TestNoStoredConversationAnywhereSaysSo(t *testing.T) {
 	var screen strings.Builder
 
-	_, err := Choose(t.TempDir(), work.At(t.TempDir()), nil, &screen)
+	_, err := Choose(t.TempDir(), work.At(t.TempDir()), money.Dollar(), nil, &screen)
 	if err == nil {
 		t.Fatal("expected the empty store to be reported")
 	}

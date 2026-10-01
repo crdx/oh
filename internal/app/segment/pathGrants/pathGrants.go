@@ -19,6 +19,12 @@ const (
 	full  = "full"
 )
 
+const (
+	groupOpening   = "["
+	groupSeparator = " "
+	groupClosing   = "]"
+)
+
 type state struct {
 	getGrants func() []pathgrant.Grant
 	pathType  string
@@ -57,38 +63,62 @@ func (self state) Render(context segment.Context) string {
 }
 
 func (self state) Ladder(segment.Context) []string {
-	return fit.Parts(self.getParts())
+	grants := self.getGrants()
+	paths := self.renderPaths(grants)
+
+	return fit.Shown(len(grants), func(shownCount int) []string {
+		return renderGroups(grants[:shownCount], paths)
+	})
 }
 
-func (self state) getParts() []string {
-	grants := self.getGrants()
+func (self state) renderPaths(grants []pathgrant.Grant) []string {
 	baseCounts := make(map[string]int, len(grants))
 	for _, grant := range grants {
 		baseCounts[filepath.Base(grant.Path)]++
 	}
 
-	parts := make([]string, 0, len(grants))
+	paths := make([]string, 0, len(grants))
 	for _, grant := range grants {
 		pathType := self.pathType
 		if (pathType == "" || pathType == base) && baseCounts[filepath.Base(grant.Path)] > 1 {
 			pathType = short
 		}
-		parts = append(parts, renderGrant(grant, pathType))
+		paths = append(paths, renderPath(grant.Path, pathType))
 	}
-	return parts
+	return paths
 }
 
-func renderGrant(grant pathgrant.Grant, pathType string) string {
-	path := grant.Path
+func renderGroups(grants []pathgrant.Grant, paths []string) []string {
+	var accesses []pathgrant.Access
+	pathsByAccess := map[pathgrant.Access][]string{}
+	for i, grant := range grants {
+		if _, isSeen := pathsByAccess[grant.Access]; !isSeen {
+			accesses = append(accesses, grant.Access)
+		}
+		pathsByAccess[grant.Access] = append(pathsByAccess[grant.Access], paths[i])
+	}
+
+	groups := make([]string, 0, len(accesses))
+	for _, access := range accesses {
+		groups = append(groups, renderAccess(access)+
+			style.Subtle(groupOpening)+
+			strings.Join(pathsByAccess[access], groupSeparator)+
+			style.Subtle(groupClosing))
+	}
+	return groups
+}
+
+func renderPath(path string, pathType string) string {
+	shownPath := path
 	switch pathType {
 	case "", base:
-		path = filepath.Base(path)
+		shownPath = filepath.Base(path)
 	case short:
-		path = pathutil.Shorten(path)
+		shownPath = pathutil.Shorten(path)
 	case full:
 	}
 
-	return renderAccess(grant.Access) + style.Subtle(":") + link.RenderPath(style.Normal(path), grant.Path)
+	return link.RenderPath(style.Normal(shownPath), path)
 }
 
 func renderAccess(access pathgrant.Access) string {

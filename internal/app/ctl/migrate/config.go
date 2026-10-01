@@ -81,6 +81,19 @@ var configSteps = map[int]configStep{
 	config.OllamaHostFormat:        migrateConfigFromVersionEight,
 	config.ContinueMessageFormat:   migrateConfigFromVersionNine,
 	config.StreamingNameFormat:     migrateConfigFromVersionTen,
+	config.NudgeFormat:             migrateConfigFromVersionEleven,
+}
+
+func migrateConfigFromVersionEleven(data []byte) ([]byte, error) {
+	if _, _, err := readConfigDocument(data); err != nil {
+		return nil, err
+	}
+
+	migratedData := renameConfigSegment(data, "exposed-ports", "forwards")
+	migratedData = renameConfigSegment(migratedData, "path-grants", "grants")
+	migratedData = nestToolThemeKinds(migratedData)
+
+	return rewriteConfigVersion(migratedData, config.ForwardNameFormat), nil
 }
 
 func migrateConfigFromVersionTen(data []byte) ([]byte, error) {

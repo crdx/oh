@@ -22,26 +22,26 @@ const (
 )
 
 type Handler struct {
-	GetTurnEvents         func() <-chan turn.Event
-	OnKey                 func(key.Key) bool
-	OnTurn                func(turn.Event)
-	OnTurnFinished        func() bool
-	OnResize              func()
-	OnBeat                func()
-	Changes               <-chan error
-	OnChange              func(error) bool
-	Conclusions           <-chan jobs.Conclusion
-	OnJobEnded            func(jobs.Conclusion)
-	HostToSandboxChanges  <-chan agent.Event
-	OnHostToSandboxChange func(agent.Event)
-	QuestionChanges       <-chan struct{}
-	OnQuestionChange      func()
-	TriggerChanges        <-chan struct{}
-	OnTriggerChange       func()
-	OnDraw                func()
-	Watch                 func(work string) func()
+	GetTurnEvents    func() <-chan turn.Event
+	OnKey            func(key.Key) bool
+	OnTurn           func(turn.Event)
+	OnTurnFinished   func() bool
+	OnResize         func()
+	OnBeat           func()
+	Changes          <-chan error
+	OnChange         func(error) bool
+	Conclusions      <-chan jobs.Conclusion
+	OnJobEnded       func(jobs.Conclusion)
+	ForwardChanges   <-chan agent.Event
+	OnForwardChange  func(agent.Event)
+	QuestionChanges  <-chan struct{}
+	OnQuestionChange func()
+	TriggerChanges   <-chan struct{}
+	OnTriggerChange  func()
 	HostCommands     <-chan hostcommand.Outcome
 	OnHostCommand    func(hostcommand.Outcome)
+	OnDraw           func()
+	Watch            func(work string) func()
 }
 
 func Run(terminal *os.File, getNextRefresh func(time.Time) time.Time, handler Handler) {
@@ -63,7 +63,7 @@ func Run(terminal *os.File, getNextRefresh func(time.Time) time.Time, handler Ha
 func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan time.Time, schedule func(), beats <-chan time.Time, handler Handler) {
 	changes := handler.Changes
 	conclusions := handler.Conclusions
-	hostToSandboxChanges := handler.HostToSandboxChanges
+	forwardChanges := handler.ForwardChanges
 	questionChanges := handler.QuestionChanges
 	triggerChanges := handler.TriggerChanges
 	hostCommands := handler.HostCommands
@@ -99,12 +99,12 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 				continue
 			}
 			handler.OnJobEnded(conclusion)
-		case event, isOpen := <-hostToSandboxChanges:
+		case event, isOpen := <-forwardChanges:
 			if !isOpen {
-				hostToSandboxChanges = nil
+				forwardChanges = nil
 				continue
 			}
-			handler.OnHostToSandboxChange(event)
+			handler.OnForwardChange(event)
 		case _, isOpen := <-questionChanges:
 			if !isOpen {
 				questionChanges = nil

@@ -21,7 +21,7 @@ import (
 	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/bash"
-	"crdx.org/oh/pkg/toolbox/expose"
+	"crdx.org/oh/pkg/toolbox/forward"
 	"crdx.org/oh/pkg/toolbox/job"
 )
 
@@ -492,7 +492,7 @@ func NewJob(
 	mode *caps.Mode,
 	files *file.Root,
 	isYolo bool,
-	ports expose.Ports,
+	ports forward.Ports,
 ) tool.Tool {
 	fresh := func(ctx context.Context) (sandbox.Policy, error) {
 		policy, err := freshPolicy(ctx, workspaceDir, homeDir, tmpDir, pathAccess, mode, isYolo)

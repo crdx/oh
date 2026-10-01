@@ -23,7 +23,7 @@ import (
 )
 
 const (
-	JournalFormat = 15
+	JournalFormat = 17
 	MetaFormat    = 3
 )
 

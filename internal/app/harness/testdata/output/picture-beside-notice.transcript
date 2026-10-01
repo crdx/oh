@@ -11,7 +11,7 @@
 
 ## User · +0s
 
-read the screenshot and expose the preview
+read the screenshot and forward the preview
 
 ## Tool calls · +1s
 
@@ -20,10 +20,10 @@ read [call_1]
 read [ok, 1 line, 10B, call_2]
 ```
 
-## Host → sandbox · 1 sandbox port · changed port 8080 · +4s
+## Port forward · 1 forwarded port · changed port 8080 · +4s
 
 ```
-Sandbox port 8080 exposed at http://127.27.192.223:8080.
+Port 8080 is now forwarded to http://127.27.192.223:8080.
 ```
 
 ## Tool calls · +5s

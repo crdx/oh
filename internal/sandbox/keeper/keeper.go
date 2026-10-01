@@ -109,9 +109,8 @@ type Keeper struct {
 	isClosed     atomic.Bool
 	readers      sync.WaitGroup
 
-	portDirectionsMutex sync.Mutex
-	sandboxToHost       map[uint16]*bridge
-	hostToSandbox       map[uint16]*bridge
+	forwardsMutex sync.Mutex
+	forwards      map[uint16]*bridge
 }
 
 type arrival struct {
@@ -238,8 +237,7 @@ func (self *Keeper) Close() error {
 	}
 
 	_ = self.control.Close()
-	self.closeHostToSandbox()
-	self.closeSandboxToHost()
+	self.closeForwards()
 	self.readers.Wait()
 
 	if self.process.Process != nil {
@@ -297,11 +295,11 @@ func (self *Keeper) receive() {
 			return
 		}
 
-		files := parseFiles(control[:controlLength])
+		file := firstFile(control[:controlLength], "forwarded-connection")
 
 		var answer reply
 		if err := json.Unmarshal(message[:length], &answer); err != nil {
-			closeFiles(files)
+			closeFile(file)
 			continue
 		}
 
@@ -310,17 +308,11 @@ func (self *Keeper) receive() {
 		self.answersMutex.Unlock()
 
 		if !isAwaited {
-			closeFiles(files)
+			closeFile(file)
 			continue
 		}
 
-		packet := arrival{answer: answer}
-		if len(files) > 0 {
-			packet.handover = files[0]
-			closeFiles(files[1:])
-		}
-
-		answers <- packet
+		answers <- arrival{answer: answer, handover: file}
 	}
 }
 
@@ -500,7 +492,7 @@ func (self *service) accept() {
 			return
 		}
 
-		output := received(control[:controlLength])
+		output := firstFile(control[:controlLength], "command-output")
 
 		self.take(message[:messageLength], flags, output)
 
@@ -531,14 +523,18 @@ func (self *service) take(message []byte, flags int, output *os.File) {
 		self.spawn(instruction, output)
 	case requestSignal:
 		self.kill(instruction)
-	case requestHostToSandboxDial:
-		self.dialHostToSandbox(instruction)
-	case requestSandboxToHostListen:
-		self.listenSandboxToHost(instruction)
+	case requestForwardDial:
+		self.dialForward(instruction)
 	}
 }
 
-func received(control []byte) *os.File {
+func closeFile(file *os.File) {
+	if file != nil {
+		_ = file.Close()
+	}
+}
+
+func firstFile(control []byte, name string) *os.File {
 	if len(control) == 0 {
 		return nil
 	}
@@ -560,7 +556,7 @@ func received(control []byte) *os.File {
 			unix.CloseOnExec(descriptor)
 
 			if output == nil {
-				output = os.NewFile(uintptr(descriptor), "command-output")
+				output = os.NewFile(uintptr(descriptor), name)
 				continue
 			}
 
@@ -647,22 +643,18 @@ func (self *service) kill(instruction request) {
 }
 
 func (self *service) send(answer reply) error {
-	return self.sendFiles(answer, nil)
+	return self.sendFile(answer, nil)
 }
 
-func (self *service) sendFiles(answer reply, files []*os.File) error {
+func (self *service) sendFile(answer reply, file *os.File) error {
 	payload, err := json.Marshal(answer)
 	if err != nil {
 		return err
 	}
 
 	var rights []byte
-	if len(files) > 0 {
-		descriptors := make([]int, len(files))
-		for i, file := range files {
-			descriptors[i] = int(file.Fd())
-		}
-		rights = unix.UnixRights(descriptors...)
+	if file != nil {
+		rights = unix.UnixRights(int(file.Fd()))
 	}
 
 	self.writeMutex.Lock()

@@ -17,7 +17,7 @@ import (
 	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/bash"
-	"crdx.org/oh/pkg/toolbox/expose"
+	"crdx.org/oh/pkg/toolbox/forward"
 	"crdx.org/oh/pkg/toolbox/job"
 )
 
@@ -91,23 +91,23 @@ func (self *heldCommand) Stop() {
 }
 
 type recordedPorts struct {
-	publications []expose.Publication
+	publications []forward.Publication
 	refusal      error
 }
 
-func (self *recordedPorts) Expose(port uint16, jobName string) (string, error) {
+func (self *recordedPorts) Forward(port uint16, jobName string) (string, error) {
 	if self.refusal != nil {
 		return "", self.refusal
 	}
-	self.publications = append(self.publications, expose.Publication{Port: port, JobName: jobName})
+	self.publications = append(self.publications, forward.Publication{Port: port, JobName: jobName})
 	return "http://session.test:" + strconv.Itoa(int(port)), nil
 }
 
-func (self *recordedPorts) Hide(uint16) error { return nil }
+func (self *recordedPorts) Revoke(uint16) error { return nil }
 
-func (self *recordedPorts) List() []expose.Publication { return self.publications }
+func (self *recordedPorts) List() []forward.Publication { return self.publications }
 
-func newJobTool(t *testing.T, manager *jobs.Manager, ports expose.Ports) tool.Tool {
+func newJobTool(t *testing.T, manager *jobs.Manager, ports forward.Ports) tool.Tool {
 	t.Helper()
 
 	openedRoot, err := os.OpenRoot(t.TempDir())
@@ -199,7 +199,7 @@ func TestStartingAnUnknownNameWithNoCommandIsRefused(t *testing.T) {
 	}
 }
 
-func TestStartingAJobCanExposeAndAssociateItsPort(t *testing.T) {
+func TestStartingAJobCanForwardAndAssociateItsPort(t *testing.T) {
 	manager := jobs.New(heldRunner{})
 	t.Cleanup(func() { _ = manager.Close() })
 
@@ -217,7 +217,7 @@ func TestStartingAJobCanExposeAndAssociateItsPort(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	wantPublications := []expose.Publication{{Port: 8080, JobName: "docs-1"}}
+	wantPublications := []forward.Publication{{Port: 8080, JobName: "docs-1"}}
 	if !reflect.DeepEqual(ports.publications, wantPublications) {
 		t.Errorf("got publications %#v, want %#v", ports.publications, wantPublications)
 	}
@@ -232,7 +232,7 @@ func TestStartingAJobCanExposeAndAssociateItsPort(t *testing.T) {
 	}
 }
 
-func TestAJobIsDiscardedWhenItsPortCannotBeExposed(t *testing.T) {
+func TestAJobIsDiscardedWhenItsPortCannotBeForwarded(t *testing.T) {
 	manager := jobs.New(heldRunner{})
 	t.Cleanup(func() { _ = manager.Close() })
 	refused := errors.New("port is occupied")
@@ -243,7 +243,7 @@ func TestAJobIsDiscardedWhenItsPortCannotBeExposed(t *testing.T) {
 		`{"action":"start","name":"docs","port":8080,"command":"serve docs"}`,
 	)
 	if !errors.Is(err, refused) || !strings.Contains(err.Error(), "stopped and discarded") {
-		t.Errorf("got %v, want the exposure refusal and rollback", err)
+		t.Errorf("got %v, want the forward refusal and rollback", err)
 	}
 	if listing := manager.List(); len(listing) != 0 {
 		t.Errorf("got jobs %#v, want the failed start discarded", listing)
@@ -441,6 +441,7 @@ func TestAJobCallIsRenderedByItsAction(t *testing.T) {
 			want: tool.CallRendering{
 				Kind:         "job_start",
 				Subject:      "docs:8080",
+				Emphasis:     tool.Emphasis{Kind: tool.EmphasisLead, Value: "docs"},
 				Continuation: []tool.CallRendering{bash.DescribeCommand("serve docs")},
 			},
 		},
@@ -450,7 +451,11 @@ func TestAJobCallIsRenderedByItsAction(t *testing.T) {
 		},
 		"restart with port": {
 			args: job.Args{Action: "start", Name: "docs", Port: 8080},
-			want: tool.CallRendering{Kind: "job_restart", Subject: "docs:8080"},
+			want: tool.CallRendering{
+				Kind:     "job_restart",
+				Subject:  "docs:8080",
+				Emphasis: tool.Emphasis{Kind: tool.EmphasisLead, Value: "docs"},
+			},
 		},
 		"status": {
 			args: job.Args{Action: "status", Name: "docs"},
@@ -536,6 +541,15 @@ func TestTheWaitParameterFormatsItsMaximumAsADuration(t *testing.T) {
 func TestTheToolExplainsJobNotificationsInBothSessionModes(t *testing.T) {
 	description := job.New(nil, nil, nil, nil).Description()
 	for _, wanted := range []string{"In an interactive session", "in a non-interactive session"} {
+		if !strings.Contains(description, wanted) {
+			t.Errorf("description %q does not contain %q", description, wanted)
+		}
+	}
+}
+
+func TestTheToolExplainsPortForwardingLimits(t *testing.T) {
+	description := job.New(nil, nil, nil, nil).Description()
+	for _, wanted := range []string{"bind a fixed port", "pass it as `port`", "discovers an ephemeral port", "stable alias"} {
 		if !strings.Contains(description, wanted) {
 			t.Errorf("description %q does not contain %q", description, wanted)
 		}

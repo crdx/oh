@@ -1,18 +1,18 @@
-{"event":{"kind":"user_message","text":"expose the five preview ports"}}
-{"event":{"kind":"model_reasoning","text":"Exposing each port in turn."}}
-{"event":{"kind":"tool_call_request","id":"call_1","name":"expose","arguments":"{\"action\":\"add\",\"port\":8001}","render":"8001"}}
-{"event":{"kind":"tool_call_request","id":"call_2","name":"expose","arguments":"{\"action\":\"add\",\"port\":8002}","render":"8002"}}
-{"event":{"kind":"tool_call_request","id":"call_3","name":"expose","arguments":"{\"action\":\"add\",\"port\":8003}","render":"8003"}}
-{"event":{"kind":"tool_call_request","id":"call_4","name":"expose","arguments":"{\"action\":\"add\",\"port\":8004}","render":"8004"}}
-{"event":{"kind":"tool_call_request","id":"call_5","name":"expose","arguments":"{\"action\":\"add\",\"port\":8005}","render":"8005"}}
+{"event":{"kind":"user_message","text":"forward the five preview ports"}}
+{"event":{"kind":"model_reasoning","text":"Forwarding each port in turn."}}
+{"event":{"kind":"tool_call_request","id":"call_1","name":"forward","arguments":"{\"action\":\"add\",\"port\":8001}","render":"8001"}}
+{"event":{"kind":"tool_call_request","id":"call_2","name":"forward","arguments":"{\"action\":\"add\",\"port\":8002}","render":"8002"}}
+{"event":{"kind":"tool_call_request","id":"call_3","name":"forward","arguments":"{\"action\":\"add\",\"port\":8003}","render":"8003"}}
+{"event":{"kind":"tool_call_request","id":"call_4","name":"forward","arguments":"{\"action\":\"add\",\"port\":8004}","render":"8004"}}
+{"event":{"kind":"tool_call_request","id":"call_5","name":"forward","arguments":"{\"action\":\"add\",\"port\":8005}","render":"8005"}}
 {"event":{"kind":"port_grant_change","name":"8001","state":{"host":"127.27.192.223","ports":[8001]}}}
-{"event":{"kind":"tool_call_result","status":"success","text":"Port 8001 is exposed.\n","id":"call_1","name":"expose","took":0}}
+{"event":{"kind":"tool_call_result","status":"success","text":"Port 8001 is forwarded.\n","id":"call_1","name":"forward","took":0}}
 {"event":{"kind":"port_grant_change","name":"8002","state":{"host":"127.27.192.223","ports":[8001,8002]}}}
-{"event":{"kind":"tool_call_result","status":"success","text":"Port 8002 is exposed.\n","id":"call_2","name":"expose","took":0}}
+{"event":{"kind":"tool_call_result","status":"success","text":"Port 8002 is forwarded.\n","id":"call_2","name":"forward","took":0}}
 {"event":{"kind":"port_grant_change","name":"8003","state":{"host":"127.27.192.223","ports":[8001,8002,8003]}}}
-{"event":{"kind":"tool_call_result","status":"success","text":"Port 8003 is exposed.\n","id":"call_3","name":"expose","took":0}}
+{"event":{"kind":"tool_call_result","status":"success","text":"Port 8003 is forwarded.\n","id":"call_3","name":"forward","took":0}}
 {"event":{"kind":"port_grant_change","name":"8004","state":{"host":"127.27.192.223","ports":[8001,8002,8003,8004]}}}
-{"event":{"kind":"tool_call_result","status":"success","text":"Port 8004 is exposed.\n","id":"call_4","name":"expose","took":0}}
+{"event":{"kind":"tool_call_result","status":"success","text":"Port 8004 is forwarded.\n","id":"call_4","name":"forward","took":0}}
 {"event":{"kind":"port_grant_change","name":"8005","state":{"host":"127.27.192.223","ports":[8001,8002,8003,8004,8005]}}}
-{"event":{"kind":"tool_call_result","status":"success","text":"Port 8005 is exposed.\n","id":"call_5","name":"expose","took":0}}
+{"event":{"kind":"tool_call_result","status":"success","text":"Port 8005 is forwarded.\n","id":"call_5","name":"forward","took":0}}
 {"event":{"kind":"model_message","text":"All five previews are up."}}

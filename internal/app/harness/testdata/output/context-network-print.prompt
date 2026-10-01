@@ -23,7 +23,7 @@
 - The shell has the same write access as path tools; runtime devices are the only additional writable exceptions.
 - The shell can execute files under the system directories, every directory in PATH, the workspace, HOME, and /tmp.
 - The shell can execute files at or under /commands.
-- The user can grant access to a path with /grant {r|rx|rw|rxw} <path>, where r is read, x is execute, and w is write, and take it back with /revoke <path>.
+- The user can grant access to a path with /grant {r|rw} <path>..., where r is read and w is write, and take it back with /revoke <path>. When shell access is enabled, the shell can execute files at or under every temporarily granted path.
 - Ask the user to grant a needed path rather than working around it or giving up, giving the full command with its flags, such as /grant rw /some/path.
 
 # Personality

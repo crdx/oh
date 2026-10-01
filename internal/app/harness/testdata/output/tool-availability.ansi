@@ -1,3 +1,7 @@
+=== a tool retired under its old name ===
+\e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 The \e[38;2;192;128;80mexpose\e[0m\e[48;2;48;58;67m tool is no longer installed and is disabled for this conversation.                   \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l
 === available ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 The \e[38;2;192;128;80mweather\e[0m\e[48;2;48;58;67m tool is available again.                                                            \e[0m\r

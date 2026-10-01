@@ -36,7 +36,7 @@ I can also change it now.
 ## Path grant · 2 paths · changed /tools · +5s
 
 ```
-Granted temporary read and execute access to /tools.
+Granted temporary read-only access to /tools.
 ```
 
 ## Assistant · +6s
@@ -46,7 +46,7 @@ I can run what is in the tools directory now.
 ## Path grant · 3 paths · changed /build · +7s
 
 ```
-Granted temporary read, execute, and write access to /build.
+Granted temporary read and write access to /build.
 ```
 
 ## Assistant · +8s

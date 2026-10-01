@@ -37,8 +37,8 @@ func watched(handler Handler) Handler {
 	if onJobEnded := handler.OnJobEnded; onJobEnded != nil {
 		handler.OnJobEnded = func(conclusion jobs.Conclusion) { defer watch("job ended")(); onJobEnded(conclusion) }
 	}
-	if onPortChange := handler.OnHostToSandboxChange; onPortChange != nil {
-		handler.OnHostToSandboxChange = func(event agent.Event) { defer watch("port change")(); onPortChange(event) }
+	if onPortChange := handler.OnForwardChange; onPortChange != nil {
+		handler.OnForwardChange = func(event agent.Event) { defer watch("port change")(); onPortChange(event) }
 	}
 	if onQuestionChange := handler.OnQuestionChange; onQuestionChange != nil {
 		handler.OnQuestionChange = func() { defer watch("question change")(); onQuestionChange() }

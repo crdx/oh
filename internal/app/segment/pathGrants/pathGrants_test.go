@@ -49,17 +49,17 @@ func TestAnEmptyGrantListDrawsNothing(t *testing.T) {
 func TestTheSegmentReadsTheCurrentGrantListEveryTime(t *testing.T) {
 	grants := []pathgrant.Grant{{Path: "/reference", Access: pathgrant.ReadAccess}}
 	built := buildSegment(t, &grants, "")
-	if got := style.Plain(built.Render(segment.Context{})); got != "r:reference" {
+	if got := style.Plain(built.Render(segment.Context{})); got != "r[reference]" {
 		t.Errorf("got %q", got)
 	}
 
 	grants = []pathgrant.Grant{{Path: "/output", Access: pathgrant.ReadAccess | pathgrant.WriteAccess}}
-	if got := style.Plain(built.Render(segment.Context{})); got != "rw:output" {
+	if got := style.Plain(built.Render(segment.Context{})); got != "rw[output]" {
 		t.Errorf("got %q", got)
 	}
 
 	grants = []pathgrant.Grant{{Path: "/tools", Access: pathgrant.ReadAccess | pathgrant.ExecAccess}}
-	if got := style.Plain(built.Render(segment.Context{})); got != "rx:tools" {
+	if got := style.Plain(built.Render(segment.Context{})); got != "rx[tools]" {
 		t.Errorf("got %q", got)
 	}
 }
@@ -99,7 +99,7 @@ func TestDuplicateBasenamesExpandToDistinguishingPaths(t *testing.T) {
 		{Path: "/two/reference", Access: pathgrant.ReadAccess | pathgrant.WriteAccess},
 	}
 	got := style.Plain(buildSegment(t, &grants, "").Render(segment.Context{}))
-	for _, want := range []string{"r:/one/reference", "w:/two/reference"} {
+	for _, want := range []string{"r[/one/reference]", "rw[/two/reference]"} {
 		if !strings.Contains(got, want) {
 			t.Errorf("got %q, want %q", got, want)
 		}
@@ -109,9 +109,9 @@ func TestDuplicateBasenamesExpandToDistinguishingPaths(t *testing.T) {
 func TestTheConfiguredPathTypeIsApplied(t *testing.T) {
 	grants := []pathgrant.Grant{{Path: "/one/reference", Access: pathgrant.ReadAccess}}
 	for pathType, want := range map[string]string{
-		"base":  "r:reference",
-		"short": "r:/one/reference",
-		"full":  "r:/one/reference",
+		"base":  "r[reference]",
+		"short": "r[/one/reference]",
+		"full":  "r[/one/reference]",
 	} {
 		if got := style.Plain(buildSegment(t, &grants, pathType).Render(segment.Context{})); got != want {
 			t.Errorf("%s got %q, want %q", pathType, got, want)
@@ -134,10 +134,10 @@ func TestEachRungHidesOneMoreGrantBehindTheirCount(t *testing.T) {
 	}
 
 	want := []string{
-		"r:path-01, r:path-02, r:path-03, r:path-04",
-		"r:path-01, r:path-02, r:path-03, +1",
-		"r:path-01, r:path-02, +2",
-		"r:path-01, +3",
+		"r[path-01 path-02 path-03 path-04]",
+		"r[path-01 path-02 path-03], +1",
+		"r[path-01 path-02], +2",
+		"r[path-01], +3",
 		"+4",
 		"+",
 	}
@@ -156,6 +156,39 @@ func TestEachRungHidesOneMoreGrantBehindTheirCount(t *testing.T) {
 		if width.Of(rung) >= width.Of(got[at]) {
 			t.Errorf("rung %d (%q) is no narrower than the one above it (%q)", at+1, rung, got[at])
 		}
+	}
+}
+
+func TestGrantsSharingAnAccessAreDrawnTogether(t *testing.T) {
+	grants := []pathgrant.Grant{
+		{Path: "/oh", Access: pathgrant.ReadAccess | pathgrant.WriteAccess},
+		{Path: "/reference", Access: pathgrant.ReadAccess},
+		{Path: "/SYSTEM.md", Access: pathgrant.ReadAccess | pathgrant.WriteAccess},
+		{Path: "/skills", Access: pathgrant.ReadAccess | pathgrant.WriteAccess},
+	}
+	built := buildSegment(t, &grants, "")
+	fitter, isFitter := built.(segment.Fitter)
+	if !isFitter {
+		t.Fatal("path grants segment does not fit itself to available room")
+	}
+
+	want := []string{
+		"rw[oh SYSTEM.md skills], r[reference]",
+		"rw[oh SYSTEM.md], r[reference], +1",
+		"rw[oh], r[reference], +2",
+		"rw[oh], +3",
+		"+4",
+		"+",
+	}
+
+	ladder := fitter.Ladder(segment.Context{})
+	got := make([]string, 0, len(ladder))
+	for _, rung := range ladder {
+		got = append(got, style.Plain(rung))
+	}
+
+	if !slices.Equal(got, want) {
+		t.Errorf("got %q, want %q", got, want)
 	}
 }
 

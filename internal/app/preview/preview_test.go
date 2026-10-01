@@ -9,8 +9,10 @@ import (
 	"strings"
 	"testing"
 
+	"crdx.org/oh/internal/app/painter"
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/store"
+	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
 )
@@ -41,7 +43,7 @@ func conversation() []agent.Event {
 	}
 }
 
-func exposedPorts(t *testing.T) []agent.Event {
+func forwardedPorts(t *testing.T) []agent.Event {
 	t.Helper()
 
 	var events []agent.Event
@@ -49,7 +51,7 @@ func exposedPorts(t *testing.T) []agent.Event {
 
 	for _, port := range []uint16{8001, 8002, 8003} {
 		routes = append(routes, portgrant.Route{Port: port})
-		event, err := portgrant.HostToSandboxChangeEvent("127.9.9.9", port, routes)
+		event, err := portgrant.ForwardChangeEvent("127.9.9.9", port, routes)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -79,15 +81,15 @@ func TestGoldenWhatAConversationLooksLikeBeforeItIsOpenedMatchesTheGolden(t *tes
 
 	for _, room := range []int{100, 46} {
 		fmt.Fprintf(&drawn, "=== %d columns ===\n", room)
-		for _, row := range Draw(conversation(), nil, room) {
+		for _, row := range Draw(conversation(), painter.Tariff{}, nil, room) {
 			fmt.Fprintln(&drawn, row)
 		}
-		fmt.Fprintf(&drawn, "=== %d columns, ports exposed in a row ===\n", room)
-		for _, row := range Draw(exposedPorts(t), nil, room) {
+		fmt.Fprintf(&drawn, "=== %d columns, ports forwarded in a row ===\n", room)
+		for _, row := range Draw(forwardedPorts(t), painter.Tariff{}, nil, room) {
 			fmt.Fprintln(&drawn, row)
 		}
 		fmt.Fprintf(&drawn, "=== %d columns, the context window filled ===\n", room)
-		for _, row := range Draw(contextExceeded(), nil, room) {
+		for _, row := range Draw(contextExceeded(), painter.Tariff{}, nil, room) {
 			fmt.Fprintln(&drawn, row)
 		}
 	}
@@ -111,25 +113,25 @@ func TestAStoredConversationIsReadFromItsJournal(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	rows, err := Read(directory, log.Name(), nil, 100)
+	rows, err := Read(directory, log.Name(), nil, money.Dollar(), 100)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if want := Draw(conversation(), nil, 100); !slices.Equal(rows, want) {
+	if want := Draw(conversation(), painter.Tariff{}, nil, 100); !slices.Equal(rows, want) {
 		t.Errorf("the stored conversation was read as %q, want %q", rows, want)
 	}
 }
 
 func TestAConversationThatWasNeverStoredIsReported(t *testing.T) {
-	if _, err := Read(t.TempDir(), "tame-impala", nil, 100); err == nil {
+	if _, err := Read(t.TempDir(), "tame-impala", nil, money.Dollar(), 100); err == nil {
 		t.Error("expected a missing session to be reported")
 	}
 }
 
 func TestANarrowTerminalIsGivenTheLeastRoomAConversationCanBeDrawnIn(t *testing.T) {
-	narrow := Draw(conversation(), nil, 1)
-	least := Draw(conversation(), nil, minimumRoom)
+	narrow := Draw(conversation(), painter.Tariff{}, nil, 1)
+	least := Draw(conversation(), painter.Tariff{}, nil, minimumRoom)
 
 	if !slices.Equal(narrow, least) {
 		t.Error("expected a terminal narrower than the minimum to be drawn at the minimum")
@@ -137,7 +139,7 @@ func TestANarrowTerminalIsGivenTheLeastRoomAConversationCanBeDrawnIn(t *testing.
 }
 
 func TestNothingStoredIsDrawnAsNoRows(t *testing.T) {
-	if rows := Draw(nil, nil, 100); len(rows) != 0 {
+	if rows := Draw(nil, painter.Tariff{}, nil, 100); len(rows) != 0 {
 		t.Errorf("expected nothing to be drawn, got %q", rows)
 	}
 }

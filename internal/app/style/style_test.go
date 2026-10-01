@@ -200,11 +200,11 @@ func TestDisabledCapabilitiesTakeTheMutedColour(t *testing.T) {
 
 func TestAToolAppearanceCanConfigureItsNameAndPaints(t *testing.T) {
 	theme := DefaultTheme()
-	theme.Tool["skill"] = ToolAppearance{
+	theme.Tool["skill"] = ToolEntry{Default: ToolAppearance{
 		Name:  "consult-chart",
 		Paint: "#010203 bold",
 		Focus: "status_danger",
-	}
+	}}
 	t.Cleanup(ApplyTheme(theme))
 
 	name, nameStyle, focusStyle := ToolCallAppearance("skill", "read", true)
@@ -239,7 +239,7 @@ func TestObservationalActionsUseNormalPaintWithinToolsThatMayChangeThings(t *tes
 		"job_wait_any",
 		"job_wait_all",
 		"job_list",
-		"expose_list",
+		"forward_list",
 	} {
 		_, nameStyle, _ := ToolCallAppearance(kind, "", false)
 		if got, want := nameStyle("call"), Normal("call"); got != want {
@@ -429,5 +429,114 @@ func TestAGradientLeavesTheWordsAloneWhereColourIsOff(t *testing.T) {
 
 	if got := Simulation("Simulation"); got != "Simulation" {
 		t.Errorf("a colourless gradient drew %q", got)
+	}
+}
+
+func TestEveryForwardKindHasItsOwnDefaultNameAndTheRetiredExposeKindsHaveNone(t *testing.T) {
+	for kind, want := range map[string]string{
+		"forward":        "forward",
+		"forward_add":    "forward",
+		"forward_remove": "close",
+		"forward_list":   "list",
+	} {
+		if name, _, _ := ToolCallAppearance(kind, "recorded", false); name != want {
+			t.Errorf("%s is named %q, want %q", kind, name, want)
+		}
+	}
+
+	for _, kind := range []string{"expose", "expose_add", "expose_remove", "expose_list"} {
+		if name, _, _ := ToolCallAppearance(kind, "recorded", false); name != "recorded" {
+			t.Errorf("the retired %s kind is still themed as %q", kind, name)
+		}
+	}
+}
+
+func TestAnActionInheritsItsToolsPaintsAndIsNamedAfterItself(t *testing.T) {
+	enableColor(t)
+
+	theme := DefaultTheme()
+	theme.Tool["tool"] = ToolEntry{
+		Default: ToolAppearance{Name: "whole", Paint: "status_danger", Focus: "status_info"},
+		Actions: map[string]ToolAppearance{
+			"go":   {},
+			"stop": {Name: "halt"},
+			"look": {Paint: "normal"},
+		},
+	}
+	t.Cleanup(ApplyTheme(theme))
+
+	for kind, want := range map[string]struct {
+		name  string
+		paint Style
+		focus Style
+	}{
+		"tool":      {name: "whole", paint: Failure, focus: Info},
+		"tool_go":   {name: "go", paint: Failure, focus: Info},
+		"tool_stop": {name: "halt", paint: Failure, focus: Info},
+		"tool_look": {name: "look", paint: Normal, focus: Info},
+	} {
+		name, nameStyle, focusStyle := ToolCallAppearance(kind, "recorded", false)
+		if name != want.name {
+			t.Errorf("%s is named %q, want %q", kind, name, want.name)
+		}
+		if got := nameStyle("x"); got != want.paint("x") {
+			t.Errorf("%s is painted %q, want %q", kind, got, want.paint("x"))
+		}
+		if got := focusStyle("x"); got != want.focus("x") {
+			t.Errorf("%s focuses with %q, want %q", kind, got, want.focus("x"))
+		}
+	}
+}
+
+func TestNoBuiltInToolHasAnActionNamedLikeItsDefault(t *testing.T) {
+	for tool, entry := range DefaultTheme().Tool {
+		for action := range entry.Actions {
+			switch action {
+			case toolDefaultKey, toolNameKey, toolPaintKey, toolFocusKey:
+				t.Errorf("%s has an action called %q, which its theme cannot tell from its own appearance", tool, action)
+			}
+		}
+	}
+}
+
+func TestAThemeCannotBeChangedThroughAClone(t *testing.T) {
+	theme := DefaultTheme()
+	theme.Tool["job"].Actions["start"] = ToolAppearance{Name: "launch"}
+
+	if got := DefaultTheme().Tool["job"].Actions["start"].Name; got != "" {
+		t.Errorf("a change to a copy reached the built-in theme: %q", got)
+	}
+}
+
+func TestEveryBuiltInToolKindKeepsItsNameAndPaint(t *testing.T) {
+	want := map[string]ToolAppearance{
+		"read":              {Name: "read"},
+		"skill":             {Name: "load", Paint: "skill", Focus: "skill"},
+		"bash":              {Name: "$", Paint: "status_info"},
+		"bash_host_network": {Name: "$", Paint: "status_danger"},
+		"job":               {Name: "job", Paint: "status_warning"},
+		"job_start":         {Name: "start", Paint: "status_warning"},
+		"job_stop":          {Name: "stop", Paint: "status_warning"},
+		"job_restart":       {Name: "restart", Paint: "status_warning"},
+		"job_discard":       {Name: "discard", Paint: "status_warning"},
+		"job_prune":         {Name: "prune", Paint: "status_warning"},
+		"job_status":        {Name: "status", Paint: "normal"},
+		"job_output":        {Name: "cat", Paint: "normal"},
+		"job_wait_any":      {Name: "await", Paint: "normal"},
+		"job_wait_all":      {Name: "await", Paint: "normal"},
+		"job_list":          {Name: "list", Paint: "normal"},
+		"forward":           {Name: "forward", Paint: "status_warning"},
+		"forward_add":       {Name: "forward", Paint: "status_warning"},
+		"forward_remove":    {Name: "close", Paint: "status_warning"},
+		"forward_list":      {Name: "list", Paint: "normal"},
+		"lookup":            {Name: "lookup", Paint: "status_info"},
+	}
+
+	theme := DefaultTheme()
+	resolved := theme.Tool.Resolved()
+	for kind, appearance := range want {
+		if got := resolved[kind]; got != appearance {
+			t.Errorf("%s resolves to %+v, want %+v", kind, got, appearance)
+		}
 	}
 }

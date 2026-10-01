@@ -102,6 +102,7 @@ type EmphasisKind string
 const (
 	EmphasisSyntax EmphasisKind = "syntax"
 	EmphasisFocus  EmphasisKind = "focus"
+	EmphasisLead   EmphasisKind = "lead"
 )
 
 type Emphasis struct {

@@ -134,8 +134,7 @@ func (self *pendingNotices) accessNotices() []string {
 		kind := item.state.Kind
 		isAccessChange := kind == caps.ModeChange || kind == caps.JobStop ||
 			kind == toolset.AvailabilityChange || kind == environment.Change ||
-			kind == pathgrant.Change || kind == portgrant.SandboxToHostChange ||
-			kind == portgrant.HostToSandboxChange
+			kind == pathgrant.Change || kind == portgrant.ForwardChange
 		if !isAccessChange {
 			continue
 		}
@@ -161,6 +160,7 @@ type displayState struct {
 	theme              style.Theme
 	pictures           pictures.Display
 	modelName          string
+	tariff             painter.Tariff
 }
 
 type runMode struct {
@@ -198,8 +198,7 @@ type App struct {
 	conditions      *conditions.State
 	environment     *environment.State
 	pathGrants      *pathgrant.Grants
-	hostToSandbox   *portgrant.HostToSandbox
-	sandboxToHost   *portgrant.SandboxToHost
+	forwards        *portgrant.Forwards
 	jobs            jobState
 	settledNotes    []string
 	settledCaps     caps.Set
@@ -302,22 +301,22 @@ func (self *App) begin(message string) cycle.Transition {
 			self.finish()
 			return !self.isTransitionRequested()
 		},
-		OnResize:              self.redraw,
-		OnBeat:                self.screen.RefreshProgress,
-		Changes:               self.configObserver.Changes(),
-		OnChange:              self.reloadConfig,
-		Conclusions:           self.jobConclusions(),
-		OnJobEnded:            self.jobEnded,
-		HostToSandboxChanges:  self.hostToSandboxChanges(),
-		OnHostToSandboxChange: self.holdHostToSandboxChange,
-		QuestionChanges:       self.questionChanges(),
-		OnQuestionChange:      self.onQuestionChange,
-		TriggerChanges:        self.triggerChanges(),
-		OnTriggerChange:       self.receiveTriggerChange,
-		OnDraw:                func() { self.drawAfterEvent(inputLine) },
-		Watch:                 self.watchStalls,
+		OnResize:         self.redraw,
+		OnBeat:           self.screen.RefreshProgress,
+		Changes:          self.configObserver.Changes(),
+		OnChange:         self.reloadConfig,
+		Conclusions:      self.jobConclusions(),
+		OnJobEnded:       self.jobEnded,
+		ForwardChanges:   self.forwardChanges(),
+		OnForwardChange:  self.holdForwardChange,
+		QuestionChanges:  self.questionChanges(),
+		OnQuestionChange: self.onQuestionChange,
+		TriggerChanges:   self.triggerChanges(),
+		OnTriggerChange:  self.receiveTriggerChange,
 		HostCommands:     self.hostCommandOutcomes(),
 		OnHostCommand:    self.hostCommandEnded,
+		OnDraw:           func() { self.drawAfterEvent(inputLine) },
+		Watch:            self.watchStalls,
 	})
 	self.endHostCommand()
 
@@ -592,7 +591,7 @@ func (self *App) handleCommand(message string) dispatch.Result {
 
 func (self *App) emitCommandEvent(event agent.Event) {
 	switch event.Kind {
-	case portgrant.SandboxToHostChange, portgrant.HostToSandboxChange:
+	case portgrant.ForwardChange:
 		self.queueAccessChange(event)
 	case pathgrant.Change:
 		self.queuePathGrantChange(event)
@@ -1136,20 +1135,19 @@ func getBarContext(frame edit.Frame) segment.Context {
 
 func (self *App) getBarSources() bar.Sources {
 	return bar.Sources{
-		IsTurnRunning:          self.isTurnRunning,
-		IsSessionPersisted:     self.isSessionPersisted,
-		GetContextUsage:        self.contextUsage,
-		GetCacheUsage:          self.cacheUsage,
-		GetSessionSpend:        self.sessionSpend,
-		GetGrantedCaps:         self.grantedCaps,
-		GetGroupStatus:         self.mode.Groups,
-		GetPathGrants:          self.getPathGrants,
-		GetHostToSandboxRoutes: self.getHostToSandboxRoutes,
-		GetSandboxToHostPorts:  self.getSandboxToHostPorts,
-		IsPrefixPending:        self.isPrefixPending,
-		GetTurnTiming:          self.turnTiming,
-		GetTurnCount:           self.turnCount,
-		GetJobs:                self.getJobs,
+		IsTurnRunning:      self.isTurnRunning,
+		IsSessionPersisted: self.isSessionPersisted,
+		GetContextUsage:    self.contextUsage,
+		GetCacheUsage:      self.cacheUsage,
+		GetSessionSpend:    self.sessionSpend,
+		GetGrantedCaps:     self.grantedCaps,
+		GetGroupStatus:     self.mode.Groups,
+		GetPathGrants:      self.getPathGrants,
+		GetForwardedRoutes: self.getForwardsRoutes,
+		IsPrefixPending:    self.isPrefixPending,
+		GetTurnTiming:      self.turnTiming,
+		GetTurnCount:       self.turnCount,
+		GetJobs:            self.getJobs,
 	}
 }
 
@@ -1249,26 +1247,26 @@ func (self *App) finishQuestion() {
 	}
 }
 
-func (self *App) hostToSandboxChanges() <-chan agent.Event {
-	if self.hostToSandbox == nil {
+func (self *App) forwardChanges() <-chan agent.Event {
+	if self.forwards == nil {
 		return nil
 	}
 
-	return self.hostToSandbox.Changes()
+	return self.forwards.Changes()
 }
 
-func (self *App) holdHostToSandboxChange(event agent.Event) {
+func (self *App) holdForwardChange(event agent.Event) {
 	self.holdNotice(event)
 }
 
-func (self *App) drainHostToSandboxChanges() {
-	if self.hostToSandbox == nil {
+func (self *App) drainForwardChanges() {
+	if self.forwards == nil {
 		return
 	}
 
 	for {
 		select {
-		case event := <-self.hostToSandbox.Changes():
+		case event := <-self.forwards.Changes():
 			self.holdNotice(event)
 		default:
 			return
@@ -1522,18 +1520,11 @@ func (self *App) getPathGrants() []pathgrant.Grant {
 	return self.pathGrants.GetCurrent()
 }
 
-func (self *App) getHostToSandboxRoutes() []portgrant.Route {
-	if self.hostToSandbox == nil {
+func (self *App) getForwardsRoutes() []portgrant.Route {
+	if self.forwards == nil {
 		return nil
 	}
-	return self.hostToSandbox.GetRoutes()
-}
-
-func (self *App) getSandboxToHostPorts() []uint16 {
-	if self.sandboxToHost == nil {
-		return nil
-	}
-	return self.sandboxToHost.GetCurrent()
+	return self.forwards.GetRoutes()
 }
 
 func (self *App) isPrefixPending() bool {
@@ -1692,6 +1683,7 @@ func (self *App) newPainter(isRunning bool) *painter.Picasso {
 		picasso.DrawPicturesFrom(self.display.pictures)
 	}
 	picasso.SuggestForkingWith(self.display.modelName)
+	picasso.PriceCacheRebuildsAt(self.display.tariff)
 	return picasso
 }
 
@@ -1807,11 +1799,8 @@ func (self *App) accessTellers() access.Group {
 	if self.pathGrants != nil {
 		tellers = append(tellers, self.pathGrants)
 	}
-	if self.hostToSandbox != nil {
-		tellers = append(tellers, self.hostToSandbox)
-	}
-	if self.sandboxToHost != nil {
-		tellers = append(tellers, self.sandboxToHost)
+	if self.forwards != nil {
+		tellers = append(tellers, self.forwards)
 	}
 	return access.NewGroup(tellers...)
 }
@@ -1926,7 +1915,7 @@ func (self *App) interruptionCause() interrupt.Cause {
 }
 
 func (self *App) takeTurn(turnEvent TurnEvent) {
-	self.drainHostToSandboxChanges()
+	self.drainForwardChanges()
 
 	if !self.currentTurn.Observe(turnEvent) {
 		return
@@ -2016,7 +2005,7 @@ func (self *App) wasPoked() bool {
 }
 
 func (self *App) finish() {
-	self.drainHostToSandboxChanges()
+	self.drainForwardChanges()
 	self.currentTurn.MarkFinished(time.Now())
 	self.screen.ReportProgress(false)
 

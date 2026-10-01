@@ -1,0 +1,32 @@
+{"kind":"head","version":17,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant.","tools":["forward"],"tool_definitions":[{"name":"forward","description":"forward a port of this sandbox to the user's machine, so a server started with the job tool can be opened in their browser","revision":"1","parameters":[{"name":"action","type":"string","description":"what to do","values":["add","remove","list"]},{"name":"port","type":"integer","description":"the TCP port inside the sandbox (for add and remove)","optional":true},{"name":"job_name","type":"string","description":"an optional associated job name; 1–10 characters from [a-z0-9-] (for add)","optional":true}]}]}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"user_message","text":"forward the port and give it to docs"}}
+{"kind":"event","event":{"rendering_kind":"forward_add","render":"8080","kind":"tool_call_request","id":"toolu_1","name":"forward","arguments":"{\"action\":\"add\",\"port\":8080}"}}
+{"kind":"event","event":{"kind":"port_grant_change","name":"8080","state":{"host":"127.82.233.168","ports":[8080]}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"Use http://127.82.233.168:8080 for the user; use localhost:8080 inside the sandbox.","id":"toolu_1","name":"forward","status":"success","stats":{"kind":"output","lines":1,"bytes":83}}}
+{"kind":"event","event":{"rendering_kind":"forward_add","render":"docs:8080","kind":"tool_call_request","id":"toolu_2","name":"forward","arguments":"{\"action\":\"add\",\"port\":8080,\"job_name\":\"docs\"}"}}
+{"kind":"event","event":{"kind":"port_grant_change","name":"8080","state":{"host":"127.82.233.168","ports":[8080],"job_names":{"8080":"docs"},"adoption":true}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"Use http://127.82.233.168:8080 for the user; use localhost:8080 inside the sandbox.","id":"toolu_2","name":"forward","status":"success","stats":{"kind":"output","lines":1,"bytes":83}}}
+{"kind":"event","event":{"kind":"model_message","text":"Port 8080 now belongs to docs."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"forward the port and give it to docs"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"forward","input":{"action":"add","port":8080}}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"Use http://127.82.233.168:8080 for the user; use localhost:8080 inside the sandbox."}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Port 8080 is now forwarded to http://127.82.233.168:8080."}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_2","name":"forward","input":{"action":"add","port":8080,"job_name":"docs"}}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_2","content":"Use http://127.82.233.168:8080 for the user; use localhost:8080 inside the sandbox."}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Port 8080 now belongs to job docs."}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Port 8080 now belongs to docs."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"give it to docs again, then to the api"}}
+{"kind":"event","event":{"rendering_kind":"forward_add","render":"docs:8080","kind":"tool_call_request","id":"toolu_3","name":"forward","arguments":"{\"action\":\"add\",\"port\":8080,\"job_name\":\"docs\"}"}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"Use http://127.82.233.168:8080 for the user; use localhost:8080 inside the sandbox.","id":"toolu_3","name":"forward","status":"success","stats":{"kind":"output","lines":1,"bytes":83}}}
+{"kind":"event","event":{"rendering_kind":"forward_add","render":"api:8080","kind":"tool_call_request","id":"toolu_4","name":"forward","arguments":"{\"action\":\"add\",\"port\":8080,\"job_name\":\"api\"}"}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"port 8080 is already forwarded","id":"toolu_4","name":"forward","status":"error","stats":{"kind":"output","lines":1,"bytes":30}}}
+{"kind":"event","event":{"kind":"model_message","text":"Port 8080 stays with docs."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"give it to docs again, then to the api"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_3","name":"forward","input":{"action":"add","port":8080,"job_name":"docs"}}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_3","content":"Use http://127.82.233.168:8080 for the user; use localhost:8080 inside the sandbox."}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_4","name":"forward","input":{"action":"add","port":8080,"job_name":"api"}}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_4","content":"port 8080 is already forwarded","is_error":true}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Port 8080 stays with docs."}]}}
+{"kind":"turn_completion","turn":{}}

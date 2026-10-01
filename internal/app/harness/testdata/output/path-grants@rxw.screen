@@ -18,16 +18,16 @@ I can read the external reference now.
 I can also change it now.
 
 
- 🤖 Granted temporary read and execute
-    access to /tools.
+ 🤖 Granted temporary read-only access
+    to /tools.
 
 
 I can run what is in the tools directory
 now.
 
 
- 🤖 Granted temporary read, execute, and
-    write access to /build.
+ 🤖 Granted temporary read and write
+    access to /build.
 
 
 I can build in place and run what comes
@@ -387,25 +387,15 @@ a
 
 d
 
-a
+-
+
+o
 
 n
 
-d
+l
 
-e
-
-x
-
-e
-
-c
-
-u
-
-t
-
-e
+y
 
 a
 
@@ -518,24 +508,6 @@ e
 a
 
 d
-
-,
-
-e
-
-x
-
-e
-
-c
-
-u
-
-t
-
-e
-
-,
 
 a
 
@@ -902,13 +874,13 @@ I can read the external reference now.
 I can also change it now.
 
 
- 🤖 Granted temporary read and execute access to /tools.
+ 🤖 Granted temporary read-only access to /tools.
 
 
 I can run what is in the tools directory now.
 
 
- 🤖 Granted temporary read, execute, and write access to /build.
+ 🤖 Granted temporary read and write access to /build.
 
 
 I can build in place and run what comes out of it.
@@ -967,10 +939,9 @@ now.
 
  🤖 Granted
     temporar
-    y read
-    and
-    execute
-    access
+    y
+    read-onl
+    y access
     to
     /tools.
 
@@ -984,8 +955,7 @@ now.
 
  🤖 Granted
     temporar
-    y read,
-    execute,
+    y read
     and
     write
     access
@@ -1048,13 +1018,13 @@ I can read the external reference now.
 I can also change it now.
 
 
- 🤖 Granted temporary read and execute access to /tools.
+ 🤖 Granted temporary read-only access to /tools.
 
 
 I can run what is in the tools directory now.
 
 
- 🤖 Granted temporary read, execute, and write access to /build.
+ 🤖 Granted temporary read and write access to /build.
 
 
 I can build in place and run what comes out of it.

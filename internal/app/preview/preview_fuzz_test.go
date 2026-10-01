@@ -8,6 +8,7 @@ import (
 
 	"crdx.org/oh/internal/app/preview"
 	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/internal/money"
 )
 
 const (
@@ -50,7 +51,7 @@ func FuzzADamagedJournalIsPreviewedWithoutFallingOver(fuzzer *testing.F) {
 			t.Fatal(err)
 		}
 
-		rows, err := preview.Read(directory, name, work.At(directory), fuzzedRoom)
+		rows, err := preview.Read(directory, name, work.At(directory), money.Dollar(), fuzzedRoom)
 		if err != nil {
 			return
 		}

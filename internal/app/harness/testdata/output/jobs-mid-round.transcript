@@ -36,10 +36,10 @@ Job `docs` exited: complete after 14s.
 docs written
 ```
 
-## Host → sandbox · 1 sandbox port · changed port 8080 · +6s
+## Port forward · 1 forwarded port · changed port 8080 · +6s
 
 ```
-Sandbox port 8080 exposed at http://127.27.192.223:8080.
+Port 8080 is now forwarded to http://127.27.192.223:8080.
 ```
 
 ## Tool calls · +7s

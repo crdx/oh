@@ -83,8 +83,8 @@ import (
 	"crdx.org/oh/internal/app/segment/activitySpinner"
 	"crdx.org/oh/internal/app/segment/cacheUsage"
 	"crdx.org/oh/internal/app/segment/contextUsage"
-	"crdx.org/oh/internal/app/segment/exposedPorts"
 	"crdx.org/oh/internal/app/segment/fastMode"
+	"crdx.org/oh/internal/app/segment/forwardedPorts"
 	"crdx.org/oh/internal/app/segment/gitBranch"
 	"crdx.org/oh/internal/app/segment/jobNames"
 	"crdx.org/oh/internal/app/segment/localTime"
@@ -141,8 +141,8 @@ import (
 	"crdx.org/oh/pkg/tool/middleware/truncate"
 	"crdx.org/oh/pkg/toolbox"
 	"crdx.org/oh/pkg/toolbox/bash"
-	"crdx.org/oh/pkg/toolbox/expose"
 	"crdx.org/oh/pkg/toolbox/fetch"
+	"crdx.org/oh/pkg/toolbox/forward"
 	"crdx.org/oh/pkg/toolbox/grep"
 	"crdx.org/oh/pkg/toolbox/job"
 	"crdx.org/oh/pkg/toolbox/lookup"
@@ -2444,23 +2444,23 @@ func workspaceNowReadOnly() string {
 	return withdrawn.Inject()
 }
 
-func TestRevokingAHostRouteRestartsTheTurnWithTheChangeAsItsPrompt(t *testing.T) {
+func TestRevokingAForwardRestartsTheTurnWithTheChangeAsItsPrompt(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
-	ports := portgrant.NewHostToSandbox(portgrant.HostToSandboxExposer{
-		Expose: func(uint16) error { return nil },
-		Hide:   func(uint16) error { return nil },
+	ports := portgrant.NewForwards(portgrant.Forwarder{
+		Forward: func(uint16) error { return nil },
+		Revoke:  func(uint16) error { return nil },
 	}, "session.test")
-	if _, err := ports.Expose(8080); err != nil {
+	if _, err := ports.Forward(8080); err != nil {
 		t.Fatal(err)
 	}
 	ports.Inject()
-	self.hostToSandbox = ports
+	self.forwards = ports
 
 	self.start("first")
 	interruptedEvents := self.currentTurn.Events()
 
-	revoked, err := ports.Hide(8080)
+	revoked, err := ports.Revoke(8080)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -2484,8 +2484,8 @@ func TestRevokingAHostRouteRestartsTheTurnWithTheChangeAsItsPrompt(t *testing.T)
 
 	messages := submittedTexts(self.recordedEvents)
 	if len(messages) != 2 || messages[0] != "first" ||
-		!strings.Contains(messages[1], "port 8080 no longer exposed") {
-		t.Errorf("got messages %q, want the route revocation after the original prompt", messages)
+		!strings.Contains(messages[1], "Port 8080 is no longer forwarded") {
+		t.Errorf("got messages %q, want the revocation after the original prompt", messages)
 	}
 }
 
@@ -3559,7 +3559,7 @@ func TestOnlyQueuedAccessChangesAreShownInTheFooter(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	portChange, err := portgrant.SandboxToHostChangeEvent(3000, []uint16{3000})
+	portChange, err := portgrant.ForwardChangeEvent(portgrant.LocalHost, 3000, []portgrant.Route{{Port: 3000}})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -5506,7 +5506,8 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"new-session":             {".txt"},
 		"ordinary-tab":            {".ansi", ".screen"},
 		"path-grant-lifecycle":    {".ansi", ".screen"},
-		"port-directions":         {".ansi", ".screen"},
+		"port-forwards":           {".ansi", ".screen"},
+		"port-forward-lifecycle":  {".ansi", ".screen"},
 		"path-message":            {".ansi", ".screen"},
 		"user-path-links":         {".ansi", ".screen"},
 		"workspace-paths":         {".ansi", ".screen"},
@@ -5823,10 +5824,29 @@ func TestGoldenToolAvailabilityChanges(t *testing.T) {
 		}
 	}
 
+	retired := func() string {
+		event, err := toolset.AvailabilityChangeEvent(
+			toolset.Availability{"expose": toolset.ToolAvailable, "forward": toolset.ToolAvailable},
+			toolset.Availability{"expose": toolset.ToolMissing, "forward": toolset.ToolAvailable},
+		)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		var screenOutput strings.Builder
+		screen := output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
+		picasso := newTestPainter(screen, false)
+		picasso.DrawEvent(event)
+		picasso.Close(dynamic.Done)
+		screen.Seal()
+		return screenOutput.String()
+	}
+
 	passes := map[string]func() string{
-		"changed":   change(toolset.ToolAvailable, toolset.ToolChanged),
-		"missing":   change(toolset.ToolAvailable, toolset.ToolMissing),
-		"available": change(toolset.ToolMissing, toolset.ToolAvailable),
+		"changed":                           change(toolset.ToolAvailable, toolset.ToolChanged),
+		"missing":                           change(toolset.ToolAvailable, toolset.ToolMissing),
+		"available":                         change(toolset.ToolMissing, toolset.ToolAvailable),
+		"a tool retired under its old name": retired,
 	}
 	compareWithGolden(t, "tool-availability", ".ansi", passes)
 	compareWithGolden(t, "tool-availability", ".screen", shownPasses(t, passes))
@@ -8365,7 +8385,7 @@ func TestNothingIsMarkedWhereAConversationIsPreviewedInsideAMenu(t *testing.T) {
 		events = append(events, *entry.Event)
 	}
 
-	drawn := preview.Draw(events, layOutWorkspace(t), replayColumns)
+	drawn := preview.Draw(events, painter.Tariff{}, layOutWorkspace(t), replayColumns)
 
 	if found := strings.Contains(strings.Join(drawn, "\n"), escape.MessageMark); found {
 		t.Error("a previewed conversation marked rows the menu draws wherever it likes")
@@ -10376,7 +10396,7 @@ func TestGoldenTheInputBlockDrawsWhatItDrewBefore(t *testing.T) {
 	commandOptions := []dropdown.Option{
 		{Label: "/conf", Detail: "edit the config and system prompt"},
 		{Label: "/copy", Detail: "copy a target to the clipboard"},
-		{Label: "/expose", Detail: "expose a host loopback port to the sandbox"},
+		{Label: "/export", Detail: "export the transcript of the whole session"},
 		{Label: "/open"},
 	}
 	openCommandDropdown := func() *dropdown.Dropdown {
@@ -10827,6 +10847,7 @@ func TestGoldenReloadingAThemeReplaysTheWholeConversation(t *testing.T) {
 		"every palette role":           func() string { return themePaletteStream(t) },
 		"decorated palette roles":      func() string { return decoratedThemeStream(t) },
 		"tool vocabulary and paints":   func() string { return toolThemeReloadStream(t) },
+		"tool actions inherit a tool":  func() string { return toolActionThemeReloadStream(t) },
 	}
 	compareWithGolden(t, "theme-reload", ".ansi", passes)
 	compareWithGolden(t, "theme-reload", ".screen", shownPasses(t, passes))
@@ -10862,18 +10883,14 @@ func themeReloadStream(t *testing.T) string {
 
 func toolThemeReloadStream(t *testing.T) string {
 	t.Helper()
-	restoreTheme := style.ApplyTheme(style.DefaultTheme())
-	defer restoreTheme()
 
-	path := filepath.Join(t.TempDir(), "config.toml")
-	writeLiveConfig(t, path, "")
+	return toolThemeReload(t, `
+		[ui.theme.tool.job]
+		status = { name = "captain", paint = "#010203 bold" }
 
-	var screenOutput bytes.Buffer
-	self := testConversation(t, &screenOutput)
-	self.recorder = nil
-	self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
-	prepareLiveConfig(t, self, path)
-	self.recordedEvents = []agent.Event{
+		[ui.theme.tool.skill]
+		default = { name = "consult-chart", paint = "#040506", focus = "#070809" }
+	`, []agent.Event{
 		{Kind: agent.UserMessageEvent, Text: "show themed tools"},
 		{
 			Kind: agent.ToolCallRequestEvent, ID: "job", Name: "job",
@@ -10891,15 +10908,60 @@ func toolThemeReloadStream(t *testing.T) string {
 		},
 		{Kind: agent.ToolCallResultEvent, ID: "skill", Name: "read", Status: agent.SuccessStatus},
 		{Kind: agent.ModelMessageEvent, Text: "themed"},
+	})
+}
+
+func toolActionThemeReloadStream(t *testing.T) string {
+	t.Helper()
+
+	call := func(id string, kind string, subject string) []agent.Event {
+		return []agent.Event{
+			{
+				Kind: agent.ToolCallRequestEvent, ID: id, Name: "job",
+				FallbackRendering: agent.FallbackRendering{RenderingKind: kind, Subject: subject},
+			},
+			{Kind: agent.ToolCallResultEvent, ID: id, Name: "job", Status: agent.SuccessStatus},
+		}
 	}
+	calls := []agent.Event{{Kind: agent.UserMessageEvent, Text: "show themed actions"}}
+	for _, action := range []struct{ kind, subject string }{
+		{"job_start", "docs"},
+		{"job_stop", "docs"},
+		{"job_output", "docs"},
+		{"forward_add", "8080"},
+		{"forward_remove", "8080"},
+	} {
+		calls = append(calls, call(action.subject+action.kind, action.kind, action.subject)...)
+	}
+
+	return toolThemeReload(t, `
+		[ui.theme.tool.job]
+		default = { paint = "#0a0b0c" }
+		stop = { name = "scuttle", paint = "#0d0e0f" }
+
+		[ui.theme.tool.forward]
+		remove = { name = "close-gangway" }
+	`, append(calls, agent.Event{Kind: agent.ModelMessageEvent, Text: "themed"}))
+}
+
+func toolThemeReload(t *testing.T, themed string, calls []agent.Event) string {
+	t.Helper()
+	restoreTheme := style.ApplyTheme(style.DefaultTheme())
+	defer restoreTheme()
+
+	path := filepath.Join(t.TempDir(), "config.toml")
+	writeLiveConfig(t, path, "")
+
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	self.recorder = nil
+	self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
+	prepareLiveConfig(t, self, path)
+	self.recordedEvents = calls
 	self.redraw()
 	screenOutput.Reset()
 
-	writeLiveConfig(t, path, `
-		[ui.theme.tool]
-		job_status = { name = "captain", paint = "#010203 bold" }
-		skill = { name = "consult-chart", paint = "#040506", focus = "#070809" }
-	`)
+	writeLiveConfig(t, path, themed)
 	settleLiveConfig(t, self)
 	return screenOutput.String()
 }
@@ -13844,10 +13906,7 @@ func TestGoldenEveryWidthShedsWhatItMustFromTheBar(t *testing.T) {
 			{Path: "/output", Access: pathgrant.ReadAccess | pathgrant.WriteAccess},
 		}
 	}))
-	exposedPortsSegment := goldenShedSegment(t, exposedPorts.New(
-		goldenExposedPorts(8000, 8080),
-		goldenLocalPorts(3000),
-	))
+	forwardedPortsSegment := goldenShedSegment(t, forwardedPorts.New(goldenForwardedPorts(8000, 8080, 3000)))
 	jobsSegment := goldenShedSegment(t, jobNames.New(jobsOf(
 		jobs.Snapshot{Name: "docs", State: jobs.StateRunning},
 	), noPortRoutes, clockAt(at)))
@@ -13864,10 +13923,10 @@ func TestGoldenEveryWidthShedsWhatItMustFromTheBar(t *testing.T) {
 			activeModelSegment,
 			contextUsageSegment,
 		),
-		"two lists of their own": goldenShedPass(t, exposedPortsSegment, pathGrantsSegment),
+		"two lists of their own": goldenShedPass(t, forwardedPortsSegment, pathGrantsSegment),
 		"a segment drawn whole after two fitters": goldenShedPass(
 			t,
-			exposedPortsSegment,
+			forwardedPortsSegment,
 			pathGrantsSegment,
 			jobsSegment,
 		),
@@ -14231,142 +14290,90 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			"",
 			segment.Context{},
 		),
-		"exposed-ports / empty": goldenSegmentPass(
+		"forwards / empty": goldenSegmentPass(
 			t,
-			exposedPorts.New(
-				goldenExposedPorts(),
-				goldenLocalPorts(),
+			forwardedPorts.New(goldenForwardedPorts()),
+			"",
+			segment.Context{},
+		),
+		"forwards / ports": goldenSegmentPass(
+			t,
+			forwardedPorts.New(goldenForwardedPorts(8000, 8080)),
+			"",
+			segment.Context{},
+		),
+		"forwards / associated starting job": goldenSegmentPass(
+			t,
+			forwardedPorts.New(goldenAssociatedPort(jobs.StateStarting)),
+			"",
+			segment.Context{},
+		),
+		"forwards / associated running job": goldenSegmentPass(
+			t,
+			forwardedPorts.New(goldenAssociatedPort(jobs.StateRunning)),
+			"",
+			segment.Context{},
+		),
+		"forwards / associated stopping job": goldenSegmentPass(
+			t,
+			forwardedPorts.New(goldenAssociatedPort(jobs.StateStopping)),
+			"",
+			segment.Context{},
+		),
+		"forwards / associated failed job": goldenSegmentPass(
+			t,
+			forwardedPorts.New(goldenAssociatedPort(jobs.StateFailed)),
+			"",
+			segment.Context{},
+		),
+		"forwards / associated complete job": goldenSegmentPass(
+			t,
+			forwardedPorts.New(goldenAssociatedPort(jobs.StateComplete)),
+			"",
+			segment.Context{},
+		),
+		"forwards / associated stopped job": goldenSegmentPass(
+			t,
+			forwardedPorts.New(goldenAssociatedPort(jobs.StateStopped)),
+			"",
+			segment.Context{},
+		),
+		"forwards / associated job ended with session": goldenSegmentPass(
+			t,
+			forwardedPorts.New(goldenAssociatedPort(jobs.StateEnded)),
+			"",
+			segment.Context{},
+		),
+		"forwards / associated absent job": goldenSegmentPass(
+			t,
+			forwardedPorts.New(goldenAssociatedPortWithoutJob()),
+			"",
+			segment.Context{},
+		),
+		"forwards / configured hostname": goldenSegmentPass(
+			t,
+			forwardedPorts.New(forwardedPorts.Routes{
+				GetRoutes: func() []portgrant.Route { return []portgrant.Route{{Port: 8000}} },
+				Hostname:  "preview-" + goldenSessionName + ".test",
+			}),
+			"",
+			segment.Context{},
+		),
+		"forwards / shedding routes": goldenSegmentPass(
+			t,
+			forwardedPorts.New(
+				goldenForwardedPorts(8000, 8080, 3000, 6000),
 			),
 			"",
 			segment.Context{},
 		),
-		"exposed-ports / host to sandbox": goldenSegmentPass(
-			t,
-			exposedPorts.New(
-				goldenExposedPorts(8000, 8080),
-				goldenLocalPorts(),
-			),
-			"",
-			segment.Context{},
-		),
-		"exposed-ports / associated starting job": goldenSegmentPass(
-			t,
-			exposedPorts.New(
-				goldenAssociatedPort(jobs.StateStarting),
-				goldenLocalPorts(),
-			),
-			"",
-			segment.Context{},
-		),
-		"exposed-ports / associated running job": goldenSegmentPass(
-			t,
-			exposedPorts.New(
-				goldenAssociatedPort(jobs.StateRunning),
-				goldenLocalPorts(),
-			),
-			"",
-			segment.Context{},
-		),
-		"exposed-ports / associated stopping job": goldenSegmentPass(
-			t,
-			exposedPorts.New(
-				goldenAssociatedPort(jobs.StateStopping),
-				goldenLocalPorts(),
-			),
-			"",
-			segment.Context{},
-		),
-		"exposed-ports / associated failed job": goldenSegmentPass(
-			t,
-			exposedPorts.New(
-				goldenAssociatedPort(jobs.StateFailed),
-				goldenLocalPorts(),
-			),
-			"",
-			segment.Context{},
-		),
-		"exposed-ports / associated complete job": goldenSegmentPass(
-			t,
-			exposedPorts.New(
-				goldenAssociatedPort(jobs.StateComplete),
-				goldenLocalPorts(),
-			),
-			"",
-			segment.Context{},
-		),
-		"exposed-ports / associated stopped job": goldenSegmentPass(
-			t,
-			exposedPorts.New(
-				goldenAssociatedPort(jobs.StateStopped),
-				goldenLocalPorts(),
-			),
-			"",
-			segment.Context{},
-		),
-		"exposed-ports / associated job ended with session": goldenSegmentPass(
-			t,
-			exposedPorts.New(
-				goldenAssociatedPort(jobs.StateEnded),
-				goldenLocalPorts(),
-			),
-			"",
-			segment.Context{},
-		),
-		"exposed-ports / associated absent job": goldenSegmentPass(
-			t,
-			exposedPorts.New(
-				goldenAssociatedPortWithoutJob(),
-				goldenLocalPorts(),
-			),
-			"",
-			segment.Context{},
-		),
-		"exposed-ports / sandbox to host": goldenSegmentPass(
-			t,
-			exposedPorts.New(
-				goldenExposedPorts(),
-				goldenLocalPorts(3000, 6000),
-			),
-			"",
-			segment.Context{},
-		),
-		"exposed-ports / both directions": goldenSegmentPass(
-			t,
-			exposedPorts.New(
-				goldenExposedPorts(8000),
-				goldenLocalPorts(3000),
-			),
-			"",
-			segment.Context{},
-		),
-		"exposed-ports / configured hostname": goldenSegmentPass(
-			t,
-			exposedPorts.New(
-				exposedPorts.Routes{
-					GetRoutes: func() []portgrant.Route { return []portgrant.Route{{Port: 8000}} },
-					Hostname:  "preview-" + goldenSessionName + ".test",
-				},
-				goldenLocalPorts(),
-			),
-			"",
-			segment.Context{},
-		),
-		"exposed-ports / both directions shedding routes": goldenSegmentPass(
-			t,
-			exposedPorts.New(
-				goldenExposedPorts(8000, 8080),
-				goldenLocalPorts(3000, 6000),
-			),
-			"",
-			segment.Context{},
-		),
-		"path-grants / empty": goldenSegmentPass(
+		"grants / empty": goldenSegmentPass(
 			t,
 			pathGrants.New(func() []pathgrant.Grant { return nil }),
 			"",
 			segment.Context{},
 		),
-		"path-grants / read and write": goldenSegmentPass(
+		"grants / read and write": goldenSegmentPass(
 			t,
 			pathGrants.New(func() []pathgrant.Grant {
 				return []pathgrant.Grant{
@@ -14377,7 +14384,7 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			"",
 			segment.Context{},
 		),
-		"path-grants / every access": goldenSegmentPass(
+		"grants / every access": goldenSegmentPass(
 			t,
 			pathGrants.New(func() []pathgrant.Grant {
 				return []pathgrant.Grant{
@@ -14390,7 +14397,7 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			"",
 			segment.Context{},
 		),
-		"path-grants / many": goldenSegmentPass(
+		"grants / many": goldenSegmentPass(
 			t,
 			pathGrants.New(func() []pathgrant.Grant {
 				grants := make([]pathgrant.Grant, 6)
@@ -14405,7 +14412,7 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			"",
 			segment.Context{},
 		),
-		"path-grants / duplicate basenames": goldenSegmentPass(
+		"grants / duplicate basenames": goldenSegmentPass(
 			t,
 			pathGrants.New(func() []pathgrant.Grant {
 				return []pathgrant.Grant{
@@ -14834,7 +14841,7 @@ func TestSessionsComeFromJournalParsing(t *testing.T) {
 }
 
 func TestChoosingWithoutStoredSessionsFails(t *testing.T) {
-	if _, err := sessions.Choose(t.TempDir(), work.At(t.TempDir()), nil, nil); err == nil {
+	if _, err := sessions.Choose(t.TempDir(), work.At(t.TempDir()), money.Dollar(), nil, nil); err == nil {
 		t.Error("expected an empty session list to fail")
 	}
 }
@@ -14884,7 +14891,7 @@ func TestChoosingASessionFromANewerOhAdvisesAnUpgrade(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err := sessions.Choose(directory, work.At(t.TempDir()), nil, nil)
+	_, err := sessions.Choose(directory, work.At(t.TempDir()), money.Dollar(), nil, nil)
 	if err == nil {
 		t.Fatal("expected the newer session to be refused")
 	}
@@ -14900,7 +14907,7 @@ func TestChoosingAnOutdatedSessionAdvisesMigration(t *testing.T) {
 	directory := t.TempDir()
 	writeStoredJournal(t, directory, "able-dolphin", "2026-08-01T00:00:00Z")
 
-	_, err := sessions.Choose(directory, work.At(t.TempDir()), nil, nil)
+	_, err := sessions.Choose(directory, work.At(t.TempDir()), money.Dollar(), nil, nil)
 	if err == nil {
 		t.Fatal("expected the outdated session to be refused")
 	}
@@ -14967,46 +14974,6 @@ func TestPathGrantCommandBecomesPendingAccessAndUpdatesTheModel(t *testing.T) {
 	}
 	if !hasGrantEvent {
 		t.Error("settled conversation did not record the grant")
-	}
-}
-
-func TestSandboxToHostChangeBecomesPendingAccessAndUpdatesTheModel(t *testing.T) {
-	var screenOutput bytes.Buffer
-	self := testConversation(t, &screenOutput)
-	var exposed []uint16
-	grants := portgrant.NewSandboxToHost(portgrant.SandboxToHostExposer{
-		Expose: func(port uint16) error {
-			exposed = append(exposed, port)
-			return nil
-		},
-		Hide: func(uint16) error { return nil },
-	}, nil)
-	self.sandboxToHost = grants
-	self.settleAccess()
-
-	event, err := grants.Expose(8080)
-	if err != nil {
-		t.Fatal(err)
-	}
-	self.emitCommandEvent(event)
-	if len(self.pendingNotices.items) != 1 || self.pendingNotices.items[0].state.Kind != portgrant.SandboxToHostChange {
-		t.Fatalf("got pending input %#v", self.pendingNotices.items)
-	}
-	for _, recordedEvent := range self.recordedEvents {
-		if recordedEvent.Kind == portgrant.SandboxToHostChange {
-			t.Fatal("the change was recorded before it could be sent to the model")
-		}
-	}
-
-	self.settleAccess()
-	if message := self.takeSettledNotes(); !strings.Contains(message, "8080") {
-		t.Errorf("model access did not name the port: %q", message)
-	}
-	if message := grants.Inject(); message != "" {
-		t.Errorf("model access was not advanced: %q", message)
-	}
-	if self.recordedEvents[len(self.recordedEvents)-1].Kind != portgrant.SandboxToHostChange {
-		t.Errorf("got recorded events %#v", self.recordedEvents)
 	}
 }
 
@@ -15163,19 +15130,15 @@ func FuzzPendingPathGrantsSayWhatTheModelHasNotBeenTold(fuzzer *testing.F) {
 		}
 
 		for _, command := range []byte(commands) {
-			path := paths[int(command/6)%len(paths)]
-			switch command % 6 {
+			path := paths[int(command/4)%len(paths)]
+			switch command % 4 {
 			case 0:
 				self.handleCommand("/grant r " + path)
 			case 1:
 				self.handleCommand("/grant rw " + path)
 			case 2:
-				self.handleCommand("/grant rx " + path)
-			case 3:
-				self.handleCommand("/grant rxw " + path)
-			case 4:
 				self.handleCommand("/revoke " + path)
-			case 5:
+			case 3:
 				self.settleAccess()
 			}
 			assertPendingPathGrants(t, self, grants, paths)
@@ -15300,7 +15263,7 @@ const (
 	pathGrantRestoreSettled
 	pathGrantHomePath
 	pathGrantHomePathMissing
-	pathGrantExec
+	pathGrantExecutableAccessRejected
 	pathGrantTakenBack
 	pathGrantReplaced
 	pathGrantRevokeSeveral
@@ -15316,7 +15279,7 @@ func TestGoldenPathGrantLifecycleDrawsEveryVisibleState(t *testing.T) {
 	passes := map[string]func() string{
 		"active turn interrupted":       func() string { return pathGrantGoldenStream(t, pathGrantInterrupted) },
 		"duplicate grant rejected":      func() string { return pathGrantGoldenStream(t, pathGrantDuplicate) },
-		"executable grant":              func() string { return pathGrantGoldenStream(t, pathGrantExec) },
+		"executable access rejected":    func() string { return pathGrantGoldenStream(t, pathGrantExecutableAccessRejected) },
 		"grant replaced before sending": func() string { return pathGrantGoldenStream(t, pathGrantReplaced) },
 		"grant taken back before sending": func() string {
 			return pathGrantGoldenStream(t, pathGrantTakenBack)
@@ -15343,63 +15306,277 @@ func TestGoldenPathGrantLifecycleDrawsEveryVisibleState(t *testing.T) {
 	compareWithGolden(t, "path-grant-lifecycle", ".screen", shownPasses(t, passes))
 }
 
-func TestGoldenPortDirectionNoticesMatchGolden(t *testing.T) {
+func TestGoldenPortForwardNoticesMatchGolden(t *testing.T) {
 	passes := map[string]func() string{
-		"queued host-to-sandbox revocation": func() string {
+		"queued revocation": func() string {
 			return pendingHostRouteRevocationStream(t)
 		},
-		"pending sandbox to host": func() string {
-			var screenOutput bytes.Buffer
-			self := testConversation(t, &screenOutput)
-			self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
-			grants := portgrant.NewSandboxToHost(portgrant.SandboxToHostExposer{
-				Expose: func(uint16) error { return nil },
-				Hide:   func(uint16) error { return nil },
-			}, nil)
-			self.sandboxToHost = grants
-			self.settleAccess()
-			event, err := grants.Expose(3000)
-			if err != nil {
-				t.Fatal(err)
-			}
-			self.emitCommandEvent(event)
-			self.settlePendingInput()
-			self.screen.End()
-			return screenOutput.String()
-		},
-		"recorded directions": func() string {
+		"recorded forwards": func() string {
 			var screenOutput bytes.Buffer
 			self := testConversation(t, &screenOutput)
 			self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
 
-			hostToSandbox, err := portgrant.HostToSandboxChangeEvent("127.9.9.9", 8080, []portgrant.Route{{Port: 8080}})
+			forwards, err := portgrant.ForwardChangeEvent("127.9.9.9", 8080, []portgrant.Route{{Port: 8080}})
 			if err != nil {
 				t.Fatal(err)
 			}
-			sandboxToHost, err := portgrant.SandboxToHostChangeEvent(3000, []uint16{3000})
+			self.notify(forwards)
+			forwards, err = portgrant.ForwardChangeEvent("127.9.9.9", 8080, nil)
 			if err != nil {
 				t.Fatal(err)
 			}
-			self.notify(hostToSandbox)
-			self.notify(sandboxToHost)
-			sandboxToHost, err = portgrant.SandboxToHostChangeEvent(3000, nil)
-			if err != nil {
-				t.Fatal(err)
-			}
-			hostToSandbox, err = portgrant.HostToSandboxChangeEvent("127.9.9.9", 8080, nil)
-			if err != nil {
-				t.Fatal(err)
-			}
-			self.notify(sandboxToHost)
-			self.notify(hostToSandbox)
+			self.notify(forwards)
 			self.screen.End()
 			return screenOutput.String()
 		},
 		"recorded ports in a row": func() string { return recordedPortsInARow(t, replayLines) },
+		"forward taken over by a job": func() string {
+			var screenOutput bytes.Buffer
+			self := testConversation(t, &screenOutput)
+			self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
+
+			forwards := portgrant.NewForwards(portgrant.Forwarder{
+				Forward: func(uint16) error { return nil },
+				Revoke:  func(uint16) error { return nil },
+			}, "127.9.9.9")
+			for _, jobName := range []string{"", "docs"} {
+				if _, err := forwards.ForModel().Forward(8080, jobName); err != nil {
+					t.Fatal(err)
+				}
+				self.notify(<-forwards.Changes())
+			}
+			self.screen.End()
+			return screenOutput.String()
+		},
 	}
-	compareWithGolden(t, "port-directions", ".ansi", passes)
-	compareWithGolden(t, "port-directions", ".screen", shownPasses(t, passes))
+	compareWithGolden(t, "port-forwards", ".ansi", passes)
+	compareWithGolden(t, "port-forwards", ".screen", shownPasses(t, passes))
 }
+
+type portForwardGoldenScenario int
+
+const (
+	portForwardPending portForwardGoldenScenario = iota
+	portForwardSettled
+	portForwardInterrupted
+	portForwardTakenBack
+	portForwardRevokedAfterSending
+	portForwardSeveralRevoked
+	portForwardDuplicate
+	portForwardBelowTheUnprivilegedLimit
+	portForwardTooMany
+	portForwardWithoutAPort
+	portForwardWithANameForAPort
+	portForwardWithoutASandboxNetwork
+	portForwardRefusedByTheKeeper
+	portForwardRevokeMissing
+	portForwardRestorePending
+	portForwardRestoreSettled
+)
+
+func TestGoldenPortForwardLifecycleDrawsEveryVisibleState(t *testing.T) {
+	passes := scenarioPasses(map[string]portForwardGoldenScenario{
+		"active turn interrupted":        portForwardInterrupted,
+		"below the unprivileged limit":   portForwardBelowTheUnprivilegedLimit,
+		"duplicate forward rejected":     portForwardDuplicate,
+		"forward taken back":             portForwardTakenBack,
+		"keeper refuses the port":        portForwardRefusedByTheKeeper,
+		"name given for a port":          portForwardWithANameForAPort,
+		"no port given":                  portForwardWithoutAPort,
+		"no sandbox network":             portForwardWithoutASandboxNetwork,
+		"pending forward":                portForwardPending,
+		"restoration correction pending": portForwardRestorePending,
+		"restoration correction settled": portForwardRestoreSettled,
+		"revoke without forward":         portForwardRevokeMissing,
+		"revoked after sending":          portForwardRevokedAfterSending,
+		"several revoked at once":        portForwardSeveralRevoked,
+		"settled into next turn":         portForwardSettled,
+		"too many forwards":              portForwardTooMany,
+	}, func(scenario portForwardGoldenScenario) string { return portForwardGoldenStream(t, scenario) })
+	compareWithGolden(t, "port-forward-lifecycle", ".ansi", passes)
+	compareWithGolden(t, "port-forward-lifecycle", ".screen", shownPasses(t, passes))
+}
+
+func scenarioPasses[Scenario any](
+	scenarios map[string]Scenario,
+	stream func(Scenario) string,
+) map[string]func() string {
+	passes := make(map[string]func() string, len(scenarios))
+	for name, scenario := range scenarios {
+		passes[name] = func() string { return stream(scenario) }
+	}
+
+	return passes
+}
+
+func portForwardGoldenStream(t *testing.T, scenario portForwardGoldenScenario) string {
+	t.Helper()
+
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
+	workspace := openTestWorkspace(t, t.TempDir())
+
+	forwarder := portgrant.Forwarder{
+		Forward: func(uint16) error { return nil },
+		Revoke:  func(uint16) error { return nil },
+	}
+	if scenario == portForwardWithoutASandboxNetwork {
+		forwarder = portgrant.Forwarder{}
+	}
+	if scenario == portForwardRefusedByTheKeeper {
+		forwarder.Forward = func(port uint16) error {
+			return fmt.Errorf("could not listen on 127.9.9.9 port %d: address already in use", port)
+		}
+	}
+	forwards := portgrant.NewForwards(forwarder, "127.9.9.9")
+	if scenario == portForwardRestorePending || scenario == portForwardRestoreSettled {
+		var result portgrant.ForwardsRestoreResult
+		forwards, result = portgrant.NewRestoredForwards(
+			portgrant.Forwarder{
+				Forward: func(uint16) error { return errors.New("address already in use") },
+				Revoke:  func(uint16) error { return nil },
+			},
+			"127.9.9.9",
+			[]portgrant.Route{{Port: 8080}},
+		)
+		if len(result.Failures) != 1 {
+			t.Fatalf("got restoration failures %#v", result.Failures)
+		}
+	}
+	self.forwards = forwards
+	files := file.New(workspace.GetRoot(), caps.RefuseWrite(self.mode))
+	pathAccess, err := shell.NewPathAccess(files, self.mode, shell.Paths{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(pathAccess.Close)
+	grants := pathgrant.New(workspace, pathAccess)
+	systemSet, err := commands.New(commands.Options{
+		PathGrants: commands.PathGrants{
+			Grant:      grants.Grant,
+			Revoke:     grants.Revoke,
+			GetCurrent: grants.GetCurrent,
+		},
+		Forwards: commands.Forwards{
+			Forward:    forwards.Forward,
+			Revoke:     forwards.Revoke,
+			GetCurrent: forwards.GetCurrent,
+			GetURL:     forwards.URL,
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	snippetSet, err := snippets.New(nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	self.commands = fixtureRegistry(t, systemSet, snippetSet)
+	self.settleAccess()
+
+	registry := bar.NewRegistry(bar.Options{
+		Workspace:       workspace,
+		Session:         cycle.Session{Name: "tame-impala", Model: "gpt-5.6-sol", Effort: "high"},
+		Sources:         self.getBarSources(),
+		SandboxHostname: "127.9.9.9",
+	})
+	live, err := configFrom(t, `
+		[bar.top]
+		left = [
+			{ segment = "activity-spinner", idle = "·✦·", frames = ["✦··"], rate = "125ms" },
+			{ segment = "forwards" },
+		]
+		center = []
+		right = [{ segment = "session-name" }]
+
+		[bar.bottom]
+		left = []
+		center = []
+		right = []
+	`).BuildLive(registry)
+	if err != nil {
+		t.Fatal(err)
+	}
+	self.display.bar = bar.NewConfiguration(registry, live.SegmentLayout)
+
+	inputLine := edit.NewInput(nil)
+	self.inputLine = inputLine
+	self.show(inputLine)
+
+	switch scenario {
+	case portForwardPending:
+		self.handleCommand("/forward 8080")
+	case portForwardSettled:
+		self.handleCommand("/forward 8080")
+		self.start("continue")
+		self.waitForCurrentTurn()
+	case portForwardInterrupted:
+		turnEvents := make(chan TurnEvent)
+		self.currentTurn = Turn{
+			Stream: testTurnStream(
+				turnEvents,
+				func(error) { close(turnEvents) },
+				turn.State{Running: true},
+			),
+			painter: self.newPainter(true),
+		}
+		self.currentTurn.painter.DrawDelta(agent.Delta{Kind: agent.ModelMessageEvent, Text: "still working"})
+		self.handleCommand("/forward 8080")
+		self.waitForCurrentTurn()
+		self.waitForCurrentTurn()
+	case portForwardTakenBack:
+		self.handleCommand("/forward 8080")
+		self.handleCommand("/revoke 8080")
+	case portForwardRevokedAfterSending:
+		self.handleCommand("/forward 8080")
+		self.start("continue")
+		self.waitForCurrentTurn()
+		self.handleCommand("/revoke 8080")
+	case portForwardSeveralRevoked:
+		self.handleCommand("/forward 8080")
+		self.handleCommand("/forward 8081")
+		self.start("continue")
+		self.waitForCurrentTurn()
+		self.handleCommand("/revoke 8080 9999 8081")
+	case portForwardDuplicate:
+		self.handleCommand("/forward 8080")
+		self.handleCommand("/forward 8080")
+	case portForwardBelowTheUnprivilegedLimit:
+		self.handleCommand("/forward 80")
+	case portForwardTooMany:
+		for port := 8080; port < 8080+maxForwardedPortsForGolden; port++ {
+			self.handleCommand("/forward " + strconv.Itoa(port))
+		}
+		self.handleCommand("/forward 9090")
+	case portForwardWithoutAPort:
+		self.handleCommand("/forward")
+	case portForwardWithANameForAPort:
+		self.handleCommand("/forward web")
+	case portForwardWithoutASandboxNetwork, portForwardRefusedByTheKeeper:
+		self.handleCommand("/forward 8080")
+	case portForwardRevokeMissing:
+		self.handleCommand("/revoke 8080")
+	case portForwardRestorePending, portForwardRestoreSettled:
+		correction, err := portgrant.ForwardChangeEvent("127.9.9.9", 8080, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		self.pendingNotices.add(correction)
+		self.notifyFailure("Port 8080 could not be forwarded again: address already in use")
+		self.show(inputLine)
+		self.refreshPendingMessages()
+		if scenario == portForwardRestoreSettled {
+			self.start("continue")
+			self.waitForCurrentTurn()
+		}
+	}
+	self.show(inputLine)
+
+	return screenOutput.String()
+}
+
+const maxForwardedPortsForGolden = 8
 
 func pendingHostRouteRevocationStream(t *testing.T) string {
 	t.Helper()
@@ -15407,15 +15584,15 @@ func pendingHostRouteRevocationStream(t *testing.T) string {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
 	self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
-	ports := portgrant.NewHostToSandbox(portgrant.HostToSandboxExposer{
-		Expose: func(uint16) error { return nil },
-		Hide:   func(uint16) error { return nil },
+	ports := portgrant.NewForwards(portgrant.Forwarder{
+		Forward: func(uint16) error { return nil },
+		Revoke:  func(uint16) error { return nil },
 	}, "session.test")
-	if _, err := ports.Expose(8080); err != nil {
+	if _, err := ports.Forward(8080); err != nil {
 		t.Fatal(err)
 	}
 	ports.Inject()
-	self.hostToSandbox = ports
+	self.forwards = ports
 	self.currentTurn = Turn{
 		painter: self.newPainter(true),
 		Stream:  testTurnStream(nil, func(error) {}, turn.State{Running: true}),
@@ -15429,7 +15606,7 @@ func pendingHostRouteRevocationStream(t *testing.T) string {
 	self.recordedEvents = append(self.recordedEvents, call)
 	self.currentTurn.painter.DrawEvent(call)
 
-	revoked, err := ports.Hide(8080)
+	revoked, err := ports.Revoke(8080)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -15448,7 +15625,7 @@ func recordedPortsInARow(t *testing.T, lines int) string {
 	var ports []uint16
 	for _, port := range []uint16{8001, 8002, 8003} {
 		ports = append(ports, port)
-		event, err := portgrant.HostToSandboxChangeEvent("127.9.9.9", port, portRoutes(ports...))
+		event, err := portgrant.ForwardChangeEvent("127.9.9.9", port, portRoutes(ports...))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -15482,7 +15659,7 @@ func pathGrantGoldenStream(t *testing.T, scenario pathGrantGoldenScenario) strin
 		[bar.top]
 		left = [
 			{ segment = "activity-spinner", idle = "·✦·", frames = ["✦··"], rate = "125ms" },
-			{ segment = "path-grants" },
+			{ segment = "grants" },
 		]
 		center = []
 		right = [{ segment = "session-name" }]
@@ -15535,7 +15712,7 @@ func pathGrantGoldenStream(t *testing.T, scenario pathGrantGoldenScenario) strin
 		self.handleCommand("/grant r ~/reference")
 	case pathGrantHomePathMissing:
 		self.handleCommand("/grant r ~/missing")
-	case pathGrantExec:
+	case pathGrantExecutableAccessRejected:
 		self.handleCommand("/grant rx " + referencePath)
 	case pathGrantTakenBack:
 		self.handleCommand("/grant r " + referencePath)
@@ -16450,7 +16627,7 @@ type sessionGoldenTurn struct {
 	EndJobAfterReasoningEvent    string                  `toml:"end-job-after-reasoning-event"`
 }
 
-const exposeToolName = "expose"
+const forwardToolName = "forward"
 
 const jobToolName = "job"
 
@@ -16462,7 +16639,7 @@ const printedSessionIsImpossible = "this scenario drives the interface, which a 
 
 func (self sessionGoldenScenario) usesTheInterface() bool {
 	if slices.ContainsFunc(self.Tools, func(specification sessionGoldenTool) bool {
-		return specification.Name == exposeToolName
+		return specification.Name == forwardToolName
 	}) {
 		return true
 	}
@@ -16504,6 +16681,7 @@ type sessionGoldenTool struct {
 	IsLargeRead           bool     `toml:"large-read"`
 	Declared              string   `toml:"declared"`
 	OnResume              string   `toml:"on-resume"`
+	ShouldRun             bool     `toml:"runs"`
 }
 
 type sessionGoldenSkill struct {
@@ -16545,6 +16723,7 @@ type sessionGoldenScenario struct {
 	JobHoldingWorkspace   string                    `toml:"job-holding-workspace"`
 	JobsRunningIntoResume []string                  `toml:"jobs-running-into-resume"`
 	RunBeforeFirst        string                    `toml:"run-before-first"`
+	Prices                *sessionGoldenPrices      `toml:"prices"`
 	Tools                 []sessionGoldenTool       `toml:"tool"`
 	FirstTurn             sessionGoldenTurn         `toml:"first"`
 	ResumeTurn            sessionGoldenTurn         `toml:"resume"`
@@ -16630,6 +16809,30 @@ func readSessionGoldenScenario(t *testing.T, path string) sessionGoldenScenario 
 
 	scenario.Name = strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))
 	return scenario
+}
+
+type sessionGoldenPrices struct {
+	Input      float64 `toml:"input"`
+	Output     float64 `toml:"output"`
+	CacheRead  float64 `toml:"cache_read"`
+	CacheWrite float64 `toml:"cache_write"`
+}
+
+func (self sessionGoldenScenario) prices() *agent.TokenPrices {
+	if self.Prices == nil {
+		return nil
+	}
+
+	return &agent.TokenPrices{
+		Input:      self.Prices.Input,
+		Output:     self.Prices.Output,
+		CacheRead:  self.Prices.CacheRead,
+		CacheWrite: self.Prices.CacheWrite,
+	}
+}
+
+func (self sessionGoldenScenario) display() displayState {
+	return displayState{modelName: self.Model, tariff: painter.Tariff{Prices: self.prices(), Currency: money.Dollar()}}
 }
 
 func (self sessionGoldenScenario) screen(writer io.Writer) *output.Screen {
@@ -16858,8 +17061,8 @@ func portRoutes(ports ...uint16) []portgrant.Route {
 	return routes
 }
 
-func goldenAssociatedPort(state jobs.State) exposedPorts.Routes {
-	return exposedPorts.Routes{
+func goldenAssociatedPort(state jobs.State) forwardedPorts.Routes {
+	return forwardedPorts.Routes{
 		GetRoutes: func() []portgrant.Route {
 			return []portgrant.Route{{Port: 8000, JobName: "docs"}}
 		},
@@ -16870,8 +17073,8 @@ func goldenAssociatedPort(state jobs.State) exposedPorts.Routes {
 	}
 }
 
-func goldenAssociatedPortWithoutJob() exposedPorts.Routes {
-	return exposedPorts.Routes{
+func goldenAssociatedPortWithoutJob() forwardedPorts.Routes {
+	return forwardedPorts.Routes{
 		GetRoutes: func() []portgrant.Route {
 			return []portgrant.Route{{Port: 8000, JobName: "docs"}}
 		},
@@ -16879,26 +17082,19 @@ func goldenAssociatedPortWithoutJob() exposedPorts.Routes {
 	}
 }
 
-func goldenExposedPorts(ports ...uint16) exposedPorts.Routes {
-	return exposedPorts.Routes{
+func goldenForwardedPorts(ports ...uint16) forwardedPorts.Routes {
+	return forwardedPorts.Routes{
 		GetRoutes: func() []portgrant.Route { return portRoutes(ports...) },
 		Hostname:  portgrant.AddressFor(goldenSessionName),
 	}
 }
 
-func goldenLocalPorts(ports ...uint16) exposedPorts.Routes {
-	return exposedPorts.Routes{
-		GetRoutes: func() []portgrant.Route { return portRoutes(ports...) },
-		Hostname:  portgrant.LocalHost,
-	}
-}
-
-func newSessionGoldenPorts(sessionName string, hostnameTemplate string) *portgrant.HostToSandbox {
+func newSessionGoldenPorts(sessionName string, hostnameTemplate string) *portgrant.Forwards {
 	address := portgrant.AddressFor(sessionName)
 	hostname := config.Ports{Hostname: hostnameTemplate}.GetHostname(sessionName, address)
-	return portgrant.NewHostToSandbox(portgrant.HostToSandboxExposer{
-		Expose: func(uint16) error { return nil },
-		Hide:   func(uint16) error { return nil },
+	return portgrant.NewForwards(portgrant.Forwarder{
+		Forward: func(uint16) error { return nil },
+		Revoke:  func(uint16) error { return nil },
 	}, hostname)
 }
 
@@ -16906,7 +17102,7 @@ func newSessionGoldenPorts(sessionName string, hostnameTemplate string) *portgra
 func newSessionGoldenTools(
 	t *testing.T,
 	specifications []sessionGoldenTool,
-	ports *portgrant.HostToSandbox,
+	ports *portgrant.Forwards,
 	scratchDirectory string,
 	toolDirectory string,
 	isResume ...bool,
@@ -16923,13 +17119,18 @@ func newSessionGoldenTools(
 			t.Fatalf("unknown on-resume state %q", specification.OnResume)
 		}
 
+		if specification.Name == jobToolName && specification.ShouldRun {
+			tools = append(tools, newSessionGoldenRunningJobTool(t, ports))
+			continue
+		}
+
 		if specification.Name == jobToolName {
 			tools = append(tools, job.New(nil, nil, nil, nil))
 			continue
 		}
 
-		if specification.Name == exposeToolName {
-			tools = append(tools, expose.New(ports.ForModel()))
+		if specification.Name == forwardToolName {
+			tools = append(tools, forward.New(ports.ForModel()))
 			continue
 		}
 
@@ -17076,6 +17277,26 @@ func newSessionGoldenLargeReadTool(t *testing.T, scratchDirectory string) tool.T
 	root := file.New(rootHandle, func(string) error { return nil })
 	root.Mount(sandbox.TmpDir, root)
 	return read.New(root, file.NewSnapshots())
+}
+
+func newSessionGoldenRunningJobTool(t *testing.T, ports *portgrant.Forwards) tool.Tool {
+	t.Helper()
+
+	rootHandle, err := os.OpenRoot(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = rootHandle.Close() })
+
+	manager := jobs.New(stoppableRunner{})
+	t.Cleanup(func() { _ = manager.Close() })
+
+	return job.New(
+		manager,
+		file.New(rootHandle, func(string) error { return nil }),
+		func(context.Context) (sandbox.Policy, error) { return sandbox.Policy{}, nil },
+		ports.ForModel(),
+	)
 }
 
 func newSessionGoldenGrepTool(t *testing.T) tool.Tool {
@@ -17636,6 +17857,9 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		IsFast:       scenario.IsFast,
 		SystemPrompt: sessionGoldenSystemPrompt,
 	}
+	if prices := scenario.prices(); prices != nil {
+		meta.ModelChoice = &model.Choice{Provider: scenario.Provider, ID: scenario.Model, Prices: prices}
+	}
 	if scenario.describesConditions() {
 		meta.Conditions = &firstConditions
 	}
@@ -17668,12 +17892,12 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	settleClock(firstAssistant)
 	var firstScreenOutput bytes.Buffer
 	firstHarness := &App{
-		agent:         firstAssistant,
-		screen:        scenario.screen(&firstScreenOutput),
-		recorder:      record.New(log),
-		hostToSandbox: goldenPorts,
-		display:       displayState{modelName: scenario.Model},
-		nudge:         builtInConfig(t).Input.Nudge,
+		agent:    firstAssistant,
+		screen:   scenario.screen(&firstScreenOutput),
+		recorder: record.New(log),
+		forwards: goldenPorts,
+		display:  scenario.display(),
+		nudge:    builtInConfig(t).Input.Nudge,
 	}
 	if scenario.Provider == model.CodexProvider {
 		firstHarness.openingEvents = []agent.Event{model.FastModeEvent(scenario.IsFast)}
@@ -17774,8 +17998,8 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		screen:         scenario.screen(&screenOutput),
 		recorder:       resumedRecorder,
 		recordedEvents: slices.Clone(storedSession.Events),
-		hostToSandbox:  goldenPorts,
-		display:        displayState{modelName: scenario.Model},
+		forwards:       goldenPorts,
+		display:        scenario.display(),
 	}
 	settleResumedSessionGoldenMode(resumedHarness, storedSession.Events)
 	restoredEvents := restoreSessionGoldenConditions(
@@ -17843,7 +18067,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		agent:          resumedAssistant,
 		screen:         scenario.screen(&replayOutput),
 		recordedEvents: storedSession.Events,
-		display:        displayState{modelName: scenario.Model},
+		display:        scenario.display(),
 	}
 	replayHarness.replay()
 
@@ -17860,7 +18084,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		screen:         scenario.screen(&printedReplayOutput).AppendOnly(),
 		recordedEvents: storedSession.Events,
 		runMode:        runMode{isPrinting: true},
-		display:        displayState{modelName: scenario.Model},
+		display:        scenario.display(),
 	}
 	printedReplayHarness.replay()
 
@@ -18347,7 +18571,7 @@ func drawPrintedSessionGoldenTurn(
 		screen:   scenario.screen(&screenOutput).AppendOnly(),
 		recorder: record.New(log),
 		runMode:  runMode{isPrinting: true},
-		display:  displayState{modelName: scenario.Model},
+		display:  scenario.display(),
 	}
 	if len(restoredEvents) > 0 {
 		printedHarness.recordedEvents = slices.Clone(restoredEvents)
@@ -20827,14 +21051,14 @@ func roomyTallTurn(t *testing.T, screenOutput *bytes.Buffer) (*App, *edit.Input)
 }
 
 func noticesDrawnBesideAnOpenBlock(self *App) map[string]func() {
-	hostToSandbox, _ := portgrant.HostToSandboxChangeEvent("127.9.9.9", 8080, []portgrant.Route{{Port: 8080}})
+	forwards, _ := portgrant.ForwardChangeEvent("127.9.9.9", 8080, []portgrant.Route{{Port: 8080}})
 
 	return map[string]func(){
 		"an ended job": func() { self.jobEnded(endedJobConclusion()) },
 		"a host command": func() {
 			self.hostCommandRan(hostcommand.RanEvent(hostcommand.Result{Command: "git status", Output: " M a\n"}))
 		},
-		"an exposed port": func() { self.notify(hostToSandbox) },
+		"a forwarded port": func() { self.notify(forwards) },
 	}
 }
 
@@ -22104,7 +22328,7 @@ func TestASimulationRunsWithNoSandboxAndNothingThatCouldUseOne(t *testing.T) {
 		t.Errorf("a simulation offered %v, want %v", options.Tools, want)
 	}
 
-	for _, refused := range []string{"bash", "job", "write", "edit", "expose"} {
+	for _, refused := range []string{"bash", "job", "write", "edit", "forward"} {
 		if slices.Contains(options.Tools, refused) {
 			t.Errorf("a simulation offered the %s tool with no sandbox around it", refused)
 		}

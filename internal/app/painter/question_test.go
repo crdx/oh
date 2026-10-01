@@ -188,7 +188,7 @@ func TestACommandIsMarkedTheWayTheToolMarksIt(t *testing.T) {
 
 func TestACommandMarkFollowsTheToolTheme(t *testing.T) {
 	theme := style.DefaultTheme()
-	theme.Tool["bash"] = style.ToolAppearance{Name: "fire"}
+	theme.Tool["bash"] = style.ToolEntry{Default: style.ToolAppearance{Name: "fire"}}
 	t.Cleanup(style.ApplyTheme(theme))
 	question := ask.Confirmation{
 		Label:    "Continue?",

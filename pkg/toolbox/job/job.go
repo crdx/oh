@@ -16,7 +16,7 @@ import (
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/bash"
-	"crdx.org/oh/pkg/toolbox/expose"
+	"crdx.org/oh/pkg/toolbox/forward"
 )
 
 const (
@@ -60,7 +60,7 @@ func New(
 	manager *jobs.Manager,
 	root *file.Root,
 	buildPolicy func(context.Context) (sandbox.Policy, error),
-	ports expose.Ports,
+	ports forward.Ports,
 ) tool.Tool {
 	return tool.Implement(
 		tool.Definition{
@@ -69,7 +69,7 @@ func New(
 			Schema: tool.Schema{
 				tool.Enum("action", "what to do", actions...),
 				tool.String("name", fmt.Sprintf("the job name; for start, use one short role such as 'check', not a specific compound such as 'cachecheck'—a live duplicate is automatically numbered, such as 'check-1'; 1–%d characters from [a-z0-9-] (for all actions except 'list', 'prune')", jobs.NameLengthLimit)).Optional(),
-				tool.Integer("port", "an optional TCP port inside the sandbox to expose to the user (for start)").Optional(),
+				tool.Integer("port", "an optional TCP port inside the sandbox to forward to the user (for start)").Optional(),
 				tool.StringArray("names", "the job names to watch for wait").Optional(),
 				tool.Enum("wait_for", "whether wait returns after any or all watched jobs end", waitForAny, waitForAll).Optional(),
 				tool.Integer("wait_seconds", fmt.Sprintf("how many seconds to wait at most — max %s (default)", util.CompactDuration(waitLimit))).Optional(),
@@ -85,21 +85,24 @@ func New(
 		})
 }
 
-const description = "run a shell command in the background. In an interactive session you will be notified automatically when it finishes; in a non-interactive session you will not."
+const description = "run a shell command in the background. For a server, bind a fixed port and pass it as `port`; the tool forwards that number and neither discovers an ephemeral port nor supplies a stable alias. In an interactive session you will be notified automatically when it finishes; in a non-interactive session you will not."
 
 func Describe(args Args) tool.CallRendering {
 	switch args.Action {
 	case actionStart:
 		subject := args.Name
+		var emphasis tool.Emphasis
 		if args.Port != 0 {
 			subject += ":" + strconv.Itoa(args.Port)
+			emphasis = tool.Emphasis{Kind: tool.EmphasisLead, Value: args.Name}
 		}
 		if strings.TrimSpace(args.Command) == "" {
-			return tool.CallRendering{Kind: "job_restart", Subject: subject}
+			return tool.CallRendering{Kind: "job_restart", Subject: subject, Emphasis: emphasis}
 		}
 		return tool.CallRendering{
 			Kind:         "job_start",
 			Subject:      subject,
+			Emphasis:     emphasis,
 			Continuation: []tool.CallRendering{bash.DescribeCommand(args.Command)},
 		}
 	case actionWait:
@@ -251,7 +254,7 @@ func run(
 	manager *jobs.Manager,
 	root *file.Root,
 	buildPolicy func(context.Context) (sandbox.Policy, error),
-	ports expose.Ports,
+	ports forward.Ports,
 	args Args,
 ) (string, tool.ToolCallMetrics, error) {
 	report, err := act(ctx, manager, root, buildPolicy, ports, args)
@@ -267,7 +270,7 @@ func act(
 	manager *jobs.Manager,
 	root *file.Root,
 	buildPolicy func(context.Context) (sandbox.Policy, error),
-	ports expose.Ports,
+	ports forward.Ports,
 	args Args,
 ) (string, error) {
 	switch args.Action {
@@ -301,10 +304,10 @@ func act(
 		case portErr != nil:
 			err = portErr
 		case ports == nil:
-			err = errors.New("port exposure is unavailable")
+			err = errors.New("port forwarding is unavailable")
 		default:
 			var publication string
-			publication, err = expose.Publish(ports, port, snapshot.Name)
+			publication, err = forward.Publish(ports, port, snapshot.Name)
 			if err == nil {
 				return report + "\n" + publication, nil
 			}
@@ -312,13 +315,13 @@ func act(
 
 		if _, discardErr := manager.Discard(snapshot.Name); discardErr != nil {
 			return "", errors.Join(
-				fmt.Errorf("could not expose port %d for job %q: %w", args.Port, snapshot.Name, err),
-				fmt.Errorf("could not discard job %q after the exposure failed: %w", snapshot.Name, discardErr),
+				fmt.Errorf("could not forward port %d for job %q: %w", args.Port, snapshot.Name, err),
+				fmt.Errorf("could not discard job %q after the forward failed: %w", snapshot.Name, discardErr),
 			)
 		}
 
 		return "", fmt.Errorf(
-			"could not expose port %d for job %q, which was stopped and discarded: %w",
+			"could not forward port %d for job %q, which was stopped and discarded: %w",
 			args.Port,
 			snapshot.Name,
 			err,

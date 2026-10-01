@@ -1,12 +1,14 @@
 {"event":{"kind":"user_message","text":"show every action-oriented tool label"}}
-{"event":{"kind":"tool_call_request","id":"expose","name":"expose","arguments":"{\"action\":\"add\",\"port\":8000}","rendering_kind":"expose_add","render":"8000"}}
-{"event":{"kind":"tool_call_result","status":"success","text":"exposed","id":"expose","name":"expose"}}
-{"event":{"kind":"tool_call_request","id":"expose-job","name":"expose","arguments":"{\"action\":\"add\",\"port\":8001,\"job_name\":\"docs\"}","rendering_kind":"expose_add","render":"docs:8001"}}
-{"event":{"kind":"tool_call_result","status":"success","text":"exposed","id":"expose-job","name":"expose"}}
-{"event":{"kind":"tool_call_request","id":"unexpose","name":"expose","arguments":"{\"action\":\"remove\",\"port\":8000}","rendering_kind":"expose_remove","render":"8000"}}
-{"event":{"kind":"tool_call_result","status":"success","text":"removed","id":"unexpose","name":"expose"}}
-{"event":{"kind":"tool_call_request","id":"list-ports","name":"expose","arguments":"{\"action\":\"list\"}","rendering_kind":"expose_list","render":"forwards"}}
-{"event":{"kind":"tool_call_result","status":"success","text":"listed","id":"list-ports","name":"expose"}}
+{"event":{"kind":"tool_call_request","id":"forward","name":"forward","arguments":"{\"action\":\"add\",\"port\":8000}","rendering_kind":"forward_add","render":"8000"}}
+{"event":{"kind":"tool_call_result","status":"success","text":"forwarded","id":"forward","name":"forward"}}
+{"event":{"kind":"tool_call_request","id":"forward-job","name":"forward","arguments":"{\"action\":\"add\",\"port\":8001,\"job_name\":\"docs\"}","rendering_kind":"forward_add","render":"docs:8001"}}
+{"event":{"kind":"tool_call_result","status":"success","text":"forwarded","id":"forward-job","name":"forward"}}
+{"event":{"kind":"tool_call_request","id":"unforward","name":"forward","arguments":"{\"action\":\"remove\",\"port\":8000}","rendering_kind":"forward_remove","render":"8000"}}
+{"event":{"kind":"tool_call_result","status":"success","text":"removed","id":"unforward","name":"forward"}}
+{"event":{"kind":"tool_call_request","id":"list-ports","name":"forward","arguments":"{\"action\":\"list\"}","rendering_kind":"forward_list","render":"forwards"}}
+{"event":{"kind":"tool_call_result","status":"success","text":"listed","id":"list-ports","name":"forward"}}
+{"event":{"kind":"tool_call_request","id":"forward-malformed","name":"forward","arguments":"{\"action\":\"bogus\"}"}}
+{"event":{"kind":"tool_call_result","status":"error","text":"action must be add, remove, or list (got \"bogus\")","id":"forward-malformed","name":"forward"}}
 {"event":{"kind":"tool_call_request","id":"start","name":"job","arguments":"{\"action\":\"start\",\"name\":\"docs\",\"port\":8002,\"command\":\"serve docs\"}"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"started","id":"start","name":"job"}}
 {"event":{"kind":"tool_call_request","id":"restart","name":"job","arguments":"{\"action\":\"start\",\"name\":\"docs\"}"}}

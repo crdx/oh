@@ -30,6 +30,11 @@ func TestGoldenCompletionMatchesGolden(t *testing.T) {
 	for _, prefix := range []string{
 		"/",
 		"/c",
+		"/e",
+		"/f",
+		"/forward ",
+		"/forward 8",
+		"/expose ",
 		"/g",
 		"/grant ",
 		"/grants ",
@@ -234,14 +239,14 @@ func fixtureEnvironment(t *testing.T) commandEnvironment {
 	}
 	grants, current := fixturePathGrants()
 	*current = []pathgrant.Grant{{Path: "/reference", Access: pathgrant.ReadAccess}}
-	ports, exposed := fixturePortGrants()
-	*exposed = []uint16{8080}
+	ports, forwarded := fixturePortGrants()
+	*forwarded = []uint16{8080}
 	managedJobs, _ := fixtureJobs()
 	return commandEnvironment{
-		configDir:     configDirectory,
-		pathGrants:    grants,
-		hostToSandbox: ports,
-		jobs:          managedJobs,
+		configDir:  configDirectory,
+		pathGrants: grants,
+		forwards:   ports,
+		jobs:       managedJobs,
 		getModelChoices: func() []model.Choice {
 			return []model.Choice{
 				{Provider: model.AnthropicProvider, ID: "claude-sonnet-5", EffortLevels: []string{"medium", "high"}},
@@ -280,16 +285,15 @@ func TestGoldenGrantListingMatchesGolden(t *testing.T) {
 	var compactOutput strings.Builder
 	var completeOutput strings.Builder
 	for _, test := range []struct {
-		label         string
-		permanent     []shell.ScopedPathGrant
-		temporary     []pathgrant.Grant
-		currentCaps   caps.Set
-		denyPatterns  []string
-		hostToSandbox []uint16
-		sandboxToHost []uint16
+		label        string
+		permanent    []shell.ScopedPathGrant
+		temporary    []pathgrant.Grant
+		currentCaps  caps.Set
+		denyPatterns []string
+		forwards     []uint16
 	}{
 		{
-			label: "effective paths and ports in both directions",
+			label: "effective paths and ports",
 			permanent: []shell.ScopedPathGrant{
 				{Path: "/commands", Access: pathgrant.ReadAccess | pathgrant.ExecAccess, Kind: shell.ExecutableSearchGrant},
 				{Path: "/configuration/first-long-reference-directory", Access: pathgrant.ReadAccess, Kind: shell.ConfiguredGrant},
@@ -300,8 +304,7 @@ func TestGoldenGrantListingMatchesGolden(t *testing.T) {
 				{Path: "/output", Access: pathgrant.ReadAccess | pathgrant.WriteAccess},
 				{Path: "/reference", Access: pathgrant.ReadAccess | pathgrant.WriteAccess},
 			},
-			hostToSandbox: []uint16{3000, 3001},
-			sandboxToHost: []uint16{8080, 8081},
+			forwards: []uint16{3000, 3001},
 		},
 		{
 			label: "every permanent path kind",
@@ -364,8 +367,7 @@ func TestGoldenGrantListingMatchesGolden(t *testing.T) {
 			},
 			currentCaps: caps.Read | caps.Shell | caps.Write,
 		},
-		{label: "host to sandbox alone", hostToSandbox: []uint16{8080}},
-		{label: "sandbox to host alone", sandboxToHost: []uint16{3000}},
+		{label: "ports alone", forwards: []uint16{8080}},
 		{label: "nothing granted"},
 	} {
 		pathGrants, current := fixturePathGrants()
@@ -375,14 +377,11 @@ func TestGoldenGrantListingMatchesGolden(t *testing.T) {
 			pathGrants.GetCurrentCaps = func() caps.Set { return test.currentCaps }
 		}
 		*current = test.temporary
-		hostToSandbox, hostExposed := fixturePortGrants()
-		*hostExposed = test.hostToSandbox
-		sandboxToHost, sandboxExposed := fixtureSandboxToHost()
-		*sandboxExposed = test.sandboxToHost
+		forwards, hostForwarded := fixturePortGrants()
+		*hostForwarded = test.forwards
 		commands := newCommandRegistry(t, commandEnvironment{
-			pathGrants:    pathGrants,
-			hostToSandbox: hostToSandbox,
-			sandboxToHost: sandboxToHost,
+			pathGrants: pathGrants,
+			forwards:   forwards,
 		})
 		for _, view := range []struct {
 			input  string

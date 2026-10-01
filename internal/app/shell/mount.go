@@ -203,9 +203,7 @@ func (self *PathAccess) getPaths() (Paths, []string) {
 		default:
 			paths.Read = append(paths.Read, path)
 		}
-		if access.Has(ExecAccess) {
-			paths.Exec = append(paths.Exec, path)
-		}
+		paths.Exec = append(paths.Exec, path)
 		if !pathsContain(self.configuredPaths, path) {
 			temporaryPaths = append(temporaryPaths, path)
 		}

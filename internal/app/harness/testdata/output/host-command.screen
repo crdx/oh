@@ -19,8 +19,7 @@
 
     Enumerating objects: 5, done.
 
-    Interrupted by the user after 4s, so it has no exit code. Anything it had not yet done was not
-    done.
+    Interrupted by the user after 4s
 === pending before the turn it wakes ===
                                                                            double-enter to send now
  ⏳ The user ran the following command on the host:
@@ -59,8 +58,7 @@
 
     $ sleep 600
 
-    Killed at its time limit of 30s, so it has no exit code. Anything it had not yet done was not
-    done.
+    Killed at its time limit of 30s
 === stopped in the turn it woke ===
 
  🤖 The user ran the following command on the host:

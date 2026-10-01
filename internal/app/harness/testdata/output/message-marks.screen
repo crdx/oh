@@ -44,9 +44,7 @@
 
       $ sleep 600
 
-      Killed at its time limit of 30s, so
-      it has no exit code. Anything it had
-      not yet done was not done.
+      Killed at its time limit of 30s
    🤖 The user ran the following command
       on the host, producing no output:
 
@@ -220,8 +218,7 @@
 
       $ sleep 600
 
-      Killed at its time limit of 30s, so it has no exit code. Anything it had not yet done was not do
-  ne.
+      Killed at its time limit of 30s
    🤖 The user ran the following command on the host, producing no output:
 
       $ cat <<'EOF' > notes.txt
@@ -372,8 +369,7 @@
 
       $ sleep 600
 
-      Killed at its time limit of 30s, so it has no exit code. Anything it had not yet done was not
-      done.
+      Killed at its time limit of 30s
    🤖 The user ran the following command on the host, producing no output:
 
       $ cat <<'EOF' > notes.txt
@@ -530,8 +526,7 @@
 
       $ sleep 600
 
-      Killed at its time limit of 30s, so it has no exit code. Anything it had not yet done was not
-      done.
+      Killed at its time limit of 30s
    🤖 The user ran the following command on the host, producing no output:
 
       $ cat <<'EOF' > notes.txt
@@ -757,16 +752,7 @@
       at its
       time
       limit of
-      30s, so
-      it has
-      no exit
-      code.
-      Anything
-      it had
-      not yet
-      done was
-      not
-      done.
+      30s
    🤖 The user
       ran the
       followin
@@ -1094,8 +1080,7 @@
 
       $ sleep 600
 
-      Killed at its time limit of 30s, so it has no exit code. Anything it had not yet done was not
-      done.
+      Killed at its time limit of 30s
    🤖 The user ran the following command on the host, producing no output:
 
       $ cat <<'EOF' > notes.txt

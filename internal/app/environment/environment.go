@@ -186,7 +186,7 @@ func changeNotices(
 	}
 	if knownEnvironment.PortHostname != current.PortHostname {
 		notices = append(notices,
-			"Host-facing URLs for exposed sandbox ports now use "+markdown.CodeSpan(current.PortHostname)+
+			"Host-facing URLs for forwarded sandbox ports now use "+markdown.CodeSpan(current.PortHostname)+
 				" instead of "+markdown.CodeSpan(knownEnvironment.PortHostname)+".",
 		)
 	}

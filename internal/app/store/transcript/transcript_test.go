@@ -796,37 +796,20 @@ func TestTranscriptRendersPathGrantEventsFromStructuredState(t *testing.T) {
 	}
 }
 
-func TestTranscriptRecordsBothPortDirections(t *testing.T) {
-	hostToSandbox, err := portgrant.HostToSandboxChangeEvent("127.9.9.9", 8080, []portgrant.Route{{Port: 8080}})
-	if err != nil {
-		t.Fatal(err)
-	}
-	sandboxToHost, err := portgrant.SandboxToHostChangeEvent(3000, []uint16{3000})
+func TestTranscriptRecordsAPortChange(t *testing.T) {
+	event, err := portgrant.ForwardChangeEvent("127.9.9.9", 8080, []portgrant.Route{{Port: 8080}})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	for name, test := range map[string]struct {
-		event agent.Event
-		want  []string
-	}{
-		"host to sandbox": {event: hostToSandbox, want: []string{
-			"## Host → sandbox · 1 sandbox port · changed port 8080",
-			"Sandbox port 8080 exposed at http://127.9.9.9:8080.",
-		}},
-		"sandbox to host": {event: sandboxToHost, want: []string{
-			"## Sandbox → host · 1 host port · changed host port 3000",
-			"Host loopback port 3000 exposed to sandbox.",
-		}},
+	written := transcriptOfOneEvent(t, event)
+	for _, want := range []string{
+		"## Port forward · 1 forwarded port · changed port 8080",
+		"Port 8080 is now forwarded to http://127.9.9.9:8080.",
 	} {
-		t.Run(name, func(t *testing.T) {
-			written := transcriptOfOneEvent(t, test.event)
-			for _, want := range test.want {
-				if !strings.Contains(written, want) {
-					t.Errorf("expected %q in the transcript, got:\n%s", want, written)
-				}
-			}
-		})
+		if !strings.Contains(written, want) {
+			t.Errorf("expected %q in the transcript, got:\n%s", want, written)
+		}
 	}
 }
 

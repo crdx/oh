@@ -1,7 +1,6 @@
 package hostcommand_test
 
 import (
-	"bytes"
 	"context"
 	"errors"
 	"os"
@@ -13,6 +12,7 @@ import (
 
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/pkg/agent"
+	"golang.org/x/sys/unix"
 )
 
 func TestACommandRunsInTheDirectoryItWasGiven(t *testing.T) {
@@ -54,23 +54,27 @@ func TestACommandCannotReadTheKeyboard(t *testing.T) {
 }
 
 func TestACommandLeadsASessionOfItsOwnBesideATerminalOfItsOwn(t *testing.T) {
-	result, err := hostcommand.Run(t.Context(), t.TempDir(), `read -ra fields < /proc/$$/stat; echo "${fields[0]} ${fields[5]} ${fields[6]}"`, &hostcommand.Output{})
+	result, err := hostcommand.Run(t.Context(), t.TempDir(), `read -ra fields < /proc/$$/stat; echo "${fields[0]} ${fields[5]} ${fields[6]} $(stat -L -c '%t %T' /proc/$$/fd/3)"`, &hostcommand.Output{})
 	if err != nil {
 		t.Fatal(err)
 	}
-
-	own, err := os.ReadFile("/proc/self/stat")
-	if err != nil {
-		t.Fatal(err)
-	}
-	ownTerminal := strings.Fields(string(own[bytes.LastIndexByte(own, ')')+2:]))[4]
 
 	fields := strings.Fields(result.Output)
-	if len(fields) != 3 || fields[0] != fields[1] {
-		t.Errorf("got process, session and terminal %q, want the shell to lead its own session", result.Output)
+	if len(fields) != 5 {
+		t.Fatalf("got process, session, terminal and handed device %q", result.Output)
 	}
-	if len(fields) == 3 && (fields[2] == "0" || fields[2] == ownTerminal) {
-		t.Errorf("got terminal %s beside the harness's own %s, want a terminal of its own", fields[2], ownTerminal)
+	if fields[0] != fields[1] {
+		t.Errorf("got process %s in session %s, want the shell to lead its own session", fields[0], fields[1])
+	}
+
+	major, majorErr := strconv.ParseUint(fields[3], 16, 32)
+	minor, minorErr := strconv.ParseUint(fields[4], 16, 32)
+	if majorErr != nil || minorErr != nil {
+		t.Fatalf("got handed device %s:%s", fields[3], fields[4])
+	}
+	handed := strconv.FormatUint(unix.Mkdev(uint32(major), uint32(minor)), 10)
+	if fields[2] == "0" || fields[2] != handed {
+		t.Errorf("got terminal %s beside the handed terminal %s, want the handed terminal to control the shell", fields[2], handed)
 	}
 }
 
@@ -169,7 +173,7 @@ func TestAnInterruptedCommandTellsTheModelWhatItPrintedBeforeItWasStopped(t *tes
 		"```bash\n$ echo first; echo second >&2; touch begun; sleep 60; echo never\n```",
 		"Output up to the point it was killed, which may be incomplete:",
 		"```\nfirst\nsecond\n```",
-		"Interrupted by the user after 4s, so it has no exit code. Anything it had not yet done was not done.",
+		"Interrupted by the user after 4s",
 	}, "\n\n")
 	if notice != want {
 		t.Errorf("got notice\n%s\nwant\n%s", notice, want)
@@ -326,11 +330,11 @@ func TestANoticeNamesHowACommandEnded(t *testing.T) {
 		},
 		"stopped at its limit": {
 			result: hostcommand.Result{Command: "sleep 600", StoppedAfter: 30 * time.Second},
-			want:   "Killed at its time limit of 30s, so it has no exit code. Anything it had not yet done was not done.",
+			want:   "Killed at its time limit of 30s",
 		},
 		"stopped by the user": {
 			result: hostcommand.Result{Command: "git push", StoppedAfter: 4 * time.Second, IsStoppedByUser: true},
-			want:   "Interrupted by the user after 4s, so it has no exit code. Anything it had not yet done was not done.",
+			want:   "Interrupted by the user after 4s",
 		},
 	}
 

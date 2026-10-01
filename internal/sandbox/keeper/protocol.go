@@ -3,17 +3,15 @@ package keeper
 import "time"
 
 const (
-	requestSpawn               = "spawn"
-	requestSignal              = "signal"
-	requestHostToSandboxDial   = "dial"
-	requestSandboxToHostListen = "listen"
+	requestSpawn       = "spawn"
+	requestSignal      = "signal"
+	requestForwardDial = "dial"
 
-	replyReady                  = "ready"
-	replySpawned                = "spawned"
-	replyRefused                = "refused"
-	replyFinished               = "finished"
-	replyHostToSandboxDialled   = "dialled"
-	replySandboxToHostListening = "listening"
+	replyReady          = "ready"
+	replySpawned        = "spawned"
+	replyRefused        = "refused"
+	replyFinished       = "finished"
+	replyForwardDialled = "dialled"
 )
 
 type request struct {

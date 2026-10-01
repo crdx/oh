@@ -21,6 +21,7 @@ import (
 	"crdx.org/oh/internal/app/ctl/migrate"
 	"crdx.org/oh/internal/app/interrupt"
 	"crdx.org/oh/internal/app/pathgrant"
+	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/store/wire"
 	"crdx.org/oh/internal/app/turn"
@@ -669,8 +670,37 @@ func TestFormatTenMigrationSpellsPathGrantsWithFlags(t *testing.T) {
 	restored, found := pathgrant.LastRecorded(storedSession.Events)
 	want := []pathgrant.Grant{
 		{Path: "/one", Access: pathgrant.ReadAccess},
-		{Path: "/three", Access: pathgrant.ReadAccess | pathgrant.ExecAccess},
+		{Path: "/three", Access: pathgrant.ReadAccess},
 		{Path: "/two", Access: pathgrant.ReadAccess | pathgrant.WriteAccess},
+	}
+	if !found || !slices.Equal(restored, want) {
+		t.Errorf("recovered %#v and %t", restored, found)
+	}
+}
+
+func TestFormatSixteenMigrationMakesExecutionImplicitInTemporaryPathGrants(t *testing.T) {
+	directory, name := storedJournal(t,
+		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":16,"id":"one","name":"tame-impala"}`,
+		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"path_grant_change","state":`+
+			`{"grants":[{"path":"/one","access":"r"},{"path":"/two","access":"rx"},`+
+			`{"path":"/three","access":"rw"},{"path":"/four","access":"rxw"}]}}}`,
+	)
+
+	if _, err := migrate.Session(options(directory), name); err != nil {
+		t.Fatal(err)
+	}
+
+	storedSession, err := store.Read(directory, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	restored, found := pathgrant.LastRecorded(storedSession.Events)
+	want := []pathgrant.Grant{
+		{Path: "/four", Access: pathgrant.ReadAccess | pathgrant.WriteAccess},
+		{Path: "/one", Access: pathgrant.ReadAccess},
+		{Path: "/three", Access: pathgrant.ReadAccess | pathgrant.WriteAccess},
+		{Path: "/two", Access: pathgrant.ReadAccess},
 	}
 	if !found || !slices.Equal(restored, want) {
 		t.Errorf("recovered %#v and %t", restored, found)
@@ -885,10 +915,10 @@ func TestFormatFifteenMigrationCompletesToolCallRenderings(t *testing.T) {
 	assertRendering("job-discard", "job_discard", "docs", "")
 	assertRendering("job-prune", "job_prune", "jobs", "")
 	assertRendering("job-wait-any", "job_wait_any", "docs", "")
-	assertRendering("expose-plain", "expose_add", "3000", "")
-	assertRendering("expose", "expose_add", "docs:8000", "")
-	assertRendering("unexpose", "expose_remove", "8000", "")
-	assertRendering("expose-list", "expose_list", "exposed ports", "")
+	assertRendering("expose-plain", "forward_add", "3000", "")
+	assertRendering("expose", "forward_add", "docs:8000", "")
+	assertRendering("unexpose", "forward_remove", "8000", "")
+	assertRendering("expose-list", "forward_list", "forwards", "")
 	assertRendering("lookup", "", "Go", "")
 	assertRendering("fetch", "", "https://example.test", "as markdown")
 	assertRendering("notify", "", "Done", "— All green")
@@ -905,6 +935,86 @@ func firstFormatJournal() []string {
 		`{"kind":"event","time":"2026-08-01T00:00:04Z","event":{"kind":"path_grant_change","state":{"grants":[{"path":"/tmp/x","access":"write"}]}}}`,
 		`{"kind":"event","time":"2026-08-01T00:00:05Z","event":{"kind":"interruption","text":"the user pressed escape"}}`,
 		`{"kind":"event","time":"2026-08-01T00:00:06Z","event":{"kind":"model_message","text":"done"}}`,
+	}
+}
+
+func TestFormatFifteenMigrationSaysForwardWhereItSaidExpose(t *testing.T) {
+	directory, name := storedJournal(t,
+		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":15,"id":"one","name":"tame-impala"}`,
+		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"tool_call_request","id":"add","name":"expose","arguments":"{\"action\":\"add\",\"port\":3000}","rendering_kind":"expose_add","render":"3000"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"tool_call_request","id":"remove","name":"expose","arguments":"{\"action\":\"remove\",\"port\":3000}","rendering_kind":"expose_remove","render":"3000"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:03Z","event":{"kind":"tool_call_request","id":"list","name":"expose","arguments":"{\"action\":\"list\"}","rendering_kind":"expose_list","render":"exposed ports"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:04Z","event":{"kind":"tool_call_request","id":"malformed","name":"expose","arguments":"{}","rendering_kind":"expose"}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:05Z","event":{"kind":"tool_call_request","id":"bash","name":"bash","arguments":"{\"command\":\"ls\"}","rendering_kind":"bash","render":"ls"}}`,
+	)
+
+	if _, err := migrate.Session(options(directory), name); err != nil {
+		t.Fatal(err)
+	}
+	storedSession, err := store.Read(directory, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	calls := make(map[string]agent.Event)
+	for _, event := range storedSession.Events {
+		calls[event.ID] = event
+	}
+	for id, want := range map[string]string{
+		"add":       "forward_add",
+		"remove":    "forward_remove",
+		"list":      "forward_list",
+		"malformed": "forward",
+		"bash":      "bash",
+	} {
+		if got := calls[id].RenderingKind; got != want {
+			t.Errorf("%s migrated to rendering kind %q, want %q", id, got, want)
+		}
+	}
+	if got := calls["list"].Subject; got != "forwards" {
+		t.Errorf("the list migrated to subject %q, want %q", got, "forwards")
+	}
+}
+
+func TestFormatFifteenMigrationForgetsHostLoopbackPorts(t *testing.T) {
+	directory, name := storedJournal(t,
+		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":15,"id":"one","name":"tame-impala"}`,
+		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"sandbox_to_host_change","name":"3000","state":{"ports":[3000]}}}`,
+		`{"kind":"item","time":"2026-08-01T00:00:01Z","payload":{"role":"user","content":[{"type":"text","text":"TCP port 3000 on the host loopback is now reachable at 127.0.0.1:3000 from the sandbox."}]}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"port_grant_change","name":"8080","state":{"host":"127.9.9.9","ports":[8080]}}}`,
+		`{"kind":"event","time":"2026-08-01T00:00:03Z","event":{"kind":"sandbox_to_host_change","name":"3000","state":{"ports":[]}}}`,
+	)
+
+	from, err := migrate.Session(options(directory), name)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if from != 15 {
+		t.Errorf("migrated from format %d, want 15", from)
+	}
+
+	storedSession, err := store.Read(directory, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	kinds := make([]agent.Kind, 0, len(storedSession.Events))
+	for _, event := range storedSession.Events {
+		kinds = append(kinds, event.Kind)
+	}
+	if want := []agent.Kind{portgrant.ForwardChange}; !slices.Equal(kinds, want) {
+		t.Errorf("kept %q, want only %q", kinds, want)
+	}
+
+	body, err := os.ReadFile(filepath.Join(directory, name, "session.jsonl")) //nolint:gosec // the test's own path
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(body), `"port_grant_change"`) || !strings.Contains(string(body), `"kind":"item"`) {
+		t.Errorf("the migration dropped more than the host loopback events:\n%s", body)
+	}
+	if strings.Contains(string(body), "sandbox_to_host_change") {
+		t.Errorf("the migration kept a host loopback event:\n%s", body)
 	}
 }
 
@@ -945,7 +1055,7 @@ func TestAJournalMigratesToTheSameBytesWhetherStoredOrArchived(t *testing.T) {
 	}
 
 	for _, wanted := range []string{
-		`"version":15`,
+		fmt.Sprintf(`"version":%d`, session.JournalFormat),
 		`"emphasis":{"kind":"syntax","value":"a.go"}`,
 		`"access":"rw"`,
 		`{"kind":"turn_interruption","name":"escape"}`,
@@ -1217,6 +1327,7 @@ func TestEveryFormatThatReadsEventsRefusesOneItCannotRead(t *testing.T) {
 		{version: 11, event: `{"kind":"tool_call","stats":"not measurements"}`},
 		{version: 11, event: `{"kind":"user_message","text":7}`},
 		{version: 12, event: `"not an event"`},
+		{version: 15, event: `"not an event"`},
 	} {
 		t.Run(fmt.Sprintf("%d %s", testCase.version, testCase.event), func(t *testing.T) {
 			directory, name := storedJournal(t,

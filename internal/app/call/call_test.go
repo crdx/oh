@@ -199,6 +199,21 @@ func TestOnlyTheFocusedPartOfArgumentsIsPainted(t *testing.T) {
 	}
 }
 
+func TestALeadingFocusIsPaintedFromTheStartAlone(t *testing.T) {
+	for _, name := range []string{"docs", "0", "8080"} {
+		label := Label{
+			Name:     "start",
+			Subject:  name + ":8080",
+			Emphasis: tool.Emphasis{Kind: tool.EmphasisLead, Value: name},
+		}
+		want := style.Change("start") + " " + style.Subject(name) + style.Subtle(":8080")
+
+		if got := label.Render(); got != want {
+			t.Errorf("%s: got %q, want %q", name, got, want)
+		}
+	}
+}
+
 func TestASkillNameAndItsFullPathArePainted(t *testing.T) {
 	label := Label{
 		Name:       "load",

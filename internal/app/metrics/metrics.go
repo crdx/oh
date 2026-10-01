@@ -5,8 +5,6 @@ import (
 	"crdx.org/oh/pkg/session"
 )
 
-const tokensPerPricedUnit = 1_000_000
-
 type Settings struct {
 	ContextWindowTokens int
 	Prices              *agent.TokenPrices
@@ -121,5 +119,5 @@ func Spend(prices agent.TokenPrices, usage agent.Usage) float64 {
 		float64(writeTokens)*prices.CacheWrite +
 		float64(usage.OutputTokens)*prices.Output
 
-	return dollars / tokensPerPricedUnit
+	return dollars / agent.TokensPerPricedUnit
 }

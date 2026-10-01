@@ -323,11 +323,11 @@ func TestRunHandsEachEventToItsHandlerAndRedraws(t *testing.T) {
 		var got string
 		wasDrawn := false
 		run(keys, make(chan os.Signal), make(chan time.Time), func() {}, nil, Handler{
-			GetTurnEvents:         neverEnds,
-			HostToSandboxChanges:  changes,
-			OnHostToSandboxChange: func(event agent.Event) { got = event.Text },
-			OnKey:                 func(key.Key) bool { return false },
-			OnDraw:                func() { wasDrawn = true; close(keys) },
+			GetTurnEvents:   neverEnds,
+			ForwardChanges:  changes,
+			OnForwardChange: func(event agent.Event) { got = event.Text },
+			OnKey:           func(key.Key) bool { return false },
+			OnDraw:          func() { wasDrawn = true; close(keys) },
 		})
 		if got != "exposed" || !wasDrawn {
 			t.Errorf("event=%q drawn=%t", got, wasDrawn)
@@ -352,12 +352,12 @@ func TestRunHandsEachEventToItsHandlerAndRedraws(t *testing.T) {
 		keys := make(chan key.Key, 1)
 		changes := make(chan error)
 		conclusions := make(chan jobs.Conclusion)
-		hostToSandboxChanges := make(chan agent.Event)
+		forwardChanges := make(chan agent.Event)
 		questionChanges := make(chan struct{})
 		triggerChanges := make(chan struct{})
 		close(changes)
 		close(conclusions)
-		close(hostToSandboxChanges)
+		close(forwardChanges)
 		close(questionChanges)
 		close(triggerChanges)
 		schedules := 0
@@ -368,14 +368,14 @@ func TestRunHandsEachEventToItsHandlerAndRedraws(t *testing.T) {
 				keys <- key.Key{Code: key.Escape}
 			}
 		}, nil, Handler{
-			GetTurnEvents:        neverEnds,
-			Changes:              changes,
-			Conclusions:          conclusions,
-			HostToSandboxChanges: hostToSandboxChanges,
-			QuestionChanges:      questionChanges,
-			TriggerChanges:       triggerChanges,
-			OnKey:                func(key.Key) bool { return false },
-			OnDraw:               func() { wasDrawn = true },
+			GetTurnEvents:   neverEnds,
+			Changes:         changes,
+			Conclusions:     conclusions,
+			ForwardChanges:  forwardChanges,
+			QuestionChanges: questionChanges,
+			TriggerChanges:  triggerChanges,
+			OnKey:           func(key.Key) bool { return false },
+			OnDraw:          func() { wasDrawn = true },
 		})
 		if schedules != 6 || wasDrawn {
 			t.Errorf("scheduled %d times, drawn=%t; want each closed source read once and nothing drawn", schedules, wasDrawn)

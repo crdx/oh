@@ -52,7 +52,7 @@ cursor row 1 column 20
 have a look at @harn
   /conf\e[38;2;150;152;150m    e…\e[0m
 \e[38;2;192;128;80m› /copy\e[0m\e[38;2;150;152;150m    c…\e[0m
-  /expose\e[38;2;150;152;150m  e…\e[0m
+  /export\e[38;2;150;152;150m  e…\e[0m
   /open
 \e[38;2;150;152;150m──\e[0m \e[38;2;192;128;80m··✦\e[0m \e[38;2;150;152;150m──────\e[0m
 cursor row 1 column 20
@@ -61,7 +61,7 @@ cursor row 1 column 20
 have a look at @harn
   /conf\e[38;2;150;152;150m    edit the config an…\e[0m
 \e[38;2;192;128;80m› /copy\e[0m\e[38;2;150;152;150m    copy a target to t…\e[0m
-  /expose\e[38;2;150;152;150m  expose a host loop…\e[0m
+  /export\e[38;2;150;152;150m  export the transcr…\e[0m
   /open
 \e[38;2;150;152;150m───────\e[0m \e[38;2;150;152;150mtame-impala\e[0m \e[38;2;150;152;150m─\e[0m \e[38;2;150;152;150m00:00\e[0m \e[38;2;150;152;150m──\e[0m
 cursor row 1 column 20
@@ -70,7 +70,7 @@ cursor row 1 column 20
 have a look at @harn
   /conf\e[38;2;150;152;150m    edit the config and system prompt\e[0m
 \e[38;2;192;128;80m› /copy\e[0m\e[38;2;150;152;150m    copy a target to the clipboard\e[0m
-  /expose\e[38;2;150;152;150m  expose a host loopback port to the sandbox\e[0m
+  /export\e[38;2;150;152;150m  export the transcript of the whole session\e[0m
   /open
 \e[38;2;150;152;150m──\e[0m \e[38;2;192;128;80m··✦\e[0m \e[38;2;150;152;150m─\e[0m \e[38;2;150;152;150m0m\e[0m 0\e[38;2;150;152;150mm\e[0m \e[38;2;150;152;150m─\e[0m \e[38;2;76;154;44mr\e[0m\e[38;2;207;173;0mx\e[0m\e[38;2;207;173;0mw\e[0m \e[38;2;129;162;190mn\e[0m\e[38;2;129;162;190mg\e[0m\e[38;2;129;162;190ml\e[0m \e[38;2;150;152;150m─\e[0m \e]8;;file:///workspace\e\\workspace\e]8;;\e\\ \e[38;2;150;152;150m─\e[0m GPTS\e[38;2;150;152;150m5.6\e[0m \e[38;2;150;152;150m─\e[0m ?\e[38;2;150;152;150m%\e[0m \e[38;2;150;152;150m─────\e[0m \e[38;2;150;152;150mtame-impala\e[0m \e[38;2;150;152;150m─\e[0m \e[38;2;150;152;150m00:00\e[0m \e[38;2;150;152;150m──\e[0m
 cursor row 1 column 20
@@ -79,7 +79,7 @@ cursor row 1 column 20
 have a look at @harn
   /conf
 \e[38;2;192;128;80m› /copy\e[0m
-  /expose
+  /export
   /open
 \e[38;2;150;152;150m──\e[0m \e[38;2;192;128;80m··✦\e[0m \e[38;2;150;152;150m──\e[0m
 cursor row 1 column 20

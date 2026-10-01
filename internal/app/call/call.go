@@ -205,7 +205,7 @@ func (self Label) renderSubject() string {
 
 	spans := []span{}
 	focus := self.focus()
-	if at := strings.LastIndex(self.Subject, focus); focus != "" && at >= 0 {
+	if at := self.focusStart(focus); focus != "" && at >= 0 {
 		focusStyle := self.FocusStyle
 		if focusStyle == nil {
 			focusStyle = style.Subject
@@ -227,7 +227,9 @@ func (self Label) renderSubject() string {
 		if markedSpan.start < at {
 			continue
 		}
-		out.WriteString(renderScratchAlias(self.Subject[at:markedSpan.start], style.Subtle))
+		if at < markedSpan.start {
+			out.WriteString(renderScratchAlias(self.Subject[at:markedSpan.start], style.Subtle))
+		}
 		out.WriteString(renderScratchAlias(self.Subject[markedSpan.start:markedSpan.end], markedSpan.style))
 		at = markedSpan.end
 	}
@@ -248,11 +250,22 @@ func renderScratchAlias(text string, textStyle style.Style) string {
 }
 
 func (self Label) focus() string {
-	if self.Emphasis.Kind == tool.EmphasisFocus {
+	if self.Emphasis.Kind == tool.EmphasisFocus || self.Emphasis.Kind == tool.EmphasisLead {
 		return self.Emphasis.Value
 	}
 
 	return ""
+}
+
+func (self Label) focusStart(focus string) int {
+	if self.Emphasis.Kind != tool.EmphasisLead {
+		return strings.LastIndex(self.Subject, focus)
+	}
+	if !strings.HasPrefix(self.Subject, focus) {
+		return -1
+	}
+
+	return 0
 }
 
 func (self Label) renderQualifier() string {

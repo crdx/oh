@@ -97,76 +97,94 @@ GPTS5.6
 ?% 0/?
 ?% 0
 ?%
-=== exposed-ports / associated absent job ===
-docs:8000
-+1
-+
-=== exposed-ports / associated complete job ===
-docs:8000
-+1
-+
-=== exposed-ports / associated failed job ===
-docs:8000
-+1
-+
-=== exposed-ports / associated job ended with session ===
-docs:8000
-+1
-+
-=== exposed-ports / associated running job ===
-docs:8000
-+1
-+
-=== exposed-ports / associated starting job ===
-docs:8000
-+1
-+
-=== exposed-ports / associated stopped job ===
-docs:8000
-+1
-+
-=== exposed-ports / associated stopping job ===
-docs:8000
-+1
-+
-=== exposed-ports / both directions ===
-8000, ⇠ 3000
-8000, +1
-+2
-+
-=== exposed-ports / both directions shedding routes ===
-8000, 8080, ⇠ 3000, ⇠ 6000
-8000, 8080, ⇠ 3000, +1
-8000, 8080, +2
-8000, +3
-+4
-+
-=== exposed-ports / configured hostname ===
-8000
-+1
-+
-=== exposed-ports / empty ===
-
-=== exposed-ports / host to sandbox ===
-8000, 8080
-8000, +1
-+2
-+
-=== exposed-ports / sandbox to host ===
-⇠ 3000, ⇠ 6000
-⇠ 3000, +1
-+2
-+
 === fast-mode / fast ===
 ⚡
 === fast-mode / standard ===
 ·
+=== forwards / associated absent job ===
+docs:8000
++1
++
+=== forwards / associated complete job ===
+docs:8000
++1
++
+=== forwards / associated failed job ===
+docs:8000
++1
++
+=== forwards / associated job ended with session ===
+docs:8000
++1
++
+=== forwards / associated running job ===
+docs:8000
++1
++
+=== forwards / associated starting job ===
+docs:8000
++1
++
+=== forwards / associated stopped job ===
+docs:8000
++1
++
+=== forwards / associated stopping job ===
+docs:8000
++1
++
+=== forwards / configured hostname ===
+8000
++1
++
+=== forwards / empty ===
+
+=== forwards / ports ===
+8000, 8080
+8000, +1
++2
++
+=== forwards / shedding routes ===
+8000, 8080, 3000, 6000
+8000, 8080, 3000, +1
+8000, 8080, +2
+8000, +3
++4
++
 === git-branch / detached head ===
 1fd1900
 === git-branch / on a branch ===
 feature/bars
 === git-branch / outside a repository ===
 
+=== grants / duplicate basenames ===
+r[/one/reference], rw[/two/reference]
+r[/one/reference], +1
++2
++
+=== grants / empty ===
+
+=== grants / every access ===
+r[reference], rw[output], rx[tools], rxw[build]
+r[reference], rw[output], rx[tools], +1
+r[reference], rw[output], +2
+r[reference], +3
++4
++
+=== grants / many ===
+r[path-01 path-02 path-03 path-04 path-05 path-06]
+r[path-01 path-02 path-03 path-04 path-05], +1
+r[path-01 path-02 path-03 path-04], +2
+r[path-01 path-02 path-03], +3
+r[path-01 path-02], +4
+r[path-01], +5
++6
++
+=== grants / read and write ===
+r[reference], rw[output]
+r[reference], +1
++2
++
 === jobs / a ghost beside a live job ===
 ● docs ○ builder
 === jobs / a ghost whose linger is up ===
@@ -211,34 +229,6 @@ rxw ngl
 rxw ngl
 === mode-toggle / read only ===
 rxw ngl
-=== path-grants / duplicate basenames ===
-r:/one/reference, rw:/two/reference
-r:/one/reference, +1
-+2
-+
-=== path-grants / empty ===
-
-=== path-grants / every access ===
-r:reference, rw:output, rx:tools, rxw:build
-r:reference, rw:output, rx:tools, +1
-r:reference, rw:output, +2
-r:reference, +3
-+4
-+
-=== path-grants / many ===
-r:path-01, r:path-02, r:path-03, r:path-04, r:path-05, r:path-06
-r:path-01, r:path-02, r:path-03, r:path-04, r:path-05, +1
-r:path-01, r:path-02, r:path-03, r:path-04, +2
-r:path-01, r:path-02, r:path-03, +3
-r:path-01, r:path-02, +4
-r:path-01, +5
-+6
-+
-=== path-grants / read and write ===
-r:reference, rw:output
-r:reference, +1
-+2
-+
 === scroll-overflow / down ===
 ↓ 7
 === scroll-overflow / empty ===

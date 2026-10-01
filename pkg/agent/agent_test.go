@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"math"
 	"reflect"
 	"slices"
 	"strings"
@@ -1232,7 +1233,7 @@ func TestEveryPromptCacheRebuildIsReportedWithItsCause(t *testing.T) {
 			if got := agent.CacheCause(notices[0].Name); got != test.want {
 				t.Errorf("got cause %q, want %q", got, test.want)
 			}
-			if agent.CacheRebuildNotice(notices[0]) == "" {
+			if agent.CacheRebuildNotice(notices[0], "") == "" {
 				t.Error("the notice said nothing")
 			}
 		})
@@ -1244,8 +1245,29 @@ func TestACacheRebuildIsQuantifiedInTokensAndWholeMinutes(t *testing.T) {
 		cause           agent.CacheCause
 		rewrittenTokens int
 		gap             time.Duration
+		cost            string
 		want            string
 	}{
+		"a reopening that cost something": {
+			cause:           agent.CacheReopened,
+			rewrittenTokens: 294_000,
+			cost:            "£1.34",
+			want:            "Cache gone: 294Kt sent for £1.34.",
+		},
+		"an entry rebuilt at a cost": {
+			cause:           agent.CacheRebuilt,
+			rewrittenTokens: 40_000,
+			gap:             45 * time.Second,
+			cost:            "$0.23",
+			want:            "Cache rebuilt: 40Kt sent <1m later for $0.23.",
+		},
+		"an entry that expired at a cost": {
+			cause:           agent.CacheExpired,
+			rewrittenTokens: 294_000,
+			gap:             11*time.Minute + 17*time.Second,
+			cost:            "$1.69",
+			want:            "Cache expired: 294Kt sent after 11m for $1.69.",
+		},
 		"a reopening recorded before readings were restored": {
 			cause:           agent.CacheReopened,
 			rewrittenTokens: 294_000,
@@ -1285,8 +1307,86 @@ func TestACacheRebuildIsQuantifiedInTokensAndWholeMinutes(t *testing.T) {
 				Usage: &usage,
 			}
 
-			if got := agent.CacheRebuildNotice(event); got != test.want {
+			if got := agent.CacheRebuildNotice(event, test.cost); got != test.want {
 				t.Errorf("got %q, want %q", got, test.want)
+			}
+		})
+	}
+}
+
+func TestACacheRebuildIsNoticedOnlyWhenItCostsSomething(t *testing.T) {
+	for name, test := range map[string]struct {
+		prices          *agent.TokenPrices
+		rewrittenTokens int
+		want            bool
+	}{
+		"a model with no prices": {
+			prices:          nil,
+			rewrittenTokens: 300,
+			want:            true,
+		},
+		"a model whose prices are all unknown": {
+			prices:          &agent.TokenPrices{},
+			rewrittenTokens: 300,
+			want:            true,
+		},
+		"a cheap model rewriting a small cache": {
+			prices:          &agent.TokenPrices{Input: 0.1, Output: 0.2, CacheRead: 0.002},
+			rewrittenTokens: 40_000,
+			want:            false,
+		},
+		"a cheap model rewriting an enormous cache": {
+			prices:          &agent.TokenPrices{Input: 0.1, Output: 0.2, CacheRead: 0.002},
+			rewrittenTokens: 2_500_000,
+			want:            true,
+		},
+		"a dear model rewriting a cache just short of the threshold": {
+			prices:          &agent.TokenPrices{Input: 5, Output: 25, CacheRead: 0.5, CacheWrite: 6.25},
+			rewrittenTokens: 30_000,
+			want:            false,
+		},
+		"a dear model rewriting a small cache": {
+			prices:          &agent.TokenPrices{Input: 5, Output: 25, CacheRead: 0.5, CacheWrite: 6.25},
+			rewrittenTokens: 40_000,
+			want:            true,
+		},
+		"a dear model rewriting a tiny cache": {
+			prices:          &agent.TokenPrices{Input: 5, Output: 25, CacheRead: 0.5, CacheWrite: 6.25},
+			rewrittenTokens: 5_000,
+			want:            false,
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			usage := cachedAs(0, test.rewrittenTokens)
+			event := agent.Event{Kind: agent.CacheRebuildEvent, Name: string(agent.CacheRebuilt), Usage: &usage}
+
+			if got := agent.IsCacheRebuildWorthNoticing(event, test.prices); got != test.want {
+				t.Errorf("got %v, want %v", got, test.want)
+			}
+		})
+	}
+}
+
+func TestACacheRebuildCostsWhatTheCacheWouldHaveSaved(t *testing.T) {
+	for name, test := range map[string]struct {
+		prices agent.TokenPrices
+		want   float64
+	}{
+		"a cache priced for writing": {
+			prices: agent.TokenPrices{Input: 5, CacheRead: 0.5, CacheWrite: 6.25},
+			want:   5.75,
+		},
+		"a cache written at the input price": {
+			prices: agent.TokenPrices{Input: 3, CacheRead: 0.3},
+			want:   2.7,
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			usage := cachedAs(0, agent.TokensPerPricedUnit)
+			event := agent.Event{Kind: agent.CacheRebuildEvent, Usage: &usage}
+
+			if got := agent.CacheRebuildDollars(event, test.prices); math.Abs(got-test.want) > 1e-9 {
+				t.Errorf("got %v, want %v", got, test.want)
 			}
 		})
 	}
@@ -1346,8 +1446,8 @@ func TestACompleteCacheLossWithoutAWriteCountIsQuantifiedByWhatWasSentUncached(t
 		t.Fatalf("got %d notices, want 1", len(notices))
 	}
 
-	if want := "Cache rebuilt: 49Kt sent <1m later."; agent.CacheRebuildNotice(notices[0]) != want {
-		t.Errorf("got %q, want %q", agent.CacheRebuildNotice(notices[0]), want)
+	if want := "Cache rebuilt: 49Kt sent <1m later."; agent.CacheRebuildNotice(notices[0], "") != want {
+		t.Errorf("got %q, want %q", agent.CacheRebuildNotice(notices[0], ""), want)
 	}
 }
 

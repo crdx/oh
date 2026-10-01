@@ -49,7 +49,7 @@ have a look a
 t @harn
   /conf    e…
 › /copy    c…
-  /expose  e…
+  /export  e…
   /open
 ── ··✦ ──────
 === dropdown with details at 30 columns ===
@@ -57,7 +57,7 @@ t @harn
 have a look at @harn
   /conf    edit the config an…
 › /copy    copy a target to t…
-  /expose  expose a host loop…
+  /export  export the transcr…
   /open
 ─────── tame-impala ─ 00:00 ──
 === dropdown with details at 80 columns ===
@@ -65,7 +65,7 @@ have a look at @harn
 have a look at @harn
   /conf    edit the config and system prompt
 › /copy    copy a target to the clipboard
-  /expose  expose a host loopback port to the sandbox
+  /export  export the transcript of the whole session
   /open
 ── ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPTS5.6 ─ ?% ───── tame-impala ─ 00:00 ──
 === dropdown with details at 9 columns ===
@@ -75,7 +75,7 @@ ok at @ha
 rn
   /conf
 › /copy
-  /expose
+  /export
   /open
 ── ··✦ ──
 === dropdown with few options at 80 columns ===

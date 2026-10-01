@@ -44,9 +44,7 @@ notes.txt is not tracked yet.
 
     $ sleep 600
 
-    Killed at its time limit of 30s, so
-    it has no exit code. Anything it had
-    not yet done was not done.
+    Killed at its time limit of 30s
  🤖 The user ran the following command
     on the host, producing no output:
 
@@ -1135,112 +1133,6 @@ f
 0
 
 s
-
-,
-
-s
-
-o
-
-i
-
-t
-
-h
-
-a
-
-s
-
-n
-
-o
-
-e
-
-x
-
-i
-
-t
-
-c
-
-o
-
-d
-
-e
-
-.
-
-A
-
-n
-
-y
-
-t
-
-h
-
-i
-
-n
-
-g
-
-i
-
-t
-
-h
-
-a
-
-d
-
-n
-
-o
-
-t
-
-y
-
-e
-
-t
-
-d
-
-o
-
-n
-
-e
-
-w
-
-a
-
-s
-
-n
-
-o
-
-t
-
-d
-
-o
-
-n
-
-e
-
-.
 
 🤖
 
@@ -3889,8 +3781,7 @@ One tracked file has changed and notes.txt is not tracked yet.
 
     $ sleep 600
 
-    Killed at its time limit of 30s, so it has no exit code. Anything it had not yet done was not
-    done.
+    Killed at its time limit of 30s
  🤖 The user ran the following command on the host, producing no output:
 
     $ cat <<'EOF' > notes.txt
@@ -4116,16 +4007,7 @@ yet.
     at its
     time
     limit of
-    30s, so
-    it has
-    no exit
-    code.
-    Anything
-    it had
-    not yet
-    done was
-    not
-    done.
+    30s
  🤖 The user
     ran the
     followin
@@ -4453,8 +4335,7 @@ One tracked file has changed and notes.txt is not tracked yet.
 
     $ sleep 600
 
-    Killed at its time limit of 30s, so it has no exit code. Anything it had not yet done was not
-    done.
+    Killed at its time limit of 30s
  🤖 The user ran the following command on the host, producing no output:
 
     $ cat <<'EOF' > notes.txt
