@@ -13,8 +13,8 @@ import (
 )
 
 const (
-	openablePreviewHint     = "enter to open · esc return · ↑↓ scroll"
-	runningPreviewHint      = "running · esc return · ↑↓ scroll"
+	openablePreviewHint     = "enter to open · esc return · ↑↓ scroll · ←→ browse"
+	runningPreviewHint      = "running · esc return · ↑↓ scroll · ←→ browse"
 	closePreviewKey         = 'q'
 	previewRule             = "─"
 	previewHeaderRows       = 3
@@ -32,6 +32,7 @@ type previewState struct {
 	room               int
 	offset             int
 	failure            string
+	openedBy           key.Key
 	isOpen             bool
 	isOpenable         bool
 	isTailWanted       bool
@@ -53,6 +54,7 @@ func (self *state) askToPreview(keypress key.Key) bool {
 		read:               work.Read,
 		unavailableLabel:   work.UnavailableLabel,
 		unavailableMessage: work.UnavailableMessage,
+		openedBy:           keypress,
 		isOpen:             true,
 		isOpenable:         self.list.IsChoosable(self.chosen()),
 		isTailWanted:       true,
@@ -90,11 +92,27 @@ func (self *state) readPreview(keypress key.Key) action {
 		if keypress.Value == closePreviewKey && !keypress.Mod.Has(key.Ctrl) {
 			self.preview = previewState{}
 		}
-	case key.Left, key.Right, key.Backspace, key.Delete, key.PasteStart, key.PasteEnd,
+	case key.Left:
+		self.browsePreview(-1)
+	case key.Right:
+		self.browsePreview(1)
+	case key.Backspace, key.Delete, key.PasteStart, key.PasteEnd,
 		key.Clipboard, key.FocusIn, key.FocusOut, key.Unknown:
 	}
 
 	return continuePicking
+}
+
+func (self *state) browsePreview(direction int) {
+	previewedCursor := self.cursor
+	self.move(direction)
+	if self.cursor == previewedCursor {
+		return
+	}
+
+	if !self.askToPreview(self.preview.openedBy) {
+		self.cursor = previewedCursor
+	}
 }
 
 func (self *state) scrollPreview(distance int) {

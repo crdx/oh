@@ -144,11 +144,12 @@ func run(directories Directories, choice options, output console.Output) error {
 	}
 
 	slices.SortFunc(total.removals, byLargest)
-	writeRemovals(total.removals, output.Screen)
+	listedRemovals := slices.DeleteFunc(slices.Clone(total.removals), isEmpty)
+	writeRemovals(listedRemovals, output.Screen)
 
 	count := len(total.removals)
 	_, _ = fmt.Fprintln(output.Screen, style.Subtle(
-		summary(count, reclaimedBytes(total.removals), runningCount, choice.isDryRun),
+		summary(len(listedRemovals), count-len(listedRemovals), reclaimedBytes(total.removals), runningCount, choice.isDryRun),
 	))
 
 	if failureCount := len(total.failures); failureCount > 0 {
@@ -164,6 +165,10 @@ func byLargest(one removal, other removal) int {
 	}
 
 	return strings.Compare(one.name, other.name)
+}
+
+func isEmpty(one removal) bool {
+	return one.bytes == 0
 }
 
 func reclaimedBytes(removals []removal) int64 {
@@ -551,7 +556,15 @@ func takenNoun(count int) string {
 	return util.PluralNoun(count, "path")
 }
 
-func summary(count int, reclaimedBytes int64, runningCount int, isDryRun bool) string {
+func emptyNoun(count int) string {
+	if count == 1 {
+		return "empty directory"
+	}
+
+	return "empty directories"
+}
+
+func summary(count int, emptyCount int, reclaimedBytes int64, runningCount int, isDryRun bool) string {
 	text := strconv.Itoa(count) + " " + takenNoun(count) + ", " +
 		util.FormatBytes(reclaimedBytes, bytePrecision)
 	if isDryRun {
@@ -562,6 +575,10 @@ func summary(count int, reclaimedBytes int64, runningCount int, isDryRun bool) s
 
 	if runningCount > 0 {
 		text += ", " + util.Plural(runningCount, "running session") + " and the shared home left alone"
+	}
+
+	if emptyCount > 0 {
+		text += ", also " + strconv.Itoa(emptyCount) + " " + emptyNoun(emptyCount)
 	}
 
 	return text

@@ -5,7 +5,6 @@
 [38;2;150;152;150mgo-module-cache[0m    8K  farm/stored-session/go-mod
 [38;2;150;152;150mgo-build-work  [0m    4K  farm/stored-session/go-build2952174331
 [38;2;150;152;150mgo-build-work  [0m    4K  farm/stored-session/go-build884213007
-[38;2;150;152;150mgo-build-work  [0m    0B  farm/stored-session/go-build15
 
-[38;2;150;152;150m6 paths, 40K reclaimed[0m
+[38;2;150;152;150m5 paths, 40K reclaimed, also 1 empty directory[0m
 === failure ===

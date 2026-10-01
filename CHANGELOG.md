@@ -37,6 +37,11 @@
 - Fence `fetch` and `lookup` results as untrusted data
 - Tell the model that session drops are untrusted
 
+### Sessions and storage
+
+- Count empty directories in `oh --ctl gc`
+- Browse session previews with left and right keys
+
 ## [0.11.0] - 2026-09-29
 
 ### Completion and input

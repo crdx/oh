@@ -84,6 +84,16 @@ func TestGoldenARunningSessionKeepsItsCachesAndTheHomeItShares(t *testing.T) {
 	runningName := storedSession(t, directories.Sessions)
 	write(t, filepath.Join(directories.Farm, runningName, ".cache", "still-warm"), 4096)
 
+	emptyWork := []string{
+		filepath.Join(directories.Farm, goldenName, "go-build1"),
+		filepath.Join(directories.Farm, goldenName, "go-build2"),
+	}
+	for _, path := range emptyWork {
+		if err := os.MkdirAll(path, 0o700); err != nil {
+			t.Fatal(err)
+		}
+	}
+
 	heldLock, err := session.AcquireLock(directories.Sessions, runningName)
 	if err != nil {
 		t.Fatal(err)
@@ -96,6 +106,10 @@ func TestGoldenARunningSessionKeepsItsCachesAndTheHomeItShares(t *testing.T) {
 	}
 
 	assertGolden(t, "running.txt", report(screen.String(), failure.String()))
+
+	for _, path := range emptyWork {
+		assertGone(t, path)
+	}
 
 	kept := filepath.Join(directories.Farm, runningName, ".cache")
 	if _, err := os.Stat(kept); err != nil {

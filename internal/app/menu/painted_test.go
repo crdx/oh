@@ -230,8 +230,9 @@ func TestGoldenTheCompletePreviewLifecycleMatchesTheGolden(t *testing.T) {
 			rows: []string{
 				"chewy-sardine   why does the spinner stutter when a tool runs",
 				"thick-poodle    add support for reasoning traces",
+				"quiet-marmot    tidy the changelog",
 			},
-			unrunnable: []bool{true, false},
+			unrunnable: []bool{true, false, false},
 		},
 		read: map[string][]string{
 			"thick-poodle    add support for reasoning traces": {
@@ -244,11 +245,19 @@ func TestGoldenTheCompletePreviewLifecycleMatchesTheGolden(t *testing.T) {
 				"The prompt is drawn by layout, which wraps the buffer against",
 				link.RenderURL("the terminal width and reports where the cursor landed.", "file:///workspace/layout.go"),
 			},
+			"quiet-marmot    tidy the changelog": {
+				"› tidy the changelog",
+				"",
+				"The changelog is tidy.",
+			},
 		},
 	}
 
 	keypresses := []key.Key{
 		{Code: key.Enter},
+		{Code: key.Right},
+		{Code: key.Right},
+		{Code: key.Left},
 		{Code: key.Up},
 		{Code: key.Up},
 		{Code: key.PageDown},

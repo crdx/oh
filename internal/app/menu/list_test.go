@@ -774,6 +774,54 @@ func TestAPreviewScrollsWithoutMovingTheCursorBehindIt(t *testing.T) {
 	}
 }
 
+func TestLeftAndRightPreviewTheNeighbouringRows(t *testing.T) {
+	rows := previewableRows("first", "second", "third")
+	self := listState(rows, 1)
+	self.measure = func() (int, int) { return 40, 9 }
+
+	self.apply(key.Key{Code: key.Enter})
+	self.draw()
+	self.apply(key.Key{Code: key.Home})
+
+	self.apply(key.Key{Code: key.Right})
+	self.draw()
+	if !self.preview.isOpen || self.preview.title != "reading third" || self.cursor != 2 {
+		t.Errorf("expected right to preview the next row, got %q at %d", self.preview.title, self.cursor)
+	}
+	if self.preview.offset != 2 {
+		t.Errorf("expected the next row to open at its end, got the offset %d", self.preview.offset)
+	}
+
+	self.apply(key.Key{Code: key.Right})
+	if self.preview.title != "reading third" || self.cursor != 2 {
+		t.Errorf("expected right on the last row to stay, got %q at %d", self.preview.title, self.cursor)
+	}
+
+	self.apply(key.Key{Code: key.Left})
+	self.apply(key.Key{Code: key.Left})
+	if self.preview.title != "reading first" || self.cursor != 0 {
+		t.Errorf("expected left to preview the earlier rows, got %q at %d", self.preview.title, self.cursor)
+	}
+
+	self.apply(key.Key{Code: key.Escape})
+	if self.cursor != 0 {
+		t.Errorf("expected the rows to keep the cursor on the last row previewed, got %d", self.cursor)
+	}
+}
+
+func TestBrowsingPastARowThatCannotBePreviewedStaysPut(t *testing.T) {
+	rows := previewableRows("first", "second")
+	rows.unrunnable = []bool{false, true}
+	self := listState(rows, 0)
+	self.measure = func() (int, int) { return 40, 9 }
+
+	self.apply(key.Key{Code: key.Enter})
+	self.apply(key.Key{Code: key.Right})
+	if !self.preview.isOpen || self.preview.title != "reading first" || self.cursor != 0 {
+		t.Errorf("expected the preview to stay on the first row, got %q at %d", self.preview.title, self.cursor)
+	}
+}
+
 func TestAPreviewIsClosedByEscapeAndByQ(t *testing.T) {
 	for _, keypress := range []key.Key{{Code: key.Escape}, {Code: key.Rune, Value: 'q'}} {
 		rows := previewableRows("first", "second")
@@ -957,12 +1005,12 @@ func TestAPreviewMarksWhyItCannotBeOpened(t *testing.T) {
 	self.apply(key.Key{Code: key.Enter})
 
 	mark, rest, _ := strings.Cut(runningPreviewHint, " ")
-	if got, want := self.previewHint(40), style.Success(mark)+style.Subtle(" "+rest); got != want {
+	if got, want := self.previewHint(60), style.Success(mark)+style.Subtle(" "+rest); got != want {
 		t.Errorf("got the hint %q, want %q", got, want)
 	}
 
 	self.preview.isOpenable = true
-	if got, want := self.previewHint(40), style.Subtle(openablePreviewHint); got != want {
+	if got, want := self.previewHint(60), style.Subtle(openablePreviewHint); got != want {
 		t.Errorf("got the hint %q, want %q", got, want)
 	}
 }

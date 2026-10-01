@@ -3,5 +3,5 @@
 [38;2;150;152;150mno-session[0m    8K  farm/able-dolphin
 [38;2;150;152;150m.cache    [0m    8K  farm/stored-session/.cache
 
-[38;2;150;152;150m2 paths, 16K reclaimed, 1 running session and the shared home left alone[0m
+[38;2;150;152;150m2 paths, 16K reclaimed, 1 running session and the shared home left alone, also 2 empty directories[0m
 === failure ===
