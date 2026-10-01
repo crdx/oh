@@ -1,7 +1,6 @@
 package skill
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
 	"io"
@@ -14,6 +13,7 @@ import (
 	"crdx.org/oh/internal/app/contextsource"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/file"
+	"crdx.org/oh/internal/util/frontmatter"
 	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/pkg/agent"
 	"gopkg.in/yaml.v3"
@@ -239,25 +239,16 @@ func discover(scope string, isGlobal bool, warnings io.Writer) ([]Skill, error) 
 }
 
 func parse(data []byte) (metadata, error) {
-	data = bytes.TrimPrefix(data, []byte("\xef\xbb\xbf"))
-	lines := bytes.Split(data, []byte("\n"))
-	if len(lines) == 0 || string(bytes.TrimSpace(lines[0])) != "---" {
+	header, _, isPresent, err := frontmatter.Split(data)
+	if err != nil {
+		return metadata{}, fmt.Errorf("skill has %w", err)
+	}
+	if !isPresent {
 		return metadata{}, errors.New("skill has no YAML frontmatter")
 	}
 
-	end := -1
-	for i := 1; i < len(lines); i++ {
-		if string(bytes.TrimSpace(lines[i])) == "---" {
-			end = i
-			break
-		}
-	}
-	if end == -1 {
-		return metadata{}, errors.New("skill has unterminated YAML frontmatter")
-	}
-
 	var parsedMetadata metadata
-	if err := yaml.Unmarshal(bytes.Join(lines[1:end], []byte("\n")), &parsedMetadata); err != nil {
+	if err := yaml.Unmarshal(header, &parsedMetadata); err != nil {
 		return metadata{}, fmt.Errorf("could not parse skill frontmatter: %w", err)
 	}
 
