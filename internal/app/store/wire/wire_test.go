@@ -551,3 +551,133 @@ func TestATransparentlyDecompressedResponseSaysSo(t *testing.T) {
 		}
 	}
 }
+
+func TestRecorderCensorsOAuthCodesInFormsJSONAndURLs(t *testing.T) {
+	form := `grant_type=authorization_code&client_id=public-client&redirect_uri=http%3A%2F%2Flocalhost%3A1455%2Fauth%2Fcallback&code=single-use-code&code_verifier=single-use-verifier&state=single-use-state`
+	transcript := recordBody(t, []byte(form), "application/x-www-form-urlencoded", "")
+	for _, secret := range []string{"single-use-code", "single-use-verifier", "single-use-state"} {
+		if strings.Contains(transcript, secret) {
+			t.Errorf("form secret %q survived censorship:\n%s", secret, transcript)
+		}
+	}
+	for _, kept := range []string{"authorization_code", "public-client"} {
+		if !strings.Contains(transcript, kept) {
+			t.Errorf("expected benign form value %q to survive:\n%s", kept, transcript)
+		}
+	}
+	if strings.Count(transcript, "REDACTED") != 3 {
+		t.Errorf("expected three form replacements, got:\n%s", transcript)
+	}
+
+	jsonBody := []byte(`{"grant_type":"authorization_code","client_id":"public-client","code":"json-code","code_verifier":"json-verifier","state":"json-state","redirect_uri":"http://localhost:53692/callback"}`)
+	transcript = recordBody(t, jsonBody, "application/json", "")
+	for _, secret := range []string{"json-code", "json-verifier", "json-state"} {
+		if strings.Contains(transcript, secret) {
+			t.Errorf("JSON secret %q survived censorship:\n%s", secret, transcript)
+		}
+	}
+	for _, kept := range []string{"authorization_code", "public-client"} {
+		if !strings.Contains(transcript, kept) {
+			t.Errorf("expected benign JSON value %q to survive:\n%s", kept, transcript)
+		}
+	}
+	if strings.Count(transcript, "[REDACTED]") != 3 {
+		t.Errorf("expected three JSON replacements, got:\n%s", transcript)
+	}
+}
+
+func TestRecorderCensorsSensitiveQueryParametersInRequestURLs(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "wire.http.zst")
+	recorder, err := wire.Open(path, wire.Meta{}, func(err error) {
+		t.Errorf("unexpected recorder failure: %v", err)
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	exchange := recorder.Start(req.Request{
+		StartedAt: time.Unix(2, 0),
+		Method:    http.MethodPost,
+		URL:       "https://example.test/token?code=url-code&state=url-state&next=kept",
+		Protocol:  "HTTP/1.1",
+		Header:    http.Header{"Content-Type": {"application/json"}},
+		Body:      []byte(`{}`),
+	})
+	exchange.Response(req.Response{
+		ReceivedAt: time.Unix(3, 0),
+		Protocol:   "HTTP/1.1",
+		Status:     "200 OK",
+		Code:       200,
+		Header:     http.Header{"Content-Type": {"application/json"}},
+	})
+	exchange.Finish(time.Unix(4, 0), nil, false)
+	if err := recorder.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	transcript := decompressed(t, path)
+	for _, secret := range []string{"url-code", "url-state"} {
+		if strings.Contains(transcript, secret) {
+			t.Errorf("URL secret %q survived censorship:\n%s", secret, transcript)
+		}
+	}
+	if !strings.Contains(transcript, "next=kept") {
+		t.Errorf("expected a benign query value to survive:\n%s", transcript)
+	}
+	if !strings.Contains(transcript, "REDACTED") {
+		t.Errorf("expected a redacted query value:\n%s", transcript)
+	}
+}
+
+func TestARecordedURLWithoutSecretsIsLeftExactlyAsWritten(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "wire.http.zst")
+	recorder, err := wire.Open(path, wire.Meta{}, func(err error) {
+		t.Errorf("unexpected recorder failure: %v", err)
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	address := "https://example.test/token?grant_type=authorization_code&next=kept"
+	exchange := recorder.Start(req.Request{
+		StartedAt: time.Unix(2, 0),
+		Method:    http.MethodPost,
+		URL:       address,
+		Protocol:  "HTTP/1.1",
+		Header:    http.Header{"Content-Type": {"application/json"}},
+		Body:      []byte(`{}`),
+	})
+	exchange.Response(req.Response{
+		ReceivedAt: time.Unix(3, 0),
+		Protocol:   "HTTP/1.1",
+		Status:     "200 OK",
+		Code:       200,
+		Header:     http.Header{"Content-Type": {"application/json"}},
+	})
+	exchange.Finish(time.Unix(4, 0), nil, false)
+	if err := recorder.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	transcript := decompressed(t, path)
+	if !strings.Contains(transcript, "> POST "+address+" HTTP/1.1") {
+		t.Errorf("expected the address unchanged, got:\n%s", transcript)
+	}
+}
+
+func TestANestedErrorCodeIsKeptWhileATopLevelOAuthCodeIsCensored(t *testing.T) {
+	body := []byte(`{"code":"top-level-secret","error":{"code":"rate_limit_exceeded","message":"slow down","type":"rate_limit_error"},"innocent":"kept"}`)
+
+	transcript := recordBody(t, body, "application/json", "")
+	if strings.Contains(transcript, "top-level-secret") {
+		t.Errorf("the top-level code survived censorship:\n%s", transcript)
+	}
+	for _, kept := range []string{"rate_limit_exceeded", "slow down", "rate_limit_error", `"innocent":"kept"`} {
+		if !strings.Contains(transcript, kept) {
+			t.Errorf("expected protocol value %q to survive:\n%s", kept, transcript)
+		}
+	}
+	if strings.Count(transcript, "[REDACTED]") != 1 {
+		t.Errorf("expected one replacement, got:\n%s", transcript)
+	}
+}

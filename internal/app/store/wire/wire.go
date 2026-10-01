@@ -88,7 +88,7 @@ func (self *Recorder) Start(request req.Request) req.ExchangeObserver {
 	sequence := self.next
 	self.next++
 	exchange := &exchange{recorder: self, sequence: sequence, startedAt: request.StartedAt}
-	self.write(fmt.Sprintf("# exchange %d start %s\n> %s %s %s\n", sequence, request.StartedAt.UTC().Format(time.RFC3339Nano), request.Method, request.URL, request.Protocol))
+	self.write(fmt.Sprintf("# exchange %d start %s\n> %s %s %s\n", sequence, request.StartedAt.UTC().Format(time.RFC3339Nano), request.Method, censorURL(request.URL), request.Protocol))
 	self.writeHeaders(">", request.Header)
 	self.write("\n")
 	self.write(string(censorBody(request.Body, request.Header.Get("Content-Type"))))
@@ -246,6 +246,36 @@ func (self *exchange) readMarker(readAt time.Time, byteCount int) string {
 	return marker + fmt.Sprintf(" bytes=%d\n", byteCount)
 }
 
+func censorURL(address string) string {
+	if address == "" {
+		return address
+	}
+
+	parsedAddress, err := url.Parse(address)
+	if err != nil || parsedAddress.RawQuery == "" {
+		return censorBearer(address)
+	}
+
+	query, err := url.ParseQuery(parsedAddress.RawQuery)
+	if err != nil {
+		return censorBearer(address)
+	}
+
+	wasCensored := false
+	for key := range query {
+		if isSensitiveName(key) || isOAuthSecretName(key) {
+			query[key] = []string{redacted}
+			wasCensored = true
+		}
+	}
+	if !wasCensored {
+		return censorBearer(address)
+	}
+
+	parsedAddress.RawQuery = query.Encode()
+	return censorBearer(parsedAddress.String())
+}
+
 func censorBody(body []byte, contentType string) []byte {
 	if len(body) == 0 {
 		return nil
@@ -258,7 +288,7 @@ func censorBody(body []byte, contentType string) []byte {
 		values, err := url.ParseQuery(string(body))
 		if err == nil {
 			for key := range values {
-				if isSensitiveName(key) {
+				if isSensitiveName(key) || isOAuthSecretName(key) {
 					values[key] = []string{redacted}
 				}
 			}
@@ -304,17 +334,21 @@ func censorJSON(body []byte) []byte {
 }
 
 func censorValue(value any) (any, bool) {
+	return censorValueAtDepth(value, 0)
+}
+
+func censorValueAtDepth(value any, depth int) (any, bool) {
 	switch typedValue := value.(type) {
 	case map[string]any:
 		wasCensored := false
 		for key, item := range typedValue {
-			if isSensitiveName(key) {
+			if isSensitiveName(key) || (depth == 0 && isOAuthSecretName(key)) {
 				typedValue[key] = redacted
 				wasCensored = true
 				continue
 			}
 
-			censoredItem, itemWasCensored := censorValue(item)
+			censoredItem, itemWasCensored := censorValueAtDepth(item, depth+1)
 			typedValue[key] = censoredItem
 			wasCensored = wasCensored || itemWasCensored
 		}
@@ -322,7 +356,7 @@ func censorValue(value any) (any, bool) {
 	case []any:
 		wasCensored := false
 		for index, item := range typedValue {
-			censoredItem, itemWasCensored := censorValue(item)
+			censoredItem, itemWasCensored := censorValueAtDepth(item, depth+1)
 			typedValue[index] = censoredItem
 			wasCensored = wasCensored || itemWasCensored
 		}
@@ -364,7 +398,9 @@ func isSensitiveName(name string) bool {
 		"tokenuuid",
 		"clientsecret",
 		"token",
-		"password":
+		"password",
+		"codechallenge",
+		"codeverifier":
 		return true
 	}
 	return strings.Contains(normalisedName, "credential") ||
@@ -372,6 +408,14 @@ func isSensitiveName(name string) bool {
 		strings.HasSuffix(normalisedName, "organizationid") ||
 		strings.HasSuffix(normalisedName, "workspaceid") ||
 		strings.HasSuffix(normalisedName, "requestid")
+}
+
+func isOAuthSecretName(name string) bool {
+	switch strings.NewReplacer("-", "", "_", "").Replace(strings.ToLower(name)) {
+	case "code", "state":
+		return true
+	}
+	return false
 }
 
 func censorBearer(value string) string {
