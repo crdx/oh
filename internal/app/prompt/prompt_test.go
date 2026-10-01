@@ -490,7 +490,7 @@ func TestTheHarnessDoesNotOfferTheHostNetworkWhenItIsNotGranted(t *testing.T) {
 	for _, want := range []string{
 		"The bash tool takes network=loopback (the default) or network=host",
 		"The host network is withheld, so a network=host call is refused",
-		"The user can grant the host network with ctrl+x n",
+		"The user can grant network access with ctrl+x n, which allows network=host calls",
 		"Ask the user to grant the host network, not to run the command",
 	} {
 		if !strings.Contains(got, want) {
@@ -1280,7 +1280,7 @@ func TestARefusedNetworkToolSaysHowItIsGranted(t *testing.T) {
 			isInteractive: true,
 			wanted: []string{
 				"The lookup tool is refused; do not call it unless the user grants it with ctrl+x l",
-				"The fetch tool is refused; do not call it unless the user grants it with ctrl+x n",
+				"The fetch tool is refused; do not call it unless the user grants network access with ctrl+x n",
 			},
 		},
 		"non-interactive": {

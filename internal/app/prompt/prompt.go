@@ -93,9 +93,9 @@ var (
 		- Flowchart edges: --> or <-->, optionally -->|label|, chained or fanned out with &
 		- Flowcharts also support subgraph id[label] … end, <br> in labels, and %% comments
 		- Flowchart directions BT and RL draw as TD and LR
-		- Flowchart styling, click, and direction are not supported
+		- Flowchart styling, click, and direction statements inside the body are not supported
 		- Sequence diagrams support participant/actor with as, all arrows, notes, autonumber, and loop/opt/alt/par/critical/break/rect blocks
-		- Sequence activation (activate, or +/- on an arrow), title, box, and create are not supported
+		- Sequence activation (activate, or +/- on an arrow), the title keyword, box, and create are not supported
 
 		{{ networkSection . }}# /tmp
 
@@ -595,7 +595,7 @@ func networkRules(data harnessContextTemplateData) string {
 	}
 
 	lines := []string{
-		"- A bash call has only the sandbox's private loopback network",
+		"- A bash call on network=loopback, the default, has only the sandbox's private loopback network",
 		loopback,
 	}
 
@@ -647,17 +647,17 @@ func networkToolRules(data harnessContextTemplateData) []string {
 
 	if data.LookupOffered {
 		lines = append(lines, "- The lookup tool is "+lookupAccess(data.LookupGranted)+
-			grantHint(data.LookupGranted, data.Conditions.Interactive, caps.Lookup))
+			grantHint(data.LookupGranted, data.Conditions.Interactive, caps.Lookup, "it"))
 	}
 	if data.FetchOffered {
 		lines = append(lines, "- The fetch tool is "+lookupAccess(data.NetworkGranted)+
-			grantHint(data.NetworkGranted, data.Conditions.Interactive, caps.Network))
+			grantHint(data.NetworkGranted, data.Conditions.Interactive, caps.Network, "network access"))
 	}
 
 	return lines
 }
 
-func grantHint(isGranted bool, isInteractive bool, capability caps.Set) string {
+func grantHint(isGranted bool, isInteractive bool, capability caps.Set, grantedName string) string {
 	if isGranted {
 		return ""
 	}
@@ -665,7 +665,7 @@ func grantHint(isGranted bool, isInteractive bool, capability caps.Set) string {
 		return "; do not call it"
 	}
 
-	return "; do not call it unless the user grants it with ctrl+x " + capability.Flag()
+	return "; do not call it unless the user grants " + grantedName + " with ctrl+x " + capability.Flag()
 }
 
 func hostNetworkRules(isNetworkGranted bool, isInteractive bool) []string {
@@ -679,7 +679,7 @@ func hostNetworkRules(isNetworkGranted bool, isInteractive bool) []string {
 		if isInteractive {
 			return append(
 				lines,
-				"- The user can grant the host network with ctrl+x n",
+				"- The user can grant network access with ctrl+x n, which allows network=host calls",
 				"- Ask the user to grant the host network, not to run the command",
 			)
 		}
