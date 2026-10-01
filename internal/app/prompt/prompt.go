@@ -788,6 +788,7 @@ func readOnlyWorkspaceSection(data harnessContextTemplateData) string {
 			"    - GIT_CEILING_DIRECTORIES prevents this: run each git apply below exactly as written",
 			"    - Copy it into scratch: cp -r <workspace> <destination>",
 			"    - Make the copy a repository: git -C <destination> init, then add and commit everything as the baseline",
+			"    - The sandbox can have no git identity: commit with git -c user.name=oh -c user.email=oh@localhost commit",
 		)
 	}
 	lines = append(

@@ -1235,6 +1235,7 @@ func TestAWorkspaceWithNoRepositoryIsCopiedAndMadeOneBeforeTheWork(t *testing.T)
 	for _, want := range []string{
 		"Copy it into scratch: cp -r <workspace> <destination>",
 		"Make the copy a repository: git -C <destination> init, then add and commit everything as the baseline",
+		"commit with git -c user.name=oh -c user.email=oh@localhost commit",
 		"git -C <workspace> apply --reverse --check <patch>",
 	} {
 		if !strings.Contains(got, want) {
