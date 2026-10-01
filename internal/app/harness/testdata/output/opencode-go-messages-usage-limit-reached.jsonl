@@ -1,0 +1,11 @@
+{"kind":"head","version":17,"meta":{"model":"qwen3.8-max","workspaceDir":"","provider":"opencode-go","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"user_message","text":"reach the OpenCode Go usage limit"}}
+{"kind":"event","event":{"kind":"turn_failure","failure":{"kind":"http_status","message":"Monthly usage limit reached. Resets in 1 day. To continue using this model now, enable usage from your available balance: https://opencode.ai/workspace/workspace-1/go","http_status":429,"code":"GoUsageLimitError","media_type":"text/plain"}}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"reach the OpenCode Go usage limit"}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"continue after the early reset"}}
+{"kind":"event","event":{"kind":"model_message","text":"Available after the reset.","usage":{"input_tokens":10,"output_tokens":5,"cache":{"read_tokens":0}}}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"continue after the early reset"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Available after the reset."}]}}
+{"kind":"turn_completion","turn":{"input_tokens":10}}

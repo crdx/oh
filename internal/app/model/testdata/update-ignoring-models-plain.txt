@@ -1,16 +1,16 @@
 Provider      Models  Selectable  Ignored  Source
 Codex              1           1           models.dev (it lists no models of its own, and only the registry describes it)
-OpenCode Go        —                       all 2 models it offers are ignored
-Anthropic          5           2        3  endpoint
-Ollama             5           0        5  endpoint
+OpenCode Go        5           3        2  endpoint
+Anthropic          6           2        4  endpoint
+Ollama             5           1        4  endpoint
 
 Provider     Model                                        Reason
-OpenCode Go  grok-4.6                                     unsupported request shape
-OpenCode Go  qwen3-max                                    unsupported request shape
+OpenCode Go  minimax-m2.7                                 superseded by minimax-m3
+OpenCode Go  kimi-k2.7-code                               unknown effort level
 Anthropic    claude-sonnet-4-5                            superseded by claude-sonnet-4-6
 Anthropic    claude-opus-4-5                              unsupported request shape
 Anthropic    claude-fable-5-20260609                      superseded by claude-fable-5-1
-Ollama       llama-3                                      superseded by llama-4
+Anthropic    claude-haiku-5                               unknown effort level
 Ollama       llama-4                                      unknown output limit
 Ollama       a-locally-built-model-with-a-very-long-name  unknown effort level
 Ollama       Nothing Identifies This One                  unknown id

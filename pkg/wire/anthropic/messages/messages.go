@@ -52,26 +52,70 @@ type Client struct {
 	Effort          string
 	MaxOutputTokens int
 
-	tokens         TokenSource
-	instructions   string
-	tools          []functionTool
-	toolNames      []string
-	history        []json.RawMessage
-	requestHistory imageHistory
-	prefix         prefixwatch.Watcher
-	rewrite        string
-	requests       *req.Client
-	observer       req.Observer
+	tokens           TokenSource
+	headerSource     func(token string) http.Header
+	extraHeader      http.Header
+	identity         string
+	thinking         *thinking
+	isEffortRequired bool
+	instructions     string
+	tools            []functionTool
+	toolNames        []string
+	history          []json.RawMessage
+	requestHistory   imageHistory
+	prefix           prefixwatch.Watcher
+	rewrite          string
+	requests         *req.Client
+	observer         req.Observer
 }
 
 func New(tokens TokenSource, model string, effort string, maxOutputTokens int) (*Client, error) {
 	client := &Client{
-		URL:             Endpoint,
+		URL:              Endpoint,
+		Model:            model,
+		Effort:           effort,
+		MaxOutputTokens:  maxOutputTokens,
+		tokens:           tokens,
+		identity:         Identity,
+		thinking:         &thinking{Type: "adaptive", Display: "summarized"},
+		isEffortRequired: true,
+		requests:         req.NewStreaming(responseHeaderTimeout, streamIdleTimeout),
+	}
+	client.headerSource = client.subscriptionHeaders
+
+	if err := client.settled(); err != nil {
+		return nil, err
+	}
+
+	return client, nil
+}
+
+func NewAt(
+	url string,
+	requestHeader http.Header,
+	model string,
+	effort string,
+	maxOutputTokens int,
+) (*Client, error) {
+	fixedHeader := requestHeader.Clone()
+
+	client := &Client{
+		URL:             url,
 		Model:           model,
 		Effort:          effort,
 		MaxOutputTokens: maxOutputTokens,
-		tokens:          tokens,
+		tokens:          noTokens{},
 		requests:        req.NewStreaming(responseHeaderTimeout, streamIdleTimeout),
+		headerSource: func(string) http.Header {
+			header := fixedHeader.Clone()
+			if header == nil {
+				header = http.Header{}
+			}
+			header.Set("Anthropic-Version", Version)
+			header.Set("Accept", "text/event-stream")
+
+			return header
+		},
 	}
 
 	if err := client.settled(); err != nil {
@@ -79,6 +123,20 @@ func New(tokens TokenSource, model string, effort string, maxOutputTokens int) (
 	}
 
 	return client, nil
+}
+
+type noTokens struct{}
+
+func (self noTokens) Token() (string, error) {
+	return "", nil
+}
+
+func (self *Client) SetRequestHeader(name string, value string) {
+	if self.extraHeader == nil {
+		self.extraHeader = http.Header{}
+	}
+
+	self.extraHeader.Set(name, value)
 }
 
 func (self *Client) IdleAfter(after time.Duration) {
@@ -215,18 +273,21 @@ func (self *Client) settled() error {
 	}{
 		{"URL", self.URL},
 		{"Model", self.Model},
-		{"Effort", self.Effort},
 	} {
 		if setting.value == "" {
 			return fmt.Errorf("anthropic: %s is empty", setting.name)
 		}
 	}
 
+	if self.Effort == "" && self.isEffortRequired {
+		return errors.New("anthropic: Effort is empty")
+	}
+
 	if self.MaxOutputTokens <= 0 {
 		return fmt.Errorf("anthropic: MaxOutputTokens is %d, and must be above zero", self.MaxOutputTokens)
 	}
 
-	if !slices.Contains(Efforts, self.Effort) {
+	if self.Effort != "" && !slices.Contains(Efforts, self.Effort) {
 		return fmt.Errorf(
 			"anthropic: Effort is %q, and must be one of: %s",
 			self.Effort, strings.Join(Efforts, ", "),
@@ -283,14 +344,33 @@ func (self *Client) body() request {
 		Cache:           ephemeral(),
 		System:          self.system(),
 		Tools:           self.tools,
-		Thinking:        thinking{Type: "adaptive", Display: "summarized"},
-		Output:          outputConfig{Effort: self.Effort},
+		Thinking:        self.requestedThinking(),
+		Output:          self.outputConfig(),
 		Messages:        encodeMessages(merged(self.requestHistory.prepare(self.history))),
 	}
 }
 
+func (self *Client) requestedThinking() *thinking {
+	if self.thinking == nil && self.Effort == "" {
+		return &thinking{Type: "enabled"}
+	}
+
+	return self.thinking
+}
+
+func (self *Client) outputConfig() *outputConfig {
+	if self.Effort == "" {
+		return nil
+	}
+
+	return &outputConfig{Effort: self.Effort}
+}
+
 func (self *Client) system() []textBlock {
-	blocks := []textBlock{{Type: "text", Text: Identity, Cache: ephemeral()}}
+	var blocks []textBlock
+	if self.identity != "" {
+		blocks = append(blocks, textBlock{Type: "text", Text: self.identity, Cache: ephemeral()})
+	}
 
 	if self.instructions != "" {
 		blocks = append(blocks, textBlock{Type: "text", Text: self.instructions, Cache: ephemeral()})
@@ -300,6 +380,15 @@ func (self *Client) system() []textBlock {
 }
 
 func (self *Client) headers(token string) http.Header {
+	header := self.headerSource(token)
+	for name, values := range self.extraHeader {
+		header[name] = slices.Clone(values)
+	}
+
+	return header
+}
+
+func (self *Client) subscriptionHeaders(token string) http.Header {
 	header := http.Header{}
 
 	header.Set("Authorization", "Bearer "+token)
@@ -321,13 +410,13 @@ type request struct {
 	System          []textBlock       `json:"system,omitempty"`
 	Tools           []functionTool    `json:"tools,omitempty"`
 	Messages        []json.RawMessage `json:"messages"`
-	Thinking        thinking          `json:"thinking"`
-	Output          outputConfig      `json:"output_config"`
+	Thinking        *thinking         `json:"thinking,omitempty"`
+	Output          *outputConfig     `json:"output_config,omitempty"`
 }
 
 type thinking struct {
 	Type    string `json:"type"`
-	Display string `json:"display"`
+	Display string `json:"display,omitempty"`
 }
 
 type outputConfig struct {

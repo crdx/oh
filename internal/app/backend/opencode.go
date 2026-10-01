@@ -27,5 +27,5 @@ func connectOpencodeGo(choice model.Choice, effort string, endpoint string) (*Co
 		client.UsageURL = opencodego.UsageEndpointURL
 	}
 
-	return &Connection{Client: client, ToolsSize: opencodego.ToolsSize}, nil
+	return &Connection{Client: client, ToolsSize: client.ToolsSize}, nil
 }

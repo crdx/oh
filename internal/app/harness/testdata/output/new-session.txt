@@ -20,6 +20,11 @@
 "sol@none@high"              error: effort "none@high" does not match any of: none, high
 "claude"                     error: model "claude" is ambiguous; matches: anthropic/claude-opus-5, anthropic/claude-sonnet-5
 "mystery"                    error: model gpt-5.6-mystery has no recognised effort levels
+"minimax"                    opencode-go/minimax-m3
+"opencode-go/minimax-m3"     opencode-go/minimax-m3
+"minimax@high"               error: model minimax-m3 takes no effort level
+"minimax+fast"               error: opencode-go does not support fast mode
+"mythos"                     error: model "mythos" does not match any known model
 "nope"                       error: model "nope" does not match any known model
 
 === effort autoselection ===
@@ -104,6 +109,8 @@
 "gpt"                        new -m codex/gpt-5.6-sol@high+fast --from able-dolphin
 "gpt@high"                   new -m codex/gpt-5.6-sol@high --from able-dolphin
 "gpt@high+fast"              new -m codex/gpt-5.6-sol@high+fast --from able-dolphin
+"minimax"                    new -m opencode-go/minimax-m3 --from able-dolphin
+"minimax@high"               error: model minimax-m3 takes no effort level
 "nope"                       error: model "nope" does not match any known model
 
 === new session model globs ===
@@ -124,5 +131,7 @@
 "sonnet@nope"                error: effort "nope" does not match any of: medium
 "opus-5@"                    error: model must be written as model or model@effort[+fast], got "opus-5@"
 "@high"                      error: model must be written as model or model@effort[+fast], got "@high"
+"minimax"                    new -m opencode-go/minimax-m3
+"minimax@high"               error: model minimax-m3 takes no effort level
 "nope"                       error: model "nope" does not match any known model
 "nonsense"                   error: model "nonsense" does not match any known model

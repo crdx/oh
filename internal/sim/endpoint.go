@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"path"
 	"strconv"
 	"strings"
 	"sync"
@@ -127,9 +128,9 @@ func (self *Endpoint) ServeHTTP(writer http.ResponseWriter, request *http.Reques
 	self.answer(writer, request, dialect)
 }
 
-func (self *Endpoint) dialectFor(path string) (Dialect, bool) {
+func (self *Endpoint) dialectFor(requestPath string) (Dialect, bool) {
 	for _, dialect := range self.dialects {
-		if strings.HasSuffix(path, dialect.Path()) {
+		if path.Base(requestPath) == path.Base(dialect.Path()) {
 			return dialect, true
 		}
 	}

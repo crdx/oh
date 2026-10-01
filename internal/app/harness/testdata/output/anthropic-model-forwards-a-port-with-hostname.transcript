@@ -17,24 +17,24 @@ put the preview where i can see it
 ## Tool calls · +0s
 
 ```
-expose: 8080 [toolu_1]
+forward: 8080 [toolu_1]
 ```
 
-## Host → sandbox · 1 sandbox port · changed port 8080 · +0s
+## Port forward · 1 forwarded port · changed port 8080 · +0s
 
 ```
-Sandbox port 8080 exposed at http://tame-impala.agent:8080.
+Port 8080 is now forwarded to http://tame-impala.agent:8080.
 ```
 
 ## Tool calls · +0s
 
 ```
-expose [ok, 1 line, 86B, toolu_1]
+forward [ok, 1 line, 86B, toolu_1]
 ```
 
 ## Assistant · +0s
 
-The preview is exposed at the address in the tool result above.
+The preview is forwarded at the address in the tool result above.
 
 ## User · +0s
 
@@ -43,19 +43,19 @@ take it down
 ## Tool calls · +0s
 
 ```
-expose: 8080 [toolu_2]
+forward: 8080 [toolu_2]
 ```
 
-## Host → sandbox · none · changed port 8080 · +0s
+## Port forward · none · changed port 8080 · +0s
 
 ```
-Sandbox port 8080 no longer exposed to host.
+Port 8080 is no longer forwarded.
 ```
 
 ## Tool calls · +0s
 
 ```
-expose [ok, 1 line, 17B, toolu_2]
+forward [ok, 1 line, 16B, toolu_2]
 ```
 
 ## Assistant · +0s

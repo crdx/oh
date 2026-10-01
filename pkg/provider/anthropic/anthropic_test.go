@@ -21,6 +21,7 @@ import (
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/provider/anthropic"
 	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/wire/anthropic/messages"
 )
 
 type WeatherParams struct {
@@ -163,6 +164,36 @@ func newClient(t *testing.T, url string) *anthropic.Client {
 	client.URL = url
 
 	return client
+}
+
+func TestEveryTurnCarriesTheSubscriptionHeaders(t *testing.T) {
+	var sent http.Header
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		sent = request.Header.Clone()
+		writer.Header().Set("Content-Type", "text/event-stream")
+		_, _ = fmt.Fprint(writer, script(answer("Hello.")))
+	}))
+	t.Cleanup(server.Close)
+
+	client := newClient(t, server.URL)
+	client.AddUserMessage("hello")
+	if _, err := client.Send(t.Context(), func(agent.Output) bool { return true }); err != nil {
+		t.Fatal(err)
+	}
+
+	for name, want := range map[string]string{
+		"Authorization":     "Bearer sk-ant-oat-fake",
+		"Anthropic-Version": messages.Version,
+		"Anthropic-Beta":    messages.Beta,
+		"Anthropic-Dangerous-Direct-Browser-Access": "true",
+		"Accept":     "text/event-stream",
+		"User-Agent": messages.UserAgent,
+		"X-App":      "cli",
+	} {
+		if got := sent.Get(name); got != want {
+			t.Errorf("%s is %q, want %q", name, got, want)
+		}
+	}
 }
 
 func TestNewHandsBackAClientHoldingWhatItWasAsked(t *testing.T) {

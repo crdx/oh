@@ -1,0 +1,44 @@
+provider = "opencode-go"
+model = "kimi-k2.7-code"
+
+[[tool]]
+name = "alpha"
+outputs = ["alpha result"]
+state-key = "alpha-count"
+
+[[tool]]
+name = "beta"
+outputs = ["beta result"]
+state-key = "beta-count"
+
+[first]
+prompt = "reason, then call two tools in fragments"
+
+[[first.response]]
+event = [
+    '''{"choices":[{"delta":{"role":"assistant","content":null,"reasoning_content":""}}]}''',
+    '''{"choices":[{"delta":{"reasoning_content":"Use both tools."}}]}''',
+    '''{"choices":[{"delta":{"tool_calls":[{"index":0,"id":"call-1","type":"function","function":{"name":"alpha","arguments":"{"}}]}}]}''',
+    '''{"choices":[{"delta":{"tool_calls":[{"index":0,"function":{"arguments":"}"}}]}}]}''',
+    '''{"choices":[{"delta":{"tool_calls":[{"index":1,"id":"call-2","type":"function","function":{"name":"beta","arguments":"{"}}]}}]}''',
+    '''{"choices":[{"delta":{"tool_calls":[{"index":1,"function":{"arguments":"}"}}]}}]}''',
+    '''{"choices":[{"delta":{"content":"","reasoning_content":""},"finish_reason":"tool_calls"}]}''',
+    '''[DONE]''',
+]
+
+[[first.response]]
+event = [
+    '''{"choices":[{"delta":{"content":"Tools done."}}]}''',
+    '''{"choices":[{"delta":{},"finish_reason":"stop"}]}''',
+    '''[DONE]''',
+]
+
+[resume]
+prompt = "continue after both tool results"
+
+[[resume.response]]
+event = [
+    '''{"choices":[{"delta":{"content":"Resumed."}}]}''',
+    '''{"choices":[{"delta":{},"finish_reason":"stop"}]}''',
+    '''[DONE]''',
+]

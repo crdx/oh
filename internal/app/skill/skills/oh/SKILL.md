@@ -38,7 +38,7 @@ Where `~/.config/org.crdx/oh/` is a symlink into a dotfiles repository, edit the
 
 `~/.config/org.crdx/oh/config.toml` holds what follows the user between projects, and needs a `version` key. Beside it sit `SYSTEM.md`, prepended to every session, and `snippets/` for snippet bodies kept in files.
 
-- `[model]` — `round_robin` of `provider/model@effort` entries to rotate through; `effort` and `fast` defaults
+- `[model]` — `round_robin` as an array of `provider/model@effort` entries (written `provider/model` for a model that takes no effort) or a path, relative to the supplying config, to a file with one non-empty entry per line; lines whose first non-whitespace character is `#` are comments, and duplicates add weight; `effort` and `fast` defaults
 - `[provider.ollama]` — `host` for a local or LAN endpoint
 - `[snippets]` — `//name` expansions, inline or `{ file = "snippets/name.md" }`; `{{ .Arg }}` takes the rest of the line, and a field of any other name, as `{{ .Question }}`, takes it too while naming it `<question>` in completion and help rather than `<args>`; `{{ .Args }}` is the same text split into words
 - `[ui]` — `streaming`, `grouping`, `reasoning`, `currency`, `[ui.theme]`

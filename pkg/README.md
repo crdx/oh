@@ -71,13 +71,13 @@ Stand in for every provider endpoint at once, playing scenarios defined in TOML 
 go run ./cmd/simulate --scenario internal/sim/scenarios/success.toml
 ```
 
-The simulator deals in wire formats, not providers. A provider speaks one of them, and more than one provider can speak the same one.
+The simulator deals in wire formats, not providers. A provider speaks one of them for each model, and more than one provider can speak the same one. Each is answered at any path ending in its last segment, so `/v1/responses` reaches Responses too.
 
-| Wire format      | Served at              | Spoken by               |
-|------------------|------------------------|-------------------------|
-| Responses        | `/v1/codex/responses`  | `codex`                 |
-| Chat Completions | `/v1/chat/completions` | `opencode-go`, `ollama` |
-| Messages         | `/v1/messages`         | `anthropic`             |
+| Wire format      | Served at              | Spoken by                  |
+|------------------|------------------------|----------------------------|
+| Responses        | `/v1/codex/responses`  | `codex`, `opencode-go`     |
+| Chat Completions | `/v1/chat/completions` | `opencode-go`, `ollama`    |
+| Messages         | `/v1/messages`         | `anthropic`, `opencode-go` |
 
 ## Examples
 

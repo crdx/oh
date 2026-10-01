@@ -92,19 +92,28 @@ func errorText(err error) string {
 }
 
 type revision struct {
-	sourceSnapshots      []sourceSnapshot
-	snippetFileSnapshots map[string]snapshot
-	snippetSettings      map[string][]string
+	sourceSnapshots         []sourceSnapshot
+	roundRobinFileSnapshots map[string]snapshot
+	snippetFileSnapshots    map[string]snapshot
+	snippetSettings         map[string][]string
+	snippetDirectories      []string
 }
 
 func (self revision) equal(other revision) bool {
 	if len(self.sourceSnapshots) != len(other.sourceSnapshots) ||
+		len(self.roundRobinFileSnapshots) != len(other.roundRobinFileSnapshots) ||
 		len(self.snippetFileSnapshots) != len(other.snippetFileSnapshots) {
 		return false
 	}
 	for i, source := range self.sourceSnapshots {
 		otherSource := other.sourceSnapshots[i]
 		if source.source != otherSource.source || !source.snapshot.equal(otherSource.snapshot) {
+			return false
+		}
+	}
+	for path, current := range self.roundRobinFileSnapshots {
+		previous, exists := other.roundRobinFileSnapshots[path]
+		if !exists || !current.equal(previous) {
 			return false
 		}
 	}
@@ -137,6 +146,22 @@ func (self revision) changesSince(previous revision) []SourceChange {
 			Path:      filepath.Base(source.source.Path),
 			Settings:  settings,
 			IsRemoved: source.snapshot.isMissing,
+		})
+	}
+
+	for _, path := range slices.Sorted(maps.Keys(self.roundRobinFileSnapshots)) {
+		current := self.roundRobinFileSnapshots[path]
+		if was, isKnown := previous.roundRobinFileSnapshots[path]; isKnown && current.equal(was) {
+			continue
+		}
+		settings := []string{"model.round_robin"}
+		if isEverySettingNamed(settings, isNamed) {
+			continue
+		}
+		changes = append(changes, SourceChange{
+			Path:      filepath.Base(path),
+			Settings:  settings,
+			IsRemoved: current.isMissing,
 		})
 	}
 
@@ -242,11 +267,18 @@ func leafTableOf(key toml.Key) toml.Key {
 }
 
 func (self revision) getPaths() []string {
-	paths := make([]string, 0, len(self.sourceSnapshots)+len(self.snippetFileSnapshots))
+	paths := make(
+		[]string,
+		0,
+		len(self.sourceSnapshots)+len(self.roundRobinFileSnapshots)+len(self.snippetFileSnapshots)+
+			len(self.snippetDirectories),
+	)
 	for _, source := range self.sourceSnapshots {
 		paths = append(paths, source.source.Path)
 	}
-	return append(paths, slices.Sorted(maps.Keys(self.snippetFileSnapshots))...)
+	paths = append(paths, slices.Sorted(maps.Keys(self.roundRobinFileSnapshots))...)
+	paths = append(paths, slices.Sorted(maps.Keys(self.snippetFileSnapshots))...)
+	return paths
 }
 
 func readRevision(sources []Source) (Config, revision, error) {
@@ -256,9 +288,11 @@ func readRevision(sources []Source) (Config, revision, error) {
 	}
 	settings, err := loadSnapshots(snapshots)
 	return settings, revision{
-		sourceSnapshots:      snapshots,
-		snippetFileSnapshots: settings.snippetFileSnapshots,
-		snippetSettings:      snippetSettings(settings),
+		sourceSnapshots:         snapshots,
+		roundRobinFileSnapshots: settings.roundRobinFileSnapshots,
+		snippetFileSnapshots:    settings.snippetFileSnapshots,
+		snippetSettings:         snippetSettings(settings),
+		snippetDirectories:      settings.snippetDirectories,
 	}, err
 }
 

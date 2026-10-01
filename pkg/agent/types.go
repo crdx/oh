@@ -32,6 +32,7 @@ type Model struct {
 	ID                  string       `json:"id"`
 	Name                string       `json:"name,omitempty"`
 	EffortLevels        []string     `json:"efforts,omitempty"`
+	IsEffortless        bool         `json:"effortless,omitempty"`
 	ContextWindowTokens int          `json:"context,omitempty"`
 	MaxOutputTokens     int          `json:"output,omitempty"`
 	Prices              *TokenPrices `json:"prices,omitempty"`

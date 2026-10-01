@@ -76,10 +76,14 @@ func Open(path string, meta Meta) (*Recorder, error) {
 		return nil, err
 	}
 	if info.Size() == 0 {
+		effortLine := ""
+		if meta.Effort != "" {
+			effortLine = fmt.Sprintf("- **Effort:** `%s`\n", meta.Effort)
+		}
 		_, err = fmt.Fprintf(
 			file,
-			"# Conversation\n\n- **Session:** `%s`\n- **Started:** `%s`\n- **Model:** `%s`\n- **Effort:** `%s`\n- **Provider:** `%s`\n- **Workspace:** `%s`\n- **Tool detail:** `jq 'select(.event.id == \"<id>\")' session.jsonl`, for the `[id]` of any call\n",
-			meta.Name, meta.StartedAt.UTC().Format(time.RFC3339Nano), meta.Model, meta.Effort, meta.Provider, meta.Workspace,
+			"# Conversation\n\n- **Session:** `%s`\n- **Started:** `%s`\n- **Model:** `%s`\n%s- **Provider:** `%s`\n- **Workspace:** `%s`\n- **Tool detail:** `jq 'select(.event.id == \"<id>\")' session.jsonl`, for the `[id]` of any call\n",
+			meta.Name, meta.StartedAt.UTC().Format(time.RFC3339Nano), meta.Model, effortLine, meta.Provider, meta.Workspace,
 		)
 		if err != nil {
 			_ = file.Close()

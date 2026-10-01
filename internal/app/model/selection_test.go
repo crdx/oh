@@ -435,3 +435,93 @@ func TestEveryListedPriceIsReadFromTheCacheEvenWhenTheModelCannotBeChosen(t *tes
 		t.Error("an absent model cache should quote no prices")
 	}
 }
+
+func useAnEffortlessModel(t *testing.T) {
+	t.Helper()
+
+	writeModelCache(t, modelCache{
+		Version: cacheVersion,
+		Providers: map[string]cachedModels{
+			opencodeGoProvider: {Models: []agent.Model{
+				{ID: "minimax-m3", IsEffortless: true, MaxOutputTokens: 128_000},
+				{ID: "kimi-k2.7-code", MaxOutputTokens: 128_000},
+			}},
+			anthropicProvider: {Models: []agent.Model{
+				{ID: "claude-haiku-5", IsEffortless: true, MaxOutputTokens: 128_000},
+			}},
+		},
+	})
+}
+
+func TestAnEffortlessModelIsChosenWithoutAnEffort(t *testing.T) {
+	useAnEffortlessModel(t)
+
+	for _, writtenSelection := range []string{"opencode-go/minimax-m3", "minimax"} {
+		for _, defaults := range []Defaults{{}, {Effort: "max"}, {Effort: "low", IsFast: true}} {
+			selection, err := ParseSelection(modelCachePath(), writtenSelection, defaults)
+			if err != nil {
+				t.Fatalf("%s with %+v: %v", writtenSelection, defaults, err)
+			}
+
+			want := Selection{Provider: opencodeGoProvider, Model: "minimax-m3"}
+			if selection != want {
+				t.Errorf("%s with %+v: got %+v, want %+v", writtenSelection, defaults, selection, want)
+			}
+			if selection.String() != "opencode-go/minimax-m3" {
+				t.Errorf("%s: written back as %q", writtenSelection, selection.String())
+			}
+		}
+	}
+}
+
+func TestAnEffortlessModelRefusesAnEffort(t *testing.T) {
+	useAnEffortlessModel(t)
+
+	for _, writtenSelection := range []string{"opencode-go/minimax-m3@high", "minimax@max"} {
+		_, err := ParseSelection(modelCachePath(), writtenSelection, Defaults{})
+		if err == nil || !strings.Contains(err.Error(), "minimax-m3 takes no effort level") {
+			t.Errorf("%s: expected the effort to be refused, got %v", writtenSelection, err)
+		}
+	}
+
+	choices := Choices(modelCachePath())
+	if _, err := ResolveQuery("minimax@high", choices, Defaults{}); err == nil ||
+		!strings.Contains(err.Error(), "takes no effort level") {
+		t.Errorf("expected a new session query to refuse the effort too, got %v", err)
+	}
+}
+
+func TestANewSessionQueryChoosesAnEffortlessModelWithoutAnEffort(t *testing.T) {
+	useAnEffortlessModel(t)
+
+	selection, err := ResolveQuery("minimax", Choices(modelCachePath()), Defaults{Effort: "high"})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if selection != (Selection{Provider: opencodeGoProvider, Model: "minimax-m3"}) {
+		t.Errorf("got %+v", selection)
+	}
+}
+
+func TestOnlyAModelKnownToTakeNoEffortIsChosenWithoutOne(t *testing.T) {
+	useAnEffortlessModel(t)
+
+	for _, writtenSelection := range []string{"kimi", "claude-haiku-5", "anthropic/claude-haiku-5"} {
+		if _, err := ParseSelection(modelCachePath(), writtenSelection, Defaults{}); err == nil {
+			t.Errorf("%s: expected a model with unknown effort levels to be refused", writtenSelection)
+		}
+	}
+}
+
+func TestASelectionWithAnEffortIsWrittenWithIt(t *testing.T) {
+	for selection, want := range map[Selection]string{
+		{Provider: codexProvider, Model: "gpt-5.6-sol", Effort: "high"}:               "codex/gpt-5.6-sol@high",
+		{Provider: codexProvider, Model: "gpt-5.6-sol", Effort: "high", IsFast: true}: "codex/gpt-5.6-sol@high+fast",
+		{Provider: opencodeGoProvider, Model: "minimax-m3"}:                           "opencode-go/minimax-m3",
+	} {
+		if got := selection.String(); got != want {
+			t.Errorf("got %q, want %q", got, want)
+		}
+	}
+}

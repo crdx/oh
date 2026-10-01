@@ -16,7 +16,10 @@ type Selection struct {
 }
 
 func (self Selection) String() string {
-	writtenSelection := self.Provider + "/" + self.Model + "@" + self.Effort
+	writtenSelection := self.Provider + "/" + self.Model
+	if self.Effort != "" {
+		writtenSelection += "@" + self.Effort
+	}
 	if self.IsFast {
 		writtenSelection += "+fast"
 	}

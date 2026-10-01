@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -170,7 +171,7 @@ func TestAModelTakingNoEffortLevelCannotBeSelected(t *testing.T) {
 	}
 }
 
-func TestOpenCodeGoOnlyOffersModelsForItsWireProtocol(t *testing.T) {
+func TestOpenCodeGoOffersEveryModelOverWhicheverWireServesIt(t *testing.T) {
 	models := []agent.Model{
 		{ID: "minimax-m3", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000},
 		{ID: "qwen3.8-max", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000},
@@ -179,9 +180,43 @@ func TestOpenCodeGoOnlyOffersModelsForItsWireProtocol(t *testing.T) {
 		{ID: "mimo-v2-omni", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000},
 	}
 
-	choices := choicesFor(opencodeGoProvider, models)
-	if len(choices) != 2 || choices[0].ID != "ox-alpha-free" || choices[1].ID != "mimo-v2-omni" {
-		t.Errorf("got %v", choices)
+	var offered []string
+	for _, choice := range choicesFor(opencodeGoProvider, models) {
+		offered = append(offered, choice.ID)
+	}
+
+	want := []string{"minimax-m3", "qwen3.8-max", "muse-spark-1.2-contributor", "ox-alpha-free", "mimo-v2-omni"}
+	if !slices.Equal(offered, want) {
+		t.Errorf("offered %v, want %v", offered, want)
+	}
+}
+
+func TestAnEffortlessModelIsOfferedOnlyWhereItsProviderCanDriveIt(t *testing.T) {
+	effortless := agent.Model{ID: "longcat-2.0", IsEffortless: true, MaxOutputTokens: 128_000}
+	unknown := agent.Model{ID: "kimi-k2.7-code", MaxOutputTokens: 128_000}
+
+	for _, test := range []struct {
+		providerName string
+		model        agent.Model
+		want         string
+	}{
+		{opencodeGoProvider, effortless, ""},
+		{opencodeGoProvider, unknown, "unknown effort level"},
+		{anthropicProvider, effortless, "unknown effort level"},
+		{codexProvider, effortless, "unknown effort level"},
+		{ollamaProvider, effortless, "unknown effort level"},
+	} {
+		if got := unselectableReason(test.providerName, test.model); got != test.want {
+			t.Errorf("%s/%s: got reason %q, want %q", test.providerName, test.model.ID, got, test.want)
+		}
+
+		isOffered := len(choicesFor(test.providerName, []agent.Model{test.model})) == 1
+		if isOffered != (test.want == "") {
+			t.Errorf("%s/%s: offered is %t", test.providerName, test.model.ID, isOffered)
+		}
+		if pickable(test.providerName, []agent.Model{test.model}) != len(choicesFor(test.providerName, []agent.Model{test.model})) {
+			t.Errorf("%s/%s: counted and offered disagree", test.providerName, test.model.ID)
+		}
 	}
 }
 
@@ -250,6 +285,27 @@ func TestTheRegistryFillsInWhatAListingLeftOut(t *testing.T) {
 
 	if supplemented[0].Prices != nil {
 		t.Errorf("expected an unpriced model to stay unpriced, got %+v", supplemented[0].Prices)
+	}
+}
+
+func TestTheRegistrySaysWhenAListedModelTakesNoEffort(t *testing.T) {
+	listed := []agent.Model{
+		{ID: "minimax-m3"},
+		{ID: "qwen3.8-max", EffortLevels: []string{"low", "medium", "xhigh"}},
+		{ID: "kimi-k2.7-code"},
+	}
+
+	registered := map[string]agent.Model{
+		"minimax-m3":  {ID: "minimax-m3", IsEffortless: true, MaxOutputTokens: 128_000},
+		"qwen3.8-max": {ID: "qwen3.8-max", IsEffortless: true},
+	}
+
+	supplemented := supplement(OpencodeGoProvider, listed, registered)
+
+	for i, want := range []bool{true, false, false} {
+		if supplemented[i].IsEffortless != want {
+			t.Errorf("%s: effortless is %t, want %t", supplemented[i].ID, supplemented[i].IsEffortless, want)
+		}
 	}
 }
 
@@ -353,6 +409,67 @@ func TestOnlyTheLatestIterationOfEachCurrentModelIsRetained(t *testing.T) {
 
 			if !slices.Equal(got, test.want) {
 				t.Errorf("got %v, want %v", got, test.want)
+			}
+		})
+	}
+}
+
+func TestOnlyAModelThatCanBeUsedSupersedesAnother(t *testing.T) {
+	for _, test := range []struct {
+		providerName string
+		models       []agent.Model
+		recorded     []string
+		ignored      []ignoredModel
+	}{
+		{
+			providerName: opencodeGoProvider,
+			models: []agent.Model{
+				{ID: "glm-5.2", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000},
+				{ID: "glm-5.3", MaxOutputTokens: 128_000},
+				{ID: "longcat-2.0", IsEffortless: true, MaxOutputTokens: 128_000},
+				{ID: "longcat-2.5", IsEffortless: true, MaxOutputTokens: 128_000},
+				{ID: "kimi-k2", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000},
+				{ID: "kimi-k3", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000},
+			},
+			recorded: []string{"glm-5.2", "glm-5.3", "longcat-2.5", "kimi-k3"},
+			ignored: []ignoredModel{
+				{Name: "longcat-2.0", Reason: "superseded by longcat-2.5"},
+				{Name: "kimi-k2", Reason: "superseded by kimi-k3"},
+			},
+		},
+		{
+			providerName: anthropicProvider,
+			models: []agent.Model{
+				{ID: "claude-sonnet-5", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000},
+				{ID: "claude-sonnet-5-5", IsEffortless: true, MaxOutputTokens: 128_000},
+			},
+			recorded: []string{"claude-sonnet-5", "claude-sonnet-5-5"},
+		},
+		{
+			providerName: codexProvider,
+			models: []agent.Model{
+				{ID: "gpt-realtime-2", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000},
+				{ID: "gpt-realtime-2.1", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000},
+			},
+			ignored: []ignoredModel{
+				{Name: "gpt-realtime-2", Reason: undrivableReason},
+				{Name: "gpt-realtime-2.1", Reason: undrivableReason},
+			},
+		},
+	} {
+		t.Run(test.providerName, func(t *testing.T) {
+			recordable, ignoredModels := recordableModels(test.providerName, test.models)
+
+			var recorded []string
+			for _, model := range recordable {
+				recorded = append(recorded, model.ID)
+			}
+
+			if !slices.Equal(recorded, test.recorded) {
+				t.Errorf("recorded %v, want %v", recorded, test.recorded)
+			}
+			if !slices.Equal(ignoredModels, test.ignored) {
+				t.Errorf("ignored %v, want %v", ignoredModels, test.ignored)
 			}
 		})
 	}
@@ -586,11 +703,16 @@ func TestProviderDescriptionCoversEveryEndpointAndRegistryCombination(t *testing
 		"endpoint and registry": {listed: listed, registered: registered, wantSource: sourceBoth, wantModels: 1},
 		"registry only":         {registered: registered, wantSource: sourceRegistry, wantWhy: "the endpoint lists no models", wantModels: 1},
 		"neither":               {listingErr: listingFailure, wantWhy: listingFailure.Error()},
+		"registry without login": {
+			listingErr: NoLoginError{Err: listingFailure},
+			registered: registered,
+			wantWhy:    listingFailure.Error(),
+		},
 	}
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			models, source, why := describeProviderModels(
+			models, source, why, _ := describeProviderModels(
 				t.Context(),
 				codexProvider,
 				test.registered,
@@ -612,7 +734,7 @@ func TestEndpointListingExcludesRegistryModelsTheProviderCannotUse(t *testing.T)
 		"gpt-realtime-2.1": {ID: "gpt-realtime-2.1", MaxOutputTokens: 16_000},
 	}
 
-	models, source, _ := describeProviderModels(
+	models, source, _, _ := describeProviderModels(
 		t.Context(),
 		codexProvider,
 		registered,
@@ -877,8 +999,16 @@ func TestAProviderNobodyCouldListKeepsItsModelsAndNamesNoRemoval(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	unlistable := func(ctx context.Context, providerName string) ([]agent.Model, error) {
+		if providerName == anthropicProvider {
+			return nil, errors.New("connection refused")
+		}
+
+		return unreachableProviders(ctx, providerName)
+	}
+
 	var output bytes.Buffer
-	if err := Update(&output, endpoint, modelCachePath(), seenModelsPath(), unreachableProviders, false); err != nil {
+	if err := Update(&output, endpoint, modelCachePath(), seenModelsPath(), unlistable, false); err != nil {
 		t.Fatal(err)
 	}
 
@@ -898,5 +1028,92 @@ func TestNothingCachedAndNothingReachableIsAnError(t *testing.T) {
 	var output bytes.Buffer
 	if err := ensureModelsWithoutProviderListings(&output, deadAddress, modelCachePath()); err == nil {
 		t.Fatalf("expected an empty cache with nothing reachable to fail, got %q", output.String())
+	}
+}
+
+func TestLoggingInToAProviderRefreshesAFreshCache(t *testing.T) {
+	t.Setenv("XDG_STATE_HOME", t.TempDir())
+
+	endpoint := serveRegistry(t, oneCodexModel)
+	isCodexLoggedIn := false
+	listings := 0
+	lister := func(_ context.Context, providerName string) ([]agent.Model, error) {
+		if providerName != codexProvider {
+			return []agent.Model{{ID: "other", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000}}, nil
+		}
+
+		listings++
+		if !isCodexLoggedIn {
+			return nil, NoLoginError{Err: errors.New("not logged in")}
+		}
+
+		return []agent.Model{{ID: "gpt-5.6-sol", EffortLevels: []string{"high"}}}, nil
+	}
+	isLoggedIn := func(providerName string) bool {
+		return providerName != codexProvider || isCodexLoggedIn
+	}
+
+	if err := Update(io.Discard, endpoint, modelCachePath(), seenModelsPath(), lister, false); err != nil {
+		t.Fatal(err)
+	}
+	if _, isCached := loadModelCache(modelCachePath()).Providers[codexProvider]; isCached {
+		t.Fatal("expected a provider nobody logged in to to record no models")
+	}
+
+	if err := Ensure(io.Discard, endpoint, modelCachePath(), seenModelsPath(), lister, isLoggedIn); err != nil {
+		t.Fatal(err)
+	}
+	if listings != 1 {
+		t.Fatalf("expected a fresh cache to stand while nobody logged in, got %d listings", listings)
+	}
+
+	isCodexLoggedIn = true
+
+	if err := Ensure(io.Discard, endpoint, modelCachePath(), seenModelsPath(), lister, isLoggedIn); err != nil {
+		t.Fatal(err)
+	}
+	cache := loadModelCache(modelCachePath())
+	if len(cache.Providers[codexProvider].Models) != 1 || len(cache.ProvidersWithoutLogin) != 0 {
+		t.Errorf("expected logging in to refresh the cache, got %+v", cache)
+	}
+
+	if err := Ensure(io.Discard, endpoint, modelCachePath(), seenModelsPath(), lister, isLoggedIn); err != nil {
+		t.Fatal(err)
+	}
+	if listings != 2 {
+		t.Errorf("expected the refreshed cache to stand, got %d listings", listings)
+	}
+}
+
+func TestLoggingOutOfAProviderForgetsTheModelsItListed(t *testing.T) {
+	t.Setenv("XDG_STATE_HOME", t.TempDir())
+
+	endpoint := serveRegistry(t, oneCodexModel)
+	isCodexLoggedIn := true
+	lister := func(_ context.Context, providerName string) ([]agent.Model, error) {
+		if providerName != codexProvider {
+			return []agent.Model{{ID: "other", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000}}, nil
+		}
+		if !isCodexLoggedIn {
+			return nil, NoLoginError{Err: errors.New("not logged in")}
+		}
+
+		return []agent.Model{{ID: "gpt-5.6-sol", EffortLevels: []string{"high"}}}, nil
+	}
+
+	if err := Update(io.Discard, endpoint, modelCachePath(), seenModelsPath(), lister, false); err != nil {
+		t.Fatal(err)
+	}
+	if _, isCached := loadModelCache(modelCachePath()).Providers[codexProvider]; !isCached {
+		t.Fatal("expected a provider somebody logged in to to record its models")
+	}
+
+	isCodexLoggedIn = false
+
+	if err := Update(io.Discard, endpoint, modelCachePath(), seenModelsPath(), lister, false); err != nil {
+		t.Fatal(err)
+	}
+	if _, isCached := loadModelCache(modelCachePath()).Providers[codexProvider]; isCached {
+		t.Error("expected logging out to forget the models the provider listed")
 	}
 }

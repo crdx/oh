@@ -278,6 +278,11 @@ func Main() {
 		SessionsDir:    location.GetSessionsDir(),
 		ToolNames:      completableTools(),
 		CustomCapFlags: completableCustomCapFlags(),
+		IsLoggedIn: func(providerName string) bool {
+			return backend.IsAvailable(providerName, backend.EndpointSettings{
+				OverrideURL: os.Getenv(backend.EndpointVariable),
+			})
+		},
 	}) {
 		return
 	}
@@ -589,7 +594,14 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		return "", model.Update(os.Stdout, endpointURL, modelCachePath, seenModelsPath, listProviderModels, inputArgs.IsShowingIgnored)
 	}
 
-	if err := model.Ensure(notices, endpointURL, modelCachePath, seenModelsPath, listProviderModels); err != nil {
+	if err := model.Ensure(
+		notices,
+		endpointURL,
+		modelCachePath,
+		seenModelsPath,
+		listProviderModels,
+		isProviderAvailable,
+	); err != nil {
 		return "", err
 	}
 

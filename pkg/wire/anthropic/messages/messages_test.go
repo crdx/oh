@@ -131,3 +131,55 @@ func TestTheCacheLifetimeIsLeftToTheEndpoint(t *testing.T) {
 		t.Error("the client declares a cache lifetime it does not ask the endpoint for")
 	}
 }
+
+func TestAnEndpointClientTakesNoEffortOrOneItKnows(t *testing.T) {
+	for effort, isAccepted := range map[string]bool{"": true, "xhigh": true, "whatever": false} {
+		_, err := NewAt("http://somewhere/v1/messages", nil, "qwen3.8-max", effort, 64_000)
+		if (err == nil) != isAccepted {
+			t.Errorf("effort %q: got %v", effort, err)
+		}
+	}
+
+	if _, err := New(noTokens{}, "claude-opus-5", "", 64_000); err == nil {
+		t.Error("expected the subscription to insist on an effort")
+	}
+}
+
+func TestAnEndpointClientAsksForThinkingOnlyWhenItHasNoEffortToGive(t *testing.T) {
+	effortless, err := NewAt("http://somewhere/v1/messages", nil, "minimax-m3", "", 64_000)
+	if err != nil {
+		t.Fatal(err)
+	}
+	graded, err := NewAt("http://somewhere/v1/messages", nil, "qwen3.8-max", "xhigh", 64_000)
+	if err != nil {
+		t.Fatal(err)
+	}
+	subscribed, err := New(noTokens{}, "claude-opus-5", "high", 64_000)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	for name, test := range map[string]struct {
+		client   *Client
+		thinking string
+		output   string
+	}{
+		"effortless": {effortless, `{"type":"enabled"}`, `null`},
+		"graded":     {graded, `null`, `{"effort":"xhigh"}`},
+		"subscribed": {subscribed, `{"type":"adaptive","display":"summarized"}`, `{"effort":"high"}`},
+	} {
+		body := test.client.body()
+
+		thinking, err := json.Marshal(body.Thinking)
+		if err != nil {
+			t.Fatal(err)
+		}
+		output, err := json.Marshal(body.Output)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if string(thinking) != test.thinking || string(output) != test.output {
+			t.Errorf("%s: got thinking %s and output %s", name, thinking, output)
+		}
+	}
+}

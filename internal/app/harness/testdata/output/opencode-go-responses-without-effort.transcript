@@ -1,0 +1,32 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `muse-spark-1.3-contributor`
+- **Provider:** `opencode-go`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+reason, call a tool, then answer
+
+## Tool calls · +0s
+
+```
+work: work [ok, 1 line, 11B, call-1]
+```
+
+## Assistant · +0s
+
+Tool complete.
+
+## User · +0s
+
+continue after the tool result
+
+## Assistant · +0s
+
+Resumed.

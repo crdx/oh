@@ -46,6 +46,16 @@ func TestAModelIsOfferedAtTheEffortNearestTheOneWanted(t *testing.T) {
 	}
 }
 
+func TestAModelTakingNoEffortIsOfferedWithoutOne(t *testing.T) {
+	for _, defaults := range []Defaults{{}, {Effort: "high"}, {Effort: "max", IsFast: true}} {
+		offers := offered([]Choice{{Provider: OpencodeGoProvider, ID: "minimax-m3"}}, defaults)
+
+		if offers[0].Effort != (picker.Effort{}) || len(offers[0].EffortLevels) != 0 {
+			t.Errorf("with %+v: expected no effort at all, got %q of %v", defaults, offers[0].Effort, offers[0].EffortLevels)
+		}
+	}
+}
+
 func TestOnlyAProviderWithFastModeOffersItBesideEachEffort(t *testing.T) {
 	offers := offered([]Choice{
 		{Provider: CodexProvider, ID: "gpt-5.6-sol", EffortLevels: []string{"low", "high"}},

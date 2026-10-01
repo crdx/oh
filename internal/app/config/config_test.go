@@ -66,6 +66,65 @@ func TestConfiguredSkillDirectoriesResolvesAbsoluteRelativeAndHomePaths(t *testi
 	}
 }
 
+func TestRoundRobinCanLoadSelectionsFromAFile(t *testing.T) {
+	directory := t.TempDir()
+	modelsPath := filepath.Join(directory, "models.txt")
+	if err := os.WriteFile(
+		modelsPath,
+		[]byte("# preferred models\n anthropic/one@high\n  # weighted fallback\n\tcodex/two@medium\r\nanthropic/one@high\n"),
+		0o600,
+	); err != nil {
+		t.Fatal(err)
+	}
+	configPath := filepath.Join(directory, "config.toml")
+	if err := writeConfigFile(configPath, "[model]\nround_robin = \"models.txt\"\n"); err != nil {
+		t.Fatal(err)
+	}
+
+	settings, err := Load(configPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := []string{"anthropic/one@high", "codex/two@medium", "anthropic/one@high"}
+	if !slices.Equal(settings.Model.RoundRobin, want) {
+		t.Errorf("got model rotation %#v, want %#v", settings.Model.RoundRobin, want)
+	}
+}
+
+func TestRoundRobinModelFileMustContainOneSelectionPerLine(t *testing.T) {
+	directory := t.TempDir()
+	modelsPath := filepath.Join(directory, "models.txt")
+	if err := os.WriteFile(modelsPath, []byte("anthropic/one@high\n\nanthropic/two@high\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	configPath := filepath.Join(directory, "config.toml")
+	if err := writeConfigFile(configPath, "[model]\nround_robin = \"models.txt\"\n"); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := Load(configPath)
+	if err == nil || !strings.Contains(err.Error(), "models.txt: line 2 is empty") {
+		t.Errorf("got error %v", err)
+	}
+}
+
+func TestRoundRobinModelFileMustContainASelectionBesideComments(t *testing.T) {
+	directory := t.TempDir()
+	modelsPath := filepath.Join(directory, "models.txt")
+	if err := os.WriteFile(modelsPath, []byte("# no model selected\n  # still none\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	configPath := filepath.Join(directory, "config.toml")
+	if err := writeConfigFile(configPath, "[model]\nround_robin = \"models.txt\"\n"); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := Load(configPath)
+	if err == nil || !strings.Contains(err.Error(), "file contains no model selections") {
+		t.Errorf("got error %v", err)
+	}
+}
+
 func TestConfiguredDefaultCapabilitiesRejectUnknownFlags(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
 	if err := writeConfigFile(path, "[caps]\ndefault = \"rwz\"\n"); err != nil {
@@ -570,6 +629,7 @@ func TestConfiguredSkillExclusionsRejectAnEmptyDirectory(t *testing.T) {
 func TestConfiguredStringsCannotBeEmpty(t *testing.T) {
 	for name, contents := range map[string]string{
 		"model round robin":           "[model]\nround_robin = []\n",
+		"model file path":             "[model]\nround_robin = \"\"\n",
 		"model selection":             "[model]\nround_robin = [\"\"]\n",
 		"model selection whitespace":  "[model]\nround_robin = [\"  \"]\n",
 		"input nudge":                 "[input]\nnudge = \"\"\n",

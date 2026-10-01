@@ -1,0 +1,50 @@
+provider = "opencode-go"
+model = "muse-spark-1.3-contributor"
+
+[[tool]]
+name = "work"
+outputs = ["tool result"]
+state-key = "work-count"
+
+[first]
+prompt = "reason, call a tool, then answer"
+
+[[first.response]]
+event = [
+    '''{"type":"response.created","response":{"status":"in_progress"}}''',
+    '''{"type":"response.in_progress","response":{"status":"in_progress"}}''',
+    '''{"type":"keepalive"}''',
+    '''{"type":"response.output_item.added","item":{"id":"reasoning-1","type":"reasoning","content":[],"encrypted_content":"initial-sealed","summary":[]}}''',
+    '''{"type":"response.reasoning_summary_part.added","part":{"type":"summary_text","text":""}}''',
+    '''{"type":"response.reasoning_summary_text.delta","delta":"Use the tool."}''',
+    '''{"type":"response.reasoning_summary_text.done","text":"Use the tool."}''',
+    '''{"type":"response.reasoning_summary_part.done","part":{"type":"summary_text","text":"Use the tool."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"reasoning-1","type":"reasoning","content":[],"encrypted_content":"sealed","summary":[{"type":"summary_text","text":"Use the tool."}]}}''',
+    '''{"type":"response.output_item.added","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"work","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-1","delta":"{}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-1","arguments":"{}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"work","arguments":"{}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-1","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Tool complete."}''',
+    '''{"type":"response.output_text.done","text":"Tool complete."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Tool complete."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"Tool complete."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "continue after the tool result"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_text.delta","delta":"Resumed."}''',
+    '''{"type":"response.output_text.done","text":"Resumed."}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"Resumed."}]}}''',
+    '''{"type":"response.completed"}''',
+]

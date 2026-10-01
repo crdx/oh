@@ -107,3 +107,41 @@ func TestFetchTakesThePriceOfEachTokenKind(t *testing.T) {
 		t.Error("expected a model without costs to carry no prices")
 	}
 }
+
+func TestFetchTellsAModelThatThinksWithoutAnEffortFromOneNothingIsKnownAbout(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, _ *http.Request) {
+		writer.Header().Set("Content-Type", "application/json")
+		_, _ = writer.Write([]byte(`{
+			"opencode-go": {"models": {
+				"graded": {"reasoning": true, "reasoning_options": [{"type": "effort", "values": ["low", "high"]}]},
+				"toggled": {"reasoning": true, "reasoning_options": [{"type": "toggle"}]},
+				"always": {"reasoning": true, "reasoning_options": []},
+				"plain": {"reasoning": false},
+				"undescribed": {}
+			}}
+		}`))
+	}))
+	defer server.Close()
+
+	registry, err := Fetch(t.Context(), server.URL, nil)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	models := registry.Provider("opencode-go")
+	for name, want := range map[string]bool{
+		"graded":      false,
+		"toggled":     true,
+		"always":      true,
+		"plain":       false,
+		"undescribed": false,
+	} {
+		if got := models[name].IsEffortless; got != want {
+			t.Errorf("%s: effortless is %t, want %t", name, got, want)
+		}
+	}
+
+	if got := models["graded"].EffortLevels; len(got) != 2 {
+		t.Errorf("expected the graded model to keep its levels, got %v", got)
+	}
+}

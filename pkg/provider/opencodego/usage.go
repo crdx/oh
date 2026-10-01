@@ -34,7 +34,7 @@ type usageLimit struct {
 }
 
 func (self *Client) Send(ctx context.Context, yield agent.Yield) (agent.Reply, error) {
-	reply, err := self.Client.Send(ctx, yield)
+	reply, err := self.conversation.Send(ctx, yield)
 	window, isLimited := refusedUsageWindow(err, time.Now())
 	if !isLimited {
 		return reply, err

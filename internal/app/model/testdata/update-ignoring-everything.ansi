@@ -1,12 +1,12 @@
 \e[38;2;204;102;102mmodels.dev: Get "<registry>": dial tcp 127.0.0.1:1: connect: connection refused\e[0m
 \e[4m\e[38;2;150;152;150mProvider      Models  Selectable  Ignored  Source\e[0m\e[0m
 Codex              \e[38;2;150;152;150m—\e[0m                       \e[38;2;150;152;150mit lists no models of its own, and only the registry describes it\e[0m
-OpenCode Go        \e[38;2;150;152;150m—\e[0m                       \e[38;2;150;152;150mall 2 models it offers are ignored\e[0m
-Anthropic          \e[38;2;150;152;150m—\e[0m                       \e[38;2;150;152;150mnot logged in to Anthropic: run the login command with anthropic\e[0m
+OpenCode Go        \e[38;2;150;152;150m—\e[0m                       \e[38;2;150;152;150mnot logged in to OpenCode Go: run the login command with opencode-go\e[0m
+Anthropic          \e[38;2;150;152;150m—\e[0m                       \e[38;2;150;152;150mall 2 models it offers are ignored\e[0m
 Ollama             \e[38;2;150;152;150m—\e[0m                       \e[38;2;150;152;150mGet "http://localhost:11434/api/tags": connect: connection refused\e[0m
 
-\e[4m\e[38;2;150;152;150mProvider     Model       Reason\e[0m\e[0m
-OpenCode Go  grok-4.6    \e[38;2;150;152;150munsupported request shape\e[0m
-OpenCode Go  minimax-m2  \e[38;2;150;152;150munsupported request shape\e[0m
+\e[4m\e[38;2;150;152;150mProvider   Model             Reason\e[0m\e[0m
+Anthropic  claude-opus-4-5   \e[38;2;150;152;150munsupported request shape\e[0m
+Anthropic  claude-haiku-4-5  \e[38;2;150;152;150munsupported request shape\e[0m
 === error ===
 no provider could be described

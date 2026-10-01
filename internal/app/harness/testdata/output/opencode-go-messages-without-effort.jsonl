@@ -1,0 +1,18 @@
+{"kind":"head","version":17,"meta":{"model":"minimax-m3","workspaceDir":"","provider":"opencode-go","system_prompt":"You are a test assistant.","tools":["work"],"tool_definitions":[{"name":"work","description":"A deterministic scenario tool.","revision":"1"}]}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"user_message","text":"count what a call cost"}}
+{"kind":"event","event":{"kind":"model_reasoning","text":"Working it out.","usage":{"input_tokens":6300,"cache":{"read_tokens":6000}}}}
+{"kind":"event","event":{"render":"work","kind":"tool_call_request","id":"toolu_1","name":"work","arguments":"{}","usage":{"output_tokens":140}}}
+{"kind":"event","event":{"kind":"state_change","id":"toolu_1","state":1}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"done","id":"toolu_1","name":"work","status":"success","stats":{"kind":"output","lines":1,"bytes":4}}}
+{"kind":"event","event":{"kind":"model_message","text":"The work is done.","usage":{"input_tokens":6720,"output_tokens":60,"cache":{"read_tokens":6400}}}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"count what a call cost"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"thinking","thinking":"Working it out.","signature":"seal-1"},{"type":"tool_use","id":"toolu_1","name":"work","input":{}}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"done"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The work is done."}]}}
+{"kind":"turn_completion","turn":{"input_tokens":6720}}
+{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
+{"kind":"event","event":{"kind":"model_message","text":"Carrying on.","usage":{"input_tokens":7140,"output_tokens":40,"cache":{"read_tokens":6800}}}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"carry on"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Carrying on."}]}}
+{"kind":"turn_completion","turn":{"input_tokens":7140}}

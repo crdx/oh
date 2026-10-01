@@ -14,6 +14,7 @@ import (
 	"crdx.org/oh/pkg/provider/anthropic"
 	"crdx.org/oh/pkg/provider/codex"
 	"crdx.org/oh/pkg/provider/ollama"
+	"crdx.org/oh/pkg/provider/opencodego"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/wire/openai/chatcompletions"
 )
@@ -568,6 +569,41 @@ func TestAnAddressThatNoApiAnswersAtIsRefused(t *testing.T) {
 
 	if response.StatusCode != http.StatusNotFound {
 		t.Errorf("expected an address nothing answers at to be refused, got %d", response.StatusCode)
+	}
+}
+
+func TestEachApiIsAnsweredWhereverItsPathStands(t *testing.T) {
+	scenario := &sim.Scenario{
+		Model: "muse-spark-1.3-contributor",
+		Turns: []sim.Turn{{Say: "Hello."}},
+	}
+	endpoint := sim.New(scenario)
+	server := httptest.NewServer(endpoint)
+
+	t.Cleanup(server.Close)
+
+	client, err := opencodego.New(
+		endpoint.Addresses(server.URL)[sim.Completions],
+		"token",
+		scenario.Model,
+		"high",
+		128_000,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	answer, err := agent.New("You are a helpful assistant", client, nil).Send(t.Context(), "hello")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if answer != "Hello." {
+		t.Errorf("expected the scenario's answer, got %q", answer)
+	}
+
+	if askedRequests := endpoint.Requests(); len(askedRequests) != 1 || askedRequests[0].API != sim.Responses {
+		t.Errorf("expected one request through the Responses API, got %+v", askedRequests)
 	}
 }
 

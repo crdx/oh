@@ -57,14 +57,17 @@ type Client struct {
 	Effort string
 	IsFast bool
 
-	tokens         TokenSource
-	instructions   string
-	tools          []functionTool
-	session        string
-	history        []json.RawMessage
-	requestHistory imagehistory.Cache
-	requests       *req.Client
-	observer       req.Observer
+	tokens           TokenSource
+	headerSource     func(Token) http.Header
+	isEffortRequired bool
+	extraHeader      http.Header
+	instructions     string
+	tools            []functionTool
+	session          string
+	history          []json.RawMessage
+	requestHistory   imagehistory.Cache
+	requests         *req.Client
+	observer         req.Observer
 
 	usageMutex   sync.Mutex
 	usageWindows []agent.UsageWindow
@@ -79,12 +82,56 @@ func New(tokens TokenSource, model string, effort string) (*Client, error) {
 		session:  newToken(),
 		requests: req.NewStreaming(responseHeaderTimeout, streamIdleTimeout),
 	}
+	client.headerSource = client.codexHeaders
+	client.isEffortRequired = true
 
 	if err := client.settled(); err != nil {
 		return nil, err
 	}
 
 	return client, nil
+}
+
+func NewAt(url string, requestHeader http.Header, model string, effort string) (*Client, error) {
+	fixedHeader := requestHeader.Clone()
+
+	client := &Client{
+		URL:      url,
+		Model:    model,
+		Effort:   effort,
+		tokens:   noTokens{},
+		session:  newToken(),
+		requests: req.NewStreaming(responseHeaderTimeout, streamIdleTimeout),
+		headerSource: func(Token) http.Header {
+			header := fixedHeader.Clone()
+			if header == nil {
+				header = http.Header{}
+			}
+			header.Set("Accept", "text/event-stream")
+
+			return header
+		},
+	}
+
+	if err := client.settled(); err != nil {
+		return nil, err
+	}
+
+	return client, nil
+}
+
+type noTokens struct{}
+
+func (self noTokens) Token() (Token, error) {
+	return Token{}, nil
+}
+
+func (self *Client) SetRequestHeader(name string, value string) {
+	if self.extraHeader == nil {
+		self.extraHeader = http.Header{}
+	}
+
+	self.extraHeader.Set(name, value)
 }
 
 func (self *Client) UseSession(id string) {
@@ -193,11 +240,14 @@ func (self *Client) settled() error {
 	}{
 		{"URL", self.URL},
 		{"Model", self.Model},
-		{"Effort", self.Effort},
 	} {
 		if setting.value == "" {
 			return fmt.Errorf("codex: %s is empty", setting.name)
 		}
+	}
+
+	if self.Effort == "" && self.isEffortRequired {
+		return errors.New("codex: Effort is empty")
 	}
 
 	return nil
@@ -229,6 +279,15 @@ func (self *Client) requestBody() request {
 }
 
 func (self *Client) headers(token Token) http.Header {
+	header := self.headerSource(token)
+	for name, values := range self.extraHeader {
+		header[name] = slices.Clone(values)
+	}
+
+	return header
+}
+
+func (self *Client) codexHeaders(token Token) http.Header {
 	return requestHeaders(token, self.session, routingHint(self.Model, self.serviceTier()))
 }
 
@@ -254,7 +313,7 @@ type request struct {
 }
 
 type reasoning struct {
-	Effort  string `json:"effort"`
+	Effort  string `json:"effort,omitempty"`
 	Summary string `json:"summary"`
 }
 

@@ -16,6 +16,11 @@ import (
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/provider/codex"
 	"crdx.org/oh/pkg/provider/ollama"
+	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/toolbox/title"
+	"crdx.org/oh/pkg/wire/anthropic/messages"
+	"crdx.org/oh/pkg/wire/openai/chatcompletions"
+	"crdx.org/oh/pkg/wire/openai/responses"
 
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/app/model"
@@ -204,7 +209,7 @@ func TestResolveRefusesToResumeUnderAnotherProvider(t *testing.T) {
 		nil,
 		"",
 	)
-	if err == nil || !strings.Contains(err.Error(), "cannot resume a conversation held with opencode-go/saved-model@") {
+	if err == nil || !strings.Contains(err.Error(), "cannot resume a conversation held with opencode-go/saved-model under") {
 		t.Fatalf("got selection %s and error %v", selection, err)
 	}
 }
@@ -531,6 +536,31 @@ func TestEveryConnectionCarriesAWebSearchClient(t *testing.T) {
 		}
 		if client.Search.Model != webSearchModel {
 			t.Errorf("%s: search asks %q, want %q", providerName, client.Search.Model, webSearchModel)
+		}
+	}
+}
+
+func TestAnOpenCodeConnectionMeasuresToolsInItsModelsWireFormat(t *testing.T) {
+	t.Setenv("XDG_STATE_HOME", t.TempDir())
+
+	offered := []tool.Tool{title.New()}
+
+	for modelID, want := range map[string]int{
+		"deepseek-v4-pro":            chatcompletions.ToolsSize(offered),
+		"muse-spark-1.3-contributor": responses.ToolsSize(offered),
+		"qwen3.8-max":                messages.ToolsSize(offered),
+	} {
+		connection, err := Connect(
+			model.Choice{Provider: opencodeGoProvider, ID: modelID, MaxOutputTokens: 128_000},
+			testSelection(),
+			EndpointSettings{OverrideURL: "http://somewhere/v1/chat/completions"},
+		)
+		if err != nil {
+			t.Fatalf("%s: unexpected error: %v", modelID, err)
+		}
+
+		if got := connection.ToolsSize(offered); got != want {
+			t.Errorf("%s: measured %d bytes of tools, want %d", modelID, got, want)
 		}
 	}
 }

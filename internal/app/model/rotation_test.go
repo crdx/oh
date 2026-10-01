@@ -7,6 +7,8 @@ import (
 	"strings"
 	"sync"
 	"testing"
+
+	"crdx.org/oh/pkg/agent"
 )
 
 func TestRoundRobinSelectionsResolveEveryEntry(t *testing.T) {
@@ -200,5 +202,43 @@ func TestRoundRobinStateFromANewerOhIsRefusedBeforeItsShapeIsRead(t *testing.T) 
 	_, err := ReserveRoundRobin(path, selections)
 	if err == nil || !strings.Contains(err.Error(), "newer build") {
 		t.Fatalf("expected the newer state to be named as one, got %v", err)
+	}
+}
+
+func TestARotationTakesTurnsWithAnEffortlessModel(t *testing.T) {
+	writeModelCache(t, modelCache{
+		Version: cacheVersion,
+		Providers: map[string]cachedModels{
+			opencodeGoProvider: {Models: []agent.Model{
+				{ID: "minimax-m3", IsEffortless: true, MaxOutputTokens: 128_000},
+				{ID: "deepseek-v4-pro", EffortLevels: []string{"high", "max"}, MaxOutputTokens: 384_000},
+			}},
+		},
+	})
+
+	selections, err := ParseRoundRobin(modelCachePath(), []string{"minimax", "deepseek@max"}, Defaults{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	path := filepath.Join(t.TempDir(), "round-robin.json")
+
+	var reserved []string
+	for range 4 {
+		selection, err := ReserveRoundRobin(path, selections)
+		if err != nil {
+			t.Fatal(err)
+		}
+		reserved = append(reserved, selection.String())
+	}
+
+	want := []string{
+		"opencode-go/minimax-m3",
+		"opencode-go/deepseek-v4-pro@max",
+		"opencode-go/minimax-m3",
+		"opencode-go/deepseek-v4-pro@max",
+	}
+	if !slices.Equal(reserved, want) {
+		t.Errorf("got %v, want %v", reserved, want)
 	}
 }

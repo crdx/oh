@@ -133,6 +133,10 @@ func ListModels(ctx context.Context, providerName string, endpoints EndpointSett
 		MaxOutputTokens: listingMaxOutputTokens,
 	}
 	selection := model.Selection{Provider: providerName, Model: listingModel, Effort: listingEffort}
+	if err := requireCredentials(providerName, endpoints.OverrideURL); err != nil {
+		return nil, model.NoLoginError{Err: err}
+	}
+
 	client, err := connectProvider(choice, selection, endpoints)
 	if err != nil {
 		return nil, err

@@ -1,0 +1,33 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `kimi-k2.7-code`
+- **Provider:** `opencode-go`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+reason, then call two tools in fragments
+
+## Tool calls · +0s
+
+```
+alpha: alpha [ok, 1 line, 12B, call-1]
+beta: beta [ok, 1 line, 11B, call-2]
+```
+
+## Assistant · +0s
+
+Tools done.
+
+## User · +0s
+
+continue after both tool results
+
+## Assistant · +0s
+
+Resumed.

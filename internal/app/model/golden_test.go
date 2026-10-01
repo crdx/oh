@@ -53,6 +53,26 @@ func TestGoldenAnUpdateFromTheRegistryAloneMatchesTheGolden(t *testing.T) {
 	assertGolden(t, "update-from-registry.ansi", report(t, output.String()))
 }
 
+func TestGoldenAProviderNobodyLoggedInToListsNothingFromTheRegistry(t *testing.T) {
+	t.Setenv("XDG_STATE_HOME", t.TempDir())
+
+	signedOut := func(ctx context.Context, providerName string) ([]agent.Model, error) {
+		if providerName == CodexProvider {
+			return nil, NoLoginError{Err: errors.New("not logged in to ChatGPT: run the login command with codex")}
+		}
+
+		return unreachableProviders(ctx, providerName)
+	}
+
+	var output bytes.Buffer
+	err := Update(&output, serveRegistry(t, oneCodexModel), modelCachePath(), seenModelsPath(), signedOut, true)
+	if err == nil {
+		t.Fatal("expected an update with nobody logged in to fail")
+	}
+
+	assertGolden(t, "update-without-login.ansi", report(t, output.String()))
+}
+
 func TestGoldenAnUpdateAProviderListsItselfMatchesTheGolden(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 
@@ -109,10 +129,14 @@ func cachedProviderModels(t *testing.T, providerName string) string {
 func ignoredModelListings() map[string][]agent.Model {
 	return map[string][]agent.Model{
 		OpencodeGoProvider: {
-			{ID: "grok-4.6", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
+			{ID: "minimax-m2.7", IsEffortless: true, MaxOutputTokens: 32_000},
+			{ID: "minimax-m3", IsEffortless: true, MaxOutputTokens: 32_000},
+			{ID: "muse-spark-1.3-contributor", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
 			{ID: "qwen3-max", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
+			{ID: "kimi-k2.7-code", MaxOutputTokens: 32_000},
 		},
 		AnthropicProvider: {
+			{ID: "claude-haiku-5", IsEffortless: true, MaxOutputTokens: 64_000},
 			{ID: "claude-sonnet-4-5", EffortLevels: []string{"high"}, MaxOutputTokens: 64_000},
 			{ID: "claude-sonnet-4-6", EffortLevels: []string{"high"}, MaxOutputTokens: 64_000},
 			{ID: "claude-opus-4-5", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
@@ -215,8 +239,8 @@ func secondListings() map[string][]agent.Model {
 func changedModelListings() map[string][]agent.Model {
 	return map[string][]agent.Model{
 		OpencodeGoProvider: {
-			{ID: "grok-4.6", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
-			{ID: "qwen3-max", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
+			{ID: "minimax-m2.1", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
+			{ID: "minimax-m2.5", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
 		},
 		AnthropicProvider: {
 			{ID: "claude-sonnet-4-6", EffortLevels: []string{"high"}, MaxOutputTokens: 64_000},
@@ -375,10 +399,10 @@ func TestGoldenAnUpdateThatRecordsNothingStillNamesWhatItIgnored(t *testing.T) {
 
 	var output bytes.Buffer
 	lister := func(ctx context.Context, providerName string) ([]agent.Model, error) {
-		if providerName == OpencodeGoProvider {
+		if providerName == AnthropicProvider {
 			return []agent.Model{
-				{ID: "grok-4.6", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
-				{ID: "minimax-m2", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
+				{ID: "claude-opus-4-5", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
+				{ID: "claude-haiku-4-5", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
 			}, nil
 		}
 
@@ -402,16 +426,16 @@ func TestGoldenAStartupRefreshThatRecordsNothingShowsWhatItIgnored(t *testing.T)
 
 	var output bytes.Buffer
 	lister := func(ctx context.Context, providerName string) ([]agent.Model, error) {
-		if providerName == OpencodeGoProvider {
+		if providerName == AnthropicProvider {
 			return []agent.Model{
-				{ID: "grok-4.6", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
-				{ID: "minimax-m2", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
+				{ID: "claude-opus-4-5", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
+				{ID: "claude-haiku-4-5", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
 			}, nil
 		}
 
 		return unreachableProviders(ctx, providerName)
 	}
-	if err := Ensure(&output, deadAddress, modelCachePath(), seenModelsPath(), lister); err != nil {
+	if err := Ensure(&output, deadAddress, modelCachePath(), seenModelsPath(), lister, isLoggedInEverywhere); err != nil {
 		t.Fatalf("expected a failed refresh to be forgiven, got %v", err)
 	}
 
@@ -431,7 +455,14 @@ func TestGoldenAStartupRefreshNamesWhatChangedAndNothingElse(t *testing.T) {
 	ageModelCache(t, time.Now().Add(-8*24*time.Hour))
 
 	var output bytes.Buffer
-	if err := Ensure(&output, endpoint, modelCachePath(), seenModelsPath(), listingModels(secondListings())); err != nil {
+	if err := Ensure(
+		&output,
+		endpoint,
+		modelCachePath(),
+		seenModelsPath(),
+		listingModels(secondListings()),
+		isLoggedInEverywhere,
+	); err != nil {
 		t.Fatalf("expected the refresh to succeed, got %v", err)
 	}
 
@@ -454,9 +485,9 @@ func unreachableProviders(_ context.Context, providerName string) ([]agent.Model
 	case CodexProvider:
 		return nil, agent.ErrNoListing
 	case OpencodeGoProvider:
-		return nil, errors.New("not logged in to OpenCode Go: run the login command with opencode-go")
+		return nil, NoLoginError{Err: errors.New("not logged in to OpenCode Go: run the login command with opencode-go")}
 	case AnthropicProvider:
-		return nil, errors.New("not logged in to Anthropic: run the login command with anthropic")
+		return nil, NoLoginError{Err: errors.New("not logged in to Anthropic: run the login command with anthropic")}
 	default:
 		return nil, errors.New(`Get "http://localhost:11434/api/tags": connect: connection refused`)
 	}

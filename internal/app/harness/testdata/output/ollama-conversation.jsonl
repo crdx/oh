@@ -1,4 +1,4 @@
-{"kind":"head","version":15,"meta":{"model":"qwen3.8:27b-mtp-q8_0-256k","workspaceDir":"","provider":"ollama","effort":"high","system_prompt":"You are a test assistant."}}
+{"kind":"head","version":17,"meta":{"model":"qwen3.8:27b-mtp-q8_0-256k","workspaceDir":"","provider":"ollama","effort":"high","system_prompt":"You are a test assistant."}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"answer through Ollama"}}
 {"kind":"event","event":{"kind":"model_reasoning","text":"Consider it."}}

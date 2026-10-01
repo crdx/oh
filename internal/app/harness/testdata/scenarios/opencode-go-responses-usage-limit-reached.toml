@@ -1,0 +1,22 @@
+provider = "opencode-go"
+model = "muse-spark-1.3-contributor"
+effort = "medium"
+
+[first]
+prompt = "reach the OpenCode Go usage limit"
+
+[[first.response]]
+status = 429
+body = '''{"type":"error","error":{"type":"GoUsageLimitError","message":"Monthly usage limit reached. Resets in 1 day. To continue using this model now, enable usage from your available balance: https://opencode.ai/workspace/workspace-1/go"},"metadata":{"workspace":"workspace-1","limitName":"monthly"}}'''
+headers = { Content-Type = "text/plain;charset=UTF-8", Retry-After = "165899" }
+
+[resume]
+prompt = "continue after the early reset"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_text.delta","delta":"Available after the reset."}''',
+    '''{"type":"response.output_text.done","text":"Available after the reset."}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"Available after the reset."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

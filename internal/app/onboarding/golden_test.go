@@ -449,6 +449,42 @@ func TestGoldenOpenCodeGoOnboardingMatchesTheGolden(t *testing.T) {
 	assertScreenGolden(t, "first-run-opencode-go", output.String())
 }
 
+func TestGoldenOpenCodeGoOnboardingOfAModelTakingNoEffortMatchesTheGolden(t *testing.T) {
+	var output bytes.Buffer
+	restoreStyle := style.Init(&output)
+	t.Cleanup(restoreStyle)
+
+	var saved string
+	harry := wizard{
+		output: &output,
+		choose: menuChoices(&output, 2, 0),
+		login: func(provider, func(string)) error {
+			return storeOpenCodeGoKey(
+				typed("secret\n", &output),
+				&output,
+				filepath.Join(t.TempDir(), "auth.json"),
+				func(string) error { return nil },
+			)
+		},
+		refreshModels: func() error { return nil },
+		getModels: func() []model.Choice {
+			return []model.Choice{{Provider: model.OpencodeGoProvider, ID: "minimax-m3", Name: "MiniMax M3"}}
+		},
+		setInitialModel: func(selection string) error {
+			saved = selection
+			return nil
+		},
+	}
+
+	if err := harry.castSpell(); err != nil {
+		t.Fatal(err)
+	}
+	if saved != "opencode-go/minimax-m3" {
+		t.Errorf("saved %q", saved)
+	}
+	assertScreenGolden(t, "first-run-opencode-go-without-effort", output.String())
+}
+
 func typed(text string, terminal io.Writer) io.Reader {
 	return io.TeeReader(strings.NewReader(text), terminal)
 }

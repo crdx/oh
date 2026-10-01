@@ -98,18 +98,66 @@ func TestModelCompletionsAreWholeSelections(t *testing.T) {
 		{Provider: "anthropic", ID: "claude-sonnet-5", EffortLevels: []string{"none", "high"}},
 	}
 
-	selections := modelCompletions("sonnet", choices)
+	selections := model.SelectionsMatching("sonnet", choices)
 	if len(selections) != 2 || selections[0] != "anthropic/claude-sonnet-5@none" {
 		t.Errorf("got %v", selections)
 	}
 
-	selections = modelCompletions("gpt-5@h", choices)
+	selections = model.SelectionsMatching("gpt-5@h", choices)
 	if len(selections) != 1 || selections[0] != "openai/gpt-5@high" {
 		t.Errorf("got %v", selections)
 	}
 
-	if selections := modelCompletions("", choices); len(selections) != 4 {
+	if selections := model.SelectionsMatching("", choices); len(selections) != 4 {
 		t.Errorf("expected every selection, got %v", selections)
+	}
+}
+
+func TestAProviderNameBeingTypedCompletesItsModels(t *testing.T) {
+	choices := []model.Choice{
+		{Provider: model.CodexProvider, ID: "gpt-5.6-sol", EffortLevels: []string{"high"}},
+		{Provider: model.OpencodeGoProvider, ID: "minimax-m3"},
+		{Provider: model.OpencodeGoProvider, ID: "kimi-k3", EffortLevels: []string{"high"}},
+	}
+
+	for _, word := range []string{"opencode", "OpenCode-", "opencode-go/"} {
+		if selections := model.SelectionsMatching(word, choices); !slices.Equal(
+			selections,
+			[]string{"opencode-go/minimax-m3", "opencode-go/kimi-k3@high"},
+		) {
+			t.Errorf("%s: got %v", word, selections)
+		}
+	}
+	if selections := model.SelectionsMatching("min", choices); !slices.Equal(selections, []string{"opencode-go/minimax-m3"}) {
+		t.Errorf("a model name should outrank a provider name, got %v", selections)
+	}
+	if selections := model.SelectionsMatching("opencode@h", choices); !slices.Equal(selections, []string{"opencode-go/kimi-k3@high"}) {
+		t.Errorf("an effort should narrow a provider's models, got %v", selections)
+	}
+	if selections := model.SelectionsMatching("zz", choices); len(selections) != 0 {
+		t.Errorf("got %v", selections)
+	}
+}
+
+func TestAModelTakingNoEffortCompletesWithoutOne(t *testing.T) {
+	choices := []model.Choice{
+		{Provider: model.OpencodeGoProvider, ID: "minimax-m3"},
+		{Provider: model.OpencodeGoProvider, ID: "minimax-m2", EffortLevels: []string{"high"}},
+	}
+
+	if selections := model.SelectionsMatching("minimax", choices); !slices.Equal(
+		selections,
+		[]string{"opencode-go/minimax-m3", "opencode-go/minimax-m2@high"},
+	) {
+		t.Errorf("got %v", selections)
+	}
+	for _, word := range []string{"minimax-m3@", "minimax-m3@h", "minimax-m3+f"} {
+		if selections := model.SelectionsMatching(word, choices[:1]); len(selections) != 0 {
+			t.Errorf("%s: expected nothing to complete, got %v", word, selections)
+		}
+	}
+	if efforts := effortCompletions("minimax-m3@", choices[:1]); len(efforts) != 0 {
+		t.Errorf("expected no effort to complete, got %v", efforts)
 	}
 }
 
@@ -119,13 +167,13 @@ func TestFastModeCompletionsReachOnlyCodex(t *testing.T) {
 		{Provider: model.AnthropicProvider, ID: "claude-opus-5", EffortLevels: []string{"high"}},
 	}
 
-	if selections := modelCompletions("sol@high+f", choices); !slices.Equal(
+	if selections := model.SelectionsMatching("sol@high+f", choices); !slices.Equal(
 		selections,
 		[]string{"codex/gpt-5.6-sol@high+fast"},
 	) {
 		t.Errorf("got %v", selections)
 	}
-	if selections := modelCompletions("opus@high+f", choices); len(selections) != 0 {
+	if selections := model.SelectionsMatching("opus@high+f", choices); len(selections) != 0 {
 		t.Errorf("got %v", selections)
 	}
 }

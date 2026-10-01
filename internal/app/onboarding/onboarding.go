@@ -274,7 +274,7 @@ func (self *wizard) castSpell() error {
 
 	choice := choices[chosenIndex]
 	effort := self.defaults.EffortFor(choice.EffortLevels)
-	if effort == "" {
+	if effort == "" && !choice.IsEffortless() {
 		return fmt.Errorf("model %s has no recognised effort levels", choice.ID)
 	}
 

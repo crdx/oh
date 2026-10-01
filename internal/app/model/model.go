@@ -23,7 +23,6 @@ import (
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/provider/anthropic"
 	"crdx.org/oh/pkg/provider/codex"
-	"crdx.org/oh/pkg/provider/opencodego"
 )
 
 const refreshMessage = "Refreshing the model list..."
@@ -60,6 +59,8 @@ type modelCache struct {
 	Version   int                     `json:"version"`
 	CheckedAt time.Time               `json:"checked"`
 	Providers map[string]cachedModels `json:"providers"`
+
+	ProvidersWithoutLogin []string `json:"without_login,omitempty"`
 }
 
 type cachedModels struct {
@@ -194,6 +195,7 @@ func filledFrom(model agent.Model, knownModel agent.Model) agent.Model {
 	}
 	if len(model.EffortLevels) == 0 {
 		model.EffortLevels = slices.Clone(knownModel.EffortLevels)
+		model.IsEffortless = model.IsEffortless || (len(model.EffortLevels) == 0 && knownModel.IsEffortless)
 	}
 	if model.ContextWindowTokens == 0 {
 		model.ContextWindowTokens = knownModel.ContextWindowTokens
@@ -240,10 +242,6 @@ func (self modelIteration) precedes(other modelIteration) bool {
 	}
 
 	return self.Snapshot < other.Snapshot
-}
-
-func (self modelIteration) matches(other modelIteration) bool {
-	return self.Snapshot == other.Snapshot && slices.Equal(self.Numbers, other.Numbers)
 }
 
 func getModelIteration(id string) (modelFamily, modelIteration, bool) {
@@ -299,11 +297,16 @@ func latestModelIterations(models []agent.Model) map[modelFamily]latestIteration
 
 func supersededBy(latest map[modelFamily]latestIteration, id string) (string, bool) {
 	family, iteration, hasIteration := getModelIteration(id)
-	if !hasIteration || iteration.matches(latest[family].Iteration) {
+	if !hasIteration {
 		return "", false
 	}
 
-	return latest[family].ID, true
+	knownLatest, hasKnown := latest[family]
+	if !hasKnown || !iteration.precedes(knownLatest.Iteration) {
+		return "", false
+	}
+
+	return knownLatest.ID, true
 }
 
 func isDrivable(providerName string, id string) bool {
@@ -312,8 +315,6 @@ func isDrivable(providerName string, id string) bool {
 		return anthropic.SupportsAdaptiveThinking(id)
 	case CodexProvider:
 		return codex.SupportsResponses(id)
-	case OpencodeGoProvider:
-		return opencodego.SupportsCompletions(id)
 	default:
 		return true
 	}
@@ -326,8 +327,20 @@ type ignoredModel struct {
 	Reason string
 }
 
+func usableModels(providerName string, models []agent.Model) []agent.Model {
+	usable := make([]agent.Model, 0, len(models))
+
+	for _, model := range models {
+		if isDrivable(providerName, model.ID) && unselectableReason(providerName, model) == "" {
+			usable = append(usable, model)
+		}
+	}
+
+	return usable
+}
+
 func recordableModels(providerName string, models []agent.Model) ([]agent.Model, []ignoredModel) {
-	latest := latestModelIterations(models)
+	latest := latestModelIterations(usableModels(providerName, models))
 
 	recordable := make([]agent.Model, 0, len(models))
 
@@ -349,11 +362,11 @@ func recordableModels(providerName string, models []agent.Model) ([]agent.Model,
 	return recordable, ignoredModels
 }
 
-func unselectableReason(model agent.Model) string {
+func unselectableReason(providerName string, model agent.Model) string {
 	switch {
 	case model.ID == "":
 		return "unknown id"
-	case len(model.EffortLevels) == 0:
+	case len(model.EffortLevels) == 0 && !isEffortlessDrivable(providerName, model):
 		return "unknown effort level"
 	case model.MaxOutputTokens <= 0:
 		return "unknown output limit"
@@ -390,7 +403,11 @@ type modelChange struct {
 	Reason string
 }
 
-func modelChanges(storedModels []agent.Model, models []agent.Model) []modelChange {
+func isEffortlessDrivable(providerName string, model agent.Model) bool {
+	return model.IsEffortless && providerName == OpencodeGoProvider
+}
+
+func modelChanges(providerName string, storedModels []agent.Model, models []agent.Model) []modelChange {
 	var changes []modelChange
 
 	for _, model := range models {
@@ -398,7 +415,7 @@ func modelChanges(storedModels []agent.Model, models []agent.Model) []modelChang
 			changes = append(changes, modelChange{
 				Name:   modelName(model),
 				Change: addedChange,
-				Reason: unselectableReason(model),
+				Reason: unselectableReason(providerName, model),
 			})
 		}
 	}
@@ -418,11 +435,11 @@ func holdsModel(models []agent.Model, id string) bool {
 	})
 }
 
-func unselectableModels(models []agent.Model) []ignoredModel {
+func unselectableModels(providerName string, models []agent.Model) []ignoredModel {
 	var ignoredModels []ignoredModel
 
 	for _, model := range models {
-		if reason := unselectableReason(model); reason != "" {
+		if reason := unselectableReason(providerName, model); reason != "" {
 			ignoredModels = append(ignoredModels, ignoredFor(model, reason))
 		}
 	}
@@ -434,7 +451,7 @@ func choicesFor(providerName string, models []agent.Model) []Choice {
 	choices := make([]Choice, 0, len(models))
 
 	for _, model := range models {
-		if unselectableReason(model) != "" || !isDrivable(providerName, model.ID) {
+		if unselectableReason(providerName, model) != "" || !isDrivable(providerName, model.ID) {
 			continue
 		}
 
@@ -485,9 +502,28 @@ func List(output io.Writer, path string, isAvailable func(providerName string) b
 
 type ProviderLister func(context.Context, string) ([]agent.Model, error)
 
-func Ensure(output io.Writer, endpoint string, path string, seenPath string, listProviderModels ProviderLister) error {
+type NoLoginError struct {
+	Err error
+}
+
+func (self NoLoginError) Error() string {
+	return self.Err.Error()
+}
+
+func (self NoLoginError) Unwrap() error {
+	return self.Err
+}
+
+func Ensure(
+	output io.Writer,
+	endpoint string,
+	path string,
+	seenPath string,
+	listProviderModels ProviderLister,
+	isLoggedIn func(providerName string) bool,
+) error {
 	cache := loadModelCache(path)
-	if isCacheCurrent(cache, time.Now()) {
+	if isCacheCurrent(cache, time.Now()) && !hasLoggedInSince(cache, isLoggedIn) {
 		return nil
 	}
 
@@ -515,6 +551,10 @@ func Ensure(output io.Writer, endpoint string, path string, seenPath string, lis
 	cache.CheckedAt = time.Now()
 
 	return saveModelCache(path, cache)
+}
+
+func hasLoggedInSince(cache modelCache, isLoggedIn func(providerName string) bool) bool {
+	return slices.ContainsFunc(cache.ProvidersWithoutLogin, isLoggedIn)
 }
 
 func isCacheCurrent(cache modelCache, now time.Time) bool {
@@ -557,6 +597,7 @@ func updateModels(
 	}
 
 	cache := loadModelCache(path)
+	cache.ProvidersWithoutLogin = nil
 
 	writeHeadings(output)
 
@@ -569,18 +610,27 @@ func updateModels(
 		registeredModels := registry.Provider(registryNames[providerName])
 		storedListing, isStored := cache.Providers[providerName]
 
-		listedModels, source, why := describeProviderModels(ctx, providerName, registeredModels, listProviderModels)
+		listedModels, source, why, listingError := describeProviderModels(
+			ctx,
+			providerName,
+			registeredModels,
+			listProviderModels,
+		)
+		if errors.As(listingError, new(NoLoginError)) {
+			cache.ProvidersWithoutLogin = append(cache.ProvidersWithoutLogin, providerName)
+			delete(cache.Providers, providerName)
+		}
 		listedModels = plainModels(listedModels)
 		listedByProvider[providerName] = listedModels
 
 		models, ignoredModels := recordableModels(providerName, listedModels)
-		ignoredModels = append(ignoredModels, unselectableModels(models)...)
+		ignoredModels = append(ignoredModels, unselectableModels(providerName, models)...)
 
 		report := providerReport{
 			Provider:        providerName,
 			Source:          source,
 			ListedCount:     len(listedModels),
-			SelectableCount: pickable(models),
+			SelectableCount: pickable(providerName, models),
 			IgnoredModels:   ignoredModels,
 		}
 
@@ -590,7 +640,7 @@ func updateModels(
 			report.IsRecorded = true
 			report.Why = why
 			if isStored {
-				report.ChangedModels = modelChanges(storedListing.Models, models)
+				report.ChangedModels = modelChanges(providerName, storedListing.Models, models)
 			}
 			cache.Providers[providerName] = cachedModels{
 				FetchedAt: time.Now(),
@@ -634,10 +684,10 @@ func updateModels(
 	return reports, nil
 }
 
-func pickable(models []agent.Model) int {
+func pickable(providerName string, models []agent.Model) int {
 	var count int
 	for _, model := range models {
-		if unselectableReason(model) == "" {
+		if unselectableReason(providerName, model) == "" {
 			count++
 		}
 	}
@@ -662,7 +712,7 @@ func describeProviderModels(
 	providerName string,
 	registeredModels map[string]agent.Model,
 	listProviderModels ProviderLister,
-) ([]agent.Model, string, string) {
+) ([]agent.Model, string, string, error) {
 	listedModels, err := listProviderModels(ctx, providerName)
 
 	why := "the endpoint lists no models"
@@ -672,15 +722,15 @@ func describeProviderModels(
 
 	if len(listedModels) > 0 {
 		if len(registeredModels) == 0 {
-			return listedModels, sourceEndpoint, ""
+			return listedModels, sourceEndpoint, "", nil
 		}
 
-		return supplement(providerName, listedModels, registeredModels), sourceBoth, ""
+		return supplement(providerName, listedModels, registeredModels), sourceBoth, "", nil
 	}
 
-	if len(registeredModels) > 0 {
-		return fromRegistry(registeredModels), sourceRegistry, why
+	if len(registeredModels) > 0 && !errors.As(err, new(NoLoginError)) {
+		return fromRegistry(registeredModels), sourceRegistry, why, err
 	}
 
-	return nil, "", why
+	return nil, "", why, err
 }

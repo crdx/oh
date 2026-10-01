@@ -5,6 +5,7 @@
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M  [38;2;76;154;44m◼[0m        $0.075      $0.30  [38;2;150;152;150mdeepseek-v4-flash-vision-exp[0m
   Anthropic     Opus 5                        high          200K  [38;2;207;173;0m◼◼◼[0m      $15.00     $75.00  [38;2;150;152;150mclaude-opus-5[0m
   Codex         Sol Pro                       medium        272K  [38;2;204;102;102m◼◼◼◼[0m    $150.00    $600.00  [38;2;150;152;150mgpt-5.3-sol-pro[0m
+  OpenCode Go   MiniMax M3                    —               1M  [38;2;76;154;44m◼[0m         $0.30      $1.20  [38;2;150;152;150mminimax-m3[0m
   Ollama        Qwen Coder 3 30B              medium           —  —             —          —  [38;2;150;152;150mqwen3-coder:30b[0m
 
 --- 100 columns ---
@@ -14,6 +15,7 @@
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M  [38;2;76;154;44m◼[0m     [38;2;150;152;150mdeepseek-v4-flash-vision-exp[0m
   Anthropic     Opus 5                        high          200K  [38;2;207;173;0m◼◼◼[0m   [38;2;150;152;150mclaude-opus-5[0m
   Codex         Sol Pro                       medium        272K  [38;2;204;102;102m◼◼◼◼[0m  [38;2;150;152;150mgpt-5.3-sol-pro[0m
+  OpenCode Go   MiniMax M3                    —               1M  [38;2;76;154;44m◼[0m     [38;2;150;152;150mminimax-m3[0m
   Ollama        Qwen Coder 3 30B              medium           —  —     [38;2;150;152;150mqwen3-coder:30b[0m
 
 --- 80 columns ---
@@ -23,6 +25,7 @@
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M  [38;2;150;152;150mdeepseek-v4-f…[0m
   Anthropic     Opus 5                        high          200K  [38;2;150;152;150mclaude-opus-5[0m
   Codex         Sol Pro                       medium        272K  [38;2;150;152;150mgpt-5.3-sol-p…[0m
+  OpenCode Go   MiniMax M3                    —               1M  [38;2;150;152;150mminimax-m3[0m
   Ollama        Qwen Coder 3 30B              medium           —  [38;2;150;152;150mqwen3-coder:3…[0m
 
 --- 46 columns ---
@@ -32,6 +35,7 @@
   OpenCode Go   DeepSeek Flash Vision Exp 4  …
   Anthropic     Opus 5                       …
   Codex         Sol Pro                      …
+  OpenCode Go   MiniMax M3                   …
   Ollama        Qwen Coder 3 30B             …
 
 --- 150 columns in pounds ---
@@ -40,4 +44,5 @@
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M  [38;2;76;154;44m◼[0m         £0.06      £0.24  [38;2;150;152;150mdeepseek-v4-flash-vision-exp[0m
   Anthropic     Opus 5                        high          200K  [38;2;207;173;0m◼◼◼[0m      £12.00     £60.00  [38;2;150;152;150mclaude-opus-5[0m
   Codex         Sol Pro                       medium        272K  [38;2;204;102;102m◼◼◼◼[0m    £120.00    £480.00  [38;2;150;152;150mgpt-5.3-sol-pro[0m
+  OpenCode Go   MiniMax M3                    —               1M  [38;2;76;154;44m◼[0m         £0.24      £0.96  [38;2;150;152;150mminimax-m3[0m
   Ollama        Qwen Coder 3 30B              medium           —  —             —          —  [38;2;150;152;150mqwen3-coder:30b[0m

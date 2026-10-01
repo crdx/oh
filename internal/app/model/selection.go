@@ -39,6 +39,10 @@ func Choices(path string) []Choice {
 	return availableModelChoices(loadModelCache(path))
 }
 
+func SignedInChoices(path string, isLoggedIn func(providerName string) bool) []Choice {
+	return signedInto(Choices(path), isLoggedIn)
+}
+
 type PricedModel struct {
 	Provider string
 	ID       string
@@ -93,16 +97,11 @@ func ParseSelection(path string, writtenSelection string, defaults Defaults) (Se
 		return Selection{}, fmt.Errorf("%s does not support fast mode", choice.Provider)
 	}
 
-	effort := defaults.EffortFor(choice.EffortLevels)
-
-	switch {
-	case hasEffort:
-		if effort, err = matchEffort(effortQuery, choice); err != nil {
-			return Selection{}, err
-		}
-	case effort == "":
-		return Selection{}, fmt.Errorf("model %s has no recognised effort levels", choice.ID)
-	default:
+	effort, err := chosenEffort(choice, effortQuery, hasEffort, defaults)
+	if err != nil {
+		return Selection{}, err
+	}
+	if !hasEffort {
 		isFast = isFast || defaults.IsFastFor(choice.Provider)
 	}
 
@@ -128,20 +127,39 @@ func ResolveQuery(query string, choices []Choice, defaults Defaults) (Selection,
 		return Selection{}, fmt.Errorf("%s does not support fast mode", choice.Provider)
 	}
 
-	effort := defaults.EffortFor(choice.EffortLevels)
-
-	switch {
-	case hasEffort:
-		if effort, err = matchEffort(effortQuery, choice); err != nil {
-			return Selection{}, err
-		}
-	case effort == "":
-		return Selection{}, fmt.Errorf("model %s has no recognised effort levels", choice.ID)
-	default:
+	effort, err := chosenEffort(choice, effortQuery, hasEffort, defaults)
+	if err != nil {
+		return Selection{}, err
+	}
+	if !hasEffort {
 		isFast = isFast || defaults.IsFastFor(choice.Provider)
 	}
 
 	return Selection{Provider: choice.Provider, Model: choice.ID, Effort: effort, IsFast: isFast}, nil
+}
+
+func chosenEffort(choice Choice, effortQuery string, hasEffort bool, defaults Defaults) (string, error) {
+	switch {
+	case choice.IsEffortless():
+		if hasEffort {
+			return "", fmt.Errorf("model %s takes no effort level", choice.ID)
+		}
+
+		return "", nil
+	case hasEffort:
+		return matchEffort(effortQuery, choice)
+	}
+
+	effort := defaults.EffortFor(choice.EffortLevels)
+	if effort == "" {
+		return "", fmt.Errorf("model %s has no recognised effort levels", choice.ID)
+	}
+
+	return effort, nil
+}
+
+func (self Choice) IsEffortless() bool {
+	return len(self.EffortLevels) == 0
 }
 
 func splitFastMode(writtenSelection string) (string, bool, error) {
@@ -273,6 +291,60 @@ func EffortsMatching(query string, efforts []string) []string {
 	}
 
 	return levels
+}
+
+func SelectionsMatching(word string, choices []Choice) []string {
+	selectionQuery, modeQuery, hasMode := strings.Cut(word, "+")
+	modelQuery, effortQuery, isQualified := strings.Cut(selectionQuery, "@")
+
+	var selections []string
+
+	for _, choice := range choicesForSelection(modelQuery, choices) {
+		if choice.IsEffortless() {
+			if !isQualified && !hasMode {
+				selections = append(selections, choice.Provider+"/"+choice.ID)
+			}
+			continue
+		}
+
+		efforts := choice.EffortLevels
+		if isQualified {
+			efforts = EffortsMatching(effortQuery, choice.EffortLevels)
+		}
+
+		for _, effort := range efforts {
+			selection := choice.Provider + "/" + choice.ID + "@" + effort
+			if hasMode {
+				if SupportsFastMode(choice.Provider) && isFastModePrefix(modeQuery) {
+					selections = append(selections, selection+"+fast")
+				}
+				continue
+			}
+			selections = append(selections, selection)
+		}
+	}
+
+	return selections
+}
+
+func choicesForSelection(query string, choices []Choice) []Choice {
+	if rankedChoices := RankedChoices(query, choices); len(rankedChoices) > 0 || strings.Contains(query, "/") {
+		return rankedChoices
+	}
+
+	query = strings.ToLower(query)
+	var matches []Choice
+	for _, choice := range choices {
+		if strings.HasPrefix(strings.ToLower(choice.Provider), query) {
+			matches = append(matches, choice)
+		}
+	}
+	return matches
+}
+
+func isFastModePrefix(query string) bool {
+	_, isFound := strings.CutPrefix("fast", query)
+	return isFound
 }
 
 func ResolveEffort(name string) string {

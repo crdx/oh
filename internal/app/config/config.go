@@ -66,9 +66,11 @@ type Config struct {
 
 	Experimental map[string]any `toml:"experimental"`
 
-	fallback             *toml.MetaData
-	sources              []sourceMetadata
-	snippetFileSnapshots map[string]snapshot
+	fallback                *toml.MetaData
+	sources                 []sourceMetadata
+	roundRobinFileSnapshots map[string]snapshot
+	snippetFileSnapshots    map[string]snapshot
+	snippetDirectories      []string
 }
 
 type sourceMetadata struct {
@@ -111,9 +113,41 @@ type Input struct {
 }
 
 type Model struct {
-	RoundRobin []string     `toml:"round_robin"`
+	RoundRobin RoundRobin   `toml:"round_robin"`
 	Effort     model.Effort `toml:"effort"`
 	IsFast     bool         `toml:"fast"`
+}
+
+type RoundRobin []string
+
+const roundRobinFileMarker = "\x00file:"
+
+func (self *RoundRobin) UnmarshalTOML(value any) error {
+	switch configuredValue := value.(type) {
+	case string:
+		*self = RoundRobin{roundRobinFileMarker + configuredValue}
+		return nil
+	case []any:
+		selections := make(RoundRobin, len(configuredValue))
+		for i, selection := range configuredValue {
+			text, isText := selection.(string)
+			if !isText {
+				return fmt.Errorf("model selection %d is not a string", i+1)
+			}
+			selections[i] = text
+		}
+		*self = selections
+		return nil
+	default:
+		return errors.New("round_robin is not a path or array of model selections")
+	}
+}
+
+func (self *RoundRobin) filePath() (string, bool) {
+	if len(*self) != 1 {
+		return "", false
+	}
+	return strings.CutPrefix((*self)[0], roundRobinFileMarker)
 }
 
 func (self Model) GetDefaults() model.Defaults {
@@ -599,13 +633,8 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 	config.sources = append(config.sources, sourceMetadata{source: source.source, path: displayPath, meta: &meta})
 
 	if meta.IsDefined("model", "round_robin") {
-		if len(config.Model.RoundRobin) == 0 {
-			return fmt.Errorf("%s: model.round_robin is empty, so there is nothing to ask", displayPath)
-		}
-		for _, selection := range config.Model.RoundRobin {
-			if strings.TrimSpace(selection) == "" {
-				return fmt.Errorf("%s: model.round_robin contains an empty selection", displayPath)
-			}
+		if err := applyRoundRobin(config, source.source.Path, displayPath); err != nil {
+			return err
 		}
 	}
 	config.Provider.Ollama.Host = strings.TrimSpace(config.Provider.Ollama.Host)
@@ -699,6 +728,61 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 	}
 
 	return nil
+}
+
+func applyRoundRobin(config *Config, sourcePath string, displayPath string) error {
+	config.roundRobinFileSnapshots = nil
+	if writtenPath, isFile := config.Model.RoundRobin.filePath(); isFile {
+		if err := loadRoundRobinFile(config, sourcePath, writtenPath); err != nil {
+			return fmt.Errorf("%s: model.round_robin: %w", displayPath, err)
+		}
+	}
+	if len(config.Model.RoundRobin) == 0 {
+		return fmt.Errorf("%s: model.round_robin is empty, so there is nothing to ask", displayPath)
+	}
+	for _, selection := range config.Model.RoundRobin {
+		if strings.TrimSpace(selection) == "" {
+			return fmt.Errorf("%s: model.round_robin contains an empty selection", displayPath)
+		}
+	}
+	return nil
+}
+
+func loadRoundRobinFile(config *Config, sourcePath string, writtenPath string) error {
+	resolvedPath, err := resolveConfigPath(sourcePath, writtenPath)
+	if err != nil {
+		return err
+	}
+	current := readSnapshot(resolvedPath)
+	config.roundRobinFileSnapshots = map[string]snapshot{resolvedPath: current}
+	if current.failure != nil {
+		return fmt.Errorf("could not read %s: %w", resolvedPath, current.failure)
+	}
+	config.Model.RoundRobin, err = parseRoundRobinFile(current.data)
+	if err != nil {
+		return fmt.Errorf("%s: %w", resolvedPath, err)
+	}
+	return nil
+}
+
+func parseRoundRobinFile(data []byte) (RoundRobin, error) {
+	var selections RoundRobin
+	lineNumber := 0
+	for line := range strings.Lines(string(data)) {
+		lineNumber++
+		selection := strings.TrimSpace(line)
+		if selection == "" {
+			return nil, fmt.Errorf("line %d is empty", lineNumber)
+		}
+		if strings.HasPrefix(selection, "#") {
+			continue
+		}
+		selections = append(selections, selection)
+	}
+	if len(selections) == 0 {
+		return nil, errors.New("file contains no model selections, so there is nothing to ask")
+	}
+	return selections, nil
 }
 
 func normaliseInput(config *Config, meta toml.MetaData, displayPath string) error {

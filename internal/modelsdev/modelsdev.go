@@ -20,6 +20,8 @@ type entry struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
 
+	IsReasoning bool `json:"reasoning"`
+
 	ReasoningOptions []struct {
 		Type   string   `json:"type"`
 		Values []string `json:"values"`
@@ -82,6 +84,7 @@ func (self entry) model(name string) agent.Model {
 		ID:                  id,
 		Name:                self.Name,
 		EffortLevels:        self.getEffortLevels(),
+		IsEffortless:        self.IsReasoning && len(self.getEffortLevels()) == 0,
 		ContextWindowTokens: self.getContextWindowTokens(),
 		MaxOutputTokens:     self.Limit.MaxOutputTokens,
 		Prices:              self.getPrices(),

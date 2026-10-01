@@ -3890,7 +3890,14 @@ func TestGoldenCompletionProtocolMatchesTheGolden(t *testing.T) {
 	}
 	writeStoredSession(t, directory, workspaceDir, "older-badger", "2024-01-01T00:00:00Z")
 	writeStoredSession(t, directory, workspaceDir, "newer-jaguar", "2025-01-01T00:00:00Z")
-	sources := cli.Sources{ModelCachePath: cachePath, SessionsDir: directory, ToolNames: completableToolNames}
+	sources := cli.Sources{
+		ModelCachePath: cachePath,
+		SessionsDir:    directory,
+		ToolNames:      completableToolNames,
+		IsLoggedIn: func(providerName string) bool {
+			return providerName != model.CodexProvider
+		},
+	}
 
 	requests := []struct {
 		name string
@@ -3899,6 +3906,7 @@ func TestGoldenCompletionProtocolMatchesTheGolden(t *testing.T) {
 		{name: "options", args: []string{"--complete", "option", ""}},
 		{name: "models", args: []string{"--complete", "model", "sonnet"}},
 		{name: "models of a provider", args: []string{"--complete", "model", "anthropic/"}},
+		{name: "models of a provider nobody logged in to", args: []string{"--complete", "model", "codex/"}},
 		{name: "efforts", args: []string{"--complete", "effort", "sonnet@"}},
 		{name: "providers", args: []string{"--complete", "provider", ""}},
 		{name: "capabilities", args: []string{"--complete", "caps", "rxw"}},
@@ -6999,52 +7007,181 @@ func TestModelUpdateDispatchRunsThroughTheBinary(t *testing.T) {
 
 func TestOpenCodeRequestsUseTheStoredSessionIdentifier(t *testing.T) {
 	binary := buildTestBinary(t)
-	endpoint := sim.New(&sim.Scenario{
-		Model: "fake",
-		Turns: []sim.Turn{
-			{Say: "First answer."},
-			{Say: "Second answer."},
-		},
-	})
 
-	var headerMutex sync.Mutex
-	var sessionHeaders []string
-	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
-		if sessionID := request.Header.Get("X-Opencode-Session"); sessionID != "" {
+	for _, test := range []struct {
+		model string
+		path  string
+	}{
+		{"fake", "/v1/chat/completions"},
+		{"fake-contributor", "/v1/responses"},
+		{"qwen-fake", "/v1/messages"},
+	} {
+		t.Run(test.model, func(t *testing.T) {
+			endpoint := sim.New(&sim.Scenario{
+				Model: test.model,
+				Turns: []sim.Turn{
+					{Say: "First answer."},
+					{Say: "Second answer."},
+				},
+			})
+
+			var headerMutex sync.Mutex
+			var sessionHeaders []string
+			var conversationPaths []string
+			server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+				if sessionID := request.Header.Get("X-Opencode-Session"); sessionID != "" {
+					headerMutex.Lock()
+					sessionHeaders = append(sessionHeaders, sessionID)
+					conversationPaths = append(conversationPaths, request.URL.Path)
+					headerMutex.Unlock()
+				}
+				endpoint.ServeHTTP(writer, request)
+			}))
+			t.Cleanup(server.Close)
+
+			address := endpoint.Addresses(server.URL)[sim.Completions]
+			stateDirectory := t.TempDir()
+			workspaceDir := reachableWorkspaceDir(t)
+			environment := append(testBinaryEnvironment(t, stateDirectory), backend.EndpointVariable+"="+address)
+			runTestBinary(t, binary, workspaceDir, environment, "-p", "--yolo", "-m", "opencode-go/"+test.model, "first question")
+
+			sessionsDirectory := filepath.Join(stateDirectory, "org.crdx", "oh", "sessions")
+			storedSessions, err := store.List(sessionsDirectory)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if len(storedSessions) != 1 {
+				t.Fatalf("got %d stored sessions, want one", len(storedSessions))
+			}
+			storedSession := storedSessions[0]
+
+			runTestBinary(t, binary, workspaceDir, environment, "-p", "-r", storedSession.Name, "second question")
+
 			headerMutex.Lock()
-			sessionHeaders = append(sessionHeaders, sessionID)
+			capturedHeaders := slices.Clone(sessionHeaders)
+			capturedPaths := slices.Clone(conversationPaths)
 			headerMutex.Unlock()
-		}
-		endpoint.ServeHTTP(writer, request)
-	}))
-	t.Cleanup(server.Close)
-
-	address := endpoint.Addresses(server.URL)[sim.Completions]
-	stateDirectory := t.TempDir()
-	workspaceDir := reachableWorkspaceDir(t)
-	environment := append(testBinaryEnvironment(t, stateDirectory), backend.EndpointVariable+"="+address)
-	runTestBinary(t, binary, workspaceDir, environment, "-p", "--yolo", "-m", "opencode-go/fake", "first question")
-
-	sessionsDirectory := filepath.Join(stateDirectory, "org.crdx", "oh", "sessions")
-	storedSessions, err := store.List(sessionsDirectory)
-	if err != nil {
-		t.Fatal(err)
+			if !slices.Equal(capturedHeaders, []string{storedSession.ID, storedSession.ID}) {
+				t.Errorf("got OpenCode session headers %q, want the stored ID %q twice", capturedHeaders, storedSession.ID)
+			}
+			if slices.Contains(capturedHeaders, storedSession.Name) {
+				t.Errorf("sent the human-readable session name %q", storedSession.Name)
+			}
+			if !slices.Equal(capturedPaths, []string{test.path, test.path}) {
+				t.Errorf("got conversation paths %q, want %s twice", capturedPaths, test.path)
+			}
+		})
 	}
-	if len(storedSessions) != 1 {
-		t.Fatalf("got %d stored sessions, want one", len(storedSessions))
-	}
-	storedSession := storedSessions[0]
+}
 
-	runTestBinary(t, binary, workspaceDir, environment, "-p", "-r", storedSession.Name, "second question")
+func TestAnOpenCodeModelTakingNoEffortIsAskedToThinkAndResumedWithoutOne(t *testing.T) {
+	binary := buildTestBinary(t)
 
-	headerMutex.Lock()
-	capturedHeaders := slices.Clone(sessionHeaders)
-	headerMutex.Unlock()
-	if !slices.Equal(capturedHeaders, []string{storedSession.ID, storedSession.ID}) {
-		t.Errorf("got OpenCode session headers %q, want the stored ID %q twice", capturedHeaders, storedSession.ID)
+	for _, test := range []struct {
+		model         string
+		path          string
+		requireEffort func(t *testing.T, request int, body map[string]any)
+	}{
+		{"minimax-fake", "/messages", requireThinkingWithoutAnEffort},
+		{"fake-contributor", "/responses", requireAReasoningSummaryWithoutAnEffort},
+	} {
+		t.Run(test.model, func(t *testing.T) {
+			endpoint := sim.New(&sim.Scenario{
+				Model: test.model,
+				Turns: []sim.Turn{{Say: "First answer."}, {Say: "Second answer."}},
+			})
+
+			var bodyMutex sync.Mutex
+			var conversationBodies []map[string]any
+			server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+				if strings.HasSuffix(request.URL.Path, test.path) {
+					raw, _ := io.ReadAll(request.Body)
+					var body map[string]any
+					_ = json.Unmarshal(raw, &body)
+					bodyMutex.Lock()
+					conversationBodies = append(conversationBodies, body)
+					bodyMutex.Unlock()
+					request.Body = io.NopCloser(bytes.NewReader(raw))
+				}
+				endpoint.ServeHTTP(writer, request)
+			}))
+			t.Cleanup(server.Close)
+
+			stateDirectory := t.TempDir()
+			cachePath := filepath.Join(stateDirectory, "org.crdx", "oh", "models.json")
+			if err := os.MkdirAll(filepath.Dir(cachePath), 0o700); err != nil {
+				t.Fatal(err)
+			}
+			cache := checkedModelCache(`{"opencode-go":{"models":[{"id":"` + test.model + `","effortless":true,"output":128000}]}}`)
+			if err := os.WriteFile(cachePath, cache, 0o600); err != nil {
+				t.Fatal(err)
+			}
+
+			address := endpoint.Addresses(server.URL)[sim.Completions]
+			workspaceDir := reachableWorkspaceDir(t)
+			environment := append(testBinaryEnvironment(t, stateDirectory), backend.EndpointVariable+"="+address)
+
+			command := exec.CommandContext( //nolint:gosec // running the binary under test
+				t.Context(), binary, "-p", "--yolo", "-m", "opencode-go/"+test.model+"@high", "refused question",
+			)
+			command.Env = environment
+			command.Dir = workspaceDir
+			if refusal, err := command.CombinedOutput(); err == nil || !strings.Contains(string(refusal), "takes no effort level") {
+				t.Errorf("expected an effort to be refused, got %v: %s", err, refusal)
+			}
+
+			first := runTestBinary(t, binary, workspaceDir, environment, "-p", "--yolo", "-m", "opencode-go/"+test.model, "first question")
+			if !strings.Contains(first, "First answer.") {
+				t.Errorf("expected the first answer, got %q", first)
+			}
+
+			storedSessions, err := store.List(filepath.Join(stateDirectory, "org.crdx", "oh", "sessions"))
+			if err != nil {
+				t.Fatal(err)
+			}
+			if len(storedSessions) != 1 {
+				t.Fatalf("got %d stored sessions, want one", len(storedSessions))
+			}
+			if effort := storedSessions[0].Meta.Effort; effort != "" {
+				t.Errorf("expected the session to hold no effort, got %q", effort)
+			}
+
+			second := runTestBinary(t, binary, workspaceDir, environment, "-p", "-r", storedSessions[0].Name, "second question")
+			if !strings.Contains(second, "Second answer.") {
+				t.Errorf("expected the session to resume, got %q", second)
+			}
+
+			bodyMutex.Lock()
+			bodies := slices.Clone(conversationBodies)
+			bodyMutex.Unlock()
+			if len(bodies) != 2 {
+				t.Fatalf("got %d conversation requests, want two", len(bodies))
+			}
+			for i, body := range bodies {
+				test.requireEffort(t, i, body)
+			}
+		})
 	}
-	if slices.Contains(capturedHeaders, storedSession.Name) {
-		t.Errorf("sent the human-readable session name %q", storedSession.Name)
+}
+
+func requireThinkingWithoutAnEffort(t *testing.T, request int, body map[string]any) {
+	t.Helper()
+
+	thinking, _ := body["thinking"].(map[string]any)
+	if len(thinking) != 1 || thinking["type"] != "enabled" {
+		t.Errorf("request %d asked for thinking %v", request, body["thinking"])
+	}
+	if output, isSent := body["output_config"]; isSent {
+		t.Errorf("request %d carried an output effort %v", request, output)
+	}
+}
+
+func requireAReasoningSummaryWithoutAnEffort(t *testing.T, request int, body map[string]any) {
+	t.Helper()
+
+	reasoning, _ := body["reasoning"].(map[string]any)
+	if _, isSent := reasoning["effort"]; isSent || reasoning["summary"] != "auto" {
+		t.Errorf("request %d asked for reasoning %v", request, body["reasoning"])
 	}
 }
 
@@ -7262,10 +7399,12 @@ func useCommandLineModelCache(t *testing.T) string {
 	data := checkedModelCache(`{` +
 		`"codex":{"models":[{"id":"gpt-5.6-sol","efforts":["none","high"],"output":128000},` +
 		`{"id":"gpt-5.6-mystery","efforts":["whatever"],"output":128000}]},` +
-		`"opencode-go":{"models":[{"id":"deepseek-v4-pro","efforts":["medium"],"output":128000}]},` +
+		`"opencode-go":{"models":[{"id":"deepseek-v4-pro","efforts":["medium"],"output":128000},` +
+		`{"id":"minimax-m3","effortless":true,"output":128000}]},` +
 		`"anthropic":{"models":[` +
 		`{"id":"claude-opus-5","efforts":["medium","max"],"output":128000},` +
-		`{"id":"claude-sonnet-5","efforts":["low","high"],"output":128000}` +
+		`{"id":"claude-sonnet-5","efforts":["low","high"],"output":128000},` +
+		`{"id":"claude-mythos-6","effortless":true,"output":128000}` +
 		`]}}`)
 	if err := os.WriteFile(path, data, 0o600); err != nil {
 		t.Fatal(err)
@@ -7302,6 +7441,11 @@ func resolveCommandLineSelections(t *testing.T) string {
 		"sol@none@high",
 		"claude",
 		"mystery",
+		"minimax",
+		"opencode-go/minimax-m3",
+		"minimax@high",
+		"minimax+fast",
+		"mythos",
 		"nope",
 	} {
 		chosen, err := model.ParseSelection(path, selection, model.Defaults{})
@@ -7324,6 +7468,7 @@ func newSessionFixtureChoices() []model.Choice {
 		{Provider: "anthropic", ID: "claude-opus-5", EffortLevels: []string{"medium", "max"}},
 		{Provider: "anthropic", ID: "claude-sonnet-4-5", EffortLevels: []string{"medium"}},
 		{Provider: "codex", ID: "gpt-5.6-sol", EffortLevels: []string{"none", "high"}},
+		{Provider: "opencode-go", ID: "minimax-m3"},
 	}
 }
 
@@ -7333,7 +7478,9 @@ func resolveForkedSessionGlobs(t *testing.T) string {
 	choices := newSessionFixtureChoices()
 	var written strings.Builder
 
-	for _, glob := range []string{"", "opus-5", "opus-5@max", "haiku", "gpt", "gpt@high", "gpt@high+fast", "nope"} {
+	for _, glob := range []string{
+		"", "opus-5", "opus-5@max", "haiku", "gpt", "gpt@high", "gpt@high+fast", "minimax", "minimax@high", "nope",
+	} {
 		transition, err := cycle.ForkedSessionTransition(glob, choices, model.Defaults{Effort: "medium", IsFast: true}, "able-dolphin")
 		if err != nil {
 			fmt.Fprintf(&written, "%-28q error: %v\n", glob, err)
@@ -7371,6 +7518,8 @@ func resolveNewSessionGlobs(t *testing.T) string {
 		"sonnet@nope",
 		"opus-5@",
 		"@high",
+		"minimax",
+		"minimax@high",
 		"nope",
 		"nonsense",
 	} {
@@ -11865,6 +12014,7 @@ const (
 	configReloadSettingThatIsNotLive
 	configReloadGrantThatWaitsForTheNextRun
 	configReloadSnippets
+	configReloadRoundRobinFile
 	configReloadSnippetFile
 	configReloadSharedSnippetFile
 	configReloadSnippetFileTheConfigNames
@@ -11882,6 +12032,7 @@ func TestGoldenReloadingConfigDrawsEveryVisibleState(t *testing.T) {
 		"filesystem watch failure":                          configReloadWatchFailure,
 		"replayed failure and recovery":                     configReloadReplay,
 		"reloaded snippets":                                 configReloadSnippets,
+		"reloaded model rotation file":                      configReloadRoundRobinFile,
 		"reloaded snippet file":                             configReloadSnippetFile,
 		"a snippet file two snippets share":                 configReloadSharedSnippetFile,
 		"a snippet file the revision itself names":          configReloadSnippetFileTheConfigNames,
@@ -12060,7 +12211,7 @@ func configReloadStream(t *testing.T, scenario configReloadScenario) string {
 	t.Helper()
 
 	path := filepath.Join(t.TempDir(), "config.toml")
-	writeLiveConfig(t, path, `
+	initialConfig := `
 		[ui]
 		currency = "GBP"
 
@@ -12073,7 +12224,18 @@ func configReloadStream(t *testing.T, scenario configReloadScenario) string {
 		left = []
 		center = []
 		right = []
-	`)
+	`
+	if scenario == configReloadRoundRobinFile {
+		initialConfig += "\n[model]\nround_robin = \"models.txt\"\n"
+		if err := os.WriteFile(
+			filepath.Join(filepath.Dir(path), "models.txt"),
+			[]byte("# primary\nanthropic/one@high\n"),
+			0o600,
+		); err != nil {
+			t.Fatal(err)
+		}
+	}
+	writeLiveConfig(t, path, initialConfig)
 
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
@@ -12119,6 +12281,14 @@ func configReloadStream(t *testing.T, scenario configReloadScenario) string {
 		`)
 		settleLiveConfig(t, self)
 		self.handleCommand("//help")
+		self.show(inputLine)
+		return screenOutput.String()
+	case configReloadRoundRobinFile:
+		modelsPath := filepath.Join(filepath.Dir(path), "models.txt")
+		if err := os.WriteFile(modelsPath, []byte("# replacement\ncodex/two@medium\n"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+		settleLiveConfig(t, self)
 		self.show(inputLine)
 		return screenOutput.String()
 	case configReloadSnippetFile:

@@ -102,6 +102,37 @@ func TestWritingAnObservedSnippetFileLoadsTheNewPrompt(t *testing.T) {
 	}
 }
 
+func TestWritingAnObservedRoundRobinFileLoadsTheNewRotation(t *testing.T) {
+	directory := t.TempDir()
+	modelsPath := filepath.Join(directory, "models.txt")
+	if err := os.WriteFile(modelsPath, []byte("anthropic/one@high\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	configPath := filepath.Join(directory, "config.toml")
+	if err := writeConfigFile(configPath, "[model]\nround_robin = \"models.txt\"\n"); err != nil {
+		t.Fatal(err)
+	}
+
+	settings, observer := observeConfig(t, configPath)
+	if !slices.Equal(settings.Model.RoundRobin, []string{"anthropic/one@high"}) {
+		t.Errorf("got initial rotation %q", settings.Model.RoundRobin)
+	}
+	if err := os.WriteFile(modelsPath, []byte("codex/two@medium\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	applied := observer.Reload(nil, testSegments())
+	if applied.Status != ReloadApplied {
+		t.Fatalf("reload status=%v failure=%v", applied.Status, applied.Failure)
+	}
+	if len(applied.Changes) != 1 || applied.Changes[0].Path != "models.txt" {
+		t.Fatalf("got %v, want the model file alone", applied.Changes)
+	}
+	if want := []string{"model.round_robin"}; !slices.Equal(applied.Changes[0].Settings, want) {
+		t.Errorf("got %v, want the setting it supplies: %v", applied.Changes[0].Settings, want)
+	}
+}
+
 func TestCreatingAMissingObservedSnippetFileRecoversTheConfig(t *testing.T) {
 	directory := t.TempDir()
 	configPath := filepath.Join(directory, "config.toml")

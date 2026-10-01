@@ -3,7 +3,9 @@ package codex_test
 import (
 	"bytes"
 	"context"
+	"crypto/sha256"
 	"encoding/base64"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -13,6 +15,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"reflect"
+	"runtime"
 	"slices"
 	"strings"
 	"testing"
@@ -173,6 +176,32 @@ func TestNewHandsBackAClientHoldingWhatItWasAsked(t *testing.T) {
 
 	if client.URL != codex.Endpoint || client.Model != "gpt-5.6-sol" || client.Effort != "low" {
 		t.Errorf("expected what was asked for to be held verbatim, got %+v", client)
+	}
+}
+
+func TestEveryTurnCarriesTheCodexHeaders(t *testing.T) {
+	server, _, headers := recordedTurns(t, events(answer("Hello."), completed))
+	client := newClient(t, server.URL)
+	client.UseSession("0123456789ABCDEFGHIJKL")
+
+	if _, err := sendOnce(t, client, "hello"); err != nil {
+		t.Fatal(err)
+	}
+
+	sum := sha256.Sum256([]byte("0123456789ABCDEFGHIJKL"))
+	for name, want := range map[string]string{
+		"Authorization":        "Bearer token",
+		"Chatgpt-Account-Id":   "account",
+		"Originator":           codex.Originator,
+		"Openai-Beta":          "responses=experimental",
+		"Accept":               "text/event-stream",
+		"Session_id":           hex.EncodeToString(sum[:]),
+		"X-Codex-Routing-Hint": "model=gpt-5.6-sol",
+		"User-Agent":           fmt.Sprintf("oh (%s; %s)", runtime.GOOS, runtime.GOARCH),
+	} {
+		if got := (*headers)[0].Get(name); got != want {
+			t.Errorf("%s is %q, want %q", name, got, want)
+		}
 	}
 }
 

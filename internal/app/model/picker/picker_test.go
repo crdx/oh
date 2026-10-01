@@ -111,6 +111,14 @@ func availableModels() []*Model {
 			Prices:              &agent.TokenPrices{Input: 150, Output: 600},
 		},
 		{
+			Provider:            "OpenCode Go",
+			ProviderID:          "opencode-go",
+			Name:                "MiniMax M3",
+			ID:                  "minimax-m3",
+			ContextWindowTokens: 1000000,
+			Prices:              &agent.TokenPrices{Input: 0.3, Output: 1.2},
+		},
+		{
 			Provider:            "Ollama",
 			ProviderID:          "ollama",
 			Name:                "Qwen Coder 3 30B",
@@ -171,6 +179,18 @@ func TestAnEffortTheModelDoesNotOfferIsLeftAlone(t *testing.T) {
 
 	if models[0].Effort != (Effort{Level: "medium"}) {
 		t.Errorf("expected the effort to be left alone, got %s", models[0].Effort)
+	}
+}
+
+func TestAModelTakingNoEffortHasNoEffortToSet(t *testing.T) {
+	models := []*Model{{ID: "minimax-m3"}}
+
+	for _, direction := range []int{1, -1} {
+		(&modelList{models: models}).Adjust(0, direction)
+
+		if models[0].Effort != (Effort{}) {
+			t.Errorf("expected no effort to be set, got %q", models[0].Effort)
+		}
 	}
 }
 

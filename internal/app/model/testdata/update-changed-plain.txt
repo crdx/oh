@@ -1,17 +1,24 @@
 Provider      Models  Selectable  Ignored  Source
 Codex              1           1           models.dev (it lists no models of its own, and only the registry describes it)
-OpenCode Go        —                       all 2 models it offers are ignored
+OpenCode Go        2           1        1  endpoint
 Anthropic          3           1        2  endpoint
 Ollama             2           1        1  endpoint
 
-Provider   Model                                        Change
-Anthropic  claude-sonnet-4-7                            added
-Anthropic  claude-sonnet-4-6                            removed
-Anthropic  claude-fable-5-1                             removed
-Ollama     mistral-3                                    added
-Ollama     a-locally-built-model-with-a-very-long-name  removed
-Ollama     Nothing Identifies This One                  removed
-Ollama     (unnamed)                                    removed
+Provider     Model                                        Change
+OpenCode Go  minimax-m2.5                                 added
+OpenCode Go  minimax-m3                                   removed
+OpenCode Go  muse-spark-1.3-contributor                   removed
+OpenCode Go  qwen3-max                                    removed
+OpenCode Go  kimi-k2.7-code                               removed
+Anthropic    claude-sonnet-4-7                            added
+Anthropic    claude-haiku-5                               removed
+Anthropic    claude-sonnet-4-6                            removed
+Anthropic    claude-fable-5-1                             removed
+Ollama       mistral-3                                    added
+Ollama       llama-3                                      removed
+Ollama       a-locally-built-model-with-a-very-long-name  removed
+Ollama       Nothing Identifies This One                  removed
+Ollama       (unnamed)                                    removed
 
 Stored model list in /state/models.json
-Run oh -u -I to see the 5 models that were ignored.
+Run oh -u -I to see the 4 models that were ignored.

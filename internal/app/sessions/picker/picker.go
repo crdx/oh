@@ -437,7 +437,7 @@ func rowInView(storedSession *Session, isChosen bool, room int, isWorkspaceShown
 	cells = append(cells,
 		sessionTitle(storedSession),
 		sessionModel(storedSession),
-		storedSession.Effort,
+		strutil.OrDash(storedSession.Effort),
 		strconv.Itoa(storedSession.Messages()),
 		FormatSize(storedSession.Bytes),
 		util.CoarseDuration(storedSession.TouchedAt.Sub(storedSession.StartedAt)),

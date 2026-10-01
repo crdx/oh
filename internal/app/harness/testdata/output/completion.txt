@@ -21,6 +21,7 @@ anthropic/claude-sonnet-5@high
 === models of a provider ===
 anthropic/claude-sonnet-5@none
 anthropic/claude-sonnet-5@high
+=== models of a provider nobody logged in to ===
 === efforts ===
 none
 high

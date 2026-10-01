@@ -13,6 +13,7 @@ import (
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/util"
+	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -157,7 +158,7 @@ func modelRow(model *Model, currency money.Currency, isChosen bool, room int) st
 	return modelTable().Row([]string{
 		menu.Mark(isChosen) + " " + model.Provider,
 		model.Name,
-		model.Effort.String(),
+		strutil.OrDash(model.Effort.String()),
 		contextWindow(model.ContextWindowTokens),
 		tier(model.Prices),
 		price(model.Prices, currency, inputRate),

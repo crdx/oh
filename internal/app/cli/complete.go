@@ -47,6 +47,7 @@ type Sources struct {
 	SessionsDir    string
 	ToolNames      []string
 	CustomCapFlags string
+	IsLoggedIn     func(providerName string) bool
 }
 
 func Complete(args []string, sources Sources) ([]string, bool) {
@@ -75,9 +76,9 @@ func completions(kind string, word string, sources Sources) []string {
 	case completeOption:
 		return optionCompletions(word, usageOptions(usage))
 	case completeModel:
-		return modelCompletions(word, model.Choices(sources.ModelCachePath))
+		return model.SelectionsMatching(word, model.SignedInChoices(sources.ModelCachePath, sources.IsLoggedIn))
 	case completeEffort:
-		return effortCompletions(word, model.Choices(sources.ModelCachePath))
+		return effortCompletions(word, model.SignedInChoices(sources.ModelCachePath, sources.IsLoggedIn))
 	case completeSession:
 		return withPrefix(word, sessionNames(sources.SessionsDir))
 	case completeProvider:
@@ -127,38 +128,6 @@ func usageOptions(text string) []string {
 	slices.Sort(options)
 
 	return options
-}
-
-func modelCompletions(word string, choices []model.Choice) []string {
-	selectionQuery, modeQuery, hasMode := strings.Cut(word, "+")
-	modelQuery, effortQuery, isQualified := strings.Cut(selectionQuery, "@")
-
-	var selections []string
-
-	for _, choice := range model.RankedChoices(modelQuery, choices) {
-		efforts := choice.EffortLevels
-		if isQualified {
-			efforts = model.EffortsMatching(effortQuery, choice.EffortLevels)
-		}
-
-		for _, effort := range efforts {
-			selection := choice.Provider + "/" + choice.ID + "@" + effort
-			if hasMode {
-				if model.SupportsFastMode(choice.Provider) && isFastModePrefix(modeQuery) {
-					selections = append(selections, selection+"+fast")
-				}
-				continue
-			}
-			selections = append(selections, selection)
-		}
-	}
-
-	return selections
-}
-
-func isFastModePrefix(query string) bool {
-	_, isFound := strings.CutPrefix("fast", query)
-	return isFound
 }
 
 func effortCompletions(word string, choices []model.Choice) []string {

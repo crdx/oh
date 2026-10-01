@@ -1,0 +1,29 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `muse-spark-1.3-contributor`
+- **Effort:** `medium`
+- **Provider:** `opencode-go`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+reach the OpenCode Go usage limit
+
+## Failure · +0s
+
+```
+Monthly usage limit reached. Resets in 1 day. To continue using this model now, enable usage from your available balance: https://opencode.ai/workspace/workspace-1/go
+```
+
+## User · +0s
+
+continue after the early reset
+
+## Assistant · +0s
+
+Available after the reset.

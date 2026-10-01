@@ -78,7 +78,7 @@ func offered(choices []Choice, defaults Defaults) []*picker.Model {
 	for _, choice := range choices {
 		efforts := orderedEfforts(choice.EffortLevels)
 		effort := defaults.EffortFor(efforts)
-		if effort == "" {
+		if effort == "" && len(efforts) > 0 {
 			effort = efforts[0]
 		}
 
