@@ -17,6 +17,7 @@ import (
 	"crdx.org/oh/internal/app/editor"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/prompt"
+	"crdx.org/oh/internal/app/skill"
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/table"
@@ -385,13 +386,23 @@ func formatContextSources(sources ContextSources) string {
 		for _, source := range section.sources {
 			listing = append(listing, "  "+contextTable.Row([]string{
 				util.FormatEstimatedTokens(source.EstimatedTokens),
-				source.DisplayName(),
+				paintSourceName(source),
 			}, 0))
 		}
 		listings = append(listings, strings.Join(listing, "\n"))
 	}
 
 	return strings.Join(listings, "\n")
+}
+
+func paintSourceName(source contextsource.Source) string {
+	name, isSkill := skill.NameFromPath(source.Path)
+	if !isSkill {
+		return source.DisplayName()
+	}
+
+	directory := filepath.Dir(source.Path)
+	return filepath.Dir(directory) + string(filepath.Separator) + style.Skill(name) + string(filepath.Separator) + filepath.Base(source.Path)
 }
 
 func infoCommand(getInfo func() (string, error)) slash.Command {
