@@ -1249,6 +1249,36 @@ func TestAWorkspaceWithNoRepositoryIsCopiedAndMadeOneBeforeTheWork(t *testing.T)
 	}
 }
 
+func TestConfiguredPathsSayTheyAreShownWithSymlinksResolved(t *testing.T) {
+	want := "Configured paths show with symlinks resolved; a symlink to one has the same access."
+	for name, testCase := range map[string]struct {
+		paths    shell.Paths
+		expected bool
+	}{
+		"read":      {paths: shell.Paths{Read: []string{"/reference"}}, expected: true},
+		"write":     {paths: shell.Paths{Write: []string{"/output"}}, expected: true},
+		"exec":      {paths: shell.Paths{Exec: []string{"/opt"}}, expected: true},
+		"path":      {paths: shell.Paths{Path: []string{"/tools/bin"}}, expected: true},
+		"home only": {paths: shell.Paths{Home: []string{"/home/user/.config/git/ignore"}}, expected: false},
+		"none":      {expected: false},
+	} {
+		t.Run(name, func(t *testing.T) {
+			got := harnessContext(Config{
+				Workspace:   work.At("/workspace"),
+				SessionName: "session-id",
+				TmpDir:      "/state/farm/session",
+				HomeDir:     "/state/home",
+				CurrentCaps: caps.Read,
+				ExtraPaths:  testCase.paths,
+			})
+
+			if isPresent := strings.Contains(got, want); isPresent != testCase.expected {
+				t.Errorf("symlink note presence is %t, want %t: %q", isPresent, testCase.expected, got)
+			}
+		})
+	}
+}
+
 func TestTheStateSaysWhetherTheSessionIsInteractive(t *testing.T) {
 	for name, isInteractive := range map[string]bool{"interactive": true, "non-interactive": false} {
 		t.Run(name, func(t *testing.T) {

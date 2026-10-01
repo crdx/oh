@@ -19,6 +19,7 @@
 - Configured path /reference is read-only.
 - Configured path /output is read-write.
 - Configured executable path /commands is read-only to path tools.
+- Configured paths show with symlinks resolved; a symlink to one has the same access.
 - The user grants a path with /grant {r|rw} <path>... (r grants read; rw grants read and write) and revokes it with /revoke <path>. With shell access, the shell can execute files at or under every granted path.
 - If you need a path, ask the user to grant it; do not work around it or give up. Give the full command, such as /grant rw /some/path.
 
@@ -38,9 +39,9 @@
 - Flowchart edges: --> or <-->, optionally -->|label|, chained or fanned out with &
 - Flowcharts also support subgraph id[label] … end, <br> in labels, and %% comments
 - Flowchart directions BT and RL draw as TD and LR
-- Flowchart styling, click, and direction are not supported
+- Flowchart styling, click, and direction statements inside the body are not supported
 - Sequence diagrams support participant/actor with as, all arrows, notes, autonumber, and loop/opt/alt/par/critical/break/rect blocks
-- Sequence activation (activate, or +/- on an arrow), title, box, and create are not supported
+- Sequence activation (activate, or +/- on an arrow), the title keyword, box, and create are not supported
 
 # /tmp
 
@@ -60,7 +61,7 @@
 
 - The workspace (/workspace) is read-write
 - The workspace is not a git repository
-- Session is interactive; questions, approvals, and /! commands for the user to run are available, and a background job can wake the conversation when it finishes.
+- The session is interactive: questions, approvals, and /! commands for the user are available. A background job wakes the conversation when it ends.
 
 These states can change at any time. You will be told what changes.
 If a state blocks the work and no workflow below covers it, ask the user to change it.

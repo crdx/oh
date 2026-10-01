@@ -397,6 +397,9 @@ func scopeRules(data harnessContextTemplateData) string {
 	for _, path := range extraPaths.Path {
 		lines = append(lines, "- Configured PATH directory "+path+" is read-only to path tools"+shellExecution(isShellConfined)+".")
 	}
+	if len(extraPaths.Read)+len(extraPaths.Write)+len(extraPaths.Exec)+len(extraPaths.Path) > 0 {
+		lines = append(lines, "- Configured paths show with symlinks resolved; a symlink to one has the same access.")
+	}
 	for _, path := range extraPaths.Home {
 		relative, isHomePath := shell.HomeRelativePath(path)
 		if isHomePath {
