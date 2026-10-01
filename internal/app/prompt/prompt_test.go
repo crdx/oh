@@ -757,8 +757,8 @@ func TestAnOfferedToolIsStillMentioned(t *testing.T) {
 		"# Network",
 		"The bash tool is granted",
 		"A service started with the job tool",
-		"git clone --shared",
 		"Configured executable path /commands is read-only to path tools, and the shell can execute files at or under it.",
+		"cp -r <workspace> <destination>",
 	} {
 		if !strings.Contains(got, want) {
 			t.Errorf("harness context does not contain %q: %q", want, got)
@@ -946,8 +946,13 @@ func TestTheHarnessDisclosesThatABashCallTakesItsProcessesWithIt(t *testing.T) {
 }
 
 func TestTheReadOnlyWorkspaceWorkflowHasItsOwnSection(t *testing.T) {
+	workspace := systemWorkspace(t)
+	if err := os.MkdirAll(filepath.Join(workspace.GetDir(), ".git"), 0o700); err != nil {
+		t.Fatal(err)
+	}
+
 	got := harnessContext(Config{
-		Workspace:    work.At("/workspace"),
+		Workspace:    workspace,
 		SessionName:  "session-id",
 		TmpDir:       "/state/farm/session",
 		HomeDir:      "/state/home",
@@ -964,10 +969,11 @@ func TestTheReadOnlyWorkspaceWorkflowHasItsOwnSection(t *testing.T) {
 		"git -C <workspace> diff --binary HEAD",
 		"Do the work and run its checks in the scratch copy",
 		"Check if a standalone patch is already applied",
-		"Check a series in a scratch clone",
+		"Write workspace-relative *.patch files under /tmp",
+		"Check a series in a scratch copy",
 		"last-to-first",
 		"hand off only the rest",
-		"fresh scratch clone",
+		"fresh scratch copy",
 		"first-to-last",
 		"Applying a patch is filesystem-detectable",
 		"start the mandatory watcher",
@@ -977,6 +983,11 @@ func TestTheReadOnlyWorkspaceWorkflowHasItsOwnSection(t *testing.T) {
 	} {
 		if !strings.Contains(got, rule) {
 			t.Errorf("read-only workspace workflow does not contain %q: %q", rule, got)
+		}
+	}
+	for _, unwanted := range []string{"cp -r", "git -C <destination> init", "\t"} {
+		if strings.Contains(got, unwanted) {
+			t.Errorf("read-only workspace workflow for a repository contains %q: %q", unwanted, got)
 		}
 	}
 
@@ -1175,8 +1186,13 @@ func TestCommandsForTheUserAreOfferedAsBangLinesOnlyWhenSomebodyCanTypeThem(t *t
 		isInteractive bool
 		handoff       string
 	}{
-		"interactive":     {isInteractive: true, handoff: "Tell the user to apply it with: /!git apply <user's path to patch>"},
-		"non-interactive": {handoff: "Tell the user to apply it with: cd <workspace> && git apply <user's path to patch>"},
+		"interactive": {
+			isInteractive: true,
+			handoff:       "Tell the user to apply it with: /!GIT_CEILING_DIRECTORIES=/ git apply <user's path to patch>",
+		},
+		"non-interactive": {
+			handoff: "Tell the user to apply it with: cd <workspace> && GIT_CEILING_DIRECTORIES=/ git apply <user's path to patch>",
+		},
 	} {
 		t.Run(name, func(t *testing.T) {
 			got := harnessContext(Config{
@@ -1204,5 +1220,96 @@ func TestCommandsForTheUserAreOfferedAsBangLinesOnlyWhenSomebodyCanTypeThem(t *t
 				t.Errorf("system prompt does not contain %q: %q", testCase.handoff, got)
 			}
 		})
+	}
+}
+
+func TestAWorkspaceWithNoRepositoryIsCopiedAndMadeOneBeforeTheWork(t *testing.T) {
+	got := harnessContext(Config{
+		Workspace:    systemWorkspace(t),
+		SessionName:  "session-id",
+		TmpDir:       "/state/farm/session",
+		HomeDir:      "/state/home",
+		CurrentCaps:  caps.Read | caps.Shell,
+		OfferedTools: []string{"bash"},
+	})
+
+	for _, want := range []string{
+		"Copy it into scratch: cp -r <workspace> <destination>",
+		"Make the copy a repository: git -C <destination> init, then add and commit everything as the baseline",
+		"git -C <workspace> apply --reverse --check <patch>",
+	} {
+		if !strings.Contains(got, want) {
+			t.Errorf("read-only workspace workflow does not contain %q: %q", want, got)
+		}
+	}
+	for _, unwanted := range []string{"git clone --shared", "diff --binary HEAD", "real repository"} {
+		if strings.Contains(got, unwanted) {
+			t.Errorf("read-only workspace workflow without a repository contains %q: %q", unwanted, got)
+		}
+	}
+}
+
+func TestAWorkspaceInsideARepositoryIsKeptFromIt(t *testing.T) {
+	repository := t.TempDir()
+	if err := os.MkdirAll(filepath.Join(repository, ".git"), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	workspaceDirectory := filepath.Join(repository, "config", "kitty")
+	if err := os.MkdirAll(workspaceDirectory, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	ceiling := "GIT_CEILING_DIRECTORIES=" + filepath.Join(repository, "config") + " "
+
+	for name, isInteractive := range map[string]bool{"interactive": true, "non-interactive": false} {
+		t.Run(name, func(t *testing.T) {
+			got := harnessContext(Config{
+				Workspace:    work.At(workspaceDirectory),
+				SessionName:  "session-id",
+				TmpDir:       "/state/farm/session",
+				HomeDir:      "/state/home",
+				CurrentCaps:  caps.Read | caps.Shell,
+				OfferedTools: []string{"bash"},
+				Conditions:   conditions.Conditions{Interactive: isInteractive},
+			})
+
+			handoff := "cd <workspace> && " + ceiling + "git apply <user's path to patch>"
+			if isInteractive {
+				handoff = "/!" + ceiling + "git apply <user's path to patch>"
+			}
+			for _, want := range []string{
+				"A repository above the workspace makes git apply skip its paths and still succeed",
+				"Check if a standalone patch is already applied: " + ceiling + "git -C <workspace> apply --reverse --check <patch>",
+				"Verify a standalone patch applies: " + ceiling + "git -C <workspace> apply --check <patch>",
+				"Tell the user to apply it with: " + handoff,
+			} {
+				if !strings.Contains(got, want) {
+					t.Errorf("read-only workspace workflow does not contain %q: %q", want, got)
+				}
+			}
+		})
+	}
+}
+
+func TestARepositoryWorkspaceAppliesWithoutACeiling(t *testing.T) {
+	workspace := systemWorkspace(t)
+	if err := os.MkdirAll(filepath.Join(workspace.GetDir(), ".git"), 0o700); err != nil {
+		t.Fatal(err)
+	}
+
+	got := harnessContext(Config{
+		Workspace:    workspace,
+		SessionName:  "session-id",
+		TmpDir:       "/state/farm/session",
+		HomeDir:      "/state/home",
+		CurrentCaps:  caps.Read | caps.Shell,
+		OfferedTools: []string{"bash"},
+		Conditions:   conditions.Conditions{Interactive: true},
+	})
+
+	if strings.Contains(got, "GIT_CEILING_DIRECTORIES") {
+		t.Errorf("a repository workspace is kept from a repository above it: %q", got)
+	}
+	if want := "Tell the user to apply it with: /!git apply <user's path to patch>"; !strings.Contains(got, want) {
+		t.Errorf("harness context does not contain %q: %q", want, got)
 	}
 }

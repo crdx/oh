@@ -757,34 +757,62 @@ func readOnlyWorkspaceSection(data harnessContextTemplateData) string {
 		"# Read-only Workspaces",
 		"",
 		"- To change a read-only workspace, use this workflow; do not ask for write access:",
-		"\t- Clone it into scratch: git clone --shared <workspace> <destination>",
-		"\t- Copy tracked changes: git -C <workspace> diff --binary HEAD | git -C <destination> apply",
-		"\t- Copy needed untracked files by hand; use cp -r only if the workspace is not a repository",
-		"\t- Do the work and run its checks in the scratch copy",
-		"\t- Write workspace-relative *.patch files for the user to apply to the real repository",
-		"\t- Check if a standalone patch is already applied: git -C <workspace> apply --reverse --check <patch>",
-		"\t- Check a series in a scratch clone: try patches last-to-first, reverse each that applies, and hand off only the rest",
-		"\t- Verify a standalone patch applies: git -C <workspace> apply --check <patch>",
-		"\t- Verify a series by applying its remaining patches first-to-last in a fresh scratch clone",
 	}
+	if data.IsRepository {
+		lines = append(
+			lines,
+			"    - Clone it into scratch: git clone --shared <workspace> <destination>",
+			"    - Copy tracked changes: git -C <workspace> diff --binary HEAD | git -C <destination> apply",
+			"    - Copy needed untracked files by hand",
+		)
+	} else {
+		lines = append(
+			lines,
+			"    - A repository above the workspace makes git apply skip its paths and still succeed",
+			"    - GIT_CEILING_DIRECTORIES prevents this: run each git apply below exactly as written",
+			"    - Copy it into scratch: cp -r <workspace> <destination>",
+			"    - Make the copy a repository: git -C <destination> init, then add and commit everything as the baseline",
+		)
+	}
+	lines = append(
+		lines,
+		"    - Do the work and run its checks in the scratch copy",
+		"    - Write workspace-relative *.patch files under /tmp for the user to apply to the workspace",
+		"    - Check if a standalone patch is already applied: "+applyCommand(data)+" --reverse --check <patch>",
+		"    - Check a series in a scratch copy: try patches last-to-first, reverse each that applies, and hand off only the rest",
+		"    - Verify a standalone patch applies: "+applyCommand(data)+" --check <patch>",
+		"    - Verify a series by applying its remaining patches first-to-last in a fresh scratch copy",
+	)
 	if data.JobsGranted {
 		lines = append(
 			lines,
-			"\t- Applying a patch is filesystem-detectable, so start the mandatory watcher from \"Waiting for the User\" before the handoff",
-			"\t- Make the watcher check at once, and exit only when the reverse-apply check above proves the whole handoff is applied",
+			"    - Applying a patch is filesystem-detectable, so start the mandatory watcher from \"Waiting for the User\" before the handoff",
+			"    - Make the watcher check at once, and exit only when the reverse-apply check above proves the whole handoff is applied",
 		)
 	}
-	lines = append(lines, patchHandoffRule(data.Conditions.Interactive))
+	lines = append(lines, patchHandoffRule(data))
 
 	return strings.Join(lines, "\n")
 }
 
-func patchHandoffRule(isInteractive bool) string {
-	if isInteractive {
-		return "\t- Tell the user to apply it with: /!git apply <user's path to patch>"
+func patchHandoffRule(data harnessContextTemplateData) string {
+	if data.Conditions.Interactive {
+		return "    - Tell the user to apply it with: /!" + ceilingPrefix(data) + "git apply <user's path to patch>"
 	}
 
-	return "\t- Tell the user to apply it with: cd <workspace> && git apply <user's path to patch>"
+	return "    - Tell the user to apply it with: cd <workspace> && " + ceilingPrefix(data) + "git apply <user's path to patch>"
+}
+
+func applyCommand(data harnessContextTemplateData) string {
+	return ceilingPrefix(data) + "git -C <workspace> apply"
+}
+
+func ceilingPrefix(data harnessContextTemplateData) string {
+	if data.IsRepository {
+		return ""
+	}
+
+	return "GIT_CEILING_DIRECTORIES=" + filepath.Dir(data.WorkspaceDir) + " "
 }
 
 func shellSandbox(isYolo bool) string {
