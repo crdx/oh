@@ -343,6 +343,24 @@ func TestGoldenGrantListingMatchesGolden(t *testing.T) {
 			},
 		},
 		{
+			label: "shared and project skills with the shell",
+			permanent: shell.SkillGrants(
+				[]string{"/workspace/.agents/skills/review", "/skills/one", "/skills/two"},
+				[]string{"/skills/one", "/skills/two"},
+				caps.Read|caps.Shell,
+			),
+			currentCaps: caps.Read | caps.Shell,
+		},
+		{
+			label: "shared skills without the shell",
+			permanent: shell.SkillGrants(
+				[]string{"/skills/one", "/skills/two"},
+				[]string{"/skills/one", "/skills/two"},
+				caps.Read,
+			),
+			currentCaps: caps.Read,
+		},
+		{
 			label:       "read-only workspace",
 			permanent:   []shell.ScopedPathGrant{{Path: "/workspace", Access: shell.ReadAccess, Kind: shell.WorkspaceGrant}},
 			currentCaps: caps.Read,

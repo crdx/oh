@@ -46,6 +46,7 @@ type PathAccess struct {
 	denySearches     map[string]*pendingDenySearch
 	denials          pathDenials
 	roots            []*os.Root
+	skillDirectories []string
 }
 
 type pendingDenySearch struct {
@@ -100,6 +101,16 @@ func NewPathAccess(files *file.Root, mode *caps.Mode, paths Paths) (*PathAccess,
 	}
 
 	return access, nil
+}
+
+func (self *PathAccess) ShareSkills(directories []string) {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	self.skillDirectories = nil
+	for _, directory := range directories {
+		self.skillDirectories = append(self.skillDirectories, pathutil.Canonicalise(directory))
+	}
 }
 
 func (self *PathAccess) GetPaths() Paths {
@@ -194,6 +205,14 @@ func (self *PathAccess) getPaths() (Paths, []string) {
 	defer self.mutex.RUnlock()
 
 	paths := clonePaths(self.configuredPaths)
+	for _, directory := range self.skillDirectories {
+		if !slices.Contains(paths.Read, directory) {
+			paths.Read = append(paths.Read, directory)
+		}
+		if !slices.Contains(paths.Exec, directory) {
+			paths.Exec = append(paths.Exec, directory)
+		}
+	}
 	var temporaryPaths []string
 	for _, path := range slices.Sorted(maps.Keys(self.temporaryAccess)) {
 		access := self.temporaryAccess[path]

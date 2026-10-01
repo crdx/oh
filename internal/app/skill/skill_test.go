@@ -62,6 +62,13 @@ func TestDiscoverReadsProjectAndGlobalDirectories(t *testing.T) {
 			t.Errorf("enabled directories %v do not contain %s", enabledDirectories, directory)
 		}
 	}
+	globalDirectories := GlobalDirectories(discoveredSkills)
+	wantGlobal := []string{filepath.Join(globalDirectory, "review"), filepath.Dir(globalPath)}
+	slices.Sort(globalDirectories)
+	slices.Sort(wantGlobal)
+	if !slices.Equal(globalDirectories, wantGlobal) {
+		t.Errorf("got global directories %v, want %v", globalDirectories, wantGlobal)
+	}
 }
 
 func TestExcludeGlobalMatchesAbsoluteDirectories(t *testing.T) {

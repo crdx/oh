@@ -32,6 +32,13 @@
   r    system                /system/read
   rw   system                /system/devices
   rx   system                /system/bin
+=== shared and project skills with the shell ===
+\e[38;2;129;162;190mPaths:\e[0m
+  r    skills                /workspace/.agents/skills/review
+  rx   skills                /skills/{one,two}
+=== shared skills without the shell ===
+\e[38;2;129;162;190mPaths:\e[0m
+  r    skills                /skills/{one,two}
 === read-only workspace ===
 \e[38;2;129;162;190mPaths:\e[0m
   r    workspace             /workspace

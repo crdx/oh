@@ -5454,99 +5454,103 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		".transcript",
 	})
 	for name, extensions := range map[string][]string{
-		"app-plain-resume":        {".jsonl", ".transcript"},
-		"app-plain-turn":          {".jsonl", ".transcript"},
-		"approval-queue":          {".ansi", ".screen"},
-		"authorisation-url":       {".ansi", ".screen"},
-		"banner":                  {".ansi", ".screen"},
-		"banner-relayout":         {".ansi", ".screen"},
-		"clearing":                {".ansi", ".screen"},
-		"completion":              {".txt"},
-		"config-reload":           {".ansi", ".screen"},
-		"corrupt-session":         {".txt"},
-		"default-bar":             {".ansi", ".screen"},
-		"elided-path-links":       {".ansi", ".screen"},
-		"environment-change":      {".ansi", ".screen"},
-		"feedback":                {".ansi", ".screen", ".txt"},
-		"feedback-frame":          {".ansi", ".screen"},
-		"question-notifications":  {".ansi", ".screen", ".txt"},
-		"fork-message":            {".txt"},
-		"context":                 {".prompt"},
-		"context-deny":            {".prompt"},
-		"context-drops":           {".prompt"},
-		"context-jobs":            {".prompt"},
-		"context-network":         {".prompt"},
-		"context-network-print":   {".prompt"},
-		"context-print":           {".prompt"},
-		"context-file-tools":      {".prompt"},
-		"context-no-telling":      {".prompt"},
-		"context-no-sockets":      {".prompt"},
-		"context-no-paths":        {".prompt"},
-		"context-path-kinds":      {".prompt"},
-		"context-repository":      {".prompt"},
-		"context-scratch-root":    {".prompt"},
-		"context-simulation":      {".prompt"},
-		"context-yolo":            {".prompt"},
-		"host-command":            {".ansi", ".screen"},
-		"host-command-running":    {".ansi", ".screen"},
-		"inputblock":              {".ansi", ".screen"},
-		"pathrefs":                {".ansi", ".screen"},
-		"slashcommands":           {".ansi", ".screen"},
-		"legacy-alt-enter":        {".ansi", ".screen"},
-		"lifecycle":               {".ansi", ".screen"},
-		"line-resize":             {".screen"},
-		"short-terminal":          {".screen"},
-		"streaming-modes":         {".screen"},
-		"groupings":               {".screen"},
-		"reasonings":              {".ansi", ".screen"},
-		"mermaid-streaming":       {".screen"},
-		"message-marks":           {".screen"},
-		"mode-takeback":           {".ansi", ".screen"},
-		"model-arguments":         {".txt"},
-		"new-session":             {".txt"},
-		"ordinary-tab":            {".ansi", ".screen"},
-		"path-grant-lifecycle":    {".ansi", ".screen"},
-		"port-forwards":           {".ansi", ".screen"},
-		"port-forward-lifecycle":  {".ansi", ".screen"},
-		"path-message":            {".ansi", ".screen"},
-		"user-path-links":         {".ansi", ".screen"},
-		"workspace-paths":         {".ansi", ".screen"},
-		"wrapped-reasoning-paths": {".ansi", ".screen"},
-		"wrapping-paths":          {".ansi", ".screen"},
-		"pending-mode-messages":   {".ansi", ".screen"},
-		"pending-notices":         {".ansi", ".screen"},
-		"paste":                   {".ansi", ".screen"},
-		"pictures":                {".ansi", ".screen"},
-		"picker-menu":             {".ansi", ".screen"},
-		"plain-input":             {".ansi", ".screen"},
-		"print-arguments":         {".txt"},
-		"prompt-arguments":        {".txt"},
-		"queued-messages":         {".ansi", ".screen"},
-		"question-over-call":      {".screen"},
-		"footer-over-calls":       {".screen"},
-		"frame-edges":             {".screen"},
-		"readline-bindings":       {".ansi", ".screen"},
-		"resume-arguments":        {".txt"},
-		"resume-model-arguments":  {".txt"},
-		"resume-mode":             {".ansi"},
-		"resume-confinement":      {".ansi"},
-		"running":                 {".ansi", ".screen"},
-		"schedule":                {".ansi", ".screen"},
-		"segments":                {".ansi", ".screen"},
-		"shedding":                {".ansi", ".screen"},
-		"signal-restoration":      {".ansi"},
-		"special-links":           {".ansi", ".screen"},
-		"startup":                 {".ansi", ".screen"},
-		"startup-local-config":    {".ansi", ".screen"},
-		"startup-sized":           {".ansi", ".screen"},
-		"startup-sized-output":    {".ansi", ".screen"},
-		"terminal-escape":         {".ansi", ".screen"},
-		"theme-reload":            {".ansi", ".screen"},
-		"tool-availability":       {".ansi", ".screen"},
-		"usage":                   {".json"},
-		"usage-arguments":         {".txt"},
-		"vertical-movement":       {".ansi", ".screen"},
-		"draft-cursor":            {".screen"},
+		"app-plain-resume":         {".jsonl", ".transcript"},
+		"app-plain-turn":           {".jsonl", ".transcript"},
+		"approval-queue":           {".ansi", ".screen"},
+		"authorisation-url":        {".ansi", ".screen"},
+		"banner":                   {".ansi", ".screen"},
+		"banner-relayout":          {".ansi", ".screen"},
+		"clearing":                 {".ansi", ".screen"},
+		"completion":               {".txt"},
+		"config-reload":            {".ansi", ".screen"},
+		"corrupt-session":          {".txt"},
+		"default-bar":              {".ansi", ".screen"},
+		"elided-path-links":        {".ansi", ".screen"},
+		"environment-change":       {".ansi", ".screen"},
+		"feedback":                 {".ansi", ".screen", ".txt"},
+		"feedback-frame":           {".ansi", ".screen"},
+		"question-notifications":   {".ansi", ".screen", ".txt"},
+		"fork-message":             {".txt"},
+		"context":                  {".prompt"},
+		"context-deny":             {".prompt"},
+		"context-drops":            {".prompt"},
+		"context-jobs":             {".prompt"},
+		"context-network":          {".prompt"},
+		"context-network-print":    {".prompt"},
+		"context-print":            {".prompt"},
+		"context-file-tools":       {".prompt"},
+		"context-no-telling":       {".prompt"},
+		"context-no-sockets":       {".prompt"},
+		"context-no-paths":         {".prompt"},
+		"context-path-kinds":       {".prompt"},
+		"context-repository":       {".prompt"},
+		"context-scratch-root":     {".prompt"},
+		"context-lookup":           {".prompt"},
+		"context-custom-tool":      {".prompt"},
+		"context-project-skill":    {".prompt"},
+		"context-repository-print": {".prompt"},
+		"context-simulation":       {".prompt"},
+		"context-yolo":             {".prompt"},
+		"host-command":             {".ansi", ".screen"},
+		"host-command-running":     {".ansi", ".screen"},
+		"inputblock":               {".ansi", ".screen"},
+		"pathrefs":                 {".ansi", ".screen"},
+		"slashcommands":            {".ansi", ".screen"},
+		"legacy-alt-enter":         {".ansi", ".screen"},
+		"lifecycle":                {".ansi", ".screen"},
+		"line-resize":              {".screen"},
+		"short-terminal":           {".screen"},
+		"streaming-modes":          {".screen"},
+		"groupings":                {".screen"},
+		"reasonings":               {".ansi", ".screen"},
+		"mermaid-streaming":        {".screen"},
+		"message-marks":            {".screen"},
+		"mode-takeback":            {".ansi", ".screen"},
+		"model-arguments":          {".txt"},
+		"new-session":              {".txt"},
+		"ordinary-tab":             {".ansi", ".screen"},
+		"path-grant-lifecycle":     {".ansi", ".screen"},
+		"port-forwards":            {".ansi", ".screen"},
+		"port-forward-lifecycle":   {".ansi", ".screen"},
+		"path-message":             {".ansi", ".screen"},
+		"user-path-links":          {".ansi", ".screen"},
+		"workspace-paths":          {".ansi", ".screen"},
+		"wrapped-reasoning-paths":  {".ansi", ".screen"},
+		"wrapping-paths":           {".ansi", ".screen"},
+		"pending-mode-messages":    {".ansi", ".screen"},
+		"pending-notices":          {".ansi", ".screen"},
+		"paste":                    {".ansi", ".screen"},
+		"pictures":                 {".ansi", ".screen"},
+		"picker-menu":              {".ansi", ".screen"},
+		"plain-input":              {".ansi", ".screen"},
+		"print-arguments":          {".txt"},
+		"prompt-arguments":         {".txt"},
+		"queued-messages":          {".ansi", ".screen"},
+		"question-over-call":       {".screen"},
+		"footer-over-calls":        {".screen"},
+		"frame-edges":              {".screen"},
+		"readline-bindings":        {".ansi", ".screen"},
+		"resume-arguments":         {".txt"},
+		"resume-model-arguments":   {".txt"},
+		"resume-mode":              {".ansi"},
+		"resume-confinement":       {".ansi"},
+		"running":                  {".ansi", ".screen"},
+		"schedule":                 {".ansi", ".screen"},
+		"segments":                 {".ansi", ".screen"},
+		"shedding":                 {".ansi", ".screen"},
+		"signal-restoration":       {".ansi"},
+		"special-links":            {".ansi", ".screen"},
+		"startup":                  {".ansi", ".screen"},
+		"startup-local-config":     {".ansi", ".screen"},
+		"startup-sized":            {".ansi", ".screen"},
+		"startup-sized-output":     {".ansi", ".screen"},
+		"terminal-escape":          {".ansi", ".screen"},
+		"theme-reload":             {".ansi", ".screen"},
+		"tool-availability":        {".ansi", ".screen"},
+		"usage":                    {".json"},
+		"usage-arguments":          {".txt"},
+		"vertical-movement":        {".ansi", ".screen"},
+		"draft-cursor":             {".screen"},
 	} {
 		claimFixtureName(t, expected, "special replay", name, extensions)
 	}
@@ -8107,6 +8111,9 @@ type promptGolden struct {
 	readsTheScratchRoot bool
 	hasNoExtraPaths     bool
 	hasEveryPathKind    bool
+	isLookupGranted     bool
+	hasCustomTool       bool
+	hasProjectSkillOnly bool
 }
 
 func TestGoldenTheCompleteSystemPromptMatchesTheGolden(t *testing.T) {
@@ -8126,6 +8133,13 @@ func TestGoldenTheCompleteSystemPromptMatchesTheGolden(t *testing.T) {
 		"context-path-kinds":    {hasEveryPathKind: true},
 		"context-repository":    {isRepository: true},
 		"context-scratch-root":  {readsTheScratchRoot: true},
+		"context-lookup":        {isLookupGranted: true},
+		"context-custom-tool":   {hasCustomTool: true},
+		"context-project-skill": {hasProjectSkillOnly: true},
+		"context-repository-print": {
+			isRepository: true,
+			isPrinting:   true,
+		},
 		"context-simulation": {
 			isYolo:       true,
 			offeredTools: []string{"read", "ls", "grep"},
@@ -8165,6 +8179,27 @@ func compareSystemPromptWithGolden(t *testing.T, name string, shape promptGolden
 		t.Fatal(err)
 	}
 
+	skillRoot := filepath.Join(configDirectory, "skills")
+	if shape.hasProjectSkillOnly {
+		skillRoot = filepath.Join(workspaceDirectory, ".agents", "skills")
+	}
+	skillDirectory := filepath.Join(skillRoot, "golden")
+	if err := os.MkdirAll(skillDirectory, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	skillBody := "---\nname: golden\ndescription: Exercise complete prompt assembly.\n---\nBody"
+	if err := os.WriteFile(filepath.Join(skillDirectory, "SKILL.md"), []byte(skillBody), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	var globalSkillRoots []string
+	if !shape.hasProjectSkillOnly {
+		globalSkillRoots = []string{skillRoot}
+	}
+	discoveredSkills, err := skill.Discover(workspaceDirectory, globalSkillRoots, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	dropsDirectory := ""
 	if shape.hasClipboardDrops {
 		dropsDirectory = "/state/sessions/tame-impala/drops"
@@ -8194,6 +8229,15 @@ func compareSystemPromptWithGolden(t *testing.T, name string, shape promptGolden
 	if shape.isNetworkGranted {
 		currentCaps |= caps.Network
 	}
+	if shape.isLookupGranted {
+		currentCaps |= caps.Lookup
+	}
+	offeredTools := shape.offeredTools
+	var toolGroups caps.ToolGroups
+	if shape.hasCustomTool {
+		offeredTools = []string{"read", "bash", "commit"}
+		toolGroups = caps.ToolGroups{"c": {"commit"}}
+	}
 
 	got, _, err := prompt.Load(prompt.Config{
 		GlobalPath:     globalPath,
@@ -8207,12 +8251,9 @@ func compareSystemPromptWithGolden(t *testing.T, name string, shape promptGolden
 		CurrentCaps:    currentCaps,
 		ExtraPaths:     extraPaths,
 		DropsDirectory: dropsDirectory,
-		Skills: []skill.Skill{{
-			Name:        "golden",
-			Description: "Exercise complete prompt assembly.",
-			Location:    "/skills/golden/SKILL.md",
-		}},
-		OfferedTools: shape.offeredTools,
+		Skills:         discoveredSkills,
+		OfferedTools:   offeredTools,
+		ToolGroups:     toolGroups,
 		Conditions: conditions.Conditions{
 			UnixSockets: !shape.hasNoSockets,
 			IPv6:        !shape.hasNoSockets,
@@ -8226,6 +8267,7 @@ func compareSystemPromptWithGolden(t *testing.T, name string, shape promptGolden
 		t.Fatal(err)
 	}
 	got = strings.ReplaceAll(got, workspaceDirectory, "/workspace")
+	got = strings.ReplaceAll(got, "GIT_CEILING_DIRECTORIES="+filepath.Dir(workspaceDirectory)+" ", "GIT_CEILING_DIRECTORIES=/ ")
 	got = strings.ReplaceAll(got, configDirectory, "/config")
 	got = strings.ReplaceAll(got, "127.0.0.1", "<loopback>")
 

@@ -845,3 +845,57 @@ func TestHomeMappingsAreReadableByFileToolsBeforeAShellRuns(t *testing.T) {
 		t.Errorf("home mapping write got %v, want read-only", err)
 	}
 }
+
+func TestASharedSkillIsReadableAndExecutableByTheShell(t *testing.T) {
+	mode := caps.NewMode(caps.Read | caps.Shell)
+	files := configuredPathTestRoot(t, mode)
+	configuredDirectory := t.TempDir()
+	access, err := NewPathAccess(files, mode, Paths{Exec: []string{configuredDirectory}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer access.Close()
+
+	skillDirectory := t.TempDir()
+	linkedSkill := filepath.Join(t.TempDir(), "linked")
+	if err := os.Symlink(skillDirectory, linkedSkill); err != nil {
+		t.Fatal(err)
+	}
+	access.ShareSkills([]string{linkedSkill, configuredDirectory})
+
+	paths := access.GetPaths()
+	for _, list := range [][]string{paths.Read, paths.Exec} {
+		if !slices.Contains(list, skillDirectory) {
+			t.Errorf("shell paths %v do not reach the skill's real directory %s", list, skillDirectory)
+		}
+		if slices.Contains(list, linkedSkill) {
+			t.Errorf("shell paths %v name the symbolic link %s", list, linkedSkill)
+		}
+	}
+	if count := countOf(paths.Exec, configuredDirectory); count != 1 {
+		t.Errorf("configured directory is executable %d times, want once: %v", count, paths.Exec)
+	}
+
+	policy, err := createTestPolicy(t, t.TempDir(), t.TempDir(), t.TempDir(), paths, caps.Shell)
+	if err != nil {
+		t.Fatalf("the sandbox cannot enforce the shared skill here: %v", err)
+	}
+	if !slices.Contains(policy.Read, skillDirectory) || !slices.Contains(policy.Exec, skillDirectory) {
+		t.Errorf("policy does not read and execute %s: read %v, exec %v", skillDirectory, policy.Read, policy.Exec)
+	}
+
+	access.ShareSkills(nil)
+	if slices.Contains(access.GetPaths().Read, skillDirectory) {
+		t.Errorf("shell paths kept the skill after it stopped being shared")
+	}
+}
+
+func countOf(list []string, wanted string) int {
+	count := 0
+	for _, item := range list {
+		if item == wanted {
+			count++
+		}
+	}
+	return count
+}

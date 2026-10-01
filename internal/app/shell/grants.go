@@ -157,6 +157,18 @@ func configuredScopedGrants(paths Paths, isShellGranted bool) []ScopedPathGrant 
 	return grants
 }
 
+func SkillGrants(enabledDirectories []string, sharedDirectories []string, currentCaps caps.Set) []ScopedPathGrant {
+	grants := make([]ScopedPathGrant, 0, len(enabledDirectories))
+	for _, directory := range enabledDirectories {
+		access := ReadAccess
+		if slices.Contains(sharedDirectories, directory) {
+			access |= executableAccess(currentCaps.Has(caps.Shell))
+		}
+		grants = append(grants, ScopedPathGrant{Path: directory, Access: access, Kind: GlobalSkillGrant})
+	}
+	return grants
+}
+
 func executableAccess(isShellGranted bool) Access {
 	if isShellGranted {
 		return ExecAccess

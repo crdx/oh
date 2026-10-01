@@ -16,8 +16,6 @@
 - The workspace is the current directory, /workspace
 - The session name is tame-impala
 - Path tools can access the workspace, private home, /tmp, read-only system and executable search paths, and the configured paths listed here.
-- Path tools and the shell cannot access a file or directory whose name matches the deny pattern *.key.
-- A denied path shows as an empty, unreadable file or directory, so tools such as git can falsely report it as modified. This is a sandbox artefact: exclude the path, and keep it out of progress updates, summaries, and handoffs. A request to handle all changes does not include a denied path. Ask for access only if the user names the path or the work cannot exclude it.
 - Configured path /reference is read-only.
 - Configured path /output is read-write.
 - Configured executable path /commands is read-only to path tools, and the shell can execute files at or under it.
@@ -54,7 +52,7 @@
 - Processes in the sandbox can talk over <loopback> and ::1
 - Unix sockets work under /tmp, not under the workspace
 - The host's loopback interface and external networks are unreachable
-- The lookup tool is refused; do not call it unless the user grants it with ctrl+x l
+- The lookup tool is granted external network access
 - The fetch tool is refused; do not call it unless the user grants it with ctrl+x n
 - The bash tool takes network=loopback (the default) or network=host
 - The host network is withheld, so a network=host call is refused before it runs

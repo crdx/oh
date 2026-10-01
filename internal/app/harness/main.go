@@ -793,6 +793,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		return "", err
 	}
 	defer skill.Close(skillRoots)
+	pathAccess.ShareSkills(skill.GlobalDirectories(availableSkills))
 
 	selectionTime := time.Now()
 	selection, err := backend.ResolveAvailable(
@@ -1181,11 +1182,11 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 				grants := shell.PermanentGrants(
 					workspace.GetDir(), homeDir, settings.Sandbox, mode.Current(), args.Yolo,
 				)
-				for _, directory := range skill.EnabledDirectories(availableSkills) {
-					grants = append(grants, shell.ScopedPathGrant{
-						Path: directory, Access: shell.ReadAccess, Kind: shell.GlobalSkillGrant,
-					})
-				}
+				grants = append(grants, shell.SkillGrants(
+					skill.EnabledDirectories(availableSkills),
+					skill.GlobalDirectories(availableSkills),
+					mode.Current(),
+				)...)
 				if dropKeeper.IsMounted() {
 					grants = append(grants, shell.ScopedPathGrant{
 						Path: dropKeeper.GetDirectory(), Access: shell.ReadAccess, Kind: shell.SessionDropsGrant,

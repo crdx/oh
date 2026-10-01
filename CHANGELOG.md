@@ -61,6 +61,7 @@
 - Group up path grants in the bar by their access role
 - Grant several paths at once with `/grant`
 - Fail faster if bash is missing
+- Let the shell read and run enabled global skills
 
 ### Tool calls
 

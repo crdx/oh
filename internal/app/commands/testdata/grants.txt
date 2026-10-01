@@ -32,6 +32,13 @@ Paths:
   r    system                /system/read
   rw   system                /system/devices
   rx   system                /system/bin
+=== shared and project skills with the shell ===
+Paths:
+  r    skills                /workspace/.agents/skills/review
+  rx   skills                /skills/{one,two}
+=== shared skills without the shell ===
+Paths:
+  r    skills                /skills/{one,two}
 === read-only workspace ===
 Paths:
   r    workspace             /workspace

@@ -1107,7 +1107,6 @@ func TestEveryConfiguredPathKindHasItsFileToolAccessDocumented(t *testing.T) {
 		"Configured PATH directory /toolbox/bin is read-only to path tools, and the shell can execute files at or under it.",
 		"Configured home path " + homePath + " is read-only and appears at HOME/.config/git/ignore.",
 		"Configured home path " + outsideHomePath + " is read-only to path tools; it is outside the user's home, so it is not in private HOME.",
-		"The shell can execute files at or under the PATH directory /toolbox/bin.",
 	} {
 		if !strings.Contains(got, want) {
 			t.Errorf("harness context does not contain %q: %q", want, got)
@@ -1316,6 +1315,52 @@ func TestARefusedNetworkToolSaysHowItIsGranted(t *testing.T) {
 				if !strings.Contains(got, want) {
 					t.Errorf("harness context does not contain %q: %q", want, got)
 				}
+			}
+		})
+	}
+}
+
+func TestTheShellIsToldItCanReadAndRunASharedSkill(t *testing.T) {
+	globalDirectory := t.TempDir()
+	skillDirectory := filepath.Join(globalDirectory, "pdf")
+	if err := os.MkdirAll(skillDirectory, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	body := "---\nname: pdf\ndescription: Work with PDFs.\n---\nBody"
+	if err := os.WriteFile(filepath.Join(skillDirectory, "SKILL.md"), []byte(body), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	globalSkills, err := skill.Discover(t.TempDir(), []string{globalDirectory}, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := "The shell can read and execute files in every skill directory listed under Skills."
+	for name, testCase := range map[string]struct {
+		skills       []skill.Skill
+		offeredTools []string
+		isYolo       bool
+		expected     bool
+	}{
+		"confined shell":   {skills: globalSkills, offeredTools: []string{"bash"}, expected: true},
+		"no global skills": {offeredTools: []string{"bash"}, expected: false},
+		"no shell":         {skills: globalSkills, offeredTools: []string{"read"}, expected: false},
+		"unconfined shell": {skills: globalSkills, offeredTools: []string{"bash"}, isYolo: true, expected: false},
+	} {
+		t.Run(name, func(t *testing.T) {
+			got := harnessContext(Config{
+				Workspace:    work.At("/workspace"),
+				SessionName:  "session-id",
+				TmpDir:       "/state/farm/session",
+				HomeDir:      "/state/home",
+				CurrentCaps:  caps.Read | caps.Shell,
+				OfferedTools: testCase.offeredTools,
+				Skills:       testCase.skills,
+				Yolo:         testCase.isYolo,
+			})
+
+			if isPresent := strings.Contains(got, want); isPresent != testCase.expected {
+				t.Errorf("shared skill rule presence is %t, want %t: %q", isPresent, testCase.expected, got)
 			}
 		})
 	}

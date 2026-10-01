@@ -89,3 +89,17 @@ func assertScopedGrant(
 	}
 	t.Errorf("no %s grant for %s in %#v", kind, path, grants)
 }
+
+func TestOnlyASharedSkillIsExecutableByTheShell(t *testing.T) {
+	sharedDirectory := t.TempDir()
+	projectDirectory := t.TempDir()
+	enabledDirectories := []string{projectDirectory, sharedDirectory}
+	sharedDirectories := []string{sharedDirectory}
+
+	withShell := SkillGrants(enabledDirectories, sharedDirectories, caps.Read|caps.Shell)
+	assertScopedGrant(t, withShell, GlobalSkillGrant, sharedDirectory, ReadAccess|ExecAccess)
+	assertScopedGrant(t, withShell, GlobalSkillGrant, projectDirectory, ReadAccess)
+
+	withoutShell := SkillGrants(enabledDirectories, sharedDirectories, caps.Read)
+	assertScopedGrant(t, withoutShell, GlobalSkillGrant, sharedDirectory, ReadAccess)
+}

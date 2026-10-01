@@ -131,6 +131,7 @@ type harnessContextTemplateData struct {
 	HomeDir           string
 	ExtraPaths        shell.Paths
 	DropsDirectory    string
+	SharesSkills      bool
 	ShellOffered      bool
 	TitleOffered      bool
 	NotifyOffered     bool
@@ -281,6 +282,7 @@ func harnessContext(config Config) string {
 		HomeDir:           config.HomeDir,
 		ExtraPaths:        config.ExtraPaths,
 		DropsDirectory:    config.DropsDirectory,
+		SharesSkills:      len(skill.GlobalDirectories(config.Skills)) > 0,
 		ShellOffered:      toolset.Offers(config.OfferedTools, shellToolName),
 		TitleOffered:      toolset.Offers(config.OfferedTools, titleToolName),
 		NotifyOffered:     toolset.Offers(config.OfferedTools, notifyToolName),
@@ -407,8 +409,8 @@ func scopeRules(data harnessContextTemplateData) string {
 		lines = append(lines, "- The shell has the same read access, plus the private process, terminal, resolver, and language-package cache files that commands need.")
 		lines = append(lines, "- The shell has the same write access, plus runtime devices.")
 		lines = append(lines, "- The shell can execute files under system directories, PATH directories, the workspace, HOME, and /tmp.")
-		for _, path := range extraPaths.Path {
-			lines = append(lines, "- The shell can execute files at or under the PATH directory "+path+".")
+		if data.SharesSkills {
+			lines = append(lines, "- The shell can read and execute files in every skill directory listed under Skills.")
 		}
 	} else if data.ShellOffered && data.Yolo {
 		lines = append(lines, "- With --yolo the shell is unconfined; path tools stay limited to the paths above.")
