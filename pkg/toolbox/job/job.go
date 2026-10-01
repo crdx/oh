@@ -85,7 +85,7 @@ func New(
 		})
 }
 
-const description = "run a shell command in the background. For a server, bind a fixed port and pass it as `port`; the tool forwards that number and neither discovers an ephemeral port nor supplies a stable alias. In an interactive session you will be notified automatically when it finishes; in a non-interactive session you will not."
+const description = "run a shell command in the background. For a server, bind a fixed port and pass it as `port`; the tool forwards that same number, reports the URL the user opens it at, and does not discover an ephemeral port. In an interactive session you will be notified automatically when it finishes; in a non-interactive session you will not."
 
 func Describe(args Args) tool.CallRendering {
 	switch args.Action {

@@ -549,7 +549,7 @@ func TestTheToolExplainsJobNotificationsInBothSessionModes(t *testing.T) {
 
 func TestTheToolExplainsPortForwardingLimits(t *testing.T) {
 	description := job.New(nil, nil, nil, nil).Description()
-	for _, wanted := range []string{"bind a fixed port", "pass it as `port`", "discovers an ephemeral port", "stable alias"} {
+	for _, wanted := range []string{"bind a fixed port", "pass it as `port`", "does not discover an ephemeral port", "reports the URL"} {
 		if !strings.Contains(description, wanted) {
 			t.Errorf("description %q does not contain %q", description, wanted)
 		}
