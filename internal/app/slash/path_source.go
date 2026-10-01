@@ -72,10 +72,11 @@ func (self *PathSource) Results(word trigger.Word, limit int) trigger.Results {
 	items := make([]trigger.Result, len(paths))
 	for i, path := range paths {
 		path = prefix + path
+		isOpenEnded := pathref.IsDirectory(path)
 		items[i] = trigger.Result{
 			Label:       path,
-			Text:        path,
-			IsOpenEnded: pathref.IsDirectory(path),
+			Text:        trigger.QuotedText(path, word.IsQuoted, isOpenEnded),
+			IsOpenEnded: isOpenEnded,
 		}
 	}
 
@@ -173,11 +174,7 @@ func (self Registry) pathArgumentWord(runes []rune, cursor int) (trigger.Word, b
 		return trigger.Word{}, false
 	}
 
-	return trigger.Word{
-		Start: pathStart,
-		End:   len(runes),
-		Query: string(runes[pathStart:cursor]),
-	}, true
+	return quotedWordAt(runes, pathStart, cursor), true
 }
 
 func isPathCompletionControl(value rune) bool {

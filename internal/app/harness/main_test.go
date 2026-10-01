@@ -5409,6 +5409,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"usage":                   {".json"},
 		"usage-arguments":         {".txt"},
 		"vertical-movement":       {".ansi", ".screen"},
+		"draft-cursor":            {".screen"},
 	} {
 		claimFixtureName(t, expected, "special replay", name, extensions)
 	}
@@ -10282,6 +10283,44 @@ func TestGoldenVerticalInputMovementDrawsWhatItDrewBefore(t *testing.T) {
 func verticalInputMovementStream(t *testing.T, keypresses ...key.Key) string {
 	t.Helper()
 
+	return draftStream(t, "one two three", keypresses...)
+}
+
+func TestGoldenTheCursorAtTheEndOfADraftStandsAfterIt(t *testing.T) {
+	end := key.Key{Code: key.End}
+	left := key.Key{Code: key.Left}
+
+	drafts := map[string]struct {
+		text       string
+		keypresses []key.Key
+	}{
+		"1 a row filled exactly":                     {text: "one two thre"},
+		"2 spaces hidden by a wrap":                  {text: "one two thre   "},
+		"3 spaces that fit on their row":             {text: "one two  three  "},
+		"4 the end of a line over a hidden wrap":     {text: "one two thre   \nfour", keypresses: []key.Key{{Code: key.Up}, end}},
+		"5 the end of a line filling its row":        {text: "one two thre\nfour", keypresses: []key.Key{{Code: key.Up}, end}},
+		"6 among spaces hidden by a wrap":            {text: "one two thre   ", keypresses: []key.Key{left}},
+		"7 the end of the text before hidden spaces": {text: "one two thre   ", keypresses: []key.Key{left, left, left}},
+	}
+
+	passes := map[string]func() string{}
+	for name, draft := range drafts {
+		passes[name] = func() string {
+			played := playScreen(t, draftStream(t, draft.text, draft.keypresses...), tinyColumns)
+
+			return fmt.Sprintf(
+				"%s\ncursor row %d column %d",
+				strings.Join(played.text(), "\n"), played.row, played.column,
+			)
+		}
+	}
+
+	compareWithGolden(t, "draft-cursor", ".screen", passes)
+}
+
+func draftStream(t *testing.T, text string, keypresses ...key.Key) string {
+	t.Helper()
+
 	self := slashCommandFixture(t, caps.Read)
 	var screenOutput strings.Builder
 	self.screen = output.NewTerminalOfSize(&screenOutput, tinyColumns, replayLines)
@@ -10289,7 +10328,7 @@ func verticalInputMovementStream(t *testing.T, keypresses ...key.Key) string {
 	history := edit.NewHistory("", historyLimit)
 	history.Add("earlier")
 	inputLine := edit.NewInput(history)
-	inputLine.SetText("one two three")
+	inputLine.SetText(text)
 	self.show(inputLine)
 
 	for _, keypress := range keypresses {
@@ -10350,6 +10389,12 @@ func TestGoldenReadlineInputBindingsDrawWhatTheyDrewBefore(t *testing.T) {
 		},
 		"14 ctrl+r then ctrl+a": func() string {
 			return readlineInputStream(t, historyLines, "unfinished", control('r'), character('g'), character('i'), character('t'), control('a'), character('!'))
+		},
+		"15 ctrl+j": func() string {
+			return readlineInputStream(t, nil, "one two", control('j'), character('!'))
+		},
+		"16 ctrl+delete": func() string {
+			return readlineInputStream(t, nil, "one two", key.Key{Code: key.Home}, key.Key{Code: key.Delete, Mod: key.Ctrl})
 		},
 	}
 
@@ -11131,7 +11176,7 @@ func TestReloadingConfigReplacesSnippetsAtomically(t *testing.T) {
 	inputLine.SetText("//ne")
 	self.apply(inputLine, nil, tabKey)
 	self.apply(inputLine, nil, tabKey)
-	if inputLine.Text() != "//new " {
+	if inputLine.Text() != "//new" {
 		t.Errorf("reloaded completion is %q", inputLine.Text())
 	}
 }
@@ -15114,6 +15159,12 @@ const (
 	pathGrantTakenBack
 	pathGrantReplaced
 	pathGrantRevokeSeveral
+	pathGrantSeveral
+	pathGrantSeveralSettled
+	pathGrantQuoted
+	pathGrantRepeated
+	pathGrantUnclosedQuote
+	pathGrantAllMissing
 )
 
 func TestGoldenPathGrantLifecycleDrawsEveryVisibleState(t *testing.T) {
@@ -15133,6 +15184,12 @@ func TestGoldenPathGrantLifecycleDrawsEveryVisibleState(t *testing.T) {
 		"restoration correction pending": func() string { return pathGrantGoldenStream(t, pathGrantRestorePending) },
 		"restoration correction settled": func() string { return pathGrantGoldenStream(t, pathGrantRestoreSettled) },
 		"revoke without grant rejected":  func() string { return pathGrantGoldenStream(t, pathGrantRevokeMissing) },
+		"several granted at once":        func() string { return pathGrantGoldenStream(t, pathGrantSeveral) },
+		"several settled into next turn": func() string { return pathGrantGoldenStream(t, pathGrantSeveralSettled) },
+		"quoted path with a space":       func() string { return pathGrantGoldenStream(t, pathGrantQuoted) },
+		"repeated path granted once":     func() string { return pathGrantGoldenStream(t, pathGrantRepeated) },
+		"unclosed quote rejected":        func() string { return pathGrantGoldenStream(t, pathGrantUnclosedQuote) },
+		"every path missing":             func() string { return pathGrantGoldenStream(t, pathGrantAllMissing) },
 		"several revoked at once":        func() string { return pathGrantGoldenStream(t, pathGrantRevokeSeveral) },
 		"settled into next turn":         func() string { return pathGrantGoldenStream(t, pathGrantSettled) },
 		"unknown access rejected":        func() string { return pathGrantGoldenStream(t, pathGrantUnknownAccess) },
@@ -15356,6 +15413,24 @@ func pathGrantGoldenStream(t *testing.T, scenario pathGrantGoldenScenario) strin
 		self.handleCommand("/grant rwz " + referencePath)
 	case pathGrantRevokeMissing:
 		self.handleCommand("/revoke " + referencePath)
+	case pathGrantSeveral:
+		self.handleCommand("/grant r " + referencePath + " " + missingPath + " " + homePath)
+	case pathGrantSeveralSettled:
+		self.handleCommand("/grant rw " + referencePath + " " + homePath)
+		self.start("continue")
+		self.waitForCurrentTurn()
+	case pathGrantQuoted:
+		spacedPath := filepath.Join(referencePath, "meeting notes")
+		if err := os.Mkdir(spacedPath, 0o700); err != nil {
+			t.Fatal(err)
+		}
+		self.handleCommand(`/grant r "` + spacedPath + `"`)
+	case pathGrantRepeated:
+		self.handleCommand("/grant r " + referencePath + " " + referencePath)
+	case pathGrantUnclosedQuote:
+		self.handleCommand("/grant r " + referencePath + ` "` + homePath)
+	case pathGrantAllMissing:
+		self.handleCommand("/grant r " + missingPath + " " + filepath.Join(missingPath, "deeper"))
 	case pathGrantRevokeSeveral:
 		self.handleCommand("/grant r " + referencePath)
 		self.handleCommand("/grant r " + homePath)
@@ -15922,8 +15997,8 @@ func TestTabCompletionKeepsCommandNamespacesSeparate(t *testing.T) {
 	withSlashCompleter(self)
 
 	for input, want := range map[string]string{
-		"/":  "/conf ",
-		"//": "//help ",
+		"/":  "/conf",
+		"//": "//help",
 	} {
 		inputLine := edit.NewInput(nil)
 		for _, value := range input {
@@ -15957,7 +16032,7 @@ func TestTabOpensThenChoosesAUniqueSlashCommand(t *testing.T) {
 	}
 
 	self.apply(inputLine, nil, tabKey)
-	if got := inputLine.Text(); got != "/open " {
+	if got := inputLine.Text(); got != "/open" {
 		t.Errorf("got completion %q", got)
 	}
 }

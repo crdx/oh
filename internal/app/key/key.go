@@ -143,8 +143,6 @@ func (self *Decoder) swallow(value rune) {
 
 func plain(value rune) Key {
 	switch {
-	case value == '\n':
-		return Key{Code: Enter}
 	case value == '\t':
 		return Key{Code: Rune, Value: '\t'}
 	case value == '\b' || value == delByte:

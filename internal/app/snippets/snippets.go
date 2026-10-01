@@ -29,28 +29,29 @@ func New(configuredDefinitions map[string]Definition) (slash.CommandSet, error) 
 	commands := make([]slash.Command, 0, len(configuredDefinitions))
 	for _, name := range slices.Sorted(maps.Keys(configuredDefinitions)) {
 		definition := configuredDefinitions[name]
+		subject := definition.subject(name)
 		prompt := strings.TrimSpace(definition.Prompt)
 		if prompt == "" {
-			return slash.CommandSet{}, fmt.Errorf("%s: prompt is empty", name)
+			return slash.CommandSet{}, fmt.Errorf("%s: prompt is empty", subject)
 		}
 		promptTemplate, err := template.New(name).
 			Funcs(template.FuncMap{defaultFunctionName: defaultValue}).
 			Option("missingkey=error").
 			Parse(prompt)
 		if err != nil {
-			return slash.CommandSet{}, fmt.Errorf("%s: %w", name, err)
+			return slash.CommandSet{}, fmt.Errorf("%s: %w", subject, err)
 		}
 
 		argumentName, err := getArgumentName(promptTemplate.Tree)
 		if err != nil {
-			return slash.CommandSet{}, fmt.Errorf("%s: %w", name, err)
+			return slash.CommandSet{}, fmt.Errorf("%s: %w", subject, err)
 		}
 		argumentPolicy := definition.Arguments
 		if argumentPolicy == "" {
 			argumentPolicy = inferArgumentPolicyFromTemplate(promptTemplate.Tree)
 		}
 		if argumentPolicy != ArgumentsRequired && argumentPolicy != ArgumentsOptional && argumentPolicy != ArgumentsNone {
-			return slash.CommandSet{}, fmt.Errorf("%s: invalid argument policy %q", name, argumentPolicy)
+			return slash.CommandSet{}, fmt.Errorf("%s: invalid argument policy %q", subject, argumentPolicy)
 		}
 		command := slash.Command{
 			Name:        name,

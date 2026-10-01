@@ -60,7 +60,13 @@ func (self *Source) Results(word trigger.Word, limit int) trigger.Results {
 			text += " "
 		}
 
-		items = append(items, trigger.Result{Label: completion.Label, Detail: description, Text: text, IsOpenEnded: completion.TakesArguments})
+		items = append(items, trigger.Result{
+			Label:       completion.Label,
+			Detail:      description,
+			Text:        text,
+			IsOpenEnded: completion.TakesArguments,
+			IsFinal:     completion.IsFinal,
+		})
 	}
 
 	return trigger.Results{Items: items, Total: len(completions), Placeholder: noMatchText}

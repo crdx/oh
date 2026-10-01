@@ -163,6 +163,10 @@ func TestReplacementLeavesAnOpenEndedResultOpenAndClosesTheRest(t *testing.T) {
 		t.Errorf("closed replacement is %q", got)
 	}
 
+	if got := trigger.Replacement(word, trigger.Result{Text: "@main.go", IsFinal: true}, runes); got != "@main.go" {
+		t.Errorf("final replacement is %q", got)
+	}
+
 	beforeSpace := trigger.Word{Start: 0, End: 3, Query: "ma"}
 	if got := trigger.Replacement(beforeSpace, trigger.Result{Text: "#main"}, []rune("#ma rest")); got != "#main" {
 		t.Errorf("closed replacement before a space is %q", got)
@@ -322,6 +326,18 @@ func TestTabStillCarriesAWordTypedOutWholeOnToItsArguments(t *testing.T) {
 	}
 	if got := string(editor.runes); got != "#bug " {
 		t.Errorf("the word became %q", got)
+	}
+}
+
+func TestTabOpensNothingOverAWordAlreadyWhole(t *testing.T) {
+	completer := trigger.New(&fakeSource{symbol: '#', items: []trigger.Result{{Text: "bug"}}})
+	editor := &fakeEditor{runes: []rune("#bug"), cursor: 4}
+
+	if completer.Open(editor) {
+		t.Error("tab opened the dropdown over a word it had nothing to add to")
+	}
+	if completer.IsOpen() {
+		t.Error("the dropdown stayed open")
 	}
 }
 

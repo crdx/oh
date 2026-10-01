@@ -14,6 +14,9 @@ var layouts = []string{
 	"  indented  gaps   here",
 	"日本語 の テキスト です",
 	"\n\nabc\n\n",
+	"trailing spaces   ",
+	"eaten   \nbelow",
+	"fullrow\nnext",
 }
 
 func TestEveryLayoutIsDrawable(t *testing.T) {
@@ -58,6 +61,28 @@ func TestTheCursorNeverGoesBackwards(t *testing.T) {
 				}
 
 				lastRow, lastColumn = row, column
+			}
+		}
+	}
+}
+
+func TestTheCursorAtALineEndStandsAfterItsText(t *testing.T) {
+	for _, text := range layouts {
+		runes := []rune(text)
+
+		for room := 1; room <= 14; room++ {
+			for cursor := range len(runes) + 1 {
+				if cursor < len(runes) && runes[cursor] != '\n' {
+					continue
+				}
+
+				rows, row, column := layout(&Buffer{runes: runes, cursor: cursor}, room)
+				if drawn := width.Of(rows[row]); column < drawn && column < room {
+					t.Fatalf(
+						"%q at %d in room %d stands at %d,%d before the text of %q",
+						text, cursor, room, row, column, rows,
+					)
+				}
 			}
 		}
 	}

@@ -1,104 +1,104 @@
 === 01 a slash lists the commands with what they do ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l
 === 02 a name narrows the commands ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/c\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m  edit the configuration file\e[0m\e[K\e[1B\r  /copy\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/co\e[K\r\e[3C\e[?25h\e[?2026l
 === 03 a name matching nothing ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/z\e[K\e[1B\r\e[38;2;150;152;150m  no matching commands\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/zz\e[K\r\e[3C\e[?25h\e[?2026l
 === 04 tab chooses a command that takes nothing ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/c\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m  edit the configuration file\e[0m\e[K\e[1B\r  /copy\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/co\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/con\e[K\e[2B\r\e[K\e[2A\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/conf \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[6C\e[?25h\e[?2026l
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/c\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m  edit the configuration file\e[0m\e[K\e[1B\r  /copy\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/co\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/con\e[K\e[2B\r\e[K\e[2A\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/conf\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[5C\e[?25h\e[?2026l
 === 05 choosing a command goes on to its arguments ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/c\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m  edit the configuration file\e[0m\e[K\e[1B\r  /copy\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/co\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r  /conf\e[38;2;150;152;150m  edit the configuration file\e[0m\e[K\e[1B\r\e[38;2;192;128;80m› /copy\e[0m\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[2A\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy \e[K\e[1B\r\e[38;2;192;128;80m› session-dir\e[0m\e[K\e[1B\r  session-id\e[K\e[1B\r  session-name\e[K\e[3A\r\e[6C\e[?25h\e[?2026l
 === 06 an argument narrows the arguments ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/c\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m  edit the configuration file\e[0m\e[K\e[1B\r  /copy\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/co\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/cop\e[K\e[1B\r\e[38;2;192;128;80m› /copy\e[0m\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[2A\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy \e[K\e[1B\r\e[38;2;192;128;80m› session-dir\e[0m\e[K\e[1B\r  session-id\e[K\e[1B\r  session-name\e[K\e[3A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy s\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy se\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy ses\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy sess\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy sessi\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy sessio\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy session\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy session-\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy session-n\e[K\e[1B\r\e[38;2;192;128;80m› session-name\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[15C\e[?25h\e[?2026l
 === 07 tab chooses an argument ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/c\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m  edit the configuration file\e[0m\e[K\e[1B\r  /copy\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/co\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/cop\e[K\e[1B\r\e[38;2;192;128;80m› /copy\e[0m\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[2A\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy \e[K\e[1B\r\e[38;2;192;128;80m› session-dir\e[0m\e[K\e[1B\r  session-id\e[K\e[1B\r  session-name\e[K\e[3A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r  session-dir\e[K\e[1B\r\e[38;2;192;128;80m› session-id\e[0m\e[K\e[2A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy session-id \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[17C\e[?25h\e[?2026l
 === 08 enter submits rather than chooses ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/q\e[K\e[1B\r\e[38;2;192;128;80m› /quit\e[0m\e[38;2;150;152;150m  leave the session, and say goodbye in a line long …\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/qu\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r \e[38;2;150;152;150m╭────────────────────────────────────────────────────────╮\e[0m\e[K\e[1B\r \e[38;2;150;152;150m│\e[0m \e[38;2;204;102;102mCommand not found: /qu (alt+enter to send)\e[0m             \e[38;2;150;152;150m│\e[0m\e[K\e[1B\r\e[38;2;150;152;150m─┴\e[0m\e[38;2;150;152;150m────────────────────────────────────────────────────────\e[0m\e[38;2;150;152;150m┴─\e[0m\e[1B\r/qu\e[K\e[1B\r\e[38;2;192;128;80m› /quit\e[0m\e[38;2;150;152;150m  leave the session, and say goodbye in a line long …\e[0m\e[4B\r\e[K\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[3C\e[?25h\e[?2026l
 === 09 two slashes list the snippets ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//\e[K\e[1B\r\e[38;2;192;128;80m› //help\e[0m\e[38;2;150;152;150m           list the configured snippets\e[0m\e[K\e[1B\r  //review <args>\e[38;2;150;152;150m  Review the named scope.\e[0m\e[K\e[1B\r  //test [<args>]\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l
 === 10 a path closes the dropdown at its second slash ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/t\e[K\e[1B\r\e[38;2;150;152;150m  no matching commands\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/tm\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/tmp\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/tmp/\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/tmp/n\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/tmp/no\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/tmp/not\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/tmp/note\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/tmp/notes\e[K\r\e[10C\e[?25h\e[?2026l
 === 11 a slash within prose opens nothing ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
@@ -107,22 +107,22 @@
 === 12 tab after a complete command is swallowed ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/c\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m  edit the configuration file\e[0m\e[K\e[1B\r  /copy\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/co\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/con\e[K\e[2B\r\e[K\e[2A\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/conf\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/conf \e[K\r\e[6C\e[?25h\e[?2026l
 === 13 escape closes the dropdown ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[1C\e[?25h\e[?2026l
 === 14 recalling a command opens nothing ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
@@ -138,13 +138,13 @@
 === 16 a path reference within a command completes as a path ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/g\e[K\e[1B\r\e[38;2;192;128;80m› /grant <access> <path>\e[0m\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gr\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gra\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gran\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant \e[K\e[1B\r\e[38;2;192;128;80m› r\e[0m\e[K\e[1B\r  rw\e[K\e[1B\r  rx\e[K\e[1B\r  rxw\e[K\e[4A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rw\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rw \e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rw @\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/g\e[K\e[1B\r\e[38;2;192;128;80m› /grant <access> <path>...\e[0m\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gr\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gra\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gran\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant \e[K\e[1B\r\e[38;2;192;128;80m› r\e[0m\e[K\e[1B\r  rw\e[K\e[2A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rw\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rw \e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rw @\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rw @h\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rw @ha\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rw @har\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rw @harn\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› internal/app/harness/\e[0m\e[K\e[1B\r  internal/app/harness/app.go\e[K\r
   internal/app/harness/main.go\e[K\r
   internal/app/harness/pathref.go\e[K\r
@@ -166,106 +166,106 @@
 === 19 a command with nothing to list closes once chosen ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/r\e[K\e[1B\r\e[38;2;192;128;80m› /revoke\e[0m\e[38;2;150;152;150m  revoke a grant\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/re\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/rev\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[8C\e[?25h\e[?2026l
 === 20 an argument matching nothing closes the dropdown ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/c\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m  edit the configuration file\e[0m\e[K\e[1B\r  /copy\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/co\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/cop\e[K\e[1B\r\e[38;2;192;128;80m› /copy\e[0m\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[2A\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy \e[K\e[1B\r\e[38;2;192;128;80m› session-dir\e[0m\e[K\e[1B\r  session-id\e[K\e[1B\r  session-name\e[K\e[3A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy x\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[7C\e[?25h\e[?2026l
 === 21 typing on after a closed command opens nothing ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/r\e[K\e[1B\r\e[38;2;192;128;80m› /revoke\e[0m\e[38;2;150;152;150m  revoke a grant\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/re\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/rev\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke /\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke /t\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke /tm\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke /tmp\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke /tmp/\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke /tmp/n\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke /tmp/no\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke /tmp/not\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke /tmp/note\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke /tmp/notes\e[K\r\e[18C\e[?25h\e[?2026l
 === 22 a command typed whole that takes nothing closes the dropdown ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/q\e[K\e[1B\r\e[38;2;192;128;80m› /quit\e[0m\e[38;2;150;152;150m  leave the session, and say goodbye in a line long …\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/qu\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/qui\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/quit\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[5C\e[?25h\e[?2026l
 === 23 an argument typed whole closes the dropdown ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/c\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m  edit the configuration file\e[0m\e[K\e[1B\r  /copy\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/co\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/cop\e[K\e[1B\r\e[38;2;192;128;80m› /copy\e[0m\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[2A\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy \e[K\e[1B\r\e[38;2;192;128;80m› session-dir\e[0m\e[K\e[1B\r  session-id\e[K\e[1B\r  session-name\e[K\e[3A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy s\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy se\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy ses\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy sess\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy sessi\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy sessio\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy session\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy session-\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy session-i\e[K\e[1B\r\e[38;2;192;128;80m› session-id\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy session-id\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[16C\e[?25h\e[?2026l
 === 24 choosing a snippet leaves room for its arguments ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//\e[K\e[1B\r\e[38;2;192;128;80m› //help\e[0m\e[38;2;150;152;150m           list the configured snippets\e[0m\e[K\e[1B\r  //review <args>\e[38;2;150;152;150m  Review the named scope.\e[0m\e[K\e[1B\r  //test [<args>]\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//r\e[K\e[1B\r\e[38;2;192;128;80m› //review <args>\e[0m\e[38;2;150;152;150m  Review the named scope.\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//re\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//rev\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review t\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review th\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review the\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review the \e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review the t\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review the te\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review the tes\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review the test\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review the tests\e[K\r\e[18C\e[?25h\e[?2026l
 === 25 tab after grant flags lists paths ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/g\e[K\e[1B\r\e[38;2;192;128;80m› /grant <access> <path>\e[0m\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gr\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gra\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gran\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant \e[K\e[1B\r\e[38;2;192;128;80m› r\e[0m\e[K\e[1B\r  rw\e[K\e[1B\r  rx\e[K\e[1B\r  rxw\e[K\e[4A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rx\e[K\e[1B\r\e[38;2;192;128;80m› rx\e[0m\e[K\e[1B\r  rxw\e[K\e[1B\r\e[K\e[1B\r\e[K\e[4A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rx \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  listing paths…\e[0m\e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› documents/\e[0m\e[K\e[1B\r  notes.txt\e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[3A\r\e[10C\e[?25h\e[?2026l
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/g\e[K\e[1B\r\e[38;2;192;128;80m› /grant <access> <path>...\e[0m\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gr\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gra\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gran\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant \e[K\e[1B\r\e[38;2;192;128;80m› r\e[0m\e[K\e[1B\r  rw\e[K\e[2A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  listing paths…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› documents/\e[0m\e[K\e[1B\r  notes.txt\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[3A\r\e[9C\e[?25h\e[?2026l
 === 26 tab chooses a grant path ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/g\e[K\e[1B\r\e[38;2;192;128;80m› /grant <access> <path>\e[0m\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gr\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gra\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gran\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant \e[K\e[1B\r\e[38;2;192;128;80m› r\e[0m\e[K\e[1B\r  rw\e[K\e[1B\r  rx\e[K\e[1B\r  rxw\e[K\e[4A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rx\e[K\e[1B\r\e[38;2;192;128;80m› rx\e[0m\e[K\e[1B\r  rxw\e[K\e[1B\r\e[K\e[1B\r\e[K\e[4A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rx \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  listing paths…\e[0m\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/g\e[K\e[1B\r\e[38;2;192;128;80m› /grant <access> <path>...\e[0m\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gr\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gra\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gran\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant \e[K\e[1B\r\e[38;2;192;128;80m› r\e[0m\e[K\e[1B\r  rw\e[K\e[2A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rw\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rw \e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  listing paths…\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› documents/\e[0m\e[K\e[1B\r  notes.txt\e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[3A\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r  documents/\e[K\e[1B\r\e[38;2;192;128;80m› notes.txt\e[0m\e[K\e[2A\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rx notes.txt \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[20C\e[?25h\e[?2026l
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[3A\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r  documents/\e[K\e[1B\r\e[38;2;192;128;80m› notes.txt\e[0m\e[K\e[2A\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rw notes.txt \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[20C\e[?25h\e[?2026l
 === 27 enter sends a whole command that takes arguments ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/c\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m  edit the configuration file\e[0m\e[K\e[1B\r  /copy\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/co\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/cop\e[K\e[1B\r\e[38;2;192;128;80m› /copy\e[0m\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[2A\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[?25h\e[?2026l
 === 28 space after a whole command goes on to its arguments ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/c\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m  edit the configuration file\e[0m\e[K\e[1B\r  /copy\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/co\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/cop\e[K\e[1B\r\e[38;2;192;128;80m› /copy\e[0m\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[2A\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy \e[K\e[1B\r\e[38;2;192;128;80m› session-dir\e[0m\e[K\e[1B\r  session-id\e[K\e[1B\r  session-name\e[K\e[3A\r\e[6C\e[?25h\e[?2026l
 === 29 tab after a chosen argument offers only the rest ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
@@ -284,14 +284,217 @@
   8080\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke 8\e[K\e[1B\r\e[38;2;192;128;80m› 8080\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke 80\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke 808\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke 8080\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[4A\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke 8080 \e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke 8080 /\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke 8080 /f\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke 8080 /fi\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke 8080 /fir\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke 8080 /firs\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke 8080 /first\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/revoke 8080 /first \e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› /second\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[20C\e[?25h\e[?2026l
-=== 31 tab lists a tilde path after conventionally ordered access ===
+=== 31 tab lists a tilde path after read access ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                   edit the configuration file\e[0m\e[K\r
-  /copy\e[38;2;150;152;150m                   copy a session target to the clip…\e[0m\r
-  /grant <access> <path>\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
   /open\e[K\r
-  /quit\e[38;2;150;152;150m                   leave the session, and say goodby…\e[0m\r
-  /revoke\e[38;2;150;152;150m                 revoke a grant\e[0m\e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/g\e[K\e[1B\r\e[38;2;192;128;80m› /grant <access> <path>\e[0m\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gr\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gra\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gran\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant \e[K\e[1B\r\e[38;2;192;128;80m› r\e[0m\e[K\e[1B\r  rw\e[K\e[1B\r  rx\e[K\e[1B\r  rxw\e[K\e[4A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rw\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rwx\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rwx \e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rwx ~\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rwx ~/\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rwx ~/d\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rwx ~/do\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant rwx ~/doc\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  listing paths…\e[0m\e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› ~/documents/\e[0m\e[K\e[1A\r\e[16C\e[?25h\e[?2026l
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/g\e[K\e[1B\r\e[38;2;192;128;80m› /grant <access> <path>...\e[0m\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gr\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gra\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gran\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant \e[K\e[1B\r\e[38;2;192;128;80m› r\e[0m\e[K\e[1B\r  rw\e[K\e[2A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~/\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~/d\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~/do\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~/doc\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  listing paths…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› ~/documents/\e[0m\e[K\e[1A\r\e[14C\e[?25h\e[?2026l
+=== 32 tab again after a command that takes nothing changes nothing ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+  /open\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/c\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m  edit the configuration file\e[0m\e[K\e[1B\r  /copy\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/co\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/con\e[K\e[2B\r\e[K\e[2A\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/conf\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[5C\e[?25h\e[?2026l
+=== 33 tab within a command with nothing to complete is swallowed ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+  /open\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/c\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m  edit the configuration file\e[0m\e[K\e[1B\r  /copy\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/co\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/cop\e[K\e[1B\r\e[38;2;192;128;80m› /copy\e[0m\e[38;2;150;152;150m  copy a session target to the clipboard\e[0m\e[K\e[1B\r\e[K\e[2A\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy \e[K\e[1B\r\e[38;2;192;128;80m› session-dir\e[0m\e[K\e[1B\r  session-id\e[K\e[1B\r  session-name\e[K\e[3A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy a\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy an\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy any\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy anyt\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy anyth\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy anythi\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy anythin\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/copy anything\e[K\r\e[14C\e[?25h\e[?2026l
+=== 34 tab within a snippet is swallowed ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+  /open\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//\e[K\e[1B\r\e[38;2;192;128;80m› //help\e[0m\e[38;2;150;152;150m           list the configured snippets\e[0m\e[K\e[1B\r  //review <args>\e[38;2;150;152;150m  Review the named scope.\e[0m\e[K\e[1B\r  //test [<args>]\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//r\e[K\e[1B\r\e[38;2;192;128;80m› //review <args>\e[0m\e[38;2;150;152;150m  Review the named scope.\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//re\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//rev\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//revi\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//revie\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review t\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review th\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review the\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review the \e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review the t\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review the te\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review the tes\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review the test\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r//review the tests\e[K\r\e[18C\e[?25h\e[?2026l
+=== 35 tab after a grant path lists another ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+  /open\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/g\e[K\e[1B\r\e[38;2;192;128;80m› /grant <access> <path>...\e[0m\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gr\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gra\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gran\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant \e[K\e[1B\r\e[38;2;192;128;80m› r\e[0m\e[K\e[1B\r  rw\e[K\e[2A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r n\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r no\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r not\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r note\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.t\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.tx\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt \e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  listing paths…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› documents/\e[0m\e[K\e[1B\r  notes.txt\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[3A\r\e[19C\e[?25h\e[?2026l
+=== 36 tab quotes a grant path holding a space ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+  /open\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/g\e[K\e[1B\r\e[38;2;192;128;80m› /grant <access> <path>...\e[0m\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gr\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gra\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gran\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant \e[K\e[1B\r\e[38;2;192;128;80m› r\e[0m\e[K\e[1B\r  rw\e[K\e[2A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r n\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r no\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r not\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r note\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.t\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.tx\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt \e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/d\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/do\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/doc\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/docu\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/docum\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/docume\e[K\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/documen\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/document\e[K\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/documents\e[K\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/documents/\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  listing paths…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› ~/documents/meeting notes.txt\e[0m\e[K\e[1B\r  ~/documents/old drafts/\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[3A\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt "~/documents/meeting notes.txt" \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[51C\e[?25h\e[?2026l
+=== 37 tab completes within a quoted grant path ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+  /open\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/g\e[K\e[1B\r\e[38;2;192;128;80m› /grant <access> <path>...\e[0m\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gr\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gra\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gran\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant \e[K\e[1B\r\e[38;2;192;128;80m› r\e[0m\e[K\e[1B\r  rw\e[K\e[2A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r n\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r no\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r not\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r note\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.t\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.tx\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt \e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt "\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt "~\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt "~/\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt "~/d\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt "~/do\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt "~/doc\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt "~/docu\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt "~/docum\e[K\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt "~/docume\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt "~/documen\e[K\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt "~/document\e[K\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt "~/documents\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt "~/documents/\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt "~/documents/m\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt "~/documents/me\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt "~/documents/mee\e[K\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  listing paths…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› ~/documents/meeting notes.txt\e[0m\e[K\e[1A\r\e[35C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt "~/documents/meeting notes.txt" \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[2A\r\e[51C\e[?25h\e[?2026l
+=== 38 tab completes only the grant path under the cursor ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+  /open\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/g\e[K\e[1B\r\e[38;2;192;128;80m› /grant <access> <path>...\e[0m\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gr\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gra\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gran\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant \e[K\e[1B\r\e[38;2;192;128;80m› r\e[0m\e[K\e[1B\r  rw\e[K\e[2A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~/\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~/n\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~/no\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~/no \e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~/no ~\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~/no ~/\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~/no ~/d\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~/no ~/do\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~/no ~/doc\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~/no ~/docu\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~/no ~/docum\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~/no ~/docume\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~/no ~/documen\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~/no ~/document\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~/no ~/documents\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~/no ~/documents/\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  listing paths…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› ~/notes.txt\e[0m\e[K\e[1A\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r ~/notes.txt ~/documents/\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[2A\r\e[20C\e[?25h\e[?2026l
+=== 39 a quoted grant directory goes on listing inside its quote ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+  /open\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/g\e[K\e[1B\r\e[38;2;192;128;80m› /grant <access> <path>...\e[0m\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[6A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gr\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gra\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/gran\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant \e[K\e[1B\r\e[38;2;192;128;80m› r\e[0m\e[K\e[1B\r  rw\e[K\e[2A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r n\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r no\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r not\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r note\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.t\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.tx\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt \e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/d\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/do\e[K\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/doc\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/docu\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/docum\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/docume\e[K\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/documen\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/document\e[K\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/documents\e[K\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/documents/\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/documents/o\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/documents/ol\e[K\r\e[33C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt ~/documents/old\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  listing paths…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› ~/documents/old drafts/\e[0m\e[K\e[1A\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt "~/documents/old drafts/\e[K\e[1B\r\e[38;2;150;152;150m  listing paths…\e[0m\e[K\e[1A\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› ~/documents/old drafts/plan.txt\e[0m\e[K\e[1A\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/grant r notes.txt "~/documents/old drafts/plan.txt" \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[2A\r\e[53C\e[?25h\e[?2026l
+=== 40 choosing a command goes on to the arguments it completes ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
+  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/n\e[K\e[1B\r\e[38;2;192;128;80m› /new [<model>]\e[0m\e[38;2;150;152;150m  start a new session\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/ne\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new \e[K\e[1B\r\e[38;2;192;128;80m› anthropic/claude-sonnet-5@medium\e[0m\e[K\e[1B\r  anthropic/claude-sonnet-5@high\e[K\e[1B\r  anthropic/claude-opus-5@high\e[K\e[1B\r  opencode-go/minimax-m3\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[5A\r\e[5C\e[?25h\e[?2026l
+=== 41 completed arguments keep the order their command gives ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
+  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/n\e[K\e[1B\r\e[38;2;192;128;80m› /new [<model>]\e[0m\e[38;2;150;152;150m  start a new session\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/ne\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new \e[K\e[1B\r\e[38;2;192;128;80m› anthropic/claude-sonnet-5@medium\e[0m\e[K\e[1B\r  anthropic/claude-sonnet-5@high\e[K\e[1B\r  anthropic/claude-opus-5@high\e[K\e[1B\r  opencode-go/minimax-m3\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[5A\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new s\e[K\e[4B\r\e[K\e[4A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new so\e[K\e[3B\r\e[K\e[3A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new son\e[K\r\e[8C\e[?25h\e[?2026l
+=== 42 tab chooses an argument that follows another ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
+  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/j\e[K\e[1B\r\e[38;2;192;128;80m› /job {status|stop} <name> | prune\e[0m\e[38;2;150;152;150m  act on a job\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/jo\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job \e[K\e[1B\r\e[38;2;192;128;80m› prune\e[0m\e[K\e[1B\r  status\e[K\e[1B\r  stop\e[K\e[3A\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job s\e[K\e[1B\r\e[38;2;192;128;80m› status\e[0m\e[K\e[1B\r  stop\e[K\e[1B\r\e[K\e[3A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job st\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job sto\e[K\e[1B\r\e[38;2;192;128;80m› stop\e[0m\e[K\e[1B\r\e[K\e[2A\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job stop\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[4A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job stop \e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› build\e[0m\e[K\r
+  docs\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[3A\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r  build\e[K\e[1B\r\e[38;2;192;128;80m› docs\e[0m\e[K\e[2A\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job stop docs \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[15C\e[?25h\e[?2026l
+=== 43 a command taking an attached argument closes the dropdown ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+  /open\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/!\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/!l\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/!ls\e[K\r\e[4C\e[?25h\e[?2026l
+=== 44 a bang alone closes the dropdown ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /conf\e[0m\e[38;2;150;152;150m                      edit the configuration file\e[0m\e[K\r
+  /copy\e[38;2;150;152;150m                      copy a session target to the c…\e[0m\r
+  /grant <access> <path>...\e[38;2;150;152;150m  grant temporary path access\e[0m\e[K\r
+  /open\e[K\r
+  /quit\e[38;2;150;152;150m                      leave the session, and say goo…\e[0m\r
+  /revoke\e[38;2;150;152;150m                    revoke a grant\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[7A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/!\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[7A\r\e[2C\e[?25h\e[?2026l
+=== 45 a completed argument matching nothing closes the dropdown ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
+  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/n\e[K\e[1B\r\e[38;2;192;128;80m› /new [<model>]\e[0m\e[38;2;150;152;150m  start a new session\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/ne\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new \e[K\e[1B\r\e[38;2;192;128;80m› anthropic/claude-sonnet-5@medium\e[0m\e[K\e[1B\r  anthropic/claude-sonnet-5@high\e[K\e[1B\r  anthropic/claude-opus-5@high\e[K\e[1B\r  opencode-go/minimax-m3\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[5A\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new z\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[5A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new zz\e[K\r\e[7C\e[?25h\e[?2026l
+=== 46 a completed argument typed whole closes the dropdown ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
+  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/n\e[K\e[1B\r\e[38;2;192;128;80m› /new [<model>]\e[0m\e[38;2;150;152;150m  start a new session\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/ne\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new \e[K\e[1B\r\e[38;2;192;128;80m› anthropic/claude-sonnet-5@medium\e[0m\e[K\e[1B\r  anthropic/claude-sonnet-5@high\e[K\e[1B\r  anthropic/claude-opus-5@high\e[K\e[1B\r  opencode-go/minimax-m3\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[5A\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new a\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new an\e[K\e[3B\r\e[K\e[1B\r\e[K\e[4A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new ant\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anth\e[K\e[3B\r  anthropic/claude-opus-5@high\e[K\e[3A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthr\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthro\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthrop\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropi\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/c\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/cl\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/cla\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/clau\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claud\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-o\e[K\e[1B\r\e[38;2;192;128;80m› anthropic/claude-opus-5@high\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[23C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-op\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-opu\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-opus\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-opus-\e[K\r\e[27C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-opus-5\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-opus-5@\e[K\r\e[29C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-opus-5@h\e[K\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-opus-5@hi\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-opus-5@hig\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-opus-5@high\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[5A\r\e[33C\e[?25h\e[?2026l
+=== 47 tab after a chosen completed argument is swallowed ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
+  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/n\e[K\e[1B\r\e[38;2;192;128;80m› /new [<model>]\e[0m\e[38;2;150;152;150m  start a new session\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/ne\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new \e[K\e[1B\r\e[38;2;192;128;80m› anthropic/claude-sonnet-5@medium\e[0m\e[K\e[1B\r  anthropic/claude-sonnet-5@high\e[K\e[1B\r  anthropic/claude-opus-5@high\e[K\e[1B\r  opencode-go/minimax-m3\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[5A\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new anthropic/claude-sonnet-5@medium \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[5A\r\e[38C\e[?25h\e[?2026l
+=== 48 choosing an action that takes no name closes the dropdown ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
+  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/j\e[K\e[1B\r\e[38;2;192;128;80m› /job {status|stop} <name> | prune\e[0m\e[38;2;150;152;150m  act on a job\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/jo\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job \e[K\e[1B\r\e[38;2;192;128;80m› prune\e[0m\e[K\e[1B\r  status\e[K\e[1B\r  stop\e[K\e[3A\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job p\e[K\e[2B\r\e[K\e[1B\r\e[K\e[3A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job pr\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/job prune \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[4A\r\e[11C\e[?25h\e[?2026l
+=== 49 a long completed list windows around the selection ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
+  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/f\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m  fork the session\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/fo\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/for\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/fork\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/fork \e[K\e[1B\r\e[38;2;192;128;80m› model-01@high\e[0m\e[K\e[1B\r  model-02@high\e[K\e[1B\r  model-03@high\e[K\e[1B\r  model-04@high\e[K\r
+  model-05@high\e[K\r
+  model-06@high\e[K\r
+  model-07@high\e[K\r
+\e[38;2;150;152;150m  ⋮ 5 more\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[9A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r  model-01@high\e[K\e[1B\r\e[38;2;192;128;80m› model-02@high\e[0m\e[K\e[2A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2B\r  model-02@high\e[K\e[1B\r\e[38;2;192;128;80m› model-03@high\e[0m\e[K\e[3A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3B\r  model-03@high\e[K\e[1B\r\e[38;2;192;128;80m› model-04@high\e[0m\e[K\e[4A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4B\r  model-04@high\e[K\e[1B\r\e[38;2;192;128;80m› model-05@high\e[0m\e[K\e[5A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[5B\r  model-05@high\e[K\e[1B\r\e[38;2;192;128;80m› model-06@high\e[0m\e[K\e[6A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[6B\r  model-06@high\e[K\e[1B\r\e[38;2;192;128;80m› model-07@high\e[0m\e[K\e[7A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r  model-02@high\e[K\e[1B\r  model-03@high\e[K\e[1B\r  model-04@high\e[K\e[1B\r  model-05@high\e[K\e[1B\r  model-06@high\e[K\e[1B\r  model-07@high\e[K\e[1B\r\e[38;2;192;128;80m› model-08@high\e[0m\e[K\e[1B\r\e[38;2;150;152;150m  ⋮ 1 above, 4 below\e[0m\e[K\e[8A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r  model-03@high\e[K\e[1B\r  model-04@high\e[K\e[1B\r  model-05@high\e[K\e[1B\r  model-06@high\e[K\e[1B\r  model-07@high\e[K\e[1B\r  model-08@high\e[K\e[1B\r\e[38;2;192;128;80m› model-09@high\e[0m\e[K\e[1B\r\e[38;2;150;152;150m  ⋮ 2 above, 3 below\e[0m\e[K\e[8A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r  model-04@high\e[K\e[1B\r  model-05@high\e[K\e[1B\r  model-06@high\e[K\e[1B\r  model-07@high\e[K\e[1B\r  model-08@high\e[K\e[1B\r  model-09@high\e[K\e[1B\r\e[38;2;192;128;80m› model-10@high\e[0m\e[K\e[1B\r\e[38;2;150;152;150m  ⋮ 3 above, 2 below\e[0m\e[K\e[8A\r\e[6C\e[?25h\e[?2026l
+=== 50 a long completed list stops at its last row ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
+  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/f\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m  fork the session\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/fo\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/for\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/fork\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/fork \e[K\e[1B\r\e[38;2;192;128;80m› model-01@high\e[0m\e[K\e[1B\r  model-02@high\e[K\e[1B\r  model-03@high\e[K\e[1B\r  model-04@high\e[K\r
+  model-05@high\e[K\r
+  model-06@high\e[K\r
+  model-07@high\e[K\r
+\e[38;2;150;152;150m  ⋮ 5 more\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[9A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r  model-01@high\e[K\e[1B\r\e[38;2;192;128;80m› model-02@high\e[0m\e[K\e[2A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2B\r  model-02@high\e[K\e[1B\r\e[38;2;192;128;80m› model-03@high\e[0m\e[K\e[3A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3B\r  model-03@high\e[K\e[1B\r\e[38;2;192;128;80m› model-04@high\e[0m\e[K\e[4A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4B\r  model-04@high\e[K\e[1B\r\e[38;2;192;128;80m› model-05@high\e[0m\e[K\e[5A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[5B\r  model-05@high\e[K\e[1B\r\e[38;2;192;128;80m› model-06@high\e[0m\e[K\e[6A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[6B\r  model-06@high\e[K\e[1B\r\e[38;2;192;128;80m› model-07@high\e[0m\e[K\e[7A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r  model-02@high\e[K\e[1B\r  model-03@high\e[K\e[1B\r  model-04@high\e[K\e[1B\r  model-05@high\e[K\e[1B\r  model-06@high\e[K\e[1B\r  model-07@high\e[K\e[1B\r\e[38;2;192;128;80m› model-08@high\e[0m\e[K\e[1B\r\e[38;2;150;152;150m  ⋮ 1 above, 4 below\e[0m\e[K\e[8A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r  model-03@high\e[K\e[1B\r  model-04@high\e[K\e[1B\r  model-05@high\e[K\e[1B\r  model-06@high\e[K\e[1B\r  model-07@high\e[K\e[1B\r  model-08@high\e[K\e[1B\r\e[38;2;192;128;80m› model-09@high\e[0m\e[K\e[1B\r\e[38;2;150;152;150m  ⋮ 2 above, 3 below\e[0m\e[K\e[8A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r  model-04@high\e[K\e[1B\r  model-05@high\e[K\e[1B\r  model-06@high\e[K\e[1B\r  model-07@high\e[K\e[1B\r  model-08@high\e[K\e[1B\r  model-09@high\e[K\e[1B\r\e[38;2;192;128;80m› model-10@high\e[0m\e[K\e[1B\r\e[38;2;150;152;150m  ⋮ 3 above, 2 below\e[0m\e[K\e[8A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r  model-05@high\e[K\e[1B\r  model-06@high\e[K\e[1B\r  model-07@high\e[K\e[1B\r  model-08@high\e[K\e[1B\r  model-09@high\e[K\e[1B\r  model-10@high\e[K\e[1B\r\e[38;2;192;128;80m› model-11@high\e[0m\e[K\e[1B\r\e[38;2;150;152;150m  ⋮ 4 above, 1 below\e[0m\e[K\e[8A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r  model-06@high\e[K\e[1B\r  model-07@high\e[K\e[1B\r  model-08@high\e[K\e[1B\r  model-09@high\e[K\e[1B\r  model-10@high\e[K\e[1B\r  model-11@high\e[K\e[1B\r\e[38;2;192;128;80m› model-12@high\e[0m\e[K\e[1B\r\e[38;2;150;152;150m  ⋮ 5 above\e[0m\e[K\e[8A\r\e[6C\e[?25h\e[?2026l
+=== 51 escape closes a completed argument's dropdown ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
+  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/n\e[K\e[1B\r\e[38;2;192;128;80m› /new [<model>]\e[0m\e[38;2;150;152;150m  start a new session\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/ne\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new \e[K\e[1B\r\e[38;2;192;128;80m› anthropic/claude-sonnet-5@medium\e[0m\e[K\e[1B\r  anthropic/claude-sonnet-5@high\e[K\e[1B\r  anthropic/claude-opus-5@high\e[K\e[1B\r  opencode-go/minimax-m3\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[5A\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[5A\r\e[5C\e[?25h\e[?2026l
+=== 52 typing a provider keeps its models listed ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r/\e[K\e[1B\r\e[38;2;192;128;80m› /fork [<model>]\e[0m\e[38;2;150;152;150m                    fork the session\e[0m\e[K\r
+  /job {status|stop} <name> | prune\e[38;2;150;152;150m  act on a job\e[0m\e[K\r
+  /new [<model>]\e[38;2;150;152;150m                     start a new session\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[4A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/n\e[K\e[1B\r\e[38;2;192;128;80m› /new [<model>]\e[0m\e[38;2;150;152;150m  start a new session\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/ne\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new \e[K\e[1B\r\e[38;2;192;128;80m› anthropic/claude-sonnet-5@medium\e[0m\e[K\e[1B\r  anthropic/claude-sonnet-5@high\e[K\e[1B\r  anthropic/claude-opus-5@high\e[K\e[1B\r  opencode-go/minimax-m3\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[5A\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new o\e[K\e[4B\r\e[K\e[4A\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new op\e[K\e[1B\r\e[38;2;192;128;80m› anthropic/claude-opus-5@high\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[3A\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new ope\e[K\e[1B\r\e[38;2;192;128;80m› opencode-go/minimax-m3\e[0m\e[K\e[1A\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new open\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new openc\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new openco\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new opencod\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new opencode\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r/new opencode-\e[K\r\e[14C\e[?25h\e[?2026l

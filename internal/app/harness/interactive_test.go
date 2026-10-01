@@ -29,6 +29,7 @@ const (
 	endOfTransmission   = "\x04"
 	pressEnter          = "\r"
 	pressEscape         = "\x1b"
+	clearInput          = "\x15"
 	readyBanner         = "ready in "
 )
 
@@ -360,4 +361,31 @@ func (self *interactiveSession) screen() []string {
 
 	drawn := terminalQueries.ReplaceAllString(self.String(), "")
 	return playScreenOfSize(self.t, drawn, interactiveColumns, interactiveRows).text()
+}
+
+func TestCommandArgumentsAreCompletedFromTheSessionItself(t *testing.T) {
+	rig := newInteractiveRig(t)
+
+	session := rig.start("--yolo", "-m", "opencode-go/fake")
+	session.waitFor(readyBanner)
+	session.requireHidden("opencode-go/fake")
+
+	session.typeAndSettle("/new opencode-go/")
+	session.requireShown("› opencode-go/fake@")
+	session.typeAndSettle("\t")
+	session.requireShown("/new opencode-go/fake@")
+	session.requireHidden("› ")
+	session.typeAndSettle(clearInput)
+
+	session.typeAndSettle("/fork opencode-go/fa")
+	session.requireShown("› opencode-go/fake@")
+	session.typeAndSettle(pressEscape)
+	session.typeAndSettle(clearInput)
+
+	session.typeAndSettle("/!")
+	session.requireHidden("no matching commands")
+	session.requireHidden("› ")
+	session.typeAndSettle(clearInput)
+
+	session.quit()
 }

@@ -172,10 +172,9 @@ func TestFocusReportingIsRestoredWithTheKeyboardProtocol(t *testing.T) {
 	}
 }
 
-func TestEveryLineEndingIsOneEnter(t *testing.T) {
+func TestReturnLineEndingsAreOneEnter(t *testing.T) {
 	for name, input := range map[string]string{
 		"cr":   "a\rb",
-		"lf":   "a\nb",
 		"crlf": "a\r\nb",
 	} {
 		got := decode(t, input)
@@ -191,6 +190,15 @@ func TestEveryLineEndingIsOneEnter(t *testing.T) {
 				t.Errorf("%s: expected %v, got %v", name, want[i], got[i])
 			}
 		}
+	}
+}
+
+func TestLineFeedArrivesAsControlJ(t *testing.T) {
+	got := decode(t, "\n")
+	want := Key{Code: Rune, Value: 'j', Mod: Ctrl}
+
+	if len(got) != 1 || got[0] != want {
+		t.Errorf("got %+v, want %+v", got, want)
 	}
 }
 
@@ -245,6 +253,7 @@ func TestKeyboardProtocolControlKeysKeepTheirModifiers(t *testing.T) {
 	for input, want := range map[string]Key{
 		"\x1b[13;2u":  {Code: Enter, Mod: Shift},
 		"\x1b[99;5u":  {Code: Rune, Value: 'c', Mod: Ctrl},
+		"\x1b[106;5u": {Code: Rune, Value: 'j', Mod: Ctrl},
 		"\x1b[127;5u": {Code: Backspace, Mod: Ctrl},
 	} {
 		got := decode(t, input)
@@ -267,6 +276,7 @@ func TestKeyboardProtocolKeypadKeysMatchTheirOrdinaryKeys(t *testing.T) {
 		"\x1b[57423u":   {Code: Home},
 		"\x1b[57424u":   {Code: End},
 		"\x1b[57426u":   {Code: Delete},
+		"\x1b[57426;5u": {Code: Delete, Mod: Ctrl},
 	} {
 		got := decode(t, input)
 		if len(got) != 1 || got[0] != want {
@@ -391,13 +401,14 @@ func TestApplicationCursorKeysAreRecognised(t *testing.T) {
 	}
 }
 
-func TestLegacyTildeHomeAndEndKeysAreNavigation(t *testing.T) {
+func TestLegacyTildeKeysKeepTheirModifiers(t *testing.T) {
 	for input, want := range map[string]Key{
 		"\x1b[1~":   {Code: Home},
 		"\x1b[4~":   {Code: End},
 		"\x1b[7~":   {Code: Home},
 		"\x1b[8~":   {Code: End},
 		"\x1b[1;5~": {Code: Home, Mod: Ctrl},
+		"\x1b[3;5~": {Code: Delete, Mod: Ctrl},
 		"\x1b[4;5~": {Code: End, Mod: Ctrl},
 		"\x1b[7;5~": {Code: Home, Mod: Ctrl},
 		"\x1b[8;5~": {Code: End, Mod: Ctrl},

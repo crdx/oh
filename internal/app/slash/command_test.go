@@ -99,7 +99,20 @@ func TestAnAttachedArgumentIsNotOfferedAsACompletion(t *testing.T) {
 	))
 
 	assertCompletions(t, registry, "/", []string{"/conf"})
-	assertCompletions(t, registry, "/!", nil)
+	for _, prefix := range []string{"/!", "/!ls"} {
+		if registry.Completes(prefix) {
+			t.Errorf("Completes(%q) held for an attached command", prefix)
+		}
+	}
+}
+
+func TestAnAttachedNameLeavesALongerCommandToComplete(t *testing.T) {
+	registry := mustRegistry(t, mustSet(t, "/",
+		slash.Command{Name: "!", Run: commandHandler}.WithAttachedArgument("<command>"),
+		slash.Command{Name: "!status", Run: commandHandler},
+	))
+
+	assertCompletions(t, registry, "/!s", []string{"/!status"})
 }
 
 func TestSetRejectsInvalidDefinitions(t *testing.T) {
@@ -228,6 +241,38 @@ func TestCompletionOffersFurtherArgumentsWithoutThoseAlreadyWritten(t *testing.T
 	}
 }
 
+func TestACommandCompletingItsOwnArgumentsIsToldWhatWasWritten(t *testing.T) {
+	type request struct {
+		writtenArguments []string
+		partial          string
+	}
+	var requests []request
+	registry := mustRegistry(t, mustSet(t, "/",
+		slash.Command{Name: "job", Run: commandHandler}.
+			WithArgumentCompletion(func(writtenArguments []string, partial string) []string {
+				requests = append(requests, request{writtenArguments: writtenArguments, partial: partial})
+				if len(writtenArguments) == 1 {
+					return []string{"zebra", "aardvark"}
+				}
+				return nil
+			}),
+	))
+
+	assertCompletions(t, registry, "/job stop  z", []string{"/job stop  zebra", "/job stop  aardvark"})
+	if registry.Completes("/job ") {
+		t.Error("Completes held where the command completed nothing")
+	}
+	want := request{writtenArguments: []string{"stop"}, partial: "z"}
+	if len(requests) == 0 || !slices.Equal(requests[0].writtenArguments, want.writtenArguments) || requests[0].partial != want.partial {
+		t.Errorf("got requests %+v, want %+v first", requests, want)
+	}
+
+	wantCommand := []slash.Completion{{Text: "/job", Label: "/job", TakesArguments: true}}
+	if got := registry.Completions("/jo"); !slices.Equal(got, wantCommand) {
+		t.Errorf("got %+v, want %+v", got, wantCommand)
+	}
+}
+
 func TestCompletionOffersOneArgumentToACommandThatTakesOne(t *testing.T) {
 	registry := mustRegistry(t, mustSet(t, "/",
 		slash.Command{Name: "copy", Run: commandHandler}.WithArguments("session-dir", "session-id"),
@@ -277,7 +322,7 @@ func TestACompletionNamesWhatItCompletes(t *testing.T) {
 	))
 
 	want := []slash.Completion{
-		{Text: "/conf", Label: "/conf", Description: "Edit the config."},
+		{Text: "/conf", Label: "/conf", Description: "Edit the config.", IsFinal: true},
 		{Text: "/copy", Label: "/copy", TakesArguments: true},
 	}
 	if got := registry.Completions("/co"); !slices.Equal(got, want) {

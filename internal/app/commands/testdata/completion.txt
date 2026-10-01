@@ -3,29 +3,35 @@
   /copy <target> → /copy …  (copy a target to the clipboard)
   /ctx → /ctx  (list sources contributing to model context)
   /edit <target> → /edit …  (open a target in your editor)
-  /expose <port> → /expose …  (expose a host loopback port to the sandbox)
-  /fork [<model>] → /fork …  (fork this session into a new one, optionally on another model)
-  /grant <access> <path> → /grant …  (grant temporary access to a path)
-  /grants [all] → /grants …  (list effective access and port routes)
+  /fork [<model>] → /fork …  (fork this session)
+  /forward <port> → /forward …  (forward a sandbox port to the host)
+  /grant <access> <path>... → /grant …  (grant temporary access to a path)
+  /grants [all] → /grants …  (list effective access and forwarded ports)
   /help → /help  (list the commands and targets)
   /info → /info  (show every bar segment with its current value)
   /job <action> → /job …  (inspect, stop, or discard a background job, or prune finished ones)
   /jobs → /jobs  (list this session's background jobs)
-  /new [<model>] → /new …  (start a new session, optionally on another model)
+  /new [<model>] → /new …  (start a new session)
   /open <target> → /open …  (open a target with its default application)
-  /revoke <target>... → /revoke …  (revoke temporary path grants or port routes)
+  /revoke <target>... → /revoke …  (revoke temporary path grants or forwarded ports)
 "/c"
   /conf → /conf  (edit the config and system prompt)
   /copy <target> → /copy …  (copy a target to the clipboard)
   /ctx → /ctx  (list sources contributing to model context)
+"/e"
+  /edit <target> → /edit …  (open a target in your editor)
+"/f"
+  /fork [<model>] → /fork …  (fork this session)
+  /forward <port> → /forward …  (forward a sandbox port to the host)
+"/forward "
+"/forward 8"
+"/expose "
 "/g"
-  /grant <access> <path> → /grant …  (grant temporary access to a path)
-  /grants [all] → /grants …  (list effective access and port routes)
+  /grant <access> <path>... → /grant …  (grant temporary access to a path)
+  /grants [all] → /grants …  (list effective access and forwarded ports)
 "/grant "
   r → /grant r
   rw → /grant rw
-  rx → /grant rx
-  rxw → /grant rxw
 "/grants "
   all → /grants all
 "/job "
@@ -34,8 +40,71 @@
   prune → /job prune
   status → /job status
   stop → /job stop
+"/job st"
+  status → /job status
+  stop → /job stop
+"/job stop "
+  build → /job stop build
+  docs → /job stop docs
+"/job output d"
+  docs → /job output docs
+"/job prune "
+"/job stop docs "
+"/job discard "
+  build → /job discard build
+  docs → /job discard docs
+"/job bogus "
+"/jobs "
+"/!"
+"/!ls"
+"/n"
+  /new [<model>] → /new …  (start a new session)
+"/new "
+  anthropic/claude-sonnet-5@medium → /new anthropic/claude-sonnet-5@medium
+  anthropic/claude-sonnet-5@high → /new anthropic/claude-sonnet-5@high
+  anthropic/claude-opus-5@high → /new anthropic/claude-opus-5@high
+  anthropic/claude-opus-5@max → /new anthropic/claude-opus-5@max
+  codex/gpt-5.6-sol@high → /new codex/gpt-5.6-sol@high
+  opencode-go/minimax-m3 → /new opencode-go/minimax-m3
+"/new son"
+  anthropic/claude-sonnet-5@medium → /new anthropic/claude-sonnet-5@medium
+  anthropic/claude-sonnet-5@high → /new anthropic/claude-sonnet-5@high
+"/new gpt@h"
+  codex/gpt-5.6-sol@high → /new codex/gpt-5.6-sol@high
+"/new sol@high+f"
+  codex/gpt-5.6-sol@high+fast → /new codex/gpt-5.6-sol@high+fast
+"/new nothing-like-it"
+"/new sonnet "
+"/new o"
+  anthropic/claude-sonnet-5@medium → /new anthropic/claude-sonnet-5@medium
+  anthropic/claude-sonnet-5@high → /new anthropic/claude-sonnet-5@high
+  anthropic/claude-opus-5@high → /new anthropic/claude-opus-5@high
+  anthropic/claude-opus-5@max → /new anthropic/claude-opus-5@max
+  codex/gpt-5.6-sol@high → /new codex/gpt-5.6-sol@high
+"/new opencode-"
+  opencode-go/minimax-m3 → /new opencode-go/minimax-m3
+"/new codex@h"
+  codex/gpt-5.6-sol@high → /new codex/gpt-5.6-sol@high
+"/new minimax"
+  opencode-go/minimax-m3 → /new opencode-go/minimax-m3
+"/new minimax@"
+"/new opus@m"
+  anthropic/claude-opus-5@max → /new anthropic/claude-opus-5@max
+"/new opus+f"
+"/fork "
+  anthropic/claude-sonnet-5@medium → /fork anthropic/claude-sonnet-5@medium
+  anthropic/claude-sonnet-5@high → /fork anthropic/claude-sonnet-5@high
+  anthropic/claude-opus-5@high → /fork anthropic/claude-opus-5@high
+  anthropic/claude-opus-5@max → /fork anthropic/claude-opus-5@max
+  codex/gpt-5.6-sol@high → /fork codex/gpt-5.6-sol@high
+  opencode-go/minimax-m3 → /fork opencode-go/minimax-m3
+"/fork opus"
+  anthropic/claude-opus-5@high → /fork anthropic/claude-opus-5@high
+  anthropic/claude-opus-5@max → /fork anthropic/claude-opus-5@max
+"/fork sol@high+"
+  codex/gpt-5.6-sol@high+fast → /fork codex/gpt-5.6-sol@high+fast
 "/r"
-  /revoke <target>... → /revoke …  (revoke temporary path grants or port routes)
+  /revoke <target>... → /revoke …  (revoke temporary path grants or forwarded ports)
 "/revoke "
   /reference → /revoke /reference
   8080 → /revoke 8080

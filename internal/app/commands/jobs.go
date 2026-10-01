@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"slices"
 	"strings"
 
 	"crdx.org/oh/internal/app/call"
@@ -12,6 +13,10 @@ import (
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/toolbox/bash"
 )
+
+const pruneJobAction = "prune"
+
+var namedJobActions = []string{"status", "output", "stop", "discard"}
 
 type Jobs struct {
 	List          func() []jobs.Snapshot
@@ -56,7 +61,7 @@ func jobCommand(managedJobs Jobs) slash.Command {
 		Run: func(context slash.Context, arguments slash.Arguments) error {
 			action, name, isNamed := strings.Cut(arguments.Text, " ")
 			name = strings.TrimSpace(name)
-			if action == "prune" {
+			if action == pruneJobAction {
 				return pruneEveryFinishedJob(context, managedJobs)
 			}
 			if !isNamed || name == "" {
@@ -66,9 +71,28 @@ func jobCommand(managedJobs Jobs) slash.Command {
 			return runJobAction(context, managedJobs, action, name)
 		},
 	}.
-		WithArguments("status", "output", "stop", "discard", "prune").
 		WithArgumentUsage("{status|output|stop|discard} <name> | prune").
+		WithArgumentCompletion(func(writtenArguments []string, partial string) []string {
+			switch {
+			case len(writtenArguments) == 0:
+				return slash.MatchingPrefixes(partial, append(slices.Clone(namedJobActions), pruneJobAction))
+			case len(writtenArguments) == 1 && slices.Contains(namedJobActions, writtenArguments[0]):
+				return slash.MatchingPrefixes(partial, jobNames(managedJobs.List()))
+			default:
+				return nil
+			}
+		}).
 		WithCompletionUsage("<action>")
+}
+
+func jobNames(listing []jobs.Snapshot) []string {
+	names := make([]string, 0, len(listing))
+	for _, snapshot := range listing {
+		if !slices.Contains(names, snapshot.Name) {
+			names = append(names, snapshot.Name)
+		}
+	}
+	return names
 }
 
 func runJobAction(context slash.Context, managedJobs Jobs, action string, name string) error {

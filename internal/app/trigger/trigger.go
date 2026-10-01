@@ -14,6 +14,7 @@ type Result struct {
 	Detail      string
 	Text        string
 	IsOpenEnded bool
+	IsFinal     bool
 }
 
 type Results struct {
@@ -93,11 +94,15 @@ func findQuotedWord(runes []rune, cursor int, symbol rune) (Word, bool) {
 }
 
 func WordText(symbol rune, text string, isQuoted bool, isOpenEnded bool) string {
+	return string(symbol) + QuotedText(text, isQuoted, isOpenEnded)
+}
+
+func QuotedText(text string, isQuoted bool, isOpenEnded bool) string {
 	if !isQuoted && !strings.ContainsFunc(text, unicode.IsSpace) {
-		return string(symbol) + text
+		return text
 	}
 
-	quotedText := string(symbol) + string(quote) + text
+	quotedText := string(quote) + text
 	if isOpenEnded {
 		return quotedText
 	}
@@ -106,7 +111,7 @@ func WordText(symbol rune, text string, isQuoted bool, isOpenEnded bool) string 
 }
 
 func Replacement(word Word, result Result, runes []rune) string {
-	if result.IsOpenEnded || word.End < len(runes) && unicode.IsSpace(runes[word.End]) {
+	if result.IsOpenEnded || result.IsFinal || word.End < len(runes) && unicode.IsSpace(runes[word.End]) {
 		return result.Text
 	}
 

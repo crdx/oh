@@ -229,7 +229,11 @@ func (self *Input) Apply(keypress key.Key, isRunning bool) Action {
 		self.buffer.MoveEnd()
 
 	case key.Delete:
-		self.buffer.DeleteForward()
+		if keypress.Mod.Has(key.Ctrl) {
+			self.buffer.DeleteWordForward()
+		} else {
+			self.buffer.DeleteForward()
+		}
 
 	case key.Backspace:
 		if keypress.Mod.Has(key.Ctrl) {
@@ -415,6 +419,9 @@ func (self *Input) rune(keypress key.Key, isRunning bool) Action {
 			return QuitSession
 		}
 
+	case 'j':
+		self.insert('\n')
+
 	case 'x':
 		self.isPrefixPending = true
 	}
@@ -456,7 +463,7 @@ func (self *Input) paste(keypress key.Key) {
 	case keypress.Code == key.PasteEnd:
 		self.isPasting = false
 		self.normalisePastedText()
-	case keypress.Code == key.Enter:
+	case keypress.Code == key.Enter || keypress.Code == key.Rune && keypress.Value == 'j' && keypress.Mod.Has(key.Ctrl):
 		self.buffer.Insert([]rune{'\n'})
 	case keypress.Code == key.Rune && keypress.Mod == 0 && isPastable(keypress.Value):
 		self.insert(keypress.Value)

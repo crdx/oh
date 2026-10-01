@@ -12,6 +12,7 @@ import (
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/contextsource"
 	"crdx.org/oh/internal/app/feedback"
+	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/shell"
 	"crdx.org/oh/internal/app/snippets"
@@ -33,6 +34,33 @@ func TestGoldenCompletionMatchesGolden(t *testing.T) {
 		"/grant ",
 		"/grants ",
 		"/job ",
+		"/job st",
+		"/job stop ",
+		"/job output d",
+		"/job prune ",
+		"/job stop docs ",
+		"/job discard ",
+		"/job bogus ",
+		"/jobs ",
+		"/!",
+		"/!ls",
+		"/n",
+		"/new ",
+		"/new son",
+		"/new gpt@h",
+		"/new sol@high+f",
+		"/new nothing-like-it",
+		"/new sonnet ",
+		"/new o",
+		"/new opencode-",
+		"/new codex@h",
+		"/new minimax",
+		"/new minimax@",
+		"/new opus@m",
+		"/new opus+f",
+		"/fork ",
+		"/fork opus",
+		"/fork sol@high+",
 		"/r",
 		"/revoke ",
 		"/revoke 8080 ",
@@ -214,6 +242,14 @@ func fixtureEnvironment(t *testing.T) commandEnvironment {
 		pathGrants:    grants,
 		hostToSandbox: ports,
 		jobs:          managedJobs,
+		getModelChoices: func() []model.Choice {
+			return []model.Choice{
+				{Provider: model.AnthropicProvider, ID: "claude-sonnet-5", EffortLevels: []string{"medium", "high"}},
+				{Provider: model.AnthropicProvider, ID: "claude-opus-5", EffortLevels: []string{"high", "max"}},
+				{Provider: model.CodexProvider, ID: "gpt-5.6-sol", EffortLevels: []string{"high"}},
+				{Provider: model.OpencodeGoProvider, ID: "minimax-m3"},
+			}
+		},
 		getInfo: func() (string, error) {
 			return "cache-usage  5m ttl\nmode-toggle  rxw ngl", nil
 		},

@@ -340,12 +340,7 @@ func newPathRefRig(t *testing.T, scenario pathRefScenario) *pathRefRig {
 		rig.app.commands = scenario.commands(t)
 		pathDirectory := t.TempDir()
 		t.Setenv("HOME", pathDirectory)
-		if err := os.Mkdir(filepath.Join(pathDirectory, "documents"), 0o700); err != nil {
-			t.Fatal(err)
-		}
-		if err := os.WriteFile(filepath.Join(pathDirectory, "notes.txt"), nil, 0o600); err != nil {
-			t.Fatal(err)
-		}
+		writeGrantPathFixture(t, pathDirectory)
 		sources = append(
 			sources,
 			slash.NewSource(func() slash.Registry { return rig.app.commands }),
@@ -355,6 +350,25 @@ func newPathRefRig(t *testing.T, scenario pathRefScenario) *pathRefRig {
 	rig.app.completer = trigger.New(sources...)
 
 	return rig
+}
+
+func writeGrantPathFixture(t *testing.T, directory string) {
+	t.Helper()
+
+	for _, subdirectory := range []string{"documents", filepath.Join("documents", "old drafts")} {
+		if err := os.Mkdir(filepath.Join(directory, subdirectory), 0o700); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for _, file := range []string{
+		"notes.txt",
+		filepath.Join("documents", "meeting notes.txt"),
+		filepath.Join("documents", "old drafts", "plan.txt"),
+	} {
+		if err := os.WriteFile(filepath.Join(directory, file), nil, 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
 }
 
 func (self *pathRefRig) show() {
@@ -383,6 +397,12 @@ func (self *pathRefRig) listingArrives() {
 	self.t.Helper()
 
 	close(self.release)
+	self.nextListingArrives()
+}
+
+func (self *pathRefRig) nextListingArrives() {
+	self.t.Helper()
+
 	select {
 	case <-self.app.triggerChanges():
 	case <-time.After(5 * time.Second):
@@ -799,17 +819,71 @@ func TestAClosedDropdownLeavesTheScreenAsAFreshDrawWould(t *testing.T) {
 		},
 	} {
 		t.Run(name, func(t *testing.T) {
-			rig := newPathRefRig(t, pathRefScenario{columns: replayColumns, lines: replayLines})
-			steps(rig)
-
-			fresh := newPathRefRig(t, pathRefScenario{columns: replayColumns, lines: replayLines})
-			fresh.app.completer = nil
-			fresh.input.SetText(rig.input.Text())
-			fresh.show()
-
-			requireSameVisibleScreenInColumns(
-				t, "a closed dropdown left something behind", replayColumns, rig.output.String(), fresh.output.String(),
-			)
+			requireAClosedDropdownLeavesNothing(t, nil, steps)
 		})
 	}
+
+	for name, test := range map[string]struct {
+		commands func(t *testing.T) slash.Registry
+		steps    func(rig *pathRefRig)
+	}{
+		"bang": {commands: slashGoldenRegistry, steps: func(rig *pathRefRig) {
+			rig.show()
+			rig.typeText("/!")
+		}},
+		"completed argument matching nothing": {commands: completedArgumentsGoldenRegistry, steps: func(rig *pathRefRig) {
+			rig.show()
+			rig.typeText("/new zz")
+		}},
+		"completed argument typed whole": {commands: completedArgumentsGoldenRegistry, steps: func(rig *pathRefRig) {
+			rig.show()
+			rig.typeText("/new anthropic/claude-opus-5@high")
+		}},
+		"chosen completed argument": {commands: completedArgumentsGoldenRegistry, steps: func(rig *pathRefRig) {
+			rig.show()
+			rig.typeText("/new ")
+			rig.press(tabKey)
+		}},
+		"chosen action taking no name": {commands: completedArgumentsGoldenRegistry, steps: func(rig *pathRefRig) {
+			rig.show()
+			rig.typeText("/job pr")
+			rig.press(tabKey)
+		}},
+		"provider typed whole": {commands: completedArgumentsGoldenRegistry, steps: func(rig *pathRefRig) {
+			rig.show()
+			rig.typeText("/new opencode-go/minimax-m3")
+		}},
+		"escape from a long completed list": {commands: completedArgumentsGoldenRegistry, steps: func(rig *pathRefRig) {
+			rig.show()
+			rig.typeText("/fork ")
+			rig.press(pathRefEscape)
+		}},
+	} {
+		t.Run(name, func(t *testing.T) {
+			requireAClosedDropdownLeavesNothing(t, test.commands, test.steps)
+		})
+	}
+}
+
+func requireAClosedDropdownLeavesNothing(
+	t *testing.T,
+	commands func(t *testing.T) slash.Registry,
+	steps func(rig *pathRefRig),
+) {
+	t.Helper()
+
+	rig := newPathRefRig(t, pathRefScenario{columns: replayColumns, lines: replayLines, commands: commands})
+	steps(rig)
+	if rig.app.completer.IsOpen() {
+		t.Error("the dropdown is still open")
+	}
+
+	fresh := newPathRefRig(t, pathRefScenario{columns: replayColumns, lines: replayLines})
+	fresh.app.completer = nil
+	fresh.input.SetText(rig.input.Text())
+	fresh.show()
+
+	requireSameVisibleScreenInColumns(
+		t, "a closed dropdown left something behind", replayColumns, rig.output.String(), fresh.output.String(),
+	)
 }

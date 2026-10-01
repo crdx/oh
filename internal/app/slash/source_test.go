@@ -71,7 +71,7 @@ func TestTheSourceDescribesEachCommand(t *testing.T) {
 
 	want := trigger.Results{
 		Items: []trigger.Result{
-			{Label: "/conf", Detail: "Edit the config.", Text: "/conf"},
+			{Label: "/conf", Detail: "Edit the config.", Text: "/conf", IsFinal: true},
 			{Label: "/copy <target>", Detail: "Copy a target.", Text: "/copy ", IsOpenEnded: true},
 			{
 				Label:       "/grant <access> <path>",
@@ -79,7 +79,7 @@ func TestTheSourceDescribesEachCommand(t *testing.T) {
 				Text:        "/grant ",
 				IsOpenEnded: true,
 			},
-			{Label: "/quit", Text: "/quit"},
+			{Label: "/quit", Text: "/quit", IsFinal: true},
 		},
 		Total:       4,
 		Placeholder: "no matching commands",

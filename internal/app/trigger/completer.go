@@ -91,6 +91,10 @@ func (self *Completer) Open(editor Editor) bool {
 	for _, source := range self.sources {
 		if word, isFound := self.find(source, editor); isFound {
 			self.openWith(source, word)
+			if self.offersOnly(string(editor.Runes()[word.Start:word.End])) {
+				self.close()
+				return false
+			}
 			return true
 		}
 	}

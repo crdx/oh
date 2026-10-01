@@ -181,6 +181,21 @@ func (self revision) changesSince(previous revision) []SourceChange {
 		})
 	}
 
+	for _, path := range slices.Sorted(maps.Keys(previous.snippetFileSnapshots)) {
+		if _, isKept := self.snippetFileSnapshots[path]; isKept {
+			continue
+		}
+		settings := previous.snippetSettings[path]
+		if isEverySettingNamed(settings, isNamed) {
+			continue
+		}
+		changes = append(changes, SourceChange{
+			Path:      filepath.Base(path),
+			Settings:  settings,
+			IsRemoved: true,
+		})
+	}
+
 	return changes
 }
 
@@ -278,6 +293,9 @@ func (self revision) getPaths() []string {
 	}
 	paths = append(paths, slices.Sorted(maps.Keys(self.roundRobinFileSnapshots))...)
 	paths = append(paths, slices.Sorted(maps.Keys(self.snippetFileSnapshots))...)
+	for _, directory := range self.snippetDirectories {
+		paths = append(paths, snippetPattern(directory))
+	}
 	return paths
 }
 

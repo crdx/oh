@@ -93,9 +93,9 @@ func grantCommand(grants PathGrants) slash.Command {
 		Name:        "grant",
 		Description: "grant temporary access to a path",
 		Run: func(context slash.Context, arguments slash.Arguments) error {
-			accessText, path, found := strings.Cut(arguments.Text, " ")
-			path = strings.TrimSpace(path)
-			if !found || path == "" {
+			accessText, pathText, _ := strings.Cut(arguments.Text, " ")
+			paths, isWellFormed := slash.QuotedFields(pathText)
+			if !isWellFormed || len(paths) == 0 {
 				return slash.Usage()
 			}
 
@@ -103,18 +103,25 @@ func grantCommand(grants PathGrants) slash.Command {
 			if err != nil {
 				return slash.Usage()
 			}
-			event, err := grants.Grant(path, access)
-			if err != nil {
-				return err
+			var failures []string
+			for _, path := range distinct(paths) {
+				event, err := grants.Grant(path, access)
+				if err != nil {
+					failures = append(failures, err.Error())
+					continue
+				}
+				context.Emit(event)
 			}
-			context.Emit(event)
+			if len(failures) > 0 {
+				return errors.New(strings.Join(failures, "; "))
+			}
 			return nil
 		},
 	}.
 		WithArguments(flagChoices...).
 		WithPathArgumentAfterMatching(isGrantAccess).
 		WithArgumentUsage(pathgrant.GrantUsage).
-		WithCompletionUsage("<access> <path>")
+		WithCompletionUsage("<access> <path>...")
 }
 
 func isGrantAccess(argument string) bool {
@@ -197,13 +204,17 @@ func revokedSubjects(
 		return []string{arguments.Text}
 	}
 
-	subjects := make([]string, 0, len(arguments.Fields))
-	for _, field := range arguments.Fields {
-		if !slices.Contains(subjects, field) {
-			subjects = append(subjects, field)
+	return distinct(arguments.Fields)
+}
+
+func distinct(values []string) []string {
+	distinctValues := make([]string, 0, len(values))
+	for _, value := range values {
+		if !slices.Contains(distinctValues, value) {
+			distinctValues = append(distinctValues, value)
 		}
 	}
-	return subjects
+	return distinctValues
 }
 
 func revoke(

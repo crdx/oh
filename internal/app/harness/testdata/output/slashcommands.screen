@@ -1,12 +1,12 @@
 === 01 a slash lists the commands with what they do ===
 ────────────────────────────────────────────────────────────
 /
-› /conf                   edit the configuration file
-  /copy                   copy a session target to the clip…
-  /grant <access> <path>  grant temporary path access
+› /conf                      edit the configuration file
+  /copy                      copy a session target to the c…
+  /grant <access> <path>...  grant temporary path access
   /open
-  /quit                   leave the session, and say goodby…
-  /revoke                 revoke a grant
+  /quit                      leave the session, and say goo…
+  /revoke                    revoke a grant
 ────────────────────────────────────────────────────────────
 === 02 a name narrows the commands ===
 ────────────────────────────────────────────────────────────
@@ -153,13 +153,13 @@ see /co
 ────────────────────────────────────────────────────────────
 === 25 tab after grant flags lists paths ===
 ────────────────────────────────────────────────────────────
-/grant rx
+/grant r
 › documents/
   notes.txt
 ────────────────────────────────────────────────────────────
 === 26 tab chooses a grant path ===
 ────────────────────────────────────────────────────────────
-/grant rx notes.txt
+/grant rw notes.txt
 ────────────────────────────────────────────────────────────
 === 27 enter sends a whole command that takes arguments ===
 ────────────────────────────────────────────────────────────
@@ -186,8 +186,122 @@ see /co
 /revoke 8080 /first
 › /second
 ────────────────────────────────────────────────────────────
-=== 31 tab lists a tilde path after conventionally ordered access ===
+=== 31 tab lists a tilde path after read access ===
 ────────────────────────────────────────────────────────────
-/grant rwx ~/doc
+/grant r ~/doc
 › ~/documents/
+────────────────────────────────────────────────────────────
+=== 32 tab again after a command that takes nothing changes nothing ===
+────────────────────────────────────────────────────────────
+/conf
+────────────────────────────────────────────────────────────
+=== 33 tab within a command with nothing to complete is swallowed ===
+────────────────────────────────────────────────────────────
+/copy anything
+────────────────────────────────────────────────────────────
+=== 34 tab within a snippet is swallowed ===
+────────────────────────────────────────────────────────────
+//review the tests
+────────────────────────────────────────────────────────────
+=== 35 tab after a grant path lists another ===
+────────────────────────────────────────────────────────────
+/grant r notes.txt
+› documents/
+  notes.txt
+────────────────────────────────────────────────────────────
+=== 36 tab quotes a grant path holding a space ===
+────────────────────────────────────────────────────────────
+/grant r notes.txt "~/documents/meeting notes.txt"
+────────────────────────────────────────────────────────────
+=== 37 tab completes within a quoted grant path ===
+────────────────────────────────────────────────────────────
+/grant r notes.txt "~/documents/meeting notes.txt"
+────────────────────────────────────────────────────────────
+=== 38 tab completes only the grant path under the cursor ===
+────────────────────────────────────────────────────────────
+/grant r ~/notes.txt ~/documents/
+────────────────────────────────────────────────────────────
+=== 39 a quoted grant directory goes on listing inside its quote ===
+────────────────────────────────────────────────────────────
+/grant r notes.txt "~/documents/old drafts/plan.txt"
+────────────────────────────────────────────────────────────
+=== 40 choosing a command goes on to the arguments it completes ===
+────────────────────────────────────────────────────────────
+/new
+› anthropic/claude-sonnet-5@medium
+  anthropic/claude-sonnet-5@high
+  anthropic/claude-opus-5@high
+  opencode-go/minimax-m3
+────────────────────────────────────────────────────────────
+=== 41 completed arguments keep the order their command gives ===
+────────────────────────────────────────────────────────────
+/new son
+› anthropic/claude-sonnet-5@medium
+  anthropic/claude-sonnet-5@high
+
+
+────────────────────────────────────────────────────────────
+=== 42 tab chooses an argument that follows another ===
+────────────────────────────────────────────────────────────
+/job stop docs
+────────────────────────────────────────────────────────────
+=== 43 a command taking an attached argument closes the dropdown ===
+────────────────────────────────────────────────────────────
+/!ls
+────────────────────────────────────────────────────────────
+=== 44 a bang alone closes the dropdown ===
+────────────────────────────────────────────────────────────
+/!
+────────────────────────────────────────────────────────────
+=== 45 a completed argument matching nothing closes the dropdown ===
+────────────────────────────────────────────────────────────
+/new zz
+────────────────────────────────────────────────────────────
+=== 46 a completed argument typed whole closes the dropdown ===
+────────────────────────────────────────────────────────────
+/new anthropic/claude-opus-5@high
+────────────────────────────────────────────────────────────
+=== 47 tab after a chosen completed argument is swallowed ===
+────────────────────────────────────────────────────────────
+/new anthropic/claude-sonnet-5@medium
+────────────────────────────────────────────────────────────
+=== 48 choosing an action that takes no name closes the dropdown ===
+────────────────────────────────────────────────────────────
+/job prune
+────────────────────────────────────────────────────────────
+=== 49 a long completed list windows around the selection ===
+────────────────────────────────────────────────────────────
+/fork
+  model-04@high
+  model-05@high
+  model-06@high
+  model-07@high
+  model-08@high
+  model-09@high
+› model-10@high
+  ⋮ 3 above, 2 below
+────────────────────────────────────────────────────────────
+=== 50 a long completed list stops at its last row ===
+────────────────────────────────────────────────────────────
+/fork
+  model-06@high
+  model-07@high
+  model-08@high
+  model-09@high
+  model-10@high
+  model-11@high
+› model-12@high
+  ⋮ 5 above
+────────────────────────────────────────────────────────────
+=== 51 escape closes a completed argument's dropdown ===
+────────────────────────────────────────────────────────────
+/new
+────────────────────────────────────────────────────────────
+=== 52 typing a provider keeps its models listed ===
+────────────────────────────────────────────────────────────
+/new opencode-
+› opencode-go/minimax-m3
+
+
+
 ────────────────────────────────────────────────────────────

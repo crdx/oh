@@ -15,6 +15,7 @@ import (
 	"crdx.org/oh/internal/app/column"
 	"crdx.org/oh/internal/app/contextsource"
 	"crdx.org/oh/internal/app/editor"
+	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/prompt"
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/style"
@@ -52,6 +53,7 @@ type Options struct {
 	Jobs              Jobs
 	GetInfo           func() (string, error)
 	GetContextSources func() ContextSources
+	GetModelChoices   func() []model.Choice
 	StartSession      func(SessionStart) error
 	StartHostCommand  func(directory string, command string) error
 }
@@ -95,6 +97,7 @@ type commandEnvironment struct {
 	jobs              Jobs
 	getInfo           func() (string, error)
 	getContextSources func() ContextSources
+	getModelChoices   func() []model.Choice
 	startSession      func(SessionStart) error
 }
 
@@ -145,6 +148,7 @@ func New(options Options) (slash.CommandSet, error) {
 		jobs:              options.Jobs,
 		getInfo:           options.GetInfo,
 		getContextSources: options.GetContextSources,
+		getModelChoices:   options.GetModelChoices,
 		startSession:      options.StartSession,
 	})
 }
@@ -155,6 +159,9 @@ func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 	}
 	if environment.getContextSources == nil {
 		environment.getContextSources = func() ContextSources { return ContextSources{} }
+	}
+	if environment.getModelChoices == nil {
+		environment.getModelChoices = func() []model.Choice { return nil }
 	}
 	openConfiguration := func(additionalPaths []string) error {
 		paths := []string{environment.configDir}
@@ -191,9 +198,14 @@ func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 		targetCommand("edit", "open a target in your editor", targets, targetNames, environment.openEditor, nil),
 		infoCommand(environment.getInfo),
 		targetCommand("open", "open a target with its default application", targets, targetNames, environment.openTarget, nil),
-		sessionCommand("new", "start a new session, optionally on another model", func(modelGlob string) error {
-			return environment.startSession(SessionStart{ModelGlob: modelGlob})
-		}),
+		sessionCommand(
+			"new",
+			"start a new session",
+			environment.getModelChoices,
+			func(modelGlob string) error {
+				return environment.startSession(SessionStart{ModelGlob: modelGlob})
+			},
+		),
 	}
 	if environment.pathGrants.isConfigured() {
 		commands = append(commands, pathGrantCommands(
@@ -208,12 +220,17 @@ func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 	commands = append(commands, help)
 	commands = append(commands, commandsRequiringPersistedSession(
 		environment.session.isPersisted,
-		sessionCommand("fork", "fork this session into a new one, optionally on another model", func(modelGlob string) error {
-			return environment.startSession(SessionStart{
-				ModelGlob:         modelGlob,
-				SourceSessionName: environment.session.name,
-			})
-		}),
+		sessionCommand(
+			"fork",
+			"fork this session",
+			environment.getModelChoices,
+			func(modelGlob string) error {
+				return environment.startSession(SessionStart{
+					ModelGlob:         modelGlob,
+					SourceSessionName: environment.session.name,
+				})
+			},
+		),
 	)...)
 
 	var err error
@@ -423,7 +440,12 @@ func editorCommand(
 	}
 }
 
-func sessionCommand(name string, description string, startSession func(string) error) slash.Command {
+func sessionCommand(
+	name string,
+	description string,
+	getModelChoices func() []model.Choice,
+	startSession func(string) error,
+) slash.Command {
 	return slash.Command{
 		Name:        name,
 		Description: description,
@@ -436,7 +458,14 @@ func sessionCommand(name string, description string, startSession func(string) e
 			}
 			return startSession(arguments.Fields[0])
 		},
-	}.WithArgumentUsage("[<model>]")
+	}.
+		WithArgumentUsage("[<model>]").
+		WithArgumentCompletion(func(writtenArguments []string, partial string) []string {
+			if len(writtenArguments) > 0 {
+				return nil
+			}
+			return model.SelectionsMatching(partial, getModelChoices())
+		})
 }
 
 func commandsRequiringPersistedSession(isSessionPersisted func() bool, commands ...slash.Command) []slash.Command {

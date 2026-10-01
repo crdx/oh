@@ -1,0 +1,44 @@
+=== 1 a row filled exactly ===
+────────────
+one two thre
+
+────────────
+cursor row 2 column 0
+=== 2 spaces hidden by a wrap ===
+────────────
+one two thre
+
+────────────
+cursor row 2 column 0
+=== 3 spaces that fit on their row ===
+────────────
+one two
+three
+────────────
+cursor row 2 column 7
+=== 4 the end of a line over a hidden wrap ===
+────────────
+one two thre
+
+four
+────────────
+cursor row 2 column 0
+=== 5 the end of a line filling its row ===
+────────────
+one two thre
+
+four
+────────────
+cursor row 2 column 0
+=== 6 among spaces hidden by a wrap ===
+────────────
+one two thre
+
+────────────
+cursor row 2 column 0
+=== 7 the end of the text before hidden spaces ===
+────────────
+one two thre
+
+────────────
+cursor row 2 column 0

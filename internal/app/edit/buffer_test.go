@@ -199,6 +199,20 @@ func TestDeletingAWordBackwardLeavesTheCursorWhereTheWordBegan(t *testing.T) {
 	})
 }
 
+func TestDeletingAWordForwardLeavesTheCursorWhereItWas(t *testing.T) {
+	moves(t, (*Buffer).DeleteWordForward, map[string]string{
+		"|one two":    "| two",
+		"one| two":    "one|",
+		"one | two":   "one |",
+		"one t|wo":    "one t|",
+		"one, |two":   "one, |",
+		"one|":        "one|",
+		"|  ":         "|",
+		"one|\ntwo":   "one|",
+		"|snake_case": "|_case",
+	})
+}
+
 func TestDeletingAWhitespaceWordBackwardKeepsPunctuationWithItsWord(t *testing.T) {
 	moves(t, (*Buffer).DeleteWhitespaceWordBackward, map[string]string{
 		"one --two|":  "one |",

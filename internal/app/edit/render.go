@@ -1,6 +1,8 @@
 package edit
 
 import (
+	"slices"
+
 	"crdx.org/oh/internal/app/width"
 )
 
@@ -19,15 +21,11 @@ func window(rows []string, cursorRow int) Frame {
 
 func layout(buffer *Buffer, room int) ([]string, int, int) {
 	runes := buffer.Runes()
-	laid := width.Rows(string(runes), room)
+	laid := withCursorRow(width.Rows(string(runes), room), buffer.Cursor(), room)
 
-	rows := make([]string, 0, len(laid)+1)
+	rows := make([]string, 0, len(laid))
 	for _, row := range laid {
 		rows = append(rows, row.Text)
-	}
-
-	if buffer.Cursor() == len(runes) && hasTrailingCursorRow(laid, room) {
-		return append(rows, ""), len(rows), 0
 	}
 
 	cursorRow, cursorColumn := locate(laid, runes, buffer.Cursor(), room)
@@ -35,22 +33,33 @@ func layout(buffer *Buffer, room int) ([]string, int, int) {
 	return rows, cursorRow, cursorColumn
 }
 
-func hasTrailingCursorRow(rows []width.Row, room int) bool {
-	return room > 0 && width.Of(rows[len(rows)-1].Text) >= room
+func withCursorRow(rows []width.Row, cursor int, room int) []width.Row {
+	for i, row := range rows {
+		if !isContinued(rows, i) && isPastRow(row, cursor, room) {
+			return slices.Insert(rows, i+1, width.Row{Begin: row.Next, End: row.Next, Next: row.Next})
+		}
+	}
+
+	return rows
+}
+
+func isPastRow(row width.Row, cursor int, room int) bool {
+	if cursor < row.End || cursor > row.Next {
+		return false
+	}
+
+	return cursor > row.End || row.Next > row.End || room > 0 && width.Of(row.Text) >= room
+}
+
+func isContinued(rows []width.Row, i int) bool {
+	return i+1 < len(rows) && rows[i+1].Begin == rows[i].Next
 }
 
 func moveCursorVertically(buffer *Buffer, room int, direction int) bool {
 	runes := buffer.Runes()
 	rows := width.Rows(string(runes), room)
+	rows = withCursorRow(withCursorRow(rows, len(runes), room), buffer.Cursor(), room)
 	cursorRow, cursorColumn := locate(rows, runes, buffer.Cursor(), room)
-
-	if hasTrailingCursorRow(rows, room) {
-		rows = append(rows, width.Row{Begin: len(runes), End: len(runes), Next: len(runes)})
-		if buffer.Cursor() == len(runes) {
-			cursorRow = len(rows) - 1
-			cursorColumn = 0
-		}
-	}
 
 	targetRow := cursorRow + direction
 	if targetRow < 0 || targetRow >= len(rows) {
@@ -72,18 +81,20 @@ func positionAtColumn(row width.Row, runes []rune, column int) int {
 
 func locate(rows []width.Row, runes []rune, cursor int, room int) (int, int) {
 	for i, row := range rows {
-		if cursor >= row.End && cursor <= row.Next && row.Next > row.End {
-			return min(i+1, len(rows)-1), 0
+		if cursor < row.Begin || cursor > row.Next {
+			continue
 		}
 
-		if cursor >= row.Begin && cursor <= row.End {
-			column := width.Of(string(runes[row.Begin:cursor]))
-			if room > 0 {
-				column = min(column, room)
-			}
-
-			return i, column
+		if isContinued(rows, i) && isPastRow(row, cursor, room) {
+			return i + 1, 0
 		}
+
+		column := width.Of(string(runes[row.Begin:min(cursor, row.End)]))
+		if room > 0 {
+			column = min(column, room)
+		}
+
+		return i, column
 	}
 
 	return 0, 0

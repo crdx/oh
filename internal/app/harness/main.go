@@ -1228,6 +1228,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 			IsPersisted:    log.IsPersisted,
 			GetLastMessage: func() (string, bool) { return app.getLastMessage() },
 		},
+		GetModelChoices: func() []model.Choice { return model.SignedInChoices(modelCachePath, isProviderAvailable) },
 		StartSession: func(start commands.SessionStart) error {
 			var transition cycle.Transition
 			var err error

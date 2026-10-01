@@ -33,8 +33,8 @@ func (self *App) applyToCompleter(inputLine *edit.Input, keypress key.Key) bool 
 		if self.completer.Open(inputLine) {
 			return true
 		}
-		invocation, isCommand := self.commands.Find(inputLine.Text())
-		return isCommand && invocation.Arguments.Text == ""
+		_, isCommand := self.commands.CommandName(inputLine.Text())
+		return isCommand
 	}
 	if dismissesFeedback(keypress) && self.feedback.CanBeDismissed() {
 		return false

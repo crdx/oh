@@ -1,10 +1,17 @@
 package snippets
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
+	"io"
 	"slices"
 	"strings"
+
+	"gopkg.in/yaml.v3"
+
+	"crdx.org/oh/internal/util/frontmatter"
+	"crdx.org/oh/internal/util/pathutil"
 )
 
 type ArgumentPolicy string
@@ -37,13 +44,36 @@ func (self *Definition) UnmarshalTOML(value any) error {
 	}
 }
 
+type fileMetadata struct {
+	Description string         `yaml:"description"`
+	Arguments   ArgumentPolicy `yaml:"arguments"`
+}
+
 func (self *Definition) LoadFileContents(path string, contents []byte) error {
+	header, body, _, err := frontmatter.Split(contents)
+	if err != nil {
+		return err
+	}
+
+	var metadata fileMetadata
+	decoder := yaml.NewDecoder(bytes.NewReader(header))
+	decoder.KnownFields(true)
+	if err := decoder.Decode(&metadata); err != nil && !errors.Is(err, io.EOF) {
+		return fmt.Errorf("could not parse frontmatter: %w", err)
+	}
+
 	self.File = path
-	self.Prompt = strings.TrimSpace(string(contents))
+	self.Prompt = strings.TrimSpace(string(body))
 	if self.Prompt == "" {
 		return errors.New("prompt file is empty")
 	}
-	return nil
+	if self.Description == "" {
+		self.Description = strings.TrimSpace(metadata.Description)
+	}
+	if self.Arguments == "" {
+		self.Arguments = metadata.Arguments
+	}
+	return self.validate()
 }
 
 func (self *Definition) unmarshalTable(configuredTable map[string]any) error {
@@ -83,6 +113,10 @@ func (self *Definition) unmarshalTable(configuredTable map[string]any) error {
 	if (self.Prompt == "") == (self.File == "") {
 		return errors.New("set exactly one of prompt or file")
 	}
+	return self.validate()
+}
+
+func (self *Definition) validate() error {
 	if strings.ContainsAny(self.Description, "\r\n") {
 		return errors.New("description must fit on one line")
 	}
@@ -92,6 +126,13 @@ func (self *Definition) unmarshalTable(configuredTable map[string]any) error {
 	default:
 		return fmt.Errorf("arguments is %q, want required, optional, or none", self.Arguments)
 	}
+}
+
+func (self *Definition) subject(name string) string {
+	if self.File == "" {
+		return name
+	}
+	return fmt.Sprintf("%s (%s)", name, pathutil.Shorten(self.File))
 }
 
 func getString(configuredTable map[string]any, name string) (string, error) {

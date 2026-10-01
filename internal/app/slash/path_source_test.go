@@ -16,8 +16,8 @@ func pathSourceFixture(t *testing.T, directory string) *slash.PathSource {
 
 	registry := mustRegistry(t, mustSet(t, "/",
 		slash.Command{Name: "grant", Run: commandHandler}.
-			WithArguments("r", "rx", "rw", "rxw").
-			WithPathArgumentAfter("r", "rx", "rw", "rxw"),
+			WithArguments("r", "rw").
+			WithPathArgumentAfter("r", "rw"),
 		slash.Command{Name: "open", Run: commandHandler}.WithArguments("workspace"),
 	))
 	return slash.NewPathSource(directory, func() slash.Registry { return registry })
@@ -33,28 +33,64 @@ func TestThePathSourceFindsAPathAfterAConfiguredArgument(t *testing.T) {
 		wantFound bool
 	}{
 		"an empty path": {
-			text:      "/grant rx ",
+			text:      "/grant rw ",
 			cursor:    10,
 			want:      trigger.Word{Start: 10, End: 10},
 			wantFound: true,
 		},
 		"a relative path": {
-			text:      "/grant rx notes/one",
+			text:      "/grant rw notes/one",
 			cursor:    18,
 			want:      trigger.Word{Start: 10, End: 19, Query: "notes/on"},
 			wantFound: true,
 		},
-		"a path with spaces": {
-			text:      "/grant rx meeting notes",
+		"a second path": {
+			text:      "/grant rw meeting notes",
 			cursor:    22,
-			want:      trigger.Word{Start: 10, End: 23, Query: "meeting note"},
+			want:      trigger.Word{Start: 18, End: 23, Query: "note"},
 			wantFound: true,
 		},
-		"the cursor before the path": {text: "/grant rx notes", cursor: 7},
-		"no space before the path":   {text: "/grant rx", cursor: 9},
+		"the first of several paths": {
+			text:      "/grant rw meeting notes",
+			cursor:    12,
+			want:      trigger.Word{Start: 10, End: 17, Query: "me"},
+			wantFound: true,
+		},
+		"an empty path after another": {
+			text:      "/grant rw one ",
+			cursor:    14,
+			want:      trigger.Word{Start: 14, End: 14},
+			wantFound: true,
+		},
+		"an empty path between two others": {
+			text:      "/grant rw one  two",
+			cursor:    14,
+			want:      trigger.Word{Start: 14, End: 14},
+			wantFound: true,
+		},
+		"an open quoted path": {
+			text:      `/grant rw one "meeting no`,
+			cursor:    25,
+			want:      trigger.Word{Start: 14, End: 25, Query: "meeting no", IsQuoted: true},
+			wantFound: true,
+		},
+		"a closed quoted path": {
+			text:      `/grant rw "meeting notes" two`,
+			cursor:    25,
+			want:      trigger.Word{Start: 10, End: 25, Query: "meeting notes", IsQuoted: true},
+			wantFound: true,
+		},
+		"within a closed quoted path": {
+			text:      `/grant rw "meeting notes" two`,
+			cursor:    14,
+			want:      trigger.Word{Start: 10, End: 25, Query: "mee", IsQuoted: true},
+			wantFound: true,
+		},
+		"the cursor before the path": {text: "/grant rw notes", cursor: 7},
+		"no space before the path":   {text: "/grant rw", cursor: 9},
 		"an invalid first argument":  {text: "/grant z ", cursor: 9},
 		"another command":            {text: "/open workspace", cursor: 15},
-		"a second line":              {text: "/grant rx \nnotes", cursor: 16},
+		"a second line":              {text: "/grant rw \nnotes", cursor: 16},
 	} {
 		t.Run(name, func(t *testing.T) {
 			got, found := source.Find([]rune(test.text), test.cursor)
@@ -95,7 +131,7 @@ func TestThePathSourceListsRelativePathsAndContinuesThroughDirectories(t *testin
 
 	want := trigger.Results{
 		Items: []trigger.Result{
-			{Label: "alpha dir/", Text: "alpha dir/", IsOpenEnded: true},
+			{Label: "alpha dir/", Text: `"alpha dir/`, IsOpenEnded: true},
 			{Label: "apple.txt", Text: "apple.txt"},
 		},
 		Total:       2,
@@ -106,19 +142,19 @@ func TestThePathSourceListsRelativePathsAndContinuesThroughDirectories(t *testin
 	}
 
 	fuzzyWord := trigger.Word{Query: "adir"}
-	wantFuzzy := []trigger.Result{{Label: "alpha dir/", Text: "alpha dir/", IsOpenEnded: true}}
+	wantFuzzy := []trigger.Result{{Label: "alpha dir/", Text: `"alpha dir/`, IsOpenEnded: true}}
 	if got := source.Results(fuzzyWord, 10).Items; !reflect.DeepEqual(got, wantFuzzy) {
 		t.Errorf("fuzzy match got %+v, want %+v", got, wantFuzzy)
 	}
 
-	word = trigger.Word{Query: "alpha dir/"}
+	word = trigger.Word{Query: "alpha dir/", IsQuoted: true}
 	if got := source.Results(word, 10); got.Placeholder != "listing paths…" {
 		t.Fatalf("got initial directory results %+v", got)
 	}
 	awaitPathSourceChange(t, changes)
 
 	want = trigger.Results{
-		Items:       []trigger.Result{{Label: "alpha dir/inside.txt", Text: "alpha dir/inside.txt"}},
+		Items:       []trigger.Result{{Label: "alpha dir/inside.txt", Text: `"alpha dir/inside.txt"`}},
 		Total:       1,
 		Placeholder: "no matching paths",
 	}

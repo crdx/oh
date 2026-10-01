@@ -36,11 +36,11 @@ Where `~/.config/org.crdx/oh/` is a symlink into a dotfiles repository, edit the
 
 ## Global Config
 
-`~/.config/org.crdx/oh/config.toml` holds what follows the user between projects, and needs a `version` key. Beside it sit `SYSTEM.md`, prepended to every session, and `snippets/` for snippet bodies kept in files.
+`~/.config/org.crdx/oh/config.toml` holds what follows the user between projects, and needs a `version` key. Beside it sit `SYSTEM.md`, prepended to every session, and `snippets/`, where each `<name>.md` is the snippet `//name` without being listed anywhere. Its optional YAML frontmatter sets `description` and `arguments` (`required`, `optional`, or `none`). A `[snippets]` entry of the same name takes precedence, and a workspace has no snippet directory of its own.
 
 - `[model]` — `round_robin` as an array of `provider/model@effort` entries (written `provider/model` for a model that takes no effort) or a path, relative to the supplying config, to a file with one non-empty entry per line; lines whose first non-whitespace character is `#` are comments, and duplicates add weight; `effort` and `fast` defaults
 - `[provider.ollama]` — `host` for a local or LAN endpoint
-- `[snippets]` — `//name` expansions, inline or `{ file = "snippets/name.md" }`; `{{ .Arg }}` takes the rest of the line, and a field of any other name, as `{{ .Question }}`, takes it too while naming it `<question>` in completion and help rather than `<args>`; `{{ .Args }}` is the same text split into words
+- `[snippets]` — `//name` expansions, inline or `{ file = "path/name.md" }`, whose frontmatter fills any `description` or `arguments` the entry leaves out; `{{ .Arg }}` takes the rest of the line, and a field of any other name, as `{{ .Question }}`, takes it too while naming it `<question>` in completion and help rather than `<args>`; `{{ .Args }}` is the same text split into words
 - `[ui]` — `streaming`, `grouping`, `reasoning`, `currency`, `[ui.theme]`
 - `[permissions]` — `ask` or `allow` per gated action, deciding what a granted capability buys
 - `[tools]` — custom tools, each `[tools.<name>]` naming a `command` to run and the parameters the model supplies

@@ -12,7 +12,16 @@
 
 ### Completion and input
 
+- Insert a newline with `ctrl+j`
+- Delete the next word with `ctrl+delete`
 - Keep option terminators out of messages
+- Remove trailing space after an argumentless command
+- Eat tabs within slash commands and snippets
+- Auto-discover snippets from `snippets/*.md`
+- Add completion for `/new`, `/fork`, and `/job`
+- Hide the "no matches" dropdown on `/!`
+- Fix input wrapping cursor position issue
+- Grant several paths at once with `/grant`
 
 ### Tool calls
 

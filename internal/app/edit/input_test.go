@@ -415,15 +415,20 @@ func TestPendingReturnDoesNotSurviveATurnStateChange(t *testing.T) {
 	}
 }
 
-func TestShiftReturnOpensALine(t *testing.T) {
-	self := NewInput(nil)
+func TestNewlineKeysOpenALine(t *testing.T) {
+	for name, keypress := range map[string]key.Key{
+		"ctrl+j":      {Code: key.Rune, Value: 'j', Mod: key.Ctrl},
+		"shift+enter": {Code: key.Enter, Mod: key.Shift},
+	} {
+		self := NewInput(nil)
 
-	self.Apply(key.Key{Code: key.Rune, Value: 'a'}, true)
-	self.Apply(key.Key{Code: key.Enter, Mod: key.Shift}, true)
-	self.Apply(key.Key{Code: key.Rune, Value: 'b'}, true)
+		self.Apply(key.Key{Code: key.Rune, Value: 'a'}, true)
+		self.Apply(keypress, true)
+		self.Apply(key.Key{Code: key.Rune, Value: 'b'}, true)
 
-	if got := self.Text(); got != "a\nb" {
-		t.Errorf("expected two lines, got %q", got)
+		if got := self.Text(); got != "a\nb" {
+			t.Errorf("%s: expected two lines, got %q", name, got)
+		}
 	}
 }
 
@@ -703,6 +708,17 @@ func TestReadlineControlBindingsEditTheCurrentLine(t *testing.T) {
 		if got := markCursor(self.buffer); got != test.want {
 			t.Errorf("%s: got %q, want %q", name, got, test.want)
 		}
+	}
+}
+
+func TestControlDeleteDeletesAWordForward(t *testing.T) {
+	self := NewInput(nil)
+	self.buffer = bufferFrom(t, "one |two three")
+
+	self.Apply(key.Key{Code: key.Delete, Mod: key.Ctrl}, false)
+
+	if got := markCursor(self.buffer); got != "one | three" {
+		t.Errorf("got %q, want %q", got, "one | three")
 	}
 }
 

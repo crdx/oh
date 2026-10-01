@@ -4,7 +4,9 @@ import (
 	_ "embed"
 	"errors"
 	"fmt"
+	"io/fs"
 	"maps"
+	"os"
 	"path/filepath"
 	"reflect"
 	"slices"
@@ -37,6 +39,11 @@ const minimumToolOutputBytes = 1024
 const (
 	sessionPlaceholder = "{session}"
 	hostnameLimit      = 253
+)
+
+const (
+	snippetDirectoryName = "snippets"
+	snippetExtension     = ".md"
 )
 
 const (
@@ -560,6 +567,15 @@ func loadSnapshots(sources []sourceSnapshot) (Config, error) {
 		}
 	}
 
+	for _, source := range sources {
+		if source.source.IsOverride {
+			continue
+		}
+		if err := discoverSnippets(&config, source.source.Path); err != nil {
+			return config, err
+		}
+	}
+
 	toolGroups, err := config.CustomToolGroups()
 	if err != nil {
 		return config, err
@@ -728,6 +744,60 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 	}
 
 	return nil
+}
+
+func discoverSnippets(config *Config, configPath string) error {
+	directory := filepath.Join(filepath.Dir(configPath), snippetDirectoryName)
+	config.snippetDirectories = append(config.snippetDirectories, directory)
+
+	entries, err := os.ReadDir(directory)
+	if errors.Is(err, fs.ErrNotExist) {
+		return nil
+	}
+	if err != nil {
+		return fmt.Errorf("%s: %w", pathutil.Shorten(directory), err)
+	}
+
+	for _, entry := range entries {
+		name, isSnippet := strings.CutSuffix(entry.Name(), snippetExtension)
+		if !isSnippet || name == "" || strings.HasPrefix(name, ".") || entry.IsDir() {
+			continue
+		}
+		if _, isDefined := config.Snippets[name]; isDefined {
+			continue
+		}
+
+		path := filepath.Join(directory, entry.Name())
+		if _, isReferenced := config.snippetFileSnapshots[path]; isReferenced {
+			continue
+		}
+		current := readSnapshot(path)
+		if current.isMissing {
+			continue
+		}
+		if config.snippetFileSnapshots == nil {
+			config.snippetFileSnapshots = make(map[string]snapshot)
+		}
+		config.snippetFileSnapshots[path] = current
+		if current.failure != nil {
+			return fmt.Errorf("%s: %w", pathutil.Shorten(path), current.failure)
+		}
+
+		var definition snippets.Definition
+		if err := definition.LoadFileContents(path, current.data); err != nil {
+			return fmt.Errorf("%s: %w", pathutil.Shorten(path), err)
+		}
+		if config.Snippets == nil {
+			config.Snippets = make(map[string]snippets.Definition)
+		}
+		config.Snippets[name] = definition
+	}
+
+	return nil
+}
+
+func snippetPattern(directory string) string {
+	return filepath.Join(directory, "*"+snippetExtension)
 }
 
 func applyRoundRobin(config *Config, sourcePath string, displayPath string) error {
