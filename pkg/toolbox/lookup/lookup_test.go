@@ -5,6 +5,8 @@ import (
 	"errors"
 	"strings"
 	"testing"
+
+	"crdx.org/oh/pkg/tool"
 )
 
 type searchStub struct {
@@ -34,7 +36,7 @@ func TestLookupDelegatesToTheConfiguredSearcher(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if searcher.query != "current weather" || result.Output != "cited answer" {
+	if searcher.query != "current weather" || result.Output != tool.MarkUntrusted(`a web search for "current weather"`, "cited answer") {
 		t.Errorf("got query %q and output %q", searcher.query, result.Output)
 	}
 }

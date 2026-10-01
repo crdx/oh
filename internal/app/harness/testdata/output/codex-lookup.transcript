@@ -17,7 +17,7 @@ look up the latest Go release, then answer
 ## Tool calls · +0s
 
 ```
-lookup: latest Go release [ok, 1 line, 71B, call-1]
+lookup: latest Go release [ok, 7 lines, 944B, call-1]
 ```
 
 ## Assistant · +0s

@@ -87,10 +87,10 @@ func newTool(
 			}
 			if page.statusCode < http.StatusOK || page.statusCode >= http.StatusMultipleChoices {
 				return "", tool.ToolCallMetrics{}, fmt.Errorf(
-					"fetch returned HTTP %d: %s (raw HTML saved to %s)",
+					"fetch returned HTTP %d (raw HTML saved to %s)\n\n%s",
 					page.statusCode,
-					strings.TrimSpace(string(page.rawHTML)),
 					rawHTMLPath,
+					tool.MarkUntrusted(origin(args.URL), strings.TrimSpace(string(page.rawHTML))),
 				)
 			}
 
@@ -105,7 +105,7 @@ func newTool(
 					"fetch returned no content (raw HTML saved to %s)", rawHTMLPath,
 				)
 			}
-			output = fmt.Sprintf(rawHTMLPathNotice, rawHTMLPath) + "\n\n" + output
+			output = fmt.Sprintf(rawHTMLPathNotice, rawHTMLPath) + "\n\n" + tool.MarkUntrusted(origin(args.URL), output)
 
 			return output, tool.GetMetrics(output), nil
 		})
@@ -121,6 +121,10 @@ func Describe(args Args) tool.CallRendering {
 		Subject:   args.URL,
 		Qualifier: qualifier,
 	}
+}
+
+func origin(address string) string {
+	return "the web page at " + address
 }
 
 func validate(args Args) error {

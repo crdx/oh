@@ -34,6 +34,8 @@
 - Let a background job associate to a port
 - Name background job output calls `cat`
 - Format background job wait limits as durations
+- Fence `fetch` and `lookup` results as untrusted data
+- Tell the model that session drops are untrusted
 
 ## [0.11.0] - 2026-09-29
 

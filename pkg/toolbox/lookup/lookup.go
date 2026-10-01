@@ -3,6 +3,7 @@ package lookup
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strings"
 
 	"crdx.org/oh/pkg/tool"
@@ -50,6 +51,8 @@ func New(
 			if output == "" {
 				return "", tool.ToolCallMetrics{}, errors.New("lookup returned no content")
 			}
+
+			output = tool.MarkUntrusted(fmt.Sprintf("a web search for %q", args.Query), output)
 
 			return output, tool.GetMetrics(output), nil
 		})
