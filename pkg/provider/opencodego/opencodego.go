@@ -18,6 +18,7 @@ import (
 
 const (
 	asideTimeout  = 30 * time.Second
+	outputCeiling = 32_000
 	sessionHeader = "X-Opencode-Session"
 
 	completionsSuffix = "/chat/completions"
@@ -65,9 +66,13 @@ func New(
 		}
 	}
 
+	if maxOutputTokens > 0 {
+		maxOutputTokens = min(maxOutputTokens, outputCeiling)
+	}
+
 	switch wireFor(model) {
 	case responsesWire:
-		return newResponsesClient(url, token, model, effort)
+		return newResponsesClient(url, token, model, effort, maxOutputTokens)
 	case messagesWire:
 		return newMessagesClient(url, token, model, effort, maxOutputTokens)
 	case completionsWire:
@@ -86,8 +91,14 @@ func newCompletionsClient(url string, token string, model string, effort string,
 	return &Client{conversation: conversation, Token: token, toolsSize: chatcompletions.ToolsSize}, nil
 }
 
-func newResponsesClient(url string, token string, model string, effort string) (*Client, error) {
-	conversation, err := responses.NewAt(besideCompletions(url, responsesSuffix), requestHeaders(token), model, effort)
+func newResponsesClient(url string, token string, model string, effort string, maxOutputTokens int) (*Client, error) {
+	conversation, err := responses.NewAt(
+		besideCompletions(url, responsesSuffix),
+		requestHeaders(token),
+		model,
+		effort,
+		maxOutputTokens,
+	)
 	if err != nil {
 		return nil, err
 	}

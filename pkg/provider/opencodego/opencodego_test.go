@@ -65,7 +65,7 @@ func sendOnce(t *testing.T, client *opencodego.Client) {
 func TestAChatModelIsAskedThroughChatCompletions(t *testing.T) {
 	server, sent := recordingServer(t, "data: [DONE]\n\n")
 
-	client, err := opencodego.New(server.URL+"/v1/chat/completions", "secret", "deepseek-v4-pro", "low", 64_000)
+	client, err := opencodego.New(server.URL+"/v1/chat/completions", "secret", "deepseek-v4-pro", "low", 16_000)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -75,7 +75,7 @@ func TestAChatModelIsAskedThroughChatCompletions(t *testing.T) {
 		t.Errorf("got path %q", sent.path)
 	}
 	if sent.body["model"] != "deepseek-v4-pro" || sent.body["reasoning_effort"] != "low" ||
-		sent.body["max_completion_tokens"] != float64(64_000) {
+		sent.body["max_completion_tokens"] != float64(16_000) {
 		t.Errorf("expected what was asked for to be sent verbatim, got %v", sent.body)
 	}
 }
@@ -153,8 +153,8 @@ func TestAMessagesModelIsAskedThroughMessagesWithoutClaudeCodesClothes(t *testin
 	if sent.path != "/v1/messages" {
 		t.Errorf("got path %q", sent.path)
 	}
-	if sent.body["model"] != "qwen3.8-max" || sent.body["max_tokens"] != float64(64_000) {
-		t.Errorf("expected the model and output limit to be sent, got %v", sent.body)
+	if sent.body["model"] != "qwen3.8-max" || sent.body["max_tokens"] != float64(32_000) {
+		t.Errorf("expected the model and the capped output limit to be sent, got %v", sent.body)
 	}
 	if output, _ := sent.body["output_config"].(map[string]any); output["effort"] != "xhigh" {
 		t.Errorf("expected the effort to be sent as an output effort, got %v", sent.body["output_config"])
@@ -218,6 +218,39 @@ func TestAResponsesModelTakingNoEffortIsSentNoEffort(t *testing.T) {
 	reasoning, _ := sent.body["reasoning"].(map[string]any)
 	if _, isSent := reasoning["effort"]; isSent || reasoning["summary"] != "auto" {
 		t.Errorf("expected a reasoning summary and no effort, got %v", sent.body["reasoning"])
+	}
+}
+
+func TestEveryWireIsSentTheOutputLimitCappedAsOpencodeCapsIt(t *testing.T) {
+	tests := []struct {
+		model           string
+		response        string
+		maxOutputTokens int
+		field           string
+		want            float64
+	}{
+		{"muse-spark-1.3-contributor", completedResponse, 131_072, "max_output_tokens", 32_000},
+		{"muse-spark-1.3-contributor", completedResponse, 16_000, "max_output_tokens", 16_000},
+		{"qwen3.8-max", stoppedMessage, 131_072, "max_tokens", 32_000},
+		{"qwen3.8-max", stoppedMessage, 16_000, "max_tokens", 16_000},
+		{"kimi-k2.7-code", "data: [DONE]\n\n", 131_072, "max_completion_tokens", 32_000},
+		{"kimi-k2.7-code", "data: [DONE]\n\n", 16_000, "max_completion_tokens", 16_000},
+	}
+
+	for _, test := range tests {
+		t.Run(fmt.Sprintf("%s/%d", test.model, test.maxOutputTokens), func(t *testing.T) {
+			server, sent := recordingServer(t, test.response)
+
+			client, err := opencodego.New(server.URL+"/v1/chat/completions", "secret", test.model, "", test.maxOutputTokens)
+			if err != nil {
+				t.Fatal(err)
+			}
+			sendOnce(t, client)
+
+			if sent.body[test.field] != test.want {
+				t.Errorf("expected %s of %v, got %v", test.field, test.want, sent.body[test.field])
+			}
+		})
 	}
 }
 
@@ -316,6 +349,8 @@ func TestNewPreservesSettingValidation(t *testing.T) {
 		{"token", "http://somewhere", "", "deepseek-v4-pro", 128_000, "chat: Token is empty"},
 		{"model", "http://somewhere", "secret", "", 128_000, "chat: Model is empty"},
 		{"max tokens", "http://somewhere", "secret", "deepseek-v4-pro", 0, "chat: MaxOutputTokens is 0"},
+		{"responses max tokens", "http://somewhere", "secret", "muse-spark-1.3-contributor", 0, "responses: MaxOutputTokens is 0"},
+		{"messages max tokens", "http://somewhere", "secret", "qwen3.8-max", 0, "anthropic: MaxOutputTokens is 0"},
 	}
 
 	for _, test := range tests {

@@ -14,6 +14,7 @@
 - Add OpenCode Go's Grok, Luna and Muse models over the Responses API
 - Add OpenCode Go's Qwen models over the Messages API
 - Offer OpenCode Go models that don't have effort levels
+- Cap OpenCode Go max output at 32Kt
 - Only list and complete modelsfor logged in providers
 
 ### Drawing

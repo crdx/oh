@@ -57,6 +57,8 @@ type Client struct {
 	Effort string
 	IsFast bool
 
+	MaxOutputTokens int
+
 	tokens           TokenSource
 	headerSource     func(Token) http.Header
 	isEffortRequired bool
@@ -92,16 +94,27 @@ func New(tokens TokenSource, model string, effort string) (*Client, error) {
 	return client, nil
 }
 
-func NewAt(url string, requestHeader http.Header, model string, effort string) (*Client, error) {
+func NewAt(
+	url string,
+	requestHeader http.Header,
+	model string,
+	effort string,
+	maxOutputTokens int,
+) (*Client, error) {
+	if maxOutputTokens <= 0 {
+		return nil, fmt.Errorf("responses: MaxOutputTokens is %d, and must be above zero", maxOutputTokens)
+	}
+
 	fixedHeader := requestHeader.Clone()
 
 	client := &Client{
-		URL:      url,
-		Model:    model,
-		Effort:   effort,
-		tokens:   noTokens{},
-		session:  newToken(),
-		requests: req.NewStreaming(responseHeaderTimeout, streamIdleTimeout),
+		URL:             url,
+		Model:           model,
+		Effort:          effort,
+		MaxOutputTokens: maxOutputTokens,
+		tokens:          noTokens{},
+		session:         newToken(),
+		requests:        req.NewStreaming(responseHeaderTimeout, streamIdleTimeout),
 		headerSource: func(Token) http.Header {
 			header := fixedHeader.Clone()
 			if header == nil {
@@ -265,6 +278,7 @@ func (self *Client) requestBody() request {
 	return request{
 		Model:             self.Model,
 		ServiceTier:       self.serviceTier(),
+		MaxOutputTokens:   self.MaxOutputTokens,
 		Store:             false,
 		Stream:            true,
 		Input:             self.requestHistory.Prepare(self.history),
@@ -294,6 +308,7 @@ func (self *Client) codexHeaders(token Token) http.Header {
 type request struct {
 	Model             string         `json:"model"`
 	ServiceTier       string         `json:"service_tier,omitempty"`
+	MaxOutputTokens   int            `json:"max_output_tokens,omitempty"`
 	Store             bool           `json:"store"`
 	Tools             []functionTool `json:"tools"`
 	Instructions      string         `json:"instructions,omitempty"`
