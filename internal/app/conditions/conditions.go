@@ -100,7 +100,7 @@ func changeNotices(knownConditions Conditions, current Conditions) []string {
 	}
 
 	if knownConditions.Interactive != current.Interactive {
-		notices = append(notices, interactionNotice(current.Interactive))
+		notices = append(notices, InteractionNotice(current.Interactive))
 	}
 
 	return notices
@@ -122,12 +122,12 @@ func addressNotice(isIPv6Reachable bool) string {
 	return "IPv6 unavailable; use 127.0.0.1."
 }
 
-func interactionNotice(isInteractive bool) string {
+func InteractionNotice(isInteractive bool) string {
 	if isInteractive {
-		return "Session is interactive; questions, approvals, and /! commands for the user to run are available, and a background job can wake the conversation when it finishes."
+		return "The session is interactive: questions, approvals, and /! commands for the user are available. A background job wakes the conversation when it ends."
 	}
 
-	return "Session is non-interactive; questions, approvals, and /! commands for the user to run are unavailable, and a background job will not wake the conversation when it finishes."
+	return "The session is non-interactive: questions, approvals, and /! commands for the user are unavailable. A background job does not wake the conversation when it ends."
 }
 
 const Change agent.Kind = "conditions_change"

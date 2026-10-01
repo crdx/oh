@@ -1249,6 +1249,27 @@ func TestAWorkspaceWithNoRepositoryIsCopiedAndMadeOneBeforeTheWork(t *testing.T)
 	}
 }
 
+func TestTheStateSaysWhetherTheSessionIsInteractive(t *testing.T) {
+	for name, isInteractive := range map[string]bool{"interactive": true, "non-interactive": false} {
+		t.Run(name, func(t *testing.T) {
+			got := harnessContext(Config{
+				Workspace:   work.At("/workspace"),
+				SessionName: "session-id",
+				TmpDir:      "/state/farm/session",
+				HomeDir:     "/state/home",
+				CurrentCaps: caps.Read,
+				Conditions:  conditions.Conditions{Interactive: isInteractive},
+			})
+
+			want := "- " + conditions.InteractionNotice(isInteractive)
+			state := strings.Index(got, "# State")
+			if state == -1 || !strings.Contains(got[state:], want) {
+				t.Errorf("state does not contain %q: %q", want, got)
+			}
+		})
+	}
+}
+
 func TestAWorkspaceInsideARepositoryIsKeptFromIt(t *testing.T) {
 	repository := t.TempDir()
 	if err := os.MkdirAll(filepath.Join(repository, ".git"), 0o700); err != nil {

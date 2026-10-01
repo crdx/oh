@@ -7,8 +7,8 @@ There is no IPv6 here, so 127.0.0.1 instead.\e[?25h\e[?2026l\e[?2026h\e[?25l\e[?
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Unix sockets now work under /tmp, not the workspace.                                            \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 IPv6 available; ::1 reaches the sandbox loopback.                                               \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Session is interactive; questions, approvals, and /! commands for the user to run are available,\e[0m\r
-\e[48;2;48;58;67m    and a background job can wake the conversation when it finishes.                                \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 The session is interactive: questions, approvals, and /! commands for the user are available. A \e[0m\r
+\e[48;2;48;58;67m    background job wakes the conversation when it ends.                                             \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r

@@ -7,8 +7,8 @@ There is no IPv6 here, so 127.0.0.1 instead.
 
  🤖 Unix sockets now work under /tmp, not the workspace.
  🤖 IPv6 available; ::1 reaches the sandbox loopback.
- 🤖 Session is interactive; questions, approvals, and /! commands for the user to run are available,
-    and a background job can wake the conversation when it finishes.
+ 🤖 The session is interactive: questions, approvals, and /! commands for the user are available. A
+    background job wakes the conversation when it ends.
 
 
 

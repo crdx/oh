@@ -525,6 +525,7 @@ func stateRules(data harnessContextTemplateData) string {
 	} else {
 		lines = append(lines, "- The workspace is not a git repository")
 	}
+	lines = append(lines, "- "+conditions.InteractionNotice(data.Conditions.Interactive))
 
 	if data.ShellOffered {
 		lines = append(lines, "- The bash tool is "+shellAccess(data.ShellGranted)+shellSandbox(data.Yolo))
