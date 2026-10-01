@@ -172,7 +172,7 @@ func TestConfiguredPathsAreDisclosedInTheHarnessContext(t *testing.T) {
 		"Ask for access only if the user names the path or the work cannot exclude it",
 		"Configured path /reference is read-only",
 		"Configured path /output is read-write.",
-		"shell can execute files at or under /commands",
+		"Configured executable path /commands is read-only to path tools, and the shell can execute files at or under it.",
 	} {
 		if !strings.Contains(got, want) {
 			t.Errorf("system prompt does not contain %q: %q", want, got)
@@ -195,7 +195,7 @@ func TestASessionWithNoDenyPatternIsNeverToldWhatADeniedPathLooksLike(t *testing
 }
 
 var pathGrantWording = []string{
-	"The user grants a path with /grant {r|rw} <path>... (r is read, w is write) and revokes it with /revoke <path>. With shell access, the shell can execute files at or under every granted path.",
+	"The user grants a path with /grant {r|rw} <path>... (r grants read; rw grants read and write) and revokes it with /revoke <path>. With shell access, the shell can execute files at or under every granted path.",
 	"If you need a path, ask the user to grant it; do not work around it or give up. Give the full command, such as /grant rw /some/path.",
 }
 
@@ -757,8 +757,8 @@ func TestAnOfferedToolIsStillMentioned(t *testing.T) {
 		"# Network",
 		"The bash tool is granted",
 		"A service started with the job tool",
-		"The shell can execute files at or under /commands.",
 		"git clone --shared",
+		"Configured executable path /commands is read-only to path tools, and the shell can execute files at or under it.",
 	} {
 		if !strings.Contains(got, want) {
 			t.Errorf("harness context does not contain %q: %q", want, got)
@@ -1016,7 +1016,8 @@ func TestWaitingForTheUserFollowsJobAvailability(t *testing.T) {
 				"Before ending a turn to wait for a user action",
 				"the filesystem can detect",
 				"you must start a job watcher",
-				"Use a ready, continuous `inotifywait --monitor` if available",
+				"Use a continuous `inotifywait --monitor` if available",
+				"With inotifywait, end the turn only after it prints \"Watches established\"",
 				"otherwise poll every 2s",
 				"When the job ends, continue",
 			} {
@@ -1091,11 +1092,10 @@ func TestEveryConfiguredPathKindHasItsFileToolAccessDocumented(t *testing.T) {
 	})
 
 	for _, want := range []string{
-		"Configured executable path /commands is read-only to path tools.",
-		"Configured PATH directory /toolbox/bin is read-only to path tools.",
+		"Configured executable path /commands is read-only to path tools, and the shell can execute files at or under it.",
+		"Configured PATH directory /toolbox/bin is read-only to path tools, and the shell can execute files at or under it.",
 		"Configured home path " + homePath + " is read-only and appears at HOME/.config/git/ignore.",
 		"Configured home path " + outsideHomePath + " is read-only to path tools; it is outside the user's home, so it is not in private HOME.",
-		"The shell can execute files at or under /commands.",
 		"The shell can execute files at or under the PATH directory /toolbox/bin.",
 	} {
 		if !strings.Contains(got, want) {

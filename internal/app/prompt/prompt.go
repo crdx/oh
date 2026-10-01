@@ -333,7 +333,7 @@ func titleSection(data harnessContextTemplateData) string {
 
 	return "# Titles\n\n" + strings.Join([]string{
 		"- Title the conversation with the title tool as soon as possible.",
-		"- Use 3 hyphen-separated words: VERB–MODIFIER–NOUN",
+		"- Use 3 hyphen-separated words, verb-modifier-noun, such as fix-picker-clipping.",
 		"- Keep it to 30 characters or fewer.",
 		"- Set a title before any long task.",
 		"- A provisional title is fine; you can change it later.",
@@ -388,11 +388,12 @@ func scopeRules(data harnessContextTemplateData) string {
 	for _, path := range extraPaths.Write {
 		lines = append(lines, "- Configured path "+path+" is read-write.")
 	}
+	isShellConfined := data.ShellOffered && !data.Yolo
 	for _, path := range extraPaths.Exec {
-		lines = append(lines, "- Configured executable path "+path+" is read-only to path tools.")
+		lines = append(lines, "- Configured executable path "+path+" is read-only to path tools"+shellExecution(isShellConfined)+".")
 	}
 	for _, path := range extraPaths.Path {
-		lines = append(lines, "- Configured PATH directory "+path+" is read-only to path tools.")
+		lines = append(lines, "- Configured PATH directory "+path+" is read-only to path tools"+shellExecution(isShellConfined)+".")
 	}
 	for _, path := range extraPaths.Home {
 		relative, isHomePath := shell.HomeRelativePath(path)
@@ -402,13 +403,10 @@ func scopeRules(data harnessContextTemplateData) string {
 			lines = append(lines, "- Configured home path "+path+" is read-only to path tools; it is outside the user's home, so it is not in private HOME.")
 		}
 	}
-	if data.ShellOffered && !data.Yolo {
+	if isShellConfined {
 		lines = append(lines, "- The shell has the same read access, plus the private process, terminal, resolver, and language-package cache files that commands need.")
 		lines = append(lines, "- The shell has the same write access, plus runtime devices.")
 		lines = append(lines, "- The shell can execute files under system directories, PATH directories, the workspace, HOME, and /tmp.")
-		for _, path := range extraPaths.Exec {
-			lines = append(lines, "- The shell can execute files at or under "+path+".")
-		}
 		for _, path := range extraPaths.Path {
 			lines = append(lines, "- The shell can execute files at or under the PATH directory "+path+".")
 		}
@@ -419,9 +417,17 @@ func scopeRules(data harnessContextTemplateData) string {
 	return strings.Join(append(lines, pathGrantRules()...), "\n")
 }
 
+func shellExecution(isShellConfined bool) string {
+	if !isShellConfined {
+		return ""
+	}
+
+	return ", and the shell can execute files at or under it"
+}
+
 func pathGrantRules() []string {
 	return []string{
-		"- The user grants a path with /grant " + pathgrant.GrantUsage + " (r is read, w is write) and revokes it with /revoke <path>. With shell access, the shell can execute files at or under every granted path.",
+		"- The user grants a path with /grant " + pathgrant.GrantUsage + " (r grants read; rw grants read and write) and revokes it with /revoke <path>. With shell access, the shell can execute files at or under every granted path.",
 		"- If you need a path, ask the user to grant it; do not work around it or give up. Give the full command, such as /grant rw /some/path.",
 	}
 }
@@ -705,7 +711,7 @@ func scratchRules(data harnessContextTemplateData) string {
 			"- /tmp is your persistent, always-writable scratch space",
 			"- On the user's machine it is " + data.TmpDir,
 			"- Always translate a /tmp path to that location before giving it to the user",
-			"\t- For example: /tmp/foo.png → " + filepath.Join(data.TmpDir, "foo.png"),
+			"    - For example: /tmp/foo.png → " + filepath.Join(data.TmpDir, "foo.png"),
 		}
 	}
 
@@ -721,7 +727,8 @@ func waitingForUserSection(data harnessContextTemplateData) string {
 		"# Waiting for the User",
 		"",
 		"- Before ending a turn to wait for a user action the filesystem can detect, you must start a job watcher",
-		"- Use a ready, continuous `inotifywait --monitor` if available; otherwise poll every 2s",
+		"- Use a continuous `inotifywait --monitor` if available; otherwise poll every 2s",
+		"- With inotifywait, end the turn only after it prints \"Watches established\"",
 		"- When the job ends, continue where you stopped",
 	}, "\n") + "\n\n"
 }
