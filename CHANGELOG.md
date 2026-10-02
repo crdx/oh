@@ -63,6 +63,7 @@
 - Grant several paths at once with `/grant`
 - Fail faster if bash is missing
 - Let the shell read and run enabled global skills
+- Give each shell a private `/dev/shm`
 
 ### Tool calls
 

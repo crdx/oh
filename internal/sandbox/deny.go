@@ -90,6 +90,9 @@ func (self Policy) denyRoots() []string {
 		if grant.isOptional && !pathutil.Exists(grant.path) {
 			continue
 		}
+		if grant.path == SharedMemoryPath {
+			continue
+		}
 		if self.TmpDir != "" {
 			if grant.path == TmpDir {
 				continue

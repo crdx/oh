@@ -35,6 +35,7 @@ func TestPermanentGrantsFollowLiveWorkspaceCapabilities(t *testing.T) {
 	)
 	assertScopedGrant(t, writable, RuntimeGrant, "/proc", ReadAccess)
 	assertScopedGrant(t, writable, RuntimeGrant, "/dev/pts", ReadAccess|WriteAccess)
+	assertScopedGrant(t, writable, RuntimeGrant, sandbox.SharedMemoryPath, ReadAccess|WriteAccess)
 }
 
 func TestPermanentGrantsShowRepositoryMetadataAccess(t *testing.T) {

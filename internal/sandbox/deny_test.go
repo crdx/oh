@@ -83,6 +83,12 @@ func TestScratchDenyPathsAreTranslatedToSandboxTmp(t *testing.T) {
 	}
 }
 
+func TestPrivateSharedMemoryIsNotSearchedForDeniedNames(t *testing.T) {
+	if slices.Contains(Policy{Deny: []string{".env"}}.denyRoots(), SharedMemoryPath) {
+		t.Errorf("the host's %s was searched, though a command only ever sees an empty one of its own", SharedMemoryPath)
+	}
+}
+
 func TestAGrantContainingTheScratchIsNotSearched(t *testing.T) {
 	farm := t.TempDir()
 	scratch := filepath.Join(farm, "session")

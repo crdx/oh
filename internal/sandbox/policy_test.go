@@ -141,6 +141,19 @@ func TestEveryPolicyGrantsPseudoterminals(t *testing.T) {
 	}
 }
 
+func TestEveryPolicyGrantsItsPrivateSharedMemory(t *testing.T) {
+	rights, granted := rightsFor(Policy{}.grants(), SharedMemoryPath)
+	if !granted {
+		t.Fatal("private shared memory was not granted")
+	}
+	if rights != rightsWrite {
+		t.Errorf("private shared memory got rights %#x, want it writable", rights)
+	}
+	if !slices.Contains(RuntimeWritablePaths(), SharedMemoryPath) {
+		t.Error("private shared memory is granted but not listed among the runtime grants")
+	}
+}
+
 func TestOnlyExplicitlyOptionalPolicyPathsMayBeMissing(t *testing.T) {
 	for _, granted := range systemPathGrants {
 		if !granted.isOptional {

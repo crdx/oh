@@ -80,9 +80,11 @@ const privateNamespaces = uintptr(
 		syscall.CLONE_NEWUTS,
 )
 
-const processFilesystemPath = "/proc"
-
-const TmpDir = "/tmp"
+const (
+	processFilesystemPath = "/proc"
+	TmpDir                = "/tmp"
+	SharedMemoryPath      = "/dev/shm"
+)
 
 type virtualFile struct {
 	path     string
@@ -183,6 +185,10 @@ func applyMounts(policy Policy) error {
 	}
 
 	if err := mountPseudoterminals(); err != nil {
+		return err
+	}
+
+	if err := mountSharedMemory(); err != nil {
 		return err
 	}
 
@@ -375,6 +381,17 @@ func mountPseudoterminals() error {
 	}
 	if err := unix.Mount("/dev/pts/ptmx", "/dev/ptmx", "", unix.MS_BIND, ""); err != nil {
 		return fmt.Errorf("could not attach the pseudoterminal multiplexer: %w", err)
+	}
+	return nil
+}
+
+func mountSharedMemory() error {
+	if !pathutil.Exists(SharedMemoryPath) {
+		return nil
+	}
+	flags := uintptr(unix.MS_NOSUID | unix.MS_NODEV)
+	if err := unix.Mount("tmpfs", SharedMemoryPath, "tmpfs", flags, "mode=1777"); err != nil {
+		return fmt.Errorf("could not mount private shared memory: %w", err)
 	}
 	return nil
 }

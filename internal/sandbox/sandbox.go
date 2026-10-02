@@ -83,7 +83,7 @@ func RuntimeReadablePaths() []string {
 }
 
 func RuntimeWritablePaths() []string {
-	return []string{"/dev/ptmx", "/dev/pts"}
+	return []string{"/dev/ptmx", "/dev/pts", SharedMemoryPath}
 }
 
 type Policy struct {
@@ -158,6 +158,7 @@ func (self Policy) grants() []grant {
 		grants,
 		grant{path: "/dev/ptmx", rights: rightsWrite},
 		grant{path: "/dev/pts", rights: rightsWrite},
+		grant{path: SharedMemoryPath, rights: rightsWrite, isOptional: true},
 		grant{path: processFilesystemPath, rights: rightsRead},
 	)
 
