@@ -54,6 +54,7 @@ type Args struct {
 	WaitFor     string   `json:"wait_for,omitempty"`
 	WaitSeconds int      `json:"wait_seconds,omitempty"`
 	Command     string   `json:"command"`
+	Intent      string   `json:"intent,omitempty"`
 }
 
 func New(
@@ -74,6 +75,7 @@ func New(
 				tool.Enum("wait_for", "whether wait returns after any or all watched jobs end", waitForAny, waitForAll).Optional(),
 				tool.Integer("wait_seconds", fmt.Sprintf("how many seconds to wait at most — max %s (default)", util.CompactDuration(waitLimit))).Optional(),
 				tool.String("command", "the command line (for action 'start'); if omitted, re-runs previous job by name").Optional(),
+				tool.String("intent", "what you intend the job to do, in words").Optional(),
 			},
 		},
 		Describe,

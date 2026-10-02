@@ -68,6 +68,7 @@
 
 ### Tool calls
 
+- Add intent parameter to job tool
 - Allow a background job associate to a port
 - Allow a background job take over a forwarded port
 - Call background job output calls `cat`

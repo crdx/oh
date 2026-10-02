@@ -26,7 +26,7 @@ event = [
 event = [
     '''{"type":"message_start","message":{}}''',
     '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_2","name":"job","input":{}}}''',
-    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"action\":\"start\",\"name\":\"docs\",\"port\":8080,\"command\":\"just docs\"}"}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"action\":\"start\",\"name\":\"docs\",\"port\":8080,\"command\":\"just docs\",\"intent\":\"serve the documentation\"}"}}''',
     '''{"type":"content_block_stop","index":0}''',
     '''{"type":"message_delta","delta":{"stop_reason":"tool_use"}}''',
     '''{"type":"message_stop"}''',

@@ -199,6 +199,21 @@ func TestStartingAnUnknownNameWithNoCommandIsRefused(t *testing.T) {
 	}
 }
 
+func TestAJobIntentIsAcceptedWithoutChangingItsRendering(t *testing.T) {
+	built := job.New(nil, nil, nil, nil)
+	withoutIntent, err := built.Parse(`{"action":"start","name":"docs","command":"serve docs"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	withIntent, err := built.Parse(`{"action":"start","name":"docs","command":"serve docs","intent":"serve the documentation"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(withIntent.Rendering(), withoutIntent.Rendering()) {
+		t.Errorf("got %#v, want intent to leave rendering %#v", withIntent.Rendering(), withoutIntent.Rendering())
+	}
+}
+
 func TestStartingAJobCanForwardAndAssociateItsPort(t *testing.T) {
 	manager := jobs.New(heldRunner{})
 	t.Cleanup(func() { _ = manager.Close() })
