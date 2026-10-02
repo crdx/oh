@@ -54,7 +54,7 @@ func Run(output io.Writer, errorOutput io.Writer, name string, analyse Analyser,
 }
 
 func Check(analyse Analyser, filename string) ([]Diagnostic, error) {
-	source, err := os.ReadFile(filepath.Clean(filename))
+	source, err := os.ReadFile(filepath.Clean(filename)) //nolint:gosec // a linter reads the files it is named
 	if err != nil {
 		return nil, err
 	}
