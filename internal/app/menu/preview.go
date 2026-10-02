@@ -13,8 +13,9 @@ import (
 )
 
 const (
-	openablePreviewHint     = "enter to open · esc return · ↑↓ scroll · ←→ browse"
-	runningPreviewHint      = "running · esc return · ↑↓ scroll · ←→ browse"
+	previewKeysHint         = " · esc return · ↑↓ scroll · ←→ browse"
+	openablePreviewHint     = "enter to open" + previewKeysHint
+	runningPreviewHint      = "running" + previewKeysHint
 	closePreviewKey         = 'q'
 	previewRule             = "─"
 	previewHeaderRows       = 3
@@ -205,7 +206,7 @@ func (self *state) previewHint(room int) string {
 
 	hint := runningPreviewHint
 	if self.preview.unavailableLabel != "" {
-		hint = self.preview.unavailableLabel + " · esc return · ↑↓ scroll"
+		hint = self.preview.unavailableLabel + previewKeysHint
 	}
 	mark, rest, isMarked := strings.Cut(Clip(hint, room), " ")
 	paint := style.Success

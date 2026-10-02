@@ -400,7 +400,7 @@
 \e[K\e[J
 === another workspace's conversation read but not opened ===
 \e[H\e[38;2;192;128;80m🐢 wiry-turtle  work in another project\e[0m                                                                         \e[38;2;150;152;150m5-9 of 9\e[0m\e[K\r
-\e[38;2;129;162;190mother\e[0m\e[38;2;150;152;150m workspace · esc return · ↑↓ scroll\e[0m\e[K\r
+\e[38;2;129;162;190mother\e[0m\e[38;2;150;152;150m workspace · esc return · ↑↓ scroll · ←→ browse\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[K\r
 \e[K\r
 read cmd/oh/line/render.go\e[0m\e[K\r
