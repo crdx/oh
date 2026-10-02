@@ -107,25 +107,25 @@ left = [
     { segment = "activity-spinner", idle = "·✦·", frames = ["✦··", "·✦·", "··✦", "··✦", "·✦·", "✦··"], rate = "125ms" },
     { segment = "forwards" },
     { segment = "jobs" },
+    { segment = "grants", type = "base" },
 ]
 center = [
-    { segment = "active-model" },
-    { segment = "context-usage" },
 ]
 right = [
+    { segment = "active-model" },
+    { segment = "context-usage" },
     { segment = "scroll-overflow", direction = "up" }
 ]
 
 [bar.bottom]
 left = [
     { segment = "mode-toggle" },
-    { segment = "grants", type = "base" },
+    { segment = "workspace-dir", type = "base" },
 ]
 center = [
     { segment = "subscription-usage" },
 ]
 right = [
-    { segment = "workspace-dir", type = "base" },
     { segment = "session-name", emoji = true },
     { segment = "scroll-overflow", direction = "down" }
 ]

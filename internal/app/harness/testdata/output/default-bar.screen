@@ -3,21 +3,22 @@ usage n/a
 === bottom.center while waiting ===
 usage n/a
 === bottom.left while running ===
-rxw ngl
+rxw ngl ─ workspace
 === bottom.left while waiting ===
-rxw ngl
+rxw ngl ─ workspace
 === bottom.right while running ===
-workspace ─ tame-impala 🦌
+tame-impala 🦌
 === bottom.right while waiting ===
-workspace ─ tame-impala 🦌
+tame-impala 🦌
 === top.center while running ===
-GPT Sol 5.6 ▫▫▫▪·· ─ 21% 42K/200K
+
 === top.center while waiting ===
-GPT Sol 5.6 ▫▫▫▪·· ─ 21% 42K/200K
+
 === top.left while running ===
 ··✦
 === top.left while waiting ===
 ·✦·
 === top.right while running ===
-
+GPT Sol 5.6 ▫▫▫▪·· ─ 21% 42K/200K
 === top.right while waiting ===
+GPT Sol 5.6 ▫▫▫▪·· ─ 21% 42K/200K
