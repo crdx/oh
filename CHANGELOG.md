@@ -47,13 +47,13 @@
 
 - Run `/!` without freezing the interface
 - Stop a running `/!` command with escape or `ctrl+d`
-- Show the last line a running `/!` command printed, such as a fingerprint prompt
+- Show the last line a running `/!` command printed
 - Keep only the final state of progress lines in `/!` output
 - Tell the model to produce commands as `/!` lines
 
 ### Grants and sandbox
 
-- Make temporary grants shell-executable and accept only `r` or `rw`
+- Make temporary accept only `r` or `rw`
 - Remove host loopback ports
 - Add `/forward` and drop `/expose`
 - Rename terminology to "forward"
@@ -89,10 +89,10 @@
 ### Model guidance
 
 - Mandate tall Mermaid diagrams, not wide
-- Give a workspace that isn't a repository its own read-only workflow
+- Give a r/o workspace that isn't a repository its own workflow
 - Tell the model whether the session is interactive
-- Say how to get a refused lookup or fetch tool granted
-- Keep git from finding a repository above a read-only workspace when applying its patches
+- Explain how to get a refused lookup or fetch tool granted
+- Keep git from finding the wrong repository for its patches
 
 ## [0.11.0] - 2026-09-29
 
