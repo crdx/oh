@@ -296,7 +296,7 @@ func (self *sessionList) deletion(index int, movedSession *Session) (menu.Remova
 	}
 
 	return menu.Removal{
-		Prompt:   "Press delete again to delete " + movedSession.Name + " for good",
+		Prompt:   "Press delete again to delete " + movedSession.Name,
 		Progress: "Deleting…",
 		Perform:  func() error { return self.store.Delete(movedSession) },
 		Apply:    func() { self.forget(index) },

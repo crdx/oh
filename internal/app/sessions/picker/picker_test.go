@@ -334,7 +334,7 @@ func TestDeletingTakesTheSessionOutOfWhicheverViewItIsIn(t *testing.T) {
 	if !isBound {
 		t.Fatal("expected a stored session to be deletable")
 	}
-	if removal.Prompt != "Press delete again to delete thick-poodle for good" {
+	if removal.Prompt != "Press delete again to delete thick-poodle" {
 		t.Errorf("unexpected prompt: %q", removal.Prompt)
 	}
 	if err := removal.Perform(); err != nil {

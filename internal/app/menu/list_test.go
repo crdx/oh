@@ -1027,3 +1027,92 @@ func TestAHintWithNoRoomForItsMarkIsStillDrawn(t *testing.T) {
 		t.Errorf("got the hint %q, want %q", got, want)
 	}
 }
+
+type removablePreviewableList struct {
+	removableList
+
+	read map[string][]string
+}
+
+func (self *removablePreviewableList) Preview(index int, keypress key.Key) (Preview, bool) {
+	if keypress.Code != key.Enter || !self.IsChoosable(index) {
+		return Preview{}, false
+	}
+
+	name := self.rows[index]
+
+	return Preview{
+		Title: "reading " + name,
+		Read:  func(int) ([]string, error) { return self.read[name], nil },
+	}, true
+}
+
+func removablePreviewableRows(names ...string) *removablePreviewableList {
+	rows := &removablePreviewableList{removableList: *removableRows(names...), read: map[string][]string{}}
+	for _, name := range names {
+		rows.read[name] = []string{name + " one", name + " two"}
+	}
+
+	return rows
+}
+
+func TestAPreviewedRowIsRemovedOnASecondPressAndTheRowsReturn(t *testing.T) {
+	rows := removablePreviewableRows("first", "second", "third")
+	self := listState(rows, 1)
+	self.measure = func() (int, int) { return 40, 9 }
+
+	self.apply(key.Key{Code: key.Enter})
+	self.draw()
+
+	self.apply(archiveKey())
+	if self.removalState.index != 1 || !self.preview.isOpen {
+		t.Fatalf("expected the preview to ask about its row, got %d", self.removalState.index)
+	}
+	if !strings.Contains(self.previewHint(40), "Press ctrl+a again") {
+		t.Errorf("expected the question in place of the hint, got %q", self.previewHint(40))
+	}
+
+	self.apply(key.Key{Code: key.Escape})
+	if !self.preview.isOpen || len(rows.removed) != 0 {
+		t.Fatalf("expected any other key to leave the preview and its row alone, got %v", rows.removed)
+	}
+
+	self.apply(archiveKey())
+	self.apply(archiveKey())
+
+	if !slices.Equal(rows.removed, []string{"second"}) {
+		t.Fatalf("got the rows removed as %v", rows.removed)
+	}
+	if self.preview.isOpen {
+		t.Error("expected the rows back once the previewed row was removed")
+	}
+	if self.cursor != 1 || self.chosen() != 1 {
+		t.Errorf("expected the cursor to hold its place, got %d", self.cursor)
+	}
+}
+
+func TestAFailedRemovalIsReportedInPlaceOfThePreviewHint(t *testing.T) {
+	rows := removablePreviewableRows("first", "second")
+	rows.failure = errors.New("the session is already open elsewhere")
+	self := listState(rows, 0)
+	self.measure = func() (int, int) { return 80, 9 }
+
+	self.apply(key.Key{Code: key.Enter})
+	self.apply(archiveKey())
+	self.apply(archiveKey())
+
+	if !self.preview.isOpen {
+		t.Fatal("expected the preview to stay open after a failure")
+	}
+	if !strings.Contains(self.previewHint(80), rows.failure.Error()) {
+		t.Errorf("expected the failure in place of the hint, got %q", self.previewHint(80))
+	}
+
+	self.apply(key.Key{Code: key.Up})
+	if got, want := self.previewHint(80), style.Subtle(openablePreviewHint); got != want {
+		t.Errorf("expected the hint back, got %q", got)
+	}
+	if !self.preview.isOpen {
+		t.Error("expected the key that cleared the failure to leave the preview open")
+	}
+}

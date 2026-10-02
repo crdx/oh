@@ -462,7 +462,7 @@ output layer instead.\e[0m\e[K\r
 \e[K\r
 \e[K\e[J
 === the confirmation asked before a session is deleted for good ===
-\e[H\e[38;2;207;173;0mPress delete again to delete thick-poodle for good\e[0m\e[K\r
+\e[H\e[38;2;207;173;0mPress delete again to delete thick-poodle\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Agent                 Title                      Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
 \e[3m\e[38;2;150;152;150m  🐟 chewy-sardine      why does the spinner stu…  \e[38;2;192;128;80m⚡\e[0m\e[3m\e[38;2;150;152;150m Codex 5.3              high        12     1M      8m      just now\e[0m\e[0m\e[K\r
 \e[38;2;192;128;80m› 🐩 thick-poodle       add support for reasonin…  \e[38;2;192;128;80m⚡\e[0m\e[38;2;192;128;80m Sonnet 5             medium         4    <1M      1h       37m ago\e[0m\e[K\r
@@ -487,13 +487,13 @@ output layer instead.\e[0m\e[K\r
 \e[K\r
 \e[K\e[J
 === the deletion confirmation clipped by a narrow terminal ===
-\e[H\e[38;2;207;173;0mPress delete again to delete thick-poodle for…\e[0m\e[K\r
-\e[4m\e[38;2;150;152;150m  Agent      …  Messages  Length  Last Message\e[0m\e[0m\e[K\r
-\e[3m\e[38;2;150;152;150m  🐟 chewy-sa…        12      8m      just now\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› 🐩 thick-po…         4      1h       37m ago\e[0m\e[K\r
-  🦡 funny-ba…       148      3h        5h ago\e[K\r
-  🐬 able-dol…         1      4h        3d ago\e[K\r
-  🦌 tame-imp…        26      1d       12d ago\e[K\r
+\e[H\e[38;2;207;173;0mPress delete again to delete thick-pood…\e[0m\e[K\r
+\e[4m\e[38;2;150;152;150m  Agent…  Messages  Length  Last Message\e[0m\e[0m\e[K\r
+\e[3m\e[38;2;150;152;150m  🐟 ch…        12      8m      just now\e[0m\e[0m\e[K\r
+\e[38;2;192;128;80m› 🐩 th…         4      1h       37m ago\e[0m\e[K\r
+  🦡 fu…       148      3h        5h ago\e[K\r
+  🐬 ab…         1      4h        3d ago\e[K\r
+  🦌 ta…        26      1d       12d ago\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -512,7 +512,7 @@ output layer instead.\e[0m\e[K\r
 \e[K\r
 \e[K\e[J
 === deleting an archived session for good ===
-\e[H\e[38;2;207;173;0mPress delete again to delete tame-impala for good\e[0m\e[K\r
+\e[H\e[38;2;207;173;0mPress delete again to delete tame-impala\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Agent (archived)      Title                      Model                   Effort  Messages   Size  Length  Last Message\e[0m\e[0m\e[K\r
 \e[38;2;192;128;80m› 🦌 tame-impala        rename the harness to oh   Codex 5.3                    —        26    <1M      1d       12d ago\e[0m\e[K\r
   🐢 wiry-turtle        add an archive view to t…  Sonnet 5                  high        61     2M      3h        2d ago\e[K\r

@@ -242,7 +242,7 @@ func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
 		{name: "the confirmation asked before an archived session is restored", room: 120, height: 24, cursor: 1, isArchivedView: true, keypress: new(archiveKeypress())},
 		{name: "the archived view with nothing archived", room: 120, height: 24, cursor: 0, isArchivedView: true, hasNothingArchived: true},
 		{name: "the confirmation asked before a session is deleted for good", room: 120, height: 24, cursor: 1, keypress: new(deleteKeypress())},
-		{name: "the deletion confirmation clipped by a narrow terminal", room: 46, height: 24, cursor: 1, keypress: new(deleteKeypress())},
+		{name: "the deletion confirmation clipped by a narrow terminal", room: 40, height: 24, cursor: 1, keypress: new(deleteKeypress())},
 		{name: "deleting an archived session for good", room: 120, height: 24, cursor: 0, isArchivedView: true, keypress: new(deleteKeypress())},
 		{name: "the whole conversation read", room: 120, height: 24, cursor: 1, keypress: new(openKeypress()), read: reading()},
 		{name: "the conversation read with the terminal too short for it", room: 120, height: 8, cursor: 1, keypress: new(openKeypress()), read: reading()},

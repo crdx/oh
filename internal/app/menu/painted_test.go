@@ -284,3 +284,49 @@ func TestGoldenTheCompletePreviewLifecycleMatchesTheGolden(t *testing.T) {
 
 	compareWithGolden(t, "previewed.ansi", strutil.VisibleEscapes(output.String()))
 }
+
+func TestGoldenRemovingFromAPreviewMatchesTheGolden(t *testing.T) {
+	rows := removablePreviewableRows(
+		"chewy-sardine   why does the spinner stutter when a tool runs",
+		"thick-poodle    add support for reasoning traces",
+		"quiet-marmot    tidy the changelog",
+	)
+	rows.refused = []string{"quiet-marmot    tidy the changelog"}
+
+	keypresses := []key.Key{
+		{Code: key.Down},
+		{Code: key.Enter},
+		archiveKey(),
+		{Code: key.Up},
+		archiveKey(),
+		archiveKey(),
+		{Code: key.Enter},
+		archiveKey(),
+		archiveKey(),
+		{Code: key.Up},
+		{Code: key.Escape},
+		{Code: key.Up},
+		{Code: key.Enter},
+		{Code: key.Enter},
+	}
+
+	keys := make(chan key.Key, len(keypresses))
+	for _, keypress := range keypresses {
+		keys <- keypress
+	}
+	close(keys)
+
+	var output strings.Builder
+	chosen, err := choose(rows, keys, func() (int, int) { return 46, 9 }, &output, inline)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if chosen != 0 {
+		t.Errorf("chose row %d, want 0", chosen)
+	}
+	if !slices.Equal(rows.removed, []string{"thick-poodle    add support for reasoning traces"}) {
+		t.Errorf("got the rows removed as %v", rows.removed)
+	}
+
+	compareWithGolden(t, "previewremoval.ansi", strutil.VisibleEscapes(output.String()))
+}

@@ -89,6 +89,7 @@
 
 - Count empty directories in `oh --ctl gc`
 - Browse session previews with left and right keys
+- Archive and delete sessions from their preview
 
 ### Questions and approvals
 

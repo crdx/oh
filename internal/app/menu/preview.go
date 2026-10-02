@@ -200,6 +200,9 @@ func (self *state) drawPreview(room int, height int) string {
 }
 
 func (self *state) previewHint(room int) string {
+	if line, isRemoving := self.removalLine(room); isRemoving {
+		return line
+	}
 	if self.preview.isOpenable {
 		return style.Subtle(Clip(openablePreviewHint, room))
 	}

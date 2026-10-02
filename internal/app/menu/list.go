@@ -225,10 +225,6 @@ func (self *state) apply(keypress key.Key) action {
 		return continuePicking
 	}
 
-	if self.preview.isOpen {
-		return self.readPreview(keypress)
-	}
-
 	if self.removalState.index >= 0 {
 		self.answerRemoval(keypress)
 		return continuePicking
@@ -238,6 +234,10 @@ func (self *state) apply(keypress key.Key) action {
 
 	if self.askToRemove(keypress) {
 		return continuePicking
+	}
+
+	if self.preview.isOpen {
+		return self.readPreview(keypress)
 	}
 
 	if self.askToPreview(keypress) {
@@ -360,6 +360,7 @@ func (self *state) finishRemoval(err error) {
 
 	work.Apply()
 
+	self.preview = previewState{}
 	at, offset := self.cursor, self.offset
 	self.refilter()
 	self.cursor = self.selectableFrom(at)
@@ -586,18 +587,25 @@ func (self *state) scroll(rows int) {
 }
 
 func (self *state) promptLine(room int) string {
-	if self.removalState.isWorking {
-		frame := spinner.Activity.Frame(self.removalState.spinnerAt)
-		return style.Change(Clip(frame+" "+self.removalState.work.Progress, room))
-	}
-	if self.removalState.index >= 0 {
-		return style.Change(Clip(self.removalState.work.Prompt, room))
-	}
-	if self.removalState.failure != "" {
-		return style.Failure(Clip(self.removalState.failure, room))
+	if line, isRemoving := self.removalLine(room); isRemoving {
+		return line
 	}
 
 	return self.filterLine(room)
+}
+
+func (self *state) removalLine(room int) (string, bool) {
+	switch {
+	case self.removalState.isWorking:
+		frame := spinner.Activity.Frame(self.removalState.spinnerAt)
+		return style.Change(Clip(frame+" "+self.removalState.work.Progress, room)), true
+	case self.removalState.index >= 0:
+		return style.Change(Clip(self.removalState.work.Prompt, room)), true
+	case self.removalState.failure != "":
+		return style.Failure(Clip(self.removalState.failure, room)), true
+	}
+
+	return "", false
 }
 
 func (self *state) filterLine(room int) string {
