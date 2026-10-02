@@ -23,6 +23,7 @@ import (
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/internal/util/strutil"
+	"mvdan.cc/sh/v3/syntax"
 )
 
 const (
@@ -835,7 +836,12 @@ func ceilingPrefix(data harnessContextTemplateData) string {
 		return ""
 	}
 
-	return "GIT_CEILING_DIRECTORIES=" + filepath.Dir(data.WorkspaceDir) + " "
+	ceiling, err := syntax.Quote(filepath.Dir(data.WorkspaceDir), syntax.LangBash)
+	if err != nil {
+		ceiling = filepath.Dir(data.WorkspaceDir)
+	}
+
+	return "GIT_CEILING_DIRECTORIES=" + ceiling + " "
 }
 
 func shellSandbox(isYolo bool) string {

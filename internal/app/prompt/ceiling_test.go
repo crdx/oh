@@ -11,13 +11,23 @@ import (
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/conditions"
 	"crdx.org/oh/internal/app/work"
+	"mvdan.cc/sh/v3/syntax"
 )
 
 var workflowCommand = regexp.MustCompile(`(?m)^    - (Check if a standalone patch is already applied|Verify a standalone patch applies|Tell the user to apply it with): (?:/!)?(.+)$`)
 
 func TestTheWorkflowsCommandsJudgeAWorkspaceInsideARepositoryTruthfully(t *testing.T) {
+	for _, parent := range []string{"config", "my config"} {
+		t.Run(parent, func(t *testing.T) {
+			requireTheWorkflowJudgesTruthfully(t, parent)
+		})
+	}
+}
+
+func requireTheWorkflowJudgesTruthfully(t *testing.T, parent string) {
+	t.Helper()
 	repository := t.TempDir()
-	workspaceDirectory := filepath.Join(repository, "config", "kitty")
+	workspaceDirectory := filepath.Join(repository, parent, "kitty")
 	if err := os.MkdirAll(workspaceDirectory, 0o700); err != nil {
 		t.Fatal(err)
 	}
@@ -44,9 +54,9 @@ func TestTheWorkflowsCommandsJudgeAWorkspaceInsideARepositoryTruthfully(t *testi
 	commands := map[string]string{}
 	for _, match := range workflowCommand.FindAllStringSubmatch(got, -1) {
 		command := strings.NewReplacer(
-			"<workspace>", workspaceDirectory,
-			"<patch>", patchPath,
-			"<user's path to patch>", patchPath,
+			"<workspace>", quoted(t, workspaceDirectory),
+			"<patch>", quoted(t, patchPath),
+			"<user's path to patch>", quoted(t, patchPath),
 		).Replace(match[2])
 		commands[match[1]] = command
 	}
@@ -57,7 +67,7 @@ func TestTheWorkflowsCommandsJudgeAWorkspaceInsideARepositoryTruthfully(t *testi
 		return bashIn(t, workspaceDirectory, commands["Check if a standalone patch is already applied"]) == nil
 	}
 
-	if bashIn(t, workspaceDirectory, "git -C "+workspaceDirectory+" apply --reverse --check "+patchPath) != nil {
+	if bashIn(t, workspaceDirectory, "git -C "+quoted(t, workspaceDirectory)+" apply --reverse --check "+quoted(t, patchPath)) != nil {
 		t.Fatal("git no longer skips a nested workspace's paths, so this test proves nothing")
 	}
 	if isApplied() {
@@ -75,6 +85,15 @@ func TestTheWorkflowsCommandsJudgeAWorkspaceInsideARepositoryTruthfully(t *testi
 	if !isApplied() {
 		t.Error("the patch is not reported applied after it was")
 	}
+}
+
+func quoted(t *testing.T, text string) string {
+	t.Helper()
+	quotedText, err := syntax.Quote(text, syntax.LangBash)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return quotedText
 }
 
 func gitIn(t *testing.T, directory string, arguments ...string) {
