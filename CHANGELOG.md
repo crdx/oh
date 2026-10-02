@@ -49,9 +49,7 @@
 ### Host commands
 
 - Keep the pending `/!` send hint visible
-- Add `experimental.command_starts_turn`
-- Keep idle `/!` output pending for double-enter
-- Don't start a new turn with `/!` commands
+- Keep idle `/!` output correctly pending
 - Run `/!` without freezing the interface
 - Stop a running `/!` command with escape or `ctrl+d`
 - Show the last line a running `/!` command printed
@@ -61,7 +59,7 @@
 
 ### Grants and sandbox
 
-- Make temporary accept only `r` or `rw`
+- Make temporary grants accept only `r` or `rw`
 - Remove host loopback ports
 - Add `/forward` and drop `/expose`
 - Rename terminology to "forward"
