@@ -8,7 +8,7 @@ forward 8080 1L
  🤖 Port 8080 is now forwarded to http://127.82.233.168:8080.
 
 
-start docs:8080 $ just docs 2L
+start docs:8080 — serve the documentation $ just docs 2L
 
 
  🤖 Port 8080 now belongs to job docs.

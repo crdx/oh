@@ -8,7 +8,7 @@
 \e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to http://127.82.233.168:8080.                                       \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
-\e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[38;2;150;152;150m:8080\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mdocs\e[0m \e[38;2;150;152;150m2L\e[0m\r
+\e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[38;2;150;152;150m:8080\e[0m \e[38;2;150;152;150m— serve the documentation\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mdocs\e[0m \e[38;2;150;152;150m2L\e[0m\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Port 8080 now belongs to job docs.                                                              \e[0m\r

@@ -98,12 +98,17 @@ func Describe(args Args) tool.CallRendering {
 			subject += ":" + strconv.Itoa(args.Port)
 			emphasis = tool.Emphasis{Kind: tool.EmphasisLead, Value: args.Name}
 		}
+		qualifier := ""
+		if intent := strings.TrimSpace(args.Intent); intent != "" {
+			qualifier = "— " + intent
+		}
 		if strings.TrimSpace(args.Command) == "" {
-			return tool.CallRendering{Kind: "job_restart", Subject: subject, Emphasis: emphasis}
+			return tool.CallRendering{Kind: "job_restart", Subject: subject, Qualifier: qualifier, Emphasis: emphasis}
 		}
 		return tool.CallRendering{
 			Kind:         "job_start",
 			Subject:      subject,
+			Qualifier:    qualifier,
 			Emphasis:     emphasis,
 			Continuation: []tool.CallRendering{bash.DescribeCommand(args.Command)},
 		}

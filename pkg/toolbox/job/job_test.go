@@ -199,18 +199,27 @@ func TestStartingAnUnknownNameWithNoCommandIsRefused(t *testing.T) {
 	}
 }
 
-func TestAJobIntentIsAcceptedWithoutChangingItsRendering(t *testing.T) {
+func TestAJobIntentQualifiesItsCallRow(t *testing.T) {
 	built := job.New(nil, nil, nil, nil)
-	withoutIntent, err := built.Parse(`{"action":"start","name":"docs","command":"serve docs"}`)
+	for _, arguments := range []string{
+		`{"action":"start","name":"docs","command":"serve docs","intent":"serve the documentation"}`,
+		`{"action":"start","name":"docs","intent":"serve the documentation"}`,
+	} {
+		call, err := built.Parse(arguments)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if got := call.Rendering().Qualifier; got != "— serve the documentation" {
+			t.Errorf("%s qualified as %q, want the intent", arguments, got)
+		}
+	}
+
+	call, err := built.Parse(`{"action":"start","name":"docs","command":"serve docs","intent":"  "}`)
 	if err != nil {
 		t.Fatal(err)
 	}
-	withIntent, err := built.Parse(`{"action":"start","name":"docs","command":"serve docs","intent":"serve the documentation"}`)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !reflect.DeepEqual(withIntent.Rendering(), withoutIntent.Rendering()) {
-		t.Errorf("got %#v, want intent to leave rendering %#v", withIntent.Rendering(), withoutIntent.Rendering())
+	if got := call.Rendering().Qualifier; got != "" {
+		t.Errorf("a blank intent qualified as %q, want nothing", got)
 	}
 }
 
