@@ -91,10 +91,10 @@ func TestRoundRobinCanLoadSelectionsFromAFile(t *testing.T) {
 	}
 }
 
-func TestRoundRobinModelFileMustContainOneSelectionPerLine(t *testing.T) {
+func TestRoundRobinModelFileSkipsBlankLines(t *testing.T) {
 	directory := t.TempDir()
 	modelsPath := filepath.Join(directory, "models.txt")
-	if err := os.WriteFile(modelsPath, []byte("anthropic/one@high\n\nanthropic/two@high\n"), 0o600); err != nil {
+	if err := os.WriteFile(modelsPath, []byte("\nanthropic/one@high\n\n  \nanthropic/two@high\n\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 	configPath := filepath.Join(directory, "config.toml")
@@ -102,9 +102,13 @@ func TestRoundRobinModelFileMustContainOneSelectionPerLine(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err := Load(configPath)
-	if err == nil || !strings.Contains(err.Error(), "models.txt: line 2 is empty") {
-		t.Errorf("got error %v", err)
+	settings, err := Load(configPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := []string{"anthropic/one@high", "anthropic/two@high"}
+	if !slices.Equal(settings.Model.RoundRobin, want) {
+		t.Errorf("got model rotation %#v, want %#v", settings.Model.RoundRobin, want)
 	}
 }
 

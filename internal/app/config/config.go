@@ -811,14 +811,9 @@ func loadRoundRobinFile(config *Config, sourcePath string, writtenPath string) e
 
 func parseRoundRobinFile(data []byte) (RoundRobin, error) {
 	var selections RoundRobin
-	lineNumber := 0
 	for line := range strings.Lines(string(data)) {
-		lineNumber++
 		selection := strings.TrimSpace(line)
-		if selection == "" {
-			return nil, fmt.Errorf("line %d is empty", lineNumber)
-		}
-		if strings.HasPrefix(selection, "#") {
+		if selection == "" || strings.HasPrefix(selection, "#") {
 			continue
 		}
 		selections = append(selections, selection)
