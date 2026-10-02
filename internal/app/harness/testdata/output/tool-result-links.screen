@@ -6,8 +6,8 @@
 read README.md 1L
 grep [ ✗ regex parse error: [ ^ error: …
 ls 0L
-$ sleep 10 – the command was stopped be…
-$ touch marker ✓ no output
+Running this command for the test $ – t…
+Running this command for the test $ t… ✓
 
 Every finished call has a result link,
 whether or not it returned anything.
@@ -148,8 +148,8 @@ g
 read README.md 1L
 grep [ ✗ regex parse error: [ ^ error: unclosed character class
 ls 0L
-$ sleep 10 – the command was stopped because the user pressed escape
-$ touch marker ✓ no output
+Running this command for the test $ sleep 10 – the command was stopped because the user pressed esc…
+Running this command for the test $ touch marker ✓ no output
 
 Every finished call has a result link, whether or not it returned anything.
 === tiny ===
@@ -162,8 +162,8 @@ Every finished call has a result link, whether or not it returned anything.
 read REA… 1L
 grep ✗ rege…
 ls 0L
-$ s… – the …
-$ touch m… ✓
+Running t… –
+Running t… ✓
 
 Every
 finished
@@ -181,7 +181,7 @@ anything.
 read README.md 1L
 grep [ ✗ regex parse error: [ ^ error: unclosed character class
 ls 0L
-$ sleep 10 – the command was stopped because the user pressed escape
-$ touch marker ✓ no output
+Running this command for the test $ sleep 10 – the command was stopped because the user pressed esc…
+Running this command for the test $ touch marker ✓ no output
 
 Every finished call has a result link, whether or not it returned anything.

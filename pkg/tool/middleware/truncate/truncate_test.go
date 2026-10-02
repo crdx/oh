@@ -450,3 +450,24 @@ func TestTheCapMarksSuccessAsTheToolItWrapsDoes(t *testing.T) {
 		t.Error("expected the cap to leave success unmarked when the tool it wraps does")
 	}
 }
+
+func TestAFrozenSchemaReachesTheToolItWraps(t *testing.T) {
+	wrapped := truncate.Tool(buildTool(newToolBuilder(t)), newLimit(t, limitBytes))
+	frozen := tool.WithSnapshot(wrapped, tool.Snapshot{
+		Definition: tool.Definition{
+			Name:   "generate",
+			Schema: tool.Schema{tool.Integer("size", "how many lines to generate").Optional()},
+		},
+		Revision: wrapped.Revision(),
+	})
+
+	if _, err := wrapped.Parse(`{}`); err == nil {
+		t.Fatal("the current schema accepted a call without its required size")
+	}
+	if output := exec(t, frozen, `{}`); output != "" {
+		t.Errorf("got %q, want nothing generated", output)
+	}
+	if _, isRendered := frozen.Render(`{}`); !isRendered {
+		t.Error("the frozen schema did not reach the wrapped tool's rendering")
+	}
+}

@@ -3,7 +3,7 @@
 {"event":{"kind":"tool_call_result","status":"success","id":"call_1","name":"divine","text":"nothing to say","took":0}}
 {"event":{"kind":"tool_call_request","id":"call_2","name":"conjure","arguments":"{\"source\": \"x\"}","render":"func Draw(rows []string, columns int) ([]string, error) { return rows, nil }","emphasis":{"kind":"syntax","value":"go"},"read_only":true}}
 {"event":{"kind":"tool_call_result","status":"success","id":"call_2","name":"conjure","text":"ok","took":0}}
-{"event":{"kind":"tool_call_request","id":"call_3","name":"bash","arguments":"{\"command\": \"for do done esac fi \\\"unclosed\"}","render":"for do done esac fi \"unclosed","emphasis":{"kind":"syntax","value":"bash"}}}
+{"event":{"kind":"tool_call_request","id":"call_3","name":"bash","arguments":"{\"command\":\"for do done esac fi \\\"unclosed\",\"intent\":\"Running this command for the test\"}","render":"for do done esac fi \"unclosed","emphasis":{"kind":"syntax","value":"bash"}}}
 {"event":{"kind":"tool_call_result","id":"call_3","name":"bash","text":"syntax error","took":0,"status":"error"}}
 {"event":{"kind":"tool_call_request","id":"call_4","name":"summon","arguments":"{\"what\": \"nothing\"}","render":"nothing","read_only":true}}
 {"event":{"kind":"tool_call_result","status":"success","id":"call_4","name":"summon","text":"","took":0,"stats":{"kind":"output"}}}

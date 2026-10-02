@@ -165,8 +165,8 @@ func TestHostNetworkingRequiresItsCapability(t *testing.T) {
 		false,
 		func(_ context.Context, _ string, intent string) error {
 			approvalCount++
-			if intent != "try it" {
-				t.Errorf("got intent %q, want %q", intent, "try it")
+			if intent != "Trying it" {
+				t.Errorf("got intent %q, want %q", intent, "Trying it")
 			}
 			return approvalFailure
 		},
@@ -174,7 +174,7 @@ func TestHostNetworkingRequiresItsCapability(t *testing.T) {
 	)
 
 	execute := func() error {
-		call, parseErr := shell.Parse(`{"intent":"try it","command":"true","network":"host"}`)
+		call, parseErr := shell.Parse(`{"intent":"trying it","command":"true","network":"host"}`)
 		if parseErr != nil {
 			t.Fatal(parseErr)
 		}

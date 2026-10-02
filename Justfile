@@ -90,6 +90,7 @@ golden:
         ./internal/app/model \
         ./internal/app/model/picker \
         ./internal/app/onboarding \
+        ./internal/app/painter \
         ./internal/app/preview \
         ./internal/app/segment/subUsage \
         ./internal/app/sessions \

@@ -276,6 +276,8 @@ type FallbackRendering struct {
 	Emphasis      tool.Emphasis        `json:"emphasis,omitzero"`
 	Continuation  []tool.CallRendering `json:"continuation,omitempty"`
 	Intent        string               `json:"intent,omitempty"`
+	Introduces    string               `json:"introduces,omitempty"`
+	Mentions      []string             `json:"mentions,omitempty"`
 	ShowOutput    bool                 `json:"show_output,omitempty"`
 	ReadOnly      bool                 `json:"read_only,omitempty"`
 	MarksSuccess  bool                 `json:"marks_success,omitempty"`
@@ -293,6 +295,8 @@ func (self *FallbackRendering) SetRendering(rendering tool.CallRendering) {
 	self.Emphasis = rendering.Emphasis
 	self.Continuation = slices.Clone(rendering.Continuation)
 	self.Intent = rendering.Intent
+	self.Introduces = rendering.Introduces
+	self.Mentions = slices.Clone(rendering.Mentions)
 	self.ShowOutput = rendering.ShowOutput
 }
 

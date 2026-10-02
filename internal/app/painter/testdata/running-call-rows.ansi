@@ -1,0 +1,107 @@
+── shell running · 120 columns
+[3m[38;2;150;152;150mRunning the whole test suite[0m[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mtest[0m
+
+── shell running · 80 columns
+[3m[38;2;150;152;150mRunning the whole test suite[0m[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mtest[0m
+
+── shell running · 60 columns
+[3m[38;2;150;152;150mRunning the whole test suite[0m[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mtest[0m
+
+── shell running · 44 columns
+[3m[38;2;150;152;150mRunning the whole test suite[0m[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mtest[0m
+
+── shell running · 30 columns
+[3m[38;2;150;152;150mRunning the whole test suite[0m[0m [38;2;129;162;190m$[0m
+
+── shell running · 16 columns
+[3m[38;2;150;152;150mRunning the who…[0m[0m
+
+── shell running on the host network · 120 columns
+[3m[38;2;150;152;150mChecking what the status endpoint reports[0m[0m [38;2;204;102;102m$[0m [38;2;129;162;190mcurl[0m[38;2;150;152;150m [0m[38;2;129;162;190m]8;;https://example.com/status\https://example.com/status]8;;\[0m
+
+── shell running on the host network · 80 columns
+[3m[38;2;150;152;150mChecking what the status endpoint reports[0m[0m [38;2;204;102;102m$[0m [38;2;129;162;190mcurl[0m[38;2;150;152;150m [0m[38;2;129;162;190m]8;;https://example.com/status\https://example.com/status]8;;\[0m
+
+── shell running on the host network · 60 columns
+[3m[38;2;150;152;150mChecking what the status endpoint reports[0m[0m [38;2;204;102;102m$[0m [38;2;129;162;190mcurl[0m[38;2;150;152;150m [0m[38;2;129;162;190m]8;;https://example.com/status\https://ex[0m[38;2;129;162;190m…]8;;\[0m
+
+── shell running on the host network · 44 columns
+[3m[38;2;150;152;150mChecking what the status endpoint reports[0m[0m [38;2;204;102;102m$[0m
+
+── shell running on the host network · 30 columns
+[3m[38;2;150;152;150mChecking what the status endp…[0m[0m
+
+── shell running on the host network · 16 columns
+[3m[38;2;150;152;150mChecking what t…[0m[0m
+
+── shell running a long command · 120 columns
+[3m[38;2;150;152;150mRegenerating the harness golden files[0m[0m [38;2;129;162;190m$[0m [38;2;129;162;190mgo[0m[38;2;150;152;150m [0m[38;2;129;162;190mtest[0m[38;2;150;152;150m -run 'TestGolden' -count=1 ./internal/app/harness/ ./internal/app/paint[0m[38;2;150;152;150m…[0m
+
+── shell running a long command · 80 columns
+[3m[38;2;150;152;150mRegenerating the harness golden files[0m[0m [38;2;129;162;190m$[0m [38;2;129;162;190mgo[0m[38;2;150;152;150m [0m[38;2;129;162;190mtest[0m[38;2;150;152;150m -run 'TestGolden' -count=1 ./in[0m[38;2;150;152;150m…[0m
+
+── shell running a long command · 60 columns
+[3m[38;2;150;152;150mRegenerating the harness golden files[0m[0m [38;2;129;162;190m$[0m [38;2;129;162;190mgo[0m[38;2;150;152;150m [0m[38;2;129;162;190mtest[0m[38;2;150;152;150m -run 'TestG[0m[38;2;150;152;150m…[0m
+
+── shell running a long command · 44 columns
+[3m[38;2;150;152;150mRegenerating the harness golden files[0m[0m [38;2;129;162;190m$[0m [38;2;129;162;190mgo[0m[38;2;150;152;150m [0m[38;2;129;162;190m…[0m
+
+── shell running a long command · 30 columns
+[3m[38;2;150;152;150mRegenerating the harness gold…[0m[0m
+
+── shell running a long command · 16 columns
+[3m[38;2;150;152;150mRegenerating th…[0m[0m
+
+── job starting · 120 columns
+[3m[38;2;150;152;150mRegenerating every golden in scratch[0m[0m [38;2;207;173;0mstart[0m [38;2;192;128;80mgolden[0m [38;2;129;162;190m$[0m [38;2;129;162;190mcd[0m[38;2;150;152;150m [0m[38;2;129;162;190m]8;;file:///tmp/oh\/tmp/oh]8;;\[0m[38;2;150;152;150m [0m[38;2;138;190;183m&&[0m[38;2;150;152;150m [0m[38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mgolden[0m[38;2;150;152;150m 2[0m[38;2;138;190;183m>&[0m[38;2;150;152;150m1 [0m[38;2;138;190;183m|[0m[38;2;150;152;150m [0m[38;2;129;162;190mtail[0m[38;2;150;152;150m [0m[38;2;129;162;190m-30[0m
+
+── job starting · 80 columns
+[3m[38;2;150;152;150mRegenerating every golden in scratch[0m[0m [38;2;207;173;0mstart[0m [38;2;192;128;80mgolden[0m [38;2;129;162;190m$[0m [38;2;129;162;190mcd[0m[38;2;150;152;150m [0m[38;2;129;162;190m]8;;file:///tmp/oh\/tmp/oh]8;;\[0m[38;2;150;152;150m [0m[38;2;138;190;183m&&[0m[38;2;150;152;150m [0m[38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mgolden[0m[38;2;150;152;150m 2[0m[38;2;138;190;183m…[0m
+
+── job starting · 60 columns
+[3m[38;2;150;152;150mRegenerating every golden in scratch[0m[0m [38;2;207;173;0mstart[0m [38;2;192;128;80mgolden[0m [38;2;129;162;190m$[0m [38;2;129;162;190mcd[0m[38;2;150;152;150m [0m[38;2;129;162;190m]8;;file:///tmp/oh\/tmp[0m[38;2;129;162;190m…]8;;\[0m
+
+── job starting · 44 columns
+[3m[38;2;150;152;150mRegenerating every golden in scratch[0m[0m [38;2;207;173;0mstart[0m [38;2;192;128;80m…[0m
+
+── job starting · 30 columns
+[3m[38;2;150;152;150mRegenerating every golden in …[0m[0m
+
+── job starting · 16 columns
+[3m[38;2;150;152;150mRegenerating ev…[0m[0m
+
+── job waiting with a limit · 120 columns
+await [38;2;192;128;80mgolden[0m [38;2;150;152;150mfor up to 20s[0m
+
+── job waiting with a limit · 80 columns
+await [38;2;192;128;80mgolden[0m [38;2;150;152;150mfor up to 20s[0m
+
+── job waiting with a limit · 60 columns
+await [38;2;192;128;80mgolden[0m [38;2;150;152;150mfor up to 20s[0m
+
+── job waiting with a limit · 44 columns
+await [38;2;192;128;80mgolden[0m [38;2;150;152;150mfor up to 20s[0m
+
+── job waiting with a limit · 30 columns
+await [38;2;192;128;80mgolden[0m [38;2;150;152;150mfor up to 20s[0m
+
+── job waiting with a limit · 16 columns
+await [38;2;192;128;80mgolden[0m [38;2;150;152;150mfo…[0m
+
+── job waiting on several · 120 columns
+await [38;2;192;128;80mdocs && build[0m
+
+── job waiting on several · 80 columns
+await [38;2;192;128;80mdocs && build[0m
+
+── job waiting on several · 60 columns
+await [38;2;192;128;80mdocs && build[0m
+
+── job waiting on several · 44 columns
+await [38;2;192;128;80mdocs && build[0m
+
+── job waiting on several · 30 columns
+await [38;2;192;128;80mdocs && build[0m
+
+── job waiting on several · 16 columns
+await [38;2;192;128;80mdocs && b…[0m

@@ -6,6 +6,7 @@ import (
 	"errors"
 	"os"
 	"reflect"
+	"slices"
 	"strconv"
 	"strings"
 	"sync"
@@ -28,6 +29,7 @@ func run(t *testing.T, manager *jobs.Manager, arguments any) (string, error) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	encoded = withIntent(t, encoded)
 
 	built := job.New(manager, nil, func(context.Context) (sandbox.Policy, error) {
 		return sandbox.Policy{}, nil
@@ -199,19 +201,65 @@ func TestStartingAnUnknownNameWithNoCommandIsRefused(t *testing.T) {
 	}
 }
 
-func TestAJobCarriesItsIntentIntoItsCallRow(t *testing.T) {
+func TestOnlyStartingAJobCarriesItsIntent(t *testing.T) {
 	built := job.New(nil, nil, nil, nil)
 	for _, arguments := range []string{
-		`{"action":"start","name":"docs","command":"serve docs","intent":"serve the documentation"}`,
-		`{"action":"start","name":"docs","intent":"serve the documentation"}`,
+		`{"action":"start","name":"docs","command":"serve docs","intent":"serving the documentation"}`,
+		`{"action":"start","name":"docs","intent":"serving the documentation"}`,
 	} {
 		call, err := built.Parse(arguments)
 		if err != nil {
 			t.Fatal(err)
 		}
-		if got := call.Rendering().Intent; got != "serve the documentation" {
-			t.Errorf("%s carried the intent %q, want it whole", arguments, got)
+		if got := call.Rendering().Intent; got != "Serving the documentation" {
+			t.Errorf("%s carried the intent %q", arguments, got)
 		}
+	}
+
+	call, err := built.Parse(`{"action":"status","name":"docs","intent":"checking on the docs"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := call.Rendering().Intent; got != "" {
+		t.Errorf("a status call carried the intent %q, want none", got)
+	}
+}
+
+func TestAStartIntroducesItsJobAndOtherCallsMentionTheirs(t *testing.T) {
+	built := job.New(nil, nil, nil, nil)
+	for arguments, want := range map[string]struct {
+		introduces string
+		mentions   []string
+	}{
+		`{"action":"start","name":"docs","command":"serve","intent":"serving the docs"}`: {introduces: "docs"},
+		`{"action":"status","name":"docs"}`:                                              {mentions: []string{"docs"}},
+		`{"action":"output","name":"docs"}`:                                              {mentions: []string{"docs"}},
+		`{"action":"stop","name":"docs"}`:                                                {mentions: []string{"docs"}},
+		`{"action":"discard","name":"docs"}`:                                             {mentions: []string{"docs"}},
+		`{"action":"wait","names":["docs","build"]}`:                                     {mentions: []string{"docs", "build"}},
+		`{"action":"list"}`:                                                              {},
+		`{"action":"prune"}`:                                                             {},
+	} {
+		call, err := built.Parse(arguments)
+		if err != nil {
+			t.Fatal(err)
+		}
+		rendering := call.Rendering()
+		if rendering.Introduces != want.introduces || !slices.Equal(rendering.Mentions, want.mentions) {
+			t.Errorf("%s introduced %q and mentioned %q", arguments, rendering.Introduces, rendering.Mentions)
+		}
+	}
+}
+
+func TestOnlyStartingAJobNeedsAnIntent(t *testing.T) {
+	built := job.New(nil, nil, nil, nil)
+
+	if _, err := built.Parse(`{"action":"start","name":"docs","command":"serve docs"}`); err == nil ||
+		err.Error() != "intent is required to start a job" {
+		t.Errorf("got %v, want the start to ask for an intent", err)
+	}
+	if _, err := built.Parse(`{"action":"status","name":"docs"}`); err != nil {
+		t.Errorf("a status call without an intent was refused: %v", err)
 	}
 }
 
@@ -227,7 +275,7 @@ func TestStartingAJobCanForwardAndAssociateItsPort(t *testing.T) {
 	result, err := callJob(
 		t,
 		newJobTool(t, manager, ports),
-		`{"action":"start","name":"docs","port":8080,"command":"serve docs"}`,
+		`{"intent":"check the job here","action":"start","name":"docs","port":8080,"command":"serve docs"}`,
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -256,7 +304,7 @@ func TestAJobIsDiscardedWhenItsPortCannotBeForwarded(t *testing.T) {
 	_, err := callJob(
 		t,
 		newJobTool(t, manager, &recordedPorts{refusal: refused}),
-		`{"action":"start","name":"docs","port":8080,"command":"serve docs"}`,
+		`{"intent":"check the job here","action":"start","name":"docs","port":8080,"command":"serve docs"}`,
 	)
 	if !errors.Is(err, refused) || !strings.Contains(err.Error(), "stopped and discarded") {
 		t.Errorf("got %v, want the forward refusal and rollback", err)
@@ -344,6 +392,7 @@ func TestStartingValidatesTheJobName(t *testing.T) {
 
 	for _, testCase := range testCases {
 		encoded, err := json.Marshal(map[string]string{
+			"intent":  "check the job name here",
 			"action":  "start",
 			"name":    testCase.name,
 			"command": "true",
@@ -423,9 +472,9 @@ func TestOnlyAWaitTakesANumberOfSeconds(t *testing.T) {
 func TestOnlyAStartTakesAValidPort(t *testing.T) {
 	built := job.New(nil, nil, nil, nil)
 	for name, arguments := range map[string]string{
-		"port with status": `{"action":"status","name":"docs","port":8080}`,
-		"negative port":    `{"action":"start","name":"docs","port":-1,"command":"serve"}`,
-		"large port":       `{"action":"start","name":"docs","port":65536,"command":"serve"}`,
+		"port with status": `{"intent":"check the job here","action":"status","name":"docs","port":8080}`,
+		"negative port":    `{"intent":"check the job here","action":"start","name":"docs","port":-1,"command":"serve"}`,
+		"large port":       `{"intent":"check the job here","action":"start","name":"docs","port":65536,"command":"serve"}`,
 	} {
 		t.Run(name, func(t *testing.T) {
 			if _, err := built.Parse(arguments); err == nil {
@@ -434,7 +483,7 @@ func TestOnlyAStartTakesAValidPort(t *testing.T) {
 		})
 	}
 
-	if _, err := built.Parse(`{"action":"start","name":"docs","port":8080,"command":"serve"}`); err != nil {
+	if _, err := built.Parse(`{"intent":"check the job here","action":"start","name":"docs","port":8080,"command":"serve"}`); err != nil {
 		t.Errorf("a valid start port was refused: %v", err)
 	}
 }
@@ -450,6 +499,7 @@ func TestAJobCallIsRenderedByItsAction(t *testing.T) {
 				Kind:         "job_start",
 				Subject:      "docs",
 				Continuation: []tool.CallRendering{bash.DescribeCommand("python3  -m\nhttp.server")},
+				Introduces:   "docs",
 			},
 		},
 		"start with port": {
@@ -459,55 +509,57 @@ func TestAJobCallIsRenderedByItsAction(t *testing.T) {
 				Subject:      "docs:8080",
 				Emphasis:     tool.Emphasis{Kind: tool.EmphasisLead, Value: "docs"},
 				Continuation: []tool.CallRendering{bash.DescribeCommand("serve docs")},
+				Introduces:   "docs",
 			},
 		},
 		"restart": {
 			args: job.Args{Action: "start", Name: "docs"},
-			want: tool.CallRendering{Kind: "job_restart", Subject: "docs"},
+			want: tool.CallRendering{Kind: "job_restart", Subject: "docs", Introduces: "docs"},
 		},
 		"restart with port": {
 			args: job.Args{Action: "start", Name: "docs", Port: 8080},
 			want: tool.CallRendering{
-				Kind:     "job_restart",
-				Subject:  "docs:8080",
-				Emphasis: tool.Emphasis{Kind: tool.EmphasisLead, Value: "docs"},
+				Kind:       "job_restart",
+				Subject:    "docs:8080",
+				Emphasis:   tool.Emphasis{Kind: tool.EmphasisLead, Value: "docs"},
+				Introduces: "docs",
 			},
 		},
 		"status": {
 			args: job.Args{Action: "status", Name: "docs"},
-			want: tool.CallRendering{Kind: "job_status", Subject: "docs"},
+			want: tool.CallRendering{Kind: "job_status", Subject: "docs", Mentions: []string{"docs"}},
 		},
 		"output": {
 			args: job.Args{Action: "output", Name: "docs"},
-			want: tool.CallRendering{Kind: "job_output", Subject: "docs"},
+			want: tool.CallRendering{Kind: "job_output", Subject: "docs", Mentions: []string{"docs"}},
 		},
 		"stop": {
 			args: job.Args{Action: "stop", Name: "docs"},
-			want: tool.CallRendering{Kind: "job_stop", Subject: "docs"},
+			want: tool.CallRendering{Kind: "job_stop", Subject: "docs", Mentions: []string{"docs"}},
 		},
 		"discard": {
 			args: job.Args{Action: "discard", Name: "docs"},
-			want: tool.CallRendering{Kind: "job_discard", Subject: "docs"},
+			want: tool.CallRendering{Kind: "job_discard", Subject: "docs", Mentions: []string{"docs"}},
 		},
 		"wait any": {
 			args: job.Args{Action: "wait", Names: []string{"build", "lint"}},
-			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build || lint"},
+			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build || lint", Mentions: []string{"build", "lint"}},
 		},
 		"wait all": {
 			args: job.Args{Action: "wait", Names: []string{"build", "lint"}, WaitFor: "all"},
-			want: tool.CallRendering{Kind: "job_wait_all", Subject: "build && lint"},
+			want: tool.CallRendering{Kind: "job_wait_all", Subject: "build && lint", Mentions: []string{"build", "lint"}},
 		},
 		"wait any with limit": {
 			args: job.Args{Action: "wait", Names: []string{"build", "lint"}, WaitFor: "any", WaitSeconds: 20},
-			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build || lint", Qualifier: "for up to 20s"},
+			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build || lint", Qualifier: "for up to 20s", Mentions: []string{"build", "lint"}},
 		},
 		"wait with formatted limit": {
 			args: job.Args{Action: "wait", Name: "build", WaitSeconds: 270},
-			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build", Qualifier: "for up to 4m 30s"},
+			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build", Qualifier: "for up to 4m 30s", Mentions: []string{"build"}},
 		},
 		"wait with clamped limit": {
 			args: job.Args{Action: "wait", Name: "build", WaitSeconds: 300},
-			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build", Qualifier: "for up to 4m 30s"},
+			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build", Qualifier: "for up to 4m 30s", Mentions: []string{"build"}},
 		},
 		"list": {
 			args: job.Args{Action: "list"},
@@ -607,7 +659,7 @@ func TestRestartingAJobFailsWhenItsPolicyCannotBeBuilt(t *testing.T) {
 		return sandbox.Policy{}, errPolicy
 	}, nil)
 
-	call, err := built.Parse(`{"action":"start","name":"build"}`)
+	call, err := built.Parse(`{"intent":"check the job here","action":"start","name":"build"}`)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -617,3 +669,21 @@ func TestRestartingAJobFailsWhenItsPolicyCannotBeBuilt(t *testing.T) {
 }
 
 var errPolicy = errors.New("no policy")
+
+func withIntent(t *testing.T, encoded []byte) []byte {
+	t.Helper()
+
+	var fields map[string]any
+	if err := json.Unmarshal(encoded, &fields); err != nil {
+		t.Fatal(err)
+	}
+	if _, isPresent := fields["intent"]; !isPresent {
+		fields["intent"] = "check the job here"
+	}
+
+	withIntent, err := json.Marshal(fields)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return withIntent
+}

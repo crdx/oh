@@ -5,7 +5,7 @@
 
 Building now.
 
-$ just build – 11s 3L 40M compiling age…
+Running this command for the test $ – c…
 
 Turn stopped.
 
@@ -176,7 +176,7 @@ e
 
 Building now.
 
-$ just build – 11s 3L 40M compiling agent compiling toolbox note: the command was stopped after 12s…
+Running this command for the test $ just build – 11s 3L 40M compiling agent compiling toolbox note:…
 
 Turn stopped.
 
@@ -195,7 +195,7 @@ Left alone.
 Building
 now.
 
-$ j… – comp…
+Running t… –
 
 Turn
 stopped.
@@ -215,7 +215,7 @@ Left alone.
 
 Building now.
 
-$ just build – 11s 3L 40M compiling agent compiling toolbox note: the command was stopped after 12s…
+Running this command for the test $ just build – 11s 3L 40M compiling agent compiling toolbox note:…
 
 Turn stopped.
 

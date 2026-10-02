@@ -110,6 +110,8 @@ func LabelFor(event agent.Event, getTool ToolLookup, workspace *work.Space) Labe
 	}, event.Name, rendering.ReadOnly)
 	label.TimeLimit = timeLimit
 	label.Intent = rendering.Intent
+	label.Introduces = rendering.Introduces
+	label.Mentions = rendering.Mentions
 	label.MarksSuccess = rendering.MarksSuccess
 	label.lineRange = rendering.PathLine
 	label.Continuation = make([]Label, 0, len(rendering.Continuation))

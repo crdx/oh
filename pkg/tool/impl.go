@@ -12,8 +12,8 @@ type _tool struct {
 	schema              Schema
 	revision            string
 	compatibleRevisions map[string]struct{}
-	parse               func(arguments string) (_call, error)
-	render              func(arguments string) (CallRendering, bool)
+	parse               func(schema Schema, arguments string) (_call, error)
+	render              func(schema Schema, arguments string) (CallRendering, bool)
 
 	parallel        bool
 	readOnly        bool
@@ -31,11 +31,17 @@ func (self _tool) CompatibleWith(revision string) bool {
 	_, isCompatible := self.compatibleRevisions[revision]
 	return isCompatible
 }
-func (self _tool) Concurrent() bool                              { return self.parallel }
-func (self _tool) ReadOnly() bool                                { return self.readOnly }
-func (self _tool) StateKey() string                              { return self.stateName }
-func (self _tool) MarksSuccess() bool                            { return self.isSuccessMarked }
-func (self _tool) Render(arguments string) (CallRendering, bool) { return self.render(arguments) }
+func (self _tool) Concurrent() bool   { return self.parallel }
+func (self _tool) ReadOnly() bool     { return self.readOnly }
+func (self _tool) StateKey() string   { return self.stateName }
+func (self _tool) MarksSuccess() bool { return self.isSuccessMarked }
+func (self _tool) Render(arguments string) (CallRendering, bool) {
+	return self.render(self.schema, arguments)
+}
+
+func (self _tool) RenderUnder(schema Schema, arguments string) (CallRendering, bool) {
+	return self.render(schema, arguments)
+}
 
 func (self _tool) Restore(state json.RawMessage) error {
 	if self.restore == nil {
@@ -46,7 +52,11 @@ func (self _tool) Restore(state json.RawMessage) error {
 }
 
 func (self _tool) Parse(arguments string) (ToolCall, error) {
-	call, err := self.parse(arguments)
+	return self.ParseUnder(self.schema, arguments)
+}
+
+func (self _tool) ParseUnder(schema Schema, arguments string) (ToolCall, error) {
+	call, err := self.parse(schema, arguments)
 	if err != nil {
 		return nil, err
 	}

@@ -25,6 +25,27 @@ type SuccessMarker interface {
 	MarksSuccess() bool
 }
 
+type SchemaParser interface {
+	ParseUnder(schema Schema, arguments string) (ToolCall, error)
+	RenderUnder(schema Schema, arguments string) (CallRendering, bool)
+}
+
+func ParseUnder(subject Tool, schema Schema, arguments string) (ToolCall, error) {
+	if parser, isParser := subject.(SchemaParser); isParser {
+		return parser.ParseUnder(schema, arguments)
+	}
+
+	return subject.Parse(arguments)
+}
+
+func RenderUnder(subject Tool, schema Schema, arguments string) (CallRendering, bool) {
+	if parser, isParser := subject.(SchemaParser); isParser {
+		return parser.RenderUnder(schema, arguments)
+	}
+
+	return subject.Render(arguments)
+}
+
 func MarksSuccess(subject Tool) bool {
 	marker, isMarker := subject.(SuccessMarker)
 	return isMarker && marker.MarksSuccess()
@@ -44,6 +65,8 @@ type CallRendering struct {
 	Emphasis     Emphasis        `json:"emphasis,omitzero"`
 	Continuation []CallRendering `json:"continuation,omitempty"`
 	Intent       string          `json:"intent,omitempty"`
+	Introduces   string          `json:"introduces,omitempty"`
+	Mentions     []string        `json:"mentions,omitempty"`
 	ShowOutput   bool            `json:"show_output,omitempty"`
 }
 

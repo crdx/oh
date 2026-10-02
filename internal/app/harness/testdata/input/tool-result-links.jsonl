@@ -2,8 +2,8 @@
 {"event":{"kind":"tool_call_request","id":"call/a?&","name":"read","arguments":"{\"path\":\"README.md\"}","render":"README.md","read_only":true}}
 {"event":{"kind":"tool_call_request","id":"call_2","name":"grep","arguments":"{\"pattern\":\"[\"}","render":"[","read_only":true}}
 {"event":{"kind":"tool_call_request","id":"call_3","name":"ls","arguments":"{\"path\":\".\"}","read_only":true}}
-{"event":{"kind":"tool_call_request","id":"call_4","name":"bash","arguments":"{\"command\":\"sleep 10\"}","render":"sleep 10"}}
-{"event":{"kind":"tool_call_request","id":"call_5","name":"bash","arguments":"{\"command\":\"touch marker\"}","render":"touch marker"}}
+{"event":{"kind":"tool_call_request","id":"call_4","name":"bash","arguments":"{\"command\":\"sleep 10\",\"intent\":\"Running this command for the test\"}","render":"sleep 10"}}
+{"event":{"kind":"tool_call_request","id":"call_5","name":"bash","arguments":"{\"command\":\"touch marker\",\"intent\":\"Running this command for the test\"}","render":"touch marker"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"# Workspace\n","id":"call/a?&","name":"read","stats":{"kind":"read","lines":1,"bytes":12}}}
 {"event":{"kind":"tool_call_result","status":"error","text":"regex parse error:\n    [\n    ^\nerror: unclosed character class","id":"call_2","name":"grep"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"","id":"call_3","name":"ls","stats":{"kind":"list","lines":0}}}

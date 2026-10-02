@@ -1,5 +1,5 @@
 {"event":{"kind":"user_message","text":"run a multiline command and notify me when it finishes"}}
-{"event":{"kind":"tool_call_request","id":"call_1","name":"bash","arguments":"{\"command\":\"NAME=alpha\\ncase \\\"$NAME\\\" in alpha) echo alpha ;; esac\\n(echo beta)\"}","render":"stale shell rendering","detail":"stale qualifier"}}
+{"event":{"kind":"tool_call_request","id":"call_1","name":"bash","arguments":"{\"command\":\"NAME=alpha\\ncase \\\"$NAME\\\" in alpha) echo alpha ;; esac\\n(echo beta)\",\"intent\":\"Running this command for the test\"}","render":"stale shell rendering","detail":"stale qualifier"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"alpha\nbeta\n","id":"call_1","name":"bash","took":0,"stats":{"kind":"resources","lines":2,"bytes":11}}}
 {"event":{"kind":"tool_call_request","id":"call_2","name":"notify","arguments":"{\"title\":\"command finished\",\"message\":\"alpha and beta were printed\",\"icon\":\"success\"}","render":"stale notification title","detail":"stale notification message"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"notified the user","id":"call_2","name":"notify","took":0,"stats":{"kind":"output","lines":1,"bytes":17}}}

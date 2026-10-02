@@ -21,11 +21,11 @@ func (self frozenTool) StateKey() string    { return self.current.StateKey() }
 func (self frozenTool) MarksSuccess() bool  { return MarksSuccess(self.current) }
 
 func (self frozenTool) Render(arguments string) (CallRendering, bool) {
-	return self.current.Render(arguments)
+	return RenderUnder(self.current, self.snapshot.Definition.Schema, arguments)
 }
 
 func (self frozenTool) Parse(arguments string) (ToolCall, error) {
-	return self.current.Parse(arguments)
+	return ParseUnder(self.current, self.snapshot.Definition.Schema, arguments)
 }
 
 func (self frozenTool) Restore(state json.RawMessage) error {

@@ -35,19 +35,15 @@ type Args struct {
 	Network Network `json:"network,omitempty"`
 }
 
-const IntentDescription = `what you intend it to do, as a lowercase imperative of 5 to 7 words, such as "regenerate every golden in the scratch copy"`
+const IntentDescription = `what you are doing, as a 5 to 7 word phrase opening with a capitalised -ing verb, such as "Regenerating every golden in the scratch copy"`
 
 func SpokenIntent(intent string) string {
-	intent = strings.TrimSpace(intent)
-	runes := []rune(intent)
-	if len(runes) == 0 || !unicode.IsUpper(runes[0]) {
-		return intent
-	}
-	if len(runes) > 1 && unicode.IsUpper(runes[1]) {
-		return intent
+	runes := []rune(strings.TrimSpace(intent))
+	if len(runes) == 0 {
+		return ""
 	}
 
-	runes[0] = unicode.ToLower(runes[0])
+	runes[0] = unicode.ToUpper(runes[0])
 	return string(runes)
 }
 
@@ -60,7 +56,7 @@ func New(
 ) tool.Tool {
 	schema := tool.Schema{
 		tool.String("command", "the command line"),
-		tool.String("intent", IntentDescription).Optional(),
+		tool.String("intent", IntentDescription),
 	}
 	if hasNetworkChoice {
 		schema = append(schema, tool.Enum(

@@ -6,7 +6,7 @@
 
 One of each, then.
 
-$ COUNT=0; for NAME in *.g… ✓ 2s 3L 700M
+Running this command for the test $ C… ✓
 ls 2L
 read diagram.png ~1.6Kt
 edit screen.go +12 −5
@@ -374,7 +374,7 @@ e
 
 One of each, then.
 
-$ COUNT=0; for NAME in *.go; do COUNT=$((COUNT + 1)); done; echo $COUNT ✓ 2s 3L 700M
+Running this command for the test $ COUNT=0; for NAME in *.go; do COUNT=$((COUNT + 1))… ✓ 2s 3L 700M
 ls 2L
 read diagram.png ~1.6Kt
 edit screen.go +12 −5
@@ -405,7 +405,7 @@ That is one call of every kind the harness knows how to measure.
 One of each,
 then.
 
-$ COUNT=0… ✓
+Running t… ✓
 ls 2L
 read ~1.6Kt
 edit +12 −5
@@ -445,7 +445,7 @@ measure.
 
 One of each, then.
 
-$ COUNT=0; for NAME in *.go; do COUNT=$((COUNT + 1)); done; echo $COUNT ✓ 2s 3L 700M
+Running this command for the test $ COUNT=0; for NAME in *.go; do COUNT=$((COUNT + 1))… ✓ 2s 3L 700M
 ls 2L
 read diagram.png ~1.6Kt
 edit screen.go +12 −5

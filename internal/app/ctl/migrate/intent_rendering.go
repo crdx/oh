@@ -2,6 +2,7 @@ package migrate
 
 import (
 	"encoding/json"
+	"slices"
 	"strings"
 	"unicode"
 )
@@ -11,45 +12,55 @@ func intentsJoinRenderings(line map[string]json.RawMessage) error {
 		if string(event["kind"]) != `"tool_call_request"` {
 			return nil
 		}
-		if _, isStored := event["intent"]; isStored {
-			return nil
-		}
 
 		name, isNamed := historicalString(event["name"])
 		if !isNamed {
 			return nil
 		}
 		arguments := historicalArguments(event["arguments"])
+		action, _ := historicalArgument(arguments, "action")
 
-		switch name {
-		case "bash":
-		case "job":
-			if action, _ := historicalArgument(arguments, "action"); action != "start" {
-				return nil
+		switch {
+		case name == "bash":
+			storeHistoricalIntent(event, arguments)
+		case name == "job" && action == "start":
+			storeHistoricalIntent(event, arguments)
+			if jobName, isPresent := historicalArgument(arguments, "name"); isPresent && jobName != "" {
+				setHistoricalString(event, "introduces", jobName)
 			}
-		default:
-			return nil
+		case name == "job" && slices.Contains(historicalMentioningActions, action):
+			if names := historicalJobNames(arguments); len(names) > 0 {
+				mentions, err := json.Marshal(names)
+				if err != nil {
+					return err
+				}
+				event["mentions"] = mentions
+			}
 		}
-
-		intent, isPresent := historicalArgument(arguments, "intent")
-		if intent = historicalSpokenIntent(intent); !isPresent || intent == "" {
-			return nil
-		}
-		setHistoricalString(event, "intent", intent)
 
 		return nil
 	})
 }
 
-func historicalSpokenIntent(intent string) string {
-	runes := []rune(strings.Join(strings.Fields(intent), " "))
-	if len(runes) == 0 || !unicode.IsUpper(runes[0]) {
-		return string(runes)
-	}
-	if len(runes) > 1 && unicode.IsUpper(runes[1]) {
-		return string(runes)
+var historicalMentioningActions = []string{"wait", "status", "output", "stop", "discard"}
+
+func storeHistoricalIntent(event map[string]json.RawMessage, arguments map[string]json.RawMessage) {
+	if _, isStored := event["intent"]; isStored {
+		return
 	}
 
-	runes[0] = unicode.ToLower(runes[0])
+	intent, isPresent := historicalArgument(arguments, "intent")
+	if intent = historicalSpokenIntent(intent); isPresent && intent != "" {
+		setHistoricalString(event, "intent", intent)
+	}
+}
+
+func historicalSpokenIntent(intent string) string {
+	runes := []rune(strings.Join(strings.Fields(intent), " "))
+	if len(runes) == 0 {
+		return ""
+	}
+
+	runes[0] = unicode.ToUpper(runes[0])
 	return string(runes)
 }

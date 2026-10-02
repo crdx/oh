@@ -9,24 +9,24 @@
 {"event":{"kind":"tool_call_result","status":"success","text":"listed","id":"list-ports","name":"forward"}}
 {"event":{"kind":"tool_call_request","id":"forward-malformed","name":"forward","arguments":"{\"action\":\"bogus\"}"}}
 {"event":{"kind":"tool_call_result","status":"error","text":"action must be add, remove, or list (got \"bogus\")","id":"forward-malformed","name":"forward"}}
-{"event":{"kind":"tool_call_request","id":"start","name":"job","arguments":"{\"action\":\"start\",\"name\":\"docs\",\"port\":8002,\"command\":\"serve docs\"}"}}
+{"event":{"kind":"tool_call_request","id":"start","name":"job","arguments":"{\"action\":\"start\",\"name\":\"docs\",\"port\":8002,\"command\":\"serve docs\",\"intent\":\"Handling this job for the test\"}"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"started","id":"start","name":"job"}}
-{"event":{"kind":"tool_call_request","id":"restart","name":"job","arguments":"{\"action\":\"start\",\"name\":\"docs\"}"}}
+{"event":{"kind":"tool_call_request","id":"restart","name":"job","arguments":"{\"action\":\"start\",\"name\":\"docs\",\"intent\":\"Handling this job for the test\"}"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"restarted","id":"restart","name":"job"}}
-{"event":{"kind":"tool_call_request","id":"status","name":"job","arguments":"{\"action\":\"status\",\"name\":\"docs\"}"}}
+{"event":{"kind":"tool_call_request","id":"status","name":"job","arguments":"{\"action\":\"status\",\"name\":\"docs\",\"intent\":\"Handling this job for the test\"}"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"status","id":"status","name":"job"}}
-{"event":{"kind":"tool_call_request","id":"output","name":"job","arguments":"{\"action\":\"output\",\"name\":\"docs\"}"}}
+{"event":{"kind":"tool_call_request","id":"output","name":"job","arguments":"{\"action\":\"output\",\"name\":\"docs\",\"intent\":\"Handling this job for the test\"}"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"output","id":"output","name":"job"}}
-{"event":{"kind":"tool_call_request","id":"wait-any","name":"job","arguments":"{\"action\":\"wait\",\"names\":[\"docs\",\"build\"]}"}}
+{"event":{"kind":"tool_call_request","id":"wait-any","name":"job","arguments":"{\"action\":\"wait\",\"names\":[\"docs\",\"build\"],\"intent\":\"Handling this job for the test\"}"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"waited","id":"wait-any","name":"job"}}
-{"event":{"kind":"tool_call_request","id":"wait-all","name":"job","arguments":"{\"action\":\"wait\",\"names\":[\"docs\",\"build\"],\"wait_for\":\"all\",\"wait_seconds\":20}"}}
+{"event":{"kind":"tool_call_request","id":"wait-all","name":"job","arguments":"{\"action\":\"wait\",\"names\":[\"docs\",\"build\"],\"wait_for\":\"all\",\"wait_seconds\":20,\"intent\":\"Handling this job for the test\"}"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"waited","id":"wait-all","name":"job"}}
-{"event":{"kind":"tool_call_request","id":"stop","name":"job","arguments":"{\"action\":\"stop\",\"name\":\"docs\"}"}}
+{"event":{"kind":"tool_call_request","id":"stop","name":"job","arguments":"{\"action\":\"stop\",\"name\":\"docs\",\"intent\":\"Handling this job for the test\"}"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"stopped","id":"stop","name":"job"}}
-{"event":{"kind":"tool_call_request","id":"list-jobs","name":"job","arguments":"{\"action\":\"list\"}"}}
+{"event":{"kind":"tool_call_request","id":"list-jobs","name":"job","arguments":"{\"action\":\"list\",\"intent\":\"Handling this job for the test\"}"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"listed","id":"list-jobs","name":"job"}}
-{"event":{"kind":"tool_call_request","id":"discard","name":"job","arguments":"{\"action\":\"discard\",\"name\":\"docs\"}"}}
+{"event":{"kind":"tool_call_request","id":"discard","name":"job","arguments":"{\"action\":\"discard\",\"name\":\"docs\",\"intent\":\"Handling this job for the test\"}"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"discarded","id":"discard","name":"job"}}
-{"event":{"kind":"tool_call_request","id":"prune","name":"job","arguments":"{\"action\":\"prune\"}"}}
+{"event":{"kind":"tool_call_request","id":"prune","name":"job","arguments":"{\"action\":\"prune\",\"intent\":\"Handling this job for the test\"}"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"pruned","id":"prune","name":"job"}}
 {"event":{"kind":"model_message","text":"Those are every action label."}}

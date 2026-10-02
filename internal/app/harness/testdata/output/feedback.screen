@@ -5,7 +5,7 @@
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === approval during a call ===
-$ curl https://example.com/status ✦· 7s
+Checking what the status endpoint reports $ curl https://example.com/status ✦· 7s
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 Run this command in the sandbox with host networking?
@@ -103,7 +103,7 @@ $ cat <<EOF > /tmp/note.txt
 === network approval ===
 ──────────────────────────────────────── auto-denies in 1m ─────────────────────────────────────────
 Run this command in the sandbox with host networking?
-see what the status endpoint reports
+Checking what the status endpoint reports
 
 $ curl https://example.com/status
 

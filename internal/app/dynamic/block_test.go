@@ -662,3 +662,45 @@ func TestALongSummaryIsElidedToTheTerminalEdge(t *testing.T) {
 		t.Errorf("expected the summary to be elided at the edge, got %q", plain)
 	}
 }
+
+type leadingLabel struct {
+	textLabel
+
+	lead string
+}
+
+func (self leadingLabel) Elide(room int) Label {
+	if room <= width.Of(self.lead) {
+		return leadingLabel{lead: width.Elide(self.lead, room)}
+	}
+
+	return leadingLabel{lead: self.lead, textLabel: textLabel{text: width.Elide(self.text, room-width.Of(self.lead))}}
+}
+
+func (self leadingLabel) Render() string { return self.lead + self.text }
+
+func (self leadingLabel) Width() int { return width.Of(self.lead) + self.textLabel.Width() }
+
+func (self leadingLabel) LeadWidth() int { return width.Of(self.lead) }
+
+func TestAMarkAndThenALeadAreKeptBeforeAnythingElseOnTheRow(t *testing.T) {
+	for state, mark := range map[RowState]string{Succeeded: "✓", Failed: "✗"} {
+		block := testBlock()
+		block.Add(leadingLabel{lead: "Building every package ", textLabel: textLabel{text: "$ go build ./..."}}, 0)
+		block.FinaliseRow(0, state, time.Second, "exit(1): undefined: spinner", "2L 30M")
+
+		for _, columns := range []int{60, 40, 30, 23, 12, 4} {
+			plain := style.Plain(block.Rows(columns)[0])
+			want := strings.TrimSuffix(width.Elide("Building every package", columns-2), width.Ellipsis)
+			if !strings.HasPrefix(plain, want) {
+				t.Errorf("%s in %d columns: got %q, want it to open with %q", mark, columns, plain, want)
+			}
+			if !strings.Contains(plain, mark) {
+				t.Errorf("%s in %d columns: got %q, want its mark kept", mark, columns, plain)
+			}
+			if got := width.Of(plain); got > columns {
+				t.Errorf("%s in %d columns: used %d", mark, columns, got)
+			}
+		}
+	}
+}

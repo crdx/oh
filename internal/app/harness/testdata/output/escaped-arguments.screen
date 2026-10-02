@@ -3,7 +3,7 @@
  run whatever you like
 
 
-$ echo red ✓ 1L 2M red
+Running this command for the test $ e… ✓
 screenshot notes.md lines 1 to 40 1L
 grep one two 1L
 
@@ -119,7 +119,7 @@ d
  run whatever you like
 
 
-$ echo red ✓ 1L 2M red
+Running this command for the test $ echo red ✓ 1L 2M red
 screenshot notes.md lines 1 to 40 1L
 grep one two 1L
 
@@ -133,7 +133,7 @@ Nothing moved.
  you like
 
 
-$ e… ✓ 1L 2M
+Running t… ✓
 screensh… 1L
 grep one… 1L
 
@@ -150,7 +150,7 @@ moved.
  run whatever you like
 
 
-$ echo red ✓ 1L 2M red
+Running this command for the test $ echo red ✓ 1L 2M red
 screenshot notes.md lines 1 to 40 1L
 grep one two 1L
 

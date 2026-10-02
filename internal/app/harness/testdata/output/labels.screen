@@ -4,12 +4,12 @@
  skill
 
 
-$ if [[ -d src ]]; then echo there… ✓ 1L
-$ while read -r NAME; do echo "$NA… ✓ 1L
-$ until [[ -z "$REST" ]]; do REST=… ✓ 1L
-$ case "$MODE" in read) echo r ;; … ✓ 1L
-$ select CHOICE in one two; do bre… ✓ 1L
-$ ls -la | grep -v "^d" | wc -l ✓ 1L
+Running this command for the test $ ✓ 1L
+Running this command for the test $ ✓ 1L
+Running this command for the test $ ✓ 1L
+Running this command for the test $ ✓ 1L
+Running this command for the test $ ✓ 1L
+Running this command for the test $ ✓ 1L
 grep ^\\p{Lu}\\w{2,8}(?:-\\d+)?$ *.go 1L
 load skills/tidy/SKILL.md 8L
 read wide.md 3L
@@ -348,12 +348,12 @@ l
  run each shape of command and load the skill
 
 
-$ if [[ -d src ]]; then echo there; elif [[ -f src ]]; then echo file; else echo none; fi ✓ 1L
-$ while read -r NAME; do echo "$NAME" >out.txt 2>&1; done <list.txt ✓ 1L
-$ until [[ -z "$REST" ]]; do REST=""; done ✓ 1L
-$ case "$MODE" in read) echo r ;; write) echo w ;; *) echo o ;; esac ✓ 1L
-$ select CHOICE in one two; do break; done ✓ 1L
-$ ls -la | grep -v "^d" | wc -l ✓ 1L
+Running this command for the test $ if [[ -d src ]]; then echo there; elif [[ -f src ]]; then … ✓ 1L
+Running this command for the test $ while read -r NAME; do echo "$NAME" >out.txt 2>&1; done <l… ✓ 1L
+Running this command for the test $ until [[ -z "$REST" ]]; do REST=""; done ✓ 1L
+Running this command for the test $ case "$MODE" in read) echo r ;; write) echo w ;; *) echo o… ✓ 1L
+Running this command for the test $ select CHOICE in one two; do break; done ✓ 1L
+Running this command for the test $ ls -la | grep -v "^d" | wc -l ✓ 1L
 grep ^\\p{Lu}\\w{2,8}(?:-\\d+)?$ *.go 1L
 load skills/tidy/SKILL.md 8L
 read wide.md 3L
@@ -379,12 +379,12 @@ func count() int {
  skill
 
 
-$ if [… ✓ 1L
-$ whil… ✓ 1L
-$ unti… ✓ 1L
-$ case… ✓ 1L
-$ sele… ✓ 1L
-$ ls -… ✓ 1L
+Running t… ✓
+Running t… ✓
+Running t… ✓
+Running t… ✓
+Running t… ✓
+Running t… ✓
 grep ^\\p… 1L
 load ski… 8L
 read wid… 3L
@@ -427,12 +427,12 @@ otal
  run each shape of command and load the skill
 
 
-$ if [[ -d src ]]; then echo there; elif [[ -f src ]]; then echo file; else echo none; fi ✓ 1L
-$ while read -r NAME; do echo "$NAME" >out.txt 2>&1; done <list.txt ✓ 1L
-$ until [[ -z "$REST" ]]; do REST=""; done ✓ 1L
-$ case "$MODE" in read) echo r ;; write) echo w ;; *) echo o ;; esac ✓ 1L
-$ select CHOICE in one two; do break; done ✓ 1L
-$ ls -la | grep -v "^d" | wc -l ✓ 1L
+Running this command for the test $ if [[ -d src ]]; then echo there; elif [[ -f src ]]; then … ✓ 1L
+Running this command for the test $ while read -r NAME; do echo "$NAME" >out.txt 2>&1; done <l… ✓ 1L
+Running this command for the test $ until [[ -z "$REST" ]]; do REST=""; done ✓ 1L
+Running this command for the test $ case "$MODE" in read) echo r ;; write) echo w ;; *) echo o… ✓ 1L
+Running this command for the test $ select CHOICE in one two; do break; done ✓ 1L
+Running this command for the test $ ls -la | grep -v "^d" | wc -l ✓ 1L
 grep ^\\p{Lu}\\w{2,8}(?:-\\d+)?$ *.go 1L
 load skills/tidy/SKILL.md 8L
 read wide.md 3L

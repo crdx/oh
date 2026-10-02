@@ -73,7 +73,18 @@ func (self truncatedTool) MarksSuccess() bool {
 }
 
 func (self truncatedTool) Parse(arguments string) (tool.ToolCall, error) {
-	call, err := self.Tool.Parse(arguments)
+	return self.truncated(self.Tool.Parse(arguments))
+}
+
+func (self truncatedTool) ParseUnder(schema tool.Schema, arguments string) (tool.ToolCall, error) {
+	return self.truncated(tool.ParseUnder(self.Tool, schema, arguments))
+}
+
+func (self truncatedTool) RenderUnder(schema tool.Schema, arguments string) (tool.CallRendering, bool) {
+	return tool.RenderUnder(self.Tool, schema, arguments)
+}
+
+func (self truncatedTool) truncated(call tool.ToolCall, err error) (tool.ToolCall, error) {
 	if err != nil {
 		return nil, err
 	}

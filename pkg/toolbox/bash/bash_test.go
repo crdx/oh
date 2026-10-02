@@ -189,45 +189,71 @@ func TestTheIntentReachesTheNetworkApproval(t *testing.T) {
 		true,
 	)
 
-	call, err := shell.Parse(`{"intent":"fetch the example page","command":"true","network":"host"}`)
+	call, err := shell.Parse(`{"intent":"Fetching the example page","command":"true","network":"host"}`)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	if _, err := call.Exec(t.Context()); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if approvedIntent != "fetch the example page" {
-		t.Errorf("got intent %q, want %q", approvedIntent, "fetch the example page")
+	if approvedIntent != "Fetching the example page" {
+		t.Errorf("got intent %q, want %q", approvedIntent, "Fetching the example page")
 	}
 }
 
-func TestACallWithoutAnIntentStillParses(t *testing.T) {
-	if _, err := fixedShell(nil, func() sandbox.Policy { return sandbox.Policy{} }).
-		Parse(`{"command":"true"}`); err != nil {
+func TestACallWithoutAnIntentIsRefused(t *testing.T) {
+	_, err := fixedShell(nil, func() sandbox.Policy { return sandbox.Policy{} }).Parse(`{"command":"true"}`)
+
+	if err == nil || err.Error() != "intent is required" {
+		t.Fatalf("got %v, want the required-intent error", err)
+	}
+}
+
+func TestACallMadeWhenIntentWasOptionalStillParses(t *testing.T) {
+	shell := fixedShell(nil, func() sandbox.Policy { return sandbox.Policy{} })
+	schema := slices.Clone(shell.Schema())
+	for index, parameter := range schema {
+		if parameter.Name == "intent" {
+			schema[index] = parameter.Optional()
+		}
+	}
+	frozen := tool.WithSnapshot(shell, tool.Snapshot{
+		Definition: tool.Definition{Name: shell.Name(), Description: shell.Description(), Schema: schema},
+		Revision:   shell.Revision(),
+	})
+
+	call, err := frozen.Parse(`{"command":"true"}`)
+	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
+	}
+	if got := call.Rendering().Subject; got != "true" {
+		t.Errorf("got subject %q, want the command", got)
+	}
+	if rendering, isRendered := frozen.Render(`{"command":"true"}`); !isRendered || rendering.Subject != "true" {
+		t.Errorf("got rendering %#v (%t), want the command", rendering, isRendered)
 	}
 }
 
 func TestTheIntentReachesTheCallRow(t *testing.T) {
 	call, err := fixedShell(nil, func() sandbox.Policy { return sandbox.Policy{} }).
-		Parse(`{"command":"go test ./...","intent":"run every test"}`)
+		Parse(`{"command":"go test ./...","intent":"running every test"}`)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if got := call.Rendering().Intent; got != "run every test" {
-		t.Errorf("got intent %q, want %q", got, "run every test")
+	if got := call.Rendering().Intent; got != "Running every test" {
+		t.Errorf("got intent %q, want %q", got, "Running every test")
 	}
 }
 
-func TestALeadingCapitalIsLoweredInTheIntent(t *testing.T) {
+func TestTheIntentOpensWithACapitalLikeReasoning(t *testing.T) {
 	for intent, want := range map[string]string{
-		"Run every test":        "run every test",
-		"run every test":        "run every test",
-		"  A quick look around": "a quick look around",
-		"API tests only":        "API tests only",
-		"Élan check":            "élan check",
-		"":                      "",
+		"running every test":  "Running every test",
+		"Running every test":  "Running every test",
+		"  checking around  ": "Checking around",
+		"élan checking":       "Élan checking",
+		"API checks only":     "API checks only",
+		"":                    "",
 	} {
 		if got := bash.SpokenIntent(intent); got != want {
 			t.Errorf("%q: got %q, want %q", intent, got, want)

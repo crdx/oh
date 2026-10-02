@@ -22,9 +22,6 @@ const (
 	bytesPerMegabyte = 1 << 20
 
 	noTimeAtAll = "0s"
-
-	intentMark       = "# "
-	minimumRestWidth = 2
 )
 
 type Label struct {
@@ -33,6 +30,9 @@ type Label struct {
 	Emphasis        tool.Emphasis
 	Qualifier       string
 	Intent          string
+	Introduces      string
+	Mentions        []string
+	Aside           string
 	ReadOnly        bool
 	NameStyle       style.Style
 	FocusStyle      style.Style
@@ -48,6 +48,18 @@ type Label struct {
 	renderedSubject string
 }
 
+func (self Label) GetAside() string {
+	return self.Aside
+}
+
+func (self Label) LeadWidth() int {
+	if self.Intent == "" {
+		return 0
+	}
+
+	return width.Of(self.Intent) + 1
+}
+
 func (self Label) Elide(room int) dynamic.Label {
 	return self.elide(room)
 }
@@ -61,6 +73,9 @@ func (self Label) Render() string {
 		}
 	}
 	line := name
+	if self.Intent != "" {
+		line = strings.TrimSuffix(style.Reasoning(self.Intent)+" "+line, " ")
+	}
 	isQualifierLinked := false
 
 	if self.Subject != "" {
@@ -87,13 +102,6 @@ func (self Label) Render() string {
 			}
 			line += part
 		}
-	}
-
-	if self.Intent != "" {
-		if line != "" {
-			line += " "
-		}
-		line += style.Comment(intentMark) + style.Intent(self.Intent)
 	}
 
 	if self.linkSource != "" {
@@ -140,7 +148,7 @@ func (self Label) Width() int {
 		if total > 0 {
 			total++
 		}
-		total += width.Of(intentMark + self.Intent)
+		total += width.Of(self.Intent)
 	}
 
 	return total
@@ -154,13 +162,13 @@ func (self Label) elide(room int) Label {
 		self.pathSubject = self.Subject
 	}
 
-	self.Name = width.Elide(self.Name, room)
+	if self.Intent != "" {
+		self.Intent = width.Elide(self.Intent, room)
+		room -= width.Of(self.Intent) + 1
+	}
+
+	self.Name = width.Elide(self.Name, max(room, 0))
 	room -= width.Of(self.Name) + 1
-	self.Intent, room = elideIntent(
-		self.Intent,
-		room,
-		self.Subject != "" || self.Qualifier != "" || len(self.Continuation) > 0,
-	)
 
 	if room > 0 {
 		completeSubject := self.Subject
@@ -202,24 +210,6 @@ func (self Label) elide(room int) Label {
 
 	self.linkSource = linkSource
 	return self
-}
-
-func elideIntent(intent string, room int, hasRest bool) (string, int) {
-	if intent == "" {
-		return "", room
-	}
-
-	restRoom := 0
-	if hasRest {
-		restRoom = minimumRestWidth
-	}
-	markedIntent := width.Elide(intentMark+intent, min(width.Of(intentMark+intent), room-restRoom))
-	text, isMarked := strings.CutPrefix(markedIntent, intentMark)
-	if !isMarked || text == "" || text == width.Ellipsis {
-		return "", room
-	}
-
-	return text, room - width.Of(markedIntent) - 1
 }
 
 func (self Label) getSource() string {

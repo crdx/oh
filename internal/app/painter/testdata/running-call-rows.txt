@@ -1,0 +1,107 @@
+── shell running · 120 columns
+Running the whole test suite $ just test
+
+── shell running · 80 columns
+Running the whole test suite $ just test
+
+── shell running · 60 columns
+Running the whole test suite $ just test
+
+── shell running · 44 columns
+Running the whole test suite $ just test
+
+── shell running · 30 columns
+Running the whole test suite $
+
+── shell running · 16 columns
+Running the who…
+
+── shell running on the host network · 120 columns
+Checking what the status endpoint reports $ curl https://example.com/status
+
+── shell running on the host network · 80 columns
+Checking what the status endpoint reports $ curl https://example.com/status
+
+── shell running on the host network · 60 columns
+Checking what the status endpoint reports $ curl https://ex…
+
+── shell running on the host network · 44 columns
+Checking what the status endpoint reports $
+
+── shell running on the host network · 30 columns
+Checking what the status endp…
+
+── shell running on the host network · 16 columns
+Checking what t…
+
+── shell running a long command · 120 columns
+Regenerating the harness golden files $ go test -run 'TestGolden' -count=1 ./internal/app/harness/ ./internal/app/paint…
+
+── shell running a long command · 80 columns
+Regenerating the harness golden files $ go test -run 'TestGolden' -count=1 ./in…
+
+── shell running a long command · 60 columns
+Regenerating the harness golden files $ go test -run 'TestG…
+
+── shell running a long command · 44 columns
+Regenerating the harness golden files $ go …
+
+── shell running a long command · 30 columns
+Regenerating the harness gold…
+
+── shell running a long command · 16 columns
+Regenerating th…
+
+── job starting · 120 columns
+Regenerating every golden in scratch start golden $ cd /tmp/oh && just golden 2>&1 | tail -30
+
+── job starting · 80 columns
+Regenerating every golden in scratch start golden $ cd /tmp/oh && just golden 2…
+
+── job starting · 60 columns
+Regenerating every golden in scratch start golden $ cd /tmp…
+
+── job starting · 44 columns
+Regenerating every golden in scratch start …
+
+── job starting · 30 columns
+Regenerating every golden in …
+
+── job starting · 16 columns
+Regenerating ev…
+
+── job waiting with a limit · 120 columns
+await golden for up to 20s
+
+── job waiting with a limit · 80 columns
+await golden for up to 20s
+
+── job waiting with a limit · 60 columns
+await golden for up to 20s
+
+── job waiting with a limit · 44 columns
+await golden for up to 20s
+
+── job waiting with a limit · 30 columns
+await golden for up to 20s
+
+── job waiting with a limit · 16 columns
+await golden fo…
+
+── job waiting on several · 120 columns
+await docs && build
+
+── job waiting on several · 80 columns
+await docs && build
+
+── job waiting on several · 60 columns
+await docs && build
+
+── job waiting on several · 44 columns
+await docs && build
+
+── job waiting on several · 30 columns
+await docs && build
+
+── job waiting on several · 16 columns
+await docs && b…

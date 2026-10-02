@@ -1419,13 +1419,25 @@ func TestFormatEighteenMigrationStoresTheIntentInTheRendering(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	want := map[string]string{"1": "run every test", "2": "API checks only", "4": "serve the docs"}
+	want := map[string]string{"1": "Run every test", "2": "API checks only", "4": "Serve the docs"}
 	for _, event := range storedSession.Events {
 		if event.Kind != agent.ToolCallRequestEvent {
 			continue
 		}
 		if event.Intent != want[event.ID] {
 			t.Errorf("call %s stored the intent %q, want %q", event.ID, event.Intent, want[event.ID])
+		}
+	}
+	for _, event := range storedSession.Events {
+		switch event.ID {
+		case "4":
+			if event.Introduces != "docs" {
+				t.Errorf("the start introduced %q, want docs", event.Introduces)
+			}
+		case "5":
+			if !slices.Equal(event.Mentions, []string{"docs"}) {
+				t.Errorf("the stop mentioned %q, want docs", event.Mentions)
+			}
 		}
 	}
 }

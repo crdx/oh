@@ -335,7 +335,7 @@ func TestRenderingCarriesItsPathLineIntoTheLabel(t *testing.T) {
 func TestALabelCarriesTheTimeTheCallGaveItself(t *testing.T) {
 	waitEvent := agent.Event{
 		Name:      "job",
-		Arguments: `{"action":"wait","name":"check","wait_seconds":20}`,
+		Arguments: `{"intent":"wait for the check to finish","action":"wait","name":"check","wait_seconds":20}`,
 	}
 	getTool := func(string) (tool.Tool, bool) {
 		return job.New(jobs.New(nil), nil, nil, nil), true
@@ -345,7 +345,7 @@ func TestALabelCarriesTheTimeTheCallGaveItself(t *testing.T) {
 		t.Errorf("got %s, want the wait to declare the time it gave itself", got)
 	}
 
-	statusEvent := agent.Event{Name: "job", Arguments: `{"action":"status","name":"check"}`}
+	statusEvent := agent.Event{Name: "job", Arguments: `{"intent":"see how the check is doing","action":"status","name":"check"}`}
 	if got := call.LabelFor(statusEvent, getTool, nil).TimeLimit; got != 0 {
 		t.Errorf("got %s, want a call that waits for nothing to declare no bound", got)
 	}

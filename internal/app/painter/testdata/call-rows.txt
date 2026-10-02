@@ -1,0 +1,779 @@
+── shell succeeded with output · 120 columns
+Checking the working tree state $ git status --short ✓ 0.2s 2L 28M M internal/app/call/call.go M pkg/toolbox/job/job.go
+
+── shell succeeded with output · 80 columns
+Checking the working tree state $ git status --short ✓ 0.2s 2L 28M M internal/a…
+
+── shell succeeded with output · 60 columns
+Checking the working tree state $ git status … ✓ 0.2s 2L 28M
+
+── shell succeeded with output · 44 columns
+Checking the working tree state $ git sta… ✓
+
+── shell succeeded with output · 30 columns
+Checking the working tree s… ✓
+
+── shell succeeded with output · 16 columns
+Checking the … ✓
+
+── shell succeeded with no output · 120 columns
+Creating the build lock file $ touch build.lock ✓ no output 2M
+
+── shell succeeded with no output · 80 columns
+Creating the build lock file $ touch build.lock ✓ no output 2M
+
+── shell succeeded with no output · 60 columns
+Creating the build lock file $ touch build.l… ✓ no output 2M
+
+── shell succeeded with no output · 44 columns
+Creating the build lock file $ touch buil… ✓
+
+── shell succeeded with no output · 30 columns
+Creating the build lock file ✓
+
+── shell succeeded with no output · 16 columns
+Creating the … ✓
+
+── shell failed with an exit code · 120 columns
+Building every package once more $ go build ./... ✗ 2L 30M exit(1): ./cmd/oh/main.go:12:2: undefined: spinner
+
+── shell failed with an exit code · 80 columns
+Building every package once more $ go build ./... ✗ 2L 30M exit(1): ./cmd/oh/ma…
+
+── shell failed with an exit code · 60 columns
+Building every package once more $ go bu… ✗ 2L 30M exit(1):…
+
+── shell failed with an exit code · 44 columns
+Building every package once more ✗ 2L 30M …
+
+── shell failed with an exit code · 30 columns
+Building every package once… ✗
+
+── shell failed with an exit code · 16 columns
+Building ever… ✗
+
+── shell stopped by the user · 120 columns
+Waiting for the server to settle $ sleep 10 – the command was stopped because the user pressed escape
+
+── shell stopped by the user · 80 columns
+Waiting for the server to settle $ sleep 10 – the command was stopped because t…
+
+── shell stopped by the user · 60 columns
+Waiting for the server to settle $ sleep 10 – the command w…
+
+── shell stopped by the user · 44 columns
+Waiting for the server to settle $ s… – the…
+
+── shell stopped by the user · 30 columns
+Waiting for the server to s… –
+
+── shell stopped by the user · 16 columns
+Waiting for t… –
+
+── shell stopped by its time limit · 120 columns
+Running the whole test suite $ just test – the command was stopped after 2m because it ran out of time
+
+── shell stopped by its time limit · 80 columns
+Running the whole test suite $ just test – the command was stopped after 2m bec…
+
+── shell stopped by its time limit · 60 columns
+Running the whole test suite $ just test – the command was …
+
+── shell stopped by its time limit · 44 columns
+Running the whole test suite $ jus… – the c…
+
+── shell stopped by its time limit · 30 columns
+Running the whole test suite –
+
+── shell stopped by its time limit · 16 columns
+Running the w… –
+
+── shell with a multi-line command · 120 columns
+Printing each name in turn $ for NAME in one two three; do echo "$NAME"; done 3L ✓ 0.2s 3L 28M one two three
+
+── shell with a multi-line command · 80 columns
+Printing each name in turn $ for NAME in one two three; do echo "… ✓ 0.2s 3L 28M
+
+── shell with a multi-line command · 60 columns
+Printing each name in turn $ for NAME in one … ✓ 0.2s 3L 28M
+
+── shell with a multi-line command · 44 columns
+Printing each name in turn $ … ✓ 0.2s 3L 28M
+
+── shell with a multi-line command · 30 columns
+Printing each name in turn $ ✓
+
+── shell with a multi-line command · 16 columns
+Printing each… ✓
+
+── shell with a heredoc · 120 columns
+Writing the design notes file $ cat > notes.md <<'EOF' 5L ✓ no output 2M
+
+── shell with a heredoc · 80 columns
+Writing the design notes file $ cat > notes.md <<'EOF' 5L ✓ no output 2M
+
+── shell with a heredoc · 60 columns
+Writing the design notes file $ cat > notes.… ✓ no output 2M
+
+── shell with a heredoc · 44 columns
+Writing the design notes file $ cat > not… ✓
+
+── shell with a heredoc · 30 columns
+Writing the design notes fi… ✓
+
+── shell with a heredoc · 16 columns
+Writing the d… ✓
+
+── shell with a long command · 120 columns
+Inspecting the host command golden changes $ git diff --word-diff=plain -- internal/app/harness/testdat… ✓ 0.2s 103L 28M
+
+── shell with a long command · 80 columns
+Inspecting the host command golden changes $ git diff --word-di… ✓ 0.2s 103L 28M
+
+── shell with a long command · 60 columns
+Inspecting the host command golden changes $ ✓ 0.2s 103L 28M
+
+── shell with a long command · 44 columns
+Inspecting the host command golden changes ✓
+
+── shell with a long command · 30 columns
+Inspecting the host command… ✓
+
+── shell with a long command · 16 columns
+Inspecting th… ✓
+
+── shell with a long intent · 120 columns
+Listing everything in the workspace root before deciding which of the many directories to search next $ ls ✓ 0.2s 1L 28M
+
+── shell with a long intent · 80 columns
+Listing everything in the workspace root before deciding which of the many di… ✓
+
+── shell with a long intent · 60 columns
+Listing everything in the workspace root before deciding … ✓
+
+── shell with a long intent · 44 columns
+Listing everything in the workspace root … ✓
+
+── shell with a long intent · 30 columns
+Listing everything in the w… ✓
+
+── shell with a long intent · 16 columns
+Listing every… ✓
+
+── shell with a lowercase intent · 120 columns
+Running every lint and test $ just check ✓ 0.2s 1L 28M ok all eight steps
+
+── shell with a lowercase intent · 80 columns
+Running every lint and test $ just check ✓ 0.2s 1L 28M ok all eight steps
+
+── shell with a lowercase intent · 60 columns
+Running every lint and test $ just check ✓ 0.2s 1L 28M ok a…
+
+── shell with a lowercase intent · 44 columns
+Running every lint and test $ ✓ 0.2s 1L 28M
+
+── shell with a lowercase intent · 30 columns
+Running every lint and test ✓
+
+── shell with a lowercase intent · 16 columns
+Running every… ✓
+
+── shell with whitespace and control characters in its intent · 120 columns
+Checking the shell works $ true ✓ no output 2M
+
+── shell with whitespace and control characters in its intent · 80 columns
+Checking the shell works $ true ✓ no output 2M
+
+── shell with whitespace and control characters in its intent · 60 columns
+Checking the shell works $ true ✓ no output 2M
+
+── shell with whitespace and control characters in its intent · 44 columns
+Checking the shell works $ t… ✓ no output 2M
+
+── shell with whitespace and control characters in its intent · 30 columns
+Checking the shell works $ … ✓
+
+── shell with whitespace and control characters in its intent · 16 columns
+Checking the … ✓
+
+── shell with wide characters · 120 columns
+Printing 日本語 to the terminal $ echo 日本語のテキスト ✓ 0.2s 1L 28M 日本語のテキスト
+
+── shell with wide characters · 80 columns
+Printing 日本語 to the terminal $ echo 日本語のテキスト ✓ 0.2s 1L 28M 日本語の…
+
+── shell with wide characters · 60 columns
+Printing 日本語 to the terminal $ echo 日本語… ✓ 0.2s 1L 28M
+
+── shell with wide characters · 44 columns
+Printing 日本語 to the terminal $ echo 日… ✓
+
+── shell with wide characters · 30 columns
+Printing 日本語 to the term… ✓
+
+── shell with wide characters · 16 columns
+Printing 日本… ✓
+
+── shell on the host network, approved · 120 columns
+Checking what the status endpoint reports $ curl https://example.com/status ✓ 0.2s 1L 28M {"status":"ok"}
+
+── shell on the host network, approved · 80 columns
+Checking what the status endpoint reports $ curl https://example.… ✓ 0.2s 1L 28M
+
+── shell on the host network, approved · 60 columns
+Checking what the status endpoint reports $ c… ✓ 0.2s 1L 28M
+
+── shell on the host network, approved · 44 columns
+Checking what the status endpoint reports ✓
+
+── shell on the host network, approved · 30 columns
+Checking what the status en… ✓
+
+── shell on the host network, approved · 16 columns
+Checking what… ✓
+
+── shell on the host network, refused · 120 columns
+Checking what example.com serves $ curl example.com ✗ host-network access refused; command did not run
+
+── shell on the host network, refused · 80 columns
+Checking what example.com serves $ curl example.com ✗ host-network access refus…
+
+── shell on the host network, refused · 60 columns
+Checking what example.com serves $ curl exam… ✗ host-networ…
+
+── shell on the host network, refused · 44 columns
+Checking what example.com serves $ c… ✗ hos…
+
+── shell on the host network, refused · 30 columns
+Checking what example.com s… ✗
+
+── shell on the host network, refused · 16 columns
+Checking what… ✗
+
+── shell withheld · 120 columns
+Printing a word to test access $ echo forbidden ✗ shell access unavailable; ctrl+x x grants it
+
+── shell withheld · 80 columns
+Printing a word to test access $ echo forbidden ✗ shell access unavailable; ctr…
+
+── shell withheld · 60 columns
+Printing a word to test access $ echo forbi… ✗ shell access…
+
+── shell withheld · 44 columns
+Printing a word to test access $ ec… ✗ shel…
+
+── shell withheld · 30 columns
+Printing a word to test acc… ✗
+
+── shell withheld · 16 columns
+Printing a wo… ✗
+
+── shell with invalid Bash · 120 columns
+Trying out some broken syntax $ for do done esac fi "unclosed ✗ syntax error
+
+── shell with invalid Bash · 80 columns
+Trying out some broken syntax $ for do done esac fi "unclosed ✗ syntax error
+
+── shell with invalid Bash · 60 columns
+Trying out some broken syntax $ for do done … ✗ syntax error
+
+── shell with invalid Bash · 44 columns
+Trying out some broken syntax $ fo… ✗ synta…
+
+── shell with invalid Bash · 30 columns
+Trying out some broken synt… ✗
+
+── shell with invalid Bash · 16 columns
+Trying out so… ✗
+
+── shell without an intent in a new session · 120 columns
+$ ls -la ✗ intent is required
+
+── shell without an intent in a new session · 80 columns
+$ ls -la ✗ intent is required
+
+── shell without an intent in a new session · 60 columns
+$ ls -la ✗ intent is required
+
+── shell without an intent in a new session · 44 columns
+$ ls -la ✗ intent is required
+
+── shell without an intent in a new session · 30 columns
+$ ls -la ✗ intent is required
+
+── shell without an intent in a new session · 16 columns
+$ ls … ✗ intent…
+
+── shell without an intent in an old session · 120 columns
+$ ls -la ✓ 0.2s 1L 28M total 8
+
+── shell without an intent in an old session · 80 columns
+$ ls -la ✓ 0.2s 1L 28M total 8
+
+── shell without an intent in an old session · 60 columns
+$ ls -la ✓ 0.2s 1L 28M total 8
+
+── shell without an intent in an old session · 44 columns
+$ ls -la ✓ 0.2s 1L 28M total 8
+
+── shell without an intent in an old session · 30 columns
+$ ls -la ✓ 0.2s 1L 28M total 8
+
+── shell without an intent in an old session · 16 columns
+$ ✓ 0.2s 1L 28M
+
+── shell with an unknown parameter · 120 columns
+$ ls Listing the files ✗ unknown parameter: colour
+
+── shell with an unknown parameter · 80 columns
+$ ls Listing the files ✗ unknown parameter: colour
+
+── shell with an unknown parameter · 60 columns
+$ ls Listing the files ✗ unknown parameter: colour
+
+── shell with an unknown parameter · 44 columns
+$ ls Listing the fi… ✗ unknown parameter: c…
+
+── shell with an unknown parameter · 30 columns
+$ ls Listing… ✗ unknown param…
+
+── shell with an unknown parameter · 16 columns
+$ ls … ✗ unknow…
+
+── shell with arguments that are not JSON · 120 columns
+$ {"command": ✗ could not parse the arguments
+
+── shell with arguments that are not JSON · 80 columns
+$ {"command": ✗ could not parse the arguments
+
+── shell with arguments that are not JSON · 60 columns
+$ {"command": ✗ could not parse the arguments
+
+── shell with arguments that are not JSON · 44 columns
+$ {"command": ✗ could not parse the argumen…
+
+── shell with arguments that are not JSON · 30 columns
+$ {"command": ✗ could not par…
+
+── shell with arguments that are not JSON · 16 columns
+$ {"c… ✗ could …
+
+── several shell calls in one round · 120 columns
+Checking the working tree state $ git status --short ✓ 0.2s 1L 28M M a.go
+Vetting every package $ go vet ./... ✗ 2L 30M exit(1): vet: a.go:3: unreachable code
+Pausing for the build cache $ sleep 5 – the command was stopped because the user pressed escape
+
+── several shell calls in one round · 80 columns
+Checking the working tree state $ git status --short ✓ 0.2s 1L 28M M a.go
+Vetting every package $ go vet ./... ✗ 2L 30M exit(1): vet: a.go:3: unreachable…
+Pausing for the build cache $ sleep 5 – the command was stopped because the use…
+
+── several shell calls in one round · 60 columns
+Checking the working tree state $ git status … ✓ 0.2s 1L 28M
+Vetting every package $ go vet ./... ✗ 2L 30M exit(1): vet:…
+Pausing for the build cache $ sleep 5 – the command was sto…
+
+── several shell calls in one round · 44 columns
+Checking the working tree state $ git sta… ✓
+Vetting every package $ go … ✗ 2L 30M exit(…
+Pausing for the build cache $ sle… – the co…
+
+── several shell calls in one round · 30 columns
+Checking the working tree s… ✓
+Vetting every package $ ✗ ex…
+Pausing for the build cache –
+
+── several shell calls in one round · 16 columns
+Checking the … ✓
+Vetting every… ✗
+Pausing for t… –
+
+── job start · 120 columns
+Serving the documentation locally start docs $ python3 -m http.server 8080 1L
+
+── job start · 80 columns
+Serving the documentation locally start docs $ python3 -m http.server 8080 1L
+
+── job start · 60 columns
+Serving the documentation locally start docs $ python3 -… 1L
+
+── job start · 44 columns
+Serving the documentation locally start … 1L
+
+── job start · 30 columns
+Serving the documentation loc…
+
+── job start · 16 columns
+Serving the doc…
+
+── job start with a forwarded port · 120 columns
+Serving the docs on the forwarded port start docs:8080 $ just docs 1L
+
+── job start with a forwarded port · 80 columns
+Serving the docs on the forwarded port start docs:8080 $ just docs 1L
+
+── job start with a forwarded port · 60 columns
+Serving the docs on the forwarded port start docs:8080 $ 1L
+
+── job start with a forwarded port · 44 columns
+Serving the docs on the forwarded port s… 1L
+
+── job start with a forwarded port · 30 columns
+Serving the docs on the forwa…
+
+── job start with a forwarded port · 16 columns
+Serving the doc…
+
+── job start with a multi-line command · 120 columns
+Rebuilding every five seconds start watch $ while true; do just build; sleep 5; done 4L 1L
+
+── job start with a multi-line command · 80 columns
+Rebuilding every five seconds start watch $ while true; do just build; sleep… 1L
+
+── job start with a multi-line command · 60 columns
+Rebuilding every five seconds start watch $ while true; … 1L
+
+── job start with a multi-line command · 44 columns
+Rebuilding every five seconds start watch 1L
+
+── job start with a multi-line command · 30 columns
+Rebuilding every five seconds
+
+── job start with a multi-line command · 16 columns
+Rebuilding ever…
+
+── job restart · 120 columns
+Restarting the documentation server restart docs 1L
+
+── job restart · 80 columns
+Restarting the documentation server restart docs 1L
+
+── job restart · 60 columns
+Restarting the documentation server restart docs 1L
+
+── job restart · 44 columns
+Restarting the documentation server rest… 1L
+
+── job restart · 30 columns
+Restarting the documentation …
+
+── job restart · 16 columns
+Restarting the …
+
+── job restart with a port · 120 columns
+Restarting the docs on its port restart docs:8080 1L
+
+── job restart with a port · 80 columns
+Restarting the docs on its port restart docs:8080 1L
+
+── job restart with a port · 60 columns
+Restarting the docs on its port restart docs:8080 1L
+
+── job restart with a port · 44 columns
+Restarting the docs on its port restart … 1L
+
+── job restart with a port · 30 columns
+Restarting the docs on its po…
+
+── job restart with a port · 16 columns
+Restarting the …
+
+── job start refused · 120 columns
+Serving the documentation locally start docs $ just docs ✗ a job of that name is already running
+
+── job start refused · 80 columns
+Serving the documentation locally start docs $ just do… ✗ a job of that name is…
+
+── job start refused · 60 columns
+Serving the documentation locally start docs ✗ a job of th…
+
+── job start refused · 44 columns
+Serving the documentation locally st… ✗ a j…
+
+── job start refused · 30 columns
+Serving the documentation l… ✗
+
+── job start refused · 16 columns
+Serving the d… ✗
+
+── job start without an intent · 120 columns
+start docs $ just docs ✗ intent is required to start a job
+
+── job start without an intent · 80 columns
+start docs $ just docs ✗ intent is required to start a job
+
+── job start without an intent · 60 columns
+start docs $ just docs ✗ intent is required to start a job
+
+── job start without an intent · 44 columns
+start docs $ just d… ✗ intent is required t…
+
+── job start without an intent · 30 columns
+start docs $ ✗ intent is req…
+
+── job start without an intent · 16 columns
+start ✗ intent…
+
+── job start with an invalid name · 120 columns
+Trying a name that is too long start way-too-long-a-name $ true ✗ job name must match [a-z0-9-]{1,10}
+
+── job start with an invalid name · 80 columns
+Trying a name that is too long start way-too-long-a-n… ✗ job name must match [a…
+
+── job start with an invalid name · 60 columns
+Trying a name that is too long start way-to… ✗ job name mus…
+
+── job start with an invalid name · 44 columns
+Trying a name that is too long start ✗ job …
+
+── job start with an invalid name · 30 columns
+Trying a name that is too l… ✗
+
+── job start with an invalid name · 16 columns
+Trying a name… ✗
+
+── job calls naming nobody's job · 120 columns
+status docs 1L
+cat docs 1L
+
+── job calls naming nobody's job · 80 columns
+status docs 1L
+cat docs 1L
+
+── job calls naming nobody's job · 60 columns
+status docs 1L
+cat docs 1L
+
+── job calls naming nobody's job · 44 columns
+status docs 1L
+cat docs 1L
+
+── job calls naming nobody's job · 30 columns
+status docs 1L
+cat docs 1L
+
+── job calls naming nobody's job · 16 columns
+status docs 1L
+cat docs 1L
+
+── job calls reminded of their job · 120 columns
+Serving the documentation locally start docs $ just docs 1L
+status docs 1L (Serving the documentation locally)
+cat docs 2L (Serving the documentation locally)
+stop docs 1L (Serving the documentation locally)
+discard docs 1L (Serving the documentation locally)
+
+── job calls reminded of their job · 80 columns
+Serving the documentation locally start docs $ just docs 1L
+status docs 1L (Serving the documentation locally)
+cat docs 2L (Serving the documentation locally)
+stop docs 1L (Serving the documentation locally)
+discard docs 1L (Serving the documentation locally)
+
+── job calls reminded of their job · 60 columns
+Serving the documentation locally start docs $ just docs 1L
+status docs 1L (Serving the documentation locally)
+cat docs 2L (Serving the documentation locally)
+stop docs 1L (Serving the documentation locally)
+discard docs 1L (Serving the documentation locally)
+
+── job calls reminded of their job · 44 columns
+Serving the documentation locally start … 1L
+status docs 1L
+cat docs 2L
+stop docs 1L
+discard docs 1L
+
+── job calls reminded of their job · 30 columns
+Serving the documentation loc…
+status docs 1L
+cat docs 2L
+stop docs 1L
+discard docs 1L
+
+── job calls reminded of their job · 16 columns
+Serving the doc…
+status docs 1L
+cat docs 2L
+stop docs 1L
+discard docs 1L
+
+── job waits reminded of every job · 120 columns
+Serving the documentation locally start docs $ just docs 1L
+Building every package start build $ just build 1L
+await docs || build 1L (Serving the documentation locally; Building every package)
+await docs && build for up to 20s 2L (Serving the documentation locally; Building every package)
+await docs || other 1L (Serving the documentation locally)
+
+── job waits reminded of every job · 80 columns
+Serving the documentation locally start docs $ just docs 1L
+Building every package start build $ just build 1L
+await docs || build 1L
+await docs && build for up to 20s 2L
+await docs || other 1L (Serving the documentation locally)
+
+── job waits reminded of every job · 60 columns
+Serving the documentation locally start docs $ just docs 1L
+Building every package start build $ just build 1L
+await docs || build 1L
+await docs && build for up to 20s 2L
+await docs || other 1L (Serving the documentation locally)
+
+── job waits reminded of every job · 44 columns
+Serving the documentation locally start … 1L
+Building every package start build $ jus… 1L
+await docs || build 1L
+await docs && build for up to 20s 2L
+await docs || other 1L
+
+── job waits reminded of every job · 30 columns
+Serving the documentation loc…
+Building every package sta… 1L
+await docs || build 1L
+await docs && build for up… 2L
+await docs || other 1L
+
+── job waits reminded of every job · 16 columns
+Serving the doc…
+Building every …
+await docs |… 1L
+await docs &… 2L
+await docs |… 1L
+
+── job reminded of its newest start · 120 columns
+Serving the documentation locally start docs $ just docs 1L
+status docs 1L (Serving the documentation locally)
+Serving the docs on a new port start docs $ just docs 1L
+status docs 1L (Serving the docs on a new port)
+
+── job reminded of its newest start · 80 columns
+Serving the documentation locally start docs $ just docs 1L
+status docs 1L (Serving the documentation locally)
+Serving the docs on a new port start docs $ just docs 1L
+status docs 1L (Serving the docs on a new port)
+
+── job reminded of its newest start · 60 columns
+Serving the documentation locally start docs $ just docs 1L
+status docs 1L (Serving the documentation locally)
+Serving the docs on a new port start docs $ just docs 1L
+status docs 1L (Serving the docs on a new port)
+
+── job reminded of its newest start · 44 columns
+Serving the documentation locally start … 1L
+status docs 1L
+Serving the docs on a new port start docs 1L
+status docs 1L
+
+── job reminded of its newest start · 30 columns
+Serving the documentation loc…
+status docs 1L
+Serving the docs on a new port
+status docs 1L
+
+── job reminded of its newest start · 16 columns
+Serving the doc…
+status docs 1L
+Serving the doc…
+status docs 1L
+
+── job calls naming no job · 120 columns
+Serving the documentation locally start docs $ just docs 1L
+list jobs 2L
+prune jobs 1L
+
+── job calls naming no job · 80 columns
+Serving the documentation locally start docs $ just docs 1L
+list jobs 2L
+prune jobs 1L
+
+── job calls naming no job · 60 columns
+Serving the documentation locally start docs $ just docs 1L
+list jobs 2L
+prune jobs 1L
+
+── job calls naming no job · 44 columns
+Serving the documentation locally start … 1L
+list jobs 2L
+prune jobs 1L
+
+── job calls naming no job · 30 columns
+Serving the documentation loc…
+list jobs 2L
+prune jobs 1L
+
+── job calls naming no job · 16 columns
+Serving the doc…
+list jobs 2L
+prune jobs 1L
+
+── job wait stopped by the user · 120 columns
+Running the full check start check $ just check 1L
+await check for up to 4m 30s – stopped because the user pressed escape (Running the full check)
+
+── job wait stopped by the user · 80 columns
+Running the full check start check $ just check 1L
+await check for up to 4m 30s – stopped because the user pressed escape
+
+── job wait stopped by the user · 60 columns
+Running the full check start check $ just check 1L
+await check for up to 4m 30s – stopped because the user pre…
+
+── job wait stopped by the user · 44 columns
+Running the full check start check $ jus… 1L
+await check for up … – stopped because the …
+
+── job wait stopped by the user · 30 columns
+Running the full check sta… 1L
+await check … – stopped becau…
+
+── job wait stopped by the user · 16 columns
+Running the ful…
+await – stoppe…
+
+── job call with an unknown action · 120 columns
+job explode docs ✗ action must be one of start, status, output, wait, stop, discard, list, prune
+
+── job call with an unknown action · 80 columns
+job explode docs ✗ action must be one of start, status, output, wait, stop, dis…
+
+── job call with an unknown action · 60 columns
+job explode docs ✗ action must be one of start, status, out…
+
+── job call with an unknown action · 44 columns
+job explode docs ✗ action must be one of st…
+
+── job call with an unknown action · 30 columns
+job explode … ✗ action must b…
+
+── job call with an unknown action · 16 columns
+job e… ✗ action…
+
+── shell and job calls mixed in one round · 120 columns
+Serving the documentation locally start docs $ just docs 1L
+Checking the docs answer requests $ curl -s localhost:8080 | head -1 ✓ 0.2s 1L 28M <!DOCTYPE html>
+stop docs 1L (Serving the documentation locally)
+
+── shell and job calls mixed in one round · 80 columns
+Serving the documentation locally start docs $ just docs 1L
+Checking the docs answer requests $ curl -s localhost:8080 | head… ✓ 0.2s 1L 28M
+stop docs 1L (Serving the documentation locally)
+
+── shell and job calls mixed in one round · 60 columns
+Serving the documentation locally start docs $ just docs 1L
+Checking the docs answer requests $ curl -s l… ✓ 0.2s 1L 28M
+stop docs 1L (Serving the documentation locally)
+
+── shell and job calls mixed in one round · 44 columns
+Serving the documentation locally start … 1L
+Checking the docs answer requests $ curl … ✓
+stop docs 1L
+
+── shell and job calls mixed in one round · 30 columns
+Serving the documentation loc…
+Checking the docs answer re… ✓
+stop docs 1L
+
+── shell and job calls mixed in one round · 16 columns
+Serving the doc…
+Checking the … ✓
+stop docs 1L

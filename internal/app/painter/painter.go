@@ -42,6 +42,7 @@ type Picasso struct {
 	toolBlock         *dynamic.Block
 	rows              map[string]int
 	labels            map[string]call.Label
+	introductions     *Introductions
 	answer            liveText
 	answerRenderer    markdown.IncrementalRenderer
 	reasoning         liveText
@@ -97,6 +98,7 @@ func New(
 	streamingMode output.StreamingMode,
 ) *Picasso {
 	self := &Picasso{
+		introductions: NewIntroductions(),
 		screen:        screen,
 		isRunning:     isRunning,
 		getTool:       getTool,
@@ -108,6 +110,10 @@ func New(
 	self.reasoning.streamingMode = streamingMode
 
 	return self
+}
+
+func (self *Picasso) RememberIntroductionsIn(introductions *Introductions) {
+	self.introductions = introductions
 }
 
 func (self *Picasso) RenderReasoningAs(rendering output.ReasoningRendering) {
@@ -199,6 +205,8 @@ func (self *Picasso) DrawEvent(event agent.Event) {
 
 		roots := self.linkRoots()
 		label := call.LabelFor(event, self.getTool, self.workspace).WithHostPathAliases(roots)
+		self.introductions.note(label)
+		label.Aside = self.introductions.recall(label.Mentions)
 		if self.screen.IsTerminal() {
 			label.PathRoots = roots
 		}

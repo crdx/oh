@@ -23,6 +23,36 @@ type Label interface {
 	Width() int
 }
 
+type LeadingLabel interface {
+	Label
+
+	LeadWidth() int
+}
+
+type AsideLabel interface {
+	Label
+
+	GetAside() string
+}
+
+func asideText(label Label) string {
+	asideLabel, hasAside := label.(AsideLabel)
+	if !hasAside || asideLabel.GetAside() == "" {
+		return ""
+	}
+
+	return "(" + asideLabel.GetAside() + ")"
+}
+
+func leadWidth(label Label) int {
+	leadingLabel, isLeading := label.(LeadingLabel)
+	if !isLeading {
+		return 0
+	}
+
+	return leadingLabel.LeadWidth()
+}
+
 type RowState int
 
 const (
@@ -253,15 +283,23 @@ func (self *Block) isHeld() bool {
 const failureShare = 2
 
 func (self *Block) line(row row, columns int) string {
-	result := self.fitResult(row, columns, row.label.Width())
-
 	label := row.label
 	summary := row.summary
+	markRoom := 0
+	if mark := self.getProgressIndicator(row); mark != "" {
+		markRoom = style.Width(mark) + 1
+	}
+	lead := min(leadWidth(label), max(columns-markRoom, 0))
+
+	result := ""
+	if columns <= 0 || columns > lead {
+		result = self.fitResult(row, columns-lead, label.Width()-lead)
+	}
 
 	if columns > 0 {
 		room := columns - style.Width(result) - resultSpacing(result)
 
-		summary = width.Elide(summary, summaryRoom(row.state, room, label.Width()))
+		summary = width.Elide(summary, summaryRoom(row.state, room-lead, label.Width()-lead))
 
 		if summary != "" {
 			room -= width.Of(summary) + 1
@@ -270,7 +308,12 @@ func (self *Block) line(row row, columns int) string {
 		label = label.Elide(room)
 	}
 
-	return util.JoinNonEmpty(label.Render(), result, summaryText(row.state, summary))
+	line := util.JoinNonEmpty(label.Render(), result, summaryText(row.state, summary))
+	if aside := asideText(row.label); aside != "" && (columns <= 0 || style.Width(line)+1+width.Of(aside) <= columns) {
+		line = util.JoinNonEmpty(line, style.Reasoning(aside))
+	}
+
+	return line
 }
 
 func summaryRoom(state RowState, room int, labelWidth int) int {

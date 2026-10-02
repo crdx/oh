@@ -168,14 +168,14 @@ func (self Builder[T]) guardAccess(execute ResultExecutor[T]) ResultExecutor[T] 
 	}
 }
 
-func (self Builder[T]) decodeArguments(arguments string) (T, error) {
+func (self Builder[T]) decodeArguments(schema Schema, arguments string) (T, error) {
 	var args T
 
 	if self.decode != nil {
 		return self.decode(arguments)
 	}
 
-	if _, err := self.definition.Schema.Decode(arguments); err != nil {
+	if _, err := schema.Decode(arguments); err != nil {
 		return args, err
 	}
 
@@ -214,15 +214,15 @@ func (self Builder[T]) build(exec ResultExecutor[T]) Tool {
 		stateName:           self.stateName,
 		restore:             self.restore,
 		fallback:            self.fallback,
-		render: func(arguments string) (CallRendering, bool) {
-			args, err := self.decodeArguments(arguments)
+		render: func(schema Schema, arguments string) (CallRendering, bool) {
+			args, err := self.decodeArguments(schema, arguments)
 			if err != nil {
 				return self.fallback, false
 			}
 			return self.renderCall(args), true
 		},
-		parse: func(arguments string) (_call, error) {
-			args, err := self.decodeArguments(arguments)
+		parse: func(schema Schema, arguments string) (_call, error) {
+			args, err := self.decodeArguments(schema, arguments)
 			if err != nil {
 				return _call{}, err
 			}

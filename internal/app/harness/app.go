@@ -188,6 +188,7 @@ type questionState struct {
 type App struct {
 	agent           *agent.Agent
 	recordedEvents  []agent.Event
+	introductions   *painter.Introductions
 	openingEvents   []agent.Event
 	screen          *output.Screen
 	recorder        *record.Recorder
@@ -1685,6 +1686,10 @@ func (self *App) restore(storedSession *store.Session) {
 
 func (self *App) newPainter(isRunning bool) *painter.Picasso {
 	picasso := painter.New(self.screen, isRunning, self.agent.Tool, self.workspace, self.display.streamingMode)
+	if self.introductions == nil {
+		self.introductions = painter.NewIntroductions()
+	}
+	picasso.RememberIntroductionsIn(self.introductions)
 	picasso.RenderReasoningAs(self.display.reasoningRendering)
 	if self.screen.IsTerminal() && self.recorder != nil {
 		picasso.LinkToolResults(self.recorder.Name())
@@ -1703,6 +1708,9 @@ func (self *App) replay() {
 
 func (self *App) replayHistory(count int) {
 	self.screen.Sync(func() {
+		if self.introductions != nil {
+			self.introductions.Forget()
+		}
 		painter := self.newPainter(self.currentTurn.Running())
 
 		for _, event := range self.recordedEvents[:count] {

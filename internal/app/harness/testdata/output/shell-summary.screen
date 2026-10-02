@@ -3,14 +3,14 @@
  check the tree, then build it
 
 
-$ git status --short ✓ 2L 4M M cmd/oh/m…
-$ touch build.lock ✓ no output 2M
+Running this command for the test $ g… ✓
+Running this command for the test $ t… ✓
 read cmd/oh/dynamic/dynamic.go 1L
-$ printf 'one\\ttwo\\r\\n\\n\\tthree… ✓ 3L 2M
-$ ls /usr/bin ✓ 1L 6M awk basename bash…
-$ for NAME in cmd/oh/dynam… ✓ 1s 1L 400M
-$ go build … ✗ 0.9s 2L 300M exit(1): ./…
-$ just check ✓ 1L 8M ok all six steps
+Running this command for the test $ p… ✓
+Running this command for the test $ l… ✓
+Running this command for the test $ f… ✓
+Running this command for the test $ ✗ e…
+Running this command for the test $ j… ✓
 
 The tree is dirty and the build is
 broken.
@@ -114,14 +114,14 @@ n
  check the tree, then build it
 
 
-$ git status --short ✓ 2L 4M M cmd/oh/main.go M cmd/oh/dynamic/dynamic.go
-$ touch build.lock ✓ no output 2M
+Running this command for the test $ git status --short ✓ 2L 4M M cmd/oh/main.go M cmd/oh/dynamic/dy…
+Running this command for the test $ touch build.lock ✓ no output 2M
 read cmd/oh/dynamic/dynamic.go 1L
-$ printf 'one\\ttwo\\r\\n\\n\\tthree\\n' ✓ 3L 2M one two three
-$ ls /usr/bin ✓ 1L 6M awk basename bash cat chmod cp date diff du echo env find grep gzip head id j…
-$ for NAME in cmd/oh/dynamic cmd/oh/painter cmd/oh/call; do go vet ./$NAME; done ✓ 1s 1L 400M ok
-$ go build ./... ✗ 0.9s 2L 300M exit(1): ./cmd/oh/main.go:12:2: undefined: spinner
-$ just check ✓ 1L 8M ok all six steps
+Running this command for the test $ printf 'one\\ttwo\\r\\n\\n\\tthree\\n' ✓ 3L 2M one two three
+Running this command for the test $ ls /usr/bin ✓ 1L 6M awk basename bash cat chmod cp date diff du…
+Running this command for the test $ for NAME in cmd/oh/dynamic cmd/oh/painter cmd/oh/c… ✓ 1s 1L 400M
+Running this command for the test $ go build ./... ✗ 0.9s 2L 300M exit(1): ./cmd/oh/main.go:12:2: u…
+Running this command for the test $ just check ✓ 1L 8M ok all six steps
 
 The tree is dirty and the build is broken.
 === tiny ===
@@ -131,14 +131,14 @@ The tree is dirty and the build is broken.
  build it
 
 
-$ g… ✓ 2L 4M
-$ touch b… ✓
+Running t… ✓
+Running t… ✓
 read cmd… 1L
-$ p… ✓ 3L 2M
-$ l… ✓ 1L 6M
-$ for NAM… ✓
-$ g… ✗ exit…
-$ j… ✓ 1L 8M
+Running t… ✓
+Running t… ✓
+Running t… ✓
+Running t… ✗
+Running t… ✓
 
 The tree is
 dirty and
@@ -149,13 +149,13 @@ broken.
  check the tree, then build it
 
 
-$ git status --short ✓ 2L 4M M cmd/oh/main.go M cmd/oh/dynamic/dynamic.go
-$ touch build.lock ✓ no output 2M
+Running this command for the test $ git status --short ✓ 2L 4M M cmd/oh/main.go M cmd/oh/dynamic/dy…
+Running this command for the test $ touch build.lock ✓ no output 2M
 read cmd/oh/dynamic/dynamic.go 1L
-$ printf 'one\\ttwo\\r\\n\\n\\tthree\\n' ✓ 3L 2M one two three
-$ ls /usr/bin ✓ 1L 6M awk basename bash cat chmod cp date diff du echo env find grep gzip head id j…
-$ for NAME in cmd/oh/dynamic cmd/oh/painter cmd/oh/call; do go vet ./$NAME; done ✓ 1s 1L 400M ok
-$ go build ./... ✗ 0.9s 2L 300M exit(1): ./cmd/oh/main.go:12:2: undefined: spinner
-$ just check ✓ 1L 8M ok all six steps
+Running this command for the test $ printf 'one\\ttwo\\r\\n\\n\\tthree\\n' ✓ 3L 2M one two three
+Running this command for the test $ ls /usr/bin ✓ 1L 6M awk basename bash cat chmod cp date diff du…
+Running this command for the test $ for NAME in cmd/oh/dynamic cmd/oh/painter cmd/oh/c… ✓ 1s 1L 400M
+Running this command for the test $ go build ./... ✗ 0.9s 2L 300M exit(1): ./cmd/oh/main.go:12:2: u…
+Running this command for the test $ just check ✓ 1L 8M ok all six steps
 
 The tree is dirty and the build is broken.

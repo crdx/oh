@@ -1,6 +1,6 @@
 {"event":{"kind":"user_message","text":"build it and tell me what broke"}}
 {"event":{"kind":"model_message","text":"Building now."}}
-{"event":{"kind":"tool_call_request","id":"call_1","name":"bash","arguments":"{\"command\":\"just build\"}","render":"just build"}}
+{"event":{"kind":"tool_call_request","id":"call_1","name":"bash","arguments":"{\"command\":\"just build\",\"intent\":\"Running this command for the test\"}","render":"just build"}}
 {"event":{"kind":"tool_call_result","status":"cancelled","id":"call_1","name":"bash","text":"compiling agent\ncompiling toolbox\nnote: the command was stopped after 12s because the user sent a new message.","took":0,"stats":{"kind":"resources","cpu_time":11000000000,"peak_memory":41943040,"lines":3,"bytes":96}}}
 {"event":{"kind":"turn_interruption"}}
 {"event":{"kind":"user_message","text":"leave it, the build is broken anyway"}}

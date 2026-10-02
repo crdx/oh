@@ -2,7 +2,7 @@
  run a command while shell access is withheld
 
 
-$ echo forbidden ✗ 1L shell access unavailable; ctrl+x x grants it
+Printing a word to test access $ echo forbidden ✗ 1L shell access unavailable; ctrl+x x grants it
 
 Shell access is unavailable.
 

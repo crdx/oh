@@ -3,7 +3,7 @@
  start the docs server and a watcher
 
 
-start docs $ python3 -m http.server … 1L
+Handling this job for the test start 1L
 
 Both are up.
 
@@ -19,7 +19,7 @@ Both are up.
 
 
 list jobs 2L
-restart docs 1L
+Handling this job for the test resta… 1L
 
 Restarted docs from the command it was
 remembered with.
@@ -391,7 +391,7 @@ h
  start the docs server and a watcher
 
 
-start docs $ python3 -m http.server 8080 1L
+Handling this job for the test start docs $ python3 -m http.server 8080 1L
 
 Both are up.
 
@@ -405,7 +405,7 @@ Both are up.
 
 
 list jobs 2L
-restart docs 1L
+Handling this job for the test restart docs 1L
 
 Restarted docs from the command it was remembered with.
 === tiny ===
@@ -416,7 +416,7 @@ Restarted docs from the command it was remembered with.
  watcher
 
 
-start do… 1L
+Handling th…
 
 Both are up.
 
@@ -447,7 +447,7 @@ Both are up.
 
 
 list jobs 2L
-restart … 1L
+Handling th…
 
 Restarted
 docs from
@@ -460,7 +460,7 @@ with.
  start the docs server and a watcher
 
 
-start docs $ python3 -m http.server 8080 1L
+Handling this job for the test start docs $ python3 -m http.server 8080 1L
 
 Both are up.
 
@@ -474,6 +474,6 @@ Both are up.
 
 
 list jobs 2L
-restart docs 1L
+Handling this job for the test restart docs 1L
 
 Restarted docs from the command it was remembered with.

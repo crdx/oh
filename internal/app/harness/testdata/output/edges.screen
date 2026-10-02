@@ -5,7 +5,7 @@
 
 divine one.go lines 1-400
 conjure func Draw(rows []string, column…
-$ for do done esac fi "u… ✗ syntax error
+Running this command for the test $ ✗ s…
 summon nothing no output
 summon plenty 900L+ ~700t of ~321Kt
 summon japanese 1L ~1.9Kt
@@ -137,7 +137,7 @@ s
 
 divine one.go lines 1-400
 conjure func Draw(rows []string, columns int) ([]string, error) { return rows, nil }
-$ for do done esac fi "unclosed ✗ syntax error
+Running this command for the test $ for do done esac fi "unclosed ✗ syntax error
 summon nothing no output
 summon plenty 900L+ ~700t of ~321Kt
 summon japanese 1L ~1.9Kt
@@ -154,7 +154,7 @@ That is all of the awkward ones.
 
 divine one.…
 conjure fun…
-$ f… ✗ synt…
+Running t… ✗
 s… no output
 summon plen…
 s… 1L ~1.9Kt
@@ -177,7 +177,7 @@ ones.
 
 divine one.go lines 1-400
 conjure func Draw(rows []string, columns int) ([]string, error) { return rows, nil }
-$ for do done esac fi "unclosed ✗ syntax error
+Running this command for the test $ for do done esac fi "unclosed ✗ syntax error
 summon nothing no output
 summon plenty 900L+ ~700t of ~321Kt
 summon japanese 1L ~1.9Kt

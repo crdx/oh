@@ -1,6 +1,6 @@
 {"event":{"kind":"user_message","text":"do one of everything so I can see what each call says about itself"}}
 {"event":{"kind":"model_message","text":"One of each, then."}}
-{"event":{"kind":"tool_call_request","id":"call_1","name":"bash","arguments":"{\"command\":\"COUNT=0; for NAME in *.go; do COUNT=$((COUNT + 1)); done; echo $COUNT\"}","render":"COUNT=0; for NAME in *.go; do COUNT=$((COUNT + 1)); done; echo $COUNT","emphasis":{"kind":"syntax","value":"bash"}}}
+{"event":{"kind":"tool_call_request","id":"call_1","name":"bash","arguments":"{\"command\":\"COUNT=0; for NAME in *.go; do COUNT=$((COUNT + 1)); done; echo $COUNT\",\"intent\":\"Running this command for the test\"}","render":"COUNT=0; for NAME in *.go; do COUNT=$((COUNT + 1)); done; echo $COUNT","emphasis":{"kind":"syntax","value":"bash"}}}
 {"event":{"kind":"tool_call_result","status":"success","text":"","id":"call_1","name":"bash","took":0,"stats":{"kind":"resources","cpu_time":2400000000,"peak_memory":734003200,"lines":3,"bytes":96}}}
 {"event":{"kind":"tool_call_request","id":"call_2","name":"ls","arguments":"{\"path\":\".\"}","read_only":true}}
 {"event":{"kind":"tool_call_result","status":"success","text":"README.md\nscreen.go\n","id":"call_2","name":"ls","took":0,"stats":{"kind":"list","lines":2}}}

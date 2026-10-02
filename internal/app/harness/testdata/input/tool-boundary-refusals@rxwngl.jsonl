@@ -7,6 +7,6 @@
 {"event":{"kind":"tool_call_result","status":"error","text":"linked: path escapes from parent","id":"call_2","name":"grep","took":0}}
 {"event":{"kind":"tool_call_request","id":"call_3","name":"fetch","arguments":"{\"url\":\"http://[2001:db8::1]/private\",\"type\":\"text\"}","render":"http://[2001:db8::1]/private","detail":"text","read_only":true}}
 {"event":{"kind":"tool_call_result","status":"error","text":"the fetch failed: Get \"http://[2001:db8::1]/private\": dial tcp [2001:db8::1]:80: 2001:db8::1 is documentation space, and fetch reaches only the public internet","id":"call_3","name":"fetch","took":0}}
-{"event":{"kind":"tool_call_request","id":"call_4","name":"bash","arguments":"{\"command\":\"echo ready\"}","render":"echo ready","read_only":false}}
+{"event":{"kind":"tool_call_request","id":"call_4","name":"bash","arguments":"{\"command\":\"echo ready\",\"intent\":\"Running this command for the test\"}","render":"echo ready","read_only":false}}
 {"event":{"kind":"tool_call_result","status":"error","text":"the shell cannot be confined: writable policy unsupported","id":"call_4","name":"bash","took":0}}
 {"event":{"kind":"model_message","text":"Each boundary stayed closed."}}

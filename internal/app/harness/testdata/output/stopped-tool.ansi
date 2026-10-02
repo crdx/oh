@@ -5,7 +5,7 @@
 \r
 Building now.\r
 \r
-\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150m11s 3L 40M\e[0m \e[38;2;150;152;150mcompiling age…\e[0m\r
+\e[3m\e[38;2;150;152;150mRunning this command for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mc…\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -177,7 +177,7 @@ e\r
 \e[48;2;52;53;65m\e[0m
 Building now.
 
-\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150m11s 3L 40M\e[0m \e[38;2;150;152;150mcompiling agent compiling toolbox note: the command was stopped after 12s because the user sent a new message.\e[0m
+\e[3m\e[38;2;150;152;150mRunning this command for the test\e[0m\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150m11s 3L 40M\e[0m \e[38;2;150;152;150mcompiling agent compiling toolbox note: the command was stopped after 12s because the user sent a new message.\e[0m
 
 \e[38;2;207;173;0mTurn stopped.\e[0m
 
@@ -193,7 +193,7 @@ Left alone.
 \r
 Building now.\r
 \r
-\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150m11s 3L 40M\e[0m \e[38;2;150;152;150mcompiling agent compiling toolbox note: the command was stopped after 12s…\e[0m\r
+\e[3m\e[38;2;150;152;150mRunning this command for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150m11s 3L 40M\e[0m \e[38;2;150;152;150mcompiling agent compiling toolbox note:…\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -210,7 +210,7 @@ Left alone.\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
 Buil\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBuilding\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBuilding now\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBuilding now.\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150m11s 3L 40M\e[0m \e[38;2;150;152;150mcompiling agent compiling toolbox note: the command was stopped after 12s…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+\e[3m\e[38;2;150;152;150mRunning this command for the test\e[0m\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m\e[K\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mRunning this command for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150m11s 3L 40M\e[0m \e[38;2;150;152;150mcompiling agent compiling toolbox note:…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -227,7 +227,7 @@ Left\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rLeft alo\e[K\r\e[8C\e[?25h\e[?2
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
 Building now.\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150m11s 3L 40M\e[0m \e[38;2;150;152;150mcompiling agent compiling toolbox note: the command was stopped after 12s…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+\e[3m\e[38;2;150;152;150mRunning this command for the test\e[0m\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m\e[K\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mRunning this command for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150m11s 3L 40M\e[0m \e[38;2;150;152;150mcompiling agent compiling toolbox note:…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -244,7 +244,7 @@ Left alone.\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[11C\e[?25h\e[?2026l\
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
 Buil\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBuilding\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBuilding now\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBuilding now.\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150m11s 3L 40M\e[0m \e[38;2;150;152;150mcompiling agent compiling toolbox note: the command was stopped after 12s…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+\e[3m\e[38;2;150;152;150mRunning this command for the test\e[0m\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m\e[K\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mRunning this command for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150m11s 3L 40M\e[0m \e[38;2;150;152;150mcompiling agent compiling toolbox note:…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -264,7 +264,7 @@ Left\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rLeft alo\e[K\r\e[8C\e[?25h\e[?2
 Building\r
 now.\r
 \r
-\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mj\e[0m\e[38;2;129;162;190m…\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mcomp…\e[0m\r
+\e[3m\e[38;2;150;152;150mRunning t…\e[0m\e[0m \e[38;2;150;152;150m–\e[0m\r
 \r
 \e[38;2;207;173;0mTurn\e[0m\r
 \e[38;2;207;173;0mstopped.\e[0m\r
@@ -284,7 +284,7 @@ Left alone.\r
 \e[48;2;52;53;65m\e[0m\r
 Building now.\r
 \r
-\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150m11s 3L 40M\e[0m \e[38;2;150;152;150mcompiling agent compiling toolbox note: the command was stopped after 12s because the user sent a new message.\e[0m\r
+\e[3m\e[38;2;150;152;150mRunning this command for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150m11s 3L 40M\e[0m \e[38;2;150;152;150mcompiling agent compiling toolbox note: the command was stopped after 12s because the user sent a new message.\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -300,7 +300,7 @@ Left alone.\r
 \r
 Building now.\r
 \r
-\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150m11s 3L 40M\e[0m \e[38;2;150;152;150mcompiling agent compiling toolbox note: the command was stopped after 12s…\e[0m\r
+\e[3m\e[38;2;150;152;150mRunning this command for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mbuild\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150m11s 3L 40M\e[0m \e[38;2;150;152;150mcompiling agent compiling toolbox note:…\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r

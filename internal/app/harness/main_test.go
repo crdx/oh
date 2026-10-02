@@ -12041,7 +12041,7 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 		go func() {
 			_ = ask.Confirm(questionContext, broker, ask.Confirmation{
 				Label:    "Run this command in the sandbox with host networking?",
-				Intent:   "see what the status endpoint reports",
+				Intent:   "Checking what the status endpoint reports",
 				Detail:   "curl https://example.com/status",
 				Language: "bash",
 			})
@@ -12199,7 +12199,7 @@ func drawApprovalDuringACall(
 			Kind:      agent.ToolCallRequestEvent,
 			ID:        "call-1",
 			Name:      "bash",
-			Arguments: `{"command":"curl https://example.com/status","network":"host"}`,
+			Arguments: `{"command":"curl https://example.com/status","intent":"Checking what the status endpoint reports","network":"host"}`,
 		})
 
 		time.Sleep(revealAndSomeFrames)

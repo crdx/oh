@@ -349,16 +349,16 @@ func TestElidedBashCountsWideUnicodeInTerminalCells(t *testing.T) {
 	}
 }
 
-func TestAnIntentIsDrawnLastAsAComment(t *testing.T) {
-	label := Label{Name: "$", Subject: "go test ./...", Qualifier: "2L", Intent: "run every test"}
+func TestAnIntentLeadsTheRowLikeReasoning(t *testing.T) {
+	label := Label{Name: "$", Subject: "go test ./...", Qualifier: "2L", Intent: "Running every test"}
 
-	if got := style.Plain(label.Render()); got != "$ go test ./... 2L # run every test" {
+	if got := style.Plain(label.Render()); got != "Running every test $ go test ./... 2L" {
 		t.Errorf("got %q", got)
 	}
-	if got := label.Render(); !strings.HasSuffix(got, style.Comment("# ")+style.Intent("run every test")) {
-		t.Errorf("got %q, want the intent underlined after a plain comment mark", got)
+	if got := label.Render(); !strings.HasPrefix(got, style.Reasoning("Running every test")+" ") {
+		t.Errorf("got %q, want the intent drawn as reasoning first", got)
 	}
-	if got, want := label.Width(), width.Of("$ go test ./... 2L # run every test"); got != want {
+	if got, want := label.Width(), width.Of("Running every test $ go test ./... 2L"); got != want {
 		t.Errorf("got width %d, want %d", got, want)
 	}
 }
@@ -367,17 +367,16 @@ func TestAnIntentIsCutLast(t *testing.T) {
 	label := Label{
 		Name:         "start",
 		Subject:      "golden",
-		Intent:       "regenerate every golden",
+		Intent:       "Regenerating every golden",
 		Continuation: []Label{{Name: "$", Subject: "cd /tmp/oh && just golden"}},
 	}
 	for room, want := range map[int]string{
-		80: "start golden $ cd /tmp/oh && just golden # regenerate every golden",
-		50: "start golden $ cd /tmp/… # regenerate every golden",
-		34: "start g… # regenerate every golden",
-		33: "start … # regenerate every golden",
-		31: "start … # regenerate every gol…",
-		12: "start … # r…",
-		11: "start gold…",
+		80: "Regenerating every golden start golden $ cd /tmp/oh && just golden",
+		50: "Regenerating every golden start golden $ cd /tmp/…",
+		36: "Regenerating every golden start gol…",
+		33: "Regenerating every golden start …",
+		31: "Regenerating every golden start",
+		10: "Regenerat…",
 	} {
 		got := elided(t, label, room)
 		if plain := style.Plain(got.Render()); plain != want {
@@ -389,10 +388,10 @@ func TestAnIntentIsCutLast(t *testing.T) {
 	}
 }
 
-func TestALoneIntentTakesTheWholeRoom(t *testing.T) {
-	label := Label{Name: "start", Intent: "regenerate every golden"}
+func TestANarrowRowIsFilledByTheIntentFirst(t *testing.T) {
+	label := Label{Name: "start", Intent: "Regenerating every golden"}
 
-	if got := style.Plain(elided(t, label, 20).Render()); got != "start # regenerate …" {
+	if got := style.Plain(elided(t, label, 20).Render()); got != "Regenerating every …" {
 		t.Errorf("got %q", got)
 	}
 }

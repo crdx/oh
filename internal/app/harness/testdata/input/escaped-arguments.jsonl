@@ -1,5 +1,5 @@
 {"event":{"kind":"user_message","text":"run whatever you like"}}
-{"event":{"kind":"tool_call_request","id":"call_1","name":"bash","arguments":"{\"command\": \"echo \\u001b[31mred\\u001b[0m\"}","render":"echo \u001b[31mred\u001b[0m","emphasis":{"kind":"syntax","value":"bash"}}}
+{"event":{"kind":"tool_call_request","id":"call_1","name":"bash","arguments":"{\"command\":\"echo \\u001b[31mred\\u001b[0m\",\"intent\":\"Running this command for the test\"}","render":"echo \u001b[31mred\u001b[0m","emphasis":{"kind":"syntax","value":"bash"}}}
 {"event":{"kind":"tool_call_result","status":"success","text":"\u001b[31mred\u001b[0m\n","id":"call_1","name":"bash","took":0,"stats":{"kind":"resources","cpu_time":0,"peak_memory":2097152,"lines":1,"bytes":12}}}
 {"event":{"kind":"tool_call_request","id":"call_2","name":"screenshot","arguments":"{\"path\": \"notes.md\"}","render":"notes\u001b[2J\u001b[H.md","detail":"lines 1 to 40\u0007","read_only":true}}
 {"event":{"kind":"tool_call_result","status":"success","text":"# Notes\n","id":"call_2","name":"screenshot","took":0,"stats":{"kind":"read","lines":1,"bytes":8,"estimated_tokens":2}}}

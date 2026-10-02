@@ -1,5 +1,5 @@
 {"event":{"kind":"user_message","text":"start the docs server and keep it up"}}
-{"event":{"kind":"tool_call_request","id":"call_1","name":"job","arguments":"{\"action\":\"start\",\"name\":\"docs\",\"command\":\"python3 -m http.server 8080\"}","render":"stale job rendering","detail":"stale job qualifier"}}
+{"event":{"kind":"tool_call_request","id":"call_1","name":"job","arguments":"{\"action\":\"start\",\"name\":\"docs\",\"command\":\"python3 -m http.server 8080\",\"intent\":\"Handling this job for the test\"}","render":"stale job rendering","detail":"stale job qualifier"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"docs: running, up 0s","id":"call_1","name":"job","took":0,"stats":{"kind":"output","lines":1,"bytes":20}}}
 {"event":{"kind":"job_listing","state":[{"name":"docs","command":"python3 -m http.server 8080","state":"running","started_at":"2026-08-23T14:32:09Z"}]}}
 {"event":{"kind":"model_message","text":"The docs server is up."}}
@@ -12,11 +12,11 @@
 {"event":{"kind":"job_stop","name":"docs","state":"w"}}
 {"event":{"kind":"job_stop","name":"index","state":{"path":"/reference"}}}
 {"event":{"kind":"user_message","text":"what happened to it"}}
-{"event":{"kind":"tool_call_request","id":"call_2","name":"job","arguments":"{\"action\":\"status\",\"name\":\"docs\"}","render":"stale status rendering","detail":"stale status qualifier"}}
+{"event":{"kind":"tool_call_request","id":"call_2","name":"job","arguments":"{\"action\":\"status\",\"name\":\"docs\",\"intent\":\"Handling this job for the test\"}","render":"stale status rendering","detail":"stale status qualifier"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"docs: stopped, ran for 41s","id":"call_2","name":"job","took":0,"stats":{"kind":"output","lines":1,"bytes":26}}}
 {"event":{"kind":"job_stop","name":"docs"}}
-{"event":{"kind":"tool_call_request","id":"call_3","name":"job","arguments":"{\"action\":\"discard\",\"name\":\"docs\"}","render":"stale discard rendering","detail":"stale discard qualifier"}}
+{"event":{"kind":"tool_call_request","id":"call_3","name":"job","arguments":"{\"action\":\"discard\",\"name\":\"docs\",\"intent\":\"Handling this job for the test\"}","render":"stale discard rendering","detail":"stale discard qualifier"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"docs: stopped, ran for 41s, and discarded","id":"call_3","name":"job","took":0,"stats":{"kind":"output","lines":1,"bytes":52}}}
-{"event":{"kind":"tool_call_request","id":"call_4","name":"job","arguments":"{\"action\":\"prune\"}","render":"stale prune rendering","detail":"stale prune qualifier"}}
+{"event":{"kind":"tool_call_request","id":"call_4","name":"job","arguments":"{\"action\":\"prune\",\"intent\":\"Handling this job for the test\"}","render":"stale prune rendering","detail":"stale prune qualifier"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"pruned build, watch.","id":"call_4","name":"job","took":0,"stats":{"kind":"output","lines":1,"bytes":67}}}
 {"event":{"kind":"model_message","text":"It was stopped when write access was withdrawn."}}

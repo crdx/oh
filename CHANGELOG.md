@@ -75,7 +75,9 @@
 ### Tool calls
 
 - Add intent parameter to job tool
-- Show intent as a trailing underlined comment
+- Lead shell and job start rows with their intent
+- Require an intent on every shell call and job start
+- Remind a job call of the intent its job was started with
 - Allow a background job associate to a port
 - Allow a background job take over a forwarded port
 - Call background job output calls `cat`

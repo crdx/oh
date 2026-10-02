@@ -8,8 +8,8 @@ forward docs:8001
 close 8000
 list forwards
 forward ✗ action must be add, remove, o…
-start docs:8002 $ serve docs
-restart docs
+Handling this job for the test start do…
+Handling this job for the test restart …
 status docs
 cat docs
 await docs || build
@@ -141,15 +141,15 @@ forward docs:8001
 close 8000
 list forwards
 forward ✗ action must be add, remove, or list (got "bogus")
-start docs:8002 $ serve docs
-restart docs
-status docs
-cat docs
-await docs || build
-await docs && build for up to 20s
-stop docs
+Handling this job for the test start docs:8002 $ serve docs
+Handling this job for the test restart docs
+status docs (Handling this job for the test)
+cat docs (Handling this job for the test)
+await docs || build (Handling this job for the test)
+await docs && build for up to 20s (Handling this job for the test)
+stop docs (Handling this job for the test)
 list jobs
-discard docs
+discard docs (Handling this job for the test)
 prune jobs
 
 Those are every action label.
@@ -166,8 +166,8 @@ forward doc…
 close 8000
 list forwar…
 for… ✗ acti…
-start docs:…
-restart docs
+Handling th…
+Handling th…
 status docs
 cat docs
 await docs …
@@ -190,15 +190,15 @@ forward docs:8001
 close 8000
 list forwards
 forward ✗ action must be add, remove, or list (got "bogus")
-start docs:8002 $ serve docs
-restart docs
-status docs
-cat docs
-await docs || build
-await docs && build for up to 20s
-stop docs
+Handling this job for the test start docs:8002 $ serve docs
+Handling this job for the test restart docs
+status docs (Handling this job for the test)
+cat docs (Handling this job for the test)
+await docs || build (Handling this job for the test)
+await docs && build for up to 20s (Handling this job for the test)
+stop docs (Handling this job for the test)
 list jobs
-discard docs
+discard docs (Handling this job for the test)
 prune jobs
 
 Those are every action label.

@@ -1,0 +1,779 @@
+── shell succeeded with output · 120 columns
+[3m[38;2;150;152;150mChecking the working tree state[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgit[0m[38;2;150;152;150m [0m[38;2;129;162;190mstatus[0m[38;2;150;152;150m --short[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 2L 28M[0m [38;2;150;152;150mM internal/app/call/call.go M pkg/toolbox/job/job.go[0m
+
+── shell succeeded with output · 80 columns
+[3m[38;2;150;152;150mChecking the working tree state[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgit[0m[38;2;150;152;150m [0m[38;2;129;162;190mstatus[0m[38;2;150;152;150m --short[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 2L 28M[0m [38;2;150;152;150mM internal/a…[0m
+
+── shell succeeded with output · 60 columns
+[3m[38;2;150;152;150mChecking the working tree state[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgit[0m[38;2;150;152;150m [0m[38;2;129;162;190mstatus[0m[38;2;150;152;150m [0m[38;2;150;152;150m…[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 2L 28M[0m
+
+── shell succeeded with output · 44 columns
+[3m[38;2;150;152;150mChecking the working tree state[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgit[0m[38;2;150;152;150m [0m[38;2;129;162;190msta[0m[38;2;129;162;190m…[0m [38;2;76;154;44m✓[0m
+
+── shell succeeded with output · 30 columns
+[3m[38;2;150;152;150mChecking the working tree s…[0m[0m [38;2;76;154;44m✓[0m
+
+── shell succeeded with output · 16 columns
+[3m[38;2;150;152;150mChecking the …[0m[0m [38;2;76;154;44m✓[0m
+
+── shell succeeded with no output · 120 columns
+[3m[38;2;150;152;150mCreating the build lock file[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mtouch[0m[38;2;150;152;150m [0m[38;2;129;162;190mbuild.lock[0m [38;2;76;154;44m✓[0m [38;2;150;152;150mno output 2M[0m
+
+── shell succeeded with no output · 80 columns
+[3m[38;2;150;152;150mCreating the build lock file[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mtouch[0m[38;2;150;152;150m [0m[38;2;129;162;190mbuild.lock[0m [38;2;76;154;44m✓[0m [38;2;150;152;150mno output 2M[0m
+
+── shell succeeded with no output · 60 columns
+[3m[38;2;150;152;150mCreating the build lock file[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mtouch[0m[38;2;150;152;150m [0m[38;2;129;162;190mbuild.l[0m[38;2;129;162;190m…[0m [38;2;76;154;44m✓[0m [38;2;150;152;150mno output 2M[0m
+
+── shell succeeded with no output · 44 columns
+[3m[38;2;150;152;150mCreating the build lock file[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mtouch[0m[38;2;150;152;150m [0m[38;2;129;162;190mbuil[0m[38;2;129;162;190m…[0m [38;2;76;154;44m✓[0m
+
+── shell succeeded with no output · 30 columns
+[3m[38;2;150;152;150mCreating the build lock file[0m[0m [38;2;76;154;44m✓[0m
+
+── shell succeeded with no output · 16 columns
+[3m[38;2;150;152;150mCreating the …[0m[0m [38;2;76;154;44m✓[0m
+
+── shell failed with an exit code · 120 columns
+[3m[38;2;150;152;150mBuilding every package once more[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgo[0m[38;2;150;152;150m [0m[38;2;129;162;190mbuild[0m[38;2;150;152;150m ./...[0m [38;2;204;102;102m✗[0m [38;2;150;152;150m2L 30M[0m [38;2;204;102;102mexit(1): ./cmd/oh/main.go:12:2: undefined: spinner[0m
+
+── shell failed with an exit code · 80 columns
+[3m[38;2;150;152;150mBuilding every package once more[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgo[0m[38;2;150;152;150m [0m[38;2;129;162;190mbuild[0m[38;2;150;152;150m ./...[0m [38;2;204;102;102m✗[0m [38;2;150;152;150m2L 30M[0m [38;2;204;102;102mexit(1): ./cmd/oh/ma…[0m
+
+── shell failed with an exit code · 60 columns
+[3m[38;2;150;152;150mBuilding every package once more[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgo[0m[38;2;150;152;150m [0m[38;2;129;162;190mbu[0m[38;2;129;162;190m…[0m [38;2;204;102;102m✗[0m [38;2;150;152;150m2L 30M[0m [38;2;204;102;102mexit(1):…[0m
+
+── shell failed with an exit code · 44 columns
+[3m[38;2;150;152;150mBuilding every package once more[0m[0m [38;2;204;102;102m✗[0m [38;2;150;152;150m2L 30M[0m [38;2;204;102;102m…[0m
+
+── shell failed with an exit code · 30 columns
+[3m[38;2;150;152;150mBuilding every package once…[0m[0m [38;2;204;102;102m✗[0m
+
+── shell failed with an exit code · 16 columns
+[3m[38;2;150;152;150mBuilding ever…[0m[0m [38;2;204;102;102m✗[0m
+
+── shell stopped by the user · 120 columns
+[3m[38;2;150;152;150mWaiting for the server to settle[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190msleep[0m[38;2;150;152;150m [0m[38;2;129;162;190m10[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command was stopped because the user pressed escape[0m
+
+── shell stopped by the user · 80 columns
+[3m[38;2;150;152;150mWaiting for the server to settle[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190msleep[0m[38;2;150;152;150m [0m[38;2;129;162;190m10[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command was stopped because t…[0m
+
+── shell stopped by the user · 60 columns
+[3m[38;2;150;152;150mWaiting for the server to settle[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190msleep[0m[38;2;150;152;150m [0m[38;2;129;162;190m10[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command w…[0m
+
+── shell stopped by the user · 44 columns
+[3m[38;2;150;152;150mWaiting for the server to settle[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190ms[0m[38;2;129;162;190m…[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe…[0m
+
+── shell stopped by the user · 30 columns
+[3m[38;2;150;152;150mWaiting for the server to s…[0m[0m [38;2;150;152;150m–[0m
+
+── shell stopped by the user · 16 columns
+[3m[38;2;150;152;150mWaiting for t…[0m[0m [38;2;150;152;150m–[0m
+
+── shell stopped by its time limit · 120 columns
+[3m[38;2;150;152;150mRunning the whole test suite[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mtest[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command was stopped after 2m because it ran out of time[0m
+
+── shell stopped by its time limit · 80 columns
+[3m[38;2;150;152;150mRunning the whole test suite[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mtest[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command was stopped after 2m bec…[0m
+
+── shell stopped by its time limit · 60 columns
+[3m[38;2;150;152;150mRunning the whole test suite[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mtest[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command was …[0m
+
+── shell stopped by its time limit · 44 columns
+[3m[38;2;150;152;150mRunning the whole test suite[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mjus[0m[38;2;129;162;190m…[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe c…[0m
+
+── shell stopped by its time limit · 30 columns
+[3m[38;2;150;152;150mRunning the whole test suite[0m[0m [38;2;150;152;150m–[0m
+
+── shell stopped by its time limit · 16 columns
+[3m[38;2;150;152;150mRunning the w…[0m[0m [38;2;150;152;150m–[0m
+
+── shell with a multi-line command · 120 columns
+[3m[38;2;150;152;150mPrinting each name in turn[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;201;166;212mfor[0m[38;2;150;152;150m NAME [0m[38;2;201;166;212min[0m[38;2;150;152;150m one two three; [0m[38;2;201;166;212mdo[0m[38;2;150;152;150m [0m[38;2;129;162;190mecho[0m[38;2;150;152;150m [0m[38;2;129;162;190m"$NAME"[0m[38;2;138;190;183m;[0m[38;2;150;152;150m [0m[38;2;201;166;212mdone[0m [38;2;150;152;150m3L[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 3L 28M[0m [38;2;150;152;150mone two three[0m
+
+── shell with a multi-line command · 80 columns
+[3m[38;2;150;152;150mPrinting each name in turn[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;201;166;212mfor[0m[38;2;150;152;150m NAME [0m[38;2;201;166;212min[0m[38;2;150;152;150m one two three; [0m[38;2;201;166;212mdo[0m[38;2;150;152;150m [0m[38;2;129;162;190mecho[0m[38;2;150;152;150m [0m[38;2;129;162;190m"[0m[38;2;129;162;190m…[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 3L 28M[0m
+
+── shell with a multi-line command · 60 columns
+[3m[38;2;150;152;150mPrinting each name in turn[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;201;166;212mfor[0m[38;2;150;152;150m NAME [0m[38;2;201;166;212min[0m[38;2;150;152;150m one [0m[38;2;150;152;150m…[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 3L 28M[0m
+
+── shell with a multi-line command · 44 columns
+[3m[38;2;150;152;150mPrinting each name in turn[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;201;166;212m…[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 3L 28M[0m
+
+── shell with a multi-line command · 30 columns
+[3m[38;2;150;152;150mPrinting each name in turn[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;76;154;44m✓[0m
+
+── shell with a multi-line command · 16 columns
+[3m[38;2;150;152;150mPrinting each…[0m[0m [38;2;76;154;44m✓[0m
+
+── shell with a heredoc · 120 columns
+[3m[38;2;150;152;150mWriting the design notes file[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mcat[0m[38;2;150;152;150m [0m[38;2;138;190;183m>[0m[38;2;150;152;150m notes.md [0m[38;2;138;190;183m<<[0m[38;2;150;152;150m'EOF'[0m [38;2;150;152;150m5L[0m [38;2;76;154;44m✓[0m [38;2;150;152;150mno output 2M[0m
+
+── shell with a heredoc · 80 columns
+[3m[38;2;150;152;150mWriting the design notes file[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mcat[0m[38;2;150;152;150m [0m[38;2;138;190;183m>[0m[38;2;150;152;150m notes.md [0m[38;2;138;190;183m<<[0m[38;2;150;152;150m'EOF'[0m [38;2;150;152;150m5L[0m [38;2;76;154;44m✓[0m [38;2;150;152;150mno output 2M[0m
+
+── shell with a heredoc · 60 columns
+[3m[38;2;150;152;150mWriting the design notes file[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mcat[0m[38;2;150;152;150m [0m[38;2;138;190;183m>[0m[38;2;150;152;150m notes.[0m[38;2;150;152;150m…[0m [38;2;76;154;44m✓[0m [38;2;150;152;150mno output 2M[0m
+
+── shell with a heredoc · 44 columns
+[3m[38;2;150;152;150mWriting the design notes file[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mcat[0m[38;2;150;152;150m [0m[38;2;138;190;183m>[0m[38;2;150;152;150m not[0m[38;2;150;152;150m…[0m [38;2;76;154;44m✓[0m
+
+── shell with a heredoc · 30 columns
+[3m[38;2;150;152;150mWriting the design notes fi…[0m[0m [38;2;76;154;44m✓[0m
+
+── shell with a heredoc · 16 columns
+[3m[38;2;150;152;150mWriting the d…[0m[0m [38;2;76;154;44m✓[0m
+
+── shell with a long command · 120 columns
+[3m[38;2;150;152;150mInspecting the host command golden changes[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgit[0m[38;2;150;152;150m [0m[38;2;129;162;190mdiff[0m[38;2;150;152;150m --word-diff=plain -- internal/app/harness/testdat[0m[38;2;150;152;150m…[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 103L 28M[0m
+
+── shell with a long command · 80 columns
+[3m[38;2;150;152;150mInspecting the host command golden changes[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgit[0m[38;2;150;152;150m [0m[38;2;129;162;190mdiff[0m[38;2;150;152;150m --word-di[0m[38;2;150;152;150m…[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 103L 28M[0m
+
+── shell with a long command · 60 columns
+[3m[38;2;150;152;150mInspecting the host command golden changes[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 103L 28M[0m
+
+── shell with a long command · 44 columns
+[3m[38;2;150;152;150mInspecting the host command golden changes[0m[0m [38;2;76;154;44m✓[0m
+
+── shell with a long command · 30 columns
+[3m[38;2;150;152;150mInspecting the host command…[0m[0m [38;2;76;154;44m✓[0m
+
+── shell with a long command · 16 columns
+[3m[38;2;150;152;150mInspecting th…[0m[0m [38;2;76;154;44m✓[0m
+
+── shell with a long intent · 120 columns
+[3m[38;2;150;152;150mListing everything in the workspace root before deciding which of the many directories to search next[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mls[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m
+
+── shell with a long intent · 80 columns
+[3m[38;2;150;152;150mListing everything in the workspace root before deciding which of the many di…[0m[0m [38;2;76;154;44m✓[0m
+
+── shell with a long intent · 60 columns
+[3m[38;2;150;152;150mListing everything in the workspace root before deciding …[0m[0m [38;2;76;154;44m✓[0m
+
+── shell with a long intent · 44 columns
+[3m[38;2;150;152;150mListing everything in the workspace root …[0m[0m [38;2;76;154;44m✓[0m
+
+── shell with a long intent · 30 columns
+[3m[38;2;150;152;150mListing everything in the w…[0m[0m [38;2;76;154;44m✓[0m
+
+── shell with a long intent · 16 columns
+[3m[38;2;150;152;150mListing every…[0m[0m [38;2;76;154;44m✓[0m
+
+── shell with a lowercase intent · 120 columns
+[3m[38;2;150;152;150mRunning every lint and test[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mcheck[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m [38;2;150;152;150mok all eight steps[0m
+
+── shell with a lowercase intent · 80 columns
+[3m[38;2;150;152;150mRunning every lint and test[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mcheck[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m [38;2;150;152;150mok all eight steps[0m
+
+── shell with a lowercase intent · 60 columns
+[3m[38;2;150;152;150mRunning every lint and test[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mcheck[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m [38;2;150;152;150mok a…[0m
+
+── shell with a lowercase intent · 44 columns
+[3m[38;2;150;152;150mRunning every lint and test[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m
+
+── shell with a lowercase intent · 30 columns
+[3m[38;2;150;152;150mRunning every lint and test[0m[0m [38;2;76;154;44m✓[0m
+
+── shell with a lowercase intent · 16 columns
+[3m[38;2;150;152;150mRunning every…[0m[0m [38;2;76;154;44m✓[0m
+
+── shell with whitespace and control characters in its intent · 120 columns
+[3m[38;2;150;152;150mChecking the shell works[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mtrue[0m [38;2;76;154;44m✓[0m [38;2;150;152;150mno output 2M[0m
+
+── shell with whitespace and control characters in its intent · 80 columns
+[3m[38;2;150;152;150mChecking the shell works[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mtrue[0m [38;2;76;154;44m✓[0m [38;2;150;152;150mno output 2M[0m
+
+── shell with whitespace and control characters in its intent · 60 columns
+[3m[38;2;150;152;150mChecking the shell works[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mtrue[0m [38;2;76;154;44m✓[0m [38;2;150;152;150mno output 2M[0m
+
+── shell with whitespace and control characters in its intent · 44 columns
+[3m[38;2;150;152;150mChecking the shell works[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mt[0m[38;2;129;162;190m…[0m [38;2;76;154;44m✓[0m [38;2;150;152;150mno output 2M[0m
+
+── shell with whitespace and control characters in its intent · 30 columns
+[3m[38;2;150;152;150mChecking the shell works[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190m…[0m [38;2;76;154;44m✓[0m
+
+── shell with whitespace and control characters in its intent · 16 columns
+[3m[38;2;150;152;150mChecking the …[0m[0m [38;2;76;154;44m✓[0m
+
+── shell with wide characters · 120 columns
+[3m[38;2;150;152;150mPrinting 日本語 to the terminal[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mecho[0m[38;2;150;152;150m [0m[38;2;129;162;190m日本語のテキスト[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m [38;2;150;152;150m日本語のテキスト[0m
+
+── shell with wide characters · 80 columns
+[3m[38;2;150;152;150mPrinting 日本語 to the terminal[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mecho[0m[38;2;150;152;150m [0m[38;2;129;162;190m日本語のテキスト[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m [38;2;150;152;150m日本語の…[0m
+
+── shell with wide characters · 60 columns
+[3m[38;2;150;152;150mPrinting 日本語 to the terminal[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mecho[0m[38;2;150;152;150m [0m[38;2;129;162;190m日本語[0m[38;2;129;162;190m…[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m
+
+── shell with wide characters · 44 columns
+[3m[38;2;150;152;150mPrinting 日本語 to the terminal[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mecho[0m[38;2;150;152;150m [0m[38;2;129;162;190m日[0m[38;2;129;162;190m…[0m [38;2;76;154;44m✓[0m
+
+── shell with wide characters · 30 columns
+[3m[38;2;150;152;150mPrinting 日本語 to the term…[0m[0m [38;2;76;154;44m✓[0m
+
+── shell with wide characters · 16 columns
+[3m[38;2;150;152;150mPrinting 日本…[0m[0m [38;2;76;154;44m✓[0m
+
+── shell on the host network, approved · 120 columns
+[3m[38;2;150;152;150mChecking what the status endpoint reports[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;204;102;102m$[0m]8;;\ [38;2;129;162;190mcurl[0m[38;2;150;152;150m [0m[38;2;129;162;190m]8;;https://example.com/status\https://example.com/status]8;;\[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m [38;2;150;152;150m{"status":"ok"}[0m
+
+── shell on the host network, approved · 80 columns
+[3m[38;2;150;152;150mChecking what the status endpoint reports[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;204;102;102m$[0m]8;;\ [38;2;129;162;190mcurl[0m[38;2;150;152;150m [0m[38;2;129;162;190m]8;;https://example.com/status\https://example.[0m[38;2;129;162;190m…]8;;\[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m
+
+── shell on the host network, approved · 60 columns
+[3m[38;2;150;152;150mChecking what the status endpoint reports[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;204;102;102m$[0m]8;;\ [38;2;129;162;190mc[0m[38;2;129;162;190m…[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m
+
+── shell on the host network, approved · 44 columns
+[3m[38;2;150;152;150mChecking what the status endpoint reports[0m[0m [38;2;76;154;44m✓[0m
+
+── shell on the host network, approved · 30 columns
+[3m[38;2;150;152;150mChecking what the status en…[0m[0m [38;2;76;154;44m✓[0m
+
+── shell on the host network, approved · 16 columns
+[3m[38;2;150;152;150mChecking what…[0m[0m [38;2;76;154;44m✓[0m
+
+── shell on the host network, refused · 120 columns
+[3m[38;2;150;152;150mChecking what example.com serves[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;204;102;102m$[0m]8;;\ [38;2;129;162;190mcurl[0m[38;2;150;152;150m [0m[38;2;129;162;190mexample.com[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mhost-network access refused; command did not run[0m
+
+── shell on the host network, refused · 80 columns
+[3m[38;2;150;152;150mChecking what example.com serves[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;204;102;102m$[0m]8;;\ [38;2;129;162;190mcurl[0m[38;2;150;152;150m [0m[38;2;129;162;190mexample.com[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mhost-network access refus…[0m
+
+── shell on the host network, refused · 60 columns
+[3m[38;2;150;152;150mChecking what example.com serves[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;204;102;102m$[0m]8;;\ [38;2;129;162;190mcurl[0m[38;2;150;152;150m [0m[38;2;129;162;190mexam[0m[38;2;129;162;190m…[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mhost-networ…[0m
+
+── shell on the host network, refused · 44 columns
+[3m[38;2;150;152;150mChecking what example.com serves[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;204;102;102m$[0m]8;;\ [38;2;129;162;190mc[0m[38;2;129;162;190m…[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mhos…[0m
+
+── shell on the host network, refused · 30 columns
+[3m[38;2;150;152;150mChecking what example.com s…[0m[0m [38;2;204;102;102m✗[0m
+
+── shell on the host network, refused · 16 columns
+[3m[38;2;150;152;150mChecking what…[0m[0m [38;2;204;102;102m✗[0m
+
+── shell withheld · 120 columns
+[3m[38;2;150;152;150mPrinting a word to test access[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mecho[0m[38;2;150;152;150m [0m[38;2;129;162;190mforbidden[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mshell access unavailable; ctrl+x x grants it[0m
+
+── shell withheld · 80 columns
+[3m[38;2;150;152;150mPrinting a word to test access[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mecho[0m[38;2;150;152;150m [0m[38;2;129;162;190mforbidden[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mshell access unavailable; ctr…[0m
+
+── shell withheld · 60 columns
+[3m[38;2;150;152;150mPrinting a word to test access[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mecho[0m[38;2;150;152;150m [0m[38;2;129;162;190mforbi[0m[38;2;129;162;190m…[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mshell access…[0m
+
+── shell withheld · 44 columns
+[3m[38;2;150;152;150mPrinting a word to test access[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mec[0m[38;2;129;162;190m…[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mshel…[0m
+
+── shell withheld · 30 columns
+[3m[38;2;150;152;150mPrinting a word to test acc…[0m[0m [38;2;204;102;102m✗[0m
+
+── shell withheld · 16 columns
+[3m[38;2;150;152;150mPrinting a wo…[0m[0m [38;2;204;102;102m✗[0m
+
+── shell with invalid Bash · 120 columns
+[3m[38;2;150;152;150mTrying out some broken syntax[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;150;152;150mfor do done esac fi "unclosed[0m [38;2;204;102;102m✗[0m [38;2;204;102;102msyntax error[0m
+
+── shell with invalid Bash · 80 columns
+[3m[38;2;150;152;150mTrying out some broken syntax[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;150;152;150mfor do done esac fi "unclosed[0m [38;2;204;102;102m✗[0m [38;2;204;102;102msyntax error[0m
+
+── shell with invalid Bash · 60 columns
+[3m[38;2;150;152;150mTrying out some broken syntax[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;150;152;150mfor do done …[0m [38;2;204;102;102m✗[0m [38;2;204;102;102msyntax error[0m
+
+── shell with invalid Bash · 44 columns
+[3m[38;2;150;152;150mTrying out some broken syntax[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;150;152;150mfo…[0m [38;2;204;102;102m✗[0m [38;2;204;102;102msynta…[0m
+
+── shell with invalid Bash · 30 columns
+[3m[38;2;150;152;150mTrying out some broken synt…[0m[0m [38;2;204;102;102m✗[0m
+
+── shell with invalid Bash · 16 columns
+[3m[38;2;150;152;150mTrying out so…[0m[0m [38;2;204;102;102m✗[0m
+
+── shell without an intent in a new session · 120 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;192;128;80mls -la[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mintent is required[0m
+
+── shell without an intent in a new session · 80 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;192;128;80mls -la[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mintent is required[0m
+
+── shell without an intent in a new session · 60 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;192;128;80mls -la[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mintent is required[0m
+
+── shell without an intent in a new session · 44 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;192;128;80mls -la[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mintent is required[0m
+
+── shell without an intent in a new session · 30 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;192;128;80mls -la[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mintent is required[0m
+
+── shell without an intent in a new session · 16 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;192;128;80mls …[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mintent…[0m
+
+── shell without an intent in an old session · 120 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mls[0m[38;2;150;152;150m [0m[38;2;129;162;190m-la[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m [38;2;150;152;150mtotal 8[0m
+
+── shell without an intent in an old session · 80 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mls[0m[38;2;150;152;150m [0m[38;2;129;162;190m-la[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m [38;2;150;152;150mtotal 8[0m
+
+── shell without an intent in an old session · 60 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mls[0m[38;2;150;152;150m [0m[38;2;129;162;190m-la[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m [38;2;150;152;150mtotal 8[0m
+
+── shell without an intent in an old session · 44 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mls[0m[38;2;150;152;150m [0m[38;2;129;162;190m-la[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m [38;2;150;152;150mtotal 8[0m
+
+── shell without an intent in an old session · 30 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mls[0m[38;2;150;152;150m [0m[38;2;129;162;190m-la[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m [38;2;150;152;150mtotal 8[0m
+
+── shell without an intent in an old session · 16 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m
+
+── shell with an unknown parameter · 120 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;192;128;80mls Listing the files[0m [38;2;204;102;102m✗[0m [38;2;204;102;102munknown parameter: colour[0m
+
+── shell with an unknown parameter · 80 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;192;128;80mls Listing the files[0m [38;2;204;102;102m✗[0m [38;2;204;102;102munknown parameter: colour[0m
+
+── shell with an unknown parameter · 60 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;192;128;80mls Listing the files[0m [38;2;204;102;102m✗[0m [38;2;204;102;102munknown parameter: colour[0m
+
+── shell with an unknown parameter · 44 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;192;128;80mls Listing the fi…[0m [38;2;204;102;102m✗[0m [38;2;204;102;102munknown parameter: c…[0m
+
+── shell with an unknown parameter · 30 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;192;128;80mls Listing…[0m [38;2;204;102;102m✗[0m [38;2;204;102;102munknown param…[0m
+
+── shell with an unknown parameter · 16 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;192;128;80mls …[0m [38;2;204;102;102m✗[0m [38;2;204;102;102munknow…[0m
+
+── shell with arguments that are not JSON · 120 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;192;128;80m{"command":[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mcould not parse the arguments[0m
+
+── shell with arguments that are not JSON · 80 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;192;128;80m{"command":[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mcould not parse the arguments[0m
+
+── shell with arguments that are not JSON · 60 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;192;128;80m{"command":[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mcould not parse the arguments[0m
+
+── shell with arguments that are not JSON · 44 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;192;128;80m{"command":[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mcould not parse the argumen…[0m
+
+── shell with arguments that are not JSON · 30 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;192;128;80m{"command":[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mcould not par…[0m
+
+── shell with arguments that are not JSON · 16 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;192;128;80m{"c…[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mcould …[0m
+
+── several shell calls in one round · 120 columns
+[3m[38;2;150;152;150mChecking the working tree state[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgit[0m[38;2;150;152;150m [0m[38;2;129;162;190mstatus[0m[38;2;150;152;150m --short[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m [38;2;150;152;150mM a.go[0m
+[3m[38;2;150;152;150mVetting every package[0m[0m ]8;;oh://tool-result?call=call-2&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgo[0m[38;2;150;152;150m [0m[38;2;129;162;190mvet[0m[38;2;150;152;150m ./...[0m [38;2;204;102;102m✗[0m [38;2;150;152;150m2L 30M[0m [38;2;204;102;102mexit(1): vet: a.go:3: unreachable code[0m
+[3m[38;2;150;152;150mPausing for the build cache[0m[0m ]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190msleep[0m[38;2;150;152;150m [0m[38;2;129;162;190m5[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command was stopped because the user pressed escape[0m
+
+── several shell calls in one round · 80 columns
+[3m[38;2;150;152;150mChecking the working tree state[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgit[0m[38;2;150;152;150m [0m[38;2;129;162;190mstatus[0m[38;2;150;152;150m --short[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m [38;2;150;152;150mM a.go[0m
+[3m[38;2;150;152;150mVetting every package[0m[0m ]8;;oh://tool-result?call=call-2&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgo[0m[38;2;150;152;150m [0m[38;2;129;162;190mvet[0m[38;2;150;152;150m ./...[0m [38;2;204;102;102m✗[0m [38;2;150;152;150m2L 30M[0m [38;2;204;102;102mexit(1): vet: a.go:3: unreachable…[0m
+[3m[38;2;150;152;150mPausing for the build cache[0m[0m ]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190msleep[0m[38;2;150;152;150m [0m[38;2;129;162;190m5[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command was stopped because the use…[0m
+
+── several shell calls in one round · 60 columns
+[3m[38;2;150;152;150mChecking the working tree state[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgit[0m[38;2;150;152;150m [0m[38;2;129;162;190mstatus[0m[38;2;150;152;150m [0m[38;2;150;152;150m…[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m
+[3m[38;2;150;152;150mVetting every package[0m[0m ]8;;oh://tool-result?call=call-2&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgo[0m[38;2;150;152;150m [0m[38;2;129;162;190mvet[0m[38;2;150;152;150m ./...[0m [38;2;204;102;102m✗[0m [38;2;150;152;150m2L 30M[0m [38;2;204;102;102mexit(1): vet:…[0m
+[3m[38;2;150;152;150mPausing for the build cache[0m[0m ]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190msleep[0m[38;2;150;152;150m [0m[38;2;129;162;190m5[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command was sto…[0m
+
+── several shell calls in one round · 44 columns
+[3m[38;2;150;152;150mChecking the working tree state[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgit[0m[38;2;150;152;150m [0m[38;2;129;162;190msta[0m[38;2;129;162;190m…[0m [38;2;76;154;44m✓[0m
+[3m[38;2;150;152;150mVetting every package[0m[0m ]8;;oh://tool-result?call=call-2&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgo[0m[38;2;150;152;150m [0m[38;2;129;162;190m…[0m [38;2;204;102;102m✗[0m [38;2;150;152;150m2L 30M[0m [38;2;204;102;102mexit(…[0m
+[3m[38;2;150;152;150mPausing for the build cache[0m[0m ]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190msle[0m[38;2;129;162;190m…[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe co…[0m
+
+── several shell calls in one round · 30 columns
+[3m[38;2;150;152;150mChecking the working tree s…[0m[0m [38;2;76;154;44m✓[0m
+[3m[38;2;150;152;150mVetting every package[0m[0m ]8;;oh://tool-result?call=call-2&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;204;102;102m✗[0m [38;2;204;102;102mex…[0m
+[3m[38;2;150;152;150mPausing for the build cache[0m[0m [38;2;150;152;150m–[0m
+
+── several shell calls in one round · 16 columns
+[3m[38;2;150;152;150mChecking the …[0m[0m [38;2;76;154;44m✓[0m
+[3m[38;2;150;152;150mVetting every…[0m[0m [38;2;204;102;102m✗[0m
+[3m[38;2;150;152;150mPausing for t…[0m[0m [38;2;150;152;150m–[0m
+
+── job start · 120 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mpython3[0m[38;2;150;152;150m [0m[38;2;129;162;190m-m[0m[38;2;150;152;150m http.server 8080[0m [38;2;150;152;150m1L[0m
+
+── job start · 80 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mpython3[0m[38;2;150;152;150m [0m[38;2;129;162;190m-m[0m[38;2;150;152;150m http.server 8080[0m [38;2;150;152;150m1L[0m
+
+── job start · 60 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mpython3[0m[38;2;150;152;150m [0m[38;2;129;162;190m-[0m[38;2;129;162;190m…[0m [38;2;150;152;150m1L[0m
+
+── job start · 44 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80m…[0m [38;2;150;152;150m1L[0m
+
+── job start · 30 columns
+[3m[38;2;150;152;150mServing the documentation loc…[0m[0m
+
+── job start · 16 columns
+[3m[38;2;150;152;150mServing the doc…[0m[0m
+
+── job start with a forwarded port · 120 columns
+[3m[38;2;150;152;150mServing the docs on the forwarded port[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m[38;2;150;152;150m:8080[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;150;152;150m1L[0m
+
+── job start with a forwarded port · 80 columns
+[3m[38;2;150;152;150mServing the docs on the forwarded port[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m[38;2;150;152;150m:8080[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;150;152;150m1L[0m
+
+── job start with a forwarded port · 60 columns
+[3m[38;2;150;152;150mServing the docs on the forwarded port[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m[38;2;150;152;150m:8080[0m [38;2;129;162;190m$[0m [38;2;150;152;150m1L[0m
+
+── job start with a forwarded port · 44 columns
+[3m[38;2;150;152;150mServing the docs on the forwarded port[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0ms…[0m]8;;\ [38;2;150;152;150m1L[0m
+
+── job start with a forwarded port · 30 columns
+[3m[38;2;150;152;150mServing the docs on the forwa…[0m[0m
+
+── job start with a forwarded port · 16 columns
+[3m[38;2;150;152;150mServing the doc…[0m[0m
+
+── job start with a multi-line command · 120 columns
+[3m[38;2;150;152;150mRebuilding every five seconds[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mwatch[0m [38;2;129;162;190m$[0m [38;2;201;166;212mwhile[0m[38;2;150;152;150m [0m[38;2;129;162;190mtrue[0m[38;2;138;190;183m;[0m[38;2;150;152;150m [0m[38;2;201;166;212mdo[0m[38;2;150;152;150m [0m[38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mbuild[0m[38;2;138;190;183m;[0m[38;2;150;152;150m [0m[38;2;129;162;190msleep[0m[38;2;150;152;150m [0m[38;2;129;162;190m5[0m[38;2;138;190;183m;[0m[38;2;150;152;150m [0m[38;2;201;166;212mdone[0m [38;2;150;152;150m4L[0m [38;2;150;152;150m1L[0m
+
+── job start with a multi-line command · 80 columns
+[3m[38;2;150;152;150mRebuilding every five seconds[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mwatch[0m [38;2;129;162;190m$[0m [38;2;201;166;212mwhile[0m[38;2;150;152;150m [0m[38;2;129;162;190mtrue[0m[38;2;138;190;183m;[0m[38;2;150;152;150m [0m[38;2;201;166;212mdo[0m[38;2;150;152;150m [0m[38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mbuild[0m[38;2;138;190;183m;[0m[38;2;150;152;150m [0m[38;2;129;162;190msleep[0m[38;2;150;152;150m…[0m [38;2;150;152;150m1L[0m
+
+── job start with a multi-line command · 60 columns
+[3m[38;2;150;152;150mRebuilding every five seconds[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mwatch[0m [38;2;129;162;190m$[0m [38;2;201;166;212mwhile[0m[38;2;150;152;150m [0m[38;2;129;162;190mtrue[0m[38;2;138;190;183m;[0m[38;2;150;152;150m [0m[38;2;201;166;212m…[0m [38;2;150;152;150m1L[0m
+
+── job start with a multi-line command · 44 columns
+[3m[38;2;150;152;150mRebuilding every five seconds[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mwatch[0m [38;2;150;152;150m1L[0m
+
+── job start with a multi-line command · 30 columns
+[3m[38;2;150;152;150mRebuilding every five seconds[0m[0m
+
+── job start with a multi-line command · 16 columns
+[3m[38;2;150;152;150mRebuilding ever…[0m[0m
+
+── job restart · 120 columns
+[3m[38;2;150;152;150mRestarting the documentation server[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mrestart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+
+── job restart · 80 columns
+[3m[38;2;150;152;150mRestarting the documentation server[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mrestart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+
+── job restart · 60 columns
+[3m[38;2;150;152;150mRestarting the documentation server[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mrestart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+
+── job restart · 44 columns
+[3m[38;2;150;152;150mRestarting the documentation server[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mrest…[0m]8;;\ [38;2;150;152;150m1L[0m
+
+── job restart · 30 columns
+[3m[38;2;150;152;150mRestarting the documentation …[0m[0m
+
+── job restart · 16 columns
+[3m[38;2;150;152;150mRestarting the …[0m[0m
+
+── job restart with a port · 120 columns
+[3m[38;2;150;152;150mRestarting the docs on its port[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mrestart[0m]8;;\ [38;2;192;128;80mdocs[0m[38;2;150;152;150m:8080[0m [38;2;150;152;150m1L[0m
+
+── job restart with a port · 80 columns
+[3m[38;2;150;152;150mRestarting the docs on its port[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mrestart[0m]8;;\ [38;2;192;128;80mdocs[0m[38;2;150;152;150m:8080[0m [38;2;150;152;150m1L[0m
+
+── job restart with a port · 60 columns
+[3m[38;2;150;152;150mRestarting the docs on its port[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mrestart[0m]8;;\ [38;2;192;128;80mdocs[0m[38;2;150;152;150m:8080[0m [38;2;150;152;150m1L[0m
+
+── job restart with a port · 44 columns
+[3m[38;2;150;152;150mRestarting the docs on its port[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mrestart[0m]8;;\ [38;2;192;128;80m…[0m [38;2;150;152;150m1L[0m
+
+── job restart with a port · 30 columns
+[3m[38;2;150;152;150mRestarting the docs on its po…[0m[0m
+
+── job restart with a port · 16 columns
+[3m[38;2;150;152;150mRestarting the …[0m[0m
+
+── job start refused · 120 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;204;102;102m✗[0m [38;2;204;102;102ma job of that name is already running[0m
+
+── job start refused · 80 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdo[0m[38;2;129;162;190m…[0m [38;2;204;102;102m✗[0m [38;2;204;102;102ma job of that name is…[0m
+
+── job start refused · 60 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;204;102;102m✗[0m [38;2;204;102;102ma job of th…[0m
+
+── job start refused · 44 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mst…[0m]8;;\ [38;2;204;102;102m✗[0m [38;2;204;102;102ma j…[0m
+
+── job start refused · 30 columns
+[3m[38;2;150;152;150mServing the documentation l…[0m[0m [38;2;204;102;102m✗[0m
+
+── job start refused · 16 columns
+[3m[38;2;150;152;150mServing the d…[0m[0m [38;2;204;102;102m✗[0m
+
+── job start without an intent · 120 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mintent is required to start a job[0m
+
+── job start without an intent · 80 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mintent is required to start a job[0m
+
+── job start without an intent · 60 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mintent is required to start a job[0m
+
+── job start without an intent · 44 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190md[0m[38;2;129;162;190m…[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mintent is required t…[0m
+
+── job start without an intent · 30 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mintent is req…[0m
+
+── job start without an intent · 16 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;204;102;102m✗[0m [38;2;204;102;102mintent…[0m
+
+── job start with an invalid name · 120 columns
+[3m[38;2;150;152;150mTrying a name that is too long[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mway-too-long-a-name[0m [38;2;129;162;190m$[0m [38;2;129;162;190mtrue[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mjob name must match [a-z0-9-]{1,10}[0m
+
+── job start with an invalid name · 80 columns
+[3m[38;2;150;152;150mTrying a name that is too long[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mway-too-long-a-n…[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mjob name must match [a…[0m
+
+── job start with an invalid name · 60 columns
+[3m[38;2;150;152;150mTrying a name that is too long[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mway-to…[0m [38;2;204;102;102m✗[0m [38;2;204;102;102mjob name mus…[0m
+
+── job start with an invalid name · 44 columns
+[3m[38;2;150;152;150mTrying a name that is too long[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;204;102;102m✗[0m [38;2;204;102;102mjob …[0m
+
+── job start with an invalid name · 30 columns
+[3m[38;2;150;152;150mTrying a name that is too l…[0m[0m [38;2;204;102;102m✗[0m
+
+── job start with an invalid name · 16 columns
+[3m[38;2;150;152;150mTrying a name…[0m[0m [38;2;204;102;102m✗[0m
+
+── job calls naming nobody's job · 120 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\cat]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+
+── job calls naming nobody's job · 80 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\cat]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+
+── job calls naming nobody's job · 60 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\cat]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+
+── job calls naming nobody's job · 44 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\cat]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+
+── job calls naming nobody's job · 30 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\cat]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+
+── job calls naming nobody's job · 16 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\cat]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+
+── job calls reminded of their job · 120 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the documentation locally)[0m[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\cat]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m2L[0m [3m[38;2;150;152;150m(Serving the documentation locally)[0m[0m
+]8;;oh://tool-result?call=call-4&session=tame-impala\[38;2;207;173;0mstop[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the documentation locally)[0m[0m
+]8;;oh://tool-result?call=call-5&session=tame-impala\[38;2;207;173;0mdiscard[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the documentation locally)[0m[0m
+
+── job calls reminded of their job · 80 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the documentation locally)[0m[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\cat]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m2L[0m [3m[38;2;150;152;150m(Serving the documentation locally)[0m[0m
+]8;;oh://tool-result?call=call-4&session=tame-impala\[38;2;207;173;0mstop[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the documentation locally)[0m[0m
+]8;;oh://tool-result?call=call-5&session=tame-impala\[38;2;207;173;0mdiscard[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the documentation locally)[0m[0m
+
+── job calls reminded of their job · 60 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the documentation locally)[0m[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\cat]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m2L[0m [3m[38;2;150;152;150m(Serving the documentation locally)[0m[0m
+]8;;oh://tool-result?call=call-4&session=tame-impala\[38;2;207;173;0mstop[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the documentation locally)[0m[0m
+]8;;oh://tool-result?call=call-5&session=tame-impala\[38;2;207;173;0mdiscard[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the documentation locally)[0m[0m
+
+── job calls reminded of their job · 44 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80m…[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\cat]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m2L[0m
+]8;;oh://tool-result?call=call-4&session=tame-impala\[38;2;207;173;0mstop[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-5&session=tame-impala\[38;2;207;173;0mdiscard[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+
+── job calls reminded of their job · 30 columns
+[3m[38;2;150;152;150mServing the documentation loc…[0m[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\cat]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m2L[0m
+]8;;oh://tool-result?call=call-4&session=tame-impala\[38;2;207;173;0mstop[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-5&session=tame-impala\[38;2;207;173;0mdiscard[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+
+── job calls reminded of their job · 16 columns
+[3m[38;2;150;152;150mServing the doc…[0m[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\cat]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m2L[0m
+]8;;oh://tool-result?call=call-4&session=tame-impala\[38;2;207;173;0mstop[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-5&session=tame-impala\[38;2;207;173;0mdiscard[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+
+── job waits reminded of every job · 120 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;150;152;150m1L[0m
+[3m[38;2;150;152;150mBuilding every package[0m[0m ]8;;oh://tool-result?call=call-2&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mbuild[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mbuild[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\await]8;;\ [38;2;192;128;80mdocs || build[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the documentation locally; Building every package)[0m[0m
+]8;;oh://tool-result?call=call-4&session=tame-impala\await]8;;\ [38;2;192;128;80mdocs && build[0m [38;2;150;152;150mfor up to 20s[0m [38;2;150;152;150m2L[0m [3m[38;2;150;152;150m(Serving the documentation locally; Building every package)[0m[0m
+]8;;oh://tool-result?call=call-5&session=tame-impala\await]8;;\ [38;2;192;128;80mdocs || other[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the documentation locally)[0m[0m
+
+── job waits reminded of every job · 80 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;150;152;150m1L[0m
+[3m[38;2;150;152;150mBuilding every package[0m[0m ]8;;oh://tool-result?call=call-2&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mbuild[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mbuild[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\await]8;;\ [38;2;192;128;80mdocs || build[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-4&session=tame-impala\await]8;;\ [38;2;192;128;80mdocs && build[0m [38;2;150;152;150mfor up to 20s[0m [38;2;150;152;150m2L[0m
+]8;;oh://tool-result?call=call-5&session=tame-impala\await]8;;\ [38;2;192;128;80mdocs || other[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the documentation locally)[0m[0m
+
+── job waits reminded of every job · 60 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;150;152;150m1L[0m
+[3m[38;2;150;152;150mBuilding every package[0m[0m ]8;;oh://tool-result?call=call-2&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mbuild[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mbuild[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\await]8;;\ [38;2;192;128;80mdocs || build[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-4&session=tame-impala\await]8;;\ [38;2;192;128;80mdocs && build[0m [38;2;150;152;150mfor up to 20s[0m [38;2;150;152;150m2L[0m
+]8;;oh://tool-result?call=call-5&session=tame-impala\await]8;;\ [38;2;192;128;80mdocs || other[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the documentation locally)[0m[0m
+
+── job waits reminded of every job · 44 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80m…[0m [38;2;150;152;150m1L[0m
+[3m[38;2;150;152;150mBuilding every package[0m[0m ]8;;oh://tool-result?call=call-2&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mbuild[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjus[0m[38;2;129;162;190m…[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\await]8;;\ [38;2;192;128;80mdocs || build[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-4&session=tame-impala\await]8;;\ [38;2;192;128;80mdocs && build[0m [38;2;150;152;150mfor up to 20s[0m [38;2;150;152;150m2L[0m
+]8;;oh://tool-result?call=call-5&session=tame-impala\await]8;;\ [38;2;192;128;80mdocs || other[0m [38;2;150;152;150m1L[0m
+
+── job waits reminded of every job · 30 columns
+[3m[38;2;150;152;150mServing the documentation loc…[0m[0m
+[3m[38;2;150;152;150mBuilding every package[0m[0m ]8;;oh://tool-result?call=call-2&session=tame-impala\[38;2;207;173;0msta…[0m]8;;\ [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\await]8;;\ [38;2;192;128;80mdocs || build[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-4&session=tame-impala\await]8;;\ [38;2;192;128;80mdocs && build[0m [38;2;150;152;150mfor up…[0m [38;2;150;152;150m2L[0m
+]8;;oh://tool-result?call=call-5&session=tame-impala\await]8;;\ [38;2;192;128;80mdocs || other[0m [38;2;150;152;150m1L[0m
+
+── job waits reminded of every job · 16 columns
+[3m[38;2;150;152;150mServing the doc…[0m[0m
+[3m[38;2;150;152;150mBuilding every …[0m[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\await]8;;\ [38;2;192;128;80mdocs |…[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-4&session=tame-impala\await]8;;\ [38;2;192;128;80mdocs &…[0m [38;2;150;152;150m2L[0m
+]8;;oh://tool-result?call=call-5&session=tame-impala\await]8;;\ [38;2;192;128;80mdocs |…[0m [38;2;150;152;150m1L[0m
+
+── job reminded of its newest start · 120 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the documentation locally)[0m[0m
+[3m[38;2;150;152;150mServing the docs on a new port[0m[0m ]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-4&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the docs on a new port)[0m[0m
+
+── job reminded of its newest start · 80 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the documentation locally)[0m[0m
+[3m[38;2;150;152;150mServing the docs on a new port[0m[0m ]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-4&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the docs on a new port)[0m[0m
+
+── job reminded of its newest start · 60 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the documentation locally)[0m[0m
+[3m[38;2;150;152;150mServing the docs on a new port[0m[0m ]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-4&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the docs on a new port)[0m[0m
+
+── job reminded of its newest start · 44 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80m…[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+[3m[38;2;150;152;150mServing the docs on a new port[0m[0m ]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-4&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+
+── job reminded of its newest start · 30 columns
+[3m[38;2;150;152;150mServing the documentation loc…[0m[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+[3m[38;2;150;152;150mServing the docs on a new port[0m[0m
+]8;;oh://tool-result?call=call-4&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+
+── job reminded of its newest start · 16 columns
+[3m[38;2;150;152;150mServing the doc…[0m[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+[3m[38;2;150;152;150mServing the doc…[0m[0m
+]8;;oh://tool-result?call=call-4&session=tame-impala\status]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+
+── job calls naming no job · 120 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\list]8;;\ [38;2;192;128;80mjobs[0m [38;2;150;152;150m2L[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;207;173;0mprune[0m]8;;\ [38;2;192;128;80mjobs[0m [38;2;150;152;150m1L[0m
+
+── job calls naming no job · 80 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\list]8;;\ [38;2;192;128;80mjobs[0m [38;2;150;152;150m2L[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;207;173;0mprune[0m]8;;\ [38;2;192;128;80mjobs[0m [38;2;150;152;150m1L[0m
+
+── job calls naming no job · 60 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\list]8;;\ [38;2;192;128;80mjobs[0m [38;2;150;152;150m2L[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;207;173;0mprune[0m]8;;\ [38;2;192;128;80mjobs[0m [38;2;150;152;150m1L[0m
+
+── job calls naming no job · 44 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80m…[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\list]8;;\ [38;2;192;128;80mjobs[0m [38;2;150;152;150m2L[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;207;173;0mprune[0m]8;;\ [38;2;192;128;80mjobs[0m [38;2;150;152;150m1L[0m
+
+── job calls naming no job · 30 columns
+[3m[38;2;150;152;150mServing the documentation loc…[0m[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\list]8;;\ [38;2;192;128;80mjobs[0m [38;2;150;152;150m2L[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;207;173;0mprune[0m]8;;\ [38;2;192;128;80mjobs[0m [38;2;150;152;150m1L[0m
+
+── job calls naming no job · 16 columns
+[3m[38;2;150;152;150mServing the doc…[0m[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\list]8;;\ [38;2;192;128;80mjobs[0m [38;2;150;152;150m2L[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;207;173;0mprune[0m]8;;\ [38;2;192;128;80mjobs[0m [38;2;150;152;150m1L[0m
+
+── job wait stopped by the user · 120 columns
+[3m[38;2;150;152;150mRunning the full check[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mcheck[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mcheck[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\await]8;;\ [38;2;192;128;80mcheck[0m [38;2;150;152;150mfor up to 4m 30s[0m [38;2;150;152;150m–[0m [38;2;150;152;150mstopped because the user pressed escape[0m [3m[38;2;150;152;150m(Running the full check)[0m[0m
+
+── job wait stopped by the user · 80 columns
+[3m[38;2;150;152;150mRunning the full check[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mcheck[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mcheck[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\await]8;;\ [38;2;192;128;80mcheck[0m [38;2;150;152;150mfor up to 4m 30s[0m [38;2;150;152;150m–[0m [38;2;150;152;150mstopped because the user pressed escape[0m
+
+── job wait stopped by the user · 60 columns
+[3m[38;2;150;152;150mRunning the full check[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mcheck[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mcheck[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\await]8;;\ [38;2;192;128;80mcheck[0m [38;2;150;152;150mfor up to 4m 30s[0m [38;2;150;152;150m–[0m [38;2;150;152;150mstopped because the user pre…[0m
+
+── job wait stopped by the user · 44 columns
+[3m[38;2;150;152;150mRunning the full check[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mcheck[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjus[0m[38;2;129;162;190m…[0m [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\await]8;;\ [38;2;192;128;80mcheck[0m [38;2;150;152;150mfor up …[0m [38;2;150;152;150m–[0m [38;2;150;152;150mstopped because the …[0m
+
+── job wait stopped by the user · 30 columns
+[3m[38;2;150;152;150mRunning the full check[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0msta…[0m]8;;\ [38;2;150;152;150m1L[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\await]8;;\ [38;2;192;128;80mcheck[0m [38;2;150;152;150m…[0m [38;2;150;152;150m–[0m [38;2;150;152;150mstopped becau…[0m
+
+── job wait stopped by the user · 16 columns
+[3m[38;2;150;152;150mRunning the ful…[0m[0m
+]8;;oh://tool-result?call=call-2&session=tame-impala\await]8;;\ [38;2;150;152;150m–[0m [38;2;150;152;150mstoppe…[0m
+
+── job call with an unknown action · 120 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mjob[0m]8;;\ [38;2;192;128;80mexplode docs[0m [38;2;204;102;102m✗[0m [38;2;204;102;102maction must be one of start, status, output, wait, stop, discard, list, prune[0m
+
+── job call with an unknown action · 80 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mjob[0m]8;;\ [38;2;192;128;80mexplode docs[0m [38;2;204;102;102m✗[0m [38;2;204;102;102maction must be one of start, status, output, wait, stop, dis…[0m
+
+── job call with an unknown action · 60 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mjob[0m]8;;\ [38;2;192;128;80mexplode docs[0m [38;2;204;102;102m✗[0m [38;2;204;102;102maction must be one of start, status, out…[0m
+
+── job call with an unknown action · 44 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mjob[0m]8;;\ [38;2;192;128;80mexplode docs[0m [38;2;204;102;102m✗[0m [38;2;204;102;102maction must be one of st…[0m
+
+── job call with an unknown action · 30 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mjob[0m]8;;\ [38;2;192;128;80mexplode …[0m [38;2;204;102;102m✗[0m [38;2;204;102;102maction must b…[0m
+
+── job call with an unknown action · 16 columns
+]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mjob[0m]8;;\ [38;2;192;128;80me…[0m [38;2;204;102;102m✗[0m [38;2;204;102;102maction…[0m
+
+── shell and job calls mixed in one round · 120 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;150;152;150m1L[0m
+[3m[38;2;150;152;150mChecking the docs answer requests[0m[0m ]8;;oh://tool-result?call=call-2&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mcurl[0m[38;2;150;152;150m [0m[38;2;129;162;190m-s[0m[38;2;150;152;150m localhost:8080 [0m[38;2;138;190;183m|[0m[38;2;150;152;150m [0m[38;2;129;162;190mhead[0m[38;2;150;152;150m [0m[38;2;129;162;190m-1[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m [38;2;150;152;150m<!DOCTYPE html>[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;207;173;0mstop[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the documentation locally)[0m[0m
+
+── shell and job calls mixed in one round · 80 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;150;152;150m1L[0m
+[3m[38;2;150;152;150mChecking the docs answer requests[0m[0m ]8;;oh://tool-result?call=call-2&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mcurl[0m[38;2;150;152;150m [0m[38;2;129;162;190m-s[0m[38;2;150;152;150m localhost:8080 [0m[38;2;138;190;183m|[0m[38;2;150;152;150m [0m[38;2;129;162;190mhead[0m[38;2;150;152;150m…[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;207;173;0mstop[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the documentation locally)[0m[0m
+
+── shell and job calls mixed in one round · 60 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;129;162;190m$[0m [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mdocs[0m [38;2;150;152;150m1L[0m
+[3m[38;2;150;152;150mChecking the docs answer requests[0m[0m ]8;;oh://tool-result?call=call-2&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mcurl[0m[38;2;150;152;150m [0m[38;2;129;162;190m-s[0m[38;2;150;152;150m l[0m[38;2;150;152;150m…[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;207;173;0mstop[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m [3m[38;2;150;152;150m(Serving the documentation locally)[0m[0m
+
+── shell and job calls mixed in one round · 44 columns
+[3m[38;2;150;152;150mServing the documentation locally[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;207;173;0mstart[0m]8;;\ [38;2;192;128;80m…[0m [38;2;150;152;150m1L[0m
+[3m[38;2;150;152;150mChecking the docs answer requests[0m[0m ]8;;oh://tool-result?call=call-2&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mcurl[0m[38;2;150;152;150m [0m[38;2;129;162;190m…[0m [38;2;76;154;44m✓[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;207;173;0mstop[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+
+── shell and job calls mixed in one round · 30 columns
+[3m[38;2;150;152;150mServing the documentation loc…[0m[0m
+[3m[38;2;150;152;150mChecking the docs answer re…[0m[0m [38;2;76;154;44m✓[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;207;173;0mstop[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m
+
+── shell and job calls mixed in one round · 16 columns
+[3m[38;2;150;152;150mServing the doc…[0m[0m
+[3m[38;2;150;152;150mChecking the …[0m[0m [38;2;76;154;44m✓[0m
+]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;207;173;0mstop[0m]8;;\ [38;2;192;128;80mdocs[0m [38;2;150;152;150m1L[0m

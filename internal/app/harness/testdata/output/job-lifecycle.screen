@@ -3,7 +3,7 @@
  start the docs server and keep it up
 
 
-start docs $ python3 -m http.server … 1L
+Handling this job for the test start 1L
 
 The docs server is up.
 
@@ -1410,7 +1410,7 @@ n
  start the docs server and keep it up
 
 
-start docs $ python3 -m http.server 8080 1L
+Handling this job for the test start docs $ python3 -m http.server 8080 1L
 
 The docs server is up.
 
@@ -1445,13 +1445,13 @@ Cache expired: 97Kt sent after 7m.
  what happened to it
 
 
-status docs 1L
+status docs 1L (Handling this job for the test)
 
 
  🤖 Job docs stopped from the keyboard.
 
 
-discard docs 1L
+discard docs 1L (Handling this job for the test)
 prune jobs 1L
 
 It was stopped when write access was withdrawn.
@@ -1463,7 +1463,7 @@ It was stopped when write access was withdrawn.
  up
 
 
-start do… 1L
+Handling th…
 
 The docs
 server is
@@ -1606,7 +1606,7 @@ withdrawn.
  start the docs server and keep it up
 
 
-start docs $ python3 -m http.server 8080 1L
+Handling this job for the test start docs $ python3 -m http.server 8080 1L
 
 The docs server is up.
 
@@ -1641,13 +1641,13 @@ Cache expired: 97Kt sent after 7m.
  what happened to it
 
 
-status docs 1L
+status docs 1L (Handling this job for the test)
 
 
  🤖 Job docs stopped from the keyboard.
 
 
-discard docs 1L
+discard docs 1L (Handling this job for the test)
 prune jobs 1L
 
 It was stopped when write access was withdrawn.

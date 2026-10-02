@@ -75,7 +75,7 @@ func New(
 				tool.Enum("wait_for", "whether wait returns after any or all watched jobs end", waitForAny, waitForAll).Optional(),
 				tool.Integer("wait_seconds", fmt.Sprintf("how many seconds to wait at most — max %s (default)", util.CompactDuration(waitLimit))).Optional(),
 				tool.String("command", "the command line (for action 'start'); if omitted, re-runs previous job by name").Optional(),
-				tool.String("intent", bash.IntentDescription).Optional(),
+				tool.String("intent", "for action 'start', "+bash.IntentDescription).Optional(),
 			},
 		},
 		Describe,
@@ -90,6 +90,20 @@ func New(
 const description = "run a shell command in the background. For a server, bind a fixed port and pass it as `port`; the tool forwards that same number, reports the URL the user opens it at, and does not discover an ephemeral port. In an interactive session you will be notified automatically when it finishes; in a non-interactive session you will not."
 
 func Describe(args Args) tool.CallRendering {
+	rendering := describeAction(args)
+	switch args.Action {
+	case actionStart:
+		rendering.Intent = bash.SpokenIntent(args.Intent)
+		rendering.Introduces = args.Name
+	case actionWait:
+		rendering.Mentions = getWaitNames(args)
+	case actionStatus, actionOutput, actionStop, actionDiscard:
+		rendering.Mentions = []string{args.Name}
+	}
+	return rendering
+}
+
+func describeAction(args Args) tool.CallRendering {
 	switch args.Action {
 	case actionStart:
 		subject := args.Name
@@ -99,13 +113,12 @@ func Describe(args Args) tool.CallRendering {
 			emphasis = tool.Emphasis{Kind: tool.EmphasisLead, Value: args.Name}
 		}
 		if strings.TrimSpace(args.Command) == "" {
-			return tool.CallRendering{Kind: "job_restart", Subject: subject, Emphasis: emphasis, Intent: bash.SpokenIntent(args.Intent)}
+			return tool.CallRendering{Kind: "job_restart", Subject: subject, Emphasis: emphasis}
 		}
 		return tool.CallRendering{
 			Kind:         "job_start",
 			Subject:      subject,
 			Emphasis:     emphasis,
-			Intent:       bash.SpokenIntent(args.Intent),
 			Continuation: []tool.CallRendering{bash.DescribeCommand(args.Command)},
 		}
 	case actionWait:
@@ -140,6 +153,10 @@ func Describe(args Args) tool.CallRendering {
 func validate(args Args) error {
 	if !slices.Contains(actions, args.Action) {
 		return fmt.Errorf("action must be %s (got %q)", actionChoices, args.Action)
+	}
+
+	if args.Action == actionStart && strings.TrimSpace(args.Intent) == "" {
+		return errors.New(`intent is required to start a job`)
 	}
 
 	if args.Action != actionStart && args.Port != 0 {
