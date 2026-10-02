@@ -16,6 +16,7 @@ type IncrementalRenderer struct {
 	options       Options
 	lastCandidate int
 	isDisabled    bool
+	settledRows   int
 }
 
 func (self *IncrementalRenderer) Render(markdown string, columns int) []string {
@@ -38,6 +39,10 @@ func (self *IncrementalRenderer) EndsWithTable(markdown string) bool {
 	return EndsWithTable(markdown[len(self.stableSource):])
 }
 
+func (self *IncrementalRenderer) SettledRows() int {
+	return self.settledRows
+}
+
 func (self *IncrementalRenderer) Reset() {
 	*self = IncrementalRenderer{}
 }
@@ -49,12 +54,16 @@ func (self *IncrementalRenderer) RenderWith(markdown string, options Options) []
 	}
 	self.previousSource = markdown
 	if self.isDisabled {
-		return self.tail.render(markdown, options)
+		rows := self.tail.render(markdown, options)
+		self.settledRows = self.tail.settledRows
+		return rows
 	}
 
 	tailRows := self.tail.render(markdown[len(self.stableSource):], options)
 	if self.tail.hasMermaid || self.tail.hasLinkReference {
-		return self.disable(markdown)
+		rows := self.disable(markdown)
+		self.settledRows = self.tail.settledRows
+		return rows
 	}
 	if self.tail.hasStableCandidateStart && self.tail.stableCandidateStart > 0 {
 		candidate := len(self.stableSource) + self.tail.stableCandidateStart
@@ -63,6 +72,15 @@ func (self *IncrementalRenderer) RenderWith(markdown string, options Options) []
 				tailRows = remainingRows
 			}
 		}
+	}
+
+	self.settledRows = len(self.stableRows)
+	switch {
+	case self.tail.settledRows == 0:
+	case len(self.stableRows) == 0:
+		self.settledRows = self.tail.settledRows
+	default:
+		self.settledRows += 1 + self.tail.settledRows
 	}
 
 	return joinRenderedParts(self.stableRows, tailRows)

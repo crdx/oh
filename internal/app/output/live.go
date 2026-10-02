@@ -17,6 +17,7 @@ type liveRegion struct {
 	lastGroup       Group
 	height          int
 	committedRows   []width.ScreenRow
+	settledRows     int
 	isStarted       bool
 	shouldLinkPaths bool
 }
@@ -26,15 +27,23 @@ func spansOneGroup(firstGroup Group, lastGroup Group, group Group) bool {
 }
 
 func (self *Screen) DrawAnswer(rows []width.ScreenRow) bool {
-	return self.draw(rows, AnswerGroup, true)
+	return self.draw(rows, len(rows), AnswerGroup, true)
 }
 
 func (self *Screen) DrawLinkedAnswer(rows []width.ScreenRow) bool {
-	return self.draw(rows, AnswerGroup, false)
+	return self.draw(rows, len(rows), AnswerGroup, false)
+}
+
+func (self *Screen) DrawArrivingAnswer(rows []width.ScreenRow, settledRows int) bool {
+	return self.draw(rows, settledRows, AnswerGroup, false)
 }
 
 func (self *Screen) DrawReasoning(rows []string) bool {
-	return self.draw(width.HardRows(rows), ReasoningGroup, false)
+	return self.draw(width.HardRows(rows), len(rows), ReasoningGroup, false)
+}
+
+func (self *Screen) DrawArrivingReasoning(rows []string, settledRows int) bool {
+	return self.draw(width.HardRows(rows), settledRows, ReasoningGroup, false)
 }
 
 func (self *Screen) DiscardLive() bool {
@@ -53,7 +62,7 @@ func (self *Screen) DiscardLive() bool {
 	return true
 }
 
-func (self *Screen) draw(rows []width.ScreenRow, group Group, shouldLinkPaths bool) bool {
+func (self *Screen) draw(rows []width.ScreenRow, settledRows int, group Group, shouldLinkPaths bool) bool {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 
@@ -79,6 +88,7 @@ func (self *Screen) draw(rows []width.ScreenRow, group Group, shouldLinkPaths bo
 	}
 
 	self.live.rows = rows
+	self.live.settledRows = min(max(settledRows, 0), len(rows))
 	self.live.lastGroup = group
 	self.live.shouldLinkPaths = shouldLinkPaths
 	self.changed()
@@ -201,10 +211,19 @@ func (self *Screen) liveFrameRows(room int) []width.ScreenRow {
 	}
 
 	if room >= 0 && gap+len(visible) > room {
-		overflow := endingOnARow(visible, max(0, len(visible)-room))
-		self.commit(visible[:overflow], firstGroup, shouldLinkPaths)
-		visible = visible[overflow:]
-		gap = 0
+		visibleSettledRows := visible[:max(0, self.live.settledRows-len(self.live.committedRows))]
+		owedRows := max(0, len(visible)-room)
+		overflow := endingOnARow(visibleSettledRows, min(len(visibleSettledRows), owedRows))
+		if overflow > 0 || owedRows <= len(visibleSettledRows) {
+			self.commit(visible[:overflow], firstGroup, shouldLinkPaths)
+			visible = visible[overflow:]
+			gap = 0
+		}
+
+		if gap+len(visible) > room {
+			visible = self.windowed(visible, gap, room)
+			gap = 0
+		}
 	}
 
 	frameRows := make([]width.ScreenRow, gap, gap+len(visible))

@@ -146,6 +146,50 @@ func TestADifferenceAboveTheScreenIsReportedRatherThanRepaired(t *testing.T) {
 	}
 }
 
+func TestAnUnsettledTailTallerThanTheScreenIsWindowedRatherThanCommitted(t *testing.T) {
+	screen, _ := region()
+	screen.lines = 4
+
+	rows := []string{"one", "two", "three", "four", "five", "six"}
+	if !screen.DrawArrivingAnswer(width.HardRows(rows), 1) {
+		t.Fatal("expected the first drawing to be made")
+	}
+
+	if got := width.Texts(screen.live.committedRows); !slices.Equal(got, []string{"one"}) {
+		t.Fatalf("expected only the settled row in scrollback, got %q", got)
+	}
+
+	shown := drawnTexts(screen)
+	if len(shown) != 4 || !strings.Contains(shown[0], "more lines") || shown[3] != "six" {
+		t.Fatalf("expected the newest rows under a hidden-rows notice, got %q", shown)
+	}
+
+	if !screen.DrawArrivingAnswer(width.HardRows([]string{"one", "TWO", "three", "four", "five", "six", "seven"}), 1) {
+		t.Error("expected a change to an unsettled row to be repaired in place")
+	}
+
+	if !screen.DrawArrivingAnswer(width.HardRows([]string{"one", "TWO", "three", "four", "five", "six", "seven"}), 7) {
+		t.Fatal("expected settling the rows to be drawn")
+	}
+
+	if got := width.Texts(screen.live.committedRows); !slices.Equal(got, []string{"one", "TWO", "three"}) {
+		t.Fatalf("expected the settled overflow in scrollback, got %q", got)
+	}
+}
+
+func TestSettledRowsBeyondTheDrawingCountAsEveryRow(t *testing.T) {
+	screen, _ := region()
+	screen.lines = 4
+
+	if !screen.DrawArrivingAnswer(width.HardRows([]string{"one", "two", "three", "four", "five", "six"}), 99) {
+		t.Fatal("expected the drawing to be made")
+	}
+
+	if got := width.Texts(screen.live.committedRows); !slices.Equal(got, []string{"one", "two"}) {
+		t.Fatalf("expected the overflow in scrollback, got %q", got)
+	}
+}
+
 func TestWritingOutsideTheRegionEndsIt(t *testing.T) {
 	screen, _ := region()
 

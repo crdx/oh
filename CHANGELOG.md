@@ -30,6 +30,7 @@
 - Show what lost prompt caches cost us in API pricing
 - Show success tick only on shell and custom tool calls
 - Space out the harness notice after one that runs on
+- Stop a streaming answer pulling you back to the bottom
 
 ### Completion and input
 

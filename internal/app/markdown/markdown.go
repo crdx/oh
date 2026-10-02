@@ -75,6 +75,7 @@ type StreamRenderer struct {
 	hasLinkReference        bool
 	stableCandidateStart    int
 	hasStableCandidateStart bool
+	settledRows             int
 }
 
 func (self *StreamRenderer) Render(markdown string, columns int) []string {
@@ -94,6 +95,7 @@ func (self *StreamRenderer) Reset() {
 	self.hasLinkReference = false
 	self.stableCandidateStart = 0
 	self.hasStableCandidateStart = false
+	self.settledRows = 0
 }
 
 func (self *StreamRenderer) render(markdown string, options Options) []width.ScreenRow {
@@ -104,6 +106,7 @@ func (self *StreamRenderer) render(markdown string, options Options) []width.Scr
 	self.hasLinkReference = false
 	self.stableCandidateStart = 0
 	self.hasStableCandidateStart = false
+	self.settledRows = 0
 
 	return render(markdown, options, self)
 }
@@ -112,10 +115,12 @@ func render(markdown string, options Options, stream *StreamRenderer) []width.Sc
 	source := []byte(strings.ReplaceAll(markdown, "\t", tab))
 	parserContext := parser.NewContext()
 	document := markdownParser.Parse(text.NewReader(source), parser.WithContext(parserContext))
+	var settledBefore ast.Node
 	if stream != nil {
 		stream.hasLinkReference = len(parserContext.References()) > 0
 		if lastBlock := document.LastChild(); lastBlock != nil {
-			if candidate := lastBlock.PreviousSibling(); candidate != nil && candidate.Pos() >= 0 {
+			settledBefore = lastBlock.PreviousSibling()
+			if candidate := settledBefore; candidate != nil && candidate.Pos() >= 0 {
 				contentStart := originalOffset(markdown, candidate.Pos())
 				stream.stableCandidateStart = strings.LastIndexByte(markdown[:contentStart], '\n') + 1
 				stream.hasStableCandidateStart = true
@@ -129,12 +134,18 @@ func render(markdown string, options Options, stream *StreamRenderer) []width.Sc
 		columns:                options.Columns,
 		mermaidBlock:           &mermaidBlock,
 		stream:                 stream,
+		document:               document,
+		settledBefore:          settledBefore,
+		unsettledFrom:          -1,
 		shouldRenderHyperlinks: options.ShouldRenderHyperlinks,
 		linkRoot:               options.LinkRoot,
 		pictures:               options.Pictures,
 		shouldSoftWrapCode:     options.ShouldSoftWrapCode,
 	}
 	renderer.blocks(document)
+	if stream != nil && renderer.unsettledFrom >= 0 {
+		stream.settledRows = min(stream.settledRows, renderer.unsettledFrom)
+	}
 
 	return renderer.rows
 }
@@ -161,6 +172,9 @@ type renderer struct {
 	isTight                bool
 	rows                   []width.ScreenRow
 	stream                 *StreamRenderer
+	document               ast.Node
+	settledBefore          ast.Node
+	unsettledFrom          int
 	shouldRenderHyperlinks bool
 	linkRoot               link.Roots
 	pictures               PictureDrawer
@@ -170,6 +184,9 @@ type renderer struct {
 func (self *renderer) blocks(parent ast.Node) {
 	for node := parent.FirstChild(); node != nil; node = node.NextSibling() {
 		unseparatedRowCount := len(self.rows)
+		if parent == self.document && node == self.settledBefore {
+			self.stream.settledRows = unseparatedRowCount
+		}
 		if len(self.rows) > 0 && !self.isTight {
 			self.add("")
 		}
@@ -330,6 +347,9 @@ func (self *renderer) mermaid(lines []string, block int) bool {
 	cachedRows, hasCachedRows := self.stream.mermaidRows[block]
 	if !hasCachedRows || widestRow(cachedRows) > self.columns {
 		return false
+	}
+	if self.unsettledFrom < 0 {
+		self.unsettledFrom = len(self.rows)
 	}
 	self.add(cachedRows...)
 	return true

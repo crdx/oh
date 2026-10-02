@@ -46,6 +46,76 @@ func TestIncrementalRendererMatchesMarkdownThatCanChangeEarlierBlocks(t *testing
 	}
 }
 
+func requireSettledRowsNeverChange(t *testing.T, source string, columns int) {
+	t.Helper()
+
+	var incremental IncrementalRenderer
+	streamed := make([][]string, len(source)+1)
+	settled := make([]int, len(source)+1)
+	for at := 1; at <= len(source); at++ {
+		streamed[at] = incremental.Render(source[:at], columns)
+		settled[at] = incremental.SettledRows()
+		if settled[at] > len(streamed[at]) {
+			t.Fatalf("byte %d settled %d rows of %d", at, settled[at], len(streamed[at]))
+		}
+	}
+
+	final := width.Texts(render(source, Options{Columns: columns}, nil))
+	for at := 1; at <= len(source); at++ {
+		for later := at + 1; later <= len(source); later++ {
+			if !slices.Equal(streamed[at][:settled[at]], streamed[later][:settled[at]]) {
+				t.Fatalf("byte %d settled %q, but byte %d drew %q", at, streamed[at][:settled[at]], later, streamed[later][:settled[at]])
+			}
+		}
+		if !slices.Equal(streamed[at][:settled[at]], final[:settled[at]]) {
+			t.Fatalf("byte %d settled %q, but the whole answer draws %q", at, streamed[at][:settled[at]], final[:settled[at]])
+		}
+	}
+}
+
+func TestIncrementalRendererSettlesOnlyRowsThatNeverChange(t *testing.T) {
+	for name, source := range map[string]string{
+		"paragraphs":              "first paragraph\n\nsecond paragraph\n\nthird paragraph\n\nfourth",
+		"provisional heading":     "first\n\nsecond\n\na heading after all\n---\n\nafter",
+		"fenced code with blanks": "before\n\n```go\nfunc one() {}\n\nfunc two() {}\n```\n\nafter\n\nmore",
+		"widening table":          "before\n\n| one | two |\n| --- | --- |\n| a | b |\n| a much wider cell | b |\n\nafter\n\nmore",
+		"loosening list":          "before\n\n- one\n- two\n\n- three\n\nafter\n\nmore",
+		"early link reference":    "[note]: https://example.com\n\nordinary text\n\nsee [the note][note]\n\nmore",
+		"growing diagram": "before\n\n```mermaid\nflowchart TD\n    one --> two\n    two --> three\n" +
+			"    one --> four\n    four --> five\n```\n\nafter\n\nmore",
+		"unfinished diagram": "before\n\n```mermaid\nflowchart TD\n    one --> two\n    two -->\n```\n\nafter\n\nmore",
+		"outgrown diagram": "before\n\n```mermaid\nflowchart LR\n    one --> two\n    two --> three\n" +
+			"    three --> four\n    four --> five\n```\n\nafter\n\nmore",
+		"quoted blocks": "> first\n>\n> second\n\nafter\n\nmore",
+	} {
+		for _, columns := range []int{0, 1, 10, 40, 100} {
+			t.Run(name, func(t *testing.T) {
+				requireSettledRowsNeverChange(t, source, columns)
+			})
+		}
+	}
+}
+
+func TestIncrementalRendererSettlesEveryBlockButTheLastTwo(t *testing.T) {
+	for name, source := range map[string]string{
+		"incremental": "first\n\nsecond\n\nthird\n\nfourth",
+		"disabled":    "```mermaid\nflowchart TD\n    one --> two\n```\n\nsecond\n\nthird\n\nfourth",
+	} {
+		t.Run(name, func(t *testing.T) {
+			var renderer IncrementalRenderer
+			for at := 1; at <= len(source); at++ {
+				renderer.Render(source[:at], 100)
+			}
+
+			rows := renderer.Render(source, 100)
+			want := slices.Index(rows, "third") - 1
+			if got := renderer.SettledRows(); got != want {
+				t.Errorf("want %d settled rows of %q, got %d", want, rows, got)
+			}
+		})
+	}
+}
+
 func TestIncrementalHyperlinkRenderingMatchesTheCompleteStream(t *testing.T) {
 	source := "first paragraph\n\n[linked words](https://example.test/path) and https://example.test/bare"
 	var incremental IncrementalRenderer
@@ -145,10 +215,16 @@ func FuzzIncrementalRenderer(fuzzer *testing.F) {
 			if incremental.IsTailMermaid() != baseline.IsTailMermaid() {
 				t.Fatalf("byte %d disagreed about a Mermaid tail", at)
 			}
+			if settled := incremental.SettledRows(); settled > len(got) {
+				t.Fatalf("byte %d settled %d rows of %d", at, settled, len(got))
+			}
 			fresh := width.Texts(render(source[:at], Options{Columns: columns}, nil))
 			if !baseline.hasMermaid && !slices.Equal(want, fresh) {
 				t.Fatalf("byte %d streamed different rows from a fresh render\nfresh:    %q\nstreamed: %q", at, fresh, want)
 			}
+		}
+		if !baseline.hasLinkReference {
+			requireSettledRowsNeverChange(t, source, columns)
 		}
 	})
 }

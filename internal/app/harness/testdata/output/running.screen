@@ -100,6 +100,21 @@ The answer starts here.
 
  look into it
 
+⋮ 15 more lines
+ ⏳ queued message 15
+ ⏳ queued message 16
+ ⏳ queued message 17
+ ⏳ queued message 18
+ ⏳ queued message 19
+ ⏳ queued message 20
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+⋮ 1 more line
+--- frame 2 ---
+
+ look into it
+
 
 The answer starts here.
 ⋮ 15 more lines
@@ -168,6 +183,21 @@ The answer starts here.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === queued message as answer starts markdown paced terminal-filling ===
 --- frame 1 ---
+
+ look into it
+
+⋮ 15 more lines
+ ⏳ queued message 15
+ ⏳ queued message 16
+ ⏳ queued message 17
+ ⏳ queued message 18
+ ⏳ queued message 19
+ ⏳ queued message 20
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+⋮ 1 more line
+--- frame 2 ---
 
  look into it
 

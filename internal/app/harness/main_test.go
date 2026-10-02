@@ -40,6 +40,7 @@ import (
 	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/text"
 
+	"crdx.org/oh/internal/app/ansi"
 	"crdx.org/oh/internal/app/backend"
 	"crdx.org/oh/internal/app/bar"
 	"crdx.org/oh/internal/app/call"
@@ -1758,6 +1759,49 @@ func drawAnswerResolvedLate(t *testing.T, lines int) frameEdgeStreams {
 	return frameEdgeStreams{live: live, sealed: screenOutput.String()}
 }
 
+const answerWithADiagram = "Here is how a request travels.\n\n" +
+	"```mermaid\nflowchart TD\n" +
+	"    receive[Receive] --> validate[Validate]\n" +
+	"    validate --> accept[Accept]\n" +
+	"    validate --> reject[Reject]\n" +
+	"    accept --> store[Store]\n" +
+	"    store --> reply[Reply]\n" +
+	"    reject --> reply\n" +
+	"```\n\n" +
+	"The request is validated first.\n\nThen it is stored and answered.\n\nNothing else touches it.\n"
+
+type diagramStreams struct {
+	arriving string
+	followed string
+	sealed   string
+}
+
+func drawDiagramStillArriving(t *testing.T, kind agent.Kind, lines int) diagramStreams {
+	t.Helper()
+
+	var screenOutput bytes.Buffer
+	self := frameEdgeConversation(t, &screenOutput, lines)
+	self.display.reasoningRendering = output.ReasoningMarkdown
+	self.currentTurn = Turn{Stream: testRunningTurnStream(), painter: self.newPainter(true)}
+
+	diagramMiddle := strings.Index(answerWithADiagram, "    store -->")
+	diagramEnd := strings.Index(answerWithADiagram, "Then it is stored")
+	streamProse(self, kind, answerWithADiagram[:diagramMiddle])
+	arriving := screenOutput.String()
+	streamProse(self, kind, answerWithADiagram[diagramMiddle:diagramEnd])
+	followed := screenOutput.String()
+	streamProse(self, kind, answerWithADiagram[diagramEnd:])
+
+	if strings.Contains(screenOutput.String(), ansi.EraseScrollback) {
+		t.Errorf("a diagram arriving on a %d-line terminal cleared the scrollback", lines)
+	}
+
+	self.recordEvent(agent.Event{Kind: kind, Text: answerWithADiagram})
+	self.show(self.inputLine)
+
+	return diagramStreams{arriving: arriving, followed: followed, sealed: screenOutput.String()}
+}
+
 func drawRowsEndingInBlanks(lines int) frameEdgeStreams {
 	var screenOutput bytes.Buffer
 	screen := output.NewTerminalOfSize(&screenOutput, replayColumns, lines)
@@ -1846,6 +1890,17 @@ func TestGoldenTheFrameAtItsEdgesDrawsEveryVisibleState(t *testing.T) {
 		add(fmt.Sprintf("an answer whose top changes after it was committed at %d lines", lines), drawn.live, lines)
 		add(fmt.Sprintf("an answer whose top changes after it was committed at %d lines, sealed", lines), drawn.sealed, lines)
 		requireSameVisibleScreen(t, "an answer resolved late", roomyAnswer.sealed, drawn.sealed)
+	}
+
+	for kind, name := range map[agent.Kind]string{agent.ModelReasoningEvent: "a thought", agent.ModelMessageEvent: "an answer"} {
+		roomy := drawDiagramStillArriving(t, kind, roomyFrameLines)
+		for _, lines := range []int{8, replayLines} {
+			drawn := drawDiagramStillArriving(t, kind, lines)
+			add(fmt.Sprintf("%s whose diagram is still arriving at %d lines", name, lines), drawn.arriving, lines)
+			add(fmt.Sprintf("%s whose diagram prose follows at %d lines", name, lines), drawn.followed, lines)
+			add(fmt.Sprintf("%s whose diagram arrived at %d lines, sealed", name, lines), drawn.sealed, lines)
+			requireSameVisibleScreen(t, name+" with a diagram, sealed", roomy.sealed, drawn.sealed)
+		}
 	}
 
 	roomyRows := drawRowsEndingInBlanks(roomyFrameLines)
@@ -8639,7 +8694,7 @@ func streamThroughHoldingTheNotice(t *testing.T, rig *replayRig, entries []repla
 					rig.chat.currentTurn.painter.DrawEvent(*held)
 					held = nil
 				}
-				rig.chat.currentTurn.painter.DrawDelta(agent.Delta{Kind: event.Kind, Text: piece})
+				streamDelta(rig.chat, agent.Delta{Kind: event.Kind, Text: piece})
 			}
 		}
 
@@ -8880,6 +8935,52 @@ func TestGoldenEveryScenarioDrawsWhatItDrewBefore(t *testing.T) {
 }
 
 const shortLines = 6
+
+var scrollingTerminalLines = []int{shortLines, 12, replayLines}
+
+var reasoningRenderings = map[string]output.ReasoningRendering{
+	"plain":    output.ReasoningPlain,
+	"markdown": output.ReasoningMarkdown,
+}
+
+func TestStreamingNeverClearsScrollback(t *testing.T) {
+	modes := map[string]output.StreamingMode{
+		"asap":  output.StreamingModeASAP,
+		"line":  output.StreamingModeLine,
+		"paced": output.StreamingModePaced,
+	}
+
+	for _, journal := range everyJournal(t) {
+		entries := readJournal(t, journal.path)
+
+		for modeName, mode := range modes {
+			for renderingName, rendering := range reasoningRenderings {
+				replayRig := newReplayRig(t, replayColumns)
+				replayRig.chat.display.reasoningRendering = rendering
+				replayed := replayInto(replayRig, entries)
+
+				for _, lines := range scrollingTerminalLines {
+					name := fmt.Sprintf("%s/%s/%s thoughts/%d lines", journal.name, modeName, renderingName, lines)
+					t.Run(name, func(t *testing.T) {
+						rig := newRig(t, func(written *strings.Builder, workspaceDir string) *output.Screen {
+							return output.NewTerminalOfSize(written, replayColumns, lines).
+								LinkPathsUnder(link.Roots{Workspace: workspaceDir})
+						})
+						rig.chat.display.streamingMode = mode
+						rig.chat.display.reasoningRendering = rendering
+						drawn := streamThrough(t, rig, entries)
+
+						if strings.Contains(drawn, ansi.EraseScrollback) {
+							t.Error("streaming cleared the scrollback, which scrolls whoever is reading it to the bottom")
+						}
+						requireNothingDrawnAboveTheScreen(t, "streaming", drawn, lines)
+						requireSameVisibleScreen(t, "a streamed conversation differs from its replay", replayed, drawn)
+					})
+				}
+			}
+		}
+	}
+}
 
 func TestGoldenATallRegionOnAShortTerminalIsWindowedAndSealedWhole(t *testing.T) {
 	scenarios := map[string]string{
@@ -9644,7 +9745,7 @@ func streamThrough(t *testing.T, rig *replayRig, entries []replayEntry) string {
 		event := *entry.Event
 		if event.Kind == agent.ModelMessageEvent || event.Kind == agent.ModelReasoningEvent {
 			for piece := range deltaSized(event.Text) {
-				rig.chat.currentTurn.painter.DrawDelta(agent.Delta{Kind: event.Kind, Text: piece})
+				streamDelta(rig.chat, agent.Delta{Kind: event.Kind, Text: piece})
 			}
 		}
 
@@ -9664,6 +9765,10 @@ func streamThrough(t *testing.T, rig *replayRig, entries []replayEntry) string {
 	rig.chat.screen.ReportProgress(false)
 
 	return rig.drawn()
+}
+
+func streamDelta(self *App, delta agent.Delta) {
+	self.takeTurn(TurnEvent{Update: agent.Update{Delta: &delta}})
 }
 
 func deltaSized(text string) iter.Seq[string] {

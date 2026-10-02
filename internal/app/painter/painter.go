@@ -697,7 +697,11 @@ func (self *Picasso) drawReasoning(isSettled bool) {
 	}
 
 	self.reasoning.MarkRowsDrawn(len(rows), isTailHidden || isRowArriving)
-	if !self.screen.DrawReasoning(rows) {
+	settledRows := len(rows)
+	if !isSettled && self.reasoningRendering != output.ReasoningPlain {
+		settledRows = min(settledRows, self.reasoningRenderer.SettledRows())
+	}
+	if !self.screen.DrawArrivingReasoning(rows, settledRows) {
 		self.isStale = true
 	}
 }
@@ -717,7 +721,11 @@ func (self *Picasso) drawAnswer(isSettled bool) {
 	}
 
 	self.answer.MarkRowsDrawn(len(rows), isTailHeldBack || isRowArriving)
-	if !self.screen.DrawLinkedAnswer(rows) {
+	settledRows := len(rows)
+	if !isSettled {
+		settledRows = min(settledRows, self.answerRenderer.SettledRows())
+	}
+	if !self.screen.DrawArrivingAnswer(rows, settledRows) {
 		self.isStale = true
 	}
 }
