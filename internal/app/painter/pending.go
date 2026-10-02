@@ -201,7 +201,7 @@ func (self *PendingMessages) Rows(columns int) []string {
 
 	content := output.Stack(parts)
 
-	return frameSubmitted(self.sendHintRow(columns), content, columns, style.Harness)
+	return frameSubmitted("", content, self.sendHintRow(columns), columns, style.Harness)
 }
 
 func (self *PendingMessages) sendHintRow(columns int) string {

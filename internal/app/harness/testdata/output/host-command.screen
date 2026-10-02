@@ -1,5 +1,37 @@
-=== completed and waiting for the next turn ===
-                                                                           double-enter to send now
+=== completed and sent by double-enter ===
+
+ 🤖 The user ran the following command on the host:
+
+    $ git status --short
+
+    Output:
+
+     M README.md
+    ?? notes.txt
+
+    Exit code: 0
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== completed and started an experimental turn ===
+
+ 🤖 The user ran the following command on the host:
+
+    $ git status --short
+
+    Output:
+
+     M README.md
+    ?? notes.txt
+
+    Exit code: 0
+
+
+Model returned no reply.
+=== completed and waiting for double-enter ===
+
  ⏳ The user ran the following command on the host:
 
     $ git status --short
@@ -10,6 +42,7 @@
     ?? notes.txt
 
     Exit code: 0
+                                                                           double-enter to send now
 === completed during a running turn ===
 
  🤖 The user ran the following command on the host:
@@ -22,6 +55,40 @@
     ?? notes.txt
 
     Exit code: 0
+=== completed taller than the terminal and pending ===
+⋮ 21 more lines
+                                                                           double-enter to send now
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== completed taller than the terminal and sent ===
+
+ 🤖 The user ran the following command on the host:
+
+    $ print-many-lines
+
+    Output:
+
+    line 1
+    line 2
+    line 3
+    line 4
+    line 5
+    line 6
+    line 7
+    line 8
+    line 9
+    line 10
+    line 11
+    line 12
+
+    Exit code: 0
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
 === exited with a failure ===
 
  🤖 The user ran the following command on the host:
@@ -33,7 +100,7 @@
     error: failed to push some refs
 
     Exit code: 1
-=== interrupted by the user ===
+=== interrupted and sent into the next turn ===
 
  🤖 The user started the following command on the host, then interrupted it before it finished:
 
@@ -44,23 +111,23 @@
     Enumerating objects: 5, done.
 
     Interrupted by the user after 4s
+=== interrupted and waiting for the next turn ===
+
+ ⏳ The user started the following command on the host, then interrupted it before it finished:
+
+    $ git push
+
+    Output up to the point it was killed, which may be incomplete:
+
+    Enumerating objects: 5, done.
+
+    Interrupted by the user after 4s
+                                                                           double-enter to send now
 === printed nothing ===
 
  🤖 The user ran the following command on the host, producing no output:
 
     $ touch notes.txt
-
-    Exit code: 0
-=== settled into the next turn ===
-
- 🤖 The user ran the following command on the host:
-
-    $ git status --short
-
-    Output:
-
-     M README.md
-    ?? notes.txt
 
     Exit code: 0
 === stopped at its limit ===

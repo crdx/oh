@@ -135,6 +135,46 @@ func TestAPasteOfFiveLinesIsNotFenced(t *testing.T) {
 	}
 }
 
+func TestAPasteThatMakesAHostCommandIsNotFenced(t *testing.T) {
+	for name, scenario := range map[string]struct {
+		typed  string
+		pasted string
+		want   string
+	}{
+		"a pasted command": {
+			pasted: "/!git apply <<'EOF'\none\ntwo\nthree\nfour\nEOF",
+			want:   "/!git apply <<'EOF'\none\ntwo\nthree\nfour\nEOF",
+		},
+		"a pasted command under leading whitespace": {
+			pasted: "  /! cat <<'EOF'\n  one\n  two\n  three\n  four\n  EOF",
+			want:   "/! cat <<'EOF'\none\ntwo\nthree\nfour\nEOF",
+		},
+		"a paste after a typed bang": {
+			typed:  "/! ",
+			pasted: "cat <<'EOF'\none\ntwo\nthree\nfour\nEOF",
+			want:   "/! cat <<'EOF'\none\ntwo\nthree\nfour\nEOF",
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			self := inputFromKeys(t, scenario.typed+pasteStart+scenario.pasted+pasteEnd)
+
+			if got := self.Text(); got != scenario.want {
+				t.Errorf("got %q, want %q", got, scenario.want)
+			}
+		})
+	}
+}
+
+func TestAPasteMentioningAHostCommandLaterIsStillFenced(t *testing.T) {
+	self := NewInput(nil)
+	self.InsertPasted("one\n/!two\nthree\nfour\nfive\nsix")
+
+	want := "```\none\n/!two\nthree\nfour\nfive\nsix\n```"
+	if got := self.Text(); got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
 func TestAFencedPasteStartsAndEndsOnItsOwnLines(t *testing.T) {
 	self := inputFromKeys(t, "beforeafter")
 	for range len("after") {

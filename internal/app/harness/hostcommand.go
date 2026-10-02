@@ -5,6 +5,7 @@ import (
 	"errors"
 	"time"
 
+	"crdx.org/oh/internal/app/experimental"
 	"crdx.org/oh/internal/app/feedback"
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/painter"
@@ -96,7 +97,11 @@ func (self *App) hostCommandEnded(outcome hostcommand.Outcome) {
 }
 
 func (self *App) hostCommandRan(event agent.Event) {
-	self.holdNotice(event)
+	if self.holdNotice(event) &&
+		!hostcommand.IsStoppedByUser(event) &&
+		self.experimental.IsEnabled(experimental.CommandStartsTurn) {
+		self.startTurn()
+	}
 }
 
 func (self *App) awaitHostCommand() {

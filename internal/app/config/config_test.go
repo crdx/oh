@@ -1762,6 +1762,13 @@ func TestAnUnrecognisedDefaultEffortIsRefused(t *testing.T) {
 	}
 }
 
+func TestCommandsDoNotStartTurnsByDefault(t *testing.T) {
+	config := configFrom(t, "")
+	if value, isSet := config.Experimental["command_starts_turn"]; !isSet || value != false {
+		t.Errorf("got experimental toggles %v", config.Experimental)
+	}
+}
+
 func TestAnExperimentalToggleIsCarriedToTheLiveConfiguration(t *testing.T) {
 	config := configFrom(t, `
 		[experimental]

@@ -1,8 +1,8 @@
 === 1 a restored job standing ===
-                                                                           double-enter to send now
+
  ⏳ The session was closed and reopened after the last turn. Job docs stopped when it closed.
     Restart it if still needed.
-
+                                                                           double-enter to send now
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -19,9 +19,9 @@ Model returned no reply.
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 3 an ended job standing ===
-                                                                           double-enter to send now
- ⏳ Job build exited: failed with no output.
 
+ ⏳ Job build exited: failed with no output.
+                                                                           double-enter to send now
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -57,10 +57,10 @@ Model returned no reply.
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 7 a restored job and one return ===
-                                                                           double-enter to send now
+
  ⏳ The session was closed and reopened after the last turn. Job docs stopped when it closed.
     Restart it if still needed.
-
+                                                                           double-enter to send now
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -77,10 +77,10 @@ Model returned no reply.
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 7c a restored job after an expired return pair ===
-                                                                           double-enter to send now
+
  ⏳ The session was closed and reopened after the last turn. Job docs stopped when it closed.
     Restart it if still needed.
-
+                                                                           double-enter to send now
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -97,11 +97,11 @@ Model returned no reply.
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 8 a stopped job standing ===
-                                                                           double-enter to send now
+
  ⏳ The workspace is now read-only.
  ⏳ Job web stopped because the workspace was made read-only.
  ⏳ The workspace is now read-write.
-
+                                                                           double-enter to send now
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 

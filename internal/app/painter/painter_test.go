@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 	"testing"
@@ -241,14 +242,20 @@ func TestPendingMessagesShareOneBlock(t *testing.T) {
 	if !strings.Contains(rows[1], "one") || !strings.Contains(rows[2], "two") {
 		t.Errorf("got rows %q, want the messages beside each other", rows)
 	}
+	if !strings.Contains(style.Plain(rows[3]), sendHint) {
+		t.Errorf("got rows %q, want the send hint last", rows)
+	}
 }
 
 func TestStandingNoticesSayHowToSendThemNow(t *testing.T) {
 	pending := NewPendingMessages([]string{"one"}, false, link.Roots{})
 
 	standing := pending.Rows(40)
-	if !strings.Contains(style.Plain(standing[0]), sendHint) {
-		t.Errorf("got rows %q, want the hint above the standing notice", standing)
+	if !strings.Contains(style.Plain(standing[len(standing)-1]), sendHint) {
+		t.Errorf("got rows %q, want the hint below the standing notice", standing)
+	}
+	if strings.Contains(style.Plain(standing[0]), sendHint) {
+		t.Errorf("got rows %q, want the hint only below the standing notice", standing)
 	}
 
 	pending.MarkSent()
@@ -292,7 +299,9 @@ func TestTheSendHintIsDroppedWhenItDoesNotFit(t *testing.T) {
 			if len(rows) != 3 {
 				t.Errorf("got %d rows, want a pad, the message, and a pad: %q", len(rows), rows)
 			}
-			if strings.Contains(style.Plain(rows[0]), sendHint) {
+			if slices.ContainsFunc(rows, func(row string) bool {
+				return strings.Contains(style.Plain(row), sendHint)
+			}) {
 				t.Errorf("got rows %q, want no hint where it does not fit", rows)
 			}
 		})

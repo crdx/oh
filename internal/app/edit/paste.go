@@ -4,11 +4,15 @@ import (
 	"encoding/json"
 	"regexp"
 	"strings"
+	"unicode"
 
 	"crdx.org/oh/internal/util/strutil"
 )
 
-const minimumCodeBlockPasteLines = 6
+const (
+	minimumCodeBlockPasteLines = 6
+	hostCommandPrefix          = "/!"
+)
 
 var (
 	goPackagePattern      = regexp.MustCompile(`(?m)^package [[:alpha:]_][[:alnum:]_]*[ \t]*$`)
@@ -18,14 +22,16 @@ var (
 	dockerStepPattern     = regexp.MustCompile(`(?mi)^(?:RUN|COPY|ADD|ENTRYPOINT|CMD)[ \t]+`)
 )
 
-func preparePastedText(text string, isAtLineStart bool, isAtLineEnd bool) string {
+func preparePastedText(text string, precedingText string, isAtLineEnd bool) string {
 	text = strings.ReplaceAll(text, "\r\n", "\n")
 	text = strings.ReplaceAll(text, "\r", "\n")
 	text = normaliseIndentation(strutil.StripControl(text))
 
-	if pastedLineCount(text) < minimumCodeBlockPasteLines {
+	if pastedLineCount(text) < minimumCodeBlockPasteLines || isHostCommand(precedingText+text) {
 		return text
 	}
+
+	isAtLineStart := precedingText == "" || strings.HasSuffix(precedingText, "\n")
 
 	codeBlock := FencedCodeBlock(text)
 
@@ -37,6 +43,10 @@ func preparePastedText(text string, isAtLineStart bool, isAtLineEnd bool) string
 	}
 
 	return codeBlock
+}
+
+func isHostCommand(text string) bool {
+	return strings.HasPrefix(strings.TrimLeftFunc(text, unicode.IsSpace), hostCommandPrefix)
 }
 
 func FencedCodeBlock(text string) string {

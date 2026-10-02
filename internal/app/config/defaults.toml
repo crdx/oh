@@ -81,6 +81,7 @@ lookup = "allow"
 [tools]
 
 [experimental]
+command_starts_turn = false
 
 [model]
 effort = "high"
@@ -104,7 +105,8 @@ home = []
 
 [bar.top]
 left = [
-    { segment = "activity-spinner", idle = "·✦·", frames = ["✦··", "·✦·", "··✦", "··✦", "·✦·", "✦··"], rate = "125ms" },
+    { segment = "activity-spinner", idle = "·✦·", frames = ["✦··", "·✦·", "··✦", "··✦", "·✦·", "✦··"], rate = "100ms" },
+    { segment = "mode-toggle" },
     { segment = "forwards" },
     { segment = "jobs" },
     { segment = "grants", type = "base" },
@@ -114,18 +116,18 @@ center = [
 right = [
     { segment = "active-model" },
     { segment = "context-usage" },
-    { segment = "scroll-overflow", direction = "up" }
+    { segment = "scroll-overflow", direction = "up" },
 ]
 
 [bar.bottom]
 left = [
-    { segment = "mode-toggle" },
     { segment = "workspace-dir", type = "base" },
+    { segment = "git-branch" },
+    { segment = "session-name", emoji = true },
 ]
 center = [
-    { segment = "subscription-usage" },
 ]
 right = [
-    { segment = "session-name", emoji = true },
-    { segment = "scroll-overflow", direction = "down" }
+    { segment = "subscription-usage" },
+    { segment = "scroll-overflow", direction = "down" },
 ]

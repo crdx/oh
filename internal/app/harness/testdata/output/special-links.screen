@@ -13,12 +13,14 @@ http://trellis.heroic-ibex.agent:12006/.
 === email autolink ===
 person-at-example.test
 === pending message ===
-               double-enter to send now
+
  ⏳ Granted temporary read-only access
     to /reference.
-=== pending message with a heading and a list ===
                double-enter to send now
+=== pending message with a heading and a list ===
+
  ⏳ Heading
 
     • first item
     • second item
+               double-enter to send now

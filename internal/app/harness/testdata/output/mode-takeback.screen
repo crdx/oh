@@ -16,32 +16,37 @@ conversation remains in scrollback
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === 11 toggled once past a stopped job ===
-                                                                           double-enter to send now
+
  ⏳ The workspace is now read-only.
  ⏳ Job web stopped because the workspace was made read-only.
  ⏳ The workspace is now read-write.
+                                                                           double-enter to send now
 === 12 toggled twice past a stopped job ===
-                                                                           double-enter to send now
+
  ⏳ The workspace is now read-only.
  ⏳ Job web stopped because the workspace was made read-only.
-=== 13 toggled thrice past a stopped job ===
                                                                            double-enter to send now
+=== 13 toggled thrice past a stopped job ===
+
  ⏳ The workspace is now read-only.
  ⏳ Job web stopped because the workspace was made read-only.
  ⏳ The workspace is now read-write.
-=== 14 toggled four times past a stopped job ===
                                                                            double-enter to send now
+=== 14 toggled four times past a stopped job ===
+
  ⏳ The workspace is now read-only.
  ⏳ Job web stopped because the workspace was made read-only.
-=== 15 toggled past a job another capability stopped ===
                                                                            double-enter to send now
+=== 15 toggled past a job another capability stopped ===
+
  ⏳ Job web stopped because the bash tool was refused.
+                                                                           double-enter to send now
 === 2 after ctrl+x l ===
 conversation remains in scrollback
 
-                                                                           double-enter to send now
- ⏳ Lookup can now access the internet.
 
+ ⏳ Lookup can now access the internet.
+                                                                           double-enter to send now
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -55,10 +60,10 @@ conversation remains in scrollback
 === 4 after ctrl+x n ===
 conversation remains in scrollback
 
-                                                                           double-enter to send now
+
  ⏳ Bash may now request the host network.
  ⏳ Fetch can now access the internet.
-
+                                                                           double-enter to send now
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -79,9 +84,9 @@ Job `build` exited: complete after 30s.
 === 7 one notice standing ===
 conversation remains in scrollback
 
-                                                                           double-enter to send now
- ⏳ The workspace is now read-only.
 
+ ⏳ The workspace is now read-only.
+                                                                           double-enter to send now
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -89,11 +94,11 @@ conversation remains in scrollback
 === 8 three notices standing ===
 conversation remains in scrollback
 
-                                                                           double-enter to send now
+
  ⏳ The workspace is now read-only.
  ⏳ Lookup can now access the internet.
  ⏳ .git is now read-write.
-
+                                                                           double-enter to send now
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -101,10 +106,10 @@ conversation remains in scrollback
 === 9 the middle notice taken back ===
 conversation remains in scrollback
 
-                                                                           double-enter to send now
+
  ⏳ The workspace is now read-only.
  ⏳ .git is now read-write.
-
+                                                                           double-enter to send now
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 

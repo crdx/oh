@@ -147,10 +147,9 @@ func (self *Input) Frame(width int) Frame {
 func (self *Input) InsertPasted(text string) {
 	position := self.buffer.Cursor()
 	runes := self.buffer.Runes()
-	isAtLineStart := position == 0 || runes[position-1] == '\n'
 	isAtLineEnd := position == len(runes) || runes[position] == '\n'
 
-	self.buffer.Insert([]rune(preparePastedText(text, isAtLineStart, isAtLineEnd)))
+	self.buffer.Insert([]rune(preparePastedText(text, string(runes[:position]), isAtLineEnd)))
 }
 
 func isPastable(character rune) bool {
@@ -474,10 +473,9 @@ func (self *Input) normalisePastedText() {
 	end := self.buffer.Cursor()
 	runes := self.buffer.Runes()
 	pastedText := string(runes[self.pasteStart:end])
-	isAtLineStart := self.pasteStart == 0 || runes[self.pasteStart-1] == '\n'
 	isAtLineEnd := end == len(runes) || runes[end] == '\n'
 
-	normalisedText := preparePastedText(pastedText, isAtLineStart, isAtLineEnd)
+	normalisedText := preparePastedText(pastedText, string(runes[:self.pasteStart]), isAtLineEnd)
 	if normalisedText == pastedText {
 		return
 	}

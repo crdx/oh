@@ -45,12 +45,16 @@
 
 ### Host commands
 
+- Keep the pending `/!` send hint visible
+- Add `experimental.command_starts_turn`
+- Keep idle `/!` output pending for double-enter
 - Don't start a new turn with `/!` commands
 - Run `/!` without freezing the interface
 - Stop a running `/!` command with escape or `ctrl+d`
 - Show the last line a running `/!` command printed
 - Keep only the final state of progress lines in `/!` output
 - Tell the model to produce commands as `/!` lines
+- Don't fence a long pasted `/!` command as a code block
 
 ### Grants and sandbox
 

@@ -17975,7 +17975,9 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	if scenario.RunBeforeFirst != "" {
 		firstHarness.hostCommandRan(sessionGoldenHostCommand(scenario.RunBeforeFirst))
 		firstHarness.settleAccess()
-		firstAssistant.AddUserMessage(firstHarness.takeSettledNotes())
+		if note := firstHarness.takeSettledNotes(); note != "" {
+			firstAssistant.AddUserMessage(note)
+		}
 	}
 	firstHarness.currentTurn = Turn{Stream: testRunningTurnStream(), painter: firstHarness.newPainter(true)}
 	firstTurns := runSessionGoldenTurn(t, firstHarness, scenario.FirstTurn, cancelSignals)
@@ -19674,6 +19676,9 @@ func TestGoldenAPasteDrawsWhatItDrewBefore(t *testing.T) {
 		"4d a paste containing a fence": func() string {
 			return pasteStream(t, "one\n```\nthree\nfour\nfive\nsix", pasteFinished)
 		},
+		"4e a host command of many lines": func() string {
+			return pasteStream(t, "/! cat <<'EOF'\none\ntwo\nthree\nfour\nEOF", pasteFinished)
+		},
 		"5 an indented paste": func() string {
 			return pasteStream(t, "    if isReady {\n        begin()\n    }", pasteFinished)
 		},
@@ -21203,34 +21208,80 @@ func endedJobConclusion() jobs.Conclusion {
 	}
 }
 
-func TestAHostCommandWaitsForTheNextTurn(t *testing.T) {
+func TestAHostCommandWaitsForDoubleEnter(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
+	provider := &messageCaptureProvider{}
+	self.agent = agent.New("", provider, nil)
 	completeTurn(self)
 
 	self.hostCommandRan(hostCommandRun())
 
 	if self.currentTurn.Running() {
-		t.Fatal("the command started a turn, want it left for the next message")
+		t.Fatal("the command started a turn, want it left for double-enter")
 	}
-	if len(self.pendingNotices.items) != 1 {
-		t.Fatalf("got %d pending notices, want the completed command held for the next turn", len(self.pendingNotices.items))
+	if len(self.pendingNotices.items) != 1 || len(self.settledNotes) != 0 {
+		t.Fatalf(
+			"got %d pending notices and %d settled notes, want one pending notice",
+			len(self.pendingNotices.items), len(self.settledNotes),
+		)
+	}
+	if slices.ContainsFunc(provider.messages, func(message string) bool {
+		return strings.Contains(message, "git status --short")
+	}) {
+		t.Errorf("the pending command was sent to the provider: %q", provider.messages)
 	}
 
-	self.start("what changed?")
+	history := edit.NewHistory("", historyLimit)
+	self.continueOrFlush(edit.NewInput(history), history)
+	if !self.currentTurn.Running() {
+		t.Fatal("double-enter did not start a turn for the pending command")
+	}
+	if len(self.pendingNotices.items) != 0 {
+		t.Errorf("got pending notices %+v, want the turn to have taken them", self.pendingNotices.items)
+	}
+	if !slices.ContainsFunc(provider.messages, func(message string) bool {
+		return strings.Contains(message, "git status --short")
+	}) {
+		t.Errorf("got messages %q, want double-enter to send the command", provider.messages)
+	}
+
+	for report := range self.currentTurn.Events() {
+		self.takeTurn(report)
+	}
+	self.finish()
+}
+
+func TestAHostCommandStartsATurnWhenTheExperimentIsEnabled(t *testing.T) {
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	provider := &messageCaptureProvider{}
+	self.agent = agent.New("", provider, nil)
+	self.experimental = experimental.New(map[string]any{
+		string(experimental.CommandStartsTurn): true,
+	})
+	completeTurn(self)
+
+	self.hostCommandRan(hostCommandRun())
+
+	if !self.currentTurn.Running() {
+		t.Fatal("the command left the conversation idle, want the experiment to start a turn")
+	}
 	for report := range self.currentTurn.Events() {
 		self.takeTurn(report)
 	}
 	self.finish()
 
-	messages := submittedTexts(self.recordedEvents)
-	if !slices.ContainsFunc(messages, func(message string) bool {
+	if !slices.ContainsFunc(provider.messages, func(message string) bool {
 		return strings.Contains(message, "git status --short")
 	}) {
-		t.Errorf("got messages %q, want the next turn told about the command", messages)
+		t.Errorf("got messages %q, want the turn told about the command", provider.messages)
 	}
-	if len(self.pendingNotices.items) != 0 {
-		t.Errorf("got pending notices %+v, want the next turn to have taken them", self.pendingNotices.items)
+	if len(self.pendingNotices.items) != 0 || len(self.settledNotes) != 0 {
+		t.Errorf(
+			"got %d pending notices and %d settled notes, want the turn to have taken them",
+			len(self.pendingNotices.items), len(self.settledNotes),
+		)
 	}
 }
 
@@ -21282,35 +21333,85 @@ func hostCommandRun() agent.Event {
 }
 
 func TestGoldenHostCommandNoticesMatchGolden(t *testing.T) {
-	drawnAt := func(build func(*App)) func() string {
+	drawnAtLines := func(lines int, isEnded bool, build func(*App)) func() string {
 		return func() string {
 			var screenOutput bytes.Buffer
 			self := testConversation(t, &screenOutput)
-			self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
+			self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, lines)
 			self.settleAccess()
 			build(self)
-			self.screen.End()
+			if isEnded {
+				self.screen.End()
+			}
 
 			return screenOutput.String()
 		}
 	}
+	drawnAt := func(build func(*App)) func() string {
+		return drawnAtLines(replayLines, true, build)
+	}
+	drawnStandingAt := func(build func(*App)) func() string {
+		return drawnAtLines(replayLines, false, build)
+	}
+	tallCommand := func(isSent bool) func() string {
+		return drawnAtLines(shortLines, isSent, func(self *App) {
+			history := edit.NewHistory("", historyLimit)
+			inputLine := edit.NewInput(history)
+			self.inputLine = inputLine
+			self.show(inputLine)
 
+			var commandOutput strings.Builder
+			for line := 1; line <= shortLines*2; line++ {
+				fmt.Fprintf(&commandOutput, "line %d\n", line)
+			}
+			self.hostCommandRan(hostcommand.RanEvent(hostcommand.Result{
+				Command: "print-many-lines",
+				Output:  commandOutput.String(),
+			}))
+			if isSent {
+				self.continueOrFlush(inputLine, history)
+			}
+			self.show(inputLine)
+		})
+	}
+
+	interruptedCommand := func() agent.Event {
+		return hostcommand.RanEvent(hostcommand.Result{
+			Command:         "git push",
+			Output:          "Enumerating objects: 5, done.\n",
+			StoppedAfter:    4 * time.Second,
+			IsStoppedByUser: true,
+		})
+	}
 	passes := map[string]func() string{
-		"completed and waiting for the next turn": drawnAt(func(self *App) {
+		"completed and waiting for double-enter": drawnStandingAt(func(self *App) {
 			self.hostCommandRan(hostCommandRun())
+		}),
+		"completed and sent by double-enter": drawnAt(func(self *App) {
+			history := edit.NewHistory("", historyLimit)
+			inputLine := edit.NewInput(history)
+			self.hostCommandRan(hostCommandRun())
+			self.continueOrFlush(inputLine, history)
+			self.show(inputLine)
+		}),
+		"completed and started an experimental turn": drawnAt(func(self *App) {
+			self.experimental = experimental.New(map[string]any{
+				string(experimental.CommandStartsTurn): true,
+			})
+			self.hostCommandRan(hostCommandRun())
+			for report := range self.currentTurn.Events() {
+				self.takeTurn(report)
+			}
+			self.finish()
 		}),
 		"completed during a running turn": drawnAt(func(self *App) {
 			self.currentTurn = Turn{Stream: testRunningTurnStream(), painter: self.newPainter(true)}
 			self.hostCommandRan(hostCommandRun())
 		}),
-		"settled into the next turn": drawnAt(func(self *App) {
-			self.hostCommandRan(hostCommandRun())
-			self.settlePendingInput()
-		}),
 		"stopped in the next turn": drawnAt(func(self *App) {
+			history := edit.NewHistory("", historyLimit)
 			self.hostCommandRan(hostCommandRun())
-			self.settlePendingInput()
-			self.currentTurn = Turn{painter: self.newPainter(true)}
+			self.continueOrFlush(edit.NewInput(history), history)
 			self.currentTurn.painter.DrawEvent(interrupt.Event(interrupt.ControlD))
 		}),
 		"printed nothing": drawnAt(func(self *App) {
@@ -21329,15 +21430,27 @@ func TestGoldenHostCommandNoticesMatchGolden(t *testing.T) {
 				StoppedAfter: 30 * time.Second,
 			}))
 		}),
-		"interrupted by the user": drawnAt(func(self *App) {
-			self.notify(hostcommand.RanEvent(hostcommand.Result{
-				Command:         "git push",
-				Output:          "Enumerating objects: 5, done.\n",
-				StoppedAfter:    4 * time.Second,
-				IsStoppedByUser: true,
-			}))
+		"interrupted and waiting for the next turn": drawnStandingAt(func(self *App) {
+			self.hostCommandRan(interruptedCommand())
+		}),
+		"interrupted and sent into the next turn": drawnAt(func(self *App) {
+			history := edit.NewHistory("", historyLimit)
+			self.hostCommandRan(interruptedCommand())
+			self.continueOrFlush(edit.NewInput(history), history)
 		}),
 	}
+
+	tallPending := tallCommand(false)()
+	requireNothingDrawnAboveTheScreen(t, "a pending host command taller than the terminal", tallPending, shortLines)
+	passes["completed taller than the terminal and pending"] = func() string { return tallPending }
+
+	tallSent := tallCommand(true)()
+	requireNothingDrawnAboveTheScreen(t, "a sent host command taller than the terminal", tallSent, shortLines)
+	copied := strings.Join(playScreenOfSize(t, tallSent, replayColumns, shortLines).copied(), "\n")
+	if !strings.Contains(copied, "line 1") || !strings.Contains(copied, fmt.Sprintf("line %d", shortLines*2)) {
+		t.Errorf("the sent command was not sealed whole into scrollback:\n%s", copied)
+	}
+	passes["completed taller than the terminal and sent"] = func() string { return tallSent }
 
 	compareWithGolden(t, "host-command", ".ansi", passes)
 	compareWithGolden(t, "host-command", ".screen", shownPasses(t, passes))
@@ -21550,7 +21663,7 @@ func TestTheModelIsToldTheDetailedFormOfAUserNotice(t *testing.T) {
 	}
 }
 
-func TestAHostCommandLeavesANoticeStandingForTheNextTurn(t *testing.T) {
+func TestAHostCommandIsPendingWithoutStartingATurn(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
 	self.settleAccess()
@@ -21558,13 +21671,18 @@ func TestAHostCommandLeavesANoticeStandingForTheNextTurn(t *testing.T) {
 	self.hostCommandRan(hostcommand.RanEvent(hostcommand.Result{Command: "git status", Output: " M README.md\n"}))
 
 	if self.currentTurn.Running() {
-		t.Fatal("the command started a turn, want it left for the next message")
+		t.Fatal("the command started a turn, want it left for double-enter")
 	}
 	if len(self.settledNotes) != 0 || len(self.pendingNotices.items) != 1 {
 		t.Errorf(
-			"got %d notes and %d notices standing, want one pending notice",
+			"got %d settled notes and %d pending notices, want one pending notice",
 			len(self.settledNotes), len(self.pendingNotices.items),
 		)
+	}
+	if messages := submittedTexts(self.recordedEvents); slices.ContainsFunc(messages, func(message string) bool {
+		return strings.Contains(message, "git status")
+	}) {
+		t.Errorf("the pending command was recorded as sent: %q", messages)
 	}
 }
 

@@ -1182,7 +1182,7 @@ func TestTitlesAndNotificationsFollowTheirOwnTools(t *testing.T) {
 	}
 }
 
-func TestCommandsForTheUserAreOfferedAsBangLinesOnlyWhenSomebodyCanTypeThem(t *testing.T) {
+func TestCommandsForTheUserAreOfferedAsBangBlocksOnlyWhenSomebodyCanTypeThem(t *testing.T) {
 	for name, testCase := range map[string]struct {
 		isInteractive bool
 		handoff       string
@@ -1208,8 +1208,9 @@ func TestCommandsForTheUserAreOfferedAsBangLinesOnlyWhenSomebodyCanTypeThem(t *t
 
 			for _, rule := range []string{
 				"# Commands for the User",
-				"as a /! line in a fenced bash block, for them to paste into their input",
-				"/! runs bash on the host in the workspace, so do not cd to it",
+				"in a fenced bash block whose first line starts with `/!`, for them to paste into their input",
+				"`/!` applies to the entire pasted input, so prefer a readable multi-line command over joining it onto one line",
+				"`/!` runs bash on the host in the workspace, so do not cd to it",
 				"You receive the command, output, exit code, and interrupt/kill state",
 				"no terminal and is killed after 30s",
 			} {

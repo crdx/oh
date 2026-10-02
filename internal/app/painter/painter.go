@@ -288,7 +288,7 @@ func renderSubmittedMessage(
 ) string {
 	content := submittedContentRows(message, columns, shouldRenderHyperlinks, roots)
 
-	return strings.Join(frameSubmitted("", content, columns, message.background()), "\n")
+	return strings.Join(frameSubmitted("", content, "", columns, message.background()), "\n")
 }
 
 func submittedContentRows(
@@ -329,9 +329,9 @@ func submittedContentRows(
 	return content
 }
 
-func frameSubmitted(head string, content []string, columns int, background style.Style) []string {
+func frameSubmitted(head string, content []string, foot string, columns int, background style.Style) []string {
 	rows := append([]string{head}, content...)
-	rows = append(rows, "")
+	rows = append(rows, foot)
 
 	for i, row := range rows {
 		if room := columns - style.Width(row); room > 0 {
@@ -580,7 +580,7 @@ func (self *Picasso) submittedPanel(message submittedMessage) (output.Block, out
 			isLoose: isLooseNotice(message.text),
 		},
 		func(content []string, columns int) []string {
-			return frameSubmitted("", content, columns, message.background())
+			return frameSubmitted("", content, "", columns, message.background())
 		}
 }
 

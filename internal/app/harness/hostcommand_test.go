@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -85,8 +86,19 @@ func TestAHostCommandRunsWithoutHoldingTheInterface(t *testing.T) {
 	if self.currentTurn.Running() {
 		t.Fatal("the command started a turn, want it left for the next message")
 	}
+	if len(self.pendingNotices.items) != 1 || len(self.settledNotes) != 0 {
+		t.Errorf(
+			"got %d pending notices and %d settled notes, want one pending notice",
+			len(self.pendingNotices.items), len(self.settledNotes),
+		)
+	}
 	if notice := strings.Join(self.pendingNotices.notices(), "\n"); !strings.Contains(notice, "git push") {
-		t.Errorf("got pending notices %q, want the completed command held for the next message", notice)
+		t.Errorf("got pending notices %q, want the completed command", notice)
+	}
+	if messages := submittedTexts(self.recordedEvents); slices.ContainsFunc(messages, func(message string) bool {
+		return strings.Contains(message, "git push")
+	}) {
+		t.Errorf("the pending command was recorded as sent: %q", messages)
 	}
 }
 
@@ -173,8 +185,16 @@ func TestAPrintedHostCommandIsAwaitedAndHeldForTheNextLine(t *testing.T) {
 	if self.currentTurn.Running() {
 		t.Error("the command started a turn, want it held for the next input line")
 	}
-	if len(self.pendingNotices.items) != 1 {
-		t.Errorf("got %d pending notices, want the command's own", len(self.pendingNotices.items))
+	if len(self.pendingNotices.items) != 1 || len(self.settledNotes) != 0 {
+		t.Errorf(
+			"got %d pending notices and %d settled notes, want one pending notice",
+			len(self.pendingNotices.items), len(self.settledNotes),
+		)
+	}
+	if messages := submittedTexts(self.recordedEvents); slices.ContainsFunc(messages, func(message string) bool {
+		return strings.Contains(message, "ls")
+	}) {
+		t.Errorf("the pending command was recorded as sent: %q", messages)
 	}
 }
 

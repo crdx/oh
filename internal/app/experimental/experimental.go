@@ -9,6 +9,8 @@ import (
 
 type Name string
 
+const CommandStartsTurn Name = "command_starts_turn"
+
 type Kind int
 
 const (
@@ -32,7 +34,9 @@ func (self Kind) String() string {
 	return "a value"
 }
 
-var toggleKinds = map[Name]Kind{}
+var toggleKinds = map[Name]Kind{
+	CommandStartsTurn: BooleanKind,
+}
 
 type Complaint struct {
 	Name   string

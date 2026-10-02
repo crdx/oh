@@ -13,6 +13,16 @@ func TestEveryDeclaredToggleNamesItselfInSnakeCase(t *testing.T) {
 	}
 }
 
+func TestCommandStartsTurnIsABooleanToggle(t *testing.T) {
+	if complaints := Check(map[string]any{string(CommandStartsTurn): true}); len(complaints) != 0 {
+		t.Errorf("got complaints %v", complaints)
+	}
+	complaints := Check(map[string]any{string(CommandStartsTurn): "yes"})
+	if len(complaints) != 1 || !strings.Contains(complaints[0].Reason, "true or false") {
+		t.Errorf("got complaints %v, want the toggle to require a boolean", complaints)
+	}
+}
+
 func TestAToggleNobodyDeclaresIsComplainedAboutAndDoesNothing(t *testing.T) {
 	complaints := check(map[Name]Kind{}, map[string]any{"retired_thing": true})
 
