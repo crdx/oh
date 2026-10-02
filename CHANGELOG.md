@@ -2,6 +2,8 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+## [0.12.0] - 2026-10-03
+
 ### Theme
 
 - Apply the theme in the session picker
@@ -15,7 +17,7 @@
 - Add OpenCode Go's Qwen models over the Messages API
 - Offer OpenCode Go models that don't have effort levels
 - Cap OpenCode Go max output at 32Kt
-- Only list and complete modelsfor logged in providers
+- Only list and complete models for logged in providers
 
 ### Drawing
 
@@ -74,12 +76,11 @@
 
 ### Tool calls
 
-- Add intent parameter to job tool
 - Lead shell and job start rows with their intent
 - Require an intent on every shell call and job start
 - Remind a job call of the intent its job was started with
-- Allow a background job associate to a port
-- Allow a background job take over a forwarded port
+- Allow a background job to associate with a port
+- Allow a background job to take over a forwarded port
 - Call background job output calls `cat`
 - Format background job wait limits as durations
 - Fence `fetch` and `lookup` results as untrusted data
