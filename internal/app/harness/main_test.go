@@ -11649,6 +11649,7 @@ const (
 	feedbackHelp
 	feedbackStartupInfo
 	feedbackSuccess
+	feedbackReloadedConfig
 	feedbackClearedByEditing
 	feedbackClearedByEscape
 	feedbackClearedByBackspace
@@ -11714,6 +11715,7 @@ func TestGoldenFeedbackDrawsEveryVisibleState(t *testing.T) {
 		"multiline help":                    feedbackHelp,
 		"startup info":                      feedbackStartupInfo,
 		"success confirmation":              feedbackSuccess,
+		"config reload without snippets":    feedbackReloadedConfig,
 		"editing clears feedback":           feedbackClearedByEditing,
 		"escape clears feedback":            feedbackClearedByEscape,
 		"backspace clears feedback":         feedbackClearedByBackspace,
@@ -11856,6 +11858,16 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 		self.acceptInitialInput(inputLine, edit.NewHistory("", historyLimit), "/info")
 	case feedbackSuccess:
 		self.handleCommand("/copy")
+		self.show(inputLine)
+	case feedbackReloadedConfig:
+		self.showFeedback(feedback.Confirmation, feedback.Message{
+			Text: reloadConfirmation([]config.SourceChange{{
+				Path:     "config.toml",
+				Settings: []string{"ui.currency"},
+			}}),
+			Status:       agent.SuccessStatus,
+			DismissAfter: configReloadConfirmationDuration,
+		})
 		self.show(inputLine)
 	case feedbackClearedByEditing:
 		self.handleCommand("/unknown")

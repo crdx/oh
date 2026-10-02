@@ -37,6 +37,7 @@
 - Remove trailing space after an argumentless command
 - Eat tabs within slash commands and snippets
 - Auto-discover snippets from `snippets/*.md`
+- Keep unchanged snippets out of config reload notices
 - Add completion for `/new`, `/fork`, and `/job`
 - Hide the "no matches" dropdown on `/!`
 - Fix input wrapping cursor position issue

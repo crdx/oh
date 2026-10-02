@@ -550,6 +550,132 @@ func TestAReloadReportsAnOverrideThatWentAway(t *testing.T) {
 	}
 }
 
+func observedConfigWithDiscoveredSnippets(t *testing.T) (string, string, *Observer) {
+	t.Helper()
+
+	directory := t.TempDir()
+	snippetsDirectory := filepath.Join(directory, "snippets")
+	if err := os.Mkdir(snippetsDirectory, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	for _, name := range []string{"done.md", "fix.md"} {
+		if err := os.WriteFile(filepath.Join(snippetsDirectory, name), []byte("Do the thing.\n"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	configPath := filepath.Join(directory, "config.toml")
+	if err := writeConfigFile(configPath, "[ui]\ncurrency = \"GBP\"\n"); err != nil {
+		t.Fatal(err)
+	}
+	_, observer := observeConfig(t, configPath)
+	return configPath, snippetsDirectory, observer
+}
+
+func TestSavingAConfigDoesNotReportUnchangedDiscoveredSnippets(t *testing.T) {
+	configPath, _, observer := observedConfigWithDiscoveredSnippets(t)
+	if err := writeConfigFile(configPath, "[ui]\ncurrency = \"EUR\"\n"); err != nil {
+		t.Fatal(err)
+	}
+
+	applied := observer.Reload(nil, testSegments())
+	if applied.Status != ReloadApplied {
+		t.Fatalf("reload status=%v failure=%v", applied.Status, applied.Failure)
+	}
+	if len(applied.Changes) != 1 || applied.Changes[0].Path != "config.toml" {
+		t.Fatalf("got changes %v, want the config alone", applied.Changes)
+	}
+	if want := []string{"ui.currency"}; !slices.Equal(applied.Changes[0].Settings, want) {
+		t.Errorf("got settings %v, want %v", applied.Changes[0].Settings, want)
+	}
+}
+
+func TestAValidConfigAfterATransientFailureDoesNotReportUnchangedDiscoveredSnippets(t *testing.T) {
+	configPath, _, observer := observedConfigWithDiscoveredSnippets(t)
+	if err := os.WriteFile(configPath, []byte("not toml = ["), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if failed := observer.Reload(nil, testSegments()); failed.Status != ReloadFailed {
+		t.Fatalf("failed reload status=%v failure=%v", failed.Status, failed.Failure)
+	}
+
+	if err := writeConfigFile(configPath, "[ui]\ncurrency = \"EUR\"\n"); err != nil {
+		t.Fatal(err)
+	}
+	applied := observer.Reload(nil, testSegments())
+	if applied.Status != ReloadApplied {
+		t.Fatalf("reload status=%v failure=%v", applied.Status, applied.Failure)
+	}
+	if len(applied.Changes) != 1 || applied.Changes[0].Path != "config.toml" {
+		t.Fatalf("got changes %v, want the config alone", applied.Changes)
+	}
+	if want := []string{"ui.currency"}; !slices.Equal(applied.Changes[0].Settings, want) {
+		t.Errorf("got settings %v, want %v", applied.Changes[0].Settings, want)
+	}
+}
+
+func TestAValidConfigAfterATransientFailureStillReportsRealDiscoveredSnippetChanges(t *testing.T) {
+	for name, test := range map[string]struct {
+		change    func(string) error
+		path      string
+		setting   string
+		isRemoved bool
+	}{
+		"changed": {
+			change: func(directory string) error {
+				return os.WriteFile(filepath.Join(directory, "done.md"), []byte("Do something else.\n"), 0o600)
+			},
+			path:    "done.md",
+			setting: "snippets.done",
+		},
+		"created": {
+			change: func(directory string) error {
+				return os.WriteFile(filepath.Join(directory, "new.md"), []byte("Do something new.\n"), 0o600)
+			},
+			path:    "new.md",
+			setting: "snippets.new",
+		},
+		"removed": {
+			change: func(directory string) error {
+				return os.Remove(filepath.Join(directory, "done.md"))
+			},
+			path:      "done.md",
+			setting:   "snippets.done",
+			isRemoved: true,
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			configPath, snippetsDirectory, observer := observedConfigWithDiscoveredSnippets(t)
+			if err := os.WriteFile(configPath, []byte("not toml = ["), 0o600); err != nil {
+				t.Fatal(err)
+			}
+			if failed := observer.Reload(nil, testSegments()); failed.Status != ReloadFailed {
+				t.Fatalf("failed reload status=%v failure=%v", failed.Status, failed.Failure)
+			}
+			if err := test.change(snippetsDirectory); err != nil {
+				t.Fatal(err)
+			}
+			if err := writeConfigFile(configPath, "[ui]\ncurrency = \"GBP\"\n"); err != nil {
+				t.Fatal(err)
+			}
+
+			applied := observer.Reload(nil, testSegments())
+			if applied.Status != ReloadApplied {
+				t.Fatalf("reload status=%v failure=%v", applied.Status, applied.Failure)
+			}
+			if len(applied.Changes) != 1 {
+				t.Fatalf("got changes %v, want the snippet alone", applied.Changes)
+			}
+			change := applied.Changes[0]
+			if change.Path != test.path || change.IsRemoved != test.isRemoved {
+				t.Errorf("got path %q removed=%t, want %q removed=%t", change.Path, change.IsRemoved, test.path, test.isRemoved)
+			}
+			if want := []string{test.setting}; !slices.Equal(change.Settings, want) {
+				t.Errorf("got settings %v, want %v", change.Settings, want)
+			}
+		})
+	}
+}
+
 func TestAChangedSnippetFileIsNamedBesideTheConfigThatReferencesIt(t *testing.T) {
 	directory := t.TempDir()
 	snippetsDirectory := filepath.Join(directory, "snippets")

@@ -327,6 +327,7 @@ func snippetSettings(settings Config) map[string][]string {
 type Observer struct {
 	sources         []Source
 	handledRevision revision
+	failedRevision  *revision
 	watcher         *fileWatcher
 }
 
@@ -434,13 +435,20 @@ func (self *Observer) refresh(watchFailure error) (Config, []SourceChange, error
 	}
 
 	if current.equal(self.handledRevision) {
+		self.failedRevision = nil
 		return Config{}, nil, nil
 	}
-	previous := self.handledRevision
-	self.handledRevision = current
 	if err != nil {
+		if self.failedRevision != nil && current.equal(*self.failedRevision) {
+			return Config{}, nil, nil
+		}
+		self.failedRevision = &current
 		return Config{}, nil, err
 	}
+
+	previous := self.handledRevision
+	self.handledRevision = current
+	self.failedRevision = nil
 	return settings, current.changesSince(previous), nil
 }
 
