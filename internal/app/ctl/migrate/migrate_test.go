@@ -1392,3 +1392,40 @@ func TestEveryFormatThatReadsEventsRefusesOneItCannotRead(t *testing.T) {
 		})
 	}
 }
+
+func TestFormatEighteenMigrationStoresTheIntentInTheRendering(t *testing.T) {
+	directory, name := storedJournal(t,
+		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":18,"id":"one","name":"tame-impala","meta":{}}`,
+		`{"kind":"event","event":{"kind":"tool_call_request","id":"1","name":"bash",`+
+			`"arguments":"{\"command\":\"go test ./...\",\"intent\":\"Run   every test\"}"}}`,
+		`{"kind":"event","event":{"kind":"tool_call_request","id":"2","name":"bash",`+
+			`"arguments":"{\"command\":\"true\",\"intent\":\"API checks only\"}"}}`,
+		`{"kind":"event","event":{"kind":"tool_call_request","id":"3","name":"bash",`+
+			`"arguments":"{\"command\":\"true\",\"intent\":\"  \"}"}}`,
+		`{"kind":"event","event":{"kind":"tool_call_request","id":"4","name":"job",`+
+			`"arguments":"{\"action\":\"start\",\"name\":\"docs\",\"command\":\"just docs\",\"intent\":\"serve the docs\"}"}}`,
+		`{"kind":"event","event":{"kind":"tool_call_request","id":"5","name":"job",`+
+			`"arguments":"{\"action\":\"stop\",\"name\":\"docs\",\"intent\":\"stop the docs\"}"}}`,
+		`{"kind":"event","event":{"kind":"tool_call_request","id":"6","name":"read",`+
+			`"arguments":"{\"path\":\"README.md\",\"intent\":\"read it\"}"}}`,
+	)
+
+	if _, err := migrate.Session(options(directory), name); err != nil {
+		t.Fatal(err)
+	}
+
+	storedSession, err := store.Read(directory, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := map[string]string{"1": "run every test", "2": "API checks only", "4": "serve the docs"}
+	for _, event := range storedSession.Events {
+		if event.Kind != agent.ToolCallRequestEvent {
+			continue
+		}
+		if event.Intent != want[event.ID] {
+			t.Errorf("call %s stored the intent %q, want %q", event.ID, event.Intent, want[event.ID])
+		}
+	}
+}

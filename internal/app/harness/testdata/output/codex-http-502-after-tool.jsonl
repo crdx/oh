@@ -1,4 +1,4 @@
-{"kind":"head","version":18,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant.","tools":["work"],"tool_definitions":[{"name":"work","description":"A deterministic scenario tool.","revision":"1"}]}}
+{"kind":"head","version":19,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant.","tools":["work"],"tool_definitions":[{"name":"work","description":"A deterministic scenario tool.","revision":"1"}]}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"recover from a bad gateway once the tool has run"}}

@@ -1,4 +1,4 @@
-{"kind":"head","version":18,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"high","system_prompt":"You are a test assistant."}}
+{"kind":"head","version":19,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"high","system_prompt":"You are a test assistant."}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"lose the network during reasoning"}}
 {"kind":"event","event":{"kind":"request_retry","failure":{"kind":"generic_error","message":"unexpected EOF"},"attempt":1}}

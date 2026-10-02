@@ -1,4 +1,4 @@
-{"kind":"head","version":18,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant.","tools":["lookup"],"tool_definitions":[{"name":"lookup","description":"search the web using OpenAI and return a cited answer","revision":"1","parameters":[{"name":"query","type":"string","description":"web lookup query"}]}]}}
+{"kind":"head","version":19,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant.","tools":["lookup"],"tool_definitions":[{"name":"lookup","description":"search the web using OpenAI and return a cited answer","revision":"1","parameters":[{"name":"query","type":"string","description":"web lookup query"}]}]}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"look up a topic the user will refuse"}}
 {"kind":"event","event":{"render":"current weather","read_only":true,"kind":"tool_call_request","id":"call-1","name":"lookup","arguments":"{\"query\":\"current weather\"}"}}

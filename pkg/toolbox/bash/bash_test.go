@@ -208,6 +208,33 @@ func TestACallWithoutAnIntentStillParses(t *testing.T) {
 	}
 }
 
+func TestTheIntentReachesTheCallRow(t *testing.T) {
+	call, err := fixedShell(nil, func() sandbox.Policy { return sandbox.Policy{} }).
+		Parse(`{"command":"go test ./...","intent":"run every test"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if got := call.Rendering().Intent; got != "run every test" {
+		t.Errorf("got intent %q, want %q", got, "run every test")
+	}
+}
+
+func TestALeadingCapitalIsLoweredInTheIntent(t *testing.T) {
+	for intent, want := range map[string]string{
+		"Run every test":        "run every test",
+		"run every test":        "run every test",
+		"  A quick look around": "a quick look around",
+		"API tests only":        "API tests only",
+		"Élan check":            "élan check",
+		"":                      "",
+	} {
+		if got := bash.SpokenIntent(intent); got != want {
+			t.Errorf("%q: got %q, want %q", intent, got, want)
+		}
+	}
+}
+
 func TestAnEmptyCommandIsRefusedDuringParsing(t *testing.T) {
 	call, err := fixedShell(nil, func() sandbox.Policy { return sandbox.Policy{} }).
 		Parse(`{"intent":"try it","command":"   "}`)
@@ -288,7 +315,9 @@ func TestTheSharedCommandRenderingMatchesTheBashTool(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if parsedRendering := parsedCall.Rendering(); !reflect.DeepEqual(rendering, parsedRendering) {
+	parsedRendering := parsedCall.Rendering()
+	parsedRendering.Intent = ""
+	if !reflect.DeepEqual(rendering, parsedRendering) {
 		t.Errorf("got %#v, want the bash tool's complete rendering %#v", parsedRendering, rendering)
 	}
 }

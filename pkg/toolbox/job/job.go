@@ -75,7 +75,7 @@ func New(
 				tool.Enum("wait_for", "whether wait returns after any or all watched jobs end", waitForAny, waitForAll).Optional(),
 				tool.Integer("wait_seconds", fmt.Sprintf("how many seconds to wait at most — max %s (default)", util.CompactDuration(waitLimit))).Optional(),
 				tool.String("command", "the command line (for action 'start'); if omitted, re-runs previous job by name").Optional(),
-				tool.String("intent", "what you intend the job to do, in words").Optional(),
+				tool.String("intent", bash.IntentDescription).Optional(),
 			},
 		},
 		Describe,
@@ -98,18 +98,14 @@ func Describe(args Args) tool.CallRendering {
 			subject += ":" + strconv.Itoa(args.Port)
 			emphasis = tool.Emphasis{Kind: tool.EmphasisLead, Value: args.Name}
 		}
-		qualifier := ""
-		if intent := strings.TrimSpace(args.Intent); intent != "" {
-			qualifier = "— " + intent
-		}
 		if strings.TrimSpace(args.Command) == "" {
-			return tool.CallRendering{Kind: "job_restart", Subject: subject, Qualifier: qualifier, Emphasis: emphasis}
+			return tool.CallRendering{Kind: "job_restart", Subject: subject, Emphasis: emphasis, Intent: bash.SpokenIntent(args.Intent)}
 		}
 		return tool.CallRendering{
 			Kind:         "job_start",
 			Subject:      subject,
-			Qualifier:    qualifier,
 			Emphasis:     emphasis,
+			Intent:       bash.SpokenIntent(args.Intent),
 			Continuation: []tool.CallRendering{bash.DescribeCommand(args.Command)},
 		}
 	case actionWait:

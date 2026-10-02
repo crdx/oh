@@ -1,4 +1,4 @@
-{"kind":"head","version":18,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"head","version":19,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant."}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"interrupt reasoning before the answer"}}
 {"kind":"event","event":{"kind":"turn_interruption","name":"escape"}}

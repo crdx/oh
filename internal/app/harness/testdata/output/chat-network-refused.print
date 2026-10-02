@@ -2,7 +2,7 @@
  run a command the user will refuse the host network
 
 
-$ curl example.com ✗ 1L host-network access refused; command did not run
+$ curl example.c… # see what example.com serves ✗ 1L host-network access refused; command did not r…
 
 I will not run that command.
 

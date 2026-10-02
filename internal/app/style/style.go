@@ -39,6 +39,7 @@ var (
 	RunningSession        Style = decorate(col.Italic, Dim)
 	OtherWorkspaceSession Style = Dim
 	Column                Style = decorate(col.Underline, Dim)
+	Intent                Style = decorate(col.Underline, Comment)
 	Greeting              Style = col.Italic
 	PendingPrefix         Style = col.Underline
 

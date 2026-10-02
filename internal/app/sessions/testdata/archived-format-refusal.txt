@@ -1,3 +1,3 @@
 === startup ===
 === picker ===
-able-dolphin is written in an older journal format: run `oh --ctl migrate` to bring it up to format 18
+able-dolphin is written in an older journal format: run `oh --ctl migrate` to bring it up to format 19

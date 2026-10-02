@@ -43,11 +43,12 @@ type CallRendering struct {
 	PathLine     string          `json:"path_line,omitempty"`
 	Emphasis     Emphasis        `json:"emphasis,omitzero"`
 	Continuation []CallRendering `json:"continuation,omitempty"`
+	Intent       string          `json:"intent,omitempty"`
 	ShowOutput   bool            `json:"show_output,omitempty"`
 }
 
 func (self CallRendering) HasArguments() bool {
-	return self.Subject != "" || self.Qualifier != "" || len(self.Continuation) > 0
+	return self.Subject != "" || self.Qualifier != "" || len(self.Continuation) > 0 || self.Intent != ""
 }
 
 type ToolCallResult struct {

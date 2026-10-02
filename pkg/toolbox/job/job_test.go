@@ -199,7 +199,7 @@ func TestStartingAnUnknownNameWithNoCommandIsRefused(t *testing.T) {
 	}
 }
 
-func TestAJobIntentQualifiesItsCallRow(t *testing.T) {
+func TestAJobCarriesItsIntentIntoItsCallRow(t *testing.T) {
 	built := job.New(nil, nil, nil, nil)
 	for _, arguments := range []string{
 		`{"action":"start","name":"docs","command":"serve docs","intent":"serve the documentation"}`,
@@ -209,17 +209,9 @@ func TestAJobIntentQualifiesItsCallRow(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if got := call.Rendering().Qualifier; got != "— serve the documentation" {
-			t.Errorf("%s qualified as %q, want the intent", arguments, got)
+		if got := call.Rendering().Intent; got != "serve the documentation" {
+			t.Errorf("%s carried the intent %q, want it whole", arguments, got)
 		}
-	}
-
-	call, err := built.Parse(`{"action":"start","name":"docs","command":"serve docs","intent":"  "}`)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if got := call.Rendering().Qualifier; got != "" {
-		t.Errorf("a blank intent qualified as %q, want nothing", got)
 	}
 }
 

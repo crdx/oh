@@ -22,6 +22,9 @@ const (
 	bytesPerMegabyte = 1 << 20
 
 	noTimeAtAll = "0s"
+
+	intentMark       = "# "
+	minimumRestWidth = 2
 )
 
 type Label struct {
@@ -29,6 +32,7 @@ type Label struct {
 	Subject         string
 	Emphasis        tool.Emphasis
 	Qualifier       string
+	Intent          string
 	ReadOnly        bool
 	NameStyle       style.Style
 	FocusStyle      style.Style
@@ -85,6 +89,13 @@ func (self Label) Render() string {
 		}
 	}
 
+	if self.Intent != "" {
+		if line != "" {
+			line += " "
+		}
+		line += style.Comment(intentMark) + style.Intent(self.Intent)
+	}
+
 	if self.linkSource != "" {
 		return link.RenderFromSource(line, self.linkSource, self.PathRoots)
 	}
@@ -125,6 +136,13 @@ func (self Label) Width() int {
 		total += partWidth
 	}
 
+	if self.Intent != "" {
+		if total > 0 {
+			total++
+		}
+		total += width.Of(intentMark + self.Intent)
+	}
+
 	return total
 }
 
@@ -138,6 +156,11 @@ func (self Label) elide(room int) Label {
 
 	self.Name = width.Elide(self.Name, room)
 	room -= width.Of(self.Name) + 1
+	self.Intent, room = elideIntent(
+		self.Intent,
+		room,
+		self.Subject != "" || self.Qualifier != "" || len(self.Continuation) > 0,
+	)
 
 	if room > 0 {
 		completeSubject := self.Subject
@@ -179,6 +202,24 @@ func (self Label) elide(room int) Label {
 
 	self.linkSource = linkSource
 	return self
+}
+
+func elideIntent(intent string, room int, hasRest bool) (string, int) {
+	if intent == "" {
+		return "", room
+	}
+
+	restRoom := 0
+	if hasRest {
+		restRoom = minimumRestWidth
+	}
+	markedIntent := width.Elide(intentMark+intent, min(width.Of(intentMark+intent), room-restRoom))
+	text, isMarked := strings.CutPrefix(markedIntent, intentMark)
+	if !isMarked || text == "" || text == width.Ellipsis {
+		return "", room
+	}
+
+	return text, room - width.Of(markedIntent) - 1
 }
 
 func (self Label) getSource() string {

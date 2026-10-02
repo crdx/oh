@@ -349,6 +349,54 @@ func TestElidedBashCountsWideUnicodeInTerminalCells(t *testing.T) {
 	}
 }
 
+func TestAnIntentIsDrawnLastAsAComment(t *testing.T) {
+	label := Label{Name: "$", Subject: "go test ./...", Qualifier: "2L", Intent: "run every test"}
+
+	if got := style.Plain(label.Render()); got != "$ go test ./... 2L # run every test" {
+		t.Errorf("got %q", got)
+	}
+	if got := label.Render(); !strings.HasSuffix(got, style.Comment("# ")+style.Intent("run every test")) {
+		t.Errorf("got %q, want the intent underlined after a plain comment mark", got)
+	}
+	if got, want := label.Width(), width.Of("$ go test ./... 2L # run every test"); got != want {
+		t.Errorf("got width %d, want %d", got, want)
+	}
+}
+
+func TestAnIntentIsCutLast(t *testing.T) {
+	label := Label{
+		Name:         "start",
+		Subject:      "golden",
+		Intent:       "regenerate every golden",
+		Continuation: []Label{{Name: "$", Subject: "cd /tmp/oh && just golden"}},
+	}
+	for room, want := range map[int]string{
+		80: "start golden $ cd /tmp/oh && just golden # regenerate every golden",
+		50: "start golden $ cd /tmp/… # regenerate every golden",
+		34: "start g… # regenerate every golden",
+		33: "start … # regenerate every golden",
+		31: "start … # regenerate every gol…",
+		12: "start … # r…",
+		11: "start gold…",
+	} {
+		got := elided(t, label, room)
+		if plain := style.Plain(got.Render()); plain != want {
+			t.Errorf("in %d columns got %q, want %q", room, plain, want)
+		}
+		if got.Width() > room {
+			t.Errorf("in %d columns used %d", room, got.Width())
+		}
+	}
+}
+
+func TestALoneIntentTakesTheWholeRoom(t *testing.T) {
+	label := Label{Name: "start", Intent: "regenerate every golden"}
+
+	if got := style.Plain(elided(t, label, 20).Render()); got != "start # regenerate …" {
+		t.Errorf("got %q", got)
+	}
+}
+
 func TestAPathInTheDetailCanBeFocused(t *testing.T) {
 	label := Label{
 		Name:      "grep",

@@ -79,6 +79,7 @@ func plain(rendering agent.FallbackRendering) agent.FallbackRendering {
 	rendering.Subject = primary.Subject
 	rendering.Note = primary.Qualifier
 	rendering.Emphasis = primary.Emphasis
+	rendering.Intent = strings.Join(strings.Fields(strutil.Printable(rendering.Intent)), " ")
 	rendering.Continuation = slices.Clone(rendering.Continuation)
 	for i := range rendering.Continuation {
 		rendering.Continuation[i] = printableCallRendering(rendering.Continuation[i])
@@ -108,6 +109,7 @@ func LabelFor(event agent.Event, getTool ToolLookup, workspace *work.Space) Labe
 		ShowOutput: rendering.ShowOutput,
 	}, event.Name, rendering.ReadOnly)
 	label.TimeLimit = timeLimit
+	label.Intent = rendering.Intent
 	label.MarksSuccess = rendering.MarksSuccess
 	label.lineRange = rendering.PathLine
 	label.Continuation = make([]Label, 0, len(rendering.Continuation))

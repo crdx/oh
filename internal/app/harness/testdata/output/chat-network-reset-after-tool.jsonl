@@ -1,4 +1,4 @@
-{"kind":"head","version":18,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"high","system_prompt":"You are a test assistant.","tools":["work"],"tool_definitions":[{"name":"work","description":"A deterministic scenario tool.","revision":"1"}]}}
+{"kind":"head","version":19,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"high","system_prompt":"You are a test assistant.","tools":["work"],"tool_definitions":[{"name":"work","description":"A deterministic scenario tool.","revision":"1"}]}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"complete a tool round, then lose the network"}}
 {"kind":"event","event":{"kind":"model_reasoning","text":"Use the tool."}}

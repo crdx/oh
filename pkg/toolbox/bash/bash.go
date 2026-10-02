@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"slices"
 	"strings"
+	"unicode"
 
 	"mvdan.cc/sh/v3/syntax"
 
@@ -34,6 +35,22 @@ type Args struct {
 	Network Network `json:"network,omitempty"`
 }
 
+const IntentDescription = `what you intend it to do, as a lowercase imperative of 5 to 7 words, such as "regenerate every golden in the scratch copy"`
+
+func SpokenIntent(intent string) string {
+	intent = strings.TrimSpace(intent)
+	runes := []rune(intent)
+	if len(runes) == 0 || !unicode.IsUpper(runes[0]) {
+		return intent
+	}
+	if len(runes) > 1 && unicode.IsUpper(runes[1]) {
+		return intent
+	}
+
+	runes[0] = unicode.ToLower(runes[0])
+	return string(runes)
+}
+
 func New(
 	root *file.Root,
 	buildPolicy func(context.Context) (sandbox.Policy, error),
@@ -43,7 +60,7 @@ func New(
 ) tool.Tool {
 	schema := tool.Schema{
 		tool.String("command", "the command line"),
-		tool.String("intent", "what you intend the command to do, in words").Optional(),
+		tool.String("intent", IntentDescription).Optional(),
 	}
 	if hasNetworkChoice {
 		schema = append(schema, tool.Enum(
@@ -69,7 +86,7 @@ func New(
 		Exec(func(ctx context.Context, args Args) (string, tool.ToolCallMetrics, error) {
 			isHostNetwork := hasNetworkChoice && args.Network == HostNetwork
 			if isHostNetwork {
-				if err := approveNetwork(ctx, args.Command, args.Intent); err != nil {
+				if err := approveNetwork(ctx, args.Command, SpokenIntent(args.Intent)); err != nil {
 					return "", tool.ToolCallMetrics{}, err
 				}
 			}
@@ -97,6 +114,7 @@ func ProtectedPolicy(policy sandbox.Policy) sandbox.Policy {
 
 func Describe(args Args) tool.CallRendering {
 	rendering := DescribeCommand(args.Command)
+	rendering.Intent = SpokenIntent(args.Intent)
 	if args.Network == HostNetwork {
 		rendering.Kind = hostNetworkRenderingKind
 	}
