@@ -236,19 +236,19 @@ The command runs on the host, in the workspace directory. The sandbox does not c
 
 Put custom tools in the global config. A workspace `oh.toml` that sets `[tools]` stops startup.
 
-| Key           | Holds                                                     |
-|---------------|-----------------------------------------------------------|
-| `version`     | positive compatibility version; `1` by default            |
-| `description` | what the tool does; required                              |
-| `command`     | the executable and its fixed arguments; required          |
-| `parameters`  | the arguments the model supplies, each one a table        |
-| `subject`     | the parameter shown in the call row; the first by default |
-| `timeout`     | the limit for one call; `30s` by default                  |
-| `permission`  | `ask` by default; a table can set its optional timeout    |
-| `group`       | one lowercase mode flag that must grant access            |
-| `enabled`     | grant the tool's group initially; `false` by default      |
+| Key           | Holds                                                  |
+|---------------|--------------------------------------------------------|
+| `version`     | positive compatibility version; `1` by default         |
+| `description` | what the tool does; required                           |
+| `command`     | the executable and its fixed arguments; required       |
+| `parameters`  | the arguments the model supplies, each one a table     |
+| `subject`     | the primary parameter; the first by default            |
+| `timeout`     | the limit for one call; `30s` by default               |
+| `permission`  | `ask` by default; a table can set its optional timeout |
+| `group`       | one lowercase mode flag that must grant access         |
+| `enabled`     | grant the tool's group initially; `false` by default   |
 
-The model reads the description alone to choose a tool. Write it for the model.
+The model reads the description alone to choose a tool. Write it for the model. The subject leads the tool's call row and, when approval is required, its supplied arguments.
 
 A group using `x`, `w`, `n`, `g`, `l`, or `r` follows that built-in capability. Any other letter appears directly after those letters in the mode display, as in `rxw nglabc`, and ctrl+x followed by that letter toggles every tool in its group. Set `enabled = true` on a tool or add its letter to `caps.default` to grant the group initially. Enabling one tool grants every tool sharing its group. An explicit `-c` overrides both defaults. Read is always granted, so a tool in group `r` is always available.
 

@@ -83,6 +83,7 @@
 
 ### Questions and approvals
 
+- Lead custom tool approvals with their subject
 - Keep question notifications on screen until dealt with
 - Keep the blank row under a question's label
 - Give approvals 5 minutes before they lapse

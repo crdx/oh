@@ -21,8 +21,9 @@ type Option struct {
 }
 
 type Field struct {
-	Name  string
-	Value string
+	Name      string
+	Value     string
+	IsSubject bool
 }
 
 type Question struct {

@@ -88,8 +88,8 @@ func TestAConfirmationDrawsNamedFieldsAndLinksTheirPaths(t *testing.T) {
 	question := ask.Confirmation{
 		Label: "Run the commit tool?",
 		Fields: []ask.Field{
+			{Name: "message", Value: "Align header controls consistently", IsSubject: true},
 			{Name: "patch", Value: patchPath},
-			{Name: "message", Value: "Align header controls consistently"},
 		},
 	}.Question()
 
@@ -98,21 +98,25 @@ func TestAConfirmationDrawsNamedFieldsAndLinksTheirPaths(t *testing.T) {
 	want := []string{
 		"Run the commit tool?",
 		"",
-		"patch: " + patchPath,
 		"message: Align header controls consistently",
+		"",
+		"patch: " + patchPath,
 		"",
 		"[Yes]  No ",
 	}
 	if !slices.Equal(plain, want) {
 		t.Errorf("got rows %q, want %q", plain, want)
 	}
-	if !strings.Contains(rows[2], link.RenderPath(patchPath, patchPath)) {
-		t.Errorf("got patch row %q, want the patch path linked", rows[2])
+	if !strings.Contains(rows[2], style.Info("Align header controls consistently")) {
+		t.Errorf("got subject row %q, want its value painted as forwarded content", rows[2])
+	}
+	if !strings.Contains(rows[4], link.RenderPath(patchPath, patchPath)) {
+		t.Errorf("got patch row %q, want the patch path linked", rows[4])
 	}
 
 	unlinked := RenderQuestion(question, question.DefaultIndex(), 120, false, link.Roots{})
-	if strings.Contains(unlinked[2], link.RenderPath(patchPath, patchPath)) {
-		t.Errorf("got patch row %q without terminal hyperlinks", unlinked[2])
+	if strings.Contains(unlinked[4], link.RenderPath(patchPath, patchPath)) {
+		t.Errorf("got patch row %q without terminal hyperlinks", unlinked[4])
 	}
 }
 

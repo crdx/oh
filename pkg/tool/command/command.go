@@ -60,8 +60,14 @@ type Declaration struct {
 }
 
 type Options struct {
-	Directory      string
-	Approve        func(ctx context.Context, name string, arguments tool.Arguments, timeout time.Duration) error
+	Directory string
+	Approve   func(
+		ctx context.Context,
+		name string,
+		subject string,
+		arguments tool.Arguments,
+		timeout time.Duration,
+	) error
 	GroupForTool   func(name string) string
 	IsGroupAllowed func(group string) bool
 }
@@ -92,6 +98,7 @@ func New(declaration Declaration, options Options) (tool.Tool, error) {
 	if subject != "" && schema.Find(subject) == nil {
 		return nil, fmt.Errorf("subject names %s, which is not a parameter", subject)
 	}
+	declaration.Subject = subject
 
 	timeLimit := declaration.TimeLimit
 	if timeLimit <= 0 {
@@ -286,7 +293,13 @@ func run(
 	line := argv(executable, declaration.Command, arguments)
 
 	if declaration.MustAsk && options.Approve != nil {
-		if err := options.Approve(ctx, declaration.Name, arguments, approvalTimeout); err != nil {
+		if err := options.Approve(
+			ctx,
+			declaration.Name,
+			declaration.Subject,
+			arguments,
+			approvalTimeout,
+		); err != nil {
 			return "", err
 		}
 	}

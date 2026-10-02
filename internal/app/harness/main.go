@@ -155,23 +155,32 @@ func (self approval) confirmation(subject string) ask.Confirmation {
 func (self approval) confirmArguments(
 	ctx context.Context,
 	broker *ask.Broker,
+	subject string,
 	arguments tool.Arguments,
 	timeout time.Duration,
 ) error {
-	fields := make([]ask.Field, 0, len(arguments.Schema()))
-	for _, parameter := range arguments.Schema() {
-		if !arguments.IsPresent(parameter.Name) {
+	schema := arguments.Schema()
+	fields := make([]ask.Field, 0, len(schema))
+	if parameter := schema.Find(subject); parameter != nil && arguments.IsPresent(subject) {
+		fields = append(fields, argumentField(arguments, *parameter, true))
+	}
+	for _, parameter := range schema {
+		if parameter.Name == subject || !arguments.IsPresent(parameter.Name) {
 			continue
 		}
 
-		value := arguments.GetText(parameter.Name)
-		if parameter.Type == tool.TypeArray {
-			value = strings.Join(arguments.GetStrings(parameter.Name), ", ")
-		}
-		fields = append(fields, ask.Field{Name: parameter.Name, Value: value})
+		fields = append(fields, argumentField(arguments, parameter, false))
 	}
 
 	return self.confirmWith(ctx, broker, ask.Confirmation{Label: self.label, Fields: fields}, timeout)
+}
+
+func argumentField(arguments tool.Arguments, parameter tool.Parameter, isSubject bool) ask.Field {
+	value := arguments.GetText(parameter.Name)
+	if parameter.Type == tool.TypeArray {
+		value = strings.Join(arguments.GetStrings(parameter.Name), ", ")
+	}
+	return ask.Field{Name: parameter.Name, Value: value, IsSubject: isSubject}
 }
 
 func (self approval) confirmWith(
@@ -1089,10 +1098,11 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		Approve: func(
 			ctx context.Context,
 			name string,
+			subject string,
 			arguments tool.Arguments,
 			timeout time.Duration,
 		) error {
-			return customToolApproval(name).confirmArguments(ctx, askBroker, arguments, timeout)
+			return customToolApproval(name).confirmArguments(ctx, askBroker, subject, arguments, timeout)
 		},
 	})
 	if err != nil {

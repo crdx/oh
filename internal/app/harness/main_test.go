@@ -1401,8 +1401,8 @@ func TestGoldenAQuestionOverARunningCallDrawsEveryVisibleState(t *testing.T) {
 		"a question with fields": {
 			command: "curl example.com",
 			fields: []ask.Field{
+				{Name: "message", Value: "Align header controls consistently", IsSubject: true},
 				{Name: "patch", Value: "/tmp/layout.patch"},
-				{Name: "message", Value: "Align header controls consistently"},
 			},
 		},
 		"a question with a configured timeout": {
@@ -2004,7 +2004,13 @@ func TestACustomToolApprovalCarriesNamedArgumentsAndItsTimeout(t *testing.T) {
 	startedAt := time.Now()
 
 	go func() {
-		result <- customToolApproval("commit").confirmArguments(t.Context(), broker, arguments, approvalTimeout)
+		result <- customToolApproval("commit").confirmArguments(
+			t.Context(),
+			broker,
+			"message",
+			arguments,
+			approvalTimeout,
+		)
 	}()
 	<-broker.Changes()
 	reachedAt := time.Now()
@@ -2019,8 +2025,8 @@ func TestACustomToolApprovalCarriesNamedArgumentsAndItsTimeout(t *testing.T) {
 	}
 	question := request.Question
 	if question.Label != "Run the commit tool?" || !slices.Equal(question.Fields, []ask.Field{
+		{Name: "message", Value: "Align header controls consistently", IsSubject: true},
 		{Name: "patch", Value: "/tmp/layout.patch"},
-		{Name: "message", Value: "Align header controls consistently"},
 		{Name: "labels", Value: "one, two words"},
 		{Name: "force", Value: "false"},
 		{Name: "retries", Value: "2"},

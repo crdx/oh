@@ -46,8 +46,9 @@ $ curl example.com ✦·
 ────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
 Run the commit tool?
 
-patch: /tmp/layout.patch
 message: Align header controls consistently
+
+patch: /tmp/layout.patch
 
 [Yes]  No
 ────────────────────────────────────────────────────────────────────────────────────────────────────

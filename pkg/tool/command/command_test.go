@@ -265,6 +265,7 @@ func TestTheCommandRunsInTheDirectoryItWasGiven(t *testing.T) {
 func TestTheApprovalSeesEverySuppliedArgumentAndCanRefuseIt(t *testing.T) {
 	refusal := errors.New("the user said no")
 	var askedName string
+	var askedSubject string
 	var askedArguments tool.Arguments
 	var askedTimeout time.Duration
 
@@ -275,10 +276,12 @@ func TestTheApprovalSeesEverySuppliedArgumentAndCanRefuseIt(t *testing.T) {
 		Approve: func(
 			_ context.Context,
 			name string,
+			subject string,
 			arguments tool.Arguments,
 			timeout time.Duration,
 		) error {
 			askedName = name
+			askedSubject = subject
 			askedArguments = arguments
 			askedTimeout = timeout
 			return refusal
@@ -302,7 +305,10 @@ func TestTheApprovalSeesEverySuppliedArgumentAndCanRefuseIt(t *testing.T) {
 		t.Errorf("got the wrong arguments")
 	}
 	if askedName != "deploy" {
-		t.Errorf("got %q", askedName)
+		t.Errorf("got name %q", askedName)
+	}
+	if askedSubject != "environment" {
+		t.Errorf("got subject %q", askedSubject)
 	}
 	if askedTimeout != 5*time.Minute {
 		t.Errorf("got timeout %s", askedTimeout)
@@ -318,7 +324,7 @@ func TestTheApprovalReceivesItsConfiguredTimeout(t *testing.T) {
 	var askedTimeout time.Duration
 
 	subject, err := command.New(declaration, command.Options{
-		Approve: func(_ context.Context, _ string, _ tool.Arguments, timeout time.Duration) error {
+		Approve: func(_ context.Context, _ string, _ string, _ tool.Arguments, timeout time.Duration) error {
 			askedTimeout = timeout
 			return nil
 		},
@@ -346,7 +352,7 @@ func TestAGroupRefusesACommandBeforeApproval(t *testing.T) {
 		IsGroupAllowed: func(group string) bool {
 			return group == "a" && isGranted
 		},
-		Approve: func(context.Context, string, tool.Arguments, time.Duration) error {
+		Approve: func(context.Context, string, string, tool.Arguments, time.Duration) error {
 			approvalCount++
 			return nil
 		},
@@ -373,7 +379,7 @@ func TestAGroupRefusesACommandBeforeApproval(t *testing.T) {
 
 func TestAToolTheDeclarationDoesNotGateIsNeverAskedAbout(t *testing.T) {
 	subject, err := command.New(echoingDeclaration(t), command.Options{
-		Approve: func(context.Context, string, tool.Arguments, time.Duration) error {
+		Approve: func(context.Context, string, string, tool.Arguments, time.Duration) error {
 			t.Error("the tool was asked about")
 			return nil
 		},
@@ -392,7 +398,7 @@ func TestACallTheSchemaRefusesNeverReachesTheCommand(t *testing.T) {
 	declaration.MustAsk = true
 
 	subject, err := command.New(declaration, command.Options{
-		Approve: func(context.Context, string, tool.Arguments, time.Duration) error {
+		Approve: func(context.Context, string, string, tool.Arguments, time.Duration) error {
 			t.Error("the command was approved")
 			return nil
 		},
