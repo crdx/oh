@@ -146,6 +146,49 @@ func TestConsecutivePanelRowsShareOneFrame(t *testing.T) {
 	}
 }
 
+type looseTextBlock struct {
+	textBlock
+}
+
+func (looseTextBlock) IsLoose() bool {
+	return true
+}
+
+func TestOnlyANoticeAfterALooseOneStandsApart(t *testing.T) {
+	screen, _ := region()
+
+	screen.Panel(textBlock{text: "first notice"}, framed)
+	screen.Panel(textBlock{text: "second notice"}, framed)
+	screen.Panel(looseTextBlock{textBlock{text: "third notice\nwith more"}}, framed)
+	screen.Panel(textBlock{text: "fourth notice"}, framed)
+
+	want := []string{
+		"top",
+		"first notice",
+		"second notice",
+		"third notice",
+		"with more",
+		"",
+		"fourth notice",
+		"bottom",
+	}
+	if got := panelRows(screen); !slices.Equal(got, want) {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
+func TestStackSpacesOnlyAfterALoosePart(t *testing.T) {
+	tight := []StackPart{{Rows: []string{"first"}}, {Rows: []string{"second", "third"}}, {Rows: []string{"fourth"}}}
+	if got, want := Stack(tight), []string{"first", "second", "third", "fourth"}; !slices.Equal(got, want) {
+		t.Errorf("tight: got %q, want %q", got, want)
+	}
+
+	loose := []StackPart{{Rows: []string{"first"}}, {Rows: []string{"second", "third"}, IsLoose: true}, {Rows: []string{"fourth"}}}
+	if got, want := Stack(loose), []string{"first", "second", "third", "", "fourth"}; !slices.Equal(got, want) {
+		t.Errorf("loose: got %q, want %q", got, want)
+	}
+}
+
 func TestAPanelOpenedBesideAToolBlockLeavesItAlone(t *testing.T) {
 	screen, _ := region()
 

@@ -31,14 +31,46 @@ type framedBlock struct {
 	frame  Frame
 }
 
-func (self *framedBlock) Rows(columns int) []string {
-	var rows []string
+type LooseBlock interface {
+	Block
 
+	IsLoose() bool
+}
+
+func isLooseBlock(block Block) bool {
+	loose, canBeLoose := block.(LooseBlock)
+
+	return canBeLoose && loose.IsLoose()
+}
+
+func (self *framedBlock) Rows(columns int) []string {
+	parts := make([]StackPart, 0, len(self.blocks))
 	for _, block := range self.blocks {
-		rows = append(rows, block.Rows(columns)...)
+		parts = append(parts, StackPart{Rows: block.Rows(columns), IsLoose: isLooseBlock(block)})
 	}
 
-	return self.frame(rows, columns)
+	return self.frame(Stack(parts), columns)
+}
+
+type StackPart struct {
+	Rows    []string
+	IsLoose bool
+}
+
+func Stack(parts []StackPart) []string {
+	var rows []string
+
+	isAfterLoosePart := false
+	for _, part := range parts {
+		if isAfterLoosePart {
+			rows = append(rows, "")
+		}
+
+		rows = append(rows, part.Rows...)
+		isAfterLoosePart = part.IsLoose
+	}
+
+	return rows
 }
 
 func (self *Screen) Panel(block Block, frame Frame) {

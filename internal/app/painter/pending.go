@@ -11,6 +11,7 @@ import (
 	"crdx.org/oh/internal/app/jobrecord"
 	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/markdown"
+	"crdx.org/oh/internal/app/output"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/style"
@@ -185,15 +186,20 @@ func (self *PendingMessages) Rows(columns int) []string {
 		return nil
 	}
 
-	var content []string
+	parts := make([]output.StackPart, 0, len(self.messages))
 	for _, message := range self.messages {
-		content = append(content, submittedContentRows(
-			submittedMessage{text: message, kind: self.kind},
-			columns,
-			self.shouldRenderHyperlinks,
-			self.pathRoots,
-		)...)
+		parts = append(parts, output.StackPart{
+			Rows: submittedContentRows(
+				submittedMessage{text: message, kind: self.kind},
+				columns,
+				self.shouldRenderHyperlinks,
+				self.pathRoots,
+			),
+			IsLoose: isLooseNotice(message),
+		})
 	}
+
+	content := output.Stack(parts)
 
 	return frameSubmitted(self.sendHintRow(columns), content, columns, style.Harness)
 }

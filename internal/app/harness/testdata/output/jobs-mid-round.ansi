@@ -16,8 +16,10 @@
 \e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined:     \e[0m\r
 \e[48;2;48;58;67m    getWidth                            \e[0m\r
 \e[48;2;48;58;67m    exit status 1                       \e[0m\r
+\e[48;2;48;58;67m                                        \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m exited: complete after 14s.\e[0m\r
 \e[48;2;48;58;67m    docs written                        \e[0m\r
+\e[48;2;48;58;67m                                        \e[0m\r
 \e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to       \e[0m\r
 \e[48;2;48;58;67m    \e]8;;http://127.27.192.223:8080\e\\http://127.27.192.223:8080\e]8;;\e\\.         \e[0m\r
 \e[48;2;48;58;67m                                        \e[0m\r
@@ -366,6 +368,7 @@ written.\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67m1\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67m🤖\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67mJ\e[0m\r
@@ -451,6 +454,7 @@ written.\r
 \e[48;2;48;58;67me\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67m🤖\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
@@ -645,8 +649,10 @@ read \e[38;2;192;128;80mtarget.txt\e[0m \e[38;2;150;152;150m1L\e[0m
 go build ./...
 cmd/oh/draw.go:41:9: undefined: getWidth
 exit status 1\e[0m
+\e[48;2;48;58;67m\e[0m
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m exited: complete after 14s.
 docs written\e[0m
+\e[48;2;48;58;67m\e[0m
 \e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.\e[0m
 \e[48;2;48;58;67m\e[0m
 Both files are read. The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and the docs are written.
@@ -665,8 +671,10 @@ Both files are read. The build failed on an undefined \e[38;2;192;128;80mgetWidt
 \e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
 \e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
 \e[48;2;48;58;67m    exit status 1                                                                                   \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m exited: complete after 14s.                                                            \e[0m\r
 \e[48;2;48;58;67m    docs written                                                                                    \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to \e]8;;http://127.27.192.223:8080\e\\http://127.27.192.223:8080\e]8;;\e\\.                                       \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
@@ -686,10 +694,12 @@ read \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e
 \e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
 \e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
 \e[48;2;48;58;67m    exit status 1                                                                                   \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m exited: complete after 14s.                                                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m exited: complete after 14s.                                                            \e[0m\r
 \e[48;2;48;58;67m    docs written                                                                                    \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to \e]8;;http://127.27.192.223:8080\e\\http://127.27.192.223:8080\e]8;;\e\\.                                       \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[11A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[11B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[10A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[10B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to \e]8;;http://127.27.192.223:8080\e\\http://127.27.192.223:8080\e]8;;\e\\.                                       \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[13A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[13B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[12A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[12B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 Both\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth fil\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files a\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are r\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read.\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The bui\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build f\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build faile\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an unde\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefine\e[K\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefined `g\e[K\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefined `getWi\e[K\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m\e[K\r\e[62C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, an\e[K\r\e[66C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and th\e[K\r\e[70C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and the do\e[K\r\e[74C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and the docs a\e[K\r\e[78C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and the docs are w\e[K\r\e[82C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and the docs are writt\e[K\r\e[86C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and the docs are written.\e[K\r\e[89C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[89C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
@@ -707,10 +717,12 @@ read \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e
 \e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
 \e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
 \e[48;2;48;58;67m    exit status 1                                                                                   \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m exited: complete after 14s.                                                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m exited: complete after 14s.                                                            \e[0m\r
 \e[48;2;48;58;67m    docs written                                                                                    \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to \e]8;;http://127.27.192.223:8080\e\\http://127.27.192.223:8080\e]8;;\e\\.                                       \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[11A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[11B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[10A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[10B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to \e]8;;http://127.27.192.223:8080\e\\http://127.27.192.223:8080\e]8;;\e\\.                                       \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[13A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[13B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[12A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[12B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 Both files are read. The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and the docs are written.\e[K\r\e[89C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[89C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
@@ -728,10 +740,12 @@ read \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e
 \e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
 \e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
 \e[48;2;48;58;67m    exit status 1                                                                                   \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m exited: complete after 14s.                                                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m exited: complete after 14s.                                                            \e[0m\r
 \e[48;2;48;58;67m    docs written                                                                                    \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to \e]8;;http://127.27.192.223:8080\e\\http://127.27.192.223:8080\e]8;;\e\\.                                       \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[11A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[11B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[10A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[10B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to \e]8;;http://127.27.192.223:8080\e\\http://127.27.192.223:8080\e]8;;\e\\.                                       \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[13A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/README.md\e\\README.md\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[13B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[12A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[12B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 Both\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth fil\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files a\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are r\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read.\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The bui\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build f\e[K\r\e[32C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build faile\e[K\r\e[36C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an unde\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefine\e[K\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefined `g\e[K\r\e[56C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefined `getWi\e[K\r\e[60C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m\e[K\r\e[62C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, an\e[K\r\e[66C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and th\e[K\r\e[70C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and the do\e[K\r\e[74C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and the docs a\e[K\r\e[78C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and the docs are w\e[K\r\e[82C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and the docs are writt\e[K\r\e[86C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth files are read. The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and the docs are written.\e[K\r\e[89C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[89C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
@@ -770,6 +784,7 @@ Both\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth fil\e[K\r\e[8C\e[?25h\e[?2
 \e[48;2;48;58;67m    getWidth\e[0m\r
 \e[48;2;48;58;67m    exit    \e[0m\r
 \e[48;2;48;58;67m    status 1\e[0m\r
+\e[48;2;48;58;67m            \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m    exited: \e[0m\r
 \e[48;2;48;58;67m    complete\e[0m\r
@@ -777,6 +792,7 @@ Both\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth fil\e[K\r\e[8C\e[?25h\e[?2
 \e[48;2;48;58;67m    14s.    \e[0m\r
 \e[48;2;48;58;67m    docs    \e[0m\r
 \e[48;2;48;58;67m    written \e[0m\r
+\e[48;2;48;58;67m            \e[0m\r
 \e[48;2;48;58;67m 🤖 Port    \e[0m\r
 \e[48;2;48;58;67m    8080 is \e[0m\r
 \e[48;2;48;58;67m    now     \e[0m\r
@@ -810,8 +826,10 @@ are written.\r
 go build ./...\r
 cmd/oh/draw.go:41:9: undefined: getWidth\r
 exit status 1\e[0m\r
+\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m exited: complete after 14s.\r
 docs written\e[0m\r
+\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to \e]8;;http://127.27.192.223:8080\e\\http://127.27.192.223:8080\e]8;;\e\\.\e[0m\r
 \e[48;2;48;58;67m\e[0m\r
 Both files are read. The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and the docs are written.\r
@@ -830,8 +848,10 @@ Both files are read. The build failed on an undefined \e[38;2;192;128;80mgetWidt
 \e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
 \e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
 \e[48;2;48;58;67m    exit status 1                                                                                   \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m exited: complete after 14s.                                                            \e[0m\r
 \e[48;2;48;58;67m    docs written                                                                                    \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to \e]8;;http://127.27.192.223:8080\e\\http://127.27.192.223:8080\e]8;;\e\\.                                       \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r

@@ -576,7 +576,8 @@ func (self *Picasso) drawSubmittedPanel(message submittedMessage) {
 
 func (self *Picasso) submittedPanel(message submittedMessage) (output.Block, output.Frame) {
 	return submittedRows{
-			render: func(columns int) []string { return self.submittedContent(message, columns) },
+			render:  func(columns int) []string { return self.submittedContent(message, columns) },
+			isLoose: isLooseNotice(message.text),
 		},
 		func(content []string, columns int) []string {
 			return frameSubmitted("", content, columns, message.background())
@@ -584,7 +585,16 @@ func (self *Picasso) submittedPanel(message submittedMessage) (output.Block, out
 }
 
 type submittedRows struct {
-	render func(columns int) []string
+	render  func(columns int) []string
+	isLoose bool
+}
+
+func (self submittedRows) IsLoose() bool {
+	return self.isLoose
+}
+
+func isLooseNotice(text string) bool {
+	return strings.Contains(strings.TrimSpace(text), "\n")
 }
 
 func (self submittedRows) Rows(columns int) []string {

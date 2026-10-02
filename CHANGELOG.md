@@ -27,6 +27,7 @@
 - Hide prompt cache rebuilds costing under an arbitrary $0.20
 - Show what lost prompt caches cost us in API pricing
 - Show success tick only on shell and custom tool calls
+- Space out the harness notice after one that runs on
 
 ### Completion and input
 

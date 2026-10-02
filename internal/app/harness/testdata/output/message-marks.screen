@@ -31,12 +31,14 @@
       error: failed to push some refs
 
       Exit code: 1
+
    🤖 The user ran the following command
       on the host, producing no output:
 
       $ touch notes.txt
 
       Exit code: 0
+
    🤖 The user started the following
       command on the host, which was
       killed at its time limit before it
@@ -45,6 +47,7 @@
       $ sleep 600
 
       Killed at its time limit of 30s
+
    🤖 The user ran the following command
       on the host, producing no output:
 
@@ -54,6 +57,7 @@
       > EOF
 
       Exit code: 0
+
    🤖 The user ran the following command
       on the host:
 
@@ -68,6 +72,7 @@
       ```
 
       Exit code: 0
+
    🤖 The user ran the following command
       on the host:
 
@@ -119,6 +124,7 @@
       README.md
 
       Exit code: 0
+
    🤖 The user ran the following command
       on the host:
 
@@ -132,6 +138,7 @@
       every row beneath it
 
       Exit code: 0
+
    🤖 The user ran the following command
       on the host:
 
@@ -145,6 +152,7 @@
       cmd/oh/painter/painter.go
 
       Exit code: 0
+
    🤖 The user ran the following command
       on the host, producing no output:
 
@@ -208,17 +216,20 @@
       error: failed to push some refs
 
       Exit code: 1
+
    🤖 The user ran the following command on the host, producing no output:
 
       $ touch notes.txt
 
       Exit code: 0
+
    🤖 The user started the following command on the host, which was killed at its time limit before it
    finished or printed anything:
 
       $ sleep 600
 
       Killed at its time limit of 30s
+
    🤖 The user ran the following command on the host, producing no output:
 
       $ cat <<'EOF' > notes.txt
@@ -227,6 +238,7 @@
       > EOF
 
       Exit code: 0
+
    🤖 The user ran the following command on the host:
 
       $ sed -n '1,4p' README.md
@@ -240,6 +252,7 @@
       ```
 
       Exit code: 0
+
    🤖 The user ran the following command on the host:
 
       $ find / -name '*.go'
@@ -283,6 +296,7 @@
       README.md
 
       Exit code: 0
+
    🤖 The user ran the following command on the host:
 
       $ git log -1 --format=%s
@@ -293,6 +307,7 @@
   ilently lose every row beneath it
 
       Exit code: 0
+
    🤖 The user ran the following command on the host:
 
       $ find . -type f -name '*.go' -newer go.mod -not -path './vendor/*' -exec grep -l 'drawSubmitted
@@ -303,6 +318,7 @@
       cmd/oh/painter/painter.go
 
       Exit code: 0
+
    🤖 The user ran the following command on the host, producing no output:
 
       $ printf '   \\n\\n'
@@ -359,17 +375,20 @@
       error: failed to push some refs
 
       Exit code: 1
+
    🤖 The user ran the following command on the host, producing no output:
 
       $ touch notes.txt
 
       Exit code: 0
+
    🤖 The user started the following command on the host, which was killed at its time limit before it
       finished or printed anything:
 
       $ sleep 600
 
       Killed at its time limit of 30s
+
    🤖 The user ran the following command on the host, producing no output:
 
       $ cat <<'EOF' > notes.txt
@@ -378,6 +397,7 @@
       > EOF
 
       Exit code: 0
+
    🤖 The user ran the following command on the host:
 
       $ sed -n '1,4p' README.md
@@ -391,6 +411,7 @@
       ```
 
       Exit code: 0
+
    🤖 The user ran the following command on the host:
 
       $ find / -name '*.go'
@@ -437,6 +458,7 @@
       README.md
 
       Exit code: 0
+
    🤖 The user ran the following command on the host:
 
       $ git log -1 --format=%s
@@ -447,6 +469,7 @@
       silently lose every row beneath it
 
       Exit code: 0
+
    🤖 The user ran the following command on the host:
 
       $ find . -type f -name '*.go' -newer go.mod -not -path './vendor/*' -exec grep -l
@@ -457,6 +480,7 @@
       cmd/oh/painter/painter.go
 
       Exit code: 0
+
    🤖 The user ran the following command on the host, producing no output:
 
       $ printf '   \\n\\n'
@@ -516,17 +540,20 @@
       error: failed to push some refs
 
       Exit code: 1
+
    🤖 The user ran the following command on the host, producing no output:
 
       $ touch notes.txt
 
       Exit code: 0
+
    🤖 The user started the following command on the host, which was killed at its time limit before it
       finished or printed anything:
 
       $ sleep 600
 
       Killed at its time limit of 30s
+
    🤖 The user ran the following command on the host, producing no output:
 
       $ cat <<'EOF' > notes.txt
@@ -535,6 +562,7 @@
       > EOF
 
       Exit code: 0
+
    🤖 The user ran the following command on the host:
 
       $ sed -n '1,4p' README.md
@@ -548,6 +576,7 @@
       ```
 
       Exit code: 0
+
    🤖 The user ran the following command on the host:
 
       $ find / -name '*.go'
@@ -594,6 +623,7 @@
       README.md
 
       Exit code: 0
+
    🤖 The user ran the following command on the host:
 
       $ git log -1 --format=%s
@@ -604,6 +634,7 @@
       silently lose every row beneath it
 
       Exit code: 0
+
    🤖 The user ran the following command on the host:
 
       $ find . -type f -name '*.go' -newer go.mod -not -path './vendor/*' -exec grep -l
@@ -614,6 +645,7 @@
       cmd/oh/painter/painter.go
 
       Exit code: 0
+
    🤖 The user ran the following command on the host, producing no output:
 
       $ printf '   \\n\\n'
@@ -706,6 +738,7 @@
 
       Exit
       code: 1
+
    🤖 The user
       ran the
       followin
@@ -723,6 +756,7 @@
 
       Exit
       code: 0
+
    🤖 The user
       started
       the
@@ -753,6 +787,7 @@
       time
       limit of
       30s
+
    🤖 The user
       ran the
       followin
@@ -775,6 +810,7 @@
 
       Exit
       code: 0
+
    🤖 The user
       ran the
       followin
@@ -800,6 +836,7 @@
 
       Exit
       code: 0
+
    🤖 The user
       ran the
       followin
@@ -891,6 +928,7 @@
 
       Exit
       code: 0
+
    🤖 The user
       ran the
       followin
@@ -928,6 +966,7 @@
 
       Exit
       code: 0
+
    🤖 The user
       ran the
       followin
@@ -964,6 +1003,7 @@
 
       Exit
       code: 0
+
    🤖 The user
       ran the
       followin
@@ -1070,17 +1110,20 @@
       error: failed to push some refs
 
       Exit code: 1
+
    🤖 The user ran the following command on the host, producing no output:
 
       $ touch notes.txt
 
       Exit code: 0
+
    🤖 The user started the following command on the host, which was killed at its time limit before it
       finished or printed anything:
 
       $ sleep 600
 
       Killed at its time limit of 30s
+
    🤖 The user ran the following command on the host, producing no output:
 
       $ cat <<'EOF' > notes.txt
@@ -1089,6 +1132,7 @@
       > EOF
 
       Exit code: 0
+
    🤖 The user ran the following command on the host:
 
       $ sed -n '1,4p' README.md
@@ -1102,6 +1146,7 @@
       ```
 
       Exit code: 0
+
    🤖 The user ran the following command on the host:
 
       $ find / -name '*.go'
@@ -1148,6 +1193,7 @@
       README.md
 
       Exit code: 0
+
    🤖 The user ran the following command on the host:
 
       $ git log -1 --format=%s
@@ -1158,6 +1204,7 @@
       silently lose every row beneath it
 
       Exit code: 0
+
    🤖 The user ran the following command on the host:
 
       $ find . -type f -name '*.go' -newer go.mod -not -path './vendor/*' -exec grep -l
@@ -1168,6 +1215,7 @@
       cmd/oh/painter/painter.go
 
       Exit code: 0
+
    🤖 The user ran the following command on the host, producing no output:
 
       $ printf '   \\n\\n'
