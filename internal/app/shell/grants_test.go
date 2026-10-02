@@ -1,7 +1,9 @@
 package shell
 
 import (
+	"os"
 	"path/filepath"
+	"slices"
 	"testing"
 
 	"crdx.org/oh/internal/app/caps"
@@ -103,4 +105,24 @@ func TestOnlyASharedSkillIsExecutableByTheShell(t *testing.T) {
 
 	withoutShell := SkillGrants(enabledDirectories, sharedDirectories, caps.Read)
 	assertScopedGrant(t, withoutShell, GlobalSkillGrant, sharedDirectory, ReadAccess)
+}
+
+func TestASharedSkillIsListedWhereTheShellReachesIt(t *testing.T) {
+	realDirectory := t.TempDir()
+	linkedDirectory := filepath.Join(t.TempDir(), "skills")
+	if err := os.Symlink(realDirectory, linkedDirectory); err != nil {
+		t.Fatal(err)
+	}
+	mode := caps.NewMode(caps.Read | caps.Shell)
+	access, err := NewPathAccess(configuredPathTestRoot(t, mode), mode, Paths{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	access.ShareSkills([]string{linkedDirectory})
+
+	grants := SkillGrants([]string{linkedDirectory}, []string{linkedDirectory}, caps.Read|caps.Shell)
+	assertScopedGrant(t, grants, GlobalSkillGrant, realDirectory, ReadAccess|ExecAccess)
+	if paths := access.GetPaths(); !slices.Contains(paths.Exec, realDirectory) {
+		t.Errorf("the shell executes under %q, want %s", paths.Exec, realDirectory)
+	}
 }

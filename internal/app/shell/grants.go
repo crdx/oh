@@ -162,6 +162,7 @@ func SkillGrants(enabledDirectories []string, sharedDirectories []string, curren
 	for _, directory := range enabledDirectories {
 		access := ReadAccess
 		if slices.Contains(sharedDirectories, directory) {
+			directory = pathutil.Canonicalise(directory)
 			access |= executableAccess(currentCaps.Has(caps.Shell))
 		}
 		grants = append(grants, ScopedPathGrant{Path: directory, Access: access, Kind: GlobalSkillGrant})
