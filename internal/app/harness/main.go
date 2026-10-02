@@ -1431,6 +1431,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	}
 	startupInfo := startup.Info{
 		Session:       log.Name(),
+		ReadyAt:       app.getNow(),
 		PromptBytes:   len(systemPrompt),
 		ProjectSkills: projectSkills,
 		GlobalSkills:  globalSkills,

@@ -10,9 +10,12 @@ import (
 	"crdx.org/oh/pkg/agent"
 )
 
+var startupDate = time.Date(2026, time.October, 2, 9, 0, 0, 0, time.UTC)
+
 func TestAStartupEventKeepsItsFactsForReplay(t *testing.T) {
 	info := Info{
 		Session:       "tame-impala",
+		ReadyAt:       startupDate,
 		PromptBytes:   32_697,
 		ProjectSkills: 2,
 		GlobalSkills:  3,
@@ -25,11 +28,17 @@ func TestAStartupEventKeepsItsFactsForReplay(t *testing.T) {
 	}
 
 	event := NewEvent(12*time.Millisecond, info)
-	if facts := string(event.State); !strings.Contains(facts, `"local_config":{"name":"oh.toml","settings":["ui.currency","sandbox.write"]}`) {
-		t.Errorf("local config facts were not grouped in %s", facts)
+	facts := string(event.State)
+	for _, fact := range []string{
+		`"ready_at":"2026-10-02T09:00:00Z"`,
+		`"local_config":{"name":"oh.toml","settings":["ui.currency","sandbox.write"]}`,
+	} {
+		if !strings.Contains(facts, fact) {
+			t.Errorf("startup facts %s did not contain %s", facts, fact)
+		}
 	}
 	got := style.Plain(RenderEvent(event, 80, false))
-	want := "Agent tame-impala 🦌 ready in 12ms with 5 skills ⧸ 4 snippets ⧸ ~13Kt context ⧸ oh.toml: ui.currency, sandbox.write."
+	want := "Agent tame-impala 🦌 ready in 12ms on Friday, 2 October 2026 with 5 skills ⧸ 4 snippets ⧸ ~13Kt context ⧸ oh.toml: ui.currency, sandbox.write."
 	if got != want {
 		t.Errorf("got %q, want %q", got, want)
 	}
@@ -140,19 +149,19 @@ func TestAResumedConversationHasNoStartupLine(t *testing.T) {
 }
 
 func TestKittyGetsATwoRowStartupBannerWithASizedEmoji(t *testing.T) {
-	line := RenderBanner(time.Millisecond, false, Info{Session: "tame-impala"}, 80, true)
+	line := RenderBanner(time.Millisecond, false, Info{Session: "tame-impala", ReadyAt: startupDate}, 80, true)
 
 	if !strings.HasPrefix(line, " \x1b]66;s=2:w=2;🦌\x1b\\") {
 		t.Errorf("expected a sized impala, got %q", line)
 	}
-	want := " 🦌  Agent tame-impala ready in 1ms\n  0 skills ⧸ 0 snippets ⧸ 0t context"
+	want := " 🦌  Agent tame-impala ready in 1ms on Friday, 2 October 2026\n  0 skills ⧸ 0 snippets ⧸ 0t context"
 	if got := style.Plain(line); got != want {
 		t.Errorf("got %q, want %q", got, want)
 	}
 }
 
 func TestAHeadingThatDoesNotFitBesideTheEmojiGetsTheOrdinaryStartupSentence(t *testing.T) {
-	info := Info{Session: "tame-impala"}
+	info := Info{Session: "tame-impala", ReadyAt: startupDate}
 	headingWidth := style.Width(renderHeading(time.Millisecond, info, false))
 	columns := bannerLeftPadding + sizedEmojiCells + bannerGap + headingWidth - 1
 	line := RenderBanner(time.Millisecond, false, info, columns, true)

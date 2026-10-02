@@ -32,6 +32,7 @@ type LocalConfig struct {
 
 type Info struct {
 	Session       string       `json:"session,omitempty"`
+	ReadyAt       time.Time    `json:"ready_at,omitzero"`
 	PromptBytes   int          `json:"prompt,omitempty"`
 	ProjectSkills int          `json:"project_skills,omitempty"`
 	GlobalSkills  int          `json:"global_skills,omitempty"`
@@ -56,6 +57,7 @@ const (
 	textSizingPrefix        = "\x1b]66;"
 	textSizingMetadata      = "s=2:w=2"
 	startupDetailsSeparator = "⧸"
+	longDateLayout          = "Monday, 2 January 2006"
 )
 
 func RenderEvent(event agent.Event, columns int, isTextSizingSupported bool) string {
@@ -108,6 +110,9 @@ func renderHeading(elapsedTime time.Duration, info Info, shouldIncludeEmoji bool
 		}
 	}
 	_, _ = line.WriteString(style.Subtle(" ready in ") + startupDuration(elapsedTime))
+	if !info.ReadyAt.IsZero() {
+		_, _ = line.WriteString(style.Subtle(" on ") + style.Normal(info.ReadyAt.Format(longDateLayout)))
+	}
 	return line.String()
 }
 

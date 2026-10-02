@@ -1,19 +1,17 @@
 === fallback then following output ===
-Agent tame-impala 🦌 ready in 2ms
-with 4 skills ⧸ 2 snippets ⧸ ~1.6Kt
-context.
+Agent tame-impala 🦌 ready in 2ms on Friday, 2 October 2026
+with 4 skills ⧸ 2 snippets ⧸ ~1.6Kt context.
 Following output.
 === wide then following output ===
- 🦌    Agent tame-impala ready in 2ms
+ 🦌    Agent tame-impala ready in 2ms on Friday, 2 October 2026
        4 skills ⧸ 2 snippets ⧸ ~1.6Kt context
 Following output.
 === wrapped details then following output ===
- 🦌    Agent tame-impala ready in 2ms
-       4 skills ⧸ 2 snippets ⧸ ~1.6Kt
-       context
+ 🦌    Agent tame-impala ready in 2ms on Friday, 2 October 2026
+       4 skills ⧸ 2 snippets ⧸ ~1.6Kt context
 Following output.
 === wrapped local config then following output ===
- 🦌    Agent tame-impala ready in 2ms
+ 🦌    Agent tame-impala ready in 2ms on Friday, 2 October 2026
        4 skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸ oh.toml: caps.default, editor.command,
        model.round_robin, ports.hostname, skills.include, ui.currency, ui.streaming
 Following output.

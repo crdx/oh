@@ -1,22 +1,20 @@
 === fallback then following output ===
-\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0mtame-impala\e[38;2;150;152;150m \e[0m🦌\e[38;2;150;152;150m ready in \e[0m2\e[38;2;150;152;150mms\e[0m\e[38;2;150;152;150m\e[0m\r
-\e[38;2;150;152;150mwith \e[0m4\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m2\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m1.6\e[38;2;150;152;150mKt\e[0m\e[38;2;150;152;150m\e[0m\r
-\e[38;2;150;152;150mcontext.\e[0m\r
+\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0mtame-impala\e[38;2;150;152;150m \e[0m🦌\e[38;2;150;152;150m ready in \e[0m2\e[38;2;150;152;150mms\e[0m\e[38;2;150;152;150m on \e[0mFriday, 2 October 2026\e[38;2;150;152;150m\e[0m\r
+\e[38;2;150;152;150mwith \e[0m4\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m2\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m1.6\e[38;2;150;152;150mKt\e[0m\e[38;2;150;152;150m context.\e[0m\r
 Following output.\r
 
 === wide then following output ===
- \e]66;s=2:w=2;🦌\e\\\e[38;2;150;152;150m  \e[0m\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0mtame-impala\e[38;2;150;152;150m ready in \e[0m2\e[38;2;150;152;150mms\e[0m\r
+ \e]66;s=2:w=2;🦌\e\\\e[38;2;150;152;150m  \e[0m\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0mtame-impala\e[38;2;150;152;150m ready in \e[0m2\e[38;2;150;152;150mms\e[0m\e[38;2;150;152;150m on \e[0mFriday, 2 October 2026\r
 \e[5C  4\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m2\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m1.6\e[38;2;150;152;150mKt\e[0m\e[38;2;150;152;150m context\e[0m\r
 Following output.\r
 
 === wrapped details then following output ===
- \e]66;s=2:w=2;🦌\e\\\e[38;2;150;152;150m  \e[0m\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0mtame-impala\e[38;2;150;152;150m ready in \e[0m2\e[38;2;150;152;150mms\e[0m\r
-\e[5C  4\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m2\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m1.6\e[38;2;150;152;150mKt\e[0m\e[38;2;150;152;150m\e[0m\r
-\e[5C  \e[38;2;150;152;150mcontext\e[0m\r
+ \e]66;s=2:w=2;🦌\e\\\e[38;2;150;152;150m  \e[0m\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0mtame-impala\e[38;2;150;152;150m ready in \e[0m2\e[38;2;150;152;150mms\e[0m\e[38;2;150;152;150m on \e[0mFriday, 2 October 2026\r
+\e[5C  4\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m2\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m1.6\e[38;2;150;152;150mKt\e[0m\e[38;2;150;152;150m context\e[0m\r
 Following output.\r
 
 === wrapped local config then following output ===
- \e]66;s=2:w=2;🦌\e\\\e[38;2;150;152;150m  \e[0m\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0mtame-impala\e[38;2;150;152;150m ready in \e[0m2\e[38;2;150;152;150mms\e[0m\r
+ \e]66;s=2:w=2;🦌\e\\\e[38;2;150;152;150m  \e[0m\e[38;2;150;152;150mAgent\e[0m\e[38;2;150;152;150m \e[0mtame-impala\e[38;2;150;152;150m ready in \e[0m2\e[38;2;150;152;150mms\e[0m\e[38;2;150;152;150m on \e[0mFriday, 2 October 2026\r
 \e[5C  4\e[38;2;150;152;150m skills \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m2\e[38;2;150;152;150m snippets \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;150;152;150m~\e[0m1.6\e[38;2;150;152;150mKt\e[0m\e[38;2;150;152;150m context \e[0m\e[38;2;192;128;80m⧸\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;207;173;0moh.toml\e[0m\e[38;2;150;152;150m: \e[0mcaps.default, editor.command,\r
 \e[5C  model.round_robin, ports.hostname, skills.include, ui.currency, ui.streaming\e[38;2;150;152;150m\e[0m\r
 Following output.\r

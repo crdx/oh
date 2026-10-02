@@ -10022,10 +10022,13 @@ func TestGoldenTheBarConfiguredByDefaultDrawsWhatItDrewBefore(t *testing.T) {
 	compareWithGolden(t, "default-bar", ".screen", shownPasses(t, passes))
 }
 
+var startupDate = time.Date(2026, time.October, 2, 9, 0, 0, 0, time.UTC)
+
 func TestGoldenTheStartupLineDrawsWhatItDrewBefore(t *testing.T) {
 	bannerInfo := func(sessionName string, localConfig *startup.LocalConfig) startup.Info {
 		return startup.Info{
 			Session:       sessionName,
+			ReadyAt:       startupDate,
 			PromptBytes:   740 + 3*1024,
 			ProjectSkills: 3,
 			GlobalSkills:  1,
@@ -10133,6 +10136,7 @@ func TestGoldenTheStartupLineDrawsWhatItDrewBefore(t *testing.T) {
 func TestGoldenASizedBannerSurvivesARelayoutUnderTheInput(t *testing.T) {
 	startupEvent := startup.NewEvent(1500*time.Microsecond, startup.Info{
 		Session:       "tame-impala",
+		ReadyAt:       startupDate,
 		PromptBytes:   740 + 3*1024,
 		ProjectSkills: 3,
 		GlobalSkills:  1,
@@ -10248,6 +10252,7 @@ func TestGoldenLocalConfigsDrawMegathoroughly(t *testing.T) {
 
 	render := func(info startup.Info, columns int, isTextSizingSupported bool) string {
 		info.Session = "tame-impala"
+		info.ReadyAt = startupDate
 		info.PromptBytes = 740 + 3*1024
 		info.ProjectSkills = 3
 		info.GlobalSkills = 1

@@ -1,7 +1,8 @@
 === empty local config / ordinary / narrow ===
-Agent tame-impala 🦌 ready in 2ms with 4
- skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸
-oh.toml: (empty).
+Agent tame-impala 🦌 ready in 2ms on Fri
+day, 2 October 2026 with 4 skills ⧸ 2 sn
+ippets ⧸ ~1.6Kt context ⧸ oh.toml: (empt
+y).
 === empty local config / ordinary / one column ===
 A
 g
@@ -35,6 +36,32 @@ n
 2
 m
 s
+
+o
+n
+
+F
+r
+i
+d
+a
+y
+,
+
+2
+
+O
+c
+t
+o
+b
+e
+r
+
+2
+0
+2
+6
 
 w
 i
@@ -102,32 +129,37 @@ y
 === empty local config / ordinary / tiny ===
 Agent tame-i
 mpala 🦌 rea
-dy in 2ms wi
-th 4 skills
-⧸ 2 snippets
- ⧸ ~1.6Kt co
-ntext ⧸ oh.t
-oml: (empty)
-.
+dy in 2ms on
+ Friday, 2 O
+ctober 2026
+with 4 skill
+s ⧸ 2 snippe
+ts ⧸ ~1.6Kt
+context ⧸ oh
+.toml: (empt
+y).
 === empty local config / ordinary / wide ===
-Agent tame-impala 🦌 ready in 2ms with 4 skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸ oh.toml: (empty).
+Agent tame-impala 🦌 ready in 2ms on Friday, 2 October 2026 with 4 skills ⧸ 2 snippets ⧸ ~1.6Kt cont
+ext ⧸ oh.toml: (empty).
 === empty local config / sized / narrow ===
- 🦌    Agent tame-impala ready in 2ms
-       4 skills ⧸ 2 snippets ⧸ ~1.6Kt
-       context ⧸ oh.toml: (empty)
+Agent tame-impala 🦌 ready in 2ms on Fri
+day, 2 October 2026 with 4 skills ⧸ 2 sn
+ippets ⧸ ~1.6Kt context ⧸ oh.toml: (empt
+y).
 === empty local config / sized / wide ===
- 🦌    Agent tame-impala ready in 2ms
+ 🦌    Agent tame-impala ready in 2ms on Friday, 2 October 2026
        4 skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸ oh.toml: (empty)
 === many local settings / ordinary / narrow ===
-Agent tame-impala 🦌 ready in 2ms with 4
- skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸
-oh.toml: bar.bottom.left, bar.top.center
-, caps.default, editor.command, model.ro
-und_robin, ports.hostname, provider.olla
-ma.host, sandbox.read, sandbox.write, sk
-ills.exclude, skills.include, snippets.r
-eview, tool.output, ui.currency, ui.grou
-ping, ui.reasoning, ui.streaming.
+Agent tame-impala 🦌 ready in 2ms on Fri
+day, 2 October 2026 with 4 skills ⧸ 2 sn
+ippets ⧸ ~1.6Kt context ⧸ oh.toml: bar.b
+ottom.left, bar.top.center, caps.default
+, editor.command, model.round_robin, por
+ts.hostname, provider.ollama.host, sandb
+ox.read, sandbox.write, skills.exclude,
+skills.include, snippets.review, tool.ou
+tput, ui.currency, ui.grouping, ui.reaso
+ning, ui.streaming.
 === many local settings / ordinary / one column ===
 A
 g
@@ -161,6 +193,32 @@ n
 2
 m
 s
+
+o
+n
+
+F
+r
+i
+d
+a
+y
+,
+
+2
+
+O
+c
+t
+o
+b
+e
+r
+
+2
+0
+2
+6
 
 w
 i
@@ -484,64 +542,63 @@ g
 === many local settings / ordinary / tiny ===
 Agent tame-i
 mpala 🦌 rea
-dy in 2ms wi
-th 4 skills
-⧸ 2 snippets
- ⧸ ~1.6Kt co
-ntext ⧸ oh.t
-oml: bar.bot
-tom.left, ba
-r.top.center
-, caps.defau
-lt, editor.c
-ommand, mode
-l.round_robi
-n, ports.hos
-tname, provi
-der.ollama.h
-ost, sandbox
-.read, sandb
-ox.write, sk
-ills.exclude
-, skills.inc
-lude, snippe
-ts.review, t
-ool.output,
-ui.currency,
- ui.grouping
-, ui.reasoni
-ng, ui.strea
-ming.
+dy in 2ms on
+ Friday, 2 O
+ctober 2026
+with 4 skill
+s ⧸ 2 snippe
+ts ⧸ ~1.6Kt
+context ⧸ oh
+.toml: bar.b
+ottom.left,
+bar.top.cent
+er, caps.def
+ault, editor
+.command, mo
+del.round_ro
+bin, ports.h
+ostname, pro
+vider.ollama
+.host, sandb
+ox.read, san
+dbox.write,
+skills.exclu
+de, skills.i
+nclude, snip
+pets.review,
+ tool.output
+, ui.currenc
+y, ui.groupi
+ng, ui.reaso
+ning, ui.str
+eaming.
 === many local settings / ordinary / wide ===
-Agent tame-impala 🦌 ready in 2ms with 4 skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸ oh.toml: bar.bottom.
-left, bar.top.center, caps.default, editor.command, model.round_robin, ports.hostname, provider.olla
-ma.host, sandbox.read, sandbox.write, skills.exclude, skills.include, snippets.review, tool.output,
-ui.currency, ui.grouping, ui.reasoning, ui.streaming.
+Agent tame-impala 🦌 ready in 2ms on Friday, 2 October 2026 with 4 skills ⧸ 2 snippets ⧸ ~1.6Kt cont
+ext ⧸ oh.toml: bar.bottom.left, bar.top.center, caps.default, editor.command, model.round_robin, por
+ts.hostname, provider.ollama.host, sandbox.read, sandbox.write, skills.exclude, skills.include, snip
+pets.review, tool.output, ui.currency, ui.grouping, ui.reasoning, ui.streaming.
 === many local settings / sized / narrow ===
- 🦌    Agent tame-impala ready in 2ms
-       4 skills ⧸ 2 snippets ⧸ ~1.6Kt
-       context ⧸ oh.toml:
-       bar.bottom.left, bar.top.center,
-       caps.default, editor.command,
-       model.round_robin,
-       ports.hostname,
-       provider.ollama.host,
-       sandbox.read, sandbox.write,
-       skills.exclude, skills.include,
-       snippets.review, tool.output,
-       ui.currency, ui.grouping,
-       ui.reasoning, ui.streaming
+Agent tame-impala 🦌 ready in 2ms on Fri
+day, 2 October 2026 with 4 skills ⧸ 2 sn
+ippets ⧸ ~1.6Kt context ⧸ oh.toml: bar.b
+ottom.left, bar.top.center, caps.default
+, editor.command, model.round_robin, por
+ts.hostname, provider.ollama.host, sandb
+ox.read, sandbox.write, skills.exclude,
+skills.include, snippets.review, tool.ou
+tput, ui.currency, ui.grouping, ui.reaso
+ning, ui.streaming.
 === many local settings / sized / wide ===
- 🦌    Agent tame-impala ready in 2ms
+ 🦌    Agent tame-impala ready in 2ms on Friday, 2 October 2026
        4 skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸ oh.toml: bar.bottom.left, bar.top.center,
        caps.default, editor.command, model.round_robin, ports.hostname, provider.ollama.host,
        sandbox.read, sandbox.write, skills.exclude, skills.include, snippets.review, tool.output,
        ui.currency, ui.grouping, ui.reasoning, ui.streaming
 === mixed global and local settings / ordinary / narrow ===
-Agent tame-impala 🦌 ready in 2ms with 4
- skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸
-oh.toml: sandbox.write, snippets.review,
- ui.currency.
+Agent tame-impala 🦌 ready in 2ms on Fri
+day, 2 October 2026 with 4 skills ⧸ 2 sn
+ippets ⧸ ~1.6Kt context ⧸ oh.toml: sandb
+ox.write, snippets.review, ui.currency.
 === mixed global and local settings / ordinary / one column ===
 A
 g
@@ -575,6 +632,32 @@ n
 2
 m
 s
+
+o
+n
+
+F
+r
+i
+d
+a
+y
+,
+
+2
+
+O
+c
+t
+o
+b
+e
+r
+
+2
+0
+2
+6
 
 w
 i
@@ -678,30 +761,33 @@ y
 === mixed global and local settings / ordinary / tiny ===
 Agent tame-i
 mpala 🦌 rea
-dy in 2ms wi
-th 4 skills
-⧸ 2 snippets
- ⧸ ~1.6Kt co
-ntext ⧸ oh.t
-oml: sandbox
-.write, snip
-pets.review,
- ui.currency
-.
+dy in 2ms on
+ Friday, 2 O
+ctober 2026
+with 4 skill
+s ⧸ 2 snippe
+ts ⧸ ~1.6Kt
+context ⧸ oh
+.toml: sandb
+ox.write, sn
+ippets.revie
+w, ui.curren
+cy.
 === mixed global and local settings / ordinary / wide ===
-Agent tame-impala 🦌 ready in 2ms with 4 skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸ oh.toml: sandbox.wri
-te, snippets.review, ui.currency.
+Agent tame-impala 🦌 ready in 2ms on Friday, 2 October 2026 with 4 skills ⧸ 2 snippets ⧸ ~1.6Kt cont
+ext ⧸ oh.toml: sandbox.write, snippets.review, ui.currency.
 === mixed global and local settings / sized / narrow ===
- 🦌    Agent tame-impala ready in 2ms
-       4 skills ⧸ 2 snippets ⧸ ~1.6Kt
-       context ⧸ oh.toml: sandbox.write,
-       snippets.review, ui.currency
+Agent tame-impala 🦌 ready in 2ms on Fri
+day, 2 October 2026 with 4 skills ⧸ 2 sn
+ippets ⧸ ~1.6Kt context ⧸ oh.toml: sandb
+ox.write, snippets.review, ui.currency.
 === mixed global and local settings / sized / wide ===
- 🦌    Agent tame-impala ready in 2ms
+ 🦌    Agent tame-impala ready in 2ms on Friday, 2 October 2026
        4 skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸ oh.toml: sandbox.write, snippets.review, ui.currency
 === no local config / ordinary / narrow ===
-Agent tame-impala 🦌 ready in 2ms with 4
- skills ⧸ 2 snippets ⧸ ~1.6Kt context.
+Agent tame-impala 🦌 ready in 2ms on Fri
+day, 2 October 2026 with 4 skills ⧸ 2 sn
+ippets ⧸ ~1.6Kt context.
 === no local config / ordinary / one column ===
 A
 g
@@ -735,6 +821,32 @@ n
 2
 m
 s
+
+o
+n
+
+F
+r
+i
+d
+a
+y
+,
+
+2
+
+O
+c
+t
+o
+b
+e
+r
+
+2
+0
+2
+6
 
 w
 i
@@ -783,24 +895,28 @@ t
 === no local config / ordinary / tiny ===
 Agent tame-i
 mpala 🦌 rea
-dy in 2ms wi
-th 4 skills
-⧸ 2 snippets
- ⧸ ~1.6Kt co
-ntext.
+dy in 2ms on
+ Friday, 2 O
+ctober 2026
+with 4 skill
+s ⧸ 2 snippe
+ts ⧸ ~1.6Kt
+context.
 === no local config / ordinary / wide ===
-Agent tame-impala 🦌 ready in 2ms with 4 skills ⧸ 2 snippets ⧸ ~1.6Kt context.
+Agent tame-impala 🦌 ready in 2ms on Friday, 2 October 2026 with 4 skills ⧸ 2 snippets ⧸ ~1.6Kt cont
+ext.
 === no local config / sized / narrow ===
- 🦌    Agent tame-impala ready in 2ms
-       4 skills ⧸ 2 snippets ⧸ ~1.6Kt
-       context
+Agent tame-impala 🦌 ready in 2ms on Fri
+day, 2 October 2026 with 4 skills ⧸ 2 sn
+ippets ⧸ ~1.6Kt context.
 === no local config / sized / wide ===
- 🦌    Agent tame-impala ready in 2ms
+ 🦌    Agent tame-impala ready in 2ms on Friday, 2 October 2026
        4 skills ⧸ 2 snippets ⧸ ~1.6Kt context
 === one local setting / ordinary / narrow ===
-Agent tame-impala 🦌 ready in 2ms with 4
- skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸
-oh.toml: caps.default.
+Agent tame-impala 🦌 ready in 2ms on Fri
+day, 2 October 2026 with 4 skills ⧸ 2 sn
+ippets ⧸ ~1.6Kt context ⧸ oh.toml: caps.
+default.
 === one local setting / ordinary / one column ===
 A
 g
@@ -834,6 +950,32 @@ n
 2
 m
 s
+
+o
+n
+
+F
+r
+i
+d
+a
+y
+,
+
+2
+
+O
+c
+t
+o
+b
+e
+r
+
+2
+0
+2
+6
 
 w
 i
@@ -906,20 +1048,23 @@ t
 === one local setting / ordinary / tiny ===
 Agent tame-i
 mpala 🦌 rea
-dy in 2ms wi
-th 4 skills
-⧸ 2 snippets
- ⧸ ~1.6Kt co
-ntext ⧸ oh.t
-oml: caps.de
-fault.
+dy in 2ms on
+ Friday, 2 O
+ctober 2026
+with 4 skill
+s ⧸ 2 snippe
+ts ⧸ ~1.6Kt
+context ⧸ oh
+.toml: caps.
+default.
 === one local setting / ordinary / wide ===
-Agent tame-impala 🦌 ready in 2ms with 4 skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸ oh.toml: caps.defaul
-t.
+Agent tame-impala 🦌 ready in 2ms on Friday, 2 October 2026 with 4 skills ⧸ 2 snippets ⧸ ~1.6Kt cont
+ext ⧸ oh.toml: caps.default.
 === one local setting / sized / narrow ===
- 🦌    Agent tame-impala ready in 2ms
-       4 skills ⧸ 2 snippets ⧸ ~1.6Kt
-       context ⧸ oh.toml: caps.default
+Agent tame-impala 🦌 ready in 2ms on Fri
+day, 2 October 2026 with 4 skills ⧸ 2 sn
+ippets ⧸ ~1.6Kt context ⧸ oh.toml: caps.
+default.
 === one local setting / sized / wide ===
- 🦌    Agent tame-impala ready in 2ms
+ 🦌    Agent tame-impala ready in 2ms on Friday, 2 October 2026
        4 skills ⧸ 2 snippets ⧸ ~1.6Kt context ⧸ oh.toml: caps.default
