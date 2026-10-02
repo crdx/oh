@@ -235,26 +235,35 @@ func endingOnARow(rows []width.ScreenRow, count int) int {
 }
 
 func (self *Screen) windowed(rows []width.ScreenRow, gap int, room int) []width.ScreenRow {
+	withGap := func(visible []width.ScreenRow) []width.ScreenRow {
+		return append(make([]width.ScreenRow, gap), visible...)
+	}
 	if room < 0 || gap+len(rows) <= room {
-		return append(make([]width.ScreenRow, gap), rows...)
+		return withGap(rows)
 	}
 
+	if gap > 0 && room-gap >= 2 {
+		room -= gap
+	} else {
+		gap = 0
+	}
 	if len(rows) <= room {
-		return rows
+		return withGap(rows)
 	}
 
 	rows = withoutTrailingBlankRows(rows)
 	if len(rows) <= room {
-		return rows
+		return withGap(rows)
 	}
 
 	if room < 2 {
-		return rows[len(rows)-room:]
+		return withGap(rows[len(rows)-room:])
 	}
 
 	shownRows := rows[len(rows)-room+1:]
+	visible := append([]width.ScreenRow{{Text: self.hiddenRowsNotice(len(rows) - len(shownRows))}}, shownRows...)
 
-	return append([]width.ScreenRow{{Text: self.hiddenRowsNotice(len(rows) - len(shownRows))}}, shownRows...)
+	return withGap(visible)
 }
 
 func withoutTrailingBlankRows(rows []width.ScreenRow) []width.ScreenRow {

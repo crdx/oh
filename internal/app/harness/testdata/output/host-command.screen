@@ -56,13 +56,18 @@ Model returned no reply.
 
     Exit code: 0
 === completed taller than the terminal and pending ===
-⋮ 21 more lines
+Previous answer.
+
+⋮ 20 more lines
+    Exit code: 0
                                                                            double-enter to send now
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === completed taller than the terminal and sent ===
+Previous answer.
+
 
  🤖 The user ran the following command on the host:
 

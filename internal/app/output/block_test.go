@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/width"
 )
 
 type mutableBlock struct {
@@ -287,6 +288,56 @@ func TestARegionTallerThanTheTerminalIsWindowedToTheRoomItHas(t *testing.T) {
 	}
 	if !slices.Contains(drawnTexts(screen), "row 19") {
 		t.Errorf("the window lost the newest row: %q", drawnTexts(screen))
+	}
+}
+
+func TestAWindowedRegionKeepsItsGroupingGap(t *testing.T) {
+	screenOutput := &strings.Builder{}
+	screen := &Screen{writer: screenOutput, isTerminal: true, canRepaint: true, columns: 40, lines: 8}
+	screen.DrawAnswer(width.HardRows([]string{"answer"}))
+	screen.Seal()
+	screen.Footer([]string{"> "}, 0, 2)
+
+	block := &rowsBlock{}
+	for i := range 20 {
+		block.rows = append(block.rows, "row "+strconv.Itoa(i))
+	}
+	screen.OpenPanel(block)
+	screen.Footer([]string{"> "}, 0, 2)
+
+	if strings.TrimSpace(style.Plain(screen.canvas.rows[0].Text)) != "" {
+		t.Errorf("window opened with %q, want its grouping gap", screen.canvas.rows[0].Text)
+	}
+	if !strings.Contains(screen.canvas.rows[1].Text, "more lines") {
+		t.Errorf("window continued with %q, want it to say what it hid", screen.canvas.rows[1].Text)
+	}
+	if got := len(screen.canvas.rows); got > screen.lines {
+		t.Errorf("painted %d rows on a terminal of %d", got, screen.lines)
+	}
+}
+
+func TestAWindowedRegionDropsItsGroupingGapBeforeHidingEveryContentRow(t *testing.T) {
+	screenOutput := &strings.Builder{}
+	screen := &Screen{writer: screenOutput, isTerminal: true, canRepaint: true, columns: 40, lines: 4}
+	screen.DrawAnswer(width.HardRows([]string{"answer"}))
+	screen.Seal()
+	screen.Footer([]string{"> "}, 0, 2)
+
+	block := &rowsBlock{}
+	for i := range 20 {
+		block.rows = append(block.rows, "row "+strconv.Itoa(i))
+	}
+	screen.OpenPanel(block)
+	screen.Footer([]string{"> "}, 0, 2)
+
+	if !strings.Contains(screen.canvas.rows[0].Text, "more lines") {
+		t.Errorf("window opened with %q, want it to say what it hid", screen.canvas.rows[0].Text)
+	}
+	if !slices.Contains(drawnTexts(screen), "row 19") {
+		t.Errorf("window lost its newest content row: %q", drawnTexts(screen))
+	}
+	if got := len(screen.canvas.rows); got > screen.lines {
+		t.Errorf("painted %d rows on a terminal of %d", got, screen.lines)
 	}
 }
 

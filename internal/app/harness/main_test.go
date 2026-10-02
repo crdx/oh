@@ -21370,8 +21370,12 @@ func TestGoldenHostCommandNoticesMatchGolden(t *testing.T) {
 	drawnStandingAt := func(build func(*App)) func() string {
 		return drawnAtLines(replayLines, false, build)
 	}
+	const tallCommandLines = shortLines + 2
 	tallCommand := func(isSent bool) func() string {
-		return drawnAtLines(shortLines, isSent, func(self *App) {
+		return drawnAtLines(tallCommandLines, isSent, func(self *App) {
+			self.screen.DrawAnswer(width.HardRows([]string{"Previous answer."}))
+			self.screen.Seal()
+
 			history := edit.NewHistory("", historyLimit)
 			inputLine := edit.NewInput(history)
 			self.inputLine = inputLine
@@ -21458,19 +21462,26 @@ func TestGoldenHostCommandNoticesMatchGolden(t *testing.T) {
 	}
 
 	tallPending := tallCommand(false)()
-	requireNothingDrawnAboveTheScreen(t, "a pending host command taller than the terminal", tallPending, shortLines)
+	requireNothingDrawnAboveTheScreen(t, "a pending host command taller than the terminal", tallPending, tallCommandLines)
 	passes["completed taller than the terminal and pending"] = func() string { return tallPending }
 
 	tallSent := tallCommand(true)()
-	requireNothingDrawnAboveTheScreen(t, "a sent host command taller than the terminal", tallSent, shortLines)
-	copied := strings.Join(playScreenOfSize(t, tallSent, replayColumns, shortLines).copied(), "\n")
+	requireNothingDrawnAboveTheScreen(t, "a sent host command taller than the terminal", tallSent, tallCommandLines)
+	copied := strings.Join(playScreenOfSize(t, tallSent, replayColumns, tallCommandLines).copied(), "\n")
 	if !strings.Contains(copied, "line 1") || !strings.Contains(copied, fmt.Sprintf("line %d", shortLines*2)) {
 		t.Errorf("the sent command was not sealed whole into scrollback:\n%s", copied)
 	}
 	passes["completed taller than the terminal and sent"] = func() string { return tallSent }
 
 	compareWithGolden(t, "host-command", ".ansi", passes)
-	compareWithGolden(t, "host-command", ".screen", shownPasses(t, passes))
+	screenPasses := shownPasses(t, passes)
+	screenPasses["completed taller than the terminal and pending"] = func() string {
+		return shownInLines(t, tallPending, tallCommandLines)
+	}
+	screenPasses["completed taller than the terminal and sent"] = func() string {
+		return shownInLines(t, tallSent, tallCommandLines)
+	}
+	compareWithGolden(t, "host-command", ".screen", screenPasses)
 }
 
 func TestGoldenADoubleReturnFlushesPendingNoticesWithoutTheNudge(t *testing.T) {

@@ -20,6 +20,7 @@
 ### Drawing
 
 - Show the date in the startup banner
+- Keep the grouping gap above windowed blocks
 - Ensure clipped hyperlinks don't leak
 - Don't show `1L` for the grep tool's `(no output)` line
 - Keep skill and reopened-job notices conciser
