@@ -85,10 +85,11 @@ func TestAConfirmationDrawsNamedFieldsAndLinksTheirPaths(t *testing.T) {
 	if err := os.WriteFile(patchPath, nil, 0o600); err != nil {
 		t.Fatal(err)
 	}
+	const message = "Align header controls consistently\n\nKeep every row aligned."
 	question := ask.Confirmation{
 		Label: "Run the commit tool?",
 		Fields: []ask.Field{
-			{Name: "message", Value: "Align header controls consistently", IsSubject: true},
+			{Name: "message", Value: message, IsSubject: true},
 			{Name: "patch", Value: patchPath},
 		},
 	}.Question()
@@ -100,6 +101,7 @@ func TestAConfirmationDrawsNamedFieldsAndLinksTheirPaths(t *testing.T) {
 		"",
 		"message: Align header controls consistently",
 		"",
+		"Keep every row aligned.",
 		"patch: " + patchPath,
 		"",
 		"[Yes]  No ",
@@ -110,13 +112,13 @@ func TestAConfirmationDrawsNamedFieldsAndLinksTheirPaths(t *testing.T) {
 	if !strings.Contains(rows[2], style.Info("Align header controls consistently")) {
 		t.Errorf("got subject row %q, want its value painted as forwarded content", rows[2])
 	}
-	if !strings.Contains(rows[4], link.RenderPath(patchPath, patchPath)) {
-		t.Errorf("got patch row %q, want the patch path linked", rows[4])
+	if !strings.Contains(rows[5], link.RenderPath(patchPath, patchPath)) {
+		t.Errorf("got patch row %q, want the patch path linked", rows[5])
 	}
 
 	unlinked := RenderQuestion(question, question.DefaultIndex(), 120, false, link.Roots{})
-	if strings.Contains(unlinked[4], link.RenderPath(patchPath, patchPath)) {
-		t.Errorf("got patch row %q without terminal hyperlinks", unlinked[4])
+	if strings.Contains(unlinked[5], link.RenderPath(patchPath, patchPath)) {
+		t.Errorf("got patch row %q without terminal hyperlinks", unlinked[5])
 	}
 }
 

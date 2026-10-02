@@ -47,7 +47,6 @@ $ curl example.com ✦·
 Run the commit tool?
 
 message: Align header controls consistently
-
 patch: /tmp/layout.patch
 
 [Yes]  No

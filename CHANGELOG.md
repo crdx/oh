@@ -90,6 +90,7 @@
 
 ### Questions and approvals
 
+- Keep custom tool approval fields together
 - Lead custom tool approvals with their subject
 - Keep question notifications on screen until dealt with
 - Keep the blank row under a question's label

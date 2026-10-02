@@ -115,11 +115,7 @@ func renderQuestionFields(
 ) []string {
 	var rows []string
 
-	for index, field := range fields {
-		if field.IsSubject && len(rows) > 0 {
-			rows = append(rows, "")
-		}
-
+	for _, field := range fields {
 		value := strutil.StripControl(field.Value)
 		if shouldRenderHyperlinks {
 			value = link.Render(value, pathRoots)
@@ -132,9 +128,6 @@ func renderQuestionFields(
 		prefix := style.Subject(name+":") + " "
 		indent := min(style.Width(prefix), max(columns-1, 0))
 		rows = append(rows, width.WrapIndented(prefix+value, columns, indent)...)
-		if field.IsSubject && index < len(fields)-1 {
-			rows = append(rows, "")
-		}
 	}
 
 	return rows
