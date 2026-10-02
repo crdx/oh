@@ -292,7 +292,7 @@ func runningCallRows() []callRowCase {
 		{title: "shell running", calls: []callRowCall{{"bash", `{"command":"just test","intent":"Running the whole test suite"}`, nil}}},
 		{title: "shell running on the host network", calls: []callRowCall{{"bash", `{"command":"curl https://example.com/status","intent":"Checking what the status endpoint reports","network":"host"}`, nil}}},
 		{title: "shell running a long command", calls: []callRowCall{{"bash", `{"command":"go test -run 'TestGolden' -count=1 ./internal/app/harness/ ./internal/app/painter/ ./internal/app/call/","intent":"Regenerating the harness golden files"}`, nil}}},
-		{title: "job starting", calls: []callRowCall{{"job", `{"action":"start","name":"golden","command":"cd /tmp/oh && just golden 2>&1 | tail -30","intent":"Regenerating every golden in scratch"}`, nil}}},
+		{title: "job starting", calls: []callRowCall{{"job", `{"action":"start","name":"golden","command":"cd repo/oh && just golden 2>&1 | tail -30","intent":"Regenerating every golden in scratch"}`, nil}}},
 		{title: "job waiting with a limit", calls: []callRowCall{{"job", `{"action":"wait","name":"golden","wait_seconds":20}`, nil}}},
 		{title: "job waiting on several", calls: []callRowCall{{"job", `{"action":"wait","names":["docs","build"],"wait_for":"all"}`, nil}}},
 	}
