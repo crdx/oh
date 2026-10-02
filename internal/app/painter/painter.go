@@ -446,6 +446,8 @@ func (self *Picasso) LiveEventCount() int {
 }
 
 func (self *Picasso) Redraw(liveEvents []agent.Event) {
+	self.isStale = false
+
 	if self.toolBlock != nil {
 		self.screen.OpenTool(self.toolBlock)
 
