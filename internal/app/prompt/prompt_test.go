@@ -491,7 +491,8 @@ func TestTheHarnessDoesNotOfferTheHostNetworkWhenItIsNotGranted(t *testing.T) {
 		"The bash tool takes network=loopback (the default) or network=host",
 		"The host network is withheld, so a network=host call is refused",
 		"The user can grant network access with ctrl+x n, which allows network=host calls",
-		"Ask the user to grant the host network, not to run the command",
+		"Suggest both to the user: granting the host network, or running the command themselves as a /! line",
+		"If only one simple command needs the host network, just suggest the /! line for the user to run",
 	} {
 		if !strings.Contains(got, want) {
 			t.Errorf("harness context does not contain %q: %q", want, got)
@@ -1024,9 +1025,10 @@ func TestWaitingForTheUserFollowsJobAvailability(t *testing.T) {
 
 			for _, rule := range []string{
 				"# Waiting for the User",
-				"Before ending a turn to wait for a user action",
-				"the filesystem can detect",
-				"you must start a job watcher",
+				"Before ending your turn, start a job watcher",
+				"when completion can be detected through the filesystem",
+				"Note that this will not work with /grant",
+				"it needs to be accessible already to be watchable",
 				"Use a continuous `inotifywait --monitor` if available",
 				"With inotifywait, end the turn only after it prints \"Watches established\"",
 				"otherwise poll every 2s",

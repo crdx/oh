@@ -56,7 +56,8 @@
 - The bash tool takes network=loopback (the default) or network=host
 - The host network is withheld, so a network=host call is refused before it runs
 - The user can grant network access with ctrl+x n, which allows network=host calls
-- Ask the user to grant the host network, not to run the command
+- Suggest both to the user: granting the host network, or running the command themselves as a /! line
+- If only one simple command needs the host network, just suggest the /! line for the user to run
 
 # /tmp
 
