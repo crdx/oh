@@ -1,3 +1,27 @@
+=== completed and waiting for the next turn ===
+                                                                           double-enter to send now
+ ⏳ The user ran the following command on the host:
+
+    $ git status --short
+
+    Output:
+
+     M README.md
+    ?? notes.txt
+
+    Exit code: 0
+=== completed during a running turn ===
+
+ 🤖 The user ran the following command on the host:
+
+    $ git status --short
+
+    Output:
+
+     M README.md
+    ?? notes.txt
+
+    Exit code: 0
 === exited with a failure ===
 
  🤖 The user ran the following command on the host:
@@ -20,18 +44,6 @@
     Enumerating objects: 5, done.
 
     Interrupted by the user after 4s
-=== pending before the turn it wakes ===
-                                                                           double-enter to send now
- ⏳ The user ran the following command on the host:
-
-    $ git status --short
-
-    Output:
-
-     M README.md
-    ?? notes.txt
-
-    Exit code: 0
 === printed nothing ===
 
  🤖 The user ran the following command on the host, producing no output:
@@ -39,7 +51,7 @@
     $ touch notes.txt
 
     Exit code: 0
-=== settled into the turn ===
+=== settled into the next turn ===
 
  🤖 The user ran the following command on the host:
 
@@ -59,7 +71,7 @@
     $ sleep 600
 
     Killed at its time limit of 30s
-=== stopped in the turn it woke ===
+=== stopped in the next turn ===
 
  🤖 The user ran the following command on the host:
 

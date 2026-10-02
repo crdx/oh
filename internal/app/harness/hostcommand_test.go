@@ -82,8 +82,11 @@ func TestAHostCommandRunsWithoutHoldingTheInterface(t *testing.T) {
 	if self.isHostCommandUnderway() || len(self.hostCommandRows(replayColumns)) != 0 {
 		t.Error("the command still stands after it ended")
 	}
-	if !self.currentTurn.Running() {
-		t.Fatal("the command left the conversation asleep, want a turn of its own")
+	if self.currentTurn.Running() {
+		t.Fatal("the command started a turn, want it left for the next message")
+	}
+	if notice := strings.Join(self.pendingNotices.notices(), "\n"); !strings.Contains(notice, "git push") {
+		t.Errorf("got pending notices %q, want the completed command held for the next message", notice)
 	}
 }
 
@@ -144,13 +147,13 @@ func TestAStopKeyReachesTheTurnOnceTheCommandIsStopping(t *testing.T) {
 	endHeldHostCommand(t, self)
 }
 
-func TestAPrintedHostCommandIsAwaitedBeforeTheNextLine(t *testing.T) {
+func TestAPrintedHostCommandIsAwaitedAndHeldForTheNextLine(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
 	self.settleAccess()
 	self.runMode.isPlain = true
 	self.hostCommand.run = func(_ context.Context, _ string, command string, _ *hostcommand.Output) (hostcommand.Result, error) {
-		return hostcommand.Result{Command: command, IsStoppedByUser: true}, nil
+		return hostcommand.Result{Command: command}, nil
 	}
 
 	systemCommands, err := commands.New(commands.Options{
@@ -166,6 +169,9 @@ func TestAPrintedHostCommandIsAwaitedBeforeTheNextLine(t *testing.T) {
 
 	if self.isHostCommandUnderway() {
 		t.Error("the command was left running, want it awaited")
+	}
+	if self.currentTurn.Running() {
+		t.Error("the command started a turn, want it held for the next input line")
 	}
 	if len(self.pendingNotices.items) != 1 {
 		t.Errorf("got %d pending notices, want the command's own", len(self.pendingNotices.items))

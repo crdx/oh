@@ -96,9 +96,7 @@ func (self *App) hostCommandEnded(outcome hostcommand.Outcome) {
 }
 
 func (self *App) hostCommandRan(event agent.Event) {
-	if self.holdNotice(event) && !hostcommand.IsStoppedByUser(event) {
-		self.startTurn()
-	}
+	self.holdNotice(event)
 }
 
 func (self *App) awaitHostCommand() {

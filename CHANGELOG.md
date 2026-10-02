@@ -45,6 +45,7 @@
 
 ### Host commands
 
+- Don't start a new turn with `/!` commands
 - Run `/!` without freezing the interface
 - Stop a running `/!` command with escape or `ctrl+d`
 - Show the last line a running `/!` command printed

@@ -17967,7 +17967,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		firstAssistant.AddUserMessage(firstHarness.takeSettledNotes())
 	}
 	if scenario.RunBeforeFirst != "" {
-		firstHarness.holdNotice(sessionGoldenHostCommand(scenario.RunBeforeFirst))
+		firstHarness.hostCommandRan(sessionGoldenHostCommand(scenario.RunBeforeFirst))
 		firstHarness.settleAccess()
 		firstAssistant.AddUserMessage(firstHarness.takeSettledNotes())
 	}
@@ -21197,28 +21197,34 @@ func endedJobConclusion() jobs.Conclusion {
 	}
 }
 
-func TestAHostCommandWakesTheConversationWithATurnOfItsOwn(t *testing.T) {
+func TestAHostCommandWaitsForTheNextTurn(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
 	completeTurn(self)
 
 	self.hostCommandRan(hostCommandRun())
 
-	if !self.currentTurn.Running() {
-		t.Fatal("the command left the conversation asleep, want a turn of its own")
+	if self.currentTurn.Running() {
+		t.Fatal("the command started a turn, want it left for the next message")
+	}
+	if len(self.pendingNotices.items) != 1 {
+		t.Fatalf("got %d pending notices, want the completed command held for the next turn", len(self.pendingNotices.items))
 	}
 
+	self.start("what changed?")
 	for report := range self.currentTurn.Events() {
 		self.takeTurn(report)
 	}
 	self.finish()
 
 	messages := submittedTexts(self.recordedEvents)
-	if len(messages) == 0 || !strings.Contains(messages[len(messages)-1], "git status --short") {
-		t.Errorf("got messages %q, want the command named in the turn it woke", messages)
+	if !slices.ContainsFunc(messages, func(message string) bool {
+		return strings.Contains(message, "git status --short")
+	}) {
+		t.Errorf("got messages %q, want the next turn told about the command", messages)
 	}
-	if note := self.takeSettledNotes(); note != "" {
-		t.Errorf("told the model %q afterwards, want the waking turn to have taken it", note)
+	if len(self.pendingNotices.items) != 0 {
+		t.Errorf("got pending notices %+v, want the next turn to have taken them", self.pendingNotices.items)
 	}
 }
 
@@ -21284,18 +21290,19 @@ func TestGoldenHostCommandNoticesMatchGolden(t *testing.T) {
 	}
 
 	passes := map[string]func() string{
-		"pending before the turn it wakes": drawnAt(func(self *App) {
-			self.pendingNotices.add(hostCommandRun())
-			self.refreshPendingMessages()
+		"completed and waiting for the next turn": drawnAt(func(self *App) {
+			self.hostCommandRan(hostCommandRun())
 		}),
-		"settled into the turn": drawnAt(func(self *App) {
-			self.pendingNotices.add(hostCommandRun())
-			self.refreshPendingMessages()
+		"completed during a running turn": drawnAt(func(self *App) {
+			self.currentTurn = Turn{Stream: testRunningTurnStream(), painter: self.newPainter(true)}
+			self.hostCommandRan(hostCommandRun())
+		}),
+		"settled into the next turn": drawnAt(func(self *App) {
+			self.hostCommandRan(hostCommandRun())
 			self.settlePendingInput()
 		}),
-		"stopped in the turn it woke": drawnAt(func(self *App) {
-			self.pendingNotices.add(hostCommandRun())
-			self.refreshPendingMessages()
+		"stopped in the next turn": drawnAt(func(self *App) {
+			self.hostCommandRan(hostCommandRun())
 			self.settlePendingInput()
 			self.currentTurn = Turn{painter: self.newPainter(true)}
 			self.currentTurn.painter.DrawEvent(interrupt.Event(interrupt.ControlD))
@@ -21537,19 +21544,19 @@ func TestTheModelIsToldTheDetailedFormOfAUserNotice(t *testing.T) {
 	}
 }
 
-func TestAHostCommandLeavesNothingStandingBecauseItWakesItsOwnTurn(t *testing.T) {
+func TestAHostCommandLeavesANoticeStandingForTheNextTurn(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
 	self.settleAccess()
 
 	self.hostCommandRan(hostcommand.RanEvent(hostcommand.Result{Command: "git status", Output: " M README.md\n"}))
 
-	if !self.currentTurn.Running() {
-		t.Fatal("the command left the conversation asleep, want a turn of its own")
+	if self.currentTurn.Running() {
+		t.Fatal("the command started a turn, want it left for the next message")
 	}
-	if len(self.settledNotes) != 0 || len(self.pendingNotices.items) != 0 {
+	if len(self.settledNotes) != 0 || len(self.pendingNotices.items) != 1 {
 		t.Errorf(
-			"got %d notes and %d notices standing, want the turn it woke to have taken both",
+			"got %d notes and %d notices standing, want one pending notice",
 			len(self.settledNotes), len(self.pendingNotices.items),
 		)
 	}

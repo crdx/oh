@@ -1,3 +1,31 @@
+=== completed and waiting for the next turn ===
+\e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m ⏳ The user ran the following command on the host:                                                 \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150m$\e[0m\e[48;2;48;58;67m \e[38;2;150;152;150mgit\e[0m\e[48;2;48;58;67m \e[38;2;150;152;150mstatus\e[0m\e[48;2;48;58;67m \e[38;2;150;152;150m--short\e[0m\e[48;2;48;58;67m                                                                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    Output:                                                                                         \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150m M README.md\e[0m\e[48;2;48;58;67m                                                                                    \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150m?? notes.txt\e[0m\e[48;2;48;58;67m                                                                                    \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    Exit code: 0                                                                                    \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[?25h\e[?2026l
+=== completed during a running turn ===
+\e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 The user ran the following command on the host:                                                 \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150m$\e[0m\e[48;2;48;58;67m \e[38;2;150;152;150mgit\e[0m\e[48;2;48;58;67m \e[38;2;150;152;150mstatus\e[0m\e[48;2;48;58;67m \e[38;2;150;152;150m--short\e[0m\e[48;2;48;58;67m                                                                            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    Output:                                                                                         \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150m M README.md\e[0m\e[48;2;48;58;67m                                                                                    \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150m?? notes.txt\e[0m\e[48;2;48;58;67m                                                                                    \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    Exit code: 0                                                                                    \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[?25h\e[?2026l
 === exited with a failure ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 The user ran the following command on the host:                                                 \e[0m\r
@@ -24,20 +52,6 @@
 \e[48;2;48;58;67m    Interrupted by the user after 4s                                                                \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[?25h\e[?2026l
-=== pending before the turn it wakes ===
-\e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m ⏳ The user ran the following command on the host:                                                 \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m    \e[38;2;150;152;150m$\e[0m\e[48;2;48;58;67m \e[38;2;150;152;150mgit\e[0m\e[48;2;48;58;67m \e[38;2;150;152;150mstatus\e[0m\e[48;2;48;58;67m \e[38;2;150;152;150m--short\e[0m\e[48;2;48;58;67m                                                                            \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m    Output:                                                                                         \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m    \e[38;2;150;152;150m M README.md\e[0m\e[48;2;48;58;67m                                                                                    \e[0m\r
-\e[48;2;48;58;67m    \e[38;2;150;152;150m?? notes.txt\e[0m\e[48;2;48;58;67m                                                                                    \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m    Exit code: 0                                                                                    \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[?25h\e[?2026l
 === printed nothing ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 The user ran the following command on the host, producing no output:                            \e[0m\r
@@ -47,7 +61,7 @@
 \e[48;2;48;58;67m    Exit code: 0                                                                                    \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[?25h\e[?2026l
-=== settled into the turn ===
+=== settled into the next turn ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67m ⏳ The user ran the following command on the host:                                                 \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
@@ -71,7 +85,7 @@
 \e[48;2;48;58;67m    Killed at its time limit of 30s                                                                 \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[?25h\e[?2026l
-=== stopped in the turn it woke ===
+=== stopped in the next turn ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67m ⏳ The user ran the following command on the host:                                                 \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
