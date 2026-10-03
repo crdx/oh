@@ -2,6 +2,12 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+## [0.12.1] - 2026-10-03
+
+### Commands
+
+- Start a new turn when a `/!` command finishes
+
 ## [0.12.0] - 2026-10-03
 
 ### Theme
