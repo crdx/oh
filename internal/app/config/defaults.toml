@@ -81,7 +81,7 @@ lookup = "allow"
 [tools]
 
 [experimental]
-command_starts_turn = false
+command_starts_turn = true
 
 [model]
 effort = "high"
