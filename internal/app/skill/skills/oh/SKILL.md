@@ -245,11 +245,14 @@ Put custom tools in the global config. A workspace `oh.toml` that sets `[tools]`
 | `parameters`  | the arguments the model supplies, each one a table     |
 | `subject`     | the primary parameter; the first by default            |
 | `timeout`     | the limit for one call; `30s` by default               |
+| `concurrency` | maximum simultaneous calls; `1` by default             |
 | `permission`  | `ask` by default; a table can set its optional timeout |
 | `group`       | one lowercase mode flag that must grant access         |
 | `enabled`     | grant the tool's group initially; `false` by default   |
 
 The model reads the description alone to choose a tool. Write it for the model. The subject leads the tool's call row and, when approval is required, its supplied arguments.
+
+`concurrency` greater than one lets separate calls to this custom tool run together, up to that limit and oh's global limit of 16 tool calls. Calls beyond the limit wait for a slot without consuming their command timeout. This setting does not split one call into multiple jobs or make the model issue a batch; it only permits parallel execution when one model response contains multiple calls. Leave it at one for commands that share mutable state without their own locking.
 
 A group using `x`, `w`, `n`, `g`, `l`, or `r` follows that built-in capability. Any other letter appears directly after those letters in the mode display, as in `rxw nglabc`, and ctrl+x followed by that letter toggles every tool in its group. Set `enabled = true` on a tool or add its letter to `caps.default` to grant the group initially. Enabling one tool grants every tool sharing its group. An explicit `-c` overrides both defaults. Read is always granted, so a tool in group `r` is always available.
 
@@ -276,6 +279,7 @@ description = "report the weather for a city"
 command = ["./tools/forecast"]
 subject = "city"
 timeout = "10s"
+concurrency = 4
 permission = { rule = "ask", timeout = "5m" }
 group = "a"
 enabled = true

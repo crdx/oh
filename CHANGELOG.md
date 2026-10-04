@@ -3,6 +3,7 @@
 ## [N.N.N] - XXXX-XX-XX
 
 - Add a git status bar segment
+- Let custom tools set their concurrency level
 
 ## [0.12.1] - 2026-10-03
 

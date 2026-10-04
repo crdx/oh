@@ -23,6 +23,7 @@ type CustomTool struct {
 	Parameters         []CustomParameter `toml:"parameters"`
 	Subject            string            `toml:"subject"`
 	Timeout            time.Duration     `toml:"timeout"`
+	Concurrency        int               `toml:"concurrency"`
 	Permission         CustomPermission  `toml:"permission"`
 	Group              string            `toml:"group"`
 	IsEnabledByDefault bool              `toml:"enabled"`
@@ -217,6 +218,7 @@ func (self Config) declare(name string) (command.Declaration, error) {
 		Parameters:      parameters,
 		Subject:         setting.Subject,
 		TimeLimit:       setting.Timeout,
+		Concurrency:     setting.Concurrency,
 		MustAsk:         rule != permission.Allow,
 		ApprovalTimeout: approvalTimeout,
 		Group:           setting.Group,

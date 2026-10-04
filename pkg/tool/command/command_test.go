@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 
@@ -122,6 +123,89 @@ func TestACommandVersionDefaultsToOneAndMustBePositive(t *testing.T) {
 	declaration.Version = -1
 	if _, err := command.New(declaration, command.Options{}); err == nil || !strings.Contains(err.Error(), "positive integer") {
 		t.Errorf("got %v", err)
+	}
+}
+
+func TestCommandConcurrencyDefaultsToOneAndMustBePositive(t *testing.T) {
+	declaration := echoingDeclaration(t)
+	serial, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if serial.Concurrent() {
+		t.Error("default command is concurrent")
+	}
+
+	declaration.Concurrency = 3
+	concurrent, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !concurrent.Concurrent() {
+		t.Error("command with concurrency three is serial")
+	}
+
+	declaration.Concurrency = -1
+	if _, err := command.New(declaration, command.Options{}); err == nil || !strings.Contains(err.Error(), "concurrency is not a positive integer") {
+		t.Errorf("got %v", err)
+	}
+}
+
+func TestCommandConcurrencyCapsSimultaneousProcesses(t *testing.T) {
+	state := t.TempDir()
+	for _, name := range []string{"running", "maximum"} {
+		if err := os.WriteFile(filepath.Join(state, name), []byte("0\n"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	script := writeScript(t, `
+state=$1
+exec 9>"$state/lock"
+flock 9
+running=$(<"$state/running")
+maximum=$(<"$state/maximum")
+running=$((running + 1))
+printf '%d\n' "$running" > "$state/running"
+if ((running > maximum)); then printf '%d\n' "$running" > "$state/maximum"; fi
+flock -u 9
+sleep 0.05
+flock 9
+running=$(<"$state/running")
+printf '%d\n' "$((running - 1))" > "$state/running"
+`)
+	declaration := command.Declaration{
+		Name: "deploy", Description: "deploy concurrently", Command: []string{script, state}, Concurrency: 2,
+	}
+	subject, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var group sync.WaitGroup
+	errors := make(chan error, 6)
+	for range 6 {
+		parsed, err := subject.Parse(`{}`)
+		if err != nil {
+			t.Fatal(err)
+		}
+		group.Go(func() {
+			_, err := parsed.Exec(t.Context())
+			errors <- err
+		})
+	}
+	group.Wait()
+	close(errors)
+	for err := range errors {
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+	maximum, err := os.ReadFile(filepath.Join(state, "maximum")) //nolint:gosec // a path below the test directory
+	if err != nil {
+		t.Fatal(err)
+	}
+	if strings.TrimSpace(string(maximum)) != "2" {
+		t.Errorf("maximum concurrent processes is %s, want 2", strings.TrimSpace(string(maximum)))
 	}
 }
 

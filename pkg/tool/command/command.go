@@ -53,6 +53,7 @@ type Declaration struct {
 	Parameters      []Parameter
 	Subject         string
 	TimeLimit       time.Duration
+	Concurrency     int
 	MustAsk         bool
 	ApprovalTimeout time.Duration
 	Group           string
@@ -115,6 +116,13 @@ func New(declaration Declaration, options Options) (tool.Tool, error) {
 	if version < 1 {
 		return nil, errors.New("version is not a positive integer")
 	}
+	concurrency := declaration.Concurrency
+	if concurrency == 0 {
+		concurrency = 1
+	}
+	if concurrency < 1 {
+		return nil, errors.New("concurrency is not a positive integer")
+	}
 
 	builder := tool.Implement(
 		tool.Definition{
@@ -132,6 +140,10 @@ func New(declaration Declaration, options Options) (tool.Tool, error) {
 		MarksSuccess().
 		TakesAtMost(func(tool.Arguments) time.Duration { return timeLimit })
 
+	if concurrency > 1 {
+		builder = builder.IsEmbarrassinglyParallel()
+	}
+
 	if declaration.Group != "" {
 		builder = builder.Requires(
 			func() bool {
@@ -145,7 +157,20 @@ func New(declaration Declaration, options Options) (tool.Tool, error) {
 		)
 	}
 
+	var slots chan struct{}
+	if concurrency > 1 {
+		slots = make(chan struct{}, concurrency)
+	}
+
 	return builder.Plain(func(ctx context.Context, arguments tool.Arguments) (string, error) {
+		if slots != nil {
+			select {
+			case slots <- struct{}{}:
+				defer func() { <-slots }()
+			case <-ctx.Done():
+				return "", ctx.Err()
+			}
+		}
 		return run(ctx, declaration, executable, arguments, options, timeLimit, approvalTimeout)
 	}), nil
 }

@@ -42,6 +42,7 @@ func TestACustomToolBecomesAToolTheModelIsOffered(t *testing.T) {
 	config, _ := configWithACustomTool(t, `
 		[tools.weather]
 		version = 3
+		concurrency = 4
 		description = "report the weather for a city"
 		command = ["./forecast"]
 		parameters = [
@@ -65,6 +66,22 @@ func TestACustomToolBecomesAToolTheModelIsOffered(t *testing.T) {
 	}
 	if tools[0].Revision() != "3" {
 		t.Errorf("got version %q", tools[0].Revision())
+	}
+	if !tools[0].Concurrent() {
+		t.Error("configured concurrency did not make the tool concurrent")
+	}
+}
+
+func TestACustomToolConcurrencyMustBePositive(t *testing.T) {
+	config, _ := configWithACustomTool(t, `
+		[tools.weather]
+		description = "report the weather"
+		command = ["./forecast"]
+		concurrency = -1
+	`)
+
+	if _, err := config.BuildCustomTools(command.Options{}); err == nil || !strings.Contains(err.Error(), "concurrency is not a positive integer") {
+		t.Errorf("got %v", err)
 	}
 }
 
