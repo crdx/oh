@@ -1,11 +1,11 @@
 === bottom.center while running ===
-
+\e[38;2;150;152;150mtame-impala\e[0m 🦌
 === bottom.center while waiting ===
-
+\e[38;2;150;152;150mtame-impala\e[0m 🦌
 === bottom.left while running ===
-\e]8;;file:///workspace\e\\workspace\e]8;;\e\\ \e[38;2;150;152;150m─\e[0m \e[38;2;150;152;150mtame-impala\e[0m 🦌
+\e]8;;file:///workspace\e\\workspace\e]8;;\e\\
 === bottom.left while waiting ===
-\e]8;;file:///workspace\e\\workspace\e]8;;\e\\ \e[38;2;150;152;150m─\e[0m \e[38;2;150;152;150mtame-impala\e[0m 🦌
+\e]8;;file:///workspace\e\\workspace\e]8;;\e\\
 === bottom.right while running ===
 \e[38;2;150;152;150musage n/a\e[0m
 === bottom.right while waiting ===

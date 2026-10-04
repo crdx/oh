@@ -122,10 +122,11 @@ right = [
 [bar.bottom]
 left = [
     { segment = "workspace-dir", type = "base" },
+    { segment = "git-status" },
     { segment = "git-branch" },
-    { segment = "session-name", emoji = true },
 ]
 center = [
+    { segment = "session-name", emoji = true },
 ]
 right = [
     { segment = "subscription-usage" },

@@ -18,6 +18,7 @@ import (
 	"crdx.org/oh/internal/app/segment/fastMode"
 	"crdx.org/oh/internal/app/segment/forwardedPorts"
 	"crdx.org/oh/internal/app/segment/gitBranch"
+	"crdx.org/oh/internal/app/segment/gitStatus"
 	"crdx.org/oh/internal/app/segment/jobNames"
 	"crdx.org/oh/internal/app/segment/localTime"
 	"crdx.org/oh/internal/app/segment/modeToggle"
@@ -56,6 +57,7 @@ const (
 	turnTimerSegment       = "turn-timer"
 	turnCountSegment       = "turn-count"
 	gitBranchSegment       = "git-branch"
+	gitStatusSegment       = "git-status"
 	sessionSpendSegment    = "session-spend"
 	subUsageSegment        = "subscription-usage"
 	jobNamesSegment        = "jobs"
@@ -129,6 +131,7 @@ func NewRegistry(options Options) segment.Registry {
 		turnTimerSegment:    turnTimer.New(options.Sources.GetTurnTiming, options.Sources.IsTurnRunning),
 		turnCountSegment:    turnCount.New(options.Sources.GetTurnCount),
 		gitBranchSegment:    gitBranch.New(options.Workspace.GetDir()),
+		gitStatusSegment:    gitStatus.New(options.Workspace.GetDir()),
 		jobNamesSegment:     jobNames.New(options.Sources.GetJobs, options.Sources.GetForwardedRoutes, time.Now),
 		subUsageSegment: subUsage.New(subUsage.Settings{
 			Reporter:         options.UsageReporter,

@@ -177,6 +177,22 @@ GPTS\e[38;2;150;152;150m5.6\e[0m
 \e[38;2;150;152;150mfeature/bars\e[0m
 === git-branch / outside a repository ===
 \e[38;2;150;152;150m\e[0m
+=== git-status / clean ===
+\e[38;2;76;154;44m●\e[0m
+
+=== git-status / dirty ===
+\e[38;2;207;173;0m●\e[0m
+
+=== git-status / diverged ===
+\e[38;2;76;154;44m●\e[0m \e[38;2;129;162;190m↑2\e[0m \e[38;2;129;162;190m↓1\e[0m
+\e[38;2;76;154;44m●\e[0m
+
+=== git-status / outside a repository ===
+
+=== git-status / rebasing ===
+\e[38;2;204;102;102m●\e[0m \e[38;2;204;102;102mrebasing\e[0m
+\e[38;2;204;102;102m●\e[0m
+
 === grants / duplicate basenames ===
 \e[38;2;76;154;44mr\e[0m\e[38;2;150;152;150m[\e[0m\e]8;;file:///one/reference\e\\/one/reference\e]8;;\e\\\e[38;2;150;152;150m]\e[0m\e[38;2;150;152;150m, \e[0m\e[38;2;76;154;44mr\e[0m\e[38;2;207;173;0mw\e[0m\e[38;2;150;152;150m[\e[0m\e]8;;file:///two/reference\e\\/two/reference\e]8;;\e\\\e[38;2;150;152;150m]\e[0m
 \e[38;2;76;154;44mr\e[0m\e[38;2;150;152;150m[\e[0m\e]8;;file:///one/reference\e\\/one/reference\e]8;;\e\\\e[38;2;150;152;150m]\e[0m\e[38;2;150;152;150m, \e[0m\e[38;2;150;152;150m+1\e[0m

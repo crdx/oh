@@ -87,6 +87,7 @@ import (
 	"crdx.org/oh/internal/app/segment/fastMode"
 	"crdx.org/oh/internal/app/segment/forwardedPorts"
 	"crdx.org/oh/internal/app/segment/gitBranch"
+	"crdx.org/oh/internal/app/segment/gitStatus"
 	"crdx.org/oh/internal/app/segment/jobNames"
 	"crdx.org/oh/internal/app/segment/localTime"
 	"crdx.org/oh/internal/app/segment/modeToggle"
@@ -13744,6 +13745,75 @@ func goldenRepository(t *testing.T, head string) string {
 	return workspaceDir
 }
 
+const (
+	goldenSettleLimit = 10 * time.Second
+	goldenSettlePoll  = 10 * time.Millisecond
+
+	goldenCleanRepository = `
+git init -q -b main
+git commit -q --allow-empty -m base
+`
+
+	goldenDivergedRepository = `
+git init -q -b main
+git remote add origin /nowhere
+git commit -q --allow-empty -m base
+git commit -q --allow-empty -m theirs
+git update-ref refs/remotes/origin/main HEAD
+git reset -q --hard HEAD~1
+git commit -q --allow-empty -m mine
+git commit -q --allow-empty -m more
+git branch -q --set-upstream-to=origin/main
+`
+
+	goldenRebasingRepository = `
+git init -q -b main
+echo base > file
+git add file
+git commit -q -m base
+git checkout -q -b other
+echo other > file
+git commit -q -am other
+git checkout -q main
+echo main > file
+git commit -q -am main
+! git rebase -q other > /dev/null 2>&1
+`
+)
+
+func goldenGitRepository(t *testing.T, script string) string {
+	t.Helper()
+
+	workspaceDir := t.TempDir()
+
+	command := exec.CommandContext(t.Context(), "bash", "-euo", "pipefail", "-c", script) //nolint:gosec // the fixture's own setup
+	command.Dir = workspaceDir
+
+	if output, err := command.CombinedOutput(); err != nil {
+		t.Fatalf("failed to set up a repository: %s\n%s", err, output)
+	}
+
+	return workspaceDir
+}
+
+func goldenSettledSegmentPass(t *testing.T, factory segment.Factory) func() string {
+	t.Helper()
+
+	built, err := factory(goldenSegmentOptions(""))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return func() string {
+		deadline := time.Now().Add(goldenSettleLimit)
+		for drawLadder(built, segment.Context{}) == "" && time.Now().Before(deadline) {
+			time.Sleep(goldenSettlePoll)
+		}
+
+		return drawLadder(built, segment.Context{})
+	}
+}
+
 func availableSegments(workspace *work.Space, harness *App) segment.Registry {
 	return bar.NewRegistry(bar.Options{
 		Workspace: workspace,
@@ -14128,6 +14198,12 @@ func customToolDefaultMode(t *testing.T, isEnabled bool) *caps.Mode {
 
 func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 	t.Setenv("HOME", "/user/kevin")
+	t.Setenv("GIT_CONFIG_GLOBAL", os.DevNull)
+	t.Setenv("GIT_CONFIG_NOSYSTEM", "1")
+	t.Setenv("GIT_AUTHOR_NAME", "Kevin")
+	t.Setenv("GIT_AUTHOR_EMAIL", "kevin@example.com")
+	t.Setenv("GIT_COMMITTER_NAME", "Kevin")
+	t.Setenv("GIT_COMMITTER_EMAIL", "kevin@example.com")
 
 	at := time.Date(2026, time.August, 23, 14, 32, 9, 0, time.UTC)
 	isPersisted := func() bool { return true }
@@ -14263,6 +14339,28 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			gitBranch.New(goldenRepository(t, "1fd19004e0f4a2c8b4c5d6e7f8a9b0c1d2e3f4a5\n")),
 			"",
 			segment.Context{},
+		),
+		"git-status / outside a repository": goldenSegmentPass(
+			t,
+			gitStatus.New(workspaceMarker),
+			"",
+			segment.Context{},
+		),
+		"git-status / clean": goldenSettledSegmentPass(
+			t,
+			gitStatus.New(goldenGitRepository(t, goldenCleanRepository)),
+		),
+		"git-status / dirty": goldenSettledSegmentPass(
+			t,
+			gitStatus.New(goldenGitRepository(t, goldenCleanRepository+"echo changed > file\n")),
+		),
+		"git-status / diverged": goldenSettledSegmentPass(
+			t,
+			gitStatus.New(goldenGitRepository(t, goldenDivergedRepository)),
+		),
+		"git-status / rebasing": goldenSettledSegmentPass(
+			t,
+			gitStatus.New(goldenGitRepository(t, goldenRebasingRepository)),
 		),
 		"turn-count / nothing asked yet": goldenSegmentPass(
 			t,

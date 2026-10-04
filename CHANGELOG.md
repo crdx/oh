@@ -2,6 +2,8 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+- Add a git status bar segment
+
 ## [0.12.1] - 2026-10-03
 
 ### Commands

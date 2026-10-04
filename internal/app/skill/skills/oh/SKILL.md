@@ -194,6 +194,7 @@ The right side is drawn whole, and the left and centre are then fitted into what
 | `fast-mode`          | `⚡` for the fast model, `·` for the standard one                              | none                                        |
 | `forwards`           | ports as links, prefixed by associated jobs                                    | none                                        |
 | `git-branch`         | the workspace's branch, or a short hash when detached                          | `rate`, default `5s`                        |
+| `git-status`         | a dot for clean, dirty, or mid-operation, then `↑` ahead and `↓` behind        | `rate`, default `5s`                        |
 | `grants`             | each granted path, grouped under its access flags, linked to the path it names | `type`: `base`, `short`, or `full`          |
 | `jobs`               | a mark and name per job, a finished one lingering 30 seconds                   | none                                        |
 | `local-time`         | the clock, its refresh following the format's finest field                     | `format`, a Go layout, default `15:04`      |

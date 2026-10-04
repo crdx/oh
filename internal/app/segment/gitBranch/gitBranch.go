@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"crdx.org/oh/internal/app/gitrepo"
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/style"
 )
@@ -65,7 +66,7 @@ func (self *state) Render(segment.Context) string {
 }
 
 func branchOf(workspaceDir string) string {
-	gitDir := gitDirOf(workspaceDir)
+	gitDir := gitrepo.Dir(workspaceDir)
 	if gitDir == "" {
 		return ""
 	}
@@ -86,33 +87,4 @@ func branchOf(workspaceDir string) string {
 	}
 
 	return ""
-}
-
-func gitDirOf(workspaceDir string) string {
-	gitPath := filepath.Join(workspaceDir, ".git")
-
-	info, err := os.Stat(gitPath)
-	if err != nil {
-		return ""
-	}
-
-	if info.IsDir() {
-		return gitPath
-	}
-
-	pointer, err := os.ReadFile(gitPath) //nolint:gosec // the .git of the workspace
-	if err != nil {
-		return ""
-	}
-
-	elsewhere, ok := strings.CutPrefix(strings.TrimSpace(string(pointer)), "gitdir: ")
-	if !ok {
-		return ""
-	}
-
-	if filepath.IsAbs(elsewhere) {
-		return elsewhere
-	}
-
-	return filepath.Join(workspaceDir, elsewhere)
 }

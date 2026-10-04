@@ -157,6 +157,18 @@ docs:8000
 feature/bars
 === git-branch / outside a repository ===
 
+=== git-status / clean ===
+●
+=== git-status / dirty ===
+●
+=== git-status / diverged ===
+● ↑2 ↓1
+●
+=== git-status / outside a repository ===
+
+=== git-status / rebasing ===
+● rebasing
+●
 === grants / duplicate basenames ===
 r[/one/reference], rw[/two/reference]
 r[/one/reference], +1

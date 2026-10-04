@@ -110,6 +110,11 @@ var (
 	InsertedText Style = success()
 	DeletedText  Style = danger()
 	Hunk         Style = information()
+
+	CleanTree    Style = success()
+	DirtyTree    Style = warning()
+	TroubledTree Style = danger()
+	Divergence   Style = information()
 )
 
 func ExecWhenWritable(isWritable bool) Style {

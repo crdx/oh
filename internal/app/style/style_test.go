@@ -124,6 +124,7 @@ func TestEveryStyleFollowsItsOwnPaletteRole(t *testing.T) {
 			"subject":    Subject,
 		},
 		"38;2;4;4;4": {
+			"clean tree":        CleanTree,
 			"inserted text":     InsertedText,
 			"low price":         LowPrice,
 			"preview load hint": PreviewLoadHint,
@@ -131,6 +132,7 @@ func TestEveryStyleFollowsItsOwnPaletteRole(t *testing.T) {
 			"success":           Success,
 		},
 		"38;2;5;5;5": {
+			"divergence":    Divergence,
 			"function":      Function,
 			"hunk":          Hunk,
 			"information":   Info,
@@ -143,6 +145,7 @@ func TestEveryStyleFollowsItsOwnPaletteRole(t *testing.T) {
 		},
 		"38;2;6;6;6": {
 			"change":               Change,
+			"dirty tree":           DirtyTree,
 			"heading":              Heading,
 			"high price":           HighPrice,
 			"preview running hint": PreviewRunningHint,
@@ -155,6 +158,7 @@ func TestEveryStyleFollowsItsOwnPaletteRole(t *testing.T) {
 			"extreme price": WtfPrice,
 			"failure":       Failure,
 			"hazard":        Hazard,
+			"troubled tree": TroubledTree,
 		},
 		"38;2;8;8;8":    {"type": Type},
 		"38;2;9;9;9":    {"literal": Literal},
