@@ -210,7 +210,17 @@ func ModelChoice(
 	return model.Chosen(modelCachePath, seenModelsPath, selection.Provider, selection.Model)
 }
 
-func OpeningCaps(requestedCaps caps.Set, wereCapsChosen bool, resumedSession *store.Session) (caps.Set, error) {
+func OpeningCaps(
+	requestedCaps caps.Set,
+	wereCapsChosen bool,
+	resumedSession *store.Session,
+	isYolo bool,
+) (caps.Set, error) {
+	alwaysOn := caps.Set(0)
+	if isYolo {
+		alwaysOn = caps.Unconfined()
+	}
+	requestedCaps |= alwaysOn
 	if resumedSession == nil {
 		return requestedCaps, nil
 	}
@@ -220,7 +230,7 @@ func OpeningCaps(requestedCaps caps.Set, wereCapsChosen bool, resumedSession *st
 		return requestedCaps, nil
 	}
 
-	if wereCapsChosen && requestedCaps != lastCaps {
+	if wereCapsChosen && requestedCaps&^alwaysOn != lastCaps&^alwaysOn {
 		return 0, fmt.Errorf(
 			"a resumed conversation opens in the mode it was left in, which was %s rather than %s",
 			lastCaps.Flags(),

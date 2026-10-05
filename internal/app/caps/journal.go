@@ -19,6 +19,7 @@ type modeRecord struct {
 	Groups           string     `json:"groups,omitempty"`
 	ToolGroups       ToolGroups `json:"tool_groups,omitempty"`
 	FrozenToolGroups ToolGroups `json:"frozen_tool_groups,omitempty"`
+	IsUnconfined     bool       `json:"unconfined,omitempty"`
 }
 
 func ModeEvent(grantedCaps Set) agent.Event {
@@ -44,6 +45,7 @@ func (self *Mode) Event(swappedFlag string) agent.Event {
 			Groups:           status.GrantedFlags,
 			ToolGroups:       self.activeToolGroups,
 			FrozenToolGroups: self.toolGroups,
+			IsUnconfined:     current.isUnconfined,
 		}),
 	}
 }
@@ -93,7 +95,7 @@ func FlagsBy(event agent.Event) (string, error) {
 }
 
 func Notice(swappedCaps Set, grantedCaps Set) ([]string, bool) {
-	notices := changeNotices(swappedCaps, grantedCaps)
+	notices := changeNotices(swappedCaps, grantedCaps, false)
 
 	return notices, len(notices) > 0
 }
@@ -111,7 +113,7 @@ func ModeNotice(event agent.Event) ([]string, bool) {
 
 	var notices []string
 	if swappedCaps, isBuiltIn := Named(event.Name); isBuiltIn {
-		notices = changeNotices(swappedCaps, grantedCaps)
+		notices = changeNotices(swappedCaps, grantedCaps, record.IsUnconfined)
 	}
 	if toolNames, isKnown := record.ToolGroups[event.Name]; isKnown {
 		isGranted := strings.Contains(record.Groups, event.Name)
@@ -176,7 +178,7 @@ func encodeFlags(grantedCaps Set) json.RawMessage {
 
 func encodeMode(record modeRecord) json.RawMessage {
 	var value any = record
-	if record.Groups == "" && len(record.ToolGroups) == 0 && len(record.FrozenToolGroups) == 0 {
+	if record.Groups == "" && len(record.ToolGroups) == 0 && len(record.FrozenToolGroups) == 0 && !record.IsUnconfined {
 		value = record.Flags
 	}
 	encodedMode, err := json.Marshal(value)

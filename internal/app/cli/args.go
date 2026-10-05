@@ -2,6 +2,7 @@ package cli
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"slices"
 	"strings"
@@ -177,6 +178,12 @@ func (self Input) Parse(
 		options.Selection = selection
 	}
 
+	if self.Yolo {
+		if err := refuseConfinedCaps(self.Caps); err != nil {
+			return options, err
+		}
+	}
+
 	capFlags := self.Caps
 	if capFlags == "" {
 		capFlags = defaultCapFlags
@@ -202,6 +209,21 @@ func (self Input) Parse(
 	}
 
 	return options, nil
+}
+
+func refuseConfinedCaps(flags string) error {
+	for _, flag := range flags {
+		if knownCap, isBuiltIn := caps.Named(string(flag)); isBuiltIn && caps.Unconfined().Has(knownCap) {
+			return fmt.Errorf(
+				"--yolo leaves %s always on, so --caps takes only %s and custom tool groups (got %q)",
+				caps.Unconfined().Flags(),
+				caps.Lookup.Flag(),
+				flags,
+			)
+		}
+	}
+
+	return nil
 }
 
 func (self Input) Check(isPromptPiped bool) error {

@@ -697,7 +697,12 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		return "", err
 	}
 
-	args.Caps, err = sessions.OpeningCaps(args.Caps, args.WereCapsChosen, resumedSession)
+	args.Yolo, err = sessions.OpeningConfinement(args.Yolo, resumedSession)
+	if err != nil {
+		return "", err
+	}
+
+	args.Caps, err = sessions.OpeningCaps(args.Caps, args.WereCapsChosen, resumedSession, args.Yolo)
 	if err != nil {
 		return "", err
 	}
@@ -723,10 +728,6 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	}
 	activeToolGroups := frozenToolGroups.Only(selectedCustomToolNames)
 
-	args.Yolo, err = sessions.OpeningConfinement(args.Yolo, resumedSession)
-	if err != nil {
-		return "", err
-	}
 	settings.Sandbox = sandboxPathsForMode(settings.Sandbox, args.Yolo)
 
 	if err := workspace.Validate(); err != nil {
@@ -1364,6 +1365,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		ModelEffortLevels:     choice.EffortLevels,
 		IsFast:                selection.IsFast,
 		IsSimulated:           isSimulated,
+		IsUnconfined:          args.Yolo,
 		UsageReporter:         usageReporter,
 		UsageCachePath:        usageCachePath,
 		UsageIsSelfRefreshing: usageReporter != nil,
@@ -1395,6 +1397,9 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 
 	if resumedSession != nil {
 		app.restore(resumedSession)
+	}
+	if args.Yolo {
+		app.unconfine()
 	}
 	if forkSource != nil {
 		app.carryOver(forkSource)

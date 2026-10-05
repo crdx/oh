@@ -241,6 +241,10 @@ rxw ngl
 rxw ngl
 === mode-toggle / read only ===
 rxw ngl
+=== mode-toggle / unconfined ===
+labc
+=== mode-toggle / unconfined with lookup pending prefix ===
+l
 === scroll-overflow / down ===
 ↓ 7
 === scroll-overflow / empty ===

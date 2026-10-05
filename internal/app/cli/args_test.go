@@ -7,6 +7,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"slices"
+	"strings"
 	"testing"
 
 	"crdx.org/oh/internal/app/caps"
@@ -406,6 +407,27 @@ func TestTheYoloFlagWaivesTheSandbox(t *testing.T) {
 	}
 	if settledOptions.Yolo {
 		t.Error("expected a sandbox without --yolo")
+	}
+}
+
+func TestTheYoloFlagTakesOnlyTheCapsItLeavesOpen(t *testing.T) {
+	for _, flags := range []string{"", "l", "lc"} {
+		input := Input{inputFlags: inputFlags{Yolo: true, Caps: flags}}
+		if _, err := input.Parse(modelCachePath(), model.Defaults{}, "c"); err != nil {
+			t.Errorf("--yolo -c %q: unexpected error: %v", flags, err)
+		}
+	}
+
+	for _, flags := range []string{"r", "x", "w", "n", "g", "rxl"} {
+		input := Input{inputFlags: inputFlags{Yolo: true, Caps: flags}}
+		_, err := input.Parse(modelCachePath(), model.Defaults{}, "c")
+		if err == nil || !strings.Contains(err.Error(), "--caps takes only l and custom tool groups") {
+			t.Errorf("--yolo -c %q: got %v, want the confined caps refused", flags, err)
+		}
+	}
+
+	if _, err := (Input{inputFlags: inputFlags{Caps: "rxw"}}).Parse(modelCachePath(), model.Defaults{}); err != nil {
+		t.Errorf("a sandboxed session refused its caps: %v", err)
 	}
 }
 

@@ -4,8 +4,9 @@
 
 - Add a git status bar segment
 - Let custom tools set their concurrency level
-- Maintain source session config on fork
+- Maintain source session config on `/fork`
 - Offer the job tool under `--yolo`
+- Don't enable irrelevant caps under `--yolo`
 
 ## [0.12.1] - 2026-10-03
 

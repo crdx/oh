@@ -55,6 +55,31 @@ func TestCustomToolGroupsJoinTheSecondSection(t *testing.T) {
 	}
 }
 
+func TestAnUnconfinedSessionDrawsOnlyWhatItCanStillToggle(t *testing.T) {
+	for _, test := range []struct {
+		grantedCaps caps.Set
+		want        string
+		paint       style.Style
+	}{
+		{caps.All() &^ caps.Lookup, "lab", style.Dim},
+		{caps.All(), "lab", style.Lookup},
+	} {
+		built, err := modeToggle.NewUnconfined(
+			func() caps.Set { return test.grantedCaps },
+			func() bool { return false },
+			func() caps.GroupStatus { return caps.GroupStatus{Flags: "ab", GrantedFlags: "a"} },
+		)(noOptions{})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		got := built.Render(segment.Context{})
+		if style.Plain(got) != test.want || !strings.HasPrefix(got, test.paint("l")) {
+			t.Errorf("caps %q drew %q, want %q led by %q", test.grantedCaps.Flags(), got, test.want, test.paint("l"))
+		}
+	}
+}
+
 func TestTheShellLetterFollowsWhateverItMayChange(t *testing.T) {
 	for _, test := range []struct {
 		flags string

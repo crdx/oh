@@ -5908,7 +5908,7 @@ func TestGoldenAResumedConversationDrawsItsRecordedMode(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	restoredCaps, err := sessions.OpeningCaps(caps.Read|caps.Shell|caps.Write, false, storedSession)
+	restoredCaps, err := sessions.OpeningCaps(caps.Read|caps.Shell|caps.Write, false, storedSession, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -8419,6 +8419,9 @@ func compareSystemPromptWithGolden(t *testing.T, name string, shape promptGolden
 	}
 
 	currentCaps := caps.Read | caps.Write | caps.Git | caps.Shell
+	if shape.isYolo {
+		currentCaps |= caps.Unconfined()
+	}
 	if shape.isNetworkGranted {
 		currentCaps |= caps.Network
 	}
@@ -8453,7 +8456,7 @@ func compareSystemPromptWithGolden(t *testing.T, name string, shape promptGolden
 			Interactive: !shape.isPrinting,
 		},
 		JobsGranted:    shape.areJobsGiven,
-		NetworkGranted: shape.isNetworkGranted,
+		NetworkGranted: currentCaps.Has(caps.Network),
 		Yolo:           shape.isYolo,
 	})
 	if err != nil {
@@ -14689,6 +14692,26 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			"",
 			segment.Context{},
 		),
+		"mode-toggle / unconfined": goldenSegmentPass(
+			t,
+			modeToggle.NewUnconfined(
+				caps.Unconfined,
+				func() bool { return false },
+				func() caps.GroupStatus { return caps.GroupStatus{Flags: "abc", GrantedFlags: "b"} },
+			),
+			"",
+			segment.Context{},
+		),
+		"mode-toggle / unconfined with lookup pending prefix": goldenSegmentPass(
+			t,
+			modeToggle.NewUnconfined(
+				func() caps.Set { return caps.Unconfined() | caps.Lookup },
+				func() bool { return true },
+				func() caps.GroupStatus { return caps.GroupStatus{} },
+			),
+			"",
+			segment.Context{},
+		),
 		"forwards / empty": goldenSegmentPass(
 			t,
 			forwardedPorts.New(goldenForwardedPorts()),
@@ -20800,7 +20823,7 @@ func resumeAppPlainTurn(t *testing.T, directory string, sessionName string) {
 		t.Fatal(err)
 	}
 
-	resumedCaps, err := sessions.OpeningCaps(caps.All(), false, storedSession)
+	resumedCaps, err := sessions.OpeningCaps(caps.All(), false, storedSession, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -22984,7 +23007,7 @@ parameters = [
 
 	output := runTestBinary(
 		t, binary, reachableWorkspaceDir(t), environment,
-		"-p", "--yolo", "-m", "anthropic/fake", "-c", "rxa", "what is the weather",
+		"-p", "--yolo", "-m", "anthropic/fake", "-c", "a", "what is the weather",
 	)
 
 	if !strings.Contains(output, "weather London 2") {
@@ -23050,7 +23073,7 @@ parameters = [{ name = "city", kind = "string", description = "the city to repor
 
 	runTestBinary(
 		t, binary, workspaceDirectory, environment,
-		"-p", "--yolo", "-m", "anthropic/fake", "-c", "rxa", "run weather",
+		"-p", "--yolo", "-m", "anthropic/fake", "-c", "a", "run weather",
 	)
 
 	sessionDirectory := filepath.Join(stateDirectory, "org.crdx", "oh", "sessions")

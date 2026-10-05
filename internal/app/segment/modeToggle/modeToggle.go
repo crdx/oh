@@ -14,6 +14,7 @@ type state struct {
 	getGrantedCaps  func() caps.Set
 	isPrefixPending func() bool
 	getGroupStatus  func() caps.GroupStatus
+	isUnconfined    bool
 }
 
 func New(
@@ -26,18 +27,40 @@ func New(
 		groups = getGroupStatus[0]
 	}
 
+	return factory(state{
+		getGrantedCaps:  getGrantedCaps,
+		isPrefixPending: isPrefixPending,
+		getGroupStatus:  groups,
+	})
+}
+
+func NewUnconfined(
+	getGrantedCaps func() caps.Set,
+	isPrefixPending func() bool,
+	getGroupStatus func() caps.GroupStatus,
+) segment.Factory {
+	return factory(state{
+		getGrantedCaps:  getGrantedCaps,
+		isPrefixPending: isPrefixPending,
+		getGroupStatus:  getGroupStatus,
+		isUnconfined:    true,
+	})
+}
+
+func factory(segmentState state) segment.Factory {
 	return func(segment.Options) (segment.Segment, error) {
-		return state{
-			getGrantedCaps:  getGrantedCaps,
-			isPrefixPending: isPrefixPending,
-			getGroupStatus:  groups,
-		}, nil
+		return segmentState, nil
 	}
 }
 
 func (self state) Render(segment.Context) string {
 	grantedCaps := self.getGrantedCaps()
 	isPrefixPending := self.isPrefixPending()
+
+	if self.isUnconfined {
+		return self.letter(caps.Lookup, grantedCaps.Has(caps.Lookup), style.Lookup, isPrefixPending) +
+			self.groupLetters(isPrefixPending)
+	}
 
 	renderedMode := self.letter(caps.Read, true, style.Read, isPrefixPending) +
 		self.letter(
@@ -52,15 +75,16 @@ func (self state) Render(segment.Context) string {
 		self.letter(caps.Git, grantedCaps.Has(caps.Git), style.Git, isPrefixPending) +
 		self.letter(caps.Lookup, grantedCaps.Has(caps.Lookup), style.Lookup, isPrefixPending)
 
+	return renderedMode + self.groupLetters(isPrefixPending)
+}
+
+func (self state) groupLetters(isPrefixPending bool) string {
 	groups := self.getGroupStatus()
-	if groups.Flags == "" {
-		return renderedMode
-	}
 	var groupLetters strings.Builder
 	for _, flag := range groups.Flags {
 		groupLetters.WriteString(self.groupLetter(string(flag), groups.Has(string(flag)), isPrefixPending))
 	}
-	return renderedMode + groupLetters.String()
+	return groupLetters.String()
 }
 
 func (self state) groupLetter(flag string, isGranted bool, isPrefixPending bool) string {

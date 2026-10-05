@@ -35,6 +35,10 @@ var capsMap = []struct {
 
 var AllFlags = All().Flags()
 
+func Unconfined() Set {
+	return Read | Shell | Write | Network | Git
+}
+
 func All() Set {
 	var allCaps Set
 
@@ -196,10 +200,11 @@ func (self GroupStatus) Has(flag string) bool {
 type modeValue struct {
 	caps          Set
 	grantedGroups map[string]bool
+	isUnconfined  bool
 }
 
 func (self modeValue) clone() modeValue {
-	return modeValue{caps: self.caps, grantedGroups: maps.Clone(self.grantedGroups)}
+	return modeValue{caps: self.caps, grantedGroups: maps.Clone(self.grantedGroups), isUnconfined: self.isUnconfined}
 }
 
 type Mode struct {
@@ -213,7 +218,7 @@ func modeDefinition(toolGroups func() ToolGroups) access.Definition[modeValue] {
 		Clone: modeValue.clone,
 		Describe: func(knownValue modeValue, current modeValue) string {
 			groups := toolGroups()
-			notices := changeNotices(current.caps^knownValue.caps, current.caps)
+			notices := changeNotices(current.caps^knownValue.caps, current.caps, current.isUnconfined)
 			for _, flag := range slices.Sorted(maps.Keys(groups)) {
 				wasGranted := modeValueAllows(knownValue, flag)
 				isGranted := modeValueAllows(current, flag)
@@ -271,9 +276,27 @@ func (self *Mode) Current() Set {
 
 func (self *Mode) Toggle(whichCaps Set) {
 	self.state.Change(func(current modeValue) modeValue {
+		if current.isUnconfined {
+			whichCaps &^= Unconfined()
+		}
 		current.caps ^= whichCaps
 		return current
 	})
+}
+
+func (self *Mode) Unconfine() Set {
+	var newlyGrantedCaps Set
+	self.state.Change(func(current modeValue) modeValue {
+		newlyGrantedCaps = Unconfined() &^ current.caps
+		current.caps |= Unconfined()
+		current.isUnconfined = true
+		return current
+	})
+	return newlyGrantedCaps
+}
+
+func (self *Mode) IsUnconfined() bool {
+	return self.state.GetCurrent().isUnconfined
 }
 
 func (self *Mode) ToggleGroup(flag string) bool {
@@ -334,7 +357,7 @@ func toolAccessNotices(toolNames []string, isGranted bool) []string {
 	return notices
 }
 
-func changeNotices(changedCaps Set, currentCaps Set) []string {
+func changeNotices(changedCaps Set, currentCaps Set, isUnconfined bool) []string {
 	var notices []string
 
 	if changedCaps.Has(Write) {
@@ -344,7 +367,10 @@ func changeNotices(changedCaps Set, currentCaps Set) []string {
 		notices = append(notices, shellNotice(currentCaps.Has(Shell)))
 	}
 	if changedCaps.Has(Network) {
-		notices = append(notices, hostNetworkNotice(currentCaps.Has(Network)), fetchNotice(currentCaps.Has(Network)))
+		if !isUnconfined {
+			notices = append(notices, hostNetworkNotice(currentCaps.Has(Network)))
+		}
+		notices = append(notices, fetchNotice(currentCaps.Has(Network)))
 	}
 	if changedCaps.Has(Git) {
 		notices = append(notices, repositoryNotice(currentCaps.Has(Git)))

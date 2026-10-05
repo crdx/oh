@@ -69,6 +69,7 @@ type Options struct {
 	ModelEffortLevels     []string
 	IsFast                bool
 	IsSimulated           bool
+	IsUnconfined          bool
 	UsageReporter         agent.UsageReporter
 	UsageCachePath        string
 	UsageIsSelfRefreshing bool
@@ -100,12 +101,8 @@ func NewRegistry(options Options) segment.Registry {
 		cacheUsageSegment:      cacheUsage.New(options.Sources.GetCacheUsage),
 		contextUsageSegment:    contextUsage.New(options.Sources.GetContextUsage),
 		sessionSpendSegment:    sessionSpend.New(options.Sources.GetSessionSpend, options.Currency),
-		modeToggleSegment: modeToggle.New(
-			options.Sources.GetGrantedCaps,
-			options.Sources.IsPrefixPending,
-			options.Sources.GetGroupStatus,
-		),
-		grantsSegment: pathGrants.New(options.Sources.GetPathGrants),
+		modeToggleSegment:      modeToggleFor(options),
+		grantsSegment:          pathGrants.New(options.Sources.GetPathGrants),
 		forwardsSegment: forwardedPorts.New(forwardedPorts.Routes{
 			GetRoutes: options.Sources.GetForwardedRoutes,
 			GetJobs:   options.Sources.GetJobs,
@@ -338,4 +335,20 @@ type infoOptions struct{}
 
 func (infoOptions) Read(any) error {
 	return nil
+}
+
+func modeToggleFor(options Options) segment.Factory {
+	if options.IsUnconfined {
+		return modeToggle.NewUnconfined(
+			options.Sources.GetGrantedCaps,
+			options.Sources.IsPrefixPending,
+			options.Sources.GetGroupStatus,
+		)
+	}
+
+	return modeToggle.New(
+		options.Sources.GetGrantedCaps,
+		options.Sources.IsPrefixPending,
+		options.Sources.GetGroupStatus,
+	)
 }

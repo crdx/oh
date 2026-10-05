@@ -773,7 +773,7 @@ func userCommandSection(data harnessContextTemplateData) string {
 }
 
 func readOnlyWorkspaceSection(data harnessContextTemplateData) string {
-	if !data.ShellOffered {
+	if !data.ShellOffered || data.Yolo {
 		return ""
 	}
 

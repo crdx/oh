@@ -1093,23 +1093,6 @@ func TestTheHarnessOffersNoJobToolForAProcessThatMustOutliveACall(t *testing.T) 
 	}
 }
 
-func TestAnUnconfinedShellKeepsItsBackgroundProcessesUnmentioned(t *testing.T) {
-	got := harnessContext(Config{
-		Workspace:    work.At("/workspace"),
-		SessionName:  "session-id",
-		TmpDir:       "/state/farm/session",
-		HomeDir:      "/state/home",
-		CurrentCaps:  caps.Read | caps.Shell,
-		OfferedTools: []string{"bash", "job"},
-		JobsGranted:  true,
-		Yolo:         true,
-	})
-
-	if unwanted := "leaves running dies"; strings.Contains(got, unwanted) {
-		t.Errorf("harness context mentions %q with no sandbox: %q", unwanted, got)
-	}
-}
-
 func TestEveryConfiguredPathKindHasItsFileToolAccessDocumented(t *testing.T) {
 	userHome := t.TempDir()
 	t.Setenv("HOME", userHome)

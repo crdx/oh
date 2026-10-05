@@ -93,19 +93,36 @@ func TestAResumedConversationOpensInTheModeItWasLeftIn(t *testing.T) {
 	assumedCaps := caps.Read | caps.Write
 	resumedSession := &store.Session{Events: []agent.Event{caps.ModeEvent(leftCaps)}}
 
-	got, err := OpeningCaps(assumedCaps, false, resumedSession)
+	got, err := OpeningCaps(assumedCaps, false, resumedSession, false)
 	if err != nil || got != leftCaps {
 		t.Errorf("expected %s, got %s and %v", leftCaps.Flags(), got.Flags(), err)
 	}
 
-	got, err = OpeningCaps(assumedCaps, false, &store.Session{})
+	got, err = OpeningCaps(assumedCaps, false, &store.Session{}, false)
 	if err != nil || got != assumedCaps {
 		t.Errorf("expected a silent session to leave %s alone, got %s and %v", assumedCaps.Flags(), got.Flags(), err)
 	}
 
-	got, err = OpeningCaps(assumedCaps, false, nil)
+	got, err = OpeningCaps(assumedCaps, false, nil, false)
 	if err != nil || got != assumedCaps {
 		t.Errorf("expected a fresh conversation to keep %s, got %s and %v", assumedCaps.Flags(), got.Flags(), err)
+	}
+}
+
+func TestAYoloConversationAlwaysOpensUnconfined(t *testing.T) {
+	got, err := OpeningCaps(caps.Read|caps.Shell, false, nil, true)
+	if err != nil || got != caps.Unconfined() {
+		t.Errorf("a new conversation: got %s and %v, want %s", got.Flags(), err, caps.Unconfined().Flags())
+	}
+
+	leftBeforeItWasForced := &store.Session{Events: []agent.Event{caps.ModeEvent(caps.Read | caps.Shell | caps.Lookup)}}
+	got, err = OpeningCaps(caps.Read|caps.Lookup, true, leftBeforeItWasForced, true)
+	if want := caps.Read | caps.Shell | caps.Lookup; err != nil || got != want {
+		t.Errorf("a resumed conversation: got %s and %v, want the mode it was left in, %s", got.Flags(), err, want.Flags())
+	}
+
+	if _, err := OpeningCaps(caps.Read, true, leftBeforeItWasForced, true); err == nil {
+		t.Error("a resumed conversation was opened without the lookup it was left with")
 	}
 }
 
@@ -128,11 +145,11 @@ func TestAResumedConversationCannotBeAskedForAnotherMode(t *testing.T) {
 	leftCaps := caps.Read | caps.Git
 	resumedSession := &store.Session{Events: []agent.Event{caps.ModeEvent(leftCaps)}}
 
-	if _, err := OpeningCaps(caps.Read|caps.Shell, true, resumedSession); err == nil {
+	if _, err := OpeningCaps(caps.Read|caps.Shell, true, resumedSession, false); err == nil {
 		t.Error("expected another mode to be refused")
 	}
 
-	got, err := OpeningCaps(leftCaps, true, resumedSession)
+	got, err := OpeningCaps(leftCaps, true, resumedSession, false)
 	if err != nil || got != leftCaps {
 		t.Errorf("expected the mode it was left in to be allowed, got %s and %v", got.Flags(), err)
 	}

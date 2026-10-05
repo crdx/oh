@@ -358,3 +358,27 @@ func TestTheModeIsSafeToSwapWhileItIsBeingRead(t *testing.T) {
 		t.Error("expected an even number of swaps to leave the mode where it started")
 	}
 }
+
+func TestAnUnconfinedModeKeepsWhatItLeavesOpen(t *testing.T) {
+	mode := NewMode(Read | Shell)
+
+	if granted := mode.Unconfine(); granted != Write|Network|Git {
+		t.Errorf("unconfining granted %s, want wng", granted.Flags())
+	}
+	if granted := mode.Unconfine(); granted != 0 {
+		t.Errorf("unconfining again granted %s, want nothing", granted.Flags())
+	}
+
+	mode.Toggle(Write | Lookup)
+	if got, want := mode.Current(), Unconfined()|Lookup; got != want {
+		t.Errorf("got %s, want %s", got.Flags(), want.Flags())
+	}
+
+	notices, _ := ModeNotice(mode.Event(Network.Flag()))
+	if joined := strings.Join(notices, " "); strings.Contains(joined, "host network") || !strings.Contains(joined, "Fetch") {
+		t.Errorf("an unconfined mode said %q", joined)
+	}
+	if !mode.IsUnconfined() || NewMode(Read).IsUnconfined() {
+		t.Error("only an unconfined mode says it is")
+	}
+}

@@ -265,6 +265,10 @@ GPTS\e[38;2;150;152;150m5.6\e[0m
 \e[4m\e[38;2;76;154;44mr\e[0m\e[0m\e[4m\e[38;2;150;152;150mx\e[0m\e[0m\e[4m\e[38;2;150;152;150mw\e[0m\e[0m \e[4m\e[38;2;150;152;150mn\e[0m\e[0m\e[4m\e[38;2;150;152;150mg\e[0m\e[0m\e[4m\e[38;2;150;152;150ml\e[0m\e[0m
 === mode-toggle / read only ===
 \e[38;2;76;154;44mr\e[0m\e[38;2;150;152;150mx\e[0m\e[38;2;150;152;150mw\e[0m \e[38;2;150;152;150mn\e[0m\e[38;2;150;152;150mg\e[0m\e[38;2;150;152;150ml\e[0m
+=== mode-toggle / unconfined ===
+\e[38;2;150;152;150ml\e[0m\e[38;2;150;152;150ma\e[0m\e[38;2;129;162;190mb\e[0m\e[38;2;150;152;150mc\e[0m
+=== mode-toggle / unconfined with lookup pending prefix ===
+\e[4m\e[38;2;129;162;190ml\e[0m\e[0m
 === scroll-overflow / down ===
 \e[38;2;150;152;150m↓ 7\e[0m
 === scroll-overflow / empty ===

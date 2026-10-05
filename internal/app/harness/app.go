@@ -774,6 +774,10 @@ func (self *App) takeBackInterjection(inputLine *edit.Input) bool {
 }
 
 func (self *App) toggleCap(whichCaps caps.Set) {
+	if self.mode.IsUnconfined() && caps.Unconfined().Has(whichCaps) {
+		return
+	}
+
 	self.mode.Toggle(whichCaps)
 	self.terminal.SetMode(self.mode.Current())
 
@@ -785,6 +789,13 @@ func (self *App) toggleCap(whichCaps caps.Set) {
 	}
 
 	self.interruptForAccessChange()
+}
+
+func (self *App) unconfine() {
+	grantedCaps := self.mode.Unconfine()
+	for _, flag := range grantedCaps.Flags() {
+		self.queueModeChange(string(flag), 0)
+	}
 }
 
 func (self *App) toggleToolGroup(flag string) {
