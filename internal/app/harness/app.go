@@ -2,8 +2,10 @@ package harness
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"os"
 	"os/signal"
 	"slices"
@@ -42,6 +44,7 @@ import (
 	"crdx.org/oh/internal/app/record"
 	"crdx.org/oh/internal/app/schedule"
 	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/sessions"
 	"crdx.org/oh/internal/app/shell"
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/startup"
@@ -1879,13 +1882,19 @@ func (self *App) recordJobListing() {
 }
 
 func (self *App) restoreJobs(events []agent.Event) {
+	if live := self.rememberJobs(events); len(live) > 0 {
+		self.pendingNotices.add(jobrecord.EndedWithSessionEvent(live))
+	}
+}
+
+func (self *App) rememberJobs(events []agent.Event) []string {
 	if self.jobs.manager == nil {
-		return
+		return nil
 	}
 
 	rememberedJobs, wasRecorded := jobrecord.LastRecorded(events)
 	if !wasRecorded {
-		return
+		return nil
 	}
 
 	self.jobs.manager.Restore(rememberedJobs)
@@ -1898,11 +1907,42 @@ func (self *App) restoreJobs(events []agent.Event) {
 		}
 	}
 
-	if len(live) == 0 {
-		return
+	return live
+}
+
+func (self *App) carryOver(forkSource *sessions.ForkSource) {
+	events := forkSource.GetEvents()
+
+	recordedGrants, _ := pathgrant.LastRecorded(events)
+	for _, grant := range recordedGrants {
+		event, err := self.pathGrants.Grant(grant.Path, grant.Access)
+		if pathError, isPathError := errors.AsType[*fs.PathError](err); isPathError {
+			err = pathError.Err
+		}
+		if err != nil {
+			self.notifyFailure(fmt.Sprintf("Temporary access to %s could not be carried over: %v", grant.Path, err))
+			continue
+		}
+		self.queuePathGrantChange(event)
 	}
 
-	self.pendingNotices.add(jobrecord.EndedWithSessionEvent(live))
+	recordedRoutes, _ := portgrant.LastRecordedForwards(events)
+	for _, route := range recordedRoutes {
+		event, err := self.forwards.ForwardRoute(route)
+		if err != nil {
+			self.notifyFailure(fmt.Sprintf("Port %d could not be forwarded again: %v", route.Port, err))
+			continue
+		}
+		self.pendingNotices.add(event)
+	}
+
+	self.carryJobs(events, forkSource.GetName())
+}
+
+func (self *App) carryJobs(events []agent.Event, sourceName string) {
+	if live := self.rememberJobs(events); len(live) > 0 {
+		self.pendingNotices.add(jobrecord.EndedWithSourceSessionEvent(sourceName, live))
+	}
 }
 
 func (self *App) interruptionNote() string {

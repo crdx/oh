@@ -2398,6 +2398,106 @@ func TestTwoReturnsWithARestoredJobNoticeSubmitItRatherThanTheNudge(t *testing.T
 	}
 }
 
+func TestAForkCarriesItsSourcesGrantsForwardsAndJobs(t *testing.T) {
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	self.settleAccess()
+	workspaceDir := t.TempDir()
+	grants := preparePathGrantCommands(t, self, openTestWorkspace(t, workspaceDir))
+	var opened []uint16
+	self.forwards = portgrant.NewForwards(portgrant.Forwarder{
+		Forward: func(port uint16) error { opened = append(opened, port); return nil },
+		Revoke:  func(uint16) error { return nil },
+	}, "127.9.9.9")
+	self.jobs = jobState{manager: jobs.New(nil)}
+
+	grantedPath, err := filepath.EvalSymlinks(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	sourceGrants := []pathgrant.Grant{{Path: grantedPath, Access: pathgrant.ReadAccess | pathgrant.WriteAccess}}
+	grantChange, err := pathgrant.ChangeEvent(grantedPath, sourceGrants)
+	if err != nil {
+		t.Fatal(err)
+	}
+	sourceRoutes := []portgrant.Route{{Port: 8080, JobName: "docs"}}
+	forwardChange, err := portgrant.ForwardChangeEvent("127.1.2.3", 8080, sourceRoutes)
+	if err != nil {
+		t.Fatal(err)
+	}
+	listing := jobrecord.ListingEvent([]jobs.Snapshot{
+		{Name: "docs", Command: "python3 -m http.server 8080", State: jobs.StateRunning},
+		{Name: "build", Command: "just build", State: jobs.StateComplete},
+	})
+
+	sessionsDir := t.TempDir()
+	source, err := store.Create(sessionsDir, store.Meta{WorkspaceDir: workspaceDir})
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, event := range []agent.Event{
+		{Kind: agent.UserMessageEvent, Text: "begin"}, grantChange, forwardChange, listing,
+	} {
+		if err := source.Event(event); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := source.Close(); err != nil {
+		t.Fatal(err)
+	}
+	forkSource, err := sessions.GetForkSource(sessionsDir, work.At(workspaceDir), source.Name(), "")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	self.carryOver(forkSource)
+	self.start("carry on")
+	for report := range self.currentTurn.Events() {
+		self.takeTurn(report)
+	}
+	self.finish()
+
+	if got := grants.GetCurrent(); !slices.Equal(got, sourceGrants) {
+		t.Errorf("got grants %#v, want %#v", got, sourceGrants)
+	}
+	if recorded, _ := pathgrant.LastRecorded(self.recordedEvents); !slices.Equal(recorded, sourceGrants) {
+		t.Errorf("recorded grants %#v, want %#v", recorded, sourceGrants)
+	}
+	if !slices.Equal(opened, []uint16{8080}) {
+		t.Errorf("opened ports %v, want 8080", opened)
+	}
+	if recorded, _ := portgrant.LastRecordedForwards(self.recordedEvents); !slices.Equal(recorded, sourceRoutes) {
+		t.Errorf("recorded forwards %#v, want %#v", recorded, sourceRoutes)
+	}
+	for _, name := range []string{"docs", "build"} {
+		if _, isKnown := self.jobs.manager.RememberedCommand(name); !isKnown {
+			t.Errorf("job %s was not carried over", name)
+		}
+	}
+	if recorded, _ := jobrecord.LastRecorded(self.recordedEvents); len(recorded) != 2 {
+		t.Errorf("recorded jobs %#v, want both", recorded)
+	}
+
+	jobNotice, _ := jobrecord.EndedWithSessionNotice(
+		jobrecord.EndedWithSourceSessionEvent(source.Name(), []string{"docs"}),
+	)
+	messages := submittedTexts(self.recordedEvents)
+	for _, want := range []string{
+		"Granted temporary read and write access to " + grantedPath + ".",
+		jobNotice,
+		"carry on",
+	} {
+		if !slices.Contains(messages, want) {
+			t.Errorf("got messages %q, want one to be %q", messages, want)
+		}
+	}
+	if !slices.ContainsFunc(messages, func(message string) bool {
+		return strings.Contains(message, "8080") && strings.Contains(message, "127.9.9.9")
+	}) {
+		t.Errorf("got messages %q, want the forward on the fork's own address", messages)
+	}
+}
+
 func TestTwoReturnsWithAnEndedJobNoticeSubmitItRatherThanTheNudge(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
@@ -5596,6 +5696,8 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"resume-model-arguments":   {".txt"},
 		"resume-mode":              {".ansi"},
 		"resume-confinement":       {".ansi"},
+		"fork-carry-over":          {".ansi", ".screen", ".txt"},
+		"fork-mode":                {".ansi"},
 		"running":                  {".ansi", ".screen"},
 		"schedule":                 {".ansi", ".screen"},
 		"segments":                 {".ansi", ".screen"},
@@ -7573,10 +7675,29 @@ func TestForkingAStoredSessionOpensANewOneCarryingItsTranscript(t *testing.T) {
 		t.Fatalf("got %d stored sessions, want one", len(storedSessions))
 	}
 	sourceName := storedSessions[0].Name
+	grantedPath, err := filepath.EvalSymlinks(reachableWorkspaceDir(t))
+	if err != nil {
+		t.Fatal(err)
+	}
+	sourceGrants := []pathgrant.Grant{{Path: grantedPath, Access: pathgrant.ReadAccess}}
+	grantChange, err := pathgrant.ChangeEvent(grantedPath, sourceGrants)
+	if err != nil {
+		t.Fatal(err)
+	}
+	source, err := store.Open(sessionsDirectory, sourceName)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := source.Event(grantChange); err != nil {
+		t.Fatal(err)
+	}
+	if err := source.Close(); err != nil {
+		t.Fatal(err)
+	}
 
 	runTestBinary(
 		t, binary, workspaceDir, environment,
-		"-p", "--yolo", "-m", "opencode-go/fake", "--from", sourceName, "carry on",
+		"-p", "-m", "opencode-go/fake", "--from", sourceName, "carry on",
 	)
 
 	storedSessions, err = store.List(sessionsDirectory)
@@ -7594,6 +7715,16 @@ func TestForkingAStoredSessionOpensANewOneCarryingItsTranscript(t *testing.T) {
 	transcript := filepath.Join(sessionsDirectory, forkName, "drops", sourceName+".chat.md")
 	if _, err := os.Stat(transcript); err != nil {
 		t.Errorf("the forked transcript is missing: %v", err)
+	}
+	fork, err := store.Read(sessionsDirectory, forkName)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !fork.Meta.Yolo {
+		t.Error("the fork of a session outside the sandbox was confined")
+	}
+	if recorded, _ := pathgrant.LastRecorded(fork.Events); !slices.Equal(recorded, sourceGrants) {
+		t.Errorf("the fork recorded grants %#v, want %#v", recorded, sourceGrants)
 	}
 }
 

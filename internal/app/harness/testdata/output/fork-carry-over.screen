@@ -1,0 +1,181 @@
+=== a forward carried over ===
+
+ 🤖 Port 8080 is now forwarded to http://127.9.9.9:8080.
+
+
+
+ This session was forked from able-dolphin.
+ Check able-dolphin.chat.md's size first, then read its head and tail before continuing.
+ Its own opening message will say whether able-dolphin was forked from an earlier session.
+ If so, follow the chain to get the full context.
+
+
+Model returned no reply.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a forward that cannot be opened again ===
+
+ This session was forked from able-dolphin.
+ Check able-dolphin.chat.md's size first, then read its head and tail before continuing.
+ Its own opening message will say whether able-dolphin was forked from an earlier session.
+ If so, follow the chain to get the full context.
+
+
+Model returned no reply.
+
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ Port 8080 could not be forwarded again: address already in use                                 │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a grant carried over ===
+
+ 🤖 Granted temporary read and write access to /tmp/oh-golden-reference-0000000000/reference.
+
+
+
+ This session was forked from able-dolphin.
+ Check able-dolphin.chat.md's size first, then read its head and tail before continuing.
+ Its own opening message will say whether able-dolphin was forked from an earlier session.
+ If so, follow the chain to get the full context.
+
+
+Model returned no reply.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a grant revoked in the source ===
+
+ This session was forked from able-dolphin.
+ Check able-dolphin.chat.md's size first, then read its head and tail before continuing.
+ Its own opening message will say whether able-dolphin was forked from an earlier session.
+ If so, follow the chain to get the full context.
+
+
+Model returned no reply.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a grant that no longer resolves ===
+
+ This session was forked from able-dolphin.
+ Check able-dolphin.chat.md's size first, then read its head and tail before continuing.
+ Its own opening message will say whether able-dolphin was forked from an earlier session.
+ If so, follow the chain to get the full context.
+
+
+Model returned no reply.
+
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ Temporary access to /tmp/oh-golden-missing-0000000000/missing could not be carried over: no    │
+ │ such file or directory                                                                         │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a sandboxed source forked outside the sandbox ===
+
+ 🤖 Granted temporary read-only access to /tmp/oh-golden-reference-0000000000/reference.
+
+
+
+ This session was forked from able-dolphin.
+ Check able-dolphin.chat.md's size first, then read its head and tail before continuing.
+ Its own opening message will say whether able-dolphin was forked from an earlier session.
+ If so, follow the chain to get the full context.
+
+
+Model returned no reply.
+
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ Port 8080 could not be forwarded again: a forwarded sandbox port needs the sandbox's own       │
+ │ network, which this session does not have                                                      │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a source holding nothing to carry ===
+
+ This session was forked from able-dolphin.
+ Check able-dolphin.chat.md's size first, then read its head and tail before continuing.
+ Its own opening message will say whether able-dolphin was forked from an earlier session.
+ If so, follow the chain to get the full context.
+
+
+Model returned no reply.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== everything carried over at once ===
+
+ 🤖 Granted temporary read-only access to /tmp/oh-golden-reference-0000000000/reference.
+ 🤖 Port 3000 is now forwarded to http://127.9.9.9:3000.
+ 🤖 Port 8080 is now forwarded to http://127.9.9.9:8080.
+ 🤖 Job docs was running in session able-dolphin when this session was forked from it, and is not
+    running here. Restart it if still needed.
+
+
+
+ This session was forked from able-dolphin.
+ Check able-dolphin.chat.md's size first, then read its head and tail before continuing.
+ Its own opening message will say whether able-dolphin was forked from an earlier session.
+ If so, follow the chain to get the full context.
+
+
+Model returned no reply.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== one running job carried over ===
+
+ 🤖 Job docs was running in session able-dolphin when this session was forked from it, and is not
+    running here. Restart it if still needed.
+
+
+
+ This session was forked from able-dolphin.
+ Check able-dolphin.chat.md's size first, then read its head and tail before continuing.
+ Its own opening message will say whether able-dolphin was forked from an earlier session.
+ If so, follow the chain to get the full context.
+
+
+Model returned no reply.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== only finished jobs carried over ===
+
+ This session was forked from able-dolphin.
+ Check able-dolphin.chat.md's size first, then read its head and tail before continuing.
+ Its own opening message will say whether able-dolphin was forked from an earlier session.
+ If so, follow the chain to get the full context.
+
+
+Model returned no reply.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== several running jobs carried over ===
+
+ 🤖 Jobs docs and watch were running in session able-dolphin when this session was forked from it,
+    and are not running here. Restart each if still needed.
+
+
+
+ This session was forked from able-dolphin.
+ Check able-dolphin.chat.md's size first, then read its head and tail before continuing.
+ Its own opening message will say whether able-dolphin was forked from an earlier session.
+ If so, follow the chain to get the full context.
+
+
+Model returned no reply.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────

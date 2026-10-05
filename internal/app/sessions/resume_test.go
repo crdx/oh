@@ -426,3 +426,69 @@ func TestGoldenTheRefusalOfAConfinementChangeMatchesTheGolden(t *testing.T) {
 
 	comparePickerGolden(t, "confinement-refusal.txt", err.Error()+"\n")
 }
+
+func storedForkSource(t *testing.T, meta store.Meta, events ...agent.Event) *ForkSource {
+	t.Helper()
+
+	directory := t.TempDir()
+	meta.WorkspaceDir = t.TempDir()
+	writer, err := store.Create(directory, meta)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, event := range append(events, agent.Event{Kind: agent.UserMessageEvent, Text: "begin"}) {
+		if err := writer.Event(event); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	forkSource, err := GetForkSource(directory, work.At(meta.WorkspaceDir), writer.Name(), "")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return forkSource
+}
+
+func TestAForkOpensInTheConfinementOfItsSource(t *testing.T) {
+	waived := storedForkSource(t, store.Meta{Yolo: true})
+	confined := storedForkSource(t, store.Meta{})
+
+	if !ForkedConfinement(false, waived) {
+		t.Error("a fork of a session outside the sandbox was confined")
+	}
+	if ForkedConfinement(false, confined) {
+		t.Error("a fork of a confined session left the sandbox")
+	}
+	if !ForkedConfinement(true, confined) {
+		t.Error("a fork asked to leave the sandbox stayed confined")
+	}
+	if ForkedConfinement(false, nil) || !ForkedConfinement(true, nil) {
+		t.Error("a session that forks nothing did not keep what it was asked for")
+	}
+}
+
+func TestAForkOpensInTheModeItsSourceWasLeftIn(t *testing.T) {
+	mode := caps.NewModeWithGroups(caps.Read|caps.Git, "a", caps.ToolGroups{"a": {"weather"}, "b": {"tides"}})
+	forkSource := storedForkSource(t, store.Meta{}, mode.Event(""))
+	requestedCaps := caps.Read | caps.Write
+
+	gotCaps, gotGroups := ForkedCaps(requestedCaps, "bc", false, "abc", forkSource)
+	if gotCaps != caps.Read|caps.Git || gotGroups != "ac" {
+		t.Errorf("got %s and groups %q, want rg and groups %q", gotCaps.Flags(), gotGroups, "ac")
+	}
+
+	gotCaps, gotGroups = ForkedCaps(requestedCaps, "b", true, "abc", forkSource)
+	if gotCaps != requestedCaps || gotGroups != "b" {
+		t.Errorf("a chosen mode gave way to the source's, got %s and groups %q", gotCaps.Flags(), gotGroups)
+	}
+
+	silentSource := storedForkSource(t, store.Meta{})
+	gotCaps, gotGroups = ForkedCaps(requestedCaps, "b", false, "abc", silentSource)
+	if gotCaps != requestedCaps || gotGroups != "b" {
+		t.Errorf("a source with no recorded mode changed the request, got %s and groups %q", gotCaps.Flags(), gotGroups)
+	}
+}

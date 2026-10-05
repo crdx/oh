@@ -687,6 +687,10 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	if forkSource != nil {
 		args.Message = forkSource.GetInitialUserMessage(forkSource.DroppedChatName)
 	}
+	args.Yolo = sessions.ForkedConfinement(args.Yolo, forkSource)
+	args.Caps, args.GroupFlags = sessions.ForkedCaps(
+		args.Caps, args.GroupFlags, args.WereCapsChosen, configuredToolGroups.CustomFlags(), forkSource,
+	)
 
 	resumedSession, err := sessions.LoadForResume(sessionsDir, workspace, args.Session)
 	if err != nil {
@@ -1391,6 +1395,9 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 
 	if resumedSession != nil {
 		app.restore(resumedSession)
+	}
+	if forkSource != nil {
+		app.carryOver(forkSource)
 	}
 	for _, failure := range forwardsRestoreResult.Failures {
 		correction, err := portgrant.ForwardChangeEvent(

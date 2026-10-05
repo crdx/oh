@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 
 	"crdx.org/oh/internal/app/caps"
@@ -22,6 +23,8 @@ type ForkSource struct {
 	DroppedChatName string
 	sourceName      string
 	userMessage     string
+	events          []agent.Event
+	isYolo          bool
 }
 
 func forkedTranscriptName(sourceName string) string {
@@ -74,7 +77,57 @@ func GetForkSource(directory string, workspace *work.Space, name string, userMes
 		DroppedChatName: forkedTranscriptName(storedSession.Name),
 		sourceName:      storedSession.Name,
 		userMessage:     userMessage,
+		events:          storedSession.Events,
+		isYolo:          storedSession.Meta.Yolo,
 	}, nil
+}
+
+func (self *ForkSource) GetName() string {
+	return self.sourceName
+}
+
+func (self *ForkSource) GetEvents() []agent.Event {
+	return self.events
+}
+
+func ForkedConfinement(wasYoloChosen bool, forkSource *ForkSource) bool {
+	if forkSource == nil {
+		return wasYoloChosen
+	}
+
+	return wasYoloChosen || forkSource.isYolo
+}
+
+func ForkedCaps(
+	requestedCaps caps.Set,
+	requestedGroups string,
+	wereCapsChosen bool,
+	customFlags string,
+	forkSource *ForkSource,
+) (caps.Set, string) {
+	if forkSource == nil || wereCapsChosen {
+		return requestedCaps, requestedGroups
+	}
+
+	lastCaps, found := caps.LastRecordedMode(forkSource.events)
+	if !found {
+		return requestedCaps, requestedGroups
+	}
+
+	lastGroups, sourceToolGroups, _ := caps.LastRecordedToolGroups(forkSource.events)
+	var groups strings.Builder
+	for _, flag := range customFlags {
+		label := string(flag)
+		isGranted := strings.Contains(requestedGroups, label)
+		if _, isKnownToSource := sourceToolGroups[label]; isKnownToSource {
+			isGranted = strings.Contains(lastGroups, label)
+		}
+		if isGranted {
+			groups.WriteString(label)
+		}
+	}
+
+	return lastCaps, groups.String()
 }
 
 func LoadForResume(directory string, workspace *work.Space, name string) (*store.Session, error) {

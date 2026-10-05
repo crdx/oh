@@ -114,6 +114,10 @@ func (self *Forwards) Forward(port uint16) (agent.Event, error) {
 	return self.forward(port, "")
 }
 
+func (self *Forwards) ForwardRoute(route Route) (agent.Event, error) {
+	return self.forward(route.Port, route.JobName)
+}
+
 func (self *Forwards) Revoke(port uint16) (agent.Event, error) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()

@@ -111,6 +111,33 @@ func TestTheModelIsToldHowToRestartAJobEndedWithTheSession(t *testing.T) {
 	}
 }
 
+func TestAForkNamesTheSessionItsJobsWereRunningIn(t *testing.T) {
+	for _, test := range []struct {
+		names   []string
+		expects string
+	}{
+		{
+			[]string{"docs"},
+			"Job `docs` was running in session `able-dolphin` when this session was forked from it, " +
+				"and is not running here. Restart it if still needed.",
+		},
+		{
+			[]string{"docs", "watch"},
+			"Jobs `docs` and `watch` were running in session `able-dolphin` when this session was forked from it, " +
+				"and are not running here. Restart each if still needed.",
+		},
+	} {
+		event := jobrecord.EndedWithSourceSessionEvent("able-dolphin", test.names)
+		notice, isSaid := jobrecord.EndedWithSessionNotice(event)
+		if !isSaid {
+			t.Fatalf("%v said nothing", test.names)
+		}
+		if notice != test.expects {
+			t.Errorf("got %q, want %q", notice, test.expects)
+		}
+	}
+}
+
 func TestNoEndedJobsSayNothing(t *testing.T) {
 	if _, isSaid := jobrecord.EndedWithSessionNotice(jobrecord.EndedWithSessionEvent(nil)); isSaid {
 		t.Error("an empty list of ended jobs still said something")
