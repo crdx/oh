@@ -535,10 +535,11 @@ func stateRules(data harnessContextTemplateData) string {
 
 	if data.ShellOffered {
 		lines = append(lines, "- The bash tool is "+shellAccess(data.ShellGranted)+shellSandbox(data.Yolo))
-		if !data.Yolo {
-			lines = append(lines, "- A process that a bash call leaves running dies when the call ends"+
-				jobSurvival(data.JobsGranted))
+		leftBehind := "- A process that a bash call leaves running dies when the call ends"
+		if data.Yolo {
+			leftBehind = "- A process that a bash call leaves running in its process group dies when the call ends"
 		}
+		lines = append(lines, leftBehind+jobSurvival(data.JobsGranted))
 	}
 
 	for _, flag := range slices.Sorted(maps.Keys(data.ToolGroups)) {

@@ -79,6 +79,8 @@
 === a sandboxed source forked outside the sandbox ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Granted temporary read-only access to /tmp/oh-golden-reference-0000000000/reference.            \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m was running in session \e[38;2;192;128;80mable-dolphin\e[0m\e[48;2;48;58;67m when this session was forked from it, and is not   \e[0m\r
+\e[48;2;48;58;67m    running here. Restart it if still needed.                                                       \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e]9;4;3\e\\\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r

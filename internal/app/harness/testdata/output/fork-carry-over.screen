@@ -79,6 +79,8 @@ Model returned no reply.
 === a sandboxed source forked outside the sandbox ===
 
  🤖 Granted temporary read-only access to /tmp/oh-golden-reference-0000000000/reference.
+ 🤖 Job docs was running in session able-dolphin when this session was forked from it, and is not
+    running here. Restart it if still needed.
 
 
 

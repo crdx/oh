@@ -8,7 +8,9 @@ import (
 	"os"
 	"path/filepath"
 	"slices"
+	"strconv"
 	"strings"
+	"syscall"
 	"testing"
 	"time"
 
@@ -224,6 +226,156 @@ func TestAYoloCommandIsStoppedWhenItRunsOutOfTime(t *testing.T) {
 	)
 	if err == nil || !strings.Contains(err.Error(), "did not finish within") {
 		t.Fatalf("got %v and %v, want the command stopped at its deadline", result, err)
+	}
+}
+
+func TestAYoloCommandStartsInTheBackgroundAndIsWaitedFor(t *testing.T) {
+	directory := t.TempDir()
+	release := filepath.Join(directory, "release")
+
+	running, err := Direct().Start(
+		t.Context(),
+		directory,
+		"echo started; while [ ! -e release ]; do sleep 0.01; done; echo released; exit 4",
+		Policy{Yolo: true, Env: []string{"PATH"}},
+		&boundedBuffer{},
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if err := os.WriteFile(release, nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	result, err := running.Wait()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if result.ExitCode != 4 || result.Output != "started\nreleased\n" {
+		t.Errorf("got exit %d and %q, want the command's own status and output", result.ExitCode, result.Output)
+	}
+}
+
+func TestStoppingAYoloCommandStopsEverythingItStarted(t *testing.T) {
+	directory := t.TempDir()
+
+	running, err := Direct().Start(
+		t.Context(),
+		directory,
+		"sleep 300 & echo $! > child.tmp; mv child.tmp child; wait",
+		Policy{Yolo: true, Env: []string{"PATH"}},
+		&boundedBuffer{},
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var childPid int
+	deadline := time.Now().Add(10 * time.Second)
+	for childPid == 0 {
+		if time.Now().After(deadline) {
+			t.Fatal("the command never started its child")
+		}
+		childPid, _ = readChildPid(directory)
+		time.Sleep(10 * time.Millisecond)
+	}
+
+	running.Stop()
+	if _, err := running.Wait(); err == nil {
+		t.Error("a stopped command was reported as finishing")
+	}
+
+	for time.Now().Before(deadline) {
+		if syscall.Kill(childPid, 0) != nil {
+			return
+		}
+		time.Sleep(10 * time.Millisecond)
+	}
+	_ = syscall.Kill(childPid, syscall.SIGKILL)
+	t.Errorf("child %d outlived its stopped command", childPid)
+}
+
+func TestAYoloCommandSettlesWhenItsShellExitsAndTakesItsChildrenWithIt(t *testing.T) {
+	directory := t.TempDir()
+
+	startedAt := time.Now()
+	result, err := Run(
+		t.Context(),
+		directory,
+		"sleep 300 & echo $! > child; echo done",
+		Policy{Yolo: true, Env: []string{"PATH"}, Timeout: time.Minute},
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if took := time.Since(startedAt); took > 10*time.Second {
+		t.Errorf("took %s, want the command settled once its shell exited", took)
+	}
+	if result.Output != "done\n" {
+		t.Errorf("got %q, want the shell's own output", result.Output)
+	}
+
+	childPid, err := readChildPid(directory)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for deadline := time.Now().Add(10 * time.Second); time.Now().Before(deadline); {
+		if syscall.Kill(childPid, 0) != nil {
+			return
+		}
+		time.Sleep(10 * time.Millisecond)
+	}
+	_ = syscall.Kill(childPid, syscall.SIGKILL)
+	t.Errorf("child %d outlived the shell that started it", childPid)
+}
+
+func TestAYoloCommandSettlesThoughSomethingThatLeftItsGroupHoldsItsOutput(t *testing.T) {
+	directory := t.TempDir()
+
+	startedAt := time.Now()
+	result, err := Run(
+		t.Context(),
+		directory,
+		"setsid sh -c 'echo $$ > child.tmp; mv child.tmp child; exec sleep 300' & "+
+			"while [ ! -e child ]; do sleep 0.01; done; echo done",
+		Policy{Yolo: true, Env: []string{"PATH"}, Timeout: time.Minute},
+	)
+	if childPid, err := readChildPid(directory); err == nil {
+		t.Cleanup(func() { _ = syscall.Kill(childPid, syscall.SIGKILL) })
+	}
+	if err != nil {
+		t.Fatal(err)
+	}
+	if took := time.Since(startedAt); took > strayOutputGrace+5*time.Second {
+		t.Errorf("took %s, want the command settled soon after its shell exited", took)
+	}
+	if result.Output != "done\n" {
+		t.Errorf("got %q, want the shell's own output", result.Output)
+	}
+}
+
+func readChildPid(directory string) (int, error) {
+	contents, err := os.ReadFile(filepath.Join(directory, "child")) //nolint:gosec // the test's own directory
+	if err != nil {
+		return 0, err
+	}
+
+	return strconv.Atoi(strings.TrimSpace(string(contents)))
+}
+
+func TestAYoloCommandIsNotMistakenForASandboxThatCouldNotStart(t *testing.T) {
+	result, err := Run(
+		t.Context(),
+		t.TempDir(),
+		"printf 'sandbox: mine'; exit 125",
+		Policy{Yolo: true, Env: []string{"PATH"}, Timeout: time.Minute},
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if result.ExitCode != 125 || result.Output != "sandbox: mine" {
+		t.Errorf("got exit %d and %q, want the command's own status and output", result.ExitCode, result.Output)
 	}
 }
 

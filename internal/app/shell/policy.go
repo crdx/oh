@@ -506,6 +506,10 @@ func NewJob(
 		return policy, nil
 	}
 
+	if isYolo {
+		return job.NewOnHost(manager, files, fresh)
+	}
+
 	return job.New(manager, files, fresh, ports)
 }
 

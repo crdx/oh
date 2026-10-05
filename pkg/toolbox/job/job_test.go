@@ -624,6 +624,28 @@ func TestTheToolExplainsPortForwardingLimits(t *testing.T) {
 	}
 }
 
+func TestAJobOnTheHostOffersNothingToForward(t *testing.T) {
+	onHost := job.NewOnHost(nil, nil, nil)
+
+	for _, parameter := range onHost.Schema() {
+		if parameter.Name == "port" {
+			t.Error("a job on the host offers a port to forward")
+		}
+	}
+	description := onHost.Description()
+	for _, wanted := range []string{"directly on the host", "In an interactive session", "in a non-interactive session"} {
+		if !strings.Contains(description, wanted) {
+			t.Errorf("description %q does not contain %q", description, wanted)
+		}
+	}
+	if strings.Contains(description, "forward") {
+		t.Errorf("description %q promises forwarding", description)
+	}
+	if _, err := onHost.Parse(`{"action":"start","name":"web","command":"serve","intent":"Serving the site","port":8080}`); err == nil {
+		t.Error("a job on the host accepted a port")
+	}
+}
+
 var _ tool.Tool = job.New(nil, nil, nil, nil)
 
 func TestAJobIsReportedByNameForEveryActionThatNamesOne(t *testing.T) {

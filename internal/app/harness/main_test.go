@@ -8313,7 +8313,7 @@ func TestGoldenTheCompleteSystemPromptMatchesTheGolden(t *testing.T) {
 	for name, shape := range map[string]promptGolden{
 		"context":               {},
 		"context-deny":          {hasDenyPattern: true},
-		"context-yolo":          {isYolo: true},
+		"context-yolo":          {isYolo: true, areJobsGiven: true},
 		"context-jobs":          {areJobsGiven: true},
 		"context-drops":         {hasClipboardDrops: true},
 		"context-network":       {isNetworkGranted: true},

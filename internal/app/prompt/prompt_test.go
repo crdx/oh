@@ -911,6 +911,30 @@ func TestYoloDoesNotReportDenyPatterns(t *testing.T) {
 	}
 }
 
+func TestAnUnconfinedShellSaysWhatItLeavesBehindAndWhereJobsLive(t *testing.T) {
+	for _, areJobsGranted := range []bool{false, true} {
+		got := harnessContext(Config{
+			Workspace:    work.At("/workspace"),
+			SessionName:  "session-id",
+			TmpDir:       "/state/farm/session",
+			HomeDir:      "/state/home",
+			CurrentCaps:  caps.Read | caps.Shell,
+			OfferedTools: []string{"bash", "job"},
+			JobsGranted:  areJobsGranted,
+			Yolo:         true,
+		})
+
+		const leftBehind = "- A process that a bash call leaves running in its process group dies when the call ends"
+		if !strings.Contains(got, leftBehind) {
+			t.Errorf("jobs granted %v: harness context does not contain %q: %q", areJobsGranted, leftBehind, got)
+		}
+		const survival = "use the job tool for anything that must outlive the call"
+		if strings.Contains(got, survival) != areJobsGranted {
+			t.Errorf("jobs granted %v: got %q", areJobsGranted, got)
+		}
+	}
+}
+
 func TestAnUnconfinedShellReportsNoExecutableDirectories(t *testing.T) {
 	got := harnessContext(Config{
 		Workspace:    work.At("/workspace"),

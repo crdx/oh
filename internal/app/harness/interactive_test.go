@@ -161,6 +161,13 @@ func newInteractiveRig(t *testing.T, answers ...string) *interactiveRig {
 	for _, answer := range answers {
 		turns = append(turns, sim.Turn{Say: answer})
 	}
+
+	return newScriptedRig(t, turns...)
+}
+
+func newScriptedRig(t *testing.T, turns ...sim.Turn) *interactiveRig {
+	t.Helper()
+
 	endpoint := sim.New(&sim.Scenario{Model: "fake", Turns: turns})
 	server := httptest.NewServer(endpoint)
 	t.Cleanup(server.Close)

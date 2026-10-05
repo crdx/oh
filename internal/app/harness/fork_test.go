@@ -169,8 +169,8 @@ func drawForkGolden(t *testing.T, source forkGoldenSource) forkGoldenDrawing {
 			},
 			Revoke: func(uint16) error { return nil },
 		}
-		self.jobs = jobState{manager: jobs.New(nil)}
 	}
+	self.jobs = jobState{manager: jobs.New(nil)}
 	self.forwards = portgrant.NewForwards(forwarder, "127.9.9.9")
 
 	forkSource := storedGoldenForkSource(t, workspaceDir, store.Meta{}, source.events(paths)...)

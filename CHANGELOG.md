@@ -5,6 +5,7 @@
 - Add a git status bar segment
 - Let custom tools set their concurrency level
 - Maintain source session config on fork
+- Offer the job tool under `--yolo`
 
 ## [0.12.1] - 2026-10-03
 

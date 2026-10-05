@@ -63,10 +63,6 @@ type runner struct {
 }
 
 func (self runner) Run(ctx context.Context, directory string, command string, policy Policy) (Result, error) {
-	if policy.Yolo {
-		return runYolo(ctx, directory, command, policy)
-	}
-
 	runningCommand, err := self.Start(ctx, directory, command, policy, &boundedBuffer{})
 	if err != nil {
 		return Result{}, err
@@ -82,6 +78,10 @@ func (self runner) Start(
 	policy Policy,
 	output Output,
 ) (Command, error) {
+	if policy.Yolo {
+		return startYolo(ctx, directory, command, policy, output)
+	}
+
 	if err := validate(ctx, policy); err != nil {
 		return nil, err
 	}
@@ -218,7 +218,7 @@ func (self *startedCommand) Wait() (Result, error) {
 		return Result{}, fmt.Errorf("could not run the command: %w", err)
 	}
 
-	if result.ExitCode == notStarted && strings.HasPrefix(result.Output, notice) {
+	if !self.policy.Yolo && result.ExitCode == notStarted && strings.HasPrefix(result.Output, notice) {
 		return Result{}, fmt.Errorf(
 			"the sandbox could not start: %s",
 			strings.TrimSpace(strings.TrimPrefix(result.Output, notice)),

@@ -1476,7 +1476,8 @@ func openRunner(
 	ctx context.Context, isYolo bool,
 ) (sandbox.Runner, *jobs.Manager, *keeper.Keeper, func(), error) {
 	if isYolo {
-		return sandbox.Direct(), nil, nil, func() {}, nil
+		runner := sandbox.Direct()
+		return runner, jobs.New(runner), nil, func() {}, nil
 	}
 
 	keeperProcess, err := keeper.Open(ctx)

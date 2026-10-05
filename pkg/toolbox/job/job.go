@@ -63,21 +63,53 @@ func New(
 	buildPolicy func(context.Context) (sandbox.Policy, error),
 	ports forward.Ports,
 ) tool.Tool {
-	return tool.Implement(
-		tool.Definition{
-			Name:        "job",
-			Description: description,
-			Schema: tool.Schema{
-				tool.Enum("action", "what to do", actions...),
-				tool.String("name", fmt.Sprintf("the job name; for start, use one short role such as 'check', not a specific compound such as 'cachecheck'—a live duplicate is automatically numbered, such as 'check-1'; 1–%d characters from [a-z0-9-] (for all actions except 'list', 'prune')", jobs.NameLengthLimit)).Optional(),
-				tool.Integer("port", "an optional TCP port inside the sandbox to forward to the user (for start)").Optional(),
-				tool.StringArray("names", "the job names to watch for wait").Optional(),
-				tool.Enum("wait_for", "whether wait returns after any or all watched jobs end", waitForAny, waitForAll).Optional(),
-				tool.Integer("wait_seconds", fmt.Sprintf("how many seconds to wait at most — max %s (default)", util.CompactDuration(waitLimit))).Optional(),
-				tool.String("command", "the command line (for action 'start'); if omitted, re-runs previous job by name").Optional(),
-				tool.String("intent", "for action 'start', "+bash.IntentDescription).Optional(),
-			},
+	return build(manager, root, buildPolicy, ports, tool.Definition{
+		Name:        "job",
+		Description: description,
+		Schema: schema(
+			tool.Integer("port", "an optional TCP port inside the sandbox to forward to the user (for start)").Optional(),
+		),
+	})
+}
+
+func NewOnHost(
+	manager *jobs.Manager,
+	root *file.Root,
+	buildPolicy func(context.Context) (sandbox.Policy, error),
+) tool.Tool {
+	return build(manager, root, buildPolicy, nil, tool.Definition{
+		Name:        "job",
+		Description: hostDescription,
+		Schema:      schema(),
+	})
+}
+
+func schema(extra ...tool.Parameter) tool.Schema {
+	return slices.Concat(
+		tool.Schema{
+			tool.Enum("action", "what to do", actions...),
+			tool.String("name", fmt.Sprintf("the job name; for start, use one short role such as 'check', not a specific compound such as 'cachecheck'—a live duplicate is automatically numbered, such as 'check-1'; 1–%d characters from [a-z0-9-] (for all actions except 'list', 'prune')", jobs.NameLengthLimit)).Optional(),
 		},
+		extra,
+		tool.Schema{
+			tool.StringArray("names", "the job names to watch for wait").Optional(),
+			tool.Enum("wait_for", "whether wait returns after any or all watched jobs end", waitForAny, waitForAll).Optional(),
+			tool.Integer("wait_seconds", fmt.Sprintf("how many seconds to wait at most — max %s (default)", util.CompactDuration(waitLimit))).Optional(),
+			tool.String("command", "the command line (for action 'start'); if omitted, re-runs previous job by name").Optional(),
+			tool.String("intent", "for action 'start', "+bash.IntentDescription).Optional(),
+		},
+	)
+}
+
+func build(
+	manager *jobs.Manager,
+	root *file.Root,
+	buildPolicy func(context.Context) (sandbox.Policy, error),
+	ports forward.Ports,
+	definition tool.Definition,
+) tool.Tool {
+	return tool.Implement(
+		definition,
 		Describe,
 	).
 		Validate(validate).
@@ -88,6 +120,8 @@ func New(
 }
 
 const description = "run a shell command in the background. For a server, bind a fixed port and pass it as `port`; the tool forwards that same number, reports the URL the user opens it at, and does not discover an ephemeral port. In an interactive session you will be notified automatically when it finishes; in a non-interactive session you will not."
+
+const hostDescription = "run a shell command in the background, directly on the host. A server binds the host's own network, so the user opens it at the address it listens on. In an interactive session you will be notified automatically when it finishes; in a non-interactive session you will not."
 
 func Describe(args Args) tool.CallRendering {
 	rendering := describeAction(args)
