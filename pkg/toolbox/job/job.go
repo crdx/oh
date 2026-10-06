@@ -415,7 +415,7 @@ func act(
 			return "", err
 		}
 
-		return jobs.Report(snapshot.Describe(), output, snapshot.DroppedBytes), nil
+		return jobs.Report(snapshot.DescribeWith(output), output, snapshot.DroppedBytes), nil
 
 	case actionWait:
 		return waited(ctx, manager, getWaitNames(args), getWaitFor(args), getWaitLimit(args))
@@ -501,7 +501,7 @@ func getReports(names []string, read func(string) (string, jobs.Snapshot, error)
 		if err != nil {
 			return "", err
 		}
-		reports = append(reports, jobs.Report(snapshot.Describe(), output, snapshot.DroppedBytes))
+		reports = append(reports, jobs.Report(snapshot.DescribeWith(output), output, snapshot.DroppedBytes))
 	}
 
 	return strings.Join(reports, "\n\n"), nil

@@ -633,6 +633,12 @@ func TestGoldenJobOutputMatchesGolden(t *testing.T) {
 	}{
 		{label: "with output", output: "built successfully\n"},
 		{label: "without output", output: " \n\t"},
+		{label: "failed without output", output: "", snapshot: jobs.Snapshot{
+			Name:     "build",
+			State:    jobs.StateFailed,
+			ExitCode: 2,
+			Failure:  "note: the command was killed by SIGKILL.",
+		}},
 		{label: "from a respawned run", output: "built in 3s\n", snapshot: jobs.Snapshot{
 			Name:  "watch",
 			State: jobs.StateStopped,

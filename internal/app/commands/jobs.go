@@ -111,7 +111,7 @@ func runJobAction(context slash.Context, managedJobs Jobs, action string, name s
 		if err != nil {
 			return err
 		}
-		context.Notice(withJobOutput(snapshot.Describe(), text))
+		context.Notice(withJobOutput(snapshot.DescribeWith(text), text))
 
 		return nil
 
@@ -194,7 +194,7 @@ func styleJobOutcome(snapshot jobs.Snapshot) string {
 
 func withJobOutput(status string, text string) string {
 	if strings.TrimSpace(text) == "" {
-		return status + " with no output"
+		return status
 	}
 
 	return status + "\n" + strings.TrimRight(text, "\n")

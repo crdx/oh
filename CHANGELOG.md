@@ -8,6 +8,7 @@
 - Offer the job tool under `--yolo`
 - Don't enable irrelevant caps under `--yolo`
 - Respawn jobs (no, not that one)
+- Keep output notice beside job duration
 
 ## [0.12.1] - 2026-10-03
 

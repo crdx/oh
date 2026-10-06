@@ -22,12 +22,12 @@ whenever they exit.\r
 \e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined:     \e[0m\r
 \e[48;2;48;58;67m    getWidth                            \e[0m\r
 \e[48;2;48;58;67m                                        \e[0m\r
-\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m exited: complete after 8s,\e[0m\r
-\e[48;2;48;58;67m    run 3, respawned with no output.    \e[0m\r
-\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mserve\e[0m\e[48;2;48;58;67m exited: failed after 0s,  \e[0m\r
-\e[48;2;48;58;67m    run 2, the job could not be         \e[0m\r
-\e[48;2;48;58;67m    respawned: no namespaces left with  \e[0m\r
-\e[48;2;48;58;67m    no output.                          \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m exited: complete after 8s \e[0m\r
+\e[48;2;48;58;67m    with no output, run 3, respawned.   \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mserve\e[0m\e[48;2;48;58;67m exited: failed after 0s   \e[0m\r
+\e[48;2;48;58;67m    with no output, run 2, the job could\e[0m\r
+\e[48;2;48;58;67m    not be respawned: no namespaces     \e[0m\r
+\e[48;2;48;58;67m    left.                               \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mlint\e[0m\e[48;2;48;58;67m exited: failed after 0s,   \e[0m\r
 \e[48;2;48;58;67m    exit(127), run 4, not respawned     \e[0m\r
 \e[48;2;48;58;67m    after 3 runs in a row each ended    \e[0m\r
@@ -610,6 +610,30 @@ t\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67ms\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mw\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mh\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mu\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mp\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mu\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67m,\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67mr\e[0m\r
@@ -639,30 +663,6 @@ t\r
 \e[48;2;48;58;67me\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67md\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mw\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mi\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mt\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mh\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mn\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mo\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mo\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mu\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mt\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mp\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mu\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mt\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67m.\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
@@ -723,6 +723,30 @@ t\r
 \e[48;2;48;58;67m0\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mw\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mh\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mu\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mp\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mu\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67m,\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
@@ -817,30 +841,6 @@ t\r
 \e[48;2;48;58;67me\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67mf\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mt\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mw\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mi\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mt\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mh\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mn\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mo\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mo\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mu\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mt\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mp\e[0m\r
-\e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mu\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67mt\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
@@ -1275,8 +1275,8 @@ built in 3s\e[0m
 go build ./...
 cmd/oh/draw.go:41:9: undefined: getWidth\e[0m
 \e[48;2;48;58;67m\e[0m
-\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m exited: complete after 8s, run 3, respawned with no output.\e[0m
-\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mserve\e[0m\e[48;2;48;58;67m exited: failed after 0s, run 2, the job could not be respawned: no namespaces left with no output.\e[0m
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m exited: complete after 8s with no output, run 3, respawned.\e[0m
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mserve\e[0m\e[48;2;48;58;67m exited: failed after 0s with no output, run 2, the job could not be respawned: no namespaces left.\e[0m
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mlint\e[0m\e[48;2;48;58;67m exited: failed after 0s, exit(127), run 4, not respawned after 3 runs in a row each ended within 2s.
 bash: golangci-lint: command not found\e[0m
 \e[48;2;48;58;67m\e[0m
@@ -1308,9 +1308,9 @@ Both are running and will come back whenever they exit.\r
 \e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
 \e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m exited: complete after 8s, run 3, respawned with no output.                           \e[0m\r
-\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mserve\e[0m\e[48;2;48;58;67m exited: failed after 0s, run 2, the job could not be respawned: no namespaces left    \e[0m\r
-\e[48;2;48;58;67m    with no output.                                                                                 \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m exited: complete after 8s with no output, run 3, respawned.                           \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mserve\e[0m\e[48;2;48;58;67m exited: failed after 0s with no output, run 2, the job could not be respawned: no     \e[0m\r
+\e[48;2;48;58;67m    namespaces left.                                                                                \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mlint\e[0m\e[48;2;48;58;67m exited: failed after 0s, exit(127), run 4, not respawned after 3 runs in a row each    \e[0m\r
 \e[48;2;48;58;67m    ended within 2s.                                                                                \e[0m\r
 \e[48;2;48;58;67m    bash: golangci-lint: command not found                                                          \e[0m\r
@@ -1345,9 +1345,9 @@ Both\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth are\e[K\r\e[8C\e[?25h\e[?2
 \e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
 \e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m exited: complete after 8s, run 3, respawned with no output.                           \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mserve\e[0m\e[48;2;48;58;67m exited: failed after 0s, run 2, the job could not be respawned: no namespaces left    \e[0m\r
-\e[48;2;48;58;67m    with no output.                                                                                 \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m exited: complete after 8s with no output, run 3, respawned.                           \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mserve\e[0m\e[48;2;48;58;67m exited: failed after 0s with no output, run 2, the job could not be respawned: no     \e[0m\r
+\e[48;2;48;58;67m    namespaces left.                                                                                \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mlint\e[0m\e[48;2;48;58;67m exited: failed after 0s, exit(127), run 4, not respawned after 3 runs in a row each    \e[0m\r
 \e[48;2;48;58;67m    ended within 2s.                                                                                \e[0m\r
 \e[48;2;48;58;67m    bash: golangci-lint: command not found                                                          \e[0m\r
@@ -1382,9 +1382,9 @@ Both are running and will come back whenever they exit.\e[K\r\e[55C\e[?25h\e[?20
 \e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
 \e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m exited: complete after 8s, run 3, respawned with no output.                           \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mserve\e[0m\e[48;2;48;58;67m exited: failed after 0s, run 2, the job could not be respawned: no namespaces left    \e[0m\r
-\e[48;2;48;58;67m    with no output.                                                                                 \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m exited: complete after 8s with no output, run 3, respawned.                           \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mserve\e[0m\e[48;2;48;58;67m exited: failed after 0s with no output, run 2, the job could not be respawned: no     \e[0m\r
+\e[48;2;48;58;67m    namespaces left.                                                                                \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mlint\e[0m\e[48;2;48;58;67m exited: failed after 0s, exit(127), run 4, not respawned after 3 runs in a row each    \e[0m\r
 \e[48;2;48;58;67m    ended within 2s.                                                                                \e[0m\r
 \e[48;2;48;58;67m    bash: golangci-lint: command not found                                                          \e[0m\r
@@ -1419,9 +1419,9 @@ Both\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth are\e[K\r\e[8C\e[?25h\e[?2
 \e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
 \e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m exited: complete after 8s, run 3, respawned with no output.                           \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mserve\e[0m\e[48;2;48;58;67m exited: failed after 0s, run 2, the job could not be respawned: no namespaces left    \e[0m\r
-\e[48;2;48;58;67m    with no output.                                                                                 \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m exited: complete after 8s with no output, run 3, respawned.                           \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mserve\e[0m\e[48;2;48;58;67m exited: failed after 0s with no output, run 2, the job could not be respawned: no     \e[0m\r
+\e[48;2;48;58;67m    namespaces left.                                                                                \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mlint\e[0m\e[48;2;48;58;67m exited: failed after 0s, exit(127), run 4, not respawned after 3 runs in a row each    \e[0m\r
 \e[48;2;48;58;67m    ended within 2s.                                                                                \e[0m\r
 \e[48;2;48;58;67m    bash: golangci-lint: command not found                                                          \e[0m\r
@@ -1496,29 +1496,27 @@ they exit.\r
 \e[48;2;48;58;67m    \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m   \e[0m\r
 \e[48;2;48;58;67m    exited: \e[0m\r
 \e[48;2;48;58;67m    complete\e[0m\r
-\e[48;2;48;58;67m    after   \e[0m\r
-\e[48;2;48;58;67m    8s, run \e[0m\r
-\e[48;2;48;58;67m    3,      \e[0m\r
+\e[48;2;48;58;67m    after 8s\e[0m\r
+\e[48;2;48;58;67m    with no \e[0m\r
+\e[48;2;48;58;67m    output, \e[0m\r
+\e[48;2;48;58;67m    run 3,  \e[0m\r
 \e[48;2;48;58;67m    respawne\e[0m\r
-\e[48;2;48;58;67m    d with  \e[0m\r
-\e[48;2;48;58;67m    no      \e[0m\r
-\e[48;2;48;58;67m    output. \e[0m\r
+\e[48;2;48;58;67m    d.      \e[0m\r
 \e[48;2;48;58;67m 🤖 Job     \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;192;128;80mserve\e[0m\e[48;2;48;58;67m   \e[0m\r
 \e[48;2;48;58;67m    exited: \e[0m\r
 \e[48;2;48;58;67m    failed  \e[0m\r
-\e[48;2;48;58;67m    after   \e[0m\r
-\e[48;2;48;58;67m    0s, run \e[0m\r
-\e[48;2;48;58;67m    2, the  \e[0m\r
-\e[48;2;48;58;67m    job     \e[0m\r
+\e[48;2;48;58;67m    after 0s\e[0m\r
+\e[48;2;48;58;67m    with no \e[0m\r
+\e[48;2;48;58;67m    output, \e[0m\r
+\e[48;2;48;58;67m    run 2,  \e[0m\r
+\e[48;2;48;58;67m    the job \e[0m\r
 \e[48;2;48;58;67m    could   \e[0m\r
 \e[48;2;48;58;67m    not be  \e[0m\r
 \e[48;2;48;58;67m    respawne\e[0m\r
 \e[48;2;48;58;67m    d: no   \e[0m\r
 \e[48;2;48;58;67m    namespac\e[0m\r
-\e[48;2;48;58;67m    es left \e[0m\r
-\e[48;2;48;58;67m    with no \e[0m\r
-\e[48;2;48;58;67m    output. \e[0m\r
+\e[48;2;48;58;67m    es left.\e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mlint\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m    exited: \e[0m\r
 \e[48;2;48;58;67m    failed  \e[0m\r
@@ -1582,8 +1580,8 @@ built in 3s\e[0m\r
 go build ./...\r
 cmd/oh/draw.go:41:9: undefined: getWidth\e[0m\r
 \e[48;2;48;58;67m\e[0m\r
-\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m exited: complete after 8s, run 3, respawned with no output.\e[0m\r
-\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mserve\e[0m\e[48;2;48;58;67m exited: failed after 0s, run 2, the job could not be respawned: no namespaces left with no output.\e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m exited: complete after 8s with no output, run 3, respawned.\e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mserve\e[0m\e[48;2;48;58;67m exited: failed after 0s with no output, run 2, the job could not be respawned: no namespaces left.\e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mlint\e[0m\e[48;2;48;58;67m exited: failed after 0s, exit(127), run 4, not respawned after 3 runs in a row each ended within 2s.\r
 bash: golangci-lint: command not found\e[0m\r
 \e[48;2;48;58;67m\e[0m\r
@@ -1615,9 +1613,9 @@ Both are running and will come back whenever they exit.\r
 \e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
 \e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m exited: complete after 8s, run 3, respawned with no output.                           \e[0m\r
-\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mserve\e[0m\e[48;2;48;58;67m exited: failed after 0s, run 2, the job could not be respawned: no namespaces left    \e[0m\r
-\e[48;2;48;58;67m    with no output.                                                                                 \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m exited: complete after 8s with no output, run 3, respawned.                           \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mserve\e[0m\e[48;2;48;58;67m exited: failed after 0s with no output, run 2, the job could not be respawned: no     \e[0m\r
+\e[48;2;48;58;67m    namespaces left.                                                                                \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mlint\e[0m\e[48;2;48;58;67m exited: failed after 0s, exit(127), run 4, not respawned after 3 runs in a row each    \e[0m\r
 \e[48;2;48;58;67m    ended within 2s.                                                                                \e[0m\r
 \e[48;2;48;58;67m    bash: golangci-lint: command not found                                                          \e[0m\r

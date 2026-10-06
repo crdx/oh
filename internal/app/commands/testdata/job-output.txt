@@ -3,6 +3,8 @@ build: complete
 built successfully
 === without output ===
 build: complete with no output
+=== failed without output ===
+build: failed with no output, exit(2), note: the command was killed by SIGKILL.
 === from a respawned run ===
 watch: stopped, run 4
 built in 3s

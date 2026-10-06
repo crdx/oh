@@ -45,13 +45,13 @@ cmd/oh/draw.go:41:9: undefined: getWidth
 ## job_ended · +9s
 
 ```
-Job `watch` exited: complete after 8s, run 3, respawned with no output.
+Job `watch` exited: complete after 8s with no output, run 3, respawned.
 ```
 
 ## job_ended · +10s
 
 ```
-Job `serve` exited: failed after 0s, run 2, the job could not be respawned: no namespaces left with no output.
+Job `serve` exited: failed after 0s with no output, run 2, the job could not be respawned: no namespaces left.
 ```
 
 ## job_ended · +11s

@@ -82,13 +82,29 @@ func (self Snapshot) Describe() string {
 	return self.Name + ": " + self.Outcome()
 }
 
+func (self Snapshot) DescribeWith(output string) string {
+	return self.Name + ": " + self.OutcomeWith(output)
+}
+
 func (self Snapshot) Outcome() string {
+	return self.outcome(false)
+}
+
+func (self Snapshot) OutcomeWith(output string) string {
+	return self.outcome(strings.TrimSpace(output) == "")
+}
+
+func (self Snapshot) outcome(isSilent bool) string {
 	stateWithDuration := string(self.State)
 
 	if self.IsLive() {
 		stateWithDuration += " for " + util.CompactDuration(time.Since(self.StartedAt).Round(time.Second))
 	} else if !self.EndedAt.IsZero() {
 		stateWithDuration += " after " + util.CompactDuration(self.EndedAt.Sub(self.StartedAt).Round(time.Second))
+	}
+
+	if isSilent {
+		stateWithDuration += " with no output"
 	}
 
 	parts := []string{stateWithDuration}
@@ -817,15 +833,6 @@ func Report(status string, output string, droppedBytes int) string {
 	}
 
 	if strings.TrimSpace(output) == "" {
-		marker := " with no output"
-		for _, punctuation := range []string{".", "!", "?"} {
-			withoutPunctuation, found := strings.CutSuffix(lines[0], punctuation)
-			if found {
-				lines[0] = withoutPunctuation + marker + punctuation
-				return strings.Join(lines, "\n")
-			}
-		}
-		lines[0] += marker
 		return strings.Join(lines, "\n")
 	}
 

@@ -52,7 +52,7 @@ func EndedNotice(event agent.Event) (string, bool) {
 	}
 
 	return jobs.Report(
-		"Job "+markdown.CodeSpan(conclusion.Snapshot.Name)+" exited: "+conclusion.Snapshot.Outcome()+".",
+		"Job "+markdown.CodeSpan(conclusion.Snapshot.Name)+" exited: "+conclusion.Snapshot.OutcomeWith(conclusion.Output)+".",
 		conclusion.Output,
 		conclusion.DroppedBytes,
 	), true

@@ -22,12 +22,12 @@ whenever they exit.
     cmd/oh/draw.go:41:9: undefined:
     getWidth
 
- 🤖 Job watch exited: complete after 8s,
-    run 3, respawned with no output.
- 🤖 Job serve exited: failed after 0s,
-    run 2, the job could not be
-    respawned: no namespaces left with
-    no output.
+ 🤖 Job watch exited: complete after 8s
+    with no output, run 3, respawned.
+ 🤖 Job serve exited: failed after 0s
+    with no output, run 2, the job could
+    not be respawned: no namespaces
+    left.
  🤖 Job lint exited: failed after 0s,
     exit(127), run 4, not respawned
     after 3 runs in a row each ended
@@ -609,6 +609,30 @@ r
 
 s
 
+w
+
+i
+
+t
+
+h
+
+n
+
+o
+
+o
+
+u
+
+t
+
+p
+
+u
+
+t
+
 ,
 
 r
@@ -638,30 +662,6 @@ n
 e
 
 d
-
-w
-
-i
-
-t
-
-h
-
-n
-
-o
-
-o
-
-u
-
-t
-
-p
-
-u
-
-t
 
 .
 
@@ -722,6 +722,30 @@ r
 0
 
 s
+
+w
+
+i
+
+t
+
+h
+
+n
+
+o
+
+o
+
+u
+
+t
+
+p
+
+u
+
+t
 
 ,
 
@@ -816,30 +840,6 @@ l
 e
 
 f
-
-t
-
-w
-
-i
-
-t
-
-h
-
-n
-
-o
-
-o
-
-u
-
-t
-
-p
-
-u
 
 t
 
@@ -1274,9 +1274,9 @@ Both are running and will come back whenever they exit.
     go build ./...
     cmd/oh/draw.go:41:9: undefined: getWidth
 
- 🤖 Job watch exited: complete after 8s, run 3, respawned with no output.
- 🤖 Job serve exited: failed after 0s, run 2, the job could not be respawned: no namespaces left
-    with no output.
+ 🤖 Job watch exited: complete after 8s with no output, run 3, respawned.
+ 🤖 Job serve exited: failed after 0s with no output, run 2, the job could not be respawned: no
+    namespaces left.
  🤖 Job lint exited: failed after 0s, exit(127), run 4, not respawned after 3 runs in a row each
     ended within 2s.
     bash: golangci-lint: command not found
@@ -1350,29 +1350,27 @@ they exit.
     watch
     exited:
     complete
-    after
-    8s, run
-    3,
+    after 8s
+    with no
+    output,
+    run 3,
     respawne
-    d with
-    no
-    output.
+    d.
  🤖 Job
     serve
     exited:
     failed
-    after
-    0s, run
-    2, the
-    job
+    after 0s
+    with no
+    output,
+    run 2,
+    the job
     could
     not be
     respawne
     d: no
     namespac
-    es left
-    with no
-    output.
+    es left.
  🤖 Job lint
     exited:
     failed
@@ -1436,9 +1434,9 @@ Both are running and will come back whenever they exit.
     go build ./...
     cmd/oh/draw.go:41:9: undefined: getWidth
 
- 🤖 Job watch exited: complete after 8s, run 3, respawned with no output.
- 🤖 Job serve exited: failed after 0s, run 2, the job could not be respawned: no namespaces left
-    with no output.
+ 🤖 Job watch exited: complete after 8s with no output, run 3, respawned.
+ 🤖 Job serve exited: failed after 0s with no output, run 2, the job could not be respawned: no
+    namespaces left.
  🤖 Job lint exited: failed after 0s, exit(127), run 4, not respawned after 3 runs in a row each
     ended within 2s.
     bash: golangci-lint: command not found
