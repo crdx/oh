@@ -263,6 +263,66 @@ func TestOnlyStartingAJobNeedsAnIntent(t *testing.T) {
 	}
 }
 
+func TestAStartRespawnsOnlyWhenAskedTo(t *testing.T) {
+	manager := jobs.New(heldRunner{})
+	t.Cleanup(func() { _ = manager.Close() })
+	built := newJobTool(t, manager, nil)
+
+	for _, current := range []struct {
+		arguments string
+		want      string
+	}{
+		{
+			arguments: `{"intent":"check the job here","action":"start","name":"watch","command":"just watch","respawn":true}`,
+			want:      "watch: running for 0s, run 1, respawns on exit",
+		},
+		{
+			arguments: `{"intent":"check the job here","action":"start","name":"once","command":"just once"}`,
+			want:      "once: running for 0s",
+		},
+	} {
+		result, err := callJob(t, built, current.arguments)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if result.Output != current.want {
+			t.Errorf("got %q, want %q", result.Output, current.want)
+		}
+	}
+}
+
+func TestARestartFromTheRememberedCommandCanRespawn(t *testing.T) {
+	manager := jobs.New(heldRunner{})
+	t.Cleanup(func() { _ = manager.Close() })
+	built := newJobTool(t, manager, nil)
+
+	if _, err := callJob(t, built, `{"intent":"check the job here","action":"start","name":"watch","command":"just watch"}`); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := callJob(t, built, `{"intent":"check the job here","action":"stop","name":"watch"}`); err != nil {
+		t.Fatal(err)
+	}
+
+	result, err := callJob(t, built, `{"intent":"check the job here","action":"start","name":"watch","respawn":true}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := "watch: running for 0s, run 1, respawns on exit"; result.Output != want {
+		t.Errorf("got %q, want %q", result.Output, want)
+	}
+
+	if _, err := callJob(t, built, `{"intent":"check the job here","action":"start","name":"watch"}`); err != nil {
+		t.Fatal(err)
+	}
+	snapshot, err := manager.Status("watch-1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if snapshot.Run != 0 || snapshot.Respawn != "" {
+		t.Errorf("got %#v, want a restart without respawn to leave it off", snapshot)
+	}
+}
+
 func TestStartingAJobCanForwardAndAssociateItsPort(t *testing.T) {
 	manager := jobs.New(heldRunner{})
 	t.Cleanup(func() { _ = manager.Close() })
@@ -488,6 +548,32 @@ func TestOnlyAStartTakesAValidPort(t *testing.T) {
 	}
 }
 
+func TestOnlyAStartRespawns(t *testing.T) {
+	_, err := run(t, jobs.New(nil), map[string]any{
+		"action":  "status",
+		"name":    "watch",
+		"respawn": true,
+	})
+	if err == nil || !strings.Contains(err.Error(), `respawn requires action="start"`) {
+		t.Errorf("got %v, want respawn to belong to start alone", err)
+	}
+}
+
+func TestTheRespawnParameterNamesWhenItGivesUp(t *testing.T) {
+	var description string
+	for _, parameter := range job.New(nil, nil, nil, nil).Schema() {
+		if parameter.Name == "respawn" {
+			description = parameter.Description
+		}
+	}
+
+	for _, wanted := range []string{"for action 'start'", "still notifying you", "stop the job", "3 runs in a row", "within 2s"} {
+		if !strings.Contains(description, wanted) {
+			t.Errorf("respawn description %q does not contain %q", description, wanted)
+		}
+	}
+}
+
 func TestAJobCallIsRenderedByItsAction(t *testing.T) {
 	for name, shape := range map[string]struct {
 		args job.Args
@@ -524,6 +610,20 @@ func TestAJobCallIsRenderedByItsAction(t *testing.T) {
 				Emphasis:   tool.Emphasis{Kind: tool.EmphasisLead, Value: "docs"},
 				Introduces: "docs",
 			},
+		},
+		"respawning start": {
+			args: job.Args{Action: "start", Name: "watch", Command: "inotifywait .", Respawn: true},
+			want: tool.CallRendering{
+				Kind:         "job_start",
+				Subject:      "watch",
+				Qualifier:    "respawning on exit",
+				Continuation: []tool.CallRendering{bash.DescribeCommand("inotifywait .")},
+				Introduces:   "watch",
+			},
+		},
+		"respawning restart": {
+			args: job.Args{Action: "start", Name: "watch", Respawn: true},
+			want: tool.CallRendering{Kind: "job_restart", Subject: "watch", Qualifier: "respawning on exit", Introduces: "watch"},
 		},
 		"status": {
 			args: job.Args{Action: "status", Name: "docs"},

@@ -84,7 +84,7 @@ func TestWaitingOnSeveralJobsReturnsAsSoonAsAnyHasEnded(t *testing.T) {
 		result <- name
 	}()
 
-	manager.conclude(docs, StateComplete, 0, "")
+	manager.conclude(docs, StateComplete, "")
 	close(docs.over)
 
 	if name := <-result; name != "docs" {
@@ -94,7 +94,7 @@ func TestWaitingOnSeveralJobsReturnsAsSoonAsAnyHasEnded(t *testing.T) {
 		t.Errorf("got %#v and %v, want the other job to remain live", snapshot, statusErr)
 	}
 
-	manager.conclude(build, StateComplete, 0, "")
+	manager.conclude(build, StateComplete, "")
 	close(build.over)
 }
 

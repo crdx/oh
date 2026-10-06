@@ -3,3 +3,6 @@ build: complete
 built successfully
 === without output ===
 build: complete with no output
+=== from a respawned run ===
+watch: stopped, run 4
+built in 3s

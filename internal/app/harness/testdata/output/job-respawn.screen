@@ -1,0 +1,1455 @@
+=== narrow ===
+
+ rebuild whenever the source changes,
+ and keep the server up
+
+
+Rebuilding whenever the source changes …
+Keeping the server up start serve re… 1L
+
+Both are running and will come back
+whenever they exit.
+
+
+ 🤖 Job watch exited: complete after 8s,
+    run 1, respawned.
+    go build ./...
+    built in 3s
+
+ 🤖 Job watch exited: failed after 8s,
+    exit(1), run 2, respawned.
+    go build ./...
+    cmd/oh/draw.go:41:9: undefined:
+    getWidth
+
+ 🤖 Job watch exited: complete after 8s,
+    run 3, respawned with no output.
+ 🤖 Job serve exited: failed after 0s,
+    run 2, the job could not be
+    respawned: no namespaces left with
+    no output.
+ 🤖 Job lint exited: failed after 0s,
+    exit(127), run 4, not respawned
+    after 3 runs in a row each ended
+    within 2s.
+    bash: golangci-lint: command not
+    found
+
+
+
+ wait for the next rebuild, stop it,
+ then bring lint back
+
+
+await watch 3L
+stop watch 1L
+Bringing lint back restart lint resp… 1L
+
+The rebuild passed, the watcher is
+stopped, and lint is respawning again.
+=== one column ===
+
+
+r
+
+e
+
+b
+
+u
+
+i
+
+l
+
+d
+
+w
+
+h
+
+e
+
+n
+
+e
+
+v
+
+e
+
+r
+
+t
+
+h
+
+e
+
+s
+
+o
+
+u
+
+r
+
+c
+
+e
+
+c
+
+h
+
+a
+
+n
+
+g
+
+e
+
+s
+
+,
+
+a
+
+n
+
+d
+
+k
+
+e
+
+e
+
+p
+
+t
+
+h
+
+e
+
+s
+
+e
+
+r
+
+v
+
+e
+
+r
+
+u
+
+p
+
+
+…
+…
+
+B
+o
+t
+h
+a
+r
+e
+r
+u
+n
+n
+i
+n
+g
+a
+n
+d
+w
+i
+l
+l
+c
+o
+m
+e
+b
+a
+c
+k
+w
+h
+e
+n
+e
+v
+e
+r
+t
+h
+e
+y
+e
+x
+i
+t
+.
+
+
+
+🤖
+
+J
+
+o
+
+b
+
+w
+
+a
+
+t
+
+c
+
+h
+
+e
+
+x
+
+i
+
+t
+
+e
+
+d
+
+:
+
+c
+
+o
+
+m
+
+p
+
+l
+
+e
+
+t
+
+e
+
+a
+
+f
+
+t
+
+e
+
+r
+
+8
+
+s
+
+,
+
+r
+
+u
+
+n
+
+1
+
+,
+
+r
+
+e
+
+s
+
+p
+
+a
+
+w
+
+n
+
+e
+
+d
+
+.
+
+g
+
+o
+
+b
+
+u
+
+i
+
+l
+
+d
+
+.
+
+/
+
+.
+
+.
+
+.
+
+b
+
+u
+
+i
+
+l
+
+t
+
+i
+
+n
+
+3
+
+s
+
+
+🤖
+
+J
+
+o
+
+b
+
+w
+
+a
+
+t
+
+c
+
+h
+
+e
+
+x
+
+i
+
+t
+
+e
+
+d
+
+:
+
+f
+
+a
+
+i
+
+l
+
+e
+
+d
+
+a
+
+f
+
+t
+
+e
+
+r
+
+8
+
+s
+
+,
+
+e
+
+x
+
+i
+
+t
+
+(
+
+1
+
+)
+
+,
+
+r
+
+u
+
+n
+
+2
+
+,
+
+r
+
+e
+
+s
+
+p
+
+a
+
+w
+
+n
+
+e
+
+d
+
+.
+
+g
+
+o
+
+b
+
+u
+
+i
+
+l
+
+d
+
+.
+
+/
+
+.
+
+.
+
+.
+
+c
+
+m
+
+d
+
+/
+
+o
+
+h
+
+/
+
+d
+
+r
+
+a
+
+w
+
+.
+
+g
+
+o
+
+:
+
+4
+
+1
+
+:
+
+9
+
+:
+
+u
+
+n
+
+d
+
+e
+
+f
+
+i
+
+n
+
+e
+
+d
+
+:
+
+g
+
+e
+
+t
+
+W
+
+i
+
+d
+
+t
+
+h
+
+
+🤖
+
+J
+
+o
+
+b
+
+w
+
+a
+
+t
+
+c
+
+h
+
+e
+
+x
+
+i
+
+t
+
+e
+
+d
+
+:
+
+c
+
+o
+
+m
+
+p
+
+l
+
+e
+
+t
+
+e
+
+a
+
+f
+
+t
+
+e
+
+r
+
+8
+
+s
+
+,
+
+r
+
+u
+
+n
+
+3
+
+,
+
+r
+
+e
+
+s
+
+p
+
+a
+
+w
+
+n
+
+e
+
+d
+
+w
+
+i
+
+t
+
+h
+
+n
+
+o
+
+o
+
+u
+
+t
+
+p
+
+u
+
+t
+
+.
+
+🤖
+
+J
+
+o
+
+b
+
+s
+
+e
+
+r
+
+v
+
+e
+
+e
+
+x
+
+i
+
+t
+
+e
+
+d
+
+:
+
+f
+
+a
+
+i
+
+l
+
+e
+
+d
+
+a
+
+f
+
+t
+
+e
+
+r
+
+0
+
+s
+
+,
+
+r
+
+u
+
+n
+
+2
+
+,
+
+t
+
+h
+
+e
+
+j
+
+o
+
+b
+
+c
+
+o
+
+u
+
+l
+
+d
+
+n
+
+o
+
+t
+
+b
+
+e
+
+r
+
+e
+
+s
+
+p
+
+a
+
+w
+
+n
+
+e
+
+d
+
+:
+
+n
+
+o
+
+n
+
+a
+
+m
+
+e
+
+s
+
+p
+
+a
+
+c
+
+e
+
+s
+
+l
+
+e
+
+f
+
+t
+
+w
+
+i
+
+t
+
+h
+
+n
+
+o
+
+o
+
+u
+
+t
+
+p
+
+u
+
+t
+
+.
+
+🤖
+
+J
+
+o
+
+b
+
+l
+
+i
+
+n
+
+t
+
+e
+
+x
+
+i
+
+t
+
+e
+
+d
+
+:
+
+f
+
+a
+
+i
+
+l
+
+e
+
+d
+
+a
+
+f
+
+t
+
+e
+
+r
+
+0
+
+s
+
+,
+
+e
+
+x
+
+i
+
+t
+
+(
+
+1
+
+2
+
+7
+
+)
+
+,
+
+r
+
+u
+
+n
+
+4
+
+,
+
+n
+
+o
+
+t
+
+r
+
+e
+
+s
+
+p
+
+a
+
+w
+
+n
+
+e
+
+d
+
+a
+
+f
+
+t
+
+e
+
+r
+
+3
+
+r
+
+u
+
+n
+
+s
+
+i
+
+n
+
+a
+
+r
+
+o
+
+w
+
+e
+
+a
+
+c
+
+h
+
+e
+
+n
+
+d
+
+e
+
+d
+
+w
+
+i
+
+t
+
+h
+
+i
+
+n
+
+2
+
+s
+
+.
+
+b
+
+a
+
+s
+
+h
+
+:
+
+g
+
+o
+
+l
+
+a
+
+n
+
+g
+
+c
+
+i
+
+-
+
+l
+
+i
+
+n
+
+t
+
+:
+
+c
+
+o
+
+m
+
+m
+
+a
+
+n
+
+d
+
+n
+
+o
+
+t
+
+f
+
+o
+
+u
+
+n
+
+d
+
+
+
+
+w
+
+a
+
+i
+
+t
+
+f
+
+o
+
+r
+
+t
+
+h
+
+e
+
+n
+
+e
+
+x
+
+t
+
+r
+
+e
+
+b
+
+u
+
+i
+
+l
+
+d
+
+,
+
+s
+
+t
+
+o
+
+p
+
+i
+
+t
+
+,
+
+t
+
+h
+
+e
+
+n
+
+b
+
+r
+
+i
+
+n
+
+g
+
+l
+
+i
+
+n
+
+t
+
+b
+
+a
+
+c
+
+k
+
+
+…
+…
+…
+
+T
+h
+e
+r
+e
+b
+u
+i
+l
+d
+p
+a
+s
+s
+e
+d
+,
+t
+h
+e
+w
+a
+t
+c
+h
+e
+r
+i
+s
+s
+t
+o
+p
+p
+e
+d
+,
+a
+n
+d
+l
+i
+n
+t
+i
+s
+r
+e
+s
+p
+a
+w
+n
+i
+n
+g
+a
+g
+a
+i
+n
+.
+=== printed ===
+
+ rebuild whenever the source changes, and keep the server up
+
+
+Rebuilding whenever the source changes start watch respawning on exit $ just watch 1L
+Keeping the server up start serve respawning on exit $ python3 -m http.server 8080 1L
+
+Both are running and will come back whenever they exit.
+
+
+ 🤖 Job watch exited: complete after 8s, run 1, respawned.
+    go build ./...
+    built in 3s
+
+ 🤖 Job watch exited: failed after 8s, exit(1), run 2, respawned.
+    go build ./...
+    cmd/oh/draw.go:41:9: undefined: getWidth
+
+ 🤖 Job watch exited: complete after 8s, run 3, respawned with no output.
+ 🤖 Job serve exited: failed after 0s, run 2, the job could not be respawned: no namespaces left
+    with no output.
+ 🤖 Job lint exited: failed after 0s, exit(127), run 4, not respawned after 3 runs in a row each
+    ended within 2s.
+    bash: golangci-lint: command not found
+
+
+
+ wait for the next rebuild, stop it, then bring lint back
+
+
+await watch 3L (Rebuilding whenever the source changes)
+stop watch 1L (Rebuilding whenever the source changes)
+Bringing lint back restart lint respawning on exit 1L
+
+The rebuild passed, the watcher is stopped, and lint is respawning again.
+=== tiny ===
+
+ rebuild
+ whenever
+ the source
+ changes,
+ and keep
+ the server
+ up
+
+
+Rebuilding …
+Keeping the…
+
+Both are
+running and
+will come
+back
+whenever
+they exit.
+
+
+ 🤖 Job
+    watch
+    exited:
+    complete
+    after
+    8s, run
+    1,
+    respawne
+    d.
+    go build
+    ./...
+    built in
+    3s
+
+ 🤖 Job
+    watch
+    exited:
+    failed
+    after
+    8s,
+    exit(1),
+    run 2,
+    respawne
+    d.
+    go build
+    ./...
+    cmd/oh/d
+    raw.go:4
+    1:9:
+    undefine
+    d:
+    getWidth
+
+ 🤖 Job
+    watch
+    exited:
+    complete
+    after
+    8s, run
+    3,
+    respawne
+    d with
+    no
+    output.
+ 🤖 Job
+    serve
+    exited:
+    failed
+    after
+    0s, run
+    2, the
+    job
+    could
+    not be
+    respawne
+    d: no
+    namespac
+    es left
+    with no
+    output.
+ 🤖 Job lint
+    exited:
+    failed
+    after
+    0s,
+    exit(127
+    ), run
+    4, not
+    respawne
+    d after
+    3 runs
+    in a row
+    each
+    ended
+    within
+    2s.
+    bash:
+    golangci
+    -lint:
+    command
+    not
+    found
+
+
+
+ wait for
+ the next
+ rebuild,
+ stop it,
+ then bring
+ lint back
+
+
+await wa… 3L
+stop wat… 1L
+Bringing li…
+
+The rebuild
+passed, the
+watcher is
+stopped, and
+lint is
+respawning
+again.
+=== wide ===
+
+ rebuild whenever the source changes, and keep the server up
+
+
+Rebuilding whenever the source changes start watch respawning on exit $ just watch 1L
+Keeping the server up start serve respawning on exit $ python3 -m http.server 8080 1L
+
+Both are running and will come back whenever they exit.
+
+
+ 🤖 Job watch exited: complete after 8s, run 1, respawned.
+    go build ./...
+    built in 3s
+
+ 🤖 Job watch exited: failed after 8s, exit(1), run 2, respawned.
+    go build ./...
+    cmd/oh/draw.go:41:9: undefined: getWidth
+
+ 🤖 Job watch exited: complete after 8s, run 3, respawned with no output.
+ 🤖 Job serve exited: failed after 0s, run 2, the job could not be respawned: no namespaces left
+    with no output.
+ 🤖 Job lint exited: failed after 0s, exit(127), run 4, not respawned after 3 runs in a row each
+    ended within 2s.
+    bash: golangci-lint: command not found
+
+
+
+ wait for the next rebuild, stop it, then bring lint back
+
+
+await watch 3L (Rebuilding whenever the source changes)
+stop watch 1L (Rebuilding whenever the source changes)
+Bringing lint back restart lint respawning on exit 1L
+
+The rebuild passed, the watcher is stopped, and lint is respawning again.

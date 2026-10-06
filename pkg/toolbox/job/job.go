@@ -55,6 +55,7 @@ type Args struct {
 	WaitSeconds int      `json:"wait_seconds,omitempty"`
 	Command     string   `json:"command"`
 	Intent      string   `json:"intent,omitempty"`
+	Respawn     bool     `json:"respawn,omitempty"`
 }
 
 func New(
@@ -97,6 +98,11 @@ func schema(extra ...tool.Parameter) tool.Schema {
 			tool.Integer("wait_seconds", fmt.Sprintf("how many seconds to wait at most — max %s (default)", util.CompactDuration(waitLimit))).Optional(),
 			tool.String("command", "the command line (for action 'start'); if omitted, re-runs previous job by name").Optional(),
 			tool.String("intent", "for action 'start', "+bash.IntentDescription).Optional(),
+			tool.Boolean("respawn", fmt.Sprintf(
+				"for action 'start', start the command again each time it exits, still notifying you; stop the job to end it. Respawning gives up after %d runs in a row each end within %s",
+				jobs.QuickRunsTolerated,
+				util.CompactDuration(jobs.QuickRunLimit),
+			)).Optional(),
 		},
 	)
 }
@@ -146,12 +152,17 @@ func describeAction(args Args) tool.CallRendering {
 			subject += ":" + strconv.Itoa(args.Port)
 			emphasis = tool.Emphasis{Kind: tool.EmphasisLead, Value: args.Name}
 		}
+		qualifier := ""
+		if args.Respawn {
+			qualifier = "respawning on exit"
+		}
 		if strings.TrimSpace(args.Command) == "" {
-			return tool.CallRendering{Kind: "job_restart", Subject: subject, Emphasis: emphasis}
+			return tool.CallRendering{Kind: "job_restart", Subject: subject, Qualifier: qualifier, Emphasis: emphasis}
 		}
 		return tool.CallRendering{
 			Kind:         "job_start",
 			Subject:      subject,
+			Qualifier:    qualifier,
 			Emphasis:     emphasis,
 			Continuation: []tool.CallRendering{bash.DescribeCommand(args.Command)},
 		}
@@ -191,6 +202,10 @@ func validate(args Args) error {
 
 	if args.Action == actionStart && strings.TrimSpace(args.Intent) == "" {
 		return errors.New(`intent is required to start a job`)
+	}
+
+	if args.Action != actionStart && args.Respawn {
+		return errors.New(`respawn requires action="start"`)
 	}
 
 	if args.Action != actionStart && args.Port != 0 {
@@ -343,7 +358,12 @@ func act(
 			return "", err
 		}
 
-		snapshot, err := manager.Start(ctx, args.Name, root.Name(), command, policy)
+		start := manager.Start
+		if args.Respawn {
+			start = manager.StartRespawning
+		}
+
+		snapshot, err := start(ctx, args.Name, root.Name(), command, policy)
 		if err != nil {
 			return "", err
 		}
@@ -442,9 +462,9 @@ func waited(
 	completedNames, err := waitForJobs(waitContext, manager, names, waitFor)
 	if err == nil {
 		if waitFor == waitForAll {
-			return getReports(manager, names)
+			return getReports(names, manager.Ended)
 		}
-		return getReports(manager, completedNames)
+		return getReports(completedNames, manager.Ended)
 	}
 	if ctx.Err() != nil {
 		return "", stop.Error(ctx, "")
@@ -474,10 +494,10 @@ func waitForJobs(ctx context.Context, manager *jobs.Manager, names []string, wai
 	return completedNames, nil
 }
 
-func getReports(manager *jobs.Manager, names []string) (string, error) {
+func getReports(names []string, read func(string) (string, jobs.Snapshot, error)) (string, error) {
 	reports := make([]string, 0, len(names))
 	for _, name := range names {
-		output, snapshot, err := manager.Output(name)
+		output, snapshot, err := read(name)
 		if err != nil {
 			return "", err
 		}
@@ -488,7 +508,7 @@ func getReports(manager *jobs.Manager, names []string) (string, error) {
 }
 
 func getTimeoutReport(manager *jobs.Manager, names []string, waitFor string, limit time.Duration) (string, error) {
-	reports, err := getReports(manager, names)
+	reports, err := getReports(names, manager.Output)
 	if err != nil {
 		return "", err
 	}

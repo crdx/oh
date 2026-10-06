@@ -1,0 +1,30 @@
+
+ rebuild every time the source changes
+
+
+Rebuilding whenever the source changes start watch respawning on exit $ just watch 1L
+
+
+ 🤖 Job watch exited: failed after 12s, exit(2), run 1, respawned.
+    go build ./...
+    cmd/oh/draw.go:41:9: undefined: getWidth
+    exit status 1
+
+
+The first rebuild failed on getWidth; the watcher is already running again.
+
+
+ start it again
+
+
+Watching the source again start watch respawning on exit $ just watch 1L
+
+
+ 🤖 Job watch exited: failed after 12s, exit(2), run 4, not respawned after 3 runs in a row each
+    ended within 2s.
+    go build ./...
+    cmd/oh/draw.go:41:9: undefined: getWidth
+    exit status 1
+
+
+It kept failing at once, so it gave up respawning; getWidth needs fixing first.

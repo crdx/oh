@@ -36,6 +36,26 @@ func TestAWaitReportsTheJobAndItsOutputOnceItHasEnded(t *testing.T) {
 	})
 }
 
+func TestAWaitOnARespawningJobReportsTheRunThatEnded(t *testing.T) {
+	synctest.Test(t, func(t *testing.T) {
+		manager := jobs.New(endingRunner{after: 50 * time.Millisecond, output: "changed: a.go\n"})
+		defer func() { _ = manager.Close() }()
+
+		if _, err := manager.StartRespawning(t.Context(), "watch", t.TempDir(), "inotifywait .", sandbox.Policy{}); err != nil {
+			t.Fatal(err)
+		}
+
+		report, err := waited(t.Context(), manager, []string{"watch"}, waitForAny, time.Minute)
+		if err != nil {
+			t.Fatalf("the wait failed: %v", err)
+		}
+
+		if got, want := report, "watch: complete after 0s, run 1, respawned\nchanged: a.go"; got != want {
+			t.Errorf("got %q, want %q", got, want)
+		}
+	})
+}
+
 func TestAWaitOnAJobThatKeepsRunningGivesUpAndSaysSo(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		manager := jobs.New(endingRunner{after: time.Hour, output: "serving\n"})

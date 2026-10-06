@@ -17046,6 +17046,7 @@ type sessionGoldenTurn struct {
 	ToggleDuringModeTurn         string                  `toml:"toggle-during-mode-turn"`
 	CancelAfterToolToggle        bool                    `toml:"cancel-after-tool-toggle"`
 	EndJobAfterToolRequest       string                  `toml:"end-job-after-tool-request"`
+	EndJobRespawn                jobs.Respawn            `toml:"end-job-respawn"`
 	EndJobAfterReasoningEvent    string                  `toml:"end-job-after-reasoning-event"`
 }
 
@@ -19183,7 +19184,10 @@ func takeFirstSessionGoldenToolRequest(
 	}
 
 	if turn.EndJobAfterToolRequest != "" {
-		testHarness.jobEnded(endedSessionGoldenJob(turn.EndJobAfterToolRequest))
+		testHarness.jobEnded(respawnedSessionGoldenJob(
+			endedSessionGoldenJob(turn.EndJobAfterToolRequest),
+			turn.EndJobRespawn,
+		))
 	}
 
 	if turn.DoubleReturnAfterToolRequest {
@@ -19217,6 +19221,19 @@ func endedSessionGoldenJob(name string) jobs.Conclusion {
 		},
 		Output: "go build ./...\ncmd/oh/draw.go:41:9: undefined: getWidth\nexit status 1",
 	}
+}
+
+func respawnedSessionGoldenJob(conclusion jobs.Conclusion, respawn jobs.Respawn) jobs.Conclusion {
+	switch respawn {
+	case jobs.RespawnDone:
+		conclusion.Snapshot.Run = 1
+	case jobs.RespawnAbandoned:
+		conclusion.Snapshot.Run = jobs.QuickRunsTolerated + 1
+	case "", jobs.RespawnOnExit:
+	}
+	conclusion.Snapshot.Respawn = respawn
+
+	return conclusion
 }
 
 func takeFirstSessionGoldenMessageDelta(t *testing.T, testHarness *App, turn sessionGoldenTurn) {

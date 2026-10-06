@@ -20,6 +20,16 @@ const (
 	normalGracePeriod     = 5 * time.Second
 	shutdownGracePeriod   = time.Second
 	reportedBytePrecision = 3
+	QuickRunLimit         = 2 * time.Second
+	QuickRunsTolerated    = 3
+)
+
+type Respawn string
+
+const (
+	RespawnOnExit    Respawn = "on_exit"
+	RespawnDone      Respawn = "respawned"
+	RespawnAbandoned Respawn = "abandoned"
 )
 
 type State string
@@ -61,6 +71,8 @@ type Snapshot struct {
 	EndedAt      time.Time `json:"ended_at,omitzero"`
 	ExitCode     int       `json:"code,omitempty"`
 	Failure      string    `json:"failure,omitempty"`
+	Run          int       `json:"run,omitempty"`
+	Respawn      Respawn   `json:"respawn,omitempty"`
 	DroppedBytes int       `json:"-"`
 }
 
@@ -83,6 +95,23 @@ func (self Snapshot) Outcome() string {
 
 	if self.ExitCode != 0 {
 		parts = append(parts, fmt.Sprintf("exit(%d)", self.ExitCode))
+	}
+
+	if self.Run > 0 {
+		parts = append(parts, fmt.Sprintf("run %d", self.Run))
+	}
+
+	switch self.Respawn {
+	case RespawnOnExit:
+		parts = append(parts, "respawns on exit")
+	case RespawnDone:
+		parts = append(parts, "respawned")
+	case RespawnAbandoned:
+		parts = append(parts, fmt.Sprintf(
+			"not respawned after %d runs in a row each ended within %s",
+			QuickRunsTolerated,
+			util.CompactDuration(QuickRunLimit),
+		))
 	}
 
 	if self.Failure != "" {
@@ -111,6 +140,11 @@ type job struct {
 	runningCommand sandbox.Command
 	over           chan struct{}
 	waiters        int
+	run            int
+	respawn        Respawn
+	quickRuns      int
+	launch         func(sandbox.Output) (sandbox.Command, error)
+	previous       *Conclusion
 }
 
 type Manager struct {
@@ -159,11 +193,21 @@ func (self *Manager) Restore(rememberedJobs []Snapshot) {
 			endedAt:   snapshot.EndedAt,
 			code:      snapshot.ExitCode,
 			failure:   snapshot.Failure,
+			run:       snapshot.Run,
+			respawn:   restoredRespawn(snapshot.Respawn),
 			output:    &spool{},
 			over:      closedChannel(),
 		}
 		self.order = append(self.order, snapshot.Name)
 	}
+}
+
+func restoredRespawn(respawn Respawn) Respawn {
+	if respawn == RespawnOnExit {
+		return ""
+	}
+
+	return respawn
 }
 
 func closedChannel() chan struct{} {
@@ -192,28 +236,17 @@ func (self *Manager) Start(
 	command string,
 	policy sandbox.Policy,
 ) (Snapshot, error) {
-	openingJob, err := self.claim(name, command, policy)
-	if err != nil {
-		return Snapshot{}, err
-	}
+	return self.start(ctx, name, directory, command, policy, "")
+}
 
-	runningCommand, err := self.runner.Start(context.WithoutCancel(ctx), directory, command, policy, openingJob.output)
-	if err != nil {
-		self.conclude(openingJob, StateFailed, 0, err.Error())
-		close(openingJob.over)
-
-		return self.snapshot(openingJob), fmt.Errorf("the job could not be started: %w", err)
-	}
-
-	if !self.settleStarted(openingJob, runningCommand) {
-		runningCommand.Stop()
-	}
-
-	self.watchers.Add(1)
-
-	go self.watch(openingJob)
-
-	return self.snapshot(openingJob), nil
+func (self *Manager) StartRespawning(
+	ctx context.Context,
+	name string,
+	directory string,
+	command string,
+	policy sandbox.Policy,
+) (Snapshot, error) {
+	return self.start(ctx, name, directory, command, policy, RespawnOnExit)
 }
 
 func (self *Manager) Stop(name string) (Snapshot, error) {
@@ -244,14 +277,30 @@ func (self *Manager) Status(name string) (Snapshot, error) {
 
 func (self *Manager) Output(name string) (string, Snapshot, error) {
 	self.mutex.Lock()
-	found, isKnown := self.jobs[name]
-	self.mutex.Unlock()
+	defer self.mutex.Unlock()
 
+	found, isKnown := self.jobs[name]
 	if !isKnown {
 		return "", Snapshot{}, ErrNotFound
 	}
 
-	return found.output.String(), self.snapshot(found), nil
+	return found.output.String(), self.describe(found), nil
+}
+
+func (self *Manager) Ended(name string) (string, Snapshot, error) {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	found, isKnown := self.jobs[name]
+	if !isKnown {
+		return "", Snapshot{}, ErrNotFound
+	}
+
+	if isLive(found.state) && found.previous != nil {
+		return found.previous.Output, found.previous.Snapshot, nil
+	}
+
+	return found.output.String(), self.describe(found), nil
 }
 
 func (self *Manager) Wait(ctx context.Context, names []string) (string, error) {
@@ -290,7 +339,10 @@ func (self *Manager) Wait(ctx context.Context, names []string) (string, error) {
 	cases = append(cases, reflect.SelectCase{Dir: reflect.SelectRecv, Chan: reflect.ValueOf(ctx.Done())})
 	self.mutex.Unlock()
 
-	reflect.Select(cases)
+	endedIndex, _, _ := reflect.Select(cases)
+	if endedIndex < len(watchedJobs) {
+		return watchedJobs[endedIndex].name, nil
+	}
 
 	self.mutex.Lock()
 	endedName, isEnded := getFirstEndedName(watchedJobs)
@@ -405,6 +457,51 @@ func (self *Manager) Close() error {
 	return nil
 }
 
+func (self *Manager) start(
+	ctx context.Context,
+	name string,
+	directory string,
+	command string,
+	policy sandbox.Policy,
+	respawn Respawn,
+) (Snapshot, error) {
+	launchContext := context.WithoutCancel(ctx)
+	launch := func(output sandbox.Output) (sandbox.Command, error) {
+		return self.runner.Start(launchContext, directory, command, policy, output)
+	}
+
+	openingJob, err := self.claim(name, command, policy)
+	if err != nil {
+		return Snapshot{}, err
+	}
+
+	self.mutex.Lock()
+	openingJob.launch = launch
+	if respawn != "" {
+		openingJob.respawn = respawn
+		openingJob.run = 1
+	}
+	self.mutex.Unlock()
+
+	runningCommand, err := launch(openingJob.output)
+	if err != nil {
+		self.conclude(openingJob, StateFailed, err.Error())
+		close(openingJob.over)
+
+		return self.snapshot(openingJob), fmt.Errorf("the job could not be started: %w", err)
+	}
+
+	if !self.settleStarted(openingJob, runningCommand) {
+		runningCommand.Stop()
+	}
+
+	self.watchers.Add(1)
+
+	go self.watch(openingJob)
+
+	return self.snapshot(openingJob), nil
+}
+
 func (self *Manager) releaseWaiters(watchedJobs []*job) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
@@ -489,38 +586,131 @@ func (self *Manager) claim(name string, command string, policy sandbox.Policy) (
 
 func (self *Manager) watch(endingJob *job) {
 	defer self.watchers.Done()
-	defer close(endingJob.over)
 
-	result, err := endingJob.runningCommand.Wait()
-	failure := resultFailure(result, endingJob.policy, err)
+	for {
+		self.mutex.Lock()
+		runningCommand := endingJob.runningCommand
+		self.mutex.Unlock()
 
-	switch {
-	case err != nil || result.ExitCode != 0:
-		self.conclude(endingJob, self.endingState(endingJob, StateFailed), result.ExitCode, failure)
-	default:
-		self.conclude(endingJob, self.endingState(endingJob, StateComplete), 0, "")
+		result, err := runningCommand.Wait()
+		state, code, failure := StateComplete, 0, ""
+		if err != nil || result.ExitCode != 0 {
+			state, code, failure = StateFailed, result.ExitCode, resultFailure(result, endingJob.policy, err)
+		}
+
+		if !self.settle(endingJob, state, code, failure) {
+			return
+		}
+
+		if !self.relaunch(endingJob) {
+			return
+		}
 	}
-
-	self.announceEnd(endingJob)
 }
 
-func (self *Manager) announceEnd(endedJob *job) {
+func (self *Manager) settle(endingJob *job, natural State, code int, failure string) bool {
 	self.mutex.Lock()
-	isAnnounced := endedJob.waiters == 0 &&
-		(endedJob.state == StateComplete || endedJob.state == StateFailed)
-	snapshot := self.describe(endedJob)
-	self.mutex.Unlock()
 
-	if !isAnnounced {
-		return
+	over := endingJob.over
+	if endingJob.state == StateStopping || endingJob.state == StateStopped {
+		endingJob.state = StateStopped
+	} else {
+		endingJob.state = natural
+	}
+	endingJob.code = code
+	endingJob.failure = failure
+	endingJob.endedAt = time.Now()
+
+	isRespawned := self.isRespawnDue(endingJob)
+	if isRespawned {
+		endingJob.respawn = RespawnDone
 	}
 
-	conclusion := Conclusion{
+	conclusion := self.conclusion(endingJob)
+	isAnnounced := endingJob.waiters == 0 &&
+		(endingJob.state == StateComplete || endingJob.state == StateFailed)
+
+	if isRespawned {
+		endingJob.previous = &conclusion
+		endingJob.run++
+		endingJob.state = StateStarting
+		endingJob.startedAt = time.Now()
+		endingJob.endedAt = time.Time{}
+		endingJob.code = 0
+		endingJob.failure = ""
+		endingJob.output = &spool{}
+		endingJob.over = make(chan struct{})
+		endingJob.runningCommand = nil
+		endingJob.respawn = RespawnOnExit
+	}
+
+	self.mutex.Unlock()
+
+	close(over)
+
+	if isAnnounced {
+		self.announce(conclusion)
+	}
+
+	return isRespawned
+}
+
+func (self *Manager) isRespawnDue(endingJob *job) bool {
+	if endingJob.respawn != RespawnOnExit || self.isClosed {
+		return false
+	}
+	if endingJob.state != StateComplete && endingJob.state != StateFailed {
+		return false
+	}
+
+	if endingJob.endedAt.Sub(endingJob.startedAt) < QuickRunLimit {
+		endingJob.quickRuns++
+	} else {
+		endingJob.quickRuns = 0
+	}
+
+	if endingJob.quickRuns >= QuickRunsTolerated {
+		endingJob.respawn = RespawnAbandoned
+
+		return false
+	}
+
+	return true
+}
+
+func (self *Manager) relaunch(respawningJob *job) bool {
+	self.mutex.Lock()
+	output := respawningJob.output
+	self.mutex.Unlock()
+
+	runningCommand, err := respawningJob.launch(output)
+	if err != nil {
+		self.mutex.Lock()
+		respawningJob.respawn = ""
+		self.mutex.Unlock()
+		self.settle(respawningJob, StateFailed, 0, "the job could not be respawned: "+err.Error())
+
+		return false
+	}
+
+	if !self.settleStarted(respawningJob, runningCommand) {
+		runningCommand.Stop()
+	}
+
+	return true
+}
+
+func (self *Manager) conclusion(endedJob *job) Conclusion {
+	snapshot := self.describe(endedJob)
+
+	return Conclusion{
 		Snapshot:     snapshot,
 		Output:       endedJob.output.String(),
 		DroppedBytes: snapshot.DroppedBytes,
 	}
+}
 
+func (self *Manager) announce(conclusion Conclusion) {
 	select {
 	case self.conclusions <- conclusion:
 	default:
@@ -539,23 +729,12 @@ func resultFailure(result sandbox.Result, policy sandbox.Policy, waitFailure err
 	return strings.Join(parts, "\n")
 }
 
-func (self *Manager) endingState(endingJob *job, natural State) State {
-	self.mutex.Lock()
-	defer self.mutex.Unlock()
-
-	if endingJob.state == StateStopping {
-		return StateStopped
-	}
-
-	return natural
-}
-
-func (self *Manager) conclude(endingJob *job, state State, code int, failure string) {
+func (self *Manager) conclude(endingJob *job, state State, failure string) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 
 	endingJob.state = state
-	endingJob.code = code
+	endingJob.code = 0
 	endingJob.failure = failure
 	endingJob.endedAt = time.Now()
 }
@@ -563,6 +742,10 @@ func (self *Manager) conclude(endingJob *job, state State, code int, failure str
 func (self *Manager) beginEnd(endingJob *job) bool {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
+
+	if endingJob.respawn == RespawnOnExit {
+		endingJob.respawn = ""
+	}
 
 	if !isLive(endingJob.state) {
 		return false
@@ -580,10 +763,11 @@ func (self *Manager) end(endingJob *job, patience time.Duration) {
 
 	self.mutex.Lock()
 	runningCommand := endingJob.runningCommand
+	over := endingJob.over
 	self.mutex.Unlock()
 
 	if runningCommand == nil {
-		self.conclude(endingJob, StateStopped, 0, "")
+		self.conclude(endingJob, StateStopped, "")
 
 		return
 	}
@@ -591,13 +775,13 @@ func (self *Manager) end(endingJob *job, patience time.Duration) {
 	_ = runningCommand.Signal(syscall.SIGTERM)
 
 	select {
-	case <-endingJob.over:
+	case <-over:
 		return
 	case <-time.After(patience):
 	}
 
 	runningCommand.Stop()
-	<-endingJob.over
+	<-over
 }
 
 func (self *Manager) snapshot(subject *job) Snapshot {
@@ -616,6 +800,8 @@ func (self *Manager) describe(subject *job) Snapshot {
 		EndedAt:      subject.endedAt,
 		ExitCode:     subject.code,
 		Failure:      subject.failure,
+		Run:          subject.run,
+		Respawn:      subject.respawn,
 		DroppedBytes: subject.output.DroppedBytes(),
 	}
 }

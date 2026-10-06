@@ -7,6 +7,7 @@
 - Maintain source session config on `/fork`
 - Offer the job tool under `--yolo`
 - Don't enable irrelevant caps under `--yolo`
+- Respawn jobs (no, not that one)
 
 ## [0.12.1] - 2026-10-03
 

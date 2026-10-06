@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"testing/synctest"
 	"time"
 
 	"crdx.org/oh/internal/app/caps"
@@ -491,103 +492,158 @@ func TestGoldenSnippetExpansionMatchesGolden(t *testing.T) {
 }
 
 func TestGoldenJobListingMatchesGolden(t *testing.T) {
-	startedAt := time.Date(2026, time.January, 2, 3, 4, 5, 0, time.UTC)
-	finishedJob := func(name string, command string) jobs.Snapshot {
-		return jobs.Snapshot{
-			Name:      name,
-			Command:   command,
-			State:     jobs.StateComplete,
-			StartedAt: startedAt,
-			EndedAt:   startedAt.Add(3 * time.Second),
+	synctest.Test(t, func(t *testing.T) {
+		startedAt := time.Date(2026, time.January, 2, 3, 4, 5, 0, time.UTC)
+		finishedJob := func(name string, command string) jobs.Snapshot {
+			return jobs.Snapshot{
+				Name:      name,
+				Command:   command,
+				State:     jobs.StateComplete,
+				StartedAt: startedAt,
+				EndedAt:   startedAt.Add(3 * time.Second),
+			}
 		}
-	}
-	failedJob := func(name string, command string) jobs.Snapshot {
-		snapshot := finishedJob(name, command)
-		snapshot.State = jobs.StateFailed
-		snapshot.ExitCode = 1
-		return snapshot
-	}
-	stoppedJob := func(name string, command string) jobs.Snapshot {
-		snapshot := finishedJob(name, command)
-		snapshot.State = jobs.StateStopped
-		snapshot.ExitCode = -1
-		snapshot.Failure = "the command was stopped after 22m 46s\nnote: the command was killed by SIGKILL."
-		return snapshot
-	}
-
-	var output strings.Builder
-	for _, test := range []struct {
-		label   string
-		listing []jobs.Snapshot
-	}{
-		{label: "no jobs"},
-		{label: "ordinary and multiline commands", listing: []jobs.Snapshot{
-			finishedJob("build", "GOCACHE=/tmp/cache just build && echo done"),
-			failedJob("docs", "python3 -m http.server 8080\n  --bind localhost"),
-		}},
-		{label: "heredoc command", listing: []jobs.Snapshot{
-			finishedJob("write", "cat <<'EOF' > notes.txt\nhello\nEOF"),
-		}},
-		{label: "malformed stored command", listing: []jobs.Snapshot{
-			finishedJob("broken", "echo 'unterminated\necho later"),
-		}},
-		{label: "multiline failure", listing: []jobs.Snapshot{
-			stoppedJob("witness", "python3 /tmp/model-witness.py"),
-		}},
-	} {
-		managedJobs, _ := fixtureJobs()
-		managedJobs.List = func() []jobs.Snapshot { return test.listing }
-
-		context, err := invokeJobCommand(t, managedJobs, "/jobs")
-		if err != nil {
-			t.Fatal(err)
+		failedJob := func(name string, command string) jobs.Snapshot {
+			snapshot := finishedJob(name, command)
+			snapshot.State = jobs.StateFailed
+			snapshot.ExitCode = 1
+			return snapshot
+		}
+		stoppedJob := func(name string, command string) jobs.Snapshot {
+			snapshot := finishedJob(name, command)
+			snapshot.State = jobs.StateStopped
+			snapshot.ExitCode = -1
+			snapshot.Failure = "the command was stopped after 22m 46s\nnote: the command was killed by SIGKILL."
+			return snapshot
 		}
 
-		for _, columns := range []int{120, 60, 30} {
-			var shown feedback.State
-			shown.Show(feedback.Command, feedback.Message{
-				Text:      context.notice,
-				Status:    agent.InfoStatus,
-				IsListing: context.isListing,
-			}, startedAt)
-			rows := shown.Render(columns, startedAt)
-			wantedRows := 1
-			if len(test.listing) > 0 {
-				wantedRows += len(test.listing)
+		respawningJob := func(name string) jobs.Snapshot {
+			return jobs.Snapshot{
+				Name:      name,
+				Command:   "just " + name,
+				State:     jobs.StateRunning,
+				StartedAt: time.Now(),
+				Run:       3,
+				Respawn:   jobs.RespawnOnExit,
 			}
-			if len(rows) != wantedRows {
-				t.Errorf("%s at %d columns drew %d rows, want %d", test.label, columns, len(rows), wantedRows)
+		}
+		stoppedRespawningJob := func(name string) jobs.Snapshot {
+			snapshot := finishedJob(name, "just "+name)
+			snapshot.State = jobs.StateStopped
+			snapshot.Run = 2
+			return snapshot
+		}
+		abandonedJob := func(name string) jobs.Snapshot {
+			snapshot := failedJob(name, "just "+name)
+			snapshot.ExitCode = 127
+			snapshot.Run = jobs.QuickRunsTolerated + 1
+			snapshot.Respawn = jobs.RespawnAbandoned
+			return snapshot
+		}
+		unrespawnableJob := func(name string) jobs.Snapshot {
+			snapshot := failedJob(name, "just "+name)
+			snapshot.ExitCode = 0
+			snapshot.Run = 2
+			snapshot.Failure = "the job could not be respawned: no namespaces left"
+			return snapshot
+		}
+		endedRespawningJob := func(name string) jobs.Snapshot {
+			snapshot := finishedJob(name, "just "+name)
+			snapshot.State = jobs.StateEnded
+			snapshot.Run = 4
+			return snapshot
+		}
+
+		var output strings.Builder
+		for _, test := range []struct {
+			label   string
+			listing []jobs.Snapshot
+		}{
+			{label: "no jobs"},
+			{label: "ordinary and multiline commands", listing: []jobs.Snapshot{
+				finishedJob("build", "GOCACHE=/tmp/cache just build && echo done"),
+				failedJob("docs", "python3 -m http.server 8080\n  --bind localhost"),
+			}},
+			{label: "heredoc command", listing: []jobs.Snapshot{
+				finishedJob("write", "cat <<'EOF' > notes.txt\nhello\nEOF"),
+			}},
+			{label: "malformed stored command", listing: []jobs.Snapshot{
+				finishedJob("broken", "echo 'unterminated\necho later"),
+			}},
+			{label: "multiline failure", listing: []jobs.Snapshot{
+				stoppedJob("witness", "python3 /tmp/model-witness.py"),
+			}},
+			{label: "respawning jobs", listing: []jobs.Snapshot{
+				respawningJob("watch"),
+				stoppedRespawningJob("serve"),
+				abandonedJob("lint"),
+				unrespawnableJob("index"),
+				endedRespawningJob("check"),
+			}},
+		} {
+			managedJobs, _ := fixtureJobs()
+			managedJobs.List = func() []jobs.Snapshot { return test.listing }
+
+			context, err := invokeJobCommand(t, managedJobs, "/jobs")
+			if err != nil {
+				t.Fatal(err)
 			}
-			for rowNumber, row := range rows {
-				rowColumns := width.Of(row)
-				if rowColumns > columns {
-					t.Errorf("%s row %d uses %d columns, want at most %d", test.label, rowNumber, rowColumns, columns)
+
+			for _, columns := range []int{120, 60, 30} {
+				var shown feedback.State
+				shown.Show(feedback.Command, feedback.Message{
+					Text:      context.notice,
+					Status:    agent.InfoStatus,
+					IsListing: context.isListing,
+				}, startedAt)
+				rows := shown.Render(columns, startedAt)
+				wantedRows := 1
+				if len(test.listing) > 0 {
+					wantedRows += len(test.listing)
 				}
+				if len(rows) != wantedRows {
+					t.Errorf("%s at %d columns drew %d rows, want %d", test.label, columns, len(rows), wantedRows)
+				}
+				for rowNumber, row := range rows {
+					rowColumns := width.Of(row)
+					if rowColumns > columns {
+						t.Errorf("%s row %d uses %d columns, want at most %d", test.label, rowNumber, rowColumns, columns)
+					}
+				}
+				fmt.Fprintf(
+					&output,
+					"=== %s (%d columns) ===\n%s\n",
+					test.label,
+					columns,
+					strings.Join(rows, "\n"),
+				)
 			}
-			fmt.Fprintf(
-				&output,
-				"=== %s (%d columns) ===\n%s\n",
-				test.label,
-				columns,
-				strings.Join(rows, "\n"),
-			)
 		}
-	}
 
-	assertGolden(t, "job-listing.txt", output.String())
+		assertGolden(t, "job-listing.txt", output.String())
+	})
 }
 
 func TestGoldenJobOutputMatchesGolden(t *testing.T) {
 	var output strings.Builder
 	for _, test := range []struct {
-		label  string
-		output string
+		label    string
+		output   string
+		snapshot jobs.Snapshot
 	}{
 		{label: "with output", output: "built successfully\n"},
 		{label: "without output", output: " \n\t"},
+		{label: "from a respawned run", output: "built in 3s\n", snapshot: jobs.Snapshot{
+			Name:  "watch",
+			State: jobs.StateStopped,
+			Run:   4,
+		}},
 	} {
 		managedJobs, _ := fixtureJobs()
 		managedJobs.Output = func(string) (string, jobs.Snapshot, error) {
+			if test.snapshot.Name != "" {
+				return test.output, test.snapshot, nil
+			}
 			return test.output, jobs.Snapshot{Name: "build", State: jobs.StateComplete}, nil
 		}
 		context, err := invokeJobCommand(t, managedJobs, "/job output build")
