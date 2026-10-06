@@ -26,7 +26,7 @@ const (
 	clientID     = "app_EMoamEEZ73f0CkXaXp7hrann"
 	callbackHost = "127.0.0.1:1455"
 	redirectURL  = "http://localhost:1455/auth/callback"
-	scope        = "openid profile email offline_access"
+	Scope        = "openid profile email offline_access api.connectors.read api.connectors.invoke"
 )
 
 const chill = 5 * time.Minute
@@ -89,7 +89,7 @@ func authoriseAddress(verifier string, state string) string {
 		"response_type":              {"code"},
 		"client_id":                  {clientID},
 		"redirect_uri":               {redirectURL},
-		"scope":                      {scope},
+		"scope":                      {Scope},
 		"state":                      {state},
 		"code_challenge":             {base64.RawURLEncoding.EncodeToString(digest[:])},
 		"code_challenge_method":      {"S256"},
@@ -176,6 +176,8 @@ func exchange(ctx context.Context, code string, verifier string) (*Credentials, 
 		return nil, fmt.Errorf("exchange the code: %w", err)
 	}
 
+	credentials.Scope = Scope
+
 	return credentials, nil
 }
 
@@ -184,7 +186,6 @@ func refreshToken(requests *req.Client, refresh string) (*Credentials, error) {
 		"grant_type":    {"refresh_token"},
 		"client_id":     {clientID},
 		"refresh_token": {refresh},
-		"scope":         {scope},
 	})
 	if err != nil {
 		return nil, err

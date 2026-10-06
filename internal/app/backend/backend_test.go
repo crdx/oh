@@ -12,6 +12,7 @@ import (
 	"testing"
 	"time"
 
+	"crdx.org/oh/internal/auth"
 	"crdx.org/oh/internal/sim"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/provider/codex"
@@ -411,6 +412,36 @@ func TestOnlyASignedIntoProviderIsReadyForASession(t *testing.T) {
 	}
 }
 
+func TestOnlyAnOutdatedCodexLoginIsRefused(t *testing.T) {
+	t.Setenv("XDG_STATE_HOME", t.TempDir())
+
+	if err := RefuseOutdatedLogins(); err != nil {
+		t.Errorf("expected nobody being logged in to be left alone, got %v", err)
+	}
+
+	writeStoredCredentials(t)
+
+	if err := RefuseOutdatedLogins(); err != nil {
+		t.Errorf("expected a current login to be left alone, got %v", err)
+	}
+
+	err := auth.Update(auth.Path(), func(credentials *auth.Credentials) error {
+		credentials.Codex.Scope = ""
+		return nil
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if err := RefuseOutdatedLogins(); !errors.Is(err, codex.ErrOutdatedLogin) {
+		t.Errorf("expected a login predating the scopes to be refused, got %v", err)
+	}
+
+	if IsLoggedIn(codexProvider) {
+		t.Error("expected an outdated login not to count as signed in")
+	}
+}
+
 func TestAnOverrideEndpointMakesProvidersAvailableWithoutCredentials(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 	endpoints := EndpointSettings{OverrideURL: "http://somewhere"}
@@ -442,8 +473,9 @@ func writeStoredCredentials(t *testing.T) {
 	}
 
 	credentials := fmt.Sprintf(
-		`{"version":1,"codex":{"access":"stored","refresh":"refresh-me","account_id":"account","expires_at":%d},`+
+		`{"version":1,"codex":{"access":"stored","refresh":"refresh-me","account_id":"account","scope":%q,"expires_at":%d},`+
 			`"anthropic":{"access":"stored","refresh":"refresh-me","expires_at":%d}}`,
+		codex.Scope,
 		time.Now().Add(time.Hour).UnixMilli(),
 		time.Now().Add(time.Hour).UnixMilli(),
 	)

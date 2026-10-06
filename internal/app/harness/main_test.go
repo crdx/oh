@@ -18011,6 +18011,7 @@ func newSessionGoldenStoredCredentials() *auth.Credentials {
 			Refresh:   "old-codex-refresh",
 			ExpiresAt: time.Now().Add(-time.Minute).UnixMilli(),
 			AccountID: "old-codex-account",
+			Scope:     codex.Scope,
 		},
 		OpenCodeGo: &auth.OpenCodeGoCredentials{APIKey: "old-key"},
 	}
@@ -18029,6 +18030,7 @@ func newSessionGoldenRotatedCredentials() *auth.Credentials {
 			Refresh:   "rotated-codex-refresh",
 			ExpiresAt: time.Now().Add(time.Hour).UnixMilli(),
 			AccountID: "rotated-codex-account",
+			Scope:     codex.Scope,
 		},
 		OpenCodeGo: &auth.OpenCodeGoCredentials{APIKey: "rotated-key"},
 	}

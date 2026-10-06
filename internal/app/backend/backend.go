@@ -2,6 +2,7 @@ package backend
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"crdx.org/oh/internal/req"
@@ -78,6 +79,14 @@ func Connect(choice model.Choice, selection model.Selection, endpoints EndpointS
 	}
 
 	return connection, nil
+}
+
+func RefuseOutdatedLogins() error {
+	if _, err := codex.LoadStoredCredentials(); errors.Is(err, codex.ErrOutdatedLogin) {
+		return err
+	}
+
+	return nil
 }
 
 func IsLoggedIn(providerName string) bool {

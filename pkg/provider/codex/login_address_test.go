@@ -60,3 +60,15 @@ func TestALoginPresentsWhereToAuthoriseAndTakesTheCallback(t *testing.T) {
 }
 
 const presentedAccess = "header.eyJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiYWNjb3VudCJ9fQ.signature"
+
+func TestALoginAsksForTheScopesCodexAsksFor(t *testing.T) {
+	parsed, err := url.Parse(authoriseAddress("verifier", "state"))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	const wanted = "openid profile email offline_access api.connectors.read api.connectors.invoke"
+	if asked := parsed.Query().Get("scope"); asked != wanted {
+		t.Errorf("expected the login to ask for %q, and it asked for %q", wanted, asked)
+	}
+}

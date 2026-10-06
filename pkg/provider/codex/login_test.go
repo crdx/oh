@@ -69,6 +69,9 @@ func TestALoginExchangesTheRedirectedCodeAndNamesTheAccount(t *testing.T) {
 	if stored.Codex.Access != accessToken() || stored.Codex.AccountID != "account" || stored.Codex.Refresh != "kept" {
 		t.Errorf("stored %+v, want the fresh access naming its account beside the refresh token already held", *stored.Codex)
 	}
+	if stored.Codex.Scope != codex.Scope {
+		t.Errorf("stored the scope %q, want the login to record %q", stored.Codex.Scope, codex.Scope)
+	}
 }
 
 func TestALoginRefusesATokenNamingNoAccount(t *testing.T) {

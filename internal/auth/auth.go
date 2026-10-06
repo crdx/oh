@@ -32,6 +32,7 @@ type CodexCredentials struct {
 	Refresh   string `json:"refresh"`
 	ExpiresAt int64  `json:"expires_at"`
 	AccountID string `json:"account_id"`
+	Scope     string `json:"scope,omitempty"`
 }
 
 type AnthropicCredentials struct {

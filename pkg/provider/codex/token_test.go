@@ -2,9 +2,11 @@ package codex_test
 
 import (
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"os"
 	"path/filepath"
 	"slices"
@@ -30,7 +32,8 @@ func writeCredentials(t *testing.T, expiresIn time.Duration) string {
 	path := filepath.Join(t.TempDir(), "auth.json")
 
 	credentials := fmt.Sprintf(
-		`{"version":1,"codex":{"access":"old","refresh":"refresh-me","account_id":"account","expires_at":%d},"opencode-go":{"api_key":"open-code-key"}}`,
+		`{"version":1,"codex":{"access":"old","refresh":"refresh-me","account_id":"account","scope":%q,"expires_at":%d},"opencode-go":{"api_key":"open-code-key"}}`,
+		codex.Scope,
 		time.Now().Add(expiresIn).UnixMilli(),
 	)
 
@@ -44,6 +47,12 @@ func writeCredentials(t *testing.T, expiresIn time.Duration) string {
 func tokenEndpoint(t *testing.T, grants *[]string) {
 	t.Helper()
 
+	tokenEndpointRecording(t, grants, &[]url.Values{})
+}
+
+func tokenEndpointRecording(t *testing.T, grants *[]string, forms *[]url.Values) {
+	t.Helper()
+
 	server := httptest.NewServer(http.HandlerFunc(
 		func(writer http.ResponseWriter, request *http.Request) {
 			if err := request.ParseForm(); err != nil {
@@ -51,6 +60,7 @@ func tokenEndpoint(t *testing.T, grants *[]string) {
 			}
 
 			*grants = append(*grants, request.PostForm.Get("grant_type"))
+			*forms = append(*forms, request.PostForm)
 
 			writer.Header().Set("Content-Type", "application/json")
 			_, _ = fmt.Fprintf(writer, `{"access_token":%q,"refresh_token":"next","expires_in":3600}`, accessToken())
@@ -305,5 +315,60 @@ func TestAConversationShowsItsObserverTheRefreshBeforeTheRequest(t *testing.T) {
 	want := []string{"POST " + codex.TokenURL, "POST " + conversation.URL}
 	if !slices.Equal(addresses, want) {
 		t.Errorf("observed %q, want %q", addresses, want)
+	}
+}
+
+func TestARefreshKeepsTheScopesTheLoginWasGranted(t *testing.T) {
+	var grants []string
+	var forms []url.Values
+
+	tokenEndpointRecording(t, &grants, &forms)
+	path := writeCredentials(t, time.Minute)
+
+	if _, err := codex.StoredCredentialsAt(path).Token(); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if len(forms) != 1 {
+		t.Fatalf("expected one refresh, got %d", len(forms))
+	}
+
+	if forms[0].Has("scope") {
+		t.Errorf("expected the refresh to leave the granted scopes alone, and it asked for %q", forms[0].Get("scope"))
+	}
+
+	stored, err := auth.Load(path)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if stored.Codex.Scope != codex.Scope {
+		t.Errorf("expected the refreshed login to keep its scope, got %q", stored.Codex.Scope)
+	}
+}
+
+func TestALoginGrantedOtherScopesIsRefused(t *testing.T) {
+	var grants []string
+
+	tokenEndpoint(t, &grants)
+
+	for _, scope := range []string{"", "openid profile email offline_access"} {
+		path := filepath.Join(t.TempDir(), "auth.json")
+		credentials := fmt.Sprintf(
+			`{"version":1,"codex":{"access":"old","refresh":"refresh-me","account_id":"account","scope":%q,"expires_at":%d}}`,
+			scope,
+			time.Now().Add(time.Hour).UnixMilli(),
+		)
+		if err := os.WriteFile(path, []byte(credentials), 0o600); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if _, err := codex.StoredCredentialsAt(path).Token(); !errors.Is(err, codex.ErrOutdatedLogin) {
+			t.Errorf("expected a login granted %q to be refused as outdated, got %v", scope, err)
+		}
+	}
+
+	if len(grants) != 0 {
+		t.Errorf("expected an outdated login never to be refreshed, got %v", grants)
 	}
 }

@@ -10,6 +10,8 @@ import (
 
 type Credentials = auth.CodexCredentials
 
+var ErrOutdatedLogin = errors.New("the Codex login is invalid for this build: run oh --login codex")
+
 func stale(credentials *Credentials) bool {
 	return time.Now().Add(refreshWindow).UnixMilli() >= credentials.ExpiresAt
 }
@@ -21,6 +23,10 @@ func inherit(childCredentials *Credentials, parentCredentials *Credentials) {
 
 	if childCredentials.AccountID == "" {
 		childCredentials.AccountID = parentCredentials.AccountID
+	}
+
+	if childCredentials.Scope == "" {
+		childCredentials.Scope = parentCredentials.Scope
 	}
 }
 
@@ -39,6 +45,9 @@ func loadCredentials(path string) (*Credentials, error) {
 	}
 	if err != nil {
 		return nil, err
+	}
+	if storedCredentials.Codex.Scope != Scope {
+		return nil, ErrOutdatedLogin
 	}
 
 	return storedCredentials.Codex, nil

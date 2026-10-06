@@ -535,6 +535,12 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		return "", err
 	}
 
+	if endpointURL == "" && !inputArgs.IsDemoing {
+		if err := backend.RefuseOutdatedLogins(); err != nil {
+			return "", err
+		}
+	}
+
 	if inputArgs.Usage {
 		return "", usage.Show(ctx, os.Stdout, usage.Options{JSON: inputArgs.JSON})
 	}

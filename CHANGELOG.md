@@ -10,6 +10,7 @@
 - Respawn jobs (no, not that one)
 - Keep output notice beside job duration
 - Offer GPT-6 Sol through Codex
+- Adjust Codex login scopes, and invalidate
 
 ## [0.12.1] - 2026-10-03
 
