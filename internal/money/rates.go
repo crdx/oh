@@ -70,26 +70,31 @@ func Load(path string, code string) Currency {
 	return In(code, loadRateCache(path).Rates[code])
 }
 
-func Ensure(ctx context.Context, address string, path string, code string) error {
+func Ensure(ctx context.Context, address string, path string, code string) (Currency, error) {
 	if code == "" || code == DollarCode {
-		return nil
+		return Dollar(), nil
 	}
 
 	cache := loadRateCache(path)
+	currencyOnFile := In(code, cache.Rates[code])
 	if isRateCurrent(cache, code, time.Now()) {
-		return nil
+		return currencyOnFile, nil
 	}
 
 	rate, err := fetchRate(ctx, address, code)
 	if err != nil {
-		return err
+		return currencyOnFile, err
 	}
 
 	cache.Base = DollarCode
 	cache.FetchedAt = time.Now()
 	cache.Rates[code] = rate
 
-	return saveRateCache(path, cache)
+	if err := saveRateCache(path, cache); err != nil {
+		return currencyOnFile, err
+	}
+
+	return In(code, rate), nil
 }
 
 func isRateCurrent(cache rateCache, code string, now time.Time) bool {

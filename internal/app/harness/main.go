@@ -464,13 +464,12 @@ func ensureCurrency(ctx context.Context, output io.Writer, code string, isSimula
 		return money.Dollar()
 	}
 
-	path := location.GetExchangeRateCachePath()
-
-	if err := money.Ensure(ctx, "", path, code); err != nil {
+	currency, err := money.Ensure(ctx, "", location.GetExchangeRateCachePath(), code)
+	if err != nil {
 		_, _ = fmt.Fprintln(output, style.Change("exchange rate not refreshed: %s", err))
 	}
 
-	return money.Load(path, code)
+	return currency
 }
 
 func sandboxPathsForMode(paths shell.Paths, isYolo bool) shell.Paths {
