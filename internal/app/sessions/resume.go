@@ -199,7 +199,7 @@ func ModelSelection(resumedSession *store.Session) model.Selection {
 
 func ModelChoice(
 	resumedSession *store.Session,
-	modelCachePath string,
+	choices []model.Choice,
 	seenModelsPath string,
 	selection model.Selection,
 ) (model.Choice, error) {
@@ -207,7 +207,7 @@ func ModelChoice(
 		return *resumedSession.Meta.ModelChoice, nil
 	}
 
-	return model.Chosen(modelCachePath, seenModelsPath, selection.Provider, selection.Model)
+	return model.Chosen(choices, seenModelsPath, selection.Provider, selection.Model)
 }
 
 func OpeningCaps(

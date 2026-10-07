@@ -25,11 +25,11 @@ func seenModelsPath() string {
 }
 
 func chosenAnthropicModel(model string) (Choice, error) {
-	return Chosen(modelCachePath(), seenModelsPath(), anthropicProvider, model)
+	return Chosen(Choices(modelCachePath()), seenModelsPath(), anthropicProvider, model)
 }
 
 func parseModelSelection(writtenSelection string) (string, string, string, error) {
-	selection, err := ParseSelection(modelCachePath(), writtenSelection, Defaults{})
+	selection, err := ParseSelection(Choices(modelCachePath()), writtenSelection, Defaults{})
 
 	return selection.Provider, selection.Model, selection.Effort, err
 }
@@ -41,9 +41,10 @@ func updateModelsWithoutProviderListings(output io.Writer, endpoint string, path
 }
 
 func ensureModelsWithoutProviderListings(output io.Writer, endpoint string, path string) error {
-	return Ensure(output, endpoint, path, seenModelsPath(), func(context.Context, string) ([]agent.Model, error) {
+	_, err := Ensure(output, endpoint, path, seenModelsPath(), func(context.Context, string) ([]agent.Model, error) {
 		return nil, nil
 	}, isLoggedInEverywhere)
+	return err
 }
 
 func isLoggedInEverywhere(string) bool {

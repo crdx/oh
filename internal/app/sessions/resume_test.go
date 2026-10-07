@@ -47,7 +47,7 @@ func TestAResumedSessionTakesTheModelItHoldsWithoutAskingTheModelList(t *testing
 	absentCachePath := filepath.Join(t.TempDir(), "models.json")
 	absentSeenModelsPath := filepath.Join(t.TempDir(), "seen_models.json")
 
-	got, err := ModelChoice(resumedSession, absentCachePath, absentSeenModelsPath, ModelSelection(resumedSession))
+	got, err := ModelChoice(resumedSession, model.Choices(absentCachePath), absentSeenModelsPath, ModelSelection(resumedSession))
 	if err != nil || got.MaxOutputTokens != heldChoice.MaxOutputTokens {
 		t.Errorf("expected the held model, got %+v and %v", got, err)
 	}
@@ -67,7 +67,7 @@ func TestASessionHoldingNoModelResumesOnAModelOnlySeen(t *testing.T) {
 		Effort:   "high",
 	}}
 
-	got, err := ModelChoice(resumedSession, absentCachePath, seenModelsPath, ModelSelection(resumedSession))
+	got, err := ModelChoice(resumedSession, model.Choices(absentCachePath), seenModelsPath, ModelSelection(resumedSession))
 	if err != nil || got.MaxOutputTokens != 128_000 {
 		t.Errorf("expected the model that was seen, got %+v and %v", got, err)
 	}
@@ -82,7 +82,7 @@ func TestASessionHoldingNoModelAsksTheModelList(t *testing.T) {
 		"a new session":             nil,
 		"a session holding nothing": {Meta: store.Meta{Provider: selection.Provider, Model: selection.Model}},
 	} {
-		if _, err := ModelChoice(resumedSession, absentCachePath, absentSeenModelsPath, selection); err == nil || !strings.Contains(err.Error(), "-u") {
+		if _, err := ModelChoice(resumedSession, model.Choices(absentCachePath), absentSeenModelsPath, selection); err == nil || !strings.Contains(err.Error(), "-u") {
 			t.Errorf("%s: expected the model list to be asked and to know nothing, got %v", name, err)
 		}
 	}

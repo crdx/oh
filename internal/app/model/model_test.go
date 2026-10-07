@@ -10,6 +10,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"reflect"
 	"slices"
 	"strings"
 	"testing"
@@ -1103,7 +1104,7 @@ func TestLoggingInToAProviderRefreshesAFreshCache(t *testing.T) {
 		t.Fatal("expected a provider nobody logged in to to record no models")
 	}
 
-	if err := Ensure(io.Discard, endpoint, modelCachePath(), seenModelsPath(), lister, isLoggedIn); err != nil {
+	if _, err := Ensure(io.Discard, endpoint, modelCachePath(), seenModelsPath(), lister, isLoggedIn); err != nil {
 		t.Fatal(err)
 	}
 	if listings != 1 {
@@ -1112,7 +1113,7 @@ func TestLoggingInToAProviderRefreshesAFreshCache(t *testing.T) {
 
 	isCodexLoggedIn = true
 
-	if err := Ensure(io.Discard, endpoint, modelCachePath(), seenModelsPath(), lister, isLoggedIn); err != nil {
+	if _, err := Ensure(io.Discard, endpoint, modelCachePath(), seenModelsPath(), lister, isLoggedIn); err != nil {
 		t.Fatal(err)
 	}
 	cache := loadModelCache(modelCachePath())
@@ -1120,7 +1121,7 @@ func TestLoggingInToAProviderRefreshesAFreshCache(t *testing.T) {
 		t.Errorf("expected logging in to refresh the cache, got %+v", cache)
 	}
 
-	if err := Ensure(io.Discard, endpoint, modelCachePath(), seenModelsPath(), lister, isLoggedIn); err != nil {
+	if _, err := Ensure(io.Discard, endpoint, modelCachePath(), seenModelsPath(), lister, isLoggedIn); err != nil {
 		t.Fatal(err)
 	}
 	if listings != 2 {
@@ -1158,5 +1159,37 @@ func TestLoggingOutOfAProviderForgetsTheModelsItListed(t *testing.T) {
 	}
 	if _, isCached := loadModelCache(modelCachePath()).Providers[codexProvider]; isCached {
 		t.Error("expected logging out to forget the models the provider listed")
+	}
+}
+
+func TestEnsuringTheModelListHandsBackWhatTheCacheNowHolds(t *testing.T) {
+	t.Setenv("XDG_STATE_HOME", t.TempDir())
+
+	endpoint := serveRegistry(t, oneCodexModel)
+	if err := Update(io.Discard, endpoint, modelCachePath(), seenModelsPath(), listingModels(firstListings()), false); err != nil {
+		t.Fatal(err)
+	}
+
+	for _, step := range []struct {
+		name     string
+		age      time.Duration
+		endpoint string
+		lister   ProviderLister
+	}{
+		{name: "a current cache", endpoint: endpoint, lister: listingModels(secondListings())},
+		{name: "a refreshed cache", age: 8 * 24 * time.Hour, endpoint: endpoint, lister: listingModels(secondListings())},
+		{name: "a cache that failed to refresh", age: 8 * 24 * time.Hour, endpoint: deadAddress, lister: unreachableProviders},
+	} {
+		if step.age > 0 {
+			ageModelCache(t, time.Now().Add(-step.age))
+		}
+
+		choices, err := Ensure(io.Discard, step.endpoint, modelCachePath(), seenModelsPath(), step.lister, isLoggedInEverywhere)
+		if err != nil {
+			t.Fatalf("%s: %v", step.name, err)
+		}
+		if want := Choices(modelCachePath()); len(want) == 0 || !reflect.DeepEqual(choices, want) {
+			t.Errorf("%s: got %d choices, want the %d the cache holds", step.name, len(choices), len(want))
+		}
 	}
 }

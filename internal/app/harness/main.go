@@ -636,14 +636,15 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		return "", model.Update(os.Stdout, endpointURL, modelCachePath, seenModelsPath, listProviderModels, inputArgs.IsShowingIgnored)
 	}
 
-	if err := model.Ensure(
+	modelChoices, err := model.Ensure(
 		notices,
 		endpointURL,
 		modelCachePath,
 		seenModelsPath,
 		listProviderModels,
 		isProviderAvailable,
-	); err != nil {
+	)
+	if err != nil {
 		return "", err
 	}
 
@@ -671,7 +672,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		return "", err
 	}
 	args, err := inputArgs.Parse(
-		modelCachePath,
+		modelChoices,
 		settings.Model.GetDefaults(),
 		configuredToolGroups.CustomFlags(),
 	)
@@ -777,7 +778,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	defer func() { _ = homeRoot.Close() }()
 
 	configuredModels, err := model.ParseRoundRobin(
-		modelCachePath, configuredRotation(settings, isSimulated), settings.Model.GetDefaults(),
+		modelChoices, configuredRotation(settings, isSimulated), settings.Model.GetDefaults(),
 	)
 	if err != nil {
 		return "", err
@@ -840,7 +841,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	if err != nil {
 		return "", err
 	}
-	choice, err := sessions.ModelChoice(resumedSession, modelCachePath, seenModelsPath, selection)
+	choice, err := sessions.ModelChoice(resumedSession, modelChoices, seenModelsPath, selection)
 	if err != nil {
 		return "", err
 	}

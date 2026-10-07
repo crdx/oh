@@ -85,7 +85,7 @@ func TestLoginProviderIsOptional(t *testing.T) {
 func parseOptions(t *testing.T, arguments ...string) Options {
 	t.Helper()
 
-	settledOptions, err := bind(t, arguments...).Parse(modelCachePath(), model.Defaults{})
+	settledOptions, err := bind(t, arguments...).Parse(model.Choices(modelCachePath()), model.Defaults{})
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -146,7 +146,7 @@ func TestEveryOptionIsRead(t *testing.T) {
 
 func TestModelSelectionRequiresModelAndEffort(t *testing.T) {
 	for _, selection := range []string{"model", "model@", "@high", "model@high@extra"} {
-		if _, err := (Input{inputFlags: inputFlags{Model: selection}}).Parse(modelCachePath(), model.Defaults{}); err == nil {
+		if _, err := (Input{inputFlags: inputFlags{Model: selection}}).Parse(model.Choices(modelCachePath()), model.Defaults{}); err == nil {
 			t.Errorf("expected %q to be rejected", selection)
 		}
 	}
@@ -350,7 +350,7 @@ func TestCapabilitiesAreReadAsTheLettersTheyAreSpelledWith(t *testing.T) {
 
 func TestConfiguredCustomGroupsAreReadAsCapabilities(t *testing.T) {
 	input := Input{inputFlags: inputFlags{Caps: "rxa"}}
-	options, err := input.Parse(modelCachePath(), model.Defaults{}, "ab")
+	options, err := input.Parse(model.Choices(modelCachePath()), model.Defaults{}, "ab")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -372,14 +372,14 @@ func TestReadingIsAlwaysGranted(t *testing.T) {
 
 func TestASessionCannotBeResumedAndUsedAsTheSourceTogether(t *testing.T) {
 	input := Input{inputFlags: inputFlags{Session: "one"}, SourceSession: "another"}
-	if _, err := input.Parse(modelCachePath(), model.Defaults{}); err == nil {
+	if _, err := input.Parse(model.Choices(modelCachePath()), model.Defaults{}); err == nil {
 		t.Error("expected an error")
 	}
 }
 
 func TestAModeNamedOnTheCommandLineCountsAsChosen(t *testing.T) {
 	opts := Input{inputFlags: inputFlags{Session: "one", Caps: "rx"}}
-	settledOptions, err := opts.Parse(modelCachePath(), model.Defaults{})
+	settledOptions, err := opts.Parse(model.Choices(modelCachePath()), model.Defaults{})
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -393,7 +393,7 @@ func TestAModeNamedOnTheCommandLineCountsAsChosen(t *testing.T) {
 }
 
 func TestTheYoloFlagWaivesTheSandbox(t *testing.T) {
-	settledOptions, err := Input{inputFlags: inputFlags{Yolo: true}}.Parse(modelCachePath(), model.Defaults{})
+	settledOptions, err := Input{inputFlags: inputFlags{Yolo: true}}.Parse(model.Choices(modelCachePath()), model.Defaults{})
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -401,7 +401,7 @@ func TestTheYoloFlagWaivesTheSandbox(t *testing.T) {
 		t.Error("expected --yolo to waive the sandbox")
 	}
 
-	settledOptions, err = Input{}.Parse(modelCachePath(), model.Defaults{})
+	settledOptions, err = Input{}.Parse(model.Choices(modelCachePath()), model.Defaults{})
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -413,20 +413,20 @@ func TestTheYoloFlagWaivesTheSandbox(t *testing.T) {
 func TestTheYoloFlagTakesOnlyTheCapsItLeavesOpen(t *testing.T) {
 	for _, flags := range []string{"", "l", "lc"} {
 		input := Input{inputFlags: inputFlags{Yolo: true, Caps: flags}}
-		if _, err := input.Parse(modelCachePath(), model.Defaults{}, "c"); err != nil {
+		if _, err := input.Parse(model.Choices(modelCachePath()), model.Defaults{}, "c"); err != nil {
 			t.Errorf("--yolo -c %q: unexpected error: %v", flags, err)
 		}
 	}
 
 	for _, flags := range []string{"r", "x", "w", "n", "g", "rxl"} {
 		input := Input{inputFlags: inputFlags{Yolo: true, Caps: flags}}
-		_, err := input.Parse(modelCachePath(), model.Defaults{}, "c")
+		_, err := input.Parse(model.Choices(modelCachePath()), model.Defaults{}, "c")
 		if err == nil || !strings.Contains(err.Error(), "--caps takes only l and custom tool groups") {
 			t.Errorf("--yolo -c %q: got %v, want the confined caps refused", flags, err)
 		}
 	}
 
-	if _, err := (Input{inputFlags: inputFlags{Caps: "rxw"}}).Parse(modelCachePath(), model.Defaults{}); err != nil {
+	if _, err := (Input{inputFlags: inputFlags{Caps: "rxw"}}).Parse(model.Choices(modelCachePath()), model.Defaults{}); err != nil {
 		t.Errorf("a sandboxed session refused its caps: %v", err)
 	}
 }

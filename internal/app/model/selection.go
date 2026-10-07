@@ -19,8 +19,8 @@ type Choice struct {
 	Prices              *agent.TokenPrices `json:"prices,omitempty"`
 }
 
-func Chosen(path string, seenPath string, providerName string, model string) (Choice, error) {
-	for _, choice := range slices.Concat(Choices(path), seenChoices(seenPath)) {
+func Chosen(choices []Choice, seenPath string, providerName string, model string) (Choice, error) {
+	for _, choice := range slices.Concat(choices, seenChoices(seenPath)) {
 		if choice.Provider == providerName && choice.ID == model {
 			return choice, nil
 		}
@@ -76,7 +76,7 @@ func ListedPrices(path string) []PricedModel {
 	return pricedModels
 }
 
-func ParseSelection(path string, writtenSelection string, defaults Defaults) (Selection, error) {
+func ParseSelection(choices []Choice, writtenSelection string, defaults Defaults) (Selection, error) {
 	selectionQuery, isFast, err := splitFastMode(writtenSelection)
 	if err != nil {
 		return Selection{}, err
@@ -89,7 +89,7 @@ func ParseSelection(path string, writtenSelection string, defaults Defaults) (Se
 		)
 	}
 
-	choice, err := matchModel(modelQuery, Choices(path))
+	choice, err := matchModel(modelQuery, choices)
 	if err != nil {
 		return Selection{}, err
 	}

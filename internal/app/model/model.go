@@ -502,10 +502,10 @@ func Ensure(
 	seenPath string,
 	listProviderModels ProviderLister,
 	isLoggedIn func(providerName string) bool,
-) error {
+) ([]Choice, error) {
 	cache := loadModelCache(path)
 	if isCacheCurrent(cache, time.Now()) && !hasLoggedInSince(cache, isLoggedIn) {
-		return nil
+		return availableModelChoices(cache), nil
 	}
 
 	_, _ = fmt.Fprintln(output, style.Subtle(refreshMessage))
@@ -518,20 +518,20 @@ func Ensure(
 	reports, err := updateModels(ctx, &reportedText, endpoint, path, seenPath, listProviderModels, false)
 	if err == nil {
 		writeChangedModels(output, reports)
-		return nil
+		return Choices(path), nil
 	}
 
 	_, _ = io.Copy(output, &reportedText)
 
 	if len(cache.Providers) == 0 {
-		return err
+		return nil, err
 	}
 
 	_, _ = fmt.Fprintln(output, style.Change("model list not refreshed: %s", err))
 
 	cache.CheckedAt = time.Now()
 
-	return saveModelCache(path, cache)
+	return availableModelChoices(cache), saveModelCache(path, cache)
 }
 
 func hasLoggedInSince(cache modelCache, isLoggedIn func(providerName string) bool) bool {

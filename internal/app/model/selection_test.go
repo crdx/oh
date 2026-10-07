@@ -61,7 +61,7 @@ func TestCodexSelectionsMayEnableFastMode(t *testing.T) {
 		"codex/gpt-5.6-sol@high+fast": "high",
 		"sol+fast":                    "max",
 	} {
-		selection, err := ParseSelection(modelCachePath(), writtenSelection, Defaults{})
+		selection, err := ParseSelection(Choices(modelCachePath()), writtenSelection, Defaults{})
 		if err != nil {
 			t.Errorf("%s: %v", writtenSelection, err)
 			continue
@@ -86,7 +86,7 @@ func TestTheConfiguredDefaultsApplyOnlyWhereNoEffortIsWritten(t *testing.T) {
 		"anthropic/claude-opus-5":     "anthropic/claude-opus-5@xhigh",
 		"opencode-go/deepseek-v4-pro": "opencode-go/deepseek-v4-pro@max",
 	} {
-		selection, err := ParseSelection(modelCachePath(), writtenSelection, defaults)
+		selection, err := ParseSelection(Choices(modelCachePath()), writtenSelection, defaults)
 		if err != nil {
 			t.Errorf("%s: %v", writtenSelection, err)
 			continue
@@ -145,7 +145,7 @@ func TestFastModeIsRefusedWhereItCannotBeProvided(t *testing.T) {
 		"anthropic/claude-opus-5@high+fast",
 		"opencode-go/deepseek-v4-pro@high+fast",
 	} {
-		if _, err := ParseSelection(modelCachePath(), writtenSelection, Defaults{}); err == nil ||
+		if _, err := ParseSelection(Choices(modelCachePath()), writtenSelection, Defaults{}); err == nil ||
 			!strings.Contains(err.Error(), "does not support fast mode") {
 			t.Errorf("%s: got %v", writtenSelection, err)
 		}
@@ -156,7 +156,7 @@ func TestUnknownModelModesAreRefused(t *testing.T) {
 	useCachedModels(t)
 
 	for _, writtenSelection := range []string{"sol+", "sol+slow", "sol+fast+fast"} {
-		if _, err := ParseSelection(modelCachePath(), writtenSelection, Defaults{}); err == nil {
+		if _, err := ParseSelection(Choices(modelCachePath()), writtenSelection, Defaults{}); err == nil {
 			t.Errorf("expected %s to be refused", writtenSelection)
 		}
 	}
@@ -458,7 +458,7 @@ func TestAnEffortlessModelIsChosenWithoutAnEffort(t *testing.T) {
 
 	for _, writtenSelection := range []string{"opencode-go/minimax-m3", "minimax"} {
 		for _, defaults := range []Defaults{{}, {Effort: "max"}, {Effort: "low", IsFast: true}} {
-			selection, err := ParseSelection(modelCachePath(), writtenSelection, defaults)
+			selection, err := ParseSelection(Choices(modelCachePath()), writtenSelection, defaults)
 			if err != nil {
 				t.Fatalf("%s with %+v: %v", writtenSelection, defaults, err)
 			}
@@ -478,7 +478,7 @@ func TestAnEffortlessModelRefusesAnEffort(t *testing.T) {
 	useAnEffortlessModel(t)
 
 	for _, writtenSelection := range []string{"opencode-go/minimax-m3@high", "minimax@max"} {
-		_, err := ParseSelection(modelCachePath(), writtenSelection, Defaults{})
+		_, err := ParseSelection(Choices(modelCachePath()), writtenSelection, Defaults{})
 		if err == nil || !strings.Contains(err.Error(), "minimax-m3 takes no effort level") {
 			t.Errorf("%s: expected the effort to be refused, got %v", writtenSelection, err)
 		}
@@ -508,7 +508,7 @@ func TestOnlyAModelKnownToTakeNoEffortIsChosenWithoutOne(t *testing.T) {
 	useAnEffortlessModel(t)
 
 	for _, writtenSelection := range []string{"kimi", "claude-haiku-5", "anthropic/claude-haiku-5"} {
-		if _, err := ParseSelection(modelCachePath(), writtenSelection, Defaults{}); err == nil {
+		if _, err := ParseSelection(Choices(modelCachePath()), writtenSelection, Defaults{}); err == nil {
 			t.Errorf("%s: expected a model with unknown effort levels to be refused", writtenSelection)
 		}
 	}

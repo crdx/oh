@@ -445,7 +445,7 @@ func TestGoldenAStartupRefreshThatRecordsNothingShowsWhatItIgnored(t *testing.T)
 
 		return unreachableProviders(ctx, providerName)
 	}
-	if err := Ensure(&output, deadAddress, modelCachePath(), seenModelsPath(), lister, isLoggedInEverywhere); err != nil {
+	if _, err := Ensure(&output, deadAddress, modelCachePath(), seenModelsPath(), lister, isLoggedInEverywhere); err != nil {
 		t.Fatalf("expected a failed refresh to be forgiven, got %v", err)
 	}
 
@@ -465,7 +465,7 @@ func TestGoldenAStartupRefreshNamesWhatChangedAndNothingElse(t *testing.T) {
 	ageModelCache(t, time.Now().Add(-8*24*time.Hour))
 
 	var output bytes.Buffer
-	if err := Ensure(
+	if _, err := Ensure(
 		&output,
 		endpoint,
 		modelCachePath(),

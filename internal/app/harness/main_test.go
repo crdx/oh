@@ -7756,7 +7756,7 @@ func TestForkingAStoredSessionOpensANewOneCarryingItsTranscript(t *testing.T) {
 
 func TestAnEffortWrittenAsAnAliasInTheConfigIsResolved(t *testing.T) {
 	modelCachePath := useRoundRobinModelCache(t)
-	selections, err := model.ParseRoundRobin(modelCachePath, []string{"sol@off"}, model.Defaults{})
+	selections, err := model.ParseRoundRobin(model.Choices(modelCachePath), []string{"sol@off"}, model.Defaults{})
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -7836,7 +7836,7 @@ func resolveCommandLineSelections(t *testing.T) string {
 		"mythos",
 		"nope",
 	} {
-		chosen, err := model.ParseSelection(path, selection, model.Defaults{})
+		chosen, err := model.ParseSelection(model.Choices(path), selection, model.Defaults{})
 		if err != nil {
 			fmt.Fprintf(&written, "%-28q error: %v\n", selection, err)
 

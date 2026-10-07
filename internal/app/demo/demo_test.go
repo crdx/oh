@@ -89,7 +89,7 @@ func TestTheSimulationKnowsItsModelWithoutRefreshingTheList(t *testing.T) {
 		return nil, errors.New("the simulation has no list to fetch")
 	}
 
-	if err := model.Ensure(
+	if _, err := model.Ensure(
 		&notices,
 		session.EndpointURL,
 		cachePath,
@@ -103,7 +103,7 @@ func TestTheSimulationKnowsItsModelWithoutRefreshingTheList(t *testing.T) {
 		t.Errorf("starting the simulation said %q", notices.String())
 	}
 
-	selection, err := model.ParseSelection(cachePath, session.Selection, model.Defaults{})
+	selection, err := model.ParseSelection(model.Choices(cachePath), session.Selection, model.Defaults{})
 	if err != nil {
 		t.Fatal(err)
 	}
