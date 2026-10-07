@@ -396,3 +396,17 @@ func TestCommandArgumentsAreCompletedFromTheSessionItself(t *testing.T) {
 
 	session.quit()
 }
+
+func TestStartingASessionAsksTheTerminalAboutGraphicsOnce(t *testing.T) {
+	rig := newInteractiveRig(t)
+
+	session := rig.start("--yolo", "-m", "opencode-go/fake")
+	session.waitFor(readyBanner)
+
+	if asked := session.Count(graphicsProbe); asked != 1 {
+		t.Errorf("startup asked the terminal about graphics %d times, want once", asked)
+	}
+
+	session.quit()
+}
+

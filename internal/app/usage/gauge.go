@@ -39,6 +39,10 @@ func NewGauges(measure Measure) *Gauges {
 
 func TerminalGauges(input *os.File, output *os.File) *Gauges {
 	cellWidth, cellHeight, hasGraphics := graphics.Detect(input, output)
+	return GaugesFor(output, cellWidth, cellHeight, hasGraphics)
+}
+
+func GaugesFor(output *os.File, cellWidth int, cellHeight int, hasGraphics bool) *Gauges {
 	if !hasGraphics {
 		return NewGauges(nil)
 	}

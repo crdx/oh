@@ -307,3 +307,57 @@ func TestGoldenASessionCountsItsSpendInTheConfiguredCurrency(t *testing.T) {
 		},
 	})
 }
+
+const (
+	graphicsProbe  = "\x1b_Gi=1,s=1,v=1,a=q,t=d,f=24;AAAA\x1b\\"
+	graphicsAnswer = "\x1b_Gi=1;OK\x1b\\\x1b[?62;4c"
+)
+
+func answerGraphicsProbes(session *interactiveSession) {
+	go func() {
+		for asked := 1; session.WaitForCount(graphicsProbe, asked, interactiveDeadline); asked++ {
+			if _, err := session.typing.WriteString(graphicsAnswer); err != nil {
+				return
+			}
+		}
+	}()
+}
+
+func TestGoldenAPictureIsDrawnOnlyWhereTheTerminalSaidItCould(t *testing.T) {
+	picture, err := os.ReadFile(filepath.Join(
+		"testdata", "input", "pictures", "9e0f33117e1831a53359e08b58884030cc8df3582cd71fffbe3fd794b1f355bb-w800.png",
+	))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	pictureScreen := func(isAnswering bool) string {
+		rig := newScriptedRig(t,
+			sim.Turn{Calls: []sim.Call{{Name: "read", Arguments: `{"path":"picture.png"}`}}},
+			sim.Turn{Say: "Seen it."},
+		)
+		if err := os.WriteFile(filepath.Join(rig.workspace, "picture.png"), picture, 0o600); err != nil { //nolint:gosec // the test's own workspace
+			t.Fatal(err)
+		}
+		writeRigConfig(t, rig, emptyBar)
+
+		session := rig.start("--yolo", "-m", "opencode-go/fake")
+		if isAnswering {
+			answerGraphicsProbes(session)
+		}
+		session.waitFor(readyBanner)
+		session.typeText("look at the picture" + pressEnter)
+		session.waitFor("Seen it.")
+		session.waitToSettle()
+		screen := wrappedBanner.ReplaceAllString(strings.Join(session.screen(), "\n"), "Agent <banner>")
+		asked := session.Count(graphicsProbe)
+		session.quit()
+
+		return fmt.Sprintf("graphics probes: %d\n%s", asked, screen)
+	}
+
+	compareWithGolden(t, "picture-detection", ".screen", map[string]func() string{
+		"a terminal that answers the graphics probe": func() string { return pictureScreen(true) },
+		"a terminal that ignores the graphics probe": func() string { return pictureScreen(false) },
+	})
+}

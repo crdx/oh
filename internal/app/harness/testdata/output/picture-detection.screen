@@ -1,0 +1,35 @@
+=== a terminal that answers the graphics probe ===
+graphics probes: 1
+Refreshing the model list...
+Agent <banner>
+
+
+ look at the picture
+
+
+read picture.png ~8t
+􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮
+􎻮̍̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮
+􎻮̎̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮
+
+Seen it.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a terminal that ignores the graphics probe ===
+graphics probes: 1
+Refreshing the model list...
+Agent <banner>
+
+
+ look at the picture
+
+
+read picture.png ~8t
+
+Seen it.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────

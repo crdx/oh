@@ -1338,7 +1338,8 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	app.watchStalls = stallWatchdog.Begin
 	toolOutputLimit.SaveOverflowWith(dropKeeper.SaveOutput)
 
-	if cellWidth, cellHeight, hasGraphics := graphics.Detect(keyboard, os.Stdout); hasGraphics {
+	cellWidth, cellHeight, hasGraphics := graphics.Detect(keyboard, os.Stdout)
+	if hasGraphics {
 		app.display.pictures = pictures.Display{
 			SessionDirectory: sessionInfo.Directory,
 			ScratchDirectory: shadowedScratch(tmpDir, args.Yolo),
@@ -1369,7 +1370,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		UsageReporter:         usageReporter,
 		UsageCachePath:        usageCachePath,
 		UsageIsSelfRefreshing: usageReporter != nil,
-		UsageGauges:           usage.TerminalGauges(keyboard, os.Stdout),
+		UsageGauges:           usage.GaugesFor(os.Stdout, cellWidth, cellHeight, hasGraphics),
 		Currency:              currency,
 		SandboxHostname:       forwardsHostname,
 		Sources:               app.getBarSources(),
