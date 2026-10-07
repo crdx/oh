@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"slices"
 	"strings"
+	"sync"
 
 	"crdx.org/oh/internal/app/ansi"
 	"crdx.org/oh/internal/app/style"
@@ -39,30 +40,47 @@ func (self *Screen) Sync(draw func()) {
 		return
 	}
 
-	self.mutex.Lock()
-	self.nestedUpdates++
-	self.mutex.Unlock()
-
-	defer func() {
-		self.mutex.Lock()
-		defer self.mutex.Unlock()
-
-		if self.nestedUpdates == 1 && self.isFrameOwed {
-			self.paint()
-		}
-
-		self.nestedUpdates--
-		if self.nestedUpdates == 0 {
-			text := self.synchronisedBytes.String()
-			self.synchronisedBytes.Reset()
-
-			if text != "" {
-				self.writeRaw(self.openFrame() + text + self.closeFrame())
-			}
-		}
-	}()
+	self.openUpdate()
+	defer self.closeUpdate()
 
 	draw()
+}
+
+func (self *Screen) Hold() func() {
+	if !self.canRepaint {
+		return func() {}
+	}
+
+	self.openUpdate()
+
+	var once sync.Once
+	return func() { once.Do(self.closeUpdate) }
+}
+
+func (self *Screen) openUpdate() {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	self.nestedUpdates++
+}
+
+func (self *Screen) closeUpdate() {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	if self.nestedUpdates == 1 && self.isFrameOwed {
+		self.paint()
+	}
+
+	self.nestedUpdates--
+	if self.nestedUpdates == 0 {
+		text := self.synchronisedBytes.String()
+		self.synchronisedBytes.Reset()
+
+		if text != "" {
+			self.writeRaw(self.openFrame() + text + self.closeFrame())
+		}
+	}
 }
 
 func (self *Screen) openFrame() string {
@@ -502,6 +520,15 @@ func moveRight(columns int) string {
 	}
 
 	return ansi.Right(columns)
+}
+
+func (self *Screen) Size() (int, int) {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	self.measureTerminal()
+
+	return self.columns, self.lines
 }
 
 func (self *Screen) Columns() int {

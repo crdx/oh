@@ -23,6 +23,7 @@ const (
 	ToggleLookup
 	ToggleNetwork
 	ToggleToolGroup
+	EditDraft
 )
 
 type Input struct {
@@ -417,6 +418,9 @@ func (self *Input) rune(keypress key.Key, isRunning bool) Action {
 		if self.buffer.Len() == 0 {
 			return QuitSession
 		}
+
+	case 'g':
+		return EditDraft
 
 	case 'j':
 		self.insert('\n')

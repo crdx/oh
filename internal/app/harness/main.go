@@ -1184,8 +1184,10 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		Workspace:        workspace,
 		ScratchDir:       tmpDir,
 		HomeDir:          homeDir,
-		Editor:           editorConfiguration,
-		Output:           os.Stdout,
+		OpenEditor: func(paths []string) error {
+			return app.openEditor(paths)
+		},
+		Output: os.Stdout,
 		PathGrants: commands.PathGrants{
 			DenyPatterns: settings.Sandbox.Deny,
 			Grant:        pathGrants.Grant,

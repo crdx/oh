@@ -495,9 +495,7 @@ func TestBrowseIsNotACommandAnymore(t *testing.T) {
 	}
 }
 
-func TestEditReportsAnUnconfiguredEditor(t *testing.T) {
-	t.Setenv("PATH", t.TempDir())
-
+func TestEditReportsThatNoEditorCanBeOpened(t *testing.T) {
 	configDirectory := t.TempDir()
 	set, err := New(Options{
 		ConfigDir:  configDirectory,
@@ -513,7 +511,7 @@ func TestEditReportsAnUnconfiguredEditor(t *testing.T) {
 	}
 
 	err = invocation.Command.Run(nil, invocation.Arguments)
-	if err == nil || !strings.Contains(err.Error(), "set editor in config.toml") {
+	if !errors.Is(err, errEditorUnavailable) {
 		t.Errorf("got error %v", err)
 	}
 }

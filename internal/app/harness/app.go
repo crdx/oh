@@ -233,6 +233,9 @@ type App struct {
 	keyboard        *os.File
 	termination     terminationState
 	hostCommand     hostCommandState
+	externalEdit    externalEditState
+	keypresses      *interaction.Keyboard
+	restoreTTY      func()
 	now             func() time.Time
 }
 
@@ -263,6 +266,7 @@ func (self *App) begin(message string) cycle.Transition {
 		self.plainly(history, message)
 		return self.transition
 	}
+	self.restoreTTY = restoreTTY
 
 	restoreTitle := self.terminal.Begin(self.mode.Current())
 	restoreCursor := self.screen.BeginEditing()
@@ -278,7 +282,7 @@ func (self *App) begin(message string) cycle.Transition {
 			self.recorder.IsPersisted(),
 			restoreCursor,
 			restoreTitle,
-			restoreTTY,
+			self.takeBackTTY,
 		)
 	}
 
@@ -292,12 +296,16 @@ func (self *App) begin(message string) cycle.Transition {
 		self.refreshPendingMessages()
 	}
 
+	self.keypresses = interaction.NewKeyboard(self.getKeyboard())
+	defer func() { self.keypresses = nil }()
+	defer self.keypresses.Release()
+
 	self.acceptInitialInput(inputLine, history, message)
 	if self.isTransitionRequested() {
 		return self.transition
 	}
 
-	interaction.Run(self.getKeyboard(), self.nextRefresh, interaction.Handler{
+	interaction.Run(self.keypresses, self.nextRefresh, interaction.Handler{
 		GetTurnEvents: func() <-chan turn.Event { return self.currentTurn.Events() },
 		OnKey:         func(keypress key.Key) bool { return self.handleKeypressAndShowInput(inputLine, history, keypress) },
 		OnTurn:        self.takeTurn,
@@ -319,12 +327,22 @@ func (self *App) begin(message string) cycle.Transition {
 		OnTriggerChange:  self.receiveTriggerChange,
 		HostCommands:     self.hostCommandOutcomes(),
 		OnHostCommand:    self.hostCommandEnded,
+		EditorOutcomes:   self.editorOutcomes(),
+		OnEditorEnded:    self.editorEnded,
 		OnDraw:           func() { self.drawAfterEvent(inputLine) },
 		Watch:            self.watchStalls,
 	})
 	self.endHostCommand()
+	self.endEditing()
 
 	return self.transition
+}
+
+func (self *App) takeBackTTY() {
+	if self.restoreTTY != nil {
+		self.restoreTTY()
+		self.restoreTTY = nil
+	}
 }
 
 func (self *App) drawAfterEvent(inputLine *edit.Input) {
@@ -368,6 +386,14 @@ func (self *App) handleKeypressAndShowInput(inputLine *edit.Input, history *edit
 	if self.isAwaitingAnswer() {
 		self.screen.Sync(func() {
 			self.answerQuestion(keypress)
+			self.show(inputLine)
+		})
+		return true
+	}
+
+	if self.isEditorAwaited() {
+		self.screen.Sync(func() {
+			self.applyWhileEditing(keypress)
 			self.show(inputLine)
 		})
 		return true
@@ -488,6 +514,9 @@ func (self *App) apply(inputLine *edit.Input, history *edit.History, keypress ke
 
 	case edit.ToggleToolGroup:
 		self.toggleToolGroup(inputLine.ToolGroup())
+
+	case edit.EditDraft:
+		self.editDraft()
 
 	case edit.DrawInput:
 	}
@@ -1011,7 +1040,7 @@ func (self *App) show(inputLine *edit.Input) {
 			frame, columns,
 			segment.BottomLeft, segment.BottomCenter, segment.BottomRight,
 		),
-		Activity:      self.hostCommandRows(columns),
+		Activity:      append(self.hostCommandRows(columns), self.editingRows(columns)...),
 		Status:        self.statusRows(statusWidth),
 		FrameFeedback: isFeedbackFramed,
 		Question:      self.questionRows(columns),
@@ -1039,6 +1068,11 @@ func (self *App) show(inputLine *edit.Input) {
 			YieldingRows:  yieldingRows,
 		}
 		self.question.scroll = self.screen.InertFooter(rows, cursorRow, pins, self.question.scroll)
+		return
+	}
+
+	if self.isDraftEditedElsewhere() {
+		self.screen.InertFooter(rows, cursorRow, output.Pins{}, 0)
 		return
 	}
 

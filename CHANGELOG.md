@@ -11,6 +11,8 @@
 - Keep output notice beside job duration
 - Offer GPT-6 Sol through Codex
 - Adjust Codex login scopes, and invalidate
+- Edit in an external editor with ctrl+g
+- Show editor failures as feedback
 
 ## [0.12.1] - 2026-10-03
 

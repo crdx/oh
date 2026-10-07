@@ -14,7 +14,6 @@ import (
 
 	"crdx.org/oh/internal/app/column"
 	"crdx.org/oh/internal/app/contextsource"
-	"crdx.org/oh/internal/app/editor"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/prompt"
 	"crdx.org/oh/internal/app/skill"
@@ -34,7 +33,10 @@ const (
 	targetPlaceholder = "<target>"
 )
 
-var errHostCommandsUnavailable = errors.New("commands cannot run on the host here")
+var (
+	errHostCommandsUnavailable = errors.New("commands cannot run on the host here")
+	errEditorUnavailable       = errors.New("no editor can be opened here")
+)
 
 type Options struct {
 	ConfigDir        string
@@ -46,7 +48,7 @@ type Options struct {
 	HomeDir          string
 	Session          Session
 
-	Editor            *editor.Config
+	OpenEditor        func(paths []string) error
 	Output            io.Writer
 	PathGrants        PathGrants
 	Forwards          Forwards
@@ -113,11 +115,6 @@ type commandTarget struct {
 }
 
 func New(options Options) (slash.CommandSet, error) {
-	editorConfiguration := options.Editor
-	if editorConfiguration == nil {
-		editorConfiguration = editor.NewConfiguration(nil)
-	}
-
 	return buildCommands(commandEnvironment{
 		configDir:        options.ConfigDir,
 		configPath:       options.ConfigFile,
@@ -133,9 +130,7 @@ func New(options Options) (slash.CommandSet, error) {
 			isPersisted:    options.Session.IsPersisted,
 			getLastMessage: options.Session.GetLastMessage,
 		},
-		openEditor: func(paths []string) error {
-			return editorConfiguration.Open(paths...)
-		},
+		openEditor: options.OpenEditor,
 		openTarget: openDesktopTargets,
 		copyText: func(values []string) error {
 			return terminal.Copy(options.Output, strings.Join(values, "\n"))
@@ -154,6 +149,9 @@ func New(options Options) (slash.CommandSet, error) {
 func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 	if environment.startHostCommand == nil {
 		environment.startHostCommand = func(string, string) error { return errHostCommandsUnavailable }
+	}
+	if environment.openEditor == nil {
+		environment.openEditor = func([]string) error { return errEditorUnavailable }
 	}
 	if environment.getContextSources == nil {
 		environment.getContextSources = func() ContextSources { return ContextSources{} }

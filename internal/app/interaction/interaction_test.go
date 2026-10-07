@@ -391,7 +391,7 @@ func TestRunEndsWhenTheLastTurnAsksToLeave(t *testing.T) {
 
 	var scheduledWork []string
 	hasFinished := false
-	Run(terminal, func(time.Time) time.Time { return time.Time{} }, Handler{
+	Run(NewKeyboard(terminal), func(time.Time) time.Time { return time.Time{} }, Handler{
 		GetTurnEvents:  func() <-chan turn.Event { return turnEvents },
 		OnTurnFinished: func() bool { hasFinished = true; return false },
 		Watch: func(work string) func() {

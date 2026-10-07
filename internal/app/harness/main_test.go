@@ -5627,6 +5627,8 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"config-reload":            {".ansi", ".screen"},
 		"corrupt-session":          {".txt"},
 		"default-bar":              {".ansi", ".screen"},
+		"editing-config":           {".ansi", ".screen"},
+		"editing-draft":            {".ansi", ".screen"},
 		"elided-path-links":        {".ansi", ".screen"},
 		"environment-change":       {".ansi", ".screen"},
 		"feedback":                 {".ansi", ".screen", ".txt"},
@@ -13053,6 +13055,40 @@ type screen struct {
 	wasScreenErasedWhole   bool
 	isWrapping             bool
 	style                  graphicStyle
+
+	main *screenContents
+}
+
+type screenContents struct {
+	rows        [][]cell
+	marks       map[int]bool
+	wraps       map[int]bool
+	sized       []sizedCharacter
+	row, column int
+	lowestRow   int
+}
+
+func (self *screen) enterAlternateScreen() {
+	if self.main != nil {
+		return
+	}
+
+	self.main = &screenContents{
+		rows: self.rows, marks: self.marks, wraps: self.wraps, sized: self.sized,
+		row: self.row, column: self.column, lowestRow: self.lowestRow,
+	}
+	self.rows, self.marks, self.wraps, self.sized = nil, nil, nil, nil
+	self.row, self.column, self.lowestRow = 0, 0, 0
+}
+
+func (self *screen) leaveAlternateScreen() {
+	if self.main == nil {
+		return
+	}
+
+	self.rows, self.marks, self.wraps, self.sized = self.main.rows, self.main.marks, self.main.wraps, self.main.sized
+	self.row, self.column, self.lowestRow = self.main.row, self.main.column, self.main.lowestRow
+	self.main = nil
 }
 
 type cell struct {
@@ -13456,6 +13492,12 @@ func (self *screen) privateMode(command byte, parameters string) {
 	switch parameters {
 	case "?7":
 		self.isWrapping = command == 'h'
+	case "?1049":
+		if command == 'h' {
+			self.enterAlternateScreen()
+		} else {
+			self.leaveAlternateScreen()
+		}
 	case "?25", "?2026":
 	default:
 		self.t.Fatalf("the screen was sent a private mode it does not know: ESC [ %s%c", parameters, command)

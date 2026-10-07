@@ -7,6 +7,7 @@ import (
 	"syscall"
 	"time"
 
+	"crdx.org/oh/internal/app/editor"
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/tty"
@@ -40,11 +41,13 @@ type Handler struct {
 	OnTriggerChange  func()
 	HostCommands     <-chan hostcommand.Outcome
 	OnHostCommand    func(hostcommand.Outcome)
+	EditorOutcomes   <-chan editor.Outcome
+	OnEditorEnded    func(editor.Outcome)
 	OnDraw           func()
 	Watch            func(work string) func()
 }
 
-func Run(terminal *os.File, getNextRefresh func(time.Time) time.Time, handler Handler) {
+func Run(keyboard *Keyboard, getNextRefresh func(time.Time) time.Time, handler Handler) {
 	resizeSignals := Resizes()
 	defer signal.Stop(resizeSignals)
 
@@ -54,10 +57,9 @@ func Run(terminal *os.File, getNextRefresh func(time.Time) time.Time, handler Ha
 	beater := time.NewTicker(heartRate)
 	defer beater.Stop()
 
-	keys, stopReading := Keypresses(terminal)
-	defer stopReading()
+	defer keyboard.Release()
 
-	run(keys, resizeSignals, refresh.timer.C, refresh.schedule, beater.C, watched(handler))
+	run(keyboard.Keys(), resizeSignals, refresh.timer.C, refresh.schedule, beater.C, watched(handler))
 }
 
 func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan time.Time, schedule func(), beats <-chan time.Time, handler Handler) {
@@ -67,6 +69,7 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 	questionChanges := handler.QuestionChanges
 	triggerChanges := handler.TriggerChanges
 	hostCommands := handler.HostCommands
+	editorOutcomes := handler.EditorOutcomes
 	for {
 		schedule()
 
@@ -119,6 +122,8 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 			handler.OnTriggerChange()
 		case outcome := <-hostCommands:
 			handler.OnHostCommand(outcome)
+		case outcome := <-editorOutcomes:
+			handler.OnEditorEnded(outcome)
 		case failure, isOpen := <-changes:
 			if !isOpen {
 				changes = nil

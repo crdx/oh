@@ -85,7 +85,6 @@ golden:
         ./internal/app/cli \
         ./internal/app/commands \
         ./internal/app/demo \
-        ./internal/app/editor \
         ./internal/app/menu \
         ./internal/app/model \
         ./internal/app/model/picker \
