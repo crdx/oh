@@ -234,33 +234,32 @@ var completableToolNames = []string{
 	"fetch",
 }
 
-func completableTools() []string {
-	names := slices.Clone(completableToolNames)
+func completionSources() cli.Sources {
+	sources := cli.Sources{
+		ModelCachePath: location.GetModelCachePath(),
+		SessionsDir:    location.GetSessionsDir(),
+		ToolNames:      slices.Clone(completableToolNames),
+		IsLoggedIn: func(providerName string) bool {
+			return backend.IsAvailable(providerName, backend.EndpointSettings{
+				OverrideURL: os.Getenv(backend.EndpointVariable),
+			})
+		},
+	}
 
 	settings, err := config.Load(location.GetConfigFile())
 	if err != nil {
-		return names
+		return sources
 	}
-
 	for _, name := range settings.CustomToolNames() {
-		if !slices.Contains(names, name) {
-			names = append(names, name)
+		if !slices.Contains(sources.ToolNames, name) {
+			sources.ToolNames = append(sources.ToolNames, name)
 		}
 	}
-
-	return names
-}
-
-func completableCustomCapFlags() string {
-	settings, err := config.Load(location.GetConfigFile())
-	if err != nil {
-		return ""
+	if toolGroups, err := settings.CustomToolGroups(); err == nil {
+		sources.CustomCapFlags = toolGroups.CustomFlags()
 	}
-	toolGroups, err := settings.CustomToolGroups()
-	if err != nil {
-		return ""
-	}
-	return toolGroups.CustomFlags()
+
+	return sources
 }
 
 type terminationSignalError struct {
@@ -290,28 +289,18 @@ func Main() {
 		return
 	}
 
-	if cli.WriteCompletions(os.Stdout, os.Args[1:], cli.Sources{
-		ModelCachePath: location.GetModelCachePath(),
-		SessionsDir:    location.GetSessionsDir(),
-		ToolNames:      completableTools(),
-		CustomCapFlags: completableCustomCapFlags(),
-		IsLoggedIn: func(providerName string) bool {
-			return backend.IsAvailable(providerName, backend.EndpointSettings{
-				OverrideURL: os.Getenv(backend.EndpointVariable),
-			})
-		},
-	}) {
+	if cli.WriteCompletions(os.Stdout, os.Args[1:], completionSources) {
 		return
 	}
 
 	style.Init(os.Stdout)
-	applyAvailableTheme()
+	startupConfig := readConfig()
 
 	hooks := cycle.NewHooks(func(err error) {
 		fmt.Fprintln(os.Stderr, style.Error(fmt.Errorf("session hook: %w", err)))
 	})
 	transition := cycle.Transition{}
-	chosenSession, err := run(hooks, &transition)
+	chosenSession, err := run(hooks, &transition, startupConfig)
 	if err != nil {
 		if interruption, isSignal := errors.AsType[terminationSignalError](err); isSignal {
 			tty.Reraise(interruption.signal)
@@ -360,16 +349,22 @@ func getConfigSources(workspaceDir string) []config.Source {
 	}
 }
 
-func applyAvailableTheme() {
+type initialConfig struct {
+	observable config.Observable
+	err        error
+}
+
+func readConfig() initialConfig {
 	workspace, err := work.Current()
 	if err != nil {
-		return
+		return initialConfig{err: err}
 	}
-	settings, err := config.LoadSources(getConfigSources(workspace.GetDir())...)
-	if err != nil {
-		return
+	observable, err := config.Read(getConfigSources(workspace.GetDir())...)
+	if err == nil {
+		style.ApplyTheme(observable.Config.Ui.Theme)
 	}
-	style.ApplyTheme(settings.Ui.Theme)
+
+	return initialConfig{observable: observable, err: err}
 }
 
 func configuredRotation(settings config.Config, isSimulated bool) []string {
@@ -451,13 +446,12 @@ func prepareLegacyTools(
 	return preparedTools{registeredTools: toolboxTools, offeredTools: offeredTools}, nil
 }
 
-func availableCurrency(workspaceDir string) money.Currency {
-	settings, err := config.LoadSources(getConfigSources(workspaceDir)...)
-	if err != nil {
+func availableCurrency(initial initialConfig) money.Currency {
+	if initial.err != nil {
 		return money.Dollar()
 	}
 
-	return money.Load(location.GetExchangeRateCachePath(), currencyCode(settings.Ui.Currency))
+	return money.Load(location.GetExchangeRateCachePath(), currencyCode(initial.observable.Config.Ui.Currency))
 }
 
 func currencyCode(code string) string {
@@ -492,7 +486,7 @@ func applySimulationOptions(options *cli.Options) {
 }
 
 //nolint:gocyclo // lol no
-func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, error) {
+func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial initialConfig) (string, error) {
 	ctx := context.Background()
 	var sessionInfo cycle.Session
 	hasStarted := false
@@ -548,15 +542,10 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	}
 
 	if inputArgs.List {
-		workspace, err := work.Current()
-		if err != nil {
-			return "", err
+		if initial.err != nil {
+			return "", initial.err
 		}
-		settings, err := config.LoadSources(getConfigSources(workspace.GetDir())...)
-		if err != nil {
-			return "", err
-		}
-		style.ApplyTheme(settings.Ui.Theme)
+		settings := initial.observable.Config
 		columns := 0
 		if tty.Is(os.Stdout) {
 			columns, _, _ = term.GetSize(int(os.Stdout.Fd()))
@@ -577,21 +566,23 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	workspaceDir := workspace.GetDir()
 
 	if inputArgs.IsSessionPicker {
-		return sessions.Choose(sessionsDir, workspace, availableCurrency(workspaceDir), keyboard, os.Stdout)
+		return sessions.Choose(sessionsDir, workspace, availableCurrency(initial), keyboard, os.Stdout)
 	}
 
-	configSources := getConfigSources(workspaceDir)
-	configPath := configSources[0].Path
+	configPath := location.GetConfigFile()
 	isSimulated := inputArgs.IsDemoing
+	if initial.err != nil {
+		return "", initial.err
+	}
 
 	if !isSimulated {
-		_, isChosen, err := onboarding.PrepareConfig(onboarding.Options{
+		isChosen, err := onboarding.PrepareConfig(onboarding.Options{
 			Input:          keyboard,
 			Output:         os.Stdout,
 			EndpointURL:    endpointURL,
 			RequestedModel: inputArgs.Model,
 			ResumedSession: inputArgs.Session,
-			ConfigSources:  configSources,
+			Settings:       initial.observable.Config,
 			IsPrinting:     inputArgs.IsPrinting,
 		})
 		if err != nil {
@@ -619,7 +610,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		sessionsDir = location.GetSessionsDir()
 	}
 
-	settings, configObserver, err := config.ObserveSources(configSources...)
+	settings, configObserver, err := initial.observable.Observe()
 	if err != nil {
 		return "", err
 	}

@@ -217,14 +217,14 @@ func TestToolCompletionsComeFromTheRuntime(t *testing.T) {
 
 func TestWritingCompletionsLinesThemUp(t *testing.T) {
 	var out bytes.Buffer
-	WriteCompletions(&out, []string{"--complete", completeCaps, "rxw"}, Sources{})
+	WriteCompletions(&out, []string{"--complete", completeCaps, "rxw"}, func() Sources { return Sources{} })
 
 	if out.String() != "rxw\nrxwn\nrxwng\nrxwngl\n" {
 		t.Errorf("got %q", out.String())
 	}
 
 	out.Reset()
-	WriteCompletions(&out, []string{"--complete", "nonsense", ""}, Sources{})
+	WriteCompletions(&out, []string{"--complete", "nonsense", ""}, func() Sources { return Sources{} })
 	if out.Len() != 0 {
 		t.Errorf("got %q", out.String())
 	}

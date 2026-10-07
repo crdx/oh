@@ -117,7 +117,7 @@ func TestGoldenOnboardingEdgeCasesMatchTheGoldens(t *testing.T) {
 			t.Setenv("XDG_CONFIG_HOME", t.TempDir())
 			t.Setenv("XDG_STATE_HOME", t.TempDir())
 
-			_, _, err := PrepareConfig(Options{Output: output, IsPrinting: true})
+			_, err := PrepareConfig(Options{Output: output, Settings: storedSettings(t), IsPrinting: true})
 			if !errors.Is(err, ErrNobodyToAsk) {
 				return fmt.Errorf("got %w", err)
 			}
@@ -170,7 +170,7 @@ func TestGoldenOnboardingEdgeCasesMatchTheGoldens(t *testing.T) {
 			if err := harry.castSpell(); err != nil {
 				return err
 			}
-			if !harry.isSimulationChosen {
+			if !harry.isGoingToHogwarts {
 				return errors.New("the simulation was not taken up")
 			}
 			return nil

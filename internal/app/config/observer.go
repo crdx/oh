@@ -299,6 +299,42 @@ func (self revision) getPaths() []string {
 	return paths
 }
 
+func (self revision) isStillOnDisk(settings Config) bool {
+	for _, source := range self.sourceSnapshots {
+		if !readSnapshot(source.source.Path).equal(source.snapshot) {
+			return false
+		}
+	}
+	for _, snapshots := range []map[string]snapshot{self.roundRobinFileSnapshots, self.snippetFileSnapshots} {
+		for path, read := range snapshots {
+			if !readSnapshot(path).equal(read) {
+				return false
+			}
+		}
+	}
+
+	for _, directory := range self.snippetDirectories {
+		entries, err := os.ReadDir(directory)
+		if err != nil && !errors.Is(err, fs.ErrNotExist) {
+			return false
+		}
+		for _, entry := range entries {
+			name, isSnippet := snippetFileName(entry)
+			if !isSnippet {
+				continue
+			}
+			if _, isRead := self.snippetFileSnapshots[filepath.Join(directory, entry.Name())]; isRead {
+				continue
+			}
+			if _, isDefined := settings.Snippets[name]; !isDefined {
+				return false
+			}
+		}
+	}
+
+	return true
+}
+
 func readRevision(sources []Source) (Config, revision, error) {
 	snapshots := make([]sourceSnapshot, 0, len(sources))
 	for _, source := range sources {
@@ -335,15 +371,36 @@ func Observe(path string) (Config, *Observer, error) {
 	return ObserveSources(Source{Path: path})
 }
 
-func ObserveSources(sources ...Source) (Config, *Observer, error) {
+type Observable struct {
+	Config  Config
+	sources []Source
+	current revision
+}
+
+func Read(sources ...Source) (Observable, error) {
 	settings, current, err := readRevision(sources)
+	return Observable{Config: settings, sources: slices.Clone(sources), current: current}, err
+}
+
+func ObserveSources(sources ...Source) (Config, *Observer, error) {
+	observable, err := Read(sources...)
 	if err != nil {
 		return Config{}, nil, err
 	}
 
+	return observable.Observe()
+}
+
+func (self Observable) Observe() (Config, *Observer, error) {
+	sources, settings, current := self.sources, self.Config, self.current
+
 	watcher, err := newFileWatcher(current.getPaths()...)
 	if err != nil {
 		return Config{}, nil, fmt.Errorf("could not watch config: %w", err)
+	}
+
+	if current.isStillOnDisk(settings) {
+		return settings, &Observer{sources: slices.Clone(sources), handledRevision: current, watcher: watcher}, nil
 	}
 
 	latestSettings, latest, err := readRevision(sources)

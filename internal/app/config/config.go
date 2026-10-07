@@ -733,8 +733,8 @@ func discoverSnippets(config *Config, configPath string) error {
 	}
 
 	for _, entry := range entries {
-		name, isSnippet := strings.CutSuffix(entry.Name(), snippetExtension)
-		if !isSnippet || name == "" || strings.HasPrefix(name, ".") || entry.IsDir() {
+		name, isSnippet := snippetFileName(entry)
+		if !isSnippet {
 			continue
 		}
 		if _, isDefined := config.Snippets[name]; isDefined {
@@ -768,6 +768,15 @@ func discoverSnippets(config *Config, configPath string) error {
 	}
 
 	return nil
+}
+
+func snippetFileName(entry fs.DirEntry) (string, bool) {
+	name, isSnippet := strings.CutSuffix(entry.Name(), snippetExtension)
+	if !isSnippet || name == "" || strings.HasPrefix(name, ".") || entry.IsDir() {
+		return "", false
+	}
+
+	return name, true
 }
 
 func snippetPattern(directory string) string {

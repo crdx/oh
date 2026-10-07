@@ -16,6 +16,7 @@ import (
 
 	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/link"
+	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/app/menu"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/ptytest"
@@ -623,19 +624,31 @@ func TestALocalModelOverrideAvoidsFirstRunOnboarding(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	settings, _, err := PrepareConfig(Options{
-		ConfigSources: []config.Source{
-			{Path: filepath.Join(directory, "missing.toml")},
-			{Path: overridePath, IsOverride: true},
-		},
-		IsPrinting: true,
-	})
+	settings, err := config.LoadSources(
+		config.Source{Path: filepath.Join(directory, "missing.toml")},
+		config.Source{Path: overridePath, IsOverride: true},
+	)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if !slices.Equal(settings.Model.RoundRobin, []string{"anthropic/local"}) {
 		t.Errorf("got model rotation %#v", settings.Model.RoundRobin)
 	}
+
+	if _, err := PrepareConfig(Options{Settings: settings, IsPrinting: true}); err != nil {
+		t.Errorf("expected the override to leave nothing to ask, got %v", err)
+	}
+}
+
+func storedSettings(t *testing.T) config.Config {
+	t.Helper()
+
+	settings, err := config.Load(location.GetConfigFile())
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return settings
 }
 
 func TestAPrintedFirstRunIsRefusedRatherThanAsked(t *testing.T) {
@@ -652,7 +665,7 @@ func TestAPrintedFirstRunIsRefusedRatherThanAsked(t *testing.T) {
 	})
 
 	var shown strings.Builder
-	_, _, err = PrepareConfig(Options{Input: reader, Output: &shown, IsPrinting: true})
+	_, err = PrepareConfig(Options{Input: reader, Output: &shown, Settings: storedSettings(t), IsPrinting: true})
 
 	if !errors.Is(err, ErrNobodyToAsk) {
 		t.Fatalf("got %v, want a refusal to ask", err)

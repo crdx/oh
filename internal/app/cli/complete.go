@@ -59,13 +59,12 @@ func Complete(args []string, sources Sources) ([]string, bool) {
 	return completions(kind, word, sources), true
 }
 
-func WriteCompletions(out io.Writer, args []string, sources Sources) bool {
-	completions, isWanted := Complete(args, sources)
+func WriteCompletions(out io.Writer, args []string, getSources func() Sources) bool {
+	kind, word, isWanted := completionRequest(args)
 	if !isWanted {
 		return false
 	}
-
-	for _, completion := range completions {
+	for _, completion := range completions(kind, word, getSources()) {
 		_, _ = fmt.Fprintln(out, completion)
 	}
 	return true

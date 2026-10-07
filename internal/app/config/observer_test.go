@@ -774,3 +774,114 @@ func TestAFileThatIsNotOrdinaryIsNamedForWhatItIs(t *testing.T) {
 		}
 	}
 }
+
+func readFixture(t *testing.T) (string, Observable) {
+	t.Helper()
+
+	directory := t.TempDir()
+	snippetsDirectory := filepath.Join(directory, "snippets")
+	if err := os.Mkdir(snippetsDirectory, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	for name, prompt := range map[string]string{"review.md": "Review it.", "inline.md": "Shadowed."} {
+		if err := os.WriteFile(filepath.Join(snippetsDirectory, name), []byte(prompt), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := os.WriteFile(filepath.Join(directory, "models.txt"), []byte("anthropic/one@high\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	body := "[model]\nround_robin = \"models.txt\"\n[snippets]\ninline = { prompt = \"Inline.\" }\n"
+	if err := writeConfigFile(filepath.Join(directory, "config.toml"), body); err != nil {
+		t.Fatal(err)
+	}
+
+	observable, err := Read(Source{Path: filepath.Join(directory, "config.toml")})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return directory, observable
+}
+
+func TestAReadConfigStillOnDiskIsNotReadAgain(t *testing.T) {
+	_, observable := readFixture(t)
+
+	if !observable.current.isStillOnDisk(observable.Config) {
+		t.Fatal("expected an untouched config to be taken as still on disk")
+	}
+
+	settings, observer, err := observable.Observe()
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(observer.Close)
+	if settings.Snippets["review"].Prompt != "Review it." || settings.Snippets["inline"].Prompt != "Inline." {
+		t.Errorf("got snippets %v", settings.Snippets)
+	}
+}
+
+func TestAnythingChangedSinceAConfigWasReadIsReadAgainWhenObserved(t *testing.T) {
+	for name, change := range map[string]func(directory string) error{
+		"config": func(directory string) error {
+			return writeConfigFile(filepath.Join(directory, "config.toml"), "[model]\nround_robin = \"models.txt\"\n")
+		},
+		"rotation file": func(directory string) error {
+			return os.WriteFile(filepath.Join(directory, "models.txt"), []byte("codex/two@medium\n"), 0o600)
+		},
+		"snippet file": func(directory string) error {
+			return os.WriteFile(filepath.Join(directory, "snippets", "review.md"), []byte("Changed."), 0o600)
+		},
+		"new snippet file": func(directory string) error {
+			return os.WriteFile(filepath.Join(directory, "snippets", "fresh.md"), []byte("Fresh."), 0o600)
+		},
+		"removed snippet file": func(directory string) error {
+			return os.Remove(filepath.Join(directory, "snippets", "review.md"))
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			directory, observable := readFixture(t)
+			if err := change(directory); err != nil {
+				t.Fatal(err)
+			}
+
+			if observable.current.isStillOnDisk(observable.Config) {
+				t.Fatal("expected the change to be noticed")
+			}
+
+			settings, observer, err := observable.Observe()
+			if err != nil {
+				t.Fatal(err)
+			}
+			t.Cleanup(observer.Close)
+			want, _, err := readRevision(observable.sources)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !slices.Equal(settings.Model.RoundRobin, want.Model.RoundRobin) ||
+				len(settings.Snippets) != len(want.Snippets) ||
+				settings.Snippets["review"].Prompt != want.Snippets["review"].Prompt {
+				t.Errorf("observed %v and %v, want what is on disk: %v and %v",
+					settings.Model.RoundRobin, settings.Snippets, want.Model.RoundRobin, want.Snippets)
+			}
+		})
+	}
+}
+
+func TestAShadowedSnippetFileArrivingLeavesAReadConfigStanding(t *testing.T) {
+	directory, observable := readFixture(t)
+	if err := os.Remove(filepath.Join(directory, "snippets", "inline.md")); err != nil {
+		t.Fatal(err)
+	}
+	observable, err := Read(observable.sources...)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(directory, "snippets", "inline.md"), []byte("Shadowed."), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	if !observable.current.isStillOnDisk(observable.Config) {
+		t.Error("expected a file shadowed by a defined snippet to change nothing")
+	}
+}

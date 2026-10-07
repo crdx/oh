@@ -30,6 +30,7 @@ func TestAFirstRunOverATerminalCanHandOverToTheSimulation(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 	t.Setenv(location.StateDirVariable, "")
 
+	settings := storedSettings(t)
 	controller, terminal := ptytest.OpenSized(t, 100, 30)
 	screen := ptytest.Record(controller)
 
@@ -39,7 +40,7 @@ func TestAFirstRunOverATerminalCanHandOverToTheSimulation(t *testing.T) {
 	}
 	result := make(chan prepared, 1)
 	go func() {
-		_, isSimulated, err := PrepareConfig(Options{Input: terminal, Output: terminal})
+		isSimulated, err := PrepareConfig(Options{Input: terminal, Output: terminal, Settings: settings})
 		result <- prepared{isSimulated: isSimulated, err: err}
 	}()
 

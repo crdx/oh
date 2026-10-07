@@ -135,30 +135,26 @@ type Options struct {
 	EndpointURL    string
 	RequestedModel string
 	ResumedSession string
-	ConfigSources  []config.Source
+	Settings       config.Config
 	IsPrinting     bool
 }
 
-func PrepareConfig(options Options) (config.Config, bool, error) {
+func PrepareConfig(options Options) (bool, error) {
 	configPath := location.GetConfigFile()
-	configSources := options.ConfigSources
-	if len(configSources) == 0 {
-		configSources = []config.Source{{Path: configPath}}
-	}
-	settings, err := config.LoadSources(configSources...)
-	if err != nil || !isRequired(options, settings.Model.RoundRobin) {
-		return settings, false, err
+	settings := options.Settings
+	if !isRequired(options, settings.Model.RoundRobin) {
+		return false, nil
 	}
 
 	if options.IsPrinting {
-		return config.Config{}, false, ErrNobodyToAsk
+		return false, ErrNobodyToAsk
 	}
 
 	modelCachePath := location.GetModelCachePath()
 	seenModelsPath := location.GetSeenModelsPath()
 	pause, stopPausing, err := typingPause(options.Input, options.Output)
 	if err != nil {
-		return settings, false, err
+		return false, err
 	}
 	harry := wizard{
 		isSimulationOffered: true,
@@ -191,14 +187,10 @@ func PrepareConfig(options Options) (config.Config, bool, error) {
 	}
 
 	if err := harry.castSpell(); err != nil {
-		return config.Config{}, false, err
-	}
-	if harry.isSimulationChosen {
-		return config.Config{}, true, nil
+		return false, err
 	}
 
-	settings, err = config.LoadSources(configSources...)
-	return settings, false, err
+	return harry.isGoingToHogwarts, nil
 }
 
 func isRequired(options Options, configuredModels []string) bool {
@@ -239,7 +231,7 @@ type wizard struct {
 
 	isOpeningSkipped      bool
 	isSimulationOffered   bool
-	isSimulationChosen    bool
+	isGoingToHogwarts     bool
 	isManagingCredentials bool
 }
 
@@ -254,7 +246,7 @@ func (self *wizard) castSpell() error {
 	}
 
 	if chosenProvider.identifier == simulationIdentifier {
-		self.isSimulationChosen = true
+		self.isGoingToHogwarts = true
 		return self.sayFarewell()
 	}
 
