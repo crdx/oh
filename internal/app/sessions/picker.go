@@ -162,11 +162,7 @@ type metadataResult struct {
 }
 
 func RefreshListings(directory string, screen io.Writer) error {
-	storedNames, err := session.StoredNames(directory)
-	if err != nil {
-		return err
-	}
-	archivedNames, err := session.ArchivedNames(directory)
+	storedNames, archivedNames, err := session.ListNames(directory)
 	if err != nil {
 		return err
 	}
@@ -273,11 +269,7 @@ func loadPickerSessions(
 	directory string,
 	screen io.Writer,
 ) ([]*picker.Session, []*picker.Session, error) {
-	storedNames, err := session.StoredNames(directory)
-	if err != nil {
-		return nil, nil, err
-	}
-	archivedNames, err := session.ArchivedNames(directory)
+	storedNames, archivedNames, err := session.ListNames(directory)
 	if err != nil {
 		return nil, nil, err
 	}

@@ -684,11 +684,7 @@ type Entry struct {
 }
 
 func Entries(directory string) ([]Entry, error) {
-	storedNames, err := StoredNames(directory)
-	if err != nil {
-		return nil, err
-	}
-	archivedNames, err := ArchivedNames(directory)
+	storedNames, archivedNames, err := ListNames(directory)
 	if err != nil {
 		return nil, err
 	}
@@ -701,11 +697,7 @@ func Entries(directory string) ([]Entry, error) {
 }
 
 func AllNames(directory string) ([]string, error) {
-	storedNames, err := StoredNames(directory)
-	if err != nil {
-		return nil, err
-	}
-	archivedNames, err := ArchivedNames(directory)
+	storedNames, archivedNames, err := ListNames(directory)
 	if err != nil {
 		return nil, err
 	}
@@ -775,21 +767,35 @@ func namesInFormat(directory string, isWanted func(storedFormat int) bool) ([]st
 }
 
 func StoredNames(directory string) ([]string, error) {
+	storedNames, _, err := ListNames(directory)
+	return storedNames, err
+}
+
+func ListNames(directory string) ([]string, []string, error) {
 	found, err := os.ReadDir(directory)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return nil, nil
+			return nil, nil, nil
 		}
-		return nil, err
+		return nil, nil, err
 	}
 
-	var names []string
+	var storedNames, archivedNames []string
 	for _, candidate := range found {
-		if candidate.IsDir() && validateName(candidate.Name()) == nil {
-			names = append(names, candidate.Name())
+		if candidate.IsDir() {
+			if validateName(candidate.Name()) == nil {
+				storedNames = append(storedNames, candidate.Name())
+			}
+			continue
+		}
+		name, isArchive := strings.CutSuffix(candidate.Name(), ArchiveSuffix)
+		if isArchive && validateName(name) == nil {
+			archivedNames = append(archivedNames, name)
 		}
 	}
-	return names, nil
+	slices.Sort(archivedNames)
+
+	return storedNames, archivedNames, nil
 }
 
 func readHeadSummary(directory string, name string) (Line, error) {

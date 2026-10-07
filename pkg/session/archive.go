@@ -10,7 +10,6 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"slices"
 	"strings"
 )
 
@@ -46,27 +45,8 @@ func IsArchived(directory string, name string) bool {
 }
 
 func ArchivedNames(directory string) ([]string, error) {
-	found, err := os.ReadDir(directory)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return nil, nil
-		}
-		return nil, err
-	}
-
-	var names []string
-	for _, candidate := range found {
-		if candidate.IsDir() {
-			continue
-		}
-		name, isArchive := strings.CutSuffix(candidate.Name(), ArchiveSuffix)
-		if isArchive && validateName(name) == nil {
-			names = append(names, name)
-		}
-	}
-	slices.Sort(names)
-
-	return names, nil
+	_, archivedNames, err := ListNames(directory)
+	return archivedNames, err
 }
 
 func Archive(directory string, name string) error {
