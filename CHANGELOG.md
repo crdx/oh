@@ -2,6 +2,10 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+## [0.13.0] - 2026-10-07
+
+### Changes
+
 - Add a git status bar segment
 - Let custom tools set their concurrency level
 - Maintain source session config on `/fork`
