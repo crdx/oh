@@ -23,7 +23,7 @@ import (
 
 var (
 	startupBanner   = regexp.MustCompile(`Agent \S+ \S+ ready in \d+ms on \w+, \d+ \w+ \d+ with (.*) ⧸ ~[\d.]+Kt context\.`)
-	resumeCommand   = regexp.MustCompile(`oh -r [a-z]+-[a-z]+`)
+	resumeCommand   = regexp.MustCompile(`oh(?:\.covered)? -r [a-z]+-[a-z]+`)
 	checkedAt       = regexp.MustCompile(`"checked":\s*"[^"]*"`)
 	endpointAddress = regexp.MustCompile(`127\.0\.0\.1:\d+`)
 	wrappedBanner   = regexp.MustCompile(`(?s)Agent [a-z]+-[a-z]+ \S+ ready in \d+ms on .*?context\.`)
