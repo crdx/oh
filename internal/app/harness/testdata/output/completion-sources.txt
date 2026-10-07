@@ -1,0 +1,22 @@
+=== a declared tool and its capability group ===
+$ oh --complete tool we
+weather
+[exit 0]
+$ oh --complete caps rxwngl
+rxwngl
+rxwngla
+[exit 0]
+
+=== built-in tools without a custom declaration ===
+$ oh --complete tool re
+read
+[exit 0]
+$ oh --complete tool we
+[exit 0]
+
+=== invalid config keeps the built-in tools ===
+$ oh --complete tool re
+read
+[exit 0]
+$ oh --complete tool we
+[exit 0]

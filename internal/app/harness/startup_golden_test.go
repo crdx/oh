@@ -209,6 +209,23 @@ func TestGoldenStartupResolvesTheModelToUse(t *testing.T) {
 	})
 }
 
+func TestGoldenExecutableCompletionReadsTheConfiguredTools(t *testing.T) {
+	compareWithGolden(t, "completion-sources", ".txt", map[string]func() string{
+		"built-in tools without a custom declaration": func() string {
+			run := newStartupRun(t, "")
+			return run.run(t, "--complete", "tool", "re") + run.run(t, "--complete", "tool", "we")
+		},
+		"a declared tool and its capability group": func() string {
+			run := newStartupRun(t, "[tools.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\ngroup = \"a\"\n")
+			return run.run(t, "--complete", "tool", "we") + run.run(t, "--complete", "caps", "rxwngl")
+		},
+		"invalid config keeps the built-in tools": func() string {
+			run := newStartupRun(t, "[tools.weather]\ngroup = 5\n")
+			return run.run(t, "--complete", "tool", "re") + run.run(t, "--complete", "tool", "we")
+		},
+	})
+}
+
 func TestGoldenThePickerListsStoredAndArchivedSessions(t *testing.T) {
 	rig := newInteractiveRig(t)
 	sessionsDirectory := filepath.Join(rig.stateDirectory, "org.crdx", "oh", "sessions")

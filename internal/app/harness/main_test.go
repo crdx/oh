@@ -5633,6 +5633,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"banner-relayout":          {".ansi", ".screen"},
 		"clearing":                 {".ansi", ".screen"},
 		"completion":               {".txt"},
+		"completion-sources":       {".txt"},
 		"config-reload":            {".ansi", ".screen"},
 		"corrupt-session":          {".txt"},
 		"picker-listing":           {".screen"},
