@@ -1,0 +1,29 @@
+--- 0 columns ---
+  Provider      Model                         Effort     Context  Cost      Input     Output  Identifier
+  Anthropic     Sonnet 5                      medium        200K  ◼◼        $3.00     $15.00  claude-sonnet-5
+  Codex         Codex 5.3                     medium ⚡     272K  ◼◼        $1.30     $10.00  gpt-5.3-codex
+  OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M  ◼        $0.075      $0.30  deepseek-v4-flash-vision-exp
+  Anthropic     Opus 5                        high          200K  ◼◼◼      $15.00     $75.00  claude-opus-5
+  Codex         Sol Pro                       medium        272K  ◼◼◼◼    $150.00    $600.00  gpt-5.3-sol-pro
+  OpenCode Go   MiniMax M3                    —               1M  ◼         $0.30      $1.20  minimax-m3
+  Ollama        Qwen Coder 3 30B              medium           —  —             —          —  qwen3-coder:30b
+
+--- 100 columns ---
+  Provider      Model                         Effort     Context  Cost  Identifier
+  Anthropic     Sonnet 5                      medium        200K  ◼◼    claude-sonnet-5
+  Codex         Codex 5.3                     medium ⚡     272K  ◼◼    gpt-5.3-codex
+  OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M  ◼     deepseek-v4-flash-vision-exp
+  Anthropic     Opus 5                        high          200K  ◼◼◼   claude-opus-5
+  Codex         Sol Pro                       medium        272K  ◼◼◼◼  gpt-5.3-sol-pro
+  OpenCode Go   MiniMax M3                    —               1M  ◼     minimax-m3
+  Ollama        Qwen Coder 3 30B              medium           —  —     qwen3-coder:30b
+
+--- 46 columns ---
+  Provider      Model                        …
+  Anthropic     Sonnet 5                     …
+  Codex         Codex 5.3                    …
+  OpenCode Go   DeepSeek Flash Vision Exp 4  …
+  Anthropic     Opus 5                       …
+  Codex         Sol Pro                      …
+  OpenCode Go   MiniMax M3                   …
+  Ollama        Qwen Coder 3 30B             …

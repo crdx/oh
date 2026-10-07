@@ -27,6 +27,16 @@ const (
 
 var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")
 
+func TestGoldenQualifiedModelListMatchesTheFormerListing(t *testing.T) {
+	useCachedModels(t)
+
+	var output bytes.Buffer
+	if err := ListNames(&output, modelCachePath(), func(string) bool { return true }); err != nil {
+		t.Fatal(err)
+	}
+	assertGolden(t, "qualified-list.txt", output.String())
+}
+
 func TestGoldenAnUpdateWithNothingReachableMatchesTheGolden(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 

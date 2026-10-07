@@ -1,6 +1,7 @@
 package picker
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"slices"
@@ -89,6 +90,19 @@ func Choose(
 	}
 
 	return models[chosenIndex], nil
+}
+
+func Print(output io.Writer, models []*Model, currency money.Currency, columns int) error {
+	rows := modelList{models: models, currency: currency}
+	if _, err := fmt.Fprintln(output, style.Column(rows.ColumnHeader(columns))); err != nil {
+		return err
+	}
+	for index := range models {
+		if _, err := fmt.Fprintln(output, rows.Row(index, false, columns)); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 type modelList struct {

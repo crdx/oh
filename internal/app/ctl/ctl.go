@@ -9,6 +9,7 @@ import (
 	"crdx.org/oh/internal/app/ctl/complete"
 	"crdx.org/oh/internal/app/ctl/gc"
 	"crdx.org/oh/internal/app/ctl/migrate"
+	"crdx.org/oh/internal/app/ctl/models"
 	"crdx.org/oh/internal/app/ctl/regenerate"
 	"crdx.org/oh/internal/app/ctl/sessions"
 	"crdx.org/oh/internal/app/style"
@@ -25,6 +26,7 @@ Usage:
     oh --ctl regenerate [<session>...]
     oh --ctl migrate [options] [<session>...]
     oh --ctl gc [options]
+    oh --ctl models
 
 Commands:
     sessions      List the stored sessions
@@ -33,6 +35,7 @@ Commands:
     regenerate    Write stored transcripts again from their journals
     migrate       Bring configuration and stored sessions up to their current formats
     gc            Remove the caches sessions leave behind
+    models        Print the qualified names of usable models
 `
 
 func Run(arguments []string) int {
@@ -65,6 +68,8 @@ func Run(arguments []string) int {
 		err = migrate.Run()
 	case "gc":
 		err = gc.Run()
+	case "models":
+		err = models.Run()
 	default:
 		fmt.Print(usage)
 		return 2

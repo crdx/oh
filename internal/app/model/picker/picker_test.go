@@ -1,6 +1,7 @@
 package picker
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -9,6 +10,7 @@ import (
 	"testing"
 
 	"crdx.org/oh/internal/app/menu"
+	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/util/strutil"
@@ -243,6 +245,51 @@ func TestGoldenTheRowsOfTheModelPickerMatchTheGolden(t *testing.T) {
 	}
 
 	compareWithGolden(t, "rows.golden", output.String())
+}
+
+func TestGoldenTheStaticModelListMatchesThePicker(t *testing.T) {
+	var plain strings.Builder
+	for index, columns := range []int{0, 100, 46} {
+		if index > 0 {
+			_, _ = fmt.Fprintln(&plain)
+		}
+		_, _ = fmt.Fprintf(&plain, "--- %d columns ---\n", columns)
+		var listing strings.Builder
+		restore := style.Init(&listing)
+		err := Print(&listing, availableModels(), money.Dollar(), columns)
+		restore()
+		if err != nil {
+			t.Fatal(err)
+		}
+		plain.WriteString(listing.String())
+	}
+	compareWithGolden(t, "static-list.golden", plain.String())
+
+	var coloured strings.Builder
+	for index, columns := range []int{150, 100, 46} {
+		if index > 0 {
+			_, _ = fmt.Fprintln(&coloured)
+		}
+		_, _ = fmt.Fprintf(&coloured, "--- %d columns ---\n", columns)
+		var listing strings.Builder
+		if err := Print(&listing, availableModels(), money.Dollar(), columns); err != nil {
+			t.Fatal(err)
+		}
+		coloured.WriteString(listing.String())
+	}
+	compareWithGolden(t, "static-list.ansi", coloured.String())
+}
+
+func TestTheStaticModelListReportsWriterFailures(t *testing.T) {
+	if err := Print(failingWriter{}, availableModels(), money.Dollar(), 0); err == nil {
+		t.Error("expected a writer failure")
+	}
+}
+
+type failingWriter struct{}
+
+func (failingWriter) Write([]byte) (int, error) {
+	return 0, errors.New("writer failed")
 }
 
 func TestGoldenWhatTheModelPickerPaintsMatchesTheGolden(t *testing.T) {

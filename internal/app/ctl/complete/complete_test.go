@@ -34,6 +34,9 @@ func TestOnlyACompletionRequestIsAnsweredAtAll(t *testing.T) {
 }
 
 func TestEveryCommandIsOffered(t *testing.T) {
+	if got := completions(kindCommand, "mod"); !slices.Equal(got, []string{"models"}) {
+		t.Errorf("got the commands %v", got)
+	}
 	if got := completions(kindCommand, "s"); !slices.Equal(got, []string{"sessions"}) {
 		t.Errorf("got the commands %v", got)
 	}

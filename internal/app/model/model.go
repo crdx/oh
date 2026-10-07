@@ -481,25 +481,6 @@ func availableModelChoices(cache modelCache) []Choice {
 	return available
 }
 
-func List(output io.Writer, path string, isAvailable func(providerName string) bool) error {
-	choices := availableModelChoices(loadModelCache(path))
-	if len(choices) == 0 {
-		return errors.New("no models are known: run with -u to fetch the model list")
-	}
-
-	if choices = signedInto(choices, isAvailable); len(choices) == 0 {
-		return ErrNotLoggedIn
-	}
-
-	for _, choice := range choices {
-		if _, err := fmt.Fprintf(output, "%s/%s\n", choice.Provider, choice.ID); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
 type ProviderLister func(context.Context, string) ([]agent.Model, error)
 
 type NoLoginError struct {

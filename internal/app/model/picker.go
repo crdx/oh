@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"slices"
@@ -14,6 +15,49 @@ import (
 
 var ErrNotLoggedIn = errors.New("not logged in to any provider: run oh -L to sign in")
 
+func List(
+	output io.Writer,
+	path string,
+	currency money.Currency,
+	isLoggedIn func(providerName string) bool,
+	defaults Defaults,
+	columns int,
+) error {
+	choices, err := selectableChoices(path, isLoggedIn)
+	if err != nil {
+		return err
+	}
+
+	return picker.Print(output, offered(choices, defaults), currency, columns)
+}
+
+func ListNames(output io.Writer, path string, isLoggedIn func(providerName string) bool) error {
+	choices, err := selectableChoices(path, isLoggedIn)
+	if err != nil {
+		return err
+	}
+
+	for _, choice := range choices {
+		if _, err := fmt.Fprintf(output, "%s/%s\n", choice.Provider, choice.ID); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func selectableChoices(path string, isLoggedIn func(providerName string) bool) ([]Choice, error) {
+	choices := Choices(path)
+	if len(choices) == 0 {
+		return nil, errors.New("no models are known: run with -u to fetch the model list")
+	}
+
+	if choices = signedInto(choices, isLoggedIn); len(choices) == 0 {
+		return nil, ErrNotLoggedIn
+	}
+
+	return choices, nil
+}
+
 func Choose(
 	path string,
 	currency money.Currency,
@@ -22,13 +66,9 @@ func Choose(
 	screen io.Writer,
 	defaults Defaults,
 ) (Selection, error) {
-	choices := Choices(path)
-	if len(choices) == 0 {
-		return Selection{}, errors.New("no models are known: run with -u to fetch the model list")
-	}
-
-	if choices = signedInto(choices, isLoggedIn); len(choices) == 0 {
-		return Selection{}, ErrNotLoggedIn
+	choices, err := selectableChoices(path, isLoggedIn)
+	if err != nil {
+		return Selection{}, err
 	}
 
 	chosenModel, err := picker.Choose(offered(choices, defaults), currency, terminal, screen)

@@ -1,0 +1,3 @@
+codex/gpt-5.6-sol
+opencode-go/deepseek-v4-pro
+anthropic/claude-opus-5

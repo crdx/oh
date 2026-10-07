@@ -12,6 +12,8 @@ import (
 	"syscall"
 	"time"
 
+	"golang.org/x/term"
+
 	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/internal/money"
@@ -546,10 +548,25 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	}
 
 	if inputArgs.List {
-		endpoints := backend.EndpointSettings{OverrideURL: endpointURL}
-		return "", model.List(os.Stdout, modelCachePath, func(providerName string) bool {
-			return backend.IsAvailable(providerName, endpoints)
-		})
+		workspace, err := work.Current()
+		if err != nil {
+			return "", err
+		}
+		settings, err := config.LoadSources(getConfigSources(workspace.GetDir())...)
+		if err != nil {
+			return "", err
+		}
+		style.ApplyTheme(settings.Ui.Theme)
+		columns := 0
+		if tty.Is(os.Stdout) {
+			columns, _, _ = term.GetSize(int(os.Stdout.Fd()))
+		}
+		endpoints := backend.EndpointSettings{OverrideURL: endpointURL, OllamaHost: settings.Provider.Ollama.Host}
+		return "", model.List(os.Stdout, modelCachePath,
+			money.Load(location.GetExchangeRateCachePath(), currencyCode(settings.Ui.Currency)),
+			func(providerName string) bool { return backend.IsAvailable(providerName, endpoints) },
+			settings.Model.GetDefaults(), columns,
+		)
 	}
 
 	workspace, err := work.Current()

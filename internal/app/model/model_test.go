@@ -17,6 +17,7 @@ import (
 	"unicode"
 
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/money"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -90,21 +91,63 @@ func TestAnEmptyCacheOffersNothingToSelect(t *testing.T) {
 	}
 }
 
-func TestListingModelsPrintsEverySelectableQualifiedName(t *testing.T) {
+func TestListingModelsPrintsTheSameOffersAsThePicker(t *testing.T) {
 	useCachedModels(t)
 
 	var output bytes.Buffer
-	if err := List(&output, modelCachePath(), func(string) bool { return true }); err != nil {
+	if err := List(&output, modelCachePath(), money.Dollar(), func(string) bool { return true }, Defaults{Effort: "high", IsFast: true}, 0); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	want := strings.Join([]string{
-		"codex/gpt-5.6-sol",
-		"opencode-go/deepseek-v4-pro",
-		"anthropic/claude-opus-5",
-	}, "\n") + "\n"
-	if output.String() != want {
-		t.Errorf("got %q, want %q", output.String(), want)
+	want := []string{
+		"Provider", "Model", "Effort", "Context", "Cost", "Input", "Output", "Identifier",
+		"Codex", "Sol", "high ⚡", "gpt-5.6-sol",
+		"OpenCode Go", "DeepSeek", "high", "deepseek-v4-pro",
+		"Anthropic", "Opus", "high", "claude-opus-5",
+	}
+	rendered := style.Plain(output.String())
+	for _, field := range want {
+		if !strings.Contains(rendered, field) {
+			t.Errorf("missing %q from listing:\n%s", field, rendered)
+		}
+	}
+	if strings.Contains(rendered, "›") {
+		t.Errorf("a non-interactive listing marked a chosen row:\n%s", rendered)
+	}
+}
+
+func TestQualifiedListingOmitsUnavailableProviders(t *testing.T) {
+	useCachedModels(t)
+
+	var output bytes.Buffer
+	err := ListNames(&output, modelCachePath(), func(providerName string) bool {
+		return providerName == AnthropicProvider
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if output.String() != "anthropic/claude-opus-5\n" {
+		t.Errorf("got %q", output.String())
+	}
+}
+
+func TestQualifiedListingReturnsWriterFailures(t *testing.T) {
+	useCachedModels(t)
+
+	err := ListNames(failingWriter{}, modelCachePath(), func(string) bool { return true })
+	if err == nil || !strings.Contains(err.Error(), "writer failed") {
+		t.Errorf("got %v", err)
+	}
+}
+
+func TestQualifiedListingRefusesWithoutModelsOrLogin(t *testing.T) {
+	useCachedModels(t)
+
+	if err := ListNames(&bytes.Buffer{}, modelCachePath(), func(string) bool { return false }); !errors.Is(err, ErrNotLoggedIn) {
+		t.Errorf("expected a login refusal, got %v", err)
+	}
+	if err := ListNames(&bytes.Buffer{}, t.TempDir()+"/models.json", func(string) bool { return true }); err == nil || !strings.Contains(err.Error(), "-u") {
+		t.Errorf("expected an update hint, got %v", err)
 	}
 }
 
@@ -117,7 +160,7 @@ func (failingWriter) Write([]byte) (int, error) {
 func TestListingModelsReturnsWriterFailures(t *testing.T) {
 	useCachedModels(t)
 
-	err := List(failingWriter{}, modelCachePath(), func(string) bool { return true })
+	err := List(failingWriter{}, modelCachePath(), money.Dollar(), func(string) bool { return true }, Defaults{}, 0)
 	if err == nil || !strings.Contains(err.Error(), "writer failed") {
 		t.Errorf("got %v", err)
 	}
@@ -127,16 +170,16 @@ func TestListingModelsOmitsProvidersThatAreNotAvailable(t *testing.T) {
 	useCachedModels(t)
 
 	var output bytes.Buffer
-	err := List(&output, modelCachePath(), func(providerName string) bool {
+	err := List(&output, modelCachePath(), money.Dollar(), func(providerName string) bool {
 		return providerName != OpencodeGoProvider
-	})
+	}, Defaults{}, 0)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if strings.Contains(output.String(), OpencodeGoProvider+"/") {
+	if strings.Contains(output.String(), "DeepSeek") {
 		t.Errorf("an unavailable provider was listed: %q", output.String())
 	}
-	if !strings.Contains(output.String(), CodexProvider+"/") || !strings.Contains(output.String(), AnthropicProvider+"/") {
+	if !strings.Contains(output.String(), "Codex") || !strings.Contains(output.String(), "Anthropic") {
 		t.Errorf("available providers were omitted: %q", output.String())
 	}
 }
@@ -144,7 +187,7 @@ func TestListingModelsOmitsProvidersThatAreNotAvailable(t *testing.T) {
 func TestListingModelsRefusesWhenNoKnownProviderIsAvailable(t *testing.T) {
 	useCachedModels(t)
 
-	err := List(&bytes.Buffer{}, modelCachePath(), func(string) bool { return false })
+	err := List(&bytes.Buffer{}, modelCachePath(), money.Dollar(), func(string) bool { return false }, Defaults{}, 0)
 	if !errors.Is(err, ErrNotLoggedIn) {
 		t.Errorf("expected the listing to advise signing in, got %v", err)
 	}
@@ -153,7 +196,7 @@ func TestListingModelsRefusesWhenNoKnownProviderIsAvailable(t *testing.T) {
 func TestListingModelsWithoutACacheSaysHowToFetchThem(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 
-	if err := List(&bytes.Buffer{}, modelCachePath(), func(string) bool { return true }); err == nil || !strings.Contains(err.Error(), "-u") {
+	if err := List(&bytes.Buffer{}, modelCachePath(), money.Dollar(), func(string) bool { return true }, Defaults{}, 0); err == nil || !strings.Contains(err.Error(), "-u") {
 		t.Errorf("expected the empty listing to say how to fetch models, got %v", err)
 	}
 }

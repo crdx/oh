@@ -3,6 +3,7 @@ analyse
 check
 gc
 migrate
+models
 regenerate
 sessions
 === commands beginning with a word ===

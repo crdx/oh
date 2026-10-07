@@ -7,6 +7,7 @@ Usage:
     oh --ctl regenerate [<session>...]
     oh --ctl migrate [options] [<session>...]
     oh --ctl gc [options]
+    oh --ctl models
 
 Commands:
     sessions      List the stored sessions
@@ -15,3 +16,4 @@ Commands:
     regenerate    Write stored transcripts again from their journals
     migrate       Bring configuration and stored sessions up to their current formats
     gc            Remove the caches sessions leave behind
+    models        Print the qualified names of usable models

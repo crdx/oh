@@ -7311,7 +7311,15 @@ func TestModelListDispatchRunsThroughTheBinary(t *testing.T) {
 	}
 
 	output := runTestBinary(t, binary, reachableWorkspaceDir(t), testBinaryEnvironment(t, stateDirectory), "-l")
-	if output != "ollama/local-cli\n" {
+	qualified := runTestBinary(t, binary, reachableWorkspaceDir(t), testBinaryEnvironment(t, stateDirectory), "--ctl", "models")
+	if qualified != "ollama/local-cli\n" {
+		t.Errorf("qualified listing got %q", qualified)
+	}
+	if !strings.Contains(output, "Provider      Model") ||
+		!strings.Contains(output, "Ollama        Local Cli") ||
+		!strings.Contains(output, "high") ||
+		!strings.Contains(output, "local-cli") ||
+		strings.Contains(output, "gpt-cli") || strings.Contains(output, "\x1b") {
 		t.Errorf("got %q", output)
 	}
 }
@@ -7334,9 +7342,12 @@ func TestModelUpdateDispatchRunsThroughTheBinary(t *testing.T) {
 
 	listed := runTestBinary(t, binary, workspaceDir, environment, "-l")
 	for _, providerName := range model.ProviderNames() {
-		if !strings.Contains(listed, providerName+"/fake") {
+		if !strings.Contains(listed, model.ProviderName(providerName)+" ") {
 			t.Errorf("listing omitted %s: %q", providerName, listed)
 		}
+	}
+	if strings.Count(listed, "  fake\n") != len(model.ProviderNames()) {
+		t.Errorf("listing omitted a model identifier: %q", listed)
 	}
 }
 
