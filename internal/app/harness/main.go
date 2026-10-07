@@ -782,10 +782,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	mode := caps.NewModeWithGroups(args.Caps, args.GroupFlags, frozenToolGroups, activeToolGroups)
 
 	files := file.New(workspace.GetRoot(), caps.RefuseWrite(mode))
-	homeRoot, err := shell.MountHomeDirectory(files, homeDir, mode)
-	if err != nil {
-		return "", err
-	}
+	homeRoot := shell.MountHomeDirectory(files, homeDir, mode)
 	defer func() { _ = homeRoot.Close() }()
 
 	configuredModels, err := model.ParseRoundRobin(
@@ -901,10 +898,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 	); err != nil {
 		return "", err
 	}
-	cacheRoot, err := shell.MountHomeCache(files, homeDir)
-	if err != nil {
-		return "", err
-	}
+	cacheRoot := shell.MountHomeCache(files, homeDir)
 	defer func() { _ = cacheRoot.Close() }()
 
 	dropKeeper, err := drops.Open(files, sessionInfo.Directory, log.EnsurePersisted)
@@ -1018,10 +1012,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		fixedContextSources = identifyStaticContextSources(systemPrompt, contextFiles, availableSkills)
 	}
 
-	tmpRoot, err := shell.MountTemporaryDirectory(files, tmpDir)
-	if err != nil {
-		return "", err
-	}
+	tmpRoot := shell.MountTemporaryDirectory(files, tmpDir)
 	defer func() { _ = tmpRoot.Close() }()
 
 	pathGrants := pathgrant.New(workspace, pathAccess)

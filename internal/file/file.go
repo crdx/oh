@@ -182,6 +182,11 @@ func (self *Root) Close() error {
 	return self.root.Close()
 }
 
+func (self *Root) Prepare() error {
+	_, err := self.getRoot()
+	return err
+}
+
 func (self *Root) FS() fs.FS {
 	return rootFileSystem{root: self}
 }

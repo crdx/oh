@@ -20,10 +20,10 @@ import (
 )
 
 type configuredMount struct {
-	root    *os.Root
-	target  string
-	name    string
-	isExact bool
+	directory string
+	target    string
+	name      string
+	isExact   bool
 }
 
 type mountedPath struct {
@@ -45,7 +45,7 @@ type PathAccess struct {
 	denyPathCache    map[string][]string
 	denySearches     map[string]*pendingDenySearch
 	denials          pathDenials
-	roots            []*os.Root
+	roots            []*file.Root
 	skillDirectories []string
 }
 
@@ -132,6 +132,10 @@ func (self *PathAccess) Grant(path string, access Access) (bool, error) {
 
 	temporaryPathMount, err := self.openMountedPath(path, access)
 	if err != nil {
+		return false, err
+	}
+	if err := temporaryPathMount.root.Prepare(); err != nil {
+		_ = temporaryPathMount.root.Close()
 		return false, err
 	}
 	self.releaseTemporaryMount(path)
@@ -244,50 +248,44 @@ func (self *PathAccess) releaseTemporaryMount(path string) {
 	} else {
 		self.files.Unmount(path)
 	}
-	_ = temporaryPathMount.mount.root.Close()
+	_ = temporaryPathMount.root.Close()
 }
 
 func (self *PathAccess) openMountedPath(path string, access Access) (mountedPath, error) {
-	mount, err := openConfiguredMount(path)
+	mount, err := findConfiguredMount(path)
 	if err != nil {
 		return mountedPath{}, err
 	}
-	self.roots = append(self.roots, mount.root)
-	return mountedPath{mount: &mount, root: newMountedRoot(self.mode, mount, access)}, nil
+	return self.mountLazily(mount, access), nil
+}
+
+func (self *PathAccess) mountLazily(mount configuredMount, access Access) mountedPath {
+	root := newMountedRoot(self.mode, mount, access)
+	self.roots = append(self.roots, root)
+	return mountedPath{mount: &mount, root: root}
 }
 
 func (self *PathAccess) openBaselineMountedPath(path string) (mountedPath, error) {
-	pathMount, err := self.openMountedPath(path, ReadAccess)
-	if !errors.Is(err, fs.ErrPermission) {
-		return pathMount, err
-	}
-
-	info, statErr := os.Stat(path)
-	if statErr != nil {
-		return mountedPath{}, statErr
-	}
-	if info.IsDir() {
+	mount, err := findConfiguredMount(path)
+	if err != nil {
 		return mountedPath{}, err
 	}
-
-	target, targetErr := filepath.EvalSymlinks(path)
-	if targetErr != nil {
-		return mountedPath{}, targetErr
-	}
-	openedFile, openErr := os.Open(target)
-	if openErr != nil {
-		return mountedPath{}, openErr
-	}
-	if closeErr := openedFile.Close(); closeErr != nil {
-		return mountedPath{}, closeErr
+	if !mount.isExact {
+		return self.mountLazily(mount, ReadAccess), nil
 	}
 
-	mount := configuredMount{
-		target:  target,
-		name:    filepath.Base(target),
-		isExact: true,
+	directoryError := probeOpening(mount.directory)
+	if directoryError == nil {
+		return self.mountLazily(mount, ReadAccess), nil
 	}
-	root := file.NewExactFile(target, func(string) error { return file.ErrReadOnly })
+	if !errors.Is(directoryError, fs.ErrPermission) {
+		return mountedPath{}, directoryError
+	}
+
+	if err := probeOpening(mount.target); err != nil {
+		return mountedPath{}, err
+	}
+	root := file.NewExactFile(mount.target, func(string) error { return file.ErrReadOnly })
 	return mountedPath{mount: &mount, root: root}, nil
 }
 
@@ -492,34 +490,41 @@ func newMountedRoot(mode *caps.Mode, mount configuredMount, access Access) *file
 			return currentRefusal(filepath.Join(mount.target, name))
 		}
 	}
-	return file.New(mount.root, refuseWrite)
+	return file.NewLazy(mount.directory, refuseWrite)
 }
 
-func openConfiguredMount(path string) (configuredMount, error) {
+func findConfiguredMount(path string) (configuredMount, error) {
 	info, err := os.Stat(path)
 	if err != nil {
 		return configuredMount{}, err
 	}
 
 	if info.IsDir() {
-		root, err := os.OpenRoot(path)
-		return configuredMount{root: root, target: path, name: "."}, err
+		return configuredMount{directory: path, target: path, name: "."}, nil
 	}
 
 	target, err := filepath.EvalSymlinks(path)
 	if err != nil {
 		return configuredMount{}, err
 	}
-	root, err := os.OpenRoot(filepath.Dir(target))
 	return configuredMount{
-		root:    root,
-		target:  target,
-		name:    filepath.Base(target),
-		isExact: true,
-	}, err
+		directory: filepath.Dir(target),
+		target:    target,
+		name:      filepath.Base(target),
+		isExact:   true,
+	}, nil
 }
 
-func closeRoots(roots []*os.Root) {
+func probeOpening(path string) error {
+	handle, err := os.Open(path) //nolint:gosec // a path the sandbox policy names
+	if err != nil {
+		return err
+	}
+
+	return handle.Close()
+}
+
+func closeRoots(roots []*file.Root) {
 	for _, root := range roots {
 		_ = root.Close()
 	}

@@ -1,8 +1,6 @@
 package shell
 
 import (
-	"fmt"
-	"os"
 	"path/filepath"
 
 	"crdx.org/oh/internal/app/caps"
@@ -10,33 +8,21 @@ import (
 	"crdx.org/oh/internal/sandbox"
 )
 
-func MountHomeDirectory(files *file.Root, homeDirectory string, mode *caps.Mode) (*os.Root, error) {
-	homeRoot, err := os.OpenRoot(homeDirectory)
-	if err != nil {
-		return nil, fmt.Errorf("could not open the shell home: %w", err)
-	}
-
-	files.Mount(homeDirectory, file.New(homeRoot, caps.RefuseWrite(mode)))
-	return homeRoot, nil
+func MountHomeDirectory(files *file.Root, homeDirectory string, mode *caps.Mode) *file.Root {
+	homeRoot := file.NewLazy(homeDirectory, caps.RefuseWrite(mode))
+	files.Mount(homeDirectory, homeRoot)
+	return homeRoot
 }
 
-func MountHomeCache(files *file.Root, homeDirectory string) (*os.Root, error) {
+func MountHomeCache(files *file.Root, homeDirectory string) *file.Root {
 	cacheDirectory := filepath.Join(homeDirectory, ".cache")
-	cacheRoot, err := os.OpenRoot(cacheDirectory)
-	if err != nil {
-		return nil, fmt.Errorf("could not open the shared cache: %w", err)
-	}
-
-	files.Mount(cacheDirectory, file.New(cacheRoot, func(string) error { return nil }))
-	return cacheRoot, nil
+	cacheRoot := file.NewLazy(cacheDirectory, func(string) error { return nil })
+	files.Mount(cacheDirectory, cacheRoot)
+	return cacheRoot
 }
 
-func MountTemporaryDirectory(files *file.Root, temporaryDirectory string) (*os.Root, error) {
-	temporaryRoot, err := os.OpenRoot(temporaryDirectory)
-	if err != nil {
-		return nil, fmt.Errorf("could not open the tmp dir: %w", err)
-	}
-
-	files.Mount(sandbox.TmpDir, file.New(temporaryRoot, func(string) error { return nil }))
-	return temporaryRoot, nil
+func MountTemporaryDirectory(files *file.Root, temporaryDirectory string) *file.Root {
+	temporaryRoot := file.NewLazy(temporaryDirectory, func(string) error { return nil })
+	files.Mount(sandbox.TmpDir, temporaryRoot)
+	return temporaryRoot
 }

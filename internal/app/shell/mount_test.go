@@ -822,10 +822,7 @@ func TestHomeMappingsAreReadableByFileToolsBeforeAShellRuns(t *testing.T) {
 	}
 
 	files := file.New(workspaceRoot, caps.RefuseWrite(mode))
-	homeRoot, err := MountHomeDirectory(files, privateHome, mode)
-	if err != nil {
-		t.Fatal(err)
-	}
+	homeRoot := MountHomeDirectory(files, privateHome, mode)
 	defer func() { _ = homeRoot.Close() }()
 	access, err := NewPathAccess(files, mode, paths)
 	if err != nil {
@@ -898,4 +895,60 @@ func countOf(list []string, wanted string) int {
 		}
 	}
 	return count
+}
+
+func TestPathAccessHoldsADescriptorOnlyForWhatIsRead(t *testing.T) {
+	mode := caps.NewMode(caps.Read)
+	files := configuredPathTestRoot(t, mode)
+	var readDirectories []string
+	for range 12 {
+		directory := t.TempDir()
+		if err := os.WriteFile(filepath.Join(directory, "reference"), []byte("hello"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+		readDirectories = append(readDirectories, directory)
+	}
+
+	before := openDescriptors(t)
+	access, err := NewPathAccess(files, mode, Paths{Read: readDirectories})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if held := openDescriptors(t) - before; held != 0 {
+		t.Errorf("mounting held %d descriptors, want none", held)
+	}
+
+	readRoot, name, err := files.Resolve(filepath.Join(readDirectories[0], "reference"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if data, err := readRoot.ReadFile(name); err != nil || string(data) != "hello" {
+		t.Fatalf("read got %q and %v", data, err)
+	}
+	if held := openDescriptors(t) - before; held != 1 {
+		t.Errorf("one read held %d descriptors, want 1", held)
+	}
+
+	if _, err := access.Grant(t.TempDir(), ReadAccess); err != nil {
+		t.Fatal(err)
+	}
+	if held := openDescriptors(t) - before; held != 2 {
+		t.Errorf("a temporary grant held %d descriptors beside the read, want 2", held)
+	}
+
+	access.Close()
+	if held := openDescriptors(t) - before; held != 0 {
+		t.Errorf("closing left %d descriptors held, want none", held)
+	}
+}
+
+func openDescriptors(t *testing.T) int {
+	t.Helper()
+
+	entries, err := os.ReadDir("/proc/self/fd")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return len(entries)
 }

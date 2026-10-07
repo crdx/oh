@@ -24,10 +24,7 @@ func TestHomeMountIsReadableByFileTools(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	homeRoot, err := shell.MountHomeDirectory(files, home, caps.NewMode(caps.Read))
-	if err != nil {
-		t.Fatal(err)
-	}
+	homeRoot := shell.MountHomeDirectory(files, home, caps.NewMode(caps.Read))
 	defer func() { _ = homeRoot.Close() }()
 
 	resolvedRoot, name, err := files.Resolve(path)
@@ -52,10 +49,7 @@ func TestTemporaryMountIsWritableWithoutAShell(t *testing.T) {
 
 	files := file.New(workspaceRoot, func(string) error { return file.ErrReadOnly })
 	temporaryDirectory := t.TempDir()
-	temporaryRoot, err := shell.MountTemporaryDirectory(files, temporaryDirectory)
-	if err != nil {
-		t.Fatal(err)
-	}
+	temporaryRoot := shell.MountTemporaryDirectory(files, temporaryDirectory)
 	defer func() { _ = temporaryRoot.Close() }()
 
 	resolvedRoot, name, err := files.Resolve("/tmp/proof")
@@ -85,15 +79,9 @@ func TestPrivateCacheIsWritableByFileToolsAtEveryWorkspaceWriteState(t *testing.
 			if err := os.Mkdir(filepath.Join(home, ".cache"), 0o700); err != nil {
 				t.Fatal(err)
 			}
-			homeRoot, err := shell.MountHomeDirectory(files, home, mode)
-			if err != nil {
-				t.Fatal(err)
-			}
+			homeRoot := shell.MountHomeDirectory(files, home, mode)
 			defer func() { _ = homeRoot.Close() }()
-			cacheRoot, err := shell.MountHomeCache(files, home)
-			if err != nil {
-				t.Fatal(err)
-			}
+			cacheRoot := shell.MountHomeCache(files, home)
 			defer func() { _ = cacheRoot.Close() }()
 
 			resolvedRoot, resolvedName, err := files.Resolve(filepath.Join(home, ".cache", "proof"))
