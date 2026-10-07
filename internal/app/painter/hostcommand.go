@@ -9,6 +9,7 @@ import (
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/width"
+	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/toolbox/bash"
 )
 
@@ -29,7 +30,9 @@ func RenderHostCommand(command string, latestLine string, elapsedTime time.Durat
 }
 
 func runningHostCommand(command string, elapsedTime time.Duration, columns int) string {
-	label := call.LabelForRendering(bash.DescribeCommand(command))
+	rendering := bash.DescribeCommand(command)
+	rendering.Subject = strutil.Flatten(rendering.Subject)
+	label := call.LabelForRendering(rendering)
 	line := dynamic.RunningLine(label, elapsedTime, hostcommand.TimeLimit, 0)
 
 	gap := columns - style.Width(line) - style.Width(hostCommandStopHint)
