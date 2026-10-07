@@ -199,17 +199,22 @@ func TestDeletingAWordBackwardLeavesTheCursorWhereTheWordBegan(t *testing.T) {
 	})
 }
 
-func TestDeletingAWordForwardLeavesTheCursorWhereItWas(t *testing.T) {
+func TestDeletingAWordForwardConsumesTrailingWhitespace(t *testing.T) {
 	moves(t, (*Buffer).DeleteWordForward, map[string]string{
-		"|one two":    "| two",
-		"one| two":    "one|",
-		"one | two":   "one |",
-		"one t|wo":    "one t|",
-		"one, |two":   "one, |",
-		"one|":        "one|",
-		"|  ":         "|",
-		"one|\ntwo":   "one|",
-		"|snake_case": "|_case",
+		"|one two":         "|two",
+		"one| two":         "one|",
+		"one | two":        "one |",
+		"one| two  three":  "one|  three",
+		"one,| two  three": "one,|  three",
+		"one t|wo three":   "one t|three",
+		"one, |two":        "one, |",
+		"one|":             "one|",
+		"|  ":              "|",
+		"|one  \tthree":    "|three",
+		"|日本　three":        "|three",
+		"|one\ntwo":        "|two",
+		"one|\ntwo":        "one|",
+		"|snake_case":      "|_case",
 	})
 }
 

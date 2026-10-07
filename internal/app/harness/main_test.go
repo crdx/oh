@@ -10864,7 +10864,34 @@ func TestGoldenReadlineInputBindingsDrawWhatTheyDrewBefore(t *testing.T) {
 			return readlineInputStream(t, nil, "one two", control('j'), character('!'))
 		},
 		"16 ctrl+delete": func() string {
-			return readlineInputStream(t, nil, "one two", key.Key{Code: key.Home}, key.Key{Code: key.Delete, Mod: key.Ctrl})
+			return readlineInputStream(t, nil, "one  two", key.Key{Code: key.Home}, key.Key{Code: key.Delete, Mod: key.Ctrl})
+		},
+		"17 ctrl+delete after a word": func() string {
+			return readlineInputStream(t, nil, "one two  three", key.Key{Code: key.Home}, key.Key{Code: key.Right, Mod: key.Ctrl}, key.Key{Code: key.Delete, Mod: key.Ctrl})
+		},
+		"18 ctrl+delete inside a word": func() string {
+			return readlineInputStream(t, nil, "one two  three", key.Key{Code: key.Home}, key.Key{Code: key.Right, Mod: key.Ctrl}, key.Key{Code: key.Right}, key.Key{Code: key.Right}, key.Key{Code: key.Delete, Mod: key.Ctrl})
+		},
+		"19 ctrl+delete before punctuation": func() string {
+			return readlineInputStream(t, nil, "one,  two", key.Key{Code: key.Home}, key.Key{Code: key.Delete, Mod: key.Ctrl})
+		},
+		"20 ctrl+delete across a newline": func() string {
+			return readlineInputStream(t, nil, "one\n two", key.Key{Code: key.Home}, key.Key{Code: key.Up}, key.Key{Code: key.Delete, Mod: key.Ctrl})
+		},
+		"21 repeated ctrl+delete": func() string {
+			return readlineInputStream(t, nil, "one two three", key.Key{Code: key.Home}, key.Key{Code: key.Delete, Mod: key.Ctrl}, key.Key{Code: key.Delete, Mod: key.Ctrl})
+		},
+		"22 ctrl+delete at the end": func() string {
+			return readlineInputStream(t, nil, "one two", key.Key{Code: key.Delete, Mod: key.Ctrl})
+		},
+		"23 delete without control": func() string {
+			return readlineInputStream(t, nil, "one  two", key.Key{Code: key.Home}, key.Key{Code: key.Delete})
+		},
+		"24 ctrl+right still skips a word": func() string {
+			return readlineInputStream(t, nil, "one  two", key.Key{Code: key.Home}, key.Key{Code: key.Right, Mod: key.Ctrl}, character('!'))
+		},
+		"25 ctrl+delete after punctuation": func() string {
+			return readlineInputStream(t, nil, "one, two  three", key.Key{Code: key.Home}, key.Key{Code: key.Right, Mod: key.Ctrl}, key.Key{Code: key.Right}, key.Key{Code: key.Delete, Mod: key.Ctrl})
 		},
 	}
 

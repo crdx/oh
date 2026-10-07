@@ -751,14 +751,14 @@ func TestReadlineControlBindingsEditTheCurrentLine(t *testing.T) {
 	}
 }
 
-func TestControlDeleteDeletesAWordForward(t *testing.T) {
+func TestControlDeleteDeletesAWordAndItsTrailingWhitespace(t *testing.T) {
 	self := NewInput(nil)
-	self.buffer = bufferFrom(t, "one |two three")
+	self.buffer = bufferFrom(t, "one |two  three")
 
 	self.Apply(key.Key{Code: key.Delete, Mod: key.Ctrl}, false)
 
-	if got := markCursor(self.buffer); got != "one | three" {
-		t.Errorf("got %q, want %q", got, "one | three")
+	if got := markCursor(self.buffer); got != "one |three" {
+		t.Errorf("got %q, want %q", got, "one |three")
 	}
 }
 

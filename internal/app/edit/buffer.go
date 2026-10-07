@@ -109,7 +109,13 @@ func (self *Buffer) DeleteWordBackward() {
 }
 
 func (self *Buffer) DeleteWordForward() {
-	self.remove(self.cursor, self.wordEnd())
+	end := self.wordEnd()
+	if self.cursor < len(self.runes) && isWord(self.runes[self.cursor]) {
+		for end < len(self.runes) && unicode.IsSpace(self.runes[end]) {
+			end++
+		}
+	}
+	self.remove(self.cursor, end)
 }
 
 func (self *Buffer) DeleteWhitespaceWordBackward() {
