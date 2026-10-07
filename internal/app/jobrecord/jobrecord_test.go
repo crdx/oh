@@ -118,13 +118,11 @@ func TestAForkNamesTheSessionItsJobsWereRunningIn(t *testing.T) {
 	}{
 		{
 			[]string{"docs"},
-			"Job `docs` was running in session `able-dolphin` when this session was forked from it, " +
-				"and is not running here. Restart it if still needed.",
+			"Job `docs` was running in session `able-dolphin` when this session was forked from it. Restart it if still needed.",
 		},
 		{
 			[]string{"docs", "watch"},
-			"Jobs `docs` and `watch` were running in session `able-dolphin` when this session was forked from it, " +
-				"and are not running here. Restart each if still needed.",
+			"Jobs `docs` and `watch` were running in session `able-dolphin` when this session was forked from it. Restart each if still needed.",
 		},
 	} {
 		event := jobrecord.EndedWithSourceSessionEvent("able-dolphin", test.names)

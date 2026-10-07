@@ -103,20 +103,18 @@ func endedWithSessionNotice(event agent.Event, instruction string) (string, bool
 	subject := "Job " + formattedNames[0]
 	pronoun := "it"
 	wasRunning := " was running"
-	isNotRunning := " is not running"
 
 	if len(formattedNames) > 1 {
 		subject = "Jobs " + strings.Join(formattedNames[:len(formattedNames)-1], ", ") +
 			" and " + formattedNames[len(formattedNames)-1]
 		pronoun = "each"
 		wasRunning = " were running"
-		isNotRunning = " are not running"
 	}
 
 	restart := "Restart " + pronoun + instruction + " if still needed."
 	if event.Name != "" {
 		return subject + wasRunning + " in session " + markdown.CodeSpan(event.Name) +
-			" when this session was forked from it, and" + isNotRunning + " here. " + restart, true
+			" when this session was forked from it. " + restart, true
 	}
 
 	return "The session was closed and reopened after the last turn. " +
