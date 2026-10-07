@@ -821,10 +821,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 
 	availableSkills = skill.ExcludeGlobal(availableSkills, settings.Skills.Exclude)
 
-	skillRoots, err := skill.MountGlobalSkills(files, availableSkills)
-	if err != nil {
-		return "", err
-	}
+	skillRoots := skill.MountGlobalSkills(files, availableSkills)
 	defer skill.Close(skillRoots)
 	pathAccess.ShareSkills(skill.GlobalDirectories(availableSkills))
 

@@ -373,3 +373,94 @@ func TestAWritableExactFileRootStillRefusesSiblingsAndDirectories(t *testing.T) 
 		t.Errorf("mkdir got %v, want outside-root refusal", err)
 	}
 }
+
+func TestALazyRootOpensItsDirectoryOnlyWhenFirstUsed(t *testing.T) {
+	directory := filepath.Join(t.TempDir(), "later")
+
+	root := file.NewLazy(directory, func(string) error { return nil })
+	t.Cleanup(func() { _ = root.Close() })
+	if root.Name() != directory {
+		t.Errorf("got root name %q, want %q", root.Name(), directory)
+	}
+
+	if err := os.Mkdir(directory, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(directory, "note"), []byte("note"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	if data, err := root.ReadFile("note"); err != nil || string(data) != "note" {
+		t.Errorf("read got %q and %v", data, err)
+	}
+	if info, err := root.Stat("note"); err != nil || info.Name() != "note" {
+		t.Errorf("stat got %v and %v", info, err)
+	}
+	if entries, err := root.ReadDir("."); err != nil || len(entries) != 1 {
+		t.Errorf("listing got %v and %v", entries, err)
+	}
+	if err := root.WriteFile("written", []byte("written"), 0o600); err != nil {
+		t.Errorf("write got %v", err)
+	}
+	if err := root.MkdirAll("nested", 0o700); err != nil {
+		t.Errorf("mkdir got %v", err)
+	}
+}
+
+func TestALazyRootWhoseDirectoryIsMissingFailsOnlyWhenUsed(t *testing.T) {
+	directory := filepath.Join(t.TempDir(), "missing")
+	root := file.NewLazy(directory, func(string) error { return nil })
+	t.Cleanup(func() { _ = root.Close() })
+
+	for operation, run := range map[string]func() error{
+		"open":  func() error { _, err := root.Open("note"); return err },
+		"read":  func() error { _, err := root.ReadFile("note"); return err },
+		"stat":  func() error { _, err := root.Stat("note"); return err },
+		"write": func() error { return root.WriteFile("note", nil, 0o600) },
+		"mkdir": func() error { return root.MkdirAll("nested", 0o700) },
+	} {
+		if err := run(); !errors.Is(err, fs.ErrNotExist) {
+			t.Errorf("%s got %v, want the directory reported missing", operation, err)
+		}
+	}
+}
+
+func TestALazyRootClosedBeforeUseOpensNothing(t *testing.T) {
+	directory := t.TempDir()
+	if err := os.WriteFile(filepath.Join(directory, "note"), []byte("note"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	unused := file.NewLazy(directory, func(string) error { return nil })
+	if err := unused.Close(); err != nil {
+		t.Fatalf("closing an unused root got %v", err)
+	}
+	if _, err := unused.ReadFile("note"); !errors.Is(err, os.ErrClosed) {
+		t.Errorf("read after close got %v, want closed", err)
+	}
+
+	used := file.NewLazy(directory, func(string) error { return nil })
+	if _, err := used.ReadFile("note"); err != nil {
+		t.Fatal(err)
+	}
+	if err := used.Close(); err != nil {
+		t.Fatalf("closing a used root got %v", err)
+	}
+	if _, err := used.ReadFile("note"); err == nil {
+		t.Error("expected a read after close to fail")
+	}
+}
+
+func TestOnlyALazyRootIsClosedThroughTheTree(t *testing.T) {
+	isWritable := true
+	root, directory := testRoot(t, &isWritable)
+	if err := root.Close(); err != nil {
+		t.Fatalf("closing a borrowed root got %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(directory, "note"), []byte("note"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := root.ReadFile("note"); err != nil {
+		t.Errorf("expected the borrowed root to stay open, got %v", err)
+	}
+}

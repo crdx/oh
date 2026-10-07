@@ -265,32 +265,23 @@ func parse(data []byte) (metadata, error) {
 	return parsedMetadata, nil
 }
 
-func MountGlobalSkills(root *file.Root, skills []Skill) ([]*os.Root, error) {
-	var openedRoots []*os.Root
+func MountGlobalSkills(root *file.Root, skills []Skill) []*file.Root {
+	var mountedRoots []*file.Root
 
 	for _, foundSkill := range skills {
 		if !foundSkill.isGlobal {
 			continue
 		}
 
-		mountedRoot, err := os.OpenRoot(foundSkill.directory)
-		if err != nil {
-			closeRoots(openedRoots)
-			return nil, fmt.Errorf("could not mount skill %s: %w", foundSkill.Name, err)
-		}
-
-		root.Mount(foundSkill.directory, file.New(mountedRoot, func(string) error { return file.ErrReadOnly }))
-		openedRoots = append(openedRoots, mountedRoot)
+		mountedRoot := file.NewLazy(foundSkill.directory, func(string) error { return file.ErrReadOnly })
+		root.Mount(foundSkill.directory, mountedRoot)
+		mountedRoots = append(mountedRoots, mountedRoot)
 	}
 
-	return openedRoots, nil
+	return mountedRoots
 }
 
-func Close(roots []*os.Root) {
-	closeRoots(roots)
-}
-
-func closeRoots(roots []*os.Root) {
+func Close(roots []*file.Root) {
 	for _, root := range roots {
 		_ = root.Close()
 	}

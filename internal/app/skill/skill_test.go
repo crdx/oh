@@ -2,6 +2,7 @@ package skill
 
 import (
 	"errors"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"slices"
@@ -245,10 +246,7 @@ func TestAGlobalSkillMountCanBeReadButNotWritten(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	roots, err := MountGlobalSkills(files, discoveredSkills)
-	if err != nil {
-		t.Fatal(err)
-	}
+	roots := MountGlobalSkills(files, discoveredSkills)
 	defer Close(roots)
 
 	resolvedRoot, name, err := files.Resolve(location)
@@ -260,5 +258,45 @@ func TestAGlobalSkillMountCanBeReadButNotWritten(t *testing.T) {
 	}
 	if err := resolvedRoot.WriteFile(name, []byte("changed"), 0o600); !errors.Is(err, file.ErrReadOnly) {
 		t.Errorf("got write error %v, want read-only", err)
+	}
+}
+
+func TestAGlobalSkillWhoseDirectoryVanishesFailsOnlyItsOwnReads(t *testing.T) {
+	workspace := t.TempDir()
+	globalDirectory := t.TempDir()
+	keptLocation := writeSkill(t, globalDirectory, "kept", "---\nname: kept\ndescription: Kept.\n---\nBody")
+	goneLocation := writeSkill(t, globalDirectory, "gone", "---\nname: gone\ndescription: Gone.\n---\nBody")
+
+	workspaceRoot, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = workspaceRoot.Close() }()
+	files := file.New(workspaceRoot, func(string) error { return nil })
+
+	discoveredSkills, err := Discover(workspace, []string{globalDirectory}, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.RemoveAll(filepath.Dir(goneLocation)); err != nil {
+		t.Fatal(err)
+	}
+	roots := MountGlobalSkills(files, discoveredSkills)
+	defer Close(roots)
+
+	keptRoot, keptName, err := files.Resolve(keptLocation)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if data, err := keptRoot.ReadFile(keptName); err != nil || !strings.Contains(string(data), "Body") {
+		t.Errorf("got %q and %v", data, err)
+	}
+
+	goneRoot, goneName, err := files.Resolve(goneLocation)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := goneRoot.ReadFile(goneName); !errors.Is(err, fs.ErrNotExist) {
+		t.Errorf("got %v, want the vanished skill reported missing", err)
 	}
 }

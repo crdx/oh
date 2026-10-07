@@ -41,6 +41,9 @@ type mountedRoot struct {
 
 type Root struct {
 	root          *os.Root
+	lazyPath      string
+	lazyOpen      sync.Once
+	lazyError     error
 	exactPath     string
 	exactName     string
 	refuse        func(name string) error
@@ -53,6 +56,10 @@ type Root struct {
 
 func New(root *os.Root, refuseWrite func(name string) error) *Root {
 	return &Root{root: root, refuse: refuseWrite, mounts: map[string]mountedRoot{}}
+}
+
+func NewLazy(path string, refuseWrite func(name string) error) *Root {
+	return &Root{lazyPath: filepath.Clean(path), refuse: refuseWrite, mounts: map[string]mountedRoot{}}
 }
 
 func NewExactFile(path string, refuseWrite func(name string) error) *Root {
@@ -152,7 +159,27 @@ func (self *Root) Name() string {
 	if self.exactPath != "" {
 		return filepath.Dir(self.exactPath)
 	}
+	if self.lazyPath != "" {
+		return self.lazyPath
+	}
 	return self.root.Name()
+}
+
+func (self *Root) Close() error {
+	if self.lazyPath == "" {
+		return nil
+	}
+
+	wasOpened := true
+	self.lazyOpen.Do(func() {
+		wasOpened = false
+		self.lazyError = os.ErrClosed
+	})
+	if !wasOpened || self.root == nil {
+		return nil
+	}
+
+	return self.root.Close()
 }
 
 func (self *Root) FS() fs.FS {
@@ -169,7 +196,11 @@ func (self *Root) Open(name string) (*os.File, error) {
 	if self.exactPath != "" {
 		return os.Open(self.exactPath)
 	}
-	return self.root.Open(name)
+	root, err := self.getRoot()
+	if err != nil {
+		return nil, err
+	}
+	return root.Open(name)
 }
 
 func (self *Root) ReadFile(name string) ([]byte, error) {
@@ -182,7 +213,11 @@ func (self *Root) ReadFile(name string) ([]byte, error) {
 	if self.exactPath != "" {
 		return os.ReadFile(self.exactPath)
 	}
-	return self.root.ReadFile(name)
+	root, err := self.getRoot()
+	if err != nil {
+		return nil, err
+	}
+	return root.ReadFile(name)
 }
 
 func (self *Root) Stat(name string) (os.FileInfo, error) {
@@ -195,7 +230,11 @@ func (self *Root) Stat(name string) (os.FileInfo, error) {
 	if self.exactPath != "" {
 		return os.Stat(self.exactPath)
 	}
-	return self.root.Stat(name)
+	root, err := self.getRoot()
+	if err != nil {
+		return nil, err
+	}
+	return root.Stat(name)
 }
 
 func (self *Root) ReadDir(name string) ([]os.DirEntry, error) {
@@ -227,7 +266,11 @@ func (self *Root) WriteFile(name string, data []byte, perm os.FileMode) error {
 	if self.exactPath != "" {
 		return os.WriteFile(self.exactPath, data, perm)
 	}
-	return self.root.WriteFile(name, data, perm)
+	root, err := self.getRoot()
+	if err != nil {
+		return err
+	}
+	return root.WriteFile(name, data, perm)
 }
 
 func (self *Root) MkdirAll(name string, perm os.FileMode) error {
@@ -237,7 +280,23 @@ func (self *Root) MkdirAll(name string, perm os.FileMode) error {
 	if self.exactPath != "" {
 		return ErrOutsideRoot
 	}
-	return self.root.MkdirAll(name, perm)
+	root, err := self.getRoot()
+	if err != nil {
+		return err
+	}
+	return root.MkdirAll(name, perm)
+}
+
+func (self *Root) getRoot() (*os.Root, error) {
+	if self.lazyPath == "" {
+		return self.root, nil
+	}
+
+	self.lazyOpen.Do(func() {
+		self.root, self.lazyError = os.OpenRoot(self.lazyPath)
+	})
+
+	return self.root, self.lazyError
 }
 
 func (self *Root) setAccessRefusal(refuse func(path string) error) {
@@ -322,6 +381,10 @@ func (self *Root) refuseWrite(name string) error {
 		return nil
 	}
 
+	root, err := self.getRoot()
+	if err != nil {
+		return err
+	}
 	resolvedName := filepath.Clean(name)
 
 	for range 255 {
@@ -330,7 +393,7 @@ func (self *Root) refuseWrite(name string) error {
 
 		for i := range parts {
 			prefix := filepath.Join(parts[:i+1]...)
-			info, err := self.root.Lstat(prefix)
+			info, err := root.Lstat(prefix)
 			if err != nil {
 				if errors.Is(err, fs.ErrNotExist) {
 					return nil
@@ -341,7 +404,7 @@ func (self *Root) refuseWrite(name string) error {
 				continue
 			}
 
-			target, err := self.root.Readlink(prefix)
+			target, err := root.Readlink(prefix)
 			if err != nil {
 				return err
 			}
