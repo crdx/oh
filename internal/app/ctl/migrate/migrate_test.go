@@ -1082,9 +1082,6 @@ func TestAJournalMigratesToTheSameBytesWhetherStoredOrArchived(t *testing.T) {
 	}
 
 	archivedDir, _ := storedJournal(t, lines...)
-	if err := store.RebuildMeta(archivedDir, name); err != nil {
-		t.Fatal(err)
-	}
 	if err := session.Archive(archivedDir, name); err != nil {
 		t.Fatal(err)
 	}
@@ -1285,9 +1282,6 @@ func TestTheCopyOfABundleSharesItsFilesRatherThanDuplicatingThem(t *testing.T) {
 
 func TestAnArchivedSessionIsKeptAsItsArchive(t *testing.T) {
 	directory, name := storedJournal(t, `{"kind":"head","time":"2026-08-01T00:00:00Z","id":"one","name":"tame-impala"}`)
-	if err := store.RebuildMeta(directory, name); err != nil {
-		t.Fatal(err)
-	}
 	if err := session.Archive(directory, name); err != nil {
 		t.Fatal(err)
 	}

@@ -457,7 +457,7 @@ func records(directory string, name string, allowsIncompleteTail bool, visit fun
 			if line.Kind != Head {
 				return errors.New("session does not start with a head")
 			}
-			if err := format.Check(formatOf(line), JournalFormat); err != nil {
+			if err := format.Require(formatOf(line), JournalFormat); err != nil {
 				return fmt.Errorf("session %s: journal %w", name, err)
 			}
 			hasSeenHead = true
@@ -740,17 +740,6 @@ func appendEntries(entries []Entry, directory string, names []string, isArchived
 	}
 
 	return entries
-}
-
-func StoredEntries(directory string) ([]Entry, error) {
-	storedNames, err := StoredNames(directory)
-	if err != nil {
-		return nil, err
-	}
-
-	entries := appendEntries(make([]Entry, 0, len(storedNames)), directory, storedNames, false)
-
-	return sortedEntries(entries), nil
 }
 
 func formatOf(head Line) int {

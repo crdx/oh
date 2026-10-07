@@ -695,10 +695,6 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition) (string, err
 		applySimulationOptions(&args)
 	}
 
-	if err := sessions.ValidateStoredFormats(sessionsDir); err != nil {
-		return "", err
-	}
-
 	if err := sessions.RefreshListing(sessionsDir, notices, args.Session); err != nil {
 		return "", err
 	}

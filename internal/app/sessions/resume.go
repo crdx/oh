@@ -66,7 +66,7 @@ func GetForkSource(directory string, workspace *work.Space, name string, userMes
 
 	storedSession, err := store.Read(directory, name)
 	if err != nil {
-		return nil, err
+		return nil, explainFormat(name, err)
 	}
 	if err := requireWorkspace(storedSession, workspace); err != nil {
 		return nil, err
@@ -145,7 +145,7 @@ func LoadForResume(directory string, workspace *work.Space, name string) (*store
 
 	storedSession, err := store.Read(directory, name)
 	if err != nil {
-		return nil, err
+		return nil, explainFormat(name, err)
 	}
 	if err := requireWorkspace(storedSession, workspace); err != nil {
 		return nil, err

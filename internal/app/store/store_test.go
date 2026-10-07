@@ -996,3 +996,37 @@ func TestAListingWrittenBeforeTheModelWasInItIsRebuiltWithIt(t *testing.T) {
 		t.Errorf("expected the model to come back from the journal, got %s", meta.Data)
 	}
 }
+
+func TestAStaleListingOverAnOlderJournalIsLeftForTheMigration(t *testing.T) {
+	directory := t.TempDir()
+	current := write(t, directory)
+	putListingBehind(t, directory, current)
+
+	outdated := "tame-impala"
+	if err := os.MkdirAll(filepath.Join(directory, outdated), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	head := `{"kind":"head","time":"2026-08-01T00:00:00Z","version":1,"id":"one","name":"tame-impala"}` + "\n"
+	if err := os.WriteFile(filepath.Join(directory, outdated, "session.jsonl"), []byte(head), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	stale, err := store.StaleMeta(directory)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(stale) != 1 || stale[0] != current {
+		t.Errorf("expected only %s to be stale, got %v", current, stale)
+	}
+
+	rebuilt, err := store.RebuildStaleMeta(directory)
+	if err != nil {
+		t.Fatalf("expected the older journal to be left alone, got %v", err)
+	}
+	if rebuilt != 1 {
+		t.Errorf("rebuilt %d listings, want 1", rebuilt)
+	}
+	if _, err := session.ReadMeta(directory, outdated); err == nil {
+		t.Error("expected no listing to be written from a journal nobody has migrated")
+	}
+}

@@ -31,6 +31,27 @@ func TestANewerFormatIsNamedAsOne(t *testing.T) {
 	}
 }
 
+func TestARequiredFormatRefusesOlderAndNewerAlike(t *testing.T) {
+	if err := format.Require(2, 2); err != nil {
+		t.Errorf("expected the current format to be read, got %v", err)
+	}
+
+	older := format.Require(1, 2)
+	if !format.IsOlder(older) || format.IsNewer(older) {
+		t.Errorf("expected an older format to be refused as older, got %v", older)
+	}
+	for _, wanted := range []string{"format 1", "older build", "format 2"} {
+		if older == nil || !strings.Contains(older.Error(), wanted) {
+			t.Errorf("expected %q in %q", wanted, older)
+		}
+	}
+
+	newer := format.Require(3, 2)
+	if !format.IsNewer(newer) || format.IsOlder(newer) {
+		t.Errorf("expected a newer format to be refused as newer, got %v", newer)
+	}
+}
+
 func TestTheVersionIsReadWithoutTheRest(t *testing.T) {
 	version, err := format.ReadJSON([]byte(`{"version":7,"model":{"round_robin":["a"]}}`))
 	if err != nil {

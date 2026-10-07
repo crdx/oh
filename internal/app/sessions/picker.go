@@ -181,13 +181,8 @@ func RefreshListing(directory string, screen io.Writer, name string) error {
 		return nil
 	}
 
-	_, err := refreshMetadata(
-		directory,
-		screen,
-		[]metadataKey{{name: name}},
-		ValidateStoredFormats,
-	)
-	return err
+	_, err := refreshMetadata(directory, screen, []metadataKey{{name: name}}, nil)
+	return explainFormat(name, err)
 }
 
 func refreshMetadata(
@@ -207,8 +202,10 @@ func refreshMetadata(
 		return metadata, nil
 	}
 
-	if formatError := validate(directory); formatError != nil {
-		return nil, formatError
+	if validate != nil {
+		if formatError := validate(directory); formatError != nil {
+			return nil, formatError
+		}
 	}
 
 	rebuilt := 0

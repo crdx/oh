@@ -35,6 +35,10 @@ func TestGoldenAMigrationMatchesTheGolden(t *testing.T) {
 	directory := goldenSessions(t, oldJournal())
 
 	assertGolden(t, "migrated.txt", migration(t, directory, &inputOpts{}))
+
+	if _, err := session.ReadMeta(directory, goldenName); err != nil {
+		t.Errorf("expected the migrated session to be listed, got %v", err)
+	}
 }
 
 func TestGoldenASessionInUseMatchesTheGolden(t *testing.T) {

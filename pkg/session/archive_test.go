@@ -93,11 +93,6 @@ func TestAnArchivedSessionIsNoLongerListedButKeepsItsMetadata(t *testing.T) {
 		t.Fatalf("got entries %v and %v", entries, err)
 	}
 
-	storedEntries, err := session.StoredEntries(directory)
-	if err != nil || len(storedEntries) != 0 {
-		t.Fatalf("got stored entries %v and %v", storedEntries, err)
-	}
-
 	storedNames, err := session.StoredNames(directory)
 	if err != nil || len(storedNames) != 0 {
 		t.Fatalf("got stored names %v and %v", storedNames, err)

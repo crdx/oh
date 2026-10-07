@@ -7,6 +7,10 @@
 - Convert `oh -l` into a non-interactive version of the model picker
 - Move bare model list to `oh --ctl models`
 
+### Changes
+
+- Trim 15ms off startup
+
 ## [0.13.0] - 2026-10-07
 
 ### Changes

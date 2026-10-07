@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"sync"
 	"time"
 
@@ -514,6 +515,11 @@ func StaleMeta(directory string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
+	outdatedNames, err := session.Outdated(directory)
+	if err != nil {
+		return nil, err
+	}
+	names = slices.DeleteFunc(names, func(name string) bool { return slices.Contains(outdatedNames, name) })
 
 	return StaleMetaOf(directory, names), nil
 }

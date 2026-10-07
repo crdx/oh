@@ -3,20 +3,12 @@ package sessions
 import (
 	"fmt"
 
+	"crdx.org/oh/internal/format"
 	"crdx.org/oh/pkg/session"
 )
 
 func ValidateFormats(directory string) error {
 	entries, err := session.Entries(directory)
-	if err != nil {
-		return err
-	}
-
-	return validateEntries(entries)
-}
-
-func ValidateStoredFormats(directory string) error {
-	entries, err := session.StoredEntries(directory)
 	if err != nil {
 		return err
 	}
@@ -35,18 +27,38 @@ func validateEntries(entries []session.Entry) error {
 	}
 
 	if len(ahead) > 0 {
-		subject, _ := nameSessions(ahead)
-		return fmt.Errorf(
-			"%s written in a newer journal format than this oh reads (format %d): upgrade oh",
-			subject, session.JournalFormat,
-		)
+		return aheadError(ahead)
 	}
 
 	if len(outdatedNames) == 0 {
 		return nil
 	}
 
-	subject, object := nameSessions(outdatedNames)
+	return outdatedError(outdatedNames)
+}
+
+func explainFormat(name string, err error) error {
+	switch {
+	case format.IsNewer(err):
+		return aheadError([]string{name})
+	case format.IsOlder(err):
+		return outdatedError([]string{name})
+	default:
+		return err
+	}
+}
+
+func aheadError(names []string) error {
+	subject, _ := nameSessions(names)
+
+	return fmt.Errorf(
+		"%s written in a newer journal format than this oh reads (format %d): upgrade oh",
+		subject, session.JournalFormat,
+	)
+}
+
+func outdatedError(names []string) error {
+	subject, object := nameSessions(names)
 
 	return fmt.Errorf(
 		"%s written in an older journal format: run `oh --ctl migrate` to bring %s up to format %d",

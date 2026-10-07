@@ -310,6 +310,9 @@ func migrateSession(options Options, name string, keep func() error) (int, error
 	if err := store.Rebuild(directory, name); err != nil {
 		return fromFormat, fmt.Errorf("the journal was migrated but its transcript was not: %w", err)
 	}
+	if err := store.RebuildMeta(directory, name); err != nil {
+		return fromFormat, fmt.Errorf("the journal was migrated but its listing was not: %w", err)
+	}
 
 	return fromFormat, nil
 }
