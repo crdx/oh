@@ -1,6 +1,7 @@
 package painter
 
 import (
+	"path/filepath"
 	"strings"
 	"time"
 	"unicode"
@@ -11,6 +12,7 @@ import (
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/util"
+	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/ask"
@@ -115,10 +117,22 @@ func renderQuestionFields(
 ) []string {
 	var rows []string
 
-	for _, field := range fields {
+	for index, field := range fields {
+		if index > 0 && strings.Contains(fields[index-1].Value, "\n") {
+			for len(rows) > 0 && style.Plain(rows[len(rows)-1]) == "" {
+				rows = rows[:len(rows)-1]
+			}
+			rows = append(rows, "")
+		}
+
 		value := strutil.StripControl(field.Value)
-		if shouldRenderHyperlinks {
-			value = link.Render(value, pathRoots)
+		if relative, isBeneath := pathutil.RelativeTo(pathRoots.Scratch, value); pathRoots.Scratch != "" && isBeneath {
+			value = style.ScratchAlias(link.ScratchAlias) + style.Subtle("/"+filepath.ToSlash(relative))
+			if shouldRenderHyperlinks {
+				value = link.Render(value, pathRoots)
+			}
+		} else if shouldRenderHyperlinks {
+			value = link.Render(value, pathRoots.WithoutScratch())
 		}
 		if field.IsSubject {
 			value = style.Info.Over(value)

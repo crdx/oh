@@ -102,6 +102,7 @@ func TestAConfirmationDrawsNamedFieldsAndLinksTheirPaths(t *testing.T) {
 		"message: Align header controls consistently",
 		"",
 		"Keep every row aligned.",
+		"",
 		"patch: " + patchPath,
 		"",
 		"[Yes]  No ",
@@ -112,13 +113,52 @@ func TestAConfirmationDrawsNamedFieldsAndLinksTheirPaths(t *testing.T) {
 	if !strings.Contains(rows[2], style.Info("Align header controls consistently")) {
 		t.Errorf("got subject row %q, want its value painted as forwarded content", rows[2])
 	}
-	if !strings.Contains(rows[5], link.RenderPath(patchPath, patchPath)) {
-		t.Errorf("got patch row %q, want the patch path linked", rows[5])
+	if !strings.Contains(rows[6], link.RenderPath(patchPath, patchPath)) {
+		t.Errorf("got patch row %q, want the patch path linked", rows[6])
 	}
 
 	unlinked := RenderQuestion(question, question.DefaultIndex(), 120, false, link.Roots{})
-	if strings.Contains(unlinked[5], link.RenderPath(patchPath, patchPath)) {
-		t.Errorf("got patch row %q without terminal hyperlinks", unlinked[5])
+	if strings.Contains(unlinked[6], link.RenderPath(patchPath, patchPath)) {
+		t.Errorf("got patch row %q without terminal hyperlinks", unlinked[6])
+	}
+}
+
+func TestAQuestionShortensOnlyPathsUnderItsHostScratch(t *testing.T) {
+	scratch := t.TempDir()
+	patchPath := filepath.Join(scratch, "split2", "02-record-removal-of-imu-posting.patch")
+	if err := os.MkdirAll(filepath.Dir(patchPath), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(patchPath, nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	question := ask.Confirmation{
+		Label: "Run the commit tool?",
+		Fields: []ask.Field{
+			{Name: "message", Value: "Record removal of IMU posting\n\nExplain the removal.\n\n", IsSubject: true},
+			{Name: "patch", Value: patchPath},
+			{Name: "other", Value: scratch + "-elsewhere/unchanged.patch"},
+			{Name: "host", Value: "/tmp/host.patch"},
+		},
+	}.Question()
+	roots := link.Roots{Scratch: scratch}
+	rows := RenderQuestion(question, 0, 120, true, roots)
+	want := []string{
+		"Run the commit tool?", "", "message: Record removal of IMU posting", "",
+		"Explain the removal.", "", "patch: <s>/split2/02-record-removal-of-imu-posting.patch",
+		"other: " + scratch + "-elsewhere/unchanged.patch", "host: /tmp/host.patch", "", "[Yes]  No ",
+	}
+	if got := plainRows(rows); !slices.Equal(got, want) {
+		t.Errorf("got rows %q, want %q", got, want)
+	}
+	alias := style.ScratchAlias(link.ScratchAlias) + style.Subtle("/split2/02-record-removal-of-imu-posting.patch")
+	if !strings.Contains(rows[6], link.Render(alias, roots)) ||
+		!strings.Contains(rows[6], link.PathURL(patchPath)) {
+		t.Errorf("got patch row %q, want the styled alias linked to the complete path", rows[6])
+	}
+	withoutLinks := RenderQuestion(question, 0, 120, false, roots)
+	if !strings.Contains(withoutLinks[6], alias) || strings.Contains(withoutLinks[6], "\x1b]8;;") {
+		t.Errorf("got patch row %q without links, want the styled alias", withoutLinks[6])
 	}
 }
 

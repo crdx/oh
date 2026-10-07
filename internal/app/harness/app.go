@@ -1098,7 +1098,7 @@ func (self *App) questionRows(columns int) []string {
 		self.question.cursor,
 		columns,
 		self.screen.IsTerminal(),
-		self.screen.LinkRoots().WithoutScratch(),
+		self.screen.LinkRoots(),
 	)
 }
 

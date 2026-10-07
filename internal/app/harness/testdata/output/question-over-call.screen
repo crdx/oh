@@ -24,6 +24,35 @@ patch: /tmp/layout.patch
 
 [Yes]  No
 ────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a question with an extended message and scratch patch, answered ===
+
+ write the script
+
+
+Writing it.
+$ curl example.com ✦· 5s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a question with an extended message and scratch patch, standing ===
+
+ write the script
+
+
+Writing it.
+$ curl example.com ✦·
+────────────────────────────────────── auto-denies in 4m 20s ───────────────────────────────────────
+Run the commit tool?
+
+message: Record removal of IMU posting
+
+Explain the removal.
+
+patch: <s>/split2/02-record-removal-of-imu-posting.patch
+
+[Yes]  No
+────────────────────────────────────────────────────────────────────────────────────────────────────
 === a question with fields, answered ===
 
  write the script

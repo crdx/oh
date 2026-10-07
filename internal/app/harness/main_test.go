@@ -1245,6 +1245,7 @@ type questionOverCall struct {
 	intent                string
 	fields                []ask.Field
 	approvalTimeout       time.Duration
+	scratch               string
 	isAskedFirst          bool
 	isRedrawn             bool
 	isRedrawnWhileRunning bool
@@ -1285,7 +1286,7 @@ func drawQuestionOverCall(t *testing.T, scene questionOverCall) drawnQuestionOve
 	synctest.Test(t, func(t *testing.T) {
 		var written bytes.Buffer
 		chat := testConversation(t, &written)
-		chat.screen = output.NewTerminalOfSize(&written, replayColumns, questionLines)
+		chat.screen = output.NewTerminalOfSize(&written, replayColumns, questionLines).LinkPathsUnder(link.Roots{Scratch: scene.scratch})
 		chat.inputLine = edit.NewInput(nil)
 		chat.currentTurn.Stream = testRunningTurnStream()
 		chat.currentTurn.painter = chat.newPainter(true)
@@ -1405,6 +1406,14 @@ func TestGoldenAQuestionOverARunningCallDrawsEveryVisibleState(t *testing.T) {
 			fields: []ask.Field{
 				{Name: "message", Value: "Align header controls consistently", IsSubject: true},
 				{Name: "patch", Value: "/tmp/layout.patch"},
+			},
+		},
+		"a question with an extended message and scratch patch": {
+			command: "curl example.com",
+			scratch: "/state/farm/tame-impala",
+			fields: []ask.Field{
+				{Name: "message", Value: "Record removal of IMU posting\n\nExplain the removal.", IsSubject: true},
+				{Name: "patch", Value: "/state/farm/tame-impala/split2/02-record-removal-of-imu-posting.patch"},
 			},
 		},
 		"a question with a configured timeout": {
