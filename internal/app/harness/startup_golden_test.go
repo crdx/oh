@@ -1,9 +1,13 @@
 package harness
 
 import (
+	"bytes"
 	"context"
+	"crypto/sha256"
+	"encoding/base64"
 	"errors"
 	"fmt"
+	"image/png"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -21,6 +25,7 @@ import (
 	"crdx.org/oh/internal/app/backend"
 	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/location"
+	"crdx.org/oh/internal/app/pictures"
 )
 
 var (
@@ -376,7 +381,11 @@ func TestGoldenAPictureIsDrawnOnlyWhereTheTerminalSaidItCould(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	pictureScreen := func(isAnswering bool) string {
+	type pictureDrawing struct {
+		screen   string
+		protocol string
+	}
+	pictureScreen := func(isAnswering bool) pictureDrawing {
 		rig := newScriptedRig(t,
 			sim.Turn{Calls: []sim.Call{{Name: "read", Arguments: `{"path":"picture.png"}`}}},
 			sim.Turn{Say: "Seen it."},
@@ -396,13 +405,46 @@ func TestGoldenAPictureIsDrawnOnlyWhereTheTerminalSaidItCould(t *testing.T) {
 		session.waitToSettle()
 		screen := wrappedBanner.ReplaceAllString(strings.Join(session.screen(), "\n"), "Agent <banner>")
 		asked := session.Count(graphicsProbe)
+		transmissions := regexp.MustCompile(`\x1b_Ga=T,[^\x1b]*\x1b\\`).FindAllString(session.String(), -1)
+		var protocol strings.Builder
+		fmt.Fprintf(&protocol, "graphics probes: %d\ntransmissions: %d\n", asked, len(transmissions))
+		for _, transmission := range transmissions {
+			header, payload, isFound := strings.Cut(strings.TrimSuffix(strings.TrimPrefix(transmission, "\x1b_G"), "\x1b\\"), ";")
+			if !isFound || !strings.Contains(header, "f=100,t=f,") {
+				t.Fatalf("picture was not transmitted by file as PNG: %q", header)
+			}
+			path, err := base64.StdEncoding.DecodeString(payload)
+			if err != nil {
+				t.Fatal(err)
+			}
+			digest := sha256.Sum256(picture)
+			wantName := fmt.Sprintf("%x-w%d.png", digest, pictures.DisplayWidth)
+			if filepath.Base(string(path)) != wantName || filepath.Base(filepath.Dir(string(path))) != "images" {
+				t.Fatalf("transmitted %q instead of the stored picture", path)
+			}
+			stored, err := os.ReadFile(string(path))
+			if err != nil {
+				t.Fatal(err)
+			}
+			image, err := png.DecodeConfig(bytes.NewReader(stored))
+			if err != nil || image.Width <= 0 || image.Height <= 0 {
+				t.Fatalf("transmitted picture is not a valid PNG: %v", err)
+			}
+			fmt.Fprintf(&protocol, "format: png file\nimage: %dx%d\n", image.Width, image.Height)
+		}
 		session.quit()
 
-		return fmt.Sprintf("graphics probes: %d\n%s", asked, screen)
+		return pictureDrawing{screen: fmt.Sprintf("graphics probes: %d\n%s", asked, screen), protocol: protocol.String()}
 	}
 
+	answered := pictureScreen(true)
+	ignored := pictureScreen(false)
 	compareWithGolden(t, "picture-detection", ".screen", map[string]func() string{
-		"a terminal that answers the graphics probe": func() string { return pictureScreen(true) },
-		"a terminal that ignores the graphics probe": func() string { return pictureScreen(false) },
+		"a terminal that answers the graphics probe": func() string { return answered.screen },
+		"a terminal that ignores the graphics probe": func() string { return ignored.screen },
+	})
+	compareWithGolden(t, "picture-detection", ".txt", map[string]func() string{
+		"a terminal that answers the graphics probe": func() string { return answered.protocol },
+		"a terminal that ignores the graphics probe": func() string { return ignored.protocol },
 	})
 }

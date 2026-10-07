@@ -1,0 +1,9 @@
+=== a terminal that answers the graphics probe ===
+graphics probes: 1
+transmissions: 1
+format: png file
+image: 120x60
+
+=== a terminal that ignores the graphics probe ===
+graphics probes: 1
+transmissions: 0

@@ -5637,7 +5637,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"config-reload":            {".ansi", ".screen"},
 		"corrupt-session":          {".txt"},
 		"picker-listing":           {".screen"},
-		"picture-detection":        {".screen"},
+		"picture-detection":        {".screen", ".txt"},
 		"rate-refresh":             {".txt"},
 		"spend-currency":           {".screen"},
 		"startup-model-selection":  {".txt"},
