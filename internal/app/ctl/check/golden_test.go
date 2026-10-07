@@ -1,6 +1,8 @@
 package check
 
 import (
+	"archive/tar"
+	"compress/gzip"
 	"flag"
 	"fmt"
 	"os"
@@ -78,6 +80,24 @@ func TestGoldenSessionProblemsMatchTheGolden(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(directory, unexpectedName), []byte("unfinished"), 0o600); err != nil {
 		t.Fatal(err)
 	}
+	foreign, err := os.Create(session.ArchivePath(directory, "zzz-otter"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	compressor := gzip.NewWriter(foreign)
+	archive := tar.NewWriter(compressor)
+	if err := archive.WriteHeader(&tar.Header{Name: "elsewhere/meta.json", Mode: 0o600, Typeflag: tar.TypeReg}); err != nil {
+		t.Fatal(err)
+	}
+	if err := archive.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if err := compressor.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if err := foreign.Close(); err != nil {
+		t.Fatal(err)
+	}
 
 	var screen, failure strings.Builder
 	err = run(paths{sessionsDir: directory}, nil, console.Output{Screen: &screen, Failure: &failure})
@@ -86,6 +106,9 @@ func TestGoldenSessionProblemsMatchTheGolden(t *testing.T) {
 	}
 
 	drawn := report(screen.String(), failure.String(), err)
+	if !strings.Contains(drawn, "zzz-otter.tgz: archive: it holds") {
+		t.Fatalf("the malformed archive was not checked: %s", drawn)
+	}
 	drawn = strings.NewReplacer(
 		healthyName, "healthy-otter",
 		archivedName, "archived-mole",
