@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"reflect"
 	"slices"
 	"strings"
 	"syscall"
@@ -446,6 +447,14 @@ func prepareLegacyTools(
 	return preparedTools{registeredTools: toolboxTools, offeredTools: offeredTools}, nil
 }
 
+func applyObservedTheme(current config.Config, latest config.Config) {
+	if reflect.DeepEqual(current.Ui.Theme, latest.Ui.Theme) {
+		return
+	}
+
+	style.ApplyTheme(latest.Ui.Theme)
+}
+
 func availableCurrency(initial initialConfig) money.Currency {
 	if initial.err != nil {
 		return money.Dollar()
@@ -615,7 +624,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	}
 	defer configObserver.Close()
 
-	style.ApplyTheme(settings.Ui.Theme)
+	applyObservedTheme(initial.observable.Config, settings)
 	editorConfiguration := editor.NewConfiguration(settings.Editor.Command)
 	toolOutputLimit := truncate.NewLimit(settings.Tool.Output.Bytes)
 	experimentalToggles := experimental.New(settings.Experimental)

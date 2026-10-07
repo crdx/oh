@@ -23347,3 +23347,28 @@ func TestAWorkspaceCannotDeclareAToolOfItsOwn(t *testing.T) {
 		t.Errorf("got %q", output)
 	}
 }
+
+func TestAThemeObservedAsReadIsNotAppliedAgainButAChangedOneIs(t *testing.T) {
+	restoreTheme := style.ApplyTheme(style.DefaultTheme())
+	t.Cleanup(func() { restoreTheme() })
+
+	read := config.Config{}
+	read.Ui.Theme = style.DefaultTheme()
+	read.Ui.Theme.Accent = "#010203"
+	changed := read
+	changed.Ui.Theme.Accent = "#040506"
+
+	sentinel := style.DefaultTheme()
+	sentinel.Accent = "#070809"
+	style.ApplyTheme(sentinel)
+
+	applyObservedTheme(read, read)
+	if drawn := style.Accent("x"); !strings.Contains(drawn, "38;2;7;8;9") {
+		t.Errorf("a theme observed as read was applied again: %q", drawn)
+	}
+
+	applyObservedTheme(read, changed)
+	if drawn := style.Accent("x"); !strings.Contains(drawn, "38;2;4;5;6") {
+		t.Errorf("a theme changed since it was read was not applied: %q", drawn)
+	}
+}

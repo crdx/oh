@@ -410,3 +410,21 @@ func TestStartingASessionAsksTheTerminalAboutGraphicsOnce(t *testing.T) {
 	session.quit()
 }
 
+func TestASessionIsDrawnInTheWorkspaceTheme(t *testing.T) {
+	rig := newInteractiveRig(t)
+	if err := os.WriteFile(
+		filepath.Join(rig.workspace, "oh.toml"),
+		[]byte("[ui.theme]\naccent = \"#010203\"\n"),
+		0o600,
+	); err != nil {
+		t.Fatal(err)
+	}
+
+	session := rig.start("--yolo", "-m", "opencode-go/fake")
+	session.waitFor(readyBanner)
+	if stream := session.String(); !strings.Contains(stream, "\x1b[38;2;1;2;3m") {
+		t.Errorf("the session did not use the workspace accent: %q", stream)
+	}
+
+	session.quit()
+}
