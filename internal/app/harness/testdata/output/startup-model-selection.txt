@@ -1,0 +1,147 @@
+=== a model named in full ===
+$ oh -p --yolo -m opencode-go/fake a question
+Refreshing the model list...
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+Full answer.
+
+oh -r <session>
+[exit 0]
+session model: opencode-go/fake@high
+
+=== a model named with an effort ===
+$ oh -p --yolo -m opencode-go/fake@low a question
+Refreshing the model list...
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+Effort answer.
+
+oh -r <session>
+[exit 0]
+session model: opencode-go/fake@low
+
+=== a model nobody offers ===
+$ oh -p --yolo -m nonesuch a question
+Refreshing the model list...
+✗ Model "nonesuch" does not match any known model
+[exit 1]
+
+=== a model several providers offer ===
+$ oh -p --yolo -m fake a question
+Refreshing the model list...
+✗ Model "fake" is ambiguous; matches: codex/fake, opencode-go/fake, anthropic/fake, ollama/fake
+[exit 1]
+
+=== a resumed session keeps its model over the rotation ===
+$ oh -p --yolo -m opencode-go/fake@low a question
+Refreshing the model list...
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+First answer.
+
+oh -r <session>
+[exit 0]
+$ oh -p -r <session> another question
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+First answer.
+
+
+ another question
+
+Resumed answer.
+
+oh -r <session>
+[exit 0]
+session model: opencode-go/fake@low
+
+=== a rotation naming a model nobody offers ===
+$ oh -p --yolo a question
+Refreshing the model list...
+✗ model.round_robin: "opencode-go/nonesuch": model "opencode-go/nonesuch" does not match any known model
+[exit 1]
+
+=== a rotation naming an offered model ===
+$ oh -p --yolo a question
+Refreshing the model list...
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+Rotated answer.
+
+oh -r <session>
+[exit 0]
+session model: opencode-go/fake@high
+
+=== a stale model list refreshed before choosing ===
+$ oh -p --yolo -m opencode-go/fake a question
+Refreshing the model list...
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+First answer.
+
+oh -r <session>
+[exit 0]
+$ oh -p --yolo -m opencode-go/fake a question
+Refreshing the model list...
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+Refreshed answer.
+
+oh -r <session>
+[exit 0]
+session model: opencode-go/fake@high
+session model: opencode-go/fake@high
+
+=== a stale model list that cannot be refreshed ===
+$ oh -p --yolo -m opencode-go/fake a question
+Refreshing the model list...
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+First answer.
+
+oh -r <session>
+[exit 0]
+$ oh -p --yolo -m opencode-go/fake a question
+Refreshing the model list...
+models.dev: request failed with status 503: listings are down
+Provider      Models  Selectable  Ignored  Source
+Codex              —                       the endpoint lists no models
+OpenCode Go        —                       request failed with status 503: listings are down
+Anthropic          —                       the endpoint lists no models
+Ollama             —                       request failed with status 503: listings are down
+model list not refreshed: no provider could be described
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+Unrefreshed answer.
+
+oh -r <session>
+[exit 0]
+session model: opencode-go/fake@high
+session model: opencode-go/fake@high
