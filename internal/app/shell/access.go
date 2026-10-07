@@ -26,10 +26,6 @@ var AllAccessFlags = (ReadAccess | ExecAccess | WriteAccess).Flags()
 
 func (self Access) Has(want Access) bool { return self&want == want }
 
-func IsAccess(access Access) bool {
-	return access.Has(ReadAccess) && access&^(ReadAccess|ExecAccess|WriteAccess) == 0
-}
-
 func (self Access) Flags() string {
 	var flags strings.Builder
 
