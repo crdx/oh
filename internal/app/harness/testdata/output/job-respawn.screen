@@ -13,11 +13,13 @@ whenever they exit.
 
  🤖 Job watch exited: complete after 8s,
     run 1, respawned.
+
     go build ./...
     built in 3s
 
  🤖 Job watch exited: failed after 8s,
     exit(1), run 2, respawned.
+
     go build ./...
     cmd/oh/draw.go:41:9: undefined:
     getWidth
@@ -32,6 +34,7 @@ whenever they exit.
     exit(127), run 4, not respawned
     after 3 runs in a row each ended
     within 2s.
+
     bash: golangci-lint: command not
     found
 
@@ -297,6 +300,7 @@ d
 
 .
 
+
 g
 
 o
@@ -445,6 +449,7 @@ e
 d
 
 .
+
 
 g
 
@@ -1025,6 +1030,7 @@ s
 
 .
 
+
 b
 
 a
@@ -1267,10 +1273,12 @@ Both are running and will come back whenever they exit.
 
 
  🤖 Job watch exited: complete after 8s, run 1, respawned.
+
     go build ./...
     built in 3s
 
  🤖 Job watch exited: failed after 8s, exit(1), run 2, respawned.
+
     go build ./...
     cmd/oh/draw.go:41:9: undefined: getWidth
 
@@ -1279,6 +1287,7 @@ Both are running and will come back whenever they exit.
     namespaces left.
  🤖 Job lint exited: failed after 0s, exit(127), run 4, not respawned after 3 runs in a row each
     ended within 2s.
+
     bash: golangci-lint: command not found
 
 
@@ -1322,6 +1331,7 @@ they exit.
     1,
     respawne
     d.
+
     go build
     ./...
     built in
@@ -1337,6 +1347,7 @@ they exit.
     run 2,
     respawne
     d.
+
     go build
     ./...
     cmd/oh/d
@@ -1387,6 +1398,7 @@ they exit.
     ended
     within
     2s.
+
     bash:
     golangci
     -lint:
@@ -1427,10 +1439,12 @@ Both are running and will come back whenever they exit.
 
 
  🤖 Job watch exited: complete after 8s, run 1, respawned.
+
     go build ./...
     built in 3s
 
  🤖 Job watch exited: failed after 8s, exit(1), run 2, respawned.
+
     go build ./...
     cmd/oh/draw.go:41:9: undefined: getWidth
 
@@ -1439,6 +1453,7 @@ Both are running and will come back whenever they exit.
     namespaces left.
  🤖 Job lint exited: failed after 0s, exit(127), run 4, not respawned after 3 runs in a row each
     ended within 2s.
+
     bash: golangci-lint: command not found
 
 

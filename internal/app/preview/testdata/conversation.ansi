@@ -19,7 +19,8 @@ The spinner is redrawn on every beat, which is why it stutters while a tool hold
 
 \e[48;2;48;58;67m                                                                                                    \e[0m
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m exited: complete after 8s, run 1, respawned.                                          \e[0m
-\e[48;2;48;58;67m    built in 3s                                                                                     \e[0m
+\e[48;2;48;58;67m                                                                                                    \e[0m
+\e[48;2;48;58;67m    \e[38;2;150;152;150mbuilt in 3s\e[0m\e[48;2;48;58;67m                                                                                     \e[0m
 \e[48;2;48;58;67m                                                                                                    \e[0m
 === 100 columns, ports forwarded in a row ===
 \e[48;2;48;58;67m                                                                                                    \e[0m
@@ -57,7 +58,8 @@ why it stutters while a tool holds the line.
 \e[48;2;48;58;67m                                              \e[0m
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m exited: complete after 8s, run  \e[0m
 \e[48;2;48;58;67m    1, respawned.                             \e[0m
-\e[48;2;48;58;67m    built in 3s                               \e[0m
+\e[48;2;48;58;67m                                              \e[0m
+\e[48;2;48;58;67m    \e[38;2;150;152;150mbuilt in 3s\e[0m\e[48;2;48;58;67m                               \e[0m
 \e[48;2;48;58;67m                                              \e[0m
 === 46 columns, ports forwarded in a row ===
 \e[48;2;48;58;67m                                              \e[0m

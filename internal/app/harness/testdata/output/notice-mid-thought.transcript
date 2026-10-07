@@ -15,12 +15,15 @@ think it through while the build finishes
 
 ## job_ended · +1s
 
-```
+````
 Job `build` exited: failed after 12s, exit(2).
+
+```
 go build ./...
 cmd/oh/draw.go:41:9: undefined: getWidth
 exit status 1
 ```
+````
 
 ## Assistant · +3s
 

@@ -10,12 +10,14 @@ The docs server is up.
 
  🤖 Job build exited: failed after 12s,
     exit(2).
+
     go build ./...
     cmd/oh/draw.go:41:9: undefined:
     getWidth
     exit status 1
 
  🤖 Job seed exited: complete after 14s.
+
     seeding the database
 
     [truncated at 2K of 58.6K; full
@@ -27,6 +29,7 @@ The docs server is up.
     with no output.
  🤖 Job build`fast exited: complete
     after 16s.
+
     done
 
  🤖 Job archive exited: complete after
@@ -222,6 +225,7 @@ t
 
 .
 
+
 g
 
 o
@@ -408,6 +412,7 @@ r
 s
 
 .
+
 
 s
 
@@ -804,6 +809,7 @@ r
 s
 
 .
+
 
 d
 
@@ -1416,11 +1422,13 @@ The docs server is up.
 
 
  🤖 Job build exited: failed after 12s, exit(2).
+
     go build ./...
     cmd/oh/draw.go:41:9: undefined: getWidth
     exit status 1
 
  🤖 Job seed exited: complete after 14s.
+
     seeding the database
 
     [truncated at 2K of 58.6K; full output in
@@ -1428,6 +1436,7 @@ The docs server is up.
 
  🤖 Job empty exited: complete after 15s with no output.
  🤖 Job build`fast exited: complete after 16s.
+
     done
 
  🤖 Job archive exited: complete after 17s with no output.
@@ -1477,6 +1486,7 @@ up.
     after
     12s,
     exit(2).
+
     go build
     ./...
     cmd/oh/d
@@ -1493,6 +1503,7 @@ up.
     complete
     after
     14s.
+
     seeding
     the
     database
@@ -1528,6 +1539,7 @@ up.
     complete
     after
     16s.
+
     done
 
  🤖 Job
@@ -1612,11 +1624,13 @@ The docs server is up.
 
 
  🤖 Job build exited: failed after 12s, exit(2).
+
     go build ./...
     cmd/oh/draw.go:41:9: undefined: getWidth
     exit status 1
 
  🤖 Job seed exited: complete after 14s.
+
     seeding the database
 
     [truncated at 2K of 58.6K; full output in
@@ -1624,6 +1638,7 @@ The docs server is up.
 
  🤖 Job empty exited: complete after 15s with no output.
  🤖 Job build`fast exited: complete after 16s.
+
     done
 
  🤖 Job archive exited: complete after 17s with no output.

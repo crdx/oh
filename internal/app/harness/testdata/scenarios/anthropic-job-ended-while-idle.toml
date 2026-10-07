@@ -2,6 +2,7 @@ provider = "anthropic"
 model = "claude-opus-5"
 effort = "medium"
 end-job-before-first = "build"
+end-job-output = "Usage:\n  oh [options]         Start a session\n  oh --help            Show help\ncmd/oh/draw.go:41:9: undefined: getWidth"
 
 [first]
 prompt = "what happened to the build"

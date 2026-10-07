@@ -6,9 +6,10 @@
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed after 12s, exit(2).                                                    \e[0m\r
-\e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
-\e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
-\e[48;2;48;58;67m    exit status 1                                                                                   \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mgo build ./...\e[0m\e[48;2;48;58;67m                                                                                  \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mcmd/oh/draw.go:41:9: undefined: getWidth\e[0m\e[48;2;48;58;67m                                                        \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mexit status 1\e[0m\e[48;2;48;58;67m                                                                                   \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
 The refactor is done. The build failed on an undefined getWidth, which I will fix next.\e[?25h\e[?2026l\r

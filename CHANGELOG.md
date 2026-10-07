@@ -9,6 +9,7 @@
 
 ### Changes
 
+- Preserve spacing in completed job output
 - Trim 15ms off startup
 
 ## [0.13.0] - 2026-10-07

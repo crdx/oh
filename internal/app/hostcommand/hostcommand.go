@@ -11,6 +11,7 @@ import (
 	"syscall"
 	"time"
 
+	"crdx.org/oh/internal/app/markdown"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
@@ -24,7 +25,6 @@ const (
 
 	stopPrecision = 100 * time.Millisecond
 
-	shortestFence      = 3
 	shellLanguage      = "bash"
 	commandPrompt      = "$ "
 	continuationPrompt = "> "
@@ -138,10 +138,10 @@ func Notice(event agent.Event) (string, bool) {
 
 	output := strings.TrimRight(result.Output, "\n")
 	hasOutput := strings.TrimSpace(output) != ""
-	paragraphs := []string{lede(result, hasOutput), fenced(shellLanguage, prompted(result.Command))}
+	paragraphs := []string{lede(result, hasOutput), markdown.CodeBlock(shellLanguage, prompted(result.Command))}
 
 	if hasOutput {
-		paragraphs = append(paragraphs, outputHeading(result), fenced("", output))
+		paragraphs = append(paragraphs, outputHeading(result), markdown.CodeBlock("", output))
 	}
 
 	return strings.Join(append(paragraphs, statusNote(result)), "\n\n"), true
@@ -170,25 +170,6 @@ func outputHeading(result Result) string {
 	}
 
 	return "Output:"
-}
-
-func fenced(language string, body string) string {
-	mark := strings.Repeat("`", max(shortestFence, longestBacktickRun(body)+1))
-
-	return mark + language + "\n" + body + "\n" + mark
-}
-
-func longestBacktickRun(body string) int {
-	longest := 0
-	for _, line := range strutil.Lines(body) {
-		run := 0
-		for run < len(line) && line[run] == '`' {
-			run++
-		}
-		longest = max(longest, run)
-	}
-
-	return longest
 }
 
 func prompted(command string) string {

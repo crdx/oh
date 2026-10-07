@@ -7,10 +7,11 @@
 \e[48;2;48;58;67m                                        \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed after 12s, \e[0m\r
 \e[48;2;48;58;67m    exit(2).                            \e[0m\r
-\e[48;2;48;58;67m    go build ./...                      \e[0m\r
-\e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined:     \e[0m\r
-\e[48;2;48;58;67m    getWidth                            \e[0m\r
-\e[48;2;48;58;67m    exit status 1                       \e[0m\r
+\e[48;2;48;58;67m                                        \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mgo build ./...\e[0m\e[48;2;48;58;67m                      \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mcmd/oh/draw.go:41:9: undefined:\e[0m\e[48;2;48;58;67m     \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mgetWidth\e[0m\e[48;2;48;58;67m                            \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mexit status 1\e[0m\e[48;2;48;58;67m                       \e[0m\r
 \e[48;2;48;58;67m                                        \e[0m\r
 \r
 \e[3m\e[38;2;150;152;150mChecking one.go The first thing to\e[0m\r
@@ -178,127 +179,128 @@ first.\r
 \e[48;2;48;58;67m \e[0m\r
 \e[48;2;48;58;67m.\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mg\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mg\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mb\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mo\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mu\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mb\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mu\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67ml\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mi\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150ml\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m.\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150md\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m/\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150m.\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m.\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150m/\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m.\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150m.\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m.\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150m.\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mc\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150m.\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mm\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mc\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mm\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m/\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150md\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150m/\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mh\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mo\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m/\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mh\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150m/\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mr\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150md\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67ma\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mr\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mw\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150ma\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m.\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mw\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mg\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150m.\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mg\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m:\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mo\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m4\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150m:\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m1\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150m4\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m:\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150m1\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m9\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150m:\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m:\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150m9\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mu\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150m:\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mu\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mn\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150md\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mf\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150me\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mf\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mi\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mn\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150me\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m:\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150md\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mg\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150m:\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mg\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150me\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mW\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mt\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mW\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mi\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150md\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mh\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mt\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mh\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mx\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150me\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mx\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mi\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mt\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150ms\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67ma\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mt\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150ma\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67mu\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mt\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150mu\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
-\e[48;2;48;58;67m1\e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150ms\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;150;152;150m1\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m \e[0m\r
 \r
 \e[3m\e[38;2;150;152;150mC\e[0m\r
@@ -540,10 +542,11 @@ t\r
 \e[48;2;52;53;65m think it through while the build finishes\e[0m
 \e[48;2;52;53;65m\e[0m
 \e[48;2;48;58;67m\e[0m
-\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed after 12s, exit(2).
-go build ./...
-cmd/oh/draw.go:41:9: undefined: getWidth
-exit status 1\e[0m
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed after 12s, exit(2).\e[0m
+\e[48;2;48;58;67m    \e[0m
+\e[48;2;48;58;67m    \e[38;2;150;152;150mgo build ./...\e[0m\e[48;2;48;58;67m\e[0m
+\e[48;2;48;58;67m    \e[38;2;150;152;150mcmd/oh/draw.go:41:9: undefined: getWidth\e[0m\e[48;2;48;58;67m\e[0m
+\e[48;2;48;58;67m    \e[38;2;150;152;150mexit status 1\e[0m\e[48;2;48;58;67m\e[0m
 \e[48;2;48;58;67m\e[0m
 \e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the file was read before it was written • the file was written before it was read func main() { println("one") } So the read has to come first.\e[0m\e[0m
 
@@ -556,9 +559,10 @@ The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and the read 
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed after 12s, exit(2).                                                    \e[0m\r
-\e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
-\e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
-\e[48;2;48;58;67m    exit status 1                                                                                   \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mgo build ./...\e[0m\e[48;2;48;58;67m                                                                                  \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mcmd/oh/draw.go:41:9: undefined: getWidth\e[0m\e[48;2;48;58;67m                                                        \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mexit status 1\e[0m\e[48;2;48;58;67m                                                                                   \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
 \e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the file was read before it was\e[0m\r
@@ -574,9 +578,10 @@ The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and the read 
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed after 12s, exit(2).                                                    \e[0m\r
-\e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
-\e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
-\e[48;2;48;58;67m    exit status 1                                                                                   \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mgo build ./...\e[0m\e[48;2;48;58;67m                                                                                  \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mcmd/oh/draw.go:41:9: undefined: getWidth\e[0m\e[48;2;48;58;67m                                                        \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mexit status 1\e[0m\e[48;2;48;58;67m                                                                                   \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[3m\e[38;2;150;152;150mC\e[0m\e[0m\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mCheck\e[0m\e[0m\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking\e[0m\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go\e[0m\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go Th\e[0m\e[0m\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The\e[0m\e[0m\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The firs\e[0m\e[0m\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first\e[0m\e[0m\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thin\e[0m\e[0m\e[K\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to\e[0m\e[0m\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to set\e[0m\e[0m\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle\e[0m\e[0m\e[K\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is w\e[0m\e[0m\e[K\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which\e[0m\e[0m\e[K\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of\e[0m\e[0m\e[K\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of thes\e[0m\e[0m\e[K\r\e[58C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these ho\e[0m\e[0m\e[K\r\e[62C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds:\e[0m\e[0m\e[K\r\e[66C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: •\e[0m\e[0m\e[K\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the\e[0m\e[0m\e[K\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the file\e[0m\e[0m\e[K\r\e[77C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the file was\e[0m\e[0m\e[K\r\e[81C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the file was rea\e[0m\e[0m\e[K\r\e[85C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the file was read be\e[0m\e[0m\e[K\r\e[89C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the file was read before\e[0m\e[0m\e[K\r\e[93C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the file was read before it\e[0m\e[0m\e[K\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the file was read before it was\e[0m\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the file was read before it was\e[0m\r
@@ -592,9 +597,10 @@ The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe buil\e[K\r\e[8C\e[?25h\e[?20
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed after 12s, exit(2).                                                    \e[0m\r
-\e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
-\e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
-\e[48;2;48;58;67m    exit status 1                                                                                   \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mgo build ./...\e[0m\e[48;2;48;58;67m                                                                                  \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mcmd/oh/draw.go:41:9: undefined: getWidth\e[0m\e[48;2;48;58;67m                                                        \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mexit status 1\e[0m\e[48;2;48;58;67m                                                                                   \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the file was read before it was\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
@@ -610,9 +616,10 @@ The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and the read 
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed after 12s, exit(2).                                                    \e[0m\r
-\e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
-\e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
-\e[48;2;48;58;67m    exit status 1                                                                                   \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mgo build ./...\e[0m\e[48;2;48;58;67m                                                                                  \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mcmd/oh/draw.go:41:9: undefined: getWidth\e[0m\e[48;2;48;58;67m                                                        \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mexit status 1\e[0m\e[48;2;48;58;67m                                                                                   \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[3m\e[38;2;150;152;150mC\e[0m\e[0m\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mCheck\e[0m\e[0m\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking\e[0m\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one\e[0m\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go\e[0m\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go Th\e[0m\e[0m\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The\e[0m\e[0m\e[K\r\e[19C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The firs\e[0m\e[0m\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first\e[0m\e[0m\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thin\e[0m\e[0m\e[K\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to\e[0m\e[0m\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to set\e[0m\e[0m\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle\e[0m\e[0m\e[K\r\e[41C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is w\e[0m\e[0m\e[K\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which\e[0m\e[0m\e[K\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of\e[0m\e[0m\e[K\r\e[53C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of thes\e[0m\e[0m\e[K\r\e[58C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these ho\e[0m\e[0m\e[K\r\e[62C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds:\e[0m\e[0m\e[K\r\e[66C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: •\e[0m\e[0m\e[K\r\e[68C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the\e[0m\e[0m\e[K\r\e[72C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the file\e[0m\e[0m\e[K\r\e[77C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the file was\e[0m\e[0m\e[K\r\e[81C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the file was rea\e[0m\e[0m\e[K\r\e[85C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the file was read be\e[0m\e[0m\e[K\r\e[89C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the file was read before\e[0m\e[0m\e[K\r\e[93C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the file was read before it\e[0m\e[0m\e[K\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the file was read before it was\e[0m\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the file was read before it was\e[0m\r
@@ -638,16 +645,17 @@ The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe buil\e[K\r\e[8C\e[?25h\e[?20
 \e[48;2;48;58;67m    after   \e[0m\r
 \e[48;2;48;58;67m    12s,    \e[0m\r
 \e[48;2;48;58;67m    exit(2).\e[0m\r
-\e[48;2;48;58;67m    go build\e[0m\r
-\e[48;2;48;58;67m    ./...   \e[0m\r
-\e[48;2;48;58;67m    cmd/oh/d\e[0m\r
-\e[48;2;48;58;67m    raw.go:4\e[0m\r
-\e[48;2;48;58;67m    1:9:    \e[0m\r
-\e[48;2;48;58;67m    undefine\e[0m\r
-\e[48;2;48;58;67m    d:      \e[0m\r
-\e[48;2;48;58;67m    getWidth\e[0m\r
-\e[48;2;48;58;67m    exit    \e[0m\r
-\e[48;2;48;58;67m    status 1\e[0m\r
+\e[48;2;48;58;67m            \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mgo build\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150m./...\e[0m\e[48;2;48;58;67m   \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mcmd/oh/d\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mraw.go:4\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150m1:9:\e[0m\e[48;2;48;58;67m    \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mundefine\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150md:\e[0m\e[48;2;48;58;67m      \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mgetWidth\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mexit\e[0m\e[48;2;48;58;67m    \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mstatus 1\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m            \e[0m\r
 \r
 \e[3m\e[38;2;150;152;150mChecking\e[0m\r
@@ -684,10 +692,11 @@ first.\r
 \e[48;2;52;53;65m think it through while the build finishes\e[0m\r
 \e[48;2;52;53;65m\e[0m\r
 \e[48;2;48;58;67m\e[0m\r
-\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed after 12s, exit(2).\r
-go build ./...\r
-cmd/oh/draw.go:41:9: undefined: getWidth\r
-exit status 1\e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed after 12s, exit(2).\e[0m\r
+\e[48;2;48;58;67m    \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mgo build ./...\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mcmd/oh/draw.go:41:9: undefined: getWidth\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mexit status 1\e[0m\e[48;2;48;58;67m\e[0m\r
 \e[48;2;48;58;67m\e[0m\r
 \e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the file was read before it was written • the file was written before it was read func main() { println("one") } So the read has to come first.\e[0m\e[0m\r
 \r
@@ -700,9 +709,10 @@ The build failed on an undefined \e[38;2;192;128;80mgetWidth\e[0m, and the read 
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed after 12s, exit(2).                                                    \e[0m\r
-\e[48;2;48;58;67m    go build ./...                                                                                  \e[0m\r
-\e[48;2;48;58;67m    cmd/oh/draw.go:41:9: undefined: getWidth                                                        \e[0m\r
-\e[48;2;48;58;67m    exit status 1                                                                                   \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mgo build ./...\e[0m\e[48;2;48;58;67m                                                                                  \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mcmd/oh/draw.go:41:9: undefined: getWidth\e[0m\e[48;2;48;58;67m                                                        \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;150;152;150mexit status 1\e[0m\e[48;2;48;58;67m                                                                                   \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
 \e[3m\e[38;2;150;152;150mChecking one.go The first thing to settle is which of these holds: • the file was read before it was\e[0m\r

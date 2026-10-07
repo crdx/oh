@@ -11,7 +11,7 @@
 
  run them
 
-⋮ 6 more lines
+⋮ 7 more lines
     exit status 1
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -22,7 +22,7 @@
  run them
 
 
-⋮ 6 more lines
+⋮ 7 more lines
     exit status 1
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -33,7 +33,7 @@
  run them
 
 
-⋮ 5 more lines
+⋮ 6 more lines
     undefined: getWidth
     exit status 1
 
@@ -45,8 +45,8 @@
  run them
 
 
-⋮ 4 more lines
- 🤖 Job build exited: failed, exit(2).
+⋮ 5 more lines
+
     undefined: getWidth
     exit status 1
 
@@ -58,9 +58,9 @@
  run them
 
 
-⋮ 3 more lines
-
+⋮ 4 more lines
  🤖 Job build exited: failed, exit(2).
+
     undefined: getWidth
     exit status 1
 
@@ -72,10 +72,10 @@
  run them
 
 
-⋮ 2 more lines
-
+⋮ 3 more lines
 
  🤖 Job build exited: failed, exit(2).
+
     undefined: getWidth
     exit status 1
 
@@ -87,11 +87,11 @@
  run them
 
 
-$ sleep 60
-$ sleep 61
+⋮ 2 more lines
 
 
  🤖 Job build exited: failed, exit(2).
+
     undefined: getWidth
     exit status 1
 
@@ -108,9 +108,9 @@ $ sleep 61
 
 
  🤖 Job build exited: failed, exit(2).
+
     undefined: getWidth
     exit status 1
-
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -125,6 +125,7 @@ $ sleep 61
 
 
  🤖 Job build exited: failed, exit(2).
+
     undefined: getWidth
     exit status 1
 
@@ -142,6 +143,7 @@ $ sleep 61
 
 
  🤖 Job build exited: failed, exit(2).
+
     undefined: getWidth
     exit status 1
 
@@ -159,6 +161,7 @@ $ sleep 61
 
 
  🤖 Job build exited: failed, exit(2).
+
     undefined: getWidth
     exit status 1
 
@@ -171,7 +174,7 @@ $ sleep 61
  run them
 
 
-⋮ 5 more lines
+⋮ 6 more lines
     undefined: getWidth
     exit status 1
 

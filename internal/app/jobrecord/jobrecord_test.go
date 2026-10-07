@@ -163,13 +163,32 @@ func TestAJobThatFinishedOnItsOwnSaysHowItWent(t *testing.T) {
 		t.Fatal("a finished job said nothing")
 	}
 
-	expects := "Job `build` exited: failed after 12s, exit(2).\n" +
-		"undefined: getWidth\nexit status 1"
+	expects := "Job `build` exited: failed after 12s, exit(2).\n\n" +
+		"```\nundefined: getWidth\nexit status 1\n```"
 	if notice != expects {
 		t.Errorf("got %q, want %q", notice, expects)
 	}
 	if event.Name != "build" {
 		t.Errorf("got %q, want the event to name the job", event.Name)
+	}
+}
+
+func TestAJobNoticeSeparatesTruncationFromLiteralOutput(t *testing.T) {
+	event := jobrecord.EndedEvent(jobs.Conclusion{
+		Snapshot:     jobs.Snapshot{Name: "build", State: jobs.StateComplete},
+		Output:       "  option   description\n```\n# not a heading\n",
+		DroppedBytes: 128,
+	})
+
+	notice, isSaid := jobrecord.EndedNotice(event)
+	if !isSaid {
+		t.Fatal("a finished job said nothing")
+	}
+	want := "Job `build` exited: complete.\n" +
+		"note: the oldest 128B of output was dropped to keep the spool bounded.\n\n" +
+		"````\n  option   description\n```\n# not a heading\n````"
+	if notice != want {
+		t.Errorf("got %q, want %q", notice, want)
 	}
 }
 
@@ -201,7 +220,7 @@ func TestAJobNameContainingABacktickRemainsOneCodeSpan(t *testing.T) {
 	if !isSaid {
 		t.Fatal("a finished job said nothing")
 	}
-	if want := "Job `` build`fast `` exited: complete.\ndone"; notice != want {
+	if want := "Job `` build`fast `` exited: complete.\n\n```\ndone\n```"; notice != want {
 		t.Errorf("got %q, want %q", notice, want)
 	}
 }

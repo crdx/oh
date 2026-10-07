@@ -22,12 +22,15 @@ job: watch [toolu_1]
 
 ## job_ended · +0s
 
-```
+````
 Job `watch` exited: failed after 12s, exit(2), run 1, respawned.
+
+```
 go build ./...
 cmd/oh/draw.go:41:9: undefined: getWidth
 exit status 1
 ```
+````
 
 ## Tool calls · +0s
 
@@ -51,12 +54,15 @@ job: watch [toolu_2]
 
 ## job_ended · +0s
 
-```
+````
 Job `watch` exited: failed after 12s, exit(2), run 4, not respawned after 3 runs in a row each ended within 2s.
+
+```
 go build ./...
 cmd/oh/draw.go:41:9: undefined: getWidth
 exit status 1
 ```
+````
 
 ## Tool calls · +0s
 

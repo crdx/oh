@@ -28,19 +28,25 @@ Both are running and will come back whenever they exit.
 
 ## job_ended · +7s
 
-```
+````
 Job `watch` exited: complete after 8s, run 1, respawned.
+
+```
 go build ./...
 built in 3s
 ```
+````
 
 ## job_ended · +8s
 
-```
+````
 Job `watch` exited: failed after 8s, exit(1), run 2, respawned.
+
+```
 go build ./...
 cmd/oh/draw.go:41:9: undefined: getWidth
 ```
+````
 
 ## job_ended · +9s
 
@@ -56,10 +62,13 @@ Job `serve` exited: failed after 0s with no output, run 2, the job could not be 
 
 ## job_ended · +11s
 
-```
+````
 Job `lint` exited: failed after 0s, exit(127), run 4, not respawned after 3 runs in a row each ended within 2s.
+
+```
 bash: golangci-lint: command not found
 ```
+````
 
 ## User · +12s
 

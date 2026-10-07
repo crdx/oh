@@ -17235,6 +17235,7 @@ type sessionGoldenScenario struct {
 	Environment           *sessionGoldenEnvironment `toml:"environment"`
 	EnvironmentOnResume   *sessionGoldenEnvironment `toml:"environment-on-resume"`
 	EndJobBeforeFirst     string                    `toml:"end-job-before-first"`
+	EndJobOutput          string                    `toml:"end-job-output"`
 	JobHoldingWorkspace   string                    `toml:"job-holding-workspace"`
 	JobsRunningIntoResume []string                  `toml:"jobs-running-into-resume"`
 	RunBeforeFirst        string                    `toml:"run-before-first"`
@@ -18437,7 +18438,11 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		settleSessionGoldenJob(t, firstHarness, scenario.JobHoldingWorkspace)
 	}
 	if scenario.EndJobBeforeFirst != "" {
-		firstHarness.jobEnded(endedSessionGoldenJob(scenario.EndJobBeforeFirst))
+		conclusion := endedSessionGoldenJob(scenario.EndJobBeforeFirst)
+		if scenario.EndJobOutput != "" {
+			conclusion.Output = scenario.EndJobOutput
+		}
+		firstHarness.jobEnded(conclusion)
 		firstHarness.settleAccess()
 		firstAssistant.AddUserMessage(firstHarness.takeSettledNotes())
 	}

@@ -27,21 +27,27 @@ The docs server is up.
 
 ## job_ended · +5s
 
-```
+````
 Job `build` exited: failed after 12s, exit(2).
+
+```
 go build ./...
 cmd/oh/draw.go:41:9: undefined: getWidth
 exit status 1
 ```
+````
 
 ## job_ended · +6s
 
-```
+````
 Job `seed` exited: complete after 14s.
+
+```
 seeding the database
 
 [truncated at 2K of 58.6K; full output in /state/sessions/tame-impala/drops/output-3f2a1c8d4b5e6f70.txt]
 ```
+````
 
 ## job_ended · +7s
 
@@ -51,10 +57,13 @@ Job `empty` exited: complete after 15s with no output.
 
 ## job_ended · +8s
 
-```
+````
 Job `` build`fast `` exited: complete after 16s.
+
+```
 done
 ```
+````
 
 ## job_ended · +9s
 

@@ -51,11 +51,16 @@ func EndedNotice(event agent.Event) (string, bool) {
 		return "", false
 	}
 
+	output := strings.TrimRight(conclusion.Output, "\n")
+	if strings.TrimSpace(output) != "" {
+		output = "\n\n" + markdown.CodeBlock("", output)
+	}
+
 	return jobs.Report(
 		"Job "+markdown.CodeSpan(conclusion.Snapshot.Name)+" exited: "+conclusion.Snapshot.OutcomeWith(conclusion.Output)+".",
-		conclusion.Output,
+		"",
 		conclusion.DroppedBytes,
-	), true
+	) + output, true
 }
 
 const EndedWithSession agent.Kind = "jobs_ended_with_session"

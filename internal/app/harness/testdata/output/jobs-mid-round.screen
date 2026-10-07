@@ -12,12 +12,14 @@ read target.txt 1L
 
  🤖 Job build exited: failed after 12s,
     exit(2).
+
     go build ./...
     cmd/oh/draw.go:41:9: undefined:
     getWidth
     exit status 1
 
  🤖 Job docs exited: complete after 14s.
+
     docs written
 
  🤖 Port 8080 is now forwarded to
@@ -245,6 +247,7 @@ t
 
 .
 
+
 g
 
 o
@@ -431,6 +434,7 @@ r
 s
 
 .
+
 
 d
 
@@ -645,11 +649,13 @@ read target.txt 1L
 
 
  🤖 Job build exited: failed after 12s, exit(2).
+
     go build ./...
     cmd/oh/draw.go:41:9: undefined: getWidth
     exit status 1
 
  🤖 Job docs exited: complete after 14s.
+
     docs written
 
  🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
@@ -681,6 +687,7 @@ read tar… 1L
     after
     12s,
     exit(2).
+
     go build
     ./...
     cmd/oh/d
@@ -697,6 +704,7 @@ read tar… 1L
     complete
     after
     14s.
+
     docs
     written
 
@@ -730,11 +738,13 @@ read target.txt 1L
 
 
  🤖 Job build exited: failed after 12s, exit(2).
+
     go build ./...
     cmd/oh/draw.go:41:9: undefined: getWidth
     exit status 1
 
  🤖 Job docs exited: complete after 14s.
+
     docs written
 
  🤖 Port 8080 is now forwarded to http://127.27.192.223:8080.
