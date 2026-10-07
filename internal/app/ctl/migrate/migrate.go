@@ -345,6 +345,10 @@ func keepCopy(bundlePath string, copyPath string) error {
 }
 
 func keepLinked(path string, keptPath string) error {
+	return keepLinkedWith(path, keptPath, os.Link)
+}
+
+func keepLinkedWith(path string, keptPath string, link func(string, string) error) error {
 	if _, err := os.Lstat(keptPath); err == nil {
 		return fmt.Errorf("a copy is already kept in %s: move it aside first", keptPath)
 	}
@@ -353,7 +357,7 @@ func keepLinked(path string, keptPath string) error {
 		return err
 	}
 
-	if err := os.Link(path, keptPath); err == nil {
+	if err := link(path, keptPath); err == nil {
 		return nil
 	}
 
