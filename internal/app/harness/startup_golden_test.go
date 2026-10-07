@@ -1,6 +1,7 @@
 package harness
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
@@ -19,6 +20,7 @@ import (
 
 	"crdx.org/oh/internal/app/backend"
 	"crdx.org/oh/internal/app/config"
+	"crdx.org/oh/internal/app/location"
 )
 
 var (
@@ -321,6 +323,32 @@ func TestGoldenASessionCountsItsSpendInTheConfiguredCurrency(t *testing.T) {
 		"dollars by default": func() string { return spendScreen("", "") },
 		"pounds from a current rate": func() string {
 			return spendScreen("[ui]\ncurrency = \"gbp\"\n", `{"GBP":0.5}`)
+		},
+	})
+}
+
+func TestGoldenAFailedRateRefreshKeepsTheCachedCurrency(t *testing.T) {
+	compareWithGolden(t, "rate-refresh", ".txt", map[string]func() string{
+		"no cached rate": func() string {
+			t.Setenv(location.StateDirVariable, t.TempDir())
+			ctx, cancel := context.WithCancel(t.Context())
+			cancel()
+			var notice strings.Builder
+			currency := ensureCurrency(ctx, &notice, "GBP", false)
+			return notice.String() + "spend: " + currency.Format(2) + "\n"
+		},
+		"stale cached rate": func() string {
+			directory := t.TempDir()
+			t.Setenv(location.StateDirVariable, directory)
+			body := fmt.Sprintf(`{"version":1,"fetched":%q,"base":"USD","rates":{"GBP":0.5}}`, time.Now().Add(-48*time.Hour).Format(time.RFC3339))
+			if err := os.WriteFile(location.GetExchangeRateCachePath(), []byte(body), 0o600); err != nil {
+				t.Fatal(err)
+			}
+			ctx, cancel := context.WithCancel(t.Context())
+			cancel()
+			var notice strings.Builder
+			currency := ensureCurrency(ctx, &notice, "GBP", false)
+			return notice.String() + "spend: " + currency.Format(2) + "\n"
 		},
 	})
 }

@@ -1,0 +1,7 @@
+=== no cached rate ===
+\e[38;2;207;173;0mexchange rate not refreshed: Get "https://api.frankfurter.dev/v1/latest?base=USD&symbols=GBP": context canceled\e[0m
+spend: $2.00
+
+=== stale cached rate ===
+\e[38;2;207;173;0mexchange rate not refreshed: Get "https://api.frankfurter.dev/v1/latest?base=USD&symbols=GBP": context canceled\e[0m
+spend: £1.00
