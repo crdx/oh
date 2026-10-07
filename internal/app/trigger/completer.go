@@ -14,6 +14,10 @@ type Editor interface {
 	IsSearching() bool
 }
 
+type emptyTabHandler interface {
+	NoMatchTab(word Word, text string) (string, bool)
+}
+
 type Completer struct {
 	sources  []Source
 	source   Source
@@ -64,6 +68,7 @@ func (self *Completer) Apply(editor Editor, keypress key.Key) bool {
 		return true
 
 	case dropdown.Swallowed:
+		self.retryEmptyTab(editor, keypress)
 		return true
 
 	case dropdown.Chosen:
@@ -146,6 +151,22 @@ func (self *Completer) Sync(editor Editor) {
 func (self *Completer) Receive() {
 	if self.dropdown.IsOpen() {
 		self.match()
+	}
+}
+
+func (self *Completer) retryEmptyTab(editor Editor, keypress key.Key) {
+	if keypress != (key.Key{Code: key.Rune, Value: '\t'}) || self.total != 0 {
+		return
+	}
+	fallback, isHandled := self.source.(emptyTabHandler)
+	if !isHandled {
+		return
+	}
+	word := self.current
+	text := string(editor.Runes()[word.Start:word.End])
+	if replacement, isAvailable := fallback.NoMatchTab(word, text); isAvailable {
+		editor.Replace(word.Start, word.End, replacement)
+		self.Sync(editor)
 	}
 }
 

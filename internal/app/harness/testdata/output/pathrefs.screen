@@ -90,7 +90,7 @@ look at @internal/app/harness/app.go
 === 12 a query matching nothing ===
 ────────────────────────────────────────────────────────────
 @zzz
-  no matching paths
+  tab to search ignored
 ────────────────────────────────────────────────────────────
 === 13 backspace over the sigil closes the dropdown ===
 ────────────────────────────────────────────────────────────
@@ -368,4 +368,133 @@ look at @"readme.md"
 === 52 typing out the only path closes the dropdown ===
 ────────────────────────────────────────────────────────────
 look at @go.mod
+────────────────────────────────────────────────────────────
+=== 53 an ordinary query suggests the ignored scope ===
+────────────────────────────────────────────────────────────
+look at @localenv
+  tab to search ignored
+────────────────────────────────────────────────────────────
+=== 54 ignored paths are listed separately ===
+────────────────────────────────────────────────────────────
+look at @!localenv
+› config/local.env
+
+
+
+
+
+
+
+────────────────────────────────────────────────────────────
+=== 55 an ignored path completes without the marker ===
+────────────────────────────────────────────────────────────
+look at @config/local.env
+────────────────────────────────────────────────────────────
+=== 56 backspace restores the ordinary scope ===
+────────────────────────────────────────────────────────────
+@
+› .github/
+  CHANGELOG.md
+  cmd/
+  go.mod
+  internal/
+  Justfile
+  main.go
+  ⋮ 17 more
+────────────────────────────────────────────────────────────
+=== 57 an ignored directory keeps its scope ===
+────────────────────────────────────────────────────────────
+@!"private caches/
+› private caches/local data.txt
+
+
+
+
+
+
+
+────────────────────────────────────────────────────────────
+=== 58 an ignored directory completes a file ===
+────────────────────────────────────────────────────────────
+@"private caches/local data.txt"
+────────────────────────────────────────────────────────────
+=== 59 tab on an empty result switches scope while listing ===
+────────────────────────────────────────────────────────────
+look at @!localenv
+  listing ignored files…
+────────────────────────────────────────────────────────────
+=== 60 the switched scope lists ignored paths ===
+────────────────────────────────────────────────────────────
+look at @!localenv
+› config/local.env
+────────────────────────────────────────────────────────────
+=== 61 tab chooses the ignored result ===
+────────────────────────────────────────────────────────────
+look at @config/local.env
+────────────────────────────────────────────────────────────
+=== 62 another tab on no ignored matches stays in scope ===
+────────────────────────────────────────────────────────────
+@!README
+  no matching ignored paths
+
+
+
+
+
+
+
+────────────────────────────────────────────────────────────
+=== 63 tab does not turn a listing failure into no matches ===
+────────────────────────────────────────────────────────────
+@localenv
+  could not list files: rg: not found
+────────────────────────────────────────────────────────────
+=== 64 tab with an ordinary match still chooses it ===
+────────────────────────────────────────────────────────────
+look at @README.md
+────────────────────────────────────────────────────────────
+=== 65 the fallback preserves an opened quote ===
+────────────────────────────────────────────────────────────
+@!"private caches
+› private caches/
+  private caches/local data.txt
+────────────────────────────────────────────────────────────
+=== 66 shift-tab with no matches stays put ===
+────────────────────────────────────────────────────────────
+@localenv
+  tab to search ignored
+────────────────────────────────────────────────────────────
+=== 67 tab before the listing arrives stays put ===
+────────────────────────────────────────────────────────────
+@localenv
+  listing files…
+────────────────────────────────────────────────────────────
+=== 68 the ignored listing failure is not a path ===
+────────────────────────────────────────────────────────────
+@!localenv
+  could not list files: rg: not found
+
+
+
+
+
+
+
+────────────────────────────────────────────────────────────
+=== 69 a narrow terminal elides the no-match hint ===
+────────────────────
+@localenv
+  tab to search ign…
+────────────────────
+=== 70 other ignore rules also supply ignored paths ===
+────────────────────────────────────────────────────────────
+@!hidden
+› hidden.tmp
+  hidden.txt
+
+
+
+
+
+
 ────────────────────────────────────────────────────────────

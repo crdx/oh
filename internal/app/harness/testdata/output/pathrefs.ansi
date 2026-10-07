@@ -101,7 +101,7 @@
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r@\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
-\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@z\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@zz\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@zzz\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  no matching paths\e[0m\e[K\e[1A\r\e[4C\e[?25h\e[?2026l
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@z\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@zz\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@zzz\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  tab to search ignored\e[0m\e[K\e[1A\r\e[4C\e[?25h\e[?2026l
 === 13 backspace over the sigil closes the dropdown ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
@@ -469,3 +469,150 @@ said before\e[?2026h\e[?25l\e[?7l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\rl\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlo\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\rloo\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook \e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook a\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at \e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @g\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @go\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @go.\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @go.m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @go.mo\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› go.mod\e[0m\e[K\e[1A\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @go.mod\e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[2A\r\e[15C\e[?25h\e[?2026l
+=== 53 an ordinary query suggests the ignored scope ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\rl\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlo\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\rloo\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook \e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook a\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at \e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @l\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @lo\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @loc\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @loca\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @local\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @locale\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @localen\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @localenv\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  tab to search ignored\e[0m\e[K\e[1A\r\e[17C\e[?25h\e[?2026l
+=== 54 ignored paths are listed separately ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\rl\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlo\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\rloo\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook \e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook a\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at \e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› .github/\e[0m\e[K\e[1B\r  CHANGELOG.md\e[K\r
+  cmd/\e[K\r
+  go.mod\e[K\r
+  internal/\e[K\r
+  Justfile\e[K\r
+  main.go\e[K\r
+\e[38;2;150;152;150m  ⋮ 17 more\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[9A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @!\e[K\e[1B\r\e[38;2;150;152;150m  listing ignored files…\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[8A\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @!l\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @!lo\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @!loc\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @!loca\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @!local\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @!locale\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @!localen\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @!localenv\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› config/local.env\e[0m\e[K\e[1A\r\e[18C\e[?25h\e[?2026l
+=== 55 an ignored path completes without the marker ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\rl\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlo\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\rloo\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook \e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook a\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at \e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› .github/\e[0m\e[K\e[1B\r  CHANGELOG.md\e[K\r
+  cmd/\e[K\r
+  go.mod\e[K\r
+  internal/\e[K\r
+  Justfile\e[K\r
+  main.go\e[K\r
+\e[38;2;150;152;150m  ⋮ 17 more\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[9A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @!\e[K\e[1B\r\e[38;2;150;152;150m  listing ignored files…\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[8A\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @!l\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @!lo\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @!loc\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @!loca\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @!local\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @!locale\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @!localen\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @!localenv\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› config/local.env\e[0m\e[K\e[1A\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @config/local.env \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[9A\r\e[26C\e[?25h\e[?2026l
+=== 56 backspace restores the ordinary scope ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r@\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› .github/\e[0m\e[K\e[1B\r  CHANGELOG.md\e[K\r
+  cmd/\e[K\r
+  go.mod\e[K\r
+  internal/\e[K\r
+  Justfile\e[K\r
+  main.go\e[K\r
+\e[38;2;150;152;150m  ⋮ 17 more\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[9A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!\e[K\e[1B\r\e[38;2;150;152;150m  listing ignored files…\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[8A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› .env.local\e[0m\e[K\e[1A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@\e[K\e[1B\r\e[38;2;192;128;80m› .github/\e[0m\e[K\e[1B\r  CHANGELOG.md\e[K\e[1B\r  cmd/\e[K\e[1B\r  go.mod\e[K\e[1B\r  internal/\e[K\e[1B\r  Justfile\e[K\e[1B\r  main.go\e[K\e[1B\r\e[38;2;150;152;150m  ⋮ 17 more\e[0m\e[K\e[8A\r\e[1C\e[?25h\e[?2026l
+=== 57 an ignored directory keeps its scope ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r@\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› .github/\e[0m\e[K\e[1B\r  CHANGELOG.md\e[K\r
+  cmd/\e[K\r
+  go.mod\e[K\r
+  internal/\e[K\r
+  Justfile\e[K\r
+  main.go\e[K\r
+\e[38;2;150;152;150m  ⋮ 17 more\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[9A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!\e[K\e[1B\r\e[38;2;150;152;150m  listing ignored files…\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[8A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!p\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!pr\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!pri\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!priv\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!priva\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!privat\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!private\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› private caches/\e[0m\e[K\e[1B\r  private caches/local data.txt\e[K\e[2A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!"private caches/\e[K\e[1B\r\e[38;2;192;128;80m› private caches/local data.txt\e[0m\e[K\e[1B\r\e[K\e[2A\r\e[18C\e[?25h\e[?2026l
+=== 58 an ignored directory completes a file ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r@\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› .github/\e[0m\e[K\e[1B\r  CHANGELOG.md\e[K\r
+  cmd/\e[K\r
+  go.mod\e[K\r
+  internal/\e[K\r
+  Justfile\e[K\r
+  main.go\e[K\r
+\e[38;2;150;152;150m  ⋮ 17 more\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[9A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!\e[K\e[1B\r\e[38;2;150;152;150m  listing ignored files…\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[8A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!p\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!pr\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!pri\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!priv\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!priva\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!privat\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!private\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› private caches/\e[0m\e[K\e[1B\r  private caches/local data.txt\e[K\e[2A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!"private caches/\e[K\e[1B\r\e[38;2;192;128;80m› private caches/local data.txt\e[0m\e[K\e[1B\r\e[K\e[2A\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@"private caches/local data.txt" \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[9A\r\e[33C\e[?25h\e[?2026l
+=== 59 tab on an empty result switches scope while listing ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\rl\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlo\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\rloo\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook \e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook a\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at \e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @l\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @lo\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @loc\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @loca\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @local\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @locale\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @localen\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @localenv\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  tab to search ignored\e[0m\e[K\e[1A\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @!localenv\e[K\e[1B\r\e[38;2;150;152;150m  listing ignored files…\e[0m\e[K\e[1A\r\e[18C\e[?25h\e[?2026l
+=== 60 the switched scope lists ignored paths ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\rl\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlo\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\rloo\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook \e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook a\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at \e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @l\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @lo\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @loc\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @loca\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @local\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @locale\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @localen\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @localenv\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  tab to search ignored\e[0m\e[K\e[1A\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @!localenv\e[K\e[1B\r\e[38;2;150;152;150m  listing ignored files…\e[0m\e[K\e[1A\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› config/local.env\e[0m\e[K\e[1A\r\e[18C\e[?25h\e[?2026l
+=== 61 tab chooses the ignored result ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\rl\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlo\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\rloo\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook \e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook a\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at \e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @l\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @lo\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @loc\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @loca\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @local\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @locale\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @localen\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @localenv\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  tab to search ignored\e[0m\e[K\e[1A\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @!localenv\e[K\e[1B\r\e[38;2;150;152;150m  listing ignored files…\e[0m\e[K\e[1A\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› config/local.env\e[0m\e[K\e[1A\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @config/local.env \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[2A\r\e[26C\e[?25h\e[?2026l
+=== 62 another tab on no ignored matches stays in scope ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r@\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› .github/\e[0m\e[K\e[1B\r  CHANGELOG.md\e[K\r
+  cmd/\e[K\r
+  go.mod\e[K\r
+  internal/\e[K\r
+  Justfile\e[K\r
+  main.go\e[K\r
+\e[38;2;150;152;150m  ⋮ 17 more\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[9A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!\e[K\e[1B\r\e[38;2;150;152;150m  listing ignored files…\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[8A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!R\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!RE\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!REA\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!READ\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!READM\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!README\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  no matching ignored paths\e[0m\e[K\e[1A\r\e[8C\e[?25h\e[?2026l
+=== 63 tab does not turn a listing failure into no matches ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r@\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@l\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@lo\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@loc\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@loca\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@local\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@locale\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@localen\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@localenv\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  could not list files: rg: not found\e[0m\e[K\e[1A\r\e[9C\e[?25h\e[?2026l
+=== 64 tab with an ordinary match still chooses it ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\rl\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlo\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\rloo\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook \e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook a\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at \e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @R\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @RE\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @REA\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @READ\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @READM\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @README\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› README.md\e[0m\e[K\e[1A\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rlook at @README.md \e[K\e[1B\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1B\r\e[K\e[2A\r\e[19C\e[?25h\e[?2026l
+=== 65 the fallback preserves an opened quote ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r@\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@"\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@"p\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@"pr\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@"pri\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@"priv\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@"priva\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@"privat\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@"private\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@"private \e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@"private c\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@"private ca\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@"private cac\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@"private cach\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@"private cache\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@"private caches\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  tab to search ignored\e[0m\e[K\e[1A\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!"private caches\e[K\e[1B\r\e[38;2;150;152;150m  listing ignored files…\e[0m\e[K\e[1A\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› private caches/\e[0m\e[K\e[1B\r  private caches/local data.txt\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[3A\r\e[17C\e[?25h\e[?2026l
+=== 66 shift-tab with no matches stays put ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r@\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@l\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@lo\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@loc\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@loca\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@local\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@locale\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@localen\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@localenv\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  tab to search ignored\e[0m\e[K\e[1A\r\e[9C\e[?25h\e[?2026l
+=== 67 tab before the listing arrives stays put ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r@\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@l\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@lo\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@loc\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@loca\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@local\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@locale\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@localen\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@localenv\e[K\r\e[9C\e[?25h\e[?2026l
+=== 68 the ignored listing failure is not a path ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r@\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› .github/\e[0m\e[K\e[1B\r  CHANGELOG.md\e[K\r
+  cmd/\e[K\r
+  go.mod\e[K\r
+  internal/\e[K\r
+  Justfile\e[K\r
+  main.go\e[K\r
+\e[38;2;150;152;150m  ⋮ 17 more\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[9A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!\e[K\e[1B\r\e[38;2;150;152;150m  listing ignored files…\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[8A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!l\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!lo\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!loc\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!loca\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!local\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!locale\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!localen\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!localenv\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  could not list files: rg: not found\e[0m\e[K\e[1A\r\e[10C\e[?25h\e[?2026l
+=== 69 a narrow terminal elides the no-match hint ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r@\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────\e[0m\e[2A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@l\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@lo\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@loc\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@loca\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@local\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@locale\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@localen\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@localenv\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;150;152;150m  tab to search ign…\e[0m\e[1A\r\e[9C\e[?25h\e[?2026l
+=== 70 other ignore rules also supply ignored paths ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r@\e[K\e[1B\r\e[38;2;150;152;150m  listing files…\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[2A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› .github/\e[0m\e[K\e[1B\r  CHANGELOG.md\e[K\r
+  cmd/\e[K\r
+  go.mod\e[K\r
+  internal/\e[K\r
+  Justfile\e[K\r
+  main.go\e[K\r
+\e[38;2;150;152;150m  ⋮ 17 more\e[0m\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────\e[0m\e[9A\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!\e[K\e[1B\r\e[38;2;150;152;150m  listing ignored files…\e[0m\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[1B\r\e[K\e[8A\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!h\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!hi\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!hid\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!hidd\e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!hidde\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r@!hidden\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1B\r\e[38;2;192;128;80m› hidden.tmp\e[0m\e[K\e[1B\r  hidden.txt\e[K\e[2A\r\e[8C\e[?25h\e[?2026l

@@ -39,11 +39,15 @@ type Source interface {
 }
 
 func FindWord(runes []rune, cursor int, symbol rune) (Word, bool) {
+	return FindWordWithMarker(runes, cursor, symbol, 0)
+}
+
+func FindWordWithMarker(runes []rune, cursor int, symbol rune, marker rune) (Word, bool) {
 	if cursor < 0 || cursor > len(runes) {
 		return Word{}, false
 	}
 
-	if word, isFound := findQuotedWord(runes, cursor, symbol); isFound {
+	if word, isFound := findQuotedWord(runes, cursor, symbol, marker); isFound {
 		return word, true
 	}
 
@@ -63,17 +67,22 @@ func FindWord(runes []rune, cursor int, symbol rune) (Word, bool) {
 	return Word{Start: start, End: end, Query: string(runes[start+1 : cursor])}, true
 }
 
-func findQuotedWord(runes []rune, cursor int, symbol rune) (Word, bool) {
+func findQuotedWord(runes []rune, cursor int, symbol rune, marker rune) (Word, bool) {
 	openingQuote := cursor - 1
 	for openingQuote > 0 && runes[openingQuote] != quote && runes[openingQuote] != '\n' {
 		openingQuote--
 	}
-	if openingQuote <= 0 || runes[openingQuote] != quote || runes[openingQuote-1] != symbol {
+	if openingQuote <= 0 || runes[openingQuote] != quote {
 		return Word{}, false
 	}
 
 	start := openingQuote - 1
-	if start > 0 && !unicode.IsSpace(runes[start-1]) {
+	prefix := ""
+	if marker != 0 && runes[start] == marker && start > 0 {
+		prefix = string(marker)
+		start--
+	}
+	if runes[start] != symbol || start > 0 && !unicode.IsSpace(runes[start-1]) {
 		return Word{}, false
 	}
 
@@ -90,7 +99,7 @@ func findQuotedWord(runes []rune, cursor int, symbol rune) (Word, bool) {
 		}
 	}
 
-	return Word{Start: start, End: end, Query: string(runes[openingQuote+1 : cursor]), IsQuoted: true}, true
+	return Word{Start: start, End: end, Query: prefix + string(runes[openingQuote+1:cursor]), IsQuoted: true}, true
 }
 
 func WordText(symbol rune, text string, isQuoted bool, isOpenEnded bool) string {

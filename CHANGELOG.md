@@ -9,6 +9,7 @@
 
 ### Changes
 
+- Complete ignored paths with `@!`
 - Preserve spacing in completed job output
 - Trim 15ms off startup
 

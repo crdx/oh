@@ -145,6 +145,42 @@ func TestListFilesHonoursIgnoresAndExclusions(t *testing.T) {
 	}
 }
 
+func TestListIgnoredFilesOnlyShowsIgnoredAndPermittedPaths(t *testing.T) {
+	directory := t.TempDir()
+	contents := map[string]string{
+		".gitignore":      "*.log\nignored/\n",
+		".ignore":         "hidden.txt\n",
+		".rgignore":       "notes.tmp\n",
+		"kept.go":         "",
+		".env.log":        "",
+		"nested/deep.log": "",
+		"ignored/file.go": "",
+		"hidden.txt":      "",
+		"notes.tmp":       "",
+		"private.log":     "",
+		".git/config":     "",
+	}
+	for name, content := range contents {
+		full := filepath.Join(directory, name)
+		if err := os.MkdirAll(filepath.Dir(full), 0o750); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(full, []byte(content), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	files, isTruncated, err := pathref.ListIgnoredFiles(context.Background(), directory, []string{"private.log"})
+	if err != nil || isTruncated {
+		t.Fatalf("listing ignored files: %q, truncated %t, %v", files, isTruncated, err)
+	}
+	slices.Sort(files)
+	want := []string{".env.log", "hidden.txt", "ignored/file.go", "nested/deep.log", "notes.tmp"}
+	if !reflect.DeepEqual(files, want) {
+		t.Errorf("got %q, want %q", files, want)
+	}
+}
+
 func TestAnIndexListsOnceUntilItGoesStale(t *testing.T) {
 	now := time.Unix(0, 0)
 	lists := 0
@@ -195,7 +231,7 @@ func TestASourceSaysItIsListingUntilTheListingArrives(t *testing.T) {
 			{Label: "cmd/main.go", Text: "@cmd/main.go"},
 		},
 		Total:       2,
-		Placeholder: "no matching paths",
+		Placeholder: "tab to search ignored",
 	}
 	if got := source.Results(trigger.Word{}, 10); !reflect.DeepEqual(got, want) {
 		t.Errorf("got %+v, want %+v", got, want)

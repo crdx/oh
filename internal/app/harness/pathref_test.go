@@ -34,14 +34,13 @@ func pathRefFixture(t *testing.T) (*App, *edit.Input) {
 	t.Helper()
 
 	self := slashCommandFixture(t, caps.Read)
-	self.completer = trigger.New(pathref.NewSource(pathref.NewIndexWith(
-		"/workspace",
-		nil,
-		func(context.Context, string, []string) ([]string, bool, error) {
-			return pathRefFixtureFiles, false, nil
-		},
-		time.Now,
-	)))
+	ordinary := pathref.NewIndexWith("/workspace", nil, func(context.Context, string, []string) ([]string, bool, error) {
+		return pathRefFixtureFiles, false, nil
+	}, time.Now)
+	ignored := pathref.NewIndexWith("/workspace", nil, func(context.Context, string, []string) ([]string, bool, error) {
+		return []string{".env.local", "config/local.env", "private caches/local data.txt"}, false, nil
+	}, time.Now)
+	self.completer = trigger.New(pathref.NewSourceWithIgnored(ordinary, ignored))
 
 	return self, edit.NewInput(nil)
 }
@@ -109,6 +108,160 @@ func TestChoosingAFileCompletesItAndClosesTheDropdown(t *testing.T) {
 	}
 	if self.completer.IsOpen() {
 		t.Error("the dropdown stayed open after choosing a file")
+	}
+}
+
+func TestTabWithNoOrdinaryMatchesSearchesIgnoredFiles(t *testing.T) {
+	self, inputLine := pathRefFixture(t)
+	typeIntoPathRef(t, self, inputLine, "look at @localenv")
+	awaitPathRefListing(t, self, inputLine)
+	pressForPathRef(self, inputLine, tabKey)
+	if got := inputLine.Text(); got != "look at @!localenv" {
+		t.Fatalf("tab changed the input to %q", got)
+	}
+	if rows := self.completer.Rows(80, dropdown.MaxRows); style.Plain(rows[0]) != "  listing ignored files…" {
+		t.Errorf("drew %q while searching", rows)
+	}
+	awaitPathRefListing(t, self, inputLine)
+	if got := selectedPathRef(self); got != "config/local.env" {
+		t.Fatalf("selected %q", got)
+	}
+	pressForPathRef(self, inputLine, tabKey)
+	if got := inputLine.Text(); got != "look at @config/local.env " {
+		t.Errorf("completed to %q", got)
+	}
+}
+
+func TestTabWaitsForTheOrdinaryListingBeforeSwitchingScopes(t *testing.T) {
+	self, inputLine := pathRefFixture(t)
+	listingArrives := make(chan struct{})
+	ordinary := pathref.NewIndexWith("/workspace", nil, func(context.Context, string, []string) ([]string, bool, error) {
+		<-listingArrives
+		return pathRefFixtureFiles, false, nil
+	}, time.Now)
+	ignored := pathref.NewIndexWith("/workspace", nil, func(context.Context, string, []string) ([]string, bool, error) {
+		return []string{".env.local"}, false, nil
+	}, time.Now)
+	self.completer = trigger.New(pathref.NewSourceWithIgnored(ordinary, ignored))
+	typeIntoPathRef(t, self, inputLine, "@localenv")
+	pressForPathRef(self, inputLine, tabKey)
+	if got := inputLine.Text(); got != "@localenv" {
+		t.Errorf("tab changed the input before listing: %q", got)
+	}
+	close(listingArrives)
+	awaitPathRefListing(t, self, inputLine)
+	pressForPathRef(self, inputLine, tabKey)
+	if got := inputLine.Text(); got != "@!localenv" {
+		t.Errorf("tab changed the input after listing to %q", got)
+	}
+}
+
+func TestTabDoesNotSwitchScopesAfterTheOrdinaryListingFails(t *testing.T) {
+	self, inputLine := pathRefFixture(t)
+	ordinary := pathref.NewIndexWith("/workspace", nil, func(context.Context, string, []string) ([]string, bool, error) {
+		return nil, false, errors.New("rg: not found")
+	}, time.Now)
+	ignored := pathref.NewIndexWith("/workspace", nil, func(context.Context, string, []string) ([]string, bool, error) {
+		return []string{".env.local"}, false, nil
+	}, time.Now)
+	self.completer = trigger.New(pathref.NewSourceWithIgnored(ordinary, ignored))
+	typeIntoPathRef(t, self, inputLine, "@localenv")
+	awaitPathRefListing(t, self, inputLine)
+	pressForPathRef(self, inputLine, tabKey)
+	if got := inputLine.Text(); got != "@localenv" {
+		t.Errorf("tab changed the input after a listing failure to %q", got)
+	}
+}
+
+func TestAnIgnoredQueryListsOnlyIgnoredFilesAndInsertsAnOrdinaryReference(t *testing.T) {
+	self, inputLine := pathRefFixture(t)
+	typeIntoPathRef(t, self, inputLine, "look at @")
+	awaitPathRefListing(t, self, inputLine)
+	typeIntoPathRef(t, self, inputLine, "!localenv")
+	if rows := self.completer.Rows(80, dropdown.MaxRows); len(rows) == 0 || style.Plain(rows[0]) != "  listing ignored files…" {
+		t.Errorf("drew %q before the ignored listing arrived", rows)
+	}
+	awaitPathRefListing(t, self, inputLine)
+	if got := selectedPathRef(self); got != "config/local.env" {
+		t.Fatalf("selected %q", got)
+	}
+	pressForPathRef(self, inputLine, tabKey)
+	if got := inputLine.Text(); got != "look at @config/local.env " {
+		t.Errorf("completed to %q", got)
+	}
+	if self.completer.IsOpen() {
+		t.Error("the dropdown stayed open after choosing a file")
+	}
+}
+
+func TestAnIgnoredQueryCannotChooseAnOrdinaryPath(t *testing.T) {
+	self, inputLine := pathRefFixture(t)
+	typeIntoPathRef(t, self, inputLine, "@")
+	awaitPathRefListing(t, self, inputLine)
+	typeIntoPathRef(t, self, inputLine, "!README")
+	awaitPathRefListing(t, self, inputLine)
+	if rows := self.completer.Rows(80, dropdown.MaxRows); style.Plain(rows[0]) != "  no matching ignored paths" {
+		t.Errorf("drew %q for an ordinary path", rows)
+	}
+}
+
+func TestTabOnAnIgnoredQueryWithNoMatchesDoesNotCycleBack(t *testing.T) {
+	self, inputLine := pathRefFixture(t)
+	typeIntoPathRef(t, self, inputLine, "@")
+	awaitPathRefListing(t, self, inputLine)
+	typeIntoPathRef(t, self, inputLine, "!README")
+	awaitPathRefListing(t, self, inputLine)
+	pressForPathRef(self, inputLine, tabKey)
+	if got := inputLine.Text(); got != "@!README" {
+		t.Errorf("tab changed an unmatched ignored query to %q", got)
+	}
+}
+
+func TestNoMatchTabPreservesAnExistingQuote(t *testing.T) {
+	self, inputLine := pathRefFixture(t)
+	typeIntoPathRef(t, self, inputLine, `@"private caches`)
+	awaitPathRefListing(t, self, inputLine)
+	pressForPathRef(self, inputLine, tabKey)
+	if got := inputLine.Text(); got != `@!"private caches` {
+		t.Fatalf("tab changed quoted input to %q", got)
+	}
+	awaitPathRefListing(t, self, inputLine)
+	if got := selectedPathRef(self); got != "private caches/" {
+		t.Errorf("selected %q", got)
+	}
+}
+
+func TestChoosingAnIgnoredDirectoryKeepsItsScopeAcrossQuotes(t *testing.T) {
+	self, inputLine := pathRefFixture(t)
+	typeIntoPathRef(t, self, inputLine, "@")
+	awaitPathRefListing(t, self, inputLine)
+	typeIntoPathRef(t, self, inputLine, "!private")
+	awaitPathRefListing(t, self, inputLine)
+	if got := selectedPathRef(self); got != "private caches/" {
+		t.Fatalf("selected %q", got)
+	}
+	pressForPathRef(self, inputLine, tabKey)
+	if got := inputLine.Text(); got != `@!"private caches/` {
+		t.Fatalf("completed to %q", got)
+	}
+	if got := selectedPathRef(self); got != "private caches/local data.txt" {
+		t.Fatalf("selected %q inside the ignored directory", got)
+	}
+	pressForPathRef(self, inputLine, tabKey)
+	if got := inputLine.Text(); got != `@"private caches/local data.txt" ` {
+		t.Errorf("completed to %q", got)
+	}
+}
+
+func TestSwitchingFromAnIgnoredQueryRestoresTheOrdinaryListing(t *testing.T) {
+	self, inputLine := pathRefFixture(t)
+	typeIntoPathRef(t, self, inputLine, "@")
+	awaitPathRefListing(t, self, inputLine)
+	typeIntoPathRef(t, self, inputLine, "!")
+	awaitPathRefListing(t, self, inputLine)
+	pressForPathRef(self, inputLine, key.Key{Code: key.Backspace})
+	if got := selectedPathRef(self); got != "cmd/" {
+		t.Errorf("selected %q after leaving ignored mode", got)
 	}
 }
 
@@ -283,12 +436,13 @@ var pathRefGoldenFiles = []string{
 }
 
 type pathRefRig struct {
-	t       *testing.T
-	app     *App
-	input   *edit.Input
-	history *edit.History
-	release chan struct{}
-	output  *strings.Builder
+	t              *testing.T
+	app            *App
+	input          *edit.Input
+	history        *edit.History
+	release        chan struct{}
+	ignoredRelease chan struct{}
+	output         *strings.Builder
 }
 
 type pathRefScenario struct {
@@ -296,7 +450,9 @@ type pathRefScenario struct {
 	lines         int
 	historyLines  []string
 	listingErr    error
+	ignoredErr    error
 	files         []string
+	ignoredFiles  []string
 	commands      func(t *testing.T) slash.Registry
 	isTurnRunning bool
 	steps         func(rig *pathRefRig)
@@ -306,11 +462,12 @@ func newPathRefRig(t *testing.T, scenario pathRefScenario) *pathRefRig {
 	t.Helper()
 
 	rig := &pathRefRig{
-		t:       t,
-		app:     slashCommandFixture(t, caps.Read),
-		history: edit.NewHistory("", historyLimit),
-		release: make(chan struct{}),
-		output:  &strings.Builder{},
+		t:              t,
+		app:            slashCommandFixture(t, caps.Read),
+		history:        edit.NewHistory("", historyLimit),
+		release:        make(chan struct{}),
+		ignoredRelease: make(chan struct{}),
+		output:         &strings.Builder{},
 	}
 	for _, line := range scenario.historyLines {
 		rig.history.Add(line)
@@ -326,16 +483,16 @@ func newPathRefRig(t *testing.T, scenario pathRefScenario) *pathRefRig {
 		files = scenario.files
 	}
 
-	clock := time.Unix(0, 0)
-	sources := []trigger.Source{pathref.NewSource(pathref.NewIndexWith(
-		"/workspace",
-		nil,
-		func(context.Context, string, []string) ([]string, bool, error) {
-			<-rig.release
-			return files, false, scenario.listingErr
-		},
-		func() time.Time { return clock },
-	))}
+	clock := func() time.Time { return time.Unix(0, 0) }
+	ordinary := pathref.NewIndexWith("/workspace", nil, func(context.Context, string, []string) ([]string, bool, error) {
+		<-rig.release
+		return files, false, scenario.listingErr
+	}, clock)
+	ignored := pathref.NewIndexWith("/workspace", nil, func(context.Context, string, []string) ([]string, bool, error) {
+		<-rig.ignoredRelease
+		return scenario.ignoredFiles, false, scenario.ignoredErr
+	}, clock)
+	sources := []trigger.Source{pathref.NewSourceWithIgnored(ordinary, ignored)}
 	if scenario.commands != nil {
 		rig.app.commands = scenario.commands(t)
 		pathDirectory := t.TempDir()
@@ -397,6 +554,13 @@ func (self *pathRefRig) listingArrives() {
 	self.t.Helper()
 
 	close(self.release)
+	self.nextListingArrives()
+}
+
+func (self *pathRefRig) ignoredListingArrives() {
+	self.t.Helper()
+
+	close(self.ignoredRelease)
 	self.nextListingArrives()
 }
 
@@ -749,6 +913,157 @@ func pathRefScenarios(t *testing.T) map[string]pathRefScenario {
 			rig.typeAndList("look at @go.mo")
 			rig.typeText("d")
 		}),
+		"53 an ordinary query suggests the ignored scope": at(60, 24, func(rig *pathRefRig) {
+			rig.typeAndList("look at @localenv")
+		}),
+		"54 ignored paths are listed separately": {
+			columns:      60,
+			lines:        24,
+			ignoredFiles: []string{".env.local", "config/local.env"},
+			steps: func(rig *pathRefRig) {
+				rig.typeAndList("look at @")
+				rig.typeText("!localenv")
+				rig.ignoredListingArrives()
+			},
+		},
+		"55 an ignored path completes without the marker": {
+			columns:      60,
+			lines:        24,
+			ignoredFiles: []string{".env.local", "config/local.env"},
+			steps: func(rig *pathRefRig) {
+				rig.typeAndList("look at @")
+				rig.typeText("!localenv")
+				rig.ignoredListingArrives()
+				rig.press(tabKey)
+			},
+		},
+		"56 backspace restores the ordinary scope": {
+			columns:      60,
+			lines:        24,
+			ignoredFiles: []string{".env.local"},
+			steps: func(rig *pathRefRig) {
+				rig.typeAndList("@")
+				rig.typeText("!")
+				rig.ignoredListingArrives()
+				rig.press(pathRefBack)
+			},
+		},
+		"57 an ignored directory keeps its scope": {
+			columns:      60,
+			lines:        24,
+			ignoredFiles: []string{"private caches/local data.txt"},
+			steps: func(rig *pathRefRig) {
+				rig.typeAndList("@")
+				rig.typeText("!private")
+				rig.ignoredListingArrives()
+				rig.press(tabKey)
+			},
+		},
+		"58 an ignored directory completes a file": {
+			columns:      60,
+			lines:        24,
+			ignoredFiles: []string{"private caches/local data.txt"},
+			steps: func(rig *pathRefRig) {
+				rig.typeAndList("@")
+				rig.typeText("!private")
+				rig.ignoredListingArrives()
+				rig.press(tabKey, tabKey)
+			},
+		},
+		"59 tab on an empty result switches scope while listing": {
+			columns:      60,
+			lines:        24,
+			ignoredFiles: []string{"config/local.env"},
+			steps: func(rig *pathRefRig) {
+				rig.typeAndList("look at @localenv")
+				rig.press(tabKey)
+				close(rig.ignoredRelease)
+			},
+		},
+		"60 the switched scope lists ignored paths": {
+			columns:      60,
+			lines:        24,
+			ignoredFiles: []string{"config/local.env"},
+			steps: func(rig *pathRefRig) {
+				rig.typeAndList("look at @localenv")
+				rig.press(tabKey)
+				rig.ignoredListingArrives()
+			},
+		},
+		"61 tab chooses the ignored result": {
+			columns:      60,
+			lines:        24,
+			ignoredFiles: []string{"config/local.env"},
+			steps: func(rig *pathRefRig) {
+				rig.typeAndList("look at @localenv")
+				rig.press(tabKey)
+				rig.ignoredListingArrives()
+				rig.press(tabKey)
+			},
+		},
+		"62 another tab on no ignored matches stays in scope": at(60, 24, func(rig *pathRefRig) {
+			rig.typeAndList("@")
+			rig.typeText("!README")
+			rig.ignoredListingArrives()
+			rig.press(tabKey)
+		}),
+		"63 tab does not turn a listing failure into no matches": {
+			columns:    60,
+			lines:      24,
+			listingErr: errors.New("rg: not found"),
+			steps: func(rig *pathRefRig) {
+				rig.typeAndList("@localenv")
+				rig.press(tabKey)
+			},
+		},
+		"64 tab with an ordinary match still chooses it": at(60, 24, func(rig *pathRefRig) {
+			rig.typeAndList("look at @README")
+			rig.press(tabKey)
+		}),
+		"65 the fallback preserves an opened quote": {
+			columns:      60,
+			lines:        24,
+			ignoredFiles: []string{"private caches/local data.txt"},
+			steps: func(rig *pathRefRig) {
+				rig.typeAndList(`@"private caches`)
+				rig.press(tabKey)
+				rig.ignoredListingArrives()
+			},
+		},
+		"66 shift-tab with no matches stays put": at(60, 24, func(rig *pathRefRig) {
+			rig.typeAndList("@localenv")
+			rig.press(key.Key{Code: key.Rune, Value: '\t', Mod: key.Shift})
+		}),
+		"67 tab before the listing arrives stays put": at(60, 24, func(rig *pathRefRig) {
+			rig.show()
+			rig.typeText("@localenv")
+			rig.press(tabKey)
+			close(rig.release)
+		}),
+		"68 the ignored listing failure is not a path": {
+			columns:    60,
+			lines:      24,
+			ignoredErr: errors.New("rg: not found"),
+			steps: func(rig *pathRefRig) {
+				rig.typeAndList("@")
+				rig.typeText("!localenv")
+				rig.ignoredListingArrives()
+				rig.press(tabKey)
+			},
+		},
+		"69 a narrow terminal elides the no-match hint": at(20, 24, func(rig *pathRefRig) {
+			rig.typeAndList("@localenv")
+		}),
+		"70 other ignore rules also supply ignored paths": {
+			columns:      60,
+			lines:        24,
+			ignoredFiles: []string{"hidden.txt", "hidden.tmp"},
+			steps: func(rig *pathRefRig) {
+				rig.typeAndList("@")
+				rig.typeText("!hidden")
+				rig.ignoredListingArrives()
+			},
+		},
 	}
 
 	return scenarios
@@ -863,6 +1178,30 @@ func TestAClosedDropdownLeavesTheScreenAsAFreshDrawWould(t *testing.T) {
 			requireAClosedDropdownLeavesNothing(t, test.commands, test.steps)
 		})
 	}
+}
+
+func TestChoosingAfterAFallbackLeavesTheScreenAsAFreshDrawWould(t *testing.T) {
+	rig := newPathRefRig(t, pathRefScenario{
+		columns:      replayColumns,
+		lines:        replayLines,
+		ignoredFiles: []string{"config/local.env"},
+	})
+	rig.typeAndList("look at @localenv")
+	rig.press(tabKey)
+	rig.ignoredListingArrives()
+	rig.press(tabKey)
+	if rig.app.completer.IsOpen() {
+		t.Error("the dropdown is still open")
+	}
+
+	fresh := newPathRefRig(t, pathRefScenario{columns: replayColumns, lines: replayLines})
+	fresh.app.completer = nil
+	fresh.input.SetText(rig.input.Text())
+	fresh.show()
+
+	requireSameVisibleScreenInColumns(
+		t, "choosing after a fallback left something behind", replayColumns, rig.output.String(), fresh.output.String(),
+	)
 }
 
 func requireAClosedDropdownLeavesNothing(

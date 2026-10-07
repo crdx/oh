@@ -130,6 +130,36 @@ func (self *Index) refresh(excludedNames []string, announceChange func()) {
 }
 
 func ListFiles(ctx context.Context, directory string, excludedNames []string) ([]string, bool, error) {
+	return listFiles(ctx, directory, excludedNames, false)
+}
+
+func ListIgnoredFiles(ctx context.Context, directory string, excludedNames []string) ([]string, bool, error) {
+	ordinaryFiles, isTruncated, err := ListFiles(ctx, directory, excludedNames)
+	if err != nil {
+		return nil, isTruncated, err
+	}
+	if isTruncated {
+		return nil, true, errors.New("too many ordinary paths to identify ignored paths")
+	}
+
+	allFiles, allTruncated, err := listFiles(ctx, directory, excludedNames, true)
+	if err != nil {
+		return nil, allTruncated, err
+	}
+	ordinaryPaths := make(map[string]bool, len(ordinaryFiles))
+	for _, file := range ordinaryFiles {
+		ordinaryPaths[file] = true
+	}
+	ignoredFiles := make([]string, 0, len(allFiles))
+	for _, file := range allFiles {
+		if !ordinaryPaths[file] {
+			ignoredFiles = append(ignoredFiles, file)
+		}
+	}
+	return ignoredFiles, allTruncated, nil
+}
+
+func listFiles(ctx context.Context, directory string, excludedNames []string, isIncludingIgnored bool) ([]string, bool, error) {
 	arguments := []string{
 		"--no-config",
 		"--files",
@@ -138,6 +168,9 @@ func ListFiles(ctx context.Context, directory string, excludedNames []string) ([
 		"--glob=!.git/**",
 		"--no-messages",
 		"--null",
+	}
+	if isIncludingIgnored {
+		arguments = append(arguments, "--no-ignore")
 	}
 	for _, pattern := range excludedNames {
 		arguments = append(arguments, "--glob=!"+pattern)
