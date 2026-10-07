@@ -12,8 +12,7 @@
 - Complete ignored paths with `@!`
 - Preserve spacing in completed job output
 - Trim 15ms off startup
-- Skip redundant wrapping of wrapped messages
-- Show the redraw latency on ctrl+l
+- Add experimental toggle to show the redraw latency on ctrl+l
 - Redraw promptly on resize, no blocking
 - Keep multiline commands on one row
 

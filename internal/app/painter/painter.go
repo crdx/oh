@@ -294,19 +294,9 @@ func renderSubmittedMessage(
 	shouldRenderHyperlinks bool,
 	roots link.Roots,
 ) string {
-	text, _ := renderSubmittedMessageWithFit(message, columns, shouldRenderHyperlinks, roots)
-	return text
-}
-
-func renderSubmittedMessageWithFit(
-	message submittedMessage,
-	columns int,
-	shouldRenderHyperlinks bool,
-	roots link.Roots,
-) (string, bool) {
 	content := submittedContentRows(message, columns, shouldRenderHyperlinks, roots)
-	rows, isFitted := frameSubmittedWithFit("", content, "", columns, message.background())
-	return strings.Join(rows, "\n"), isFitted
+
+	return strings.Join(frameSubmitted("", content, "", columns, message.background()), "\n")
 }
 
 func submittedContentRows(
@@ -348,28 +338,18 @@ func submittedContentRows(
 }
 
 func frameSubmitted(head string, content []string, foot string, columns int, background style.Style) []string {
-	rows, _ := frameSubmittedWithFit(head, content, foot, columns, background)
-	return rows
-}
-
-func frameSubmittedWithFit(head string, content []string, foot string, columns int, background style.Style) ([]string, bool) {
 	rows := append([]string{head}, content...)
 	rows = append(rows, foot)
-	isFitted := columns > 0
 
 	for i, row := range rows {
-		room := columns - style.Width(row)
-		if room < 0 {
-			isFitted = false
-		}
-		if room > 0 {
+		if room := columns - style.Width(row); room > 0 {
 			row += strings.Repeat(" ", room)
 		}
 
 		rows[i] = background(row)
 	}
 
-	return rows, isFitted
+	return rows
 }
 
 func NoticeStyle(severity agent.Status) style.Style {
@@ -650,12 +630,7 @@ func (self *Picasso) submittedContent(message submittedMessage, columns int) []s
 
 func (self *Picasso) drawSubmittedLine(message submittedMessage) {
 	if message.kind == userSubmission {
-		text, isFitted := self.renderSubmittedWithFit(message)
-		if isFitted {
-			self.screen.MarkedPanelLineFitted(text)
-		} else {
-			self.screen.MarkedPanelLine(text)
-		}
+		self.screen.MarkedPanelLine(self.renderSubmitted(message))
 		return
 	}
 
@@ -663,16 +638,11 @@ func (self *Picasso) drawSubmittedLine(message submittedMessage) {
 }
 
 func (self *Picasso) renderSubmitted(message submittedMessage) string {
-	text, _ := self.renderSubmittedWithFit(message)
-	return text
-}
-
-func (self *Picasso) renderSubmittedWithFit(message submittedMessage) (string, bool) {
 	if !self.screen.IsTerminal() {
-		return renderSubmittedMessageWithFit(message, self.screen.Columns(), false, link.Roots{})
+		return renderSubmittedMessage(message, self.screen.Columns(), false, link.Roots{})
 	}
 
-	return renderSubmittedMessageWithFit(message, self.screen.Columns(), true, self.linkRoots().WithoutScratch())
+	return renderSubmittedMessage(message, self.screen.Columns(), true, self.linkRoots().WithoutScratch())
 }
 
 func (self *Picasso) drawDeltaWithAnswerRendererReset(delta agent.Delta, shouldResetAnswerRenderer bool) {

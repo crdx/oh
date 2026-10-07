@@ -11739,19 +11739,19 @@ func TestReloadingConfigChangesTheEditorAndToolOutputLimit(t *testing.T) {
 
 func TestReloadingConfigChangesExperimentalToggles(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	writeLiveConfig(t, path, "[experimental]\nquiet_rounds = true\n")
+	writeLiveConfig(t, path, "[experimental]\nredraw_timing_feedback = true\n")
 
 	self := testConversation(t, &bytes.Buffer{})
 	prepareLiveConfig(t, self, path)
 
-	if !self.experimental.IsEnabled("quiet_rounds") {
+	if !self.experimental.IsEnabled(experimental.RedrawTimingFeedback) {
 		t.Fatal("the toggle was not read from the configuration")
 	}
 
-	writeLiveConfig(t, path, "[experimental]\nquiet_rounds = false\n")
+	writeLiveConfig(t, path, "[experimental]\nredraw_timing_feedback = false\n")
 	settleLiveConfig(t, self)
 
-	if self.experimental.IsEnabled("quiet_rounds") {
+	if self.experimental.IsEnabled(experimental.RedrawTimingFeedback) {
 		t.Error("the reloaded toggle is still enabled")
 	}
 }
@@ -12011,6 +12011,7 @@ const (
 	feedbackClearedByBackspace
 	feedbackClearedByControlD
 	feedbackClearedByControlL
+	feedbackTimedByControlL
 	feedbackSurvivingADismissKey
 	feedbackClearedByTurnCompletion
 	feedbackStorageWarnings
@@ -12067,28 +12068,29 @@ func TestCommandFeedbackHasNoAutomaticDismissal(t *testing.T) {
 
 func TestGoldenFeedbackDrawsEveryVisibleState(t *testing.T) {
 	passes := streamPasses(t, feedbackStream, map[string]feedbackScenario{
-		"command error":                               feedbackCommandError,
-		"multiline help":                              feedbackHelp,
-		"startup info":                                feedbackStartupInfo,
-		"success confirmation":                        feedbackSuccess,
-		"config reload without snippets":              feedbackReloadedConfig,
-		"editing clears feedback":                     feedbackClearedByEditing,
-		"escape clears feedback":                      feedbackClearedByEscape,
-		"backspace clears feedback":                   feedbackClearedByBackspace,
-		"ctrl+d clears feedback":                      feedbackClearedByControlD,
-		"ctrl+l replaces feedback with redraw timing": feedbackClearedByControlL,
-		"a warning survives escape":                   feedbackSurvivingADismissKey,
-		"turn completion clears it":                   feedbackClearedByTurnCompletion,
-		"combined storage warnings":                   feedbackStorageWarnings,
-		"settings nothing reads":                      feedbackUnknownSettings,
-		"tall answer stays untouched":                 feedbackTallAnswer,
-		"network approval":                            feedbackNetworkApproval,
-		"next concurrent approval":                    feedbackConcurrentApproval,
-		"chained command approval":                    feedbackChainedApproval,
-		"heredoc approval":                            feedbackHeredocApproval,
-		"approval taller than the terminal":           feedbackTallApproval,
-		"approval during a call":                      feedbackApprovalDuringACall,
-		"declared tool approval":                      feedbackDeclaredToolApproval,
+		"command error":                     feedbackCommandError,
+		"multiline help":                    feedbackHelp,
+		"startup info":                      feedbackStartupInfo,
+		"success confirmation":              feedbackSuccess,
+		"config reload without snippets":    feedbackReloadedConfig,
+		"editing clears feedback":           feedbackClearedByEditing,
+		"escape clears feedback":            feedbackClearedByEscape,
+		"backspace clears feedback":         feedbackClearedByBackspace,
+		"ctrl+d clears feedback":            feedbackClearedByControlD,
+		"ctrl+l clears feedback by default": feedbackClearedByControlL,
+		"ctrl+l shows experimental timing":  feedbackTimedByControlL,
+		"a warning survives escape":         feedbackSurvivingADismissKey,
+		"turn completion clears it":         feedbackClearedByTurnCompletion,
+		"combined storage warnings":         feedbackStorageWarnings,
+		"settings nothing reads":            feedbackUnknownSettings,
+		"tall answer stays untouched":       feedbackTallAnswer,
+		"network approval":                  feedbackNetworkApproval,
+		"next concurrent approval":          feedbackConcurrentApproval,
+		"chained command approval":          feedbackChainedApproval,
+		"heredoc approval":                  feedbackHeredocApproval,
+		"approval taller than the terminal": feedbackTallApproval,
+		"approval during a call":            feedbackApprovalDuringACall,
+		"declared tool approval":            feedbackDeclaredToolApproval,
 	})
 
 	compareWithGolden(t, "feedback", ".ansi", passes)
@@ -12233,10 +12235,13 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 		self.handleCommand("/unknown")
 		self.show(inputLine)
 		self.handleKeypressAndShowInput(inputLine, nil, feedbackDismissKeys[scenario])
-	case feedbackClearedByControlL:
+	case feedbackClearedByControlL, feedbackTimedByControlL:
 		self.handleCommand("/unknown")
 		self.show(inputLine)
-		self.now = func() time.Time { return time.Date(2024, time.January, 1, 0, 0, 0, 0, time.UTC) }
+		if scenario == feedbackTimedByControlL {
+			self.experimental = experimental.New(map[string]any{string(experimental.RedrawTimingFeedback): true})
+			self.now = func() time.Time { return time.Date(2024, time.January, 1, 0, 0, 0, 0, time.UTC) }
+		}
 		pressControlL(self)
 	case feedbackSurvivingADismissKey:
 		self.notifyFailure("chat.md recording disabled: transcript append failed")

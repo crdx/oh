@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/app/ansi"
+	"crdx.org/oh/internal/app/experimental"
 	"crdx.org/oh/internal/app/feedback"
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/link"
@@ -68,6 +69,7 @@ func askBeneathTwoCalls(t *testing.T, redraw func(*App)) string {
 		<-broker.Changes()
 		self.onQuestionChange()
 		self.show(self.inputLine)
+		self.experimental = experimental.New(map[string]any{string(experimental.RedrawTimingFeedback): true})
 		redraw(self)
 		if !self.feedback.IsEmpty() {
 			t.Error("ctrl+l covered a standing question with timing feedback")
@@ -164,11 +166,24 @@ func submittedMessageRedraw(t *testing.T, columns int, isResized bool) string {
 	return redrawn
 }
 
+func TestControlLWithoutTheExperimentalToggleDoesNotShowTiming(t *testing.T) {
+	var screenOutput bytes.Buffer
+	self := frameEdgeConversation(t, &screenOutput, replayLines)
+	pressControlL(self)
+	if !self.feedback.IsEmpty() {
+		t.Errorf("timing feedback was shown by default: %+v", self.feedback.Message())
+	}
+	if !strings.Contains(screenOutput.String(), ansi.EraseScreen) {
+		t.Error("ctrl+l stopped redrawing without its experimental feedback")
+	}
+}
+
 func TestControlLReportsCompletedRedrawTimeAndDismissesIt(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := frameEdgeConversation(t, &screenOutput, replayLines)
 	base := time.Date(2024, time.January, 1, 0, 0, 0, 0, time.UTC)
 	self.now = func() time.Time { return base }
+	self.experimental = experimental.New(map[string]any{string(experimental.RedrawTimingFeedback): true})
 
 	pressControlL(self)
 	if got := self.feedback.Message().Text; got != "Redrawn in 0ms" {
@@ -187,6 +202,7 @@ func TestControlLLeavesStandingSystemWarningsVisible(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := frameEdgeConversation(t, &screenOutput, replayLines)
 	self.showFeedback(feedback.System, feedback.Message{Text: "recording failed", Status: agent.ErrorStatus})
+	self.experimental = experimental.New(map[string]any{string(experimental.RedrawTimingFeedback): true})
 	pressControlL(self)
 
 	if got := self.feedback.Message().Text; got != "recording failed" {
@@ -236,6 +252,7 @@ func TestControlLMeasuresThroughTheTerminalWrite(t *testing.T) {
 	self.now = func() time.Time { return current }
 	writer := &redrawTimingWriter{onWrite: func() { current = base.Add(42 * time.Millisecond) }}
 	self.screen = output.NewTerminalOfSize(writer, replayColumns, replayLines)
+	self.experimental = experimental.New(map[string]any{string(experimental.RedrawTimingFeedback): true})
 
 	pressControlL(self)
 	if got := self.feedback.Message().Text; got != "Redrawn in 42ms" {
@@ -266,6 +283,7 @@ func controlLFeedbackStream(t *testing.T, columns int) string {
 	screenOutput.Reset()
 	self.screen = output.NewTerminalOfSize(&screenOutput, columns, replayLines)
 	self.now = func() time.Time { return time.Date(2024, time.January, 1, 0, 0, 0, 0, time.UTC) }
+	self.experimental = experimental.New(map[string]any{string(experimental.RedrawTimingFeedback): true})
 	self.show(self.inputLine)
 	pressControlL(self)
 	if got := self.feedback.Message().Text; got != "Redrawn in 0ms" {

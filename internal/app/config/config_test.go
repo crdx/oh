@@ -1774,6 +1774,22 @@ func TestCommandsStartTurnsByDefault(t *testing.T) {
 	}
 }
 
+func TestRedrawTimingFeedbackDefaultsToOffAndCanBeEnabled(t *testing.T) {
+	defaults := configFrom(t, "")
+	if value, isSet := defaults.Experimental["redraw_timing_feedback"]; !isSet || value != false {
+		t.Errorf("got experimental defaults %v", defaults.Experimental)
+	}
+
+	enabled := configFrom(t, "[experimental]\nredraw_timing_feedback = true\n")
+	live, err := enabled.BuildLive(testSegments())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if live.Experimental["redraw_timing_feedback"] != true {
+		t.Errorf("got live experimental toggles %v", live.Experimental)
+	}
+}
+
 func TestAnExperimentalToggleIsCarriedToTheLiveConfiguration(t *testing.T) {
 	config := configFrom(t, `
 		[experimental]

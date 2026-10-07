@@ -381,9 +381,13 @@ func (self *App) handleKeypressAndShowInput(inputLine *edit.Input, history *edit
 
 	if isRedrawKey(keypress) && !inputLine.IsPasting() {
 		self.feedback.Dismiss()
-		startedAt := self.getNow()
+		isRedrawTimingEnabled := self.experimental.IsEnabled(experimental.RedrawTimingFeedback)
+		var startedAt time.Time
+		if isRedrawTimingEnabled {
+			startedAt = self.getNow()
+		}
 		self.redraw()
-		if self.feedback.IsEmpty() && !self.isAwaitingAnswer() {
+		if isRedrawTimingEnabled && self.feedback.IsEmpty() && !self.isAwaitingAnswer() {
 			self.showFeedback(feedback.Command, feedback.Message{
 				Text:         "Redrawn in " + redrawElapsed(self.getNow().Sub(startedAt)),
 				Status:       agent.InfoStatus,

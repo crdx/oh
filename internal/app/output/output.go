@@ -120,19 +120,15 @@ func (self *Screen) LinkPathsUnder(roots link.Roots) *Screen {
 }
 
 func (self *Screen) Line(text string) {
-	self.line(text, false, NoticeGroup, false)
+	self.line(text, false, NoticeGroup)
 }
 
 func (self *Screen) PanelLine(text string) {
-	self.line(text, false, PanelGroup, false)
+	self.line(text, false, PanelGroup)
 }
 
 func (self *Screen) MarkedPanelLine(text string) {
-	self.line(text, true, PanelGroup, false)
-}
-
-func (self *Screen) MarkedPanelLineFitted(text string) {
-	self.line(text, true, PanelGroup, true)
+	self.line(text, true, PanelGroup)
 }
 
 func (self *Screen) Blank() {
@@ -172,7 +168,7 @@ func (self *Screen) End() {
 	self.changed()
 }
 
-func (self *Screen) line(text string, isMarked bool, group Group, isFitted bool) {
+func (self *Screen) line(text string, isMarked bool, group Group) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 
@@ -195,10 +191,7 @@ func (self *Screen) line(text string, isMarked bool, group Group, isFitted bool)
 		self.newline()
 	}
 
-	if !isFitted {
-		text = self.wrapToWidth(text)
-	}
-	self.write(text)
+	self.write(self.wrapToWidth(text))
 	self.changed()
 }
 
