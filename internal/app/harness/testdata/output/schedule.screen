@@ -22,6 +22,9 @@
       +8s  Configuration reloaded automatically (dismissing in 2s)
       +9s  Configuration reloaded automatically (dismissing in 1s)
      +10s
+=== redraw feedback ticks at its own start and expires ===
+      +1s  Redrawn in 42ms (dismissing in 1s)
+      +2s
 === running turn ===
       +0s  ✦·· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
    +125ms  ·✦· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?

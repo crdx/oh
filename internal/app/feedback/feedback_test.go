@@ -176,3 +176,38 @@ func TestAMessageCountsDownInWholeSeconds(t *testing.T) {
 func renderedText(rows []string) string {
 	return strings.Join(rows, "\n")
 }
+
+func TestCountdownFollowsItsOwnStartRatherThanTheWallClock(t *testing.T) {
+	var self State
+	base := time.Date(2024, time.January, 1, 0, 0, 0, 750*int(time.Millisecond), time.UTC)
+	self.Show(Command, Message{Text: "redrawn", DismissAfter: 2 * time.Second}, base)
+
+	for _, test := range []struct {
+		after       time.Duration
+		wantCount   string
+		wantRefresh time.Time
+	}{
+		{0, "in 2s", base.Add(time.Second)},
+		{time.Second - time.Nanosecond, "in 2s", base.Add(time.Second)},
+		{time.Second, "in 1s", base.Add(2 * time.Second)},
+		{2*time.Second - time.Nanosecond, "in 1s", base.Add(2 * time.Second)},
+		{2 * time.Second, "", time.Time{}},
+	} {
+		at := base.Add(test.after)
+		got := renderedText(self.Render(80, at))
+		if test.wantCount == "" {
+			if strings.Contains(got, "dismissing") {
+				t.Errorf("after %s, rendered an expired countdown: %q", test.after, got)
+			}
+		} else if !strings.Contains(got, test.wantCount) {
+			t.Errorf("after %s, rendered %q, want %q", test.after, got, test.wantCount)
+		}
+		if got := self.NextRefresh(at); !got.Equal(test.wantRefresh) {
+			t.Errorf("after %s, next refresh = %s, want %s", test.after, got, test.wantRefresh)
+		}
+	}
+	self.ClearExpired(base.Add(2 * time.Second))
+	if !self.IsEmpty() {
+		t.Error("feedback remained after its two seconds")
+	}
+}

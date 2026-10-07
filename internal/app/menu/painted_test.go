@@ -1,13 +1,17 @@
 package menu
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
 	"slices"
 	"strings"
+	"syscall"
 	"testing"
+	"testing/synctest"
+	"time"
 
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/link"
@@ -329,4 +333,54 @@ func TestGoldenRemovingFromAPreviewMatchesTheGolden(t *testing.T) {
 	}
 
 	compareWithGolden(t, "previewremoval.ansi", strutil.VisibleEscapes(output.String()))
+}
+
+type capturedMenuFrames chan string
+
+func (self capturedMenuFrames) Write(data []byte) (int, error) {
+	self <- string(data)
+	return len(data), nil
+}
+
+func TestGoldenResizeBatchDrawsThePickerBeforeAndAfterTheBurst(t *testing.T) {
+	var drawn string
+	synctest.Test(t, func(t *testing.T) {
+		room := 46
+		list := listState(paintedRows(), 1)
+		list.measure = func() (int, int) { return room, 6 }
+		frames := make(capturedMenuFrames)
+		list.screen = frames
+		keys := make(chan key.Key, 1)
+		list.keys = keys
+		resizes := make(chan os.Signal, 1)
+
+		finished := make(chan struct{})
+		go func() {
+			defer close(finished)
+			if _, err := list.pick(resizes); !errors.Is(err, ErrCancelled) {
+				t.Errorf("picker finished with %v, want cancellation", err)
+			}
+		}()
+
+		initial := <-frames
+		room = 36
+		resizes <- syscall.SIGWINCH
+		first := <-frames
+		room = 20
+		time.Sleep(30 * time.Millisecond)
+		resizes <- syscall.SIGWINCH
+		synctest.Wait()
+		time.Sleep(99 * time.Millisecond)
+		select {
+		case <-frames:
+			t.Error("picker drew a follow-up resize before the burst settled")
+		default:
+		}
+		last := <-frames
+		keys <- key.Key{Code: key.Escape}
+		<-finished
+
+		drawn = fmt.Sprintf("=== initial at 46 columns ===\n%s\n=== first resize at 36 columns ===\n%s\n=== final resize at 20 columns ===\n%s", strutil.VisibleEscapes(initial), strutil.VisibleEscapes(first), strutil.VisibleEscapes(last))
+	})
+	compareWithGolden(t, "resized.ansi", drawn)
 }

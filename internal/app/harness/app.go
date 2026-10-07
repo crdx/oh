@@ -57,6 +57,7 @@ import (
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/jobs"
+	"crdx.org/oh/internal/util"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/ask"
 	"crdx.org/oh/pkg/session"
@@ -66,6 +67,7 @@ import (
 
 const (
 	configReloadConfirmationDuration = 10 * time.Second
+	redrawFeedbackDuration           = 2 * time.Second
 	focusLossGrace                   = 5 * time.Second
 )
 
@@ -379,7 +381,16 @@ func (self *App) handleKeypressAndShowInput(inputLine *edit.Input, history *edit
 
 	if isRedrawKey(keypress) && !inputLine.IsPasting() {
 		self.feedback.Dismiss()
+		startedAt := self.getNow()
 		self.redraw()
+		if self.feedback.IsEmpty() && !self.isAwaitingAnswer() {
+			self.showFeedback(feedback.Command, feedback.Message{
+				Text:         "Redrawn in " + redrawElapsed(self.getNow().Sub(startedAt)),
+				Status:       agent.InfoStatus,
+				DismissAfter: redrawFeedbackDuration,
+			})
+			self.show(inputLine)
+		}
 		return true
 	}
 
@@ -990,6 +1001,14 @@ func dismissesFeedback(keypress key.Key) bool {
 
 func isRedrawKey(keypress key.Key) bool {
 	return keypress.Code == key.Rune && keypress.Value == 'l' && keypress.Mod == key.Ctrl
+}
+
+func redrawElapsed(elapsedTime time.Duration) string {
+	if elapsedTime < time.Second {
+		return fmt.Sprintf("%dms", elapsedTime.Round(time.Millisecond).Milliseconds())
+	}
+
+	return util.CompactDuration(elapsedTime)
 }
 
 func stopKeyCause(keypress key.Key) interrupt.Cause {

@@ -17,7 +17,6 @@ import (
 )
 
 const (
-	settling  = 100 * time.Millisecond
 	heartRate = 15 * time.Second
 	soonest   = time.Millisecond
 )
@@ -66,6 +65,8 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 	changes := handler.Changes
 	conclusions := handler.Conclusions
 	forwardChanges := handler.ForwardChanges
+	resizes := NewResizeBatch()
+	defer resizes.Stop()
 	questionChanges := handler.QuestionChanges
 	triggerChanges := handler.TriggerChanges
 	hostCommands := handler.HostCommands
@@ -85,7 +86,14 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 				return
 			}
 		case <-resizeSignals:
-			Settle(resizeSignals)
+			if !resizes.Signal(resizeSignals) {
+				continue
+			}
+			handler.OnResize()
+		case <-resizes.Ready():
+			if !resizes.Finish(resizeSignals) {
+				continue
+			}
 			handler.OnResize()
 		case <-beats:
 			handler.OnBeat()
@@ -205,15 +213,4 @@ func Resizes() chan os.Signal {
 	signals := make(chan os.Signal, 1)
 	signal.Notify(signals, syscall.SIGWINCH)
 	return signals
-}
-
-func Settle(signals <-chan os.Signal) {
-	time.Sleep(settling)
-	for {
-		select {
-		case <-signals:
-		default:
-			return
-		}
-	}
 }

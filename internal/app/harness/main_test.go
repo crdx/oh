@@ -61,6 +61,7 @@ import (
 	"crdx.org/oh/internal/app/feedback"
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/input"
+	"crdx.org/oh/internal/app/interaction"
 	"crdx.org/oh/internal/app/interrupt"
 	"crdx.org/oh/internal/app/jobrecord"
 	"crdx.org/oh/internal/app/key"
@@ -5708,6 +5709,8 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"question-over-call":       {".screen"},
 		"footer-over-calls":        {".screen"},
 		"frame-edges":              {".screen"},
+		"redraw-feedback":          {".ansi", ".screen"},
+		"submitted-message-redraw": {".ansi", ".screen"},
 		"readline-bindings":        {".ansi", ".screen"},
 		"resume-arguments":         {".txt"},
 		"resume-model-arguments":   {".txt"},
@@ -6695,7 +6698,8 @@ func everyStreamingMode() map[string]output.StreamingMode {
 
 func TestGoldenLineStreamingDrawsEveryFrameAcrossANarrowerResize(t *testing.T) {
 	compareWithGolden(t, "line-resize", ".screen", map[string]func() string{
-		"wide to narrow": func() string { return lineResizeFrames(t) },
+		"wide to narrow":  func() string { return lineResizeFrames(t) },
+		"coalesced burst": func() string { return coalescedResizeFrames(t) },
 	})
 }
 
@@ -6742,6 +6746,58 @@ func lineResizeFrames(t *testing.T) string {
 	}
 
 	return strings.TrimSuffix(frames.String(), "\n")
+}
+
+func coalescedResizeFrames(t *testing.T) string {
+	t.Helper()
+
+	var frames string
+	synctest.Test(t, func(t *testing.T) {
+		const wideColumns = 36
+		const firstColumns = 26
+		const finalColumns = 18
+		const initial = "one two three four five six seven eight nine ten eleven twelve thirteen"
+
+		var screenOutput bytes.Buffer
+		widePainter := newStreamedTestPainter(output.NewTerminalOfSize(&screenOutput, wideColumns, replayLines), true, output.StreamingModeLine)
+		widePainter.DrawDelta(agent.Delta{Kind: agent.ModelMessageEvent, Text: initial})
+
+		var drawn strings.Builder
+		fmt.Fprintf(&drawn, "--- before burst at %d columns ---\n%s\n", wideColumns, strings.Join(visibleScreen(t, screenOutput.String(), wideColumns), "\n"))
+
+		batch := interaction.NewResizeBatch()
+		defer batch.Stop()
+		resizes := make(chan os.Signal, 1)
+		if !batch.Signal(resizes) {
+			t.Error("the first resize did not draw")
+		}
+		screenOutput.Reset()
+		firstScreen := output.NewTerminalOfSize(&screenOutput, firstColumns, replayLines)
+		firstScreen.Reset()
+		firstPainter := newStreamedTestPainter(firstScreen, true, output.StreamingModeLine)
+		firstPainter.DrawDelta(widePainter.ProvisionalDelta())
+		fmt.Fprintf(&drawn, "--- first resize at %d columns ---\n%s\n", firstColumns, strings.Join(visibleScreen(t, screenOutput.String(), firstColumns), "\n"))
+
+		time.Sleep(40 * time.Millisecond)
+		resizes <- syscall.SIGWINCH
+		<-resizes
+		if batch.Signal(resizes) {
+			t.Error("follow-up resize drew early")
+		}
+		<-batch.Ready()
+		if !batch.Finish(resizes) {
+			t.Error("the last resize was not drawn")
+		}
+		screenOutput.Reset()
+		finalScreen := output.NewTerminalOfSize(&screenOutput, finalColumns, replayLines)
+		finalScreen.Reset()
+		finalPainter := newStreamedTestPainter(finalScreen, true, output.StreamingModeLine)
+		finalPainter.DrawDelta(firstPainter.ProvisionalDelta())
+		fmt.Fprintf(&drawn, "--- last resize at %d columns ---\n%s", finalColumns, strings.Join(visibleScreen(t, screenOutput.String(), finalColumns), "\n"))
+		frames = drawn.String()
+	})
+
+	return frames
 }
 
 func TestGoldenAStreamThatStopsStillShowsEverythingThatArrived(t *testing.T) {
@@ -12011,28 +12067,28 @@ func TestCommandFeedbackHasNoAutomaticDismissal(t *testing.T) {
 
 func TestGoldenFeedbackDrawsEveryVisibleState(t *testing.T) {
 	passes := streamPasses(t, feedbackStream, map[string]feedbackScenario{
-		"command error":                     feedbackCommandError,
-		"multiline help":                    feedbackHelp,
-		"startup info":                      feedbackStartupInfo,
-		"success confirmation":              feedbackSuccess,
-		"config reload without snippets":    feedbackReloadedConfig,
-		"editing clears feedback":           feedbackClearedByEditing,
-		"escape clears feedback":            feedbackClearedByEscape,
-		"backspace clears feedback":         feedbackClearedByBackspace,
-		"ctrl+d clears feedback":            feedbackClearedByControlD,
-		"ctrl+l clears feedback":            feedbackClearedByControlL,
-		"a warning survives escape":         feedbackSurvivingADismissKey,
-		"turn completion clears it":         feedbackClearedByTurnCompletion,
-		"combined storage warnings":         feedbackStorageWarnings,
-		"settings nothing reads":            feedbackUnknownSettings,
-		"tall answer stays untouched":       feedbackTallAnswer,
-		"network approval":                  feedbackNetworkApproval,
-		"next concurrent approval":          feedbackConcurrentApproval,
-		"chained command approval":          feedbackChainedApproval,
-		"heredoc approval":                  feedbackHeredocApproval,
-		"approval taller than the terminal": feedbackTallApproval,
-		"approval during a call":            feedbackApprovalDuringACall,
-		"declared tool approval":            feedbackDeclaredToolApproval,
+		"command error":                               feedbackCommandError,
+		"multiline help":                              feedbackHelp,
+		"startup info":                                feedbackStartupInfo,
+		"success confirmation":                        feedbackSuccess,
+		"config reload without snippets":              feedbackReloadedConfig,
+		"editing clears feedback":                     feedbackClearedByEditing,
+		"escape clears feedback":                      feedbackClearedByEscape,
+		"backspace clears feedback":                   feedbackClearedByBackspace,
+		"ctrl+d clears feedback":                      feedbackClearedByControlD,
+		"ctrl+l replaces feedback with redraw timing": feedbackClearedByControlL,
+		"a warning survives escape":                   feedbackSurvivingADismissKey,
+		"turn completion clears it":                   feedbackClearedByTurnCompletion,
+		"combined storage warnings":                   feedbackStorageWarnings,
+		"settings nothing reads":                      feedbackUnknownSettings,
+		"tall answer stays untouched":                 feedbackTallAnswer,
+		"network approval":                            feedbackNetworkApproval,
+		"next concurrent approval":                    feedbackConcurrentApproval,
+		"chained command approval":                    feedbackChainedApproval,
+		"heredoc approval":                            feedbackHeredocApproval,
+		"approval taller than the terminal":           feedbackTallApproval,
+		"approval during a call":                      feedbackApprovalDuringACall,
+		"declared tool approval":                      feedbackDeclaredToolApproval,
 	})
 
 	compareWithGolden(t, "feedback", ".ansi", passes)
@@ -12180,6 +12236,7 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 	case feedbackClearedByControlL:
 		self.handleCommand("/unknown")
 		self.show(inputLine)
+		self.now = func() time.Time { return time.Date(2024, time.January, 1, 0, 0, 0, 0, time.UTC) }
 		pressControlL(self)
 	case feedbackSurvivingADismissKey:
 		self.notifyFailure("chat.md recording disabled: transcript append failed")
@@ -14221,7 +14278,7 @@ func goldenJobSchedulePass(t *testing.T, runsFor time.Duration, span time.Durati
 	}
 }
 
-func goldenFeedbackSchedulePass(t *testing.T, span time.Duration) func() string {
+func goldenFeedbackSchedulePass(t *testing.T, span time.Duration, dismissAfter time.Duration, text string) func() string {
 	t.Helper()
 
 	return func() string {
@@ -14232,9 +14289,9 @@ func goldenFeedbackSchedulePass(t *testing.T, span time.Duration) func() string 
 
 			held := &App{mode: caps.NewMode(caps.All()), screen: output.New(&bytes.Buffer{})}
 			held.showFeedback(feedback.Confirmation, feedback.Message{
-				Text:         "Configuration reloaded automatically",
+				Text:         text,
 				Status:       agent.SuccessStatus,
-				DismissAfter: configReloadConfirmationDuration,
+				DismissAfter: dismissAfter,
 			})
 
 			return filmstrip(startedAt, span, 0, func() time.Time {
@@ -14264,7 +14321,11 @@ func filmstrip(
 
 		time.Sleep(time.Until(at))
 		since := "+" + time.Since(startedAt).Truncate(time.Millisecond).String()
-		fmt.Fprintf(&strip, "%9s  %s\n", since, draw())
+		if rendering := draw(); rendering == "" {
+			fmt.Fprintf(&strip, "%9s\n", since)
+		} else {
+			fmt.Fprintf(&strip, "%9s  %s\n", since, rendering)
+		}
 		time.Sleep(workPerPass)
 	}
 }
@@ -14273,15 +14334,16 @@ func TestGoldenTheRedrawScheduleRunsWhenItRanBefore(t *testing.T) {
 	t.Setenv("HOME", "/home/tester")
 
 	passes := map[string]func() string{
-		"running turn":                                      goldenSchedulePass(t, true, 0, 2*time.Second),
-		"running turn with a slow pass":                     goldenSchedulePass(t, true, 40*time.Millisecond, 2*time.Second),
-		"running turn with a pass past due":                 goldenSchedulePass(t, true, 200*time.Millisecond, 2*time.Second),
-		"waiting between turns":                             goldenSchedulePass(t, false, 0, 3*time.Second),
-		"turn timer alone on a slow loop":                   goldenTimerSchedulePass(t, 200*time.Millisecond, 3*time.Minute),
-		"clock alone to the minute":                         goldenClockSchedulePass(t, "15:04", 3*time.Minute),
-		"clock alone to the second":                         goldenClockSchedulePass(t, "15:04:05", 3*time.Second),
-		"confirmation feedback ticks down to its dismissal": goldenFeedbackSchedulePass(t, configReloadConfirmationDuration+time.Second),
-		"a finished job lingers on the bar and then goes":   goldenJobSchedulePass(t, 3*time.Second, 40*time.Second),
+		"running turn":                                       goldenSchedulePass(t, true, 0, 2*time.Second),
+		"running turn with a slow pass":                      goldenSchedulePass(t, true, 40*time.Millisecond, 2*time.Second),
+		"running turn with a pass past due":                  goldenSchedulePass(t, true, 200*time.Millisecond, 2*time.Second),
+		"waiting between turns":                              goldenSchedulePass(t, false, 0, 3*time.Second),
+		"turn timer alone on a slow loop":                    goldenTimerSchedulePass(t, 200*time.Millisecond, 3*time.Minute),
+		"clock alone to the minute":                          goldenClockSchedulePass(t, "15:04", 3*time.Minute),
+		"clock alone to the second":                          goldenClockSchedulePass(t, "15:04:05", 3*time.Second),
+		"confirmation feedback ticks down to its dismissal":  goldenFeedbackSchedulePass(t, configReloadConfirmationDuration+time.Second, configReloadConfirmationDuration, "Configuration reloaded automatically"),
+		"redraw feedback ticks at its own start and expires": goldenFeedbackSchedulePass(t, redrawFeedbackDuration+time.Second, redrawFeedbackDuration, "Redrawn in 42ms"),
+		"a finished job lingers on the bar and then goes":    goldenJobSchedulePass(t, 3*time.Second, 40*time.Second),
 	}
 
 	compareWithGolden(t, "schedule", ".ansi", passes)

@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/app/painter"
-	"crdx.org/oh/internal/app/schedule"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/pkg/agent"
@@ -81,11 +80,11 @@ func (self *State) ClearExpired(at time.Time) {
 }
 
 func (self *State) NextRefresh(at time.Time) time.Time {
-	if self.expiresAt.IsZero() {
+	if self.expiresAt.IsZero() || !at.Before(self.expiresAt) {
 		return time.Time{}
 	}
 
-	return schedule.Soonest(schedule.NextTick(at, time.Second), self.expiresAt)
+	return self.expiresAt.Add(-time.Duration(self.secondsLeft(at)-1) * time.Second)
 }
 
 func (self *State) Message() Message {
@@ -128,11 +127,13 @@ func (self *State) countdown(now time.Time) string {
 		return ""
 	}
 
-	remainingTime := self.expiresAt.Sub(now)
-	if remainingTime <= 0 {
+	if !now.Before(self.expiresAt) {
 		return ""
 	}
 
-	secondsLeft := int((remainingTime + time.Second - 1) / time.Second)
-	return style.Subtle(fmt.Sprintf("(dismissing in %ds)", secondsLeft))
+	return style.Subtle(fmt.Sprintf("(dismissing in %ds)", self.secondsLeft(now)))
+}
+
+func (self *State) secondsLeft(at time.Time) int {
+	return int((self.expiresAt.Sub(at) + time.Second - 1) / time.Second)
 }

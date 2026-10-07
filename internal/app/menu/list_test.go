@@ -9,6 +9,8 @@ import (
 	"strings"
 	"syscall"
 	"testing"
+	"testing/synctest"
+	"time"
 
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/style"
@@ -238,31 +240,41 @@ func (self drawnScreen) Write(written []byte) (int, error) {
 }
 
 func TestTheListIsDrawnAgainWhenTheTerminalChangesSize(t *testing.T) {
-	self := listState(rowsNamed("chewy-sardine"), 0)
+	synctest.Test(t, func(t *testing.T) {
+		self := listState(rowsNamed("chewy-sardine"), 0)
 
-	drawn := make(drawnScreen)
-	self.screen = drawn
-	self.measure = func() (int, int) { return 80, 24 }
+		drawn := make(drawnScreen)
+		self.screen = drawn
+		self.measure = func() (int, int) { return 80, 24 }
 
-	keys := make(chan key.Key)
-	self.keys = keys
+		keys := make(chan key.Key, 1)
+		self.keys = keys
 
-	resizes := make(chan os.Signal, 1)
-	resizes <- syscall.SIGWINCH
+		resizes := make(chan os.Signal, 1)
+		resizes <- syscall.SIGWINCH
 
-	finished := make(chan struct{})
-	go func() {
-		defer close(finished)
-		if _, err := self.pick(resizes); !errors.Is(err, ErrCancelled) {
-			t.Errorf("expected the choice to be abandoned, got %v", err)
+		finished := make(chan struct{})
+		startedAt := time.Now()
+		go func() {
+			defer close(finished)
+			if _, err := self.pick(resizes); !errors.Is(err, ErrCancelled) {
+				t.Errorf("expected the choice to be abandoned, got %v", err)
+			}
+		}()
+
+		<-drawn
+		<-drawn
+		if elapsedTime := time.Since(startedAt); elapsedTime != 0 {
+			t.Errorf("picker waited %s before redrawing", elapsedTime)
 		}
-	}()
 
-	<-drawn
-	<-drawn
-
-	keys <- key.Key{Code: key.Escape}
-	<-finished
+		resizes <- syscall.SIGWINCH
+		keys <- key.Key{Code: key.Escape}
+		<-finished
+		if elapsedTime := time.Since(startedAt); elapsedTime != 0 {
+			t.Errorf("picker delayed escape for %s after a resize", elapsedTime)
+		}
+	})
 }
 
 func TestTheChoiceEndsWhenThereIsNothingLeftToRead(t *testing.T) {

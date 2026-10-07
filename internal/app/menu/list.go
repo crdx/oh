@@ -186,9 +186,11 @@ func (self *state) run() (int, error) {
 }
 
 func (self *state) pick(resizeSignals <-chan os.Signal) (int, error) {
-	for {
-		self.draw()
+	resizes := interaction.NewResizeBatch()
+	defer resizes.Stop()
 
+	self.draw()
+	for {
 		select {
 		case err := <-self.removalState.done:
 			self.finishRemoval(err)
@@ -207,8 +209,15 @@ func (self *state) pick(resizeSignals <-chan os.Signal) (int, error) {
 			case continuePicking:
 			}
 		case <-resizeSignals:
-			interaction.Settle(resizeSignals)
+			if !resizes.Signal(resizeSignals) {
+				continue
+			}
+		case <-resizes.Ready():
+			if !resizes.Finish(resizeSignals) {
+				continue
+			}
 		}
+		self.draw()
 	}
 }
 

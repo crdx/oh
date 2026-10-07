@@ -1,3 +1,15 @@
+=== coalesced burst ===
+--- before burst at 36 columns ---
+one two three four five six seven
+eight nine ten eleven twelve
+--- first resize at 26 columns ---
+one two three four five
+six seven eight nine ten
+--- last resize at 18 columns ---
+one two three four
+five six seven
+eight nine ten
+eleven twelve
 === wide to narrow ===
 --- before resize at 36 columns ---
 one two three four five six seven

@@ -2,7 +2,7 @@
       +1s  \e[38;2;129;162;190m● check\e[0m
       +2s  \e[38;2;129;162;190m● check\e[0m
       +3s  \e[38;2;150;152;150m○ check\e[0m
-     +33s  
+     +33s
 
 === clock alone to the minute ===
     +1m0s  \e[38;2;150;152;150m00:01\e[0m
@@ -24,7 +24,11 @@
       +7s  \e[38;2;76;154;44mConfiguration reloaded automatically \e[38;2;150;152;150m(dismissing in 3s)\e[0m
       +8s  \e[38;2;76;154;44mConfiguration reloaded automatically \e[38;2;150;152;150m(dismissing in 2s)\e[0m
       +9s  \e[38;2;76;154;44mConfiguration reloaded automatically \e[38;2;150;152;150m(dismissing in 1s)\e[0m
-     +10s  
+     +10s
+
+=== redraw feedback ticks at its own start and expires ===
+      +1s  \e[38;2;76;154;44mRedrawn in 42ms \e[38;2;150;152;150m(dismissing in 1s)\e[0m
+      +2s
 
 === running turn ===
       +0s  \e[38;2;192;128;80m✦··\e[0m \e[38;2;150;152;150m─\e[0m \e[38;2;150;152;150m0m\e[0m 0\e[38;2;150;152;150mm\e[0m \e[38;2;150;152;150m─\e[0m \e[38;2;76;154;44mr\e[0m\e[38;2;207;173;0mx\e[0m\e[38;2;207;173;0mw\e[0m \e[38;2;129;162;190mn\e[0m\e[38;2;129;162;190mg\e[0m\e[38;2;129;162;190ml\e[0m \e[38;2;150;152;150m─\e[0m \e]8;;file:///workspace\e\\workspace\e]8;;\e\\ \e[38;2;150;152;150m─\e[0m GPT Sol \e[38;2;150;152;150m5.6\e[0m \e[38;2;150;152;150m▫▫▫\e[0m\e[38;2;192;128;80m▪\e[0m\e[38;2;150;152;150m··\e[0m \e[38;2;150;152;150m─\e[0m ?\e[38;2;150;152;150m% \e[0m0\e[38;2;150;152;150m/\e[0m?

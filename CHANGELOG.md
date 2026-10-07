@@ -12,6 +12,9 @@
 - Complete ignored paths with `@!`
 - Preserve spacing in completed job output
 - Trim 15ms off startup
+- Skip redundant wrapping of wrapped messages
+- Show the redraw latency on ctrl+l
+- Redraw promptly on resize, no blocking
 
 ## [0.13.0] - 2026-10-07
 

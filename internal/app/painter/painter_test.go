@@ -790,3 +790,37 @@ func TestACacheRebuildIsCostedInTheChosenCurrency(t *testing.T) {
 		t.Errorf("got %q, want it to contain %q", screenOutput.String(), want)
 	}
 }
+
+func TestFittedUserFramesMatchTheGeneralWrappingPathByteForByte(t *testing.T) {
+	messages := []string{
+		"hello",
+		"**a styled message** with 日本語 🐸 and an [address](https://example.test/route) to wrap",
+		"one paragraph\n\n- two\n- three",
+		"Averylongwordwithoutspacesandtrailing whitespace   ",
+		"before \x1b[2J after",
+	}
+	for _, columns := range []int{1, 2, 9, 20, 40, 100} {
+		for _, message := range messages {
+			text, isFitted := renderSubmittedMessageWithFit(submittedMessage{text: message, kind: userSubmission}, columns, true, link.Roots{})
+			var baseline bytes.Buffer
+			output.NewTerminalOfSize(&baseline, columns, 24).MarkedPanelLine(text)
+			var actual bytes.Buffer
+			screen := output.NewTerminalOfSize(&actual, columns, 24)
+			if isFitted {
+				screen.MarkedPanelLineFitted(text)
+			} else {
+				screen.MarkedPanelLine(text)
+			}
+			if actual.String() != baseline.String() {
+				t.Errorf("width %d, message %q, fitted %v:\nactual: %q\nbaseline: %q", columns, message, isFitted, actual.String(), baseline.String())
+			}
+		}
+	}
+}
+
+func TestOversizeSubmittedFrameKeepsTheGeneralWrappingPath(t *testing.T) {
+	_, isFitted := frameSubmittedWithFit("", []string{"longer than one cell"}, "", 1, style.User)
+	if isFitted {
+		t.Fatal("an oversized row was claimed to be fitted")
+	}
+}
