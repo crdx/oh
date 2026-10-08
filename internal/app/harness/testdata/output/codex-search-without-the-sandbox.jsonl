@@ -1,0 +1,18 @@
+{"kind":"head","version":19,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant.","tools":["grep"],"tool_definitions":[{"name":"grep","description":"search file contents","revision":"1","parameters":[{"name":"pattern","type":"string","description":"regexp"},{"name":"path","type":"string","description":"directory, defaults to working directory","optional":true},{"name":"glob","type":"string","description":"path filter, e.g. **/*.go","optional":true}]}]}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
+{"kind":"event","event":{"kind":"user_message","text":"search for the package clause"}}
+{"kind":"event","event":{"render":"^package","emphasis":{"kind":"syntax","value":"regexp"},"read_only":true,"kind":"tool_call_request","id":"call-1","name":"grep","arguments":"{\"pattern\":\"^package\"}"}}
+{"kind":"event","event":{"kind":"state_change","id":"call-1","name":"file_read","state":{"files":[{"path":"main.go","sha256":"df1d036cbbf3df46e2045071e082245ece204c7f53ecf0a4e022bff9bb228f47"}]}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"main.go:1:package main","id":"call-1","name":"grep","status":"success","stats":{"kind":"search","lines":1,"bytes":22}}}
+{"kind":"event","event":{"kind":"model_message","text":"main.go declares it."}}
+{"kind":"item","payload":{"role":"user","content":"search for the package clause"}}
+{"kind":"item","payload":{"type":"function_call","call_id":"call-1","name":"grep","arguments":"{\"pattern\":\"^package\"}"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"main.go:1:package main"}}
+{"kind":"item","payload":{"type":"message","role":"assistant","content":[{"type":"output_text","text":"main.go declares it."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"finish"}}
+{"kind":"event","event":{"kind":"model_message","text":"Done."}}
+{"kind":"item","payload":{"role":"user","content":"finish"}}
+{"kind":"item","payload":{"type":"message","role":"assistant","content":[{"type":"output_text","text":"Done."}]}}
+{"kind":"turn_completion","turn":{}}

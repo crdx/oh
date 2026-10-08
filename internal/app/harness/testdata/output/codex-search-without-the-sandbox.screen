@@ -1,0 +1,13 @@
+
+ search for the package clause
+
+
+grep ^package 1L
+
+main.go declares it.
+
+
+ finish
+
+
+Done.

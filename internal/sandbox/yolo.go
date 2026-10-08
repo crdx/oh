@@ -30,6 +30,16 @@ func startYolo(
 		return nil, err
 	}
 
+	return startOnHost(ctx, directory, []string{shell, "-c", command}, policy, output)
+}
+
+func startOnHost(
+	ctx context.Context,
+	directory string,
+	arguments []string,
+	policy Policy,
+	output Output,
+) (Command, error) {
 	var cancel context.CancelFunc
 	if policy.Timeout > 0 {
 		ctx, cancel = context.WithTimeout(ctx, policy.Timeout)
@@ -39,7 +49,7 @@ func startYolo(
 
 	startedAt := time.Now()
 
-	child := exec.CommandContext(ctx, shell, "-c", command) //nolint:gosec // the whole of what --yolo asks for
+	child := exec.CommandContext(ctx, arguments[0], arguments[1:]...) //nolint:gosec // the whole of what --yolo asks for
 	child.Dir = directory
 	reader, writer, err := os.Pipe()
 	if err != nil {

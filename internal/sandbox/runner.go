@@ -59,7 +59,8 @@ type spawner func(
 ) (process, error)
 
 type runner struct {
-	spawn spawner
+	spawn        spawner
+	isUnconfined bool
 }
 
 func (self runner) Run(ctx context.Context, directory string, command string, policy Policy) (Result, error) {

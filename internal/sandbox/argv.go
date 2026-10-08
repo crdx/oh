@@ -23,6 +23,10 @@ func DirectArgv() ArgvRunner {
 	return runner{spawn: spawnAlone}
 }
 
+func UnconfinedArgv() ArgvRunner {
+	return runner{isUnconfined: true}
+}
+
 func (self runner) RunArgv(
 	ctx context.Context,
 	directory string,
@@ -43,7 +47,7 @@ func (self runner) StartArgv(
 	policy Policy,
 	output Output,
 ) (Command, error) {
-	if policy.Yolo {
+	if policy.Yolo && !self.isUnconfined {
 		return nil, errors.New("argv commands cannot run unconfined")
 	}
 	if len(arguments) == 0 || !filepath.IsAbs(arguments[0]) {
@@ -56,6 +60,11 @@ func (self runner) StartArgv(
 		if err := ensureSane(directory, argument); err != nil {
 			return nil, err
 		}
+	}
+
+	if self.isUnconfined {
+		policy.Yolo = true
+		return startOnHost(ctx, directory, arguments, policy, output)
 	}
 
 	var err error

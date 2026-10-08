@@ -124,6 +124,7 @@ import (
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/req"
 	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/sandbox/testexec"
 	"crdx.org/oh/internal/sim"
 	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/internal/toolresult"
@@ -7028,7 +7029,7 @@ var testBinary = sync.OnceValues(func() (string, error) {
 const binaryCoverageVariable = "OH_TEST_BINARY_COVERAGE"
 
 func buildBinary(binary string, flags ...string) error {
-	arguments := append([]string{"build"}, flags...)
+	arguments := append([]string{"build", "-tags=oh_grep_test"}, flags...)
 	arguments = append(arguments, "-o", binary, "crdx.org/oh")
 	command := exec.CommandContext(context.Background(), "go", arguments...) //nolint:gosec // building the binary under test
 	if output, err := command.CombinedOutput(); err != nil {
@@ -17538,6 +17539,7 @@ type sessionGoldenTool struct {
 	Declared              string   `toml:"declared"`
 	OnResume              string   `toml:"on-resume"`
 	ShouldRun             bool     `toml:"runs"`
+	Runner                string   `toml:"runner"`
 }
 
 type sessionGoldenSkill struct {
@@ -17997,7 +17999,7 @@ func newSessionGoldenTools(
 		}
 
 		if specification.Name == grepToolName {
-			tools = append(tools, newSessionGoldenGrepTool(t))
+			tools = append(tools, newSessionGoldenGrepTool(t, specification.Runner))
 			continue
 		}
 
@@ -18156,7 +18158,40 @@ func newSessionGoldenRunningJobTool(t *testing.T, ports *portgrant.Forwards) too
 	)
 }
 
-func newSessionGoldenGrepTool(t *testing.T) tool.Tool {
+type unstartableSearchRunner struct{}
+
+func (unstartableSearchRunner) RunArgv(
+	context.Context, string, []string, sandbox.Policy,
+) (sandbox.Result, error) {
+	return sandbox.Result{}, errNoNamespaces
+}
+
+func (unstartableSearchRunner) StartArgv(
+	context.Context, string, []string, sandbox.Policy, sandbox.Output,
+) (sandbox.Command, error) {
+	return nil, errNoNamespaces
+}
+
+var errNoNamespaces = errors.New(
+	"this machine will not give the sandbox its namespaces: fork/exec /proc/self/exe: read-only file system",
+)
+
+func sessionGoldenSearchRunner(t *testing.T, name string) sandbox.ArgvRunner {
+	t.Helper()
+
+	switch name {
+	case "":
+		return testexec.New()
+	case "unconfined":
+		return sandbox.UnconfinedArgv()
+	case "unstartable":
+		return unstartableSearchRunner{}
+	}
+	t.Fatalf("no search runner is called %q", name)
+	return nil
+}
+
+func newSessionGoldenGrepTool(t *testing.T, runnerName string) tool.Tool {
 	t.Helper()
 
 	searched := t.TempDir()
@@ -18169,7 +18204,11 @@ func newSessionGoldenGrepTool(t *testing.T) tool.Tool {
 	}
 	t.Cleanup(func() { _ = rootHandle.Close() })
 
-	return grep.New(file.New(rootHandle, func(string) error { return nil }), file.NewSnapshots())
+	return grep.NewWithRunner(
+		file.New(rootHandle, func(string) error { return nil }),
+		file.NewSnapshots(),
+		sessionGoldenSearchRunner(t, runnerName),
+	)
 }
 
 func sessionGoldenImage(t *testing.T, size string, byteCount int64) (tool.Image, tool.ToolCallMetrics) {

@@ -1122,7 +1122,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	isTerminalFocused := func() bool { return app != nil && app.terminal.IsFocused() }
 
 	snapshots := file.NewSnapshots()
-	toolboxTools := toolbox.Rummage(files, snapshots)
+	toolboxTools := toolbox.RummageWithRunner(files, snapshots, grepRunner(args.Yolo))
 	askBroker := ask.New()
 	permissionSet, err := settings.BuildPermissions()
 	if err != nil {

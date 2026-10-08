@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"crdx.org/oh/internal/file"
+	"crdx.org/oh/internal/sandbox/testexec"
 	"crdx.org/oh/pkg/tool"
 )
 
@@ -79,7 +80,7 @@ func TestEditRequiresTheCurrentFileToHaveBeenRead(t *testing.T) {
 func TestGrepRecordsTheFilesWhoseContentsItExposes(t *testing.T) {
 	root := testRoot(t, true)
 	writeTestFile(t, root, "one\n")
-	tools := Rummage(root, file.NewSnapshots())
+	tools := RummageWithRunner(root, file.NewSnapshots(), testexec.New())
 
 	if err := runTool(t, toolNamed(t, tools, "grep"), `{"pattern":"one","path":"a.txt"}`); err != nil {
 		t.Fatalf("unexpected grep error: %v", err)

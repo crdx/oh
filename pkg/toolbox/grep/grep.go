@@ -2,7 +2,6 @@ package grep
 
 import (
 	"bufio"
-	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -13,10 +12,12 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 
 	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/internal/util"
+	"crdx.org/oh/pkg/sandbox"
 	"crdx.org/oh/pkg/tool"
 )
 
@@ -29,6 +30,13 @@ type Args struct {
 var matchPathPattern = regexp.MustCompile(`^(.+):[0-9]+:`)
 
 func New(root *file.Root, snapshots *file.Snapshots) tool.Tool {
+	return NewWithRunner(root, snapshots, sandbox.DirectArgv())
+}
+
+func NewWithRunner(root *file.Root, snapshots *file.Snapshots, runner sandbox.ArgvRunner) tool.Tool {
+	if runner == nil {
+		panic("grep needs a sandbox runner")
+	}
 	restoreReadState := func(payload json.RawMessage) error {
 		return snapshots.RestoreReadState(root, payload)
 	}
@@ -51,7 +59,7 @@ func New(root *file.Root, snapshots *file.Snapshots) tool.Tool {
 		IsEmbarrassinglyParallel().
 		ChangesNothing().
 		Run(func(ctx context.Context, args Args) (tool.ToolCallResult, error) {
-			output, metrics, err := run(ctx, root, args)
+			output, metrics, err := run(ctx, root, args, runner)
 			return tool.ToolCallResult{
 				Output:  output,
 				Metrics: metrics,
@@ -77,7 +85,9 @@ func confined(root *file.Root, name string) error {
 	return nil
 }
 
-func run(ctx context.Context, root *file.Root, args Args) (string, tool.ToolCallMetrics, error) {
+const searchTimeout = 4*time.Minute + 30*time.Second
+
+func run(ctx context.Context, root *file.Root, args Args, runner sandbox.ArgvRunner) (string, tool.ToolCallMetrics, error) {
 	if args.Pattern == "" {
 		return "", tool.ToolCallMetrics{}, errors.New("pattern is required")
 	}
@@ -86,12 +96,21 @@ func run(ctx context.Context, root *file.Root, args Args) (string, tool.ToolCall
 	if err != nil {
 		return "", tool.ToolCallMetrics{}, err
 	}
-
 	if err := confined(root, name); err != nil {
 		return "", tool.ToolCallMetrics{}, err
 	}
 
+	binary, err := exec.LookPath("rg")
+	if err != nil {
+		return "", tool.ToolCallMetrics{}, fmt.Errorf("ripgrep is unavailable: %w", err)
+	}
+	binary, err = filepath.Abs(binary)
+	if err != nil {
+		return "", tool.ToolCallMetrics{}, err
+	}
+
 	arguments := []string{
+		binary,
 		"--no-config",
 		"--with-filename",
 		"--line-number",
@@ -113,61 +132,53 @@ func run(ctx context.Context, root *file.Root, args Args) (string, tool.ToolCall
 
 	searchContext, stopSearch := context.WithCancel(ctx)
 	defer stopSearch()
-
-	command := exec.CommandContext(searchContext, "rg", arguments...)
-	command.Dir = root.Name()
-
-	stdout, err := command.StdoutPipe()
+	output := newSearchOutput(stopSearch)
+	policy := sandbox.Policy{
+		Read:    []string{root.Name()},
+		Exec:    []string{binary},
+		Env:     []string{"LANG", "TERM"},
+		Timeout: searchTimeout,
+	}
+	command, err := runner.StartArgv(searchContext, root.Name(), arguments, policy, output)
 	if err != nil {
-		return "", tool.ToolCallMetrics{}, fmt.Errorf("failed to read ripgrep output: %w", err)
+		return "", tool.ToolCallMetrics{}, fmt.Errorf("could not start the search: %w", err)
 	}
-
-	var stderr bytes.Buffer
-	command.Stderr = &stderr
-
-	if err := command.Start(); err != nil {
-		return "", tool.ToolCallMetrics{}, fmt.Errorf("failed to start ripgrep: %w", err)
-	}
-
-	matches, isTruncated, readErr := readMatches(stdout, name == ".")
-	if isTruncated {
-		stopSearch()
-	}
-
-	waitErr := command.Wait()
-
+	result, waitErr := command.Wait()
 	if ctx.Err() != nil {
 		return "", tool.ToolCallMetrics{}, stop.Error(ctx, "the search")
 	}
-	if readErr != nil {
-		return "", tool.ToolCallMetrics{}, fmt.Errorf("failed to read ripgrep output: %w", readErr)
+	if !output.IsTruncated() && waitErr != nil {
+		return "", tool.ToolCallMetrics{}, waitErr
 	}
-
-	if isTruncated {
-		output, metrics := util.SearchReport(matches, true)
-		return output, metrics, nil
-	}
-	if waitErr != nil {
-		message := strings.TrimSpace(stderr.String())
-
-		var exitError *exec.ExitError
-		if errors.As(waitErr, &exitError) && exitError.ExitCode() == 1 && message == "" {
-			output, metrics := util.SearchReport(nil, false)
-			return output, metrics, nil
+	if !output.IsTruncated() && result.ExitCode != 0 {
+		message := strings.TrimSpace(result.Output)
+		if result.ExitCode == 1 && message == "" {
+			answer, metrics := util.SearchReport(nil, false)
+			return answer, metrics, nil
 		}
-
 		if strings.HasPrefix(message, "rg: regex parse error:") {
 			return "", tool.ToolCallMetrics{}, fmt.Errorf("invalid pattern: %s", strings.TrimPrefix(message, "rg: "))
 		}
 		if message != "" {
 			return "", tool.ToolCallMetrics{}, errors.New(message)
 		}
-
-		return "", tool.ToolCallMetrics{}, fmt.Errorf("grep failed: %w", waitErr)
+		return "", tool.ToolCallMetrics{}, fmt.Errorf("grep failed with exit code %d", result.ExitCode)
 	}
 
-	output, metrics := util.SearchReport(matches, false)
-	return output, metrics, nil
+	readableOutput := result.Output
+	if output.IsTruncated() {
+		if lastNewline := strings.LastIndexByte(readableOutput, '\n'); lastNewline >= 0 {
+			readableOutput = readableOutput[:lastNewline+1]
+		} else {
+			readableOutput = ""
+		}
+	}
+	matches, reachedLimit, err := readMatches(strings.NewReader(readableOutput), name == ".")
+	if err != nil {
+		return "", tool.ToolCallMetrics{}, fmt.Errorf("failed to read ripgrep output: %w", err)
+	}
+	answer, metrics := util.SearchReport(matches, output.IsTruncated() || reachedLimit)
+	return answer, metrics, nil
 }
 
 func readStateForMatches(root *file.Root, args Args, output string) json.RawMessage {

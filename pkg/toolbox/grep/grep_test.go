@@ -1,4 +1,4 @@
-package grep_test
+package grep
 
 import (
 	"context"
@@ -10,9 +10,9 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/file"
+	"crdx.org/oh/internal/sandbox/testexec"
 	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/tool"
-	"crdx.org/oh/pkg/toolbox/grep"
 )
 
 func testRoot(t *testing.T, files map[string]string) *file.Root {
@@ -42,7 +42,7 @@ func testRoot(t *testing.T, files map[string]string) *file.Root {
 	return file.New(root, allowAll)
 }
 
-func exec(t *testing.T, root *file.Root, arguments string) (string, error) {
+func runGrep(t *testing.T, root *file.Root, arguments string) (string, error) {
 	t.Helper()
 
 	output, _, err := execWithMetrics(t, root, arguments)
@@ -56,7 +56,7 @@ func execWithMetrics(
 ) (string, tool.ToolCallMetrics, error) {
 	t.Helper()
 
-	call, err := grep.New(root, file.NewSnapshots()).Parse(arguments)
+	call, err := NewWithRunner(root, file.NewSnapshots(), testexec.New()).Parse(arguments)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -68,7 +68,7 @@ func execWithMetrics(
 func TestAMatchIsReportedWithItsPathAndLine(t *testing.T) {
 	root := testRoot(t, map[string]string{"main.go": "package main\n\nfunc main() {}\n"})
 
-	output, err := exec(t, root, `{"pattern":"func main"}`)
+	output, err := runGrep(t, root, `{"pattern":"func main"}`)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -98,7 +98,7 @@ func TestAGlobNarrowsWhatIsSearched(t *testing.T) {
 		"notes.txt": "hello\n",
 	})
 
-	output, err := exec(t, root, `{"pattern":"hello","glob":"**/*.go"}`)
+	output, err := runGrep(t, root, `{"pattern":"hello","glob":"**/*.go"}`)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -115,7 +115,7 @@ func TestIgnoredFilesAreNotSearched(t *testing.T) {
 		"ignored/ignored.txt": "hello\n",
 	})
 
-	output, err := exec(t, root, `{"pattern":"hello"}`)
+	output, err := runGrep(t, root, `{"pattern":"hello"}`)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -128,7 +128,7 @@ func TestIgnoredFilesAreNotSearched(t *testing.T) {
 func TestAPatternThatWillNotCompileIsRefused(t *testing.T) {
 	root := testRoot(t, map[string]string{"main.go": "hello\n"})
 
-	_, err := exec(t, root, `{"pattern":"("}`)
+	_, err := runGrep(t, root, `{"pattern":"("}`)
 	if err == nil {
 		t.Fatal("expected an invalid pattern to be refused")
 	}
@@ -171,7 +171,7 @@ func TestASearchThatCouldNotRunIsNotCalledEmpty(t *testing.T) {
 	root := testRoot(t, map[string]string{"main.go": "hello\n"})
 	standInRipgrep(t, "echo 'shim: Permission denied' >&2\nexit 1\n")
 
-	output, err := exec(t, root, `{"pattern":"hello"}`)
+	output, err := runGrep(t, root, `{"pattern":"hello"}`)
 	if err == nil {
 		t.Fatalf("got %q and no error, want a search that could not run to say so", output)
 	}
@@ -185,7 +185,7 @@ func TestASearchThatFindsNothingQuietlySaysSo(t *testing.T) {
 	root := testRoot(t, map[string]string{"main.go": "hello\n"})
 	standInRipgrep(t, "exit 1\n")
 
-	output, err := exec(t, root, `{"pattern":"hello"}`)
+	output, err := runGrep(t, root, `{"pattern":"hello"}`)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -253,7 +253,7 @@ func TestACancelledContextStopsTheSearch(t *testing.T) {
 	}
 	t.Setenv("PATH", bin)
 
-	call, err := grep.New(root, file.NewSnapshots()).Parse(`{"pattern":"hello"}`)
+	call, err := NewWithRunner(root, file.NewSnapshots(), testexec.New()).Parse(`{"pattern":"hello"}`)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -276,7 +276,7 @@ func TestACancelledContextStopsTheSearch(t *testing.T) {
 
 func TestCallHighlightsItsPatternAsRegexpSyntax(t *testing.T) {
 	root := testRoot(t, nil)
-	call, err := grep.New(root, file.NewSnapshots()).Parse(`{"pattern":"foo|bar","path":"internal/file.go"}`)
+	call, err := New(root, file.NewSnapshots()).Parse(`{"pattern":"foo|bar","path":"internal/file.go"}`)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -288,13 +288,13 @@ func TestCallHighlightsItsPatternAsRegexpSyntax(t *testing.T) {
 }
 
 func TestRenderSaysNothingOfTheWorkingDirectory(t *testing.T) {
-	rendering := grep.Describe(grep.Args{Pattern: "hello", Path: "."})
+	rendering := Describe(Args{Pattern: "hello", Path: "."})
 	subject, qualifier := rendering.Subject, rendering.Qualifier
 	if subject != "hello" || qualifier != "" {
 		t.Errorf("expected the path to go without saying, got %q and %q", subject, qualifier)
 	}
 
-	rendering = grep.Describe(grep.Args{Pattern: "hello", Path: "internal", Glob: "*.go"})
+	rendering = Describe(Args{Pattern: "hello", Path: "internal", Glob: "*.go"})
 	subject, qualifier = rendering.Subject, rendering.Qualifier
 	if subject != "hello" || qualifier != "internal *.go" {
 		t.Errorf("expected a path and glob to be named, got %q and %q", subject, qualifier)
@@ -334,7 +334,7 @@ func TestASymbolicLinkOutOfTheRootIsNotSearched(t *testing.T) {
 	root := file.New(openedRoot, allowAll)
 
 	for _, path := range []string{"directory", "file", "directory/credentials"} {
-		output, err := exec(t, root, `{"pattern":"password","path":"`+path+`"}`)
+		output, err := runGrep(t, root, `{"pattern":"password","path":"`+path+`"}`)
 		if err == nil {
 			t.Errorf("expected %s to be refused, got %q", path, output)
 		}
@@ -351,7 +351,7 @@ func TestASymbolicLinkInsideTheRootIsStillSearched(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	output, err := exec(t, root, `{"pattern":"hello","path":"linked"}`)
+	output, err := runGrep(t, root, `{"pattern":"hello","path":"linked"}`)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -371,7 +371,7 @@ func TestDeniedNamesAreNotReadBySearches(t *testing.T) {
 	})
 	root.SetExcludedNames([]string{"foo.txt"})
 
-	output, err := exec(t, root, `{"pattern":"secret"}`)
+	output, err := runGrep(t, root, `{"pattern":"secret"}`)
 	if err != nil {
 		t.Fatal(err)
 	}
