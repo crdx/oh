@@ -12419,10 +12419,25 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 		self.notifyFailure("chat.md recording disabled: transcript append failed\nwire.http.zst recording disabled: wire append failed")
 		self.show(inputLine)
 	case feedbackUnknownSettings:
-		self.notifyUnknownSettings([]string{
-			"config.toml: unknown: ui.mystery",
-			"oh.toml: unknown: bar.top.center.loudly",
-		})
+		settings := configFrom(t, `
+			[debugger]
+			stalls = true
+			cpu_profile = true
+			[debugger.nested]
+			level = 2
+			[debugger_extra]
+			stalls = true
+			[ui]
+			mystery = true
+			mystery_more = true
+		`)
+		reports := settings.UnknownSettings()
+		for i, report := range reports {
+			_, unknown, _ := strings.Cut(report, ": unknown: ")
+			reports[i] = "config.toml: unknown: " + unknown
+		}
+		reports = append(reports, "oh.toml: unknown: bar.top.center.loudly")
+		self.notifyUnknownSettings(reports)
 		self.show(inputLine)
 	case feedbackChainedApproval, feedbackHeredocApproval:
 		broker := ask.New()

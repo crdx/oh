@@ -444,8 +444,23 @@ func (self Config) UnknownSettings() []string {
 		}
 
 		slices.Sort(namedKeys)
+		reportNames := make(map[string]bool, len(namedKeys))
+		unique := namedKeys[:0]
+		for _, name := range namedKeys {
+			isCovered := false
+			for end := strings.LastIndexByte(name, '.'); end >= 0; end = strings.LastIndexByte(name[:end], '.') {
+				if reportNames[name[:end]] {
+					isCovered = true
+					break
+				}
+			}
+			if !isCovered {
+				unique = append(unique, name)
+				reportNames[name] = true
+			}
+		}
 
-		reports = append(reports, fmt.Sprintf("%s: unknown: %s", source.path, strings.Join(namedKeys, ", ")))
+		reports = append(reports, fmt.Sprintf("%s: unknown: %s", source.path, strings.Join(unique, ", ")))
 	}
 
 	return append(reports, self.experimentalReports()...)

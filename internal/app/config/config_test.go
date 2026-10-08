@@ -596,9 +596,36 @@ func TestTheSingularSkillTableIsReported(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	report := strings.Join(config.UnknownSettings(), "\n")
-	if !strings.Contains(report, "skill.include") {
-		t.Errorf("expected the singular skill table to be reported, got %q", report)
+	reports := config.UnknownSettings()
+	want := []string{path + ": unknown: skill"}
+	if !slices.Equal(reports, want) {
+		t.Errorf("got reports %q, want %q", reports, want)
+	}
+}
+
+func TestUnknownSettingsNameTablesOnceAndKeepSeparateKeys(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "config.toml")
+	if err := writeConfigFile(path, `
+[debugger]
+stalls = true
+[debugger.nested]
+level = 2
+[debugger_extra]
+stalls = true
+[ui]
+mystery = true
+mystery_more = true
+`); err != nil {
+		t.Fatal(err)
+	}
+
+	config, err := Load(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := []string{path + ": unknown: debugger, debugger_extra, ui.mystery, ui.mystery_more"}
+	if reports := config.UnknownSettings(); !slices.Equal(reports, want) {
+		t.Errorf("got reports %q, want %q", reports, want)
 	}
 }
 

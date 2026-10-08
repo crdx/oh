@@ -126,7 +126,7 @@ Approve the second operation?
 === settings nothing reads ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ Unknown settings were ignored.                                                                 │
- │ config.toml: unknown: ui.mystery                                                               │
+ │ config.toml: unknown: debugger, debugger_extra, ui.mystery, ui.mystery_more                    │
  │ oh.toml: unknown: bar.top.center.loudly                                                        │
 ─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
