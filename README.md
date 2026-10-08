@@ -62,7 +62,9 @@ go run crdx.org/oh@latest --demo
 - `pkg/agent`: conversation loop, with streaming, batching, and cancellation
 - `pkg/ask`: confirmations and choices mediated by an interface
 - `pkg/tool`: tools, schemas, middleware, and concurrency
-- `pkg/toolbox`: implementation of standard tools, plus extras
+- `pkg/toolbox`: standard tools and workspaces
+- `pkg/sandbox`: command policies, runners, and the sandbox
+- `pkg/simulator`: scripted provider endpoint for tests
 - `pkg/session`: session saving and resumption as an append-only journal
 - `pkg/wire/anthropic/messages`: the Anthropic Messages protocol
 - `pkg/wire/openai/chatcompletions`: the OpenAI-compatible Chat Completions protocol
