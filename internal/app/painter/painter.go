@@ -933,7 +933,7 @@ func RenderFailure(event agent.Event) string {
 
 const (
 	contextExceededNotice = "Context window full."
-	forkCommand           = "/fork"
+	forkCommand           = "/fork -m"
 )
 
 func RenderContextExceeded(event agent.Event, modelName string) (string, bool) {

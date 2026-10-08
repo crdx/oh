@@ -18,6 +18,7 @@ const (
 	stdinMarker      = "-"
 	optionTerminator = "--"
 	defaultCapFlags  = "rx"
+	yoloOption       = "--yolo"
 )
 
 var usage = `
@@ -179,7 +180,7 @@ func (self Input) Parse(
 	}
 
 	if self.Yolo {
-		if err := refuseConfinedCaps(self.Caps); err != nil {
+		if err := RefuseConfinedCaps(self.Caps); err != nil {
 			return options, err
 		}
 	}
@@ -211,7 +212,7 @@ func (self Input) Parse(
 	return options, nil
 }
 
-func refuseConfinedCaps(flags string) error {
+func RefuseConfinedCaps(flags string) error {
 	for _, flag := range flags {
 		if knownCap, isBuiltIn := caps.Named(string(flag)); isBuiltIn && caps.Unconfined().Has(knownCap) {
 			return fmt.Errorf(
@@ -272,14 +273,34 @@ func (self Input) isChoosingModel() bool {
 	return self.IsModelPicker || self.Model != ""
 }
 
-func InheritedOptions(arguments []string, kind cycle.TransitionKind) []string {
-	if kind != cycle.NewSession {
+func InheritedOptions(arguments []string, transition cycle.Transition) []string {
+	if transition.Kind != cycle.NewSession || slices.Contains(transition.Arguments, yoloOption) {
 		return nil
 	}
 
-	if slices.Contains(arguments, "--yolo") {
-		return []string{"--yolo"}
+	if IsYoloInherited(arguments) {
+		return []string{yoloOption}
 	}
 
 	return nil
+}
+
+func IsYoloInherited(arguments []string) bool {
+	return slices.Contains(arguments, yoloOption)
+}
+
+func OptionDescription(name string) string {
+	for line := range strings.SplitSeq(usage, "\n") {
+		names, description, hasDescription := strings.Cut(strings.TrimSpace(line), "  ")
+		if !hasDescription {
+			continue
+		}
+		for field := range strings.FieldsSeq(names) {
+			if strings.TrimSuffix(field, ",") == name {
+				return strings.TrimSpace(description)
+			}
+		}
+	}
+
+	return ""
 }

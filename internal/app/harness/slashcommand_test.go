@@ -5,10 +5,13 @@ import (
 	"strings"
 	"testing"
 
+	"crdx.org/oh/internal/app/commands"
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/snippets"
+	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/pkg/tool"
 )
 
 func slashGoldenRegistry(t *testing.T) slash.Registry {
@@ -56,6 +59,9 @@ func slashCommandScenarios(t *testing.T) map[string]pathRefScenario {
 			rig.show()
 			rig.typeText(text)
 		}
+	}
+	sessionCommanding := func(isYoloInherited bool, steps func(rig *pathRefRig)) pathRefScenario {
+		return pathRefScenario{columns: 60, lines: 24, commands: sessionCommandsGoldenRegistry(isYoloInherited), steps: steps}
 	}
 
 	return map[string]pathRefScenario{
@@ -368,6 +374,92 @@ func slashCommandScenarios(t *testing.T) map[string]pathRefScenario {
 				rig.press(pathRefEscape)
 			},
 		},
+		"53 a session command lists its options": sessionCommanding(false, typing("/new ")),
+		"54 choosing an option that takes a value goes on to its values": sessionCommanding(false, func(rig *pathRefRig) {
+			typing("/new -")(rig)
+			rig.press(tabKey)
+			if got := rig.input.Text(); got != "/new -m " {
+				rig.t.Errorf("tab left %q in the input", got)
+			}
+		}),
+		"55 choosing an option that takes nothing closes the dropdown": sessionCommanding(false, func(rig *pathRefRig) {
+			typing("/new --y")(rig)
+			rig.press(tabKey)
+			if got := rig.input.Text(); got != "/new --yolo " {
+				rig.t.Errorf("tab left %q in the input", got)
+			}
+		}),
+		"56 a long option completes as itself": sessionCommanding(false, typing("/new --")),
+		"57 an option already given is not offered again": sessionCommanding(false, func(rig *pathRefRig) {
+			typing("/fork -m sonnet --yolo -")(rig)
+			rig.press(tabKey)
+		}),
+		"58 a capability option lists capabilities":       sessionCommanding(false, typing("/fork -c ")),
+		"59 a waived sandbox lists only what it can take": sessionCommanding(true, typing("/fork -c ")),
+		"60 a waived sandbox does not offer itself again": sessionCommanding(true, typing("/new -")),
+		"61 a tool option leaves out the tools already given": sessionCommanding(false, func(rig *pathRefRig) {
+			typing("/new -t read -t ")(rig)
+			rig.press(tabKey)
+		}),
+		"62 a model given goes on to the other options":        sessionCommanding(false, typing("/fork -m sonnet ")),
+		"63 an option matching nothing closes the dropdown":    sessionCommanding(false, typing("/new -x")),
+		"64 a value matching nothing closes the dropdown":      sessionCommanding(false, typing("/new -t zz")),
+		"65 a second value for one option closes the dropdown": sessionCommanding(false, typing("/new -c rx -c ")),
+		"66 enter on an option missing its value shows the usage": sessionCommanding(false, func(rig *pathRefRig) {
+			typing("/new -m")(rig)
+			rig.press(pathRefEnter)
+		}),
+		"67 enter on sandboxed capabilities beside the waiver refuses them": sessionCommanding(false, func(rig *pathRefRig) {
+			typing("/new --yolo -c rx")(rig)
+			rig.press(pathRefEnter)
+		}),
+		"68 enter on sandboxed capabilities in a waived session refuses them": sessionCommanding(true, func(rig *pathRefRig) {
+			typing("/fork -c w")(rig)
+			rig.press(pathRefEnter)
+		}),
+		"69 enter on an unknown capability refuses it": sessionCommanding(false, func(rig *pathRefRig) {
+			typing("/new -c rz")(rig)
+			rig.press(pathRefEnter)
+		}),
+		"70 enter on an unknown tool refuses it": sessionCommanding(false, func(rig *pathRefRig) {
+			typing("/fork -t nope")(rig)
+			rig.press(pathRefEnter)
+		}),
+		"71 enter on an unknown model refuses it": sessionCommanding(false, func(rig *pathRefRig) {
+			typing("/new -m nope --yolo")(rig)
+			rig.press(pathRefEnter)
+		}),
+		"73 a bare model closes the dropdown": sessionCommanding(false, typing("/fork sonnet")),
+		"74 enter on a bare model sends it": sessionCommanding(false, func(rig *pathRefRig) {
+			typing("/new sonnet")(rig)
+			rig.press(pathRefEnter)
+			if got := rig.input.Text(); got != "" {
+				rig.t.Errorf("enter left %q in the input rather than sending it", got)
+			}
+		}),
+		"75 tab after a bare model offers the other options": sessionCommanding(false, func(rig *pathRefRig) {
+			typing("/fork sonnet ")(rig)
+			rig.press(tabKey)
+		}),
+		"76 enter on a bare model beside -m shows the usage": sessionCommanding(false, func(rig *pathRefRig) {
+			typing("/new sonnet -m opus")(rig)
+			rig.press(pathRefEnter)
+		}),
+		"77 a tool option is not offered once every tool is given": sessionCommanding(false, func(rig *pathRefRig) {
+			typing("/new -t read -t grep -t bash ")(rig)
+			rig.press(tabKey)
+		}),
+		"78 a tool option given after every tool lists nothing": sessionCommanding(false, func(rig *pathRefRig) {
+			typing("/new -t read -t grep -t bash -t ")(rig)
+			rig.press(tabKey)
+		}),
+		"72 enter on options the new session accepts sends them": sessionCommanding(false, func(rig *pathRefRig) {
+			typing("/fork -m opus -c la -t read -t bash --yolo")(rig)
+			rig.press(pathRefEnter)
+			if got := rig.input.Text(); got != "" {
+				rig.t.Errorf("enter left %q in the input rather than sending it", got)
+			}
+		}),
 	}
 }
 
@@ -430,6 +522,45 @@ func completedArgumentsGoldenRegistry(t *testing.T) slash.Registry {
 	}
 
 	return fixtureRegistry(t, set)
+}
+
+func sessionCommandsGoldenRegistry(isYoloInherited bool) func(t *testing.T) slash.Registry {
+	return func(t *testing.T) slash.Registry {
+		t.Helper()
+
+		toolNames := []string{"read", "grep", "bash"}
+		var tools []tool.Tool
+		for _, name := range toolNames {
+			tools = append(tools, slowTool(name))
+		}
+		starter := sessionStarter{
+			toolboxTools:      tools,
+			getCustomCapFlags: func() string { return "a" },
+			isYoloInherited:   isYoloInherited,
+			getModelChoices:   func() []model.Choice { return slashGoldenModels },
+			defaults:          model.Defaults{Effort: "high"},
+		}
+		set, err := commands.New(commands.Options{
+			Workspace: work.At(t.TempDir()),
+			Session: commands.Session{
+				Name:        "tame-impala",
+				IsPersisted: func() bool { return true },
+			},
+			GetModelChoices:   func() []model.Choice { return slashGoldenModels },
+			GetToolNames:      func() []string { return toolNames },
+			GetCustomCapFlags: starter.getCustomCapFlags,
+			IsYoloInherited:   isYoloInherited,
+			StartSession: func(start commands.SessionStart) error {
+				_, err := starter.transition(start)
+				return err
+			},
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		return fixtureRegistry(t, set)
+	}
 }
 
 func manyArgumentsGoldenRegistry(t *testing.T) slash.Registry {

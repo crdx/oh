@@ -433,14 +433,14 @@ func TestCommandArgumentsAreCompletedFromTheSessionItself(t *testing.T) {
 	session.waitFor(readyBanner)
 	session.requireHidden("opencode-go/fake")
 
-	session.typeAndSettle("/new opencode-go/")
+	session.typeAndSettle("/new -m opencode-go/")
 	session.requireShown("› opencode-go/fake@")
 	session.typeAndSettle("\t")
-	session.requireShown("/new opencode-go/fake@")
+	session.requireShown("/new -m opencode-go/fake@")
 	session.requireHidden("› ")
 	session.typeAndSettle(clearInput)
 
-	session.typeAndSettle("/fork opencode-go/fa")
+	session.typeAndSettle("/fork -m opencode-go/fa")
 	session.requireShown("› opencode-go/fake@")
 	session.typeAndSettle(pressEscape)
 	session.typeAndSettle(clearInput)

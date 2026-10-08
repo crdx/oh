@@ -3,7 +3,7 @@
 
 
 Request (264481 tokens) exceeds the available context size (262144 tokens), try increasing it
-Context window full. Run /fork deepseek-v4-pro to continue in a new session.
+Context window full. Run /fork -m deepseek-v4-pro to continue in a new session.
 
 
  continue after the context window filled

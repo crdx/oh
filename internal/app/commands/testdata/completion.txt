@@ -3,7 +3,7 @@
   /copy <target> → /copy …  (copy a target to the clipboard)
   /ctx → /ctx  (list sources contributing to model context)
   /edit <target> → /edit …  (open a target in your editor)
-  /fork [<model>] → /fork …  (fork this session)
+  /fork [<options>] → /fork …  (fork this session)
   /forward <port> → /forward …  (forward a sandbox port to the host)
   /grant <access> <path>... → /grant …  (grant temporary access to a path)
   /grants [all] → /grants …  (list effective access and forwarded ports)
@@ -11,7 +11,7 @@
   /info → /info  (show every bar segment with its current value)
   /job <action> → /job …  (inspect, stop, or discard a background job, or prune finished ones)
   /jobs → /jobs  (list this session's background jobs)
-  /new [<model>] → /new …  (start a new session)
+  /new [<options>] → /new …  (start a new session)
   /open <target> → /open …  (open a target with its default application)
   /revoke <target>... → /revoke …  (revoke temporary path grants or forwarded ports)
 "/c"
@@ -21,7 +21,7 @@
 "/e"
   /edit <target> → /edit …  (open a target in your editor)
 "/f"
-  /fork [<model>] → /fork …  (fork this session)
+  /fork [<options>] → /fork …  (fork this session)
   /forward <port> → /forward …  (forward a sandbox port to the host)
 "/forward "
 "/forward 8"
@@ -58,51 +58,124 @@
 "/!"
 "/!ls"
 "/n"
-  /new [<model>] → /new …  (start a new session)
+  /new [<options>] → /new …  (start a new session)
 "/new "
-  anthropic/claude-sonnet-5@medium → /new anthropic/claude-sonnet-5@medium
-  anthropic/claude-sonnet-5@high → /new anthropic/claude-sonnet-5@high
-  anthropic/claude-opus-5@high → /new anthropic/claude-opus-5@high
-  anthropic/claude-opus-5@max → /new anthropic/claude-opus-5@max
-  codex/gpt-5.6-sol@high → /new codex/gpt-5.6-sol@high
-  opencode-go/minimax-m3 → /new opencode-go/minimax-m3
+  -m → /new -m …  (pick which model to use)
+  -c → /new -c …  (configure access rights)
+  -t → /new -t …  (replace current toolbox)
+  --yolo → /new --yolo  (run outside the sandbox)
 "/new son"
-  anthropic/claude-sonnet-5@medium → /new anthropic/claude-sonnet-5@medium
-  anthropic/claude-sonnet-5@high → /new anthropic/claude-sonnet-5@high
-"/new gpt@h"
-  codex/gpt-5.6-sol@high → /new codex/gpt-5.6-sol@high
-"/new sol@high+f"
-  codex/gpt-5.6-sol@high+fast → /new codex/gpt-5.6-sol@high+fast
-"/new nothing-like-it"
-"/new sonnet "
-"/new o"
-  anthropic/claude-sonnet-5@medium → /new anthropic/claude-sonnet-5@medium
-  anthropic/claude-sonnet-5@high → /new anthropic/claude-sonnet-5@high
-  anthropic/claude-opus-5@high → /new anthropic/claude-opus-5@high
-  anthropic/claude-opus-5@max → /new anthropic/claude-opus-5@max
-  codex/gpt-5.6-sol@high → /new codex/gpt-5.6-sol@high
-"/new opencode-"
-  opencode-go/minimax-m3 → /new opencode-go/minimax-m3
-"/new codex@h"
-  codex/gpt-5.6-sol@high → /new codex/gpt-5.6-sol@high
-"/new minimax"
-  opencode-go/minimax-m3 → /new opencode-go/minimax-m3
-"/new minimax@"
-"/new opus@m"
-  anthropic/claude-opus-5@max → /new anthropic/claude-opus-5@max
-"/new opus+f"
+"/new -m son"
+  anthropic/claude-sonnet-5@medium → /new -m anthropic/claude-sonnet-5@medium
+  anthropic/claude-sonnet-5@high → /new -m anthropic/claude-sonnet-5@high
+"/new -m gpt@h"
+  codex/gpt-5.6-sol@high → /new -m codex/gpt-5.6-sol@high
+"/new -m sol@high+f"
+  codex/gpt-5.6-sol@high+fast → /new -m codex/gpt-5.6-sol@high+fast
+"/new -m nothing-like-it"
+"/new -m sonnet "
+  -c → /new -m sonnet -c …  (configure access rights)
+  -t → /new -m sonnet -t …  (replace current toolbox)
+  --yolo → /new -m sonnet --yolo  (run outside the sandbox)
+"/new -m o"
+  anthropic/claude-sonnet-5@medium → /new -m anthropic/claude-sonnet-5@medium
+  anthropic/claude-sonnet-5@high → /new -m anthropic/claude-sonnet-5@high
+  anthropic/claude-opus-5@high → /new -m anthropic/claude-opus-5@high
+  anthropic/claude-opus-5@max → /new -m anthropic/claude-opus-5@max
+  codex/gpt-5.6-sol@high → /new -m codex/gpt-5.6-sol@high
+"/new -m opencode-"
+  opencode-go/minimax-m3 → /new -m opencode-go/minimax-m3
+"/new -m codex@h"
+  codex/gpt-5.6-sol@high → /new -m codex/gpt-5.6-sol@high
+"/new -m minimax"
+  opencode-go/minimax-m3 → /new -m opencode-go/minimax-m3
+"/new -m minimax@"
+"/new -m opus@m"
+  anthropic/claude-opus-5@max → /new -m anthropic/claude-opus-5@max
+"/new -m opus+f"
+"/new -"
+  -m → /new -m …  (pick which model to use)
+  -c → /new -c …  (configure access rights)
+  -t → /new -t …  (replace current toolbox)
+  --yolo → /new --yolo  (run outside the sandbox)
+"/new --"
+  --model → /new --model …  (pick which model to use)
+  --caps → /new --caps …  (configure access rights)
+  --tool → /new --tool …  (replace current toolbox)
+  --yolo → /new --yolo  (run outside the sandbox)
+"/new --m"
+  --model → /new --model …  (pick which model to use)
+"/new --model "
+  anthropic/claude-sonnet-5@medium → /new --model anthropic/claude-sonnet-5@medium
+  anthropic/claude-sonnet-5@high → /new --model anthropic/claude-sonnet-5@high
+  anthropic/claude-opus-5@high → /new --model anthropic/claude-opus-5@high
+  anthropic/claude-opus-5@max → /new --model anthropic/claude-opus-5@max
+  codex/gpt-5.6-sol@high → /new --model codex/gpt-5.6-sol@high
+  opencode-go/minimax-m3 → /new --model opencode-go/minimax-m3
+"/new -m "
+  anthropic/claude-sonnet-5@medium → /new -m anthropic/claude-sonnet-5@medium
+  anthropic/claude-sonnet-5@high → /new -m anthropic/claude-sonnet-5@high
+  anthropic/claude-opus-5@high → /new -m anthropic/claude-opus-5@high
+  anthropic/claude-opus-5@max → /new -m anthropic/claude-opus-5@max
+  codex/gpt-5.6-sol@high → /new -m codex/gpt-5.6-sol@high
+  opencode-go/minimax-m3 → /new -m opencode-go/minimax-m3
+"/new -c "
+  r → /new -c r
+  rx → /new -c rx
+  rxw → /new -c rxw
+  rxwn → /new -c rxwn
+  rxwng → /new -c rxwng
+  rxwngl → /new -c rxwngl
+  rxwngla → /new -c rxwngla
+"/new -c rxw"
+  rxw → /new -c rxw
+  rxwn → /new -c rxwn
+  rxwng → /new -c rxwng
+  rxwngl → /new -c rxwngl
+  rxwngla → /new -c rxwngla
+"/new --yolo -c "
+  l → /new --yolo -c l
+  la → /new --yolo -c la
+"/new -c rx -c "
+"/new -t "
+  bash → /new -t bash
+  grep → /new -t grep
+  read → /new -t read
+"/new -t read -t "
+  bash → /new -t read -t bash
+  grep → /new -t read -t grep
+"/new -t read -"
+  -m → /new -t read -m …  (pick which model to use)
+  -c → /new -t read -c …  (configure access rights)
+  -t → /new -t read -t …  (replace current toolbox)
+  --yolo → /new -t read --yolo  (run outside the sandbox)
+"/new -t read -t grep -t bash "
+  -m → /new -t read -t grep -t bash -m …  (pick which model to use)
+  -c → /new -t read -t grep -t bash -c …  (configure access rights)
+  --yolo → /new -t read -t grep -t bash --yolo  (run outside the sandbox)
+"/new -t read -t grep -t bash -"
+  -m → /new -t read -t grep -t bash -m …  (pick which model to use)
+  -c → /new -t read -t grep -t bash -c …  (configure access rights)
+  --yolo → /new -t read -t grep -t bash --yolo  (run outside the sandbox)
+"/new -t read -t grep -t bash -t "
+"/new -x "
 "/fork "
-  anthropic/claude-sonnet-5@medium → /fork anthropic/claude-sonnet-5@medium
-  anthropic/claude-sonnet-5@high → /fork anthropic/claude-sonnet-5@high
-  anthropic/claude-opus-5@high → /fork anthropic/claude-opus-5@high
-  anthropic/claude-opus-5@max → /fork anthropic/claude-opus-5@max
-  codex/gpt-5.6-sol@high → /fork codex/gpt-5.6-sol@high
-  opencode-go/minimax-m3 → /fork opencode-go/minimax-m3
+  -m → /fork -m …  (pick which model to use)
+  -c → /fork -c …  (configure access rights)
+  -t → /fork -t …  (replace current toolbox)
+  --yolo → /fork --yolo  (run outside the sandbox)
 "/fork opus"
-  anthropic/claude-opus-5@high → /fork anthropic/claude-opus-5@high
-  anthropic/claude-opus-5@max → /fork anthropic/claude-opus-5@max
-"/fork sol@high+"
-  codex/gpt-5.6-sol@high+fast → /fork codex/gpt-5.6-sol@high+fast
+"/fork -m opus"
+  anthropic/claude-opus-5@high → /fork -m anthropic/claude-opus-5@high
+  anthropic/claude-opus-5@max → /fork -m anthropic/claude-opus-5@max
+"/fork -m sol@high+"
+  codex/gpt-5.6-sol@high+fast → /fork -m codex/gpt-5.6-sol@high+fast
+"/fork -m sonnet -c rxw --yolo "
+  -t → /fork -m sonnet -c rxw --yolo -t …  (replace current toolbox)
+"/fork --yolo -"
+  -m → /fork --yolo -m …  (pick which model to use)
+  -c → /fork --yolo -c …  (configure access rights)
+  -t → /fork --yolo -t …  (replace current toolbox)
 "/r"
   /revoke <target>... → /revoke …  (revoke temporary path grants or forwarded ports)
 "/revoke "

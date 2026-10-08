@@ -305,3 +305,203 @@ see /co
 
 
 ────────────────────────────────────────────────────────────
+=== 53 a session command lists its options ===
+────────────────────────────────────────────────────────────
+/new
+› -m      pick which model to use
+  -c      configure access rights
+  -t      replace current toolbox
+  --yolo  run outside the sandbox
+
+
+
+
+────────────────────────────────────────────────────────────
+=== 54 choosing an option that takes a value goes on to its values ===
+────────────────────────────────────────────────────────────
+/new -m
+› anthropic/claude-sonnet-5@medium
+  anthropic/claude-sonnet-5@high
+  anthropic/claude-opus-5@high
+  opencode-go/minimax-m3
+
+
+
+
+────────────────────────────────────────────────────────────
+=== 55 choosing an option that takes nothing closes the dropdown ===
+────────────────────────────────────────────────────────────
+/new --yolo
+────────────────────────────────────────────────────────────
+=== 56 a long option completes as itself ===
+────────────────────────────────────────────────────────────
+/new --
+› --model  pick which model to use
+  --caps   configure access rights
+  --tool   replace current toolbox
+  --yolo   run outside the sandbox
+
+
+
+
+────────────────────────────────────────────────────────────
+=== 57 an option already given is not offered again ===
+────────────────────────────────────────────────────────────
+/fork -m sonnet --yolo -
+› -c  configure access rights
+  -t  replace current toolbox
+────────────────────────────────────────────────────────────
+=== 58 a capability option lists capabilities ===
+────────────────────────────────────────────────────────────
+/fork -c
+› r
+  rx
+  rxw
+  rxwn
+  rxwng
+  rxwngl
+  rxwngla
+
+────────────────────────────────────────────────────────────
+=== 59 a waived sandbox lists only what it can take ===
+────────────────────────────────────────────────────────────
+/fork -c
+› l
+  la
+
+
+
+
+
+
+────────────────────────────────────────────────────────────
+=== 60 a waived sandbox does not offer itself again ===
+────────────────────────────────────────────────────────────
+/new -
+› -m  pick which model to use
+  -c  configure access rights
+  -t  replace current toolbox
+
+
+
+
+
+────────────────────────────────────────────────────────────
+=== 61 a tool option leaves out the tools already given ===
+────────────────────────────────────────────────────────────
+/new -t read -t
+› bash
+  grep
+────────────────────────────────────────────────────────────
+=== 62 a model given goes on to the other options ===
+────────────────────────────────────────────────────────────
+/fork -m sonnet
+› -c      configure access rights
+  -t      replace current toolbox
+  --yolo  run outside the sandbox
+
+
+
+
+
+────────────────────────────────────────────────────────────
+=== 63 an option matching nothing closes the dropdown ===
+────────────────────────────────────────────────────────────
+/new -x
+────────────────────────────────────────────────────────────
+=== 64 a value matching nothing closes the dropdown ===
+────────────────────────────────────────────────────────────
+/new -t zz
+────────────────────────────────────────────────────────────
+=== 65 a second value for one option closes the dropdown ===
+────────────────────────────────────────────────────────────
+/new -c rx -c
+────────────────────────────────────────────────────────────
+=== 66 enter on an option missing its value shows the usage ===
+ ╭────────────────────────────────────────────────────────╮
+ │ Usage: /new [-m <model>] [-c <flags>] [-t <tool>]...   │
+ │ [--yolo] (alt+enter to send)                           │
+─┴────────────────────────────────────────────────────────┴─
+/new -m
+› -m  pick which model to use
+
+
+
+
+
+
+
+────────────────────────────────────────────────────────────
+=== 67 enter on sandboxed capabilities beside the waiver refuses them ===
+ ╭────────────────────────────────────────────────────────╮
+ │ /new: --yolo leaves rxwng always on, so --caps takes   │
+ │ only l and custom tool groups (got "rx") (alt+enter to │
+ │ send)                                                  │
+─┴────────────────────────────────────────────────────────┴─
+/new --yolo -c rx
+────────────────────────────────────────────────────────────
+=== 68 enter on sandboxed capabilities in a waived session refuses them ===
+ ╭────────────────────────────────────────────────────────╮
+ │ /fork: --yolo leaves rxwng always on, so --caps takes  │
+ │ only l and custom tool groups (got "w") (alt+enter to  │
+ │ send)                                                  │
+─┴────────────────────────────────────────────────────────┴─
+/fork -c w
+────────────────────────────────────────────────────────────
+=== 69 enter on an unknown capability refuses it ===
+ ╭────────────────────────────────────────────────────────╮
+ │ /new: Unknown capability flag "z" — must be one of     │
+ │ "rxwngla" (alt+enter to send)                          │
+─┴────────────────────────────────────────────────────────┴─
+/new -c rz
+────────────────────────────────────────────────────────────
+=== 70 enter on an unknown tool refuses it ===
+ ╭────────────────────────────────────────────────────────╮
+ │ /fork: Tools not available: nope (alt+enter to send)   │
+─┴────────────────────────────────────────────────────────┴─
+/fork -t nope
+────────────────────────────────────────────────────────────
+=== 71 enter on an unknown model refuses it ===
+ ╭────────────────────────────────────────────────────────╮
+ │ /new: Model "nope" does not match any known model      │
+ │ (alt+enter to send)                                    │
+─┴────────────────────────────────────────────────────────┴─
+/new -m nope --yolo
+────────────────────────────────────────────────────────────
+=== 72 enter on options the new session accepts sends them ===
+────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────
+=== 73 a bare model closes the dropdown ===
+────────────────────────────────────────────────────────────
+/fork sonnet
+────────────────────────────────────────────────────────────
+=== 74 enter on a bare model sends it ===
+────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────
+=== 75 tab after a bare model offers the other options ===
+────────────────────────────────────────────────────────────
+/fork sonnet
+› -c      configure access rights
+  -t      replace current toolbox
+  --yolo  run outside the sandbox
+────────────────────────────────────────────────────────────
+=== 76 enter on a bare model beside -m shows the usage ===
+ ╭────────────────────────────────────────────────────────╮
+ │ Usage: /new [-m <model>] [-c <flags>] [-t <tool>]...   │
+ │ [--yolo] (alt+enter to send)                           │
+─┴────────────────────────────────────────────────────────┴─
+/new sonnet -m opus
+────────────────────────────────────────────────────────────
+=== 77 a tool option is not offered once every tool is given ===
+────────────────────────────────────────────────────────────
+/new -t read -t grep -t bash
+› -m      pick which model to use
+  -c      configure access rights
+  --yolo  run outside the sandbox
+────────────────────────────────────────────────────────────
+=== 78 a tool option given after every tool lists nothing ===
+────────────────────────────────────────────────────────────
+/new -t read -t grep -t bash -t
+────────────────────────────────────────────────────────────

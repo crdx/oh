@@ -2,19 +2,32 @@ package cycle
 
 import "crdx.org/oh/internal/app/model"
 
-const sourceSessionOption = "--from"
+const (
+	sourceSessionOption = "--from"
+	modelOption         = "-m"
+	capsOption          = "-c"
+	toolOption          = "-t"
+	yoloOption          = "--yolo"
+)
 
-func NewSessionTransition(modelGlob string, choices []model.Choice, defaults model.Defaults) (Transition, error) {
-	return selectedModelTransition(modelGlob, choices, defaults)
+type SessionOptions struct {
+	ModelGlob string
+	CapFlags  string
+	Tools     []string
+	IsYolo    bool
+}
+
+func NewSessionTransition(options SessionOptions, choices []model.Choice, defaults model.Defaults) (Transition, error) {
+	return selectedOptionsTransition(options, choices, defaults)
 }
 
 func ForkedSessionTransition(
-	modelGlob string,
+	options SessionOptions,
 	choices []model.Choice,
 	defaults model.Defaults,
 	sourceSessionName string,
 ) (Transition, error) {
-	transition, err := selectedModelTransition(modelGlob, choices, defaults)
+	transition, err := selectedOptionsTransition(options, choices, defaults)
 	if err != nil {
 		return Transition{}, err
 	}
@@ -23,17 +36,24 @@ func ForkedSessionTransition(
 	return transition, nil
 }
 
-func selectedModelTransition(modelGlob string, choices []model.Choice, defaults model.Defaults) (Transition, error) {
+func selectedOptionsTransition(options SessionOptions, choices []model.Choice, defaults model.Defaults) (Transition, error) {
 	transition := Transition{Kind: NewSession}
-	if modelGlob == "" {
-		return transition, nil
+	if options.ModelGlob != "" {
+		selection, err := model.ResolveQuery(options.ModelGlob, choices, defaults)
+		if err != nil {
+			return Transition{}, err
+		}
+		transition.Arguments = append(transition.Arguments, modelOption, selection.String())
+	}
+	if options.CapFlags != "" {
+		transition.Arguments = append(transition.Arguments, capsOption, options.CapFlags)
+	}
+	for _, name := range options.Tools {
+		transition.Arguments = append(transition.Arguments, toolOption, name)
+	}
+	if options.IsYolo {
+		transition.Arguments = append(transition.Arguments, yoloOption)
 	}
 
-	selection, err := model.ResolveQuery(modelGlob, choices, defaults)
-	if err != nil {
-		return Transition{}, err
-	}
-
-	transition.Arguments = []string{"-m", selection.String()}
 	return transition, nil
 }

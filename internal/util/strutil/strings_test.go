@@ -22,6 +22,19 @@ func TestCapitaliseUppercasesTheFirstRune(t *testing.T) {
 	}
 }
 
+func TestUncapitaliseLowercasesTheFirstRune(t *testing.T) {
+	for text, want := range map[string]string{
+		"":        "",
+		"Already": "already",
+		"Éclair":  "éclair",
+		"Run ALL": "run ALL",
+	} {
+		if got := strutil.Uncapitalise(text); got != want {
+			t.Errorf("Uncapitalise(%q) = %q, want %q", text, got, want)
+		}
+	}
+}
+
 func TestCapitaliseSentenceLeavesANameAsItWasWritten(t *testing.T) {
 	for text, want := range map[string]string{
 		"":                                     "",

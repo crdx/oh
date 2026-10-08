@@ -57,7 +57,7 @@ type Command struct {
 	Description           string
 	Run                   func(Context, Arguments) error
 	listArguments         func() []string
-	completeArgument      func(writtenArguments []string, partial string) []string
+	completeArgument      func(writtenArguments []string, partial string) []ArgumentChoice
 	isPathArgumentAfter   func(string) bool
 	argumentUsage         string
 	completionUsage       string
@@ -82,8 +82,28 @@ func (self Command) WithListedArguments(list func() []string) Command {
 }
 
 func (self Command) WithArgumentCompletion(complete func(writtenArguments []string, partial string) []string) Command {
+	return self.WithArgumentChoices(func(writtenArguments []string, partial string) []ArgumentChoice {
+		return plainChoices(complete(writtenArguments, partial))
+	})
+}
+
+func (self Command) WithArgumentChoices(complete func(writtenArguments []string, partial string) []ArgumentChoice) Command {
 	self.completeArgument = complete
 	return self
+}
+
+type ArgumentChoice struct {
+	Text       string
+	Detail     string
+	TakesValue bool
+}
+
+func plainChoices(arguments []string) []ArgumentChoice {
+	choices := make([]ArgumentChoice, len(arguments))
+	for i, argument := range arguments {
+		choices[i] = ArgumentChoice{Text: argument}
+	}
+	return choices
 }
 
 func (self Command) WithManyArguments() Command {
@@ -359,14 +379,14 @@ type completionTarget struct {
 	writtenArguments []string
 }
 
-func (self completionTarget) arguments() []string {
+func (self completionTarget) arguments() []ArgumentChoice {
 	if self.command.completeArgument != nil {
 		return self.command.completeArgument(self.writtenArguments, self.partial)
 	}
 
-	return MatchingPrefixes(self.partial, slices.DeleteFunc(slices.Clone(self.command.getArguments()), func(argument string) bool {
+	return plainChoices(MatchingPrefixes(self.partial, slices.DeleteFunc(slices.Clone(self.command.getArguments()), func(argument string) bool {
 		return slices.Contains(self.writtenArguments, argument)
-	}))
+	})))
 }
 
 func (self Registry) Completes(prefix string) bool {
@@ -410,7 +430,12 @@ func (self Registry) Completions(prefix string) []Completion {
 	arguments := target.arguments()
 	completions := make([]Completion, len(arguments))
 	for i, argument := range arguments {
-		completions[i] = Completion{Text: target.precedingText + argument, Label: argument}
+		completions[i] = Completion{
+			Text:           target.precedingText + argument.Text,
+			Label:          argument.Text,
+			Description:    argument.Detail,
+			TakesArguments: argument.TakesValue,
+		}
 	}
 	return completions
 }

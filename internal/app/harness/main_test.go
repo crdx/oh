@@ -7827,11 +7827,101 @@ func TestAnEffortWrittenAsAnAliasInTheConfigIsResolved(t *testing.T) {
 
 func TestGoldenWhatSessionTransitionsMakeOfAModelGlob(t *testing.T) {
 	compareWithGolden(t, "new-session", ".txt", map[string]func() string{
-		"command line selections": func() string { return resolveCommandLineSelections(t) },
-		"effort autoselection":    resolveAutomaticEfforts,
-		"fork model globs":        func() string { return resolveForkedSessionGlobs(t) },
-		"new session model globs": func() string { return resolveNewSessionGlobs(t) },
+		"command line selections":  func() string { return resolveCommandLineSelections(t) },
+		"effort autoselection":     resolveAutomaticEfforts,
+		"fork model globs":         func() string { return resolveForkedSessionGlobs(t) },
+		"new session model globs":  func() string { return resolveNewSessionGlobs(t) },
+		"session options":          resolveSessionOptions,
+		"session options reopened": func() string { return reopenSessionOptions(t) },
 	})
+}
+
+func reopenSessionOptions(t *testing.T) string {
+	t.Helper()
+
+	path := useCommandLineModelCache(t)
+	originalArgs := os.Args
+	t.Cleanup(func() { os.Args = originalArgs })
+	var written strings.Builder
+
+	for _, test := range []struct {
+		options           cycle.SessionOptions
+		currentArguments  []string
+		sourceSessionName string
+	}{
+		{options: cycle.SessionOptions{}},
+		{options: cycle.SessionOptions{ModelGlob: "opus-5", CapFlags: "rxwa", Tools: []string{"read", "bash"}}},
+		{options: cycle.SessionOptions{CapFlags: "la", IsYolo: true}},
+		{options: cycle.SessionOptions{IsYolo: true}, currentArguments: []string{"--yolo"}},
+		{options: cycle.SessionOptions{CapFlags: "l"}, currentArguments: []string{"--yolo", "-m", "sonnet"}},
+		{options: cycle.SessionOptions{ModelGlob: "sonnet", IsYolo: true}, sourceSessionName: "able-dolphin"},
+		{options: cycle.SessionOptions{Tools: []string{"grep"}}, currentArguments: []string{"--yolo"}, sourceSessionName: "able-dolphin"},
+	} {
+		var transition cycle.Transition
+		var err error
+		if test.sourceSessionName == "" {
+			transition, err = cycle.NewSessionTransition(test.options, model.Choices(path), model.Defaults{})
+		} else {
+			transition, err = cycle.ForkedSessionTransition(test.options, model.Choices(path), model.Defaults{}, test.sourceSessionName)
+		}
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		arguments := append(cli.InheritedOptions(test.currentArguments, transition), transition.Arguments...)
+		os.Args = append([]string{"oh"}, arguments...)
+		parsed, err := cli.Bind().Parse(model.Choices(path), model.Defaults{}, "a")
+		fmt.Fprintf(&written, "%+v from %q\n  %s\n", test.options, test.currentArguments, strings.Join(append([]string{"oh"}, arguments...), " "))
+		if err != nil {
+			fmt.Fprintf(&written, "  error: %v\n", err)
+
+			continue
+		}
+		selection := "—"
+		if parsed.Selection.Model != "" {
+			selection = parsed.Selection.String()
+		}
+		fmt.Fprintf(
+			&written,
+			"  model=%s caps=%s groups=%s chosen=%v tools=%v yolo=%v from=%q\n",
+			selection, parsed.Caps.Flags(), parsed.GroupFlags, parsed.WereCapsChosen, parsed.Tools, parsed.Yolo, parsed.SourceSession,
+		)
+	}
+
+	return written.String()
+}
+
+func resolveSessionOptions() string {
+	choices := newSessionFixtureChoices()
+	var written strings.Builder
+
+	for _, options := range []cycle.SessionOptions{
+		{CapFlags: "rxw"},
+		{Tools: []string{"read", "bash"}},
+		{IsYolo: true},
+		{ModelGlob: "opus-5", CapFlags: "l", Tools: []string{"grep"}, IsYolo: true},
+		{ModelGlob: "nope", IsYolo: true},
+	} {
+		for _, source := range []string{"", "able-dolphin"} {
+			var transition cycle.Transition
+			var err error
+			if source == "" {
+				transition, err = cycle.NewSessionTransition(options, choices, model.Defaults{Effort: "medium"})
+			} else {
+				transition, err = cycle.ForkedSessionTransition(options, choices, model.Defaults{Effort: "medium"}, source)
+			}
+			description := fmt.Sprintf("%+v", options)
+			if err != nil {
+				fmt.Fprintf(&written, "%-70s error: %v\n", description, err)
+
+				continue
+			}
+
+			fmt.Fprintf(&written, "%-70s %s %s\n", description, transitionKindName(transition.Kind), strings.Join(transition.Arguments, " "))
+		}
+	}
+
+	return written.String()
 }
 
 func useCommandLineModelCache(t *testing.T) string {
@@ -7928,7 +8018,7 @@ func resolveForkedSessionGlobs(t *testing.T) string {
 	for _, glob := range []string{
 		"", "opus-5", "opus-5@max", "haiku", "gpt", "gpt@high", "gpt@high+fast", "minimax", "minimax@high", "nope",
 	} {
-		transition, err := cycle.ForkedSessionTransition(glob, choices, model.Defaults{Effort: "medium", IsFast: true}, "able-dolphin")
+		transition, err := cycle.ForkedSessionTransition(cycle.SessionOptions{ModelGlob: glob}, choices, model.Defaults{Effort: "medium", IsFast: true}, "able-dolphin")
 		if err != nil {
 			fmt.Fprintf(&written, "%-28q error: %v\n", glob, err)
 
@@ -7970,7 +8060,7 @@ func resolveNewSessionGlobs(t *testing.T) string {
 		"nope",
 		"nonsense",
 	} {
-		transition, err := cycle.NewSessionTransition(glob, choices, model.Defaults{Effort: "medium"})
+		transition, err := cycle.NewSessionTransition(cycle.SessionOptions{ModelGlob: glob}, choices, model.Defaults{Effort: "medium"})
 		if err != nil {
 			fmt.Fprintf(&written, "%-28q error: %v\n", glob, err)
 

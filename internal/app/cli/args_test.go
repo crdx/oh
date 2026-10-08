@@ -432,15 +432,35 @@ func TestTheYoloFlagTakesOnlyTheCapsItLeavesOpen(t *testing.T) {
 }
 
 func TestOnlyANewSessionInheritsAWaivedSandbox(t *testing.T) {
-	if got := InheritedOptions([]string{"--yolo", "hello"}, cycle.NewSession); !slices.Equal(got, []string{"--yolo"}) {
+	newSession := cycle.Transition{Kind: cycle.NewSession}
+	if got := InheritedOptions([]string{"--yolo", "hello"}, newSession); !slices.Equal(got, []string{"--yolo"}) {
 		t.Errorf("got %v, want --yolo handed on to a new session", got)
 	}
 
-	if got := InheritedOptions([]string{"--yolo"}, cycle.ResumeSession); got != nil {
+	if got := InheritedOptions([]string{"--yolo"}, cycle.Transition{Kind: cycle.ResumeSession}); got != nil {
 		t.Errorf("got %v, want a resumed session to take its confinement from its own journal", got)
 	}
 
-	if got := InheritedOptions([]string{"hello"}, cycle.NewSession); got != nil {
+	asked := cycle.Transition{Kind: cycle.NewSession, Arguments: []string{"--yolo"}}
+	if got := InheritedOptions([]string{"--yolo"}, asked); got != nil {
+		t.Errorf("got %v, want a session that asks for --yolo itself not handed it twice", got)
+	}
+
+	if got := InheritedOptions([]string{"hello"}, newSession); got != nil {
 		t.Errorf("got %v, want nothing handed on by a sandboxed session", got)
+	}
+}
+
+func TestAnOptionIsDescribedAsTheHelpDescribesIt(t *testing.T) {
+	for name, want := range map[string]string{
+		"-m":        "Pick which model to use",
+		"--model":   "Pick which model to use",
+		"--yolo":    "Run outside the sandbox",
+		"-t":        "Replace current toolbox",
+		"--missing": "",
+	} {
+		if got := OptionDescription(name); got != want {
+			t.Errorf("%s: got %q, want %q", name, got, want)
+		}
 	}
 }

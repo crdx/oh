@@ -16,6 +16,14 @@ func Capitalise(text string) string {
 	return string(characters)
 }
 
+func Uncapitalise(text string) string {
+	characters := []rune(text)
+	if len(characters) > 0 {
+		characters[0] = unicode.ToLower(characters[0])
+	}
+	return string(characters)
+}
+
 func CapitaliseSentence(text string) string {
 	firstWord, _, _ := strings.Cut(text, " ")
 	firstWord, _, _ = strings.Cut(firstWord, "\n")

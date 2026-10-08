@@ -543,7 +543,7 @@ func TestRenderContextExceededAdvisesForkingWithTheSameModel(t *testing.T) {
 	if !isSaid {
 		t.Fatal("expected the notice to be said")
 	}
-	if !strings.Contains(notice, "/fork qwen4:70b") {
+	if !strings.Contains(notice, "/fork -m qwen4:70b") {
 		t.Errorf("expected the model to be named for the fork, got %q", notice)
 	}
 }

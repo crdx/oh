@@ -131,3 +131,25 @@ func TestTheSourceAnswersToASlash(t *testing.T) {
 		t.Errorf("the source answers to %q and elides with %v", source.Symbol(), source.Elision())
 	}
 }
+
+func TestAnArgumentTakingAValueKeepsCompletingIntoIt(t *testing.T) {
+	registry := mustRegistry(t, mustSet(t, "/",
+		slash.Command{Name: "new", Run: commandHandler}.
+			WithArgumentChoices(func([]string, string) []slash.ArgumentChoice {
+				return []slash.ArgumentChoice{
+					{Text: "-m", Detail: "pick a model\nand more", TakesValue: true},
+					{Text: "--yolo", Detail: "run outside the sandbox"},
+				}
+			}),
+	))
+	source := slash.NewSource(func() slash.Registry { return registry })
+
+	got := source.Results(trigger.Word{End: 5, Query: "/new "}, 10).Items
+	want := []trigger.Result{
+		{Label: "-m", Detail: "pick a model", Text: "/new -m ", IsOpenEnded: true},
+		{Label: "--yolo", Detail: "run outside the sandbox", Text: "/new --yolo"},
+	}
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("got %+v, want %+v", got, want)
+	}
+}

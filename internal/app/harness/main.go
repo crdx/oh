@@ -323,7 +323,7 @@ func Main() {
 
 	self, err := os.Executable()
 	if err == nil {
-		arguments := append([]string{self}, cli.InheritedOptions(os.Args[1:], transition.Kind)...)
+		arguments := append([]string{self}, cli.InheritedOptions(os.Args[1:], transition)...)
 		arguments = append(arguments, transition.Arguments...)
 		err = syscall.Exec(self, arguments, os.Environ()) //nolint:gosec // re-executing the binary itself
 	}
@@ -375,6 +375,65 @@ func configuredRotation(settings config.Config, isSimulated bool) []string {
 	}
 
 	return settings.Model.RoundRobin
+}
+
+func currentCustomCapFlags(sources []config.Source) string {
+	settings, err := config.LoadSources(sources...)
+	if err != nil {
+		return ""
+	}
+	toolGroups, err := settings.CustomToolGroups()
+	if err != nil {
+		return ""
+	}
+	return toolGroups.CustomFlags()
+}
+
+type sessionStarter struct {
+	toolboxTools      []tool.Tool
+	getCustomCapFlags func() string
+	isYoloInherited   bool
+	getModelChoices   func() []model.Choice
+	defaults          model.Defaults
+}
+
+func (self sessionStarter) transition(start commands.SessionStart) (cycle.Transition, error) {
+	err := checkSessionStart(start, self.toolboxTools, self.getCustomCapFlags(), self.isYoloInherited)
+	if err != nil {
+		return cycle.Transition{}, err
+	}
+
+	options := cycle.SessionOptions{
+		ModelGlob: start.ModelGlob,
+		CapFlags:  start.CapFlags,
+		Tools:     start.Tools,
+		IsYolo:    start.IsYolo,
+	}
+	if start.SourceSessionName != "" {
+		return cycle.ForkedSessionTransition(options, self.getModelChoices(), self.defaults, start.SourceSessionName)
+	}
+	return cycle.NewSessionTransition(options, self.getModelChoices(), self.defaults)
+}
+
+func checkSessionStart(
+	start commands.SessionStart,
+	toolboxTools []tool.Tool,
+	customCapFlags string,
+	isYoloInherited bool,
+) error {
+	if start.CapFlags != "" {
+		if start.IsYolo || isYoloInherited {
+			if err := cli.RefuseConfinedCaps(start.CapFlags); err != nil {
+				return err
+			}
+		}
+		if _, _, err := caps.ParseWithGroups(start.CapFlags, customCapFlags); err != nil {
+			return err
+		}
+	}
+
+	_, err := toolset.Reduce(toolboxTools, start.Tools)
+	return err
 }
 
 func sessionDefaults(selection model.Selection) model.Defaults {
@@ -1192,6 +1251,14 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		args.Message = forkSource.GetMessageWithChatAt(args.Message, transcriptPath)
 	}
 
+	isYoloInherited := cli.IsYoloInherited(os.Args[1:])
+	starter := sessionStarter{
+		toolboxTools:      toolboxTools,
+		getCustomCapFlags: func() string { return currentCustomCapFlags(getConfigSources(workspaceDir)) },
+		isYoloInherited:   isYoloInherited,
+		getModelChoices:   func() []model.Choice { return model.Choices(modelCachePath) },
+		defaults:          sessionDefaults(selection),
+	}
 	systemCommands, err := commands.New(commands.Options{
 		ConfigDir:        location.GetConfigDir(),
 		ConfigFile:       configPath,
@@ -1262,24 +1329,12 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 			IsPersisted:    log.IsPersisted,
 			GetLastMessage: func() (string, bool) { return app.getLastMessage() },
 		},
-		GetModelChoices: func() []model.Choice { return model.SignedInChoices(modelCachePath, isProviderAvailable) },
+		GetModelChoices:   func() []model.Choice { return model.SignedInChoices(modelCachePath, isProviderAvailable) },
+		GetToolNames:      func() []string { return toolset.Names(toolboxTools) },
+		GetCustomCapFlags: starter.getCustomCapFlags,
+		IsYoloInherited:   isYoloInherited,
 		StartSession: func(start commands.SessionStart) error {
-			var transition cycle.Transition
-			var err error
-			if start.SourceSessionName != "" {
-				transition, err = cycle.ForkedSessionTransition(
-					start.ModelGlob,
-					model.Choices(modelCachePath),
-					sessionDefaults(selection),
-					start.SourceSessionName,
-				)
-			} else {
-				transition, err = cycle.NewSessionTransition(
-					start.ModelGlob,
-					model.Choices(modelCachePath),
-					sessionDefaults(selection),
-				)
-			}
+			transition, err := starter.transition(start)
 			if err != nil {
 				return err
 			}

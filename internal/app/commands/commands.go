@@ -56,6 +56,9 @@ type Options struct {
 	GetInfo           func() (string, error)
 	GetContextSources func() ContextSources
 	GetModelChoices   func() []model.Choice
+	GetToolNames      func() []string
+	GetCustomCapFlags func() string
+	IsYoloInherited   bool
 	StartSession      func(SessionStart) error
 	StartHostCommand  func(directory string, command string) error
 }
@@ -70,6 +73,9 @@ type Session struct {
 
 type SessionStart struct {
 	ModelGlob         string
+	CapFlags          string
+	Tools             []string
+	IsYolo            bool
 	SourceSessionName string
 }
 
@@ -103,6 +109,9 @@ type commandEnvironment struct {
 	getInfo           func() (string, error)
 	getContextSources func() ContextSources
 	getModelChoices   func() []model.Choice
+	getToolNames      func() []string
+	getCustomCapFlags func() string
+	isYoloInherited   bool
 	startSession      func(SessionStart) error
 }
 
@@ -146,6 +155,9 @@ func New(options Options) (slash.CommandSet, error) {
 		getInfo:           options.GetInfo,
 		getContextSources: options.GetContextSources,
 		getModelChoices:   options.GetModelChoices,
+		getToolNames:      options.GetToolNames,
+		getCustomCapFlags: options.GetCustomCapFlags,
+		isYoloInherited:   options.IsYoloInherited,
 		startSession:      options.StartSession,
 	})
 }
@@ -162,6 +174,12 @@ func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 	}
 	if environment.getModelChoices == nil {
 		environment.getModelChoices = func() []model.Choice { return nil }
+	}
+	if environment.getToolNames == nil {
+		environment.getToolNames = func() []string { return nil }
+	}
+	if environment.getCustomCapFlags == nil {
+		environment.getCustomCapFlags = func() string { return "" }
 	}
 	openConfiguration := func(additionalPaths []string) error {
 		paths := []string{environment.configDir}
@@ -201,10 +219,8 @@ func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 		sessionCommand(
 			"new",
 			"start a new session",
-			environment.getModelChoices,
-			func(modelGlob string) error {
-				return environment.startSession(SessionStart{ModelGlob: modelGlob})
-			},
+			environment,
+			environment.startSession,
 		),
 	}
 	if environment.pathGrants.isConfigured() {
@@ -222,12 +238,10 @@ func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 		sessionCommand(
 			"fork",
 			"fork this session",
-			environment.getModelChoices,
-			func(modelGlob string) error {
-				return environment.startSession(SessionStart{
-					ModelGlob:         modelGlob,
-					SourceSessionName: environment.session.name,
-				})
+			environment,
+			func(start SessionStart) error {
+				start.SourceSessionName = environment.session.name
+				return environment.startSession(start)
 			},
 		),
 	)...)
@@ -448,34 +462,6 @@ func editorCommand(
 			return openEditor(values)
 		},
 	}
-}
-
-func sessionCommand(
-	name string,
-	description string,
-	getModelChoices func() []model.Choice,
-	startSession func(string) error,
-) slash.Command {
-	return slash.Command{
-		Name:        name,
-		Description: description,
-		Run: func(_ slash.Context, arguments slash.Arguments) error {
-			if len(arguments.Fields) > 1 {
-				return slash.Usage()
-			}
-			if len(arguments.Fields) == 0 {
-				return startSession("")
-			}
-			return startSession(arguments.Fields[0])
-		},
-	}.
-		WithArgumentUsage("[<model>]").
-		WithArgumentCompletion(func(writtenArguments []string, partial string) []string {
-			if len(writtenArguments) > 0 {
-				return nil
-			}
-			return model.SelectionsMatching(partial, getModelChoices())
-		})
 }
 
 func commandsRequiringPersistedSession(isSessionPersisted func() bool, commands ...slash.Command) []slash.Command {

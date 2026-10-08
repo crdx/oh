@@ -200,6 +200,15 @@ func TestCommandsRunWithoutStoppingTheHarness(t *testing.T) {
 			if start.SourceSessionName != "" {
 				action = "fork:" + start.SourceSessionName + ":" + start.ModelGlob
 			}
+			if start.CapFlags != "" {
+				action += ":caps=" + start.CapFlags
+			}
+			if len(start.Tools) > 0 {
+				action += ":tools=" + strings.Join(start.Tools, ",")
+			}
+			if start.IsYolo {
+				action += ":yolo"
+			}
 			actions = append(actions, action)
 			return nil
 		},
@@ -215,9 +224,16 @@ func TestCommandsRunWithoutStoppingTheHarness(t *testing.T) {
 		"/open skills-dir":         "open:" + strings.Join(skillDirectories[:2], ","),
 		"/open snippets-dir":       "open:" + snippetsDirectory,
 		"/new":                     "new:",
-		"/new sonnet":              "new:sonnet",
 		"/fork":                    "fork:tame-impala:",
+		"/new sonnet":              "new:sonnet",
 		"/fork sonnet":             "fork:tame-impala:sonnet",
+		"/fork sonnet --yolo":      "fork:tame-impala:sonnet:yolo",
+		"/new -m sonnet":           "new:sonnet",
+		"/new --model sonnet":      "new:sonnet",
+		"/new -c rxw --yolo":       "new::caps=rxw:yolo",
+		"/new -t read --tool grep": "new::tools=read,grep",
+		"/fork -m sonnet --yolo":   "fork:tame-impala:sonnet:yolo",
+		"/fork --caps l -m sonnet": "fork:tame-impala:sonnet:caps=l",
 		"/open config-dir":         "open:" + configDirectory,
 		"/open workspace-dir":      "open:" + workspaceDirectory,
 		"/open scratch-dir":        "open:" + scratchDirectory,
@@ -408,7 +424,15 @@ func TestCommandsRejectUnknownOrExtraTargets(t *testing.T) {
 		"/help extra",
 		"/info extra",
 		"/new one two",
+		"/new sonnet -m opus",
 		"/fork one two",
+		"/new -m",
+		"/new -m -c rx",
+		"/new -m sonnet --model opus",
+		"/new -c rx -c r",
+		"/new --yolo --yolo",
+		"/new -x",
+		"/fork -t",
 		"/copy session-name extra",
 		"/open session-chat",
 		"/edit session-chat",
@@ -443,7 +467,7 @@ func TestAModelThatCannotBeResolvedLeavesTheCommandToBeCorrected(t *testing.T) {
 		},
 	})
 
-	result, failure := dispatch.Handle(commands, dispatch.Actions{}, "/new opus")
+	result, failure := dispatch.Handle(commands, dispatch.Actions{}, "/new -m opus")
 	if result != dispatch.Rejected {
 		t.Fatalf("expected the command to be refused, got result %d", result)
 	}
@@ -543,5 +567,47 @@ func TestEditReportsThatNoEditorCanBeOpened(t *testing.T) {
 	err = invocation.Command.Run(nil, invocation.Arguments)
 	if !errors.Is(err, errEditorUnavailable) {
 		t.Errorf("got error %v", err)
+	}
+}
+
+func TestAnInheritedWaiverIsNeitherOfferedAgainNorWidenedByCapabilities(t *testing.T) {
+	environment := fixtureEnvironment(t)
+	environment.isYoloInherited = true
+	commands := newCommandRegistry(t, environment)
+
+	var options []string
+	for _, completion := range commands.Completions("/new -") {
+		options = append(options, completion.Label)
+	}
+	if want := []string{"-m", "-c", "-t"}; !slices.Equal(options, want) {
+		t.Errorf("got options %v, want %v", options, want)
+	}
+
+	var flags []string
+	for _, completion := range commands.Completions("/new -c ") {
+		flags = append(flags, completion.Label)
+	}
+	if want := []string{"l", "la"}; !slices.Equal(flags, want) {
+		t.Errorf("got capabilities %v, want %v", flags, want)
+	}
+}
+
+func TestCompletingAToolLeavesTheListedToolsAlone(t *testing.T) {
+	toolNames := []string{"read", "grep", "bash"}
+	environment := fixtureEnvironment(t)
+	environment.getToolNames = func() []string { return toolNames }
+	commands := newCommandRegistry(t, environment)
+
+	for range 2 {
+		var labels []string
+		for _, completion := range commands.Completions("/new -t read -t ") {
+			labels = append(labels, completion.Label)
+		}
+		if want := []string{"bash", "grep"}; !slices.Equal(labels, want) {
+			t.Errorf("got %v, want %v", labels, want)
+		}
+	}
+	if want := []string{"read", "grep", "bash"}; !slices.Equal(toolNames, want) {
+		t.Errorf("the listed tools became %v", toolNames)
 	}
 }

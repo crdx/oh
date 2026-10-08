@@ -22,6 +22,7 @@
 - Keep multiline commands on one row
 - Speed up redraws in conversations that mention many paths
 - Add debug toggles for cpu and stall profiling
+- Accept and complete flags in fork and new
 
 ## [0.13.0] - 2026-10-07
 

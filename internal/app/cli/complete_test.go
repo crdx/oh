@@ -202,8 +202,14 @@ func TestEffortCompletionsAreBareLevels(t *testing.T) {
 }
 
 func TestCapabilityCompletionsGrowOneAtATime(t *testing.T) {
-	sets := capsCompletions("ab")
+	sets := CapsCompletions("", "ab", false)
 	if sets[0] != "r" || sets[len(sets)-1] != "rxwnglab" {
+		t.Errorf("got %v", sets)
+	}
+}
+
+func TestAWaivedSandboxCompletesOnlyTheCapabilitiesItCanTake(t *testing.T) {
+	if sets := CapsCompletions("", "ab", true); !slices.Equal(sets, []string{"l", "la", "lab"}) {
 		t.Errorf("got %v", sets)
 	}
 }

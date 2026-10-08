@@ -83,7 +83,7 @@ func completions(kind string, word string, sources Sources) []string {
 	case completeProvider:
 		return withPrefix(word, model.LoginProviderNames())
 	case completeCaps:
-		return withPrefix(word, capsCompletions(sources.CustomCapFlags))
+		return CapsCompletions(word, sources.CustomCapFlags, false)
 	case completeTool:
 		return withPrefix(word, sources.ToolNames)
 	default:
@@ -159,11 +159,16 @@ func sessionNames(directory string) []string {
 	return names
 }
 
-func capsCompletions(customFlags ...string) []string {
+func CapsCompletions(word string, customFlags string, isYolo bool) []string {
 	flags := caps.AllFlags
-	if len(customFlags) > 0 {
-		flags += customFlags[0]
+	if isYolo {
+		flags = caps.Lookup.Flag()
 	}
+
+	return withPrefix(word, capsCompletions(flags+customFlags))
+}
+
+func capsCompletions(flags string) []string {
 	sets := make([]string, 0, len(flags))
 
 	for i := range flags {

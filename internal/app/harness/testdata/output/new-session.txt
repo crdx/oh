@@ -135,3 +135,38 @@
 "minimax@high"               error: model minimax-m3 takes no effort level
 "nope"                       error: model "nope" does not match any known model
 "nonsense"                   error: model "nonsense" does not match any known model
+
+=== session options ===
+{ModelGlob: CapFlags:rxw Tools:[] IsYolo:false}                        new -c rxw
+{ModelGlob: CapFlags:rxw Tools:[] IsYolo:false}                        new -c rxw --from able-dolphin
+{ModelGlob: CapFlags: Tools:[read bash] IsYolo:false}                  new -t read -t bash
+{ModelGlob: CapFlags: Tools:[read bash] IsYolo:false}                  new -t read -t bash --from able-dolphin
+{ModelGlob: CapFlags: Tools:[] IsYolo:true}                            new --yolo
+{ModelGlob: CapFlags: Tools:[] IsYolo:true}                            new --yolo --from able-dolphin
+{ModelGlob:opus-5 CapFlags:l Tools:[grep] IsYolo:true}                 new -m anthropic/claude-opus-5@max -c l -t grep --yolo
+{ModelGlob:opus-5 CapFlags:l Tools:[grep] IsYolo:true}                 new -m anthropic/claude-opus-5@max -c l -t grep --yolo --from able-dolphin
+{ModelGlob:nope CapFlags: Tools:[] IsYolo:true}                        error: model "nope" does not match any known model
+{ModelGlob:nope CapFlags: Tools:[] IsYolo:true}                        error: model "nope" does not match any known model
+
+=== session options reopened ===
+{ModelGlob: CapFlags: Tools:[] IsYolo:false} from []
+  oh
+  model=— caps=rx groups= chosen=false tools=[] yolo=false from=""
+{ModelGlob:opus-5 CapFlags:rxwa Tools:[read bash] IsYolo:false} from []
+  oh -m anthropic/claude-opus-5@max -c rxwa -t read -t bash
+  model=anthropic/claude-opus-5@max caps=rxw groups=a chosen=true tools=[read bash] yolo=false from=""
+{ModelGlob: CapFlags:la Tools:[] IsYolo:true} from []
+  oh -c la --yolo
+  model=— caps=rl groups=a chosen=true tools=[] yolo=true from=""
+{ModelGlob: CapFlags: Tools:[] IsYolo:true} from ["--yolo"]
+  oh --yolo
+  model=— caps=rx groups= chosen=false tools=[] yolo=true from=""
+{ModelGlob: CapFlags:l Tools:[] IsYolo:false} from ["--yolo" "-m" "sonnet"]
+  oh --yolo -c l
+  model=— caps=rl groups= chosen=true tools=[] yolo=true from=""
+{ModelGlob:sonnet CapFlags: Tools:[] IsYolo:true} from []
+  oh -m anthropic/claude-sonnet-5@high --yolo --from able-dolphin
+  model=anthropic/claude-sonnet-5@high caps=rx groups= chosen=false tools=[] yolo=true from="able-dolphin"
+{ModelGlob: CapFlags: Tools:[grep] IsYolo:false} from ["--yolo"]
+  oh --yolo -t grep --from able-dolphin
+  model=— caps=rx groups= chosen=false tools=[grep] yolo=true from="able-dolphin"
