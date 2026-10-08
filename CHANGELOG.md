@@ -20,6 +20,7 @@
 - Add experimental toggle to show the redraw latency on ctrl+l
 - Redraw promptly on resize, no blocking
 - Keep multiline commands on one row
+- Speed up redraws in conversations that mention many paths
 
 ## [0.13.0] - 2026-10-07
 

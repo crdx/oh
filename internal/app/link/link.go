@@ -2,7 +2,6 @@ package link
 
 import (
 	"net/url"
-	"os"
 	"path/filepath"
 	"regexp"
 	"sort"
@@ -170,7 +169,7 @@ func commonPrefixEnd(first string, second string) int {
 
 func locations(text string, roots Roots) []location {
 	addresses := webAddresses(text)
-	matches := pathPattern.FindAllStringSubmatchIndex(text, -1)
+	matches := pathMatches(text)
 	foundLocations := make([]location, 0, len(matches)+len(addresses))
 	var candidateLocations map[string]candidateLocation
 	if len(matches) > 1 {
@@ -665,7 +664,7 @@ func resolve(path string, roots Roots) (string, bool) {
 		resolvedPath = absolutePath
 	}
 
-	if _, err := os.Stat(resolvedPath); err != nil {
+	if !existenceMemory.exists(resolvedPath) {
 		return "", false
 	}
 

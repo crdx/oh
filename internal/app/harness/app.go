@@ -1778,6 +1778,10 @@ func (self *App) replay() {
 }
 
 func (self *App) replayHistory(count int) {
+	link.Remembering(func() { self.drawHistory(count) })
+}
+
+func (self *App) drawHistory(count int) {
 	self.screen.Sync(func() {
 		if self.introductions != nil {
 			self.introductions.Forget()
@@ -1812,6 +1816,10 @@ func (self *App) redraw() {
 
 	history := len(self.recordedEvents) - liveEvents
 
+	link.Remembering(func() { self.redrawWith(livePainter, history) })
+}
+
+func (self *App) redrawWith(livePainter *painter.Picasso, history int) {
 	self.screen.Sync(func() {
 		self.pendingNotices.renderer = nil
 		self.pendingNotices.block = nil
