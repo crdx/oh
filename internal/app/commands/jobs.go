@@ -47,7 +47,12 @@ func jobsCommand(managedJobs Jobs) slash.Command {
 			if arguments.Text != "" {
 				return slash.Usage()
 			}
-			context.NoticeListing(formatJobs(managedJobs.List()))
+			listing := managedJobs.List()
+			if len(listing) == 0 {
+				context.Notice("No background jobs.")
+				return nil
+			}
+			context.PlainNoticeListing(formatJobs(listing))
 
 			return nil
 		},
@@ -152,10 +157,6 @@ func pruneEveryFinishedJob(context slash.Context, managedJobs Jobs) error {
 }
 
 func formatJobs(listing []jobs.Snapshot) string {
-	if len(listing) == 0 {
-		return "No background jobs."
-	}
-
 	rows := make([][]string, len(listing))
 	for index, snapshot := range listing {
 		rows[index] = []string{
@@ -175,7 +176,7 @@ func formatJobs(listing []jobs.Snapshot) string {
 		lines[index] = "  " + jobTable.Row(row, 0)
 	}
 
-	return "Background jobs:\n" + strings.Join(lines, "\n")
+	return style.Info("Background jobs:") + "\n" + strings.Join(lines, "\n")
 }
 
 func styleJobOutcome(snapshot jobs.Snapshot) string {

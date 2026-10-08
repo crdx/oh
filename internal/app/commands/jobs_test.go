@@ -109,8 +109,8 @@ func TestTheJobsCommandListsEveryJob(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if !context.isListing {
-		t.Error("jobs were not marked as a listing")
+	if !context.isListing || !context.hasOwnStyle {
+		t.Error("jobs were not drawn as a listing in their own style")
 	}
 	if !strings.Contains(context.notice, style.Subject("docs")) {
 		t.Error("job name was not styled as a subject")

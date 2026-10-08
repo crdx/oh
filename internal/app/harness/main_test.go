@@ -12187,14 +12187,6 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 				return nil
 			},
 		},
-		slash.Command{
-			Name: "info",
-			Run: func(context slash.Context, _ slash.Arguments) error {
-				context.PlainNotice(style.Info("active-model") + "  GPT Sol\n" +
-					style.Info("mode-toggle") + "   " + style.Subtle("rxw ngl"))
-				return nil
-			},
-		},
 	)
 
 	inputLine := edit.NewInput(nil)
@@ -12213,6 +12205,17 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 		self.handleCommand("/help")
 		self.show(inputLine)
 	case feedbackStartupInfo:
+		systemSet, err := commands.New(commands.Options{
+			GetInfo: func() (string, error) {
+				return style.Info("active-model") + "  GPT Sol\n" +
+					style.Info("cache-usage") + "   " + style.Quantity("91%") + "\n" +
+					style.Info("mode-toggle") + "   " + style.Subtle("rxw ngl"), nil
+			},
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		self.commands = fixtureRegistry(t, systemSet)
 		self.acceptInitialInput(inputLine, edit.NewHistory("", historyLimit), "/info")
 	case feedbackSuccess:
 		self.handleCommand("/copy")

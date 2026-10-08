@@ -1,2 +1,2 @@
-[38;2;129;162;190mcache-usage  5m ttl[0m
-[38;2;129;162;190mmode-toggle  rxw ngl[0m
+[38;2;129;162;190mcache-usage[0m  5m ttl
+[38;2;129;162;190mmode-toggle[0m  [38;2;150;152;150mrxw ngl[0m

@@ -79,6 +79,10 @@ type ContextSources struct {
 	SessionSources []contextsource.Source
 }
 
+func (self ContextSources) IsEmpty() bool {
+	return len(self.SystemSources) == 0 && len(self.ProjectSources) == 0 && len(self.SessionSources) == 0
+}
+
 type commandEnvironment struct {
 	configDir        string
 	configPath       string
@@ -344,7 +348,12 @@ func contextCommand(getSources func() ContextSources) slash.Command {
 				return slash.Usage()
 			}
 
-			context.NoticeListing(formatContextSources(getSources()))
+			sources := getSources()
+			if sources.IsEmpty() {
+				context.Notice("No context sources.")
+				return nil
+			}
+			context.PlainNoticeListing(formatContextSources(sources))
 			return nil
 		},
 	}
@@ -366,10 +375,6 @@ func formatContextSources(sources ContextSources) string {
 			rows = append(rows, []string{util.FormatEstimatedTokens(source.EstimatedTokens), source.DisplayName()})
 		}
 	}
-	if len(rows) == 0 {
-		return "No context sources."
-	}
-
 	contextTable := table.New(
 		table.Column{Align: table.Right, Style: style.Dim},
 		table.Column{},
@@ -380,7 +385,7 @@ func formatContextSources(sources ContextSources) string {
 			continue
 		}
 
-		listing := []string{section.label + ":"}
+		listing := []string{style.Info(section.label + ":")}
 		for _, source := range section.sources {
 			listing = append(listing, "  "+contextTable.Row([]string{
 				util.FormatEstimatedTokens(source.EstimatedTokens),
@@ -416,7 +421,7 @@ func infoCommand(getInfo func() (string, error)) slash.Command {
 			if err != nil {
 				return err
 			}
-			context.NoticeListing(info)
+			context.PlainNoticeListing(info)
 			return nil
 		},
 	}

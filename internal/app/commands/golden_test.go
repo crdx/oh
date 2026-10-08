@@ -152,8 +152,8 @@ func TestGoldenContextListingMatchesGolden(t *testing.T) {
 		if err := invocation.Command.Run(context, invocation.Arguments); err != nil {
 			t.Fatal(err)
 		}
-		if !context.isListing {
-			t.Error("context sources were not marked as a listing")
+		if !test.sources.IsEmpty() && (!context.isListing || !context.hasOwnStyle) {
+			t.Error("context sources were not drawn as a listing in their own style")
 		}
 		for _, columns := range []int{120, 60, 30} {
 			fmt.Fprintf(
@@ -161,7 +161,7 @@ func TestGoldenContextListingMatchesGolden(t *testing.T) {
 				"=== %s (%d columns) ===\n%s\n",
 				test.label,
 				columns,
-				renderInformationListing(context.notice, columns),
+				renderCommandFeedback(context, columns),
 			)
 		}
 	}
@@ -192,20 +192,11 @@ func TestEveryCommandIsDescribedInOneLowercaseSentence(t *testing.T) {
 	}
 }
 
-func renderInformationListing(text string, columns int) string {
-	var shown feedback.State
-	shown.Show(feedback.Command, feedback.Message{
-		Text:      text,
-		Status:    agent.InfoStatus,
-		IsListing: true,
-	}, time.Time{})
-	return strings.Join(shown.Render(columns, time.Time{}), "\n")
-}
-
 func renderCommandFeedback(context *commandTestContext, columns int) string {
 	var shown feedback.State
 	shown.Show(feedback.Command, feedback.Message{
 		Text:               context.notice,
+		Status:             agent.InfoStatus,
 		HasOwnStyle:        context.hasOwnStyle,
 		IsListing:          context.isListing,
 		ContinuationIndent: context.continuationIndent,
@@ -257,7 +248,7 @@ func fixtureEnvironment(t *testing.T) commandEnvironment {
 			}
 		},
 		getInfo: func() (string, error) {
-			return "cache-usage  5m ttl\nmode-toggle  rxw ngl", nil
+			return style.Info("cache-usage") + "  5m ttl\n" + style.Info("mode-toggle") + "  " + style.Subtle("rxw ngl"), nil
 		},
 	}
 }
@@ -592,9 +583,10 @@ func TestGoldenJobListingMatchesGolden(t *testing.T) {
 			for _, columns := range []int{120, 60, 30} {
 				var shown feedback.State
 				shown.Show(feedback.Command, feedback.Message{
-					Text:      context.notice,
-					Status:    agent.InfoStatus,
-					IsListing: context.isListing,
+					Text:        context.notice,
+					Status:      agent.InfoStatus,
+					HasOwnStyle: context.hasOwnStyle,
+					IsListing:   context.isListing,
 				}, startedAt)
 				rows := shown.Render(columns, startedAt)
 				wantedRows := 1
@@ -726,7 +718,10 @@ func TestGoldenInfoMatchesGolden(t *testing.T) {
 	if !context.isListing {
 		t.Error("session info was not marked as a listing")
 	}
-	assertGolden(t, "info.txt", renderInformationListing(context.notice, 80)+"\n")
+	if !context.hasOwnStyle {
+		t.Error("session info was painted over its own styling")
+	}
+	assertGolden(t, "info.txt", renderCommandFeedback(context, 80)+"\n")
 }
 
 func TestGoldenHelpMatchesGolden(t *testing.T) {
