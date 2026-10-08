@@ -1,0 +1,93 @@
+=== grey-dark, 100 columns ===
+\e[48;2;70;70;78m                                                                                                    \e[0m
+\e[48;2;70;70;78m why does the spinner stutter when a tool runs                                                      \e[0m
+\e[48;2;70;70;78m                                                                                                    \e[0m
+
+\e[3m\e[38;2;207;207;207mLooking for where the spinner is drawn.\e[0m\e[0m
+
+I'll have a look at how the spinner is drawn.
+
+grep \e[38;2;255;196;154mspinner\e[0m \e[38;2;207;207;207m*.go\e[0m
+
+The spinner is redrawn on every beat, which is why it stutters while a tool holds the line.
+
+\e[48;2;70;70;78m                                                                                                    \e[0m
+\e[48;2;70;70;78m rebuild whenever it changes                                                                        \e[0m
+\e[48;2;70;70;78m                                                                                                    \e[0m
+
+\e[3m\e[38;2;207;207;207mRebuilding whenever it changes\e[0m\e[0m \e[38;2;255;226;122mstart\e[0m \e[38;2;255;196;154mwatch\e[0m \e[38;2;207;207;207mrespawning on exit\e[0m \e[38;2;188;220;255m$\e[0m \e[38;2;188;220;255mjust\e[0m\e[38;2;207;207;207m \e[0m\e[38;2;188;220;255mwatch\e[0m
+
+\e[48;2;66;75;82m                                                                                                    \e[0m
+\e[48;2;66;75;82m 🤖 Job \e[38;2;255;196;154mwatch\e[0m\e[48;2;66;75;82m exited: complete after 8s, run 1, respawned.                                          \e[0m
+\e[48;2;66;75;82m                                                                                                    \e[0m
+\e[48;2;66;75;82m    \e[38;2;207;207;207mbuilt in 3s\e[0m\e[48;2;66;75;82m                                                                                     \e[0m
+\e[48;2;66;75;82m                                                                                                    \e[0m
+=== grey-dark, 100 columns, the context window filled ===
+\e[48;2;70;70;78m                                                                                                    \e[0m
+\e[48;2;70;70;78m carry on with the refactor                                                                         \e[0m
+\e[48;2;70;70;78m                                                                                                    \e[0m
+
+\e[38;2;255;184;184mRequest (264481 tokens) exceeds the available context size (262144 tokens)\e[0m
+\e[38;2;255;226;122mContext window full.\e[0m
+=== grey-light, 100 columns ===
+\e[48;2;196;196;204m                                                                                                    \e[0m
+\e[48;2;196;196;204m why does the spinner stutter when a tool runs                                                      \e[0m
+\e[48;2;196;196;204m                                                                                                    \e[0m
+
+\e[3m\e[38;2;56;59;62mLooking for where the spinner is drawn.\e[0m\e[0m
+
+I'll have a look at how the spinner is drawn.
+
+grep \e[38;2;106;50;16mspinner\e[0m \e[38;2;56;59;62m*.go\e[0m
+
+The spinner is redrawn on every beat, which is why it stutters while a tool holds the line.
+
+\e[48;2;196;196;204m                                                                                                    \e[0m
+\e[48;2;196;196;204m rebuild whenever it changes                                                                        \e[0m
+\e[48;2;196;196;204m                                                                                                    \e[0m
+
+\e[3m\e[38;2;56;59;62mRebuilding whenever it changes\e[0m\e[0m \e[38;2;86;63;0mstart\e[0m \e[38;2;106;50;16mwatch\e[0m \e[38;2;56;59;62mrespawning on exit\e[0m \e[38;2;28;61;99m$\e[0m \e[38;2;28;61;99mjust\e[0m\e[38;2;56;59;62m \e[0m\e[38;2;28;61;99mwatch\e[0m
+
+\e[48;2;190;200;208m                                                                                                    \e[0m
+\e[48;2;190;200;208m 🤖 Job \e[38;2;106;50;16mwatch\e[0m\e[48;2;190;200;208m exited: complete after 8s, run 1, respawned.                                          \e[0m
+\e[48;2;190;200;208m                                                                                                    \e[0m
+\e[48;2;190;200;208m    \e[38;2;56;59;62mbuilt in 3s\e[0m\e[48;2;190;200;208m                                                                                     \e[0m
+\e[48;2;190;200;208m                                                                                                    \e[0m
+=== grey-light, 100 columns, the context window filled ===
+\e[48;2;196;196;204m                                                                                                    \e[0m
+\e[48;2;196;196;204m carry on with the refactor                                                                         \e[0m
+\e[48;2;196;196;204m                                                                                                    \e[0m
+
+\e[38;2;118;22;22mRequest (264481 tokens) exceeds the available context size (262144 tokens)\e[0m
+\e[38;2;86;63;0mContext window full.\e[0m
+=== light, 100 columns ===
+\e[48;2;232;232;239m                                                                                                    \e[0m
+\e[48;2;232;232;239m why does the spinner stutter when a tool runs                                                      \e[0m
+\e[48;2;232;232;239m                                                                                                    \e[0m
+
+\e[3m\e[38;2;110;113;117mLooking for where the spinner is drawn.\e[0m\e[0m
+
+I'll have a look at how the spinner is drawn.
+
+grep \e[38;2;166;93;46mspinner\e[0m \e[38;2;110;113;117m*.go\e[0m
+
+The spinner is redrawn on every beat, which is why it stutters while a tool holds the line.
+
+\e[48;2;232;232;239m                                                                                                    \e[0m
+\e[48;2;232;232;239m rebuild whenever it changes                                                                        \e[0m
+\e[48;2;232;232;239m                                                                                                    \e[0m
+
+\e[3m\e[38;2;110;113;117mRebuilding whenever it changes\e[0m\e[0m \e[38;2;143;106;0mstart\e[0m \e[38;2;166;93;46mwatch\e[0m \e[38;2;110;113;117mrespawning on exit\e[0m \e[38;2;61;109;154m$\e[0m \e[38;2;61;109;154mjust\e[0m\e[38;2;110;113;117m \e[0m\e[38;2;61;109;154mwatch\e[0m
+
+\e[48;2;226;234;240m                                                                                                    \e[0m
+\e[48;2;226;234;240m 🤖 Job \e[38;2;166;93;46mwatch\e[0m\e[48;2;226;234;240m exited: complete after 8s, run 1, respawned.                                          \e[0m
+\e[48;2;226;234;240m                                                                                                    \e[0m
+\e[48;2;226;234;240m    \e[38;2;110;113;117mbuilt in 3s\e[0m\e[48;2;226;234;240m                                                                                     \e[0m
+\e[48;2;226;234;240m                                                                                                    \e[0m
+=== light, 100 columns, the context window filled ===
+\e[48;2;232;232;239m                                                                                                    \e[0m
+\e[48;2;232;232;239m carry on with the refactor                                                                         \e[0m
+\e[48;2;232;232;239m                                                                                                    \e[0m
+
+\e[38;2;184;60;60mRequest (264481 tokens) exceeds the available context size (262144 tokens)\e[0m
+\e[38;2;143;106;0mContext window full.\e[0m

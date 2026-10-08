@@ -380,6 +380,33 @@ func TestGoldenThePaintedSimulationRowMatchesTheGolden(t *testing.T) {
 	assertANSIGolden(t, "first-run-simulation-painted", output.String())
 }
 
+func TestGoldenThePaintedSimulationRowOnEveryOtherBackgroundMatchesTheGolden(t *testing.T) {
+	for _, background := range []style.Background{
+		style.GreyDarkBackground,
+		style.GreyLightBackground,
+		style.LightBackground,
+	} {
+		restore := style.ReportBackground(background)
+
+		var output bytes.Buffer
+		harry := wizard{
+			isSimulationOffered: true,
+			output:              &output,
+			choose:              menuChoices(&output, len(providers)),
+			login: func(provider, func(string)) error {
+				t.Error("the simulation asked to sign in")
+				return nil
+			},
+		}
+		if err := harry.castSpell(); err != nil {
+			t.Fatal(err)
+		}
+		assertANSIGolden(t, "first-run-simulation-painted-"+background.String(), output.String())
+
+		restore()
+	}
+}
+
 func TestGoldenThePaintedWizardShowsWhatWentWrongMatchingTheGolden(t *testing.T) {
 	var output bytes.Buffer
 

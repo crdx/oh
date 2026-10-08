@@ -201,3 +201,4 @@ lint3:
     fd -tf -e go -X go run ./internal/lint/abbreviation
     fd -tf -e go -X go run ./internal/lint/boolname
     fd -tf -e go -E '*_test.go' -X go run ./internal/lint/adjective
+    fd -tf -e go -E '*_test.go' -X go run ./internal/lint/palette

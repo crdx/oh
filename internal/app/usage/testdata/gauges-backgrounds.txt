@@ -1,0 +1,111 @@
+##### grey-dark #####
+=== an idle limit ===
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=144,v=18,c=16,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+rows 0-2: 144x00000000
+rows 3-14: 144x8f8f8fff
+rows 15-17: 144x00000000
+=== a limit within its pace ===
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=144,v=18,c=16,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+rows 0-2: 144x00000000
+rows 3-14: 36xbcdcffff 20x8f8f8fff 3xcfcfcfff 85x8f8f8fff
+rows 15-17: 144x00000000
+=== a limit ahead of its pace ===
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=144,v=18,c=16,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+rows 0-2: 144x00000000
+rows 3-14: 56xffe27aff 3x7f713dff 30xffe27aff 55x8f8f8fff
+rows 15-17: 144x00000000
+=== a limit far ahead of its pace ===
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=144,v=18,c=16,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+rows 0-2: 144x00000000
+rows 3-14: 56xffb8b8ff 3x7f5c5cff 77xffb8b8ff 8x8f8f8fff
+rows 15-17: 144x00000000
+=== a full limit ===
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=144,v=18,c=16,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+rows 0-2: 144x00000000
+rows 3-14: 144xffb8b8ff
+rows 15-17: 144x00000000
+=== a narrow gauge ===
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=72,v=18,c=8,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+rows 0-2: 72x00000000
+rows 3-14: 27xffe27aff 3x7f713dff 14xffe27aff 28x8f8f8fff
+rows 15-17: 72x00000000
+=== a gauge painted a second time ===
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=144,v=18,c=16,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=144,v=18,c=16,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+rows 0-2: 144x00000000
+rows 3-14: 56xffe27aff 3x7f713dff 30xffe27aff 55x8f8f8fff
+rows 15-17: 144x00000000
+##### grey-light #####
+=== an idle limit ===
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=144,v=18,c=16,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+rows 0-2: 144x00000000
+rows 3-14: 144x6c6d6fff
+rows 15-17: 144x00000000
+=== a limit within its pace ===
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=144,v=18,c=16,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+rows 0-2: 144x00000000
+rows 3-14: 36x1c3d63ff 20x6c6d6fff 3x383b3eff 85x6c6d6fff
+rows 15-17: 144x00000000
+=== a limit ahead of its pace ===
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=144,v=18,c=16,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+rows 0-2: 144x00000000
+rows 3-14: 56x563f00ff 3x2b1f00ff 30x563f00ff 55x6c6d6fff
+rows 15-17: 144x00000000
+=== a limit far ahead of its pace ===
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=144,v=18,c=16,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+rows 0-2: 144x00000000
+rows 3-14: 56x761616ff 3x3b0b0bff 77x761616ff 8x6c6d6fff
+rows 15-17: 144x00000000
+=== a full limit ===
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=144,v=18,c=16,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+rows 0-2: 144x00000000
+rows 3-14: 144x761616ff
+rows 15-17: 144x00000000
+=== a narrow gauge ===
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=72,v=18,c=8,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+rows 0-2: 72x00000000
+rows 3-14: 27x563f00ff 3x2b1f00ff 14x563f00ff 28x6c6d6fff
+rows 15-17: 72x00000000
+=== a gauge painted a second time ===
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=144,v=18,c=16,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=144,v=18,c=16,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+rows 0-2: 144x00000000
+rows 3-14: 56x563f00ff 3x2b1f00ff 30x563f00ff 55x6c6d6fff
+rows 15-17: 144x00000000
+##### light #####
+=== an idle limit ===
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=144,v=18,c=16,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+rows 0-2: 144x00000000
+rows 3-14: 144xb6b8baff
+rows 15-17: 144x00000000
+=== a limit within its pace ===
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=144,v=18,c=16,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+rows 0-2: 144x00000000
+rows 3-14: 36x3d6d9aff 20xb6b8baff 3x6e7175ff 85xb6b8baff
+rows 15-17: 144x00000000
+=== a limit ahead of its pace ===
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=144,v=18,c=16,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+rows 0-2: 144x00000000
+rows 3-14: 56x8f6a00ff 3x473500ff 30x8f6a00ff 55xb6b8baff
+rows 15-17: 144x00000000
+=== a limit far ahead of its pace ===
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=144,v=18,c=16,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+rows 0-2: 144x00000000
+rows 3-14: 56xb83c3cff 3x5c1e1eff 77xb83c3cff 8xb6b8baff
+rows 15-17: 144x00000000
+=== a full limit ===
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=144,v=18,c=16,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+rows 0-2: 144x00000000
+rows 3-14: 144xb83c3cff
+rows 15-17: 144x00000000
+=== a narrow gauge ===
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=72,v=18,c=8,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+rows 0-2: 72x00000000
+rows 3-14: 27x8f6a00ff 3x473500ff 14x8f6a00ff 28xb6b8baff
+rows 15-17: 72x00000000
+=== a gauge painted a second time ===
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=144,v=18,c=16,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+_Ga=T,U=1,q=2,f=32,o=z,t=d,i=<identifier>,s=144,v=18,c=16,r=1,m=0;<payload>\[38;2;<identifier>m􎻮̅̅􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮􎻮[39m
+rows 0-2: 144x00000000
+rows 3-14: 56x8f6a00ff 3x473500ff 30x8f6a00ff 55xb6b8baff
+rows 15-17: 144x00000000

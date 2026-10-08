@@ -35,6 +35,7 @@ import (
 	"crdx.org/oh/pkg/toolbox/title"
 
 	"crdx.org/oh/internal/app/backend"
+	"crdx.org/oh/internal/app/background"
 	"crdx.org/oh/internal/app/bar"
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/cli"
@@ -529,6 +530,12 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	if inputArgs.Version {
 		fmt.Println(cli.Version())
 		return "", nil
+	}
+
+	if style.IsColourEnabled() {
+		if terminalBackground, isKnown := background.Detect(keyboard, os.Stdout); isKnown {
+			style.ReportBackground(terminalBackground)
+		}
 	}
 
 	if inputArgs.Login {

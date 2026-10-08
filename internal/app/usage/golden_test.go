@@ -348,6 +348,29 @@ func TestGoldenProviderLimitFailuresMatchTheGolden(t *testing.T) {
 }
 
 func TestGoldenEveryDrawnGaugeMatchesTheGolden(t *testing.T) {
+	checkGolden(t, "gauges.txt", drawnGauges(t))
+}
+
+func TestGoldenEveryDrawnGaugeOnEveryOtherBackgroundMatchesTheGolden(t *testing.T) {
+	var drawn strings.Builder
+
+	for _, background := range []style.Background{
+		style.GreyDarkBackground,
+		style.GreyLightBackground,
+		style.LightBackground,
+	} {
+		restore := style.ReportBackground(background)
+		fmt.Fprintf(&drawn, "##### %s #####\n", background)
+		drawn.WriteString(drawnGauges(t))
+		restore()
+	}
+
+	checkGolden(t, "gauges-backgrounds.txt", drawn.String())
+}
+
+func drawnGauges(t *testing.T) string {
+	t.Helper()
+
 	drawing := Graphics{CellWidth: 9, CellHeight: 18}
 	expected := 40
 
@@ -412,7 +435,7 @@ func TestGoldenEveryDrawnGaugeMatchesTheGolden(t *testing.T) {
 		)))
 	}
 
-	checkGolden(t, "gauges.txt", drawn.String())
+	return drawn.String()
 }
 
 func TestGoldenTheCollectionMatchesTheGolden(t *testing.T) {
@@ -433,13 +456,14 @@ func TestGoldenTheCollectionMatchesTheGolden(t *testing.T) {
 
 func TestEveryGoldenIsClaimedByATest(t *testing.T) {
 	claimed := map[string]struct{}{
-		"views.txt":           {},
-		"views.ansi":          {},
-		"standing-limit.txt":  {},
-		"standing-limit.ansi": {},
-		"limits.txt":          {},
-		"gauges.txt":          {},
-		"report.json":         {},
+		"views.txt":              {},
+		"views.ansi":             {},
+		"standing-limit.txt":     {},
+		"standing-limit.ansi":    {},
+		"limits.txt":             {},
+		"gauges.txt":             {},
+		"gauges-backgrounds.txt": {},
+		"report.json":            {},
 	}
 
 	entries, err := os.ReadDir("testdata")

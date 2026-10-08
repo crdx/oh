@@ -1,4 +1,4 @@
-version = 12
+version = 13
 
 [caps]
 default = "rx"
@@ -17,6 +17,9 @@ reasoning = "plain"
 currency = ""
 
 [ui.theme]
+appearance = "auto"
+
+[ui.theme.dark]
 normal = "default"
 dim = "#969896"
 accent = "#c08050"
@@ -31,6 +34,54 @@ syntax_literal = "#b5bd68"
 syntax_operator = "#8abeb7"
 syntax_keyword = "#c9a6d4"
 skill = "#c9a6d4"
+
+[ui.theme.grey-dark]
+normal = "default"
+dim = "#cfcfcf"
+accent = "#ffc49a"
+user = "#46464e"
+harness = "#424b52"
+status_success = "#b4f09c"
+status_info = "#bcdcff"
+status_warning = "#ffe27a"
+status_danger = "#ffb8b8"
+syntax_type = "#ffe9a8"
+syntax_literal = "#e2f0a0"
+syntax_operator = "#b0f4ea"
+syntax_keyword = "#f2d0ff"
+skill = "#f2d0ff"
+
+[ui.theme.grey-light]
+normal = "default"
+dim = "#383b3e"
+accent = "#6a3210"
+user = "#c4c4cc"
+harness = "#bec8d0"
+status_success = "#1f4a0f"
+status_info = "#1c3d63"
+status_warning = "#563f00"
+status_danger = "#761616"
+syntax_type = "#573a00"
+syntax_literal = "#3a4700"
+syntax_operator = "#0e4741"
+syntax_keyword = "#562670"
+skill = "#562670"
+
+[ui.theme.light]
+normal = "default"
+dim = "#6e7175"
+accent = "#a65d2e"
+user = "#e8e8ef"
+harness = "#e2eaf0"
+status_success = "#3a7d1f"
+status_info = "#3d6d9a"
+status_warning = "#8f6a00"
+status_danger = "#b83c3c"
+syntax_type = "#8a5f00"
+syntax_literal = "#5f7300"
+syntax_operator = "#2c7870"
+syntax_keyword = "#8a4fa3"
+skill = "#8a4fa3"
 
 [ui.theme.tool]
 read.default = { name = "read" }

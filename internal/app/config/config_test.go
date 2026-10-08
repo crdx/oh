@@ -368,7 +368,7 @@ func TestAnOverriddenPaletteIsReportedAsOneSettingRatherThanEveryColour(t *testi
 		t.Fatal(err)
 	}
 	overridePath := filepath.Join(directory, "oh.toml")
-	body := "[bar.top]\nleft = []\n[ui.theme]\naccent = \"#a0d0f0\"\ndim = \"#404040\"\nuser = \"#202030\"\n"
+	body := "[bar.top]\nleft = []\n[ui.theme.dark]\naccent = \"#a0d0f0\"\ndim = \"#404040\"\nuser = \"#202030\"\n"
 	if err := os.WriteFile(overridePath, []byte(body), 0o600); err != nil {
 		t.Fatal(err)
 	}
@@ -1209,7 +1209,7 @@ func brokenLayout(t *testing.T, body string) (segment.Layout, error) {
 
 func TestAConfigWrittenBeforeThemesExistedNeedsNoMigrating(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := os.WriteFile(path, []byte("version = 12\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte("version = 13\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1224,15 +1224,15 @@ func TestAConfigWrittenBeforeThemesExistedNeedsNoMigrating(t *testing.T) {
 
 func TestAThemeOverridesOneColourWithoutDroppingTheRest(t *testing.T) {
 	config := configFrom(t, `
-		[ui.theme]
+		[ui.theme.dark]
 		accent = "#010203"
 	`)
 
-	if config.Ui.Theme.Accent != "#010203" {
-		t.Errorf("got accent colour %q", config.Ui.Theme.Accent)
+	if config.Ui.Theme.Dark.Accent != "#010203" {
+		t.Errorf("got accent colour %q", config.Ui.Theme.Dark.Accent)
 	}
-	if config.Ui.Theme.StatusDanger != style.DefaultTheme().StatusDanger {
-		t.Errorf("got status danger colour %q, want default %q", config.Ui.Theme.StatusDanger, style.DefaultTheme().StatusDanger)
+	if config.Ui.Theme.Dark.StatusDanger != style.DefaultTheme().Dark.StatusDanger {
+		t.Errorf("got status danger colour %q, want default %q", config.Ui.Theme.Dark.StatusDanger, style.DefaultTheme().Dark.StatusDanger)
 	}
 }
 
@@ -1446,18 +1446,18 @@ tool = "read"
 
 func TestAThemeColourCanUseTheTerminalDefault(t *testing.T) {
 	config := configFrom(t, `
-		[ui.theme]
+		[ui.theme.dark]
 		dim = "default"
 	`)
 
-	if config.Ui.Theme.Dim != "" {
-		t.Errorf("got dim colour %q, want the terminal default", config.Ui.Theme.Dim)
+	if config.Ui.Theme.Dark.Dim != "" {
+		t.Errorf("got dim colour %q, want the terminal default", config.Ui.Theme.Dark.Dim)
 	}
 }
 
 func TestAnInvalidThemeColourIsRefused(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := writeConfigFile(path, "[ui.theme]\nstatus_danger = \"red\"\n"); err != nil {
+	if err := writeConfigFile(path, "[ui.theme.dark]\nstatus_danger = \"red\"\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1528,7 +1528,7 @@ func TestTheStreamingModeDefaultsToWholeLines(t *testing.T) {
 
 func TestAConfigWrittenBeforeTheStreamingModeExistedNeedsNoMigrating(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := os.WriteFile(path, []byte("version = 12\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte("version = 13\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1594,7 +1594,7 @@ func TestAToolOutputLimitThatIsNotASizeIsRefused(t *testing.T) {
 
 func TestAConfigWrittenBeforeTheToolOutputLimitExistedNeedsNoMigrating(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := os.WriteFile(path, []byte("version = 12\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte("version = 13\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1715,7 +1715,7 @@ func TestTheGroupingDefaultsToReasoningRunningOnFromTools(t *testing.T) {
 
 func TestAConfigWrittenBeforeTheGroupingExistedNeedsNoMigrating(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := os.WriteFile(path, []byte("version = 12\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte("version = 13\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1888,7 +1888,7 @@ func TestAPermissionNobodyOffersIsRefusedWithItsKey(t *testing.T) {
 
 func TestAConfigNobodyCouldHaveWrittenIsRefusedRatherThanParsed(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	body := append([]byte("version = 12\nx = "), bytes.Repeat([]byte("["), readableBytes)...)
+	body := append([]byte("version = 13\nx = "), bytes.Repeat([]byte("["), readableBytes)...)
 	if err := os.WriteFile(path, body, 0o600); err != nil {
 		t.Fatal(err)
 	}
@@ -2012,5 +2012,111 @@ func TestTheBuiltInDefaultsAreThemselvesAConfigSomebodyMayWrite(t *testing.T) {
 	}
 	if !reflect.DeepEqual(written.Model.GetDefaults(), built.Model.GetDefaults()) {
 		t.Errorf("got model %+v, want %+v", written.Model, built.Model)
+	}
+}
+
+func TestEveryPaletteIsWrittenUnderItsOwnTable(t *testing.T) {
+	config := configFrom(t, `
+		[ui.theme.dark]
+		accent = "#010101"
+
+		[ui.theme.grey-dark]
+		accent = "#020202"
+
+		[ui.theme.grey-light]
+		accent = "#030303"
+
+		[ui.theme.light]
+		accent = "#040404"
+	`)
+
+	for name, test := range map[string]struct {
+		palette style.Palette
+		want    style.Paint
+	}{
+		"dark":       {palette: config.Ui.Theme.Dark, want: "#010101"},
+		"grey-dark":  {palette: config.Ui.Theme.GreyDark, want: "#020202"},
+		"grey-light": {palette: config.Ui.Theme.GreyLight, want: "#030303"},
+		"light":      {palette: config.Ui.Theme.Light, want: "#040404"},
+	} {
+		if test.palette.Accent != test.want {
+			t.Errorf("got %s accent %q, want %q", name, test.palette.Accent, test.want)
+		}
+	}
+}
+
+func TestAColourWrittenForOnePaletteLeavesTheOthersAlone(t *testing.T) {
+	config := configFrom(t, `
+		[ui.theme.grey-light]
+		accent = "#010203"
+	`)
+
+	defaults := style.DefaultTheme()
+	if got := config.Ui.Theme.GreyLight.Accent; got != "#010203" {
+		t.Errorf("got grey-light accent %q", got)
+	}
+	for name, test := range map[string]struct{ got, want style.Paint }{
+		"dark":       {got: config.Ui.Theme.Dark.Accent, want: defaults.Dark.Accent},
+		"grey-dark":  {got: config.Ui.Theme.GreyDark.Accent, want: defaults.GreyDark.Accent},
+		"light":      {got: config.Ui.Theme.Light.Accent, want: defaults.Light.Accent},
+		"grey-light": {got: config.Ui.Theme.GreyLight.Dim, want: defaults.GreyLight.Dim},
+	} {
+		if test.got != test.want {
+			t.Errorf("got %s %q, want the default %q", name, test.got, test.want)
+		}
+	}
+}
+
+func TestAWorkspacePaletteColourOverridesTheGlobalOne(t *testing.T) {
+	directory := t.TempDir()
+	globalPath := filepath.Join(directory, "config.toml")
+	if err := writeConfigFile(globalPath, "[ui.theme.light]\naccent = \"#040506\"\nuser = \"#070809\"\n"); err != nil {
+		t.Fatal(err)
+	}
+	localPath := filepath.Join(directory, "oh.toml")
+	if err := os.WriteFile(localPath, []byte("[ui.theme.light]\naccent = \"#010203\"\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	settings, err := LoadSources(Source{Path: globalPath}, Source{Path: localPath, IsOverride: true})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := settings.Ui.Theme.Light.Accent; got != "#010203" {
+		t.Errorf("got light accent %q, want the workspace's", got)
+	}
+	if got := settings.Ui.Theme.Light.User; got != "#070809" {
+		t.Errorf("got light user %q, want the global one", got)
+	}
+}
+
+func TestAColourWrittenStraightUnderTheThemeIsUnknown(t *testing.T) {
+	config := configFrom(t, `
+		[ui.theme]
+		accent = "#010203"
+	`)
+
+	if got, want := config.Ui.Theme.Dark.Accent, style.DefaultTheme().Dark.Accent; got != want {
+		t.Errorf("got dark accent %q, want the default %q", got, want)
+	}
+	if unknown := strings.Join(config.UnknownSettings(), "\n"); !strings.Contains(unknown, "ui.theme.accent") {
+		t.Errorf("got unknown settings %q, want ui.theme.accent named", unknown)
+	}
+}
+
+func TestAnAppearanceIsReadAndAMistakenOneIsRefused(t *testing.T) {
+	if got := configFrom(t, "").Ui.Theme.Appearance; got != style.AutomaticAppearance {
+		t.Errorf("got default appearance %q, want automatic", got)
+	}
+	if got := configFrom(t, "[ui.theme]\nappearance = \"grey-dark\"\n").Ui.Theme.Appearance; got != style.GreyDarkAppearance {
+		t.Errorf("got appearance %q, want light", got)
+	}
+
+	path := filepath.Join(t.TempDir(), "config.toml")
+	if err := writeConfigFile(path, "[ui.theme]\nappearance = \"sepia\"\n"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := Load(path); err == nil || !strings.Contains(err.Error(), `"sepia" is not an appearance`) {
+		t.Errorf("got %v, want the appearance refused", err)
 	}
 }

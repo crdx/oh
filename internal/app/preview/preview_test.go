@@ -14,6 +14,7 @@ import (
 	"crdx.org/oh/internal/app/painter"
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/store"
+	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/util/strutil"
@@ -138,6 +139,29 @@ func TestGoldenWhatAConversationLooksLikeBeforeItIsOpenedMatchesTheGolden(t *tes
 	}
 
 	compareWithGolden(t, "conversation.ansi", strutil.VisibleEscapes(drawn.String()))
+}
+
+func TestGoldenAConversationOnEveryOtherBackgroundMatchesTheGolden(t *testing.T) {
+	var drawn strings.Builder
+
+	for _, background := range []style.Background{
+		style.GreyDarkBackground,
+		style.GreyLightBackground,
+		style.LightBackground,
+	} {
+		restore := style.ReportBackground(background)
+		fmt.Fprintf(&drawn, "=== %s, 100 columns ===\n", background)
+		for _, row := range Draw(conversation(), painter.Tariff{}, nil, 100) {
+			fmt.Fprintln(&drawn, row)
+		}
+		fmt.Fprintf(&drawn, "=== %s, 100 columns, the context window filled ===\n", background)
+		for _, row := range Draw(contextExceeded(), painter.Tariff{}, nil, 100) {
+			fmt.Fprintln(&drawn, row)
+		}
+		restore()
+	}
+
+	compareWithGolden(t, "conversation-backgrounds.ansi", strutil.VisibleEscapes(drawn.String()))
 }
 
 func TestAStoredConversationIsReadFromItsJournal(t *testing.T) {

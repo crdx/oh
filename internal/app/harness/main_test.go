@@ -11253,6 +11253,63 @@ func TestGoldenReloadingAThemeReplaysTheWholeConversation(t *testing.T) {
 		"decorated palette roles":      func() string { return decoratedThemeStream(t) },
 		"tool vocabulary and paints":   func() string { return toolThemeReloadStream(t) },
 		"tool actions inherit a tool":  func() string { return toolActionThemeReloadStream(t) },
+		"a dark terminal told to be light": func() string {
+			return appearanceReloadStream(t, style.DarkBackground, "", `
+				[ui.theme]
+				appearance = "light"
+			`)
+		},
+		"a light terminal told to be dark": func() string {
+			return appearanceReloadStream(t, style.LightBackground, "", `
+				[ui.theme]
+				appearance = "dark"
+			`)
+		},
+		"a light terminal given a light colour": func() string {
+			return appearanceReloadStream(t, style.LightBackground, "", `
+				[ui.theme.light]
+				user = "#010203"
+				accent = "#040506"
+			`)
+		},
+		"a grey-dark terminal": func() string {
+			return appearanceReloadStream(t, style.DarkBackground, "", `
+				[ui.theme]
+				appearance = "grey-dark"
+			`)
+		},
+		"a grey-light terminal": func() string {
+			return appearanceReloadStream(t, style.DarkBackground, "", `
+				[ui.theme]
+				appearance = "grey-light"
+			`)
+		},
+		"a grey-light terminal given a grey-light colour": func() string {
+			return appearanceReloadStream(t, style.GreyLightBackground, "", `
+				[ui.theme.grey-light]
+				user = "#010203"
+				accent = "#040506"
+			`)
+		},
+		"a dark terminal given a light colour": func() string {
+			return appearanceReloadStream(t, style.DarkBackground, "", `
+				[ui.theme.light]
+				user = "#010203"
+				accent = "#040506"
+			`)
+		},
+		"a forced light palette set back to automatic on a dark terminal": func() string {
+			return appearanceReloadStream(t, style.DarkBackground, `
+				[ui.theme]
+				appearance = "light"
+			`, `
+				[ui.theme]
+				appearance = "auto"
+			`)
+		},
+		"every grey-dark palette role":  func() string { return defaultPaletteStream(t, style.GreyDarkBackground) },
+		"every grey-light palette role": func() string { return defaultPaletteStream(t, style.GreyLightBackground) },
+		"every light palette role":      func() string { return defaultPaletteStream(t, style.LightBackground) },
 	}
 	compareWithGolden(t, "theme-reload", ".ansi", passes)
 	compareWithGolden(t, "theme-reload", ".screen", shownPasses(t, passes))
@@ -11278,7 +11335,7 @@ func themeReloadStream(t *testing.T) string {
 	screenOutput.Reset()
 
 	writeLiveConfig(t, path, `
-		[ui.theme]
+		[ui.theme.dark]
 		user = "#010203"
 	`)
 	settleLiveConfig(t, self)
@@ -11413,7 +11470,7 @@ func activeThemeReloadStream(t *testing.T) string {
 		[ui]
 		streaming = "asap"
 
-		[ui.theme]
+		[ui.theme.dark]
 		dim = "#010203"
 
 		[bar.top]
@@ -11451,8 +11508,8 @@ func inheritedThemeReloadStream(t *testing.T) string {
 	directory := t.TempDir()
 	globalPath := filepath.Join(directory, "config.toml")
 	overridePath := filepath.Join(directory, "oh.toml")
-	writeLiveConfig(t, globalPath, "[ui.theme]\nuser = \"#010203\"\n")
-	if err := os.WriteFile(overridePath, []byte("[ui.theme]\nuser = \"#040506\"\n"), 0o600); err != nil {
+	writeLiveConfig(t, globalPath, "[ui.theme.dark]\nuser = \"#010203\"\n")
+	if err := os.WriteFile(overridePath, []byte("[ui.theme.dark]\nuser = \"#040506\"\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -11488,7 +11545,7 @@ func invalidThemeReloadStream(t *testing.T) string {
 	defer restoreTheme()
 
 	path := stableGoldenPath(t, "config.toml", false)
-	writeLiveConfig(t, path, "[ui.theme]\nuser = \"#010203\"\n")
+	writeLiveConfig(t, path, "[ui.theme.dark]\nuser = \"#010203\"\n")
 
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
@@ -11498,7 +11555,7 @@ func invalidThemeReloadStream(t *testing.T) string {
 	self.redraw()
 	beforeReload := screenOutput.Len()
 
-	writeLiveConfig(t, path, "[ui.theme]\nuser = \"red\"\n")
+	writeLiveConfig(t, path, "[ui.theme.dark]\nuser = \"red\"\n")
 	settleLiveConfig(t, self)
 	inputLine := edit.NewInput(edit.NewHistory("", historyLimit))
 	self.show(inputLine)
@@ -11517,20 +11574,20 @@ func invalidThemeReloadStream(t *testing.T) string {
 func themePaletteStream(t *testing.T) string {
 	t.Helper()
 	theme := style.DefaultTheme()
-	theme.Normal = "#010101"
-	theme.Dim = "#020202"
-	theme.Accent = "#030303"
-	theme.StatusWarning = "#040404"
-	theme.StatusSuccess = "#050505"
-	theme.StatusInfo = "#060606"
-	theme.StatusDanger = "#070707"
-	theme.SyntaxType = "#080808"
-	theme.SyntaxLiteral = "#090909"
-	theme.SyntaxOperator = "#0a0a0a"
-	theme.SyntaxKeyword = "#0b0b0b"
-	theme.Skill = "#0e0e0e"
-	theme.User = "#0c0c0c"
-	theme.Harness = "#0d0d0d"
+	theme.Dark.Normal = "#010101"
+	theme.Dark.Dim = "#020202"
+	theme.Dark.Accent = "#030303"
+	theme.Dark.StatusWarning = "#040404"
+	theme.Dark.StatusSuccess = "#050505"
+	theme.Dark.StatusInfo = "#060606"
+	theme.Dark.StatusDanger = "#070707"
+	theme.Dark.SyntaxType = "#080808"
+	theme.Dark.SyntaxLiteral = "#090909"
+	theme.Dark.SyntaxOperator = "#0a0a0a"
+	theme.Dark.SyntaxKeyword = "#0b0b0b"
+	theme.Dark.Skill = "#0e0e0e"
+	theme.Dark.User = "#0c0c0c"
+	theme.Dark.Harness = "#0d0d0d"
 	restoreTheme := style.ApplyTheme(theme)
 	defer restoreTheme()
 
@@ -11552,15 +11609,113 @@ func themePaletteStream(t *testing.T) string {
 	}, "\r\n") + "\r\n"
 }
 
+func appearanceReloadStream(t *testing.T, background style.Background, before string, after string) string {
+	t.Helper()
+	restoreBackground := style.ReportBackground(background)
+	defer restoreBackground()
+
+	path := filepath.Join(t.TempDir(), "config.toml")
+	writeLiveConfig(t, path, before)
+	settings, err := config.Load(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	restoreTheme := style.ApplyTheme(settings.Ui.Theme)
+	defer restoreTheme()
+
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	self.recorder = nil
+	self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
+	prepareLiveConfig(t, self, path)
+	self.recordedEvents = paletteConversation()
+	self.redraw()
+	screenOutput.Reset()
+
+	writeLiveConfig(t, path, after)
+	settleLiveConfig(t, self)
+
+	return screenOutput.String()
+}
+
+func paletteConversation() []agent.Event {
+	return []agent.Event{
+		{Kind: agent.UserMessageEvent, Text: "why does the spinner stutter?"},
+		{Kind: agent.ModelReasoningEvent, Text: "Looking for where the spinner is drawn."},
+		{
+			Kind: agent.ToolCallRequestEvent, ID: "status", Name: "bash",
+			FallbackRendering: agent.FallbackRendering{RenderingKind: "bash", Subject: "git status --short"},
+		},
+		{Kind: agent.ToolCallResultEvent, ID: "status", Name: "bash", Status: agent.SuccessStatus},
+		{
+			Kind: agent.ToolCallRequestEvent, ID: "build", Name: "bash",
+			FallbackRendering: agent.FallbackRendering{RenderingKind: "bash", Subject: "go build ./..."},
+		},
+		{Kind: agent.ToolCallResultEvent, ID: "build", Name: "bash", Status: agent.ErrorStatus, Text: "exit(1)"},
+		{
+			Kind: agent.ToolCallRequestEvent, ID: "docs", Name: "job",
+			FallbackRendering: agent.FallbackRendering{RenderingKind: "job_start", Subject: "docs"},
+		},
+		{Kind: agent.ToolCallResultEvent, ID: "docs", Name: "job", Status: agent.SuccessStatus},
+		{
+			Kind: agent.ToolCallRequestEvent, ID: "skill", Name: "read",
+			FallbackRendering: agent.FallbackRendering{
+				RenderingKind: "skill",
+				Subject:       "skills/tidy/SKILL.md",
+				Emphasis:      tool.Emphasis{Kind: tool.EmphasisFocus, Value: "tidy"},
+				ReadOnly:      true,
+			},
+		},
+		{Kind: agent.ToolCallResultEvent, ID: "skill", Name: "read", Status: agent.SuccessStatus},
+		{
+			Kind: agent.ModelMessageEvent, Text: "## Why it stutters\n\n" +
+				"The spinner is redrawn on every beat, so a tool **blocks** it:\n\n" +
+				"1. Paint from `Screen.paint` only\n" +
+				"2. Skip rows that did not change\n\n" +
+				"> Sealed rows are never touched again.\n\n" +
+				"```go\nfunc (self *Screen) paint(rows []string) error {\n\t// only what changed\n\treturn self.write(\"row\", 42)\n}\n```\n\n" +
+				"```diff\n@@ -1 +1 @@\n- self.redrawAll()\n+ self.paintChanged()\n```\n\n" +
+				"| Mode  | Redraws  |\n|-------|----------|\n| line  | per line |\n\n" +
+				"See [the notes](https://example.com/paint).",
+		},
+	}
+}
+
+func defaultPaletteStream(t *testing.T, background style.Background) string {
+	t.Helper()
+	restoreBackground := style.ReportBackground(background)
+	defer restoreBackground()
+	restoreTheme := style.ApplyTheme(style.DefaultTheme())
+	defer restoreTheme()
+
+	return strings.Join([]string{
+		style.Normal("normal"),
+		style.Dim("dim"),
+		style.Subject("accent"),
+		style.Change("status warning"),
+		style.Success("status success"),
+		style.Info("status info"),
+		style.Failure("status danger"),
+		style.Type("syntax type"),
+		style.Literal("syntax literal"),
+		style.Operator("syntax operator"),
+		style.Keyword("syntax keyword"),
+		style.Skill("skill"),
+		style.Simulation("simulation"),
+		style.User("user background"),
+		style.Harness("harness background"),
+	}, "\r\n") + "\r\n"
+}
+
 func decoratedThemeStream(t *testing.T) string {
 	t.Helper()
 	theme := style.DefaultTheme()
-	theme.Accent = "#030303 italic"
-	theme.Dim = "underline"
-	theme.StatusInfo = "#060606 underline:curly underline:#0a0b0c"
-	theme.StatusDanger = "#070707 bold strikethrough"
-	theme.SyntaxType = "faint overline"
-	theme.User = "#0c0c0c italic underline"
+	theme.Dark.Accent = "#030303 italic"
+	theme.Dark.Dim = "underline"
+	theme.Dark.StatusInfo = "#060606 underline:curly underline:#0a0b0c"
+	theme.Dark.StatusDanger = "#070707 bold strikethrough"
+	theme.Dark.SyntaxType = "faint overline"
+	theme.Dark.User = "#0c0c0c italic underline"
 	restoreTheme := style.ApplyTheme(theme)
 	defer restoreTheme()
 
@@ -23427,12 +23582,12 @@ func TestAThemeObservedAsReadIsNotAppliedAgainButAChangedOneIs(t *testing.T) {
 
 	read := config.Config{}
 	read.Ui.Theme = style.DefaultTheme()
-	read.Ui.Theme.Accent = "#010203"
+	read.Ui.Theme.Dark.Accent = "#010203"
 	changed := read
-	changed.Ui.Theme.Accent = "#040506"
+	changed.Ui.Theme.Dark.Accent = "#040506"
 
 	sentinel := style.DefaultTheme()
-	sentinel.Accent = "#070809"
+	sentinel.Dark.Accent = "#070809"
 	style.ApplyTheme(sentinel)
 
 	applyObservedTheme(read, read)

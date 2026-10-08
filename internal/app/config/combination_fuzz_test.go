@@ -87,9 +87,9 @@ func soundSettings() []setting {
 		}},
 		{"theme", []string{
 			"",
-			"[ui.theme]\nnormal = \"#010203 bold\"\n",
-			"[ui.theme]\ndim = \"default\"\naccent = \"underline:curly\"\n",
-			"[ui.theme]\nuser = \"#ffffff\"\nharness = \"reverse\"\n",
+			"[ui.theme.dark]\nnormal = \"#010203 bold\"\n",
+			"[ui.theme.dark]\ndim = \"default\"\naccent = \"underline:curly\"\n",
+			"[ui.theme.dark]\nuser = \"#ffffff\"\nharness = \"reverse\"\n",
 		}},
 		{"tool", []string{
 			"",

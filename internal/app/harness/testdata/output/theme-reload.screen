@@ -1,3 +1,291 @@
+=== a dark terminal given a light colour ===
+
+ why does the spinner stutter?
+
+
+Looking for where the spinner is drawn.
+$ git status --short
+$ go build ./... ✗ exit(1)
+start docs
+load skills/tidy/SKILL.md
+
+Why it stutters
+
+The spinner is redrawn on every beat, so a tool blocks it:
+
+1. Paint from Screen.paint only
+2. Skip rows that did not change
+
+│ Sealed rows are never touched again.
+
+func (self *Screen) paint(rows []string) error {
+    // only what changed
+    return self.write("row", 42)
+}
+
+@@ -1 +1 @@
+- self.redrawAll()
++ self.paintChanged()
+
+┌──────┬──────────┐
+│ Mode │ Redraws  │
+├──────┼──────────┤
+│ line │ per line │
+└──────┴──────────┘
+
+See the notes (https://example.com/paint).
+=== a dark terminal told to be light ===
+
+ why does the spinner stutter?
+
+
+Looking for where the spinner is drawn.
+$ git status --short
+$ go build ./... ✗ exit(1)
+start docs
+load skills/tidy/SKILL.md
+
+Why it stutters
+
+The spinner is redrawn on every beat, so a tool blocks it:
+
+1. Paint from Screen.paint only
+2. Skip rows that did not change
+
+│ Sealed rows are never touched again.
+
+func (self *Screen) paint(rows []string) error {
+    // only what changed
+    return self.write("row", 42)
+}
+
+@@ -1 +1 @@
+- self.redrawAll()
++ self.paintChanged()
+
+┌──────┬──────────┐
+│ Mode │ Redraws  │
+├──────┼──────────┤
+│ line │ per line │
+└──────┴──────────┘
+
+See the notes (https://example.com/paint).
+=== a forced light palette set back to automatic on a dark terminal ===
+
+ why does the spinner stutter?
+
+
+Looking for where the spinner is drawn.
+$ git status --short
+$ go build ./... ✗ exit(1)
+start docs
+load skills/tidy/SKILL.md
+
+Why it stutters
+
+The spinner is redrawn on every beat, so a tool blocks it:
+
+1. Paint from Screen.paint only
+2. Skip rows that did not change
+
+│ Sealed rows are never touched again.
+
+func (self *Screen) paint(rows []string) error {
+    // only what changed
+    return self.write("row", 42)
+}
+
+@@ -1 +1 @@
+- self.redrawAll()
++ self.paintChanged()
+
+┌──────┬──────────┐
+│ Mode │ Redraws  │
+├──────┼──────────┤
+│ line │ per line │
+└──────┴──────────┘
+
+See the notes (https://example.com/paint).
+=== a grey-dark terminal ===
+
+ why does the spinner stutter?
+
+
+Looking for where the spinner is drawn.
+$ git status --short
+$ go build ./... ✗ exit(1)
+start docs
+load skills/tidy/SKILL.md
+
+Why it stutters
+
+The spinner is redrawn on every beat, so a tool blocks it:
+
+1. Paint from Screen.paint only
+2. Skip rows that did not change
+
+│ Sealed rows are never touched again.
+
+func (self *Screen) paint(rows []string) error {
+    // only what changed
+    return self.write("row", 42)
+}
+
+@@ -1 +1 @@
+- self.redrawAll()
++ self.paintChanged()
+
+┌──────┬──────────┐
+│ Mode │ Redraws  │
+├──────┼──────────┤
+│ line │ per line │
+└──────┴──────────┘
+
+See the notes (https://example.com/paint).
+=== a grey-light terminal ===
+
+ why does the spinner stutter?
+
+
+Looking for where the spinner is drawn.
+$ git status --short
+$ go build ./... ✗ exit(1)
+start docs
+load skills/tidy/SKILL.md
+
+Why it stutters
+
+The spinner is redrawn on every beat, so a tool blocks it:
+
+1. Paint from Screen.paint only
+2. Skip rows that did not change
+
+│ Sealed rows are never touched again.
+
+func (self *Screen) paint(rows []string) error {
+    // only what changed
+    return self.write("row", 42)
+}
+
+@@ -1 +1 @@
+- self.redrawAll()
++ self.paintChanged()
+
+┌──────┬──────────┐
+│ Mode │ Redraws  │
+├──────┼──────────┤
+│ line │ per line │
+└──────┴──────────┘
+
+See the notes (https://example.com/paint).
+=== a grey-light terminal given a grey-light colour ===
+
+ why does the spinner stutter?
+
+
+Looking for where the spinner is drawn.
+$ git status --short
+$ go build ./... ✗ exit(1)
+start docs
+load skills/tidy/SKILL.md
+
+Why it stutters
+
+The spinner is redrawn on every beat, so a tool blocks it:
+
+1. Paint from Screen.paint only
+2. Skip rows that did not change
+
+│ Sealed rows are never touched again.
+
+func (self *Screen) paint(rows []string) error {
+    // only what changed
+    return self.write("row", 42)
+}
+
+@@ -1 +1 @@
+- self.redrawAll()
++ self.paintChanged()
+
+┌──────┬──────────┐
+│ Mode │ Redraws  │
+├──────┼──────────┤
+│ line │ per line │
+└──────┴──────────┘
+
+See the notes (https://example.com/paint).
+=== a light terminal given a light colour ===
+
+ why does the spinner stutter?
+
+
+Looking for where the spinner is drawn.
+$ git status --short
+$ go build ./... ✗ exit(1)
+start docs
+load skills/tidy/SKILL.md
+
+Why it stutters
+
+The spinner is redrawn on every beat, so a tool blocks it:
+
+1. Paint from Screen.paint only
+2. Skip rows that did not change
+
+│ Sealed rows are never touched again.
+
+func (self *Screen) paint(rows []string) error {
+    // only what changed
+    return self.write("row", 42)
+}
+
+@@ -1 +1 @@
+- self.redrawAll()
++ self.paintChanged()
+
+┌──────┬──────────┐
+│ Mode │ Redraws  │
+├──────┼──────────┤
+│ line │ per line │
+└──────┴──────────┘
+
+See the notes (https://example.com/paint).
+=== a light terminal told to be dark ===
+
+ why does the spinner stutter?
+
+
+Looking for where the spinner is drawn.
+$ git status --short
+$ go build ./... ✗ exit(1)
+start docs
+load skills/tidy/SKILL.md
+
+Why it stutters
+
+The spinner is redrawn on every beat, so a tool blocks it:
+
+1. Paint from Screen.paint only
+2. Skip rows that did not change
+
+│ Sealed rows are never touched again.
+
+func (self *Screen) paint(rows []string) error {
+    // only what changed
+    return self.write("row", 42)
+}
+
+@@ -1 +1 @@
+- self.redrawAll()
++ self.paintChanged()
+
+┌──────┬──────────┐
+│ Mode │ Redraws  │
+├──────┼──────────┤
+│ line │ per line │
+└──────┴──────────┘
+
+See the notes (https://example.com/paint).
 === decorated palette roles ===
 italic accent
 underlined terminal default
@@ -5,6 +293,54 @@ curly coloured underline
 bold strikethrough
 faint overline
 decorated user background
+=== every grey-dark palette role ===
+normal
+dim
+accent
+status warning
+status success
+status info
+status danger
+syntax type
+syntax literal
+syntax operator
+syntax keyword
+skill
+simulation
+user background
+harness background
+=== every grey-light palette role ===
+normal
+dim
+accent
+status warning
+status success
+status info
+status danger
+syntax type
+syntax literal
+syntax operator
+syntax keyword
+skill
+simulation
+user background
+harness background
+=== every light palette role ===
+normal
+dim
+accent
+status warning
+status success
+status info
+status danger
+syntax type
+syntax literal
+syntax operator
+syntax keyword
+skill
+simulation
+user background
+harness background
 === every palette role ===
 normal
 dim
@@ -30,8 +366,8 @@ harness background
 
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ The configuration could not be reloaded: config.toml:    │
- │ toml: line 3 (last key "ui.theme.user"): "red" is not a colour or a decoration; write #rrggbb, │
- │ "default", "bold", "faint", "italic", "underline", "blink", "reverse", "hidden",               │
+ │ toml: line 3 (last key "ui.theme.dark.user"): "red" is not a colour or a decoration; write     │
+ │ #rrggbb, "default", "bold", "faint", "italic", "underline", "blink", "reverse", "hidden",      │
  │ "strikethrough", "overline", or a shaped or coloured underline such as "underline:curly"       │
 ─┴── ·✦· ─ rxw ngl ──────────────────────────────────────────────── GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? ──┴─
 

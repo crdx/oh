@@ -13,6 +13,7 @@ const (
 	StreamingNameFormat     = 10
 	NudgeFormat             = 11
 	ForwardNameFormat       = 12
+	ThemePaletteFormat      = 13
 
-	Format = ForwardNameFormat
+	Format = ThemePaletteFormat
 )

@@ -82,6 +82,21 @@ var configSteps = map[int]configStep{
 	config.ContinueMessageFormat:   migrateConfigFromVersionNine,
 	config.StreamingNameFormat:     migrateConfigFromVersionTen,
 	config.NudgeFormat:             migrateConfigFromVersionEleven,
+	config.ForwardNameFormat:       migrateConfigFromVersionTwelve,
+}
+
+func migrateConfigFromVersionTwelve(data []byte) ([]byte, error) {
+	_, document, err := readConfigDocument(data)
+	if err != nil {
+		return nil, err
+	}
+
+	migratedData, err := moveThemeColoursToDarkPalette(data, document)
+	if err != nil {
+		return nil, err
+	}
+
+	return rewriteConfigVersion(migratedData, config.ThemePaletteFormat), nil
 }
 
 func migrateConfigFromVersionEleven(data []byte) ([]byte, error) {

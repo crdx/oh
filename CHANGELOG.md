@@ -7,6 +7,10 @@
 - Convert `oh -l` into a non-interactive version of the model picker
 - Move bare model list to `oh --ctl models`
 
+### Theme
+
+- Add 4 default themes for different terminal backgrounds
+
 ### Changes
 
 - Complete ignored paths with `@!`

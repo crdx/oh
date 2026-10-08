@@ -18,11 +18,7 @@ import (
 
 type Style func(format any, args ...any) string
 
-const (
-	reset  = "\x1b[0m"
-	orchid = "#e6a8ff"
-	aqua   = "#7ff0dd"
-)
+const reset = "\x1b[0m"
 
 var (
 	Accent Style = accent()
@@ -84,7 +80,7 @@ var (
 	ChosenRow            Style = accent()
 	ChosenRunningSession Style = decorate(col.Italic, ChosenRow)
 
-	Simulation Style = gradient(orchid, aqua)
+	Simulation Style = simulationGradientStyle()
 
 	Heading         Style = warning()
 	MarkdownHeading Style = decorate(col.Bold, Heading)
@@ -126,6 +122,10 @@ func ExecWhenWritable(isWritable bool) Style {
 }
 
 var isColorEnabled = true
+
+func IsColourEnabled() bool {
+	return isColorEnabled
+}
 
 func Init(screen any) func() {
 	previous := isColorEnabled
@@ -239,10 +239,7 @@ func decorate(decoration Style, inner Style) Style {
 	}
 }
 
-func gradient(from string, to string) Style {
-	first, hasFirst := colour(from)
-	last, hasLast := colour(to)
-
+func simulationGradientStyle() Style {
 	return func(format any, args ...any) string {
 		text := fmt.Sprint(format)
 
@@ -250,9 +247,11 @@ func gradient(from string, to string) Style {
 			text = fmt.Sprintf(text, args...)
 		}
 
-		if !isColorEnabled || !hasFirst || !hasLast {
+		if !isColorEnabled {
 			return text
 		}
+
+		gradient := activeTheme.Load().simulation
 
 		var paint strings.Builder
 
@@ -261,7 +260,7 @@ func gradient(from string, to string) Style {
 			paint.WriteString("\x1b[")
 			paint.WriteString(italicCode)
 			paint.WriteString(";")
-			paint.WriteString(sequenceFor(blend(first, last, i, len(runes))))
+			paint.WriteString(sequenceFor(blend(gradient.from, gradient.to, i, len(runes))))
 			paint.WriteString("m")
 			paint.WriteRune(character)
 			paint.WriteString(reset)

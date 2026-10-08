@@ -15,7 +15,6 @@ const (
 	barPadding     = 5
 	tickCells      = 8
 	tickDivisor    = 2
-	trackDivisor   = 2
 	mostPlacements = 64
 )
 
@@ -106,9 +105,13 @@ func gaugeKey(usedPercent int, expectedPercent *int, pace Pace, cells int, drawi
 		pacePercent = *expectedPercent
 	}
 
+	fill, dim := paceColour(pace), style.DimColour()
+	track := style.Recede(dim)
+
 	return fmt.Sprintf(
-		"%d/%d/%d/%d/%dx%d",
+		"%d/%d/%d/%d/%dx%d/%x/%x/%x",
 		usedPercent, pacePercent, pace, cells, drawing.CellWidth, drawing.CellHeight,
+		[]uint8{fill.R, fill.G, fill.B}, []uint8{dim.R, dim.G, dim.B}, []uint8{track.R, track.G, track.B},
 	)
 }
 
@@ -129,7 +132,7 @@ func gaugeImage(usedPercent int, expectedPercent *int, pace Pace, cells int, dra
 	}
 
 	fill := paceColour(pace)
-	track := scale(style.DimColour(), trackDivisor)
+	track := style.Recede(style.DimColour())
 
 	for y := padding; y < pixelHeight-padding; y++ {
 		for x := range pixelWidth {

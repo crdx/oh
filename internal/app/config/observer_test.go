@@ -476,12 +476,12 @@ func TestAnAppliedReloadNamesTheFileThatChangedAndWhatItSupplies(t *testing.T) {
 
 func TestARetintedPaletteIsNamedAsOneSettingRatherThanEveryColour(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := writeConfigFile(path, "[ui.theme]\naccent = \"#c08050\"\ndim = \"#969896\"\n"); err != nil {
+	if err := writeConfigFile(path, "[ui.theme.dark]\naccent = \"#c08050\"\ndim = \"#969896\"\n"); err != nil {
 		t.Fatal(err)
 	}
 	_, observer := observeConfig(t, path)
 
-	if err := writeConfigFile(path, "[ui.theme]\naccent = \"#a0d0f0\"\ndim = \"#404040\"\n"); err != nil {
+	if err := writeConfigFile(path, "[ui.theme.dark]\naccent = \"#a0d0f0\"\ndim = \"#404040\"\n"); err != nil {
 		t.Fatal(err)
 	}
 

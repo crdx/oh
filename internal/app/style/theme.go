@@ -5,26 +5,49 @@ import (
 	"image/color"
 	"reflect"
 	"strings"
+	"sync"
 	"sync/atomic"
 	"unicode"
 )
 
 type Theme struct {
-	Normal         Paint     `toml:"normal"`
-	Dim            Paint     `toml:"dim"`
-	Accent         Paint     `toml:"accent"`
-	StatusSuccess  Paint     `toml:"status_success"`
-	StatusInfo     Paint     `toml:"status_info"`
-	StatusWarning  Paint     `toml:"status_warning"`
-	StatusDanger   Paint     `toml:"status_danger"`
-	SyntaxType     Paint     `toml:"syntax_type"`
-	SyntaxLiteral  Paint     `toml:"syntax_literal"`
-	SyntaxOperator Paint     `toml:"syntax_operator"`
-	SyntaxKeyword  Paint     `toml:"syntax_keyword"`
-	Skill          Paint     `toml:"skill"`
-	User           Paint     `toml:"user"`
-	Harness        Paint     `toml:"harness"`
-	Tool           ToolTheme `toml:"tool"`
+	Appearance Appearance `toml:"appearance"`
+	Dark       Palette    `toml:"dark"`
+	GreyDark   Palette    `toml:"grey-dark"`
+	GreyLight  Palette    `toml:"grey-light"`
+	Light      Palette    `toml:"light"`
+	Tool       ToolTheme  `toml:"tool"`
+}
+
+type Palette struct {
+	Normal         Paint `toml:"normal"`
+	Dim            Paint `toml:"dim"`
+	Accent         Paint `toml:"accent"`
+	StatusSuccess  Paint `toml:"status_success"`
+	StatusInfo     Paint `toml:"status_info"`
+	StatusWarning  Paint `toml:"status_warning"`
+	StatusDanger   Paint `toml:"status_danger"`
+	SyntaxType     Paint `toml:"syntax_type"`
+	SyntaxLiteral  Paint `toml:"syntax_literal"`
+	SyntaxOperator Paint `toml:"syntax_operator"`
+	SyntaxKeyword  Paint `toml:"syntax_keyword"`
+	Skill          Paint `toml:"skill"`
+	User           Paint `toml:"user"`
+	Harness        Paint `toml:"harness"`
+}
+
+func (self Theme) PaletteOn(background Background) Palette {
+	switch self.Appearance.On(background) {
+	case GreyDarkBackground:
+		return self.GreyDark
+	case GreyLightBackground:
+		return self.GreyLight
+	case LightBackground:
+		return self.Light
+	case DarkBackground:
+	}
+
+	return self.Dark
 }
 
 type ToolAppearance struct {
@@ -79,20 +102,71 @@ func (self *ToolPaint) UnmarshalText(text []byte) error {
 }
 
 var defaultTheme = Theme{
-	Normal:         "",
-	Dim:            "#969896",
-	Accent:         "#c08050",
-	StatusSuccess:  "#4c9a2c",
-	StatusInfo:     "#81a2be",
-	StatusWarning:  "#cfad00",
-	StatusDanger:   "#cc6666",
-	SyntaxType:     "#f0c674",
-	SyntaxLiteral:  "#b5bd68",
-	SyntaxOperator: "#8abeb7",
-	SyntaxKeyword:  "#c9a6d4",
-	Skill:          "#c9a6d4",
-	User:           "#343541",
-	Harness:        "#303a43",
+	Appearance: AutomaticAppearance,
+	Dark: Palette{
+		Normal:         "",
+		Dim:            "#969896",
+		Accent:         "#c08050",
+		StatusSuccess:  "#4c9a2c",
+		StatusInfo:     "#81a2be",
+		StatusWarning:  "#cfad00",
+		StatusDanger:   "#cc6666",
+		SyntaxType:     "#f0c674",
+		SyntaxLiteral:  "#b5bd68",
+		SyntaxOperator: "#8abeb7",
+		SyntaxKeyword:  "#c9a6d4",
+		Skill:          "#c9a6d4",
+		User:           "#343541",
+		Harness:        "#303a43",
+	},
+	GreyDark: Palette{
+		Normal:         "",
+		Dim:            "#cfcfcf",
+		Accent:         "#ffc49a",
+		StatusSuccess:  "#b4f09c",
+		StatusInfo:     "#bcdcff",
+		StatusWarning:  "#ffe27a",
+		StatusDanger:   "#ffb8b8",
+		SyntaxType:     "#ffe9a8",
+		SyntaxLiteral:  "#e2f0a0",
+		SyntaxOperator: "#b0f4ea",
+		SyntaxKeyword:  "#f2d0ff",
+		Skill:          "#f2d0ff",
+		User:           "#46464e",
+		Harness:        "#424b52",
+	},
+	GreyLight: Palette{
+		Normal:         "",
+		Dim:            "#383b3e",
+		Accent:         "#6a3210",
+		StatusSuccess:  "#1f4a0f",
+		StatusInfo:     "#1c3d63",
+		StatusWarning:  "#563f00",
+		StatusDanger:   "#761616",
+		SyntaxType:     "#573a00",
+		SyntaxLiteral:  "#3a4700",
+		SyntaxOperator: "#0e4741",
+		SyntaxKeyword:  "#562670",
+		Skill:          "#562670",
+		User:           "#c4c4cc",
+		Harness:        "#bec8d0",
+	},
+	Light: Palette{
+		Normal:         "",
+		Dim:            "#6e7175",
+		Accent:         "#a65d2e",
+		StatusSuccess:  "#3a7d1f",
+		StatusInfo:     "#3d6d9a",
+		StatusWarning:  "#8f6a00",
+		StatusDanger:   "#b83c3c",
+		SyntaxType:     "#8a5f00",
+		SyntaxLiteral:  "#5f7300",
+		SyntaxOperator: "#2c7870",
+		SyntaxKeyword:  "#8a4fa3",
+		Skill:          "#8a4fa3",
+		User:           "#e8e8ef",
+		Harness:        "#e2eaf0",
+	},
 	Tool: ToolTheme{
 		"read":  {Default: ToolAppearance{Name: "read"}},
 		"skill": {Default: ToolAppearance{Name: "load", Paint: "skill", Focus: "skill"}},
@@ -171,6 +245,9 @@ type compiledTheme struct {
 	statusWarningColour color.RGBA
 	statusInfoColour    color.RGBA
 	statusDangerColour  color.RGBA
+
+	simulation simulationGradient
+	recession  color.RGBA
 }
 
 type compiledToolAppearance struct {
@@ -181,45 +258,87 @@ type compiledToolAppearance struct {
 	hasFocus   bool
 }
 
-var activeTheme = newAtomicTheme(defaultTheme)
+type appliedTheme struct {
+	theme         Theme
+	background    Background
+	compiledValue *compiledTheme
+}
 
-func newAtomicTheme(theme Theme) *atomic.Pointer[compiledTheme] {
+var activeTheme = newAtomicTheme(defaultTheme, DarkBackground)
+
+func newAtomicTheme(theme Theme, background Background) *atomic.Pointer[compiledTheme] {
 	active := &atomic.Pointer[compiledTheme]{}
-	active.Store(compileTheme(theme))
+	active.Store(compileTheme(theme, background))
 	return active
 }
 
-func ApplyTheme(theme Theme) func() {
-	previous := activeTheme.Swap(compileTheme(theme))
+var themeInUse = struct {
+	mutex      sync.Mutex
+	theme      Theme
+	background Background
+}{theme: defaultTheme, background: DarkBackground}
 
-	return func() { activeTheme.Store(previous) }
+func ApplyTheme(theme Theme) func() {
+	themeInUse.mutex.Lock()
+	defer themeInUse.mutex.Unlock()
+
+	return swapTheme(theme, themeInUse.background)
 }
 
-func compileTheme(theme Theme) *compiledTheme {
-	dimColour := graphicColour(theme.Dim, defaultTheme.Dim)
-	statusWarningColour := graphicColour(theme.StatusWarning, defaultTheme.StatusWarning)
-	statusInfoColour := graphicColour(theme.StatusInfo, defaultTheme.StatusInfo)
-	statusDangerColour := graphicColour(theme.StatusDanger, defaultTheme.StatusDanger)
+func ReportBackground(background Background) func() {
+	themeInUse.mutex.Lock()
+	defer themeInUse.mutex.Unlock()
+
+	return swapTheme(themeInUse.theme, background)
+}
+
+func swapTheme(theme Theme, background Background) func() {
+	previous := appliedTheme{theme: themeInUse.theme, background: themeInUse.background}
+	previous.compiledValue = activeTheme.Swap(compileTheme(theme, background))
+	themeInUse.theme = cloneTheme(theme)
+	themeInUse.background = background
+
+	return func() {
+		themeInUse.mutex.Lock()
+		defer themeInUse.mutex.Unlock()
+
+		activeTheme.Store(previous.compiledValue)
+		themeInUse.theme = previous.theme
+		themeInUse.background = previous.background
+	}
+}
+
+func compileTheme(theme Theme, background Background) *compiledTheme {
+	chosenBackground := theme.Appearance.On(background)
+	palette := theme.PaletteOn(background)
+	fallback := defaultTheme.PaletteOn(chosenBackground)
+
+	dimColour := graphicColour(palette.Dim, fallback.Dim)
+	statusWarningColour := graphicColour(palette.StatusWarning, fallback.StatusWarning)
+	statusInfoColour := graphicColour(palette.StatusInfo, fallback.StatusInfo)
+	statusDangerColour := graphicColour(palette.StatusDanger, fallback.StatusDanger)
 
 	compiledThemeValue := &compiledTheme{
-		normal:              foregroundSequence(theme.Normal),
-		dim:                 foregroundSequence(theme.Dim),
-		accent:              foregroundSequence(theme.Accent),
-		statusWarning:       foregroundSequence(theme.StatusWarning),
-		statusSuccess:       foregroundSequence(theme.StatusSuccess),
-		statusInfo:          foregroundSequence(theme.StatusInfo),
-		statusDanger:        foregroundSequence(theme.StatusDanger),
-		syntaxType:          foregroundSequence(theme.SyntaxType),
-		syntaxLiteral:       foregroundSequence(theme.SyntaxLiteral),
-		syntaxOperator:      foregroundSequence(theme.SyntaxOperator),
-		syntaxKeyword:       foregroundSequence(theme.SyntaxKeyword),
-		skill:               foregroundSequence(theme.Skill),
-		user:                backgroundSequence(theme.User),
-		harness:             backgroundSequence(theme.Harness),
+		normal:              foregroundSequence(palette.Normal),
+		dim:                 foregroundSequence(palette.Dim),
+		accent:              foregroundSequence(palette.Accent),
+		statusWarning:       foregroundSequence(palette.StatusWarning),
+		statusSuccess:       foregroundSequence(palette.StatusSuccess),
+		statusInfo:          foregroundSequence(palette.StatusInfo),
+		statusDanger:        foregroundSequence(palette.StatusDanger),
+		syntaxType:          foregroundSequence(palette.SyntaxType),
+		syntaxLiteral:       foregroundSequence(palette.SyntaxLiteral),
+		syntaxOperator:      foregroundSequence(palette.SyntaxOperator),
+		syntaxKeyword:       foregroundSequence(palette.SyntaxKeyword),
+		skill:               foregroundSequence(palette.Skill),
+		user:                backgroundSequence(palette.User),
+		harness:             backgroundSequence(palette.Harness),
 		dimColour:           dimColour,
 		statusWarningColour: statusWarningColour,
 		statusInfoColour:    statusInfoColour,
 		statusDangerColour:  statusDangerColour,
+		simulation:          simulationGradients[chosenBackground],
+		recession:           recessions[chosenBackground],
 		tool:                make(map[string]compiledToolAppearance),
 	}
 	for kind, configuredAppearance := range theme.Tool.Resolved() {

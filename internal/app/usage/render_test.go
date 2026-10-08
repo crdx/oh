@@ -13,10 +13,10 @@ import (
 
 func TestGaugeColoursFollowTheTheme(t *testing.T) {
 	theme := style.DefaultTheme()
-	theme.Dim = "#0a0c0e"
-	theme.StatusWarning = "#010203"
-	theme.StatusInfo = "#040506"
-	theme.StatusDanger = "#070809"
+	theme.Dark.Dim = "#0a0c0e"
+	theme.Dark.StatusWarning = "#010203"
+	theme.Dark.StatusInfo = "#040506"
+	theme.Dark.StatusDanger = "#070809"
 	restoreTheme := style.ApplyTheme(theme)
 	defer restoreTheme()
 
@@ -261,6 +261,33 @@ func TestOneImageIsHeldForEachGaugeHoweverOftenItIsDrawn(t *testing.T) {
 
 	if len(identifiers) != 1 {
 		t.Errorf("one gauge drawn three times took %d image identifiers", len(identifiers))
+	}
+}
+
+func TestAGaugeIsDrawnAfreshOnceThePaletteChanges(t *testing.T) {
+	expected := 40
+	gauges := FixedGauges(Graphics{CellWidth: 9, CellHeight: 18})
+
+	for name, change := range map[string]func() func(){
+		"another background": func() func() { return style.ReportBackground(style.LightBackground) },
+		"another theme": func() func() {
+			theme := style.DefaultTheme()
+			theme.Dark.StatusWarning = "#010203"
+			return style.ApplyTheme(theme)
+		},
+	} {
+		before := identifierPattern.FindString(gauges.Draw(62, &expected, PaceAhead, gaugeWidth))
+		restore := change()
+		after := identifierPattern.FindString(gauges.Draw(62, &expected, PaceAhead, gaugeWidth))
+		restore()
+		again := identifierPattern.FindString(gauges.Draw(62, &expected, PaceAhead, gaugeWidth))
+
+		if before == after {
+			t.Errorf("after %s the gauge was served from the old palette as %s", name, before)
+		}
+		if again != before {
+			t.Errorf("back on the first palette after %s the gauge took %s, want the held %s", name, again, before)
+		}
 	}
 }
 

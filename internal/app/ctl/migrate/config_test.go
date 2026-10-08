@@ -12,6 +12,7 @@ import (
 	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/ctl/migrate"
 	"crdx.org/oh/internal/app/output"
+	"crdx.org/oh/internal/app/style"
 )
 
 func currentVersionLine() string {
@@ -866,5 +867,143 @@ func TestAMigratedConfigDrawsTheForwardsAndGrantsSegments(t *testing.T) {
 	}
 	if left := fmt.Sprint(loaded.Bar.Top.Left); !strings.Contains(left, "forwards") || !strings.Contains(left, "grants") {
 		t.Errorf("got the top left of the bar %+v", loaded.Bar.Top.Left)
+	}
+}
+
+func migratedConfig(t *testing.T, original string) string {
+	t.Helper()
+
+	path := configFile(t, original)
+	if _, _, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path}); err != nil {
+		t.Fatal(err)
+	}
+
+	body, err := os.ReadFile(path) //nolint:gosec // the test's own path
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return string(body)
+}
+
+func TestTheTwelfthConfigMigrationRenamesATableOfColoursToTheDarkPalette(t *testing.T) {
+	written := migratedConfig(t, `version = 12
+
+# my colours
+[ui.theme] # warm
+dim = "#7d756c"
+accent = "#d8a566 bold"
+
+[ui.theme.tool.job]
+default = { paint = "accent" }
+`)
+
+	want := currentVersionLine() + `
+
+# my colours
+[ui.theme.dark] # warm
+dim = "#7d756c"
+accent = "#d8a566 bold"
+
+[ui.theme.tool.job]
+default = { paint = "accent" }
+`
+	if written != want {
+		t.Errorf("got:\n%s\nwant:\n%s", written, want)
+	}
+}
+
+func TestTheTwelfthConfigMigrationMovesColoursOutOfATableTheToolsShare(t *testing.T) {
+	written := migratedConfig(t, `version = 12
+
+[ui.theme]
+  accent = "#010203"
+tool.job.default = { paint = "accent" }
+user = "#040506"
+`)
+
+	want := currentVersionLine() + `
+
+[ui.theme]
+  dark.accent = "#010203"
+tool.job.default = { paint = "accent" }
+dark.user = "#040506"
+`
+	if written != want {
+		t.Errorf("got:\n%s\nwant:\n%s", written, want)
+	}
+}
+
+func TestTheTwelfthConfigMigrationMovesDottedColours(t *testing.T) {
+	written := migratedConfig(t, `version = 12
+ui.theme.accent = "#010203"
+
+[ui]
+theme.dim = "#040506"
+currency = "gbp"
+`)
+
+	want := currentVersionLine() + `
+ui.theme.dark.accent = "#010203"
+
+[ui]
+theme.dark.dim = "#040506"
+currency = "gbp"
+`
+	if written != want {
+		t.Errorf("got:\n%s\nwant:\n%s", written, want)
+	}
+}
+
+func TestTheTwelfthConfigMigrationLeavesCommentsAndOtherTablesAlone(t *testing.T) {
+	original := `version = 12
+
+[ui]
+currency = "gbp"
+
+# [ui.theme]
+# dim = "#7d756c"
+
+[other]
+accent = "kept"
+`
+	written := migratedConfig(t, original)
+
+	if want := strings.Replace(original, "version = 12", currentVersionLine(), 1); written != want {
+		t.Errorf("got:\n%s\nwant:\n%s", written, want)
+	}
+}
+
+func TestTheTwelfthConfigMigrationRefusesColoursItCannotMove(t *testing.T) {
+	original := "version = 12\n\n[ui]\ntheme = { accent = \"#010203\" }\n"
+	path := configFile(t, original)
+
+	_, _, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path})
+	if err == nil || !strings.Contains(err.Error(), "[ui.theme.dark] by hand") {
+		t.Fatalf("got %v, want a refusal naming what to do", err)
+	}
+	if body, _ := os.ReadFile(path); string(body) != original { //nolint:gosec // the test's own path
+		t.Errorf("a refused migration rewrote the config:\n%s", body)
+	}
+}
+
+func TestAMigratedThemeIsDrawnInTheDarkPaletteAlone(t *testing.T) {
+	path := configFile(t, "version = 12\n\n[ui.theme]\naccent = \"#010203\"\n")
+	if _, _, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path}); err != nil {
+		t.Fatal(err)
+	}
+
+	loaded, err := config.Load(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := loaded.Ui.Theme.Dark.Accent; got != "#010203" {
+		t.Errorf("got dark accent %q", got)
+	}
+	if got, want := loaded.Ui.Theme.Light.Accent, style.DefaultTheme().Light.Accent; got != want {
+		t.Errorf("got light accent %q, want the default %q", got, want)
+	}
+	if unknown := loaded.UnknownSettings(); len(unknown) > 0 {
+		t.Errorf("the migrated config has unknown settings: %v", unknown)
 	}
 }

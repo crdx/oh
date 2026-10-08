@@ -203,7 +203,7 @@ func TestGoldenEverySizeASessionCanOccupyIsDrawnWithinItsColumn(t *testing.T) {
 
 func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
 	configuredTheme := style.DefaultTheme()
-	configuredTheme.Accent = "#010203"
+	configuredTheme.Dark.Accent = "#010203"
 
 	frames := []struct {
 		name     string

@@ -41,7 +41,7 @@ Where `~/.config/org.crdx/oh/` is a symlink into a dotfiles repository, edit the
 - `[model]` — `round_robin` as an array of `provider/model@effort` entries (written `provider/model` for a model that takes no effort) or a path, relative to the supplying config, to a file with one entry per line; blank lines are skipped, lines whose first non-whitespace character is `#` are comments, and duplicates add weight; `effort` and `fast` defaults
 - `[provider.ollama]` — `host` for a local or LAN endpoint
 - `[snippets]` — `//name` expansions, inline or `{ file = "path/name.md" }`, whose frontmatter fills any `description` or `arguments` the entry leaves out; `{{ .Arg }}` takes the rest of the line, and a field of any other name, as `{{ .Question }}`, takes it too while naming it `<question>` in completion and help rather than `<args>`; `{{ .Args }}` is the same text split into words
-- `[ui]` — `streaming`, `grouping`, `reasoning`, `currency`, `[ui.theme]`
+- `[ui]` — `streaming`, `grouping`, `reasoning`, `currency`, `[ui.theme]`, `[ui.theme.<palette>]`
 - `[permissions]` — `ask` or `allow` per gated action, deciding what a granted capability buys
 - `[tools]` — custom tools, each `[tools.<name>]` naming a `command` to run and the parameters the model supplies
 - `[caps]`, `[sandbox]`, `[skills]` — defaults each workspace then overrides
@@ -71,34 +71,61 @@ Text a workspace file supplies is refused wherever the terminal would obey it ra
 
 ## Theme
 
-Every `[ui.theme]` value is a space-separated list of one colour and any number of decorations. The colour is `#rrggbb`, or `"default"` for the terminal's own. Anything else fails at startup, as does a second colour.
+oh carries four palettes, each written under a table of its own: `[ui.theme.dark]`, `[ui.theme.grey-dark]`, `[ui.theme.grey-light]`, and `[ui.theme.light]`. It asks the terminal for its background colour (OSC 11) as it starts and draws in the palette made for it, by how light the background is: below about `#3c3c3c` is dark, below about `#7c7c7c` grey-dark, below about `#cccccc` grey-light, and anything lighter light. A terminal that does not answer is taken to be dark. The background is asked about once per launch, so a terminal that changes its colours mid-session keeps the palette it started with until oh is restarted.
+
+`appearance` under `[ui.theme]` is `auto` by default, and `dark`, `grey-dark`, `grey-light`, or `light` chooses a palette whatever the terminal says. A colour written in one palette's table changes that palette alone; nothing is shared between them.
+
+Every palette value is a space-separated list of one colour and any number of decorations. The colour is `#rrggbb`, or `"default"` for the terminal's own. Anything else fails at startup, as does a second colour.
 
 The decorations are `bold`, `faint`, `italic`, `underline`, `blink`, `reverse`, `hidden`, `strikethrough`, and `overline`. An underline also takes a shape as `underline:single`, `underline:double`, `underline:curly`, `underline:dotted`, or `underline:dashed`, and a colour of its own as `underline:#rrggbb`. Order is free; the terminal decides what it can draw.
 
-| Key               | Paints                                           | Default   |
-|-------------------|--------------------------------------------------|-----------|
-| `normal`          | answers, tool calls, typed input, plain syntax   | `default` |
-| `dim`             | reasoning, tool results, rules, quotes, comments | `#969896` |
-| `accent`          | prompt, spinner, subject, inline code, bullets   | `#c08050` |
-| `user`            | the background behind a user message             | `#343541` |
-| `harness`         | the background behind a harness message          | `#303a43` |
-| `status_success`  | reads, inserted lines, a cheap turn              | `#4c9a2c` |
-| `status_info`     | shell, network, git, links, diff hunks           | `#81a2be` |
-| `status_warning`  | writes, headings, changes, a stopped turn        | `#cfad00` |
-| `status_danger`   | failures, hazards, deleted lines                 | `#cc6666` |
-| `syntax_type`     | types in highlighted code                        | `#f0c674` |
-| `syntax_literal`  | literals in highlighted code                     | `#b5bd68` |
-| `syntax_operator` | operators in highlighted code                    | `#8abeb7` |
-| `syntax_keyword`  | keywords in highlighted code                     | `#c9a6d4` |
-| `skill`           | skill names in a tool call                       | `#c9a6d4` |
+| Key               | Paints                                           |
+|-------------------|--------------------------------------------------|
+| `normal`          | answers, tool calls, typed input, plain syntax   |
+| `dim`             | reasoning, tool results, rules, quotes, comments |
+| `accent`          | prompt, spinner, subject, inline code, bullets   |
+| `user`            | the background behind a user message             |
+| `harness`         | the background behind a harness message          |
+| `status_success`  | reads, inserted lines, a cheap turn              |
+| `status_info`     | shell, network, git, links, diff hunks           |
+| `status_warning`  | writes, headings, changes, a stopped turn        |
+| `status_danger`   | failures, hazards, deleted lines                 |
+| `syntax_type`     | types in highlighted code                        |
+| `syntax_literal`  | literals in highlighted code                     |
+| `syntax_operator` | operators in highlighted code                    |
+| `syntax_keyword`  | keywords in highlighted code                     |
+| `skill`           | skill names in a tool call                       |
 
-`user` and `harness` paint backgrounds; keep both near the darkness of their defaults. Every other key is a foreground. A decoration reaches every role the key paints, so `dim = "#969896 italic"` italicises tool results as well as reasoning.
+| Key               | `dark`    | `grey-dark` | `grey-light` | `light`   |
+|-------------------|-----------|-------------|--------------|-----------|
+| `normal`          | `default` | `default`   | `default`    | `default` |
+| `dim`             | `#969896` | `#cfcfcf`   | `#383b3e`    | `#6e7175` |
+| `accent`          | `#c08050` | `#ffc49a`   | `#6a3210`    | `#a65d2e` |
+| `user`            | `#343541` | `#46464e`   | `#c4c4cc`    | `#e8e8ef` |
+| `harness`         | `#303a43` | `#424b52`   | `#bec8d0`    | `#e2eaf0` |
+| `status_success`  | `#4c9a2c` | `#b4f09c`   | `#1f4a0f`    | `#3a7d1f` |
+| `status_info`     | `#81a2be` | `#bcdcff`   | `#1c3d63`    | `#3d6d9a` |
+| `status_warning`  | `#cfad00` | `#ffe27a`   | `#563f00`    | `#8f6a00` |
+| `status_danger`   | `#cc6666` | `#ffb8b8`   | `#761616`    | `#b83c3c` |
+| `syntax_type`     | `#f0c674` | `#ffe9a8`   | `#573a00`    | `#8a5f00` |
+| `syntax_literal`  | `#b5bd68` | `#e2f0a0`   | `#3a4700`    | `#5f7300` |
+| `syntax_operator` | `#8abeb7` | `#b0f4ea`   | `#0e4741`    | `#2c7870` |
+| `syntax_keyword`  | `#c9a6d4` | `#f2d0ff`   | `#562670`    | `#8a4fa3` |
+| `skill`           | `#c9a6d4` | `#f2d0ff`   | `#562670`    | `#8a4fa3` |
+
+`user` and `harness` paint backgrounds; keep both near the darkness or lightness of their palette's defaults, since the text on them is the terminal's own. Every other key is a foreground. A decoration reaches every role the key paints, so `dim = "#969896 italic"` italicises tool results as well as reasoning.
 
 ```toml
 [ui.theme]
+appearance = "auto"
+
+[ui.theme.dark]
 status_danger = "#cc6666 bold"
 status_warning = "#cfad00 underline:curly underline:#cc6666"
 dim = "default faint"
+
+[ui.theme.light]
+user = "#f0ece4"
 ```
 
 ### Tool calls
@@ -160,7 +187,7 @@ A tool records its semantic kind rather than its themed name, joining the tool a
 
 A live theme reload clears and replays the complete conversation, so vocabulary, command colours, and focused argument colours change throughout scrollback at once. Resume, preview, and print also render with the active tool theme.
 
-Some styling is fixed in the binary — the italics on reasoning and preview hints, the bold on a heading, the simulation gradient — and no theme key reaches it. `internal/app/style/theme.go` and `style.go` are canonical.
+Some styling is fixed in the binary, and no theme key reaches it: the italics on reasoning and preview hints, the bold on a heading, and the simulation gradient, which has a form for each palette. `internal/app/style/theme.go` and `style.go` are canonical.
 
 ## Bar
 

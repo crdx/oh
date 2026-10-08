@@ -1,3 +1,299 @@
+=== a dark terminal given a light colour ===
+\e[?2026h\e[?25l\e[H\e[2J\e[3J\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m why does the spinner stutter?                                                                      \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mLooking for where the spinner is drawn.\e[0m\e[0m\r
+\e[38;2;129;162;190m$\e[0m \e[38;2;192;128;80mgit status --short\e[0m\r
+\e[38;2;129;162;190m$\e[0m \e[38;2;192;128;80mgo build ./...\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mexit(1)\e[0m\r
+\e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m\r
+\e[38;2;201;166;212mload\e[0m \e[38;2;150;152;150mskills/\e[0m\e[38;2;201;166;212mtidy\e[0m\e[38;2;150;152;150m/SKILL.md\e[0m\r
+\r
+\e[1m\e[38;2;207;173;0mWhy it stutters\e[0m\e[0m\r
+\r
+The spinner is redrawn on every beat, so a tool \e[1mblocks\e[0m it:\r
+\r
+\e[38;2;192;128;80m1. \e[0mPaint from \e[38;2;192;128;80mScreen.paint\e[0m only\r
+\e[38;2;192;128;80m2. \e[0mSkip rows that did not change\r
+\r
+\e[38;2;150;152;150m│ \e[0m\e[38;2;150;152;150mSealed rows are never touched again.\e[0m\r
+\r
+\e[38;2;201;166;212mfunc\e[0m (self \e[38;2;138;190;183m*\e[0mScreen) \e[38;2;129;162;190mpaint\e[0m(rows []\e[38;2;240;198;116mstring\e[0m) \e[38;2;240;198;116merror\e[0m {\r
+    \e[38;2;150;152;150m// only what changed\e[0m\r
+    \e[38;2;201;166;212mreturn\e[0m self.\e[38;2;129;162;190mwrite\e[0m(\e[38;2;181;189;104m"row"\e[0m, \e[38;2;192;128;80m42\e[0m)\r
+}\r
+\r
+\e[38;2;129;162;190m@@ -1 +1 @@\e[0m\r
+\e[38;2;204;102;102m- self.redrawAll()\e[0m\r
+\e[38;2;76;154;44m+ self.paintChanged()\e[0m\r
+\r
+\e[38;2;150;152;150m┌──────┬──────────┐\e[0m\r
+\e[38;2;150;152;150m│\e[0m \e[1mMode\e[0m \e[38;2;150;152;150m│\e[0m \e[1mRedraws\e[0m  \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m├──────┼──────────┤\e[0m\r
+\e[38;2;150;152;150m│\e[0m line \e[38;2;150;152;150m│\e[0m per line \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m└──────┴──────────┘\e[0m\r
+\r
+See \e]8;;https://example.com/paint\e\\\e[38;2;129;162;190mthe notes\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.com/paint)\e[0m.\r
+\e[?25h\e[?2026l
+=== a dark terminal told to be light ===
+\e[?2026h\e[?25l\e[H\e[2J\e[3J\e]133;A\e\\\e[48;2;232;232;239m                                                                                                    \e[0m\r
+\e[48;2;232;232;239m why does the spinner stutter?                                                                      \e[0m\r
+\e[48;2;232;232;239m                                                                                                    \e[0m\r
+\r
+\e[3m\e[38;2;110;113;117mLooking for where the spinner is drawn.\e[0m\e[0m\r
+\e[38;2;61;109;154m$\e[0m \e[38;2;166;93;46mgit status --short\e[0m\r
+\e[38;2;61;109;154m$\e[0m \e[38;2;166;93;46mgo build ./...\e[0m \e[38;2;184;60;60m✗\e[0m \e[38;2;184;60;60mexit(1)\e[0m\r
+\e[38;2;143;106;0mstart\e[0m \e[38;2;166;93;46mdocs\e[0m\r
+\e[38;2;138;79;163mload\e[0m \e[38;2;110;113;117mskills/\e[0m\e[38;2;138;79;163mtidy\e[0m\e[38;2;110;113;117m/SKILL.md\e[0m\r
+\r
+\e[1m\e[38;2;143;106;0mWhy it stutters\e[0m\e[0m\r
+\r
+The spinner is redrawn on every beat, so a tool \e[1mblocks\e[0m it:\r
+\r
+\e[38;2;166;93;46m1. \e[0mPaint from \e[38;2;166;93;46mScreen.paint\e[0m only\r
+\e[38;2;166;93;46m2. \e[0mSkip rows that did not change\r
+\r
+\e[38;2;110;113;117m│ \e[0m\e[38;2;110;113;117mSealed rows are never touched again.\e[0m\r
+\r
+\e[38;2;138;79;163mfunc\e[0m (self \e[38;2;44;120;112m*\e[0mScreen) \e[38;2;61;109;154mpaint\e[0m(rows []\e[38;2;138;95;0mstring\e[0m) \e[38;2;138;95;0merror\e[0m {\r
+    \e[38;2;110;113;117m// only what changed\e[0m\r
+    \e[38;2;138;79;163mreturn\e[0m self.\e[38;2;61;109;154mwrite\e[0m(\e[38;2;95;115;0m"row"\e[0m, \e[38;2;166;93;46m42\e[0m)\r
+}\r
+\r
+\e[38;2;61;109;154m@@ -1 +1 @@\e[0m\r
+\e[38;2;184;60;60m- self.redrawAll()\e[0m\r
+\e[38;2;58;125;31m+ self.paintChanged()\e[0m\r
+\r
+\e[38;2;110;113;117m┌──────┬──────────┐\e[0m\r
+\e[38;2;110;113;117m│\e[0m \e[1mMode\e[0m \e[38;2;110;113;117m│\e[0m \e[1mRedraws\e[0m  \e[38;2;110;113;117m│\e[0m\r
+\e[38;2;110;113;117m├──────┼──────────┤\e[0m\r
+\e[38;2;110;113;117m│\e[0m line \e[38;2;110;113;117m│\e[0m per line \e[38;2;110;113;117m│\e[0m\r
+\e[38;2;110;113;117m└──────┴──────────┘\e[0m\r
+\r
+See \e]8;;https://example.com/paint\e\\\e[38;2;61;109;154mthe notes\e[0m\e]8;;\e\\\e[38;2;110;113;117m (https://example.com/paint)\e[0m.\r
+\e[?25h\e[?2026l
+=== a forced light palette set back to automatic on a dark terminal ===
+\e[?2026h\e[?25l\e[H\e[2J\e[3J\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m why does the spinner stutter?                                                                      \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mLooking for where the spinner is drawn.\e[0m\e[0m\r
+\e[38;2;129;162;190m$\e[0m \e[38;2;192;128;80mgit status --short\e[0m\r
+\e[38;2;129;162;190m$\e[0m \e[38;2;192;128;80mgo build ./...\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mexit(1)\e[0m\r
+\e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m\r
+\e[38;2;201;166;212mload\e[0m \e[38;2;150;152;150mskills/\e[0m\e[38;2;201;166;212mtidy\e[0m\e[38;2;150;152;150m/SKILL.md\e[0m\r
+\r
+\e[1m\e[38;2;207;173;0mWhy it stutters\e[0m\e[0m\r
+\r
+The spinner is redrawn on every beat, so a tool \e[1mblocks\e[0m it:\r
+\r
+\e[38;2;192;128;80m1. \e[0mPaint from \e[38;2;192;128;80mScreen.paint\e[0m only\r
+\e[38;2;192;128;80m2. \e[0mSkip rows that did not change\r
+\r
+\e[38;2;150;152;150m│ \e[0m\e[38;2;150;152;150mSealed rows are never touched again.\e[0m\r
+\r
+\e[38;2;201;166;212mfunc\e[0m (self \e[38;2;138;190;183m*\e[0mScreen) \e[38;2;129;162;190mpaint\e[0m(rows []\e[38;2;240;198;116mstring\e[0m) \e[38;2;240;198;116merror\e[0m {\r
+    \e[38;2;150;152;150m// only what changed\e[0m\r
+    \e[38;2;201;166;212mreturn\e[0m self.\e[38;2;129;162;190mwrite\e[0m(\e[38;2;181;189;104m"row"\e[0m, \e[38;2;192;128;80m42\e[0m)\r
+}\r
+\r
+\e[38;2;129;162;190m@@ -1 +1 @@\e[0m\r
+\e[38;2;204;102;102m- self.redrawAll()\e[0m\r
+\e[38;2;76;154;44m+ self.paintChanged()\e[0m\r
+\r
+\e[38;2;150;152;150m┌──────┬──────────┐\e[0m\r
+\e[38;2;150;152;150m│\e[0m \e[1mMode\e[0m \e[38;2;150;152;150m│\e[0m \e[1mRedraws\e[0m  \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m├──────┼──────────┤\e[0m\r
+\e[38;2;150;152;150m│\e[0m line \e[38;2;150;152;150m│\e[0m per line \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m└──────┴──────────┘\e[0m\r
+\r
+See \e]8;;https://example.com/paint\e\\\e[38;2;129;162;190mthe notes\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.com/paint)\e[0m.\r
+\e[?25h\e[?2026l
+=== a grey-dark terminal ===
+\e[?2026h\e[?25l\e[H\e[2J\e[3J\e]133;A\e\\\e[48;2;70;70;78m                                                                                                    \e[0m\r
+\e[48;2;70;70;78m why does the spinner stutter?                                                                      \e[0m\r
+\e[48;2;70;70;78m                                                                                                    \e[0m\r
+\r
+\e[3m\e[38;2;207;207;207mLooking for where the spinner is drawn.\e[0m\e[0m\r
+\e[38;2;188;220;255m$\e[0m \e[38;2;255;196;154mgit status --short\e[0m\r
+\e[38;2;188;220;255m$\e[0m \e[38;2;255;196;154mgo build ./...\e[0m \e[38;2;255;184;184m✗\e[0m \e[38;2;255;184;184mexit(1)\e[0m\r
+\e[38;2;255;226;122mstart\e[0m \e[38;2;255;196;154mdocs\e[0m\r
+\e[38;2;242;208;255mload\e[0m \e[38;2;207;207;207mskills/\e[0m\e[38;2;242;208;255mtidy\e[0m\e[38;2;207;207;207m/SKILL.md\e[0m\r
+\r
+\e[1m\e[38;2;255;226;122mWhy it stutters\e[0m\e[0m\r
+\r
+The spinner is redrawn on every beat, so a tool \e[1mblocks\e[0m it:\r
+\r
+\e[38;2;255;196;154m1. \e[0mPaint from \e[38;2;255;196;154mScreen.paint\e[0m only\r
+\e[38;2;255;196;154m2. \e[0mSkip rows that did not change\r
+\r
+\e[38;2;207;207;207m│ \e[0m\e[38;2;207;207;207mSealed rows are never touched again.\e[0m\r
+\r
+\e[38;2;242;208;255mfunc\e[0m (self \e[38;2;176;244;234m*\e[0mScreen) \e[38;2;188;220;255mpaint\e[0m(rows []\e[38;2;255;233;168mstring\e[0m) \e[38;2;255;233;168merror\e[0m {\r
+    \e[38;2;207;207;207m// only what changed\e[0m\r
+    \e[38;2;242;208;255mreturn\e[0m self.\e[38;2;188;220;255mwrite\e[0m(\e[38;2;226;240;160m"row"\e[0m, \e[38;2;255;196;154m42\e[0m)\r
+}\r
+\r
+\e[38;2;188;220;255m@@ -1 +1 @@\e[0m\r
+\e[38;2;255;184;184m- self.redrawAll()\e[0m\r
+\e[38;2;180;240;156m+ self.paintChanged()\e[0m\r
+\r
+\e[38;2;207;207;207m┌──────┬──────────┐\e[0m\r
+\e[38;2;207;207;207m│\e[0m \e[1mMode\e[0m \e[38;2;207;207;207m│\e[0m \e[1mRedraws\e[0m  \e[38;2;207;207;207m│\e[0m\r
+\e[38;2;207;207;207m├──────┼──────────┤\e[0m\r
+\e[38;2;207;207;207m│\e[0m line \e[38;2;207;207;207m│\e[0m per line \e[38;2;207;207;207m│\e[0m\r
+\e[38;2;207;207;207m└──────┴──────────┘\e[0m\r
+\r
+See \e]8;;https://example.com/paint\e\\\e[38;2;188;220;255mthe notes\e[0m\e]8;;\e\\\e[38;2;207;207;207m (https://example.com/paint)\e[0m.\r
+\e[?25h\e[?2026l
+=== a grey-light terminal ===
+\e[?2026h\e[?25l\e[H\e[2J\e[3J\e]133;A\e\\\e[48;2;196;196;204m                                                                                                    \e[0m\r
+\e[48;2;196;196;204m why does the spinner stutter?                                                                      \e[0m\r
+\e[48;2;196;196;204m                                                                                                    \e[0m\r
+\r
+\e[3m\e[38;2;56;59;62mLooking for where the spinner is drawn.\e[0m\e[0m\r
+\e[38;2;28;61;99m$\e[0m \e[38;2;106;50;16mgit status --short\e[0m\r
+\e[38;2;28;61;99m$\e[0m \e[38;2;106;50;16mgo build ./...\e[0m \e[38;2;118;22;22m✗\e[0m \e[38;2;118;22;22mexit(1)\e[0m\r
+\e[38;2;86;63;0mstart\e[0m \e[38;2;106;50;16mdocs\e[0m\r
+\e[38;2;86;38;112mload\e[0m \e[38;2;56;59;62mskills/\e[0m\e[38;2;86;38;112mtidy\e[0m\e[38;2;56;59;62m/SKILL.md\e[0m\r
+\r
+\e[1m\e[38;2;86;63;0mWhy it stutters\e[0m\e[0m\r
+\r
+The spinner is redrawn on every beat, so a tool \e[1mblocks\e[0m it:\r
+\r
+\e[38;2;106;50;16m1. \e[0mPaint from \e[38;2;106;50;16mScreen.paint\e[0m only\r
+\e[38;2;106;50;16m2. \e[0mSkip rows that did not change\r
+\r
+\e[38;2;56;59;62m│ \e[0m\e[38;2;56;59;62mSealed rows are never touched again.\e[0m\r
+\r
+\e[38;2;86;38;112mfunc\e[0m (self \e[38;2;14;71;65m*\e[0mScreen) \e[38;2;28;61;99mpaint\e[0m(rows []\e[38;2;87;58;0mstring\e[0m) \e[38;2;87;58;0merror\e[0m {\r
+    \e[38;2;56;59;62m// only what changed\e[0m\r
+    \e[38;2;86;38;112mreturn\e[0m self.\e[38;2;28;61;99mwrite\e[0m(\e[38;2;58;71;0m"row"\e[0m, \e[38;2;106;50;16m42\e[0m)\r
+}\r
+\r
+\e[38;2;28;61;99m@@ -1 +1 @@\e[0m\r
+\e[38;2;118;22;22m- self.redrawAll()\e[0m\r
+\e[38;2;31;74;15m+ self.paintChanged()\e[0m\r
+\r
+\e[38;2;56;59;62m┌──────┬──────────┐\e[0m\r
+\e[38;2;56;59;62m│\e[0m \e[1mMode\e[0m \e[38;2;56;59;62m│\e[0m \e[1mRedraws\e[0m  \e[38;2;56;59;62m│\e[0m\r
+\e[38;2;56;59;62m├──────┼──────────┤\e[0m\r
+\e[38;2;56;59;62m│\e[0m line \e[38;2;56;59;62m│\e[0m per line \e[38;2;56;59;62m│\e[0m\r
+\e[38;2;56;59;62m└──────┴──────────┘\e[0m\r
+\r
+See \e]8;;https://example.com/paint\e\\\e[38;2;28;61;99mthe notes\e[0m\e]8;;\e\\\e[38;2;56;59;62m (https://example.com/paint)\e[0m.\r
+\e[?25h\e[?2026l
+=== a grey-light terminal given a grey-light colour ===
+\e[?2026h\e[?25l\e[H\e[2J\e[3J\e]133;A\e\\\e[48;2;1;2;3m                                                                                                    \e[0m\r
+\e[48;2;1;2;3m why does the spinner stutter?                                                                      \e[0m\r
+\e[48;2;1;2;3m                                                                                                    \e[0m\r
+\r
+\e[3m\e[38;2;56;59;62mLooking for where the spinner is drawn.\e[0m\e[0m\r
+\e[38;2;28;61;99m$\e[0m \e[38;2;4;5;6mgit status --short\e[0m\r
+\e[38;2;28;61;99m$\e[0m \e[38;2;4;5;6mgo build ./...\e[0m \e[38;2;118;22;22m✗\e[0m \e[38;2;118;22;22mexit(1)\e[0m\r
+\e[38;2;86;63;0mstart\e[0m \e[38;2;4;5;6mdocs\e[0m\r
+\e[38;2;86;38;112mload\e[0m \e[38;2;56;59;62mskills/\e[0m\e[38;2;86;38;112mtidy\e[0m\e[38;2;56;59;62m/SKILL.md\e[0m\r
+\r
+\e[1m\e[38;2;86;63;0mWhy it stutters\e[0m\e[0m\r
+\r
+The spinner is redrawn on every beat, so a tool \e[1mblocks\e[0m it:\r
+\r
+\e[38;2;4;5;6m1. \e[0mPaint from \e[38;2;4;5;6mScreen.paint\e[0m only\r
+\e[38;2;4;5;6m2. \e[0mSkip rows that did not change\r
+\r
+\e[38;2;56;59;62m│ \e[0m\e[38;2;56;59;62mSealed rows are never touched again.\e[0m\r
+\r
+\e[38;2;86;38;112mfunc\e[0m (self \e[38;2;14;71;65m*\e[0mScreen) \e[38;2;28;61;99mpaint\e[0m(rows []\e[38;2;87;58;0mstring\e[0m) \e[38;2;87;58;0merror\e[0m {\r
+    \e[38;2;56;59;62m// only what changed\e[0m\r
+    \e[38;2;86;38;112mreturn\e[0m self.\e[38;2;28;61;99mwrite\e[0m(\e[38;2;58;71;0m"row"\e[0m, \e[38;2;4;5;6m42\e[0m)\r
+}\r
+\r
+\e[38;2;28;61;99m@@ -1 +1 @@\e[0m\r
+\e[38;2;118;22;22m- self.redrawAll()\e[0m\r
+\e[38;2;31;74;15m+ self.paintChanged()\e[0m\r
+\r
+\e[38;2;56;59;62m┌──────┬──────────┐\e[0m\r
+\e[38;2;56;59;62m│\e[0m \e[1mMode\e[0m \e[38;2;56;59;62m│\e[0m \e[1mRedraws\e[0m  \e[38;2;56;59;62m│\e[0m\r
+\e[38;2;56;59;62m├──────┼──────────┤\e[0m\r
+\e[38;2;56;59;62m│\e[0m line \e[38;2;56;59;62m│\e[0m per line \e[38;2;56;59;62m│\e[0m\r
+\e[38;2;56;59;62m└──────┴──────────┘\e[0m\r
+\r
+See \e]8;;https://example.com/paint\e\\\e[38;2;28;61;99mthe notes\e[0m\e]8;;\e\\\e[38;2;56;59;62m (https://example.com/paint)\e[0m.\r
+\e[?25h\e[?2026l
+=== a light terminal given a light colour ===
+\e[?2026h\e[?25l\e[H\e[2J\e[3J\e]133;A\e\\\e[48;2;1;2;3m                                                                                                    \e[0m\r
+\e[48;2;1;2;3m why does the spinner stutter?                                                                      \e[0m\r
+\e[48;2;1;2;3m                                                                                                    \e[0m\r
+\r
+\e[3m\e[38;2;110;113;117mLooking for where the spinner is drawn.\e[0m\e[0m\r
+\e[38;2;61;109;154m$\e[0m \e[38;2;4;5;6mgit status --short\e[0m\r
+\e[38;2;61;109;154m$\e[0m \e[38;2;4;5;6mgo build ./...\e[0m \e[38;2;184;60;60m✗\e[0m \e[38;2;184;60;60mexit(1)\e[0m\r
+\e[38;2;143;106;0mstart\e[0m \e[38;2;4;5;6mdocs\e[0m\r
+\e[38;2;138;79;163mload\e[0m \e[38;2;110;113;117mskills/\e[0m\e[38;2;138;79;163mtidy\e[0m\e[38;2;110;113;117m/SKILL.md\e[0m\r
+\r
+\e[1m\e[38;2;143;106;0mWhy it stutters\e[0m\e[0m\r
+\r
+The spinner is redrawn on every beat, so a tool \e[1mblocks\e[0m it:\r
+\r
+\e[38;2;4;5;6m1. \e[0mPaint from \e[38;2;4;5;6mScreen.paint\e[0m only\r
+\e[38;2;4;5;6m2. \e[0mSkip rows that did not change\r
+\r
+\e[38;2;110;113;117m│ \e[0m\e[38;2;110;113;117mSealed rows are never touched again.\e[0m\r
+\r
+\e[38;2;138;79;163mfunc\e[0m (self \e[38;2;44;120;112m*\e[0mScreen) \e[38;2;61;109;154mpaint\e[0m(rows []\e[38;2;138;95;0mstring\e[0m) \e[38;2;138;95;0merror\e[0m {\r
+    \e[38;2;110;113;117m// only what changed\e[0m\r
+    \e[38;2;138;79;163mreturn\e[0m self.\e[38;2;61;109;154mwrite\e[0m(\e[38;2;95;115;0m"row"\e[0m, \e[38;2;4;5;6m42\e[0m)\r
+}\r
+\r
+\e[38;2;61;109;154m@@ -1 +1 @@\e[0m\r
+\e[38;2;184;60;60m- self.redrawAll()\e[0m\r
+\e[38;2;58;125;31m+ self.paintChanged()\e[0m\r
+\r
+\e[38;2;110;113;117m┌──────┬──────────┐\e[0m\r
+\e[38;2;110;113;117m│\e[0m \e[1mMode\e[0m \e[38;2;110;113;117m│\e[0m \e[1mRedraws\e[0m  \e[38;2;110;113;117m│\e[0m\r
+\e[38;2;110;113;117m├──────┼──────────┤\e[0m\r
+\e[38;2;110;113;117m│\e[0m line \e[38;2;110;113;117m│\e[0m per line \e[38;2;110;113;117m│\e[0m\r
+\e[38;2;110;113;117m└──────┴──────────┘\e[0m\r
+\r
+See \e]8;;https://example.com/paint\e\\\e[38;2;61;109;154mthe notes\e[0m\e]8;;\e\\\e[38;2;110;113;117m (https://example.com/paint)\e[0m.\r
+\e[?25h\e[?2026l
+=== a light terminal told to be dark ===
+\e[?2026h\e[?25l\e[H\e[2J\e[3J\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m why does the spinner stutter?                                                                      \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mLooking for where the spinner is drawn.\e[0m\e[0m\r
+\e[38;2;129;162;190m$\e[0m \e[38;2;192;128;80mgit status --short\e[0m\r
+\e[38;2;129;162;190m$\e[0m \e[38;2;192;128;80mgo build ./...\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mexit(1)\e[0m\r
+\e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m\r
+\e[38;2;201;166;212mload\e[0m \e[38;2;150;152;150mskills/\e[0m\e[38;2;201;166;212mtidy\e[0m\e[38;2;150;152;150m/SKILL.md\e[0m\r
+\r
+\e[1m\e[38;2;207;173;0mWhy it stutters\e[0m\e[0m\r
+\r
+The spinner is redrawn on every beat, so a tool \e[1mblocks\e[0m it:\r
+\r
+\e[38;2;192;128;80m1. \e[0mPaint from \e[38;2;192;128;80mScreen.paint\e[0m only\r
+\e[38;2;192;128;80m2. \e[0mSkip rows that did not change\r
+\r
+\e[38;2;150;152;150m│ \e[0m\e[38;2;150;152;150mSealed rows are never touched again.\e[0m\r
+\r
+\e[38;2;201;166;212mfunc\e[0m (self \e[38;2;138;190;183m*\e[0mScreen) \e[38;2;129;162;190mpaint\e[0m(rows []\e[38;2;240;198;116mstring\e[0m) \e[38;2;240;198;116merror\e[0m {\r
+    \e[38;2;150;152;150m// only what changed\e[0m\r
+    \e[38;2;201;166;212mreturn\e[0m self.\e[38;2;129;162;190mwrite\e[0m(\e[38;2;181;189;104m"row"\e[0m, \e[38;2;192;128;80m42\e[0m)\r
+}\r
+\r
+\e[38;2;129;162;190m@@ -1 +1 @@\e[0m\r
+\e[38;2;204;102;102m- self.redrawAll()\e[0m\r
+\e[38;2;76;154;44m+ self.paintChanged()\e[0m\r
+\r
+\e[38;2;150;152;150m┌──────┬──────────┐\e[0m\r
+\e[38;2;150;152;150m│\e[0m \e[1mMode\e[0m \e[38;2;150;152;150m│\e[0m \e[1mRedraws\e[0m  \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m├──────┼──────────┤\e[0m\r
+\e[38;2;150;152;150m│\e[0m line \e[38;2;150;152;150m│\e[0m per line \e[38;2;150;152;150m│\e[0m\r
+\e[38;2;150;152;150m└──────┴──────────┘\e[0m\r
+\r
+See \e]8;;https://example.com/paint\e\\\e[38;2;129;162;190mthe notes\e[0m\e]8;;\e\\\e[38;2;150;152;150m (https://example.com/paint)\e[0m.\r
+\e[?25h\e[?2026l
 === decorated palette roles ===
 \e[3;38;2;3;3;3mitalic accent\e[0m\r
 \e[4munderlined terminal default\e[0m\r
@@ -5,6 +301,57 @@
 \e[1;9;38;2;7;7;7mbold strikethrough\e[0m\r
 \e[2;53mfaint overline\e[0m\r
 \e[3;4;48;2;12;12;12mdecorated user background\e[0m\r
+
+=== every grey-dark palette role ===
+normal\r
+\e[38;2;207;207;207mdim\e[0m\r
+\e[38;2;255;196;154maccent\e[0m\r
+\e[38;2;255;226;122mstatus warning\e[0m\r
+\e[38;2;180;240;156mstatus success\e[0m\r
+\e[38;2;188;220;255mstatus info\e[0m\r
+\e[38;2;255;184;184mstatus danger\e[0m\r
+\e[38;2;255;233;168msyntax type\e[0m\r
+\e[38;2;226;240;160msyntax literal\e[0m\r
+\e[38;2;176;244;234msyntax operator\e[0m\r
+\e[38;2;242;208;255msyntax keyword\e[0m\r
+\e[38;2;242;208;255mskill\e[0m\r
+\e[3;38;2;242;208;255ms\e[0m\e[3;38;2;234;212;252mi\e[0m\e[3;38;2;227;216;250mm\e[0m\e[3;38;2;220;220;248mu\e[0m\e[3;38;2;212;224;245ml\e[0m\e[3;38;2;205;228;243ma\e[0m\e[3;38;2;198;232;241mt\e[0m\e[3;38;2;190;236;238mi\e[0m\e[3;38;2;183;240;236mo\e[0m\e[3;38;2;176;244;234mn\e[0m\r
+\e[48;2;70;70;78muser background\e[0m\r
+\e[48;2;66;75;82mharness background\e[0m\r
+
+=== every grey-light palette role ===
+normal\r
+\e[38;2;56;59;62mdim\e[0m\r
+\e[38;2;106;50;16maccent\e[0m\r
+\e[38;2;86;63;0mstatus warning\e[0m\r
+\e[38;2;31;74;15mstatus success\e[0m\r
+\e[38;2;28;61;99mstatus info\e[0m\r
+\e[38;2;118;22;22mstatus danger\e[0m\r
+\e[38;2;87;58;0msyntax type\e[0m\r
+\e[38;2;58;71;0msyntax literal\e[0m\r
+\e[38;2;14;71;65msyntax operator\e[0m\r
+\e[38;2;86;38;112msyntax keyword\e[0m\r
+\e[38;2;86;38;112mskill\e[0m\r
+\e[3;38;2;86;38;112ms\e[0m\e[3;38;2;78;41;106mi\e[0m\e[3;38;2;70;45;101mm\e[0m\e[3;38;2;62;49;96mu\e[0m\e[3;38;2;54;52;91ml\e[0m\e[3;38;2;46;56;85ma\e[0m\e[3;38;2;38;60;80mt\e[0m\e[3;38;2;30;63;75mi\e[0m\e[3;38;2;22;67;70mo\e[0m\e[3;38;2;14;71;65mn\e[0m\r
+\e[48;2;196;196;204muser background\e[0m\r
+\e[48;2;190;200;208mharness background\e[0m\r
+
+=== every light palette role ===
+normal\r
+\e[38;2;110;113;117mdim\e[0m\r
+\e[38;2;166;93;46maccent\e[0m\r
+\e[38;2;143;106;0mstatus warning\e[0m\r
+\e[38;2;58;125;31mstatus success\e[0m\r
+\e[38;2;61;109;154mstatus info\e[0m\r
+\e[38;2;184;60;60mstatus danger\e[0m\r
+\e[38;2;138;95;0msyntax type\e[0m\r
+\e[38;2;95;115;0msyntax literal\e[0m\r
+\e[38;2;44;120;112msyntax operator\e[0m\r
+\e[38;2;138;79;163msyntax keyword\e[0m\r
+\e[38;2;138;79;163mskill\e[0m\r
+\e[3;38;2;155;63;196ms\e[0m\e[3;38;2;139;69;186mi\e[0m\e[3;38;2;123;76;176mm\e[0m\e[3;38;2;107;83;167mu\e[0m\e[3;38;2;91;90;157ml\e[0m\e[3;38;2;75;96;147ma\e[0m\e[3;38;2;59;103;138mt\e[0m\e[3;38;2;43;110;128mi\e[0m\e[3;38;2;27;117;118mo\e[0m\e[3;38;2;11;124;109mn\e[0m\r
+\e[48;2;232;232;239muser background\e[0m\r
+\e[48;2;226;234;240mharness background\e[0m\r
 
 === every palette role ===
 \e[38;2;1;1;1mnormal\e[0m\r
@@ -34,8 +381,8 @@
 \e[?25h\e[?2026l\e[?2026h\e[?25l\e[?7l\r\e[K\r
  \e[38;2;150;152;150m╭────────────────────────────────────────────────────────────────────────────────────────────────╮\e[0m\e[K\r
  \e[38;2;150;152;150m│\e[0m \e[38;2;204;102;102mThe configuration could not be reloaded: config.toml:\e[0m    \e[38;2;150;152;150m│\e[0m\e[K\r
- \e[38;2;150;152;150m│\e[0m \e[38;2;204;102;102mtoml: line 3 (last key "ui.theme.user"): "red" is not a colour or a decoration; write #rrggbb,\e[0m \e[38;2;150;152;150m│\e[0m\e[K\r
- \e[38;2;150;152;150m│\e[0m \e[38;2;204;102;102m"default", "bold", "faint", "italic", "underline", "blink", "reverse", "hidden",\e[0m               \e[38;2;150;152;150m│\e[0m\e[K\r
+ \e[38;2;150;152;150m│\e[0m \e[38;2;204;102;102mtoml: line 3 (last key "ui.theme.dark.user"): "red" is not a colour or a decoration; write\e[0m     \e[38;2;150;152;150m│\e[0m\e[K\r
+ \e[38;2;150;152;150m│\e[0m \e[38;2;204;102;102m#rrggbb, "default", "bold", "faint", "italic", "underline", "blink", "reverse", "hidden",\e[0m      \e[38;2;150;152;150m│\e[0m\e[K\r
  \e[38;2;150;152;150m│\e[0m \e[38;2;204;102;102m"strikethrough", "overline", or a shaped or coloured underline such as "underline:curly"\e[0m       \e[38;2;150;152;150m│\e[0m\e[K\r
 \e[38;2;150;152;150m─┴\e[0m\e[38;2;150;152;150m──\e[0m \e[38;2;150;152;150m·✦·\e[0m \e[38;2;150;152;150m─\e[0m \e[38;2;76;154;44mr\e[0m\e[38;2;150;152;150mx\e[0m\e[38;2;207;173;0mw\e[0m \e[38;2;150;152;150mn\e[0m\e[38;2;150;152;150mg\e[0m\e[38;2;150;152;150ml\e[0m \e[38;2;150;152;150m────────────────────────────────────────────────\e[0m GPT Sol \e[38;2;150;152;150m5.6\e[0m \e[38;2;150;152;150m▫▫▫\e[0m\e[38;2;192;128;80m▪\e[0m\e[38;2;150;152;150m··\e[0m \e[38;2;150;152;150m─\e[0m ?\e[38;2;150;152;150m% \e[0m0\e[38;2;150;152;150m/\e[0m? \e[38;2;150;152;150m──\e[0m\e[38;2;150;152;150m┴─\e[0m\r
 \e[K\r

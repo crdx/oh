@@ -29,7 +29,7 @@ func FuzzABarIsBuiltAndDrawnWithoutFallingOver(fuzzer *testing.F) {
 		"[bar.top]\nleft = [{ segment = \"session-spend\" }, { segment = \"active-model\" }]\n",
 		"[bar.top]\nleft = [{ segment = \"fast-mode\" }, { segment = \"mode-toggle\" }]\n",
 		"[bar.top]\nleft = [{ segment = \"session-emoji\" }]\n",
-		"[ui.theme]\nnormal = \"#010203 bold\"\n",
+		"[ui.theme.dark]\nnormal = \"#010203 bold\"\n",
 	} {
 		fuzzer.Add(seed, byte(80))
 	}

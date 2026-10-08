@@ -15,6 +15,7 @@ import (
 	"golang.org/x/sys/unix"
 
 	"crdx.org/oh/internal/app/backend"
+	"crdx.org/oh/internal/app/background"
 	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/ptytest"
 	"crdx.org/oh/internal/app/store"
@@ -86,7 +87,7 @@ func TestTheSessionPickerUsesTheWorkspaceTheme(t *testing.T) {
 	}
 	if err := os.WriteFile(
 		filepath.Join(rig.workspace, "oh.toml"),
-		[]byte("[ui.theme]\naccent = \"#010203\"\n"),
+		[]byte("[ui.theme.dark]\naccent = \"#010203\"\n"),
 		0o600,
 	); err != nil {
 		t.Fatal(err)
@@ -99,6 +100,44 @@ func TestTheSessionPickerUsesTheWorkspaceTheme(t *testing.T) {
 	}
 	session.typeText("\x03")
 	session.waitToExit()
+}
+
+const (
+	whiteBackground = "\x1b]11;rgb:ffff/ffff/ffff\x1b\\"
+	lightAccent     = "\x1b[38;2;166;93;46m"
+	darkAccent      = "\x1b[38;2;192;128;80m"
+)
+
+func TestThePickersAreDrawnForALightTerminal(t *testing.T) {
+	rig := newInteractiveRig(t, "First answer.")
+	rig.backgroundReply = whiteBackground
+	runTestBinary(t, rig.binary, rig.workspace, rig.environment, "-p", "--yolo", "-m", "opencode-go/fake", "first question")
+
+	storedSessions := rig.storedSessions()
+	if len(storedSessions) != 1 {
+		t.Fatalf("got %d stored sessions, want one to choose", len(storedSessions))
+	}
+
+	for _, picker := range []struct {
+		name      string
+		arguments []string
+		shown     string
+	}{
+		{name: "the session picker", arguments: []string{"-r"}, shown: storedSessions[0].Name},
+		{name: "the model picker", arguments: []string{"--yolo", "-m"}, shown: "fake"},
+	} {
+		session := rig.start(picker.arguments...)
+		session.waitFor(picker.shown)
+		stream := session.String()
+		if !strings.Contains(stream, lightAccent) {
+			t.Errorf("%s did not use the light accent: %q", picker.name, stream)
+		}
+		if strings.Contains(stream, darkAccent) {
+			t.Errorf("%s used the dark accent: %q", picker.name, stream)
+		}
+		session.typeText("\x03")
+		session.waitToExit()
+	}
 }
 
 func TestAModelChosenFromThePickerAnswersTheConversation(t *testing.T) {
@@ -147,11 +186,13 @@ func TestWhatIsTypedWhileTheSessionStartsIsKept(t *testing.T) {
 }
 
 type interactiveRig struct {
-	t              *testing.T
-	binary         string
-	workspace      string
-	stateDirectory string
-	environment    []string
+	t               *testing.T
+	binary          string
+	workspace       string
+	stateDirectory  string
+	environment     []string
+	backgroundReply string
+	isAnsweringLate bool
 }
 
 func newInteractiveRig(t *testing.T, answers ...string) *interactiveRig {
@@ -205,8 +246,23 @@ func (self *interactiveRig) start(arguments ...string) *interactiveSession {
 	self.t.Cleanup(func() { _ = command.Process.Kill() })
 	go func() { session.exited <- command.Wait() }()
 	session.Transcript = ptytest.Record(controller)
+	if !self.isAnsweringLate {
+		answerBackgroundProbes(session, self.backgroundReply)
+	}
 
 	return session
+}
+
+const deviceReply = "\x1b[?62;4c"
+
+func answerBackgroundProbes(session *interactiveSession, backgroundReply string) {
+	go func() {
+		for asked := 1; session.WaitForCount(background.Query, asked, interactiveDeadline); asked++ {
+			if _, err := session.typing.WriteString(backgroundReply + deviceReply); err != nil {
+				return
+			}
+		}
+	}()
 }
 
 func (self *interactiveRig) storedSessions() []*store.Session {
@@ -343,7 +399,7 @@ func TestCommandsTypedIntoAnInteractiveSessionAreAnsweredInPlace(t *testing.T) {
 	session.quit()
 }
 
-var terminalQueries = regexp.MustCompile(`\x1b_G[^\x1b]*\x1b\\|\x1b\[c|\x1b\[[<>]1?u|\x1b\[\?(1004|2004|5522)[hl]|\x1b\[2[23];0t|\x1b\[\d? q|\x1b\]2;[^\x07\x1b]*(\x07|\x1b\\)`)
+var terminalQueries = regexp.MustCompile(`\x1b\]11;\?\x1b\\|\x1b_G[^\x1b]*\x1b\\|\x1b\[c|\x1b\[[<>]1?u|\x1b\[\?(1004|2004|5522)[hl]|\x1b\[2[23];0t|\x1b\[\d? q|\x1b\]2;[^\x07\x1b]*(\x07|\x1b\\)`)
 
 func (self *interactiveSession) requireShown(text string) {
 	self.t.Helper()
@@ -410,11 +466,147 @@ func TestStartingASessionAsksTheTerminalAboutGraphicsOnce(t *testing.T) {
 	session.quit()
 }
 
+func TestASessionIsDrawnForTheBackgroundTheTerminalReports(t *testing.T) {
+	const (
+		black     = "\x1b]11;rgb:0000/0000/0000\x07"
+		darkGrey  = "\x1b]11;rgb:5050/5050/5050\x1b\\"
+		lightGrey = "\x1b]11;rgb:a0/a0/a0\x07"
+
+		greyDarkAccent  = "\x1b[38;2;255;196;154m"
+		greyLightAccent = "\x1b[38;2;106;50;16m"
+	)
+	accents := []string{darkAccent, greyDarkAccent, greyLightAccent, lightAccent}
+
+	for name, test := range map[string]struct {
+		reply      string
+		appearance string
+		want       string
+	}{
+		"a dark terminal":                            {reply: black, want: darkAccent},
+		"a dark grey terminal":                       {reply: darkGrey, want: greyDarkAccent},
+		"a light grey terminal":                      {reply: lightGrey, want: greyLightAccent},
+		"a light terminal":                           {reply: whiteBackground, want: lightAccent},
+		"a terminal that keeps its colour to itself": {want: darkAccent},
+		"a light terminal told to be dark":           {reply: whiteBackground, appearance: "dark", want: darkAccent},
+		"a dark terminal told to be grey-dark":       {reply: black, appearance: "grey-dark", want: greyDarkAccent},
+		"a dark terminal told to be grey-light":      {reply: black, appearance: "grey-light", want: greyLightAccent},
+		"a dark terminal told to be light":           {reply: black, appearance: "light", want: lightAccent},
+	} {
+		t.Run(name, func(t *testing.T) {
+			rig := newInteractiveRig(t)
+			rig.backgroundReply = test.reply
+			if test.appearance != "" {
+				if err := os.WriteFile(
+					filepath.Join(rig.workspace, "oh.toml"),
+					[]byte("[ui.theme]\nappearance = \""+test.appearance+"\"\n"),
+					0o600,
+				); err != nil {
+					t.Fatal(err)
+				}
+			}
+
+			session := rig.start("--yolo", "-m", "opencode-go/fake")
+			session.waitFor(readyBanner)
+			if asked := session.Count(background.Query); asked != 1 {
+				t.Errorf("startup asked the terminal about its background %d times, want once", asked)
+			}
+			stream := session.String()
+			for _, accent := range accents {
+				if isDrawn := strings.Contains(stream, accent); isDrawn != (accent == test.want) {
+					t.Errorf("drawing the accent %q is %t, want only %q: %q", accent, isDrawn, test.want, stream)
+				}
+			}
+
+			session.quit()
+		})
+	}
+}
+
+func TestWhatIsTypedWhileTheTerminalIsAskedAboutItsBackgroundIsKept(t *testing.T) {
+	rig := newInteractiveRig(t, "Early answer.")
+	rig.isAnsweringLate = true
+
+	session := rig.start("--yolo", "-m", "opencode-go/fake")
+	if !session.WaitForCount(background.Query, 1, interactiveDeadline) {
+		t.Fatal("the terminal was never asked about its background")
+	}
+	session.typeText("typed early")
+	session.typeText(whiteBackground + deviceReply)
+	session.waitFor(readyBanner)
+	session.requireShown("typed early")
+	if stream := session.String(); !strings.Contains(stream, lightAccent) {
+		t.Errorf("the session did not use the light accent: %q", stream)
+	}
+	session.typeText(pressEnter)
+	session.waitFor("Early answer.")
+	session.quit()
+}
+
+func TestATerminalThatAnswersNothingIsDrawnDarkOnceItStopsWaiting(t *testing.T) {
+	rig := newInteractiveRig(t)
+	rig.isAnsweringLate = true
+
+	session := rig.start("--yolo", "-m", "opencode-go/fake")
+	session.waitFor(readyBanner)
+	if stream := session.String(); !strings.Contains(stream, darkAccent) || strings.Contains(stream, lightAccent) {
+		t.Errorf("a silent terminal was not drawn in the dark palette: %q", stream)
+	}
+	session.quit()
+}
+
+func TestNothingAsksAboutTheBackgroundWhenNothingWillBeColoured(t *testing.T) {
+	for name, test := range map[string]struct {
+		environment []string
+		arguments   []string
+		shown       string
+	}{
+		"colour turned off": {
+			environment: []string{"NO_COLOR=1"},
+			arguments:   []string{"--yolo", "-m", "opencode-go/fake"},
+			shown:       readyBanner,
+		},
+		"the version asked for": {arguments: []string{"--version"}},
+	} {
+		t.Run(name, func(t *testing.T) {
+			rig := newInteractiveRig(t)
+			rig.environment = append(rig.environment, test.environment...)
+
+			session := rig.start(test.arguments...)
+			if test.shown != "" {
+				session.waitFor(test.shown)
+				session.quit()
+			} else {
+				session.waitToExit()
+			}
+
+			if asked := session.Count(background.Query); asked != 0 {
+				t.Errorf("the terminal was asked about its background %d times, want never", asked)
+			}
+		})
+	}
+}
+
+func TestAPrintedAnswerIsDrawnForTheBackgroundTheTerminalReports(t *testing.T) {
+	rig := newInteractiveRig(t, "Use `paint` here.")
+	rig.backgroundReply = whiteBackground
+
+	session := rig.start("-p", "--yolo", "-m", "opencode-go/fake", "which function?")
+	session.waitToExit()
+
+	stream := session.String()
+	if asked := session.Count(background.Query); asked != 1 {
+		t.Errorf("print mode asked the terminal about its background %d times, want once", asked)
+	}
+	if !strings.Contains(stream, lightAccent+"paint") {
+		t.Errorf("the printed answer did not use the light accent: %q", stream)
+	}
+}
+
 func TestASessionIsDrawnInTheWorkspaceTheme(t *testing.T) {
 	rig := newInteractiveRig(t)
 	if err := os.WriteFile(
 		filepath.Join(rig.workspace, "oh.toml"),
-		[]byte("[ui.theme]\naccent = \"#010203\"\n"),
+		[]byte("[ui.theme.dark]\naccent = \"#010203\"\n"),
 		0o600,
 	); err != nil {
 		t.Fatal(err)

@@ -140,7 +140,7 @@ func TestAnUnboundedPositionDrawsTheRichestRungOfEverySegment(t *testing.T) {
 
 func TestTheSegmentSeparatorFollowsTheActiveTheme(t *testing.T) {
 	theme := style.DefaultTheme()
-	theme.Dim = "#010203"
+	theme.Dark.Dim = "#010203"
 	restoreTheme := style.ApplyTheme(theme)
 	defer restoreTheme()
 

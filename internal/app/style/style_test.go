@@ -56,9 +56,9 @@ func TestApplyingAThemeChangesExistingStyles(t *testing.T) {
 	enableColor(t)
 
 	theme := DefaultTheme()
-	theme.Accent = "#010203"
-	theme.User = "#040506"
-	theme.Harness = "#070809"
+	theme.Dark.Accent = "#010203"
+	theme.Dark.User = "#040506"
+	theme.Dark.Harness = "#070809"
 	t.Cleanup(ApplyTheme(theme))
 
 	if got := Subject("subject"); !strings.Contains(got, "38;2;1;2;3") {
@@ -75,7 +75,7 @@ func TestApplyingAThemeChangesExistingStyles(t *testing.T) {
 func TestEveryStyleFollowsItsOwnPaletteRole(t *testing.T) {
 	enableColor(t)
 
-	t.Cleanup(ApplyTheme(Theme{
+	t.Cleanup(ApplyTheme(Theme{Dark: Palette{
 		Normal:         "#010101",
 		Dim:            "#020202",
 		Accent:         "#030303",
@@ -88,7 +88,7 @@ func TestEveryStyleFollowsItsOwnPaletteRole(t *testing.T) {
 		SyntaxOperator: "#0a0a0a",
 		SyntaxKeyword:  "#0b0b0b",
 		Skill:          "#0c0c0c",
-	}))
+	}}))
 
 	roles := map[string]map[string]Style{
 		"38;2;1;1;1": {
@@ -180,7 +180,7 @@ func TestAThemeCanUseTheTerminalDefault(t *testing.T) {
 	enableColor(t)
 
 	theme := DefaultTheme()
-	theme.Accent = ""
+	theme.Dark.Accent = ""
 	t.Cleanup(ApplyTheme(theme))
 
 	if got := Subject("subject"); got != "subject" {
@@ -277,7 +277,7 @@ func TestAUserMessageHasABackgroundThatSurvivesInnerStyles(t *testing.T) {
 func TestAStyleOverAnotherResumesWhereTheInnerOneReset(t *testing.T) {
 	enableColor(t)
 
-	opening := "\x1b[" + foregroundSequence(DefaultTheme().Accent) + "m"
+	opening := "\x1b[" + foregroundSequence(DefaultTheme().Dark.Accent) + "m"
 	got := ChosenRow.Over("row " + Qualifier("note") + " tail")
 
 	if count := strings.Count(got, opening); count != 2 {
@@ -415,13 +415,12 @@ func TestAGradientPaintsEveryCharacterOnItsWayFromOneColourToTheOther(t *testing
 		t.Errorf("the gradient drew no italics: %q", painted)
 	}
 
-	first, _ := colour(orchid)
-	last, _ := colour(aqua)
-	if !strings.Contains(painted, sequenceFor(first)) {
-		t.Errorf("the gradient does not start at %s: %q", orchid, painted)
+	gradient := simulationGradients[DarkBackground]
+	if !strings.Contains(painted, sequenceFor(gradient.from)) {
+		t.Errorf("the gradient does not start at %v: %q", gradient.from, painted)
 	}
-	if !strings.Contains(painted, sequenceFor(last)) {
-		t.Errorf("the gradient does not end at %s: %q", aqua, painted)
+	if !strings.Contains(painted, sequenceFor(gradient.to)) {
+		t.Errorf("the gradient does not end at %v: %q", gradient.to, painted)
 	}
 	if Width(painted) != len("Simulation") {
 		t.Errorf("the gradient measures %d cells", Width(painted))

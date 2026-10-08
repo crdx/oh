@@ -135,7 +135,7 @@ func TestEveryDecorationIsDrawnOnTopOfEveryOther(t *testing.T) {
 
 func TestEveryThemeKeyIsCompiledWithItsDecorations(t *testing.T) {
 	theme := Theme{}
-	keys := reflect.ValueOf(&theme).Elem()
+	keys := reflect.ValueOf(&theme.Dark).Elem()
 
 	wanted := 0
 	for _, key := range keys.Fields() {
@@ -148,7 +148,7 @@ func TestEveryThemeKeyIsCompiledWithItsDecorations(t *testing.T) {
 
 	written := 0
 
-	for field, code := range reflect.ValueOf(compileTheme(theme)).Elem().Fields() {
+	for field, code := range reflect.ValueOf(compileTheme(theme, DarkBackground)).Elem().Fields() {
 		if code.Kind() != reflect.String {
 			continue
 		}
@@ -168,18 +168,22 @@ func TestEveryThemeKeyIsCompiledWithItsDecorations(t *testing.T) {
 func TestEveryThemeKeyCanBeWrittenInAConfig(t *testing.T) {
 	theme := DefaultTheme()
 
-	for field, key := range reflect.ValueOf(&theme).Elem().Fields() {
-		if key.Kind() != reflect.String {
-			continue
-		}
-		written := key.String()
+	for name, palette := range map[string]*Palette{
+		"dark":       &theme.Dark,
+		"grey-dark":  &theme.GreyDark,
+		"grey-light": &theme.GreyLight,
+		"light":      &theme.Light,
+	} {
+		for field, key := range reflect.ValueOf(palette).Elem().Fields() {
+			written := key.String()
 
-		var value Paint
-		if err := value.UnmarshalText([]byte(written)); err != nil {
-			t.Errorf("the default %s is refused: %v", field.Tag.Get("toml"), err)
-		}
-		if value != Paint(written) {
-			t.Errorf("the default %q is normalised to %q", written, value)
+			var value Paint
+			if err := value.UnmarshalText([]byte(written)); err != nil {
+				t.Errorf("the default %s %s is refused: %v", name, field.Tag.Get("toml"), err)
+			}
+			if value != Paint(written) {
+				t.Errorf("the default %s %q is normalised to %q", name, written, value)
+			}
 		}
 	}
 }
@@ -198,10 +202,10 @@ func TestAKeyNobodyCouldReadPaintsNothingRatherThanRubbish(t *testing.T) {
 
 func TestAKeyWithoutAColourStillReportsTheGraphicColourItFallsBackTo(t *testing.T) {
 	theme := DefaultTheme()
-	theme.Dim = "italic"
+	theme.Dark.Dim = "italic"
 	t.Cleanup(ApplyTheme(theme))
 
-	fallback, _ := colour(string(DefaultTheme().Dim))
+	fallback, _ := colour(string(DefaultTheme().Dark.Dim))
 	if got := DimColour(); got != fallback {
 		t.Errorf("got %v, want the default dim %v", got, fallback)
 	}
@@ -209,7 +213,7 @@ func TestAKeyWithoutAColourStillReportsTheGraphicColourItFallsBackTo(t *testing.
 
 func TestAKeyNamingAColourReportsThatColourWhateverItsDecorations(t *testing.T) {
 	theme := DefaultTheme()
-	theme.StatusDanger = "underline:curly #010203 blink"
+	theme.Dark.StatusDanger = "underline:curly #010203 blink"
 	t.Cleanup(ApplyTheme(theme))
 
 	if got, want := FailureColour(), (color.RGBA{R: 1, G: 2, B: 3, A: 0xff}); got != want {
@@ -246,7 +250,7 @@ func TestAThemeKeyCarriesItsDecorationsBesideItsColour(t *testing.T) {
 	enableColor(t)
 
 	theme := DefaultTheme()
-	theme.Accent = value
+	theme.Dark.Accent = value
 	t.Cleanup(ApplyTheme(theme))
 
 	if got, want := Subject("subject"), "\x1b[3;4;38;2;1;2;3msubject"+reset; got != want {
@@ -266,7 +270,7 @@ func TestAThemeKeyCanBeDecoratedWithoutNamingAColour(t *testing.T) {
 	enableColor(t)
 
 	theme := DefaultTheme()
-	theme.Normal = value
+	theme.Dark.Normal = value
 	t.Cleanup(ApplyTheme(theme))
 
 	if got, want := Answer("answer"), "\x1b[4manswer"+reset; got != want {
@@ -278,7 +282,7 @@ func TestABackgroundKeyCarriesItsDecorationsToo(t *testing.T) {
 	enableColor(t)
 
 	theme := DefaultTheme()
-	theme.User = "#040506 italic"
+	theme.Dark.User = "#040506 italic"
 	t.Cleanup(ApplyTheme(theme))
 
 	if got, want := User("user"), "\x1b[3;48;2;4;5;6muser"+reset; got != want {

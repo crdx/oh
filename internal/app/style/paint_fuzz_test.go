@@ -91,8 +91,8 @@ func requireTheTextIsLeftAlone(t *testing.T, value Paint) {
 	enableColor(t)
 
 	theme := DefaultTheme()
-	theme.Normal = value
-	theme.User = value
+	theme.Dark.Normal = value
+	theme.Dark.User = value
 	defer ApplyTheme(theme)()
 
 	const text = "the quick brown fox"

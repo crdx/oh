@@ -1,0 +1,12 @@
+Oh, hello. \e[3m*yawns*\e[0m
+Yes? Oh, right. Let's get you signed in.
+\e[38;2;56;59;62m────────────────────────────────────────\e[0m
+
+Choose your provider:\r
+\r
+  ChatGPT      \e[38;2;56;59;62mOAuth\e[0m\r
+  Anthropic    \e[38;2;56;59;62mOAuth\e[0m\r
+  OpenCode Go  \e[38;2;56;59;62mKey\e[0m\r
+\e[38;2;106;50;16m› \e[3;38;2;86;38;112mS\e[0m\e[38;2;106;50;16m\e[3;38;2;77;42;106mi\e[0m\e[38;2;106;50;16m\e[3;38;2;68;46;100mm\e[0m\e[38;2;106;50;16m\e[3;38;2;59;50;94mu\e[0m\e[38;2;106;50;16m\e[3;38;2;50;54;88ml\e[0m\e[38;2;106;50;16m\e[3;38;2;41;58;82ma\e[0m\e[38;2;106;50;16m\e[3;38;2;32;62;76mt\e[0m\e[38;2;106;50;16m\e[3;38;2;23;66;70mo\e[0m\e[38;2;106;50;16m\e[3;38;2;14;71;65mr\e[0m\e[38;2;106;50;16m    \e[38;2;56;59;62mThe doctor will see you now\e[0m\r
+
+\e[38;2;31;74;15m✓\e[0m \e[38;2;56;59;62mThanks. Transferring you…\e[0m

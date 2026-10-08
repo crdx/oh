@@ -22,8 +22,8 @@ func requireADrawableHostname(t *testing.T, config Config) {
 func FuzzAConfigFileIsReadWithoutFallingOver(fuzzer *testing.F) {
 	for _, seed := range []string{
 		"",
-		"[ui.theme]\nnormal = \"#010203 bold\"\n",
-		"[ui.theme]\nnormal = \"underline:curly\"\n",
+		"[ui.theme.dark]\nnormal = \"#010203 bold\"\n",
+		"[ui.theme.dark]\nnormal = \"underline:curly\"\n",
 		"[ui]\nstreaming = \"asap\"\ngrouping = [\"answer\"]\n",
 		"[bar.top]\nleft = [{ name = \"model\" }]\n",
 		"[sandbox]\nread = [\"~/x\"]\n",
@@ -40,7 +40,7 @@ func FuzzAConfigFileIsReadWithoutFallingOver(fuzzer *testing.F) {
 	}
 
 	for _, seed := range []string{
-		"[ui.theme]\naccent = \"#040506 faint\"\n",
+		"[ui.theme.dark]\naccent = \"#040506 faint\"\n",
 		"[bar.bottom]\nright = []\n",
 		"[skills]\ninclude = [\"x\"]\n",
 	} {
