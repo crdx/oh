@@ -96,7 +96,7 @@ func invokeJobCommand(t *testing.T, managedJobs Jobs, input string) (*commandTes
 	if !isFound {
 		t.Fatalf("did not find %s", input)
 	}
-	context := &commandTestContext{}
+	context := newCommandTestContext(t)
 
 	return context, invocation.Command.Run(context, invocation.Arguments)
 }

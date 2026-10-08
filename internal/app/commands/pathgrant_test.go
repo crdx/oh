@@ -38,7 +38,7 @@ func invokePathGrantCommand(t *testing.T, grants PathGrants, input string) (*com
 	if !found {
 		t.Fatalf("did not find %s", input)
 	}
-	context := &commandTestContext{}
+	context := newCommandTestContext(t)
 	return context, invocation.Command.Run(context, invocation.Arguments)
 }
 

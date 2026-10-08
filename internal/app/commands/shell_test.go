@@ -30,7 +30,7 @@ func TestTheShellCommandStartsWhatFollowsItVerbatim(t *testing.T) {
 				t.Fatal("expected the shell command to be found")
 			}
 
-			context := &commandTestContext{}
+			context := newCommandTestContext(t)
 			if err := invocation.Command.Run(context, invocation.Arguments); err != nil {
 				t.Fatal(err)
 			}
@@ -60,7 +60,7 @@ func TestTheShellCommandNeedsSomethingToRun(t *testing.T) {
 	if !found {
 		t.Fatal("expected the shell command to be found")
 	}
-	err := invocation.Command.Run(&commandTestContext{}, invocation.Arguments)
+	err := invocation.Command.Run(newCommandTestContext(t), invocation.Arguments)
 	if !slash.IsUsageError(err) {
 		t.Fatalf("got error %v", err)
 	}
@@ -79,7 +79,7 @@ func TestAShellThatCannotStartIsReported(t *testing.T) {
 	if !found {
 		t.Fatal("expected the shell command to be found")
 	}
-	if err := invocation.Command.Run(&commandTestContext{}, invocation.Arguments); !errors.Is(err, failure) {
+	if err := invocation.Command.Run(newCommandTestContext(t), invocation.Arguments); !errors.Is(err, failure) {
 		t.Fatalf("got error %v", err)
 	}
 }
@@ -91,7 +91,7 @@ func TestTheShellCommandIsRefusedWhereNothingCanRunIt(t *testing.T) {
 	if !found {
 		t.Fatal("expected the shell command to be found")
 	}
-	if err := invocation.Command.Run(&commandTestContext{}, invocation.Arguments); !errors.Is(err, errHostCommandsUnavailable) {
+	if err := invocation.Command.Run(newCommandTestContext(t), invocation.Arguments); !errors.Is(err, errHostCommandsUnavailable) {
 		t.Fatalf("got error %v", err)
 	}
 }

@@ -12,6 +12,7 @@ import (
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/snippets"
 	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -22,18 +23,35 @@ type commandTestContext struct {
 	hasOwnStyle        bool
 	isListing          bool
 	success            string
+	paintedOver        []string
+}
+
+func newCommandTestContext(t *testing.T) *commandTestContext {
+	t.Helper()
+
+	context := &commandTestContext{}
+	t.Cleanup(func() {
+		for _, text := range context.paintedOver {
+			t.Errorf("a status notice would paint its colour over styled text %q", strutil.VisibleEscapes(text))
+		}
+	})
+	return context
 }
 
 func (self *commandTestContext) Emit(event agent.Event) { self.events = append(self.events, event) }
 func (self *commandTestContext) Send(string)            {}
-func (self *commandTestContext) Notice(text string)     { self.notice = text }
+
+func (self *commandTestContext) Notice(text string) {
+	self.showStatus(text)
+}
+
 func (self *commandTestContext) NoticeIndented(text string, continuationIndent int) {
-	self.notice = text
+	self.showStatus(text)
 	self.continuationIndent = continuationIndent
 }
 
 func (self *commandTestContext) NoticeListing(text string) {
-	self.notice = text
+	self.showStatus(text)
 	self.isListing = true
 }
 
@@ -55,7 +73,19 @@ func (self *commandTestContext) PlainNoticeListing(text string) {
 }
 
 func (self *commandTestContext) Success(text string) {
+	self.recordPaintedOver(text)
 	self.success = text
+}
+
+func (self *commandTestContext) showStatus(text string) {
+	self.recordPaintedOver(text)
+	self.notice = text
+}
+
+func (self *commandTestContext) recordPaintedOver(text string) {
+	if strings.Contains(text, "\x1b") {
+		self.paintedOver = append(self.paintedOver, text)
+	}
 }
 
 func newCommandRegistry(t *testing.T, environment commandEnvironment) slash.Registry {
@@ -230,7 +260,7 @@ func TestCommandsRunWithoutStoppingTheHarness(t *testing.T) {
 			if !found {
 				t.Fatal("expected command to be found")
 			}
-			context := &commandTestContext{}
+			context := newCommandTestContext(t)
 			if err := invocation.Command.Run(context, invocation.Arguments); err != nil {
 				t.Fatal(err)
 			}

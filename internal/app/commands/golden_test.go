@@ -148,7 +148,7 @@ func TestGoldenContextListingMatchesGolden(t *testing.T) {
 		if !found {
 			t.Fatal("expected /ctx to be registered")
 		}
-		context := &commandTestContext{}
+		context := newCommandTestContext(t)
 		if err := invocation.Command.Run(context, invocation.Arguments); err != nil {
 			t.Fatal(err)
 		}
@@ -404,7 +404,7 @@ func TestGoldenGrantListingMatchesGolden(t *testing.T) {
 			if !found {
 				t.Fatalf("expected %s to be registered", view.input)
 			}
-			context := &commandTestContext{}
+			context := newCommandTestContext(t)
 			if err := invocation.Command.Run(context, invocation.Arguments); err != nil {
 				t.Fatal(err)
 			}
@@ -711,7 +711,7 @@ func TestGoldenInfoMatchesGolden(t *testing.T) {
 		t.Fatal("expected /info to be registered")
 	}
 
-	context := &commandTestContext{}
+	context := newCommandTestContext(t)
 	if err := invocation.Command.Run(context, invocation.Arguments); err != nil {
 		t.Fatal(err)
 	}
