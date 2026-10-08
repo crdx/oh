@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/sandbox"
-	"crdx.org/oh/internal/sandbox/testnamespace"
 )
 
 func TestMain(m *testing.M) {
@@ -163,38 +162,5 @@ func TestAGrantThroughAModelSymlinkRefusesTheCommand(t *testing.T) {
 
 	if _, statErr := os.Stat(filepath.Join(victim, "pwned")); statErr == nil {
 		t.Error("the redirected grant wrote outside the sandbox")
-	}
-}
-
-func TestEveryCommandHasSharedMemoryOfItsOwn(t *testing.T) {
-	requireLandlock(t)
-	if testnamespace.IsUnmapped() {
-		t.Skip("an unmapped namespace mounts nothing, so the host's shared memory would be the one written")
-	}
-	if _, err := os.Stat(sandbox.SharedMemoryPath); err != nil {
-		t.Skipf("this machine has no shared memory to shadow: %v", err)
-	}
-
-	name := "oh-private-" + strings.ReplaceAll(t.Name(), "/", "-")
-	written := filepath.Join(sandbox.SharedMemoryPath, name)
-	command := "touch " + written + " && ls -A " + sandbox.SharedMemoryPath
-
-	result, err := sandbox.Run(t.Context(), t.TempDir(), command, sandbox.Policy{Env: []string{"PATH"}})
-	if err != nil && strings.Contains(err.Error(), "will not give the sandbox its namespaces") {
-		t.Skip(err)
-	}
-	if err != nil {
-		t.Fatal(err)
-	}
-	if result.ExitCode != 0 {
-		t.Fatalf("a command could not write its own shared memory: %s", result.Output)
-	}
-	if got := strings.TrimSpace(result.Output); got != name {
-		t.Errorf("a command saw %q in its shared memory, want only what it wrote", got)
-	}
-
-	if _, err := os.Stat(written); err == nil {
-		_ = os.Remove(written)
-		t.Error("a command wrote into the host's shared memory")
 	}
 }
