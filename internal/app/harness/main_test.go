@@ -5700,6 +5700,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"pending-mode-messages":    {".ansi", ".screen"},
 		"pending-notices":          {".ansi", ".screen"},
 		"paste":                    {".ansi", ".screen"},
+		"picture-approval":         {".ansi", ".screen"},
 		"pictures":                 {".ansi", ".screen"},
 		"picker-menu":              {".ansi", ".screen"},
 		"plain-input":              {".ansi", ".screen"},

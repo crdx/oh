@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"crdx.org/oh/internal/app/ansi"
+	"crdx.org/oh/internal/app/graphics"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/width"
 )
@@ -276,13 +277,30 @@ func (self *Screen) windowed(rows []width.ScreenRow, gap int, room int) []width.
 	}
 
 	if room < 2 {
-		return withGap(rows[len(rows)-room:])
+		return withGap(withVisiblePictureTransmissions(rows, rows[len(rows)-room:]))
 	}
 
-	shownRows := rows[len(rows)-room+1:]
-	visible := append([]width.ScreenRow{{Text: self.hiddenRowsNotice(len(rows) - len(shownRows))}}, shownRows...)
+	hiddenRows := rows[:len(rows)-room+1]
+	shownRows := withVisiblePictureTransmissions(rows, rows[len(hiddenRows):])
+	visible := append([]width.ScreenRow{{Text: self.hiddenRowsNotice(len(hiddenRows))}}, shownRows...)
 
 	return withGap(visible)
+}
+
+func withVisiblePictureTransmissions(rows []width.ScreenRow, shownRows []width.ScreenRow) []width.ScreenRow {
+	if len(shownRows) == 0 {
+		return shownRows
+	}
+
+	prefix := graphics.HiddenPictureTransmissions(width.Texts(rows[:len(rows)-len(shownRows)]), width.Texts(shownRows))
+	if prefix == "" {
+		return shownRows
+	}
+
+	shownRows = slices.Clone(shownRows)
+	shownRows[0].Text = prefix + shownRows[0].Text
+
+	return shownRows
 }
 
 func withoutTrailingBlankRows(rows []width.ScreenRow) []width.ScreenRow {
