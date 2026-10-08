@@ -147,7 +147,7 @@ d
 
 read one.txt 1L
 read two.txt – the call was cancelled because the user pressed escape
-await check for up to 4m 30s – 1L stopped because the user pressed escape
+await check for up to 10m – 1L stopped because the user pressed escape
 
 Turn stopped.
 
@@ -179,7 +179,7 @@ stopped.
 
 read one.txt 1L
 read two.txt – the call was cancelled because the user pressed escape
-await check for up to 4m 30s – 1L stopped because the user pressed escape
+await check for up to 10m – 1L stopped because the user pressed escape
 
 Turn stopped.
 

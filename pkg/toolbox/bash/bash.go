@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"slices"
 	"strings"
+	"time"
 	"unicode"
 
 	"mvdan.cc/sh/v3/syntax"
@@ -34,6 +35,8 @@ type Args struct {
 	Intent  string  `json:"intent,omitempty"`
 	Network Network `json:"network,omitempty"`
 }
+
+const CommandTimeout = 10 * time.Minute
 
 const IntentDescription = `what you are doing, as a 5 to 7 word phrase opening with a capitalised -ing verb, such as "Regenerating every golden in the scratch copy"`
 

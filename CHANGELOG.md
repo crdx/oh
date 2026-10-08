@@ -13,6 +13,7 @@
 
 ### Changes
 
+- Update default shell and job timeouts to 10m
 - Complete ignored paths with `@!`
 - Preserve spacing in completed job output
 - Trim 15ms off startup

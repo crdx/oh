@@ -174,6 +174,10 @@ func TestAJobFailureLeavesTheFinalOutputForTheAgentToMeasure(t *testing.T) {
 }
 
 func TestAWaitTakesTheAskedForLimitAndNeverExceedsTheCeiling(t *testing.T) {
+	if waitLimit != 10*time.Minute {
+		t.Errorf("got a wait ceiling of %s, want 10m", waitLimit)
+	}
+
 	for _, current := range []struct {
 		seconds int
 		limit   time.Duration

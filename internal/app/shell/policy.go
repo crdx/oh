@@ -26,7 +26,7 @@ import (
 )
 
 const (
-	shellTimeout    = 4*time.Minute + 30*time.Second
+	shellTimeout    = bash.CommandTimeout
 	shellCPUPercent = 80
 	shellFileSize   = 64 << 30
 	shellOpenFiles  = 1 << 20

@@ -658,8 +658,8 @@ func TestAJobCallIsRenderedByItsAction(t *testing.T) {
 			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build", Qualifier: "for up to 4m 30s", Mentions: []string{"build"}},
 		},
 		"wait with clamped limit": {
-			args: job.Args{Action: "wait", Name: "build", WaitSeconds: 300},
-			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build", Qualifier: "for up to 4m 30s", Mentions: []string{"build"}},
+			args: job.Args{Action: "wait", Name: "build", WaitSeconds: 660},
+			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build", Qualifier: "for up to 10m", Mentions: []string{"build"}},
 		},
 		"list": {
 			args: job.Args{Action: "list"},
@@ -701,7 +701,7 @@ func TestTheWaitParameterFormatsItsMaximumAsADuration(t *testing.T) {
 		}
 	}
 
-	if !strings.Contains(description, "max 4m 30s") {
+	if !strings.Contains(description, "max 10m") {
 		t.Errorf("wait_seconds description %q does not format its maximum as a duration", description)
 	}
 }

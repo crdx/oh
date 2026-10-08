@@ -33,7 +33,7 @@ const (
 	actionChoices = "start, status, output, wait, stop, discard, prune, or list"
 )
 
-const waitLimit = 4*time.Minute + 30*time.Second
+const waitLimit = bash.CommandTimeout
 
 var actions = []string{
 	actionStart,

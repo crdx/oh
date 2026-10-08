@@ -90,6 +90,10 @@ func newTestPathAccess(t *testing.T, files *file.Root, mode *caps.Mode) *PathAcc
 }
 
 func TestOnlyACommandSaturatingTheMachineReachesTheProcessorLimit(t *testing.T) {
+	if shellTimeout != 10*time.Minute {
+		t.Errorf("got a shell timeout of %s, want 10m", shellTimeout)
+	}
+
 	limit := shellCPUTime()
 	cores := runtime.NumCPU()
 
