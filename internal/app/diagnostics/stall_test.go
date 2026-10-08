@@ -1,4 +1,4 @@
-package stall
+package diagnostics
 
 import (
 	"os"
@@ -10,10 +10,10 @@ import (
 )
 
 func TestWorkHoldingTheDrawingThreadIsWrittenDownWithEveryStack(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "stalls.txt")
+	session := t.TempDir()
 
 	synctest.Test(t, func(t *testing.T) {
-		watchdog := Watch(path)
+		watchdog := Watch(session)
 		defer watchdog.Close()
 
 		done := watchdog.Begin("keypress")
@@ -22,9 +22,13 @@ func TestWorkHoldingTheDrawingThreadIsWrittenDownWithEveryStack(t *testing.T) {
 		synctest.Wait()
 	})
 
-	written, err := os.ReadFile(path) //nolint:gosec // the test's own stall log
+	stalls := stallEntries(t, session)
+	if len(stalls) != 1 {
+		t.Fatalf("got %d stalls written down, want 1", len(stalls))
+	}
+	written, err := os.ReadFile(stalls[0])
 	if err != nil {
-		t.Fatalf("expected the stall written down: %v", err)
+		t.Fatal(err)
 	}
 	if !strings.Contains(string(written), "keypress held the drawing thread for 400ms") {
 		t.Errorf("expected the work and how long it held on, got %q", firstLine(written))
@@ -39,10 +43,11 @@ func sleepThroughAStall() {
 }
 
 func TestQuickWorkIsNotWrittenDown(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "stalls.txt")
+	session := t.TempDir()
+	path := filepath.Join(session, DirectoryName)
 
 	synctest.Test(t, func(t *testing.T) {
-		watchdog := Watch(path)
+		watchdog := Watch(session)
 		defer watchdog.Close()
 
 		for range 10 {
@@ -59,10 +64,10 @@ func TestQuickWorkIsNotWrittenDown(t *testing.T) {
 }
 
 func TestAStallWithNowhereToGoIsDroppedQuietly(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "missing", "stalls.txt")
+	session := filepath.Join(t.TempDir(), "unsent")
 
 	synctest.Test(t, func(t *testing.T) {
-		watchdog := Watch(path)
+		watchdog := Watch(session)
 		defer watchdog.Close()
 
 		done := watchdog.Begin("keypress")
@@ -71,9 +76,40 @@ func TestAStallWithNowhereToGoIsDroppedQuietly(t *testing.T) {
 		synctest.Wait()
 	})
 
-	if _, err := os.Stat(filepath.Dir(path)); !os.IsNotExist(err) {
-		t.Errorf("expected no directory made for a stall, got %v", err)
+	if _, err := os.Stat(session); !os.IsNotExist(err) {
+		t.Errorf("expected no session directory made for a stall, got %v", err)
 	}
+}
+
+func TestEachStallIsWrittenToAFileOfItsOwn(t *testing.T) {
+	session := t.TempDir()
+
+	synctest.Test(t, func(t *testing.T) {
+		watchdog := Watch(session)
+		defer watchdog.Close()
+
+		for range 2 {
+			done := watchdog.Begin("resize")
+			sleepThroughAStall()
+			done()
+			synctest.Wait()
+		}
+	})
+
+	if stalls := stallEntries(t, session); len(stalls) != 2 {
+		t.Errorf("got %d stall files, want 2", len(stalls))
+	}
+}
+
+func stallEntries(t *testing.T, session string) []string {
+	t.Helper()
+
+	entries, err := filepath.Glob(filepath.Join(session, DirectoryName, StallDirectoryName, "*.txt"))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return entries
 }
 
 func firstLine(text []byte) string {

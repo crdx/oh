@@ -135,6 +135,10 @@ lookup = "allow"
 command_starts_turn = true
 redraw_timing_feedback = false
 
+[debug]
+stalls = false
+cpu_profile = false
+
 [model]
 effort = "high"
 fast = false

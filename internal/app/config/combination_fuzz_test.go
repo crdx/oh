@@ -102,6 +102,11 @@ func soundSettings() []setting {
 			"[permissions]\nnetwork = \"allow\"\n",
 			"[permissions]\nnetwork = \"ask\"\nlookup = \"ask\"\nfetch = \"allow\"\n",
 		}},
+		{"debug", []string{
+			"",
+			"[debug]\nstalls = false\n",
+			"[debug]\ncpu_profile = true\n",
+		}},
 		{"experimental", []string{
 			"",
 			"[experimental]\n",

@@ -46,6 +46,7 @@ import (
 	"crdx.org/oh/internal/app/ctl"
 	"crdx.org/oh/internal/app/cycle"
 	"crdx.org/oh/internal/app/demo"
+	"crdx.org/oh/internal/app/diagnostics"
 	"crdx.org/oh/internal/app/drops"
 	"crdx.org/oh/internal/app/editor"
 	"crdx.org/oh/internal/app/environment"
@@ -72,7 +73,6 @@ import (
 	"crdx.org/oh/internal/app/shell"
 	"crdx.org/oh/internal/app/skill"
 	"crdx.org/oh/internal/app/slash"
-	"crdx.org/oh/internal/app/stall"
 	"crdx.org/oh/internal/app/startup"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/style"
@@ -892,6 +892,14 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		Effort:       selection.Effort,
 	}
 	defer func() { _ = log.Close() }()
+	if settings.Debug.ShouldProfileCPU {
+		profiler, err := diagnostics.Profile(sessionInfo.Directory)
+		if err != nil {
+			_, _ = fmt.Fprintln(notices, style.Change("the processor profile could not start: "+err.Error()))
+		} else {
+			defer profiler.Close()
+		}
+	}
 	hooks.EmitSessionStarting(ctx, cycle.SessionStarting{Session: sessionInfo})
 	client.ObserveHTTP(log.Observer())
 
@@ -1349,9 +1357,11 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	questionNotifications := notification.NewQuestions(screen.WriteEscape, isTerminalFocused, workspace)
 	app.onQuestion = questionNotifications.Announce
 	app.savePastedImage = dropKeeper.SaveImage
-	stallWatchdog := stall.Watch(filepath.Join(sessionInfo.Directory, stall.LogName))
-	defer stallWatchdog.Close()
-	app.watchStalls = stallWatchdog.Begin
+	if settings.Debug.ShouldRecordStalls {
+		stallWatchdog := diagnostics.Watch(sessionInfo.Directory)
+		defer stallWatchdog.Close()
+		app.watchStalls = stallWatchdog.Begin
+	}
 	toolOutputLimit.SaveOverflowWith(dropKeeper.SaveOutput)
 
 	cellWidth, cellHeight, hasGraphics := graphics.Detect(keyboard, os.Stdout)

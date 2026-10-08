@@ -1,14 +1,11 @@
-package stall
+package diagnostics
 
 import (
 	"fmt"
-	"os"
 	"runtime"
 	"sync"
 	"time"
 )
-
-const LogName = "stalls.txt"
 
 const (
 	threshold   = 250 * time.Millisecond
@@ -17,19 +14,18 @@ const (
 )
 
 type Watchdog struct {
-	path string
+	sessionDirectory string
 
 	mutex     sync.Mutex
 	work      string
 	startedAt time.Time
 	stacks    []byte
 
-	writeMutex sync.Mutex
-	stop       chan struct{}
+	stop chan struct{}
 }
 
-func Watch(path string) *Watchdog {
-	self := &Watchdog{path: path, stop: make(chan struct{})}
+func Watch(sessionDirectory string) *Watchdog {
+	self := &Watchdog{sessionDirectory: sessionDirectory, stop: make(chan struct{})}
 
 	go self.run()
 
@@ -99,15 +95,9 @@ func allStacks() []byte {
 }
 
 func (self *Watchdog) write(work string, took time.Duration, stacks []byte) {
-	self.writeMutex.Lock()
-	defer self.writeMutex.Unlock()
+	endedAt := time.Now()
+	entry := fmt.Appendf(nil, "=== %s: %s held the drawing thread for %s\n%s\n",
+		endedAt.Format(time.RFC3339Nano), work, took.Round(time.Millisecond), stacks)
 
-	file, err := os.OpenFile(self.path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o600)
-	if err != nil {
-		return
-	}
-	defer func() { _ = file.Close() }()
-
-	_, _ = fmt.Fprintf(file, "=== %s: %s held the drawing thread for %s\n%s\n",
-		time.Now().Format(time.RFC3339Nano), work, took.Round(time.Millisecond), stacks)
+	writeEntry(self.sessionDirectory, StallDirectoryName, endedAt, ".txt", entry)
 }

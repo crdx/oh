@@ -12846,6 +12846,7 @@ const (
 	configReloadReplay
 	configReloadSettingThatIsNotLive
 	configReloadGrantThatWaitsForTheNextRun
+	configReloadDebugThatWaitsForTheNextRun
 	configReloadSnippets
 	configReloadRoundRobinFile
 	configReloadSnippetFile
@@ -12875,6 +12876,7 @@ func TestGoldenReloadingConfigDrawsEveryVisibleState(t *testing.T) {
 		"failure showing when the reload lands":             configReloadPreservedFailure,
 		"revision to a setting only a new session picks up": configReloadSettingThatIsNotLive,
 		"a grant that waits for the next run":               configReloadGrantThatWaitsForTheNextRun,
+		"debug settings wait for the next run":              configReloadDebugThatWaitsForTheNextRun,
 	}
 
 	passes := make(map[string]func() string, len(scenarios))
@@ -13255,6 +13257,11 @@ func configReloadStream(t *testing.T, scenario configReloadScenario) string {
 			center = []
 			right = []
 		`)
+		settleLiveConfig(t, self)
+		self.show(inputLine)
+		return screenOutput.String()
+	case configReloadDebugThatWaitsForTheNextRun:
+		writeLiveConfig(t, path, initialConfig+"\n[debug]\nstalls = true\ncpu_profile = true\n")
 		settleLiveConfig(t, self)
 		self.show(inputLine)
 		return screenOutput.String()

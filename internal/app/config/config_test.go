@@ -1554,6 +1554,37 @@ func TestTheToolOutputLimitDefaultsToTwelveKilobytes(t *testing.T) {
 	}
 }
 
+func TestNothingIsDebuggedByDefault(t *testing.T) {
+	config, err := Load("")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if config.Debug.ShouldRecordStalls {
+		t.Error("expected no stalls recorded by default")
+	}
+	if config.Debug.ShouldProfileCPU {
+		t.Error("expected no processor profile by default")
+	}
+}
+
+func TestTheDebugSettingsAreRead(t *testing.T) {
+	config := configFrom(t, `
+		[debug]
+		stalls = true
+		cpu_profile = true
+	`)
+
+	if !config.Debug.ShouldRecordStalls {
+		t.Error("expected stalls recorded")
+	}
+	if !config.Debug.ShouldProfileCPU {
+		t.Error("expected the processor profiled")
+	}
+	if reports := config.UnknownSettings(); len(reports) > 0 {
+		t.Errorf("got %v", reports)
+	}
+}
+
 func TestTheToolOutputLimitIsRead(t *testing.T) {
 	config := configFrom(t, `
 		[tool]

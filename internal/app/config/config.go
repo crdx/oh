@@ -70,6 +70,7 @@ type Config struct {
 	Tool     Tool                           `toml:"tool"`
 
 	Permissions Permissions `toml:"permissions"`
+	Debug       Debug       `toml:"debug"`
 
 	Experimental map[string]any `toml:"experimental"`
 
@@ -190,6 +191,11 @@ type Ui struct {
 
 type Tool struct {
 	Output Size `toml:"output"`
+}
+
+type Debug struct {
+	ShouldRecordStalls bool `toml:"stalls"`
+	ShouldProfileCPU   bool `toml:"cpu_profile"`
 }
 
 type Permissions struct {
