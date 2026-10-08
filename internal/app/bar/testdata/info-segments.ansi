@@ -1,0 +1,15 @@
+\e[38;2;129;162;190mactive-model\e[0m        Claude Haiku \e[38;2;150;152;150m5.5\e[0m \e[38;2;150;152;150m·▫▫\e[0m\e[38;2;192;128;80m▪\e[0m\e[38;2;150;152;150m·▫\e[0m
+\e[38;2;129;162;190mcache-usage\e[0m         91\e[38;2;150;152;150m%\e[0m
+\e[38;2;129;162;190mcontext-usage\e[0m       5\e[38;2;150;152;150m% \e[0m48\e[38;2;150;152;150mK/\e[0m1\e[38;2;150;152;150mM\e[0m
+\e[38;2;129;162;190mfast-mode\e[0m           \e[38;2;150;152;150m·\e[0m
+\e[38;2;129;162;190mgit-branch\e[0m          \e[38;2;150;152;150m\e[0m
+\e[38;2;129;162;190mlocal-time\e[0m          \e[38;2;150;152;150m10:08\e[0m
+\e[38;2;129;162;190mmode-toggle\e[0m         \e[38;2;76;154;44mr\e[0m\e[38;2;76;154;44mx\e[0m\e[38;2;150;152;150mw\e[0m \e[38;2;150;152;150mn\e[0m\e[38;2;150;152;150mg\e[0m\e[38;2;150;152;150ml\e[0m
+\e[38;2;129;162;190msession-emoji\e[0m       🦌
+\e[38;2;129;162;190msession-name\e[0m        \e[38;2;150;152;150mtame-impala\e[0m
+\e[38;2;129;162;190msession-spend\e[0m       \e[38;2;150;152;150m$\e[0m0.01
+\e[38;2;129;162;190msubscription-usage\e[0m  \e[38;2;150;152;150musage n/a\e[0m
+\e[38;2;129;162;190mturn-count\e[0m          \e[38;2;150;152;150m#6\e[0m
+\e[38;2;129;162;190mturn-timer\e[0m          1\e[38;2;150;152;150mm\e[0m \e[38;2;150;152;150m2m\e[0m
+\e[38;2;129;162;190mworkspace-dir\e[0m       \e]8;;file:///workspace\e\\workspace\e]8;;\e\\
+\e[38;2;129;162;190m(empty)\e[0m             \e[38;2;150;152;150mforwards, git-status, grants, jobs\e[0m

@@ -6,11 +6,20 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
+	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/config"
+	"crdx.org/oh/internal/app/cycle"
+	"crdx.org/oh/internal/app/pathgrant"
+	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/segment"
+	"crdx.org/oh/internal/app/segment/localTime"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/internal/jobs"
+	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/util/strutil"
 )
 
@@ -182,5 +191,50 @@ func TestTheForwardsAndGrantsSegmentsReplaceTheRetiredOnes(t *testing.T) {
 	}
 	if _, isRegistered := registry["path-grants"]; isRegistered {
 		t.Error("the retired path-grants segment is still registered")
+	}
+}
+
+func TestInfoLeavesTheStylingOfEveryRealSegmentToTheSegment(t *testing.T) {
+	granted, err := caps.Parse("rx")
+	if err != nil {
+		t.Fatal(err)
+	}
+	registry := NewRegistry(Options{
+		Workspace:         work.At("/workspace"),
+		Session:           cycle.Session{Name: "tame-impala", Model: "claude-haiku-5-5", Effort: "high"},
+		ModelEffortLevels: []string{"low", "medium", "high", "max"},
+		Currency:          money.Dollar(),
+		Sources: Sources{
+			IsTurnRunning:      func() bool { return false },
+			IsSessionPersisted: func() bool { return true },
+			GetContextUsage:    func() (int, int) { return 48_000, 1_000_000 },
+			GetCacheUsage:      func() (int, int) { return 91, 100 },
+			GetSessionSpend:    func() (float64, bool) { return 0.01, true },
+			GetGrantedCaps:     func() caps.Set { return granted },
+			GetGroupStatus:     func() caps.GroupStatus { return caps.GroupStatus{} },
+			GetPathGrants:      func() []pathgrant.Grant { return nil },
+			GetForwardedRoutes: func() []portgrant.Route { return nil },
+			IsPrefixPending:    func() bool { return false },
+			GetTurnTiming:      func() turn.Timing { return turn.Timing{UserTurn: time.Minute, ModelTurn: 2 * time.Minute} },
+			GetTurnCount:       func() int { return 6 },
+			GetJobs:            func() []jobs.Snapshot { return nil },
+		},
+	})
+	registry[localTimeSegment] = localTime.New(func() time.Time {
+		return time.Date(2026, time.October, 8, 10, 8, 0, 0, time.Local)
+	})
+	configuration := NewConfiguration(registry, segment.Layout{})
+
+	info, err := configuration.RenderInfo(segment.Context{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := strutil.VisibleEscapes(info) + "\n"
+	want, err := os.ReadFile(filepath.Join("testdata", "info-segments.ansi"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got != string(want) {
+		t.Errorf("got\n%s\nwant\n%s", got, want)
 	}
 }
