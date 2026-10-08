@@ -20,9 +20,10 @@ import (
 )
 
 const (
-	envPolicy  = "IO_SANDBOX_POLICY"
-	envCommand = "IO_SANDBOX_COMMAND"
-	envProbe   = "IO_SANDBOX_PROBE"
+	envPolicy    = "IO_SANDBOX_POLICY"
+	envCommand   = "IO_SANDBOX_COMMAND"
+	envArguments = "IO_SANDBOX_ARGUMENTS"
+	envProbe     = "IO_SANDBOX_PROBE"
 )
 
 const (
@@ -61,8 +62,9 @@ func Init() {
 	}
 
 	command := os.Getenv(envCommand)
+	arguments := os.Getenv(envArguments)
 
-	if err := execSandboxed(encodedPolicy, command); err != nil {
+	if err := execSandboxed(encodedPolicy, command, arguments); err != nil {
 		fmt.Fprint(os.Stderr, notice, err, "\n")
 		os.Exit(notStarted)
 	}
@@ -70,12 +72,24 @@ func Init() {
 	os.Exit(0)
 }
 
-func execSandboxed(encodedPolicy string, command string) error {
+func execSandboxed(encodedPolicy string, command string, encodedArguments string) error {
 	runtime.LockOSThread()
 
 	var policy Policy
 	if err := json.Unmarshal([]byte(encodedPolicy), &policy); err != nil {
 		return fmt.Errorf("could not read the policy: %w", err)
+	}
+
+	program := shell
+	arguments := []string{shell, "-c", command}
+	if encodedArguments != "" {
+		if err := json.Unmarshal([]byte(encodedArguments), &arguments); err != nil {
+			return fmt.Errorf("could not read the command arguments: %w", err)
+		}
+		if len(arguments) == 0 {
+			return errors.New("a command needs a program")
+		}
+		program = arguments[0]
 	}
 
 	if err := applyMounts(policy); err != nil {
@@ -108,8 +122,8 @@ func execSandboxed(encodedPolicy string, command string) error {
 	}
 
 	//nolint:gosec // running the command is the point, and the sandbox is why that is safe to do
-	if err := syscall.Exec(shell, []string{shell, "-c", command}, environment); err != nil {
-		return fmt.Errorf("could not start %s: %w", shell, err)
+	if err := syscall.Exec(program, arguments, environment); err != nil {
+		return fmt.Errorf("could not start %s: %w", program, err)
 	}
 
 	return nil
@@ -207,7 +221,10 @@ func validate(ctx context.Context, policy Policy) error {
 	if err := requireShell(shell); err != nil {
 		return err
 	}
+	return validatePolicy(ctx, policy)
+}
 
+func validatePolicy(ctx context.Context, policy Policy) error {
 	if err := policy.sane(); err != nil {
 		return err
 	}

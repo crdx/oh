@@ -82,15 +82,10 @@ func (self runner) Start(
 		return startYolo(ctx, directory, command, policy, output)
 	}
 
-	if err := validate(ctx, policy); err != nil {
+	var err error
+	policy, err = preparePolicy(ctx, policy, true)
+	if err != nil {
 		return nil, err
-	}
-	if len(policy.Deny) > 0 && policy.DenyPaths == nil {
-		denyPaths, err := policy.DiscoverDenyPaths()
-		if err != nil {
-			return nil, err
-		}
-		policy.DenyPaths = append([]string{}, denyPaths...)
 	}
 
 	if err := ensureSane(directory, command); err != nil {
@@ -102,16 +97,24 @@ func (self runner) Start(
 		return nil, fmt.Errorf("could not write the policy: %w", err)
 	}
 
+	environment := commandEnvironment(policy, string(encodedPolicy), envCommand, command)
+	return self.start(ctx, directory, environment, policy, output)
+}
+
+func (self runner) start(
+	ctx context.Context,
+	directory string,
+	environment []string,
+	policy Policy,
+	output Output,
+) (Command, error) {
+	var cancel context.CancelFunc
 	if policy.Timeout > 0 {
-		var cancel context.CancelFunc
 		ctx, cancel = context.WithTimeout(ctx, policy.Timeout)
-
-		return self.begin(ctx, cancel, directory, command, policy, string(encodedPolicy), output)
+	} else {
+		ctx, cancel = context.WithCancel(ctx)
 	}
-
-	ctx, cancel := context.WithCancel(ctx)
-
-	return self.begin(ctx, cancel, directory, command, policy, string(encodedPolicy), output)
+	return self.begin(ctx, cancel, directory, environment, policy, output)
 }
 
 func ensureSane(directory string, command string) error {
@@ -136,9 +139,9 @@ func ensureSane(directory string, command string) error {
 	return nil
 }
 
-func commandEnvironment(policy Policy, encodedPolicy string, command string) []string {
+func commandEnvironment(policy Policy, encodedPolicy string, invocationKey string, invocation string) []string {
 	environment := getEnvironment(policy.Env)
-	environment = append(environment, envPolicy+"="+encodedPolicy, envCommand+"="+command)
+	environment = append(environment, envPolicy+"="+encodedPolicy, invocationKey+"="+invocation)
 
 	return append(environment, testnamespace.Environment()...)
 }
@@ -155,14 +158,11 @@ func (self runner) begin(
 	ctx context.Context,
 	cancel context.CancelFunc,
 	directory string,
-	command string,
+	environment []string,
 	policy Policy,
-	encodedPolicy string,
 	output Output,
 ) (Command, error) {
 	startedAt := time.Now()
-
-	environment := commandEnvironment(policy, encodedPolicy, command)
 
 	spawn := self.spawnerFor(policy)
 

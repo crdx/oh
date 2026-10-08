@@ -108,25 +108,41 @@ type Policy struct {
 	MaxProcesses int64         `json:"processes"`
 }
 
+func (self Policy) Clone() Policy {
+	self.Deny = slices.Clone(self.Deny)
+	self.DenyPaths = slices.Clone(self.DenyPaths)
+	self.Read = slices.Clone(self.Read)
+	self.Write = slices.Clone(self.Write)
+	self.Sockets = slices.Clone(self.Sockets)
+	self.Exec = slices.Clone(self.Exec)
+	self.OptionalPaths = slices.Clone(self.OptionalPaths)
+	self.Env = slices.Clone(self.Env)
+	self.SetEnv = maps.Clone(self.SetEnv)
+	return self
+}
+
 func (self Policy) WithRead(paths ...string) Policy {
-	self.Read = append(slices.Clone(self.Read), paths...)
+	self = self.Clone()
+	self.Read = append(self.Read, paths...)
 	return self
 }
 
 func (self Policy) WithoutRead(paths ...string) Policy {
-	self.Read = slices.DeleteFunc(slices.Clone(self.Read), func(path string) bool {
+	self = self.Clone()
+	self.Read = slices.DeleteFunc(self.Read, func(path string) bool {
 		return slices.Contains(paths, path)
 	})
 	return self
 }
 
 func (self Policy) WithWrite(paths ...string) Policy {
-	self.Write = append(slices.Clone(self.Write), paths...)
+	self = self.Clone()
+	self.Write = append(self.Write, paths...)
 	return self
 }
 
 func (self Policy) WithSetEnv(name string, value string) Policy {
-	self.SetEnv = maps.Clone(self.SetEnv)
+	self = self.Clone()
 	if self.SetEnv == nil {
 		self.SetEnv = make(map[string]string)
 	}
