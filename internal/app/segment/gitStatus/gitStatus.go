@@ -109,6 +109,11 @@ func (self *state) Render(context segment.Context) string {
 func (self *state) Ladder(segment.Context) []string {
 	gitDir := gitrepo.Dir(self.workspaceDir)
 	if gitDir == "" {
+		self.mutex.Lock()
+		self.tree, self.isFailed, self.isRead = tree{}, false, false
+		self.readAt = time.Now()
+		self.mutex.Unlock()
+
 		return []string{""}
 	}
 

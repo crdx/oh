@@ -21,47 +21,47 @@ type Sequence struct {
 	IsHyperlink bool
 }
 
-func GetSequence(runes []rune, start int) Sequence {
-	if start+1 >= len(runes) {
-		return Sequence{End: len(runes)}
+func GetSequence(text string, start int) Sequence {
+	if start+1 >= len(text) {
+		return Sequence{End: len(text)}
 	}
 
-	switch runes[start+1] {
+	switch text[start+1] {
 	case '[':
-		end := getCSIEnd(runes, start)
-		if cells, isCursorRight := getCursorRight(string(runes[start:end])); isCursorRight {
+		end := getCSIEnd(text, start)
+		if cells, isCursorRight := getCursorRight(text[start:end]); isCursorRight {
 			return Sequence{End: end, Cells: cells}
 		}
 		return Sequence{End: end, IsStyle: true}
 	case ']':
-		end, isTerminated := getOSCEnd(runes, start)
+		end, isTerminated := getOSCEnd(text, start)
 		if !isTerminated {
 			return Sequence{End: end}
 		}
-		sequence := string(runes[start:end])
+		sequence := text[start:end]
 		if hyperlink, isHyperlink := getHyperlink(sequence); isHyperlink {
 			return Sequence{End: end, Hyperlink: hyperlink, IsHyperlink: true}
 		}
-		text, cells := getTextSizing(sequence)
-		return Sequence{End: end, Text: text, Cells: cells}
+		sizedText, cells := getTextSizing(sequence)
+		return Sequence{End: end, Text: sizedText, Cells: cells}
 	case '_', 'P', '^', 'X':
-		return Sequence{End: getStringEnd(runes, start)}
+		return Sequence{End: getStringEnd(text, start)}
 	default:
-		return Sequence{End: getLegacyEnd(runes, start)}
+		return Sequence{End: getLegacyEnd(text, start)}
 	}
 }
 
-func GetEnd(runes []rune, start int) int {
-	return GetSequence(runes, start).End
+func GetEnd(text string, start int) int {
+	return GetSequence(text, start).End
 }
 
-func getCSIEnd(runes []rune, start int) int {
-	for end := start + 2; end < len(runes); end++ {
-		if runes[end] >= 0x40 && runes[end] <= 0x7e {
+func getCSIEnd(text string, start int) int {
+	for end := start + 2; end < len(text); end++ {
+		if text[end] >= 0x40 && text[end] <= 0x7e {
 			return end + 1
 		}
 	}
-	return len(runes)
+	return len(text)
 }
 
 func getCursorRight(sequence string) (int, bool) {
@@ -76,37 +76,37 @@ func getCursorRight(sequence string) (int, bool) {
 	return min(cells, maximumCursorCells), true
 }
 
-func getOSCEnd(runes []rune, start int) (int, bool) {
-	for end := start + 2; end < len(runes); end++ {
+func getOSCEnd(text string, start int) (int, bool) {
+	for end := start + 2; end < len(text); end++ {
 		switch {
-		case runes[end] == '\a':
+		case text[end] == '\a':
 			return end + 1, true
-		case runes[end] == '\x1b' && end+1 < len(runes) && runes[end+1] == '\\':
+		case text[end] == '\x1b' && end+1 < len(text) && text[end+1] == '\\':
 			return end + 2, true
 		}
 	}
-	return len(runes), false
+	return len(text), false
 }
 
-func getStringEnd(runes []rune, start int) int {
-	for end := start + 2; end < len(runes); end++ {
+func getStringEnd(text string, start int) int {
+	for end := start + 2; end < len(text); end++ {
 		switch {
-		case runes[end] == '\a':
+		case text[end] == '\a':
 			return end + 1
-		case runes[end] == '\x1b' && end+1 < len(runes) && runes[end+1] == '\\':
+		case text[end] == '\x1b' && end+1 < len(text) && text[end+1] == '\\':
 			return end + 2
 		}
 	}
 
-	return len(runes)
+	return len(text)
 }
 
-func getLegacyEnd(runes []rune, start int) int {
+func getLegacyEnd(text string, start int) int {
 	end := start + 1
-	for end < len(runes) && runes[end] != 'm' && runes[end] != 'K' {
+	for end < len(text) && text[end] != 'm' && text[end] != 'K' {
 		end++
 	}
-	if end < len(runes) {
+	if end < len(text) {
 		end++
 	}
 	return end

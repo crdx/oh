@@ -193,3 +193,30 @@ func TestCuttingStyledTextKeepsWholeEscapeSequences(t *testing.T) {
 		t.Errorf("Cut(10) = %q and %d, want the whole of it and 10", got, took)
 	}
 }
+
+func FuzzCuttingAtTheWholeWidthKeepsEveryByte(fuzzer *testing.F) {
+	for _, seed := range []string{
+		"",
+		"plain",
+		"\x1b[31mred\x1b[0m",
+		"·▫▪ ─ 🦦",
+		"\x1b]8;;file:///x\x1b\\x\x1b]8;;\x1b\\",
+		"\x1b]66;s=2:w=2;🦦\x1b\\",
+		"\x1b[5Cx",
+		"a\u0301b",
+		"\xff\xfe",
+		"\x1b[3\xe2\x94\x80m",
+		"1\ufe0f\u20e3",
+	} {
+		fuzzer.Add(seed)
+	}
+
+	fuzzer.Fuzz(func(t *testing.T, text string) {
+		cells := Of(text)
+
+		kept, keptCells := Cut(text, cells)
+		if kept != text || keptCells != cells {
+			t.Errorf("Cut(%q, %d) = %q at %d cells, want the whole text", text, cells, kept, keptCells)
+		}
+	})
+}

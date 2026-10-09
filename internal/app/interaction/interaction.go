@@ -71,6 +71,8 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 	triggerChanges := handler.TriggerChanges
 	hostCommands := handler.HostCommands
 	editorOutcomes := handler.EditorOutcomes
+	frames := newFrameGate(turnFrame)
+	defer frames.stop()
 	for {
 		schedule()
 
@@ -82,6 +84,9 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 		case event, isRunning := <-handler.GetTurnEvents():
 			if isRunning {
 				handler.OnTurn(event)
+				if frames.shouldWait(time.Now()) {
+					continue
+				}
 			} else if !handler.OnTurnFinished() {
 				return
 			}
@@ -104,6 +109,7 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 				continue
 			}
 		case <-refreshes:
+		case <-frames.due():
 		case conclusion, isOpen := <-conclusions:
 			if !isOpen {
 				conclusions = nil
@@ -143,12 +149,15 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 		}
 
 		handler.OnDraw()
+		frames.drawn(time.Now())
 	}
 }
 
 type refreshTimer struct {
 	getNextRefresh func(time.Time) time.Time
 	timer          *time.Timer
+	firesAt        time.Time
+	firedAt        time.Time
 }
 
 func newRefreshTimer(getNextRefresh func(time.Time) time.Time) *refreshTimer {
@@ -167,14 +176,25 @@ func (self *refreshTimer) schedule() {
 		return
 	}
 
-	if delay := dueAt.Sub(at); delay > 0 {
-		self.timer.Reset(delay)
-	} else {
-		self.timer.Reset(soonest)
+	if !self.firesAt.IsZero() && !self.firesAt.After(at) {
+		self.firedAt = self.firesAt
 	}
+
+	delay := max(latest(dueAt, self.firedAt.Add(refreshFloor)).Sub(at), soonest)
+	self.firesAt = at.Add(delay)
+	self.timer.Reset(delay)
+}
+
+func latest(first time.Time, second time.Time) time.Time {
+	if first.After(second) {
+		return first
+	}
+
+	return second
 }
 
 func (self *refreshTimer) stop() {
+	self.firesAt = time.Time{}
 	self.timer.Stop()
 }
 

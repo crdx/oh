@@ -405,33 +405,31 @@ func statesAt(atoms []atom) []presentationState {
 func split(text string) []atom {
 	atoms := make([]atom, 0, utf8.RuneCountInString(text))
 
-	runes := []rune(text)
-
-	for i := 0; i < len(runes); {
-		if runes[i] == '\x1b' {
-			sequence := escape.GetSequence(runes, i)
+	for at := 0; at < len(text); {
+		if text[at] == '\x1b' {
+			sequence := escape.GetSequence(text, at)
 			atoms = append(atoms, atom{
-				text:        string(runes[i:sequence.End]),
+				text:        text[at:sequence.End],
 				cells:       sequence.Cells,
 				hyperlink:   sequence.Hyperlink,
 				isEscape:    true,
 				isStyle:     sequence.IsStyle,
 				isHyperlink: sequence.IsHyperlink,
 			})
-			i = sequence.End
+			at = sequence.End
 
 			continue
 		}
 
-		end := i + 1
-		for end < len(runes) && runes[end] != '\x1b' {
+		end := at + 1
+		for end < len(text) && text[end] != '\x1b' {
 			end++
 		}
 
-		for grapheme, cells := range Graphemes(string(runes[i:end])) {
+		for grapheme, cells := range Graphemes(text[at:end]) {
 			atoms = append(atoms, atom{text: grapheme, cells: cells})
 		}
-		i = end
+		at = end
 	}
 
 	return atoms
@@ -484,21 +482,20 @@ func closing(text string) string {
 	isStyleOpen := false
 	isHyperlinkOpen := false
 
-	runes := []rune(text)
-	for i := 0; i < len(runes); {
-		if runes[i] != '\x1b' {
-			i++
+	for at := 0; at < len(text); {
+		if text[at] != '\x1b' {
+			at++
 			continue
 		}
 
-		sequence := escape.GetSequence(runes, i)
-		if isSGR(string(runes[i:sequence.End])) {
-			isStyleOpen = !isReset(string(runes[i:sequence.End]))
+		sequence := escape.GetSequence(text, at)
+		if isSGR(text[at:sequence.End]) {
+			isStyleOpen = !isReset(text[at:sequence.End])
 		}
 		if sequence.IsHyperlink {
 			isHyperlinkOpen = sequence.Hyperlink != ""
 		}
-		i = sequence.End
+		at = sequence.End
 	}
 
 	var result string

@@ -31,45 +31,44 @@ func (self *Screen) fitFrom(text string, isRunningOn bool) string {
 	var out strings.Builder
 
 	last := rune(0)
-	runes := []rune(text)
 
-	for i := 0; i < len(runes); {
-		switch runes[i] {
+	for at := 0; at < len(text); {
+		switch text[at] {
 		case '\x1b':
-			sequence := escape.GetSequence(runes, i)
+			sequence := escape.GetSequence(text, at)
 			if self.column+sequence.Cells > self.columns && self.column > 0 {
 				out.WriteString("\r\n")
 				self.column = 0
 				self.openedRows++
 			}
 			self.column = min(self.column+sequence.Cells, self.columns)
-			out.WriteString(string(runes[i:sequence.End]))
-			i = sequence.End
+			out.WriteString(text[at:sequence.End])
+			at = sequence.End
 
 		case '\n':
 			if last != '\r' {
 				out.WriteRune('\r')
 			}
 
-			out.WriteRune(runes[i])
+			out.WriteByte(text[at])
 			self.column = 0
 			self.openedRows++
-			last = runes[i]
-			i++
+			last = rune(text[at])
+			at++
 
 		case '\r':
-			out.WriteRune(runes[i])
+			out.WriteByte(text[at])
 			self.column = 0
-			last = runes[i]
-			i++
+			last = rune(text[at])
+			at++
 
 		default:
-			end := i + 1
-			for end < len(runes) && runes[end] != '\x1b' && runes[end] != '\n' && runes[end] != '\r' {
+			end := at + 1
+			for end < len(text) && text[end] != '\x1b' && text[end] != '\n' && text[end] != '\r' {
 				end++
 			}
 
-			for grapheme, cells := range width.Graphemes(string(runes[i:end])) {
+			for grapheme, cells := range width.Graphemes(text[at:end]) {
 				isSoftBreak := false
 
 				if self.column+cells > self.columns && self.column > 0 {
@@ -99,7 +98,7 @@ func (self *Screen) fitFrom(text string, isRunningOn bool) string {
 					out.WriteString(noAutoWrap)
 				}
 			}
-			i = end
+			at = end
 		}
 	}
 

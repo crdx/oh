@@ -208,6 +208,48 @@ func TestTheSegmentSaysNothingOutsideARepository(t *testing.T) {
 	}
 }
 
+func TestTheSegmentOutsideARepositoryLooksAgainOnlyAtItsRate(t *testing.T) {
+	instance := build(t, t.TempDir(), "rate = \"1h\"\n")
+	at := time.Now()
+
+	if got := instance.NextRefresh(segment.Phase{At: at}); !got.Equal(at) {
+		t.Errorf("expected a segment never drawn to be drawn at once, got %s", got.Sub(at))
+	}
+
+	instance.Render(segment.Context{})
+
+	if got := instance.NextRefresh(segment.Phase{At: at}); got.Sub(at) < 59*time.Minute {
+		t.Errorf("expected the rate to pace the next look outside a repository, got %s", got.Sub(at))
+	}
+}
+
+func TestARepositoryCreatedLaterIsReadOnceTheRateHasPassed(t *testing.T) {
+	isolateGit(t)
+
+	workspaceDir := t.TempDir()
+	instance := build(t, workspaceDir, "rate = \"1h\"\n")
+	instance.Render(segment.Context{})
+
+	command := exec.CommandContext(t.Context(), "git", "init", "-q", "-b", "main")
+	command.Dir = workspaceDir
+	if output, err := command.CombinedOutput(); err != nil {
+		t.Fatalf("failed to create the repository: %s\n%s", err, output)
+	}
+
+	instance.Render(segment.Context{})
+	if instance.isReading || instance.isRead {
+		t.Fatal("expected the new repository to wait for the rate")
+	}
+
+	instance.mutex.Lock()
+	instance.readAt = time.Now().Add(-time.Hour)
+	instance.mutex.Unlock()
+
+	if got := settle(t, instance); got != "●" {
+		t.Errorf("expected the clean mark once read, got %q", got)
+	}
+}
+
 func TestTheSegmentReadsARealRepositoryOffTheDrawingThread(t *testing.T) {
 	isolateGit(t)
 

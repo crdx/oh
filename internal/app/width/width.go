@@ -72,25 +72,31 @@ func Of(text string) int {
 	}
 
 	cells := 0
-	runes := []rune(text)
 
-	for i := 0; i < len(runes); {
-		if runes[i] == '\x1b' {
-			sequence := escape.GetSequence(runes, i)
+	for at := 0; at < len(text); {
+		if text[at] == '\x1b' {
+			sequence := escape.GetSequence(text, at)
 			cells += sequence.Cells
-			i = sequence.End
+			at = sequence.End
 			continue
 		}
 
-		end := i + 1
-		for end < len(runes) && runes[end] != '\x1b' {
+		end := at + 1
+		for end < len(text) && text[end] != '\x1b' {
 			end++
 		}
-		for _, graphemeCells := range Graphemes(string(runes[i:end])) {
-			cells += graphemeCells
+
+		if plain, isPlain := plainWidth(text[at:end]); isPlain {
+			cells += plain
+		} else {
+			for _, graphemeCells := range Graphemes(text[at:end]) {
+				cells += graphemeCells
+			}
 		}
-		i = end
+
+		at = end
 	}
+
 	return cells
 }
 
@@ -100,34 +106,33 @@ func Cut(text string, cells int) (string, int) {
 	}
 
 	takenCells := 0
-	runes := []rune(text)
 	var keptText strings.Builder
 
-	for i := 0; i < len(runes); {
-		if runes[i] == '\x1b' {
-			sequence := escape.GetSequence(runes, i)
+	for at := 0; at < len(text); {
+		if text[at] == '\x1b' {
+			sequence := escape.GetSequence(text, at)
 			if takenCells+sequence.Cells > cells {
 				return keptText.String(), takenCells
 			}
-			keptText.WriteString(string(runes[i:sequence.End]))
+			keptText.WriteString(text[at:sequence.End])
 			takenCells += sequence.Cells
-			i = sequence.End
+			at = sequence.End
 			continue
 		}
 
-		end := i + 1
-		for end < len(runes) && runes[end] != '\x1b' {
+		end := at + 1
+		for end < len(text) && text[end] != '\x1b' {
 			end++
 		}
 
-		for one := range graphemes(string(runes[i:end])) {
+		for one := range graphemes(text[at:end]) {
 			if takenCells+one.cells > cells {
 				return keptText.String(), takenCells
 			}
 			keptText.WriteString(one.text)
 			takenCells += one.cells
 		}
-		i = end
+		at = end
 	}
 
 	return keptText.String(), takenCells

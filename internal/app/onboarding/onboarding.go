@@ -9,6 +9,7 @@ import (
 	"os"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"crdx.org/oh/pkg/agent"
 
@@ -358,27 +359,27 @@ func (self *wizard) typeOut(text string, interval time.Duration) error {
 		return err
 	}
 
-	runes := []rune(text)
-
-	for at := 0; at < len(runes); {
+	for at := 0; at < len(text); {
 		end := at
-		for end < len(runes) && runes[end] == '\x1b' {
-			end = escape.GetEnd(runes, end)
+		for end < len(text) && text[end] == '\x1b' {
+			end = escape.GetEnd(text, end)
 		}
 
-		hasCharacter := end < len(runes)
+		hasCharacter := end < len(text)
 		if hasCharacter {
-			end++
+			_, size := utf8.DecodeRuneInString(text[end:])
+			end += size
 		}
 
-		if _, err := io.WriteString(self.output, string(runes[at:end])); err != nil {
+		if _, err := io.WriteString(self.output, text[at:end]); err != nil {
 			return err
 		}
 		if hasCharacter {
-			self.rest(interval + restAfter(runes[end-1]))
+			character, _ := utf8.DecodeLastRuneInString(text[:end])
+			self.rest(interval + restAfter(character))
 		}
 		if self.isOpeningSkipped {
-			_, err := io.WriteString(self.output, string(runes[end:]))
+			_, err := io.WriteString(self.output, text[end:])
 			return err
 		}
 

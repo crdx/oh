@@ -22,6 +22,34 @@
       +8s  Configuration reloaded automatically (dismissing in 2s)
       +9s  Configuration reloaded automatically (dismissing in 1s)
      +10s
+=== default bar between turns outside a repository ===
+      +0s  ·✦· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+      +5s  ·✦· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+     +10s  ·✦· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+     +15s  ·✦· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+=== default bar during a turn outside a repository ===
+      +0s  ✦·· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+   +100ms  ·✦· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+   +200ms  ··✦ ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+   +300ms  ··✦ ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+   +400ms  ·✦· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+   +500ms  ✦·· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+   +600ms  ✦·· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+   +700ms  ·✦· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+   +800ms  ··✦ ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+   +900ms  ··✦ ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+      +1s  ·✦· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+=== git status alone in a repository ===
+      +0s
+   +100ms  ●
+      +5s  ●
+    +5.1s  ●
+     +10s  ●
+   +10.1s  ●
+=== git status alone outside a repository ===
+      +0s
+      +5s
+     +10s
 === redraw feedback ticks at its own start and expires ===
       +1s  Redrawn in 42ms (dismissing in 1s)
       +2s

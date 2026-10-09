@@ -14314,8 +14314,9 @@ func goldenRepository(t *testing.T, head string) string {
 }
 
 const (
-	goldenSettleLimit = 10 * time.Second
-	goldenSettlePoll  = 10 * time.Millisecond
+	goldenSettleLimit   = 10 * time.Second
+	filmstripFrameLimit = 1000
+	goldenSettlePoll    = 10 * time.Millisecond
 
 	goldenCleanRepository = `
 git init -q -b main
@@ -14586,6 +14587,63 @@ func goldenFeedbackSchedulePass(t *testing.T, span time.Duration, dismissAfter t
 	}
 }
 
+func goldenDefaultBarSchedulePass(t *testing.T, isRunning bool, span time.Duration) func() string {
+	t.Helper()
+
+	return func() string {
+		return drawnOnAStoppedClock(t, func(t *testing.T) string {
+			t.Helper()
+
+			startedAt := time.Now()
+
+			held := &App{mode: caps.NewMode(caps.All())}
+			held.currentTurn.Stream = testTimedTurnStream(isRunning, startedAt, startedAt)
+
+			layout, err := configFrom(t, "").BuildLayout(availableSegments(work.At(workspaceMarker), held))
+			if err != nil {
+				t.Fatal(err)
+			}
+			held.display.bar = bar.NewConfiguration(nil, layout)
+
+			return filmstrip(startedAt, span, 0, func() time.Time {
+				return held.nextBarRefresh(time.Now())
+			}, func() string {
+				drawn := make([]string, 0, len(segment.Positions))
+				for _, position := range segment.Positions {
+					drawn = append(drawn, renderBar(layout, position))
+				}
+
+				return strings.Join(drawn, " │ ")
+			})
+		})
+	}
+}
+
+func goldenGitStatusSchedulePass(t *testing.T, workspaceDir string, span time.Duration) func() string {
+	t.Helper()
+
+	return func() string {
+		return drawnOnAStoppedClock(t, func(t *testing.T) string {
+			t.Helper()
+
+			startedAt := time.Now()
+
+			built, err := gitStatus.New(workspaceDir)(goldenSegmentOptions(""))
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			layout := segment.Layout{segment.BottomLeft: {built}}
+
+			return filmstrip(startedAt, span, 0, func() time.Time {
+				return layout.NextRefresh(segment.Phase{At: time.Now()})
+			}, func() string {
+				return style.Plain(renderBar(layout, segment.BottomLeft))
+			})
+		})
+	}
+}
+
 func filmstrip(
 	startedAt time.Time,
 	span time.Duration,
@@ -14595,9 +14653,14 @@ func filmstrip(
 ) string {
 	var strip strings.Builder
 
-	for {
+	for frames := 0; ; frames++ {
 		at := getNextRefresh()
 		if at.IsZero() || at.Sub(startedAt) > span {
+			return strip.String()
+		}
+
+		if frames == filmstripFrameLimit {
+			fmt.Fprintf(&strip, "%9s  gave up after %d redraws\n", "+"+time.Since(startedAt).Truncate(time.Millisecond).String(), frames)
 			return strip.String()
 		}
 
@@ -14614,6 +14677,7 @@ func filmstrip(
 
 func TestGoldenTheRedrawScheduleRunsWhenItRanBefore(t *testing.T) {
 	t.Setenv("HOME", "/home/tester")
+	isolateGoldenGit(t)
 
 	passes := map[string]func() string{
 		"running turn":                                       goldenSchedulePass(t, true, 0, 2*time.Second),
@@ -14626,6 +14690,10 @@ func TestGoldenTheRedrawScheduleRunsWhenItRanBefore(t *testing.T) {
 		"confirmation feedback ticks down to its dismissal":  goldenFeedbackSchedulePass(t, configReloadConfirmationDuration+time.Second, configReloadConfirmationDuration, "Configuration reloaded automatically"),
 		"redraw feedback ticks at its own start and expires": goldenFeedbackSchedulePass(t, redrawFeedbackDuration+time.Second, redrawFeedbackDuration, "Redrawn in 42ms"),
 		"a finished job lingers on the bar and then goes":    goldenJobSchedulePass(t, 3*time.Second, 40*time.Second),
+		"default bar between turns outside a repository":     goldenDefaultBarSchedulePass(t, false, 16*time.Second),
+		"default bar during a turn outside a repository":     goldenDefaultBarSchedulePass(t, true, time.Second),
+		"git status alone outside a repository":              goldenGitStatusSchedulePass(t, workspaceMarker, 11*time.Second),
+		"git status alone in a repository":                   goldenGitStatusSchedulePass(t, goldenGitRepository(t, goldenCleanRepository), 11*time.Second),
 	}
 
 	compareWithGolden(t, "schedule", ".ansi", passes)
@@ -14769,14 +14837,20 @@ func customToolDefaultMode(t *testing.T, isEnabled bool) *caps.Mode {
 	return caps.NewModeWithGroups(options.Caps, options.GroupFlags, toolGroups)
 }
 
-func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
-	t.Setenv("HOME", "/user/kevin")
+func isolateGoldenGit(t *testing.T) {
+	t.Helper()
+
 	t.Setenv("GIT_CONFIG_GLOBAL", os.DevNull)
 	t.Setenv("GIT_CONFIG_NOSYSTEM", "1")
 	t.Setenv("GIT_AUTHOR_NAME", "Kevin")
 	t.Setenv("GIT_AUTHOR_EMAIL", "kevin@example.com")
 	t.Setenv("GIT_COMMITTER_NAME", "Kevin")
 	t.Setenv("GIT_COMMITTER_EMAIL", "kevin@example.com")
+}
+
+func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
+	t.Setenv("HOME", "/user/kevin")
+	isolateGoldenGit(t)
 
 	at := time.Date(2026, time.August, 23, 14, 32, 9, 0, time.UTC)
 	isPersisted := func() bool { return true }

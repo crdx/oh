@@ -191,17 +191,20 @@ func Error(err error) string {
 func Plain(text string) string {
 	var out strings.Builder
 
-	runes := []rune(text)
-	for i := 0; i < len(runes); {
-		if runes[i] == '\x1b' {
-			sequence := escape.GetSequence(runes, i)
+	for at := 0; at < len(text); {
+		if text[at] == '\x1b' {
+			sequence := escape.GetSequence(text, at)
 			out.WriteString(sequence.Text)
-			i = sequence.End
+			at = sequence.End
 			continue
 		}
 
-		out.WriteRune(runes[i])
-		i++
+		end := at + 1
+		for end < len(text) && text[end] != '\x1b' {
+			end++
+		}
+		out.WriteString(text[at:end])
+		at = end
 	}
 
 	return out.String()

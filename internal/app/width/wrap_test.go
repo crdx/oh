@@ -340,17 +340,16 @@ func TestElidingNeverCutsThroughAnEscapeSequence(t *testing.T) {
 			t.Errorf("Elide(%d) = %q, which is %d cells", cells, got, Of(got))
 		}
 
-		runes := []rune(got)
-		for i := 0; i < len(runes); i++ {
-			if runes[i] != '\x1b' {
+		for i := 0; i < len(got); i++ {
+			if got[i] != '\x1b' {
 				continue
 			}
 
-			sequence := escape.GetSequence(runes, i)
-			if sequence.End > len(runes) || sequence.End == i {
+			sequence := escape.GetSequence(got, i)
+			if sequence.End > len(got) || sequence.End == i {
 				t.Fatalf("Elide(%d) = %q, which holds a cut sequence at %d", cells, got, i)
 			}
-			if !strings.HasSuffix(string(runes[i:sequence.End]), "m") {
+			if !strings.HasSuffix(got[i:sequence.End], "m") {
 				t.Errorf("Elide(%d) = %q, whose sequence at %d is incomplete", cells, got, i)
 			}
 			i = sequence.End - 1
