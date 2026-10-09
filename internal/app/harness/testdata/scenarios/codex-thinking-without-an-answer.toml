@@ -1,0 +1,61 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[tool]]
+name = "audit"
+outputs = ["every case is covered"]
+
+[first]
+prompt = "audit the golden coverage"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"reasoning-1","type":"reasoning","content":[],"encrypted_content":"","summary":[]}}''',
+    '''{"type":"response.reasoning_summary_part.added","part":{"type":"summary_text","text":""}}''',
+    '''{"type":"response.reasoning_summary_text.delta","delta":"Auditing what the goldens draw."}''',
+    '''{"type":"response.reasoning_summary_text.done","text":"Auditing what the goldens draw."}''',
+    '''{"type":"response.reasoning_summary_part.done","part":{"type":"summary_text","text":"Auditing what the goldens draw."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"reasoning-1","type":"reasoning","content":[],"encrypted_content":"seal-1","summary":[{"type":"summary_text","text":"Auditing what the goldens draw."}]}}''',
+    '''{"type":"response.output_item.added","item":{"id":"call-item-2","type":"function_call","call_id":"call-1","name":"audit","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-2","delta":"{}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-2","arguments":"{}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-2","type":"function_call","call_id":"call-1","name":"audit","arguments":"{}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"reasoning-3","type":"reasoning","content":[],"encrypted_content":"","summary":[]}}''',
+    '''{"type":"response.reasoning_summary_part.added","part":{"type":"summary_text","text":""}}''',
+    '''{"type":"response.reasoning_summary_text.delta","delta":"I am adding the two missing cases and wiring them up."}''',
+    '''{"type":"response.reasoning_summary_text.done","text":"I am adding the two missing cases and wiring them up."}''',
+    '''{"type":"response.reasoning_summary_part.done","part":{"type":"summary_text","text":"I am adding the two missing cases and wiring them up."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"reasoning-3","type":"reasoning","content":[],"encrypted_content":"seal-2","summary":[{"type":"summary_text","text":"I am adding the two missing cases and wiring them up."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-4","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Both cases are covered now."}''',
+    '''{"type":"response.output_text.done","text":"Both cases are covered now."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Both cases are covered now."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-4","type":"message","role":"assistant","content":[{"type":"output_text","text":"Both cases are covered now."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "anything else missing?"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-5","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Nothing else is missing."}''',
+    '''{"type":"response.output_text.done","text":"Nothing else is missing."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Nothing else is missing."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-5","type":"message","role":"assistant","content":[{"type":"output_text","text":"Nothing else is missing."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

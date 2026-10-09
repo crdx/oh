@@ -1,0 +1,16 @@
+{"kind":"head","version":19,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
+{"kind":"event","event":{"kind":"mode_change","name":"w","state":"rxngl"}}
+{"kind":"event","event":{"kind":"job_stop","name":"web","state":"w"}}
+{"kind":"event","event":{"kind":"user_message","text":"is the preview still up"}}
+{"kind":"event","event":{"kind":"model_message","text":"No. It was stopped when the workspace was made read-only."}}
+{"kind":"item","payload":{"role":"user","content":"\u003cenvironment_context\u003e\nThe workspace is now read-only.\n\u003c/environment_context\u003e\n\n\u003ccodex_internal_context source=\"job\"\u003e\nJob `web` stopped because the workspace was made read-only.\n\u003c/codex_internal_context\u003e"}}
+{"kind":"item","payload":{"role":"user","content":"is the preview still up"}}
+{"kind":"item","payload":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"No. It was stopped when the workspace was made read-only."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"start it again"}}
+{"kind":"event","event":{"kind":"model_message","text":"The workspace is read-only, so it cannot run yet."}}
+{"kind":"item","payload":{"role":"user","content":"start it again"}}
+{"kind":"item","payload":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"The workspace is read-only, so it cannot run yet."}]}}
+{"kind":"turn_completion","turn":{}}

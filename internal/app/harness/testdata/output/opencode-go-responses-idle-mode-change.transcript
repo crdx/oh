@@ -1,0 +1,33 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `muse-spark-1.3-contributor`
+- **Effort:** `medium`
+- **Provider:** `opencode-go`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## Mode · rxngl · toggled w · +0s
+
+```
+The workspace is now read-only.
+```
+
+## User · +0s
+
+continue with the new mode
+
+## Assistant · +0s
+
+The workspace is read-only.
+
+## User · +0s
+
+continue
+
+## Assistant · +0s
+
+Continued.

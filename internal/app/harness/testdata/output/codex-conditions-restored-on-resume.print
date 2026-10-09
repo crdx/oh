@@ -1,0 +1,18 @@
+
+ bind a listener on ::1
+
+
+There is no IPv6 here, so 127.0.0.1 instead.
+
+
+ 🤖 Unix sockets now work under /tmp, not the workspace.
+ 🤖 IPv6 available; ::1 reaches the sandbox loopback.
+ 🤖 The session is interactive: questions, approvals, and /! commands for the user are available. A
+    background job wakes the conversation when it ends.
+
+
+
+ try ::1 again
+
+
+::1 answers now.

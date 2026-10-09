@@ -3,7 +3,7 @@
 {"kind":"event","event":{"kind":"job_ended","name":"build","state":{"snapshot":{"name":"build","command":"just build","state":"failed","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:21Z","code":2},"output":"Usage:\n  oh [options]         Start a session\n  oh --help            Show help\ncmd/oh/draw.go:41:9: undefined: getWidth"}}}
 {"kind":"event","event":{"kind":"user_message","text":"what happened to the build"}}
 {"kind":"event","event":{"kind":"model_message","text":"It failed after twelve seconds: getWidth is undefined in draw.go."}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Job `build` exited: failed after 12s, exit(2).\n\n```\nUsage:\n  oh [options]         Start a session\n  oh --help            Show help\ncmd/oh/draw.go:41:9: undefined: getWidth\n```"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nJob `build` exited: failed after 12s, exit(2).\n\n```\nUsage:\n  oh [options]         Start a session\n  oh --help            Show help\ncmd/oh/draw.go:41:9: undefined: getWidth\n```\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"what happened to the build"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"It failed after twelve seconds: getWidth is undefined in draw.go."}]}}
 {"kind":"turn_completion","turn":{}}

@@ -1,0 +1,35 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `medium`
+- **Provider:** `codex`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+listen on a Unix socket
+
+## Assistant · +0s
+
+A socket beneath /tmp it is.
+
+## Conditions · unix sockets, ipv6, asking the user · +0s
+
+```
+Unix sockets no longer work.
+IPv6 unavailable; use 127.0.0.1.
+The session is non-interactive: questions, approvals, and /! commands for the user are unavailable. A background job does not wake the conversation when it ends.
+```
+
+## User · +0s
+
+listen on it again
+
+## Assistant · +0s
+
+Not any more, so 127.0.0.1 it is.

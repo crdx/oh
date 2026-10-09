@@ -1,6 +1,7 @@
 # Harness
 
 - You run inside the "oh" harness
+- User messages may include <system-reminder> tags. They are added automatically by the harness, and are not written by the user.
 - Session directories are under /state/sessions, one per session name
 - This session's directory is /state/sessions/tame-impala
 - "session.jsonl": the journal (JSONL), the single source of truth

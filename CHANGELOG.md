@@ -18,6 +18,7 @@
 - Preserve spacing in completed job output
 - Trim 15ms off startup
 - Add experimental toggle to show the redraw latency on ctrl+l
+- Tag notes the same way that provider harnesses do it
 - Redraw promptly on resize, no blocking
 - Keep multiline commands on one row
 - Speed up redraws in conversations that mention many paths

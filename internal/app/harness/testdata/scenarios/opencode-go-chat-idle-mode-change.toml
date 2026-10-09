@@ -1,0 +1,23 @@
+provider = "opencode-go"
+model = "kimi-k2.7-code"
+toggle-before-first = "w"
+
+[first]
+prompt = "continue with the new mode"
+
+[[first.response]]
+event = [
+    '''{"choices":[{"delta":{"role":"assistant","content":"The workspace is read-only."}}]}''',
+    '''{"choices":[{"delta":{},"finish_reason":"stop"}]}''',
+    '''[DONE]''',
+]
+
+[resume]
+prompt = "continue"
+
+[[resume.response]]
+event = [
+    '''{"choices":[{"delta":{"role":"assistant","content":"Continued."}}]}''',
+    '''{"choices":[{"delta":{},"finish_reason":"stop"}]}''',
+    '''[DONE]''',
+]

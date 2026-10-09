@@ -3,7 +3,7 @@
 {"kind":"event","event":{"kind":"host_command_ran","name":"git status --short","state":{"command":"git status --short","output":" M cmd/oh/draw.go\n?? notes.txt\n"}}}
 {"kind":"event","event":{"kind":"user_message","text":"what have i got here"}}
 {"kind":"event","event":{"kind":"model_message","text":"One tracked file has changed and notes.txt is not tracked yet."}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"The user ran the following command on the host:\n\n```bash\n$ git status --short\n```\n\nOutput:\n\n```\n M cmd/oh/draw.go\n?? notes.txt\n```\n\nExit code: 0"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nThe user ran the following command on the host:\n\n```bash\n$ git status --short\n```\n\nOutput:\n\n```\n M cmd/oh/draw.go\n?? notes.txt\n```\n\nExit code: 0\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"what have i got here"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"One tracked file has changed and notes.txt is not tracked yet."}]}}
 {"kind":"turn_completion","turn":{}}

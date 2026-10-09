@@ -85,15 +85,15 @@ func (self *Stream) Interject(text string) bool {
 	return self.interjections.Add(text)
 }
 
-func (self *Stream) Note(text string) bool {
+func (self *Stream) Note(note agent.Note) bool {
 	if !self.Running() {
 		return false
 	}
 
-	return self.interjections.Note(text)
+	return self.interjections.Note(note)
 }
 
-func (self *Stream) TakeNotes() (string, bool) {
+func (self *Stream) TakeNotes() ([]agent.Note, bool) {
 	return self.Interjections().TakeNotes()
 }
 

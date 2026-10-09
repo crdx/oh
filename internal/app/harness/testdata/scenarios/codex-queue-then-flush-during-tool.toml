@@ -1,0 +1,48 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[tool]]
+name = "work"
+blocks = true
+stopped-output = "the call was stopped after 4s because the user sent another message"
+
+[first]
+prompt = "queue a message and then push it out at once"
+queue-after-tool-request = ["stop and do this instead"]
+double-return-after-tool-request = true
+is-cancelled = true
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"work","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-1","delta":"{}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-1","arguments":"{}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"work","arguments":"{}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-2","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Stopping that and doing this instead."}''',
+    '''{"type":"response.output_text.done","text":"Stopping that and doing this instead."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Stopping that and doing this instead."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"Stopping that and doing this instead."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-3","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Carrying on."}''',
+    '''{"type":"response.output_text.done","text":"Carrying on."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Carrying on."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-3","type":"message","role":"assistant","content":[{"type":"output_text","text":"Carrying on."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

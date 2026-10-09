@@ -1,0 +1,25 @@
+{"kind":"head","version":19,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant.","tools":["forward"],"tool_definitions":[{"name":"forward","description":"forward a port of this sandbox to the user's machine, so a server started with the job tool can be opened in their browser","revision":"1","parameters":[{"name":"action","type":"string","description":"what to do","values":["add","remove","list"]},{"name":"port","type":"integer","description":"the TCP port inside the sandbox (for add and remove)","optional":true},{"name":"job_name","type":"string","description":"an optional associated job name; 1–10 characters from [a-z0-9-] (for add)","optional":true}]}]}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
+{"kind":"event","event":{"kind":"user_message","text":"put the preview where i can see it"}}
+{"kind":"event","event":{"rendering_kind":"forward_add","render":"8080","kind":"tool_call_request","id":"call-1","name":"forward","arguments":"{\"action\":\"add\",\"port\":8080}"}}
+{"kind":"event","event":{"kind":"port_grant_change","name":"8080","state":{"host":"127.82.233.168","ports":[8080]}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"Use http://127.82.233.168:8080 for the user; use localhost:8080 inside the sandbox.","id":"call-1","name":"forward","status":"success","stats":{"kind":"output","lines":1,"bytes":83}}}
+{"kind":"event","event":{"kind":"model_message","text":"The preview is forwarded at the address in the tool result above."}}
+{"kind":"item","payload":{"role":"user","content":"put the preview where i can see it"}}
+{"kind":"item","payload":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"forward","arguments":"{\"action\":\"add\",\"port\":8080}"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"Use http://127.82.233.168:8080 for the user; use localhost:8080 inside the sandbox."}}
+{"kind":"item","payload":{"role":"user","content":"\u003cenvironment_context\u003e\nPort 8080 is now forwarded to http://127.82.233.168:8080.\n\u003c/environment_context\u003e"}}
+{"kind":"item","payload":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"The preview is forwarded at the address in the tool result above."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"take it down"}}
+{"kind":"event","event":{"rendering_kind":"forward_remove","render":"8080","kind":"tool_call_request","id":"call-2","name":"forward","arguments":"{\"action\":\"remove\",\"port\":8080}"}}
+{"kind":"event","event":{"kind":"port_grant_change","name":"8080","state":{"host":"127.82.233.168","ports":[]}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"Forward removed.","id":"call-2","name":"forward","status":"success","stats":{"kind":"output","lines":1,"bytes":16}}}
+{"kind":"event","event":{"kind":"model_message","text":"Taken down."}}
+{"kind":"item","payload":{"role":"user","content":"take it down"}}
+{"kind":"item","payload":{"id":"call-item-3","type":"function_call","call_id":"call-2","name":"forward","arguments":"{\"action\":\"remove\",\"port\":8080}"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"call-2","output":"Forward removed."}}
+{"kind":"item","payload":{"role":"user","content":"\u003cenvironment_context\u003e\nPort 8080 is no longer forwarded.\n\u003c/environment_context\u003e"}}
+{"kind":"item","payload":{"id":"message-4","type":"message","role":"assistant","content":[{"type":"output_text","text":"Taken down."}]}}
+{"kind":"turn_completion","turn":{}}

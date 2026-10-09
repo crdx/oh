@@ -1,0 +1,20 @@
+{"kind":"head","version":19,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant.","tools":["work"],"tool_definitions":[{"name":"work","description":"A deterministic scenario tool.","revision":"1"}]}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
+{"kind":"event","event":{"kind":"user_message","text":"get on with the refactor while the build runs"}}
+{"kind":"event","event":{"render":"work","kind":"tool_call_request","id":"call-1","name":"work","arguments":"{}"}}
+{"kind":"event","event":{"kind":"job_ended","name":"build","state":{"snapshot":{"name":"build","command":"just build","state":"failed","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:21Z","code":2},"output":"go build ./...\ncmd/oh/draw.go:41:9: undefined: getWidth\nexit status 1"}}}
+{"kind":"event","event":{"kind":"state_change","id":"call-1","state":1}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"the work is done","id":"call-1","name":"work","status":"success","stats":{"kind":"output","lines":1,"bytes":16}}}
+{"kind":"event","event":{"kind":"model_message","text":"The refactor is done. The build failed on an undefined getWidth, which I will fix next."}}
+{"kind":"item","payload":{"role":"user","content":"get on with the refactor while the build runs"}}
+{"kind":"item","payload":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"work","arguments":"{}"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"the work is done"}}
+{"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"job\"\u003e\nJob `build` exited: failed after 12s, exit(2).\n\n```\ngo build ./...\ncmd/oh/draw.go:41:9: undefined: getWidth\nexit status 1\n```\n\u003c/codex_internal_context\u003e"}}
+{"kind":"item","payload":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"The refactor is done. The build failed on an undefined getWidth, which I will fix next."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
+{"kind":"event","event":{"kind":"model_message","text":"Carrying on."}}
+{"kind":"item","payload":{"role":"user","content":"carry on"}}
+{"kind":"item","payload":{"id":"message-3","type":"message","role":"assistant","content":[{"type":"output_text","text":"Carrying on."}]}}
+{"kind":"turn_completion","turn":{}}

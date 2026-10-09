@@ -7,7 +7,7 @@
 {"kind":"event","event":{"kind":"model_message","text":"Correction: the build has now failed because getWidth is undefined."}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"has the build finished"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"thinking","thinking":"The build was still running when last checked.","signature":"seal-1"},{"type":"text","text":"The build is still running."}]}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Job `build` exited: failed after 12s, exit(2).\n\n```\ngo build ./...\ncmd/oh/draw.go:41:9: undefined: getWidth\nexit status 1\n```"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nJob `build` exited: failed after 12s, exit(2).\n\n```\ngo build ./...\ncmd/oh/draw.go:41:9: undefined: getWidth\nexit status 1\n```\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Correction: the build has now failed because getWidth is undefined."}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"carry on"}}

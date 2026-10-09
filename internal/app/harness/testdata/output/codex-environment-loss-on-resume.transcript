@@ -1,0 +1,41 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `medium`
+- **Provider:** `codex`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+remember what is available
+
+## Assistant · +0s
+
+I have the original environment.
+
+## Environment · sandbox, skills, repository, port hostname · +0s
+
+```
+Sandbox deny patterns removed: `secret.yml`.
+Configured read-only paths removed: `/reference`.
+Configured read-write paths removed: `/output`.
+Configured executable paths removed: `/opt/tool`.
+Configured PATH directories are now, in order: none.
+Configured home paths removed: `/test-home/.toolrc`.
+Skills no longer available: `removed` at `/skills/removed/SKILL.md`.
+The workspace is no longer a Git repository.
+Host-facing URLs for forwarded sandbox ports now use `127.9.9.9` instead of `old.agent.test`.
+```
+
+## User · +0s
+
+what was lost
+
+## Assistant · +0s
+
+The queued harness update names everything that was lost.

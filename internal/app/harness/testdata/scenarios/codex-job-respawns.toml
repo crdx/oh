@@ -1,0 +1,57 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[tool]]
+name = "job"
+runs = true
+
+[first]
+prompt = "rebuild every time the source changes"
+end-job-after-tool-request = "watch"
+end-job-respawn = "respawned"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"job","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-1","delta":"{\"action\":\"start\",\"name\":\"watch\",\"command\":\"just watch\",\"intent\":\"Rebuilding whenever the source changes\",\"respawn\":true}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-1","arguments":"{\"action\":\"start\",\"name\":\"watch\",\"command\":\"just watch\",\"intent\":\"Rebuilding whenever the source changes\",\"respawn\":true}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"job","arguments":"{\"action\":\"start\",\"name\":\"watch\",\"command\":\"just watch\",\"intent\":\"Rebuilding whenever the source changes\",\"respawn\":true}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-2","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The first rebuild failed on getWidth; the watcher is already running again."}''',
+    '''{"type":"response.output_text.done","text":"The first rebuild failed on getWidth; the watcher is already running again."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The first rebuild failed on getWidth; the watcher is already running again."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"The first rebuild failed on getWidth; the watcher is already running again."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "start it again"
+end-job-after-tool-request = "watch"
+end-job-respawn = "abandoned"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-3","type":"function_call","call_id":"call-2","name":"job","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-3","delta":"{\"action\":\"start\",\"name\":\"watch\",\"command\":\"just watch\",\"intent\":\"Watching the source again\",\"respawn\":true}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-3","arguments":"{\"action\":\"start\",\"name\":\"watch\",\"command\":\"just watch\",\"intent\":\"Watching the source again\",\"respawn\":true}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-3","type":"function_call","call_id":"call-2","name":"job","arguments":"{\"action\":\"start\",\"name\":\"watch\",\"command\":\"just watch\",\"intent\":\"Watching the source again\",\"respawn\":true}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-4","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"It kept failing at once, so it gave up respawning; getWidth needs fixing first."}''',
+    '''{"type":"response.output_text.done","text":"It kept failing at once, so it gave up respawning; getWidth needs fixing first."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"It kept failing at once, so it gave up respawning; getWidth needs fixing first."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-4","type":"message","role":"assistant","content":[{"type":"output_text","text":"It kept failing at once, so it gave up respawning; getWidth needs fixing first."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

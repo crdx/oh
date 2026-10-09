@@ -653,6 +653,38 @@ func TestAGuardReportsTheCacheLifetimeOfTheProviderItGuards(t *testing.T) {
 	}
 }
 
+type notingProvider struct {
+	providerStub
+}
+
+func (*notingProvider) NoteFormat() agent.NoteFormat { return taggedNotes{} }
+
+type taggedNotes struct{}
+
+func (taggedNotes) Wrap(note agent.Note) string { return note.Text }
+
+func (taggedNotes) Rule() string { return "tagged" }
+
+func TestAGuardWrapsNotesTheWayTheProviderItGuardsDoes(t *testing.T) {
+	clock := &testClock{now: testNow}
+
+	for name, testCase := range map[string]struct {
+		provider usage.StatefulProvider
+		want     string
+	}{
+		"a provider with its own format": {provider: &notingProvider{}, want: "tagged"},
+		"a provider that says nothing":   {provider: &providerStub{}, want: agent.SystemReminders.Rule()},
+	} {
+		t.Run(name, func(t *testing.T) {
+			guarded := usage.Guard(stoppedContext(t), testCase.provider, guardSettings(cachePath(t), "gpt-5.6-sol", clock))
+
+			if got := agent.NoteFormatOf(guarded).Rule(); got != testCase.want {
+				t.Errorf("got %q, want %q", got, testCase.want)
+			}
+		})
+	}
+}
+
 func TestASelectionIsAvailableUnlessItsModelIsLimited(t *testing.T) {
 	path := cachePath(t)
 	clock := &testClock{now: testNow}

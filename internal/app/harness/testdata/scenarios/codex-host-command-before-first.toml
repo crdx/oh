@@ -1,0 +1,32 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+run-before-first = "git status --short"
+
+[first]
+prompt = "what have i got here"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-1","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"One tracked file has changed and notes.txt is not tracked yet."}''',
+    '''{"type":"response.output_text.done","text":"One tracked file has changed and notes.txt is not tracked yet."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"One tracked file has changed and notes.txt is not tracked yet."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"One tracked file has changed and notes.txt is not tracked yet."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-2","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Carrying on."}''',
+    '''{"type":"response.output_text.done","text":"Carrying on."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Carrying on."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"Carrying on."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

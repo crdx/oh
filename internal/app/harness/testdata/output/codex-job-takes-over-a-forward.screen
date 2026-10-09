@@ -1,0 +1,26 @@
+
+ serve the docs on the port you forwarded
+
+
+forward 8080 1L
+
+
+ 🤖 Port 8080 is now forwarded to http://127.82.233.168:8080.
+
+
+Serving the documentation start docs:8080 $ just docs 2L
+
+
+ 🤖 Port 8080 now belongs to job docs.
+
+
+The docs are served on the forwarded port.
+
+
+ put the api and a bare forward on that port too
+
+
+Running the api on that port start api:8080 $ just api ✗ 1L could not forward port 8080 for job "ap…
+forward 8080 ✗ 1L port 8080 is already forwarded
+
+Port 8080 already belongs to docs.

@@ -1,0 +1,14 @@
+{"kind":"head","version":19,"meta":{"model":"qwen3.8-max","workspaceDir":"","provider":"opencode-go","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"mode_change","name":"w","state":"rxngl"}}
+{"kind":"event","event":{"kind":"user_message","text":"continue with the new mode"}}
+{"kind":"event","event":{"kind":"model_message","text":"The workspace is read-only."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nThe workspace is now read-only.\n\u003c/system-reminder\u003e"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"continue with the new mode"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The workspace is read-only."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"continue"}}
+{"kind":"event","event":{"kind":"model_message","text":"Continued."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"continue"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Continued."}]}}
+{"kind":"turn_completion","turn":{}}

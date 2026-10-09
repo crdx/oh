@@ -1,0 +1,32 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+jobs-running-into-resume = ["docs", "watch"]
+
+[first]
+prompt = "leave the preview running"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-1","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Both are still up."}''',
+    '''{"type":"response.output_text.done","text":"Both are still up."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Both are still up."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"Both are still up."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "is the preview still up"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-2","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"It went down with the session, and I have left it down."}''',
+    '''{"type":"response.output_text.done","text":"It went down with the session, and I have left it down."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"It went down with the session, and I have left it down."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"It went down with the session, and I have left it down."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

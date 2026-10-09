@@ -1076,6 +1076,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 			ToolGroups:     activeToolGroups,
 			GroupStatus:    mode.Groups(),
 			Yolo:           args.Yolo,
+			Notes:          agent.NoteFormatOf(client.Client),
 		})
 		if err != nil {
 			return "", err

@@ -245,6 +245,26 @@ func HarnessNotices(event agent.Event) ([]string, bool) {
 	return nil, false
 }
 
+func HarnessNoteKind(kind agent.Kind) agent.NoteKind {
+	switch kind {
+	case caps.JobStop, jobrecord.Ended, jobrecord.EndedWithSession:
+		return agent.JobNote
+	case hostcommand.Ran:
+		return agent.HostCommandNote
+	case turn.HarnessPoke:
+		return agent.PokeNote
+	case caps.ModeChange, conditions.Change, environment.Change, toolset.AvailabilityChange, pathgrant.Change,
+		portgrant.ForwardChange:
+		return agent.EnvironmentNote
+	case agent.StartupEvent, agent.UserMessageEvent, agent.SilentTurnEvent, agent.CacheRebuildEvent, agent.PrefixRewriteEvent,
+		agent.ModelReasoningEvent, agent.ModelMessageEvent, agent.ToolCallRequestEvent,
+		agent.ToolCallResultEvent, agent.StateChangeEvent, agent.InterruptionEvent,
+		agent.RetryingEvent, agent.FailureEvent:
+		return ""
+	}
+	return ""
+}
+
 func oneNotice(notice string, isSaid bool) ([]string, bool) {
 	if !isSaid {
 		return nil, false

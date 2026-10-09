@@ -9,7 +9,7 @@
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"get on with the refactor while the build runs"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"work","input":{}}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"the work is done"}]}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Job `build` exited: failed after 12s, exit(2).\n\n```\ngo build ./...\ncmd/oh/draw.go:41:9: undefined: getWidth\nexit status 1\n```"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nJob `build` exited: failed after 12s, exit(2).\n\n```\ngo build ./...\ncmd/oh/draw.go:41:9: undefined: getWidth\nexit status 1\n```\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The refactor is done. The build failed on an undefined getWidth, which I will fix next."}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"carry on"}}

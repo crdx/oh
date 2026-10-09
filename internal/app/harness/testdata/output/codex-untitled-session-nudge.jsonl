@@ -1,0 +1,19 @@
+{"kind":"head","version":19,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant.","tools":["title"],"tool_definitions":[{"name":"title","description":"name the task this session is doing, in a few words, as soon as the task is clear; ensure to retitle as the session evolves","revision":"1","parameters":[{"name":"title","type":"string","description":"a 3-word slug description of the task, like \"fix-picker-clipping\""}]}]}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
+{"kind":"event","event":{"kind":"user_message","text":"what does the picker do with a long title"}}
+{"kind":"event","event":{"kind":"model_message","text":"It clips it, and marks the clipping."}}
+{"kind":"item","payload":{"role":"user","content":"what does the picker do with a long title"}}
+{"kind":"item","payload":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"It clips it, and marks the clipping."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
+{"kind":"event","event":{"render":"clip long picker titles","read_only":true,"kind":"tool_call_request","id":"call-1","name":"title","arguments":"{\"title\":\"clip long picker titles\"}"}}
+{"kind":"event","event":{"kind":"state_change","id":"call-1","name":"title","state":{"title":"clip long picker titles"}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"session titled \"clip long picker titles\"","id":"call-1","name":"title","status":"success","stats":{"kind":"output","lines":1,"bytes":40}}}
+{"kind":"event","event":{"kind":"model_message","text":"Named it, now that the task is clear."}}
+{"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"title\"\u003e\nUntitled session: use the title tool.\n\u003c/codex_internal_context\u003e"}}
+{"kind":"item","payload":{"role":"user","content":"carry on"}}
+{"kind":"item","payload":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"title","arguments":"{\"title\":\"clip long picker titles\"}"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"session titled \"clip long picker titles\""}}
+{"kind":"item","payload":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"Named it, now that the task is clear."}]}}
+{"kind":"turn_completion","turn":{}}

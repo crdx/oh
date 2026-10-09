@@ -1,0 +1,33 @@
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m use every original tool                                                                            \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mI must use the original contracts.\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\\e[38;2;207;173;0mstable\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstable\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-2&session=tame-impala\e\\\e[38;2;207;173;0mchanged\e[0m\e]8;;\e\\ \e[38;2;192;128;80mchanged\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-3&session=tame-impala\e\\\e[38;2;207;173;0mrevision\e[0m\e]8;;\e\\ \e[38;2;192;128;80mrevision\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-4&session=tame-impala\e\\\e[38;2;207;173;0mschema\e[0m\e]8;;\e\\ \e[38;2;192;128;80mschema\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-5&session=tame-impala\e\\\e[38;2;207;173;0mcompatible\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcompatible\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-6&session=tame-impala\e\\\e[38;2;207;173;0mmissing\e[0m\e]8;;\e\\ \e[38;2;192;128;80mmissing\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\r
+Every original tool ran.\e[?25h\e[?2026l\e[?2026h\e[?25l\e[?7l\r
+\r\e[K\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 The \e[38;2;192;128;80mmissing\e[0m\e[48;2;48;58;67m tool is no longer installed and is disabled for this conversation.                  \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🤖 The \e[38;2;192;128;80mrevision\e[0m\e[48;2;48;58;67m tool changed from version \e[38;2;192;128;80m1\e[0m\e[48;2;48;58;67m to version \e[38;2;192;128;80m2\e[0m\e[48;2;48;58;67m and is disabled for the remainder of this \e[0m\r
+\e[48;2;48;58;67m    conversation.                                                                                   \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m try every tool again                                                                               \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mstable\e[0m \e[38;2;192;128;80mstable\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mchanged\e[0m \e[38;2;192;128;80mchanged\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+revision\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mschema\e[0m \e[38;2;192;128;80mschema\e[0m\e[K\r\e[13C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mcompatible\e[0m \e[38;2;192;128;80mcompatible\e[0m\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+missing\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0madded\e[0m \e[38;2;192;128;80m{}\e[0m\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[6A\r\e]8;;oh://tool-result?call=call-7&session=tame-impala\e\\\e[38;2;207;173;0mstable\e[0m\e]8;;\e\\ \e[38;2;192;128;80mstable\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[6B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[5A\r\e]8;;oh://tool-result?call=call-8&session=tame-impala\e\\\e[38;2;207;173;0mchanged\e[0m\e]8;;\e\\ \e[38;2;192;128;80mchanged\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[5B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e]8;;oh://tool-result?call=call-9&session=tame-impala\e\\revision\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102mthe revision tool changed from version 1 to version 2 and is disabled for the remaind…\e[0m\e[4B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e]8;;oh://tool-result?call=call-10&session=tame-impala\e\\\e[38;2;207;173;0mschema\e[0m\e]8;;\e\\ \e[38;2;192;128;80mschema\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[3B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call-11&session=tame-impala\e\\\e[38;2;207;173;0mcompatible\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcompatible\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call-12&session=tame-impala\e\\missing\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102mthe missing tool is no longer installed and is disabled for this conversation\e[0m\e[K\e[1B\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call-13&session=tame-impala\e\\\e[38;2;207;173;0madded\e[0m\e]8;;\e\\ \e[38;2;192;128;80m{}\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mthere is no tool called "added"\e[0m\e[K\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[K\r
+Tools at compatible versions ran with their frozen definitions; the changed version was refused.\e[K\r\e[96C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[96C\e[?25h\e[?2026l\r

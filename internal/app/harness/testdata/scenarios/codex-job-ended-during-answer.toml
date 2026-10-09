@@ -1,0 +1,49 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[first]
+prompt = "has the build finished"
+end-job-after-reasoning-event = "build"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"reasoning-1","type":"reasoning","content":[],"encrypted_content":"","summary":[]}}''',
+    '''{"type":"response.reasoning_summary_part.added","part":{"type":"summary_text","text":""}}''',
+    '''{"type":"response.reasoning_summary_text.delta","delta":"The build was still running when last checked."}''',
+    '''{"type":"response.reasoning_summary_text.done","text":"The build was still running when last checked."}''',
+    '''{"type":"response.reasoning_summary_part.done","part":{"type":"summary_text","text":"The build was still running when last checked."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"reasoning-1","type":"reasoning","content":[],"encrypted_content":"seal-1","summary":[{"type":"summary_text","text":"The build was still running when last checked."}]}}''',
+    '''{"type":"response.output_item.added","item":{"id":"message-2","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The build is still running."}''',
+    '''{"type":"response.output_text.done","text":"The build is still running."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The build is still running."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"The build is still running."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-3","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Correction: the build has now failed because getWidth is undefined."}''',
+    '''{"type":"response.output_text.done","text":"Correction: the build has now failed because getWidth is undefined."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Correction: the build has now failed because getWidth is undefined."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-3","type":"message","role":"assistant","content":[{"type":"output_text","text":"Correction: the build has now failed because getWidth is undefined."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-4","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Carrying on."}''',
+    '''{"type":"response.output_text.done","text":"Carrying on."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Carrying on."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-4","type":"message","role":"assistant","content":[{"type":"output_text","text":"Carrying on."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

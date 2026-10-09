@@ -79,6 +79,10 @@ func (self *guardedProvider) CacheLifetime() time.Duration {
 	return 0
 }
 
+func (self *guardedProvider) NoteFormat() agent.NoteFormat {
+	return agent.NoteFormatOf(self.provider)
+}
+
 func (self *guardedProvider) AddUserMessage(text string) {
 	self.provider.AddUserMessage(text)
 }

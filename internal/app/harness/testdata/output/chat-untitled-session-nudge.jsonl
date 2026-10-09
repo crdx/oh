@@ -10,7 +10,7 @@
 {"kind":"event","event":{"kind":"state_change","id":"call-1","name":"title","state":{"title":"clip long picker titles"}}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"session titled \"clip long picker titles\"","id":"call-1","name":"title","status":"success","stats":{"kind":"output","lines":1,"bytes":40}}}
 {"kind":"event","event":{"kind":"model_message","text":"Named it, now that the task is clear."}}
-{"kind":"item","payload":{"role":"user","content":"Untitled session: use the title tool."}}
+{"kind":"item","payload":{"role":"user","content":"\u003csystem-reminder\u003e\nUntitled session: use the title tool.\n\u003c/system-reminder\u003e"}}
 {"kind":"item","payload":{"role":"user","content":"carry on"}}
 {"kind":"item","payload":{"role":"assistant","content":"","tool_calls":[{"id":"call-1","type":"function","function":{"name":"title","arguments":"{\"title\":\"clip long picker titles\"}"}}]}}
 {"kind":"item","payload":{"role":"tool","content":"session titled \"clip long picker titles\"","tool_call_id":"call-1"}}

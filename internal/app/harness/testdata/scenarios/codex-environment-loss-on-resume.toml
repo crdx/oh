@@ -1,0 +1,49 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[environment]
+deny = ["secret.yml"]
+read = ["/reference"]
+write = ["/output"]
+exec = ["/opt/tool"]
+path = ["/opt/bin"]
+home = ["/test-home/.toolrc"]
+repository = true
+hostname = "old.agent.test"
+
+[[environment.skill]]
+name = "removed"
+description = "use the removed process"
+location = "/skills/removed/SKILL.md"
+
+[environment-on-resume]
+hostname = "127.9.9.9"
+
+[first]
+prompt = "remember what is available"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-1","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"I have the original environment."}''',
+    '''{"type":"response.output_text.done","text":"I have the original environment."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"I have the original environment."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"I have the original environment."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "what was lost"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-2","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The queued harness update names everything that was lost."}''',
+    '''{"type":"response.output_text.done","text":"The queued harness update names everything that was lost."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The queued harness update names everything that was lost."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"The queued harness update names everything that was lost."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

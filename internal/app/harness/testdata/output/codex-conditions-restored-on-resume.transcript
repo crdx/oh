@@ -1,0 +1,35 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `medium`
+- **Provider:** `codex`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+bind a listener on ::1
+
+## Assistant · +0s
+
+There is no IPv6 here, so 127.0.0.1 instead.
+
+## Conditions · unix sockets, ipv6, asking the user · +0s
+
+```
+Unix sockets now work under /tmp, not the workspace.
+IPv6 available; ::1 reaches the sandbox loopback.
+The session is interactive: questions, approvals, and /! commands for the user are available. A background job wakes the conversation when it ends.
+```
+
+## User · +0s
+
+try ::1 again
+
+## Assistant · +0s
+
+::1 answers now.

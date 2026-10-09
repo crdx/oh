@@ -23,6 +23,7 @@ import (
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/internal/util/strutil"
+	"crdx.org/oh/pkg/agent"
 	"mvdan.cc/sh/v3/syntax"
 )
 
@@ -62,6 +63,7 @@ var (
 		{{ sandboxHeader .Yolo .ShellOffered }}# Harness
 
 		- You run inside the "oh" harness
+		- {{ .NoteRule }}
 		- Session directories are under {{ .SessionsDir }}, one per session name
 		- This session's directory is {{ .SessionDir }}
 		- "session.jsonl": the journal (JSONL), the single source of truth
@@ -150,6 +152,7 @@ type harnessContextTemplateData struct {
 	ToolGroups        caps.ToolGroups
 	GroupStatus       caps.GroupStatus
 	Yolo              bool
+	NoteRule          string
 }
 
 func ProjectContextPaths(workspace *work.Space) []string {
@@ -187,6 +190,7 @@ type Config struct {
 	ToolGroups     caps.ToolGroups
 	GroupStatus    caps.GroupStatus
 	Yolo           bool
+	Notes          agent.NoteFormat
 }
 
 func Load(config Config) (string, []File, error) {
@@ -301,6 +305,7 @@ func harnessContext(config Config) string {
 		ToolGroups:        config.ToolGroups,
 		GroupStatus:       config.GroupStatus,
 		Yolo:              config.Yolo,
+		NoteRule:          noteRule(config.Notes),
 	}
 
 	var renderedText strings.Builder
@@ -308,6 +313,14 @@ func harnessContext(config Config) string {
 		panic(err)
 	}
 	return strings.TrimSpace(renderedText.String())
+}
+
+func noteRule(notes agent.NoteFormat) string {
+	if notes == nil {
+		return agent.SystemReminders.Rule()
+	}
+
+	return notes.Rule()
 }
 
 func WithDropsDirectory(systemPrompt string, dropsDirectory string) string {

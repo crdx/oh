@@ -1,0 +1,45 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[tool]]
+name = "work"
+outputs = ["the work is done"]
+
+[first]
+prompt = "get on with the refactor while the build runs"
+end-job-after-tool-request = "build"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"work","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-1","delta":"{}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-1","arguments":"{}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"work","arguments":"{}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-2","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The refactor is done. The build failed on an undefined getWidth, which I will fix next."}''',
+    '''{"type":"response.output_text.done","text":"The refactor is done. The build failed on an undefined getWidth, which I will fix next."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The refactor is done. The build failed on an undefined getWidth, which I will fix next."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"The refactor is done. The build failed on an undefined getWidth, which I will fix next."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-3","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Carrying on."}''',
+    '''{"type":"response.output_text.done","text":"Carrying on."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Carrying on."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-3","type":"message","role":"assistant","content":[{"type":"output_text","text":"Carrying on."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

@@ -1,0 +1,23 @@
+
+ has the build finished
+
+
+The build was still running when last checked.
+
+
+ 🤖 Job build exited: failed after 12s, exit(2).
+
+    go build ./...
+    cmd/oh/draw.go:41:9: undefined: getWidth
+    exit status 1
+
+
+The build is still running.
+
+Correction: the build has now failed because getWidth is undefined.
+
+
+ carry on
+
+
+Carrying on.

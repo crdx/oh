@@ -11,10 +11,10 @@
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"serve the docs on the port you forwarded"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"forward","input":{"action":"add","port":8080}}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"Use http://127.82.233.168:8080 for the user; use localhost:8080 inside the sandbox."}]}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Port 8080 is now forwarded to http://127.82.233.168:8080."}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nPort 8080 is now forwarded to http://127.82.233.168:8080.\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_2","name":"job","input":{"action":"start","name":"docs","port":8080,"command":"just docs","intent":"serving the documentation"}}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_2","content":"docs: running for 0s\nUse http://127.82.233.168:8080 for the user; use localhost:8080 inside the sandbox."}]}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Port 8080 now belongs to job docs."}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nPort 8080 now belongs to job docs.\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The docs are served on the forwarded port."}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"put the api and a bare forward on that port too"}}

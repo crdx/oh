@@ -1,0 +1,36 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+jobs-running-into-resume = ["docs"]
+
+[[tool]]
+name = "work"
+blocks = true
+stopped-output = """
+compiling agent
+note: the command was stopped after 12s because the user pressed escape."""
+
+[first]
+prompt = "interrupt while the tool is working"
+cancel-after-tool-request = 1
+is-cancelled = true
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"work","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-1","delta":"{}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-1","arguments":"{}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"work","arguments":"{}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-2","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The session was reopened, so I will leave the docs server down."}''',
+    '''{"type":"response.output_text.done","text":"The session was reopened, so I will leave the docs server down."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The session was reopened, so I will leave the docs server down."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"The session was reopened, so I will leave the docs server down."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

@@ -1,0 +1,33 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+job-holding-workspace = "web"
+toggle-before-first = "w"
+
+[first]
+prompt = "is the preview still up"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-1","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"No. It was stopped when the workspace was made read-only."}''',
+    '''{"type":"response.output_text.done","text":"No. It was stopped when the workspace was made read-only."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"No. It was stopped when the workspace was made read-only."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"No. It was stopped when the workspace was made read-only."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "start it again"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-2","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The workspace is read-only, so it cannot run yet."}''',
+    '''{"type":"response.output_text.done","text":"The workspace is read-only, so it cannot run yet."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The workspace is read-only, so it cannot run yet."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"The workspace is read-only, so it cannot run yet."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

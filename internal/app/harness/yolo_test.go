@@ -91,7 +91,7 @@ func TestAYoloSessionLeftConfinedIsToldWhatItWasGranted(t *testing.T) {
 	if got, want := harness.mode.Current(), caps.Unconfined()|caps.Lookup; got != want {
 		t.Errorf("got %s, want %s", got.Flags(), want.Flags())
 	}
-	told := strings.Join(harness.pendingNotices.modelNotices(), "\n")
+	told := strings.Join(noteTextsOf(harness.pendingNotices.modelNotes()), "\n")
 	for _, wanted := range []string{
 		"The workspace is now read-write.",
 		".git is now read-write.",

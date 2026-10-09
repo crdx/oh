@@ -1,0 +1,30 @@
+provider = "opencode-go"
+model = "qwen3.8-max"
+effort = "medium"
+toggle-before-first = "w"
+
+[first]
+prompt = "continue with the new mode"
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"The workspace is read-only."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[resume]
+prompt = "continue"
+
+[[resume.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Continued."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
+    '''{"type":"message_stop"}''',
+]

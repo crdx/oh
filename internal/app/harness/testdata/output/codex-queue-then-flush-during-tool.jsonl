@@ -1,0 +1,22 @@
+{"kind":"head","version":19,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant.","tools":["work"],"tool_definitions":[{"name":"work","description":"A scenario tool that blocks.","revision":"1"}]}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
+{"kind":"event","event":{"kind":"user_message","text":"queue a message and then push it out at once"}}
+{"kind":"event","event":{"render":"work","kind":"tool_call_request","id":"call-1","name":"work","arguments":"{}"}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"the call was stopped after 4s because the user sent another message","id":"call-1","name":"work","status":"cancelled","stats":{"kind":"output","lines":1,"bytes":67}}}
+{"kind":"event","event":{"kind":"turn_interruption","name":"replacement"}}
+{"kind":"item","payload":{"role":"user","content":"queue a message and then push it out at once"}}
+{"kind":"item","payload":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"work","arguments":"{}"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"the call was stopped after 4s because the user sent another message"}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"stop and do this instead"}}
+{"kind":"event","event":{"kind":"model_message","text":"Stopping that and doing this instead."}}
+{"kind":"item","payload":{"role":"user","content":"\u003cturn_aborted\u003e\nTurn stopped because the user sent another message.\n\u003c/turn_aborted\u003e"}}
+{"kind":"item","payload":{"role":"user","content":"stop and do this instead"}}
+{"kind":"item","payload":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"Stopping that and doing this instead."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
+{"kind":"event","event":{"kind":"model_message","text":"Carrying on."}}
+{"kind":"item","payload":{"role":"user","content":"carry on"}}
+{"kind":"item","payload":{"id":"message-3","type":"message","role":"assistant","content":[{"type":"output_text","text":"Carrying on."}]}}
+{"kind":"turn_completion","turn":{}}

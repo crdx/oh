@@ -1,0 +1,39 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `medium`
+- **Provider:** `codex`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## job_listing · +0s
+
+## User · +0s
+
+interrupt while the tool is working
+
+## Tool calls · +0s
+
+```
+work: work [cancelled, 2 lines, 88B, call-1]
+```
+
+## Interrupted · +0s
+
+Turn stopped because the user pressed escape.
+
+## jobs_ended_with_session · +0s
+
+```
+The session was closed and reopened after the last turn. Job `docs` stopped when it closed. Restart it if still needed.
+```
+
+## Assistant · +0s
+
+The session was reopened, so I will leave the docs server down.
+
+## job_listing · +0s

@@ -8,7 +8,7 @@
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"rebuild every time the source changes"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"job","input":{"action":"start","name":"watch","command":"just watch","intent":"Rebuilding whenever the source changes","respawn":true}}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"watch: running for 0s, run 1, respawns on exit"}]}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Job `watch` exited: failed after 12s, exit(2), run 1, respawned.\n\n```\ngo build ./...\ncmd/oh/draw.go:41:9: undefined: getWidth\nexit status 1\n```"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nJob `watch` exited: failed after 12s, exit(2), run 1, respawned.\n\n```\ngo build ./...\ncmd/oh/draw.go:41:9: undefined: getWidth\nexit status 1\n```\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The first rebuild failed on getWidth; the watcher is already running again."}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"start it again"}}
@@ -19,6 +19,6 @@
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"start it again"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_2","name":"job","input":{"action":"start","name":"watch","command":"just watch","intent":"Watching the source again","respawn":true}}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_2","content":"watch: running for 0s, run 1, respawns on exit"}]}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Job `watch` exited: failed after 12s, exit(2), run 4, not respawned after 3 runs in a row each ended within 2s.\n\n```\ngo build ./...\ncmd/oh/draw.go:41:9: undefined: getWidth\nexit status 1\n```"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nJob `watch` exited: failed after 12s, exit(2), run 4, not respawned after 3 runs in a row each ended within 2s.\n\n```\ngo build ./...\ncmd/oh/draw.go:41:9: undefined: getWidth\nexit status 1\n```\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"It kept failing at once, so it gave up respawning; getWidth needs fixing first."}]}}
 {"kind":"turn_completion","turn":{}}

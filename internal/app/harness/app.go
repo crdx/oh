@@ -115,8 +115,8 @@ func (self *pendingNotices) notices() []string {
 	return notices
 }
 
-func (self *pendingNotices) modelNotices() []string {
-	var notices []string
+func (self *pendingNotices) modelNotes() []agent.Note {
+	var notes []agent.Note
 	for _, item := range self.items {
 		itemNotices, areSaid := painter.HarnessNotices(item.state)
 		if item.state.Kind == environment.Change {
@@ -127,10 +127,13 @@ func (self *pendingNotices) modelNotices() []string {
 			itemNotices, areSaid = []string{modelNotice}, isSaid
 		}
 		if areSaid {
-			notices = append(notices, itemNotices...)
+			notes = append(notes, agent.Note{
+				Kind: painter.HarnessNoteKind(item.state.Kind),
+				Text: strings.Join(itemNotices, noticeSeparator),
+			})
 		}
 	}
-	return notices
+	return notes
 }
 
 func (self *pendingNotices) accessNotices() []string {
@@ -206,7 +209,7 @@ type App struct {
 	pathGrants      *pathgrant.Grants
 	forwards        *portgrant.Forwards
 	jobs            jobState
-	settledNotes    []string
+	settledNotes    []agent.Note
 	settledCaps     caps.Set
 	pendingNotices  pendingNotices
 	feedback        feedback.State
@@ -684,7 +687,7 @@ func (self *App) holdNotice(event agent.Event) bool {
 		return false
 	}
 
-	if self.currentTurn.Note(strings.Join(notices, noticeSeparator)) {
+	if self.currentTurn.Note(agent.Note{Kind: painter.HarnessNoteKind(event.Kind), Text: strings.Join(notices, noticeSeparator)}) {
 		self.notify(event)
 		return false
 	}
@@ -960,7 +963,7 @@ func (self *App) settleAccess() {
 }
 
 func (self *App) settlePendingInput() {
-	self.settledNotes = append(self.settledNotes, self.pendingNotices.modelNotices()...)
+	self.settledNotes = append(self.settledNotes, self.pendingNotices.modelNotes()...)
 	self.markAccessTold()
 
 	wasShown := self.pendingNotices.block != nil
@@ -1852,9 +1855,7 @@ func (self *App) start(message string) {
 	self.settleAccess()
 	self.metrics.BeginTurn()
 
-	if note := self.prelude(); note != "" {
-		self.agent.AddUserMessage(note)
-	}
+	self.agent.AddNotes(self.prelude())
 
 	self.currentTurn = Turn{
 		painter: self.newPainter(true),
@@ -1872,17 +1873,12 @@ func (self *App) takeSessionTitle(event agent.Event) {
 	}
 }
 
-func (self *App) prelude() string {
-	notes := slices.DeleteFunc(
-		[]string{
-			self.interruptionNote(),
-			self.takeSettledNotes(),
-			self.titleNote(),
-		},
-		func(note string) bool { return note == "" },
-	)
+func (self *App) prelude() []agent.Note {
+	notes := []agent.Note{{Kind: agent.InterruptionNote, Text: self.interruptionNote()}}
+	notes = append(notes, self.takeSettledNotes()...)
+	notes = append(notes, agent.Note{Kind: agent.TitleNote, Text: self.titleNote()})
 
-	return strings.Join(notes, " ")
+	return slices.DeleteFunc(notes, func(note agent.Note) bool { return note.Text == "" })
 }
 
 func (self *App) accessTellers() access.Group {
@@ -1929,11 +1925,11 @@ func (self *App) titleNote() string {
 
 const noticeSeparator = "\n\n"
 
-func (self *App) takeSettledNotes() string {
+func (self *App) takeSettledNotes() []agent.Note {
 	notes := self.settledNotes
 	self.settledNotes = nil
 
-	return strings.Join(notes, noticeSeparator)
+	return notes
 }
 
 func (self *App) recordJobListing() {
@@ -2150,8 +2146,8 @@ func (self *App) finish() {
 		self.recordEvent(agent.Event{Kind: agent.FailureEvent, Failure: agent.FailureFrom(turnError)})
 	}
 
-	if note, isNoted := self.currentTurn.TakeNotes(); isNoted {
-		self.settledNotes = append(self.settledNotes, note)
+	if notes, isNoted := self.currentTurn.TakeNotes(); isNoted {
+		self.settledNotes = append(self.settledNotes, notes...)
 	}
 
 	self.recordJobListing()
@@ -2197,7 +2193,7 @@ func (self *App) finish() {
 	case turn.Poke:
 		self.refreshPendingMessages()
 		self.notify(turn.PokeEvent())
-		self.agent.AddUserMessage(message)
+		self.agent.AddNotes([]agent.Note{{Kind: agent.PokeNote, Text: message}})
 		self.startTurn()
 	case turn.None:
 	}

@@ -1,0 +1,15 @@
+{"kind":"head","version":19,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant.","conditions":{"unix_sockets":true,"ipv6":true,"interactive":true}}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
+{"kind":"event","event":{"kind":"user_message","text":"listen on a Unix socket"}}
+{"kind":"event","event":{"kind":"model_message","text":"A socket beneath /tmp it is."}}
+{"kind":"item","payload":{"role":"user","content":"listen on a Unix socket"}}
+{"kind":"item","payload":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"A socket beneath /tmp it is."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"conditions_change","state":{"known":{"unix_sockets":true,"ipv6":true,"interactive":true},"current":{"unix_sockets":false,"ipv6":false,"interactive":false}}}}
+{"kind":"event","event":{"kind":"user_message","text":"listen on it again"}}
+{"kind":"event","event":{"kind":"model_message","text":"Not any more, so 127.0.0.1 it is."}}
+{"kind":"item","payload":{"role":"user","content":"\u003cenvironment_context\u003e\nUnix sockets no longer work.\n\nIPv6 unavailable; use 127.0.0.1.\n\nThe session is non-interactive: questions, approvals, and /! commands for the user are unavailable. A background job does not wake the conversation when it ends.\n\u003c/environment_context\u003e"}}
+{"kind":"item","payload":{"role":"user","content":"listen on it again"}}
+{"kind":"item","payload":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"Not any more, so 127.0.0.1 it is."}]}}
+{"kind":"turn_completion","turn":{}}

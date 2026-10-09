@@ -8,7 +8,7 @@
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"put the preview where i can see it"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"forward","input":{"action":"add","port":8080}}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"Use http://tame-impala.agent:8080 for the user; use localhost:8080 inside the sandbox."}]}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Port 8080 is now forwarded to http://tame-impala.agent:8080."}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nPort 8080 is now forwarded to http://tame-impala.agent:8080.\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The preview is forwarded at the address in the tool result above."}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"take it down"}}
@@ -19,6 +19,6 @@
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"take it down"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_2","name":"forward","input":{"action":"remove","port":8080}}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_2","content":"Forward removed."}]}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Port 8080 is no longer forwarded."}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nPort 8080 is no longer forwarded.\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Taken down."}]}}
 {"kind":"turn_completion","turn":{}}

@@ -10,7 +10,7 @@
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"mode_change","name":"w","state":"rxngl"}}
 {"kind":"event","event":{"kind":"model_message","text":"Noted, the workspace is read-only now."}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Turn stopped because access changed. The workspace is now read-only."}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTurn stopped because access changed.\n\u003c/system-reminder\u003e\n\n\u003csystem-reminder\u003e\nThe workspace is now read-only.\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Noted, the workspace is read-only now."}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"carry on"}}

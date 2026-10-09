@@ -1,0 +1,41 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `medium`
+- **Provider:** `codex`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+queue a message and then push it out at once
+
+## Tool calls · +0s
+
+```
+work: work [cancelled, 1 line, 67B, call-1]
+```
+
+## Interrupted · +0s
+
+Turn stopped because the user sent another message.
+
+## User · +0s
+
+stop and do this instead
+
+## Assistant · +0s
+
+Stopping that and doing this instead.
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+Carrying on.

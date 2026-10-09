@@ -5670,6 +5670,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"context-custom-tool":      {".prompt"},
 		"context-project-skill":    {".prompt"},
 		"context-repository-print": {".prompt"},
+		"context-codex":            {".prompt"},
 		"context-simulation":       {".prompt"},
 		"context-yolo":             {".prompt"},
 		"host-command":             {".ansi", ".screen"},
@@ -6196,7 +6197,8 @@ func TestAnIdleModeMessageJoinsTheNextTurn(t *testing.T) {
 	}
 	self.finish()
 
-	if !slices.Equal(provider.messages, []string{modeMessage, "next"}) {
+	toldMode := agent.FormatNotes(agent.SystemReminders, []agent.Note{{Kind: agent.EnvironmentNote, Text: modeMessage}})
+	if !slices.Equal(provider.messages, []string{toldMode, "next"}) {
 		t.Errorf("provider received %q", provider.messages)
 	}
 	storedSession, err := store.Read(directory, log.Name())
@@ -8483,6 +8485,7 @@ type promptGolden struct {
 	isLookupGranted     bool
 	hasCustomTool       bool
 	hasProjectSkillOnly bool
+	notes               agent.NoteFormat
 }
 
 func TestGoldenTheCompleteSystemPromptMatchesTheGolden(t *testing.T) {
@@ -8505,6 +8508,7 @@ func TestGoldenTheCompleteSystemPromptMatchesTheGolden(t *testing.T) {
 		"context-lookup":        {isLookupGranted: true},
 		"context-custom-tool":   {hasCustomTool: true},
 		"context-project-skill": {hasProjectSkillOnly: true},
+		"context-codex":         {notes: codex.Notes},
 		"context-repository-print": {
 			isRepository: true,
 			isPrinting:   true,
@@ -8634,6 +8638,7 @@ func compareSystemPromptWithGolden(t *testing.T, name string, shape promptGolden
 		JobsGranted:    shape.areJobsGiven,
 		NetworkGranted: currentCaps.Has(caps.Network),
 		Yolo:           shape.isYolo,
+		Notes:          shape.notes,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -18812,7 +18817,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	if scenario.ToggleBeforeFirst != "" {
 		toggleSessionGoldenCaps(t, firstHarness, scenario.ToggleBeforeFirst)
 		firstHarness.settleAccess()
-		firstAssistant.AddUserMessage(firstHarness.takeSettledNotes())
+		firstAssistant.AddNotes(firstHarness.takeSettledNotes())
 	}
 	if scenario.JobHoldingWorkspace != "" {
 		settleSessionGoldenJob(t, firstHarness, scenario.JobHoldingWorkspace)
@@ -18824,14 +18829,12 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		}
 		firstHarness.jobEnded(conclusion)
 		firstHarness.settleAccess()
-		firstAssistant.AddUserMessage(firstHarness.takeSettledNotes())
+		firstAssistant.AddNotes(firstHarness.takeSettledNotes())
 	}
 	if scenario.RunBeforeFirst != "" {
 		firstHarness.hostCommandRan(sessionGoldenHostCommand(scenario.RunBeforeFirst))
 		firstHarness.settleAccess()
-		if note := firstHarness.takeSettledNotes(); note != "" {
-			firstAssistant.AddUserMessage(note)
-		}
+		firstAssistant.AddNotes(firstHarness.takeSettledNotes())
 	}
 	firstHarness.currentTurn = Turn{Stream: testRunningTurnStream(), painter: firstHarness.newPainter(true)}
 	firstTurns := runSessionGoldenTurn(t, firstHarness, scenario.FirstTurn, cancelSignals)
@@ -18928,9 +18931,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		screenOutput.String(),
 	)
 	resumedHarness.settleAccess()
-	if note := resumedHarness.prelude(); note != "" {
-		resumedAssistant.AddUserMessage(note)
-	}
+	resumedAssistant.AddNotes(resumedHarness.prelude())
 	resumeTurns := runSessionGoldenTurn(t, resumedHarness, scenario.ResumeTurn, cancelSignals)
 	resumedHarness.dropPendingInput()
 
@@ -21915,10 +21916,10 @@ func TestAnEndedJobTellsTheModelWhatItPrintedWithoutBeingAsked(t *testing.T) {
 	}
 	self.settleAccess()
 
-	if note := self.takeSettledNotes(); note != notices[0] {
+	if note := noteTexts(self.takeSettledNotes()); note != notices[0] {
 		t.Errorf("told the model %q, want the notice it drew: %q", note, notices[0])
 	}
-	if note := self.takeSettledNotes(); note != "" {
+	if note := noteTexts(self.takeSettledNotes()); note != "" {
 		t.Errorf("told the model %q twice, want it taken once", note)
 	}
 }
@@ -21936,7 +21937,7 @@ func TestAnEndedJobWaitsForSomeoneToSpeakWhereNobodyIsListening(t *testing.T) {
 
 	self.settleAccess()
 
-	if note := self.takeSettledNotes(); note == "" {
+	if note := noteTexts(self.takeSettledNotes()); note == "" {
 		t.Error("the ended job said nothing, want it kept for whenever the conversation next runs")
 	}
 }
@@ -22066,7 +22067,7 @@ func TestAnEndedJobWakesTheConversationWithATurnOfItsOwn(t *testing.T) {
 	if len(messages) == 0 || !strings.Contains(messages[len(messages)-1], "build") {
 		t.Errorf("got messages %q, want the ended job named in the turn it woke", messages)
 	}
-	if note := self.takeSettledNotes(); note != "" {
+	if note := noteTexts(self.takeSettledNotes()); note != "" {
 		t.Errorf("told the model %q afterwards, want the waking turn to have taken it", note)
 	}
 }
@@ -22171,8 +22172,8 @@ func TestAHostCommandRunDuringATurnJoinsItRatherThanStartingAnother(t *testing.T
 	if queued := self.currentTurn.GetInterjections(); len(queued) != 0 {
 		t.Errorf("got queued messages %q, want a harness note rather than a message of the person's", queued)
 	}
-	note, isNoted := self.currentTurn.TakeNotes()
-	if !isNoted || !strings.Contains(note, "git status --short") {
+	notes, isNoted := self.currentTurn.TakeNotes()
+	if note := noteTexts(notes); !isNoted || !strings.Contains(note, "git status --short") {
 		t.Errorf("got note %q and %t, want the command the person ran", note, isNoted)
 	}
 }
@@ -22472,7 +22473,7 @@ func TestTheModelIsToldAboutTheJobsAWithdrawalStopped(t *testing.T) {
 	self.toggleCap(caps.Write)
 	self.settleAccess()
 
-	note := self.prelude()
+	note := noteTexts(self.prelude())
 	change := strings.Index(note, "The workspace is now read-only")
 	stop := strings.Index(note, "Job `web` stopped")
 	if change < 0 || stop < 0 {
@@ -22490,10 +22491,10 @@ func TestTheModelIsToldAboutAStoppedJobEvenWhenTheCapabilityComesBack(t *testing
 	self.toggleCap(caps.Write)
 	self.settleAccess()
 
-	if note := self.prelude(); !strings.Contains(note, "Job `web` stopped") {
+	if note := noteTexts(self.prelude()); !strings.Contains(note, "Job `web` stopped") {
 		t.Errorf("got note %q, want the job the withdrawal stopped", note)
 	}
-	if note := self.prelude(); note != "" {
+	if note := noteTexts(self.prelude()); note != "" {
 		t.Errorf("got note %q, want the stop told once", note)
 	}
 }
@@ -22526,7 +22527,7 @@ func TestTheModelIsToldTheDetailedFormOfAUserNotice(t *testing.T) {
 	if len(drawn) != 3 {
 		t.Fatalf("got %d notices drawn, want the restored job, the ended job and the change: %q", len(drawn), drawn)
 	}
-	modelNotices := self.pendingNotices.modelNotices()
+	modelNotices := noteTextsOf(self.pendingNotices.modelNotes())
 	if len(modelNotices) != 3 {
 		t.Fatalf("got %d model notices, want the restored job, the ended job and the change: %q", len(modelNotices), modelNotices)
 	}
@@ -22539,7 +22540,7 @@ func TestTheModelIsToldTheDetailedFormOfAUserNotice(t *testing.T) {
 
 	self.settleAccess()
 
-	if told := self.prelude(); told != strings.Join(modelNotices, noticeSeparator) {
+	if told := noteTexts(self.prelude()); told != strings.Join(modelNotices, noticeSeparator) {
 		t.Errorf("the model was told\n%q\nwant\n%q", told, modelNotices)
 	}
 }
@@ -22573,7 +22574,7 @@ func TestAStoppedJobIsToldWhenThePathItHeldIsRevoked(t *testing.T) {
 	self.stopJobsHoldingPath("/workspace")
 	self.settleAccess()
 
-	if note := self.prelude(); !strings.Contains(note, "Job `web` stopped") {
+	if note := noteTexts(self.prelude()); !strings.Contains(note, "Job `web` stopped") {
 		t.Errorf("got note %q, want the job the revoked path stopped", note)
 	}
 }
@@ -23750,4 +23751,97 @@ func TestAThemeObservedAsReadIsNotAppliedAgainButAChangedOneIs(t *testing.T) {
 	if drawn := style.Accent("x"); !strings.Contains(drawn, "38;2;4;5;6") {
 		t.Errorf("a theme changed since it was read was not applied: %q", drawn)
 	}
+}
+
+func noteTextsOf(notes []agent.Note) []string {
+	texts := make([]string, 0, len(notes))
+	for _, note := range notes {
+		texts = append(texts, note.Text)
+	}
+
+	return texts
+}
+
+func noteTexts(notes []agent.Note) string {
+	return strings.Join(noteTextsOf(notes), noticeSeparator)
+}
+
+func TestEveryProviderTagsItsNotesTheWayItsOwnHarnessDoes(t *testing.T) {
+	binary := buildTestBinary(t)
+
+	const pokeText = "No reply was returned; continue from where you stopped."
+	for _, test := range []struct {
+		model   string
+		dialect string
+		path    string
+		notes   agent.NoteFormat
+	}{
+		{"anthropic/fake", sim.Messages, "/messages", agent.SystemReminders},
+		{"codex/fake", sim.Responses, "/responses", codex.Notes},
+		{"opencode-go/fake", sim.Completions, "/chat/completions", agent.SystemReminders},
+		{"opencode-go/fake-contributor", sim.Completions, "/responses", agent.SystemReminders},
+		{"opencode-go/qwen-fake", sim.Completions, "/messages", agent.SystemReminders},
+		{"ollama/fake", sim.Completions, "/chat/completions", agent.SystemReminders},
+	} {
+		t.Run(test.model, func(t *testing.T) {
+			endpoint := sim.New(&sim.Scenario{
+				Model: strings.SplitN(test.model, "/", 2)[1],
+				Turns: []sim.Turn{{Think: []string{"Weighing it up."}}, {Say: "Done."}},
+			})
+
+			var bodyMutex sync.Mutex
+			var bodies []string
+			server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+				if strings.HasSuffix(request.URL.Path, test.path) {
+					raw, _ := io.ReadAll(request.Body)
+					var body any
+					_ = json.Unmarshal(raw, &body)
+					bodyMutex.Lock()
+					bodies = append(bodies, strings.Join(stringsWithin(body), "\n"))
+					bodyMutex.Unlock()
+					request.Body = io.NopCloser(bytes.NewReader(raw))
+				}
+				endpoint.ServeHTTP(writer, request)
+			}))
+			t.Cleanup(server.Close)
+
+			address := endpoint.Addresses(server.URL)[test.dialect]
+			environment := append(testBinaryEnvironment(t, t.TempDir()), backend.EndpointVariable+"="+address)
+			runTestBinary(t, binary, reachableWorkspaceDir(t), environment, "-p", "--yolo", "-m", test.model, "think it over")
+
+			bodyMutex.Lock()
+			captured := slices.Clone(bodies)
+			bodyMutex.Unlock()
+			if len(captured) != 2 {
+				t.Fatalf("got %d conversation requests, want the silent turn and its poke", len(captured))
+			}
+			if !strings.Contains(captured[0], test.notes.Rule()) {
+				t.Errorf("the system prompt does not explain the notes:\n%s", captured[0])
+			}
+			poke := agent.FormatNotes(test.notes, []agent.Note{{Kind: agent.PokeNote, Text: pokeText}})
+			if !strings.Contains(captured[1], poke) {
+				t.Errorf("the poke was not tagged as %q:\n%s", poke, captured[1])
+			}
+		})
+	}
+}
+
+func stringsWithin(value any) []string {
+	switch typed := value.(type) {
+	case string:
+		return []string{typed}
+	case []any:
+		var found []string
+		for _, element := range typed {
+			found = append(found, stringsWithin(element)...)
+		}
+		return found
+	case map[string]any:
+		var found []string
+		for _, key := range slices.Sorted(maps.Keys(typed)) {
+			found = append(found, stringsWithin(typed[key])...)
+		}
+		return found
+	}
+	return nil
 }

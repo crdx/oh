@@ -1,0 +1,37 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[tool]]
+name = "title"
+
+[first]
+prompt = "what does the picker do with a long title"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_text.delta","delta":"It clips it, and marks the clipping."}''',
+    '''{"type":"response.output_text.done","text":"It clips it, and marks the clipping."}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"It clips it, and marks the clipping."}]}}''',
+    '''{"type":"response.completed"}''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"title","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-1","delta":"{\"title\":\"clip long picker titles\"}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-1","arguments":"{\"title\":\"clip long picker titles\"}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"title","arguments":"{\"title\":\"clip long picker titles\"}"}}''',
+    '''{"type":"response.completed"}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_text.delta","delta":"Named it, now that the task is clear."}''',
+    '''{"type":"response.output_text.done","text":"Named it, now that the task is clear."}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"Named it, now that the task is clear."}]}}''',
+    '''{"type":"response.completed"}''',
+]

@@ -1,0 +1,91 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[environment]
+deny = ["old-secret.yml", "shared-secret.yml"]
+read = ["/old/reference", "/shared/reference"]
+write = ["/old/output"]
+exec = ["/old/bin"]
+path = ["/old/path", "/shared/path"]
+home = ["/test-home/.oldrc"]
+repository = false
+hostname = "old.agent.test"
+
+[[environment.skill]]
+name = "changed"
+description = "use the old process"
+location = "/skills/changed/SKILL.md"
+
+[[environment.skill]]
+name = "removed"
+description = "use the removed process"
+location = "/skills/removed/SKILL.md"
+
+[[environment.skill]]
+name = "renamed-old"
+description = "use the renamed process"
+location = "/skills/renamed/SKILL.md"
+
+[[environment.skill]]
+name = "moved"
+description = "use the moved process"
+location = "/skills/moved-old/SKILL.md"
+
+[environment-on-resume]
+deny = ["new-secret.yml", "shared-secret.yml"]
+read = ["/new/reference", "/shared/reference"]
+write = ["/new/output"]
+exec = ["/new/bin"]
+path = ["/shared/path", "/new/path"]
+home = ["/test-home/.newrc"]
+repository = true
+hostname = "new.agent.test"
+
+[[environment-on-resume.skill]]
+name = "added"
+description = "use the added process"
+location = "/skills/added/SKILL.md"
+
+[[environment-on-resume.skill]]
+name = "changed"
+description = "use the new process"
+location = "/skills/changed/SKILL.md"
+
+[[environment-on-resume.skill]]
+name = "renamed-new"
+description = "use the renamed process"
+location = "/skills/renamed/SKILL.md"
+
+[[environment-on-resume.skill]]
+name = "moved"
+description = "use the moved process"
+location = "/skills/moved-new/SKILL.md"
+
+[first]
+prompt = "remember the environment"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-1","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"I have the original environment."}''',
+    '''{"type":"response.output_text.done","text":"I have the original environment."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"I have the original environment."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"I have the original environment."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "what changed"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-2","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The queued harness update describes the complete delta."}''',
+    '''{"type":"response.output_text.done","text":"The queued harness update describes the complete delta."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The queued harness update describes the complete delta."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"The queued harness update describes the complete delta."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

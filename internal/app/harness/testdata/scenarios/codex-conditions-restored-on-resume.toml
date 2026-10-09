@@ -1,0 +1,33 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+conditions = "none"
+conditions-on-resume = "unix-sockets ipv6 interactive"
+
+[first]
+prompt = "bind a listener on ::1"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-1","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"There is no IPv6 here, so 127.0.0.1 instead."}''',
+    '''{"type":"response.output_text.done","text":"There is no IPv6 here, so 127.0.0.1 instead."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"There is no IPv6 here, so 127.0.0.1 instead."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"There is no IPv6 here, so 127.0.0.1 instead."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "try ::1 again"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-2","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"::1 answers now."}''',
+    '''{"type":"response.output_text.done","text":"::1 answers now."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"::1 answers now."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"::1 answers now."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

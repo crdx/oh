@@ -499,9 +499,9 @@ func (self *Agent) interjectNotes(ctx context.Context, interjections *Interjecti
 		return false
 	}
 
-	note, isNoted := interjections.TakeNotes()
+	notes, isNoted := interjections.TakeNotes()
 	if isNoted {
-		self.provider.AddUserMessage(note)
+		self.AddNotes(notes)
 	}
 
 	return isNoted

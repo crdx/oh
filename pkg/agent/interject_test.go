@@ -36,7 +36,7 @@ func (self *interjectionProvider) Send(_ context.Context, _ agent.Yield) (agent.
 
 	if self.sent == 1 {
 		for _, text := range self.noteAfter {
-			self.interjections.Note(text)
+			self.interjections.Note(agent.Note{Kind: agent.JobNote, Text: text})
 		}
 	}
 
@@ -256,14 +256,14 @@ func TestAHarnessNoteReachesTheModelWithoutBeingDrawnAsAUserMessage(t *testing.T
 		}
 		if update.Event.Kind == agent.ToolCallRequestEvent && !isNoted {
 			isNoted = true
-			interjections.Note("the job build has finished")
+			interjections.Note(agent.Note{Kind: agent.JobNote, Text: "the job build has finished"})
 		}
 		if update.Event.Kind == agent.UserMessageEvent {
 			messages = append(messages, update.Event.Text)
 		}
 	}
 
-	want := []string{"user:go", "send", "result:a", "result:b", "user:the job build has finished", "send"}
+	want := []string{"user:go", "send", "result:a", "result:b", "user:<system-reminder>\nthe job build has finished\n</system-reminder>", "send"}
 	if !slices.Equal(provider.history, want) {
 		t.Errorf("history %q, want %q", provider.history, want)
 	}
@@ -287,7 +287,7 @@ func TestAHarnessNoteArrivingDuringTheFinalAnswerGetsAnotherRound(t *testing.T) 
 		}
 	}
 
-	want := []string{"user:go", "send", "user:the job build has finished", "send"}
+	want := []string{"user:go", "send", "user:<system-reminder>\nthe job build has finished\n</system-reminder>", "send"}
 	if !slices.Equal(provider.history, want) {
 		t.Errorf("history %q, want %q", provider.history, want)
 	}
@@ -299,7 +299,7 @@ func TestAHarnessNoteArrivingDuringTheFinalAnswerGetsAnotherRound(t *testing.T) 
 func TestAnEmptyNoteIsNotQueued(t *testing.T) {
 	interjections := &agent.Interjections{}
 
-	if interjections.Note("") {
+	if interjections.Note(agent.Note{Kind: agent.JobNote}) {
 		t.Error("expected an empty note to be refused")
 	}
 	if _, isNoted := interjections.TakeNotes(); isNoted {

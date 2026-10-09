@@ -1,0 +1,53 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+hostname = "{session}.agent"
+
+[[tool]]
+name = "forward"
+
+[first]
+prompt = "put the preview where i can see it"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"forward","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-1","delta":"{\"action\":\"add\",\"port\":8080}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-1","arguments":"{\"action\":\"add\",\"port\":8080}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"forward","arguments":"{\"action\":\"add\",\"port\":8080}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-2","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The preview is forwarded at the address in the tool result above."}''',
+    '''{"type":"response.output_text.done","text":"The preview is forwarded at the address in the tool result above."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The preview is forwarded at the address in the tool result above."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"The preview is forwarded at the address in the tool result above."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "take it down"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-3","type":"function_call","call_id":"call-2","name":"forward","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-3","delta":"{\"action\":\"remove\",\"port\":8080}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-3","arguments":"{\"action\":\"remove\",\"port\":8080}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-3","type":"function_call","call_id":"call-2","name":"forward","arguments":"{\"action\":\"remove\",\"port\":8080}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-4","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Taken down."}''',
+    '''{"type":"response.output_text.done","text":"Taken down."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Taken down."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-4","type":"message","role":"assistant","content":[{"type":"output_text","text":"Taken down."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

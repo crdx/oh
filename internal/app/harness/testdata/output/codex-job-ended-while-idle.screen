@@ -1,0 +1,20 @@
+
+ 🤖 Job build exited: failed after 12s, exit(2).
+
+    Usage:
+      oh [options]         Start a session
+      oh --help            Show help
+    cmd/oh/draw.go:41:9: undefined: getWidth
+
+
+
+ what happened to the build
+
+
+It failed after twelve seconds: getWidth is undefined in draw.go.
+
+
+ carry on
+
+
+Carrying on.

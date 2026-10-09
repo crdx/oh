@@ -1,0 +1,34 @@
+
+ remember the environment
+
+
+I have the original environment.
+
+
+ 🤖 Sandbox deny patterns added: new-secret.yml.
+ 🤖 Sandbox deny patterns removed: old-secret.yml.
+ 🤖 Paths matching a sandbox deny pattern appear empty and unreadable; treat them as sandbox
+    artefacts and ask for access only when needed.
+ 🤖 Configured read-only paths added: /new/reference.
+ 🤖 Configured read-only paths removed: /old/reference.
+ 🤖 Configured read-write paths added: /new/output.
+ 🤖 Configured read-write paths removed: /old/output.
+ 🤖 Configured executable paths added: /new/bin.
+ 🤖 Configured executable paths removed: /old/bin.
+ 🤖 Configured PATH directories are now, in order: /shared/path, /new/path.
+ 🤖 Configured home paths added: /test-home/.newrc.
+ 🤖 Configured home paths removed: /test-home/.oldrc.
+ 🤖 Skills now available: added at /skills/added/SKILL.md; moved at /skills/moved-new/SKILL.md.
+ 🤖 Skills no longer available: moved at /skills/moved-old/SKILL.md; removed at
+    /skills/removed/SKILL.md.
+ 🤖 Skills changed: changed at /skills/changed/SKILL.md; renamed-old is now renamed-new at
+    /skills/renamed/SKILL.md.
+ 🤖 The workspace is now a Git repository.
+ 🤖 Host-facing URLs for forwarded sandbox ports now use new.agent.test instead of old.agent.test.
+
+
+
+ what changed
+
+
+The queued harness update describes the complete delta.

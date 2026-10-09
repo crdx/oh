@@ -10,38 +10,38 @@ const InterjectionSeparator = "\n\n"
 type Interjections struct {
 	mutex    sync.Mutex
 	messages []string
-	notes    []string
+	notes    []Note
 }
 
-func (self *Interjections) Note(text string) bool {
-	if self == nil || text == "" {
+func (self *Interjections) Note(note Note) bool {
+	if self == nil || note.Text == "" {
 		return false
 	}
 
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 
-	self.notes = append(self.notes, text)
+	self.notes = append(self.notes, note)
 
 	return true
 }
 
-func (self *Interjections) TakeNotes() (string, bool) {
+func (self *Interjections) TakeNotes() ([]Note, bool) {
 	if self == nil {
-		return "", false
+		return nil, false
 	}
 
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 
 	if len(self.notes) == 0 {
-		return "", false
+		return nil, false
 	}
 
-	wholeQueue := strings.Join(self.notes, InterjectionSeparator)
+	notes := self.notes
 	self.notes = nil
 
-	return wholeQueue, true
+	return notes, true
 }
 
 func (self *Interjections) Add(text string) bool {

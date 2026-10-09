@@ -1,0 +1,57 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `medium`
+- **Provider:** `codex`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+use every original tool
+
+## Tool calls · +0s
+
+```
+stable: stable [ok, 1 line, 13B, call-1]
+changed: changed [ok, 1 line, 23B, call-2]
+revision: revision [ok, 1 line, 24B, call-3]
+schema: schema [ok, 1 line, 22B, call-4]
+compatible: compatible [ok, 1 line, 17B, call-5]
+missing: missing [ok, 1 line, 23B, call-6]
+```
+
+## Assistant · +0s
+
+Every original tool ran.
+
+## Tool availability · missing, revision · +0s
+
+```
+The `missing` tool is no longer installed and is disabled for this conversation.
+The `revision` tool changed from version `1` to version `2` and is disabled for the remainder of this conversation.
+```
+
+## User · +0s
+
+try every tool again
+
+## Tool calls · +0s
+
+```
+stable: stable [ok, 1 line, 13B, call-7]
+changed: changed [ok, 1 line, 23B, call-8]
+revision [error, 1 line, 108B, call-9]
+schema: schema [ok, 1 line, 22B, call-10]
+compatible: compatible [ok, 1 line, 17B, call-11]
+missing [error, 1 line, 77B, call-12]
+added: {} [error, call-13]
+```
+
+## Assistant · +0s
+
+Tools at compatible versions ran with their frozen definitions; the changed version was refused.

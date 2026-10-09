@@ -1,0 +1,74 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[tool]]
+name = "forward"
+
+[[tool]]
+name = "job"
+runs = true
+
+[first]
+prompt = "serve the docs on the port you forwarded"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"forward","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-1","delta":"{\"action\":\"add\",\"port\":8080}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-1","arguments":"{\"action\":\"add\",\"port\":8080}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"forward","arguments":"{\"action\":\"add\",\"port\":8080}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-2","type":"function_call","call_id":"call-2","name":"job","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-2","delta":"{\"action\":\"start\",\"name\":\"docs\",\"port\":8080,\"command\":\"just docs\",\"intent\":\"serving the documentation\"}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-2","arguments":"{\"action\":\"start\",\"name\":\"docs\",\"port\":8080,\"command\":\"just docs\",\"intent\":\"serving the documentation\"}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-2","type":"function_call","call_id":"call-2","name":"job","arguments":"{\"action\":\"start\",\"name\":\"docs\",\"port\":8080,\"command\":\"just docs\",\"intent\":\"serving the documentation\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-3","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The docs are served on the forwarded port."}''',
+    '''{"type":"response.output_text.done","text":"The docs are served on the forwarded port."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The docs are served on the forwarded port."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-3","type":"message","role":"assistant","content":[{"type":"output_text","text":"The docs are served on the forwarded port."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "put the api and a bare forward on that port too"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-4","type":"function_call","call_id":"call-3","name":"job","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-4","delta":"{\"action\":\"start\",\"name\":\"api\",\"port\":8080,\"command\":\"just api\",\"intent\":\"Running the api on that port\"}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-4","arguments":"{\"action\":\"start\",\"name\":\"api\",\"port\":8080,\"command\":\"just api\",\"intent\":\"Running the api on that port\"}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-4","type":"function_call","call_id":"call-3","name":"job","arguments":"{\"action\":\"start\",\"name\":\"api\",\"port\":8080,\"command\":\"just api\",\"intent\":\"Running the api on that port\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"call-item-5","type":"function_call","call_id":"call-4","name":"forward","arguments":""}}''',
+    '''{"type":"response.function_call_arguments.delta","item_id":"call-item-5","delta":"{\"action\":\"add\",\"port\":8080}"}''',
+    '''{"type":"response.function_call_arguments.done","item_id":"call-item-5","arguments":"{\"action\":\"add\",\"port\":8080}"}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-5","type":"function_call","call_id":"call-4","name":"forward","arguments":"{\"action\":\"add\",\"port\":8080}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-6","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Port 8080 already belongs to docs."}''',
+    '''{"type":"response.output_text.done","text":"Port 8080 already belongs to docs."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Port 8080 already belongs to docs."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-6","type":"message","role":"assistant","content":[{"type":"output_text","text":"Port 8080 already belongs to docs."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

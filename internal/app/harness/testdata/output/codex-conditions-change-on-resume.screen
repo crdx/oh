@@ -1,0 +1,18 @@
+
+ listen on a Unix socket
+
+
+A socket beneath /tmp it is.
+
+
+ 🤖 Unix sockets no longer work.
+ 🤖 IPv6 unavailable; use 127.0.0.1.
+ 🤖 The session is non-interactive: questions, approvals, and /! commands for the user are
+    unavailable. A background job does not wake the conversation when it ends.
+
+
+
+ listen on it again
+
+
+Not any more, so 127.0.0.1 it is.
