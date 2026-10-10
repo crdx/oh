@@ -1,0 +1,15 @@
+{"kind":"head","version":19,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
+{"kind":"event","event":{"kind":"user_message","text":"has the build finished"}}
+{"kind":"event","event":{"kind":"model_message","text":"The build is still "}}
+{"kind":"event","event":{"kind":"job_ended","name":"build","state":{"snapshot":{"name":"build","command":"just build","state":"failed","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:21Z","code":2},"output":"go build ./...\ncmd/oh/draw.go:41:9: undefined: getWidth\nexit status 1"}}}
+{"kind":"event","event":{"kind":"turn_interruption","name":"escape"}}
+{"kind":"item","payload":{"role":"user","content":"has the build finished"}}
+{"kind":"item","payload":{"content":[{"text":"The build is still ","type":"output_text"}],"role":"assistant","type":"message"}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
+{"kind":"event","event":{"kind":"model_message","text":"Carrying on."}}
+{"kind":"item","payload":{"role":"user","content":"carry on"}}
+{"kind":"item","payload":{"id":"message-4","type":"message","role":"assistant","content":[{"type":"output_text","text":"Carrying on."}]}}
+{"kind":"turn_completion","turn":{}}

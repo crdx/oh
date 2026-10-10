@@ -5682,6 +5682,8 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"lifecycle":                {".ansi", ".screen"},
 		"line-resize":              {".screen"},
 		"short-terminal":           {".screen"},
+		"notice-mid-prose-modes":   {".screen"},
+		"notice-mid-prose":         {".screen"},
 		"streaming-modes":          {".screen"},
 		"groupings":                {".screen"},
 		"reasonings":               {".ansi", ".screen"},
@@ -17561,6 +17563,8 @@ type sessionGoldenTurn struct {
 	EndJobAfterToolRequest       string                  `toml:"end-job-after-tool-request"`
 	EndJobRespawn                jobs.Respawn            `toml:"end-job-respawn"`
 	EndJobAfterReasoningEvent    string                  `toml:"end-job-after-reasoning-event"`
+	EndJobAfterReasoningDelta    string                  `toml:"end-job-after-reasoning-delta"`
+	EndJobAfterMessageDelta      string                  `toml:"end-job-after-message-delta"`
 }
 
 const forwardToolName = "forward"
@@ -17592,6 +17596,8 @@ func (self sessionGoldenTurn) usesTheInterface() bool {
 		self.ToggleDuringModeTurn != "" ||
 		self.EndJobAfterToolRequest != "" ||
 		self.EndJobAfterReasoningEvent != "" ||
+		self.EndJobAfterReasoningDelta != "" ||
+		self.EndJobAfterMessageDelta != "" ||
 		self.DoubleReturnAfterToolRequest ||
 		self.CancelAfterQueueing ||
 		len(self.QueueAfterToolRequest) > 0 ||
@@ -19646,30 +19652,15 @@ func runSessionGoldenTurn(
 		}
 	}
 
-	reasoningDeltas := 0
+	var deltas sessionGoldenDeltas
 	reasoningEvents := 0
-	messageDeltas := 0
 	toolRequests := 0
 	retryNotices := 0
 	for update, streamError := range testHarness.agent.Stream(streamContext, turn.Prompt, testHarness.currentTurn.Interjections()) {
 		drawnTurnEvents = append(drawnTurnEvents, TurnEvent{Update: update, Err: streamError})
 		testHarness.takeTurn(TurnEvent{Update: update, Err: streamError})
 		if update.Delta != nil {
-			switch update.Delta.Kind { //nolint:exhaustive // Only model prose event kinds can be deltas.
-			case agent.ModelReasoningEvent:
-				reasoningDeltas++
-				if reasoningDeltas == turn.CancelAfterReasoningDelta {
-					interruptWithStopKey()
-				}
-			case agent.ModelMessageEvent:
-				messageDeltas++
-				if messageDeltas == turn.CancelAfterMessageDelta {
-					interruptWithStopKey()
-				}
-				if messageDeltas == 1 {
-					takeFirstSessionGoldenMessageDelta(t, testHarness, turn)
-				}
-			}
+			deltas.take(t, testHarness, turn, update.Delta.Kind, interruptWithStopKey)
 		}
 		if update.Event != nil && update.Event.Kind == agent.ModelReasoningEvent {
 			reasoningEvents++
@@ -19702,6 +19693,43 @@ func runSessionGoldenTurn(
 	drawnTurns := [][]TurnEvent{drawnTurnEvents}
 
 	return append(drawnTurns, runQueuedSessionGoldenTurns(t, testHarness, turn.ToggleDuringModeTurn)...)
+}
+
+type sessionGoldenDeltas struct {
+	reasoning int
+	message   int
+}
+
+func (self *sessionGoldenDeltas) take(
+	t *testing.T,
+	testHarness *App,
+	turn sessionGoldenTurn,
+	kind agent.Kind,
+	interruptWithStopKey func(),
+) {
+	t.Helper()
+
+	switch kind { //nolint:exhaustive // Only model prose event kinds can be deltas.
+	case agent.ModelReasoningEvent:
+		self.reasoning++
+		if self.reasoning == 1 && turn.EndJobAfterReasoningDelta != "" {
+			testHarness.jobEnded(endedSessionGoldenJob(turn.EndJobAfterReasoningDelta))
+		}
+		if self.reasoning == turn.CancelAfterReasoningDelta {
+			interruptWithStopKey()
+		}
+	case agent.ModelMessageEvent:
+		self.message++
+		if self.message == 1 && turn.EndJobAfterMessageDelta != "" {
+			testHarness.jobEnded(endedSessionGoldenJob(turn.EndJobAfterMessageDelta))
+		}
+		if self.message == turn.CancelAfterMessageDelta {
+			interruptWithStopKey()
+		}
+		if self.message == 1 {
+			takeFirstSessionGoldenMessageDelta(t, testHarness, turn)
+		}
+	}
 }
 
 func takeFirstSessionGoldenToolRequest(

@@ -1,0 +1,21 @@
+
+ has the build finished
+
+
+The build is still
+
+
+ 🤖 Job build exited: failed after 12s, exit(2).
+
+    go build ./...
+    cmd/oh/draw.go:41:9: undefined: getWidth
+    exit status 1
+
+
+Turn stopped because the user pressed escape.
+
+
+ carry on
+
+
+Carrying on.

@@ -25,6 +25,7 @@
 - Add debug toggles for cpu and stall profiling
 - Accept and complete flags in fork and new
 - Reduce the number of ui redraws
+- Stop drawing a long answer twice when a job ends while it streams
 
 ## [0.13.0] - 2026-10-07
 

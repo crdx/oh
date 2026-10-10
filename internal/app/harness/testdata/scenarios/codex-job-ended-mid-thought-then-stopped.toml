@@ -1,0 +1,32 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[first]
+prompt = "has the build finished"
+is-cancelled = true
+end-job-after-reasoning-delta = "build"
+cancel-after-reasoning-delta = 2
+
+[[first.response]]
+wait-for-cancellation = true
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"reasoning-1","type":"reasoning","content":[],"encrypted_content":"","summary":[]}}''',
+    '''{"type":"response.reasoning_summary_part.added","part":{"type":"summary_text","text":""}}''',
+    '''{"type":"response.reasoning_summary_text.delta","delta":"The build was "}''',
+    '''{"type":"response.reasoning_summary_text.delta","delta":"still running "}''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-4","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Carrying on."}''',
+    '''{"type":"response.output_text.done","text":"Carrying on."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Carrying on."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-4","type":"message","role":"assistant","content":[{"type":"output_text","text":"Carrying on."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

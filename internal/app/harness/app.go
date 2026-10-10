@@ -247,7 +247,8 @@ type App struct {
 type Turn struct {
 	*turn.Stream
 
-	painter *painter.Picasso
+	painter     *painter.Picasso
+	heldNotices []agent.Event
 }
 
 type TurnEvent = turn.Event
@@ -2080,6 +2081,10 @@ func (self *App) recordEvent(event agent.Event) {
 	}
 
 	self.storeEvent(event)
+
+	if !self.currentTurn.painter.IsProseArriving() {
+		self.releaseHeldNotices()
+	}
 }
 
 func (self *App) storeEvent(event agent.Event) {
@@ -2094,6 +2099,24 @@ func (self *App) notifyFailure(text string) {
 }
 
 func (self *App) notify(event agent.Event) {
+	if self.currentTurn.Running() && self.currentTurn.painter.IsProseArriving() {
+		self.currentTurn.heldNotices = append(self.currentTurn.heldNotices, event)
+		return
+	}
+
+	self.recordNotice(event)
+}
+
+func (self *App) releaseHeldNotices() {
+	notices := self.currentTurn.heldNotices
+	self.currentTurn.heldNotices = nil
+
+	for _, event := range notices {
+		self.recordNotice(event)
+	}
+}
+
+func (self *App) recordNotice(event agent.Event) {
 	self.recordedEvents = append(self.recordedEvents, event)
 
 	picasso := self.noticePainter()
@@ -2145,6 +2168,7 @@ func (self *App) finish() {
 	} else if turnError = self.currentTurn.Error(); turnError != nil {
 		self.recordEvent(agent.Event{Kind: agent.FailureEvent, Failure: agent.FailureFrom(turnError)})
 	}
+	self.releaseHeldNotices()
 
 	if notes, isNoted := self.currentTurn.TakeNotes(); isNoted {
 		self.settledNotes = append(self.settledNotes, notes...)

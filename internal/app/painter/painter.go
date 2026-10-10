@@ -445,6 +445,10 @@ func renderReasoningWith(
 
 func (self *Picasso) Stale() bool { return self.isStale }
 
+func (self *Picasso) IsProseArriving() bool {
+	return self.answer.Len() > 0 || self.reasoning.Len() > 0
+}
+
 func (self *Picasso) LiveEventCount() int {
 	if self.toolBlock == nil {
 		return 0
