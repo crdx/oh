@@ -36,14 +36,16 @@ type Timing struct {
 
 func Start(assistant *agent.Agent, message string, timing Timing, reminder agent.Reminder) *Stream {
 	streamContext, cancel := context.WithCancelCause(context.Background())
-	stream := Adopt(make(chan Event), cancel, State{Running: true, StartedAt: time.Now(), Timing: timing})
+	events := make(chan Event)
+	stream := Adopt(events, cancel, State{Running: true, StartedAt: time.Now(), Timing: timing})
 	stream.interjections.Remind(reminder)
+	interjections := stream.interjections
 
 	go func() {
-		defer close(stream.events)
+		defer close(events)
 		defer cancel(nil)
-		for update, err := range assistant.Stream(streamContext, message, stream.interjections) {
-			stream.events <- Event{Update: update, Err: err}
+		for update, err := range assistant.Stream(streamContext, message, interjections) {
+			events <- Event{Update: update, Err: err}
 			if err != nil {
 				return
 			}
