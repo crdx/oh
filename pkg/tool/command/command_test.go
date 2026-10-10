@@ -615,3 +615,161 @@ func TestACommandMarksItsSuccess(t *testing.T) {
 		t.Error("expected a command that exits cleanly to mark its success")
 	}
 }
+
+func waitForFile(t *testing.T, path string) {
+	t.Helper()
+
+	deadline := time.Now().Add(5 * time.Second)
+	for time.Now().Before(deadline) {
+		if _, err := os.Stat(path); err == nil {
+			return
+		}
+		time.Sleep(10 * time.Millisecond)
+	}
+	t.Fatalf("%s never appeared", path)
+}
+
+func isAlive(pid string) bool {
+	_, err := os.Stat("/proc/" + pid)
+	return err == nil
+}
+
+func requireGone(t *testing.T, pid string) {
+	t.Helper()
+
+	deadline := time.Now().Add(5 * time.Second)
+	for time.Now().Before(deadline) {
+		if !isAlive(pid) {
+			return
+		}
+		time.Sleep(10 * time.Millisecond)
+	}
+	t.Errorf("process %s outlived its tool call", pid)
+}
+
+func readPid(t *testing.T, path string) string {
+	t.Helper()
+
+	waitForFile(t, path)
+	content, err := os.ReadFile(path) //nolint:gosec // a path below the test directory
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return strings.TrimSpace(string(content))
+}
+
+func stopOnceItHasAChild(t *testing.T, body string) string {
+	t.Helper()
+
+	state := t.TempDir()
+	declaration := command.Declaration{
+		Name:        "build",
+		Description: "build remotely",
+		Command: []string{writeScript(t, body+`
+sleep 60 &
+echo $! > "$1/child.tmp" && mv "$1/child.tmp" "$1/child"
+wait
+`), state},
+	}
+	subject, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	parsed, err := subject.Parse(`{}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	ctx, cancel := context.WithCancel(t.Context())
+	finished := make(chan struct{})
+	go func() {
+		defer close(finished)
+		_, _ = parsed.Exec(ctx)
+	}()
+
+	child := readPid(t, filepath.Join(state, "child"))
+	cancel()
+
+	select {
+	case <-finished:
+	case <-time.After(10 * time.Second):
+		t.Fatal("the stopped call never returned")
+	}
+
+	return child
+}
+
+func TestStoppingACallStopsEveryProcessItStarted(t *testing.T) {
+	requireGone(t, stopOnceItHasAChild(t, ""))
+}
+
+func TestAStoppedCallIsAskedToEndBeforeItIsKilled(t *testing.T) {
+	state := t.TempDir()
+	declaration := command.Declaration{
+		Name:        "build",
+		Description: "build remotely",
+		Command: []string{writeScript(t, `
+trap 'echo cleaned > "$1/cleanup"; exit 1' TERM
+touch "$1/ready"
+while true; do sleep 0.01; done
+`), state},
+	}
+	subject, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	parsed, err := subject.Parse(`{}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	ctx, cancel := context.WithCancel(t.Context())
+	finished := make(chan struct{})
+	go func() {
+		defer close(finished)
+		_, _ = parsed.Exec(ctx)
+	}()
+
+	waitForFile(t, filepath.Join(state, "ready"))
+	cancel()
+	<-finished
+
+	if _, err := os.Stat(filepath.Join(state, "cleanup")); err != nil {
+		t.Errorf("the call was killed without the chance to clean up: %v", err)
+	}
+}
+
+func TestAProcessLeftBehindByAFinishedCallIsStoppedAndCannotHoldItOpen(t *testing.T) {
+	state := t.TempDir()
+	declaration := command.Declaration{
+		Name:        "build",
+		Description: "build remotely",
+		Command: []string{writeScript(t, `
+sleep 60 &
+echo $! > "$1/child"
+echo done
+`), state},
+	}
+	subject, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	startedAt := time.Now()
+	output, err := call(t, subject, `{}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if output != "done" {
+		t.Errorf("got %q", output)
+	}
+	if elapsed := time.Since(startedAt); elapsed > 3*time.Second {
+		t.Errorf("the call took %s", elapsed)
+	}
+	requireGone(t, readPid(t, filepath.Join(state, "child")))
+}
+
+func TestACallThatIgnoresTheRequestToEndIsKilled(t *testing.T) {
+	requireGone(t, stopOnceItHasAChild(t, "trap '' TERM"))
+}

@@ -18197,25 +18197,27 @@ func (self sessionGoldenTurn) usesTheInterface() bool {
 }
 
 type sessionGoldenTool struct {
-	Name                  string   `toml:"name"`
-	Outputs               []string `toml:"outputs"`
-	Image                 string   `toml:"image"`
-	ImageByteCount        int64    `toml:"image-bytes"`
-	StateKey              string   `toml:"state-key"`
-	ShellWithheld         bool     `toml:"shell-withheld"`
-	ShouldWithholdNetwork bool     `toml:"network-withheld"`
-	ShouldRefuseNetwork   bool     `toml:"network-refused"`
-	LookupWithheld        bool     `toml:"lookup-withheld"`
-	ShouldRefuseLookup    bool     `toml:"lookup-refused"`
-	FetchWithheld         bool     `toml:"fetch-withheld"`
-	LookupAnswer          string   `toml:"lookup-answer"`
-	Blocks                bool     `toml:"blocks"`
-	StoppedOutput         string   `toml:"stopped-output"`
-	IsLargeRead           bool     `toml:"large-read"`
-	Declared              string   `toml:"declared"`
-	OnResume              string   `toml:"on-resume"`
-	ShouldRun             bool     `toml:"runs"`
-	Runner                string   `toml:"runner"`
+	Name                  string        `toml:"name"`
+	Outputs               []string      `toml:"outputs"`
+	Image                 string        `toml:"image"`
+	ImageByteCount        int64         `toml:"image-bytes"`
+	StateKey              string        `toml:"state-key"`
+	ShellWithheld         bool          `toml:"shell-withheld"`
+	ShouldWithholdNetwork bool          `toml:"network-withheld"`
+	ShouldRefuseNetwork   bool          `toml:"network-refused"`
+	LookupWithheld        bool          `toml:"lookup-withheld"`
+	ShouldRefuseLookup    bool          `toml:"lookup-refused"`
+	FetchWithheld         bool          `toml:"fetch-withheld"`
+	LookupAnswer          string        `toml:"lookup-answer"`
+	Blocks                bool          `toml:"blocks"`
+	StoppedOutput         string        `toml:"stopped-output"`
+	IsLargeRead           bool          `toml:"large-read"`
+	Declared              string        `toml:"declared"`
+	DeclaredTimeLimit     time.Duration `toml:"declared-time-limit"`
+	HoldsStopUntilReady   bool          `toml:"holds-stop-until-ready"`
+	OnResume              string        `toml:"on-resume"`
+	ShouldRun             bool          `toml:"runs"`
+	Runner                string        `toml:"runner"`
 }
 
 type sessionGoldenSkill struct {
@@ -18941,10 +18943,17 @@ func newSessionGoldenDeclaredTool(t *testing.T, specification sessionGoldenTool,
 		t.Fatal(err)
 	}
 
+	commandLine := []string{script}
+	readyPath := filepath.Join(directory, specification.Name+".ready")
+	if specification.HoldsStopUntilReady {
+		commandLine = append(commandLine, readyPath)
+	}
+
 	declared, err := command.New(command.Declaration{
 		Name:        specification.Name,
 		Description: "A deterministic scenario tool of the user's own.",
-		Command:     []string{script},
+		Command:     commandLine,
+		TimeLimit:   specification.DeclaredTimeLimit,
 		Subject:     "dish",
 		Parameters: []command.Parameter{
 			{
@@ -18971,7 +18980,59 @@ func newSessionGoldenDeclaredTool(t *testing.T, specification sessionGoldenTool,
 		t.Fatal(err)
 	}
 
+	if specification.HoldsStopUntilReady {
+		declared = sessionGoldenReadyGate{Tool: declared, readyPath: readyPath}
+	}
+
 	return sessionGoldenRevision{Tool: declared}
+}
+
+type sessionGoldenReadyGate struct {
+	tool.Tool
+
+	readyPath string
+}
+
+func (self sessionGoldenReadyGate) MarksSuccess() bool { return tool.MarksSuccess(self.Tool) }
+
+func (self sessionGoldenReadyGate) Parse(arguments string) (tool.ToolCall, error) {
+	call, err := self.Tool.Parse(arguments)
+	if err != nil {
+		return nil, err
+	}
+
+	return sessionGoldenReadyGatedCall{ToolCall: call, readyPath: self.readyPath}, nil
+}
+
+type sessionGoldenReadyGatedCall struct {
+	tool.ToolCall
+
+	readyPath string
+}
+
+func (self sessionGoldenReadyGatedCall) Exec(ctx context.Context) (tool.ToolCallResult, error) {
+	gated, stop := context.WithCancelCause(context.WithoutCancel(ctx))
+	defer stop(nil)
+
+	go func() {
+		for {
+			if _, err := os.Stat(self.readyPath); err == nil {
+				break
+			}
+			select {
+			case <-gated.Done():
+				return
+			case <-time.After(10 * time.Millisecond):
+			}
+		}
+		select {
+		case <-ctx.Done():
+			stop(context.Cause(ctx))
+		case <-gated.Done():
+		}
+	}()
+
+	return self.ToolCall.Exec(gated)
 }
 
 func newSessionGoldenBlockingTool(specification sessionGoldenTool) tool.Tool {

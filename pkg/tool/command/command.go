@@ -4,11 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
+	"os"
 	"os/exec"
 	"regexp"
 	"slices"
 	"strconv"
 	"strings"
+	"syscall"
 	"time"
 
 	"crdx.org/oh/internal/util/strutil"
@@ -30,7 +33,8 @@ var kinds = []Kind{KindString, KindInteger, KindBoolean, KindStrings, KindEnum}
 const (
 	defaultApprovalTimeout = 5 * time.Minute
 	defaultTimeLimit       = 30 * time.Second
-	waitDelay              = time.Second
+	stopGrace              = 2 * time.Second
+	strayOutputGrace       = time.Second
 	toolVariable           = "OH_TOOL"
 )
 
@@ -333,14 +337,14 @@ func run(
 	defer cancel()
 
 	//nolint:gosec // the person declared this executable themselves, and every argument is its own word
-	process := exec.CommandContext(runContext, line[0], line[1:]...)
+	process := exec.CommandContext(context.WithoutCancel(runContext), line[0], line[1:]...)
 	process.Dir = options.Directory
 	process.Stdin = nil
-	process.WaitDelay = waitDelay
 	process.Env = append(process.Environ(), toolVariable+"="+declaration.Name)
+	process.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 
-	output, err := process.CombinedOutput()
-	text := strings.TrimRight(string(output), "\n")
+	output, err := runGroup(runContext, process)
+	text := strings.TrimRight(output, "\n")
 
 	if errors.Is(runContext.Err(), context.DeadlineExceeded) && ctx.Err() == nil {
 		return status(text, "stopped after its limit of "+timeLimit.String()), ErrCommandFailed
@@ -355,6 +359,56 @@ func run(
 	}
 
 	return text, nil
+}
+
+func runGroup(ctx context.Context, process *exec.Cmd) (string, error) {
+	reader, writer, err := os.Pipe()
+	if err != nil {
+		return "", err
+	}
+	process.Stdout = writer
+	process.Stderr = writer
+
+	err = process.Start()
+	_ = writer.Close()
+	if err != nil {
+		_ = reader.Close()
+		return "", err
+	}
+
+	var output strings.Builder
+	endOfOutput := make(chan struct{})
+	go func() {
+		defer close(endOfOutput)
+		_, _ = io.Copy(&output, reader)
+	}()
+
+	group := -process.Process.Pid
+	processEnd := make(chan error, 1)
+	go func() { processEnd <- process.Wait() }()
+
+	select {
+	case err = <-processEnd:
+	case <-ctx.Done():
+		_ = syscall.Kill(group, syscall.SIGTERM)
+		select {
+		case err = <-processEnd:
+		case <-time.After(stopGrace):
+			_ = syscall.Kill(group, syscall.SIGKILL)
+			err = <-processEnd
+		}
+	}
+	_ = syscall.Kill(group, syscall.SIGKILL)
+
+	select {
+	case <-endOfOutput:
+	case <-time.After(strayOutputGrace):
+		_ = reader.Close()
+		<-endOfOutput
+	}
+	_ = reader.Close()
+
+	return output.String(), err
 }
 
 func status(output string, note string) string {
