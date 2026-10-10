@@ -9780,16 +9780,16 @@ type journal struct {
 	path string
 }
 
-func everyJournal(t *testing.T) []journal {
-	t.Helper()
+func everyJournal(tb testing.TB) []journal {
+	tb.Helper()
 
 	paths, err := filepath.Glob(filepath.Join("testdata", "input", "*.jsonl"))
 	if err != nil {
-		t.Fatal(err)
+		tb.Fatal(err)
 	}
 
 	if len(paths) == 0 {
-		t.Fatal("expected the journals to be found")
+		tb.Fatal("expected the journals to be found")
 	}
 
 	journals := make([]journal, 0, len(paths))
@@ -9847,19 +9847,19 @@ func compareWithGolden(t *testing.T, name string, suffix string, passes map[stri
 	}
 }
 
-func readJournal(t *testing.T, path string) []replayEntry {
-	t.Helper()
+func readJournal(tb testing.TB, path string) []replayEntry {
+	tb.Helper()
 
 	contents, err := os.ReadFile(path) //nolint:gosec // the path is the test's own journal
 	if err != nil {
-		t.Fatal(err)
+		tb.Fatal(err)
 	}
 
 	var entries []replayEntry
 	for number, line := range strings.Split(strings.TrimSpace(string(contents)), "\n") {
 		var entry replayEntry
 		if err := json.Unmarshal([]byte(line), &entry); err != nil {
-			t.Fatalf("%s: line %d: %v", path, number+1, err)
+			tb.Fatalf("%s: line %d: %v", path, number+1, err)
 		}
 
 		entries = append(entries, entry)
