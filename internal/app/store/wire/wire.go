@@ -23,7 +23,12 @@ import (
 
 const redacted = "[REDACTED]"
 
-var bearerPattern = regexp.MustCompile(`(?i)bearer[ \t]+[^\s"']+`)
+const bearerWord = "bearer"
+
+var (
+	bearerPattern  = regexp.MustCompile(`(?i)bearer[ \t]+[^\s"']+`)
+	nameSeparators = strings.NewReplacer("-", "", "_", "")
+)
 
 type Meta struct {
 	Name, Model, Effort, Provider, Workspace string
@@ -369,7 +374,7 @@ func censorValueAtDepth(value any, depth int) (any, bool) {
 }
 
 func isSensitiveName(name string) bool {
-	normalisedName := strings.NewReplacer("-", "", "_", "").Replace(strings.ToLower(name))
+	normalisedName := normaliseName(name)
 	switch normalisedName {
 	case
 		"authorization",
@@ -411,13 +416,31 @@ func isSensitiveName(name string) bool {
 }
 
 func isOAuthSecretName(name string) bool {
-	switch strings.NewReplacer("-", "", "_", "").Replace(strings.ToLower(name)) {
+	switch normaliseName(name) {
 	case "code", "state":
 		return true
 	}
 	return false
 }
 
+func normaliseName(name string) string {
+	return nameSeparators.Replace(strings.ToLower(name))
+}
+
 func censorBearer(value string) string {
+	if !hasBearerWord(value) {
+		return value
+	}
+
 	return bearerPattern.ReplaceAllString(value, "Bearer "+redacted)
+}
+
+func hasBearerWord(value string) bool {
+	for i := 0; i+len(bearerWord) <= len(value); i++ {
+		if value[i]|0x20 == bearerWord[0] && strings.EqualFold(value[i:i+len(bearerWord)], bearerWord) {
+			return true
+		}
+	}
+
+	return false
 }
