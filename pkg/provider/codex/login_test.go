@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"crdx.org/oh/internal/auth"
@@ -38,6 +39,7 @@ func TestALoginExchangesTheRedirectedCodeAndNamesTheAccount(t *testing.T) {
 	codex.TokenURL = server.URL
 	t.Cleanup(func() { codex.TokenURL = "" })
 
+	codex.ListenOnAnyPort(t)
 	redirects := make(chan string, 1)
 	var challenge string
 	err := codex.LoginWithRedirect(t.Context(), func(address string) {
@@ -78,19 +80,20 @@ func TestALoginRefusesATokenNamingNoAccount(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, _ *http.Request) {
 		writer.Header().Set("Content-Type", "application/json")
-		_, _ = fmt.Fprint(writer, `{"access_token":"not-a-jwt","expires_in":3600}`)
+		_, _ = fmt.Fprint(writer, `{"access_token":"header.eyJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnt9fQ.signature","expires_in":3600}`)
 	}))
 	t.Cleanup(server.Close)
 	codex.TokenURL = server.URL
 	t.Cleanup(func() { codex.TokenURL = "" })
 
+	codex.ListenOnAnyPort(t)
 	redirects := make(chan string, 1)
 	err := codex.LoginWithRedirect(t.Context(), func(address string) {
 		parsed, _ := url.Parse(address)
 		redirects <- "http://localhost:1455/auth/callback?code=granted&state=" + parsed.Query().Get("state")
 	}, redirects)
-	if err == nil {
-		t.Fatal("a token naming no account was accepted")
+	if err == nil || !strings.Contains(err.Error(), "names no ChatGPT account") {
+		t.Fatalf("got %v, want a token naming no account refused", err)
 	}
 
 	if _, err := os.Stat(codex.CredentialsPath()); !os.IsNotExist(err) {
@@ -101,11 +104,12 @@ func TestALoginRefusesATokenNamingNoAccount(t *testing.T) {
 func TestALoginRefusesARedirectForAnotherState(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 
+	codex.ListenOnAnyPort(t)
 	redirects := make(chan string, 1)
 	err := codex.LoginWithRedirect(t.Context(), func(string) {
 		redirects <- "http://localhost:1455/auth/callback?code=granted&state=forged"
 	}, redirects)
-	if err == nil {
-		t.Fatal("a redirect carrying another state was accepted")
+	if err == nil || !strings.Contains(err.Error(), "state did not match") {
+		t.Fatalf("got %v, want a redirect carrying another state refused", err)
 	}
 }

@@ -47,9 +47,7 @@ func LoginWithRedirect(
 	verifier := newToken()
 	state := newToken()
 
-	var config net.ListenConfig
-
-	listener, err := config.Listen(ctx, "tcp", callbackHost)
+	listener, err := callbackListener(ctx)
 	if err != nil {
 		return fmt.Errorf("listen on %s: %w", callbackHost, err)
 	}
@@ -68,6 +66,14 @@ func LoginWithRedirect(
 	}
 
 	return saveCredentials(CredentialsPath(), credentials)
+}
+
+var callbackListener = listenOnCallbackHost
+
+func listenOnCallbackHost(ctx context.Context) (net.Listener, error) {
+	var config net.ListenConfig
+
+	return config.Listen(ctx, "tcp", callbackHost)
 }
 
 func printAuthorisationAddress(address string) {

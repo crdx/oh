@@ -62,6 +62,7 @@ func Run(keyboard *Keyboard, getNextRefresh func(time.Time) time.Time, handler H
 }
 
 func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan time.Time, schedule func(), beats <-chan time.Time, handler Handler) {
+	handler = handler.withDefaults()
 	changes := handler.Changes
 	conclusions := handler.Conclusions
 	forwardChanges := handler.ForwardChanges
@@ -143,7 +144,7 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 				changes = nil
 				continue
 			}
-			if handler.OnChange != nil && !handler.OnChange(failure) {
+			if !handler.OnChange(failure) {
 				continue
 			}
 		}
@@ -151,6 +152,13 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 		handler.OnDraw()
 		frames.drawn(time.Now())
 	}
+}
+
+func (self Handler) withDefaults() Handler {
+	if self.OnChange == nil {
+		self.OnChange = func(error) bool { return true }
+	}
+	return self
 }
 
 type refreshTimer struct {

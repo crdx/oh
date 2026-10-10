@@ -21,6 +21,7 @@ func TestALoginPresentsWhereToAuthoriseAndTakesTheCallback(t *testing.T) {
 	TokenURL = server.URL
 	t.Cleanup(func() { TokenURL = "" })
 
+	callbackAddress := ListenOnAnyPort(t)
 	callbacks := make(chan error, 1)
 	err := LoginWithAddress(t.Context(), func(address string) {
 		parsed, err := url.Parse(address)
@@ -29,7 +30,7 @@ func TestALoginPresentsWhereToAuthoriseAndTakesTheCallback(t *testing.T) {
 			return
 		}
 
-		callback := "http://" + callbackHost + callbackPath + "?code=granted&state=" + url.QueryEscape(parsed.Query().Get("state"))
+		callback := "http://" + callbackAddress() + callbackPath + "?code=granted&state=" + url.QueryEscape(parsed.Query().Get("state"))
 		go func() {
 			request, err := http.NewRequestWithContext(t.Context(), http.MethodGet, callback, nil)
 			if err != nil {

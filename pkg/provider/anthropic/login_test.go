@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"crdx.org/oh/internal/auth"
@@ -48,6 +49,7 @@ func TestALoginExchangesTheRedirectedCodeAndKeepsTheStoredRefreshToken(t *testin
 	anthropic.TokenURL = server.URL
 	t.Cleanup(func() { anthropic.TokenURL = "" })
 
+	anthropic.ListenOnAnyPort(t)
 	redirects := make(chan string, 1)
 	var challenge string
 	err := anthropic.LoginWithRedirect(t.Context(), func(address string) {
@@ -87,12 +89,13 @@ func TestALoginExchangesTheRedirectedCodeAndKeepsTheStoredRefreshToken(t *testin
 func TestALoginRefusesARedirectForAnotherState(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 
+	anthropic.ListenOnAnyPort(t)
 	redirects := make(chan string, 1)
 	err := anthropic.LoginWithRedirect(t.Context(), func(string) {
 		redirects <- "http://localhost:53692/callback?code=granted&state=forged"
 	}, redirects)
-	if err == nil {
-		t.Fatal("a redirect carrying another state was accepted")
+	if err == nil || !strings.Contains(err.Error(), "state did not match") {
+		t.Fatalf("got %v, want a redirect carrying another state refused", err)
 	}
 
 	if _, err := os.Stat(anthropic.CredentialsPath()); !os.IsNotExist(err) {
@@ -104,13 +107,14 @@ func TestALoginWithoutAnAccessTokenStoresNothing(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 	anthropicTokenEndpoint(t, http.StatusOK, `{"refresh_token":"only"}`)
 
+	anthropic.ListenOnAnyPort(t)
 	redirects := make(chan string, 1)
 	err := anthropic.LoginWithRedirect(t.Context(), func(address string) {
 		parsed, _ := url.Parse(address)
 		redirects <- "http://localhost:53692/callback?code=granted&state=" + parsed.Query().Get("state")
 	}, redirects)
-	if err == nil {
-		t.Fatal("a token response without an access token was accepted")
+	if err == nil || !strings.Contains(err.Error(), "carried no access token") {
+		t.Fatalf("got %v, want a token response without an access token refused", err)
 	}
 
 	if _, err := os.Stat(anthropic.CredentialsPath()); !os.IsNotExist(err) {
