@@ -13634,7 +13634,7 @@ func configReloadStream(t *testing.T, scenario configReloadScenario) string {
 			currency = "GBP"
 
 			[sandbox]
-			read = ["~/Dropbox/iso"]
+			read = ["~/reference"]
 
 			[bar.top]
 			left = [{ segment = "session-name" }]

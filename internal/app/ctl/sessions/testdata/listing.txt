@@ -2,4 +2,4 @@
 [3m[38;2;150;152;150mrunning   wild-scorpion  audit-golden-files 🟡                     32          3M  4h      3h ago        claude-opus-5     medium  /home/agent/florp/io[0m[0m
 ended     dewy-vole      a-title-far-wider-than-its-column a-tit…  8          <1M  1h      30m ago       [38;2;192;128;80m⚡[0m gpt-5.3-codex  high    /home/agent/florp/io
 archived  tame-impala    rename the harness to oh                  26          1G  10h     12d ago       gpt-5.3-codex     medium  /home/agent/florp/io
-ended     chewy-raven    —                                         0            —  <1m     just now      —                 —       /home/agent/.system
+ended     chewy-raven    —                                         0            —  <1m     just now      —                 —       /home/agent/scratch

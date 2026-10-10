@@ -57,7 +57,7 @@
         "isArchived": false,
         "isFast": false,
         "title": "",
-        "workspaceDir": "/home/agent/.system",
+        "workspaceDir": "/home/agent/scratch",
         "scratchDir": "/state/farm/chewy-raven",
         "sessionDir": "/state/sessions/chewy-raven",
         "model": "",

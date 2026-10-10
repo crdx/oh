@@ -211,7 +211,7 @@ func goldenListings(now time.Time) []Listing {
 		{
 			Name:         "chewy-raven",
 			Status:       endedStatus,
-			WorkspaceDir: "/home/agent/.system",
+			WorkspaceDir: "/home/agent/scratch",
 			ScratchDir:   "/state/farm/chewy-raven",
 			SessionDir:   "/state/sessions/chewy-raven",
 			StartedAt:    now,
