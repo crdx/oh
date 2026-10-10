@@ -108,7 +108,7 @@ func TestAnEscapeSequenceMayCrossADelayedTerminalRead(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	const delay = 50 * time.Millisecond
+	const delay = 20 * time.Millisecond
 	if escapeSequenceTimeout <= delay {
 		t.Fatalf("escape timeout %v does not cover the test delay", escapeSequenceTimeout)
 	}

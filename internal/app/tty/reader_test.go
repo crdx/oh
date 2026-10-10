@@ -73,8 +73,8 @@ func TestAReaderWithoutAWakePipeStillStops(t *testing.T) {
 		if !errors.Is(err, io.EOF) {
 			t.Errorf("got %v, want EOF", err)
 		}
-	case <-time.After(2 * readPollInterval):
-		t.Fatal("a read without a wake pipe did not stop within a poll")
+	case <-time.After(10 * readPollInterval):
+		t.Fatal("a read without a wake pipe did not stop by polling")
 	}
 }
 

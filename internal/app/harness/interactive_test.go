@@ -63,7 +63,7 @@ func TestAConversationChosenFromThePickerResumesWhereItLeftOff(t *testing.T) {
 	}
 
 	session := rig.start("-r")
-	session.waitFor(storedSessions[0].Name)
+	session.waitFor(pickedSessionName(storedSessions[0].Name))
 	session.typeText(pressEnter)
 	session.waitFor("First answer.")
 	session.typeText(pressEnter)
@@ -94,12 +94,18 @@ func TestTheSessionPickerUsesTheWorkspaceTheme(t *testing.T) {
 	}
 
 	session := rig.start("-r")
-	session.waitFor(storedSessions[0].Name)
+	session.waitFor(pickedSessionName(storedSessions[0].Name))
 	if stream := session.String(); !strings.Contains(stream, "\x1b[38;2;1;2;3m") {
 		t.Errorf("session picker did not use the workspace accent: %q", stream)
 	}
 	session.typeText("\x03")
 	session.waitToExit()
+}
+
+const pickerNameCells = 16
+
+func pickedSessionName(name string) string {
+	return name[:min(len(name), pickerNameCells)]
 }
 
 const (
@@ -123,7 +129,7 @@ func TestThePickersAreDrawnForALightTerminal(t *testing.T) {
 		arguments []string
 		shown     string
 	}{
-		{name: "the session picker", arguments: []string{"-r"}, shown: storedSessions[0].Name},
+		{name: "the session picker", arguments: []string{"-r"}, shown: pickedSessionName(storedSessions[0].Name)},
 		{name: "the model picker", arguments: []string{"--yolo", "-m"}, shown: "fake"},
 	} {
 		session := rig.start(picker.arguments...)
@@ -452,8 +458,9 @@ func TestCommandArgumentsAreCompletedFromTheSessionItself(t *testing.T) {
 	session.typeAndSettle(clearInput)
 
 	sessionsDirectory := filepath.Join(rig.stateDirectory, "org.crdx", "oh", "sessions")
-	writeStoredSession(t, sessionsDirectory, rig.workspace, "able-dolphin", time.Now().Format(time.RFC3339))
-	writeStoredSession(t, sessionsDirectory, rig.workspace, "agile-turtle", time.Now().Format(time.RFC3339))
+	storedAt := time.Now().Format(time.RFC3339)
+	writeStoredSession(t, sessionsDirectory, rig.workspace, "able-dolphin", storedAt)
+	writeStoredSession(t, sessionsDirectory, rig.workspace, "agile-turtle", storedAt)
 
 	session.typeAndSettle("/fork --from ")
 	session.requireShown("› able-dolphin")

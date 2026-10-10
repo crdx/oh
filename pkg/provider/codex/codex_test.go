@@ -1037,10 +1037,15 @@ func TestSendTellsTheModelWhenThereIsNoSuchTool(t *testing.T) {
 
 func TestCancellingTheContextEndsARequestThatIsProducingNothing(t *testing.T) {
 	requestDone := make(chan struct{})
+	requestArrived := make(chan struct{}, 1)
 
 	server := httptest.NewServer(http.HandlerFunc(
 		func(writer http.ResponseWriter, request *http.Request) {
 			writer.Header().Set("Content-Type", "text/event-stream")
+			select {
+			case requestArrived <- struct{}{}:
+			default:
+			}
 
 			if flusher, ok := writer.(http.Flusher); ok {
 				flusher.Flush()
@@ -1062,7 +1067,11 @@ func TestCancellingTheContextEndsARequestThatIsProducingNothing(t *testing.T) {
 		failure <- err
 	}()
 
-	time.Sleep(50 * time.Millisecond)
+	select {
+	case <-requestArrived:
+	case <-time.After(5 * time.Second):
+		t.Fatal("the request never reached the endpoint")
+	}
 	stop()
 
 	select {

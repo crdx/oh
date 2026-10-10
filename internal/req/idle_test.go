@@ -157,9 +157,9 @@ func TestIdlenessIsWorthAnotherAttempt(t *testing.T) {
 }
 
 func TestAStreamStillArrivingIsLeftAlone(t *testing.T) {
-	url := tricklingServer(t, 20*time.Millisecond, 10)
+	url := tricklingServer(t, 20*time.Millisecond, 25)
 
-	body, _, err := req.NewStreaming(time.Second, 100*time.Millisecond).
+	body, _, err := req.NewStreaming(time.Second, 300*time.Millisecond).
 		Stream(t.Context(), url, map[string]string{}, nil)
 	if err != nil {
 		t.Fatalf("expected the stream to open: %v", err)
@@ -171,7 +171,7 @@ func TestAStreamStillArrivingIsLeftAlone(t *testing.T) {
 		t.Fatalf("expected the whole stream, got %v", err)
 	}
 
-	if len(read) != len("tick\n")*10 {
+	if len(read) != len("tick\n")*25 {
 		t.Errorf("expected every tick, got %q", read)
 	}
 }

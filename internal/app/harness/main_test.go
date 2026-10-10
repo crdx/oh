@@ -1541,7 +1541,7 @@ func drawFooterOverCalls(t *testing.T, scene footerOverCalls) drawnFooterOverCal
 	var drawn drawnFooterOverCalls
 
 	synctest.Test(t, func(t *testing.T) {
-		var written bytes.Buffer
+		var written lockedBuffer
 		chat := slashCommandFixture(t, caps.Read)
 		chat.agent = agent.New("", quietProvider{}, nil)
 		chat.screen = output.NewTerminalOfSize(&written, replayColumns, footerOverCallsLines)
@@ -1602,6 +1602,7 @@ func drawFooterOverCalls(t *testing.T, scene footerOverCalls) drawnFooterOverCal
 		time.Sleep(time.Second)
 		synctest.Wait()
 		chat.show(chat.inputLine)
+		synctest.Wait()
 		drawn.standing = written.String()
 
 		switch scene.footer {
@@ -1615,6 +1616,7 @@ func drawFooterOverCalls(t *testing.T, scene footerOverCalls) drawnFooterOverCal
 		time.Sleep(4 * time.Second)
 		synctest.Wait()
 		chat.show(chat.inputLine)
+		synctest.Wait()
 		drawn.gone = written.String()
 
 		chat.currentTurn.painter.Stop()
@@ -1624,6 +1626,25 @@ func drawFooterOverCalls(t *testing.T, scene footerOverCalls) drawnFooterOverCal
 }
 
 const callsFillingTheRoom = 8
+
+type lockedBuffer struct {
+	lock   sync.Mutex
+	buffer bytes.Buffer
+}
+
+func (self *lockedBuffer) Write(written []byte) (int, error) {
+	self.lock.Lock()
+	defer self.lock.Unlock()
+
+	return self.buffer.Write(written)
+}
+
+func (self *lockedBuffer) String() string {
+	self.lock.Lock()
+	defer self.lock.Unlock()
+
+	return self.buffer.String()
+}
 
 func TestGoldenATallFooterOverRunningCallsDrawsEveryVisibleState(t *testing.T) {
 	passes := map[string]func() string{}
