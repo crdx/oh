@@ -23,7 +23,8 @@
 - Keep multiline commands on one row
 - Interject advice sooner in untitled sessions
 - Speed up redraws in conversations that mention many paths
-- Add debug toggles for cpu and stall profiling
+- Add debug toggles for cpu, stall, and heap profiling
+- Stop the stall watcher waking an idle session
 - Accept and complete flags in fork and new
 - Reduce the number of ui redraws
 - Stop drawing a long answer twice when a job ends while it streams

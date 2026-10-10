@@ -10,6 +10,7 @@ const (
 	DirectoryName      = "debug"
 	StallDirectoryName = "stalls"
 	CPUDirectoryName   = "cpu"
+	HeapDirectoryName  = "heap"
 	fileTimeFormat     = "20060102-150405.000000000"
 )
 

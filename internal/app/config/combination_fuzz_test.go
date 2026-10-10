@@ -106,6 +106,7 @@ func soundSettings() []setting {
 			"",
 			"[debug]\nstalls = false\n",
 			"[debug]\ncpu_profile = true\n",
+			"[debug]\nheap_profile = true\n",
 		}},
 		{"experimental", []string{
 			"",

@@ -13,7 +13,7 @@ func TestWorkHoldingTheDrawingThreadIsWrittenDownWithEveryStack(t *testing.T) {
 	session := t.TempDir()
 
 	synctest.Test(t, func(t *testing.T) {
-		watchdog := Watch(session)
+		watchdog := watchWith(session, nil)
 		defer watchdog.Close()
 
 		done := watchdog.Begin("keypress")
@@ -38,6 +38,72 @@ func TestWorkHoldingTheDrawingThreadIsWrittenDownWithEveryStack(t *testing.T) {
 	}
 }
 
+func TestAStallIsWrittenDownWithTheTraceLeadingUpToIt(t *testing.T) {
+	session := t.TempDir()
+	recorder := startRecorder()
+	if recorder == nil {
+		t.Fatal("expected the flight recorder to start")
+	}
+
+	synctest.Test(t, func(t *testing.T) {
+		watchdog := watchWith(session, recorder)
+
+		done := watchdog.Begin("keypress")
+		sleepThroughAStall()
+		done()
+		synctest.Wait()
+	})
+	recorder.Stop()
+
+	traces, err := filepath.Glob(filepath.Join(session, DirectoryName, StallDirectoryName, "*.trace"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(traces) != 1 {
+		t.Fatalf("got %d traces written down, want 1", len(traces))
+	}
+	stalls := stallEntries(t, session)
+	if len(stalls) != 1 || strings.TrimSuffix(stalls[0], ".txt") != strings.TrimSuffix(traces[0], ".trace") {
+		t.Errorf("expected the trace named after its stall, got %v beside %v", traces, stalls)
+	}
+	written, err := os.ReadFile(traces[0])
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.HasPrefix(string(written), "go 1.") {
+		t.Errorf("expected an execution trace, got %q", written[:min(len(written), 16)])
+	}
+}
+
+func TestAnIdleWatchdogLeavesNothingRunning(t *testing.T) {
+	synctest.Test(t, func(t *testing.T) {
+		watchdog := watchWith(t.TempDir(), nil)
+
+		done := watchdog.Begin("draw")
+		time.Sleep(10 * time.Millisecond)
+		done()
+		time.Sleep(time.Hour)
+	})
+}
+
+func TestNothingIsWatchedOnceTheWatchdogCloses(t *testing.T) {
+	session := t.TempDir()
+
+	synctest.Test(t, func(t *testing.T) {
+		watchdog := watchWith(session, nil)
+		watchdog.Close()
+
+		done := watchdog.Begin("keypress")
+		sleepThroughAStall()
+		done()
+		synctest.Wait()
+	})
+
+	if stalls := stallEntries(t, session); len(stalls) != 0 {
+		t.Errorf("got %d stalls after closing, want none", len(stalls))
+	}
+}
+
 func sleepThroughAStall() {
 	time.Sleep(400 * time.Millisecond)
 }
@@ -47,7 +113,7 @@ func TestQuickWorkIsNotWrittenDown(t *testing.T) {
 	path := filepath.Join(session, DirectoryName)
 
 	synctest.Test(t, func(t *testing.T) {
-		watchdog := Watch(session)
+		watchdog := watchWith(session, nil)
 		defer watchdog.Close()
 
 		for range 10 {
@@ -67,7 +133,7 @@ func TestAStallWithNowhereToGoIsDroppedQuietly(t *testing.T) {
 	session := filepath.Join(t.TempDir(), "unsent")
 
 	synctest.Test(t, func(t *testing.T) {
-		watchdog := Watch(session)
+		watchdog := watchWith(session, nil)
 		defer watchdog.Close()
 
 		done := watchdog.Begin("keypress")
@@ -85,7 +151,7 @@ func TestEachStallIsWrittenToAFileOfItsOwn(t *testing.T) {
 	session := t.TempDir()
 
 	synctest.Test(t, func(t *testing.T) {
-		watchdog := Watch(session)
+		watchdog := watchWith(session, nil)
 		defer watchdog.Close()
 
 		for range 2 {

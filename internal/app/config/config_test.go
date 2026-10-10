@@ -1593,6 +1593,9 @@ func TestNothingIsDebuggedByDefault(t *testing.T) {
 	if config.Debug.ShouldProfileCPU {
 		t.Error("expected no processor profile by default")
 	}
+	if config.Debug.ShouldProfileHeap {
+		t.Error("expected no heap profile by default")
+	}
 }
 
 func TestTheDebugSettingsAreRead(t *testing.T) {
@@ -1600,6 +1603,7 @@ func TestTheDebugSettingsAreRead(t *testing.T) {
 		[debug]
 		stalls = true
 		cpu_profile = true
+		heap_profile = true
 	`)
 
 	if !config.Debug.ShouldRecordStalls {
@@ -1607,6 +1611,9 @@ func TestTheDebugSettingsAreRead(t *testing.T) {
 	}
 	if !config.Debug.ShouldProfileCPU {
 		t.Error("expected the processor profiled")
+	}
+	if !config.Debug.ShouldProfileHeap {
+		t.Error("expected the heap profiled")
 	}
 	if reports := config.UnknownSettings(); len(reports) > 0 {
 		t.Errorf("got %v", reports)

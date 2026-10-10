@@ -201,6 +201,7 @@ type Tool struct {
 type Debug struct {
 	ShouldRecordStalls bool `toml:"stalls"`
 	ShouldProfileCPU   bool `toml:"cpu_profile"`
+	ShouldProfileHeap  bool `toml:"heap_profile"`
 }
 
 type Permissions struct {

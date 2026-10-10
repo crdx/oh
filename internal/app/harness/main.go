@@ -963,6 +963,9 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 			defer profiler.Close()
 		}
 	}
+	if settings.Debug.ShouldProfileHeap {
+		defer diagnostics.ProfileHeap(sessionInfo.Directory).Close()
+	}
 	hooks.EmitSessionStarting(ctx, cycle.SessionStarting{Session: sessionInfo})
 	client.ObserveHTTP(log.Observer())
 
