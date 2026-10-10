@@ -479,7 +479,7 @@ func title(kind agent.Kind) string {
 	case subagentrecord.Started:
 		return "Subagent started"
 	case subagentrecord.Sent:
-		return "Subagent follow-up"
+		return "Subagent message"
 	case subagentrecord.Finished:
 		return "Subagent finished"
 	case agent.UserMessageEvent:

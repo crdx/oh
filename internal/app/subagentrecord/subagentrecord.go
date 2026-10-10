@@ -172,11 +172,12 @@ func (self Report) Notice() string {
 	if self.Answer != "" {
 		parts = append(parts, self.Answer)
 	}
+	state := strings.ToUpper(string(self.State)[:1]) + string(self.State)[1:]
 	switch {
 	case self.Failure != "":
-		parts = append(parts, "It "+string(self.State)+": "+self.Failure+".")
+		parts = append(parts, state+": "+self.Failure+".")
 	case self.Answer == "":
-		parts = append(parts, "It "+string(self.State)+" without an answer.")
+		parts = append(parts, state+" without an answer.")
 	}
 	return "Subagent " + self.Name + " interjects:\n\n" + strings.Join(parts, "\n\n")
 }

@@ -421,15 +421,18 @@ func TestSendResumesAFinishedChildInItsOwnSession(t *testing.T) {
 	}
 }
 
-func TestSendRefusesAChildThatIsRunningGoneOrReplaced(t *testing.T) {
+func TestSendRefusesAChildThatIsStoppingGoneOrReplaced(t *testing.T) {
 	family := newTestFamily(t)
-	running := family.manager(t, waiting())
-	if _, err := running.Start(t.Context(), "", []subagent.Task{{Prompt: "wait"}}); err != nil {
-		t.Fatal(err)
+	stopping := family.manager(t, waiting())
+	stopping.mutex.Lock()
+	stopping.children["frugal-otter"] = &child{
+		Snapshot: Snapshot{Name: "frugal-otter", State: subagentrecord.Stopping},
+		cancel:   func() {},
+		over:     make(chan struct{}),
 	}
-	name := running.ListSnapshots()[0].Name
-	if _, err := running.Send(t.Context(), name, "again"); err == nil || !strings.Contains(err.Error(), "still running") {
-		t.Errorf("a follow-up reached a running child: %v", err)
+	stopping.mutex.Unlock()
+	if _, err := stopping.Send(t.Context(), "frugal-otter", "again"); err == nil || !strings.Contains(err.Error(), "is stopping") {
+		t.Errorf("a message reached a stopping child: %v", err)
 	}
 
 	finished := newTestFamily(t)
@@ -840,7 +843,218 @@ func TestAReportNamesWhereItsChildWrites(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if want := name + ": done (its /tmp is your /tmp/subagents/" + name + ")\nhello"; report != want {
+	want := name + ": done (its /tmp is your /tmp/subagents/" + name + ")\n" +
+		"confinement: the harness let it write nothing and kept it off the host network\n" +
+		"journal: " + session.JournalPath(family.directory, name) + "\nhello"
+	if report != want {
 		t.Errorf("the report read %q, want %q", report, want)
+	}
+}
+
+type gatedProvider struct {
+	answeringProvider
+
+	gate chan struct{}
+}
+
+func (self *gatedProvider) Send(ctx context.Context, yield agent.Yield) (agent.Reply, error) {
+	if self.gate != nil {
+		select {
+		case <-self.gate:
+		case <-ctx.Done():
+			return agent.Reply{}, ctx.Err()
+		}
+		self.gate = nil
+	}
+	return self.answeringProvider.Send(ctx, yield)
+}
+
+func TestAMessageSentToARunningChildIsReadBeforeItFinishes(t *testing.T) {
+	family := newTestFamily(t)
+	gate := make(chan struct{})
+	manager := family.manager(t, answering(func() agent.Provider { return &gatedProvider{gate: gate} }))
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "first"}}); err != nil {
+		t.Fatal(err)
+	}
+	name := manager.ListSnapshots()[0].Name
+	result, err := manager.Send(t.Context(), name, "again")
+	if err != nil || !strings.Contains(result, "queued") {
+		t.Fatalf("a message to a running child came back %q, %v", result, err)
+	}
+	close(gate)
+	events := untilFinished(t, manager, 1)
+	var kinds []agent.Kind
+	for _, event := range events {
+		kinds = append(kinds, event.Kind)
+	}
+	if want := []agent.Kind{subagentrecord.Started, subagentrecord.Sent, subagentrecord.Finished}; !slices.Equal(kinds, want) {
+		t.Fatalf("the parent recorded %v, want %v", kinds, want)
+	}
+	finish := events[len(events)-1]
+	if want := "first\n\nfirst then again"; finish.Text != want {
+		t.Errorf("the child reported %q, want both answers of its run as %q", finish.Text, want)
+	}
+	if usage := subagentrecord.UsageOf(finish); usage == nil || usage.InputTokens != 200 {
+		t.Errorf("the run was charged %+v, want both requests", usage)
+	}
+	stored, err := store.Read(family.directory, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if stored.TurnCompletions != 1 {
+		t.Errorf("the child journal holds %d turns, want the message read within one", stored.TurnCompletions)
+	}
+
+	endings := Endings(family.directory, events[:2])
+	if len(endings) != 1 || endings[0].Text != "first\n\nfirst then again" {
+		t.Fatalf("a run left unfinished ended as %+v", endings)
+	}
+	if usage := subagentrecord.UsageOf(endings[0]); usage == nil || usage.InputTokens != 200 {
+		t.Errorf("a run left unfinished was charged %+v from the message that opened it", usage)
+	}
+}
+
+func TestAStatusSaysHowFarEachChildHasGot(t *testing.T) {
+	family := newTestFamily(t)
+	now := time.Date(2026, time.January, 2, 3, 4, 5, 0, time.UTC)
+	manager, err := New(Options{
+		Directory: family.directory,
+		Scratch:   family.scratch,
+		Parent:    parentName,
+		Factory:   waiting(),
+		PickName:  func(int) int { return 0 },
+		Caps:      func() caps.Set { return caps.Read },
+		Workspace: func(string) (string, error) { return family.workspace, nil },
+		Now:       func() time.Time { return now },
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(manager.Close)
+	manager.mutex.Lock()
+	manager.children["frugal-otter"] = &child{
+		Snapshot:   Snapshot{Name: "frugal-otter", State: subagentrecord.Running, StartedAt: now.Add(-90 * time.Second)},
+		cancel:     func() {},
+		selection:  model.Selection{Provider: "anthropic", Model: "claude-opus-5", Effort: "high"},
+		choice:     model.Choice{Prices: &agent.TokenPrices{Input: 3, Output: 15}},
+		usage:      agent.Usage{InputTokens: 2_000_000, OutputTokens: 10_000},
+		toolCalls:  12,
+		lastIntent: "Reading the parser",
+	}
+	manager.children["frugal-heron"] = &child{
+		Snapshot: Snapshot{Name: "frugal-heron", State: subagentrecord.Done},
+		cancel:   func() {},
+		choice:   model.Choice{Provider: "anthropic", ID: "claude-opus-5"},
+	}
+	manager.order = append(manager.order, "frugal-otter", "frugal-heron")
+	manager.mutex.Unlock()
+	status, err := manager.Status(nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := "frugal-otter: running (1m 30s; on anthropic/claude-opus-5@high; 12 tool calls; 2Mt in, 10Kt out; last: Reading the parser)\n" +
+		"frugal-heron: done (on anthropic/claude-opus-5)"
+	if status != want {
+		t.Errorf("the status read\n%s\nwant\n%s", status, want)
+	}
+}
+
+func TestAReportSaysWhatTheHarnessHeldItsChildTo(t *testing.T) {
+	for _, test := range []struct {
+		caps caps.Set
+		want string
+	}{
+		{caps.Read, "write nothing"},
+		{caps.Read | caps.Shell, "write only its own scratch"},
+		{caps.Unconfined(), "confinement: none"},
+	} {
+		manager := newTestFamily(t).manager(t, waiting())
+		manager.mutex.Lock()
+		manager.children["frugal-otter"] = &child{Snapshot: Snapshot{Name: "frugal-otter", State: subagentrecord.Done}, caps: test.caps}
+		manager.mutex.Unlock()
+		if got := manager.attestation("frugal-otter"); !strings.Contains(got, test.want) {
+			t.Errorf("a child holding %v was attested as %q, want %q", test.caps, got, test.want)
+		}
+	}
+	manager := newTestFamily(t).manager(t, waiting())
+	manager.mutex.Lock()
+	manager.children["frugal-otter"] = &child{Snapshot: Snapshot{Name: "frugal-otter", State: subagentrecord.Done}}
+	manager.mutex.Unlock()
+	if got := manager.attestation("frugal-otter"); got != "" {
+		t.Errorf("a restored child whose run nobody saw was attested as %q", got)
+	}
+}
+
+func TestARunReportsEveryAnswerItGaveButNotItsNarration(t *testing.T) {
+	message := func(text string) agent.Event { return agent.Event{Kind: agent.ModelMessageEvent, Text: text} }
+	user := func(text string) agent.Event { return agent.Event{Kind: agent.UserMessageEvent, Text: text} }
+	request := agent.Event{Kind: agent.ToolCallRequestEvent}
+	result := agent.Event{Kind: agent.ToolCallResultEvent}
+	reasoning := agent.Event{Kind: agent.ModelReasoningEvent, Text: "thinking"}
+	for _, test := range []struct {
+		name   string
+		events []agent.Event
+		want   string
+	}{
+		{"one answer", []agent.Event{user("task"), message("done")}, "done"},
+		{"narration before calls", []agent.Event{user("task"), message("let me look"), request, result, message("done")}, "done"},
+		{
+			"a message read between calls",
+			[]agent.Event{user("task"), message("let me look"), request, result, user("also this"), reasoning, message("both done")},
+			"both done",
+		},
+		{
+			"a message read after an answer",
+			[]agent.Event{user("task"), request, result, message("the table"), user("also this"), reasoning, message("the largest file")},
+			"the table\n\nthe largest file",
+		},
+		{"an answer cut off before it began", []agent.Event{user("task"), request, result}, ""},
+	} {
+		if got := runAnswer(test.events); got != test.want {
+			t.Errorf("%s: reported %q, want %q", test.name, got, test.want)
+		}
+	}
+}
+
+func TestAMessageToAChildThatIsFinishingBecomesAFollowUp(t *testing.T) {
+	family := newTestFamily(t)
+	gate := make(chan struct{})
+	manager := family.manager(t, answering(func() agent.Provider { return &gatedProvider{gate: gate} }))
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "first"}}); err != nil {
+		t.Fatal(err)
+	}
+	name := manager.ListSnapshots()[0].Name
+	manager.mutex.Lock()
+	manager.children[name].inbox = nil
+	manager.mutex.Unlock()
+	type sent struct {
+		result string
+		err    error
+	}
+	results := make(chan sent, 1)
+	go func() {
+		result, err := manager.Send(t.Context(), name, "again")
+		results <- sent{result, err}
+	}()
+	for manager.launchMutex.TryLock() {
+		manager.launchMutex.Unlock()
+		time.Sleep(time.Millisecond)
+	}
+	close(gate)
+	outcome := <-results
+	if outcome.err != nil || outcome.result != "sent to "+name {
+		t.Fatalf("a message to a finishing child came back %q, %v", outcome.result, outcome.err)
+	}
+	events := untilFinished(t, manager, 2)
+	var kinds []agent.Kind
+	for _, event := range events {
+		kinds = append(kinds, event.Kind)
+	}
+	want := []agent.Kind{subagentrecord.Started, subagentrecord.Finished, subagentrecord.Sent, subagentrecord.Finished}
+	if !slices.Equal(kinds, want) {
+		t.Fatalf("the parent recorded %v, want the message to wait for the finish and open a run of its own", kinds)
+	}
+	if answer := events[len(events)-1].Text; answer != "first then again" {
+		t.Errorf("the follow-up answered %q", answer)
 	}
 }

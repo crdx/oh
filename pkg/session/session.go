@@ -923,6 +923,10 @@ func Exists(directory string, name string) bool {
 	return IsArchived(directory, name)
 }
 
+func JournalPath(directory string, name string) string {
+	return journalPath(directory, name)
+}
+
 func journalPath(directory string, name string) string {
 	return filepath.Join(Dir(directory, name), journalName)
 }

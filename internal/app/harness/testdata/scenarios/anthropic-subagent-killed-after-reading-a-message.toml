@@ -1,0 +1,90 @@
+provider = "anthropic"
+model = "claude-opus-5"
+effort = "medium"
+subagents-killed-with-session = true
+
+[[subagent]]
+name = "tame-adder"
+
+[[subagent.response]]
+wait-for-message = true
+event = [
+    '''{"type":"message_start","message":{"usage":{"input_tokens":1000,"output_tokens":1}}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"The first pass found nothing."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"},"usage":{"output_tokens":25}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[[subagent.response]]
+wait-for-cancellation = true
+
+[first]
+prompt = "start a subagent and steer it"
+settle-subagents-after-tool-result = 1
+settle-subagents-after-turn = true
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_1","name":"subagent","input":{}}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Watch the build\",\"intent\":\"Watching the build until stopped\"}]}"}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"tool_use"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_2","name":"subagent","input":{}}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"action\":\"send\",\"name\":\"tame-adder\",\"message\":\"Look closer\"}"}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"tool_use"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"It is working."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[resume]
+prompt = "carry on"
+deliver-subagents-before-prompt = true
+
+[[resume.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_3","name":"subagent","input":{}}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"action\":\"status\"}"}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"tool_use"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"It ended after its first pass."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Carrying on."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
+    '''{"type":"message_stop"}''',
+]

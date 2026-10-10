@@ -57,7 +57,8 @@ func New(manager Manager, model string, concurrency int) tool.Tool {
 	definition := tool.Definition{
 		Name: Name,
 		Description: "start independent subagents with a shared optional system prompt and individual tasks, " +
-			"send a finished subagent a follow-up, and inspect or control them by name; " +
+			"send one a message, which a running subagent reads once its current step finishes and a finished one takes as a follow-up, " +
+			"and inspect or control them by name; " +
 			fmt.Sprintf("at most %d run at once; ", concurrency) +
 			"a subagent knows only a short description of its sandbox, your system_prompt, and its prompt: " +
 			"none of your instructions, context files or conversation reach it, so give it everything it needs; " +
@@ -75,8 +76,8 @@ func New(manager Manager, model string, concurrency int) tool.Tool {
 		Schema: tool.Schema{
 			tool.Enum("action", "what to do", Start, Send, Status, Output, Stop, List),
 			tool.StringArray("names", "the subagents for status, output, or stop; empty means all of them").Optional(),
-			tool.String("name", "the finished subagent to send a follow-up to (for send)").Optional(),
-			tool.String("message", "the follow-up to send (for send)").Optional(),
+			tool.String("name", "the subagent to send a message to (for send)").Optional(),
+			tool.String("message", "the message to send (for send)").Optional(),
 			tool.String("system_prompt", "the only instructions every subagent shares, beside a short description of its sandbox (for start)").Optional(),
 			tool.ObjectArray("subagents", "one task per independent subagent (for start)", tool.Schema{
 				tool.String("prompt", "the whole task for this subagent, with whatever context it needs"),

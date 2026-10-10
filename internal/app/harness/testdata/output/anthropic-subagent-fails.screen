@@ -9,7 +9,7 @@ It is running.
 
  🐍 Subagent tame-adder interjects:
 
-    It failed: prompt is too long.
+    Failed: prompt is too long.
 
 
 The subagent failed, so I will read the logs myself.

@@ -1,0 +1,35 @@
+
+ start two subagents and steer them while they run
+
+
+spawn 2 subagents on GPT-5.6 Sol
+send tame-adder (Finding the largest workspace file)
+send tame-alpaca (Finding where the config loads)
+
+Both are working.
+
+
+ 🐍 Subagent tame-adder interjects:
+
+    The largest file is big.go, at 900 lines.
+
+ 🦙 Subagent tame-alpaca interjects:
+
+    The loader is in config.go.
+
+    It loads once, at startup.
+
+
+status all
+cat all 10L ~300t
+
+Both answered everything they were sent.
+
+
+ how did they get on?
+
+
+status all
+cat all 8L ~200t
+
+Both are done.

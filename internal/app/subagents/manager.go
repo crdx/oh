@@ -72,6 +72,8 @@ type Options struct {
 	Caps         func() caps.Set
 	ScratchNote  func(name string) string
 	Concurrency  int
+	Now          func() time.Time
+	JournalPath  func(name string) string
 }
 
 type Snapshot struct {
@@ -98,10 +100,14 @@ type child struct {
 	choice     model.Choice
 	selection  model.Selection
 	usage      agent.Usage
+	inbox      *agent.Interjections
+	toolCalls  int
+	lastIntent string
 }
 
 type Manager struct {
 	launchMutex sync.Mutex
+	eventMutex  sync.Mutex
 	mutex       sync.Mutex
 	options     Options
 	children    map[string]*child
@@ -128,6 +134,12 @@ func New(options Options) (*Manager, error) {
 	}
 	if options.Concurrency <= 0 {
 		options.Concurrency = defaultConcurrency
+	}
+	if options.Now == nil {
+		options.Now = time.Now
+	}
+	if options.JournalPath == nil {
+		options.JournalPath = func(name string) string { return session.JournalPath(options.Directory, name) }
 	}
 	return &Manager{
 		options:     options,
@@ -162,6 +174,9 @@ func (self *Manager) Restore(events []agent.Event) []agent.Event {
 			current.State = subagentrecord.Ended
 			current.Answer = finish.Text
 			current.Failure = subagentrecord.FailureOf(finish)
+			if usage := subagentrecord.UsageOf(finish); usage != nil {
+				current.usage = *usage
+			}
 		}
 	}
 	return finishes
@@ -176,6 +191,9 @@ func (self *child) restoreFact(event agent.Event) {
 		self.State = subagentrecord.State(event.Name)
 		self.Answer = event.Text
 		self.Failure = subagentrecord.FailureOf(event)
+		if usage := subagentrecord.UsageOf(event); usage != nil {
+			self.usage = *usage
+		}
 	}
 	if event.Kind == subagentrecord.Returned {
 		self.isReturned = true
@@ -186,21 +204,26 @@ var childLifeKinds = []agent.Kind{subagentrecord.Started, subagentrecord.Sent, s
 
 func Endings(directory string, events []agent.Event) []agent.Event {
 	isLive := map[string]bool{}
+	openingMessages := map[string]string{}
 	var order []string
 	for _, event := range events {
 		if event.Kind == subagentrecord.Started && !slices.Contains(order, event.Subagent) {
 			order = append(order, event.Subagent)
 		}
-		if slices.Contains(childLifeKinds, event.Kind) {
-			isLive[event.Subagent] = event.Kind != subagentrecord.Finished
+		if !slices.Contains(childLifeKinds, event.Kind) {
+			continue
 		}
+		if event.Kind != subagentrecord.Finished && !isLive[event.Subagent] {
+			openingMessages[event.Subagent] = event.Text
+		}
+		isLive[event.Subagent] = event.Kind != subagentrecord.Finished
 	}
 	var finishes []agent.Event
 	for _, name := range order {
 		if !isLive[name] {
 			continue
 		}
-		answer, usage := unfinishedRun(directory, name)
+		answer, usage := unfinishedRun(directory, name, openingMessages[name])
 		finishes = append(finishes, subagentrecord.FinishedEvent(
 			name, subagentrecord.Ended, answer, subagentrecord.Failure(unfinishedReason), usage,
 		))
@@ -210,28 +233,63 @@ func Endings(directory string, events []agent.Event) []agent.Event {
 
 const unfinishedReason = "parent process ended before the subagent completed"
 
-func unfinishedRun(directory string, name string) (string, *agent.Usage) {
+func unfinishedRun(directory string, name string, openingMessage string) (string, *agent.Usage) {
 	storedSession, err := store.Read(directory, name)
 	if err != nil {
 		return "", nil
 	}
-	start := 0
+	start, openingStart := 0, -1
 	for index, event := range storedSession.Events {
-		if event.Kind == agent.UserMessageEvent {
-			start = index
+		if event.Kind != agent.UserMessageEvent {
+			continue
+		}
+		start = index
+		if event.Text == openingMessage {
+			openingStart = index
 		}
 	}
-	answer := ""
+	if openingStart >= 0 {
+		start = openingStart
+	}
 	usage := agent.Usage{}
 	for _, event := range storedSession.Events[start:] {
-		if event.Kind == agent.ModelMessageEvent {
-			answer = event.Text
-		}
 		if subagentrecord.IsCounted(event) {
 			subagentrecord.AddUsage(&usage, *event.Usage)
 		}
 	}
-	return answer, &usage
+	return runAnswer(storedSession.Events[start:]), &usage
+}
+
+const answerSeparator = "\n\n"
+
+var answerBoundaryKinds = []agent.Kind{
+	agent.ModelMessageEvent,
+	agent.UserMessageEvent,
+	agent.ToolCallRequestEvent,
+	agent.ToolCallResultEvent,
+}
+
+func runAnswer(events []agent.Event) string {
+	var answers []string
+	lastAnswer := ""
+	lastKind := agent.Kind("")
+	for _, event := range events {
+		if !slices.Contains(answerBoundaryKinds, event.Kind) {
+			continue
+		}
+		if event.Kind == agent.ModelMessageEvent {
+			lastAnswer = event.Text
+		}
+		if event.Kind == agent.UserMessageEvent && lastKind == agent.ModelMessageEvent && lastAnswer != "" {
+			answers = append(answers, lastAnswer)
+			lastAnswer = ""
+		}
+		lastKind = event.Kind
+	}
+	if lastAnswer != "" {
+		answers = append(answers, lastAnswer)
+	}
+	return strings.Join(answers, answerSeparator)
 }
 
 func closedOver() chan struct{} {
@@ -289,7 +347,7 @@ func (self *Manager) Start(ctx context.Context, sharedPrompt string, tasks []sub
 			return "", err
 		}
 		current := &child{choice: self.options.Choice, selection: self.configuredSelection(), Snapshot: Snapshot{
-			Name: name, Task: task.Prompt, Intent: task.Intent, Workspace: workspace, SessionID: writer.ID(), State: subagentrecord.Running, StartedAt: time.Now(),
+			Name: name, Task: task.Prompt, Intent: task.Intent, Workspace: workspace, SessionID: writer.ID(), State: subagentrecord.Running, StartedAt: self.options.Now(),
 		}}
 		childContext := self.prepare(ctx, current)
 		reservations = append(reservations, reservation{writer: writer, current: current, start: func() {
@@ -320,6 +378,15 @@ func (self *Manager) Send(ctx context.Context, name string, message string) (str
 	}
 	self.launchMutex.Lock()
 	defer self.launchMutex.Unlock()
+	if isQueued, over := self.queue(name, message); isQueued {
+		return "queued for " + name + ", which reads it once its current step finishes", nil
+	} else if over != nil {
+		select {
+		case <-over:
+		case <-ctx.Done():
+			return "", ctx.Err()
+		}
+	}
 	self.mutex.Lock()
 	current := self.children[name]
 	err := self.refuseSend(name, current)
@@ -357,7 +424,9 @@ func (self *Manager) Send(ctx context.Context, name string, message string) (str
 	current.isReturned = false
 	current.stopReason = ""
 	current.usage = agent.Usage{}
-	current.StartedAt = time.Now()
+	current.toolCalls = 0
+	current.lastIntent = ""
+	current.StartedAt = self.options.Now()
 	current.EndedAt = time.Time{}
 	childContext := self.prepare(ctx, current)
 	self.mutex.Unlock()
@@ -429,11 +498,31 @@ func describeAll(snapshots []Snapshot) string {
 func (self *Manager) List() string { return describeAll(self.ListSnapshots()) }
 
 func (self *Manager) Status(names []string) (string, error) {
-	snapshots, _, err := self.snapshots(names)
-	if err != nil {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+	if err := self.requireKnown(names); err != nil {
 		return "", err
 	}
-	return describeAll(snapshots), nil
+	var lines []string
+	for _, childName := range self.order {
+		if len(names) == 0 || slices.Contains(names, childName) {
+			lines = append(lines, self.statusOf(self.children[childName]))
+		}
+	}
+	if len(lines) == 0 {
+		return "no subagents", nil
+	}
+	return strings.Join(lines, "\n"), nil
+}
+
+func (self *child) modelName() string {
+	if self.selection.Model != "" {
+		return self.selection.String()
+	}
+	if self.choice.ID != "" {
+		return self.choice.Provider + "/" + self.choice.ID
+	}
+	return ""
 }
 
 func (self *Manager) Output(names []string) (string, error) {
@@ -443,7 +532,14 @@ func (self *Manager) Output(names []string) (string, error) {
 	}
 	var lines []string
 	for _, snapshot := range snapshots {
-		lines = append(lines, describe(snapshot)+self.ScratchNote(snapshot.Name)+"\n"+snapshot.Answer)
+		heading := describe(snapshot) + self.ScratchNote(snapshot.Name)
+		if !snapshot.State.IsLive() {
+			if attestation := self.attestation(snapshot.Name); attestation != "" {
+				heading += "\n" + attestation
+			}
+			heading += "\njournal: " + self.options.JournalPath(snapshot.Name)
+		}
+		lines = append(lines, heading+"\n"+snapshot.Answer)
 	}
 	self.announceReturned(snapshots)
 	return strings.Join(lines, "\n"), nil
@@ -510,7 +606,7 @@ func (self *Manager) restoreStart(event agent.Event) {
 		return
 	}
 	origin, _ := subagentrecord.DecodeOrigin(event)
-	self.children[event.Subagent] = &child{Snapshot: Snapshot{
+	self.children[event.Subagent] = &child{choice: origin.Choice, Snapshot: Snapshot{
 		Name: event.Subagent, Task: event.Text, Intent: origin.Intent, Workspace: origin.Workspace, SessionID: event.ID, State: subagentrecord.Running,
 	}, over: closedOver()}
 	self.order = append(self.order, event.Subagent)
@@ -557,16 +653,19 @@ func (self *Manager) run(ctx context.Context, current *child, writer *store.Writ
 	self.recordOutcome(writer, current, state, failure)
 	_ = writer.Close()
 
+	self.eventMutex.Lock()
 	self.mutex.Lock()
+	current.inbox = nil
 	usage := current.usage
 	self.mutex.Unlock()
 	self.events <- subagentrecord.FinishedEvent(current.Name, state, answer, failure, &usage)
+	self.eventMutex.Unlock()
 
 	self.mutex.Lock()
 	current.State = state
 	current.Answer = answer
 	current.Failure = subagentrecord.FailureOf(agent.Event{Failure: failure})
-	current.EndedAt = time.Now()
+	current.EndedAt = self.options.Now()
 	close(current.over)
 	self.mutex.Unlock()
 }
@@ -616,28 +715,35 @@ func (self *Manager) converse(ctx context.Context, current *child, writer *store
 	}
 
 	startedAt := time.Now()
-	answer := ""
+	self.mutex.Lock()
+	inbox := current.inbox
+	self.mutex.Unlock()
+	var runEvents []agent.Event
 	var streamError error
-	for update, failure := range worker.Agent.Stream(ctx, message, &agent.Interjections{}) {
-		if failure != nil {
-			streamError = failure
+	for {
+		for update, failure := range worker.Agent.Stream(ctx, message, inbox) {
+			if failure != nil {
+				streamError = failure
+				break
+			}
+			if update.Event == nil {
+				continue
+			}
+			event := *update.Event
+			runEvents = append(runEvents, event)
+			self.count(current, event)
+			if err := recorder.Event(event); err != nil {
+				return runAnswer(runEvents), err
+			}
+		}
+		if streamError != nil || ctx.Err() != nil {
 			break
 		}
-		if update.Event == nil {
-			continue
+		queuedMessage, isQueued := self.takeQueued(current)
+		if !isQueued {
+			break
 		}
-		event := *update.Event
-		if event.Kind == agent.ModelMessageEvent {
-			answer = event.Text
-		}
-		if subagentrecord.IsCounted(event) {
-			self.mutex.Lock()
-			subagentrecord.AddUsage(&current.usage, *event.Usage)
-			self.mutex.Unlock()
-		}
-		if err := recorder.Event(event); err != nil {
-			return answer, err
-		}
+		message = queuedMessage
 	}
 	if ctx.Err() != nil {
 		worker.Agent.AddNotes([]agent.Note{{Kind: agent.InterruptionNote, Text: self.interruptionNote(ctx, current)}})
@@ -647,7 +753,21 @@ func (self *Manager) converse(ctx context.Context, current *child, writer *store
 			_ = recorder.CompleteTurn(session.TurnSummary{Took: time.Since(startedAt)})
 		}
 	}
-	return answer, streamError
+	return runAnswer(runEvents), streamError
+}
+
+func (self *Manager) count(current *child, event agent.Event) {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+	if subagentrecord.IsCounted(event) {
+		subagentrecord.AddUsage(&current.usage, *event.Usage)
+	}
+	if event.Kind == agent.ToolCallRequestEvent {
+		current.toolCalls++
+		if event.Intent != "" {
+			current.lastIntent = event.Intent
+		}
+	}
 }
 
 func (self *Manager) childScratch(name string) (*os.Root, error) {
@@ -793,6 +913,8 @@ func (self *Manager) refuseSend(name string, current *child) error {
 		return errors.New("subagent manager is closed")
 	case current == nil:
 		return fmt.Errorf("no subagent named %s", name)
+	case current.State == subagentrecord.Stopping:
+		return fmt.Errorf("%s is stopping, so it cannot take a message", name)
 	case current.State.IsLive():
 		return fmt.Errorf("%s is still running; wait for it before sending it anything", name)
 	case self.liveCount()+1 > self.options.Concurrency:
@@ -805,6 +927,7 @@ func (self *Manager) prepare(ctx context.Context, current *child) context.Contex
 	childContext, cancel := context.WithTimeout(context.WithoutCancel(ctx), maxChildLife)
 	current.cancel = cancel
 	current.over = make(chan struct{})
+	current.inbox = &agent.Interjections{}
 	current.caps = self.options.Caps()
 	return childContext
 }
@@ -853,4 +976,87 @@ func (self *Manager) configuredSelection() model.Selection {
 
 func recordedSelection(meta store.Meta) model.Selection {
 	return model.Selection{Provider: meta.Provider, Model: meta.Model, Effort: meta.Effort, IsFast: meta.IsFast}
+}
+
+func (self *Manager) queue(name string, message string) (bool, <-chan struct{}) {
+	self.eventMutex.Lock()
+	defer self.eventMutex.Unlock()
+	self.mutex.Lock()
+	current := self.children[name]
+	if self.closed || current == nil || current.State != subagentrecord.Running {
+		self.mutex.Unlock()
+		return false, nil
+	}
+	if current.inbox == nil {
+		self.mutex.Unlock()
+		return false, current.over
+	}
+	current.inbox.Add(message)
+	self.mutex.Unlock()
+	self.events <- subagentrecord.SentEvent(name, message)
+	return true, nil
+}
+
+func (self *Manager) takeQueued(current *child) (string, bool) {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+	message, isQueued := current.inbox.Take()
+	if !isQueued {
+		current.inbox = nil
+	}
+	return message, isQueued
+}
+
+func (self *Manager) statusOf(current *child) string {
+	var parts []string
+	if !current.StartedAt.IsZero() {
+		endedAt := current.EndedAt
+		if current.State.IsLive() || endedAt.IsZero() {
+			endedAt = self.options.Now()
+		}
+		parts = append(parts, util.FormatDuration(endedAt.Sub(current.StartedAt)))
+	}
+	if modelName := current.modelName(); modelName != "" {
+		parts = append(parts, "on "+modelName)
+	}
+	if !current.StartedAt.IsZero() {
+		parts = append(parts, util.Plural(current.toolCalls, "tool call"))
+	}
+	if usage := self.usageOf(current); usage != "" {
+		parts = append(parts, usage)
+	}
+	if current.lastIntent != "" {
+		parts = append(parts, "last: "+current.lastIntent)
+	}
+	if len(parts) == 0 {
+		return describe(current.Snapshot)
+	}
+	return describe(current.Snapshot) + " (" + strings.Join(parts, "; ") + ")"
+}
+
+func (self *Manager) usageOf(current *child) string {
+	usage := current.usage
+	if usage == (agent.Usage{}) {
+		return ""
+	}
+	input := util.FormatTokens(usage.InputTokens) + " in"
+	if usage.Cache != nil && usage.Cache.ReadTokens > 0 {
+		input += " (" + util.FormatTokens(usage.Cache.ReadTokens) + " cached)"
+	}
+	return input + ", " + util.FormatTokens(usage.OutputTokens) + " out"
+}
+
+func (self *Manager) attestation(name string) string {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+	current := self.children[name]
+	switch {
+	case current == nil || current.caps == 0:
+		return ""
+	case current.caps.Has(caps.Write):
+		return "confinement: none, so nothing limited what it changed or reached"
+	case current.caps.Has(caps.Shell):
+		return "confinement: the harness let it write only its own scratch and kept it off the host network"
+	}
+	return "confinement: the harness let it write nothing and kept it off the host network"
 }

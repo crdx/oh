@@ -9,7 +9,7 @@ It is running.
 
  🐍 Subagent tame-adder interjects:
 
-    It ended: parent process ended before the subagent completed.
+    Ended: parent process ended before the subagent completed.
 
 
 The subagent ended when the last session was killed.

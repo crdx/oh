@@ -29,6 +29,8 @@ import (
 	"crdx.org/oh/pkg/toolbox/wait"
 )
 
+var sessionGoldenChildClock = time.Date(2026, time.January, 2, 3, 4, 5, 0, time.UTC)
+
 var sessionGoldenModelNames = map[string]string{
 	"claude-opus-5": "Claude Opus 5",
 	"gpt-5.6-sol":   "GPT-5.6 Sol",
@@ -39,6 +41,7 @@ const (
 	sessionGoldenSubagentPath   = "/subagent/"
 	sessionGoldenSubagentSettle = 20 * time.Second
 	sessionGoldenSubagentPoll   = 5 * time.Millisecond
+	sessionGoldenMessageLimit   = 16
 )
 
 type sessionGoldenSubagent struct {
@@ -58,6 +61,7 @@ type sessionGoldenChildren struct {
 	isBlocked map[string]bool
 	pending   []agent.Event
 	finished  map[string]bool
+	messages  map[string]chan struct{}
 	clock     time.Time
 }
 
@@ -75,6 +79,7 @@ func newSessionGoldenChildren(t *testing.T, scenario sessionGoldenScenario) *ses
 		served:    map[string]int{},
 		isBlocked: map[string]bool{},
 		finished:  map[string]bool{},
+		messages:  map[string]chan struct{}{},
 		clock:     time.Date(2026, time.March, 18, 12, 0, 0, 0, time.UTC),
 	}
 }
@@ -130,8 +135,50 @@ func (self *sessionGoldenChildren) serves(writer http.ResponseWriter, request *h
 		self.setBlocked(name, true)
 		defer self.setBlocked(name, false)
 	}
+	if response.WaitForMessage && !self.awaitMessage(request.Context(), name) {
+		http.Error(writer, "no message was queued for "+name, http.StatusConflict)
+		return true
+	}
 	serveSessionGoldenResponse(writer, request, response, make(chan struct{}, 1))
 	return true
+}
+
+func (self *sessionGoldenChildren) messageArrivals(name string) chan struct{} {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	if self.messages[name] == nil {
+		self.messages[name] = make(chan struct{}, sessionGoldenMessageLimit)
+	}
+	return self.messages[name]
+}
+
+func (self *sessionGoldenChildren) awaitMessage(ctx context.Context, name string) bool {
+	self.setBlocked(name, true)
+	defer self.setBlocked(name, false)
+
+	select {
+	case <-self.messageArrivals(name):
+		return true
+	case <-ctx.Done():
+		return false
+	case <-time.After(sessionGoldenSubagentSettle):
+		return false
+	}
+}
+
+type sessionGoldenMessagingManager struct {
+	*subagents.Manager
+
+	children *sessionGoldenChildren
+}
+
+func (self sessionGoldenMessagingManager) Send(ctx context.Context, name string, message string) (string, error) {
+	result, err := self.Manager.Send(ctx, name, message)
+	if err == nil {
+		self.children.messageArrivals(name) <- struct{}{}
+	}
+	return result, err
 }
 
 func (self *sessionGoldenChildren) setBlocked(name string, isBlocked bool) {
@@ -198,6 +245,10 @@ func (self *sessionGoldenChildren) manager(
 		},
 		Caps:        func() caps.Set { return parentCaps() & (caps.Read | caps.Shell) },
 		ScratchNote: childScratchNote(childOptions{scratchParent: "/state/farm/tame-impala"}),
+		Now:         func() time.Time { return sessionGoldenChildClock },
+		JournalPath: func(name string) string {
+			return "/state/sessions/" + goldenSessionName + "/subagents/" + name + "/session.jsonl"
+		},
 	})
 	if err != nil {
 		self.t.Fatal(err)
@@ -209,7 +260,11 @@ func (self *sessionGoldenChildren) withTool(tools []tool.Tool, manager *subagent
 	if self == nil {
 		return tools
 	}
-	tools = append(tools, subagent.New(manager, manager.Model(), manager.Concurrency()))
+	tools = append(tools, subagent.New(
+		sessionGoldenMessagingManager{Manager: manager, children: self},
+		manager.Model(),
+		manager.Concurrency(),
+	))
 	if self.scenario.HasWaitTool {
 		var sources []wait.Source
 		if stored, isStored := sessionGoldenRunningJobs.Load(self.t); isStored {

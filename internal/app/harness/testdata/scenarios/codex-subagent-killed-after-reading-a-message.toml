@@ -1,0 +1,82 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+subagents-killed-with-session = true
+
+[[subagent]]
+name = "tame-adder"
+
+[[subagent.response]]
+wait-for-message = true
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-11","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The first pass found nothing."}''',
+    '''{"type":"response.output_text.done","text":"The first pass found nothing."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The first pass found nothing."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-11","type":"message","role":"assistant","content":[{"type":"output_text","text":"The first pass found nothing."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed","usage":{"input_tokens":1000,"output_tokens":25,"input_tokens_details":{"cached_tokens":0,"cache_write_tokens":0}}}}''',
+]
+
+[[subagent.response]]
+wait-for-cancellation = true
+
+[first]
+prompt = "start a subagent and steer it"
+settle-subagents-after-tool-result = 1
+settle-subagents-after-turn = true
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-12","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Watch the build\",\"intent\":\"Watching the build until stopped\"}]}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-13","type":"function_call","call_id":"toolu_2","name":"subagent","arguments":"{\"action\":\"send\",\"name\":\"tame-adder\",\"message\":\"Look closer\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-14","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"It is working."}''',
+    '''{"type":"response.output_text.done","text":"It is working."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"It is working."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-14","type":"message","role":"assistant","content":[{"type":"output_text","text":"It is working."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "carry on"
+deliver-subagents-before-prompt = true
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-15","type":"function_call","call_id":"toolu_3","name":"subagent","arguments":"{\"action\":\"status\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-16","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"It ended after its first pass."}''',
+    '''{"type":"response.output_text.done","text":"It ended after its first pass."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"It ended after its first pass."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-16","type":"message","role":"assistant","content":[{"type":"output_text","text":"It ended after its first pass."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-17","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Carrying on."}''',
+    '''{"type":"response.output_text.done","text":"Carrying on."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Carrying on."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-17","type":"message","role":"assistant","content":[{"type":"output_text","text":"Carrying on."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

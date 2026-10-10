@@ -41,6 +41,12 @@ event = [
 
 [[first.response]]
 event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-91","type":"function_call","call_id":"toolu_90","name":"subagent","arguments":"{\"action\":\"output\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
     '''{"type":"response.output_item.added","item":{"id":"message-44","type":"message","role":"assistant","content":[]}}''',
     '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
     '''{"type":"response.output_text.delta","delta":"The logs show no errors."}''',

@@ -1,0 +1,26 @@
+
+ start a subagent and steer it
+
+
+Watching the build until stopped spawn 1 subagent on GPT-5.6 Sol
+send tame-adder (Watching the build until stopped)
+
+It is working.
+
+
+ 🐍 Subagent tame-adder interjects:
+
+    The first pass found nothing.
+
+    Ended: parent process ended before the subagent completed.
+
+
+status all
+
+It ended after its first pass.
+
+
+ carry on
+
+
+Carrying on.

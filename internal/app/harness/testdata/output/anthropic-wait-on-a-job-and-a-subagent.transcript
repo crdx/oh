@@ -35,7 +35,7 @@ The parser is in parse.go.
 
 ```
 wait: docs [error, 1 line, 21B, toolu_3]
-wait: job:check || tame-adder [ok, 2 lines, 191B, toolu_4]
+wait: job:check || tame-adder [ok, 4 lines, 355B, toolu_4]
 job: check [ok, 1 line, 97B, toolu_5]
 ```
 

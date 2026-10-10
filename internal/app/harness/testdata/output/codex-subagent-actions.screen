@@ -6,10 +6,10 @@ Watching the build until stopped spawn 1 subagent on GPT-5.6 Sol
 list subagents 1L
 status all
 cat tame-adder 1L (Watching the build until stopped)
-send tame-adder ✗ tame-adder is still running; wait for it before sending it anything
+send tame-adder (Watching the build until stopped)
 wait tame-adder for up to 1s 3L (Watching the build until stopped)
 stop tame-adder (Watching the build until stopped)
-wait tame-adder 1L (Watching the build until stopped)
+wait tame-adder 3L ~100t (Watching the build until stopped)
 stop tame-adder ✗ none of the named subagents is running (Watching the build until stopped)
 status tame-nobody ✗ no subagent named tame-nobody
 spawn 0 subagents on GPT-5.6 Sol ✗ start requires a nonempty subagents list

@@ -48,6 +48,12 @@ Subagent tame-adder finished:
 tame-adder done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The logs show no errors.
 ```
 
+## Tool calls · +0s
+
+```
+subagent: all [ok, 4 lines, 340B, toolu_90]
+```
+
 ## Assistant · +0s
 
 The logs show no errors.

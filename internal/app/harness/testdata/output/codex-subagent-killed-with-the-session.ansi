@@ -9,7 +9,7 @@ It is running.\e[?25h\e[?2026l\e[?2026h\e[?25l\e[?7l\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m ⏳ Subagent tame-adder interjects:                                                                 \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m    It ended: parent process ended before the subagent completed.                                   \e[0m\r
+\e[48;2;48;58;67m    Ended: parent process ended before the subagent completed.                                      \e[0m\r
 \e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[48;2;48;58;67m 🐍 Subagent tame-adder interjects:                                                                 \e[0m\e[3B\r\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e]9;4;3\e\\\e[?2026h\e[?25l\r
 \r\e[K\r
 The subagent ended when the last session was killed.\e[K\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[52C\e[?25h\e[?2026l\e]9;4;0\e\\\r

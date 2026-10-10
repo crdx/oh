@@ -18203,6 +18203,7 @@ type sessionGoldenResponse struct {
 	CancelAfterWireEvent int               `toml:"cancel-after-wire-event"`
 	ResetAfterWireEvent  int               `toml:"reset-after-wire-event"`
 	WaitForCancellation  bool              `toml:"wait-for-cancellation"`
+	WaitForMessage       bool              `toml:"wait-for-message"`
 }
 
 type sessionGoldenTurn struct {

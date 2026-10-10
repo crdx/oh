@@ -3,7 +3,7 @@
 
 
 spawn 2 subagents on GPT-5.6 Sol
-cat tame-adder 2L (Finding where the config loads)
+cat tame-adder 4L ~100t (Finding where the config loads)
 
 The loader is in config.go; the parser report will follow.
 

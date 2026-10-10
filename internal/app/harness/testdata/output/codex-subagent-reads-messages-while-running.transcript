@@ -1,0 +1,100 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `medium`
+- **Provider:** `codex`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+start two subagents and steer them while they run
+
+## Tool calls · +0s
+
+```
+subagent: 2 subagents [ok, 1 line, 31B, toolu_1]
+```
+
+## Subagent started · tame-adder · +0s
+
+Find the largest file
+
+Transcript: `subagents/tame-adder/chat.md`
+
+## Subagent started · tame-alpaca · +0s
+
+Find the config loader
+
+Transcript: `subagents/tame-alpaca/chat.md`
+
+## Tool calls · +0s
+
+```
+subagent: tame-adder [ok, 1 line, 68B, toolu_2]
+subagent: tame-alpaca [ok, 1 line, 69B, toolu_3]
+```
+
+## Assistant · +0s
+
+Both are working.
+
+## Subagent message · tame-adder · +0s
+
+Also say how big it is
+
+## Subagent finished · tame-adder · done · +0s
+
+The largest file is big.go, at 900 lines.
+
+## Subagent message · tame-alpaca · +0s
+
+Also say when it loads
+
+## Subagent finished · tame-alpaca · done · +0s
+
+The loader is in config.go.
+
+It loads once, at startup.
+
+## subagent_completion_submitted · +0s
+
+```
+Subagents tame-adder, tame-alpaca finished:
+
+tame-adder done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The largest file is big.go, at 900 lines.
+
+tame-alpaca done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-alpaca, so read any /tmp path it reports as beneath that): The loader is in config.go.
+
+It loads once, at startup.
+```
+
+## Tool calls · +0s
+
+```
+subagent: all [ok, 2 lines, 206B, toolu_4]
+subagent: all [ok, 10 lines, 758B, toolu_5]
+```
+
+## Assistant · +0s
+
+Both answered everything they were sent.
+
+## User · +0s
+
+how did they get on?
+
+## Tool calls · +0s
+
+```
+subagent: all [ok, 2 lines, 118B, toolu_6]
+subagent: all [ok, 8 lines, 574B, toolu_7]
+```
+
+## Assistant · +0s
+
+Both are done.

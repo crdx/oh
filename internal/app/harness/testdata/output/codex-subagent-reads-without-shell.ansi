@@ -16,6 +16,8 @@ A reader is on it.\r
 \e[48;2;48;58;67m    The logs show no errors.                                                                        \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
+\e]8;;oh://tool-result?call=toolu_90&session=tame-impala\e\\cat\e]8;;\e\\ \e[38;2;192;128;80mall\e[0m \e[38;2;150;152;150m4L ~100t\e[0m\r
+\r
 The logs show no errors.\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r

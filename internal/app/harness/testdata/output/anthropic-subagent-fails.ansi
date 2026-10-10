@@ -9,7 +9,7 @@ It is running.\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🐍 Subagent tame-adder interjects:                                                                 \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m    It failed: prompt is too long.                                                                  \e[0m\r
+\e[48;2;48;58;67m    Failed: prompt is too long.                                                                     \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
 The subagent failed, so I will read the logs myself.\e[?25h\e[?2026l\r

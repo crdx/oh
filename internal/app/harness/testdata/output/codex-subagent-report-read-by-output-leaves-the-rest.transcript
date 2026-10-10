@@ -43,7 +43,7 @@ The parser is in parse.go.
 ## Tool calls · +0s
 
 ```
-subagent: tame-adder [ok, 2 lines, 199B, toolu_2]
+subagent: tame-adder [ok, 4 lines, 363B, toolu_2]
 ```
 
 ## Assistant · +0s
