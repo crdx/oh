@@ -429,3 +429,23 @@ func TestALabelMarksSuccessOnlyWhenItsToolSaysTo(t *testing.T) {
 		t.Error("expected the tool of the moment to outrank what was stored")
 	}
 }
+
+func BenchmarkElideAndRenderACallRowNamingPaths(b *testing.B) {
+	workspace := b.TempDir()
+	for _, name := range []string{"first.go", "second.go"} {
+		if err := os.WriteFile(filepath.Join(workspace, name), nil, 0o600); err != nil {
+			b.Fatal(err)
+		}
+	}
+
+	label := call.Label{
+		Name:      "bash",
+		Subject:   "go vet first.go second.go && " + strings.Repeat("echo padding ", 20),
+		PathRoots: link.Roots{Workspace: workspace},
+	}
+
+	b.ReportAllocs()
+	for b.Loop() {
+		label.Elide(60).Render()
+	}
+}

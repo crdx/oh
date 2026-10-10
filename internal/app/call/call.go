@@ -44,7 +44,7 @@ type Label struct {
 	Continuation    []Label
 	lineRange       string
 	pathSubject     string
-	linkSource      string
+	linkSource      link.Source
 	renderedSubject string
 }
 
@@ -66,7 +66,7 @@ func (self Label) Elide(room int) dynamic.Label {
 
 func (self Label) Render() string {
 	line := self.compose()
-	if self.linkSource != "" {
+	if !self.linkSource.IsZero() {
 		return link.RenderFromSource(line, self.linkSource, self.PathRoots)
 	}
 
@@ -160,8 +160,8 @@ func (self Label) compose() string {
 }
 
 func (self Label) elide(room int) Label {
-	self.linkSource = ""
-	linkSource := self.Render()
+	self.linkSource = link.Source{}
+	linkSource := link.Locate(self.compose(), self.PathRoots)
 	self.renderedSubject = ""
 	if lineRangeStart(self.lineRange) != "" {
 		self.pathSubject = self.Subject

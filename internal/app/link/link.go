@@ -135,17 +135,34 @@ func Render(text string, roots Roots) string {
 	return renderLocations(text, visible, locations(visible.text, roots))
 }
 
-func RenderFromSource(text string, source string, roots Roots) string {
+type Source struct {
+	text      string
+	locations []location
+}
+
+func Locate(text string, roots Roots) Source {
+	sourceText := visibleTextOf(text).text
+
+	return Source{text: sourceText, locations: locations(sourceText, roots)}
+}
+
+func (self Source) IsZero() bool {
+	return self.text == ""
+}
+
+func RenderFromSource(text string, source Source, roots Roots) string {
 	visible := visibleTextOf(text)
-	sourceText := visibleTextOf(source).text
-	prefixEnd := commonPrefixEnd(visible.text, sourceText)
-	if prefixEnd == len(sourceText) {
+	prefixEnd := commonPrefixEnd(visible.text, source.text)
+	if prefixEnd == len(source.text) {
+		if len(visible.text) == len(source.text) {
+			return renderLocations(text, visible, source.locations)
+		}
+
 		return Render(text, roots)
 	}
 
-	foundLocations := locations(sourceText, roots)
-	shownLocations := make([]location, 0, len(foundLocations))
-	for _, found := range foundLocations {
+	shownLocations := make([]location, 0, len(source.locations))
+	for _, found := range source.locations {
 		if found.begin >= prefixEnd {
 			continue
 		}

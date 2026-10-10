@@ -100,12 +100,34 @@ func TestAShortenedPathUsesItsCompleteSourceAsTheTarget(t *testing.T) {
 	path := prepareFile(t, workspace, "parent/changes.patch")
 	shown := parent + "…"
 
-	got := RenderFromSource(shown, path, Roots{})
+	got := RenderFromSource(shown, Locate(path, Roots{}), Roots{})
 	if address := linkAddress(t, got); address.Path != filepath.ToSlash(path) {
 		t.Errorf("got address %q, want complete path %q", address, path)
 	}
 	if Plain(got) != shown {
 		t.Errorf("visible path is %q, want %q", Plain(got), shown)
+	}
+}
+
+func TestTextRunningPastItsSourceLinksWhatFollowsTheSource(t *testing.T) {
+	workspace := t.TempDir()
+	first := prepareFile(t, workspace, "first.go")
+	second := prepareFile(t, workspace, "second.go")
+	shown := first + " " + second
+
+	addresses := linkAddresses(t, RenderFromSource(shown, Locate(first, Roots{}), Roots{}))
+	if len(addresses) != 2 || addresses[1].Path != filepath.ToSlash(second) {
+		t.Errorf("got addresses %v, want %q and %q", addresses, first, second)
+	}
+}
+
+func TestAnUnshortenedPathLinksFromItsLocatedSource(t *testing.T) {
+	workspace := t.TempDir()
+	path := prepareFile(t, workspace, "kept.go")
+
+	got := RenderFromSource(path, Locate(path, Roots{}), Roots{})
+	if address := linkAddress(t, got); address.Path != filepath.ToSlash(path) {
+		t.Errorf("got address %q, want %q", address, path)
 	}
 }
 
@@ -118,7 +140,7 @@ func TestAShortenedMissingPathDoesNotLinkAnExistingSourcePrefix(t *testing.T) {
 	missingPath := filepath.Join(parent, "missing.patch")
 	shown := parent + "…"
 
-	if got := RenderFromSource(shown, missingPath, Roots{}); got != shown {
+	if got := RenderFromSource(shown, Locate(missingPath, Roots{}), Roots{}); got != shown {
 		t.Errorf("missing path gained a link to its existing prefix in %q", got)
 	}
 }
