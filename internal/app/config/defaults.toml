@@ -144,6 +144,7 @@ lookup = "allow"
 [experimental]
 command_starts_turn = true
 redraw_timing_feedback = false
+reply_command = false
 shared_history = false
 wait_tool = false
 

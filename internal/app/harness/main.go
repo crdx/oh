@@ -1331,6 +1331,9 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		OpenEditor: func(paths []string) error {
 			return app.openEditor(paths)
 		},
+		ReplyInEditor: replyInEditor(experimentalToggles, func(text string) error {
+			return app.replyInEditor(text)
+		}),
 		Output: os.Stdout,
 		PathGrants: commands.PathGrants{
 			DenyPatterns: settings.Sandbox.Deny,
@@ -1435,6 +1438,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		editorConfig:    editorConfiguration,
 		toolOutputLimit: toolOutputLimit,
 		experimental:    experimentalToggles,
+		isReplyOffered:  isReplyOffered(experimentalToggles),
 		workspace:       workspace,
 		mode:            mode,
 		conditions:      restoredConditions.State,

@@ -228,6 +228,7 @@ type App struct {
 	metrics         metrics.Tracker
 	toolOutputLimit *truncate.Limit
 	experimental    *experimental.Toggles
+	isReplyOffered  bool
 	permissions     *permission.Live
 	onFailure       func(failure error)
 	onQuestion      func(question ask.Question) func()
@@ -558,6 +559,9 @@ func (self *App) apply(inputLine *edit.Input, history *edit.History, keypress ke
 
 	case edit.EditDraft:
 		self.editDraft()
+
+	case edit.ReplyToAnswer:
+		self.replyToLastAnswer()
 
 	case edit.DrawInput:
 	}

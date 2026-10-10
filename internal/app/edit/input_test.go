@@ -944,6 +944,19 @@ func TestControlDStopsARunningTurnWhateverIsTyped(t *testing.T) {
 	}
 }
 
+func TestControlDotRepliesWithoutTouchingTheLine(t *testing.T) {
+	for _, isRunning := range []bool{false, true} {
+		self := inputFromKeys(t, "a draft")
+
+		if got := self.Apply(key.Key{Code: key.Rune, Value: '.', Mod: key.Ctrl}, isRunning); got != ReplyToAnswer {
+			t.Errorf("got %v with a turn running %t, want a reply", got, isRunning)
+		}
+		if self.Text() != "a draft" {
+			t.Errorf("expected the line to be untouched, got %q", self.Text())
+		}
+	}
+}
+
 func TestControlDAtRestLeavesOnlyFromAnEmptyLine(t *testing.T) {
 	keypress := key.Key{Code: key.Rune, Value: 'd', Mod: key.Ctrl}
 

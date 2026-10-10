@@ -325,7 +325,8 @@ func fixtureEnvironment(t *testing.T) commandEnvironment {
 		getSessionNames: func() []string {
 			return []string{"able-dolphin", "agile-turtle", "tame-impala", "wise-otter"}
 		},
-		getToolNames: func() []string { return []string{"read", "grep", "bash"} },
+		getToolNames:  func() []string { return []string{"read", "grep", "bash"} },
+		replyInEditor: func(string) error { return nil },
 		subagents: Subagents{
 			List: func() []SubagentListing {
 				return []SubagentListing{{Name: "frugal-otter"}, {Name: "frugal-heron"}, {Name: "frugal-adder", IsMissing: true}}

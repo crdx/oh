@@ -12,6 +12,7 @@ type Name string
 const (
 	CommandStartsTurn    Name = "command_starts_turn"
 	RedrawTimingFeedback Name = "redraw_timing_feedback"
+	ReplyCommand         Name = "reply_command"
 	SharedHistory        Name = "shared_history"
 	WaitTool             Name = "wait_tool"
 )
@@ -42,6 +43,7 @@ func (self Kind) String() string {
 var toggleKinds = map[Name]Kind{
 	CommandStartsTurn:    BooleanKind,
 	RedrawTimingFeedback: BooleanKind,
+	ReplyCommand:         BooleanKind,
 	SharedHistory:        BooleanKind,
 	WaitTool:             BooleanKind,
 }

@@ -7,7 +7,9 @@ import (
 	"os"
 	"strings"
 
+	"crdx.org/oh/internal/app/commands"
 	"crdx.org/oh/internal/app/editor"
+	"crdx.org/oh/internal/app/experimental"
 	"crdx.org/oh/internal/app/feedback"
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/painter"
@@ -61,13 +63,15 @@ type externalEditState struct {
 	terminal terminalHandover
 	outcomes chan editor.Outcome
 
-	launch    editor.Launch
-	draftPath string
-	isAwaited bool
-	stop      context.CancelFunc
-	release   func()
-	columns   int
-	lines     int
+	launch        editor.Launch
+	draftPath     string
+	draftOriginal string
+	draftPurpose  painter.DraftPurpose
+	isAwaited     bool
+	stop          context.CancelFunc
+	release       func()
+	columns       int
+	lines         int
 }
 
 func (self *App) editorOutcomes() chan editor.Outcome {
@@ -124,17 +128,74 @@ func (self *App) editDraft() {
 }
 
 func (self *App) startDraft() error {
+	text := self.inputLine.Text()
+	position := editor.PositionIn(self.inputLine.Runes(), self.inputLine.Cursor())
+	return self.openDraft(text, position, painter.EditingTheDraft)
+}
+
+func (self *App) replyInEditor(text string) error {
+	return self.replyInEditorAt(text, len([]rune(text)))
+}
+
+func (self *App) replyToLastAnswer() {
+	if !self.isReplyOffered || self.isEditorAwaited() || self.inputLine == nil {
+		return
+	}
+
+	err := self.startReplyToLastAnswer()
+	if err != nil {
+		self.showFeedback(feedback.Command, feedback.Message{
+			Text:   "The reply could not be written: " + err.Error(),
+			Status: agent.ErrorStatus,
+		})
+	}
+}
+
+func (self *App) startReplyToLastAnswer() error {
+	message, found := self.getLastMessage()
+	if !found {
+		return commands.ErrNoModelMessage
+	}
+
+	quote := commands.QuoteReply(message)
+	return self.replyInEditorAt(quote+self.inputLine.Text(), len([]rune(quote))+self.inputLine.Cursor())
+}
+
+func (self *App) replyInEditorAt(text string, cursor int) error {
+	if self.inputLine == nil || !self.terminalHandover().IsHeld() {
+		return fmt.Errorf("replying %w", errNoTerminal)
+	}
+	if self.isEditorAwaited() {
+		return errEditorUnderway
+	}
+
+	return self.openDraft(text, editor.PositionIn([]rune(text), cursor), painter.WritingAReply)
+}
+
+func replyInEditor(toggles *experimental.Toggles, reply func(string) error) func(string) error {
+	if !isReplyOffered(toggles) {
+		return nil
+	}
+
+	return reply
+}
+
+func isReplyOffered(toggles *experimental.Toggles) bool {
+	return toggles.IsEnabled(experimental.ReplyCommand)
+}
+
+func (self *App) openDraft(text string, position editor.Position, purpose painter.DraftPurpose) error {
 	launch, err := self.resolveEditor()
 	if err != nil {
 		return err
 	}
-	launch.Position = editor.PositionIn(self.inputLine.Runes(), self.inputLine.Cursor())
+	launch.Position = position
 
 	draft, err := os.CreateTemp("", draftPattern)
 	if err != nil {
 		return err
 	}
-	_, err = draft.WriteString(self.inputLine.Text())
+	_, err = draft.WriteString(text)
 	if closeErr := draft.Close(); err == nil {
 		err = closeErr
 	}
@@ -147,11 +208,16 @@ func (self *App) startDraft() error {
 		err = self.handOverTerminal(launch, []string{draft.Name()}, draft.Name())
 		if err != nil {
 			_ = os.Remove(draft.Name())
+			return err
 		}
-		return err
+		self.externalEdit.draftOriginal = text
+		self.externalEdit.draftPurpose = purpose
+		return nil
 	}
 
 	self.externalEdit.draftPath = draft.Name()
+	self.externalEdit.draftOriginal = text
+	self.externalEdit.draftPurpose = purpose
 	self.startEditor(launch, []string{draft.Name()}, true)
 
 	return nil
@@ -251,6 +317,8 @@ func (self *App) editorEnded(outcome editor.Outcome) {
 	}
 	self.forgetViewedConversation()
 	draftPath := self.externalEdit.draftPath
+	draftOriginal := self.externalEdit.draftOriginal
+	draftPurpose := self.externalEdit.draftPurpose
 	release := self.externalEdit.release
 	if release != nil {
 		if err := self.takeTerminalBack(); err != nil && self.onFailure != nil {
@@ -267,10 +335,10 @@ func (self *App) editorEnded(outcome editor.Outcome) {
 	case outcome.Failure != nil:
 		_ = os.Remove(draftPath)
 		if !errors.Is(outcome.Failure, context.Canceled) {
-			self.showEditorFailure("The draft was kept as it was: " + outcome.Failure.Error())
+			self.showEditorFailure(draftPurpose.FailureLead() + outcome.Failure.Error())
 		}
 	default:
-		self.takeDraft(draftPath)
+		self.takeDraft(draftPath, draftOriginal, draftPurpose)
 	}
 
 	if release != nil {
@@ -281,16 +349,20 @@ func (self *App) editorEnded(outcome editor.Outcome) {
 	}
 }
 
-func (self *App) takeDraft(draftPath string) {
+func (self *App) takeDraft(draftPath string, draftOriginal string, draftPurpose painter.DraftPurpose) {
 	defer func() { _ = os.Remove(draftPath) }()
 
 	content, err := os.ReadFile(draftPath) //nolint:gosec // the draft this session wrote
 	if err != nil {
-		self.showEditorFailure("The draft was kept as it was: " + err.Error())
+		self.showEditorFailure(draftPurpose.FailureLead() + err.Error())
 		return
 	}
 
-	self.inputLine.SetText(strings.TrimRight(string(content), "\n"))
+	draft := strings.TrimRight(string(content), "\n")
+	if draft == strings.TrimRight(draftOriginal, "\n") {
+		return
+	}
+	self.inputLine.SetText(draft)
 }
 
 func (self *App) showEditorFailure(text string) {
@@ -324,7 +396,7 @@ func (self *App) editingRows(columns int) []string {
 		return nil
 	}
 
-	return painter.RenderDraftEditing(self.externalEdit.launch.Name(), columns)
+	return painter.RenderDraftEditing(self.externalEdit.launch.Name(), self.externalEdit.draftPurpose, columns)
 }
 
 func (self *App) applyWhileEditing(keypress key.Key) {

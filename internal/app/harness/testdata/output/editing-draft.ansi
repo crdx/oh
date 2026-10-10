@@ -23,6 +23,12 @@ draft\e[K\r
 a first thought\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[15C\e[?25h\e[?2026l\e[?1049h\e[H~ the editor's own screen ~\e[?1049l\e[?2026h\e[?25l\ra better thought\e[K\e[1B\rover two lines\e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[14C\e[?25h\e[?2026l
+=== a terminal editor that changes nothing keeps the cursor ===
+\e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
+a first thought\e[K\r
+\e[K\r
+\e[K\r
+\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\e[1A\r\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e[?25h\e[?2026l\e[?1049h\e[H~ the editor's own screen ~\e[?1049l\e[?2026h\e[?25l\rs\e[K\r\e[1C\e[?25h\e[?2026l\e[?2026h\e[?25l\rst\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\rsti\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rstil\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rstill\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\rstill \e[K\r\e[6C\e[?25h\e[?2026l\e[?2026h\e[?25l\rstill h\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\rstill he\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rstill her\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\rstill here\e[K\r\e[10C\e[?25h\e[?2026l\e[?2026h\e[?25l\rstill here \e[K\r\e[11C\e[?25h\e[?2026l
 === a terminal editor that fails keeps the draft ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 keep me\e[K\r

@@ -7,6 +7,7 @@ Commands:
   /info
   /open <target>
   /new [-m <model>] [-c <flags>] [-t <tool>]... [--yolo] [-f <session>]
+  /reply
   /forward <port>
   /grant {r|rw} <path>...
   /grants [all]

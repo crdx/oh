@@ -254,6 +254,7 @@ func TestKeyboardProtocolControlKeysKeepTheirModifiers(t *testing.T) {
 		"\x1b[13;2u":  {Code: Enter, Mod: Shift},
 		"\x1b[99;5u":  {Code: Rune, Value: 'c', Mod: Ctrl},
 		"\x1b[106;5u": {Code: Rune, Value: 'j', Mod: Ctrl},
+		"\x1b[46;5u":  {Code: Rune, Value: '.', Mod: Ctrl},
 		"\x1b[127;5u": {Code: Backspace, Mod: Ctrl},
 	} {
 		got := decode(t, input)

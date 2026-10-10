@@ -435,6 +435,17 @@ func TestGoldenEditingTheDraft(t *testing.T) {
 			rig.finish(nil)
 			return rig.drawn.String()
 		},
+		"a terminal editor that changes nothing keeps the cursor": func() string {
+			rig := newEditingRig(t, terminalEditor, "a first thought\n\n")
+			rig.press(key.Key{Code: key.Up})
+			rig.press(ctrlG)
+			start := rig.held.awaitStart(t)
+			rig.drawn.WriteString(terminalEditorScreen)
+			rig.writeDraft(start, "a first thought\n")
+			rig.finish(nil)
+			rig.typeText("still here ")
+			return rig.drawn.String()
+		},
 		"a terminal editor that fails keeps the draft": func() string {
 			rig := newEditingRig(t, terminalEditor, "keep me")
 			rig.press(ctrlG)

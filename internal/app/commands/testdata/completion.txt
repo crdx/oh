@@ -13,6 +13,7 @@
   /jobs → /jobs  (list this session's background jobs)
   /new [<options>] → /new …  (start a new session)
   /open <target> → /open …  (open a target with its default application)
+  /reply → /reply  (reply inline to the last answer in your editor)
   /revoke <target>... → /revoke …  (revoke temporary path grants or forwarded ports)
   /sub <action> → /sub …  (read a subagent's conversation)
   /subs → /subs  (list this session's subagents)
@@ -213,6 +214,7 @@
   -t → /fork --yolo -t …  (replace current toolbox)
   -f → /fork --yolo -f …  (fork a previous session)
 "/r"
+  /reply → /reply  (reply inline to the last answer in your editor)
   /revoke <target>... → /revoke …  (revoke temporary path grants or forwarded ports)
 "/revoke "
   /reference → /revoke /reference

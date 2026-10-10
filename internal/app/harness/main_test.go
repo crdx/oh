@@ -5672,6 +5672,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"default-bar":              {".ansi", ".screen"},
 		"editing-config":           {".ansi", ".screen"},
 		"editing-draft":            {".ansi", ".screen"},
+		"editing-reply":            {".ansi", ".screen"},
 		"elided-path-links":        {".ansi", ".screen"},
 		"spaced-path-links":        {".ansi", ".screen"},
 		"environment-change":       {".ansi", ".screen"},

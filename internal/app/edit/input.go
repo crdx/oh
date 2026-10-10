@@ -24,6 +24,7 @@ const (
 	ToggleNetwork
 	ToggleToolGroup
 	EditDraft
+	ReplyToAnswer
 )
 
 type Input struct {
@@ -421,6 +422,9 @@ func (self *Input) rune(keypress key.Key, isRunning bool) Action {
 
 	case 'g':
 		return EditDraft
+
+	case '.':
+		return ReplyToAnswer
 
 	case 'j':
 		self.insert('\n')

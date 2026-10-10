@@ -34,6 +34,8 @@ const (
 )
 
 var (
+	ErrNoModelMessage = errors.New("no model message has been received yet")
+
 	errHostCommandsUnavailable = errors.New("commands cannot run on the host here")
 	errEditorUnavailable       = errors.New("no editor can be opened here")
 )
@@ -49,6 +51,7 @@ type Options struct {
 	Session          Session
 
 	OpenEditor        func(paths []string) error
+	ReplyInEditor     func(text string) error
 	Output            io.Writer
 	PathGrants        PathGrants
 	Forwards          Forwards
@@ -102,6 +105,7 @@ type commandEnvironment struct {
 	session          commandSession
 
 	openEditor        func([]string) error
+	replyInEditor     func(string) error
 	openTarget        func([]string) error
 	copyText          func([]string) error
 	startHostCommand  func(directory string, command string) error
@@ -147,8 +151,9 @@ func New(options Options) (slash.CommandSet, error) {
 			isPersisted:    options.Session.IsPersisted,
 			getLastMessage: options.Session.GetLastMessage,
 		},
-		openEditor: options.OpenEditor,
-		openTarget: openDesktopTargets,
+		openEditor:    options.OpenEditor,
+		replyInEditor: options.ReplyInEditor,
+		openTarget:    openDesktopTargets,
 		copyText: func(values []string) error {
 			return terminal.Copy(options.Output, strings.Join(values, "\n"))
 		},
@@ -228,6 +233,9 @@ func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 			environment,
 			environment.startSession,
 		),
+	}
+	if environment.replyInEditor != nil {
+		commands = append(commands, replyCommand(environment.session.getLastMessage, environment.replyInEditor))
 	}
 	if environment.pathGrants.isConfigured() {
 		commands = append(commands, pathGrantCommands(
@@ -563,7 +571,7 @@ func lastMessageTarget(getLastMessage func() (string, bool)) commandTarget {
 					return []string{message}, nil
 				}
 			}
-			return nil, errors.New("no model message has been received yet")
+			return nil, ErrNoModelMessage
 		},
 	}
 }

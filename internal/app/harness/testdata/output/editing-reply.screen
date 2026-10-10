@@ -1,0 +1,339 @@
+=== a graphical editor is abandoned ===
+
+ which should we do
+
+
+Two options stand out.
+
+• Keep the cache, which costs memory but saves a rebuild every time the session resumes after a long
+  gap.
+• Drop it.
+
+return nil
+
+Which do you prefer?
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a graphical editor is awaited ===
+
+ which should we do
+
+
+Two options stand out.
+
+• Keep the cache, which costs memory but saves a rebuild every time the session resumes after a long
+  gap.
+• Drop it.
+
+return nil
+
+Which do you prefer?
+
+Writing the reply in subl                                                      esc to drop the reply
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a graphical editor is awaited on a narrow screen ===
+
+ which should we do
+
+
+Two options stand out.
+
+• Keep the cache, which costs memory but
+  saves a rebuild every time the session
+  resumes after a long gap.
+• Drop it.
+
+return nil
+
+Which do you prefer?
+
+Writing the reply in subl
+────────────────────────────────────────
+
+────────────────────────────────────────
+=== a graphical editor leaves the reply untouched ===
+
+ which should we do
+
+
+Two options stand out.
+
+• Keep the cache, which costs memory but saves a rebuild every time the session resumes after a long
+  gap.
+• Drop it.
+
+return nil
+
+Which do you prefer?
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a graphical editor takes the reply ===
+
+ which should we do
+
+
+Two options stand out.
+
+• Keep the cache, which costs memory but saves a rebuild every time the session resumes after a long
+  gap.
+• Drop it.
+
+return nil
+
+Which do you prefer?
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+Drop it, the memory matters more.
+
+>
+> ```go
+> return nil
+> ```
+>
+> Which do you prefer?
+
+Thanks.
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a terminal editor leaves the reply untouched ===
+
+ which should we do
+
+
+Two options stand out.
+
+• Keep the cache, which costs memory but saves a rebuild every time the session resumes after a long
+  gap.
+• Drop it.
+
+return nil
+
+Which do you prefer?
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a terminal editor takes the reply ===
+
+ which should we do
+
+
+Two options stand out.
+
+• Keep the cache, which costs memory but saves a rebuild every time the session resumes after a long
+  gap.
+• Drop it.
+
+return nil
+
+Which do you prefer?
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+Drop it, the memory matters more.
+
+>
+> ```go
+> return nil
+> ```
+>
+> Which do you prefer?
+
+Thanks.
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== a terminal editor takes the reply on a narrow screen ===
+
+ which should we do
+
+
+Two options stand out.
+
+• Keep the cache, which costs memory but
+  saves a rebuild every time the session
+  resumes after a long gap.
+• Drop it.
+
+return nil
+
+Which do you prefer?
+
+────────────────────────────────────────
+Drop it, the memory matters more.
+
+>
+> ```go
+> return nil
+> ```
+>
+> Which do you prefer?
+
+Thanks.
+────────────────────────────────────────
+=== a terminal editor that fails drops the reply ===
+
+ which should we do
+
+
+Two options stand out.
+
+• Keep the cache, which costs memory but saves a rebuild every time the session resumes after a long
+  gap.
+• Drop it.
+
+return nil
+
+Which do you prefer?
+
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ The reply was dropped: vim: exit status 1                                                      │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== ctrl+. carries the draft beneath the quote ===
+
+ which should we do
+
+
+Two options stand out.
+
+• Keep the cache, which costs memory but saves a rebuild every time the session resumes after a long
+  gap.
+• Drop it.
+
+return nil
+
+Which do you prefer?
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+>
+> ```go
+> return nil
+> ```
+>
+> Which do you prefer?
+
+The second.
+
+my own draft
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== ctrl+. takes the reply ===
+
+ which should we do
+
+
+Two options stand out.
+
+• Keep the cache, which costs memory but saves a rebuild every time the session resumes after a long
+  gap.
+• Drop it.
+
+return nil
+
+Which do you prefer?
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+long gap.
+> - Drop it.
+>
+> ```go
+> return nil
+> ```
+>
+> Which do you prefer?
+
+The second.
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== ctrl+. with nothing answered yet ===
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ The reply could not be written: no model message has been received yet                         │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
+my own draft
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== ctrl+. with the toggle off ===
+
+ which should we do
+
+
+Two options stand out.
+
+• Keep the cache, which costs memory but saves a rebuild every time the session resumes after a long
+  gap.
+• Drop it.
+
+return nil
+
+Which do you prefer?
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+my own draft
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== no editor can be found ===
+
+ which should we do
+
+
+Two options stand out.
+
+• Keep the cache, which costs memory but saves a rebuild every time the session resumes after a long
+  gap.
+• Drop it.
+
+return nil
+
+Which do you prefer?
+
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ /reply: No editor was found: set editor.command in config.toml, or $EDITOR (alt+enter to send) │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
+/reply
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== no terminal can be handed over ===
+
+ which should we do
+
+
+Two options stand out.
+
+• Keep the cache, which costs memory but saves a rebuild every time the session resumes after a long
+  gap.
+• Drop it.
+
+return nil
+
+Which do you prefer?
+
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ /reply: Replying needs the interactive terminal (alt+enter to send)                            │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
+/reply
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== nothing has been answered yet ===
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ /reply: No model message has been received yet (alt+enter to send)                             │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
+/reply
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== the toggle is off ===
+
+ which should we do
+
+
+Two options stand out.
+
+• Keep the cache, which costs memory but saves a rebuild every time the session resumes after a long
+  gap.
+• Drop it.
+
+return nil
+
+Which do you prefer?
+
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ │ Command not found: /reply (alt+enter to send)                                                  │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
+/reply
+────────────────────────────────────────────────────────────────────────────────────────────────────
