@@ -1074,11 +1074,10 @@ func (self *App) show(inputLine *edit.Input) {
 
 	columns := self.screen.Columns()
 	frame := inputLine.Frame(columns)
-	isFeedbackFramed := !self.feedback.IsEmpty()
-	statusWidth := columns
+	feedbackWidth := columns
 	topWidth := columns
-	if isFeedbackFramed {
-		statusWidth = input.FeedbackContentWidth(columns)
+	if !self.feedback.IsEmpty() {
+		feedbackWidth = input.FeedbackContentWidth(columns)
 		topWidth = input.FeedbackRuleWidth(columns)
 	}
 
@@ -1092,11 +1091,11 @@ func (self *App) show(inputLine *edit.Input) {
 			frame, columns,
 			segment.BottomLeft, segment.BottomCenter, segment.BottomRight,
 		),
-		Activity:      append(self.hostCommandRows(columns), self.editingRows(columns)...),
-		Status:        self.statusRows(statusWidth),
-		FrameFeedback: isFeedbackFramed,
-		Question:      self.questionRows(columns),
-		Rule:          self.ruleStyle(),
+		Activity:       append(self.hostCommandRows(columns), self.editingRows(columns)...),
+		QueuedMessages: self.queuedMessageRows(columns),
+		Feedback:       self.feedback.Render(feedbackWidth, self.getNow()),
+		Question:       self.questionRows(columns),
+		Rule:           self.ruleStyle(),
 	}
 	block.Dropdown = self.dropdownRows(block, columns)
 
@@ -1179,24 +1178,20 @@ func (self *App) ruleStyle() style.Style {
 	}
 }
 
-func (self *App) statusRows(columns int) []string {
-	if self.feedback.IsEmpty() {
-		var notices []string
-		if self.currentTurn.Running() {
-			notices = self.pendingNotices.accessNotices()
-		}
-
-		return painter.RenderQueuedMessagesAndNotices(
-			self.currentTurn.GetInterjections(),
-			notices,
-			!self.currentTurn.Cancelled(),
-			columns,
-			self.screen.IsTerminal(),
-			self.screen.LinkRoots().WithoutScratch(),
-		)
+func (self *App) queuedMessageRows(columns int) []string {
+	var notices []string
+	if self.currentTurn.Running() {
+		notices = self.pendingNotices.accessNotices()
 	}
 
-	return self.feedback.Render(columns, self.getNow())
+	return painter.RenderQueuedMessagesAndNotices(
+		self.currentTurn.GetInterjections(),
+		notices,
+		!self.currentTurn.Cancelled(),
+		columns,
+		self.screen.IsTerminal(),
+		self.screen.LinkRoots().WithoutScratch(),
+	)
 }
 
 func (self *App) showFeedback(source feedback.Source, message feedback.Message) {

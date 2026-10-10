@@ -373,7 +373,7 @@ func TestAConfigEditorFailureIsShownRatherThanWrittenOverTheScreen(t *testing.T)
 
 	rig.finish(errors.New("subl: Timeout waiting for detached instance to start"))
 
-	if shown := style.Plain(strings.Join(rig.app.statusRows(replayColumns), "\n")); !strings.Contains(shown, "The editor failed: subl: Timeout waiting") {
+	if shown := style.Plain(strings.Join(rig.app.feedback.Render(replayColumns, rig.app.getNow()), "\n")); !strings.Contains(shown, "The editor failed: subl: Timeout waiting") {
 		t.Errorf("got status %q, want the failure", shown)
 	}
 }

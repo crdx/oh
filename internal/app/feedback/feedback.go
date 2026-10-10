@@ -97,6 +97,10 @@ func (self *State) IsEmpty() bool {
 }
 
 func (self *State) Render(columns int, now time.Time) []string {
+	if self.IsEmpty() {
+		return nil
+	}
+
 	text := self.message.Text
 	if countdown := self.countdown(now); countdown != "" {
 		text += " " + countdown

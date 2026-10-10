@@ -11,7 +11,7 @@ error: invalid command usage
 === /sub frugal-otter ===
 error: invalid command usage
 === /sub cat frugal-otter ===
-[38;2;129;162;190m[0m
+
 === /sub cat frugal-nobody ===
 error: no subagent named frugal-nobody
 === shown ===

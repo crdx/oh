@@ -154,7 +154,7 @@ func TestTheBottomRuleDropsItsRightLabelToKeepItsLeftOne(t *testing.T) {
 func bottomRuleOf(block Block, width int) string {
 	rows, _, _ := block.Rows(width)
 
-	return rows[len(block.Status)+len(block.Input.Rows)+1]
+	return rows[len(block.QueuedMessages)+len(block.Feedback)+len(block.Input.Rows)+1]
 }
 
 func TestALabelPaintedDownToNothingCostsNothing(t *testing.T) {
@@ -201,22 +201,22 @@ func TestAHistorySearchLabelsTheLeftOfTheTopRule(t *testing.T) {
 	}
 }
 
-func TestStatusRowsSitAboveTheTopRuleWithoutMovingTheInput(t *testing.T) {
+func TestQueuedRowsSitAboveTheTopRuleWithoutMovingTheInput(t *testing.T) {
 	block := Block{
-		Input:  edit.Frame{Rows: []string{"input"}, Row: 0, Column: 3},
-		Status: []string{"first status row", "second status row"},
+		Input:          edit.Frame{Rows: []string{"input"}, Row: 0, Column: 3},
+		QueuedMessages: []string{"first queued row", "second queued row"},
 	}
 
 	rows, cursorRow, cursorColumn := block.Rows(40)
 
-	if len(rows) != 5 || rows[0] != "first status row" || rows[1] != "second status row" {
-		t.Errorf("expected status rows above the top rule, got %q", rows)
+	if len(rows) != 5 || rows[0] != "first queued row" || rows[1] != "second queued row" {
+		t.Errorf("expected queued rows above the top rule, got %q", rows)
 	}
 	if cursorRow != 3 || cursorColumn != 3 {
-		t.Errorf("status moved the cursor to %d,%d within the footer", cursorRow, cursorColumn)
+		t.Errorf("queued rows moved the cursor to %d,%d within the footer", cursorRow, cursorColumn)
 	}
 	if rowsFromBottom := len(rows) - cursorRow; rowsFromBottom != 2 {
-		t.Errorf("status moved the input to %d rows from the bottom, want 2", rowsFromBottom)
+		t.Errorf("queued rows moved the input to %d rows from the bottom, want 2", rowsFromBottom)
 	}
 }
 
@@ -260,9 +260,8 @@ func TestAQuestionHidesTheDropdown(t *testing.T) {
 func TestFeedbackRowsFormABoxAttachedToTheTopRule(t *testing.T) {
 	const columns = 20
 	block := Block{
-		Input:         edit.Frame{Rows: []string{"input"}, Row: 0, Column: 3},
-		Status:        []string{"first", "second"},
-		FrameFeedback: true,
+		Input:    edit.Frame{Rows: []string{"input"}, Row: 0, Column: 3},
+		Feedback: []string{"first", "second"},
 	}
 
 	rows, cursorRow, cursorColumn := block.Rows(columns)
@@ -298,9 +297,8 @@ func TestFeedbackRowsFormABoxAttachedToTheTopRule(t *testing.T) {
 func TestTheFeedbackFrameStandsInsideTheEndsOfTheRule(t *testing.T) {
 	const columns = 20
 	block := Block{
-		Input:         edit.Frame{Rows: []string{""}},
-		Status:        []string{"note"},
-		FrameFeedback: true,
+		Input:    edit.Frame{Rows: []string{""}},
+		Feedback: []string{"note"},
 	}
 
 	rows, _, _ := block.Rows(columns)
@@ -323,12 +321,41 @@ func TestTheFeedbackFrameStandsInsideTheEndsOfTheRule(t *testing.T) {
 	}
 }
 
+func TestQueuedRowsStandAboveTheFeedbackFrame(t *testing.T) {
+	const columns = 20
+	block := Block{
+		Input:          edit.Frame{Rows: []string{"input"}, Row: 0, Column: 3},
+		QueuedMessages: []string{"queued"},
+		Feedback:       []string{"note"},
+	}
+
+	rows, cursorRow, _ := block.Rows(columns)
+	plainRows := make([]string, len(rows))
+	for i, row := range rows {
+		plainRows[i] = style.Plain(row)
+	}
+
+	want := []string{
+		"queued",
+		" ╭────────────────╮",
+		" │ note           │",
+		"─┴────────────────┴─",
+		"input",
+		"────────────────────",
+	}
+	if !slices.Equal(plainRows, want) {
+		t.Errorf("got rows %q, want %q", plainRows, want)
+	}
+	if cursorRow != 4 {
+		t.Errorf("the cursor is on footer row %d, want 4", cursorRow)
+	}
+}
+
 func TestFeedbackFrameIsDroppedWhenItCannotHoldContent(t *testing.T) {
 	for columns := range MinimumFramedFeedbackWidth {
 		block := Block{
-			Input:         edit.Frame{Rows: []string{""}},
-			Status:        []string{"x"},
-			FrameFeedback: true,
+			Input:    edit.Frame{Rows: []string{""}},
+			Feedback: []string{"x"},
 		}
 
 		rows, _, _ := block.Rows(columns)

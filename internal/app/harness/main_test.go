@@ -2897,7 +2897,7 @@ func TestAFlushedQueueStandsOnScreenUntilTheTurnItStoppedGivesWay(t *testing.T) 
 	inputLine := edit.NewInput(history)
 
 	typeMessage(t, self, inputLine, history, "check the other path too")
-	if drawn := style.Plain(strings.Join(self.statusRows(replayColumns), "\n")); !strings.Contains(
+	if drawn := style.Plain(strings.Join(self.queuedMessageRows(replayColumns), "\n")); !strings.Contains(
 		drawn, "double-enter to send now",
 	) {
 		t.Errorf("drew %q, want the queue offering to send itself now", drawn)
@@ -2906,7 +2906,7 @@ func TestAFlushedQueueStandsOnScreenUntilTheTurnItStoppedGivesWay(t *testing.T) 
 	self.apply(inputLine, history, key.Key{Code: key.Enter})
 	self.apply(inputLine, history, key.Key{Code: key.Enter})
 
-	drawn := style.Plain(strings.Join(self.statusRows(replayColumns), "\n"))
+	drawn := style.Plain(strings.Join(self.queuedMessageRows(replayColumns), "\n"))
 	if !strings.Contains(drawn, "check the other path too") {
 		t.Errorf("drew %q, want the flushed message still standing", drawn)
 	}
@@ -11076,9 +11076,8 @@ func TestGoldenTheInputBlockDrawsWhatItDrewBefore(t *testing.T) {
 						frame, width,
 						segment.BottomLeft, segment.BottomCenter, segment.BottomRight,
 					),
-					Status:        pass.status,
-					FrameFeedback: len(pass.status) > 0,
-					Rule:          held.ruleStyle(),
+					Feedback: pass.status,
+					Rule:     held.ruleStyle(),
 				}
 				if pass.dropdown != nil {
 					block.Dropdown = pass.dropdown().Rows(width, dropdown.MaxRows)
@@ -12828,6 +12827,7 @@ const (
 	feedbackStorageWarnings
 	feedbackUnknownSettings
 	feedbackUnknownSettingsClearedByEscape
+	feedbackBesideQueuedMessages
 	feedbackTallAnswer
 	feedbackNetworkApproval
 	feedbackConcurrentApproval
@@ -12896,6 +12896,7 @@ func TestGoldenFeedbackDrawsEveryVisibleState(t *testing.T) {
 		"combined storage warnings":         feedbackStorageWarnings,
 		"settings nothing reads":            feedbackUnknownSettings,
 		"escape clears unknown settings":    feedbackUnknownSettingsClearedByEscape,
+		"a warning beside queued messages":  feedbackBesideQueuedMessages,
 		"tall answer stays untouched":       feedbackTallAnswer,
 		"network approval":                  feedbackNetworkApproval,
 		"next concurrent approval":          feedbackConcurrentApproval,
@@ -13100,6 +13101,14 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 		self.notifyUnknownSettings([]string{"config.toml: unknown: ui.mystery"})
 		self.show(inputLine)
 		self.handleKeypressAndShowInput(inputLine, nil, key.Key{Code: key.Escape})
+	case feedbackBesideQueuedMessages:
+		self.currentTurn = Turn{Stream: testRunningTurnStream(), painter: self.newPainter(true)}
+		history := edit.NewHistory("", historyLimit)
+		typeMessage(t, self, inputLine, history, "check the other path too")
+		typeMessage(t, self, inputLine, history, "and keep the old flag working")
+		typeMessage(t, self, inputLine, history, "then run the whole suite")
+		self.notifyFailure("chat.md recording disabled: transcript append failed")
+		self.show(inputLine)
 	case feedbackChainedApproval, feedbackHeredocApproval:
 		broker := ask.New()
 		closeBroker := broker.Open()
@@ -15146,7 +15155,7 @@ func goldenFeedbackSchedulePass(t *testing.T, span time.Duration, dismissAfter t
 				return held.nextRefresh(time.Now())
 			}, func() string {
 				held.feedback.ClearExpired(time.Now())
-				return strings.Join(held.statusRows(replayColumns), "\n")
+				return strings.Join(held.feedback.Render(replayColumns, held.getNow()), "\n")
 			})
 		})
 	}

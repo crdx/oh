@@ -83,19 +83,19 @@ func getSideWidth(text string) int {
 }
 
 type Block struct {
-	Top           Ruler
-	Input         edit.Frame
-	Bottom        Ruler
-	Activity      []string
-	Status        []string
-	FrameFeedback bool
-	Question      []string
-	Dropdown      []string
-	Rule          style.Style
+	Top            Ruler
+	Input          edit.Frame
+	Bottom         Ruler
+	Activity       []string
+	QueuedMessages []string
+	Feedback       []string
+	Question       []string
+	Dropdown       []string
+	Rule           style.Style
 }
 
 func (self Block) Rows(width int) ([]string, int, int) {
-	rows := make([]string, 0, len(self.Activity)+len(self.Status)+len(self.Input.Rows)+len(self.Dropdown)+4)
+	rows := make([]string, 0, len(self.Activity)+len(self.QueuedMessages)+len(self.Feedback)+len(self.Input.Rows)+len(self.Dropdown)+4)
 
 	top := self.Top
 	if self.Input.IsSearching && !self.isAsking() {
@@ -109,10 +109,11 @@ func (self Block) Rows(width int) ([]string, int, int) {
 
 	body, bodyRow, bodyColumn := self.body()
 	rule := self.rule()
-	statusRows, topWidth := self.renderStatus(width, rule)
+	feedbackRows, topWidth := self.renderFeedback(width, rule)
 
 	rows = append(rows, self.Activity...)
-	rows = append(rows, statusRows...)
+	rows = append(rows, self.QueuedMessages...)
+	rows = append(rows, feedbackRows...)
 	topRule := top.render(topWidth, rule)
 	if topWidth != width {
 		reach := strings.Repeat("─", feedbackInset)
@@ -125,21 +126,21 @@ func (self Block) Rows(width int) ([]string, int, int) {
 	}
 	rows = append(rows, bottom.render(width, rule))
 
-	return rows, len(self.Activity) + len(statusRows) + bodyRow + 1, bodyColumn
+	return rows, len(self.Activity) + len(self.QueuedMessages) + len(feedbackRows) + bodyRow + 1, bodyColumn
 }
 
-func (self Block) renderStatus(width int, rule style.Style) ([]string, int) {
-	if !self.FrameFeedback || width < MinimumFramedFeedbackWidth {
-		return self.Status, width
+func (self Block) renderFeedback(width int, rule style.Style) ([]string, int) {
+	if len(self.Feedback) == 0 || width < MinimumFramedFeedbackWidth {
+		return self.Feedback, width
 	}
 
 	contentWidth := FeedbackContentWidth(width)
 	inset := strings.Repeat(" ", feedbackInset)
-	rows := make([]string, 0, len(self.Status)+1)
+	rows := make([]string, 0, len(self.Feedback)+1)
 	rows = append(rows, inset+rule("╭"+strings.Repeat("─", FeedbackRuleWidth(width))+"╮"))
-	for _, status := range self.Status {
-		padding := strings.Repeat(" ", max(contentWidth-style.Width(status), 0))
-		rows = append(rows, inset+rule("│")+" "+status+padding+" "+rule("│"))
+	for _, feedback := range self.Feedback {
+		padding := strings.Repeat(" ", max(contentWidth-style.Width(feedback), 0))
+		rows = append(rows, inset+rule("│")+" "+feedback+padding+" "+rule("│"))
 	}
 
 	return rows, FeedbackRuleWidth(width)

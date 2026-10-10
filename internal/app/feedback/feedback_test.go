@@ -212,3 +212,11 @@ func TestCountdownFollowsItsOwnStartRatherThanTheWallClock(t *testing.T) {
 		t.Error("feedback remained after its two seconds")
 	}
 }
+
+func TestNoMessageDrawsNoRows(t *testing.T) {
+	var self State
+
+	if rows := self.Render(40, time.Now()); len(rows) != 0 {
+		t.Errorf("drew %q with no message standing", rows)
+	}
+}
