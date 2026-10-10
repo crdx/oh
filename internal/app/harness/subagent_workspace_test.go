@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/shell"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/subagents"
@@ -106,6 +107,12 @@ func TestAnUnconfinedChildWorksInAnyHostDirectory(t *testing.T) {
 	}
 }
 
+var childPromptSettings = config.Config{Sandbox: shell.Paths{
+	Exec: []string{"/opt"},
+	Path: []string{"/users/person/bin"},
+	Deny: []string{".env"},
+}}
+
 func TestGoldenAChildIsToldWhatItCanDo(t *testing.T) {
 	configDirectory := t.TempDir()
 	t.Setenv("XDG_CONFIG_HOME", configDirectory)
@@ -131,7 +138,7 @@ func TestGoldenAChildIsToldWhatItCanDo(t *testing.T) {
 			func(struct{}) tool.CallRendering { return tool.CallRendering{} },
 		).Plain(func(context.Context, struct{}) (string, error) { return "", nil }))
 	}
-	prompt := func(isYolo bool, childCaps caps.Set, sharedPrompt string) func() string {
+	prompt := func(isYolo bool, childCaps caps.Set, sharedPrompt string, options ...childOptions) func() string {
 		return func() string {
 			child := subagents.Child{
 				Name:         "tame-adder",
@@ -140,8 +147,13 @@ func TestGoldenAChildIsToldWhatItCanDo(t *testing.T) {
 				Scratch:      "/state/farm/tame-impala/subagents/tame-adder",
 				SharedPrompt: sharedPrompt,
 			}
+			promptOptions := childOptions{userHome: "/users/person", settings: childPromptSettings}
+			if len(options) > 0 {
+				promptOptions = options[0]
+			}
+			promptOptions.sessionName, promptOptions.isYolo = goldenSessionName, isYolo
 			drawn := childPrompt(
-				childOptions{sessionName: goldenSessionName, isYolo: isYolo}, workspace, child,
+				promptOptions, workspace, child,
 				"/state/farm/tame-impala/subagents/tame-adder/home", tools,
 			)
 			if strings.Contains(drawn, "Global rules.") || strings.Contains(drawn, "Workspace rules.") {
@@ -151,10 +163,11 @@ func TestGoldenAChildIsToldWhatItCanDo(t *testing.T) {
 		}
 	}
 	compareWithGolden(t, "subagent-prompt", ".txt", map[string]func() string{
-		"confined with a shell":    prompt(false, caps.Read|caps.Shell, ""),
-		"confined without a shell": prompt(false, caps.Read, ""),
-		"unconfined":               prompt(true, caps.Unconfined(), ""),
-		"with shared instructions": prompt(false, caps.Read|caps.Shell, "Answer in one sentence."),
+		"confined with a shell":                     prompt(false, caps.Read|caps.Shell, ""),
+		"confined without a shell":                  prompt(false, caps.Read, ""),
+		"unconfined":                                prompt(true, caps.Unconfined(), ""),
+		"with shared instructions":                  prompt(false, caps.Read|caps.Shell, "Answer in one sentence."),
+		"with nothing configured and no known home": prompt(false, caps.Read|caps.Shell, "", childOptions{}),
 	})
 }
 

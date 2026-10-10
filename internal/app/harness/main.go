@@ -1146,6 +1146,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		ensurePersisted: log.EnsurePersisted,
 		parentFiles:     files,
 		parentCaps:      mode.Current,
+		userHome:        userHome(),
 		parentWritable: func() []string {
 			return slices.Concat([]string{workspace.GetDir(), homeDir, tmpDir}, pathAccess.GetPaths().Write)
 		},

@@ -7,6 +7,7 @@ import (
 	"math/rand/v2"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"time"
 
@@ -43,6 +44,15 @@ type childOptions struct {
 	parentFiles     *file.Root
 	parentWritable  func() []string
 	parentCaps      func() caps.Set
+	userHome        string
+}
+
+func userHome() string {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return ""
+	}
+	return home
 }
 
 type preparedChildManager struct {
@@ -194,7 +204,8 @@ func childAgent(prompt string, provider agent.Provider, tools []tool.Tool, child
 
 func childPrompt(options childOptions, workspace *work.Space, child subagents.Child, home string, tools []tool.Tool) string {
 	commonGround := "You are a subagent of session " + options.sessionName + ". " +
-		"Report your findings in your final answer. Your parent may send you follow-ups after you answer."
+		"Report your findings in your final answer. " +
+		"Your parent may send you messages while you work, and follow-ups after you answer."
 	var circumstances, whereabouts string
 	switch {
 	case options.isYolo:
@@ -205,11 +216,13 @@ func childPrompt(options childOptions, workspace *work.Space, child subagents.Ch
 	case child.Caps.Has(caps.Shell):
 		circumstances = "Your workspace is read-only. You have shell execution, but not host networking. " +
 			"/tmp is your private writable scratch, and it outlives your answer. " +
-			parentScratchView(child.Name)
+			parentScratchView(child.Name) + "\n\n" + reachable(options, true)
 		whereabouts = "/tmp is at " + child.Scratch + " on the host. HOME is " + home + "."
 	default:
 		circumstances = "Your workspace is read-only. " +
-			"You have no shell execution, so bash refuses every command; read, search and list files instead."
+			"You have no shell execution, so bash refuses every command; read, search and list files instead.\n\n" +
+			reachable(options, false)
+		whereabouts = "HOME is " + home + "."
 	}
 	parts := []string{commonGround + " " + circumstances}
 	if child.SharedPrompt != "" {
@@ -221,6 +234,37 @@ func childPrompt(options childOptions, workspace *work.Space, child subagents.Ch
 	}
 	own += "Your tools are: " + toolNames(tools) + "."
 	return strings.Join(append(parts, own), "\n\n")
+}
+
+func reachable(options childOptions, hasShell bool) string {
+	sandboxPaths := options.settings.Sandbox
+	readable := "You can read your workspace, /tmp, HOME, and the read-only system and executable search paths"
+	searchPaths := slices.Concat(sandboxPaths.Exec, sandboxPaths.Path)
+	if len(searchPaths) > 0 {
+		readable += ", including " + strings.Join(searchPaths, ", ")
+	}
+	sentences := []string{readable + "."}
+	if hasShell {
+		sentences = append(sentences,
+			"You can write only /tmp and HOME. "+
+				"The shell can execute files under system directories, the executable search paths, the workspace, HOME, and /tmp.",
+		)
+	} else {
+		sentences = append(sentences, "You can write nothing.")
+	}
+	if len(sandboxPaths.Deny) > 0 {
+		sentences = append(sentences, "A file or directory named "+strings.Join(sandboxPaths.Deny, ", ")+" is hidden from you.")
+	}
+	home := "HOME and ~ are your own, not the user's"
+	if options.userHome != "" {
+		home += ", whose home is " + options.userHome + "; write paths there in full"
+	}
+	sentences = append(sentences,
+		home+".",
+		"The sandbox hides everything else rather than refusing it, so a path outside what you can reach looks absent. "+
+			"Its absence is no evidence that it is missing: report it as out of your reach, not as missing or broken.",
+	)
+	return strings.Join(sentences, " ")
 }
 
 func toolNames(tools []tool.Tool) string {

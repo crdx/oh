@@ -4,7 +4,6 @@
 
 ### Changes
 
-- Add subagent.concurrency setting to cap how many subagents run at once
 - Add experimental inline reply command and shortcut
 - Offer only file and shell tools in headless mode
 - Move waiting out of jobs into an experimental wait tool
@@ -41,7 +40,7 @@
 - Draw no blank row for a plain thought that strips to nothing
 - Keep the gap above the startup banner when resuming a session
 - Correctly record a stopped turn's notice
-- Add subagents
+- Add subagents with all the trimmings
 
 ## [0.13.0] - 2026-10-07
 
