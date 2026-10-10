@@ -29,7 +29,7 @@ func TestStreamLifecycle(t *testing.T) {
 		yield(agent.Output{Kind: agent.ModelMessageEvent, Text: "hello"})
 		return agent.Reply{}, nil
 	}}
-	stream := Start(agent.New("", provider, nil), "begin", Timing{})
+	stream := Start(agent.New("", provider, nil), "begin", Timing{}, agent.Reminder{})
 	var events []Event
 	for event := range stream.Events() {
 		events = append(events, event)
@@ -54,7 +54,7 @@ func TestInterruptReachesProvider(t *testing.T) {
 			<-ctx.Done()
 			return agent.Reply{}, ctx.Err()
 		}}
-		stream := Start(agent.New("", provider, nil), "begin", Timing{})
+		stream := Start(agent.New("", provider, nil), "begin", Timing{}, agent.Reminder{})
 		synctest.Wait()
 		if !stream.Interrupt(stop.Because("the user pressed escape")) || !stream.Cancelled() {
 			t.Fatal("stream was not interrupted")
@@ -128,7 +128,7 @@ func TestATurnUsesMonotonicTimeSoSuspensionDoesNotCount(t *testing.T) {
 		send: func(context.Context, agent.Yield) (agent.Reply, error) { return agent.Reply{}, nil },
 	}, nil)
 
-	stream := Start(assistant, "go on", Timing{})
+	stream := Start(assistant, "go on", Timing{}, agent.Reminder{})
 	stream.MarkFinished(time.Now())
 
 	for name, at := range map[string]time.Time{

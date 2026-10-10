@@ -1,0 +1,24 @@
+{"kind":"head","version":19,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant.","tools":["title","work"],"tool_definitions":[{"name":"title","description":"name the task this session is doing, in a few words, as soon as the task is clear; ensure to retitle as the session evolves","revision":"1","parameters":[{"name":"title","type":"string","description":"a 3-word slug description of the task, like \"fix-picker-clipping\""}]},{"name":"work","description":"A deterministic scenario tool.","revision":"1"}]}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
+{"kind":"event","event":{"kind":"user_message","text":"what does the picker do with a long title"}}
+{"kind":"event","event":{"kind":"model_message","text":"It clips it, and marks the clipping."}}
+{"kind":"item","payload":{"role":"user","content":"what does the picker do with a long title"}}
+{"kind":"item","payload":{"id":"message-4","type":"message","role":"assistant","content":[{"type":"output_text","text":"It clips it, and marks the clipping."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"now make it wrap instead"}}
+{"kind":"event","event":{"render":"work","kind":"tool_call_request","id":"call-1","name":"work","arguments":"{}"}}
+{"kind":"event","event":{"kind":"state_change","id":"call-1","state":1}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"the first part is done","id":"call-1","name":"work","status":"success","stats":{"kind":"output","lines":1,"bytes":22}}}
+{"kind":"event","event":{"render":"work","kind":"tool_call_request","id":"call-2","name":"work","arguments":"{}"}}
+{"kind":"event","event":{"kind":"state_change","id":"call-2","state":2}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"the second part is done","id":"call-2","name":"work","status":"success","stats":{"kind":"output","lines":1,"bytes":23}}}
+{"kind":"event","event":{"kind":"model_message","text":"It wraps now."}}
+{"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"title\"\u003e\nThe session is still untitled. Use the title tool to set a title.\n\u003c/codex_internal_context\u003e"}}
+{"kind":"item","payload":{"role":"user","content":"now make it wrap instead"}}
+{"kind":"item","payload":{"id":"item-call-1","type":"function_call","call_id":"call-1","name":"work","arguments":"{}"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"the first part is done"}}
+{"kind":"item","payload":{"id":"item-call-2","type":"function_call","call_id":"call-2","name":"work","arguments":"{}"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"call-2","output":"the second part is done"}}
+{"kind":"item","payload":{"id":"message-5","type":"message","role":"assistant","content":[{"type":"output_text","text":"It wraps now."}]}}
+{"kind":"turn_completion","turn":{}}

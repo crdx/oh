@@ -51,13 +51,13 @@ func TestEachNoteIsWrappedInASystemReminderByDefault(t *testing.T) {
 	assistant.AddNotes([]agent.Note{
 		{Kind: agent.EnvironmentNote, Text: "Granted temporary read-only access to /work/fleet."},
 		{Kind: agent.TitleNote},
-		{Kind: agent.TitleNote, Text: "Untitled session: use the title tool."},
+		{Kind: agent.TitleNote, Text: "The session is still untitled. Use the title tool to set a title."},
 	})
 	assistant.AddUserMessage("fyi")
 
 	want := []string{
 		"<system-reminder>\nGranted temporary read-only access to /work/fleet.\n</system-reminder>\n\n" +
-			"<system-reminder>\nUntitled session: use the title tool.\n</system-reminder>",
+			"<system-reminder>\nThe session is still untitled. Use the title tool to set a title.\n</system-reminder>",
 		"fyi",
 	}
 	if !slices.Equal(provider.messages, want) {

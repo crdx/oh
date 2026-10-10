@@ -1862,7 +1862,7 @@ func (self *App) start(message string) {
 		painter: self.newPainter(true),
 		Stream: turn.Start(self.agent, message, turn.Timing{
 			UserTurn: userTurnElapsed,
-		}),
+		}, self.titleReminder()),
 	}
 
 	self.screen.ReportProgress(true)
@@ -1904,24 +1904,43 @@ func (self *App) markAccessTold() {
 }
 
 func (self *App) titleNote() string {
+	if !self.isUntitled() || !self.hasAnswered() {
+		return ""
+	}
+
+	return untitledSessionNote
+}
+
+func (self *App) titleReminder() agent.Reminder {
+	if !self.isUntitled() || self.hasAnswered() {
+		return agent.Reminder{}
+	}
+
+	return agent.Reminder{
+		Note: agent.Note{Kind: agent.TitleNote, Text: untitledSessionNote},
+		Until: func(event agent.Event) bool {
+			return event.Kind == agent.ToolCallRequestEvent && event.Name == title.Name
+		},
+	}
+}
+
+const untitledSessionNote = "The session is still untitled. Use the " + title.Name + " tool to set a title."
+
+func (self *App) isUntitled() bool {
 	if !self.agent.IsToolEnabled(title.Name) {
-		return ""
+		return false
 	}
 
-	hasAnswered := false
-	for _, event := range self.recordedEvents {
-		if _, isTitled := agent.TitleFromEvent(event); isTitled {
-			return ""
-		}
-		if event.Kind == agent.ModelMessageEvent {
-			hasAnswered = true
-		}
-	}
-	if !hasAnswered {
-		return ""
-	}
+	return !slices.ContainsFunc(self.recordedEvents, func(event agent.Event) bool {
+		_, isTitled := agent.TitleFromEvent(event)
+		return isTitled
+	})
+}
 
-	return "Untitled session: use the " + title.Name + " tool."
+func (self *App) hasAnswered() bool {
+	return slices.ContainsFunc(self.recordedEvents, func(event agent.Event) bool {
+		return event.Kind == agent.ModelMessageEvent
+	})
 }
 
 const noticeSeparator = "\n\n"

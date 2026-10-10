@@ -1,0 +1,33 @@
+{"kind":"head","version":19,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant.","tools":["title","work"],"tool_definitions":[{"name":"title","description":"name the task this session is doing, in a few words, as soon as the task is clear; ensure to retitle as the session evolves","revision":"1","parameters":[{"name":"title","type":"string","description":"a 3-word slug description of the task, like \"fix-picker-clipping\""}]},{"name":"work","description":"A deterministic scenario tool.","revision":"1"}]}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
+{"kind":"event","event":{"kind":"user_message","text":"split the picker into its own package"}}
+{"kind":"event","event":{"render":"split picker package","read_only":true,"kind":"tool_call_request","id":"call-1","name":"title","arguments":"{\"title\":\"split picker package\"}"}}
+{"kind":"event","event":{"render":"work","kind":"tool_call_request","id":"call-2","name":"work","arguments":"{}"}}
+{"kind":"event","event":{"kind":"state_change","id":"call-1","name":"title","state":{"title":"split picker package"}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"session titled \"split picker package\"","id":"call-1","name":"title","status":"success","stats":{"kind":"output","lines":1,"bytes":37}}}
+{"kind":"event","event":{"kind":"state_change","id":"call-2","state":1}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"the first part is done","id":"call-2","name":"work","status":"success","stats":{"kind":"output","lines":1,"bytes":22}}}
+{"kind":"event","event":{"render":"work","kind":"tool_call_request","id":"call-3","name":"work","arguments":"{}"}}
+{"kind":"event","event":{"kind":"state_change","id":"call-3","state":2}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"the second part is done","id":"call-3","name":"work","status":"success","stats":{"kind":"output","lines":1,"bytes":23}}}
+{"kind":"event","event":{"kind":"model_message","text":"The picker has its own package now."}}
+{"kind":"item","payload":{"role":"user","content":"split the picker into its own package"}}
+{"kind":"item","payload":{"id":"item-call-1","type":"function_call","call_id":"call-1","name":"title","arguments":"{\"title\":\"split picker package\"}"}}
+{"kind":"item","payload":{"id":"item-call-2","type":"function_call","call_id":"call-2","name":"work","arguments":"{}"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"session titled \"split picker package\""}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"call-2","output":"the first part is done"}}
+{"kind":"item","payload":{"id":"item-call-3","type":"function_call","call_id":"call-3","name":"work","arguments":"{}"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"call-3","output":"the second part is done"}}
+{"kind":"item","payload":{"id":"message-3","type":"message","role":"assistant","content":[{"type":"output_text","text":"The picker has its own package now."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
+{"kind":"event","event":{"render":"work","kind":"tool_call_request","id":"call-4","name":"work","arguments":"{}"}}
+{"kind":"event","event":{"kind":"state_change","id":"call-4","state":1}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"the first part is done","id":"call-4","name":"work","status":"success","stats":{"kind":"output","lines":1,"bytes":22}}}
+{"kind":"event","event":{"kind":"model_message","text":"Carried on."}}
+{"kind":"item","payload":{"role":"user","content":"carry on"}}
+{"kind":"item","payload":{"id":"item-call-4","type":"function_call","call_id":"call-4","name":"work","arguments":"{}"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"call-4","output":"the first part is done"}}
+{"kind":"item","payload":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"Carried on."}]}}
+{"kind":"turn_completion","turn":{}}

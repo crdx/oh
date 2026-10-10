@@ -306,3 +306,129 @@ func TestAnEmptyNoteIsNotQueued(t *testing.T) {
 		t.Error("expected no note to be queued")
 	}
 }
+
+func titleReminder(until func(agent.Event) bool) agent.Reminder {
+	return agent.Reminder{
+		Note:  agent.Note{Kind: agent.TitleNote, Text: "The session is still untitled. Use the title tool to set a title."},
+		Until: until,
+	}
+}
+
+func isNever(agent.Event) bool { return false }
+
+func TestAReminderReachesTheModelOnceAfterTheFirstRoundOfCalls(t *testing.T) {
+	interjections := &agent.Interjections{}
+	interjections.Remind(titleReminder(isNever))
+	provider := &interjectionProvider{rounds: 2, interjections: interjections}
+	assistant := agent.New("", provider, []tool.Tool{noop()})
+
+	for _, err := range assistant.Stream(t.Context(), "go", interjections) {
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	want := []string{
+		"user:go",
+		"send",
+		"result:a",
+		"result:b",
+		"user:<system-reminder>\nThe session is still untitled. Use the title tool to set a title.\n</system-reminder>",
+		"send",
+		"result:a",
+		"result:b",
+		"send",
+	}
+	if !slices.Equal(provider.history, want) {
+		t.Errorf("history %q, want %q", provider.history, want)
+	}
+}
+
+func TestAReminderJoinsTheHarnessNotesAheadOfAQueuedMessage(t *testing.T) {
+	interjections := &agent.Interjections{}
+	interjections.Remind(titleReminder(isNever))
+	provider := &interjectionProvider{
+		rounds:        1,
+		interjections: interjections,
+		noteAfter:     []string{"the job build has finished"},
+		queueAfter:    []string{"look at the other path too"},
+	}
+	assistant := agent.New("", provider, []tool.Tool{noop()})
+
+	for _, err := range assistant.Stream(t.Context(), "go", interjections) {
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	want := []string{
+		"user:go",
+		"send",
+		"result:a",
+		"result:b",
+		"user:<system-reminder>\nthe job build has finished\n</system-reminder>\n\n" +
+			"<system-reminder>\nThe session is still untitled. Use the title tool to set a title.\n</system-reminder>",
+		"user:look at the other path too",
+		"send",
+	}
+	if !slices.Equal(provider.history, want) {
+		t.Errorf("history %q, want %q", provider.history, want)
+	}
+}
+
+func TestAReminderAnsweredWithinTheRoundIsNeverDelivered(t *testing.T) {
+	interjections := &agent.Interjections{}
+	interjections.Remind(titleReminder(func(event agent.Event) bool {
+		return event.Kind == agent.ToolCallResultEvent && event.ID == "b"
+	}))
+	provider := &interjectionProvider{rounds: 2, interjections: interjections}
+	assistant := agent.New("", provider, []tool.Tool{noop()})
+
+	for _, err := range assistant.Stream(t.Context(), "go", interjections) {
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	want := []string{"user:go", "send", "result:a", "result:b", "send", "result:a", "result:b", "send"}
+	if !slices.Equal(provider.history, want) {
+		t.Errorf("history %q, want %q", provider.history, want)
+	}
+}
+
+func TestAReminderNeverProlongsATurnThatEndsWithoutCalls(t *testing.T) {
+	interjections := &agent.Interjections{}
+	interjections.Remind(titleReminder(isNever))
+	provider := &interjectionProvider{rounds: 0, interjections: interjections}
+	assistant := agent.New("", provider, []tool.Tool{noop()})
+
+	for _, err := range assistant.Stream(t.Context(), "go", interjections) {
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	want := []string{"user:go", "send"}
+	if !slices.Equal(provider.history, want) {
+		t.Errorf("history %q, want %q", provider.history, want)
+	}
+	if notes, isNoted := interjections.TakeNotes(); isNoted {
+		t.Errorf("left %q as notes, want the reminder kept out of the next turn", notes)
+	}
+}
+
+func TestAnIncompleteReminderIsRefused(t *testing.T) {
+	interjections := &agent.Interjections{}
+
+	if interjections.Remind(agent.Reminder{Until: isNever}) {
+		t.Error("expected a reminder with no text to be refused")
+	}
+	if interjections.Remind(agent.Reminder{Note: agent.Note{Kind: agent.TitleNote, Text: "say"}}) {
+		t.Error("expected a reminder nothing can settle to be refused")
+	}
+
+	var absent *agent.Interjections
+	if absent.Remind(titleReminder(isNever)) {
+		t.Error("expected a nil queue to refuse a reminder")
+	}
+}

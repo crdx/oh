@@ -34,9 +34,10 @@ type Timing struct {
 	ModelTurn time.Duration
 }
 
-func Start(assistant *agent.Agent, message string, timing Timing) *Stream {
+func Start(assistant *agent.Agent, message string, timing Timing, reminder agent.Reminder) *Stream {
 	streamContext, cancel := context.WithCancelCause(context.Background())
 	stream := Adopt(make(chan Event), cancel, State{Running: true, StartedAt: time.Now(), Timing: timing})
+	stream.interjections.Remind(reminder)
 
 	go func() {
 		defer close(stream.events)

@@ -11,6 +11,25 @@ type Interjections struct {
 	mutex    sync.Mutex
 	messages []string
 	notes    []Note
+	reminder Reminder
+}
+
+type Reminder struct {
+	Note  Note
+	Until func(Event) bool
+}
+
+func (self *Interjections) Remind(reminder Reminder) bool {
+	if self == nil || reminder.Note.Text == "" || reminder.Until == nil {
+		return false
+	}
+
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	self.reminder = reminder
+
+	return true
 }
 
 func (self *Interjections) Note(note Note) bool {
@@ -113,4 +132,35 @@ func (self *Interjections) TakeLast() (string, bool) {
 	self.messages = self.messages[:len(self.messages)-1]
 
 	return last, true
+}
+
+func (self *Interjections) observe(event Event) {
+	if self == nil {
+		return
+	}
+
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	if self.reminder.Until != nil && self.reminder.Until(event) {
+		self.reminder = Reminder{}
+	}
+}
+
+func (self *Interjections) takeReminder() (Note, bool) {
+	if self == nil {
+		return Note{}, false
+	}
+
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	if self.reminder.Note.Text == "" {
+		return Note{}, false
+	}
+
+	note := self.reminder.Note
+	self.reminder = Reminder{}
+
+	return note, true
 }

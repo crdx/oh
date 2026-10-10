@@ -16,6 +16,7 @@
 - Tag notes the same way that provider harnesses do it
 - Redraw promptly on resize, no blocking
 - Keep multiline commands on one row
+- Interject advice sooner in untitled sessions
 - Speed up redraws in conversations that mention many paths
 - Add debug toggles for cpu and stall profiling
 - Accept and complete flags in fork and new

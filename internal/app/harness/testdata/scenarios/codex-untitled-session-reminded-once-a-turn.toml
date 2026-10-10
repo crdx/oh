@@ -1,0 +1,42 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[tool]]
+name = "title"
+
+[[tool]]
+name = "work"
+outputs = ["the first part is done", "the second part is done", "the third part is done"]
+
+[first]
+prompt = "what does the picker do with a long title"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_text.delta","delta":"It clips it, and marks the clipping."}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-4","type":"message","role":"assistant","content":[{"type":"output_text","text":"It clips it, and marks the clipping."}]}}''',
+    '''{"type":"response.completed"}''',
+]
+
+[resume]
+prompt = "now make it wrap instead"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"item-call-1","type":"function_call","call_id":"call-1","name":"work","arguments":"{}"}}''',
+    '''{"type":"response.completed"}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"item-call-2","type":"function_call","call_id":"call-2","name":"work","arguments":"{}"}}''',
+    '''{"type":"response.completed"}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_text.delta","delta":"It wraps now."}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-5","type":"message","role":"assistant","content":[{"type":"output_text","text":"It wraps now."}]}}''',
+    '''{"type":"response.completed"}''',
+]

@@ -400,6 +400,7 @@ func (self *Agent) Stream(ctx context.Context, message string, interjections *In
 		yieldEvent := func(event Event, err error) bool {
 			update := Update{}
 			if err == nil {
+				interjections.observe(event)
 				update.Event = &event
 			}
 
@@ -516,7 +517,11 @@ func (self *Agent) interject(
 		return false
 	}
 
-	self.interjectNotes(ctx, interjections)
+	notes, _ := interjections.TakeNotes()
+	if reminder, isDue := interjections.takeReminder(); isDue {
+		notes = append(notes, reminder)
+	}
+	self.AddNotes(notes)
 
 	text, isQueued := interjections.Take()
 	if !isQueued {

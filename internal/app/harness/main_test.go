@@ -19618,6 +19618,7 @@ func runSessionGoldenTurn(
 	}
 	defer cancel(nil)
 	testHarness.currentTurn.Stream = testRunningTurnStreamWithCancel(cancel)
+	testHarness.currentTurn.Interjections().Remind(testHarness.titleReminder())
 	inputLine := edit.NewInput(nil)
 	stopKey := key.Key{Code: key.Escape}
 	if turn.CancelWithCtrlD {
@@ -21249,15 +21250,21 @@ func TestTheHarnessAsksForATitleOnlyOnceTheModelHasAnsweredWithoutGivingOne(t *t
 	if note := self.titleNote(); note != "" {
 		t.Errorf("expected the opening turn to be left alone, got %q", note)
 	}
+	if reminder := self.titleReminder(); !strings.Contains(reminder.Note.Text, title.Name) {
+		t.Errorf("expected the opening turn to be reminded after its first round, got %q", reminder.Note.Text)
+	}
 
 	self.recordedEvents = append(self.recordedEvents, agent.Event{Kind: agent.ModelMessageEvent, Text: "done"})
 	if note := self.titleNote(); !strings.Contains(note, title.Name) {
 		t.Errorf("expected an unanswered session to be asked for a title, got %q", note)
 	}
+	if reminder := self.titleReminder(); reminder.Note.Text != "" {
+		t.Errorf("expected a turn already asked for a title to be reminded no more, got %q", reminder.Note.Text)
+	}
 
 	completeTurn(self)
 	if !slices.ContainsFunc(backend.told(), func(note string) bool {
-		return strings.Contains(note, "Untitled session")
+		return strings.Contains(note, untitledSessionNote)
 	}) {
 		t.Errorf("the model was told %q", backend.told())
 	}
@@ -21270,12 +21277,70 @@ func TestTheHarnessAsksForATitleOnlyOnceTheModelHasAnsweredWithoutGivingOne(t *t
 	if note := self.titleNote(); note != "" {
 		t.Errorf("expected a titled session to be left alone, got %q", note)
 	}
+	if reminder := self.titleReminder(); reminder.Note.Text != "" {
+		t.Errorf("expected a titled session to be reminded of nothing, got %q", reminder.Note.Text)
+	}
+}
+
+type workingOnceProvider struct {
+	notingProvider
+
+	sent int
+}
+
+func (self *workingOnceProvider) Send(context.Context, agent.Yield) (agent.Reply, error) {
+	self.sent++
+	if self.sent > 1 {
+		return agent.Reply{}, nil
+	}
+
+	return agent.Reply{Calls: []agent.ToolCall{{ID: "call-1", Name: "work", Arguments: "{}"}}}, nil
+}
+
+func TestAStartedTurnRemindsAnUntitledSessionAfterItsFirstRoundOfCalls(t *testing.T) {
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	backend := &workingOnceProvider{}
+	work := tool.Implement(
+		tool.Definition{Name: "work", Schema: tool.Schema{}},
+		func(struct{}) tool.CallRendering { return tool.CallRendering{} },
+	).Plain(func(context.Context, struct{}) (string, error) { return "done", nil })
+	self.agent = agent.New("", backend, []tool.Tool{title.New(), work})
+
+	completeTurn(self)
+
+	reminders := slices.DeleteFunc(backend.told(), func(note string) bool {
+		return !strings.Contains(note, untitledSessionNote)
+	})
+	if len(reminders) != 1 || backend.told()[len(backend.told())-1] != reminders[0] {
+		t.Errorf("the model was told %q, want one reminder after the round of calls", backend.told())
+	}
+}
+
+func TestAnOpeningTurnTitledBeforeAnyAnswerIsRemindedOfNothing(t *testing.T) {
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	self.agent = agent.New("", &notingProvider{}, []tool.Tool{title.New()})
+	self.recordedEvents = append(self.recordedEvents, agent.Event{
+		Kind:  agent.StateChangeEvent,
+		Name:  agent.TitleStateKey,
+		State: json.RawMessage(`{"title":"fix the picker clipping"}`),
+	})
+
+	if reminder := self.titleReminder(); reminder.Note.Text != "" {
+		t.Errorf("expected a titled session to be reminded of nothing, got %q", reminder.Note.Text)
+	}
 }
 
 func TestASessionWithoutTheTitleToolIsNeverAskedForATitle(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
 	self.agent = agent.NewWithEnabledTools("", quietProvider{}, []tool.Tool{title.New()}, nil)
+
+	if reminder := self.titleReminder(); reminder.Note.Text != "" {
+		t.Errorf("expected a session that cannot title itself to be reminded of nothing, got %q", reminder.Note.Text)
+	}
+
 	self.recordedEvents = append(self.recordedEvents, agent.Event{Kind: agent.ModelMessageEvent, Text: "done"})
 
 	if note := self.titleNote(); note != "" {
