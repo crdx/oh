@@ -1135,6 +1135,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	isTerminalFocused := func() bool { return app != nil && app.terminal.IsFocused() }
 
 	preparedChildren, err := prepareChildManager(childOptions{
+		parentChoice:    choice,
 		endpoints:       endpoints,
 		workspace:       workspace,
 		settings:        settings,

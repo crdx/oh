@@ -33,6 +33,7 @@ import (
 )
 
 type childOptions struct {
+	parentChoice    model.Choice
 	endpoints       backend.EndpointSettings
 	workspace       *work.Space
 	settings        config.Config
@@ -66,7 +67,7 @@ func prepareChildManager(options childOptions, choices []model.Choice, seenModel
 		return preparedChildManager{}, nil
 	}
 	rotate := func(settings config.Subagent, defaults model.Defaults) (subagents.Rotation, error) {
-		return childRotationOf(settings, defaults, choices, seenModelsPath, options.endpoints.OverrideURL != "")
+		return childRotationOf(options.parentChoice, settings, defaults, choices, seenModelsPath, options.endpoints.OverrideURL != "")
 	}
 	rotation, err := rotate(options.settings.Subagent, options.settings.Defaults.ForSelections())
 	if err != nil {
@@ -99,6 +100,7 @@ func prepareChildManager(options childOptions, choices []model.Choice, seenModel
 }
 
 func childRotationOf(
+	parentChoice model.Choice,
 	settings config.Subagent,
 	defaults model.Defaults,
 	choices []model.Choice,
@@ -119,14 +121,32 @@ func childRotationOf(
 	if err != nil {
 		return subagents.Rotation{}, fmt.Errorf("%s: %w", setting, err)
 	}
+	isOllamaOnly := parentChoice.Provider == model.OllamaProvider
 	models := make([]subagents.ChildModel, 0, len(selections))
+	allowedSelections := make([]model.Selection, 0, len(selections))
 	for _, selection := range selections {
 		choice, err := model.Chosen(choices, seenModelsPath, selection.Provider, selection.Model)
 		if err != nil {
 			return subagents.Rotation{}, fmt.Errorf("%s: %w", setting, err)
 		}
+		if isOllamaOnly && choice.Provider != model.OllamaProvider {
+			continue
+		}
 		models = append(models, subagents.ChildModel{Choice: choice, Selection: selection})
+		allowedSelections = append(allowedSelections, selection)
 	}
+	if len(models) == 0 {
+		return subagents.Rotation{
+			Choose: func() (subagents.ChildModel, error) {
+				return subagents.ChildModel{}, fmt.Errorf(
+					"this session runs on ollama, so its subagents run only on ollama models, and %s names none",
+					setting,
+				)
+			},
+			Concurrency: settings.Concurrency,
+		}, nil
+	}
+	selections = allowedSelections
 	return subagents.Rotation{
 		Models:      models,
 		Choose:      childRotation(models, selections, isSimulated),

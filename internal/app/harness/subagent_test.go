@@ -486,7 +486,7 @@ func TestReloadingConfigChangesTheSubagentRotationAndLimitForTheNextStart(t *tes
 }
 
 func TestARotationEmptiedLiveRefusesToStartRatherThanRunOnNoModel(t *testing.T) {
-	rotation, err := childRotationOf(config.Subagent{Concurrency: 4}, model.Defaults{}, nil, "", false)
+	rotation, err := childRotationOf(model.Choice{}, config.Subagent{Concurrency: 4}, model.Defaults{}, nil, "", false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -495,5 +495,53 @@ func TestARotationEmptiedLiveRefusesToStartRatherThanRunOnNoModel(t *testing.T) 
 	}
 	if _, err := rotation.Choose(); err == nil || !strings.Contains(err.Error(), "no subagent model is configured") {
 		t.Errorf("an empty rotation chose with %v", err)
+	}
+}
+
+func TestAnOllamaSessionStartsSubagentsOnlyOnOllamaModels(t *testing.T) {
+	local := model.Choice{Provider: model.OllamaProvider, ID: "qwen3:8b", EffortLevels: []string{"none"}}
+	other := model.Choice{Provider: model.OllamaProvider, ID: "gemma4:12b", EffortLevels: []string{"none"}}
+	hosted := model.Choice{Provider: model.AnthropicProvider, ID: "claude-opus-5", EffortLevels: []string{"high"}}
+	choices := []model.Choice{local, other, hosted}
+	everyModel := config.Subagent{
+		ModelChoice: config.ModelChoice{RoundRobin: config.RoundRobin{
+			"ollama/qwen3:8b@none", "anthropic/claude-opus-5@high", "ollama/gemma4:12b@none",
+		}},
+		Concurrency: 4,
+	}
+	for _, test := range []struct {
+		parent model.Choice
+		want   []string
+	}{
+		{local, []string{"qwen3:8b", "gemma4:12b"}},
+		{hosted, []string{"qwen3:8b", "claude-opus-5", "gemma4:12b"}},
+	} {
+		rotation, err := childRotationOf(test.parent, everyModel, model.Defaults{}, choices, "", false)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var got []string
+		for _, child := range rotation.Models {
+			got = append(got, child.Choice.ID)
+		}
+		if !slices.Equal(got, test.want) {
+			t.Errorf("a session on %s rotates over %v, want %v", test.parent.Provider, got, test.want)
+		}
+	}
+
+	onlyHosted := config.Subagent{
+		ModelChoice: config.ModelChoice{Model: "anthropic/claude-opus-5@high"},
+		Concurrency: 4,
+	}
+	rotation, err := childRotationOf(local, onlyHosted, model.Defaults{}, choices, "", false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(rotation.Models) != 0 || rotation.Concurrency != 4 {
+		t.Fatalf("an ollama session kept %+v", rotation)
+	}
+	want := "this session runs on ollama, so its subagents run only on ollama models, and subagent.model names none"
+	if _, err := rotation.Choose(); err == nil || err.Error() != want {
+		t.Errorf("an ollama session with only hosted subagents chose with %v", err)
 	}
 }
