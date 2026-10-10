@@ -2,6 +2,8 @@ package prefixwatch
 
 import (
 	"encoding/json"
+	"slices"
+	"strings"
 	"testing"
 )
 
@@ -91,5 +93,62 @@ func TestEveryWayOfRewritingWhatWasSentIsNamed(t *testing.T) {
 				t.Errorf("got %q, want %q", what, test.want)
 			}
 		})
+	}
+}
+
+func TestATurnRewrittenAfterItsMarkWasReusedIsStillNamed(t *testing.T) {
+	var watcher Watcher
+	held := []json.RawMessage{turn("user", "go on"), turn("assistant", "done")}
+	watcher.Look([]string{"read"}, "be brief", held)
+	grown := append(append([]json.RawMessage{}, held...), turn("user", "again"), turn("assistant", "done again"))
+	watcher.Look([]string{"read"}, "be brief", grown)
+
+	rewritten := append([]json.RawMessage{turn("user", "go on differently")}, grown[1:]...)
+	if what := watcher.Look([]string{"read"}, "be brief", rewritten); what != TurnChanged+" (1 of 4)" {
+		t.Errorf("got %q", what)
+	}
+}
+
+func FuzzReusedMarksGiveTheVerdictFreshMarksWould(f *testing.F) {
+	f.Add("go on", "done", "go on", "done", "again", true)
+	f.Add("go on", "done", "go on differently", "done", "", false)
+	f.Add(`{"role":"user"}`, "done", "go on", `x"`, "again", true)
+
+	f.Fuzz(func(t *testing.T, first string, answer string, firstAgain string, answerAgain string, next string, isMarked bool) {
+		held := []json.RawMessage{turn("user", first), turn("assistant", answer)}
+		later := []json.RawMessage{turn("user", firstAgain), turn("assistant", answerAgain), turn("user", next)}
+		if isMarked {
+			later[1] = marked("assistant", answerAgain)
+		}
+
+		var reusing, fresh Watcher
+		reusing.Look([]string{"read"}, "be brief", held)
+		fresh.Look([]string{"read"}, "be brief", held)
+		for at := range fresh.turns {
+			fresh.turns[at].raw = mark{}
+		}
+
+		if reused, recomputed := reusing.Look([]string{"read"}, "be brief", later), fresh.Look([]string{"read"}, "be brief", later); reused != recomputed {
+			t.Errorf("reusing marks said %q where fresh marks said %q", reused, recomputed)
+		}
+		if !slices.Equal(reusing.turns, fresh.turns) || reusing.bound != fresh.bound {
+			t.Errorf("reusing marks remembered %v (bound %d), fresh marks %v (bound %d)", reusing.turns, reusing.bound, fresh.turns, fresh.bound)
+		}
+	})
+}
+
+func BenchmarkLookAtAGrowingConversation(b *testing.B) {
+	turns := make([]json.RawMessage, 0, 400)
+	for at := range 400 {
+		role := []string{"user", "assistant"}[at%2]
+		turns = append(turns, turn(role, strings.Repeat("the quick brown fox jumps over the lazy dog ", 40)))
+	}
+
+	var watcher Watcher
+	watcher.Look([]string{"read"}, "be brief", turns[:len(turns)-1])
+
+	b.ReportAllocs()
+	for b.Loop() {
+		watcher.Look([]string{"read"}, "be brief", turns)
 	}
 }

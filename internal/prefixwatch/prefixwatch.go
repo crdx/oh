@@ -17,21 +17,27 @@ type mark [sha256.Size]byte
 
 const answeredRole = "assistant"
 
+type turnMark struct {
+	raw        mark
+	bare       mark
+	isAnswered bool
+}
+
 type Watcher struct {
 	tools    mark
 	system   mark
-	turns    []mark
+	turns    []turnMark
 	bound    int
 	wasAsked bool
 }
 
 func (self *Watcher) Look(tools any, system any, turns []json.RawMessage) string {
-	turnMarks := marksOf(turns)
+	turnMarks := self.marksOf(turns)
 	toolsMark, systemMark := markOf(tools), markOf(system)
 
 	previous := *self
 	self.tools, self.system, self.turns = toolsMark, systemMark, turnMarks
-	self.bound, self.wasAsked = boundOf(turns), true
+	self.bound, self.wasAsked = boundOf(turnMarks), true
 
 	switch {
 	case !previous.wasAsked:
@@ -45,7 +51,7 @@ func (self *Watcher) Look(tools any, system any, turns []json.RawMessage) string
 	}
 
 	for at := range previous.bound {
-		if turnMarks[at] != previous.turns[at] {
+		if turnMarks[at].bare != previous.turns[at].bare {
 			return TurnChanged + " (" + strconv.Itoa(at+1) + " of " + strconv.Itoa(previous.bound) + ")"
 		}
 	}
@@ -53,13 +59,10 @@ func (self *Watcher) Look(tools any, system any, turns []json.RawMessage) string
 	return ""
 }
 
-func boundOf(turns []json.RawMessage) int {
+func boundOf(turns []turnMark) int {
 	bound := 0
 	for at, turn := range turns {
-		var read struct {
-			Role string `json:"role"`
-		}
-		if json.Unmarshal(turn, &read) == nil && read.Role == answeredRole {
+		if turn.isAnswered {
 			bound = at + 1
 		}
 	}
@@ -67,13 +70,27 @@ func boundOf(turns []json.RawMessage) int {
 	return bound
 }
 
-func marksOf(turns []json.RawMessage) []mark {
-	marks := make([]mark, len(turns))
+func (self *Watcher) marksOf(turns []json.RawMessage) []turnMark {
+	marks := make([]turnMark, len(turns))
 	for at, turn := range turns {
-		marks[at] = markOf(turn)
+		raw := sha256.Sum256(turn)
+		if at < len(self.turns) && self.turns[at].raw == raw {
+			marks[at] = self.turns[at]
+			continue
+		}
+
+		marks[at] = turnMark{raw: raw, bare: markOf(turn), isAnswered: isAnswered(turn)}
 	}
 
 	return marks
+}
+
+func isAnswered(turn json.RawMessage) bool {
+	var read struct {
+		Role string `json:"role"`
+	}
+
+	return json.Unmarshal(turn, &read) == nil && read.Role == answeredRole
 }
 
 func markOf(value any) mark {
