@@ -6,6 +6,7 @@
 {"kind":"event","event":{"kind":"turn_interruption","name":"escape"}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"has the build finished"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The build is still "}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTurn stopped because the user pressed escape.\n\u003c/system-reminder\u003e\n\n\u003csystem-reminder\u003e\nJob `build` exited: failed after 12s, exit(2).\n\n```\ngo build ./...\ncmd/oh/draw.go:41:9: undefined: getWidth\nexit status 1\n```\n\u003c/system-reminder\u003e"}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"carry on"}}
 {"kind":"event","event":{"kind":"model_message","text":"Carrying on."}}

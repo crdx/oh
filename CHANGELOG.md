@@ -4,7 +4,7 @@
 
 ### Changes
 
-- Fix OpenCode Go's Messages API models being refused for a missing API key
+- Fix OpenCode Go's Messages API models
 - Promote --from to a real flag
 - Convert `oh -l` into a non-interactive version of the model picker
 - Move bare model list to `oh --ctl models`
@@ -27,6 +27,7 @@
 - Leave no stray row under an answer that ends up drawing nothing
 - Stop clearing the scrollback while a long plain thought arrives
 - Draw no blank row for a plain thought that strips to nothing
+- Correctly record a stopped turn's notice
 
 ## [0.13.0] - 2026-10-07
 

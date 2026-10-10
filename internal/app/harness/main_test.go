@@ -3575,6 +3575,10 @@ func TestATransitionLeavesAQueuedModeChangeUnsent(t *testing.T) {
 
 	self.start("first")
 	self.toggleCap(caps.Write)
+	queued := self.pendingNotices.notices()
+	if len(queued) == 0 {
+		t.Fatal("expected the mode change to be queued")
+	}
 
 	if err := self.requestTransition(cycle.Transition{Kind: cycle.NewSession}); err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -3589,8 +3593,15 @@ func TestATransitionLeavesAQueuedModeChangeUnsent(t *testing.T) {
 		t.Error("expected the session being closed to start no further turn")
 	}
 
-	if !slices.Equal(provider.messages, []string{"first"}) {
-		t.Errorf("expected nothing sent while the session was closing, got %q", provider.messages)
+	if provider.sent != 1 {
+		t.Errorf("expected one request before the session closed, got %d", provider.sent)
+	}
+	for _, message := range provider.messages {
+		for _, notice := range queued {
+			if strings.Contains(message, notice) {
+				t.Errorf("the queued mode change reached the closing session: %q", message)
+			}
+		}
 	}
 }
 

@@ -6,11 +6,12 @@
 {"kind":"event","event":{"kind":"turn_interruption","name":"access_change"}}
 {"kind":"item","payload":{"role":"user","content":"change two capabilities while the answer is streaming"}}
 {"kind":"item","payload":{"content":[{"text":"Partial answer.","type":"output_text"}],"role":"assistant","type":"message"}}
+{"kind":"item","payload":{"role":"user","content":"\u003cturn_aborted\u003e\nTurn stopped because access changed.\n\u003c/turn_aborted\u003e"}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"mode_change","name":"w","state":"rxngl"}}
 {"kind":"event","event":{"kind":"mode_change","name":"g","state":"rxnl"}}
 {"kind":"event","event":{"kind":"model_message","text":"The workspace and history are read-only now."}}
-{"kind":"item","payload":{"role":"user","content":"\u003cturn_aborted\u003e\nTurn stopped because access changed.\n\u003c/turn_aborted\u003e\n\n\u003cenvironment_context\u003e\nThe workspace is now read-only.\n\u003c/environment_context\u003e\n\n\u003cenvironment_context\u003e\n.git is now read-only.\n\u003c/environment_context\u003e"}}
+{"kind":"item","payload":{"role":"user","content":"\u003cenvironment_context\u003e\nThe workspace is now read-only.\n\u003c/environment_context\u003e\n\n\u003cenvironment_context\u003e\n.git is now read-only.\n\u003c/environment_context\u003e"}}
 {"kind":"item","payload":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"The workspace and history are read-only now."}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"continue"}}

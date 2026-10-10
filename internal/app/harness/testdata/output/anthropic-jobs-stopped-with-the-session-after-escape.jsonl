@@ -8,6 +8,7 @@
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"interrupt while the tool is working"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"work","input":{}}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"compiling agent\nnote: the command was stopped after 12s because the user pressed escape.","is_error":true}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTurn stopped because the user pressed escape.\n\u003c/system-reminder\u003e"}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"jobs_ended_with_session","state":["docs"]}}
 {"kind":"event","event":{"kind":"model_message","text":"The session was reopened, so I will leave the docs server down."}}

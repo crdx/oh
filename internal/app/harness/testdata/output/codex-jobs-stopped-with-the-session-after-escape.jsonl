@@ -9,6 +9,7 @@
 {"kind":"item","payload":{"role":"user","content":"interrupt while the tool is working"}}
 {"kind":"item","payload":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"work","arguments":"{}"}}
 {"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"compiling agent\nnote: the command was stopped after 12s because the user pressed escape."}}
+{"kind":"item","payload":{"role":"user","content":"\u003cturn_aborted\u003e\nTurn stopped because the user pressed escape.\n\u003c/turn_aborted\u003e"}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"jobs_ended_with_session","state":["docs"]}}
 {"kind":"event","event":{"kind":"model_message","text":"The session was reopened, so I will leave the docs server down."}}

@@ -1875,9 +1875,17 @@ func (self *App) takeSessionTitle(event agent.Event) {
 }
 
 func (self *App) prelude() []agent.Note {
-	notes := []agent.Note{{Kind: agent.InterruptionNote, Text: self.interruptionNote()}}
-	notes = append(notes, self.takeSettledNotes()...)
+	notes := self.takeSettledNotes()
 	notes = append(notes, agent.Note{Kind: agent.TitleNote, Text: self.titleNote()})
+
+	return slices.DeleteFunc(notes, func(note agent.Note) bool { return note.Text == "" })
+}
+
+func (self *App) untoldNotes() []agent.Note {
+	notes := []agent.Note{{Kind: agent.InterruptionNote, Text: self.interruptionNote()}}
+	if untold, isNoted := self.currentTurn.TakeNotes(); isNoted {
+		notes = append(notes, untold...)
+	}
 
 	return slices.DeleteFunc(notes, func(note agent.Note) bool { return note.Text == "" })
 }
@@ -2189,9 +2197,7 @@ func (self *App) finish() {
 	}
 	self.releaseHeldNotices()
 
-	if notes, isNoted := self.currentTurn.TakeNotes(); isNoted {
-		self.settledNotes = append(self.settledNotes, notes...)
-	}
+	self.agent.AddNotes(self.untoldNotes())
 
 	self.recordJobListing()
 

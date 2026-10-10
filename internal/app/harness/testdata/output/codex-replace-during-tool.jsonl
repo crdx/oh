@@ -8,10 +8,10 @@
 {"kind":"item","payload":{"role":"user","content":"send another message while the tool is working"}}
 {"kind":"item","payload":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"work","arguments":"{}"}}
 {"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"the call was stopped after 3s because the user sent another message"}}
+{"kind":"item","payload":{"role":"user","content":"\u003cturn_aborted\u003e\nTurn stopped because the user sent another message.\n\u003c/turn_aborted\u003e"}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"stop that and read the file instead"}}
 {"kind":"event","event":{"kind":"model_message","text":"Reading it instead."}}
-{"kind":"item","payload":{"role":"user","content":"\u003cturn_aborted\u003e\nTurn stopped because the user sent another message.\n\u003c/turn_aborted\u003e"}}
 {"kind":"item","payload":{"role":"user","content":"stop that and read the file instead"}}
 {"kind":"item","payload":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"Reading it instead."}]}}
 {"kind":"turn_completion","turn":{}}

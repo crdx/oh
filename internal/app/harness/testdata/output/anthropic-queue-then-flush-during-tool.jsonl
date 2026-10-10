@@ -7,10 +7,10 @@
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"queue a message and then push it out at once"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"work","input":{}}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"the call was stopped after 4s because the user sent another message","is_error":true}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTurn stopped because the user sent another message.\n\u003c/system-reminder\u003e"}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"stop and do this instead"}}
 {"kind":"event","event":{"kind":"model_message","text":"Stopping that and doing this instead."}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTurn stopped because the user sent another message.\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"stop and do this instead"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Stopping that and doing this instead."}]}}
 {"kind":"turn_completion","turn":{}}

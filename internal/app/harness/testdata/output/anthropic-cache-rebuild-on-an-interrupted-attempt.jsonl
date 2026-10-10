@@ -11,6 +11,7 @@
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"work","input":{}}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"done"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"thinking","thinking":"Completed thought.","signature":"seal-1"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTurn stopped because the user pressed escape.\n\u003c/system-reminder\u003e"}]}}
 {"kind":"turn_completion","turn":{"input_tokens":49140}}
 {"kind":"event","event":{"kind":"user_message","text":"carry on"}}
 {"kind":"event","event":{"kind":"model_message","text":"Carrying on.","usage":{"input_tokens":49680,"cache":{"read_tokens":49100,"write_tokens":400}}}}

@@ -11,6 +11,7 @@
 {"kind":"item","payload":{"role":"assistant","content":"","tool_calls":[{"id":"call-1","type":"function","function":{"name":"alpha","arguments":"{}"}},{"id":"call-2","type":"function","function":{"name":"beta","arguments":"{}"}}]}}
 {"kind":"item","payload":{"role":"tool","content":"alpha result","tool_call_id":"call-1"}}
 {"kind":"item","payload":{"role":"tool","content":"the tool was stopped","tool_call_id":"call-2"}}
+{"kind":"item","payload":{"role":"user","content":"\u003csystem-reminder\u003e\nTurn stopped because the user pressed escape.\n\u003c/system-reminder\u003e"}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"what happened to the second one"}}
 {"kind":"event","event":{"kind":"model_message","text":"It never finished."}}

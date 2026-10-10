@@ -8,10 +8,10 @@
 {"kind":"item","payload":{"role":"user","content":"queue a message and then push it out at once"}}
 {"kind":"item","payload":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"work","arguments":"{}"}}
 {"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"the call was stopped after 4s because the user sent another message"}}
+{"kind":"item","payload":{"role":"user","content":"\u003cturn_aborted\u003e\nTurn stopped because the user sent another message.\n\u003c/turn_aborted\u003e"}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"stop and do this instead"}}
 {"kind":"event","event":{"kind":"model_message","text":"Stopping that and doing this instead."}}
-{"kind":"item","payload":{"role":"user","content":"\u003cturn_aborted\u003e\nTurn stopped because the user sent another message.\n\u003c/turn_aborted\u003e"}}
 {"kind":"item","payload":{"role":"user","content":"stop and do this instead"}}
 {"kind":"item","payload":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"Stopping that and doing this instead."}]}}
 {"kind":"turn_completion","turn":{}}

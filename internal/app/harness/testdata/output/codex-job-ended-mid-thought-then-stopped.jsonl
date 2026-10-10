@@ -5,6 +5,7 @@
 {"kind":"event","event":{"kind":"turn_interruption","name":"escape"}}
 {"kind":"event","event":{"kind":"job_ended","name":"build","state":{"snapshot":{"name":"build","command":"just build","state":"failed","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:21Z","code":2},"output":"go build ./...\ncmd/oh/draw.go:41:9: undefined: getWidth\nexit status 1"}}}
 {"kind":"item","payload":{"role":"user","content":"has the build finished"}}
+{"kind":"item","payload":{"role":"user","content":"\u003cturn_aborted\u003e\nTurn stopped because the user pressed escape.\n\u003c/turn_aborted\u003e\n\n\u003ccodex_internal_context source=\"job\"\u003e\nJob `build` exited: failed after 12s, exit(2).\n\n```\ngo build ./...\ncmd/oh/draw.go:41:9: undefined: getWidth\nexit status 1\n```\n\u003c/codex_internal_context\u003e"}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"carry on"}}
 {"kind":"event","event":{"kind":"model_message","text":"Carrying on."}}
