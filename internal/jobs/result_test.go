@@ -49,8 +49,8 @@ func TestAJobKilledByAProcessorLimitNamesAndQuantifiesWhy(t *testing.T) {
 	if _, err := manager.Start(t.Context(), "build", t.TempDir(), "just build", policy); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := manager.Wait(t.Context(), []string{"build"}); err != nil {
-		t.Fatal(err)
+	if _, isAnnounced := nextConclusion(t, manager); !isAnnounced {
+		t.Fatal("the killed job announced nothing")
 	}
 
 	snapshot, err := manager.Status("build")

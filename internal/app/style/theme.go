@@ -184,16 +184,14 @@ var defaultTheme = Theme{
 		"job": {
 			Default: ToolAppearance{Name: "job", Paint: "status_warning"},
 			Actions: map[string]ToolAppearance{
-				"start":    {},
-				"stop":     {},
-				"restart":  {},
-				"discard":  {},
-				"prune":    {},
-				"status":   {Paint: "normal"},
-				"output":   {Name: "cat", Paint: "normal"},
-				"wait_any": {Name: "await", Paint: "normal"},
-				"wait_all": {Name: "await", Paint: "normal"},
-				"list":     {Paint: "normal"},
+				"start":   {},
+				"stop":    {},
+				"restart": {},
+				"discard": {},
+				"prune":   {},
+				"status":  {Paint: "normal"},
+				"output":  {Name: "cat", Paint: "normal"},
+				"list":    {Paint: "normal"},
 			},
 		},
 		"subagent": {
@@ -204,10 +202,10 @@ var defaultTheme = Theme{
 				"stop":   {},
 				"status": {Paint: "normal"},
 				"output": {Name: "cat", Paint: "normal"},
-				"wait":   {Name: "await", Paint: "normal"},
 				"list":   {Paint: "normal"},
 			},
 		},
+		"wait": {Default: ToolAppearance{Name: "wait", Paint: "normal"}},
 		"forward": {
 			Default: ToolAppearance{Name: "forward", Paint: "status_warning"},
 			Actions: map[string]ToolAppearance{

@@ -70,38 +70,38 @@ Regenerating every golden in …
 ── job starting · 16 columns
 Regenerating ev…
 
-── job waiting with a limit · 120 columns
-await golden for up to 20s
+── waiting with a limit · 120 columns
+wait golden for up to 20s
 
-── job waiting with a limit · 80 columns
-await golden for up to 20s
+── waiting with a limit · 80 columns
+wait golden for up to 20s
 
-── job waiting with a limit · 60 columns
-await golden for up to 20s
+── waiting with a limit · 60 columns
+wait golden for up to 20s
 
-── job waiting with a limit · 44 columns
-await golden for up to 20s
+── waiting with a limit · 44 columns
+wait golden for up to 20s
 
-── job waiting with a limit · 30 columns
-await golden for up to 20s
+── waiting with a limit · 30 columns
+wait golden for up to 20s
 
-── job waiting with a limit · 16 columns
-await golden fo…
+── waiting with a limit · 16 columns
+wait golden for…
 
-── job waiting on several · 120 columns
-await docs && build
+── waiting on several · 120 columns
+wait docs && build
 
-── job waiting on several · 80 columns
-await docs && build
+── waiting on several · 80 columns
+wait docs && build
 
-── job waiting on several · 60 columns
-await docs && build
+── waiting on several · 60 columns
+wait docs && build
 
-── job waiting on several · 44 columns
-await docs && build
+── waiting on several · 44 columns
+wait docs && build
 
-── job waiting on several · 30 columns
-await docs && build
+── waiting on several · 30 columns
+wait docs && build
 
-── job waiting on several · 16 columns
-await docs && b…
+── waiting on several · 16 columns
+wait docs && bu…

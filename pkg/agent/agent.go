@@ -397,6 +397,7 @@ func (self *Agent) readAbandonedCache(prose *proseStream, askedAt time.Time, yie
 
 func (self *Agent) Stream(ctx context.Context, message string, interjections *Interjections) iter.Seq2[Update, error] {
 	return func(yield func(Update, error) bool) {
+		ctx := context.WithValue(ctx, interjectionsKey{}, interjections)
 		yieldEvent := func(event Event, err error) bool {
 			update := Update{}
 			if err == nil {

@@ -1,6 +1,7 @@
 provider = "anthropic"
 model = "claude-opus-5"
 effort = "medium"
+with-wait-tool = true
 
 [[subagent]]
 name = "tame-adder"
@@ -66,8 +67,8 @@ event = [
 [[first.response]]
 event = [
     '''{"type":"message_start","message":{}}''',
-    '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_15","name":"subagent","input":{}}}''',
-    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"action\":\"wait\",\"names\":[\"tame-adder\"],\"wait_seconds\":1}"}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_15","name":"wait","input":{}}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"names\":[\"tame-adder\"],\"seconds\":1}"}}''',
     '''{"type":"content_block_stop","index":0}''',
     '''{"type":"message_delta","delta":{"stop_reason":"tool_use"}}''',
     '''{"type":"message_stop"}''',
@@ -86,8 +87,8 @@ event = [
 [[first.response]]
 event = [
     '''{"type":"message_start","message":{}}''',
-    '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_6","name":"subagent","input":{}}}''',
-    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"action\":\"wait\",\"names\":[\"tame-adder\"]}"}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_6","name":"wait","input":{}}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"names\":[\"tame-adder\"]}"}}''',
     '''{"type":"content_block_stop","index":0}''',
     '''{"type":"message_delta","delta":{"stop_reason":"tool_use"}}''',
     '''{"type":"message_stop"}''',

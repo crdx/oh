@@ -44,7 +44,7 @@ whenever they exit.\r
 \e[48;2;52;53;65m then bring lint back                   \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mwatch\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait watch Waiting for the next …\e[0m \e[38;2;150;152;150m3L\e[0m\r
 \e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwatch\e[0m\r
 \e[3m\e[38;2;150;152;150mBringing lint back\e[0m\e[0m \e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mlint\e[0m \e[38;2;150;152;150mrespawn…\e[0m\r
 \r
@@ -1196,7 +1196,7 @@ t\r
 \e[48;2;52;53;65mk\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\…\e]8;;\e\\\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\\r
 \e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\\r
 \e[3m\e[38;2;150;152;150m…\e[0m\e[0m\r
 \r
@@ -1292,7 +1292,7 @@ Both are running and will come back whenever they exit.
 \e[48;2;52;53;65m\e[0m
 \e[48;2;52;53;65m wait for the next rebuild, stop it, then bring lint back\e[0m
 \e[48;2;52;53;65m\e[0m
-await \e[38;2;192;128;80mwatch\e[0m \e[38;2;150;152;150m3L\e[0m \e[3m\e[38;2;150;152;150m(Rebuilding whenever the source changes)\e[0m\e[0m
+\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mwait watch Waiting for the next rebuild\e[0m \e[38;2;150;152;150m3L\e[0m
 \e[38;2;207;173;0mstop\e[0m \e[38;2;192;128;80mwatch\e[0m \e[3m\e[38;2;150;152;150m(Rebuilding whenever the source changes)\e[0m\e[0m
 \e[3m\e[38;2;150;152;150mBringing lint back\e[0m\e[0m \e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mlint\e[0m \e[38;2;150;152;150mrespawning on exit\e[0m
 
@@ -1332,7 +1332,7 @@ Both are running and will come back whenever they exit.\r
 \e[48;2;52;53;65m wait for the next rebuild, stop it, then bring lint back                                           \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mwatch\e[0m \e[38;2;150;152;150m3L\e[0m \e[3m\e[38;2;150;152;150m(Rebuilding whenever the source changes)\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait watch Waiting for the next rebuild\e[0m \e[38;2;150;152;150m3L\e[0m\r
 \e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwatch\e[0m \e[3m\e[38;2;150;152;150m(Rebuilding whenever the source changes)\e[0m\e[0m\r
 \e[3m\e[38;2;150;152;150mBringing lint back\e[0m\e[0m \e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mlint\e[0m \e[38;2;150;152;150mrespawning on exit\e[0m\r
 \r
@@ -1372,7 +1372,7 @@ Both\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth are\e[K\r\e[8C\e[?25h\e[?2
 \e[48;2;52;53;65m wait for the next rebuild, stop it, then bring lint back                                           \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-await \e[38;2;192;128;80mwatch\e[0m \e[3m\e[38;2;150;152;150m(Rebuilding whenever the source changes)\e[0m\e[0m\e[K\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mwatch\e[0m \e[38;2;150;152;150m3L\e[0m \e[3m\e[38;2;150;152;150m(Rebuilding whenever the source changes)\e[0m\e[0m\e[K\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mwait watch Waiting for the next rebuild\e[0m\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait watch Waiting for the next rebuild\e[0m \e[38;2;150;152;150m3L\e[0m\e[K\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[38;2;207;173;0mstop\e[0m \e[38;2;192;128;80mwatch\e[0m \e[3m\e[38;2;150;152;150m(Rebuilding whenever the source changes)\e[0m\e[0m\e[K\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwatch\e[0m \e[3m\e[38;2;150;152;150m(Rebuilding whenever the source changes)\e[0m\e[0m\e[K\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[3m\e[38;2;150;152;150mBringing lint back\e[0m\e[0m \e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mlint\e[0m \e[38;2;150;152;150mrespawning on exit\e[0m\e[K\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mBringing lint back\e[0m\e[0m \e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mlint\e[0m \e[38;2;150;152;150mrespawning on exit\e[0m\e[K\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
@@ -1412,7 +1412,7 @@ Both are running and will come back whenever they exit.\e[K\r\e[55C\e[?25h\e[?20
 \e[48;2;52;53;65m wait for the next rebuild, stop it, then bring lint back                                           \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-await \e[38;2;192;128;80mwatch\e[0m \e[3m\e[38;2;150;152;150m(Rebuilding whenever the source changes)\e[0m\e[0m\e[K\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mwatch\e[0m \e[38;2;150;152;150m3L\e[0m \e[3m\e[38;2;150;152;150m(Rebuilding whenever the source changes)\e[0m\e[0m\e[K\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mwait watch Waiting for the next rebuild\e[0m\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait watch Waiting for the next rebuild\e[0m \e[38;2;150;152;150m3L\e[0m\e[K\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[38;2;207;173;0mstop\e[0m \e[38;2;192;128;80mwatch\e[0m \e[3m\e[38;2;150;152;150m(Rebuilding whenever the source changes)\e[0m\e[0m\e[K\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwatch\e[0m \e[3m\e[38;2;150;152;150m(Rebuilding whenever the source changes)\e[0m\e[0m\e[K\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[3m\e[38;2;150;152;150mBringing lint back\e[0m\e[0m \e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mlint\e[0m \e[38;2;150;152;150mrespawning on exit\e[0m\e[K\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mBringing lint back\e[0m\e[0m \e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mlint\e[0m \e[38;2;150;152;150mrespawning on exit\e[0m\e[K\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
@@ -1452,7 +1452,7 @@ Both\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth are\e[K\r\e[8C\e[?25h\e[?2
 \e[48;2;52;53;65m wait for the next rebuild, stop it, then bring lint back                                           \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-await \e[38;2;192;128;80mwatch\e[0m \e[3m\e[38;2;150;152;150m(Rebuilding whenever the source changes)\e[0m\e[0m\e[K\r\e[52C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mwatch\e[0m \e[38;2;150;152;150m3L\e[0m \e[3m\e[38;2;150;152;150m(Rebuilding whenever the source changes)\e[0m\e[0m\e[K\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mwait watch Waiting for the next rebuild\e[0m\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait watch Waiting for the next rebuild\e[0m \e[38;2;150;152;150m3L\e[0m\e[K\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[38;2;207;173;0mstop\e[0m \e[38;2;192;128;80mwatch\e[0m \e[3m\e[38;2;150;152;150m(Rebuilding whenever the source changes)\e[0m\e[0m\e[K\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwatch\e[0m \e[3m\e[38;2;150;152;150m(Rebuilding whenever the source changes)\e[0m\e[0m\e[K\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[3m\e[38;2;150;152;150mBringing lint back\e[0m\e[0m \e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mlint\e[0m \e[38;2;150;152;150mrespawning on exit\e[0m\e[K\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mBringing lint back\e[0m\e[0m \e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mlint\e[0m \e[38;2;150;152;150mrespawning on exit\e[0m\e[K\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[50C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
@@ -1574,7 +1574,7 @@ they exit.\r
 \e[48;2;52;53;65m lint back  \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mwa…\e[0m \e[38;2;150;152;150m3L\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait…\e[0m \e[38;2;150;152;150m3L\e[0m\r
 \e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwatch\e[0m\r
 \e[3m\e[38;2;150;152;150mBringing li…\e[0m\e[0m\r
 \r
@@ -1615,7 +1615,7 @@ Both are running and will come back whenever they exit.\r
 \e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
 \e[48;2;52;53;65m wait for the next rebuild, stop it, then bring lint back\e[0m\r
 \e[48;2;52;53;65m\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mwatch\e[0m \e[38;2;150;152;150m3L\e[0m \e[3m\e[38;2;150;152;150m(Rebuilding whenever the source changes)\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait watch Waiting for the next rebuild\e[0m \e[38;2;150;152;150m3L\e[0m\r
 \e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwatch\e[0m \e[3m\e[38;2;150;152;150m(Rebuilding whenever the source changes)\e[0m\e[0m\r
 \e[3m\e[38;2;150;152;150mBringing lint back\e[0m\e[0m \e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mlint\e[0m \e[38;2;150;152;150mrespawning on exit\e[0m\r
 \r
@@ -1655,7 +1655,7 @@ Both are running and will come back whenever they exit.\r
 \e[48;2;52;53;65m wait for the next rebuild, stop it, then bring lint back                                           \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mwatch\e[0m \e[38;2;150;152;150m3L\e[0m \e[3m\e[38;2;150;152;150m(Rebuilding whenever the source changes)\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait watch Waiting for the next rebuild\e[0m \e[38;2;150;152;150m3L\e[0m\r
 \e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwatch\e[0m \e[3m\e[38;2;150;152;150m(Rebuilding whenever the source changes)\e[0m\e[0m\r
 \e[3m\e[38;2;150;152;150mBringing lint back\e[0m\e[0m \e]8;;oh://tool-result?call=call_5&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mlint\e[0m \e[38;2;150;152;150mrespawning on exit\e[0m\r
 \r

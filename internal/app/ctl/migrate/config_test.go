@@ -776,7 +776,7 @@ round_robin = ["codex/gpt@high"]
 		"skill":             {name: "consult-chart", paint: "#e6a8ff bold"},
 		"job":               {name: "tasks", paint: "status_warning"},
 		"job_start":         {name: "launch", paint: "status_info"},
-		"job_wait_any":      {name: "hold", paint: "normal"},
+		"job_wait_any":      {name: "hold", paint: "status_warning"},
 		"bash_host_network": {name: "$", paint: "status_danger"},
 		"forward":           {name: "share", paint: "status_warning"},
 		"forward_add":       {name: "open-gangway", paint: "status_warning"},

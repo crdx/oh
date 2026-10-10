@@ -1191,6 +1191,9 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	if keeperProcess != nil {
 		toolboxTools = append(toolboxTools, forward.New(forwards.ForModel()))
 	}
+	if experimentalToggles.IsEnabled(experimental.WaitTool) {
+		toolboxTools = append(toolboxTools, waitTools(jobManager, childManager)...)
+	}
 	if notify.IsAvailable() {
 		toolboxTools = append(toolboxTools, notify.New(screen.WriteEscape, isTerminalFocused))
 	}

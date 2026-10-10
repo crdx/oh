@@ -13,6 +13,7 @@ const (
 	CommandStartsTurn    Name = "command_starts_turn"
 	RedrawTimingFeedback Name = "redraw_timing_feedback"
 	SharedHistory        Name = "shared_history"
+	WaitTool             Name = "wait_tool"
 )
 
 type Kind int
@@ -42,6 +43,7 @@ var toggleKinds = map[Name]Kind{
 	CommandStartsTurn:    BooleanKind,
 	RedrawTimingFeedback: BooleanKind,
 	SharedHistory:        BooleanKind,
+	WaitTool:             BooleanKind,
 }
 
 type Complaint struct {

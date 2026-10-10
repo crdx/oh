@@ -1,6 +1,7 @@
 package agent
 
 import (
+	"context"
 	"strings"
 	"sync"
 )
@@ -12,6 +13,34 @@ type Interjections struct {
 	messages []string
 	notes    []Note
 	reminder Reminder
+	arrival  chan struct{}
+}
+
+type interjectionsKey struct{}
+
+func MessageArrival(ctx context.Context) <-chan struct{} {
+	interjections, _ := ctx.Value(interjectionsKey{}).(*Interjections)
+	return interjections.Arrival()
+}
+
+func (self *Interjections) Arrival() <-chan struct{} {
+	if self == nil {
+		return nil
+	}
+
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+
+	if self.arrival == nil {
+		self.arrival = make(chan struct{})
+	}
+	if len(self.messages) > 0 {
+		signal := make(chan struct{})
+		close(signal)
+		return signal
+	}
+
+	return self.arrival
 }
 
 type Reminder struct {
@@ -72,6 +101,10 @@ func (self *Interjections) Add(text string) bool {
 	defer self.mutex.Unlock()
 
 	self.messages = append(self.messages, text)
+	if self.arrival != nil {
+		close(self.arrival)
+		self.arrival = nil
+	}
 
 	return true
 }

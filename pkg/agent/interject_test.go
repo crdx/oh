@@ -432,3 +432,38 @@ func TestAnIncompleteReminderIsRefused(t *testing.T) {
 		t.Error("expected a nil queue to refuse a reminder")
 	}
 }
+
+func TestAQueuedMessageSignalsItsArrival(t *testing.T) {
+	interjections := &agent.Interjections{}
+	arrival := interjections.Arrival()
+	select {
+	case <-arrival:
+		t.Fatal("an empty queue signalled an arrival")
+	default:
+	}
+
+	interjections.Add("stop waiting")
+	select {
+	case <-arrival:
+	default:
+		t.Fatal("a queued message signalled nothing")
+	}
+	select {
+	case <-interjections.Arrival():
+	default:
+		t.Error("a queue still holding a message signalled nothing to a later wait")
+	}
+
+	interjections.Take()
+	select {
+	case <-interjections.Arrival():
+		t.Error("an emptied queue still signalled an arrival")
+	default:
+	}
+}
+
+func TestAContextWithoutInterjectionsNeverSignalsAnArrival(t *testing.T) {
+	if arrival := agent.MessageArrival(context.Background()); arrival != nil {
+		t.Errorf("got %v, want no arrival to wait on", arrival)
+	}
+}

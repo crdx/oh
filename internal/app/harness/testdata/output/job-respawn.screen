@@ -44,7 +44,7 @@ whenever they exit.
  then bring lint back
 
 
-await watch 3L
+job wait watch Waiting for the next … 3L
 stop watch
 Bringing lint back restart lint respawn…
 
@@ -1295,7 +1295,7 @@ Both are running and will come back whenever they exit.
  wait for the next rebuild, stop it, then bring lint back
 
 
-await watch 3L (Rebuilding whenever the source changes)
+job wait watch Waiting for the next rebuild 3L
 stop watch (Rebuilding whenever the source changes)
 Bringing lint back restart lint respawning on exit
 
@@ -1416,7 +1416,7 @@ they exit.
  lint back
 
 
-await wa… 3L
+job wait… 3L
 stop watch
 Bringing li…
 
@@ -1461,7 +1461,7 @@ Both are running and will come back whenever they exit.
  wait for the next rebuild, stop it, then bring lint back
 
 
-await watch 3L (Rebuilding whenever the source changes)
+job wait watch Waiting for the next rebuild 3L
 stop watch (Rebuilding whenever the source changes)
 Bringing lint back restart lint respawning on exit
 

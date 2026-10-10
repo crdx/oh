@@ -20,6 +20,7 @@ import (
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/bash"
 	"crdx.org/oh/pkg/toolbox/job"
+	"crdx.org/oh/pkg/toolbox/wait"
 )
 
 var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")
@@ -77,6 +78,7 @@ func callRowTools(isFrozen bool) func(string) (tool.Tool, bool) {
 		shellTool = withOptionalIntent(shellTool)
 	}
 	jobTool := job.New(nil, nil, nil, nil)
+	waitTool := wait.New([]wait.Source{job.WaitSource(nil)}, nil)
 
 	return func(name string) (tool.Tool, bool) {
 		switch name {
@@ -84,6 +86,8 @@ func callRowTools(isFrozen bool) func(string) (tool.Tool, bool) {
 			return shellTool, true
 		case "job":
 			return jobTool, true
+		case "wait":
+			return waitTool, true
 		}
 
 		return nil, false
@@ -195,12 +199,12 @@ func callRowCases() []callRowCase {
 			{"job", `{"action":"stop","name":"docs"}`, jobAnswered("stopped docs")},
 			{"job", `{"action":"discard","name":"docs"}`, jobAnswered("discarded docs")},
 		}},
-		{title: "job waits reminded of every job", calls: []callRowCall{
+		{title: "waits reminded of every job", calls: []callRowCall{
 			startJob("docs", "Serving the documentation locally"),
 			startJob("build", "Building every package"),
-			{"job", `{"action":"wait","names":["docs","build"]}`, jobAnswered("build finished with exit 0")},
-			{"job", `{"action":"wait","names":["docs","build"],"wait_for":"all","wait_seconds":20}`, jobAnswered("docs still running\nbuild finished")},
-			{"job", `{"action":"wait","names":["docs","other"]}`, jobAnswered("docs still running")},
+			{"wait", `{"names":["docs","build"]}`, jobAnswered("build finished with exit 0")},
+			{"wait", `{"names":["docs","build"],"until":"all","seconds":20}`, jobAnswered("docs still running\nbuild finished")},
+			{"wait", `{"names":["docs","other"]}`, jobAnswered("docs still running")},
 		}},
 		{title: "job reminded of its newest start", calls: []callRowCall{
 			startJob("docs", "Serving the documentation locally"),
@@ -213,11 +217,11 @@ func callRowCases() []callRowCase {
 			{"job", `{"action":"list"}`, jobAnswered("docs running\nbuild finished")},
 			{"job", `{"action":"prune"}`, jobAnswered("pruned build")},
 		}},
-		{title: "job wait stopped by the user", calls: []callRowCall{
+		{title: "wait stopped by the user", calls: []callRowCall{
 			startJob("check", "Running the full check"),
-			{"job", `{"action":"wait","name":"check","wait_seconds":270}`, callStopped("stopped because the user pressed escape")},
+			{"wait", `{"names":["check"],"seconds":270}`, callStopped("stopped because the user pressed escape")},
 		}},
-		{title: "job call with an unknown action", calls: []callRowCall{{"job", `{"action":"explode","name":"docs"}`, callRefused("action must be one of start, status, output, wait, stop, discard, list, prune")}}},
+		{title: "job call with an unknown action", calls: []callRowCall{{"job", `{"action":"explode","name":"docs"}`, callRefused("action must be start, status, output, stop, discard, prune, or list")}}},
 		{title: "shell and job calls mixed in one round", calls: []callRowCall{
 			startJob("docs", "Serving the documentation locally"),
 			{"bash", `{"command":"curl -s localhost:8080 | head -1","intent":"Checking the docs answer requests"}`, shellSucceeded("<!DOCTYPE html>", 1)},
@@ -293,8 +297,8 @@ func runningCallRows() []callRowCase {
 		{title: "shell running on the host network", calls: []callRowCall{{"bash", `{"command":"curl https://example.com/status","intent":"Checking what the status endpoint reports","network":"host"}`, nil}}},
 		{title: "shell running a long command", calls: []callRowCall{{"bash", `{"command":"go test -run 'TestGolden' -count=1 ./internal/app/harness/ ./internal/app/painter/ ./internal/app/call/","intent":"Regenerating the harness golden files"}`, nil}}},
 		{title: "job starting", calls: []callRowCall{{"job", `{"action":"start","name":"golden","command":"cd repo/oh && just golden 2>&1 | tail -30","intent":"Regenerating every golden in scratch"}`, nil}}},
-		{title: "job waiting with a limit", calls: []callRowCall{{"job", `{"action":"wait","name":"golden","wait_seconds":20}`, nil}}},
-		{title: "job waiting on several", calls: []callRowCall{{"job", `{"action":"wait","names":["docs","build"],"wait_for":"all"}`, nil}}},
+		{title: "waiting with a limit", calls: []callRowCall{{"wait", `{"names":["golden"],"seconds":20}`, nil}}},
+		{title: "waiting on several", calls: []callRowCall{{"wait", `{"names":["docs","build"],"until":"all"}`, nil}}},
 	}
 }
 

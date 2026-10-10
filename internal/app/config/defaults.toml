@@ -109,8 +109,6 @@ discard = {}
 prune = {}
 status = { paint = "normal" }
 output = { name = "cat", paint = "normal" }
-wait_any = { name = "await", paint = "normal" }
-wait_all = { name = "await", paint = "normal" }
 list = { paint = "normal" }
 
 [ui.theme.tool.subagent]
@@ -120,8 +118,10 @@ send = {}
 stop = {}
 status = { paint = "normal" }
 output = { name = "cat", paint = "normal" }
-wait = { name = "await", paint = "normal" }
 list = { paint = "normal" }
+
+[ui.theme.tool.wait]
+default = { name = "wait", paint = "normal" }
 
 [ui.theme.tool.forward]
 default = { name = "forward", paint = "status_warning" }
@@ -145,6 +145,7 @@ lookup = "allow"
 command_starts_turn = true
 redraw_timing_feedback = false
 shared_history = false
+wait_tool = false
 
 [debug]
 stalls = false

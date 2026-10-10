@@ -4,7 +4,7 @@
 
 ### Changes
 
-- Add subagents
+- Move waiting out of jobs into an experimental wait tool
 - Stop simultaneous sessions clobbering input history
 - Add experimental toggle to share input history
 - Fix OpenCode Go's Messages API models
@@ -38,6 +38,7 @@
 - Draw no blank row for a plain thought that strips to nothing
 - Keep the gap above the startup banner when resuming a session
 - Correctly record a stopped turn's notice
+- Add subagents
 
 ## [0.13.0] - 2026-10-07
 

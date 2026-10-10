@@ -1298,12 +1298,12 @@ func TestAToolDefaultReachesEveryActionThatSetsNothingOfItsOwn(t *testing.T) {
 
 	resolved := config.Ui.Theme.Tool.Resolved()
 	for kind, want := range map[string]style.ToolPaint{
-		"job":          "status_danger",
-		"job_start":    "status_danger",
-		"job_restart":  "status_danger",
-		"job_status":   "normal",
-		"job_output":   "normal",
-		"job_wait_all": "normal",
+		"job":         "status_danger",
+		"job_start":   "status_danger",
+		"job_restart": "status_danger",
+		"job_status":  "normal",
+		"job_output":  "normal",
+		"job_list":    "normal",
 	} {
 		if got := resolved[kind].Paint; got != want {
 			t.Errorf("%s is painted %q, want %q", kind, got, want)

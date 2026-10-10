@@ -6,7 +6,7 @@
 \r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call was cancelled b…\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150mfor u…\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mstopped because th…\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait check Ha…\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mstopped because th…\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -150,7 +150,7 @@
 \e[48;2;52;53;65m\e[0m
 read \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m
 read \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call was cancelled because the user pressed escape\e[0m
-await \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150mfor up to 10m\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mstopped because the user pressed escape\e[0m
+\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mwait check Handling this job for the test\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mstopped because the user pressed escape\e[0m
 
 \e[38;2;207;173;0mTurn stopped.\e[0m
 
@@ -165,7 +165,7 @@ await \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150mfor up to 10m\e[0m \e[38
 \r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call was cancelled because the user pressed escape\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150mfor up to 10m\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mstopped because the user pressed escape\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait check Handling this job for the test\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mstopped because the user pressed escape\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -180,7 +180,7 @@ await \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150mfor up to 10m\e[0m \e[38
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 read \e[38;2;192;128;80mone.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 read \e[38;2;192;128;80mtwo.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-await \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150mfor up to 10m\e[0m\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call was cancelled because the user pressed escape\e[0m\e[K\e[1B\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150mfor up to 10m\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mstopped because the user pressed escape\e[0m\e[K\r\e[67C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[67C\e[?25h\e[?2026l\r
+\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mwait check Handling this job for the test\e[0m\e[K\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call was cancelled because the user pressed escape\e[0m\e[K\e[1B\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait check Handling this job for the test\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mstopped because the user pressed escape\e[0m\e[K\r\e[87C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[87C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -195,7 +195,7 @@ await \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150mfor up to 10m\e[0m\e[K\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 read \e[38;2;192;128;80mone.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 read \e[38;2;192;128;80mtwo.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-await \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150mfor up to 10m\e[0m\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call was cancelled because the user pressed escape\e[0m\e[K\e[1B\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150mfor up to 10m\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mstopped because the user pressed escape\e[0m\e[K\r\e[67C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[67C\e[?25h\e[?2026l\r
+\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mwait check Handling this job for the test\e[0m\e[K\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call was cancelled because the user pressed escape\e[0m\e[K\e[1B\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait check Handling this job for the test\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mstopped because the user pressed escape\e[0m\e[K\r\e[87C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[87C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -210,7 +210,7 @@ await \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150mfor up to 10m\e[0m\e[K\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 read \e[38;2;192;128;80mone.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 read \e[38;2;192;128;80mtwo.txt\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-await \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150mfor up to 10m\e[0m\e[K\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call was cancelled because the user pressed escape\e[0m\e[K\e[1B\r\e[25C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150mfor up to 10m\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mstopped because the user pressed escape\e[0m\e[K\r\e[67C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[67C\e[?25h\e[?2026l\r
+\e[38;2;207;173;0mjob\e[0m \e[38;2;192;128;80mwait check Handling this job for the test\e[0m\e[K\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[2A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[2B\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call was cancelled because the user pressed escape\e[0m\e[K\e[1B\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait check Handling this job for the test\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mstopped because the user pressed escape\e[0m\e[K\r\e[87C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[87C\e[?25h\e[?2026l\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -229,7 +229,7 @@ await \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150mfor up to 10m\e[0m\e[K\r
 \r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone…\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe …\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\awa…\e]8;;\e\\ \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mstop…\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mstop…\e[0m\r
 \r
 \e[38;2;207;173;0mTurn\e[0m\r
 \e[38;2;207;173;0mstopped.\e[0m\r
@@ -245,7 +245,7 @@ await \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150mfor up to 10m\e[0m\e[K\r
 \e[48;2;52;53;65m\e[0m\r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call was cancelled because the user pressed escape\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150mfor up to 10m\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mstopped because the user pressed escape\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait check Handling this job for the test\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mstopped because the user pressed escape\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r
@@ -260,7 +260,7 @@ await \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150mfor up to 10m\e[0m\e[K\r
 \r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone.txt\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mtwo.txt\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mthe call was cancelled because the user pressed escape\e[0m\r
-\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\await\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;150;152;150mfor up to 10m\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mstopped because the user pressed escape\e[0m\r
+\e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mjob\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwait check Handling this job for the test\e[0m \e[38;2;150;152;150m–\e[0m \e[38;2;150;152;150mstopped because the user pressed escape\e[0m\r
 \r
 \e[38;2;207;173;0mTurn stopped.\e[0m\r
 \r

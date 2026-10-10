@@ -16,6 +16,7 @@ import (
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/job"
+	"crdx.org/oh/pkg/toolbox/wait"
 )
 
 func label() call.Label {
@@ -300,14 +301,13 @@ func TestAContinuedShellCallUsesTheShellLabel(t *testing.T) {
 	}
 }
 
-func TestAJobWaitPaintsJobNamesAsItsSubject(t *testing.T) {
-	label := call.LabelForRendering(job.Describe(job.Args{
-		Action:      "wait",
-		Names:       []string{"build", "lint"},
-		WaitFor:     "all",
-		WaitSeconds: 20,
+func TestAWaitPaintsWhatItWaitsForAsItsSubject(t *testing.T) {
+	label := call.LabelForRendering(wait.Describe(nil, wait.Args{
+		Names:   []string{"build", "lint"},
+		Until:   wait.All,
+		Seconds: 20,
 	}))
-	want := style.Call("await") + " " + style.Subject("build && lint") + " " + style.Qualifier("for up to 20s")
+	want := style.Call("wait") + " " + style.Subject("build && lint") + " " + style.Qualifier("for up to 20s")
 
 	if got := label.Render(); got != want {
 		t.Errorf("got %q, want %q", got, want)
@@ -333,11 +333,11 @@ func TestRenderingCarriesItsPathLineIntoTheLabel(t *testing.T) {
 }
 
 func TestALabelCarriesTheTimeTheCallGaveItself(t *testing.T) {
-	waitEvent := agent.Event{
-		Name:      "job",
-		Arguments: `{"intent":"wait for the check to finish","action":"wait","name":"check","wait_seconds":20}`,
-	}
-	getTool := func(string) (tool.Tool, bool) {
+	waitEvent := agent.Event{Name: "wait", Arguments: `{"names":["check"],"seconds":20}`}
+	getTool := func(name string) (tool.Tool, bool) {
+		if name == "wait" {
+			return wait.New([]wait.Source{job.WaitSource(jobs.New(nil))}, nil), true
+		}
 		return job.New(jobs.New(nil), nil, nil, nil), true
 	}
 

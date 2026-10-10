@@ -18329,6 +18329,7 @@ type sessionGoldenScenario struct {
 	Tools                 []sessionGoldenTool       `toml:"tool"`
 	Subagents             []sessionGoldenSubagent   `toml:"subagent"`
 	SubagentsKilled       bool                      `toml:"subagents-killed-with-session"`
+	HasWaitTool           bool                      `toml:"with-wait-tool"`
 	FirstTurn             sessionGoldenTurn         `toml:"first"`
 	ResumeTurn            sessionGoldenTurn         `toml:"resume"`
 	CredentialsPath       string                    `toml:"-"`
@@ -20263,9 +20264,12 @@ func restoreSessionGoldenRunningJobs(
 func settleSessionGoldenJob(t *testing.T, testHarness *App, name string) {
 	t.Helper()
 
-	if _, err := testHarness.jobs.manager.Wait(t.Context(), []string{name}); err != nil {
+	over, release, err := testHarness.jobs.manager.Hold(name)
+	if err != nil {
 		t.Fatalf("the stopped job never settled: %v", err)
 	}
+	<-over
+	release()
 
 	testHarness.jobs.manager.PruneFinished()
 }

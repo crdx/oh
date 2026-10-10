@@ -6,13 +6,11 @@ import (
 	"slices"
 	"strings"
 	"testing"
-	"time"
 
 	"crdx.org/oh/pkg/tool"
 )
 
 type fakeManager struct {
-	limit   time.Duration
 	tasks   []Task
 	names   []string
 	sent    string
@@ -36,12 +34,6 @@ func (self *fakeManager) Status(names []string) (string, error) {
 
 func (self *fakeManager) Output(names []string) (string, error) {
 	self.names = names
-	return "result", nil
-}
-
-func (self *fakeManager) Wait(_ context.Context, names []string, limit time.Duration) (string, error) {
-	self.names = names
-	self.limit = limit
 	return "result", nil
 }
 
@@ -86,7 +78,6 @@ func TestNamesSelectAgentsAndNoNamesMeansAll(t *testing.T) {
 	for _, input := range []string{
 		`{"action":"status","names":["frugal-otter"]}`,
 		`{"action":"output","names":["frugal-otter"]}`,
-		`{"action":"wait","names":["frugal-otter"]}`,
 		`{"action":"stop","names":["frugal-otter"]}`,
 	} {
 		manager.names = nil
@@ -98,12 +89,12 @@ func TestNamesSelectAgentsAndNoNamesMeansAll(t *testing.T) {
 			t.Errorf("%s reached the manager as %v, %v", input, manager.names, err)
 		}
 	}
-	parsed, err := built.Parse(`{"action":"wait"}`)
+	parsed, err := built.Parse(`{"action":"status"}`)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if _, err := parsed.Exec(context.Background()); err != nil || manager.names != nil {
-		t.Errorf("waiting on no names did not mean all of them: %v, %v", manager.names, err)
+		t.Errorf("asking after no names did not mean all of them: %v, %v", manager.names, err)
 	}
 }
 
@@ -134,6 +125,7 @@ func TestInvalidChildArgumentsAreRefused(t *testing.T) {
 		`{"action":"start","names":["frugal-otter"],"subagents":[{"prompt":"x"}]}`,
 		`{"action":"list","names":["frugal-otter"]}`,
 		`{"action":"wait","name":"frugal-otter"}`,
+		`{"action":"wait"}`,
 	} {
 		if _, err := built.Parse(input); err == nil {
 			t.Errorf("accepted %s", input)
@@ -144,43 +136,13 @@ func TestInvalidChildArgumentsAreRefused(t *testing.T) {
 	}
 }
 
-func TestAWaitRendersAndIsLimitedAsAJobWaitIs(t *testing.T) {
-	manager := &fakeManager{}
-	built := New(manager, "")
-	for _, run := range []struct {
-		input   string
-		subject string
-		limit   time.Duration
-		bound   string
-	}{
-		{`{"action":"wait","names":["frugal-otter","frugal-heron"]}`, "frugal-otter && frugal-heron", waitLimit, ""},
-		{`{"action":"wait"}`, "all", waitLimit, ""},
-		{`{"action":"wait","names":["frugal-otter"],"wait_seconds":20}`, "frugal-otter", 20 * time.Second, "for up to 20s"},
-		{`{"action":"wait","wait_seconds":100000}`, "all", waitLimit, "for up to 10m"},
-	} {
-		parsed, err := built.Parse(run.input)
-		if err != nil {
-			t.Fatal(err)
-		}
-		rendering := parsed.Rendering()
-		if rendering.Subject != run.subject || rendering.Qualifier != run.bound || parsed.TimeLimit() != run.limit {
-			t.Errorf("%s drew %q %q limited to %s", run.input, rendering.Subject, rendering.Qualifier, parsed.TimeLimit())
-		}
-		if _, err := parsed.Exec(context.Background()); err != nil || manager.limit != run.limit {
-			t.Errorf("%s waited at most %s: %v", run.input, manager.limit, err)
-		}
-	}
-}
-
 func TestEveryCallNamingSubagentsMentionsThem(t *testing.T) {
 	built := New(&fakeManager{}, "")
 	for input, want := range map[string][]string{
-		`{"action":"wait","names":["frugal-otter"]}`:                  {"subagent:frugal-otter"},
 		`{"action":"status","names":["frugal-otter","frugal-heron"]}`: {"subagent:frugal-otter", "subagent:frugal-heron"},
 		`{"action":"output","names":["frugal-heron"]}`:                {"subagent:frugal-heron"},
 		`{"action":"stop","names":["frugal-otter"]}`:                  {"subagent:frugal-otter"},
 		`{"action":"send","name":"frugal-otter","message":"x"}`:       {"subagent:frugal-otter"},
-		`{"action":"wait"}`: nil,
 		`{"action":"list"}`: nil,
 	} {
 		parsed, err := built.Parse(input)
@@ -215,17 +177,17 @@ func TestASpawnNamesTheModelItsSubagentsRunOn(t *testing.T) {
 	if qualifier := parsed.Rendering().Qualifier; qualifier != "on claude-sonnet-5" {
 		t.Errorf("a spawn was qualified as %q", qualifier)
 	}
-	waited, err := New(&fakeManager{}, "claude-sonnet-5").Parse(`{"action":"wait"}`)
+	listed, err := New(&fakeManager{}, "claude-sonnet-5").Parse(`{"action":"list"}`)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if qualifier := waited.Rendering().Qualifier; qualifier != "" {
-		t.Errorf("a wait was qualified as %q", qualifier)
+	if qualifier := listed.Rendering().Qualifier; qualifier != "" {
+		t.Errorf("a listing was qualified as %q", qualifier)
 	}
 }
 
 func TestOnlyActionsThatAnswerWithAStatusReportOne(t *testing.T) {
-	for _, action := range []string{Start, Send, Status, Stop, Output, Wait, List} {
+	for _, action := range []string{Start, Send, Status, Stop, Output, List} {
 		doesReportStatus := slices.Contains([]string{Start, Send, Status, Stop}, action)
 		if got := Describe(Args{Action: action}).ReportsStatus; got != doesReportStatus {
 			t.Errorf("%s reports a status: %v, want %v", action, got, doesReportStatus)

@@ -13,18 +13,22 @@ import (
 )
 
 func TestAJobRunsOnTheHostOutsideTheSandbox(t *testing.T) {
-	rig := newScriptedRig(t,
-		sim.Turn{Calls: []sim.Call{{
-			Name:      "job",
-			Arguments: `{"action":"start","name":"check","command":"echo from-the-$((1+1))-host","intent":"Checking a job runs on the host"}`,
-		}}},
-		sim.Turn{Calls: []sim.Call{{
-			Name:      "job",
-			Arguments: `{"action":"wait","names":["check"]}`,
-		}}},
-		sim.Turn{Say: "The job ran."},
-	)
-	runTestBinary(t, rig.binary, rig.workspace, rig.environment, "-p", "--yolo", "-m", "opencode-go/fake", "run a job")
+	start := sim.Call{
+		Name:      "job",
+		Arguments: `{"action":"start","name":"check","command":"echo from-the-$((1+1))-host","intent":"Checking a job runs on the host"}`,
+	}
+	rig, _ := newRespondingRig(t, func(request sim.Request) sim.Turn {
+		switch {
+		case mentions(request, "from-the-2-host"):
+			return sim.Turn{Say: "The job ran."}
+		case hasCallOutput(request):
+			return sim.Turn{Say: "Started."}
+		}
+		return sim.Turn{Calls: []sim.Call{start}}
+	})
+	session := rig.start("--yolo", "-m", "opencode-go/fake", "run a job")
+	session.waitFor("The job ran.")
+	session.quit()
 
 	storedSessions := rig.storedSessions()
 	if len(storedSessions) != 1 {

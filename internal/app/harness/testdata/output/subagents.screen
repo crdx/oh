@@ -8,7 +8,7 @@ spawn 2 subagents on Claude Opus 5
 read README.md 1L
 The readme is short; the children are
 still working.
-await tame-alpaca 2L
+subagent tame-alpaca 2L
 
 The readme is a single heading, and
 tame-alpaca counted three TODOs.
@@ -691,7 +691,7 @@ t
 spawn 2 subagents on Claude Opus 5
 read README.md 1L
 The readme is short; the children are still working.
-await tame-alpaca 2L (Counting the TODOs in the code)
+subagent tame-alpaca 2L (Counting the TODOs in the code)
 
 The readme is a single heading, and tame-alpaca counted three TODOs. tame-adder is still working.
 
@@ -737,7 +737,7 @@ is short;
 the children
 are still
 working.
-await ta… 2L
+subagent 2L
 
 The readme
 is a single
@@ -811,7 +811,7 @@ without it.
 spawn 2 subagents on Claude Opus 5
 read README.md 1L
 The readme is short; the children are still working.
-await tame-alpaca 2L (Counting the TODOs in the code)
+subagent tame-alpaca 2L (Counting the TODOs in the code)
 
 The readme is a single heading, and tame-alpaca counted three TODOs. tame-adder is still working.
 

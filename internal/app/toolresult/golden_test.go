@@ -24,6 +24,7 @@ import (
 	"crdx.org/oh/pkg/toolbox/notify"
 	"crdx.org/oh/pkg/toolbox/read"
 	"crdx.org/oh/pkg/toolbox/title"
+	"crdx.org/oh/pkg/toolbox/wait"
 	"crdx.org/oh/pkg/toolbox/write"
 )
 
@@ -226,49 +227,40 @@ func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
 				invalidJobNameError(t, "way-too-long")),
 		},
 		{
-			name: "job wait on a job that finished",
-			exchange: resultExchange("job", job.Args{Action: "wait", Name: "check"}, agent.SuccessStatus,
+			name: "wait on a job that finished",
+			exchange: resultExchange("wait", wait.Args{Names: []string{"check"}}, agent.SuccessStatus,
 				"check: complete after 37s\nok  crdx.org/oh\nlint1  \u2713\n"),
 		},
 		{
-			name: "job wait on several jobs until any finishes",
-			exchange: resultExchange("job", job.Args{Action: "wait", Names: []string{"build", "lint"}}, agent.SuccessStatus,
+			name: "wait until any of several ends",
+			exchange: resultExchange("wait", wait.Args{Names: []string{"build", "lint"}}, agent.SuccessStatus,
 				"lint: complete after 22s\nall checks passed\n"),
 		},
 		{
-			name: "job wait for any that reached its limit",
-			exchange: resultExchange("job", job.Args{Action: "wait", Names: []string{"build", "lint"}}, agent.SuccessStatus,
-				"build: running for 5m 5s\n"+
-					"lint: running for 5m 1s\n"+
-					"note: the wait gave up after 5m before any watched job ended.\n"),
+			name: "wait for any that reached its limit",
+			exchange: resultExchange("wait", wait.Args{Names: []string{"build", "lint"}}, agent.SuccessStatus,
+				"build: running for 5m 5s\n\n"+
+					"lint: running for 5m 1s\n\n"+
+					"note: the wait gave up after 10m, and build, lint are still running."),
 		},
 		{
-			name: "job wait on several jobs until all finish",
-			exchange: resultExchange("job", job.Args{
-				Action:  "wait",
-				Names:   []string{"build", "lint"},
-				WaitFor: "all",
-			}, agent.SuccessStatus,
+			name: "wait until every job and subagent ends",
+			exchange: resultExchange("wait", wait.Args{Names: []string{"build", "subagent:tame-adder"}, Until: wait.All}, agent.SuccessStatus,
 				"build: complete after 37s\nok  crdx.org/oh\n\n"+
-					"lint: complete after 22s\nall checks passed\n"),
+					"tame-adder: done\nThe parser is in parse.go."),
 		},
 		{
-			name: "job wait for all that reached its limit",
-			exchange: resultExchange("job", job.Args{
-				Action:  "wait",
-				Names:   []string{"build", "lint"},
-				WaitFor: "all",
-			}, agent.SuccessStatus,
-				"build: complete after 37s\n"+
-					"lint: running for 5m 5s\n"+
-					"note: the wait gave up after 5m before all watched jobs ended.\n"),
+			name: "wait for all that reached its limit",
+			exchange: resultExchange("wait", wait.Args{Names: []string{"build", "lint"}, Until: wait.All, Seconds: 300}, agent.SuccessStatus,
+				"build: complete after 37s\n\n"+
+					"lint: running for 5m 5s\n\n"+
+					"note: the wait gave up after 5m, and lint is still running."),
 		},
 		{
-			name: "job wait that gave up on a job still running",
-			exchange: resultExchange("job", job.Args{Action: "wait", Name: "docs"}, agent.SuccessStatus,
-				"docs: running for 5m 5s\n"+
-					"note: the wait gave up after 5m, and the job is still running.\n"+
-					"Serving HTTP on localhost port 8080 ...\n"),
+			name: "wait ended early by a message",
+			exchange: resultExchange("wait", wait.Args{Names: []string{"docs"}}, agent.SuccessStatus,
+				"docs: running for 1m 5s\nServing HTTP on localhost port 8080 ...\n\n"+
+					"note: the user sent a message, so the wait ended early, and docs is still running."),
 		},
 		{
 			name: "title",

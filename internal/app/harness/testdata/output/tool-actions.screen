@@ -12,8 +12,8 @@ Handling this job for the test start do…
 Handling this job for the test restart …
 status docs
 cat docs
-await docs || build
-await docs && build for up to 20s
+job wait Handling this job for the test
+job wait Handling this job for the test
 stop docs
 list jobs
 discard docs
@@ -145,8 +145,8 @@ Handling this job for the test start docs:8002 $ serve docs
 Handling this job for the test restart docs
 status docs (Handling this job for the test)
 cat docs (Handling this job for the test)
-await docs || build (Handling this job for the test)
-await docs && build for up to 20s (Handling this job for the test)
+job wait Handling this job for the test
+job wait Handling this job for the test
 stop docs (Handling this job for the test)
 list jobs
 discard docs (Handling this job for the test)
@@ -170,8 +170,8 @@ Handling th…
 Handling th…
 status docs
 cat docs
-await docs …
-await docs …
+job wait Ha…
+job wait Ha…
 stop docs
 list jobs
 discard docs
@@ -194,8 +194,8 @@ Handling this job for the test start docs:8002 $ serve docs
 Handling this job for the test restart docs
 status docs (Handling this job for the test)
 cat docs (Handling this job for the test)
-await docs || build (Handling this job for the test)
-await docs && build for up to 20s (Handling this job for the test)
+job wait Handling this job for the test
+job wait Handling this job for the test
 stop docs (Handling this job for the test)
 list jobs
 discard docs (Handling this job for the test)

@@ -24,6 +24,7 @@ import (
 	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/subagent"
+	"crdx.org/oh/pkg/toolbox/wait"
 )
 
 var sessionGoldenModelNames = map[string]string{
@@ -206,7 +207,11 @@ func (self *sessionGoldenChildren) withTool(tools []tool.Tool, manager *subagent
 	if self == nil {
 		return tools
 	}
-	return append(tools, subagent.New(manager, manager.Model()))
+	tools = append(tools, subagent.New(manager, manager.Model()))
+	if self.scenario.HasWaitTool {
+		tools = append(tools, wait.New([]wait.Source{manager.WaitSource()}, agent.MessageArrival))
+	}
+	return tools
 }
 
 func isStarted(manager *subagents.Manager, name string) bool {

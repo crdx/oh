@@ -299,13 +299,13 @@ Plain page.
 
 job name must match [a-z0-9-]{1,10}
 
-=== job wait on a job that finished ===
-\e[38;2;207;173;0mjob\e[0m
+=== wait on a job that finished ===
+\e[38;2;207;173;0mwait\e[0m
 
 {
-    "action": \e[38;2;181;189;104m"wait"\e[0m,
-    "name": \e[38;2;181;189;104m"check"\e[0m,
-    "command": \e[38;2;181;189;104m""\e[0m
+    "names": [
+        \e[38;2;181;189;104m"check"\e[0m
+    ]
 }
 
 check: complete after 37s
@@ -313,94 +313,84 @@ ok  crdx.org/oh
 lint1  ✓
 
 
-=== job wait on several jobs until any finishes ===
-\e[38;2;207;173;0mjob\e[0m
+=== wait until any of several ends ===
+\e[38;2;207;173;0mwait\e[0m
 
 {
-    "action": \e[38;2;181;189;104m"wait"\e[0m,
-    "name": \e[38;2;181;189;104m""\e[0m,
     "names": [
         \e[38;2;181;189;104m"build"\e[0m,
         \e[38;2;181;189;104m"lint"\e[0m
-    ],
-    "command": \e[38;2;181;189;104m""\e[0m
+    ]
 }
 
 lint: complete after 22s
 all checks passed
 
 
-=== job wait for any that reached its limit ===
-\e[38;2;207;173;0mjob\e[0m
+=== wait for any that reached its limit ===
+\e[38;2;207;173;0mwait\e[0m
 
 {
-    "action": \e[38;2;181;189;104m"wait"\e[0m,
-    "name": \e[38;2;181;189;104m""\e[0m,
     "names": [
         \e[38;2;181;189;104m"build"\e[0m,
         \e[38;2;181;189;104m"lint"\e[0m
-    ],
-    "command": \e[38;2;181;189;104m""\e[0m
+    ]
 }
 
 build: running for 5m 5s
+
 lint: running for 5m 1s
-note: the wait gave up after 5m before any watched job ended.
 
+note: the wait gave up after 10m, and build, lint are still running.
 
-=== job wait on several jobs until all finish ===
-\e[38;2;207;173;0mjob\e[0m
+=== wait until every job and subagent ends ===
+\e[38;2;207;173;0mwait\e[0m
 
 {
-    "action": \e[38;2;181;189;104m"wait"\e[0m,
-    "name": \e[38;2;181;189;104m""\e[0m,
     "names": [
         \e[38;2;181;189;104m"build"\e[0m,
-        \e[38;2;181;189;104m"lint"\e[0m
+        \e[38;2;181;189;104m"subagent:tame-adder"\e[0m
     ],
-    "wait_for": \e[38;2;181;189;104m"all"\e[0m,
-    "command": \e[38;2;181;189;104m""\e[0m
+    "until": \e[38;2;181;189;104m"all"\e[0m
 }
 
 build: complete after 37s
 ok  crdx.org/oh
 
-lint: complete after 22s
-all checks passed
+tame-adder: done
+The parser is in parse.go.
 
-
-=== job wait for all that reached its limit ===
-\e[38;2;207;173;0mjob\e[0m
+=== wait for all that reached its limit ===
+\e[38;2;207;173;0mwait\e[0m
 
 {
-    "action": \e[38;2;181;189;104m"wait"\e[0m,
-    "name": \e[38;2;181;189;104m""\e[0m,
     "names": [
         \e[38;2;181;189;104m"build"\e[0m,
         \e[38;2;181;189;104m"lint"\e[0m
     ],
-    "wait_for": \e[38;2;181;189;104m"all"\e[0m,
-    "command": \e[38;2;181;189;104m""\e[0m
+    "until": \e[38;2;181;189;104m"all"\e[0m,
+    "seconds": \e[38;2;192;128;80m300\e[0m
 }
 
 build: complete after 37s
+
 lint: running for 5m 5s
-note: the wait gave up after 5m before all watched jobs ended.
 
+note: the wait gave up after 5m, and lint is still running.
 
-=== job wait that gave up on a job still running ===
-\e[38;2;207;173;0mjob\e[0m
+=== wait ended early by a message ===
+\e[38;2;207;173;0mwait\e[0m
 
 {
-    "action": \e[38;2;181;189;104m"wait"\e[0m,
-    "name": \e[38;2;181;189;104m"docs"\e[0m,
-    "command": \e[38;2;181;189;104m""\e[0m
+    "names": [
+        \e[38;2;181;189;104m"docs"\e[0m
+    ]
 }
 
-docs: running for 5m 5s
-note: the wait gave up after 5m, and the job is still running.
+docs: running for 1m 5s
 Serving HTTP on localhost port 8080 ...
 
+note: the user sent a message, so the wait ended early, and docs is still running.
 
 === title ===
 \e[38;2;207;173;0mtitle\e[0m · \e[38;2;192;128;80mrender-useful-results\e[0m

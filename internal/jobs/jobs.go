@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"reflect"
 	"slices"
 	"strings"
 	"sync"
@@ -155,7 +154,7 @@ type job struct {
 	output         *spool
 	runningCommand sandbox.Command
 	over           chan struct{}
-	waiters        int
+	holds          int
 	run            int
 	respawn        Respawn
 	quickRuns      int
@@ -319,65 +318,23 @@ func (self *Manager) Ended(name string) (string, Snapshot, error) {
 	return found.output.String(), self.describe(found), nil
 }
 
-func (self *Manager) Wait(ctx context.Context, names []string) (string, error) {
+func (self *Manager) Hold(name string) (<-chan struct{}, func(), error) {
 	self.mutex.Lock()
-	watchedJobs := make([]*job, 0, len(names))
-	for _, name := range names {
-		found, isKnown := self.jobs[name]
-		if !isKnown {
-			self.mutex.Unlock()
-			if len(names) == 1 {
-				return "", ErrNotFound
-			}
-			return "", fmt.Errorf("%w: %s", ErrNotFound, name)
-		}
-		watchedJobs = append(watchedJobs, found)
-	}
-	if len(watchedJobs) == 0 {
-		self.mutex.Unlock()
-		return "", errors.New("at least one job name is required")
+	defer self.mutex.Unlock()
+
+	found, isKnown := self.jobs[name]
+	if !isKnown {
+		return nil, nil, ErrNotFound
 	}
 
-	for _, watchedJob := range watchedJobs {
-		watchedJob.waiters++
-	}
-	defer self.releaseWaiters(watchedJobs)
-
-	if endedName, isEnded := getFirstEndedName(watchedJobs); isEnded {
-		self.mutex.Unlock()
-		return endedName, nil
+	found.holds++
+	release := func() {
+		self.mutex.Lock()
+		defer self.mutex.Unlock()
+		found.holds--
 	}
 
-	cases := make([]reflect.SelectCase, 0, len(watchedJobs)+1)
-	for _, watchedJob := range watchedJobs {
-		cases = append(cases, reflect.SelectCase{Dir: reflect.SelectRecv, Chan: reflect.ValueOf(watchedJob.over)})
-	}
-	cases = append(cases, reflect.SelectCase{Dir: reflect.SelectRecv, Chan: reflect.ValueOf(ctx.Done())})
-	self.mutex.Unlock()
-
-	endedIndex, _, _ := reflect.Select(cases)
-	if endedIndex < len(watchedJobs) {
-		return watchedJobs[endedIndex].name, nil
-	}
-
-	self.mutex.Lock()
-	endedName, isEnded := getFirstEndedName(watchedJobs)
-	self.mutex.Unlock()
-	if isEnded {
-		return endedName, nil
-	}
-
-	return "", ctx.Err()
-}
-
-func getFirstEndedName(watchedJobs []*job) (string, bool) {
-	for _, watchedJob := range watchedJobs {
-		if !isLive(watchedJob.state) {
-			return watchedJob.name, true
-		}
-	}
-
-	return "", false
+	return found.over, release, nil
 }
 
 func (self *Manager) List() []Snapshot {
@@ -518,15 +475,6 @@ func (self *Manager) start(
 	return self.snapshot(openingJob), nil
 }
 
-func (self *Manager) releaseWaiters(watchedJobs []*job) {
-	self.mutex.Lock()
-	defer self.mutex.Unlock()
-
-	for _, watchedJob := range watchedJobs {
-		watchedJob.waiters--
-	}
-}
-
 func (self *Manager) settleStarted(openingJob *job, runningCommand sandbox.Command) bool {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
@@ -643,7 +591,7 @@ func (self *Manager) settle(endingJob *job, natural State, code int, failure str
 	}
 
 	conclusion := self.conclusion(endingJob)
-	isAnnounced := endingJob.waiters == 0 &&
+	isAnnounced := endingJob.holds == 0 &&
 		(endingJob.state == StateComplete || endingJob.state == StateFailed)
 
 	if isRespawned {

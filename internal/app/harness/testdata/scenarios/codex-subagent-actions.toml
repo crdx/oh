@@ -1,6 +1,7 @@
 provider = "codex"
 model = "gpt-5.6-sol"
 effort = "medium"
+with-wait-tool = true
 
 [[subagent]]
 name = "tame-adder"
@@ -45,7 +46,7 @@ event = [
 
 [[first.response]]
 event = [
-    '''{"type":"response.output_item.done","item":{"id":"call-item-95","type":"function_call","call_id":"toolu_15","name":"subagent","arguments":"{\"action\":\"wait\",\"names\":[\"tame-adder\"],\"wait_seconds\":1}"}}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-95","type":"function_call","call_id":"toolu_15","name":"wait","arguments":"{\"names\":[\"tame-adder\"],\"seconds\":1}"}}''',
     '''{"type":"response.completed","response":{"status":"completed"}}''',
 ]
 
@@ -57,7 +58,7 @@ event = [
 
 [[first.response]]
 event = [
-    '''{"type":"response.output_item.done","item":{"id":"call-item-31","type":"function_call","call_id":"toolu_6","name":"subagent","arguments":"{\"action\":\"wait\",\"names\":[\"tame-adder\"]}"}}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-31","type":"function_call","call_id":"toolu_6","name":"wait","arguments":"{\"names\":[\"tame-adder\"]}"}}''',
     '''{"type":"response.completed","response":{"status":"completed"}}''',
 ]
 

@@ -448,32 +448,6 @@ func (self *Manager) WasReturned(name string) bool {
 	return current != nil && current.isReturned
 }
 
-func (self *Manager) Wait(ctx context.Context, names []string, limit time.Duration) (string, error) {
-	_, overs, err := self.snapshots(names)
-	if err != nil {
-		return "", err
-	}
-	deadline := time.NewTimer(limit)
-	defer deadline.Stop()
-	for _, over := range overs {
-		select {
-		case <-over:
-		case <-ctx.Done():
-			return "", ctx.Err()
-		case <-deadline.C:
-			return self.gaveUp(names, limit)
-		}
-	}
-	return self.Output(names)
-}
-
-func pluralIs(count int) string {
-	if count == 1 {
-		return "is"
-	}
-	return "are"
-}
-
 func (self *Manager) Stop(names []string) (string, error) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
@@ -521,26 +495,6 @@ func (self *Manager) Close() {
 		close(self.events)
 		_ = self.scratchRoot.Close()
 	})
-}
-
-func (self *Manager) gaveUp(names []string, limit time.Duration) (string, error) {
-	reports, err := self.Output(names)
-	if err != nil {
-		return "", err
-	}
-	var stillLive []string
-	for _, snapshot := range self.ListSnapshots() {
-		if (len(names) == 0 || slices.Contains(names, snapshot.Name)) && snapshot.State.IsLive() {
-			stillLive = append(stillLive, snapshot.Name)
-		}
-	}
-	if len(stillLive) == 0 {
-		return reports, nil
-	}
-	return strings.TrimRight(reports, "\n") + fmt.Sprintf(
-		"\n\nnote: the wait gave up after %s, and %s %s still running.",
-		util.CompactDuration(limit), strings.Join(stillLive, ", "), pluralIs(len(stillLive)),
-	), nil
 }
 
 func (self *Manager) restoreStart(event agent.Event) {

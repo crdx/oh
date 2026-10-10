@@ -598,47 +598,47 @@ cat docs 2L
 stop docs
 discard docs
 
-── job waits reminded of every job · 120 columns
+── waits reminded of every job · 120 columns
 Serving the documentation locally start docs $ just docs
 Building every package start build $ just build
-await docs || build 1L (Serving the documentation locally; Building every package)
-await docs && build for up to 20s 2L (Serving the documentation locally; Building every package)
-await docs || other 1L (Serving the documentation locally)
+wait docs || build 1L (Serving the documentation locally; Building every package)
+wait docs && build for up to 20s 2L (Serving the documentation locally; Building every package)
+wait docs || other 1L (Serving the documentation locally)
 
-── job waits reminded of every job · 80 columns
+── waits reminded of every job · 80 columns
 Serving the documentation locally start docs $ just docs
 Building every package start build $ just build
-await docs || build 1L
-await docs && build for up to 20s 2L
-await docs || other 1L (Serving the documentation locally)
+wait docs || build 1L
+wait docs && build for up to 20s 2L
+wait docs || other 1L (Serving the documentation locally)
 
-── job waits reminded of every job · 60 columns
+── waits reminded of every job · 60 columns
 Serving the documentation locally start docs $ just docs
 Building every package start build $ just build
-await docs || build 1L
-await docs && build for up to 20s 2L
-await docs || other 1L (Serving the documentation locally)
+wait docs || build 1L
+wait docs && build for up to 20s 2L
+wait docs || other 1L (Serving the documentation locally)
 
-── job waits reminded of every job · 44 columns
+── waits reminded of every job · 44 columns
 Serving the documentation locally start docs
 Building every package start build $ just b…
-await docs || build 1L
-await docs && build for up to 20s 2L
-await docs || other 1L
+wait docs || build 1L
+wait docs && build for up to 20s 2L
+wait docs || other 1L
 
-── job waits reminded of every job · 30 columns
+── waits reminded of every job · 30 columns
 Serving the documentation loc…
 Building every package start …
-await docs || build 1L
-await docs && build for up… 2L
-await docs || other 1L
+wait docs || build 1L
+wait docs && build for up … 2L
+wait docs || other 1L
 
-── job waits reminded of every job · 16 columns
+── waits reminded of every job · 16 columns
 Serving the doc…
 Building every …
-await docs |… 1L
-await docs &… 2L
-await docs |… 1L
+wait docs ||… 1L
+wait docs &&… 2L
+wait docs ||… 1L
 
 ── job reminded of its newest start · 120 columns
 Serving the documentation locally start docs $ just docs
@@ -706,41 +706,41 @@ Serving the doc…
 list jobs 2L
 prune jobs
 
-── job wait stopped by the user · 120 columns
+── wait stopped by the user · 120 columns
 Running the full check start check $ just check
-await check for up to 4m 30s – stopped because the user pressed escape (Running the full check)
+wait check for up to 4m 30s – stopped because the user pressed escape (Running the full check)
 
-── job wait stopped by the user · 80 columns
+── wait stopped by the user · 80 columns
 Running the full check start check $ just check
-await check for up to 4m 30s – stopped because the user pressed escape
+wait check for up to 4m 30s – stopped because the user pressed escape
 
-── job wait stopped by the user · 60 columns
+── wait stopped by the user · 60 columns
 Running the full check start check $ just check
-await check for up to 4m 30s – stopped because the user pre…
+wait check for up to 4m 30s – stopped because the user pres…
 
-── job wait stopped by the user · 44 columns
+── wait stopped by the user · 44 columns
 Running the full check start check $ just c…
-await check for up … – stopped because the …
+wait check for up t… – stopped because the …
 
-── job wait stopped by the user · 30 columns
+── wait stopped by the user · 30 columns
 Running the full check start …
-await check … – stopped becau…
+wait check f… – stopped becau…
 
-── job wait stopped by the user · 16 columns
+── wait stopped by the user · 16 columns
 Running the ful…
-await – stoppe…
+wait … – stoppe…
 
 ── job call with an unknown action · 120 columns
-job explode docs ✗ action must be one of start, status, output, wait, stop, discard, list, prune
+job explode docs ✗ action must be start, status, output, stop, discard, prune, or list
 
 ── job call with an unknown action · 80 columns
-job explode docs ✗ action must be one of start, status, output, wait, stop, dis…
+job explode docs ✗ action must be start, status, output, stop, discard, prune, …
 
 ── job call with an unknown action · 60 columns
-job explode docs ✗ action must be one of start, status, out…
+job explode docs ✗ action must be start, status, output, st…
 
 ── job call with an unknown action · 44 columns
-job explode docs ✗ action must be one of st…
+job explode docs ✗ action must be start, st…
 
 ── job call with an unknown action · 30 columns
 job explode … ✗ action must b…

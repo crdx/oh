@@ -7,13 +7,13 @@
 Handling this job for the test start do…
 status docs
 cat docs 3L
-await docs 3L
+job wait docs Handling this job for … 3L
 Handling this job for the test st… ✗ a …
 list jobs 4L ~100t
-await docs && build 5L ~100t
+job wait Handling this job for… 5L ~100t
 stop docs
-await build || docs 4L ~100t
-await docs && build 7L ~100t
+job wait Handling this job for… 4L ~100t
+job wait Handling this job for… 7L ~100t
 
 The docs server ran on localhost:8080
 and is stopped now. The build job was
@@ -231,13 +231,13 @@ t
 Handling this job for the test start docs $ python3 -m http.server 8080; --bind localhost 2L
 status docs (Handling this job for the test)
 cat docs 3L (Handling this job for the test)
-await docs 3L (Handling this job for the test)
+job wait docs Handling this job for the test 3L
 Handling this job for the test start docs $ python3 -m http.ser… ✗ a job of that name is already ru…
 list jobs 4L ~100t
-await docs && build 5L ~100t (Handling this job for the test)
+job wait Handling this job for the test 5L ~100t
 stop docs (Handling this job for the test)
-await build || docs 4L ~100t (Handling this job for the test)
-await docs && build 7L ~100t (Handling this job for the test)
+job wait Handling this job for the test 4L ~100t
+job wait Handling this job for the test 7L ~100t
 
 The docs server ran on localhost:8080 and is stopped now. The build job was killed by SIGXCPU after
 exceeding its 2s processor limit.
@@ -254,13 +254,13 @@ exceeding its 2s processor limit.
 Handling th…
 status docs
 cat docs 3L
-await do… 3L
+job wait… 3L
 Handling … ✗
 li… 4L ~100t
-aw… 5L ~100t
+job 5L ~100t
 stop docs
-aw… 4L ~100t
-aw… 7L ~100t
+job 4L ~100t
+job 7L ~100t
 
 The docs
 server ran
@@ -285,13 +285,13 @@ limit.
 Handling this job for the test start docs $ python3 -m http.server 8080; --bind localhost 2L
 status docs (Handling this job for the test)
 cat docs 3L (Handling this job for the test)
-await docs 3L (Handling this job for the test)
+job wait docs Handling this job for the test 3L
 Handling this job for the test start docs $ python3 -m http.ser… ✗ a job of that name is already ru…
 list jobs 4L ~100t
-await docs && build 5L ~100t (Handling this job for the test)
+job wait Handling this job for the test 5L ~100t
 stop docs (Handling this job for the test)
-await build || docs 4L ~100t (Handling this job for the test)
-await docs && build 7L ~100t (Handling this job for the test)
+job wait Handling this job for the test 4L ~100t
+job wait Handling this job for the test 7L ~100t
 
 The docs server ran on localhost:8080 and is stopped now. The build job was killed by SIGXCPU after
 exceeding its 2s processor limit.

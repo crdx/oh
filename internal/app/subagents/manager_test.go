@@ -22,6 +22,7 @@ import (
 	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/subagent"
+	"crdx.org/oh/pkg/toolbox/wait"
 )
 
 const parentName = "frugal-ladybird"
@@ -251,9 +252,7 @@ func TestRevokingShellStopsOnlyLiveChildren(t *testing.T) {
 	if again := manager.StopRunning(); len(again) != 0 {
 		t.Fatalf("stopped them again: %v", again)
 	}
-	if _, err := manager.Wait(t.Context(), nil, time.Minute); err != nil {
-		t.Fatal(err)
-	}
+	waitOn(t, manager, wait.All, 60, names...)
 	for _, snapshot := range manager.ListSnapshots() {
 		if snapshot.State != subagentrecord.Stopped {
 			t.Errorf("%s remains %s", snapshot.Name, snapshot.State)
@@ -439,17 +438,14 @@ func TestSendRefusesAChildThatIsRunningGoneOrReplaced(t *testing.T) {
 	}
 }
 
-func TestAnAnswerReadThroughWaitIsMarkedReturnedAfterItsFinish(t *testing.T) {
+func TestAnAnswerReadThroughAWaitIsMarkedReturnedAfterItsFinish(t *testing.T) {
 	manager := newTestFamily(t).manager(t, answering(func() agent.Provider { return &answeringProvider{} }))
 	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "say hello"}, {Prompt: "say goodbye"}}); err != nil {
 		t.Fatal(err)
 	}
 	snapshots := manager.ListSnapshots()
 	first, second := snapshots[0].Name, snapshots[1].Name
-	output, err := manager.Wait(t.Context(), []string{first}, time.Minute)
-	if err != nil {
-		t.Fatal(err)
-	}
+	output := waitOn(t, manager, wait.Any, 60, first)
 	if !strings.Contains(output, "say hello") {
 		t.Fatalf("wait returned %q, want the answer", output)
 	}
@@ -602,10 +598,7 @@ func TestAWaitThatGivesUpSaysWhichSubagentsAreStillRunning(t *testing.T) {
 		t.Fatal(err)
 	}
 	name := manager.ListSnapshots()[0].Name
-	report, err := manager.Wait(t.Context(), nil, time.Second)
-	if err != nil {
-		t.Fatal(err)
-	}
+	report := waitOn(t, manager, wait.Any, 1, name)
 	if want := name + ": running\n\nnote: the wait gave up after 1s, and " + name + " is still running."; report != want {
 		t.Errorf("the report %q does not say %q", report, want)
 	}

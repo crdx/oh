@@ -1,6 +1,7 @@
 provider = "codex"
 model = "gpt-5.6-sol"
 effort = "medium"
+with-wait-tool = true
 
 [[subagent]]
 name = "tame-adder"
@@ -43,7 +44,7 @@ event = [
 
 [[first.response]]
 event = [
-    '''{"type":"response.output_item.done","item":{"id":"call-item-46","type":"function_call","call_id":"toolu_2","name":"subagent","arguments":"{\"action\":\"wait\",\"names\":[]}"}}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-46","type":"function_call","call_id":"toolu_2","name":"wait","arguments":"{\"names\":[\"tame-adder\",\"tame-alpaca\"],\"until\":\"all\"}"}}''',
     '''{"type":"response.completed","response":{"status":"completed"}}''',
 ]
 

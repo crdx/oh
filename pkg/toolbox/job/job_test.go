@@ -236,7 +236,6 @@ func TestAStartIntroducesItsJobAndOtherCallsMentionTheirs(t *testing.T) {
 		`{"action":"output","name":"docs"}`:                                              {mentions: []string{"docs"}},
 		`{"action":"stop","name":"docs"}`:                                                {mentions: []string{"docs"}},
 		`{"action":"discard","name":"docs"}`:                                             {mentions: []string{"docs"}},
-		`{"action":"wait","names":["docs","build"]}`:                                     {mentions: []string{"docs", "build"}},
 		`{"action":"list"}`:                                                              {},
 		`{"action":"prune"}`:                                                             {},
 	} {
@@ -374,48 +373,6 @@ func TestAJobIsDiscardedWhenItsPortCannotBeForwarded(t *testing.T) {
 	}
 }
 
-func TestWaitingOnAFinishedJobReportsItAtOnce(t *testing.T) {
-	output, err := run(t, withFinishedJobs(t), map[string]string{"action": "wait", "name": "build"})
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if !strings.HasPrefix(output, "build: failed") {
-		t.Errorf("got %q, want the job reported without any waiting at all", output)
-	}
-}
-
-func TestWaitingForAnyFinishedJobReportsOnlyTheFirstOne(t *testing.T) {
-	output, err := run(t, withFinishedJobs(t), map[string]any{
-		"action": "wait",
-		"names":  []string{"watch", "build"},
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if !strings.HasPrefix(output, "watch: complete") || strings.Contains(output, "build: failed") {
-		t.Errorf("got %q, want only the first requested finished job", output)
-	}
-}
-
-func TestWaitingForAllFinishedJobsReportsEveryOne(t *testing.T) {
-	output, err := run(t, withFinishedJobs(t), map[string]any{
-		"action":   "wait",
-		"names":    []string{"watch", "build"},
-		"wait_for": "all",
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	watchPosition := strings.Index(output, "watch: complete")
-	buildPosition := strings.Index(output, "build: failed")
-	if watchPosition < 0 || buildPosition < watchPosition {
-		t.Errorf("got %q, want every job in the requested order", output)
-	}
-}
-
 func TestAnUnknownActionIsRefused(t *testing.T) {
 	_, err := run(t, jobs.New(nil), map[string]string{"action": "frobnicate", "name": "docs"})
 	if err == nil || !strings.Contains(err.Error(), "must be") {
@@ -465,67 +422,6 @@ func TestStartingValidatesTheJobName(t *testing.T) {
 		if (err == nil) != testCase.isValid {
 			t.Errorf("starting %q gave %v, want validity %v", testCase.name, err, testCase.isValid)
 		}
-	}
-}
-
-func TestAWaitNeedsEitherNameOrNames(t *testing.T) {
-	if _, err := run(t, jobs.New(nil), map[string]string{"action": "wait"}); err == nil ||
-		!strings.Contains(err.Error(), "wait requires name or names") {
-		t.Errorf("got %v, want the wait to ask what to watch", err)
-	}
-}
-
-func TestAWaitRefusesNameTogetherWithNames(t *testing.T) {
-	_, err := run(t, jobs.New(nil), map[string]any{
-		"action": "wait",
-		"name":   "build",
-		"names":  []string{"docs"},
-	})
-	if err == nil || !strings.Contains(err.Error(), "cannot both be set") {
-		t.Errorf("got %v, want the two forms to be refused together", err)
-	}
-}
-
-func TestAWaitRefusesARepeatedName(t *testing.T) {
-	_, err := run(t, jobs.New(nil), map[string]any{
-		"action": "wait",
-		"names":  []string{"build", "build"},
-	})
-	if err == nil || !strings.Contains(err.Error(), "duplicate name") {
-		t.Errorf("got %v, want the repeated name to be refused", err)
-	}
-}
-
-func TestAWaitRefusesAnUnknownWaitForValue(t *testing.T) {
-	_, err := run(t, jobs.New(nil), map[string]string{
-		"action":   "wait",
-		"name":     "build",
-		"wait_for": "most",
-	})
-	if err == nil || !strings.Contains(err.Error(), "wait_for must be one of: any, all") {
-		t.Errorf("got %v, want the wait_for values to be named", err)
-	}
-}
-
-func TestAWaitRefusesANegativeNumberOfSeconds(t *testing.T) {
-	_, err := run(t, jobs.New(nil), map[string]any{
-		"action":       "wait",
-		"name":         "build",
-		"wait_seconds": -1,
-	})
-	if err == nil || !strings.Contains(err.Error(), "must be positive") {
-		t.Errorf("got %v, want the negative wait to be refused", err)
-	}
-}
-
-func TestOnlyAWaitTakesANumberOfSeconds(t *testing.T) {
-	_, err := run(t, jobs.New(nil), map[string]any{
-		"action":       "status",
-		"name":         "build",
-		"wait_seconds": 5,
-	})
-	if err == nil || !strings.Contains(err.Error(), "wait_seconds requires action=\"wait\"") {
-		t.Errorf("got %v, want wait_seconds to belong to wait alone", err)
 	}
 }
 
@@ -645,26 +541,6 @@ func TestAJobCallIsRenderedByItsAction(t *testing.T) {
 			args: job.Args{Action: "discard", Name: "docs"},
 			want: tool.CallRendering{Kind: "job_discard", ReportsStatus: true, Subject: "docs", Mentions: []string{"docs"}},
 		},
-		"wait any": {
-			args: job.Args{Action: "wait", Names: []string{"build", "lint"}},
-			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build || lint", Mentions: []string{"build", "lint"}},
-		},
-		"wait all": {
-			args: job.Args{Action: "wait", Names: []string{"build", "lint"}, WaitFor: "all"},
-			want: tool.CallRendering{Kind: "job_wait_all", Subject: "build && lint", Mentions: []string{"build", "lint"}},
-		},
-		"wait any with limit": {
-			args: job.Args{Action: "wait", Names: []string{"build", "lint"}, WaitFor: "any", WaitSeconds: 20},
-			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build || lint", Qualifier: "for up to 20s", Mentions: []string{"build", "lint"}},
-		},
-		"wait with formatted limit": {
-			args: job.Args{Action: "wait", Name: "build", WaitSeconds: 270},
-			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build", Qualifier: "for up to 4m 30s", Mentions: []string{"build"}},
-		},
-		"wait with clamped limit": {
-			args: job.Args{Action: "wait", Name: "build", WaitSeconds: 660},
-			want: tool.CallRendering{Kind: "job_wait_any", Subject: "build", Qualifier: "for up to 10m", Mentions: []string{"build"}},
-		},
 		"list": {
 			args: job.Args{Action: "list"},
 			want: tool.CallRendering{Kind: "job_list", Subject: "jobs"},
@@ -697,24 +573,18 @@ func TestTheNameParameterGivesConciseNamingAdvice(t *testing.T) {
 	}
 }
 
-func TestTheWaitParameterFormatsItsMaximumAsADuration(t *testing.T) {
-	var description string
-	for _, parameter := range job.New(nil, nil, nil, nil).Schema() {
-		if parameter.Name == "wait_seconds" {
-			description = parameter.Description
+func TestTheToolSaysToEndTheTurnRatherThanWait(t *testing.T) {
+	for _, built := range []tool.Tool{job.New(nil, nil, nil, nil), job.NewOnHost(nil, nil, nil)} {
+		if !strings.Contains(built.Description(), job.EndAdvice) {
+			t.Errorf("description %q does not say how a job's ending arrives", built.Description())
 		}
-	}
-
-	if !strings.Contains(description, "max 10m") {
-		t.Errorf("wait_seconds description %q does not format its maximum as a duration", description)
-	}
-}
-
-func TestTheToolExplainsJobNotificationsInBothSessionModes(t *testing.T) {
-	description := job.New(nil, nil, nil, nil).Description()
-	for _, wanted := range []string{"In an interactive session", "in a non-interactive session"} {
-		if !strings.Contains(description, wanted) {
-			t.Errorf("description %q does not contain %q", description, wanted)
+		for _, parameter := range built.Schema() {
+			if slices.Contains([]string{"names", "wait_for", "wait_seconds"}, parameter.Name) {
+				t.Errorf("the job tool still offers %s", parameter.Name)
+			}
+		}
+		if _, err := built.Parse(`{"action":"wait","name":"docs"}`); err == nil {
+			t.Error("the job tool accepted a wait")
 		}
 	}
 }
@@ -737,7 +607,7 @@ func TestAJobOnTheHostOffersNothingToForward(t *testing.T) {
 		}
 	}
 	description := onHost.Description()
-	for _, wanted := range []string{"directly on the host", "In an interactive session", "in a non-interactive session"} {
+	for _, wanted := range []string{"directly on the host"} {
 		if !strings.Contains(description, wanted) {
 			t.Errorf("description %q does not contain %q", description, wanted)
 		}

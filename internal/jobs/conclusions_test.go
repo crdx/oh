@@ -2,6 +2,7 @@ package jobs
 
 import (
 	"context"
+	"errors"
 	"strings"
 	"syscall"
 	"testing"
@@ -119,59 +120,43 @@ func TestAJobStoppedFromTheKeyboardAnnouncesNothing(t *testing.T) {
 	}
 }
 
-func TestAJobBeingWaitedOnAnnouncesNothing(t *testing.T) {
+func TestAHeldJobAnnouncesNothingAndAReleasedOneDoes(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
-		runner := newHeldRunner(sandbox.Result{})
-		manager := New(runner)
+		for _, isReleased := range []bool{false, true} {
+			runner := newHeldRunner(sandbox.Result{})
+			manager := New(runner)
 
-		if _, err := manager.Start(t.Context(), "build", t.TempDir(), "just build", sandbox.Policy{}); err != nil {
-			t.Fatal(err)
-		}
-
-		waiting := make(chan struct{})
-		go func() {
-			defer close(waiting)
-			if _, err := manager.Wait(t.Context(), []string{"build"}); err != nil {
-				t.Error(err)
+			if _, err := manager.Start(t.Context(), "build", t.TempDir(), "just build", sandbox.Policy{}); err != nil {
+				t.Fatal(err)
 			}
-		}()
+			over, release, err := manager.Hold("build")
+			if err != nil {
+				t.Fatal(err)
+			}
+			if isReleased {
+				release()
+			}
 
-		synctest.Wait()
-		close(runner.release)
-		<-waiting
+			close(runner.release)
+			<-over
+			synctest.Wait()
 
-		select {
-		case conclusion := <-manager.Conclusions():
-			t.Errorf("got %#v, want a job that was waited on to announce nothing", conclusion)
-		default:
+			select {
+			case conclusion := <-manager.Conclusions():
+				if !isReleased {
+					t.Errorf("got %#v, want a held job to announce nothing", conclusion)
+				}
+			default:
+				if isReleased {
+					t.Error("a released job announced nothing")
+				}
+			}
 		}
 	})
 }
 
-func TestAJobThatEndsAfterAWaitGaveUpAnnouncesItself(t *testing.T) {
-	synctest.Test(t, func(t *testing.T) {
-		runner := newHeldRunner(sandbox.Result{})
-		manager := New(runner)
-
-		if _, err := manager.Start(t.Context(), "build", t.TempDir(), "just build", sandbox.Policy{}); err != nil {
-			t.Fatal(err)
-		}
-
-		waiting, giveUp := context.WithTimeout(t.Context(), 50*time.Millisecond)
-		defer giveUp()
-
-		if _, err := manager.Wait(waiting, []string{"build"}); err == nil {
-			t.Fatal("the wait returned before the job ended")
-		}
-
-		close(runner.release)
-
-		conclusion, isAnnounced := nextConclusion(t, manager)
-		if !isAnnounced {
-			t.Fatal("a job that ended after its wait gave up announced nothing")
-		}
-		if conclusion.Snapshot.Name != "build" {
-			t.Errorf("got %#v, want the job that ended", conclusion.Snapshot)
-		}
-	})
+func TestHoldingAnUnknownJobSaysSo(t *testing.T) {
+	if _, _, err := New(nil).Hold("ghost"); !errors.Is(err, ErrNotFound) {
+		t.Errorf("got %v, want the job to be unknown", err)
+	}
 }
