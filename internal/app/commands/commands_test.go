@@ -592,7 +592,7 @@ func TestAnInheritedWaiverIsNeitherOfferedAgainNorWidenedByCapabilities(t *testi
 	for _, completion := range commands.Completions("/new -c ") {
 		flags = append(flags, completion.Label)
 	}
-	if want := []string{"l", "la"}; !slices.Equal(flags, want) {
+	if want := []string{"s", "sl", "sla"}; !slices.Equal(flags, want) {
 		t.Errorf("got capabilities %v, want %v", flags, want)
 	}
 }

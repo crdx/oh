@@ -664,19 +664,23 @@ func (self *Manager) Stop(names []string) (string, error) {
 	return "stopping " + strings.Join(stoppedNames, ", "), nil
 }
 
-func (self *Manager) StopRunning() []string {
+func (self *Manager) StopLosing(withdrawnCaps caps.Set) []string {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
+	reason := subagentrecord.Withdrawal(withdrawnCaps)
+	if reason == "" {
+		return nil
+	}
 	var holders []string
 	for _, childName := range self.order {
-		if self.children[childName].caps.Has(caps.Shell) {
+		if withdrawnCaps.Has(caps.Subagents) || self.children[childName].caps.Has(caps.Shell) {
 			holders = append(holders, childName)
 		}
 	}
 	if len(holders) == 0 {
 		return nil
 	}
-	return self.stopLocked(holders, "shell execution was withdrawn")
+	return self.stopLocked(holders, reason)
 }
 
 func (self *Manager) Close() {

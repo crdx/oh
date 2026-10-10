@@ -25,6 +25,7 @@ import (
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/store/wire"
+	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/req"
 	"crdx.org/oh/pkg/agent"
@@ -83,7 +84,8 @@ func journalLines(t *testing.T, directory string, name string) []map[string]json
 }
 
 func TestAJournalWithoutAVersionIsMigratedFromTheFirstFormat(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","id":"one","name":"tame-impala","meta":{"workspaceDir":"/workspace"}}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"tool_call_request","name":"read","highlight":{"kind":"focus","value":"draw.go"}}}`,
 		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"user_message","text":"first question"}}`,
@@ -144,7 +146,8 @@ func TestAJournalAlreadyCurrentIsLeftAlone(t *testing.T) {
 }
 
 func TestFormatThreeMigrationMarksOnlyTurnsWithDurableProviderState(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":3,"id":"one","name":"tame-impala"}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"user_message","text":"complete"}}`,
 		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"model_message","text":"done"}}`,
@@ -185,7 +188,8 @@ func TestFormatThreeMigrationMarksOnlyTurnsWithDurableProviderState(t *testing.T
 }
 
 func TestFormatThreeMigrationDoesNotCompleteAPartialProviderStateWrite(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":3,"id":"one","name":"tame-impala"}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"user_message","text":"crashed"}}`,
 		`{"kind":"item","time":"2026-08-01T00:00:02Z","payload":{"type":"partial"}}`,
@@ -205,7 +209,8 @@ func TestFormatThreeMigrationDoesNotCompleteAPartialProviderStateWrite(t *testin
 }
 
 func TestFormatFourMigrationRecoversTheLastKnownMode(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":4,"id":"one","name":"tame-impala","meta":{"system_prompt":"# State\n\n- The workspace (/workspace) is read-only\n- The .git directory within it (/workspace/.git) is read-only\n- Background processes are killed when their shell command ends\n- The bash tool is granted"}}`,
 		`{"kind":"item","time":"2026-08-01T00:00:01Z","payload":{"role":"user","content":"The workspace is now read-write."}}`,
 		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"mode_change","text":"rxw"}}`,
@@ -240,7 +245,8 @@ func TestFormatFourMigrationRecoversTheLastKnownMode(t *testing.T) {
 }
 
 func TestFormatFourMigrationPreservesARealModeChange(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":4,"id":"one","name":"tame-impala","meta":{"system_prompt":"# State\n\n- The workspace (/workspace) is read-only\n- The .git directory within it (/workspace/.git) is read-only\n- Background processes are killed when their shell command ends\n- The bash tool is granted"}}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"mode_change","text":"rxw"}}`,
 		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"mode_change","name":"g","text":"rxg"}}`,
@@ -259,7 +265,8 @@ func TestFormatFourMigrationPreservesARealModeChange(t *testing.T) {
 }
 
 func TestADryRunWritesNothing(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","id":"one","name":"tame-impala"}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"tool_call_request","highlight":{"kind":"focus"}}}`,
 	)
@@ -281,7 +288,8 @@ func TestADryRunWritesNothing(t *testing.T) {
 }
 
 func TestAnInUseJournalIsNotMigrated(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","id":"one","name":"tame-impala"}`,
 	)
 
@@ -305,7 +313,8 @@ func TestAnInUseJournalIsNotMigrated(t *testing.T) {
 }
 
 func TestAJournalFromANewerBuildIsRefused(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":99,"id":"one","name":"tame-impala"}`,
 	)
 
@@ -336,7 +345,8 @@ func TestAnEmptyJournalIsRefused(t *testing.T) {
 }
 
 func TestACopyOfTheBundleIsKeptBeforeItIsWritten(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","id":"one","name":"tame-impala"}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"tool_call_request","highlight":{"kind":"focus"}}}`,
 	)
@@ -358,7 +368,8 @@ func TestACopyOfTheBundleIsKeptBeforeItIsWritten(t *testing.T) {
 }
 
 func TestACopyIsNotWrittenOver(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","id":"one","name":"tame-impala"}`,
 	)
 
@@ -378,7 +389,8 @@ func TestACopyIsNotWrittenOver(t *testing.T) {
 }
 
 func TestADryRunKeepsNoCopy(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","id":"one","name":"tame-impala"}`,
 	)
 
@@ -393,7 +405,8 @@ func TestADryRunKeepsNoCopy(t *testing.T) {
 }
 
 func TestTheTranscriptIsWrittenAgainFromTheCarriedJournal(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","id":"one","name":"tame-impala"}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"tool_call_request","name":"read","render":"draw.go","highlight":{"kind":"focus","value":"draw.go"}}}`,
 	)
@@ -424,7 +437,8 @@ func TestTheTranscriptIsWrittenAgainFromTheCarriedJournal(t *testing.T) {
 }
 
 func TestFormatFiveMigrationAddsEventStatuses(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":5,"id":"one","name":"tame-impala"}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"harness_message","text":"stopped"}}`,
 		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"harness_message","text":"broken","failed":true}}`,
@@ -465,7 +479,8 @@ func TestFormatFiveMigrationAddsEventStatuses(t *testing.T) {
 
 func TestFormatSevenMigrationCountsTheWholeSystemPrompt(t *testing.T) {
 	systemPrompt := strings.Repeat("x", 3000)
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		fmt.Sprintf(
 			`{"kind":"head","time":"2026-08-01T00:00:00Z","version":7,"id":"one","name":"tame-impala","meta":{"system_prompt":%q}}`,
 			systemPrompt,
@@ -494,7 +509,8 @@ func TestFormatSevenMigrationCountsTheWholeSystemPrompt(t *testing.T) {
 }
 
 func TestFormatSevenMigrationFallsBackToTheContextFilesItHas(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":7,"id":"one","name":"tame-impala"}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"startup","state":{"context":[{"name":"SYSTEM.md","bytes":740},{"name":"AGENTS.md","bytes":260}]}}}`,
 	)
@@ -509,7 +525,8 @@ func TestFormatSevenMigrationFallsBackToTheContextFilesItHas(t *testing.T) {
 }
 
 func TestAnOlderJournalNamingTheBackgroundCapabilityMigratesAllTheWay(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":4,"id":"one","name":"tame-impala","meta":{"system_prompt":"# State\n\n- Background processes are allowed to outlive shell commands\n- The bash tool is granted"}}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"mode_change","name":"b","text":"rxb"}}`,
 	)
@@ -528,7 +545,8 @@ func TestAnOlderJournalNamingTheBackgroundCapabilityMigratesAllTheWay(t *testing
 }
 
 func TestFormatEightMigrationForgetsTheBackgroundCapability(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":8,"id":"one","name":"tame-impala"}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"mode_change","text":"rxwb"}}`,
 		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"mode_change","name":"b","text":"rxw"}}`,
@@ -565,7 +583,8 @@ func TestFormatEightMigrationForgetsTheBackgroundCapability(t *testing.T) {
 }
 
 func TestFormatNineMigrationForgetsTheModeASessionWasClosedOn(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":9,"id":"one","name":"tame-impala"}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"mode_change","text":"rxwgs"}}`,
 		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"user_message","text":"begin"}}`,
@@ -596,7 +615,8 @@ func TestFormatNineMigrationForgetsTheModeASessionWasClosedOn(t *testing.T) {
 }
 
 func TestFormatNineMigrationKeepsAMessageTheModeChangeDoesNotAnnounce(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":9,"id":"one","name":"tame-impala"}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"mode_change","text":"rxwgs"}}`,
 		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"user_message","text":"begin"}}`,
@@ -620,7 +640,8 @@ func TestFormatNineMigrationKeepsAMessageTheModeChangeDoesNotAnnounce(t *testing
 }
 
 func TestFormatNineMigrationKeepsTheMessagesOfACrashedTurn(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":9,"id":"one","name":"tame-impala"}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"mode_change","text":"rxwgs"}}`,
 		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"user_message","text":"begin"}}`,
@@ -648,7 +669,8 @@ func TestFormatNineMigrationKeepsTheMessagesOfACrashedTurn(t *testing.T) {
 }
 
 func TestFormatTenMigrationSpellsPathGrantsWithFlags(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":10,"id":"one","name":"tame-impala"}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"mode_change","text":"rxwgs"}}`,
 		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"path_grant_change","state":`+
@@ -680,7 +702,8 @@ func TestFormatTenMigrationSpellsPathGrantsWithFlags(t *testing.T) {
 }
 
 func TestFormatSixteenMigrationMakesExecutionImplicitInTemporaryPathGrants(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":16,"id":"one","name":"tame-impala"}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"path_grant_change","state":`+
 			`{"grants":[{"path":"/one","access":"r"},{"path":"/two","access":"rx"},`+
@@ -709,7 +732,8 @@ func TestFormatSixteenMigrationMakesExecutionImplicitInTemporaryPathGrants(t *te
 }
 
 func TestFormatSeventeenMigrationStoresContextSourceKindsRatherThanTheirNames(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":17,"id":"one","name":"tame-impala","meta":{`+
 			`"system_context_files":[{"path":"/config/SYSTEM.md","estimated_tokens":700}],`+
 			`"system_context_sources":[{"name":"harness","estimated_tokens":3379}],`+
@@ -748,7 +772,8 @@ func TestFormatSeventeenMigrationStoresContextSourceKindsRatherThanTheirNames(t 
 }
 
 func TestFormatSeventeenMigrationRefusesAContextSourceItDoesNotKnow(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":17,"id":"one","name":"tame-impala","meta":{`+
 			`"system_context_sources":[{"name":"something else","estimated_tokens":10}]}}`,
 	)
@@ -775,7 +800,8 @@ func startupState(t *testing.T, line map[string]json.RawMessage) map[string]json
 }
 
 func TestFormatElevenMigrationKeepsTheFactAndDropsTheProse(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":11,"id":"one","name":"tame-impala"}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"startup","took":1000000}}`,
 		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"mode_change","text":"rxwgs"}}`,
@@ -837,7 +863,8 @@ func TestFormatElevenMigrationKeepsTheFactAndDropsTheProse(t *testing.T) {
 }
 
 func TestFormatTwelveMigrationRenamesTheWebFlagToLookup(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":12,"id":"one","name":"tame-impala"}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"session_startup","took":1000000}}`,
 		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"mode_change","state":"rxws"}}`,
@@ -890,7 +917,8 @@ func TestFormatTwelveMigrationRenamesTheWebFlagToLookup(t *testing.T) {
 }
 
 func TestFormatFifteenMigrationCompletesToolCallRenderings(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":14,"id":"one","name":"tame-impala"}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"tool_call_request","id":"bash","name":"bash","arguments":"{\"command\":\"echo hi\"}","render":"echo hi"}}`,
 		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"tool_call_request","id":"read","name":"read","arguments":"{\"path\":\"main.go\",\"offset\":10,\"limit\":5}","render":"main.go","detail":"10-14"}}`,
@@ -990,7 +1018,8 @@ func firstFormatJournal() []string {
 }
 
 func TestFormatFifteenMigrationSaysForwardWhereItSaidExpose(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":15,"id":"one","name":"tame-impala"}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"tool_call_request","id":"add","name":"expose","arguments":"{\"action\":\"add\",\"port\":3000}","rendering_kind":"expose_add","render":"3000"}}`,
 		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"tool_call_request","id":"remove","name":"expose","arguments":"{\"action\":\"remove\",\"port\":3000}","rendering_kind":"expose_remove","render":"3000"}}`,
@@ -1028,7 +1057,8 @@ func TestFormatFifteenMigrationSaysForwardWhereItSaidExpose(t *testing.T) {
 }
 
 func TestFormatFifteenMigrationForgetsHostLoopbackPorts(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":15,"id":"one","name":"tame-impala"}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"sandbox_to_host_change","name":"3000","state":{"ports":[3000]}}}`,
 		`{"kind":"item","time":"2026-08-01T00:00:01Z","payload":{"role":"user","content":[{"type":"text","text":"TCP port 3000 on the host loopback is now reachable at 127.0.0.1:3000 from the sandbox."}]}}`,
@@ -1330,7 +1360,8 @@ func TestAnArchivedSessionAlreadyCurrentKeepsNoCopy(t *testing.T) {
 }
 
 func TestFormatElevenMigrationForgetsATotalThatSaysNothingMore(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":11,"id":"one","name":"tame-impala"}`,
 		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"tool_call","stats":{"bytes":10,"total_bytes":10}}}`,
 		`{"kind":"event","time":"2026-08-01T00:00:02Z","event":{"kind":"tool_call","stats":{"bytes":10,"total_bytes":20}}}`,
@@ -1375,7 +1406,8 @@ func TestEveryFormatThatReadsEventsRefusesOneItCannotRead(t *testing.T) {
 		{version: 15, event: `"not an event"`},
 	} {
 		t.Run(fmt.Sprintf("%d %s", testCase.version, testCase.event), func(t *testing.T) {
-			directory, name := storedJournal(t,
+			directory, name := storedJournal(
+				t,
 				fmt.Sprintf(`{"kind":"head","time":"2026-08-01T00:00:00Z","version":%d,"id":"one","name":"tame-impala"}`, testCase.version),
 				`{"kind":"event","time":"2026-08-01T00:00:01Z","event":`+testCase.event+`}`,
 			)
@@ -1388,7 +1420,8 @@ func TestEveryFormatThatReadsEventsRefusesOneItCannotRead(t *testing.T) {
 }
 
 func TestFormatEighteenMigrationStoresTheIntentInTheRendering(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":18,"id":"one","name":"tame-impala","meta":{}}`,
 		`{"kind":"event","event":{"kind":"tool_call_request","id":"1","name":"bash",`+
 			`"arguments":"{\"command\":\"go test ./...\",\"intent\":\"Run   every test\"}"}}`,
@@ -1450,7 +1483,8 @@ func TestFormatNineteenMigrationRecordsTheWireAnOpenCodeGoSessionWasSpokenOver(t
 		{`{"provider":"opencode-go","id":"qwen3.8-max","wire":"completions"}`, agent.CompletionsWire},
 		{`{"provider":"anthropic","id":"claude-opus-5"}`, ""},
 	} {
-		directory, name := storedJournal(t,
+		directory, name := storedJournal(
+			t,
 			`{"kind":"head","time":"2026-08-01T00:00:00Z","version":19,"id":"one","name":"tame-impala",`+
 				`"meta":{"provider":"opencode-go","model":"m","model_choice":`+test.choice+`}}`,
 		)
@@ -1471,7 +1505,8 @@ func TestFormatNineteenMigrationRecordsTheWireAnOpenCodeGoSessionWasSpokenOver(t
 }
 
 func TestFormatNineteenMigrationLeavesASessionHoldingNoModelChoiceAlone(t *testing.T) {
-	directory, name := storedJournal(t,
+	directory, name := storedJournal(
+		t,
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":19,"id":"one","name":"tame-impala",`+
 			`"meta":{"provider":"opencode-go","model":"deepseek-v4-pro"}}`,
 	)
@@ -1487,6 +1522,78 @@ func TestFormatNineteenMigrationLeavesASessionHoldingNoModelChoiceAlone(t *testi
 
 	if storedSession.Meta.ModelChoice != nil {
 		t.Errorf("expected no model choice, got %+v", storedSession.Meta.ModelChoice)
+	}
+}
+
+func TestFormatTwentyMigrationGrantsSubagentsToASessionThatOfferedThem(t *testing.T) {
+	directory, name := storedJournal(
+		t,
+		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":20,"id":"one","name":"tame-impala",`+
+			`"meta":{"tools":["read","subagent"]}}`,
+		`{"kind":"event","event":{"kind":"mode_change","state":"rxw"}}`,
+		`{"kind":"event","event":{"kind":"mode_change","name":"x","state":"rw"}}`,
+		`{"kind":"event","event":{"kind":"mode_change","name":"a","state":{"flags":"rx","groups":"a","tool_groups":{"a":["weather"]}}}}`,
+		`{"kind":"event","event":{"kind":"subagent_access_stop","name":"tame-adder"}}`,
+	)
+
+	if _, err := migrate.Session(options(directory), name); err != nil {
+		t.Fatal(err)
+	}
+
+	storedSession, err := store.Read(directory, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var modes []caps.Set
+	for _, event := range storedSession.Events {
+		if event.Kind == caps.ModeChange {
+			granted, err := caps.GrantedBy(event)
+			if err != nil {
+				t.Fatal(err)
+			}
+			modes = append(modes, granted)
+		}
+		if event.Kind == subagentrecord.AccessWithdrawnStop {
+			notice, isNoticed := subagentrecord.AccessWithdrawnStopNotice(event)
+			if want := "Subagent tame-adder stopped because shell execution was withdrawn."; !isNoticed || notice != want {
+				t.Errorf("the stop reads %q, want %q", notice, want)
+			}
+		}
+	}
+	want := []caps.Set{
+		caps.Read | caps.Shell | caps.Write | caps.Subagents,
+		caps.Read | caps.Write | caps.Subagents,
+		caps.Read | caps.Shell | caps.Subagents,
+	}
+	if !slices.Equal(modes, want) {
+		t.Errorf("got modes %v, want %v", modes, want)
+	}
+	if groups, _, _ := caps.LastRecordedToolGroups(storedSession.Events); groups != "a" {
+		t.Errorf("the custom group grant became %q", groups)
+	}
+}
+
+func TestFormatTwentyMigrationLeavesSubagentsRefusedWhereTheyWereNeverOffered(t *testing.T) {
+	directory, name := storedJournal(
+		t,
+		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":20,"id":"one","name":"tame-impala",`+
+			`"meta":{"tools":["read","bash"]}}`,
+		`{"kind":"event","event":{"kind":"mode_change","state":"rxw"}}`,
+	)
+
+	if _, err := migrate.Session(options(directory), name); err != nil {
+		t.Fatal(err)
+	}
+
+	storedSession, err := store.Read(directory, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	granted, found := caps.LastRecordedMode(storedSession.Events)
+	if !found || granted.Has(caps.Subagents) {
+		t.Errorf("got mode %q, want subagents left refused", granted.Flags())
 	}
 }
 
@@ -1538,7 +1645,8 @@ func TestEverySubagentJournalIsMigratedBesideItsParent(t *testing.T) {
 func TestAStaleSubagentBeneathACurrentParentIsStillMigrated(t *testing.T) {
 	head := fmt.Sprintf(`{"kind":"head","time":"2026-08-01T00:00:00Z","version":%d,"id":"one","name":"tame-impala"}`, session.JournalFormat)
 	directory, name := storedJournal(t, head)
-	childrenDirectory := storedChild(t, directory, name, "tame-otter",
+	childrenDirectory := storedChild(
+		t, directory, name, "tame-otter",
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","id":"two","name":"tame-otter","meta":{"workspaceDir":"/workspace"}}`,
 	)
 
@@ -1557,7 +1665,8 @@ func TestAStaleSubagentMakesItsParentOutdated(t *testing.T) {
 	if outdated, err := session.Outdated(directory); err != nil || len(outdated) != 0 {
 		t.Fatalf("a current family was outdated: %v, %v", outdated, err)
 	}
-	storedChild(t, directory, name, "tame-otter",
+	storedChild(
+		t, directory, name, "tame-otter",
 		`{"kind":"head","time":"2026-08-01T00:00:00Z","id":"two","name":"tame-otter","meta":{"workspaceDir":"/workspace"}}`,
 	)
 	if outdated, err := session.Outdated(directory); err != nil || !slices.Equal(outdated, []string{name}) {

@@ -1,5 +1,5 @@
 === tame-adder ===
-{"kind":"head","version":20,"meta":{"model":"gpt-5.6-sol","workspaceDir":"/workspace","provider":"codex","effort":"medium","model_choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"system_prompt":"You are tame-adder, a subagent of session tame-impala, working in /workspace."}}
+{"kind":"head","version":21,"meta":{"model":"gpt-5.6-sol","workspaceDir":"/workspace","provider":"codex","effort":"medium","model_choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"system_prompt":"You are tame-adder, a subagent of session tame-impala, working in /workspace."}}
 {"kind":"event","event":{"kind":"mode_change","state":"rx"}}
 {"kind":"event","event":{"kind":"user_message","text":"Read the readme"}}
 {"kind":"event","event":{"kind":"model_message","text":"The readme is one heading."}}
@@ -7,7 +7,7 @@
 {"kind":"item","payload":{"id":"message-11","type":"message","role":"assistant","content":[{"type":"output_text","text":"The readme is one heading."}]}}
 {"kind":"turn_completion","turn":{}}
 === tame-alpaca ===
-{"kind":"head","version":20,"meta":{"model":"gpt-5.6-sol","workspaceDir":"/workspace","provider":"codex","effort":"medium","model_choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"system_prompt":"You are tame-alpaca, a subagent of session tame-impala, working in /workspace."}}
+{"kind":"head","version":21,"meta":{"model":"gpt-5.6-sol","workspaceDir":"/workspace","provider":"codex","effort":"medium","model_choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"system_prompt":"You are tame-alpaca, a subagent of session tame-impala, working in /workspace."}}
 {"kind":"event","event":{"kind":"mode_change","state":"rx"}}
 {"kind":"event","event":{"kind":"user_message","text":"Find the config loader"}}
 {"kind":"event","event":{"kind":"model_message","text":"The loader is in config.go."}}
@@ -19,7 +19,7 @@
 {"kind":"item","payload":{"id":"message-13","type":"message","role":"assistant","content":[{"type":"output_text","text":"It reads YAML."}]}}
 {"kind":"turn_completion","turn":{}}
 === tame-anchovy ===
-{"kind":"head","version":20,"meta":{"model":"gpt-5.6-sol","workspaceDir":"/workspace","provider":"codex","effort":"medium","model_choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"system_prompt":"You are tame-anchovy, a subagent of session tame-impala, working in /workspace."}}
+{"kind":"head","version":21,"meta":{"model":"gpt-5.6-sol","workspaceDir":"/workspace","provider":"codex","effort":"medium","model_choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"system_prompt":"You are tame-anchovy, a subagent of session tame-impala, working in /workspace."}}
 {"kind":"event","event":{"kind":"mode_change","state":"rx"}}
 {"kind":"event","event":{"kind":"user_message","text":"Find the parser"}}
 {"kind":"event","event":{"kind":"model_message","text":"The parser is in parse.go."}}

@@ -16,6 +16,8 @@ import (
 
 const Name = "subagent"
 
+var ErrWithheld = errors.New("subagents unavailable; ctrl+x s grants them")
+
 const (
 	Start  = "start"
 	Send   = "send"
@@ -54,7 +56,7 @@ type Manager interface {
 	List() string
 }
 
-func New(manager Manager) tool.Tool {
+func New(manager Manager, isAllowed func() bool) tool.Tool {
 	definition := tool.Definition{
 		Name: Name,
 		Description: "start independent subagents with a shared optional system prompt and individual tasks, " +
@@ -90,7 +92,7 @@ func New(manager Manager) tool.Tool {
 			}).Optional(),
 		},
 	}
-	return tool.Implement(definition, Describe).Decode(decode).Validate(validate).Plain(func(ctx context.Context, args Args) (string, error) {
+	return tool.Implement(definition, Describe).Decode(decode).Validate(validate).Requires(isAllowed, ErrWithheld).Plain(func(ctx context.Context, args Args) (string, error) {
 		return act(ctx, manager, args)
 	})
 }

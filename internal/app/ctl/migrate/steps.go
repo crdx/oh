@@ -48,6 +48,7 @@ var steps = map[int]step{
 	17: {migrateLine: contextKindsReplaceNames},
 	18: {migrateLine: intentsJoinRenderings},
 	19: {migrateLine: wiresJoinModelChoices},
+	20: {migrateJournal: subagentsBecomeACapability},
 }
 
 var legacyGrantAccess = map[string]string{
@@ -835,7 +836,7 @@ func recordedNotice(swappedCaps caps.Set, grantedCaps caps.Set) (string, bool) {
 			return "The lookup tool can now access the internet.", true
 		}
 		return "The lookup tool is now refused.", true
-	case caps.Read:
+	case caps.Read, caps.Subagents:
 		return "", false
 	}
 

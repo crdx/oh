@@ -1,5 +1,5 @@
-{"kind":"head","version":20,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant."}}
-{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"head","version":21,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"receive HTTP 404"}}
 {"kind":"event","event":{"kind":"turn_failure","failure":{"kind":"http_status","http_status":404,"media_type":"text/event-stream"}}}
 {"kind":"item","payload":{"role":"user","content":"receive HTTP 404"}}

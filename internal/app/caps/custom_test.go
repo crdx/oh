@@ -20,7 +20,7 @@ func TestConfiguredGroupFlagsJoinTheBuiltInMode(t *testing.T) {
 		t.Errorf("got custom groups %q", grantedGroups)
 	}
 
-	if _, _, err := ParseWithGroups("z", "ba"); err == nil || !strings.Contains(err.Error(), "rxwnglba") {
+	if _, _, err := ParseWithGroups("z", "ba"); err == nil || !strings.Contains(err.Error(), "rxwsnglba") {
 		t.Errorf("got %v, want the configured flags named", err)
 	}
 }

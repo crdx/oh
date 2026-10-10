@@ -220,31 +220,31 @@ r[reference], +1
 === local-time / default format ===
 14:32
 === mode-toggle / all granted ===
-rxw ngl
+rxw sngl
 === mode-toggle / custom group disabled by default ===
-rxw nglc
+rxw snglc
 === mode-toggle / custom group enabled by tool ===
-rxw nglc
+rxw snglc
 === mode-toggle / custom group fully disabled ===
-rxw ngl
+rxw sngl
 === mode-toggle / custom group pending prefix ===
-rxw nglc
+rxw snglc
 === mode-toggle / custom group with compatible peer ===
-rxw ngla
+rxw sngla
 === mode-toggle / custom groups ===
-rxw nglabc
+rxw snglabc
 === mode-toggle / lookup only ===
-rxw ngl
+rxw sngl
 === mode-toggle / network only ===
-rxw ngl
+rxw sngl
 === mode-toggle / pending prefix ===
-rxw ngl
+rxw sngl
 === mode-toggle / read only ===
-rxw ngl
+rxw sngl
 === mode-toggle / unconfined ===
-labc
+slabc
 === mode-toggle / unconfined with lookup pending prefix ===
-l
+sl
 === scroll-overflow / down ===
 ↓ 7
 === scroll-overflow / empty ===

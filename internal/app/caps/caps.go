@@ -19,6 +19,7 @@ const (
 	Git
 	Lookup
 	Network
+	Subagents
 )
 
 var capsMap = []struct {
@@ -28,6 +29,7 @@ var capsMap = []struct {
 	{Read, "r"},
 	{Shell, "x"},
 	{Write, "w"},
+	{Subagents, "s"},
 	{Network, "n"},
 	{Git, "g"},
 	{Lookup, "l"},
@@ -378,6 +380,9 @@ func changeNotices(changedCaps Set, currentCaps Set, isUnconfined bool) []string
 	if changedCaps.Has(Lookup) {
 		notices = append(notices, lookupNotice(currentCaps.Has(Lookup)))
 	}
+	if changedCaps.Has(Subagents) {
+		notices = append(notices, subagentsNotice(currentCaps.Has(Subagents)))
+	}
 
 	return notices
 }
@@ -425,6 +430,14 @@ func lookupNotice(isGranted bool) string {
 	}
 
 	return "Lookup is now refused."
+}
+
+func subagentsNotice(isGranted bool) string {
+	if isGranted {
+		return "The subagent tool is now available."
+	}
+
+	return "The subagent tool is now refused."
 }
 
 func hostNetworkNotice(isGranted bool) string {

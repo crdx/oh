@@ -1,5 +1,5 @@
-{"kind":"head","version":20,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant.","environment":{"sandbox":{"deny":["secret.yml"],"read":["/reference"]},"skills":[{"name":"steady","description":"use the steady process","location":"/skills/steady/SKILL.md"}],"is_repository":true,"port_hostname":"session.agent.test"}}}
-{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"head","version":21,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant.","environment":{"sandbox":{"deny":["secret.yml"],"read":["/reference"]},"skills":[{"name":"steady","description":"use the steady process","location":"/skills/steady/SKILL.md"}],"is_repository":true,"port_hostname":"session.agent.test"}}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"remember the environment"}}
 {"kind":"event","event":{"kind":"model_message","text":"I have it."}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"remember the environment"}]}}

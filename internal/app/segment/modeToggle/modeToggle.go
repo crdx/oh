@@ -58,7 +58,8 @@ func (self state) Render(segment.Context) string {
 	isPrefixPending := self.isPrefixPending()
 
 	if self.isUnconfined {
-		return self.letter(caps.Lookup, grantedCaps.Has(caps.Lookup), style.Lookup, isPrefixPending) +
+		return self.letter(caps.Subagents, grantedCaps.Has(caps.Subagents), style.Subagents, isPrefixPending) +
+			self.letter(caps.Lookup, grantedCaps.Has(caps.Lookup), style.Lookup, isPrefixPending) +
 			self.groupLetters(isPrefixPending)
 	}
 
@@ -71,6 +72,7 @@ func (self state) Render(segment.Context) string {
 		) +
 		self.letter(caps.Write, grantedCaps.Has(caps.Write), style.Write, isPrefixPending) +
 		gap +
+		self.letter(caps.Subagents, grantedCaps.Has(caps.Subagents), style.Subagents, isPrefixPending) +
 		self.letter(caps.Network, grantedCaps.Has(caps.Network), style.Network, isPrefixPending) +
 		self.letter(caps.Git, grantedCaps.Has(caps.Git), style.Git, isPrefixPending) +
 		self.letter(caps.Lookup, grantedCaps.Has(caps.Lookup), style.Lookup, isPrefixPending)

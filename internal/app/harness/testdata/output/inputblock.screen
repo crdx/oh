@@ -21,7 +21,7 @@ have a look at @harn
   internal/app/harness/print.go
   internal/app/harness/replay.go
   ⋮ 14 more
-── ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPTS5.6 ─ ?% ───── tame-impala ─ 00:00 ──
+── ··✦ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPTS5.6 ─ ?% ──── tame-impala ─ 00:00 ──
 === dropdown beneath framed feedback at 80 columns ===
  ╭────────────────────────────────────────────────────────────────────────────╮
  │ Command not found: /unknown                                                │
@@ -30,7 +30,7 @@ have a look at @harn
 › internal/app/harness/
   internal/app/harness/app.go
   internal/app/harness/main.go
-── ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPTS5.6 ─ ?% ───── tame-impala ─ 00:00 ──
+── ··✦ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPTS5.6 ─ ?% ──── tame-impala ─ 00:00 ──
 === dropdown scrolled at 80 columns ===
 ── workspace ───────────────── GPT Sol 5.6 ▫▫▫▪·· ──────────────────────────────
 have a look at @harn
@@ -42,7 +42,7 @@ have a look at @harn
   internal/app/harness/testdata/
 › internal/app/harness/turn.go
   ⋮ 2 above, 12 below
-── ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPTS5.6 ─ ?% ───── tame-impala ─ 00:00 ──
+── ··✦ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPTS5.6 ─ ?% ──── tame-impala ─ 00:00 ──
 === dropdown with details at 13 columns ===
 ── workspace
 have a look a
@@ -67,7 +67,7 @@ have a look at @harn
 › /copy    copy a target to the clipboard
   /export  export the transcript of the whole session
   /open
-── ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPTS5.6 ─ ?% ───── tame-impala ─ 00:00 ──
+── ··✦ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPTS5.6 ─ ?% ──── tame-impala ─ 00:00 ──
 === dropdown with details at 9 columns ===
  GPTS5.6
 have a lo
@@ -83,12 +83,12 @@ rn
 have a look at @harn
   internal/app/harness/
 › internal/app/harness/app.go
-── ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPTS5.6 ─ ?% ───── tame-impala ─ 00:00 ──
+── ··✦ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPTS5.6 ─ ?% ──── tame-impala ─ 00:00 ──
 === dropdown without options at 80 columns ===
 ── workspace ───────────────── GPT Sol 5.6 ▫▫▫▪·· ──────────────────────────────
 have a look at @harn
   no matching paths
-── ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPTS5.6 ─ ?% ───── tame-impala ─ 00:00 ──
+── ··✦ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPTS5.6 ─ ?% ──── tame-impala ─ 00:00 ──
 === framed feedback at 40 columns ===
  ╭────────────────────────────────────╮
  │ Command not found: /unknown        │
@@ -100,19 +100,19 @@ have a look at @harn
  │ Command not found: /unknown                  │
 ─┴── workspace ─ GPT Sol 5.6 ▫▫▫▪·· ────────────┴─
 > what is the weather
-── ··✦ ─ 0m 0m ─ rxw ngl ── tame-impala ─ 00:00 ──
+── ··✦ ─ 0m 0m ─ rxw sngl ─ tame-impala ─ 00:00 ──
 === framed feedback at 60 columns ===
  ╭────────────────────────────────────────────────────────╮
  │ Command not found: /unknown                            │
 ─┴── workspace ───── GPT Sol 5.6 ▫▫▫▪·· ──────────────────┴─
 > what is the weather
-── ··✦ ─ 0m 0m ─ rxw ngl ──────────── tame-impala ─ 00:00 ──
+── ··✦ ─ 0m 0m ─ rxw sngl ─────────── tame-impala ─ 00:00 ──
 === framed feedback at 80 columns ===
  ╭────────────────────────────────────────────────────────────────────────────╮
  │ Command not found: /unknown                                                │
 ─┴── workspace ─────────────── GPT Sol 5.6 ▫▫▫▪·· ────────────────────────────┴─
 > what is the weather
-── ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPTS5.6 ─ ?% ───── tame-impala ─ 00:00 ──
+── ··✦ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPTS5.6 ─ ?% ──── tame-impala ─ 00:00 ──
 === one row at 20 columns ===
 ── workspace ───────
 > what is the weathe
@@ -133,19 +133,19 @@ r
 === one row at 60 columns ===
 ── workspace ─────── GPT Sol 5.6 ▫▫▫▪·· ────────────────────
 > what is the weather
-── ··✦ ─ 0m 0m ─ rxw ngl ──────────── tame-impala ─ 00:00 ──
+── ··✦ ─ 0m 0m ─ rxw sngl ─────────── tame-impala ─ 00:00 ──
 === one row at 80 columns ===
 ── workspace ───────────────── GPT Sol 5.6 ▫▫▫▪·· ──────────────────────────────
 > what is the weather
-── ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPTS5.6 ─ ?% ───── tame-impala ─ 00:00 ──
+── ··✦ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPTS5.6 ─ ?% ──── tame-impala ─ 00:00 ──
 === one row simulated yolo at 80 columns ===
 ── workspace ───────────────── GPT Sol 5.6 ▫▫▫▪·· ──────────────────────────────
 > what is the weather
-── ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPTS5.6 ─ ?% ───── tame-impala ─ 00:00 ──
+── ··✦ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPTS5.6 ─ ?% ──── tame-impala ─ 00:00 ──
 === one row yolo at 80 columns ===
 ── workspace ───────────────── GPT Sol 5.6 ▫▫▫▪·· ──────────────────────────────
 > what is the weather
-── ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPTS5.6 ─ ?% ───── tame-impala ─ 00:00 ──
+── ··✦ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPTS5.6 ─ ?% ──── tame-impala ─ 00:00 ──
 === reverse history search at 20 columns ===
 ────────────────────
 git diff
@@ -165,11 +165,11 @@ git diff
 === reverse history search at 60 columns ===
 ── reverse-i-search: git ─ GPT Sol 5.6 ▫▫▫▪·· ──────────────
 git diff
-── ··✦ ─ 0m 0m ─ rxw ngl ──────────── tame-impala ─ 00:00 ──
+── ··✦ ─ 0m 0m ─ rxw sngl ─────────── tame-impala ─ 00:00 ──
 === reverse history search at 80 columns ===
 ── reverse-i-search: git ───── GPT Sol 5.6 ▫▫▫▪·· ──────────────────────────────
 git diff
-── ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPTS5.6 ─ ?% ───── tame-impala ─ 00:00 ──
+── ··✦ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPTS5.6 ─ ?% ──── tame-impala ─ 00:00 ──
 === scrolled both ways at 20 columns ===
 ─── GPTS5.6 ─ ↑ 2 ──
 > the third row
@@ -194,9 +194,9 @@ git diff
 ── workspace ─────── GPT Sol 5.6 ▫▫▫▪·· ───────────── ↑ 2 ──
 > the third row
 > the fourth row
-── ··✦ ─ 0m 0m ─ rxw ngl ────── tame-impala ─ 00:00 ─ ↓ 7 ──
+── ··✦ ─ 0m 0m ─ rxw sngl ───── tame-impala ─ 00:00 ─ ↓ 7 ──
 === scrolled both ways at 80 columns ===
 ── workspace ───────────────── GPT Sol 5.6 ▫▫▫▪·· ─────────────────────── ↑ 2 ──
 > the third row
 > the fourth row
-── ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ ?% ───────── tame-impala ─ 00:00 ─ ↓ 7 ──
+── ··✦ ─ 0m 0m ─ rxw sngl ─ workspace ─ ?% ──────── tame-impala ─ 00:00 ─ ↓ 7 ──

@@ -1,0 +1,77 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[subagent]]
+name = "tame-adder"
+
+[[subagent.response]]
+wait-for-cancellation = true
+
+[[subagent]]
+name = "tame-alpaca"
+
+[[subagent.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-17","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The build tool is just."}''',
+    '''{"type":"response.output_text.done","text":"The build tool is just."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The build tool is just."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-17","type":"message","role":"assistant","content":[{"type":"output_text","text":"The build tool is just."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[first]
+prompt = "start two subagents"
+settle-subagents-after-turn = true
+subagent-debounce-passes = true
+toggle-after-subagents-settle = "s"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-13","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Watch the build forever\",\"intent\":\"Watching the build until stopped\"},{\"prompt\":\"Name the build tool\",\"intent\":\"Naming the tool that builds this\"}]}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-14","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Both are running."}''',
+    '''{"type":"response.output_text.done","text":"Both are running."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Both are running."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-14","type":"message","role":"assistant","content":[{"type":"output_text","text":"Both are running."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-15","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"tame-alpaca named the build tool; tame-adder stopped when subagents went."}''',
+    '''{"type":"response.output_text.done","text":"tame-alpaca named the build tool; tame-adder stopped when subagents went."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"tame-alpaca named the build tool; tame-adder stopped when subagents went."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-15","type":"message","role":"assistant","content":[{"type":"output_text","text":"tame-alpaca named the build tool; tame-adder stopped when subagents went."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "start one more subagent"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-18","type":"function_call","call_id":"toolu_2","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Name the test runner\",\"intent\":\"Naming the tool that runs tests\"}]}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-16","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Subagents are refused until you grant them with ctrl+x s."}''',
+    '''{"type":"response.output_text.done","text":"Subagents are refused until you grant them with ctrl+x s."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Subagents are refused until you grant them with ctrl+x s."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-16","type":"message","role":"assistant","content":[{"type":"output_text","text":"Subagents are refused until you grant them with ctrl+x s."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

@@ -22,6 +22,7 @@ const (
 	ToggleGit
 	ToggleLookup
 	ToggleNetwork
+	ToggleSubagents
 	ToggleToolGroup
 	EditDraft
 	ReplyToAnswer
@@ -450,6 +451,9 @@ func (self *Input) toggleMode(button key.Key) Action {
 
 	case 'x':
 		return ToggleShell
+
+	case 's':
+		return ToggleSubagents
 
 	case 'n':
 		return ToggleNetwork

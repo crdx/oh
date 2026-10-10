@@ -9,6 +9,11 @@ Taking them together.\r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m3L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
+\e[48;2;48;58;67m                                        \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m exited: complete after 12s \e[0m\r
+\e[48;2;48;58;67m    with no output.                     \e[0m\r
+\e[48;2;48;58;67m                                        \e[0m\r
+\r
 Both still mention the spinner.\r
 \e[?25h\e[?2026l
 === one column ===
@@ -112,6 +117,97 @@ r\r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\…\e]8;;\e\\\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\…\e]8;;\e\\\r
 \r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m🤖\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mJ\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mb\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;192;128;80md\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;192;128;80mo\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;192;128;80mc\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m\e[38;2;192;128;80ms\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mx\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67md\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m:\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mc\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mm\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mp\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ml\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ma\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mf\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67me\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mr\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m1\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m2\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67ms\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mw\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mi\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mh\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mn\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mo\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mu\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mp\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mu\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67mt\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m.\e[0m\r
+\e[48;2;48;58;67m \e[0m\r
+\r
 B\r
 o\r
 t\r
@@ -149,6 +245,9 @@ Taking them together.
 read \e[38;2;192;128;80mscreen.go\e[0m \e[38;2;150;152;150m3L\e[0m
 grep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m
 
+\e[48;2;48;58;67m\e[0m
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m exited: complete after 12s with no output.\e[0m
+\e[48;2;48;58;67m\e[0m
 Both still mention the spinner.
 
 === printed ===
@@ -161,6 +260,10 @@ Taking them together.\r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m3L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m exited: complete after 12s with no output.                                             \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\r
 Both still mention the spinner.\r
 
 === streamed asap ===
@@ -171,7 +274,11 @@ Both still mention the spinner.\r
 Taki\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTaking t\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTaking them\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTaking them toge\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTaking them together\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTaking them together.\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 read \e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-grep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m3L\e[0m\e[K\e[1B\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+grep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m exited: complete after 12s with no output.                                             \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[5A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m3L\e[0m\e[K\e[5B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[4B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 Both\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth sti\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth still m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth still menti\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth still mention t\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth still mention the s\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth still mention the spinn\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth still mention the spinner.\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
@@ -183,7 +290,11 @@ Both\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth sti\e[K\r\e[8C\e[?25h\e[?2
 Taking them together.\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 read \e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-grep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m3L\e[0m\e[K\e[1B\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+grep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m exited: complete after 12s with no output.                                             \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[5A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m3L\e[0m\e[K\e[5B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[4B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 Both still mention the spinner.\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
@@ -195,7 +306,11 @@ Both still mention the spinner.\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[
 Taki\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTaking t\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTaking them\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTaking them toge\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTaking them together\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rTaking them together.\e[K\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[21C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 read \e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-grep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[1A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m3L\e[0m\e[K\e[1B\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+grep \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[K\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m exited: complete after 12s with no output.                                             \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[5A\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m3L\e[0m\e[K\e[5B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[4B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 Both\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth sti\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth still m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth still menti\e[K\r\e[16C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth still mention t\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth still mention the s\e[K\r\e[24C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth still mention the spinn\e[K\r\e[28C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth still mention the spinner.\e[K\r\e[31C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[31C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
@@ -215,6 +330,16 @@ together.\r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\scr…\e]8;;\e\\\e[0m \e[38;2;150;152;150m3L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspi\e[0m\e[38;2;150;152;150m…\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
+\e[48;2;48;58;67m            \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m    exited: \e[0m\r
+\e[48;2;48;58;67m    complete\e[0m\r
+\e[48;2;48;58;67m    after   \e[0m\r
+\e[48;2;48;58;67m    12s with\e[0m\r
+\e[48;2;48;58;67m    no      \e[0m\r
+\e[48;2;48;58;67m    output. \e[0m\r
+\e[48;2;48;58;67m            \e[0m\r
+\r
 Both still\r
 mention the\r
 spinner.\r
@@ -228,6 +353,9 @@ Taking them together.\r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m3L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
+\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m exited: complete after 12s with no output.\e[0m\r
+\e[48;2;48;58;67m\e[0m\r
 Both still mention the spinner.\r
 \e[?25h\e[?2026l
 === wide ===
@@ -239,6 +367,10 @@ Taking them together.\r
 \r
 \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/screen.go\e\\screen.go\e]8;;\e\\\e[0m \e[38;2;150;152;150m3L\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspinner\e[0m \e[38;2;150;152;150m*.go\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m exited: complete after 12s with no output.                                             \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
 Both still mention the spinner.\r
 \e[?25h\e[?2026l

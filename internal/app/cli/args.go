@@ -214,7 +214,7 @@ func RefuseConfinedCaps(flags string) error {
 			return fmt.Errorf(
 				"--yolo leaves %s always on, so --caps takes only %s and custom tool groups (got %q)",
 				caps.Unconfined().Flags(),
-				caps.Lookup.Flag(),
+				(caps.All() &^ caps.Unconfined()).Flags(),
 				flags,
 			)
 		}

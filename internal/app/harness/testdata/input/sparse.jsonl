@@ -1,5 +1,5 @@
 {"event":{"kind":"user_message","text":"run the thing that takes no arguments"}}
-{"event":{"kind":"mode_change","name":"s","state":"rxwg"}}
+{"event":{"kind":"mode_change","name":"z","state":"rxwg"}}
 {"event":{"kind":"tool_call_request","id":"call_1","name":"status","read_only":true}}
 {"event":{"kind":"tool_call_result","id":"call_1","name":"status","status":"success"}}
 {"event":{"reports_status":true,"kind":"tool_call_request","id":"call_2","name":"notify","arguments":"{\"title\":\"done\",\"message\":\"nothing to report\",\"icon\":\"info\"}","render":"done"}}

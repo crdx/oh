@@ -32,9 +32,10 @@ opencode-go
 anthropic
 === capabilities ===
 rxw
-rxwn
-rxwng
-rxwngl
+rxws
+rxwsn
+rxwsng
+rxwsngl
 === tools ===
 read
 ls

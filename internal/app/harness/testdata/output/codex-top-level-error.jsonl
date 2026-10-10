@@ -1,5 +1,5 @@
-{"kind":"head","version":20,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant."}}
-{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"head","version":21,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"receive a top-level Responses API error"}}
 {"kind":"event","event":{"kind":"turn_failure","failure":{"kind":"generic_error","message":"the prompt was refused"}}}

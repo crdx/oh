@@ -1,5 +1,5 @@
 === tame-adder ===
-{"kind":"head","version":20,"meta":{"model":"claude-opus-5","workspaceDir":"/workspace/internal","provider":"anthropic","effort":"medium","model_choice":{"provider":"anthropic","id":"claude-opus-5","name":"Claude Opus 5"},"system_prompt":"You are tame-adder, a subagent of session tame-impala, working in /workspace/internal."}}
+{"kind":"head","version":21,"meta":{"model":"claude-opus-5","workspaceDir":"/workspace/internal","provider":"anthropic","effort":"medium","model_choice":{"provider":"anthropic","id":"claude-opus-5","name":"Claude Opus 5"},"system_prompt":"You are tame-adder, a subagent of session tame-impala, working in /workspace/internal."}}
 {"kind":"event","event":{"kind":"mode_change","state":"rx"}}
 {"kind":"event","event":{"kind":"user_message","text":"Find the config loader"}}
 {"kind":"event","event":{"kind":"model_message","text":"The loader is in config.go."}}

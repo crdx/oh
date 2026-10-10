@@ -905,7 +905,7 @@ func TestEveryNoticeSectionIsHeadedByATitleRatherThanItsKind(t *testing.T) {
 		{caps.JobStoppedByUserEvent("web"), "Job stopped"},
 		{jobrecord.EndedEvent(jobs.Conclusion{Snapshot: jobs.Snapshot{Name: "web", State: jobs.StateComplete}}), "Job ended"},
 		{jobrecord.EndedWithSessionEvent([]string{"web"}), "Jobs ended with the session"},
-		{agent.Event{Kind: subagentrecord.AccessWithdrawnStop, Name: "tame-adder"}, "Subagents stopped"},
+		{subagentrecord.AccessWithdrawnStopEvent([]string{"tame-adder"}, caps.Shell), "Subagents stopped"},
 		{subagentrecord.DeliveryEvent([]string{"tame-adder"}, "Subagent tame-adder finished:", []subagentrecord.Report{
 			{Name: "tame-adder", State: subagentrecord.Done, Answer: "done"},
 		}), "Subagent reports"},

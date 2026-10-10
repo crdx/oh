@@ -1,5 +1,5 @@
 === tame-adder ===
-{"kind":"head","version":20,"meta":{"model":"gpt-5.6-sol","workspaceDir":"/workspace","provider":"codex","effort":"medium","model_choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"system_prompt":"You are tame-adder, a subagent of session tame-impala, working in /workspace."}}
+{"kind":"head","version":21,"meta":{"model":"gpt-5.6-sol","workspaceDir":"/workspace","provider":"codex","effort":"medium","model_choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"system_prompt":"You are tame-adder, a subagent of session tame-impala, working in /workspace."}}
 {"kind":"event","event":{"kind":"mode_change","state":"rx"}}
 {"kind":"event","event":{"kind":"user_message","text":"Watch the build forever"}}
 {"kind":"item","payload":{"role":"user","content":"Watch the build forever"}}
@@ -7,7 +7,7 @@
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"turn_interruption","text":"shell execution was withdrawn"}}
 === tame-alpaca ===
-{"kind":"head","version":20,"meta":{"model":"gpt-5.6-sol","workspaceDir":"/workspace","provider":"codex","effort":"medium","model_choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"system_prompt":"You are tame-alpaca, a subagent of session tame-impala, working in /workspace."}}
+{"kind":"head","version":21,"meta":{"model":"gpt-5.6-sol","workspaceDir":"/workspace","provider":"codex","effort":"medium","model_choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"system_prompt":"You are tame-alpaca, a subagent of session tame-impala, working in /workspace."}}
 {"kind":"event","event":{"kind":"mode_change","state":"rx"}}
 {"kind":"event","event":{"kind":"user_message","text":"Name the build tool"}}
 {"kind":"event","event":{"kind":"model_message","text":"The build tool is just."}}

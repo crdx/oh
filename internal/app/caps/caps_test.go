@@ -11,16 +11,18 @@ import (
 )
 
 var (
-	nowReadOnly     = workspaceNotice(false)
-	nowReadWrite    = workspaceNotice(true)
-	gitReadOnly     = repositoryNotice(false)
-	gitWritable     = repositoryNotice(true)
-	shellGranted    = shellNotice(true)
-	shellWithheld   = shellNotice(false)
-	lookupGranted   = lookupNotice(true)
-	lookupWithheld  = lookupNotice(false)
-	networkGranted  = hostNetworkNotice(true) + " " + fetchNotice(true)
-	networkWithheld = hostNetworkNotice(false) + " " + fetchNotice(false)
+	nowReadOnly       = workspaceNotice(false)
+	nowReadWrite      = workspaceNotice(true)
+	gitReadOnly       = repositoryNotice(false)
+	gitWritable       = repositoryNotice(true)
+	shellGranted      = shellNotice(true)
+	shellWithheld     = shellNotice(false)
+	lookupGranted     = lookupNotice(true)
+	lookupWithheld    = lookupNotice(false)
+	subagentsGranted  = subagentsNotice(true)
+	subagentsWithheld = subagentsNotice(false)
+	networkGranted    = hostNetworkNotice(true) + " " + fetchNotice(true)
+	networkWithheld   = hostNetworkNotice(false) + " " + fetchNotice(false)
 )
 
 func TestEveryClauseSaysSomethingAndSaysItBothWays(t *testing.T) {
@@ -29,6 +31,7 @@ func TestEveryClauseSaysSomethingAndSaysItBothWays(t *testing.T) {
 		"history":   {gitReadOnly, gitWritable},
 		"shell":     {shellWithheld, shellGranted},
 		"lookup":    {lookupWithheld, lookupGranted},
+		"subagents": {subagentsWithheld, subagentsGranted},
 		"network":   {networkWithheld, networkGranted},
 	} {
 		if clauses[0] == "" || clauses[1] == "" {
@@ -121,6 +124,27 @@ func TestAResumedConversationDoesNotReannounceItsRecordedMode(t *testing.T) {
 	self.Toggle(Git)
 	if got := self.Inject(); got != gitWritable {
 		t.Errorf("expected only the new change to be announced, got %q", got)
+	}
+}
+
+func TestSubagentsAreOutsideTheUnconfinedSetAndToggleUnderIt(t *testing.T) {
+	if Unconfined().Has(Subagents) {
+		t.Fatal("expected --yolo to leave subagents to the person")
+	}
+
+	self := NewMode(Read)
+	self.Unconfine()
+	_ = self.Inject()
+	self.Toggle(Subagents)
+
+	if got := self.Inject(); got != subagentsGranted {
+		t.Errorf("expected %q, got %q", subagentsGranted, got)
+	}
+
+	self.Toggle(Subagents)
+
+	if got := self.Inject(); got != subagentsWithheld {
+		t.Errorf("expected %q, got %q", subagentsWithheld, got)
 	}
 }
 

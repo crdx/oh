@@ -1,5 +1,5 @@
-{"kind":"head","version":20,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant."}}
-{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"head","version":21,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"receive a rate limit that says not to ask again"}}
 {"kind":"event","event":{"kind":"turn_failure","failure":{"kind":"http_status","message":"Rate limit reached for this key.","http_status":429,"code":"rate_limit_error","media_type":"application/json"}}}
 {"kind":"item","payload":{"role":"user","content":"receive a rate limit that says not to ask again"}}

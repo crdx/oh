@@ -1361,6 +1361,61 @@ func TestARefusedNetworkToolSaysHowItIsGranted(t *testing.T) {
 	}
 }
 
+func TestTheSubagentToolSaysWhetherItIsGrantedAndHow(t *testing.T) {
+	for name, testCase := range map[string]struct {
+		currentCaps   caps.Set
+		offeredTools  []string
+		isInteractive bool
+		want          string
+	}{
+		"refused interactively": {
+			currentCaps:   caps.Read,
+			offeredTools:  []string{"subagent"},
+			isInteractive: true,
+			want:          "- The subagent tool is refused; do not call it unless the user grants subagents with ctrl+x s\n",
+		},
+		"refused headless": {
+			currentCaps:  caps.Read,
+			offeredTools: []string{"subagent"},
+			want:         "- The subagent tool is refused; do not call it\n",
+		},
+		"granted": {
+			currentCaps:   caps.Read | caps.Subagents,
+			offeredTools:  []string{"subagent"},
+			isInteractive: true,
+			want:          "- The subagent tool is available\n",
+		},
+		"not offered": {
+			currentCaps:   caps.Read | caps.Subagents,
+			offeredTools:  []string{"read"},
+			isInteractive: true,
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			got := harnessContext(Config{
+				Workspace:    work.At("/workspace"),
+				SessionName:  "session-id",
+				TmpDir:       "/state/farm/session",
+				HomeDir:      "/state/home",
+				CurrentCaps:  testCase.currentCaps,
+				OfferedTools: testCase.offeredTools,
+				Conditions:   conditions.Conditions{Interactive: testCase.isInteractive},
+			})
+
+			state := strings.Index(got, "# State")
+			if testCase.want == "" {
+				if strings.Contains(got, "subagent tool") {
+					t.Errorf("harness context mentions a subagent tool nobody offered: %q", got)
+				}
+				return
+			}
+			if state == -1 || !strings.Contains(got[state:], testCase.want) {
+				t.Errorf("state does not contain %q: %q", testCase.want, got)
+			}
+		})
+	}
+}
+
 func TestTheShellIsToldItCanReadAndRunASharedSkill(t *testing.T) {
 	globalDirectory := t.TempDir()
 	skillDirectory := filepath.Join(globalDirectory, "pdf")

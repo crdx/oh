@@ -1,5 +1,5 @@
-{"kind":"head","version":20,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant."}}
-{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"head","version":21,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"job_listing","state":[{"name":"docs","command":"just docs","state":"running","started_at":"2026-08-23T14:32:09Z"},{"name":"watch","command":"just watch","state":"running","started_at":"2026-08-23T14:32:09Z"}]}}
 {"kind":"event","event":{"kind":"user_message","text":"leave the preview running"}}
 {"kind":"event","event":{"kind":"model_message","text":"Both are still up."}}

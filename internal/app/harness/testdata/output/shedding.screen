@@ -35,15 +35,15 @@
  1– 4   +
  0      nothing
 === fitters between segments drawn whole ===
-46      rxw ngl ─ currents ─ Opus 5 ·▫▪▫▫▫ ─ 6% 62K/1M
-43–45   rxw ngl ─ currents ─ Opus 5 ·▫▪▫▫▫ ─ 6% 62K
-39–42   rxw ngl ─ currents ─ Opus 5 ·▫▪▫▫▫ ─ 6%
-35–38   rxw ngl ─ currents ─ O5 ·▫▪▫▫▫ ─ 6%
-28–34   rxw ngl ─ currents ─ O5 ─ 6%
-23–27   rxw ngl ─ currents ─ 6%
-18–22   rxw ngl ─ currents
- 7–17   rxw ngl
- 0– 6   nothing
+47      rxw sngl ─ currents ─ Opus 5 ·▫▪▫▫▫ ─ 6% 62K/1M
+44–46   rxw sngl ─ currents ─ Opus 5 ·▫▪▫▫▫ ─ 6% 62K
+40–43   rxw sngl ─ currents ─ Opus 5 ·▫▪▫▫▫ ─ 6%
+36–39   rxw sngl ─ currents ─ O5 ·▫▪▫▫▫ ─ 6%
+29–35   rxw sngl ─ currents ─ O5 ─ 6%
+24–28   rxw sngl ─ currents ─ 6%
+19–23   rxw sngl ─ currents
+ 8–18   rxw sngl
+ 0– 7   nothing
 === two lists of their own ===
 43      8000, 8080, 3000 ─ r[reference], rw[output]
 35–42   8000, 8080, 3000 ─ r[reference], +1

@@ -334,7 +334,7 @@ func TestTheDefaultCapabilitiesAreReadingAndTheShell(t *testing.T) {
 }
 
 func TestCapabilitiesAreReadAsTheLettersTheyAreSpelledWith(t *testing.T) {
-	for _, capString := range []string{"rxwngl", "lgnwxr", "wxngl"} {
+	for _, capString := range []string{"rxwsngl", "lgnswxr", "wxsngl"} {
 		currentCaps, err := caps.Parse(capString)
 		if err != nil {
 			t.Fatalf("%s: unexpected error: %v", capString, err)
@@ -413,7 +413,7 @@ func TestTheYoloFlagWaivesTheSandbox(t *testing.T) {
 }
 
 func TestTheYoloFlagTakesOnlyTheCapsItLeavesOpen(t *testing.T) {
-	for _, flags := range []string{"", "l", "lc"} {
+	for _, flags := range []string{"", "l", "s", "slc"} {
 		input := Input{inputFlags: inputFlags{Yolo: true, Caps: flags}}
 		if _, err := input.Parse(model.Choices(modelCachePath()), model.Defaults{}, "c"); err != nil {
 			t.Errorf("--yolo -c %q: unexpected error: %v", flags, err)
@@ -423,7 +423,7 @@ func TestTheYoloFlagTakesOnlyTheCapsItLeavesOpen(t *testing.T) {
 	for _, flags := range []string{"r", "x", "w", "n", "g", "rxl"} {
 		input := Input{inputFlags: inputFlags{Yolo: true, Caps: flags}}
 		_, err := input.Parse(model.Choices(modelCachePath()), model.Defaults{}, "c")
-		if err == nil || !strings.Contains(err.Error(), "--caps takes only l and custom tool groups") {
+		if err == nil || !strings.Contains(err.Error(), "--caps takes only sl and custom tool groups") {
 			t.Errorf("--yolo -c %q: got %v, want the confined caps refused", flags, err)
 		}
 	}

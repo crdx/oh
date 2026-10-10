@@ -1,5 +1,5 @@
-{"kind":"head","version":20,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant."}}
-{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"head","version":21,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"has the build finished"}}
 {"kind":"event","event":{"kind":"model_reasoning","text":"The build was still running when last checked."}}
 {"kind":"event","event":{"kind":"job_ended","name":"build","state":{"snapshot":{"name":"build","command":"just build","state":"failed","started_at":"2026-08-23T14:32:09Z","ended_at":"2026-08-23T14:32:21Z","code":2},"output":"go build ./...\ncmd/oh/draw.go:41:9: undefined: getWidth\nexit status 1"}}}

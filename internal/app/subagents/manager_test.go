@@ -267,11 +267,11 @@ func TestRevokingShellStopsOnlyLiveChildren(t *testing.T) {
 	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "first"}, {Prompt: "second"}}); err != nil {
 		t.Fatal(err)
 	}
-	names := manager.StopRunning()
+	names := manager.StopLosing(caps.Shell)
 	if len(names) != 2 {
 		t.Fatalf("stopped names %v", names)
 	}
-	if again := manager.StopRunning(); len(again) != 0 {
+	if again := manager.StopLosing(caps.Shell); len(again) != 0 {
 		t.Fatalf("stopped them again: %v", again)
 	}
 	waitOn(t, manager, wait.All, 60, names...)
@@ -280,7 +280,7 @@ func TestRevokingShellStopsOnlyLiveChildren(t *testing.T) {
 			t.Errorf("%s remains %s", snapshot.Name, snapshot.State)
 		}
 	}
-	notice, isNoticed := subagentrecord.AccessWithdrawnStopNotice(agent.Event{Kind: subagentrecord.AccessWithdrawnStop, Name: strings.Join(names, ",")})
+	notice, isNoticed := subagentrecord.AccessWithdrawnStopNotice(subagentrecord.AccessWithdrawnStopEvent(names, caps.Shell))
 	if !isNoticed || !strings.Contains(notice, strings.Join(names, ", ")) {
 		t.Errorf("missing access withdrawal notice %q", notice)
 	}
@@ -506,11 +506,35 @@ func TestWithdrawingShellStopsOnlyTheChildrenHoldingOne(t *testing.T) {
 		t.Fatal(err)
 	}
 	holder := manager.ListSnapshots()[1].Name
-	if stopped := manager.StopRunning(); !slices.Equal(stopped, []string{holder}) {
+	if stopped := manager.StopLosing(caps.Shell); !slices.Equal(stopped, []string{holder}) {
 		t.Errorf("withdrawing the shell stopped %v, want only %s", stopped, holder)
 	}
 	if reader := manager.ListSnapshots()[0]; reader.State != subagentrecord.Running {
 		t.Errorf("a child with no shell was stopped as %s", reader.State)
+	}
+}
+
+func TestWithdrawingSubagentsStopsEveryRunningChild(t *testing.T) {
+	family := newTestFamily(t)
+	manager := family.manager(t, waiting())
+	*family.caps = caps.Read
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "read"}}); err != nil {
+		t.Fatal(err)
+	}
+	*family.caps = caps.Read | caps.Shell
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "run"}}); err != nil {
+		t.Fatal(err)
+	}
+	stopped := manager.StopLosing(caps.Subagents)
+	if len(stopped) != 2 {
+		t.Fatalf("withdrawing subagents stopped %v, want both children", stopped)
+	}
+	notice, isNoticed := subagentrecord.AccessWithdrawnStopNotice(subagentrecord.AccessWithdrawnStopEvent(stopped, caps.Subagents))
+	if !isNoticed || notice != "Subagents "+strings.Join(stopped, ", ")+" stopped because subagents were withdrawn." {
+		t.Errorf("got notice %q", notice)
+	}
+	if again := manager.StopLosing(caps.Write); len(again) != 0 {
+		t.Errorf("withdrawing the workspace stopped %v", again)
 	}
 }
 
@@ -519,7 +543,7 @@ func TestAChildStoppedJustBeforeItsParentClosesIsRecordedAsStopped(t *testing.T)
 	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "wait"}}); err != nil {
 		t.Fatal(err)
 	}
-	if stopped := manager.StopRunning(); len(stopped) != 1 {
+	if stopped := manager.StopLosing(caps.Shell); len(stopped) != 1 {
 		t.Fatalf("stopped %v", stopped)
 	}
 	go manager.Close()
@@ -608,7 +632,7 @@ func TestAStoppedChildIsToldWhyWhenItIsResumed(t *testing.T) {
 		t.Fatal(err)
 	}
 	name := manager.ListSnapshots()[0].Name
-	if stopped := manager.StopRunning(); len(stopped) != 1 {
+	if stopped := manager.StopLosing(caps.Shell); len(stopped) != 1 {
 		t.Fatalf("stopped %v", stopped)
 	}
 	untilFinished(t, manager, 1)

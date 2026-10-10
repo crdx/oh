@@ -1,5 +1,5 @@
-{"kind":"head","version":20,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant."}}
-{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"head","version":21,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"change what I am allowed to do twice over, once in each turn"}}
 {"kind":"event","event":{"kind":"model_message","text":"Half an ans"}}
 {"kind":"event","event":{"kind":"turn_interruption","name":"access_change"}}
@@ -7,14 +7,14 @@
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Half an ans"}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTurn stopped because access changed.\n\u003c/system-reminder\u003e"}]}}
 {"kind":"turn_completion","turn":{}}
-{"kind":"event","event":{"kind":"mode_change","name":"w","state":"rxngl"}}
+{"kind":"event","event":{"kind":"mode_change","name":"w","state":"rxsngl"}}
 {"kind":"event","event":{"kind":"model_message","text":"The workspace is read-onl"}}
 {"kind":"event","event":{"kind":"turn_interruption","name":"access_change"}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nThe workspace is now read-only.\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The workspace is read-onl"}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTurn stopped because access changed.\n\u003c/system-reminder\u003e"}]}}
 {"kind":"turn_completion","turn":{}}
-{"kind":"event","event":{"kind":"mode_change","name":"g","state":"rxnl"}}
+{"kind":"event","event":{"kind":"mode_change","name":"g","state":"rxsnl"}}
 {"kind":"event","event":{"kind":"model_message","text":"The history is read-only now."}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\n.git is now read-only.\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The history is read-only now."}]}}

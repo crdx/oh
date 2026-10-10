@@ -24,7 +24,11 @@ read: screen.go [call_1]
 grep: spinner [call_2]
 ```
 
-## Mode · toggled w · +4s
+## Job ended · +4s
+
+```
+Job `docs` exited: complete after 12s with no output.
+```
 
 ## Tool calls · +5s
 

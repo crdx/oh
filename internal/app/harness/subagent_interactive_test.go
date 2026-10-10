@@ -232,7 +232,7 @@ func TestSubagentsReportBackThroughTheBinaryAndAreListed(t *testing.T) {
 	writeSubagentWorkspace(t, rig)
 	withFakePager(t, rig)
 
-	session := rig.start("--yolo", "-m", "opencode-go/fake", delegatingPrompt)
+	session := rig.start("--yolo", "-c", "s", "-m", "opencode-go/fake", delegatingPrompt)
 	session.waitFor(delegatedAnswer)
 	session.waitFor(firstChildAnswer)
 	session.waitFor(followedUpAnswer)
@@ -304,7 +304,7 @@ func TestAConfinedSubagentKeepsItsScratchPrivateAndTheWorkspaceReadOnly(t *testi
 	rig, _ := newRespondingRig(t, delegatingResponder(sim.Call{Name: "bash", Arguments: bashCall}))
 	writeSubagentWorkspace(t, rig)
 
-	session := rig.start("-c", "rx", "-m", "opencode-go/fake", delegatingPrompt)
+	session := rig.start("-c", "rxs", "-m", "opencode-go/fake", delegatingPrompt)
 	session.waitFor(followedUpAnswer)
 	session.quit()
 
@@ -372,7 +372,7 @@ func TestAConfinedSubagentReadsButNeverWritesAFolderItsParentPrepared(t *testing
 	rig, _ := newRespondingRig(t, preparingResponder())
 	writeSubagentWorkspace(t, rig)
 
-	session := rig.start("-c", "rx", "-m", "opencode-go/fake", "prepare a folder and hand it to a subagent")
+	session := rig.start("-c", "rxs", "-m", "opencode-go/fake", "prepare a folder and hand it to a subagent")
 	session.waitFor(preparedDone)
 	session.quit()
 
@@ -405,7 +405,7 @@ func TestAReadOnlySessionsSubagentsReadWithoutAShell(t *testing.T) {
 	rig, _ := newRespondingRig(t, delegatingResponder(sim.Call{Name: "read", Arguments: readCall}))
 	writeSubagentWorkspace(t, rig)
 
-	session := rig.start("-c", "r", "-m", "opencode-go/fake", delegatingPrompt)
+	session := rig.start("-c", "rs", "-m", "opencode-go/fake", delegatingPrompt)
 	session.waitFor(followedUpAnswer)
 	session.quit()
 
@@ -431,7 +431,7 @@ func TestASubagentRotationStartsEachChildOnTheNextModel(t *testing.T) {
 	writeSubagentWorkspace(t, rig)
 	writeRigConfig(t, rig, "[subagent]\nround_robin = [\"opencode-go/fake@low\", \"opencode-go/fake@high\"]\n")
 
-	session := rig.start("--yolo", "-m", "opencode-go/fake", delegatingPrompt)
+	session := rig.start("--yolo", "-c", "s", "-m", "opencode-go/fake", delegatingPrompt)
 	session.waitFor(followedUpAnswer)
 	session.quit()
 

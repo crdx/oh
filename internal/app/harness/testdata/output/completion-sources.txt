@@ -3,8 +3,6 @@ $ oh --complete tool we
 weather
 [exit 0]
 $ oh --complete caps rxwngl
-rxwngl
-rxwngla
 [exit 0]
 
 === built-in tools without a custom declaration ===

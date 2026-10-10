@@ -1,6 +1,6 @@
-{"kind":"head","version":20,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant.","tools":["work"],"tool_definitions":[{"name":"work","description":"A scenario tool that blocks.","revision":"1"}]}}
-{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
-{"kind":"event","event":{"kind":"mode_change","name":"w","state":"rxngl"}}
+{"kind":"head","version":21,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant.","tools":["work"],"tool_definitions":[{"name":"work","description":"A scenario tool that blocks.","revision":"1"}]}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
+{"kind":"event","event":{"kind":"mode_change","name":"w","state":"rxsngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"give it back while the tool is working"}}
 {"kind":"event","event":{"render":"work","kind":"tool_call_request","id":"toolu_1","name":"work","arguments":"{}"}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"the call was stopped after 4s because the user changed what the harness is allowed to do","id":"toolu_1","name":"work","status":"cancelled","stats":{"kind":"output","lines":1,"bytes":88}}}
@@ -11,7 +11,7 @@
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"the call was stopped after 4s because the user changed what the harness is allowed to do","is_error":true}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTurn stopped because access changed.\n\u003c/system-reminder\u003e"}]}}
 {"kind":"turn_completion","turn":{}}
-{"kind":"event","event":{"kind":"mode_change","name":"w","state":"rxwngl"}}
+{"kind":"event","event":{"kind":"mode_change","name":"w","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"model_message","text":"Noted, the workspace is writable again."}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nThe workspace is now read-write.\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Noted, the workspace is writable again."}]}}

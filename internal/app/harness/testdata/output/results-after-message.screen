@@ -9,6 +9,11 @@ Taking them together.
 read screen.go 3L
 grep spinner *.go 1L
 
+
+ 🤖 Job docs exited: complete after 12s
+    with no output.
+
+
 Both still mention the spinner.
 === one column ===
 
@@ -111,6 +116,97 @@ r
 …
 …
 
+
+
+🤖
+
+J
+
+o
+
+b
+
+d
+
+o
+
+c
+
+s
+
+e
+
+x
+
+i
+
+t
+
+e
+
+d
+
+:
+
+c
+
+o
+
+m
+
+p
+
+l
+
+e
+
+t
+
+e
+
+a
+
+f
+
+t
+
+e
+
+r
+
+1
+
+2
+
+s
+
+w
+
+i
+
+t
+
+h
+
+n
+
+o
+
+o
+
+u
+
+t
+
+p
+
+u
+
+t
+
+.
+
+
 B
 o
 t
@@ -148,6 +244,10 @@ Taking them together.
 read screen.go 3L
 grep spinner *.go 1L
 
+
+ 🤖 Job docs exited: complete after 12s with no output.
+
+
 Both still mention the spinner.
 === tiny ===
 
@@ -165,6 +265,16 @@ together.
 read scr… 3L
 grep spi… 1L
 
+
+ 🤖 Job docs
+    exited:
+    complete
+    after
+    12s with
+    no
+    output.
+
+
 Both still
 mention the
 spinner.
@@ -177,5 +287,9 @@ Taking them together.
 
 read screen.go 3L
 grep spinner *.go 1L
+
+
+ 🤖 Job docs exited: complete after 12s with no output.
+
 
 Both still mention the spinner.

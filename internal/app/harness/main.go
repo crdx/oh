@@ -1162,7 +1162,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	snapshots := file.NewSnapshots()
 	toolboxTools := toolbox.RummageWithRunner(files, snapshots, grepRunner(args.Yolo))
 	if childManager != nil {
-		toolboxTools = append(toolboxTools, subagent.New(childManager))
+		toolboxTools = append(toolboxTools, subagent.New(childManager, func() bool { return mode.Current().Has(caps.Subagents) }))
 	}
 	askBroker := ask.New()
 	permissionSet, err := settings.BuildPermissions()

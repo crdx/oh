@@ -369,7 +369,7 @@ harness background
  │ toml: line 3 (last key "ui.theme.dark.user"): "red" is not a colour or a decoration; write     │
  │ #rrggbb, "default", "bold", "faint", "italic", "underline", "blink", "reverse", "hidden",      │
  │ "strikethrough", "overline", or a shaped or coloured underline such as "underline:curly"       │
-─┴── ·✦· ─ rxw ngl ──────────────────────────────────────────────── GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? ──┴─
+─┴── ·✦· ─ rxw sngl ─────────────────────────────────────────────── GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? ──┴─
 
 ── workspace ───────────────────────────── tame-impala 🦌 ───────────────────────────── usage n/a ──
 === live turn and input draft ===

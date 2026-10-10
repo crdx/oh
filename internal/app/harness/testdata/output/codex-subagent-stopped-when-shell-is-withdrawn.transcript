@@ -8,7 +8,7 @@
 - **Workspace:** ``
 - **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
 
-## Mode · rxwngl · +0s
+## Mode · rxwsngl · +0s
 
 ## User · +0s
 
@@ -42,7 +42,7 @@ The build tool is just.
 
 ## Subagent finished · tame-adder · stopped · +0s
 
-## Mode · rwngl · toggled x · +0s
+## Mode · rwsngl · toggled x · +0s
 
 ```
 Bash is now refused.

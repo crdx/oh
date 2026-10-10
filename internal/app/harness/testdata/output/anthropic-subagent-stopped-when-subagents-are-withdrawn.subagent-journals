@@ -1,0 +1,16 @@
+=== tame-adder ===
+{"kind":"head","version":21,"meta":{"model":"claude-opus-5","workspaceDir":"/workspace","provider":"anthropic","effort":"medium","model_choice":{"provider":"anthropic","id":"claude-opus-5","name":"Claude Opus 5"},"system_prompt":"You are tame-adder, a subagent of session tame-impala, working in /workspace."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rx"}}
+{"kind":"event","event":{"kind":"user_message","text":"Watch the build forever"}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Watch the build forever"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTurn stopped because subagents were withdrawn.\n\u003c/system-reminder\u003e"}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"turn_interruption","text":"subagents were withdrawn"}}
+=== tame-alpaca ===
+{"kind":"head","version":21,"meta":{"model":"claude-opus-5","workspaceDir":"/workspace","provider":"anthropic","effort":"medium","model_choice":{"provider":"anthropic","id":"claude-opus-5","name":"Claude Opus 5"},"system_prompt":"You are tame-alpaca, a subagent of session tame-impala, working in /workspace."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rx"}}
+{"kind":"event","event":{"kind":"user_message","text":"Name the build tool"}}
+{"kind":"event","event":{"kind":"model_message","text":"The build tool is just."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Name the build tool"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The build tool is just."}]}}
+{"kind":"turn_completion","turn":{}}

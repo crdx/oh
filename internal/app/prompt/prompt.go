@@ -28,12 +28,13 @@ import (
 )
 
 const (
-	shellToolName  = "bash"
-	jobToolName    = "job"
-	lookupToolName = "lookup"
-	fetchToolName  = "fetch"
-	titleToolName  = "title"
-	notifyToolName = "notify"
+	shellToolName    = "bash"
+	jobToolName      = "job"
+	lookupToolName   = "lookup"
+	fetchToolName    = "fetch"
+	titleToolName    = "title"
+	notifyToolName   = "notify"
+	subagentToolName = "subagent"
 
 	clipboardDropsHeading = "# Clipboard Drops"
 	defaultGlobalContext  = "You are a helpful coding assistant."
@@ -140,12 +141,14 @@ type harnessContextTemplateData struct {
 	NotifyOffered     bool
 	LookupOffered     bool
 	FetchOffered      bool
+	SubagentOffered   bool
 	Conditions        conditions.Conditions
 	WorkspaceWritable bool
 	IsRepository      bool
 	GitWritable       bool
 	ShellGranted      bool
 	LookupGranted     bool
+	SubagentsGranted  bool
 	JobsGranted       bool
 	NetworkGranted    bool
 	CurrentCaps       caps.Set
@@ -293,6 +296,7 @@ func harnessContext(config Config) string {
 		NotifyOffered:     toolset.Offers(config.OfferedTools, notifyToolName),
 		LookupOffered:     toolset.Offers(config.OfferedTools, lookupToolName),
 		FetchOffered:      toolset.Offers(config.OfferedTools, fetchToolName),
+		SubagentOffered:   toolset.Offers(config.OfferedTools, subagentToolName),
 		Conditions:        config.Conditions,
 		WorkspaceWritable: currentCaps.Has(caps.Write),
 		IsRepository:      pathutil.Exists(filepath.Join(config.Workspace.GetDir(), ".git")),
@@ -302,6 +306,7 @@ func harnessContext(config Config) string {
 		NetworkGranted:    config.NetworkGranted,
 		CurrentCaps:       currentCaps,
 		LookupGranted:     currentCaps.Has(caps.Lookup),
+		SubagentsGranted:  currentCaps.Has(caps.Subagents),
 		ToolGroups:        config.ToolGroups,
 		GroupStatus:       config.GroupStatus,
 		Yolo:              config.Yolo,
@@ -509,6 +514,14 @@ func lookupAccess(isGranted bool) string {
 	return "refused"
 }
 
+func subagentAccess(isGranted bool) string {
+	if isGranted {
+		return "available"
+	}
+
+	return "refused"
+}
+
 func sandboxHeader(isYolo bool, isShellOffered bool) string {
 	if !isYolo || !isShellOffered {
 		return ""
@@ -553,6 +566,11 @@ func stateRules(data harnessContextTemplateData) string {
 			leftBehind = "- A process that a bash call leaves running in its process group dies when the call ends"
 		}
 		lines = append(lines, leftBehind+jobSurvival(data.JobsGranted))
+	}
+
+	if data.SubagentOffered {
+		lines = append(lines, "- The subagent tool is "+subagentAccess(data.SubagentsGranted)+
+			grantHint(data.SubagentsGranted, data.Conditions.Interactive, caps.Subagents, "subagents"))
 	}
 
 	for _, flag := range slices.Sorted(maps.Keys(data.ToolGroups)) {

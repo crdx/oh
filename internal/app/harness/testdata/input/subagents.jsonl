@@ -18,8 +18,8 @@
 {"event":{"kind":"tool_call_result","status":"success","text":"started tame-anchovy","id":"call_3","name":"subagent","took":0,"stats":{"kind":"output","lines":1,"bytes":20}}}
 {"event":{"kind":"subagent_started","subagent":"tame-anchovy","text":"Watch the build","id":"session-of-tame-anchovy","state":{"choice":{"provider":"anthropic","id":"claude-opus-5"},"workspace":"/workspace","intent":"Watching the build until stopped"}}}
 {"event":{"kind":"model_message","text":"It is watching the build."}}
-{"event":{"kind":"mode_change","state":"rwngl","name":"x"}}
-{"event":{"kind":"subagent_access_stop","name":"tame-anchovy"}}
+{"event":{"kind":"mode_change","state":"rwsngl","name":"x"}}
+{"event":{"kind":"subagent_access_stop","name":"tame-anchovy","state":"x"}}
 {"event":{"kind":"subagent_finished","subagent":"tame-anchovy","text":"","name":"stopped","status":"cancelled","state":{"usage":{}}}}
 {"event":{"kind":"user_message","text":"carry on"}}
 {"event":{"kind":"model_message","text":"Carrying on without it."}}

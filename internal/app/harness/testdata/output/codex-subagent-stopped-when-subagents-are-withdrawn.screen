@@ -1,0 +1,25 @@
+
+ start two subagents
+
+
+spawn 2 subagents · Watching the build until stopped, Naming the tool that builds this
+
+Both are running.
+
+
+ 🤖 The subagent tool is now refused.
+ 🤖 Subagent tame-adder stopped because subagents were withdrawn.
+ 🦙 Subagent tame-alpaca interjects:
+
+    The build tool is just.
+
+
+tame-alpaca named the build tool; tame-adder stopped when subagents went.
+
+
+ start one more subagent
+
+
+Naming the tool that runs tests spawn 1 subagent ✗ subagents unavailable; ctrl+x s grants them
+
+Subagents are refused until you grant them with ctrl+x s.

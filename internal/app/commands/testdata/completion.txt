@@ -144,19 +144,22 @@
   r → /new -c r
   rx → /new -c rx
   rxw → /new -c rxw
-  rxwn → /new -c rxwn
-  rxwng → /new -c rxwng
-  rxwngl → /new -c rxwngl
-  rxwngla → /new -c rxwngla
+  rxws → /new -c rxws
+  rxwsn → /new -c rxwsn
+  rxwsng → /new -c rxwsng
+  rxwsngl → /new -c rxwsngl
+  rxwsngla → /new -c rxwsngla
 "/new -c rxw"
   rxw → /new -c rxw
-  rxwn → /new -c rxwn
-  rxwng → /new -c rxwng
-  rxwngl → /new -c rxwngl
-  rxwngla → /new -c rxwngla
+  rxws → /new -c rxws
+  rxwsn → /new -c rxwsn
+  rxwsng → /new -c rxwsng
+  rxwsngl → /new -c rxwsngl
+  rxwsngla → /new -c rxwsngla
 "/new --yolo -c "
-  l → /new --yolo -c l
-  la → /new --yolo -c la
+  s → /new --yolo -c s
+  sl → /new --yolo -c sl
+  sla → /new --yolo -c sla
 "/new -c rx -c "
 "/new -t "
   bash → /new -t bash

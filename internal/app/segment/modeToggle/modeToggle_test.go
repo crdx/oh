@@ -11,13 +11,13 @@ import (
 )
 
 func TestEveryCapabilitySetKeepsTheSameLetters(t *testing.T) {
-	for _, flags := range []string{"", "r", "rw", "rx", "rxw", "rxwn", "rxwng", "rxwngl", "rn", "rg", "rl"} {
+	for _, flags := range []string{"", "r", "rw", "rx", "rxw", "rxws", "rxwsn", "rxwsng", "rxwsngl", "rn", "rg", "rl", "rs"} {
 		grantedCaps, err := caps.Parse(flags)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		if got := style.Plain(render(t, grantedCaps, false)); got != "rxw ngl" {
+		if got := style.Plain(render(t, grantedCaps, false)); got != "rxw sngl" {
 			t.Errorf("caps %q drew %q, want the letters to stand whatever is granted", flags, got)
 		}
 	}
@@ -35,7 +35,7 @@ func TestOnlyTheStylingSaysWhatIsGranted(t *testing.T) {
 	if pending == refused {
 		t.Errorf("a pending prefix drew nothing new: %q", pending)
 	}
-	if got := style.Plain(pending); got != "rxw ngl" {
+	if got := style.Plain(pending); got != "rxw sngl" {
 		t.Errorf("a pending prefix drew %q, want the same letters", got)
 	}
 }
@@ -50,19 +50,21 @@ func TestCustomToolGroupsJoinTheSecondSection(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if got := style.Plain(built.Render(segment.Context{})); got != "rxw nglabc" {
+	if got := style.Plain(built.Render(segment.Context{})); got != "rxw snglabc" {
 		t.Errorf("got %q", got)
 	}
 }
 
 func TestAnUnconfinedSessionDrawsOnlyWhatItCanStillToggle(t *testing.T) {
 	for _, test := range []struct {
-		grantedCaps caps.Set
-		want        string
-		paint       style.Style
+		grantedCaps    caps.Set
+		subagentsPaint style.Style
+		lookupPaint    style.Style
 	}{
-		{caps.All() &^ caps.Lookup, "lab", style.Dim},
-		{caps.All(), "lab", style.Lookup},
+		{caps.All() &^ caps.Lookup &^ caps.Subagents, style.Dim, style.Dim},
+		{caps.All() &^ caps.Lookup, style.Subagents, style.Dim},
+		{caps.All() &^ caps.Subagents, style.Dim, style.Lookup},
+		{caps.All(), style.Subagents, style.Lookup},
 	} {
 		built, err := modeToggle.NewUnconfined(
 			func() caps.Set { return test.grantedCaps },
@@ -74,8 +76,9 @@ func TestAnUnconfinedSessionDrawsOnlyWhatItCanStillToggle(t *testing.T) {
 		}
 
 		got := built.Render(segment.Context{})
-		if style.Plain(got) != test.want || !strings.HasPrefix(got, test.paint("l")) {
-			t.Errorf("caps %q drew %q, want %q led by %q", test.grantedCaps.Flags(), got, test.want, test.paint("l"))
+		lead := test.subagentsPaint("s") + test.lookupPaint("l")
+		if style.Plain(got) != "slab" || !strings.HasPrefix(got, lead) {
+			t.Errorf("caps %q drew %q, want %q led by %q", test.grantedCaps.Flags(), got, "slab", lead)
 		}
 	}
 }

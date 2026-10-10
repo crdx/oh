@@ -87,6 +87,7 @@
 - The session is interactive: questions, approvals, and /! commands for the user are available. A background job wakes the conversation when it ends.
 - The bash tool is granted
 - A process that a bash call leaves running dies when the call ends
+- The subagent tool is refused; do not call it unless the user grants subagents with ctrl+x s
 
 These states can change at any time. You will be told what changes.
 If a state blocks the work and no workflow below covers it, ask the user to change it.

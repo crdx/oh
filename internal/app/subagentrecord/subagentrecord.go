@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"strings"
 
+	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/pkg/agent"
 )
@@ -117,11 +118,39 @@ func IsCounted(event agent.Event) bool {
 	return event.Usage != nil && event.Kind != agent.CacheRebuildEvent
 }
 
+func AccessWithdrawnStopEvent(names []string, withdrawnCaps caps.Set) agent.Event {
+	encodedFlag, err := json.Marshal(withdrawnCaps.Flag())
+	if err != nil {
+		return agent.Event{}
+	}
+	return agent.Event{Kind: AccessWithdrawnStop, Name: strings.Join(names, ","), State: encodedFlag}
+}
+
 func AccessWithdrawnStopNotice(event agent.Event) (string, bool) {
 	if event.Kind != AccessWithdrawnStop || event.Name == "" {
 		return "", false
 	}
-	return namedSubagents(event.Name) + " stopped because shell execution was withdrawn.", true
+	var flag string
+	if err := json.Unmarshal(event.State, &flag); err != nil {
+		return "", false
+	}
+	withdrawnCaps, isKnown := caps.Named(flag)
+	reason := Withdrawal(withdrawnCaps)
+	if !isKnown || reason == "" {
+		return "", false
+	}
+	return namedSubagents(event.Name) + " stopped because " + reason + ".", true
+}
+
+func Withdrawal(withdrawnCaps caps.Set) string {
+	switch {
+	case withdrawnCaps.Has(caps.Subagents):
+		return "subagents were withdrawn"
+	case withdrawnCaps.Has(caps.Shell):
+		return "shell execution was withdrawn"
+	default:
+		return ""
+	}
 }
 
 func CompletionHeading(names []string) string {

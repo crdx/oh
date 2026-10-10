@@ -1,5 +1,5 @@
-{"kind":"head","version":20,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant.","environment":{"sandbox":{"deny":["secret.yml"],"read":["/reference"],"write":["/output"],"exec":["/opt/tool"],"path":["/opt/bin"],"home":["/test-home/.toolrc"]},"skills":[{"name":"removed","description":"use the removed process","location":"/skills/removed/SKILL.md"}],"is_repository":true,"port_hostname":"old.agent.test"}}}
-{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"head","version":21,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant.","environment":{"sandbox":{"deny":["secret.yml"],"read":["/reference"],"write":["/output"],"exec":["/opt/tool"],"path":["/opt/bin"],"home":["/test-home/.toolrc"]},"skills":[{"name":"removed","description":"use the removed process","location":"/skills/removed/SKILL.md"}],"is_repository":true,"port_hostname":"old.agent.test"}}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"remember what is available"}}
 {"kind":"event","event":{"kind":"model_message","text":"I have the original environment."}}

@@ -261,11 +261,11 @@ func (self *sessionGoldenChildren) manager(
 	return manager
 }
 
-func (self *sessionGoldenChildren) withTool(tools []tool.Tool, manager *subagents.Manager) []tool.Tool {
+func (self *sessionGoldenChildren) withTool(tools []tool.Tool, manager *subagents.Manager, getCaps func() caps.Set) []tool.Tool {
 	if self == nil {
 		return tools
 	}
-	tools = append(tools, subagent.New(sessionGoldenMessagingManager{Manager: manager, children: self}))
+	tools = append(tools, subagent.New(sessionGoldenMessagingManager{Manager: manager, children: self}, func() bool { return getCaps().Has(caps.Subagents) }))
 	if self.scenario.HasWaitTool {
 		var sources []wait.Source
 		if stored, isStored := sessionGoldenRunningJobs.Load(self.t); isStored {

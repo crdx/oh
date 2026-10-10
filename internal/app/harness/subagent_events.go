@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/metrics"
 	"crdx.org/oh/internal/app/model"
@@ -70,15 +71,15 @@ func (self *App) childSpend() (float64, bool) {
 	return spend + liveSpend, isPriced && isLivePriced
 }
 
-func (self *App) stopChildrenLosingShell() {
+func (self *App) stopChildrenLosing(withdrawnCaps caps.Set) {
 	if self.children.manager == nil {
 		return
 	}
-	names := self.children.manager.StopRunning()
+	names := self.children.manager.StopLosing(withdrawnCaps)
 	if len(names) == 0 {
 		return
 	}
-	self.pendingNotices.add(agent.Event{Kind: subagentrecord.AccessWithdrawnStop, Name: strings.Join(names, ",")})
+	self.pendingNotices.add(subagentrecord.AccessWithdrawnStopEvent(names, withdrawnCaps))
 	if !self.currentTurn.Running() {
 		self.refreshPendingMessages()
 	}

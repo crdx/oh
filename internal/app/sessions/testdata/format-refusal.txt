@@ -1,18 +1,18 @@
 === stored: resume ===
-able-dolphin is written in an older journal format: run `oh --ctl migrate` to bring it up to format 20
+able-dolphin is written in an older journal format: run `oh --ctl migrate` to bring it up to format 21
 === stored: fork ===
-able-dolphin is written in an older journal format: run `oh --ctl migrate` to bring it up to format 20
+able-dolphin is written in an older journal format: run `oh --ctl migrate` to bring it up to format 21
 === stored: listing ===
-able-dolphin is written in an older journal format: run `oh --ctl migrate` to bring it up to format 20
+able-dolphin is written in an older journal format: run `oh --ctl migrate` to bring it up to format 21
 === stored: picker ===
-able-dolphin is written in an older journal format: run `oh --ctl migrate` to bring it up to format 20
+able-dolphin is written in an older journal format: run `oh --ctl migrate` to bring it up to format 21
 === archived: resume ===
-able-dolphin is written in an older journal format: run `oh --ctl migrate` to bring it up to format 20
+able-dolphin is written in an older journal format: run `oh --ctl migrate` to bring it up to format 21
 === archived: fork ===
-able-dolphin is written in an older journal format: run `oh --ctl migrate` to bring it up to format 20
+able-dolphin is written in an older journal format: run `oh --ctl migrate` to bring it up to format 21
 === archived: listing ===
-able-dolphin is written in an older journal format: run `oh --ctl migrate` to bring it up to format 20
+able-dolphin is written in an older journal format: run `oh --ctl migrate` to bring it up to format 21
 === archived: picker ===
-able-dolphin is written in an older journal format: run `oh --ctl migrate` to bring it up to format 20
+able-dolphin is written in an older journal format: run `oh --ctl migrate` to bring it up to format 21
 === newer: resume ===
-able-dolphin is written in a newer journal format than this oh reads (format 20): upgrade oh
+able-dolphin is written in a newer journal format than this oh reads (format 21): upgrade oh

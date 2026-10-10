@@ -65,7 +65,7 @@ func TestTheFastModeSegmentIsRegisteredWithTheCurrentSelection(t *testing.T) {
 
 func TestInfoDrawsEveryAvailableNonemptySegmentAndSummarisesTheEmptyOnes(t *testing.T) {
 	cacheValue := "\x1b[31m5m ttl\x1b[0m"
-	modeValue := "\x1b[32mrxw ngl\x1b[0m"
+	modeValue := "\x1b[32mrxw sngl\x1b[0m"
 	registry := segment.Registry{
 		activitySpinnerSegment: fixedFactory("·✦·"),
 		cacheUsageSegment:      fixedFactory("unused configured value"),

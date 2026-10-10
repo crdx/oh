@@ -10278,7 +10278,8 @@ func newRig(t *testing.T, openScreen func(*strings.Builder, string) *output.Scre
 			nil,
 		),
 	)
-	tools = append(tools,
+	tools = append(
+		tools,
 		lookup.New(func() bool { return true }, allowApproval, sessionGoldenSearcher{}),
 		fetch.New(func() bool { return true }, allowApproval, saveTestHTML),
 	)
@@ -12033,7 +12034,8 @@ func inheritedThemeReloadStream(t *testing.T) string {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
 	self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
-	prepareLiveConfigSources(t, self,
+	prepareLiveConfigSources(
+		t, self,
 		config.Source{Path: globalPath},
 		config.Source{Path: overridePath, IsOverride: true},
 	)
@@ -12364,7 +12366,8 @@ func TestDeletingALocalConfigLiveReloadsTheGlobalFallback(t *testing.T) {
 	}
 
 	self := testConversation(t, &bytes.Buffer{})
-	prepareLiveConfigSources(t, self,
+	prepareLiveConfigSources(
+		t, self,
 		config.Source{Path: globalPath},
 		config.Source{Path: overridePath, IsOverride: true},
 	)
@@ -15638,7 +15641,8 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 		),
 		"cache-usage / restored with the session": goldenSegmentPass(
 			t,
-			cacheUsage.New(restoredWithEvents(t,
+			cacheUsage.New(restoredWithEvents(
+				t,
 				agent.Event{Kind: agent.ModelMessageEvent, Usage: &agent.Usage{InputTokens: 100_000, Cache: &agent.CacheUsage{ReadTokens: 90_000}}},
 				agent.Event{Kind: agent.ModelMessageEvent, Usage: &agent.Usage{InputTokens: 100_000, Cache: &agent.CacheUsage{ReadTokens: 96_400}}},
 			).cacheUsage),
@@ -18876,7 +18880,8 @@ func newSessionGoldenTools(
 
 		if specification.LookupWithheld || specification.FetchWithheld || specification.LookupAnswer != "" {
 			searcher := sessionGoldenSearcher{answer: specification.LookupAnswer}
-			tools = append(tools,
+			tools = append(
+				tools,
 				lookup.New(func() bool { return !specification.LookupWithheld }, allowApproval, searcher),
 				fetch.New(func() bool { return !specification.FetchWithheld }, allowApproval, saveTestHTML),
 			)
@@ -19680,7 +19685,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	}
 	firstTools := children.withTool(newSessionGoldenTools(
 		t, scenario.Tools, goldenPorts, scenario.ScratchDirectory, toolDirectory,
-	), firstChildManager)
+	), firstChildManager, func() caps.Set { return firstHarness.mode.Current() })
 	meta.ToolDefinitions = store.FreezeTools(firstTools)
 	meta.Tools = toolset.Names(firstTools)
 	if err := log.SetMeta(meta); err != nil {
@@ -19793,7 +19798,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	}
 	currentTools := children.withTool(newSessionGoldenTools(
 		t, scenario.Tools, goldenPorts, scenario.ScratchDirectory, toolDirectory, true,
-	), resumedChildManager)
+	), resumedChildManager, func() caps.Set { return resumedHarness.mode.Current() })
 	restoredTools := toolset.Restore(currentTools, store.RestoreTools(storedSession.Meta.ToolDefinitions), nil)
 	availabilityRestoration, err := toolset.RestoreAvailability(
 		storedSession.Events,

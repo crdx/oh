@@ -1,5 +1,5 @@
-{"kind":"head","version":20,"meta":{"model":"kimi-k2.7-code","workspaceDir":"","provider":"opencode-go","system_prompt":"You are a test assistant.","tools":["alpha","beta"],"tool_definitions":[{"name":"alpha","description":"A deterministic scenario tool.","revision":"1"},{"name":"beta","description":"A deterministic scenario tool.","revision":"1"}]}}
-{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"head","version":21,"meta":{"model":"kimi-k2.7-code","workspaceDir":"","provider":"opencode-go","system_prompt":"You are a test assistant.","tools":["alpha","beta"],"tool_definitions":[{"name":"alpha","description":"A deterministic scenario tool.","revision":"1"},{"name":"beta","description":"A deterministic scenario tool.","revision":"1"}]}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"reason, then call two tools in fragments"}}
 {"kind":"event","event":{"kind":"model_reasoning","text":"Use both tools."}}
 {"kind":"event","event":{"render":"alpha","kind":"tool_call_request","id":"call-1","name":"alpha","arguments":"{}"}}

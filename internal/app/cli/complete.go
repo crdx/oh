@@ -162,7 +162,7 @@ func sessionNames(directory string) []string {
 func CapsCompletions(word string, customFlags string, isYolo bool) []string {
 	flags := caps.AllFlags
 	if isYolo {
-		flags = caps.Lookup.Flag()
+		flags = (caps.All() &^ caps.Unconfined()).Flags()
 	}
 
 	return withPrefix(word, capsCompletions(flags+customFlags))

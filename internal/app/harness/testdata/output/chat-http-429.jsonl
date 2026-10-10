@@ -1,5 +1,5 @@
-{"kind":"head","version":20,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant."}}
-{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"head","version":21,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"receive HTTP 429"}}
 {"kind":"event","event":{"kind":"request_retry","failure":{"kind":"http_status","http_status":429,"media_type":"text/event-stream"},"attempt":1}}
 {"kind":"event","event":{"kind":"request_retry","failure":{"kind":"http_status","http_status":429,"media_type":"text/event-stream"},"attempt":2}}

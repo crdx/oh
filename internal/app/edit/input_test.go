@@ -860,6 +860,7 @@ func TestThePrefixAndALetterAskForOneSwap(t *testing.T) {
 		'n': ToggleNetwork,
 		'g': ToggleGit,
 		'l': ToggleLookup,
+		's': ToggleSubagents,
 	} {
 		self := NewInput(nil)
 

@@ -1,5 +1,5 @@
-{"kind":"head","version":20,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant."}}
-{"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
+{"kind":"head","version":21,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"change what I am allowed to do while the answer is still arriving"}}
 {"kind":"event","event":{"kind":"model_message","text":"Half an ans"}}
@@ -7,7 +7,7 @@
 {"kind":"item","payload":{"role":"user","content":"change what I am allowed to do while the answer is still arriving"}}
 {"kind":"item","payload":{"role":"user","content":"\u003cturn_aborted\u003e\nTurn stopped because access changed.\n\u003c/turn_aborted\u003e"}}
 {"kind":"turn_completion","turn":{}}
-{"kind":"event","event":{"kind":"mode_change","name":"w","state":"rxngl"}}
+{"kind":"event","event":{"kind":"mode_change","name":"w","state":"rxsngl"}}
 {"kind":"event","event":{"kind":"request_retry","failure":{"kind":"generic_error","message":"the stream ended before the response did"},"attempt":1}}
 {"kind":"event","event":{"kind":"request_retry","failure":{"kind":"generic_error","message":"the stream ended before the response did"},"attempt":2}}
 {"kind":"event","event":{"kind":"model_message","text":"Noted, the workspace is read-only now."}}

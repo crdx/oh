@@ -23,22 +23,22 @@
       +9s  Configuration reloaded automatically (dismissing in 1s)
      +10s
 === default bar between turns outside a repository ===
-      +0s  ·✦· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
-      +5s  ·✦· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
-     +10s  ·✦· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
-     +15s  ·✦· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+      +0s  ·✦· ─ rxw sngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+      +5s  ·✦· ─ rxw sngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+     +10s  ·✦· ─ rxw sngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+     +15s  ·✦· ─ rxw sngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
 === default bar during a turn outside a repository ===
-      +0s  ✦·· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
-   +100ms  ·✦· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
-   +200ms  ··✦ ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
-   +300ms  ··✦ ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
-   +400ms  ·✦· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
-   +500ms  ✦·· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
-   +600ms  ✦·· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
-   +700ms  ·✦· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
-   +800ms  ··✦ ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
-   +900ms  ··✦ ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
-      +1s  ·✦· ─ rxw ngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+      +0s  ✦·· ─ rxw sngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+   +100ms  ·✦· ─ rxw sngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+   +200ms  ··✦ ─ rxw sngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+   +300ms  ··✦ ─ rxw sngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+   +400ms  ·✦· ─ rxw sngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+   +500ms  ✦·· ─ rxw sngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+   +600ms  ✦·· ─ rxw sngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+   +700ms  ·✦· ─ rxw sngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+   +800ms  ··✦ ─ rxw sngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+   +900ms  ··✦ ─ rxw sngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
+      +1s  ·✦· ─ rxw sngl │  │ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/? │ workspace │ tame-impala 🦌 │ usage n/a
 === git status alone in a repository ===
       +0s
    +100ms  ●
@@ -54,54 +54,54 @@
       +1s  Redrawn in 42ms (dismissing in 1s)
       +2s
 === running turn ===
-      +0s  ✦·· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +125ms  ·✦· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +250ms  ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +375ms  ··✧ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +500ms  ·✧· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +625ms  ✧·· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +750ms  ✦·· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +875ms  ·✦· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-      +1s  ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-  +1.125s  ··✧ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +1.25s  ·✧· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-  +1.375s  ✧·· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-    +1.5s  ✦·· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-  +1.625s  ·✦· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +1.75s  ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-  +1.875s  ··✧ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-      +2s  ·✧· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+      +0s  ✦·· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +125ms  ·✦· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +250ms  ··✦ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +375ms  ··✧ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +500ms  ·✧· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +625ms  ✧·· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +750ms  ✦·· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +875ms  ·✦· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+      +1s  ··✦ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+  +1.125s  ··✧ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +1.25s  ·✧· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+  +1.375s  ✧·· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+    +1.5s  ✦·· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+  +1.625s  ·✦· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +1.75s  ··✦ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+  +1.875s  ··✧ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+      +2s  ·✧· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
 === running turn with a pass past due ===
-      +0s  ✦·· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +250ms  ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +500ms  ·✧· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +750ms  ✦·· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-      +1s  ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +1.25s  ·✧· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-    +1.5s  ✦·· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +1.75s  ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-      +2s  ·✧· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+      +0s  ✦·· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +250ms  ··✦ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +500ms  ·✧· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +750ms  ✦·· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+      +1s  ··✦ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +1.25s  ·✧· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+    +1.5s  ✦·· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +1.75s  ··✦ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+      +2s  ·✧· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
 === running turn with a slow pass ===
-      +0s  ✦·· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +125ms  ·✦· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +250ms  ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +375ms  ··✧ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +500ms  ·✧· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +625ms  ✧·· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +750ms  ✦·· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +875ms  ·✦· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-      +1s  ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-  +1.125s  ··✧ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +1.25s  ·✧· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-  +1.375s  ✧·· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-    +1.5s  ✦·· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-  +1.625s  ·✦· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-   +1.75s  ··✦ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-  +1.875s  ··✧ ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
-      +2s  ·✧· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+      +0s  ✦·· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +125ms  ·✦· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +250ms  ··✦ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +375ms  ··✧ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +500ms  ·✧· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +625ms  ✧·· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +750ms  ✦·· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +875ms  ·✦· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+      +1s  ··✦ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+  +1.125s  ··✧ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +1.25s  ·✧· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+  +1.375s  ✧·· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+    +1.5s  ✦·· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+  +1.625s  ·✦· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+   +1.75s  ··✦ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+  +1.875s  ··✧ ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+      +2s  ·✧· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
 === turn timer alone on a slow loop ===
     +1m0s  0m 1m
     +2m0s  0m 2m
     +3m0s  0m 3m
 === waiting between turns ===
-      +0s  ✧·· ─ 0m 0m ─ rxw ngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?
+      +0s  ✧·· ─ 0m 0m ─ rxw sngl ─ workspace ─ GPT Sol 5.6 ▫▫▫▪·· ─ ?% 0/?

@@ -49,6 +49,7 @@ var (
 	Info         Style = information()
 	Shell        Style = information()
 	Network      Style = information()
+	Subagents    Style = information()
 	Lookup       Style = information()
 	Git          Style = information()
 	ScratchAlias Style = decorate(col.Italic, Info)

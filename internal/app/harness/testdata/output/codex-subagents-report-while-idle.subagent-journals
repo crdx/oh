@@ -1,5 +1,5 @@
 === tame-adder ===
-{"kind":"head","version":20,"meta":{"model":"gpt-5.6-sol","workspaceDir":"/workspace","provider":"codex","effort":"medium","model_choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"system_prompt":"You are tame-adder, a subagent of session tame-impala, working in /workspace.\n\nAnswer in one sentence.","tools":["work"],"tool_definitions":[{"name":"work","description":"A deterministic scenario tool.","revision":"1"}]}}
+{"kind":"head","version":21,"meta":{"model":"gpt-5.6-sol","workspaceDir":"/workspace","provider":"codex","effort":"medium","model_choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"system_prompt":"You are tame-adder, a subagent of session tame-impala, working in /workspace.\n\nAnswer in one sentence.","tools":["work"],"tool_definitions":[{"name":"work","description":"A deterministic scenario tool.","revision":"1"}]}}
 {"kind":"event","event":{"kind":"mode_change","state":"rx"}}
 {"kind":"event","event":{"kind":"user_message","text":"Read the parser and report its entry point"}}
 {"kind":"event","event":{"render":"work","kind":"tool_call_request","id":"toolu_c1","name":"work","arguments":"{}"}}
@@ -12,7 +12,7 @@
 {"kind":"item","payload":{"id":"message-6","type":"message","role":"assistant","content":[{"type":"output_text","text":"The parser starts at parse.go."}]}}
 {"kind":"turn_completion","turn":{}}
 === tame-alpaca ===
-{"kind":"head","version":20,"meta":{"model":"gpt-5.6-sol","workspaceDir":"/workspace","provider":"codex","effort":"medium","model_choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"system_prompt":"You are tame-alpaca, a subagent of session tame-impala, working in /workspace.\n\nAnswer in one sentence.","tools":["work"],"tool_definitions":[{"name":"work","description":"A deterministic scenario tool.","revision":"1"}]}}
+{"kind":"head","version":21,"meta":{"model":"gpt-5.6-sol","workspaceDir":"/workspace","provider":"codex","effort":"medium","model_choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"system_prompt":"You are tame-alpaca, a subagent of session tame-impala, working in /workspace.\n\nAnswer in one sentence.","tools":["work"],"tool_definitions":[{"name":"work","description":"A deterministic scenario tool.","revision":"1"}]}}
 {"kind":"event","event":{"kind":"mode_change","state":"rx"}}
 {"kind":"event","event":{"kind":"user_message","text":"Count the open TODO items"}}
 {"kind":"event","event":{"kind":"model_message","text":"There are three open TODO items."}}

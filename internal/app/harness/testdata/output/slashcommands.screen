@@ -358,18 +358,18 @@ see /co
 › r
   rx
   rxw
-  rxwn
-  rxwng
-  rxwngl
-  rxwngla
-
+  rxws
+  rxwsn
+  rxwsng
+  rxwsngl
+  rxwsngla
 ────────────────────────────────────────────────────────────
 === 59 a waived sandbox lists only what it can take ===
 ────────────────────────────────────────────────────────────
 /fork -c
-› l
-  la
-
+› s
+  sl
+  sla
 
 
 
@@ -436,15 +436,15 @@ see /co
 === 67 enter on sandboxed capabilities beside the waiver refuses them ===
  ╭────────────────────────────────────────────────────────╮
  │ /new: --yolo leaves rxwng always on, so --caps takes   │
- │ only l and custom tool groups (got "rx") (alt+enter to │
- │ send)                                                  │
+ │ only sl and custom tool groups (got "rx") (alt+enter   │
+ │ to send)                                               │
 ─┴────────────────────────────────────────────────────────┴─
 /new --yolo -c rx
 ────────────────────────────────────────────────────────────
 === 68 enter on sandboxed capabilities in a waived session refuses them ===
  ╭────────────────────────────────────────────────────────╮
  │ /fork: --yolo leaves rxwng always on, so --caps takes  │
- │ only l and custom tool groups (got "w") (alt+enter to  │
+ │ only sl and custom tool groups (got "w") (alt+enter to │
  │ send)                                                  │
 ─┴────────────────────────────────────────────────────────┴─
 /fork -c w
@@ -452,7 +452,7 @@ see /co
 === 69 enter on an unknown capability refuses it ===
  ╭────────────────────────────────────────────────────────╮
  │ /new: Unknown capability flag "z" — must be one of     │
- │ "rxwngla" (alt+enter to send)                          │
+ │ "rxwsngla" (alt+enter to send)                         │
 ─┴────────────────────────────────────────────────────────┴─
 /new -c rz
 ────────────────────────────────────────────────────────────

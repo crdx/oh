@@ -3,6 +3,7 @@ package subagent
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"regexp"
 	"slices"
 	"strings"
@@ -50,9 +51,34 @@ func (self *fakeManager) Stop(names []string) (string, error) {
 
 func (self *fakeManager) List() string { return "frugal-otter" }
 
+func isGranted() bool { return true }
+
+func TestEveryActionIsRefusedWithoutSubagentAccess(t *testing.T) {
+	for _, arguments := range []string{
+		`{"action":"start","subagents":[{"prompt":"x","intent":"Doing x"}]}`,
+		`{"action":"send","name":"frugal-otter","message":"hello"}`,
+		`{"action":"status"}`,
+		`{"action":"output"}`,
+		`{"action":"stop"}`,
+		`{"action":"list"}`,
+	} {
+		manager := &fakeManager{}
+		call, err := New(manager, func() bool { return false }).Parse(arguments)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if _, err := call.Exec(t.Context()); !errors.Is(err, ErrWithheld) {
+			t.Errorf("%s: got %v, want %v", arguments, err, ErrWithheld)
+		}
+		if manager.tasks != nil || manager.names != nil || manager.message != "" {
+			t.Errorf("%s: the manager was reached", arguments)
+		}
+	}
+}
+
 func TestStartTakesIndependentObjectPrompts(t *testing.T) {
 	manager := &fakeManager{}
-	built := New(manager)
+	built := New(manager, isGranted)
 	schema, err := json.Marshal(built.Schema())
 	if err != nil {
 		t.Fatal(err)
@@ -80,7 +106,7 @@ func TestStartTakesIndependentObjectPrompts(t *testing.T) {
 
 func TestNamesSelectAgentsAndNoNamesMeansAll(t *testing.T) {
 	manager := &fakeManager{}
-	built := New(manager)
+	built := New(manager, isGranted)
 	for _, input := range []string{
 		`{"action":"status","names":["frugal-otter"]}`,
 		`{"action":"output","names":["frugal-otter"]}`,
@@ -106,7 +132,7 @@ func TestNamesSelectAgentsAndNoNamesMeansAll(t *testing.T) {
 
 func TestSendResumesAFinishedAgent(t *testing.T) {
 	manager := &fakeManager{}
-	built := New(manager)
+	built := New(manager, isGranted)
 	parsed, err := built.Parse(`{"action":"send","name":"frugal-otter","message":"now check the tests"}`)
 	if err != nil {
 		t.Fatal(err)
@@ -119,7 +145,7 @@ func TestSendResumesAFinishedAgent(t *testing.T) {
 
 func TestSendWithoutANameReachesEveryRunningAgent(t *testing.T) {
 	manager := &fakeManager{}
-	built := New(manager)
+	built := New(manager, isGranted)
 	parsed, err := built.Parse(`{"action":"send","message":"stop guessing"}`)
 	if err != nil {
 		t.Fatal(err)
@@ -137,14 +163,14 @@ func TestSendWithoutANameReachesEveryRunningAgent(t *testing.T) {
 }
 
 func TestTheDescriptionLeavesTheLimitToStartSinceItCanChange(t *testing.T) {
-	description := New(&fakeManager{}).Description()
+	description := New(&fakeManager{}, isGranted).Description()
 	if regexp.MustCompile(`\d`).MatchString(description) || !strings.Contains(description, "start says how many are running against the limit") {
 		t.Errorf("the description freezes a limit that can change, or hides where to find it: %q", description)
 	}
 }
 
 func TestInvalidChildArgumentsAreRefused(t *testing.T) {
-	built := New(&fakeManager{})
+	built := New(&fakeManager{}, isGranted)
 	for _, input := range []string{
 		`{"action":"start","subagents":[{"prompt":""}]}`,
 		`{"action":"start","subagents":[{"prompt":"x"}]}`,
@@ -169,7 +195,7 @@ func TestInvalidChildArgumentsAreRefused(t *testing.T) {
 }
 
 func TestEveryCallNamingSubagentsMentionsThem(t *testing.T) {
-	built := New(&fakeManager{})
+	built := New(&fakeManager{}, isGranted)
 	for input, want := range map[string][]string{
 		`{"action":"status","names":["frugal-otter","frugal-heron"]}`: {"subagent:frugal-otter", "subagent:frugal-heron"},
 		`{"action":"output","names":["frugal-heron"]}`:                {"subagent:frugal-heron"},
@@ -202,7 +228,7 @@ func TestEveryCallNamingSubagentsMentionsThem(t *testing.T) {
 }
 
 func TestAStartRowListsItsIntentsAndNamesNoModel(t *testing.T) {
-	built := New(&fakeManager{})
+	built := New(&fakeManager{}, isGranted)
 	for _, test := range []struct {
 		input   string
 		subject string

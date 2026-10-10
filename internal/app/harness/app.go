@@ -548,6 +548,9 @@ func (self *App) apply(inputLine *edit.Input, history *edit.History, keypress ke
 	case edit.ToggleShell:
 		self.toggleCap(caps.Shell)
 
+	case edit.ToggleSubagents:
+		self.toggleCap(caps.Subagents)
+
 	case edit.ToggleNetwork:
 		self.toggleCap(caps.Network)
 
@@ -863,9 +866,7 @@ func (self *App) toggleCap(whichCaps caps.Set) {
 
 	if isWithdrawn {
 		self.stopJobsLosingAccess(whichCaps)
-		if whichCaps.Has(caps.Shell) {
-			self.stopChildrenLosingShell()
-		}
+		self.stopChildrenLosing(whichCaps)
 	}
 
 	self.interruptForAccessChange()
