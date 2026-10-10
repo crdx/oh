@@ -5666,6 +5666,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"editing-config":           {".ansi", ".screen"},
 		"editing-draft":            {".ansi", ".screen"},
 		"elided-path-links":        {".ansi", ".screen"},
+		"spaced-path-links":        {".ansi", ".screen"},
 		"environment-change":       {".ansi", ".screen"},
 		"feedback":                 {".ansi", ".screen", ".txt"},
 		"feedback-frame":           {".ansi", ".screen"},
@@ -12459,6 +12460,93 @@ func elidedShellCall(command string, intent string) agent.Event {
 	callEvent.Intent = intent
 
 	return callEvent
+}
+
+const spacedPathColumns = 200
+
+func TestGoldenSpacedPathsLinkOnlyWithinThreeSpaces(t *testing.T) {
+	passes := map[string]func() string{
+		"spaced path links": func() string { return drawSpacedPathLinks(t) },
+	}
+	screenPasses := map[string]func() string{
+		"spaced path links": func() string { return shown(t, drawSpacedPathLinks(t), spacedPathColumns) },
+	}
+
+	compareWithGolden(t, "spaced-path-links", ".ansi", passes)
+	compareWithGolden(t, "spaced-path-links", ".screen", screenPasses)
+}
+
+func drawSpacedPathLinks(t *testing.T) string {
+	t.Helper()
+
+	rig := newReplayRig(t, spacedPathColumns)
+	workspace := rig.workspace.GetDir()
+	for _, name := range []string{
+		"one two three four.txt",
+		"one two three four five.txt",
+		"two  spaces.txt",
+		"four  spaced  out.txt",
+		"mixed/one two three four.txt",
+		"mixed/one two three four five.txt",
+	} {
+		path := filepath.Join(workspace, name)
+		if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, nil, 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for _, name := range []string{"docs/my long folder name", "docs/my much longer folder name"} {
+		if err := os.MkdirAll(filepath.Join(workspace, name), 0o700); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	sentences := strings.Join([]string{
+		"- backwards: one two three four.txt links, one two three four five.txt does not",
+		"- forwards: docs/my long folder name links, docs/my much longer folder name does not",
+		"- both ways: mixed/one two three four.txt links, mixed/one two three four five.txt does not",
+		"- doubled: two  spaces.txt links, four  spaced  out.txt does not",
+		"- located: one two three four.txt:12:3 links, one two three four five.txt:12:3 does not",
+		"- assigned: out=one two three four.txt links, out=one two three four five.txt does not",
+	}, "\n")
+	calls := []agent.Event{
+		{
+			Name: "old_read",
+			FallbackRendering: agent.FallbackRendering{
+				RenderingKind: "read",
+				Subject:       "one two three four.txt",
+				ReadOnly:      true,
+			},
+		},
+		{
+			Name: "old_read",
+			FallbackRendering: agent.FallbackRendering{
+				RenderingKind: "read",
+				Subject:       "one two three four five.txt",
+				ReadOnly:      true,
+			},
+		},
+		elidedShellCall("cat one two three four.txt", ""),
+		elidedShellCall("cat one two three four five.txt", ""),
+	}
+
+	rig.chat.recordedEvents = []agent.Event{{Kind: agent.UserMessageEvent, Text: sentences}}
+	for at, callEvent := range calls {
+		identifier := strconv.Itoa(at)
+		callEvent.Kind = agent.ToolCallRequestEvent
+		callEvent.ID = identifier
+		rig.chat.recordedEvents = append(
+			rig.chat.recordedEvents,
+			callEvent,
+			agent.Event{Kind: agent.ToolCallResultEvent, Status: agent.SuccessStatus, ID: identifier, Name: callEvent.Name},
+		)
+	}
+	rig.chat.recordedEvents = append(rig.chat.recordedEvents, agent.Event{Kind: agent.ModelMessageEvent, Text: sentences})
+	rig.chat.replay()
+
+	return rig.drawn()
 }
 
 func TestGoldenWorkspacePathsInCallLabelsLoseTheirPrefix(t *testing.T) {

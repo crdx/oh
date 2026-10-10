@@ -477,6 +477,10 @@ func locateAround(
 
 	for _, start := range starts {
 		for _, finish := range ends {
+			if strings.Count(text[start:finish], " ") > candidateSpaces {
+				continue
+			}
+
 			found, exists := locateCandidate(text[start:finish], roots, candidateLocations)
 			if !exists {
 				continue
@@ -512,6 +516,8 @@ func locateCandidate(
 	return value, exists
 }
 
+const candidateSpaces = 3
+
 func candidateBounds(text string, begin int, end int) ([]int, []int) {
 	segmentBegin := begin
 	for segmentBegin > 0 && !isPathBoundary(text[segmentBegin-1]) {
@@ -524,7 +530,7 @@ func candidateBounds(text string, begin int, end int) ([]int, []int) {
 
 	starts := []int{begin}
 	lastSpace := strings.LastIndexByte(text[segmentBegin:begin], ' ') + segmentBegin
-	for at := segmentBegin; at < lastSpace; at++ {
+	for at := spannedStart(text, segmentBegin, begin); at < lastSpace; at++ {
 		isWordStart := text[at] != ' ' && (at == segmentBegin || text[at-1] == ' ')
 		if isWordStart {
 			starts = append(starts, at)
@@ -533,9 +539,11 @@ func candidateBounds(text string, begin int, end int) ([]int, []int) {
 
 	ends := []int{end}
 	hasCrossedSpace := false
-	for at := end; at <= segmentEnd; at++ {
+	spaces := 0
+	for at := end; at <= segmentEnd && spaces <= candidateSpaces; at++ {
 		if at < segmentEnd && text[at] == ' ' {
 			hasCrossedSpace = true
+			spaces++
 		}
 		if !hasCrossedSpace || at < segmentEnd && text[at] != ' ' {
 			continue
@@ -550,6 +558,21 @@ func candidateBounds(text string, begin int, end int) ([]int, []int) {
 	}
 
 	return starts, ends
+}
+
+func spannedStart(text string, segmentBegin int, begin int) int {
+	spaces := 0
+	for at := begin - 1; at >= segmentBegin; at-- {
+		if text[at] != ' ' {
+			continue
+		}
+		spaces++
+		if spaces > candidateSpaces {
+			return at + 1
+		}
+	}
+
+	return segmentBegin
 }
 
 func isPathBoundary(character byte) bool {

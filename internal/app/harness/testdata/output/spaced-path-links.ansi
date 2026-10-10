@@ -1,0 +1,22 @@
+=== spaced path links ===
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                                                                                                                        \e[0m\r
+\e[48;2;52;53;65m \e[38;2;192;128;80m• \e[0m\e[48;2;52;53;65mbackwards: \e]8;;file:///workspace/one%20two%20three%20four.txt\e\\one two three four.txt\e]8;;\e\\ links, one two three four five.txt does not                                                                                                                        \e[0m\r
+\e[48;2;52;53;65m \e[38;2;192;128;80m• \e[0m\e[48;2;52;53;65mforwards: \e]8;;file:///workspace/docs/my%20long%20folder%20name\e\\docs/my long folder name\e]8;;\e\\ links, docs/my much longer folder name does not                                                                                                                   \e[0m\r
+\e[48;2;52;53;65m \e[38;2;192;128;80m• \e[0m\e[48;2;52;53;65mboth ways: \e]8;;file:///workspace/mixed/one%20two%20three%20four.txt\e\\mixed/one two three four.txt\e]8;;\e\\ links, mixed/one two three four five.txt does not                                                                                                            \e[0m\r
+\e[48;2;52;53;65m \e[38;2;192;128;80m• \e[0m\e[48;2;52;53;65mdoubled: \e]8;;file:///workspace/two%20%20spaces.txt\e\\two  spaces.txt\e]8;;\e\\ links, four  spaced  out.txt does not                                                                                                                                       \e[0m\r
+\e[48;2;52;53;65m \e[38;2;192;128;80m• \e[0m\e[48;2;52;53;65mlocated: \e]8;;file:///workspace/one%20two%20three%20four.txt#12:3\e\\one two three four.txt:12:3\e]8;;\e\\ links, one two three four five.txt:12:3 does not                                                                                                                \e[0m\r
+\e[48;2;52;53;65m \e[38;2;192;128;80m• \e[0m\e[48;2;52;53;65massigned: out=\e]8;;file:///workspace/one%20two%20three%20four.txt\e\\one two three four.txt\e]8;;\e\\ links, out=one two three four five.txt does not                                                                                                                 \e[0m\r
+\e[48;2;52;53;65m                                                                                                                                                                                                        \e[0m\r
+\r
+\e]8;;oh://tool-result?call=0&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/one%20two%20three%20four.txt\e\\one two three four.txt\e]8;;\e\\\e[0m\r
+\e]8;;oh://tool-result?call=1&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80mone two three four five.txt\e[0m\r
+\e]8;;oh://tool-result?call=2&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcat\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m\e]8;;file:///workspace/one%20two%20three%20four.txt\e\\one\e[0m\e[38;2;150;152;150m two three four.txt\e]8;;\e\\\e[0m\r
+\e]8;;oh://tool-result?call=3&session=tame-impala\e\\\e[38;2;129;162;190m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcat\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mone\e[0m\e[38;2;150;152;150m two three four five.txt\e[0m\r
+\r
+\e[38;2;192;128;80m• \e[0mbackwards: \e]8;;file:///workspace/one%20two%20three%20four.txt\e\\one two three four.txt\e]8;;\e\\ links, one two three four five.txt does not\r
+\e[38;2;192;128;80m• \e[0mforwards: \e]8;;file:///workspace/docs/my%20long%20folder%20name\e\\docs/my long folder name\e]8;;\e\\ links, docs/my much longer folder name does not\r
+\e[38;2;192;128;80m• \e[0mboth ways: \e]8;;file:///workspace/mixed/one%20two%20three%20four.txt\e\\mixed/one two three four.txt\e]8;;\e\\ links, mixed/one two three four five.txt does not\r
+\e[38;2;192;128;80m• \e[0mdoubled: \e]8;;file:///workspace/two%20%20spaces.txt\e\\two  spaces.txt\e]8;;\e\\ links, four  spaced  out.txt does not\r
+\e[38;2;192;128;80m• \e[0mlocated: \e]8;;file:///workspace/one%20two%20three%20four.txt#12:3\e\\one two three four.txt:12:3\e]8;;\e\\ links, one two three four five.txt:12:3 does not\r
+\e[38;2;192;128;80m• \e[0massigned: out=\e]8;;file:///workspace/one%20two%20three%20four.txt\e\\one two three four.txt\e]8;;\e\\ links, out=one two three four five.txt does not\r
+\e[?25h\e[?2026l

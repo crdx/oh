@@ -4,6 +4,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -184,6 +185,53 @@ func TestPathsWithSpacesBecomeLinks(t *testing.T) {
 	}
 	if Plain(got) != text {
 		t.Errorf("visible text is %q, want %q", Plain(got), text)
+	}
+}
+
+func TestAPathSpanningThreeSpacesLinksButOneSpanningFourDoesNot(t *testing.T) {
+	workspace := t.TempDir()
+	threeSpaces := prepareFile(t, workspace, "notes/one two three four.md")
+	fourSpaces := prepareFile(t, workspace, "notes/one two three four five.md")
+	roots := Roots{Workspace: workspace}
+
+	addresses := linkAddresses(t, Render("read notes/one two three four.md now", roots))
+	if len(addresses) != 1 || addresses[0].Path != filepath.ToSlash(threeSpaces) {
+		t.Errorf("got addresses %v, want %q", addresses, threeSpaces)
+	}
+
+	spanned := Render("read notes/one two three four five.md now", roots)
+	for _, address := range linkAddresses(t, spanned) {
+		if address.Path == filepath.ToSlash(fourSpaces) {
+			t.Errorf("a path spanning four spaces was linked in %q", spanned)
+		}
+	}
+	if Plain(spanned) != "read notes/one two three four five.md now" {
+		t.Errorf("visible text is %q", Plain(spanned))
+	}
+}
+
+func TestAParagraphProbesEachPathLikeWordAFixedNumberOfTimes(t *testing.T) {
+	workspace := t.TempDir()
+	prepareFile(t, workspace, "main.go")
+
+	const words, pathEvery, probesPerPath = 400, 25, 16
+	parts := make([]string, 0, words)
+	for at := range words {
+		if at%pathEvery == pathEvery/2 {
+			parts = append(parts, "main.go")
+		} else {
+			parts = append(parts, "word"+strconv.Itoa(at))
+		}
+	}
+
+	probes := 0
+	Remembering(func() {
+		Render(strings.Join(parts, " "), Roots{Workspace: workspace})
+		probes = len(existenceMemory.existences)
+	})
+
+	if paths := words / pathEvery; probes > paths*probesPerPath {
+		t.Errorf("a %d-word paragraph naming %d paths probed %d paths, want at most %d", words, paths, probes, paths*probesPerPath)
 	}
 }
 

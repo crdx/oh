@@ -1,0 +1,21 @@
+=== spaced path links ===
+
+ • backwards: one two three four.txt links, one two three four five.txt does not
+ • forwards: docs/my long folder name links, docs/my much longer folder name does not
+ • both ways: mixed/one two three four.txt links, mixed/one two three four five.txt does not
+ • doubled: two  spaces.txt links, four  spaced  out.txt does not
+ • located: one two three four.txt:12:3 links, one two three four five.txt:12:3 does not
+ • assigned: out=one two three four.txt links, out=one two three four five.txt does not
+
+
+read one two three four.txt
+read one two three four five.txt
+$ cat one two three four.txt
+$ cat one two three four five.txt
+
+• backwards: one two three four.txt links, one two three four five.txt does not
+• forwards: docs/my long folder name links, docs/my much longer folder name does not
+• both ways: mixed/one two three four.txt links, mixed/one two three four five.txt does not
+• doubled: two  spaces.txt links, four  spaced  out.txt does not
+• located: one two three four.txt:12:3 links, one two three four five.txt:12:3 does not
+• assigned: out=one two three four.txt links, out=one two three four five.txt does not
