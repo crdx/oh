@@ -56,6 +56,7 @@ type Options struct {
 	GetInfo           func() (string, error)
 	GetContextSources func() ContextSources
 	GetModelChoices   func() []model.Choice
+	GetSessionNames   func() []string
 	GetToolNames      func() []string
 	GetCustomCapFlags func() string
 	IsYoloInherited   bool
@@ -109,6 +110,7 @@ type commandEnvironment struct {
 	getInfo           func() (string, error)
 	getContextSources func() ContextSources
 	getModelChoices   func() []model.Choice
+	getSessionNames   func() []string
 	getToolNames      func() []string
 	getCustomCapFlags func() string
 	isYoloInherited   bool
@@ -155,6 +157,7 @@ func New(options Options) (slash.CommandSet, error) {
 		getInfo:           options.GetInfo,
 		getContextSources: options.GetContextSources,
 		getModelChoices:   options.GetModelChoices,
+		getSessionNames:   options.GetSessionNames,
 		getToolNames:      options.GetToolNames,
 		getCustomCapFlags: options.GetCustomCapFlags,
 		isYoloInherited:   options.IsYoloInherited,
@@ -240,7 +243,9 @@ func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 			"fork this session",
 			environment,
 			func(start SessionStart) error {
-				start.SourceSessionName = environment.session.name
+				if start.SourceSessionName == "" {
+					start.SourceSessionName = environment.session.name
+				}
 				return environment.startSession(start)
 			},
 		),

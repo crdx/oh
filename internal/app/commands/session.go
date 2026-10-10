@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	sessionArgumentUsage   = "[-m <model>] [-c <flags>] [-t <tool>]... [--yolo]"
+	sessionArgumentUsage   = "[-m <model>] [-c <flags>] [-t <tool>]... [--yolo] [-f <session>]"
 	sessionCompletionUsage = "[<options>]"
 	optionMarker           = "-"
 )
@@ -23,6 +23,7 @@ const (
 	capsOption
 	toolOption
 	yoloOption
+	sourceOption
 )
 
 type sessionOption struct {
@@ -35,6 +36,7 @@ var sessionOptions = []sessionOption{
 	{kind: capsOption, names: []string{"-c", "--caps"}},
 	{kind: toolOption, names: []string{"-t", "--tool"}},
 	{kind: yoloOption, names: []string{"--yolo"}},
+	{kind: sourceOption, names: []string{"-f", "--from"}},
 }
 
 func (self sessionOption) takesValue() bool {
@@ -53,6 +55,8 @@ func (self sessionOption) isUsedBy(start SessionStart) bool {
 		return start.CapFlags != ""
 	case yoloOption:
 		return start.IsYolo
+	case sourceOption:
+		return start.SourceSessionName != ""
 	case toolOption:
 		return false
 	}
@@ -80,6 +84,8 @@ func (self SessionStart) withValue(option sessionOption, value string) SessionSt
 		self.Tools = append(slices.Clone(self.Tools), value)
 	case yoloOption:
 		self.IsYolo = true
+	case sourceOption:
+		self.SourceSessionName = value
 	}
 
 	return self
@@ -200,6 +206,11 @@ func sessionValueChoices(
 		values = cli.CapsCompletions(partial, environment.getCustomCapFlags(), start.IsYolo || environment.isYoloInherited)
 	case yoloOption:
 		return nil
+	case sourceOption:
+		if environment.getSessionNames == nil {
+			return nil
+		}
+		values = slash.MatchingPrefixes(partial, environment.getSessionNames())
 	case toolOption:
 		values = slash.MatchingPrefixes(partial, unlistedTools(environment, start))
 	}

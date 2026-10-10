@@ -31,6 +31,7 @@ function _oh {
 
     case $PREVIOUS in
         -r | --resume) KIND=session ;;
+        -f | --from) KIND=session ;;
         -L | --login) KIND=provider ;;
         -c | --caps) KIND=caps ;;
         -t | --tool) KIND=tool ;;

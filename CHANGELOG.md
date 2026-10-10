@@ -2,17 +2,12 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
-### Models
-
-- Convert `oh -l` into a non-interactive version of the model picker
-- Move bare model list to `oh --ctl models`
-
-### Theme
-
-- Add 4 default themes for different terminal backgrounds
-
 ### Changes
 
+- Promote --from to a real flag
+- Convert `oh -l` into a non-interactive version of the model picker
+- Move bare model list to `oh --ctl models`
+- Add 4 default themes for different terminal backgrounds
 - Update default shell and job timeouts to 10m
 - Complete ignored paths with `@!`
 - Preserve spacing in completed job output

@@ -153,16 +153,18 @@ func TestModelSelectionRequiresModelAndEffort(t *testing.T) {
 }
 
 func TestANewConversationMayStartFromASession(t *testing.T) {
-	parsedOptions := parseOptions(t, "--from", "chosen-lobster", "carry", "on")
+	for _, argument := range []string{"-f", "--from"} {
+		parsedOptions := parseOptions(t, argument, "chosen-lobster", "carry", "on")
 
-	if !parsedOptions.StartingFromSession() || parsedOptions.SourceSession != "chosen-lobster" {
-		t.Errorf("expected the source session, got %q", parsedOptions.SourceSession)
-	}
-	if parsedOptions.Resuming() {
-		t.Error("expected starting from a session not to count as resuming")
-	}
-	if parsedOptions.Message != "carry on" {
-		t.Errorf("expected the prompt beside it, got %q", parsedOptions.Message)
+		if !parsedOptions.StartingFromSession() || parsedOptions.SourceSession != "chosen-lobster" {
+			t.Errorf("expected %s to name the source session, got %q", argument, parsedOptions.SourceSession)
+		}
+		if parsedOptions.Resuming() {
+			t.Errorf("expected %s starting from a session not to count as resuming", argument)
+		}
+		if parsedOptions.Message != "carry on" {
+			t.Errorf("expected the prompt beside %s, got %q", argument, parsedOptions.Message)
+		}
 	}
 }
 
@@ -371,7 +373,7 @@ func TestReadingIsAlwaysGranted(t *testing.T) {
 }
 
 func TestASessionCannotBeResumedAndUsedAsTheSourceTogether(t *testing.T) {
-	input := Input{inputFlags: inputFlags{Session: "one"}, SourceSession: "another"}
+	input := Input{inputFlags: inputFlags{Session: "one", SourceSession: "another"}}
 	if _, err := input.Parse(model.Choices(modelCachePath()), model.Defaults{}); err == nil {
 		t.Error("expected an error")
 	}

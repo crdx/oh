@@ -7,6 +7,7 @@ Usage:
 
 Options:
     -r, --resume [<session>]    Resume a stored session
+    -f, --from <session>        Fork a previous session
     -m, --model [<model>]       Pick which model to use
     -c, --caps <flags>          Configure access rights
     -t, --tool <tool>           Replace current toolbox

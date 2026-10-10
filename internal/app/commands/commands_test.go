@@ -215,45 +215,50 @@ func TestCommandsRunWithoutStoppingTheHarness(t *testing.T) {
 	})
 
 	tests := map[string]string{
-		"/conf":                    "edit:" + strings.Join([]string{configDirectory, configPath}, ","),
-		"/edit config-file":        "edit:" + configPath,
-		"/edit system-prompt-file": "edit:" + systemPromptPath,
-		"/edit workspace-dir":      "edit:" + workspaceDirectory,
-		"/edit skills-dir":         "edit:" + strings.Join(skillDirectories[:2], ","),
-		"/edit snippets-dir":       "edit:" + snippetsDirectory,
-		"/open skills-dir":         "open:" + strings.Join(skillDirectories[:2], ","),
-		"/open snippets-dir":       "open:" + snippetsDirectory,
-		"/new":                     "new:",
-		"/fork":                    "fork:tame-impala:",
-		"/new sonnet":              "new:sonnet",
-		"/fork sonnet":             "fork:tame-impala:sonnet",
-		"/fork sonnet --yolo":      "fork:tame-impala:sonnet:yolo",
-		"/new -m sonnet":           "new:sonnet",
-		"/new --model sonnet":      "new:sonnet",
-		"/new -c rxw --yolo":       "new::caps=rxw:yolo",
-		"/new -t read --tool grep": "new::tools=read,grep",
-		"/fork -m sonnet --yolo":   "fork:tame-impala:sonnet:yolo",
-		"/fork --caps l -m sonnet": "fork:tame-impala:sonnet:caps=l",
-		"/open config-dir":         "open:" + configDirectory,
-		"/open workspace-dir":      "open:" + workspaceDirectory,
-		"/open scratch-dir":        "open:" + scratchDirectory,
-		"/open home-dir":           "open:" + homeDirectory,
-		"/open session-dir":        "open:" + sessionDirectory,
-		"/copy last-message":       "copy:The latest answer.",
-		"/copy session-chat":       "copy:" + chatContents,
-		"/copy session-name":       "copy:tame-impala",
-		"/copy session-id":         "copy:session-id",
-		"/copy session-dir":        "copy:" + sessionDirectory,
-		"/copy config-file":        "copy:" + configPath,
-		"/copy skills-dir":         "copy:" + strings.Join(skillDirectories[:2], ","),
-		"/copy snippets-dir":       "copy:" + snippetsDirectory,
-		"/open session-log-file":   "open:" + filepath.Join(sessionDirectory, sessionJournalName),
-		"/edit session-log-file":   "edit:" + filepath.Join(sessionDirectory, sessionJournalName),
-		"/open session-chat-file":  "open:" + filepath.Join(sessionDirectory, sessionTranscriptName),
-		"/edit session-chat-file":  "edit:" + filepath.Join(sessionDirectory, sessionTranscriptName),
-		"/edit agents-file":        "edit:" + projectContextPath,
-		"/open agents-file":        "open:" + projectContextPath,
-		"/copy agents-file":        "copy:" + projectContextPath,
+		"/conf":                     "edit:" + strings.Join([]string{configDirectory, configPath}, ","),
+		"/edit config-file":         "edit:" + configPath,
+		"/edit system-prompt-file":  "edit:" + systemPromptPath,
+		"/edit workspace-dir":       "edit:" + workspaceDirectory,
+		"/edit skills-dir":          "edit:" + strings.Join(skillDirectories[:2], ","),
+		"/edit snippets-dir":        "edit:" + snippetsDirectory,
+		"/open skills-dir":          "open:" + strings.Join(skillDirectories[:2], ","),
+		"/open snippets-dir":        "open:" + snippetsDirectory,
+		"/new":                      "new:",
+		"/fork":                     "fork:tame-impala:",
+		"/new sonnet":               "new:sonnet",
+		"/fork sonnet":              "fork:tame-impala:sonnet",
+		"/fork sonnet --yolo":       "fork:tame-impala:sonnet:yolo",
+		"/new -m sonnet":            "new:sonnet",
+		"/new --model sonnet":       "new:sonnet",
+		"/new -c rxw --yolo":        "new::caps=rxw:yolo",
+		"/new -t read --tool grep":  "new::tools=read,grep",
+		"/fork -m sonnet --yolo":    "fork:tame-impala:sonnet:yolo",
+		"/fork --caps l -m sonnet":  "fork:tame-impala:sonnet:caps=l",
+		"/new --from able-dolphin":  "fork:able-dolphin:",
+		"/fork --from able-dolphin": "fork:able-dolphin:",
+		"/new -f able-dolphin":      "fork:able-dolphin:",
+		"/fork -f able-dolphin":     "fork:able-dolphin:",
+		"/fork --from able-dolphin -m sonnet --yolo": "fork:able-dolphin:sonnet:yolo",
+		"/open config-dir":                           "open:" + configDirectory,
+		"/open workspace-dir":                        "open:" + workspaceDirectory,
+		"/open scratch-dir":                          "open:" + scratchDirectory,
+		"/open home-dir":                             "open:" + homeDirectory,
+		"/open session-dir":                          "open:" + sessionDirectory,
+		"/copy last-message":                         "copy:The latest answer.",
+		"/copy session-chat":                         "copy:" + chatContents,
+		"/copy session-name":                         "copy:tame-impala",
+		"/copy session-id":                           "copy:session-id",
+		"/copy session-dir":                          "copy:" + sessionDirectory,
+		"/copy config-file":                          "copy:" + configPath,
+		"/copy skills-dir":                           "copy:" + strings.Join(skillDirectories[:2], ","),
+		"/copy snippets-dir":                         "copy:" + snippetsDirectory,
+		"/open session-log-file":                     "open:" + filepath.Join(sessionDirectory, sessionJournalName),
+		"/edit session-log-file":                     "edit:" + filepath.Join(sessionDirectory, sessionJournalName),
+		"/open session-chat-file":                    "open:" + filepath.Join(sessionDirectory, sessionTranscriptName),
+		"/edit session-chat-file":                    "edit:" + filepath.Join(sessionDirectory, sessionTranscriptName),
+		"/edit agents-file":                          "edit:" + projectContextPath,
+		"/open agents-file":                          "open:" + projectContextPath,
+		"/copy agents-file":                          "copy:" + projectContextPath,
 	}
 
 	wantConfirmations := map[string]string{
@@ -579,7 +584,7 @@ func TestAnInheritedWaiverIsNeitherOfferedAgainNorWidenedByCapabilities(t *testi
 	for _, completion := range commands.Completions("/new -") {
 		options = append(options, completion.Label)
 	}
-	if want := []string{"-m", "-c", "-t"}; !slices.Equal(options, want) {
+	if want := []string{"-m", "-c", "-t", "-f"}; !slices.Equal(options, want) {
 		t.Errorf("got options %v, want %v", options, want)
 	}
 
@@ -589,6 +594,35 @@ func TestAnInheritedWaiverIsNeitherOfferedAgainNorWidenedByCapabilities(t *testi
 	}
 	if want := []string{"l", "la"}; !slices.Equal(flags, want) {
 		t.Errorf("got capabilities %v, want %v", flags, want)
+	}
+}
+
+func TestTheSourceOptionListsTheStoredSessions(t *testing.T) {
+	environment := fixtureEnvironment(t)
+	commands := newCommandRegistry(t, environment)
+
+	var names []string
+	for _, completion := range commands.Completions("/new --from a") {
+		names = append(names, completion.Label)
+	}
+	if want := []string{"able-dolphin", "agile-turtle"}; !slices.Equal(names, want) {
+		t.Errorf("got %v, want %v", names, want)
+	}
+
+	for _, prefix := range []string{"/new --from ", "/fork --from ", "/new -f ", "/fork -f "} {
+		var labels []string
+		for _, completion := range commands.Completions(prefix) {
+			labels = append(labels, completion.Label)
+		}
+		if want := []string{"able-dolphin", "agile-turtle", "tame-impala", "wise-otter"}; !slices.Equal(labels, want) {
+			t.Errorf("%q got %v, want %v", prefix, labels, want)
+		}
+	}
+
+	environment.getSessionNames = nil
+	commands = newCommandRegistry(t, environment)
+	if completions := commands.Completions("/new --from "); len(completions) > 0 {
+		t.Errorf("expected no session source to leave the name free-form, got %v", completions)
 	}
 }
 

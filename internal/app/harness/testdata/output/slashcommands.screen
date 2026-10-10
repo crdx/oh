@@ -312,7 +312,7 @@ see /co
   -c      configure access rights
   -t      replace current toolbox
   --yolo  run outside the sandbox
-
+  -f      fork a previous session
 
 
 
@@ -340,7 +340,7 @@ see /co
   --caps   configure access rights
   --tool   replace current toolbox
   --yolo   run outside the sandbox
-
+  --from   fork a previous session
 
 
 
@@ -350,6 +350,7 @@ see /co
 /fork -m sonnet --yolo -
 › -c  configure access rights
   -t  replace current toolbox
+  -f  fork a previous session
 ────────────────────────────────────────────────────────────
 === 58 a capability option lists capabilities ===
 ────────────────────────────────────────────────────────────
@@ -381,7 +382,7 @@ see /co
 › -m  pick which model to use
   -c  configure access rights
   -t  replace current toolbox
-
+  -f  fork a previous session
 
 
 
@@ -399,7 +400,7 @@ see /co
 › -c      configure access rights
   -t      replace current toolbox
   --yolo  run outside the sandbox
-
+  -f      fork a previous session
 
 
 
@@ -420,7 +421,7 @@ see /co
 === 66 enter on an option missing its value shows the usage ===
  ╭────────────────────────────────────────────────────────╮
  │ Usage: /new [-m <model>] [-c <flags>] [-t <tool>]...   │
- │ [--yolo] (alt+enter to send)                           │
+ │ [--yolo] [-f <session>] (alt+enter to send)            │
 ─┴────────────────────────────────────────────────────────┴─
 /new -m
 › -m  pick which model to use
@@ -486,11 +487,12 @@ see /co
 › -c      configure access rights
   -t      replace current toolbox
   --yolo  run outside the sandbox
+  -f      fork a previous session
 ────────────────────────────────────────────────────────────
 === 76 enter on a bare model beside -m shows the usage ===
  ╭────────────────────────────────────────────────────────╮
  │ Usage: /new [-m <model>] [-c <flags>] [-t <tool>]...   │
- │ [--yolo] (alt+enter to send)                           │
+ │ [--yolo] [-f <session>] (alt+enter to send)            │
 ─┴────────────────────────────────────────────────────────┴─
 /new sonnet -m opus
 ────────────────────────────────────────────────────────────
@@ -500,8 +502,41 @@ see /co
 › -m      pick which model to use
   -c      configure access rights
   --yolo  run outside the sandbox
+  -f      fork a previous session
 ────────────────────────────────────────────────────────────
 === 78 a tool option given after every tool lists nothing ===
 ────────────────────────────────────────────────────────────
 /new -t read -t grep -t bash -t
+────────────────────────────────────────────────────────────
+=== 79 choosing the source option goes on to its sessions ===
+────────────────────────────────────────────────────────────
+/new --from
+› able-dolphin
+  agile-turtle
+  wise-otter
+
+
+
+
+
+────────────────────────────────────────────────────────────
+=== 80 enter on a fork naming another session sends it ===
+────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────
+=== 81 choosing a source session completes it ===
+────────────────────────────────────────────────────────────
+/fork --from able-dolphin
+────────────────────────────────────────────────────────────
+=== 82 the source option takes its short form ===
+────────────────────────────────────────────────────────────
+/new -f
+› able-dolphin
+  agile-turtle
+  wise-otter
+
+
+
+
+
 ────────────────────────────────────────────────────────────

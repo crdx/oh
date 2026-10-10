@@ -445,6 +445,24 @@ func TestCommandArgumentsAreCompletedFromTheSessionItself(t *testing.T) {
 	session.typeAndSettle(pressEscape)
 	session.typeAndSettle(clearInput)
 
+	sessionsDirectory := filepath.Join(rig.stateDirectory, "org.crdx", "oh", "sessions")
+	writeStoredSession(t, sessionsDirectory, rig.workspace, "able-dolphin", time.Now().Format(time.RFC3339))
+	writeStoredSession(t, sessionsDirectory, rig.workspace, "agile-turtle", time.Now().Format(time.RFC3339))
+
+	session.typeAndSettle("/fork --from ")
+	session.requireShown("› able-dolphin")
+	session.typeAndSettle(clearInput)
+
+	session.typeAndSettle("/fork --from ag")
+	session.requireShown("› agile-turtle")
+	session.typeAndSettle(pressEscape)
+	session.typeAndSettle(clearInput)
+
+	session.typeAndSettle("/fork -f ")
+	session.requireShown("› able-dolphin")
+	session.typeAndSettle(pressEscape)
+	session.typeAndSettle(clearInput)
+
 	session.typeAndSettle("/!")
 	session.requireHidden("no matching commands")
 	session.requireHidden("› ")

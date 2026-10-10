@@ -56,15 +56,24 @@ func TestCompletionRequestReadsTheKindAndWord(t *testing.T) {
 func TestOptionCompletionsComeFromTheUsage(t *testing.T) {
 	options := usageOptions(usage)
 
-	for _, wanted := range []string{"-L", "--login", "-r", "--resume", "-m", "--model", "-t", "--tool", "-l", "--list", "-h", "--help", "-U", "--usage", "-J", "--json"} {
+	for _, wanted := range []string{"-L", "--login", "-r", "--resume", "-f", "--from", "-m", "--model", "-t", "--tool", "-l", "--list", "-h", "--help", "-U", "--usage", "-J", "--json"} {
 		if !slices.Contains(options, wanted) {
 			t.Errorf("expected %q among %v", wanted, options)
 		}
 	}
 
-	for _, unwanted := range []string{"-", "--add", "--complete", "--from", "--sessions", "Options:"} {
+	for _, unwanted := range []string{"-", "--add", "--complete", "--sessions", "Options:"} {
 		if slices.Contains(options, unwanted) {
 			t.Errorf("did not expect %q among %v", unwanted, options)
+		}
+	}
+}
+
+func TestEveryOptionDescriptionIsTwentyThreeCharacters(t *testing.T) {
+	for _, option := range usageOptions(usage) {
+		description := OptionDescription(option)
+		if len(description) != 23 {
+			t.Errorf("expected %s to be described in 23 characters, got %d %q", option, len(description), description)
 		}
 	}
 }

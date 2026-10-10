@@ -6,14 +6,14 @@ Commands:
   /edit <target>
   /info
   /open <target>
-  /new [-m <model>] [-c <flags>] [-t <tool>]... [--yolo]
+  /new [-m <model>] [-c <flags>] [-t <tool>]... [--yolo] [-f <session>]
   /forward <port>
   /grant {r|rw} <path>...
   /grants [all]
   /revoke <target>...
   /jobs
   /job {status|output|stop|discard} <name> | prune
-  /fork [-m <model>] [-c <flags>] [-t <tool>]... [--yolo]
+  /fork [-m <model>] [-c <flags>] [-t <tool>]... [--yolo] [-f <session>]
 
 Targets:
   agents-file         config-dir          config-file

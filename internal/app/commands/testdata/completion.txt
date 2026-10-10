@@ -64,7 +64,22 @@
   -c → /new -c …  (configure access rights)
   -t → /new -t …  (replace current toolbox)
   --yolo → /new --yolo  (run outside the sandbox)
+  -f → /new -f …  (fork a previous session)
 "/new son"
+"/new --f"
+  --from → /new --from …  (fork a previous session)
+"/new --from "
+  able-dolphin → /new --from able-dolphin
+  agile-turtle → /new --from agile-turtle
+  tame-impala → /new --from tame-impala
+  wise-otter → /new --from wise-otter
+"/new -f"
+  -f → /new -f …  (fork a previous session)
+"/new -f "
+  able-dolphin → /new -f able-dolphin
+  agile-turtle → /new -f agile-turtle
+  tame-impala → /new -f tame-impala
+  wise-otter → /new -f wise-otter
 "/new -m son"
   anthropic/claude-sonnet-5@medium → /new -m anthropic/claude-sonnet-5@medium
   anthropic/claude-sonnet-5@high → /new -m anthropic/claude-sonnet-5@high
@@ -77,6 +92,7 @@
   -c → /new -m sonnet -c …  (configure access rights)
   -t → /new -m sonnet -t …  (replace current toolbox)
   --yolo → /new -m sonnet --yolo  (run outside the sandbox)
+  -f → /new -m sonnet -f …  (fork a previous session)
 "/new -m o"
   anthropic/claude-sonnet-5@medium → /new -m anthropic/claude-sonnet-5@medium
   anthropic/claude-sonnet-5@high → /new -m anthropic/claude-sonnet-5@high
@@ -98,11 +114,13 @@
   -c → /new -c …  (configure access rights)
   -t → /new -t …  (replace current toolbox)
   --yolo → /new --yolo  (run outside the sandbox)
+  -f → /new -f …  (fork a previous session)
 "/new --"
   --model → /new --model …  (pick which model to use)
   --caps → /new --caps …  (configure access rights)
   --tool → /new --tool …  (replace current toolbox)
   --yolo → /new --yolo  (run outside the sandbox)
+  --from → /new --from …  (fork a previous session)
 "/new --m"
   --model → /new --model …  (pick which model to use)
 "/new --model "
@@ -149,14 +167,17 @@
   -c → /new -t read -c …  (configure access rights)
   -t → /new -t read -t …  (replace current toolbox)
   --yolo → /new -t read --yolo  (run outside the sandbox)
+  -f → /new -t read -f …  (fork a previous session)
 "/new -t read -t grep -t bash "
   -m → /new -t read -t grep -t bash -m …  (pick which model to use)
   -c → /new -t read -t grep -t bash -c …  (configure access rights)
   --yolo → /new -t read -t grep -t bash --yolo  (run outside the sandbox)
+  -f → /new -t read -t grep -t bash -f …  (fork a previous session)
 "/new -t read -t grep -t bash -"
   -m → /new -t read -t grep -t bash -m …  (pick which model to use)
   -c → /new -t read -t grep -t bash -c …  (configure access rights)
   --yolo → /new -t read -t grep -t bash --yolo  (run outside the sandbox)
+  -f → /new -t read -t grep -t bash -f …  (fork a previous session)
 "/new -t read -t grep -t bash -t "
 "/new -x "
 "/fork "
@@ -164,7 +185,18 @@
   -c → /fork -c …  (configure access rights)
   -t → /fork -t …  (replace current toolbox)
   --yolo → /fork --yolo  (run outside the sandbox)
+  -f → /fork -f …  (fork a previous session)
 "/fork opus"
+"/fork --from "
+  able-dolphin → /fork --from able-dolphin
+  agile-turtle → /fork --from agile-turtle
+  tame-impala → /fork --from tame-impala
+  wise-otter → /fork --from wise-otter
+"/fork -f "
+  able-dolphin → /fork -f able-dolphin
+  agile-turtle → /fork -f agile-turtle
+  tame-impala → /fork -f tame-impala
+  wise-otter → /fork -f wise-otter
 "/fork -m opus"
   anthropic/claude-opus-5@high → /fork -m anthropic/claude-opus-5@high
   anthropic/claude-opus-5@max → /fork -m anthropic/claude-opus-5@max
@@ -172,10 +204,12 @@
   codex/gpt-5.6-sol@high+fast → /fork -m codex/gpt-5.6-sol@high+fast
 "/fork -m sonnet -c rxw --yolo "
   -t → /fork -m sonnet -c rxw --yolo -t …  (replace current toolbox)
+  -f → /fork -m sonnet -c rxw --yolo -f …  (fork a previous session)
 "/fork --yolo -"
   -m → /fork --yolo -m …  (pick which model to use)
   -c → /fork --yolo -c …  (configure access rights)
   -t → /fork --yolo -t …  (replace current toolbox)
+  -f → /fork --yolo -f …  (fork a previous session)
 "/r"
   /revoke <target>... → /revoke …  (revoke temporary path grants or forwarded ports)
 "/revoke "

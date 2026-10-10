@@ -2,6 +2,7 @@
 --caps
 --ctl
 --demo
+--from
 --help
 --ignored
 --json

@@ -460,6 +460,43 @@ func slashCommandScenarios(t *testing.T) map[string]pathRefScenario {
 				rig.t.Errorf("enter left %q in the input rather than sending it", got)
 			}
 		}),
+		"79 choosing the source option goes on to its sessions": sessionCommanding(false, func(rig *pathRefRig) {
+			typing("/new --f")(rig)
+			rig.press(tabKey)
+			if got := rig.input.Text(); got != "/new --from " {
+				rig.t.Errorf("tab left %q in the input", got)
+			}
+			if !rig.app.completer.IsOpen() {
+				rig.t.Error("the dropdown closed over the stored sessions")
+			}
+		}),
+		"80 enter on a fork naming another session sends it": sessionCommanding(false, func(rig *pathRefRig) {
+			typing("/fork --from able-dolphin")(rig)
+			rig.press(pathRefEnter)
+			if got := rig.input.Text(); got != "" {
+				rig.t.Errorf("enter left %q in the input rather than sending it", got)
+			}
+		}),
+		"81 choosing a source session completes it": sessionCommanding(false, func(rig *pathRefRig) {
+			typing("/fork --from a")(rig)
+			rig.press(tabKey)
+			if got := rig.input.Text(); got != "/fork --from able-dolphin " {
+				rig.t.Errorf("tab left %q in the input", got)
+			}
+			if rig.app.completer.IsOpen() {
+				rig.t.Error("the dropdown stayed open after choosing a session")
+			}
+		}),
+		"82 the source option takes its short form": sessionCommanding(false, func(rig *pathRefRig) {
+			typing("/new -f")(rig)
+			rig.press(tabKey)
+			if got := rig.input.Text(); got != "/new -f " {
+				rig.t.Errorf("tab left %q in the input", got)
+			}
+			if !rig.app.completer.IsOpen() {
+				rig.t.Error("the dropdown closed over the stored sessions")
+			}
+		}),
 	}
 }
 
@@ -547,6 +584,7 @@ func sessionCommandsGoldenRegistry(isYoloInherited bool) func(t *testing.T) slas
 				IsPersisted: func() bool { return true },
 			},
 			GetModelChoices:   func() []model.Choice { return slashGoldenModels },
+			GetSessionNames:   func() []string { return []string{"able-dolphin", "agile-turtle", "wise-otter"} },
 			GetToolNames:      func() []string { return toolNames },
 			GetCustomCapFlags: starter.getCustomCapFlags,
 			IsYoloInherited:   isYoloInherited,

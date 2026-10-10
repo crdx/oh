@@ -7160,6 +7160,7 @@ var optionsThatExitEarly = map[string][]string{
 
 var optionsThatOpenASession = []string{
 	"--resume",
+	"--from",
 	"--model",
 	"--caps",
 	"--tool",

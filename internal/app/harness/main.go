@@ -90,6 +90,7 @@ import (
 const (
 	approvalLimit               = 5 * time.Minute
 	notificationWithdrawalGrace = 2 * time.Second
+	sessionNameStaleAfter       = 5 * time.Second
 )
 
 type approval struct {
@@ -1260,6 +1261,19 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		getModelChoices:   func() []model.Choice { return model.Choices(modelCachePath) },
 		defaults:          sessionDefaults(selection),
 	}
+	var sessionNames []string
+	var sessionNamesListedAt time.Time
+	getSessionNames := func() []string {
+		if sessionNames == nil || time.Since(sessionNamesListedAt) > sessionNameStaleAfter {
+			names, err := sessions.NamesInWorkspace(sessionsDir, workspace)
+			if err != nil {
+				return sessionNames
+			}
+			sessionNames = names
+			sessionNamesListedAt = time.Now()
+		}
+		return sessionNames
+	}
 	systemCommands, err := commands.New(commands.Options{
 		ConfigDir:        location.GetConfigDir(),
 		ConfigFile:       configPath,
@@ -1331,6 +1345,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 			GetLastMessage: func() (string, bool) { return app.getLastMessage() },
 		},
 		GetModelChoices:   func() []model.Choice { return model.SignedInChoices(modelCachePath, isProviderAvailable) },
+		GetSessionNames:   getSessionNames,
 		GetToolNames:      func() []string { return toolset.Names(toolboxTools) },
 		GetCustomCapFlags: starter.getCustomCapFlags,
 		IsYoloInherited:   isYoloInherited,

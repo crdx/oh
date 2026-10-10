@@ -31,6 +31,7 @@ Usage:
 
 Options:
     -r, --resume [<session>]    Resume a stored session
+    -f, --from <session>        Fork a previous session
     -m, --model [<model>]       Pick which model to use
     -c, --caps <flags>          Configure access rights
     -t, --tool <tool>           Replace current toolbox
@@ -57,6 +58,7 @@ type inputFlags struct {
 	Provider         string   `docopt:"<provider>"`
 	Session          string   `docopt:"--resume"`
 	IsSessionPicker  bool     `docopt:"-r"`
+	SourceSession    string   `docopt:"--from"`
 	Model            string   `docopt:"--model"`
 	IsModelPicker    bool     `docopt:"-m"`
 	Caps             string   `docopt:"--caps"`
@@ -74,8 +76,6 @@ type inputFlags struct {
 
 type Input struct {
 	inputFlags
-
-	SourceSession string
 }
 
 type Options struct {
@@ -95,7 +95,6 @@ type Options struct {
 func Bind() *Input {
 	originalArgs := os.Args
 	arguments := append([]string(nil), os.Args...)
-	var sourceSession string
 	isSessionPicker := false
 	isModelPicker := false
 	for i := 1; i < len(arguments); i++ {
@@ -112,10 +111,6 @@ func Bind() *Input {
 			isModelPicker = true
 			arguments = append(arguments[:i], arguments[i+1:]...)
 			i--
-		case arguments[i] == "--from" && i+1 < len(arguments):
-			sourceSession = arguments[i+1]
-			arguments = append(arguments[:i], arguments[i+2:]...)
-			i--
 		case arguments[i] == "-r" && i+1 < len(arguments) && !strings.HasPrefix(arguments[i+1], "-"):
 			arguments[i] = "--resume"
 		}
@@ -129,7 +124,7 @@ func Bind() *Input {
 	parsedFlags.IsModelPicker = isModelPicker
 	parsedFlags.Message = promptWithoutOptionTerminator(parsedFlags.Message)
 	parsedFlags.Message = promptAfterStdinMarker(parsedFlags.Message)
-	return &Input{inputFlags: *parsedFlags, SourceSession: sourceSession}
+	return &Input{inputFlags: *parsedFlags}
 }
 
 func promptWithoutOptionTerminator(words []string) []string {

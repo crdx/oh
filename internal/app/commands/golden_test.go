@@ -53,6 +53,10 @@ func TestGoldenCompletionMatchesGolden(t *testing.T) {
 		"/n",
 		"/new ",
 		"/new son",
+		"/new --f",
+		"/new --from ",
+		"/new -f",
+		"/new -f ",
 		"/new -m son",
 		"/new -m gpt@h",
 		"/new -m sol@high+f",
@@ -83,6 +87,8 @@ func TestGoldenCompletionMatchesGolden(t *testing.T) {
 		"/new -x ",
 		"/fork ",
 		"/fork opus",
+		"/fork --from ",
+		"/fork -f ",
 		"/fork -m opus",
 		"/fork -m sol@high+",
 		"/fork -m sonnet -c rxw --yolo ",
@@ -266,6 +272,9 @@ func fixtureEnvironment(t *testing.T) commandEnvironment {
 				{Provider: model.CodexProvider, ID: "gpt-5.6-sol", EffortLevels: []string{"high"}},
 				{Provider: model.OpencodeGoProvider, ID: "minimax-m3"},
 			}
+		},
+		getSessionNames: func() []string {
+			return []string{"able-dolphin", "agile-turtle", "tame-impala", "wise-otter"}
 		},
 		getToolNames:      func() []string { return []string{"read", "grep", "bash"} },
 		getCustomCapFlags: func() string { return "a" },
