@@ -1439,3 +1439,20 @@ func cacheEntries(t *testing.T, cache string) int {
 
 	return count
 }
+
+func TestASubagentShellDistrustsEveryPathItsParentCanWrite(t *testing.T) {
+	parentWritable := []string{"/parent/workspace", "/parent/home", "/parent/scratch", "/parent/granted"}
+	parent := Parent{Scratch: "/parent/scratch", Writable: func() []string { return parentWritable }}
+
+	first := parent.confine(sandbox.Policy{Write: []string{"/parent/scratch/subagents/tame-otter"}})
+	if first.ScratchParent != "/parent/scratch" || !slices.Equal(first.ParentWritable, parentWritable) {
+		t.Errorf("the child trusted what its parent can write: %+v", first)
+	}
+	parentWritable = append(parentWritable, "/parent/granted-later")
+	if second := parent.confine(sandbox.Policy{}); !slices.Contains(second.ParentWritable, "/parent/granted-later") {
+		t.Errorf("a grant the parent gained later was trusted: %v", second.ParentWritable)
+	}
+	if session := (Parent{}).confine(sandbox.Policy{}); session.ScratchParent != "" || len(session.ParentWritable) != 0 {
+		t.Errorf("a session with no parent distrusted %+v", session)
+	}
+}

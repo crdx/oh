@@ -32,6 +32,8 @@ type Handler struct {
 	OnChange         func(error) bool
 	Conclusions      <-chan jobs.Conclusion
 	OnJobEnded       func(jobs.Conclusion)
+	SubagentEvents   <-chan agent.Event
+	OnSubagentEvent  func(agent.Event)
 	ForwardChanges   <-chan agent.Event
 	OnForwardChange  func(agent.Event)
 	QuestionChanges  <-chan struct{}
@@ -65,6 +67,7 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 	handler = handler.withDefaults()
 	changes := handler.Changes
 	conclusions := handler.Conclusions
+	subagentEvents := handler.SubagentEvents
 	forwardChanges := handler.ForwardChanges
 	resizes := NewResizeBatch()
 	defer resizes.Stop()
@@ -117,6 +120,12 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 				continue
 			}
 			handler.OnJobEnded(conclusion)
+		case event, isOpen := <-subagentEvents:
+			if !isOpen {
+				subagentEvents = nil
+				continue
+			}
+			handler.OnSubagentEvent(event)
 		case event, isOpen := <-forwardChanges:
 			if !isOpen {
 				forwardChanges = nil

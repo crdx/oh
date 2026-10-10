@@ -1,0 +1,21 @@
+
+ start a subagent that fails
+
+
+Reading the logs for errors spawn 1 subagent on GPT-5.6 Sol 1L
+
+It is running.
+
+
+ 🐍 Subagent tame-adder interjects:
+
+    It failed: prompt is too long.
+
+
+The subagent failed, so I will read the logs myself.
+
+
+ carry on
+
+
+Carrying on.

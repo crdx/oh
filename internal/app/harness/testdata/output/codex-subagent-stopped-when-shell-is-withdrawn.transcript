@@ -1,0 +1,75 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `medium`
+- **Provider:** `codex`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+start two subagents
+
+## Tool calls · +0s
+
+```
+subagent: 2 subagents [ok, 1 line, 31B, toolu_1]
+```
+
+## Assistant · +0s
+
+Both are running.
+
+## Subagent started · tame-adder · +0s
+
+Watch the build forever
+
+Transcript: `subagents/tame-adder/chat.md`
+
+## Subagent started · tame-alpaca · +0s
+
+Name the build tool
+
+Transcript: `subagents/tame-alpaca/chat.md`
+
+## Subagent finished · tame-alpaca · done · +0s
+
+The build tool is just.
+
+## Subagent finished · tame-adder · stopped · +0s
+
+## Mode · rwngl · toggled x · +0s
+
+```
+Bash is now refused.
+```
+
+## subagent_access_stop · +0s
+
+```
+Subagent tame-adder stopped because shell execution was withdrawn.
+```
+
+## subagent_completion_submitted · +0s
+
+```
+Subagent tame-alpaca finished:
+
+tame-alpaca done (its /tmp is your /tmp/subagents/tame-alpaca): The build tool is just.
+```
+
+## Assistant · +0s
+
+tame-alpaca named the build tool; tame-adder stopped when shell access went.
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+Carrying on.

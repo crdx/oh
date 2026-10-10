@@ -13,6 +13,8 @@
   /revoke <target>...
   /jobs
   /job {status|output|stop|discard} <name> | prune
+  /subs
+  /sub cat <name>
   /fork [-m <model>] [-c <flags>] [-t <tool>]... [--yolo] [-f <session>]
 
 \e[38;2;129;162;190mTargets:\e[0m

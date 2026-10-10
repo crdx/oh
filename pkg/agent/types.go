@@ -323,6 +323,7 @@ type Event struct {
 	FallbackRendering
 
 	Kind      Kind                  `json:"kind"`
+	Subagent  string                `json:"subagent,omitempty"`
 	Text      string                `json:"text,omitempty"`
 	Failure   *Failure              `json:"failure,omitempty"`
 	ID        string                `json:"id,omitempty"`

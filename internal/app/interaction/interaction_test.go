@@ -352,11 +352,13 @@ func TestRunHandsEachEventToItsHandlerAndRedraws(t *testing.T) {
 		keys := make(chan key.Key, 1)
 		changes := make(chan error)
 		conclusions := make(chan jobs.Conclusion)
+		subagentEvents := make(chan agent.Event)
 		forwardChanges := make(chan agent.Event)
 		questionChanges := make(chan struct{})
 		triggerChanges := make(chan struct{})
 		close(changes)
 		close(conclusions)
+		close(subagentEvents)
 		close(forwardChanges)
 		close(questionChanges)
 		close(triggerChanges)
@@ -364,20 +366,21 @@ func TestRunHandsEachEventToItsHandlerAndRedraws(t *testing.T) {
 		wasDrawn := false
 		run(keys, make(chan os.Signal), make(chan time.Time), func() {
 			schedules++
-			if schedules == 6 {
+			if schedules == 7 {
 				keys <- key.Key{Code: key.Escape}
 			}
 		}, nil, Handler{
 			GetTurnEvents:   neverEnds,
 			Changes:         changes,
 			Conclusions:     conclusions,
+			SubagentEvents:  subagentEvents,
 			ForwardChanges:  forwardChanges,
 			QuestionChanges: questionChanges,
 			TriggerChanges:  triggerChanges,
 			OnKey:           func(key.Key) bool { return false },
 			OnDraw:          func() { wasDrawn = true },
 		})
-		if schedules != 6 || wasDrawn {
+		if schedules != 7 || wasDrawn {
 			t.Errorf("scheduled %d times, drawn=%t; want each closed source read once and nothing drawn", schedules, wasDrawn)
 		}
 	})

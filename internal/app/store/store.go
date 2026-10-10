@@ -77,7 +77,7 @@ func encodeMeta(meta Meta) (json.RawMessage, json.RawMessage, error) {
 }
 
 const (
-	transcriptName = "chat.md"
+	transcriptName = transcript.FileName
 	wireName       = "wire.http.zst"
 )
 
@@ -123,11 +123,25 @@ type Writer struct {
 }
 
 func Create(directory string, meta Meta) (*Writer, error) {
+	return create(directory, meta, session.Create)
+}
+
+func CreateNamed(directory string, name string, meta Meta) (*Writer, error) {
+	return create(directory, meta, func(directory string, journalMeta json.RawMessage, data json.RawMessage) (*session.Writer, error) {
+		return session.CreateNamed(directory, name, journalMeta, data)
+	})
+}
+
+func create(
+	directory string,
+	meta Meta,
+	createInner func(directory string, journalMeta json.RawMessage, data json.RawMessage) (*session.Writer, error),
+) (*Writer, error) {
 	journalMeta, data, err := encodeMeta(meta)
 	if err != nil {
 		return nil, err
 	}
-	innerWriter, err := session.Create(directory, journalMeta, data)
+	innerWriter, err := createInner(directory, journalMeta, data)
 	if err != nil {
 		return nil, err
 	}

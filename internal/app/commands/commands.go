@@ -53,6 +53,7 @@ type Options struct {
 	PathGrants        PathGrants
 	Forwards          Forwards
 	Jobs              Jobs
+	Subagents         Subagents
 	GetInfo           func() (string, error)
 	GetContextSources func() ContextSources
 	GetModelChoices   func() []model.Choice
@@ -107,6 +108,7 @@ type commandEnvironment struct {
 	pathGrants        PathGrants
 	forwards          Forwards
 	jobs              Jobs
+	subagents         Subagents
 	getInfo           func() (string, error)
 	getContextSources func() ContextSources
 	getModelChoices   func() []model.Choice
@@ -154,6 +156,7 @@ func New(options Options) (slash.CommandSet, error) {
 		pathGrants:        options.PathGrants,
 		forwards:          options.Forwards,
 		jobs:              options.Jobs,
+		subagents:         options.Subagents,
 		getInfo:           options.GetInfo,
 		getContextSources: options.GetContextSources,
 		getModelChoices:   options.GetModelChoices,
@@ -234,6 +237,9 @@ func buildCommands(environment commandEnvironment) (slash.CommandSet, error) {
 	}
 	if environment.jobs.isConfigured() {
 		commands = append(commands, jobCommands(environment.jobs)...)
+	}
+	if environment.subagents.isConfigured() {
+		commands = append(commands, subagentCommands(environment.subagents)...)
 	}
 	commands = append(commands, help)
 	commands = append(commands, commandsRequiringPersistedSession(

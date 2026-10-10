@@ -1,0 +1,27 @@
+
+ exercise every subagent action
+
+
+Watching the build until stopped spawn 1 subagent on GPT-5.6 Sol 1L
+list subagents 1L
+status all 1L
+cat tame-adder 1L (Watching the build until stopped)
+send tame-adder ✗ 1L tame-adder is still running; wait for it before sending it anything
+await tame-adder for up to 1s 3L (Watching the build until stopped)
+stop tame-adder 1L (Watching the build until stopped)
+await tame-adder 1L (Watching the build until stopped)
+stop tame-adder ✗ 1L none of the named subagents is running (Watching the build until stopped)
+status tame-nobody ✗ 1L no subagent named tame-nobody
+spawn 0 subagents on GPT-5.6 Sol ✗ start requires a nonempty subagents list
+list subagents ✗ list takes no names
+send tame-nobody ✗ 1L no subagent named tame-nobody
+Reading the secrets it cannot reach spawn 1 subagent on GPT-5.6 … ✗ 1L /unreadable is not a directo…
+stop all ✗ 1L no subagent is running
+
+Every action answered.
+
+
+ carry on
+
+
+Carrying on.

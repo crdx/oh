@@ -245,6 +245,11 @@ func (self *App) editorEnded(outcome editor.Outcome) {
 		return
 	}
 
+	failureLead := "The editor failed: "
+	if self.children.viewedConversation != "" {
+		failureLead = "The pager failed: "
+	}
+	self.forgetViewedConversation()
 	draftPath := self.externalEdit.draftPath
 	release := self.externalEdit.release
 	if release != nil {
@@ -257,7 +262,7 @@ func (self *App) editorEnded(outcome editor.Outcome) {
 	switch {
 	case draftPath == "":
 		if outcome.Failure != nil {
-			self.showEditorFailure("The editor failed: " + outcome.Failure.Error())
+			self.showEditorFailure(failureLead + outcome.Failure.Error())
 		}
 	case outcome.Failure != nil:
 		_ = os.Remove(draftPath)

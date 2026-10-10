@@ -30,7 +30,7 @@ func proseJournals(f *testing.F) []proseJournal {
 
 		var prose []int
 		for index, entry := range entries {
-			if isStreamedKind(entry.Event.Kind) {
+			if entry.Event.Subagent == "" && isStreamedKind(entry.Event.Kind) {
 				prose = append(prose, index)
 			}
 		}
@@ -126,6 +126,10 @@ func streamWithSteps(
 
 	for _, entry := range entries {
 		event := *entry.Event
+		if event.Subagent != "" {
+			rig.chat.subagentEvent(event)
+			continue
+		}
 		if isStreamedKind(event.Kind) {
 			runes := []rune(event.Text)
 			for at := 0; at < len(runes); {

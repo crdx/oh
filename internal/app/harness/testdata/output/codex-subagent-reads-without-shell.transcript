@@ -1,0 +1,61 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `medium`
+- **Provider:** `codex`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## Mode · rwngl · toggled x · +0s
+
+```
+Bash is now refused.
+```
+
+## User · +0s
+
+start a subagent without a shell
+
+## Tool calls · +0s
+
+```
+subagent: 1 subagent [ok, 1 line, 18B, toolu_1]
+```
+
+## Assistant · +0s
+
+A reader is on it.
+
+## Subagent started · tame-adder · +0s
+
+Read the logs
+
+Transcript: `subagents/tame-adder/chat.md`
+
+## Subagent finished · tame-adder · done · +0s
+
+The logs show no errors.
+
+## subagent_completion_submitted · +0s
+
+```
+Subagent tame-adder finished:
+
+tame-adder done (its /tmp is your /tmp/subagents/tame-adder): The logs show no errors.
+```
+
+## Assistant · +0s
+
+The logs show no errors.
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+Carrying on.

@@ -1,0 +1,43 @@
+=== missing ===
+error: that subagent's conversation is gone
+
+=== narrow ===
+\e[48;2;52;53;65m                                        \e[0m
+\e[48;2;52;53;65m Read the README and quote it           \e[0m
+\e[48;2;52;53;65m                                        \e[0m
+
+\e[3m\e[38;2;150;152;150mI should read the README.\e[0m\e[0m
+\e[38;2;207;173;0mread\e[0m \e[38;2;192;128;80mREADME.md\e[0m
+
+The README says hello, and holds nothing
+else beyond its one heading.
+
+\e[48;2;48;58;67m                                        \e[0m
+\e[48;2;48;58;67m 🤖 Bash is now available.              \e[0m
+\e[48;2;48;58;67m                                        \e[0m
+
+\e[48;2;52;53;65m                                        \e[0m
+\e[48;2;52;53;65m Now quote it twice                     \e[0m
+\e[48;2;52;53;65m                                        \e[0m
+
+hello hello
+
+=== wide ===
+\e[48;2;52;53;65m                                                                                                    \e[0m
+\e[48;2;52;53;65m Read the README and quote it                                                                       \e[0m
+\e[48;2;52;53;65m                                                                                                    \e[0m
+
+\e[3m\e[38;2;150;152;150mI should read the README.\e[0m\e[0m
+\e[38;2;207;173;0mread\e[0m \e[38;2;192;128;80mREADME.md\e[0m
+
+The README says hello, and holds nothing else beyond its one heading.
+
+\e[48;2;48;58;67m                                                                                                    \e[0m
+\e[48;2;48;58;67m 🤖 Bash is now available.                                                                          \e[0m
+\e[48;2;48;58;67m                                                                                                    \e[0m
+
+\e[48;2;52;53;65m                                                                                                    \e[0m
+\e[48;2;52;53;65m Now quote it twice                                                                                 \e[0m
+\e[48;2;52;53;65m                                                                                                    \e[0m
+
+hello hello

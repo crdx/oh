@@ -62,7 +62,20 @@ func drawText(analysis Analysis, report presentation, writer io.Writer) error {
 		sections = append(sections, sessionSection(analysis.Sessions, report.currency))
 	}
 
-	return writeSections(writer, sections, analysis.SkippedSessions)
+	if err := writeSections(writer, sections, analysis.SkippedSessions); err != nil {
+		return err
+	}
+	if analysis.MissingSubagents == 0 {
+		return nil
+	}
+	_, err := fmt.Fprintf(writer, "\n%s\n", style.Subtle(fmt.Sprintf(
+		"%s %s gone, so only %s usage and spend are counted, from %s parent's record.",
+		util.FormatCount(analysis.MissingSubagents),
+		pluralise(analysis.MissingSubagents, "subagent's journal is", "subagents' journals are"),
+		pluralise(analysis.MissingSubagents, "its", "their"),
+		pluralise(analysis.MissingSubagents, "its", "their"),
+	)))
+	return err
 }
 
 func writeSections(writer io.Writer, sections []section, skippedCount int) error {
@@ -384,7 +397,7 @@ func toolRow(name string, statistics ToolStatistics, appearance style.Style) rep
 func sessionSection(sessions []SessionStatistics, currency money.Currency) section {
 	rows := make([]reportRow, 0, len(sessions))
 	for _, statistics := range sessions {
-		rows = append(rows, sessionRow(statistics, currency))
+		rows = append(rows, sessionRow(family(statistics), currency))
 	}
 
 	return section{

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"crdx.org/oh/internal/util/pathutil"
@@ -192,7 +193,7 @@ func (self Policy) grantPathsSafe() error {
 			continue
 		}
 
-		if link, redirects := FirstSymlinkBeneath(grant.path, self.Write); redirects {
+		if link, redirects := FirstSymlinkBeneath(grant.path, slices.Concat(self.Write, self.ParentWritable)); redirects {
 			return fmt.Errorf("a grant may not pass through %s, a symbolic link", link)
 		}
 	}

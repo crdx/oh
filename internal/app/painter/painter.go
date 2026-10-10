@@ -12,6 +12,7 @@ import (
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/toolbox/subagent"
 
 	"crdx.org/oh/internal/app/call"
 	"crdx.org/oh/internal/app/caps"
@@ -29,6 +30,7 @@ import (
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/startup"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/internal/app/toolset"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/width"
@@ -143,6 +145,10 @@ func (self *Picasso) DrawDelta(delta agent.Delta) {
 
 func (self *Picasso) DrawEvent(event agent.Event) {
 	self.drawnEvents++
+	IntroduceSubagent(self.introductions, event)
+	if isChildEvent(event) {
+		return
+	}
 
 	if self.isTooCheapToNotice(event) {
 		return
@@ -160,11 +166,7 @@ func (self *Picasso) DrawEvent(event agent.Event) {
 	}
 	self.previousKind = event.Kind
 
-	if event.Kind != agent.ModelReasoningEvent && event.Kind != agent.ModelMessageEvent {
-		self.discardProvisionalReasoning()
-		self.settleAnswer()
-		self.answer.Reset()
-	}
+	self.settleBeforeEvent(event.Kind)
 
 	switch event.Kind {
 	case agent.UserMessageEvent:
@@ -228,10 +230,10 @@ func (self *Picasso) DrawEvent(event agent.Event) {
 	case agent.CacheRebuildEvent:
 		self.screen.Line(style.Change(agent.CacheRebuildNotice(event, self.tariff.cacheRebuildCost(event))))
 
-	case portgrant.ForwardChange, hostcommand.Ran, jobrecord.Ended:
+	case portgrant.ForwardChange, hostcommand.Ran, jobrecord.Ended, subagentrecord.ReportsDelivered:
 		self.drawNotices(event, self.drawSubmittedPanel)
 
-	case caps.ModeChange, caps.JobStop, jobrecord.EndedWithSession,
+	case caps.ModeChange, caps.JobStop, subagentrecord.ShellWithdrawnStop, jobrecord.EndedWithSession,
 		conditions.Change, environment.Change, toolset.AvailabilityChange, pathgrant.Change, turn.HarnessPoke:
 		self.drawNotices(event, self.drawSubmitted)
 
@@ -553,27 +555,48 @@ func (self *Picasso) Stop() {
 	}
 }
 
+var childFactKinds = []agent.Kind{subagentrecord.Started, subagentrecord.Sent, subagentrecord.Finished, subagentrecord.Returned}
+
+func IntroduceSubagent(introductions *Introductions, event agent.Event) {
+	if origin, isDecoded := subagentrecord.DecodeOrigin(event); isDecoded && introductions != nil {
+		introductions.Introduce(subagent.Mention(event.Subagent), origin.Intent)
+	}
+}
+
+func isChildEvent(event agent.Event) bool {
+	return slices.Contains(childFactKinds, event.Kind)
+}
+
+func (self *Picasso) settleBeforeEvent(kind agent.Kind) {
+	if kind == agent.ModelReasoningEvent || kind == agent.ModelMessageEvent {
+		return
+	}
+	self.discardProvisionalReasoning()
+	self.settleAnswer()
+	self.answer.Reset()
+}
+
 func (self *Picasso) isTooCheapToNotice(event agent.Event) bool {
 	return event.Kind == agent.CacheRebuildEvent && !agent.IsCacheRebuildWorthNoticing(event, self.tariff.Prices)
 }
 
 func (self *Picasso) drawNotices(event agent.Event, draw func(submittedMessage)) {
-	notices, areSaid := HarnessNotices(event)
+	notices, areSaid := DrawnNotices(event)
 	if !areSaid {
 		return
 	}
 
 	for _, notice := range notices {
-		draw(submittedMessage{text: notice, kind: sentHarnessSubmission})
+		draw(submittedMessage{text: notice.Text, kind: sentHarnessSubmission, mark: notice.Mark})
 	}
 }
 
 func isJoinableNotice(event agent.Event) bool {
 	switch event.Kind {
-	case caps.ModeChange, caps.JobStop, portgrant.ForwardChange,
+	case caps.ModeChange, caps.JobStop, subagentrecord.ShellWithdrawnStop, portgrant.ForwardChange,
 		jobrecord.Ended, jobrecord.EndedWithSession, conditions.Change, environment.Change, toolset.AvailabilityChange,
 		pathgrant.Change, turn.HarnessPoke,
-		hostcommand.Ran:
+		hostcommand.Ran, subagentrecord.ReportsDelivered:
 		return true
 	case agent.StartupEvent, agent.UserMessageEvent, agent.SilentTurnEvent, agent.PrefixRewriteEvent,
 		agent.CacheRebuildEvent, agent.ModelReasoningEvent, agent.ModelMessageEvent, agent.ToolCallRequestEvent,

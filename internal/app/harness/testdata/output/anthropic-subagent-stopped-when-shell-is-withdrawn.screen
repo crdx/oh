@@ -1,0 +1,23 @@
+
+ start two subagents
+
+
+spawn 2 subagents on Claude Opus 5 1L
+
+Both are running.
+
+
+ 🤖 Bash is now refused.
+ 🤖 Subagent tame-adder stopped because shell execution was withdrawn.
+ 🦙 Subagent tame-alpaca interjects:
+
+    The build tool is just.
+
+
+tame-alpaca named the build tool; tame-adder stopped when shell access went.
+
+
+ carry on
+
+
+Carrying on.

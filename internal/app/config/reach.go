@@ -16,6 +16,7 @@ var reaches = map[string]Reach{
 	"provider": ReachNextRun,
 	"ports":    ReachNextRun,
 	"debug":    ReachNextRun,
+	"subagent": ReachNextRun,
 	"caps":     ReachNextSession,
 	"model":    ReachNextSession,
 	"tools":    ReachNextSession,

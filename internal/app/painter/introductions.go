@@ -20,9 +20,9 @@ func (self *Introductions) Forget() {
 	clear(self.intents)
 }
 
-func (self *Introductions) note(label call.Label) {
-	if label.Introduces != "" && label.Intent != "" {
-		self.intents[label.Introduces] = label.Intent
+func (self *Introductions) Introduce(name string, intent string) {
+	if name != "" && intent != "" {
+		self.intents[name] = intent
 	}
 }
 
@@ -35,4 +35,8 @@ func (self *Introductions) recall(names []string) string {
 	}
 
 	return strings.Join(intents, asideSeparator)
+}
+
+func (self *Introductions) note(label call.Label) {
+	self.Introduce(label.Introduces, label.Intent)
 }

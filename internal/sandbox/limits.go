@@ -64,10 +64,13 @@ func namedPathSane(path string) error {
 }
 
 func (self Policy) namedPathsSane() error {
-	paths := slices.Concat(self.DenyPaths, self.Read, self.Write, self.Exec, self.Sockets)
+	paths := slices.Concat(self.DenyPaths, self.Read, self.Write, self.Exec, self.Sockets, self.ParentWritable)
 
 	if self.TmpDir != "" {
 		paths = append(paths, self.TmpDir)
+	}
+	if self.ScratchParent != "" {
+		paths = append(paths, self.ScratchParent)
 	}
 
 	for _, path := range paths {
@@ -82,6 +85,11 @@ func (self Policy) namedPathsSane() error {
 func (self Policy) sane() error {
 	if err := self.namedPathsSane(); err != nil {
 		return err
+	}
+	if self.ScratchParent != "" {
+		if name, ok := pathutil.RelativeTo(self.ScratchParent, self.TmpDir); !ok || name == "." {
+			return fmt.Errorf("scratch %s must be beneath its parent %s", self.TmpDir, self.ScratchParent)
+		}
 	}
 	for _, pattern := range self.Deny {
 		if err := util.ValidateNameGlob(pattern); err != nil {

@@ -1,0 +1,41 @@
+=== missing ===
+error: that subagent's conversation is gone
+=== narrow ===
+
+ Read the README and quote it
+
+
+I should read the README.
+read README.md
+
+The README says hello, and holds nothing
+else beyond its one heading.
+
+
+ 🤖 Bash is now available.
+
+
+
+ Now quote it twice
+
+
+hello hello
+=== wide ===
+
+ Read the README and quote it
+
+
+I should read the README.
+read README.md
+
+The README says hello, and holds nothing else beyond its one heading.
+
+
+ 🤖 Bash is now available.
+
+
+
+ Now quote it twice
+
+
+hello hello

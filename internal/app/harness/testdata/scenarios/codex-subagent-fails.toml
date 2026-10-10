@@ -1,0 +1,57 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[subagent]]
+name = "tame-adder"
+
+[[subagent.response]]
+status = 400
+body = "{\"error\":{\"type\":\"invalid_request_error\",\"message\":\"prompt is too long\"}}"
+
+[first]
+prompt = "start a subagent that fails"
+settle-subagents-after-turn = true
+subagent-debounce-passes = true
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-38","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Read the logs\",\"intent\":\"Reading the logs for errors\"}]}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-39","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"It is running."}''',
+    '''{"type":"response.output_text.done","text":"It is running."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"It is running."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-39","type":"message","role":"assistant","content":[{"type":"output_text","text":"It is running."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-40","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The subagent failed, so I will read the logs myself."}''',
+    '''{"type":"response.output_text.done","text":"The subagent failed, so I will read the logs myself."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The subagent failed, so I will read the logs myself."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-40","type":"message","role":"assistant","content":[{"type":"output_text","text":"The subagent failed, so I will read the logs myself."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-41","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Carrying on."}''',
+    '''{"type":"response.output_text.done","text":"Carrying on."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Carrying on."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-41","type":"message","role":"assistant","content":[{"type":"output_text","text":"Carrying on."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

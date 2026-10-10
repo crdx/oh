@@ -493,3 +493,58 @@ func assertGolden(t *testing.T, name string, drawn string) {
 		t.Errorf("output differs from %s\n--- got ---\n%s--- want ---\n%s", goldenPath, drawn, want)
 	}
 }
+
+func childScratch(directories Directories, parent string, child string) string {
+	return filepath.Join(directories.Farm, parent, session.ChildrenDirectoryName, child)
+}
+
+func TestGoldenASubagentsCachesAreTakenWithoutReachingFurther(t *testing.T) {
+	for _, isAggressive := range []bool{false, true} {
+		directories := Directories{Farm: t.TempDir(), Sessions: t.TempDir(), Home: t.TempDir()}
+		storedSessionNamed(t, directories.Sessions, "tidy-badger")
+		scratch := childScratch(directories, "tidy-badger", "tidy-adder")
+		write(t, filepath.Join(scratch, ".cache", "go-build", "object"), 4096)
+		write(t, filepath.Join(scratch, "home", ".cache", "go", "mod", "cache", "download", "example.com", "list"), 2048)
+		write(t, filepath.Join(scratch, "report.md"), 256)
+		write(t, filepath.Join(scratch, "home", ".config", "settings"), 128)
+
+		var screen, failure strings.Builder
+		if err := run(directories, options{isAggressive: isAggressive}, console.Output{Screen: &screen, Failure: &failure}); err != nil {
+			t.Fatal(err)
+		}
+
+		name := "subagent.txt"
+		if isAggressive {
+			name = "subagent-aggressive.txt"
+		}
+		assertGolden(t, name, report(screen.String(), failure.String()))
+		assertGone(t, filepath.Join(scratch, ".cache"))
+		assertGone(t, filepath.Join(scratch, "home", ".cache"))
+		for _, kept := range []string{filepath.Join(scratch, "report.md"), filepath.Join(scratch, "home", ".config", "settings")} {
+			if _, err := os.Stat(kept); err != nil {
+				t.Errorf("a subagent lost %s", kept)
+			}
+		}
+	}
+}
+
+func TestARunningSessionKeepsItsSubagentsCaches(t *testing.T) {
+	directories := Directories{Farm: t.TempDir(), Sessions: t.TempDir(), Home: t.TempDir()}
+	runningName := storedSession(t, directories.Sessions)
+	kept := filepath.Join(childScratch(directories, runningName, "tame-adder"), ".cache", "still-warm")
+	write(t, kept, 4096)
+
+	heldLock, err := session.AcquireLock(directories.Sessions, runningName)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = heldLock.Release() }()
+
+	var screen, failure strings.Builder
+	if err := run(directories, options{isAggressive: true}, console.Output{Screen: &screen, Failure: &failure}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(kept); err != nil {
+		t.Errorf("a running session's subagent lost %s", kept)
+	}
+}

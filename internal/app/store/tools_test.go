@@ -27,6 +27,24 @@ func snapshottedTool() tool.Tool {
 	})
 }
 
+func TestAChildPromptArraySurvivesToolFreezing(t *testing.T) {
+	original := tool.Implement(tool.Definition{
+		Name: "subagent", Description: "start agents",
+		Schema: tool.Schema{tool.ObjectArray("subagents", "agent tasks", tool.Schema{
+			tool.String("prompt", "individual task"),
+		})},
+	}, func(struct{}) tool.CallRendering { return tool.CallRendering{} }).Plain(func(context.Context, struct{}) (string, error) { return "", nil })
+	frozen := store.FreezeTools([]tool.Tool{original})
+	restored := store.RestoreTools(frozen)
+	if len(restored) != 1 || len(restored[0].Definition.Schema) != 1 || len(restored[0].Definition.Schema[0].ItemSchema) != 1 {
+		t.Fatalf("child task field disappeared: %+v", restored)
+	}
+	field := restored[0].Definition.Schema[0].ItemSchema[0]
+	if field.Name != "prompt" || field.IsOptional() {
+		t.Fatalf("required child prompt changed: %+v", field)
+	}
+}
+
 func TestFrozenToolsRestoreTheirWholeContract(t *testing.T) {
 	original := snapshottedTool()
 	directory := t.TempDir()

@@ -1,0 +1,16 @@
+=== live ===
+\e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Subagent tame-alpaca stopped because shell execution was withdrawn.                             \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m 🐍 Subagent tame-adder interjects:                                                                 \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    The README says hello.                                                                          \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[?25h\e[?2026l
+=== replay ===
+\e[?2026h\e[?25l\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m 🤖 Subagent tame-alpaca stopped because shell execution was withdrawn.                             \e[0m\r
+\e[48;2;48;58;67m 🐍 Subagent tame-adder interjects:                                                                 \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    The README says hello.                                                                          \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[?25h\e[?2026l

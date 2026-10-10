@@ -3,6 +3,7 @@ package analyse
 import (
 	"encoding/json"
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -42,13 +43,14 @@ type inputOpts struct {
 }
 
 type Analysis struct {
-	PromptCache     PromptCacheAnalysis `json:"promptCache"`
-	Models          ModelAnalysis       `json:"models"`
-	Activity        ActivityAnalysis    `json:"activity"`
-	Faults          FaultAnalysis       `json:"faults"`
-	Tools           ToolAnalysis        `json:"tools"`
-	Sessions        []SessionStatistics `json:"sessions,omitempty"`
-	SkippedSessions int                 `json:"skippedSessions"`
+	PromptCache      PromptCacheAnalysis `json:"promptCache"`
+	Models           ModelAnalysis       `json:"models"`
+	Activity         ActivityAnalysis    `json:"activity"`
+	Faults           FaultAnalysis       `json:"faults"`
+	Tools            ToolAnalysis        `json:"tools"`
+	Sessions         []SessionStatistics `json:"sessions,omitempty"`
+	SkippedSessions  int                 `json:"skippedSessions"`
+	MissingSubagents int                 `json:"missingSubagents,omitempty"`
 }
 
 type PromptCacheAnalysis struct {
@@ -77,7 +79,7 @@ type ToolAnalysis struct {
 	Total ToolStatistics   `json:"total"`
 }
 
-const analysisCacheFormat = 5
+const analysisCacheFormat = 6
 
 type analysisCache struct {
 	Format   int                      `json:"format"`
@@ -87,6 +89,7 @@ type analysisCache struct {
 type cachedSession struct {
 	JournalSize       int64             `json:"journalSize"`
 	JournalModifiedAt int64             `json:"journalModifiedAt"`
+	Subagents         string            `json:"subagents"`
 	IsWhole           bool              `json:"isWhole"`
 	Statistics        SessionStatistics `json:"statistics"`
 }
@@ -268,8 +271,7 @@ func aggregate(sessions []SessionStatistics, prices pricebook) Analysis {
 
 	analysis := Analysis{Sessions: sessions}
 
-	for index := range sessions {
-		statistics := &sessions[index]
+	include := func(statistics *SessionStatistics) {
 		statistics.Spend, statistics.IsPriced = prices.charge(*statistics)
 
 		if statistics.Cache.Requests > 0 {
@@ -277,12 +279,16 @@ func aggregate(sessions []SessionStatistics, prices pricebook) Analysis {
 				into.Provider = statistics.Provider
 			})
 		}
-		gather(activityByProvider, statistics.Provider, statistics.Activity, func(into *ActivityStatistics) {
-			into.Provider = statistics.Provider
-		})
-		gather(faultsByProvider, statistics.Provider, statistics.Faults, func(into *FaultStatistics) {
-			into.Provider = statistics.Provider
-		})
+		if statistics.Activity != (ActivityStatistics{}) {
+			gather(activityByProvider, statistics.Provider, statistics.Activity, func(into *ActivityStatistics) {
+				into.Provider = statistics.Provider
+			})
+		}
+		if statistics.Faults != (FaultStatistics{}) {
+			gather(faultsByProvider, statistics.Provider, statistics.Faults, func(into *FaultStatistics) {
+				into.Provider = statistics.Provider
+			})
+		}
 
 		modelStatistics := modelledSession(*statistics)
 		gather(modelsByName, priceKey(statistics.Provider, statistics.Model), modelStatistics,
@@ -296,6 +302,15 @@ func aggregate(sessions []SessionStatistics, prices pricebook) Analysis {
 				into.Name = toolStatistics.Name
 			})
 		}
+	}
+
+	for index := range sessions {
+		statistics := &sessions[index]
+		include(statistics)
+		for childIndex := range statistics.Subagents {
+			include(&statistics.Subagents[childIndex])
+		}
+		analysis.MissingSubagents += statistics.MissingSubagents
 	}
 
 	analysis.PromptCache.Providers = collect(cacheByProvider, func(first CacheStatistics, second CacheStatistics) int {
@@ -380,7 +395,7 @@ func modelledSession(statistics SessionStatistics) ModelStatistics {
 	return ModelStatistics{
 		Provider:      statistics.Provider,
 		Model:         statistics.Model,
-		Sessions:      1,
+		Sessions:      statistics.Activity.Sessions,
 		Requests:      statistics.Cache.Requests,
 		InputTokens:   statistics.Cache.InputTokens,
 		CachedTokens:  statistics.Cache.CachedTokens,
@@ -429,6 +444,7 @@ func (self pricebook) charge(statistics SessionStatistics) (float64, bool) {
 type sessionFiles struct {
 	journalSize       int64
 	journalModifiedAt int64
+	subagents         string
 }
 
 func openSession(directory string, name string) (sessionFiles, error) {
@@ -446,7 +462,24 @@ func openSession(directory string, name string) (sessionFiles, error) {
 	return sessionFiles{
 		journalSize:       journalInfo.Size(),
 		journalModifiedAt: journalInfo.ModTime().UnixNano(),
+		subagents:         subagentFingerprint(sessionRoot),
 	}, nil
+}
+
+func subagentFingerprint(sessionRoot *os.Root) string {
+	entries, err := fs.ReadDir(sessionRoot.FS(), session.ChildrenDirectoryName)
+	if err != nil {
+		return ""
+	}
+	var fingerprint strings.Builder
+	for _, entry := range entries {
+		info, err := sessionRoot.Stat(filepath.Join(session.ChildrenDirectoryName, entry.Name(), journalTranscriptName))
+		if err != nil {
+			continue
+		}
+		fmt.Fprintf(&fingerprint, "%s:%d:%d;", entry.Name(), info.Size(), info.ModTime().UnixNano())
+	}
+	return fingerprint.String()
 }
 
 func analyseSessionWithCache(
@@ -464,7 +497,7 @@ func analyseSessionWithCache(
 		return sessionAnalysis{statistics: cachedStatistics.Statistics, isWhole: cachedStatistics.IsWhole}
 	}
 
-	statistics, isWhole, err := analyseJournal(directory, name)
+	statistics, isWhole, err := analyseFamily(directory, name)
 	if err != nil {
 		return sessionAnalysis{err: err}
 	}
@@ -474,7 +507,8 @@ func analyseSessionWithCache(
 
 func (self cachedSession) matches(files sessionFiles) bool {
 	return self.JournalSize == files.journalSize &&
-		self.JournalModifiedAt == files.journalModifiedAt
+		self.JournalModifiedAt == files.journalModifiedAt &&
+		self.Subagents == files.subagents
 }
 
 func cachedAnalysis(statistics SessionStatistics, isWhole bool, files sessionFiles) sessionAnalysis {
@@ -484,6 +518,7 @@ func cachedAnalysis(statistics SessionStatistics, isWhole bool, files sessionFil
 		cachedStatistics: cachedSession{
 			JournalSize:       files.journalSize,
 			JournalModifiedAt: files.journalModifiedAt,
+			Subagents:         files.subagents,
 			IsWhole:           isWhole,
 			Statistics:        statistics,
 		},

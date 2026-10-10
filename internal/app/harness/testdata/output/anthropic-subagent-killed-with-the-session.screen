@@ -1,0 +1,21 @@
+
+ start a long subagent
+
+
+Watching the build until stopped spawn 1 subagent on Claude Opus 5 1L
+
+It is running.
+
+
+ 🐍 Subagent tame-adder interjects:
+
+    It ended: parent process ended before the subagent completed.
+
+
+The subagent ended when the last session was killed.
+
+
+ carry on
+
+
+Carrying on.

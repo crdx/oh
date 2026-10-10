@@ -1,0 +1,57 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `medium`
+- **Provider:** `codex`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+start a long subagent
+
+## Tool calls · +0s
+
+```
+subagent: 1 subagent [ok, 1 line, 18B, toolu_1]
+```
+
+## Assistant · +0s
+
+It is running.
+
+## Subagent started · tame-adder · +0s
+
+Watch the build forever
+
+Transcript: `subagents/tame-adder/chat.md`
+
+## Subagent finished · tame-adder · ended · +0s
+
+```
+parent session closed
+```
+
+## subagent_completion_submitted · +0s
+
+```
+Subagent tame-adder finished:
+
+tame-adder ended (its /tmp is your /tmp/subagents/tame-adder): parent session closed
+```
+
+## Assistant · +0s
+
+The subagent ended with the last session.
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+Carrying on.

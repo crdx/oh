@@ -110,6 +110,8 @@ import (
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/store/transcript"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/subagentrecord"
+	"crdx.org/oh/internal/app/subagents"
 	"crdx.org/oh/internal/app/terminal"
 	"crdx.org/oh/internal/app/toolset"
 	"crdx.org/oh/internal/app/trigger"
@@ -375,7 +377,7 @@ func drawPendingMarkdown(t *testing.T) string {
 	screen := output.NewTerminalOfSize(&screenOutput, terminalInputColumns, replayLines)
 	screen.Blank()
 	screen.OpenPanel(painter.NewPendingMessages(
-		[]string{"# Heading\n\n- first item\n- second item"}, true, link.Roots{},
+		[]painter.Notice{{Text: "# Heading\n\n- first item\n- second item"}}, true, link.Roots{},
 	))
 	screen.Seal()
 
@@ -5637,6 +5639,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		".screen",
 		".transcript",
 	})
+	claimSubagentScenarioRequests(t, expected)
 	for name, extensions := range map[string][]string{
 		"app-plain-resume":         {".jsonl", ".transcript"},
 		"app-plain-turn":           {".jsonl", ".transcript"},
@@ -5653,6 +5656,11 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"picture-detection":        {".screen", ".txt"},
 		"rate-refresh":             {".txt"},
 		"spend-currency":           {".screen"},
+		"subagent-timeline":        {".ansi", ".screen"},
+		"subagent-pending":         {".ansi", ".screen"},
+		"subagent-bar":             {".ansi", ".screen"},
+		"subagent-prompt":          {".txt"},
+		"subagent-conversation":    {".ansi", ".screen"},
 		"startup-model-selection":  {".txt"},
 		"default-bar":              {".ansi", ".screen"},
 		"editing-config":           {".ansi", ".screen"},
@@ -9291,7 +9299,7 @@ func streamThroughHoldingTheNotice(t *testing.T, rig *replayRig, entries []repla
 			continue
 		}
 
-		if event.Kind == agent.ModelMessageEvent || event.Kind == agent.ModelReasoningEvent {
+		if event.Subagent == "" && (event.Kind == agent.ModelMessageEvent || event.Kind == agent.ModelReasoningEvent) {
 			pieces := slices.Collect(deltaSized(event.Text))
 			for at, piece := range pieces {
 				if held != nil && at == len(pieces)/2 {
@@ -10348,7 +10356,7 @@ func streamThrough(t *testing.T, rig *replayRig, entries []replayEntry) string {
 
 	for _, entry := range entries {
 		event := *entry.Event
-		if event.Kind == agent.ModelMessageEvent || event.Kind == agent.ModelReasoningEvent {
+		if event.Subagent == "" && (event.Kind == agent.ModelMessageEvent || event.Kind == agent.ModelReasoningEvent) {
 			for piece := range deltaSized(event.Text) {
 				streamDelta(rig.chat, agent.Delta{Kind: event.Kind, Text: piece})
 			}
@@ -17855,6 +17863,13 @@ type sessionGoldenTurn struct {
 	EndJobAfterReasoningEvent    string                  `toml:"end-job-after-reasoning-event"`
 	EndJobAfterReasoningDelta    string                  `toml:"end-job-after-reasoning-delta"`
 	EndJobAfterMessageDelta      string                  `toml:"end-job-after-message-delta"`
+	SettleSubagentsAfterResult   int                     `toml:"settle-subagents-after-tool-result"`
+	SettleSubagentsAfterTurn     bool                    `toml:"settle-subagents-after-turn"`
+	SubagentDebouncePasses       bool                    `toml:"subagent-debounce-passes"`
+	ToggleAfterSubagentsSettle   string                  `toml:"toggle-after-subagents-settle"`
+	SettleSubagentsAfterResults  []int                   `toml:"settle-subagents-after-tool-results"`
+	TogglesAfterSubagentsSettle  []string                `toml:"toggles-after-subagents-settle"`
+	DeliverSubagentsBefore       bool                    `toml:"deliver-subagents-before-prompt"`
 }
 
 const forwardToolName = "forward"
@@ -17871,6 +17886,10 @@ func (self sessionGoldenScenario) usesTheInterface() bool {
 	if slices.ContainsFunc(self.Tools, func(specification sessionGoldenTool) bool {
 		return specification.Name == forwardToolName
 	}) {
+		return true
+	}
+
+	if len(self.Subagents) > 0 {
 		return true
 	}
 
@@ -17960,6 +17979,8 @@ type sessionGoldenScenario struct {
 	RunBeforeFirst        string                    `toml:"run-before-first"`
 	Prices                *sessionGoldenPrices      `toml:"prices"`
 	Tools                 []sessionGoldenTool       `toml:"tool"`
+	Subagents             []sessionGoldenSubagent   `toml:"subagent"`
+	SubagentsKilled       bool                      `toml:"subagents-killed-with-session"`
 	FirstTurn             sessionGoldenTurn         `toml:"first"`
 	ResumeTurn            sessionGoldenTurn         `toml:"resume"`
 	CredentialsPath       string                    `toml:"-"`
@@ -19102,7 +19123,11 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	var requestCount atomic.Int32
 	var requestMutex sync.Mutex
 	var requestBodies [][]byte
+	children := newSessionGoldenChildren(t, scenario)
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		if children.serves(writer, request) {
+			return
+		}
 		requestBody, err := io.ReadAll(request.Body)
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
@@ -19146,9 +19171,16 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	}
 	goldenPorts := newSessionGoldenPorts(goldenSessionName, scenario.Hostname)
 	toolDirectory := t.TempDir()
-	firstTools := newSessionGoldenTools(
+	var firstHarness *App
+	var firstChildManager *subagents.Manager
+	if children != nil {
+		firstChildManager = children.manager(server.URL, session.ChildrenDir(directory, log.Name()), func() []tool.Tool {
+			return newSessionGoldenTools(t, scenario.Tools, goldenPorts, scenario.ScratchDirectory, t.TempDir())
+		}, func() caps.Set { return firstHarness.mode.Current() })
+	}
+	firstTools := children.withTool(newSessionGoldenTools(
 		t, scenario.Tools, goldenPorts, scenario.ScratchDirectory, toolDirectory,
-	)
+	), firstChildManager)
 	meta.ToolDefinitions = store.FreezeTools(firstTools)
 	meta.Tools = toolset.Names(firstTools)
 	if err := log.SetMeta(meta); err != nil {
@@ -19165,13 +19197,18 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	settleClock := newSessionGoldenClock(t, scenario)
 	settleClock(firstAssistant)
 	var firstScreenOutput bytes.Buffer
-	firstHarness := &App{
+	firstHarness = &App{
 		agent:    firstAssistant,
 		screen:   scenario.screen(&firstScreenOutput),
 		recorder: record.New(log),
 		forwards: goldenPorts,
 		display:  scenario.display(),
 		nudge:    builtInConfig(t).Input.Nudge,
+		children: childState{manager: firstChildManager},
+	}
+	firstHarness.children.directory = session.ChildrenDir(directory, log.Name())
+	if children != nil {
+		firstHarness.now = children.now
 	}
 	if scenario.Provider == model.CodexProvider {
 		firstHarness.openingEvents = []agent.Event{model.FastModeEvent(scenario.IsFast)}
@@ -19208,8 +19245,17 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		firstAssistant.AddNotes(firstHarness.takeSettledNotes())
 	}
 	firstHarness.currentTurn = Turn{Stream: testRunningTurnStream(), painter: firstHarness.newPainter(true)}
-	firstTurns := runSessionGoldenTurn(t, firstHarness, scenario.FirstTurn, cancelSignals)
+	firstTurns := runSessionGoldenTurn(t, firstHarness, scenario.FirstTurn, cancelSignals, children)
 	firstHarness.dropPendingInput()
+	if children != nil {
+		if scenario.SubagentsKilled {
+			go firstChildManager.Close()
+			for range firstChildManager.Events() {
+			}
+		} else {
+			firstHarness.endChildren()
+		}
+	}
 
 	if !scenario.usesTheInterface() {
 		printedOutput := drawPrintedSessionGoldenTurn(
@@ -19236,9 +19282,17 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	if err != nil {
 		t.Fatal(err)
 	}
-	currentTools := newSessionGoldenTools(
+	var resumedHarness *App
+	var resumedChildManager *subagents.Manager
+	if children != nil {
+		resumedChildManager = children.manager(server.URL, session.ChildrenDir(directory, sessionName), func() []tool.Tool {
+			return newSessionGoldenTools(t, scenario.Tools, goldenPorts, scenario.ScratchDirectory, t.TempDir(), true)
+		}, func() caps.Set { return resumedHarness.mode.Current() })
+		defer resumedChildManager.Close()
+	}
+	currentTools := children.withTool(newSessionGoldenTools(
 		t, scenario.Tools, goldenPorts, scenario.ScratchDirectory, toolDirectory, true,
-	)
+	), resumedChildManager)
 	restoredTools := toolset.Restore(currentTools, store.RestoreTools(storedSession.Meta.ToolDefinitions))
 	availabilityRestoration, err := toolset.RestoreAvailability(
 		storedSession.Events,
@@ -19271,13 +19325,20 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	var screenOutput bytes.Buffer
 	resumedRecorder := record.New(log)
 	resumedRecorder.Resume(len(storedSession.Items))
-	resumedHarness := &App{
+	resumedHarness = &App{
 		agent:          resumedAssistant,
 		screen:         scenario.screen(&screenOutput),
 		recorder:       resumedRecorder,
 		recordedEvents: slices.Clone(storedSession.Events),
 		forwards:       goldenPorts,
 		display:        scenario.display(),
+		children: childState{
+			manager:   resumedChildManager,
+			directory: session.ChildrenDir(directory, sessionName),
+		},
+	}
+	if children != nil {
+		resumedHarness.now = children.now
 	}
 	settleResumedSessionGoldenMode(resumedHarness, storedSession.Events)
 	restoredEvents := restoreSessionGoldenConditions(
@@ -19293,6 +19354,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	if len(scenario.JobsRunningIntoResume) > 0 {
 		restoredEvents = restoreSessionGoldenRunningJobs(t, resumedHarness, storedSession.Events, restoredEvents)
 	}
+	resumedHarness.restoreChildren(storedSession.Events)
 	resumedHarness.currentTurn = Turn{Stream: testRunningTurnStream()}
 	resumedHarness.replay()
 	requireSameVisibleScreen(
@@ -19303,7 +19365,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	)
 	resumedHarness.settleAccess()
 	resumedAssistant.AddNotes(resumedHarness.prelude())
-	resumeTurns := runSessionGoldenTurn(t, resumedHarness, scenario.ResumeTurn, cancelSignals)
+	resumeTurns := runSessionGoldenTurn(t, resumedHarness, scenario.ResumeTurn, cancelSignals, children)
 	resumedHarness.dropPendingInput()
 
 	printedScreen := printedSessionIsImpossible
@@ -19326,6 +19388,9 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	}
 	if got := int(requestCount.Load()); got != len(responses) {
 		t.Errorf("provider received %d requests, want %d", got, len(responses))
+	}
+	if children != nil {
+		children.requireEveryResponseServed()
 	}
 
 	transcriptPath := filepath.Join(directory, sessionName, "chat.md")
@@ -19389,6 +19454,11 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		".transcript":     canonicalSessionTranscript(string(transcript), sessionName),
 		".requests.jsonl": requests,
 		".print":          printedScreen,
+	}
+	if children != nil {
+		outputs[".subagent-requests"] = children.recordedRequests()
+		outputs[".subagent-journals"] = children.recordedJournals(session.ChildrenDir(directory, sessionName))
+		requireDrawnWithoutChildren(t, resumedAssistant, scenario, storedSession, session.ChildrenDir(directory, sessionName), replayOutput.String())
 	}
 
 	for extension, drawn := range outputs {
@@ -19886,10 +19956,13 @@ func runSessionGoldenTurn(
 	testHarness *App,
 	turn sessionGoldenTurn,
 	cancelSignals <-chan struct{},
+	children *sessionGoldenChildren,
 ) [][]TurnEvent {
 	t.Helper()
 
 	var drawnTurnEvents []TurnEvent
+	childTurns := children.hooks(t, testHarness, turn)
+	settledTurns := childTurns.before()
 
 	var streamContext context.Context
 	var cancel context.CancelCauseFunc
@@ -19973,6 +20046,7 @@ func runSessionGoldenTurn(
 			toolRequests++
 			takeToolRequest(toolRequests)
 		}
+		childTurns.observe(update)
 	}
 	if turn.IsCancelled && !testHarness.currentTurn.Cancelled() {
 		if turn.CancelWithSignal {
@@ -19982,9 +20056,12 @@ func runSessionGoldenTurn(
 	}
 	testHarness.finish()
 
-	drawnTurns := [][]TurnEvent{drawnTurnEvents}
-
-	return append(drawnTurns, runQueuedSessionGoldenTurns(t, testHarness, turn.ToggleDuringModeTurn)...)
+	return slices.Concat(
+		settledTurns,
+		[][]TurnEvent{drawnTurnEvents},
+		runQueuedSessionGoldenTurns(t, testHarness, turn.ToggleDuringModeTurn, childTurns.observe),
+		childTurns.after(),
+	)
 }
 
 type sessionGoldenDeltas struct {
@@ -20122,7 +20199,12 @@ func takeFirstSessionGoldenMessageDelta(t *testing.T, testHarness *App, turn ses
 	}
 }
 
-func runQueuedSessionGoldenTurns(t *testing.T, testHarness *App, toggleDuringModeTurn string) [][]TurnEvent {
+func runQueuedSessionGoldenTurns(
+	t *testing.T,
+	testHarness *App,
+	toggleDuringModeTurn string,
+	observe func(agent.Update),
+) [][]TurnEvent {
 	t.Helper()
 
 	var drawnTurns [][]TurnEvent
@@ -20132,6 +20214,9 @@ func runQueuedSessionGoldenTurns(t *testing.T, testHarness *App, toggleDuringMod
 		for event := range testHarness.currentTurn.Events() {
 			drawnTurnEvents = append(drawnTurnEvents, event)
 			testHarness.takeTurn(event)
+			if observe != nil {
+				observe(event.Update)
+			}
 			if toggleDuringModeTurn == "" || event.Update.Delta == nil {
 				continue
 			}
@@ -20187,6 +20272,9 @@ func canonicalSessionJournal(t *testing.T, directory string, name string) string
 		if line.Event != nil {
 			canonicalEvent := *line.Event
 			canonicalEvent.Took = 0
+			if canonicalEvent.Kind == subagentrecord.Started {
+				canonicalEvent.ID = "session-of-" + canonicalEvent.Subagent
+			}
 			event = &canonicalEvent
 		}
 

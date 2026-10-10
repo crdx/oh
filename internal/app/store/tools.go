@@ -10,12 +10,13 @@ type ToolDefinition struct {
 }
 
 type ToolParameter struct {
-	Name        string   `json:"name"`
-	Type        string   `json:"type"`
-	ItemType    string   `json:"item_type,omitempty"`
-	Description string   `json:"description"`
-	Values      []string `json:"values,omitempty"`
-	IsOptional  bool     `json:"optional,omitempty"`
+	Name        string          `json:"name"`
+	Type        string          `json:"type"`
+	ItemType    string          `json:"item_type,omitempty"`
+	ItemFields  []ToolParameter `json:"item_fields,omitempty"`
+	Description string          `json:"description"`
+	Values      []string        `json:"values,omitempty"`
+	IsOptional  bool            `json:"optional,omitempty"`
 }
 
 func FreezeTools(tools []tool.Tool) []ToolDefinition {
@@ -23,17 +24,7 @@ func FreezeTools(tools []tool.Tool) []ToolDefinition {
 
 	for at, availableTool := range tools {
 		snapshot := tool.TakeSnapshot(availableTool)
-		parameters := make([]ToolParameter, len(snapshot.Definition.Schema))
-		for index, parameter := range snapshot.Definition.Schema {
-			parameters[index] = ToolParameter{
-				Name:        parameter.Name,
-				Type:        string(parameter.Type),
-				ItemType:    string(parameter.ItemType),
-				Description: parameter.Description,
-				Values:      parameter.Values,
-				IsOptional:  parameter.IsOptional(),
-			}
-		}
+		parameters := freezeParameters(snapshot.Definition.Schema)
 
 		frozenDefinitions[at] = ToolDefinition{
 			Name:        snapshot.Definition.Name,
@@ -46,24 +37,30 @@ func FreezeTools(tools []tool.Tool) []ToolDefinition {
 	return frozenDefinitions
 }
 
+func freezeParameters(schema tool.Schema) []ToolParameter {
+	if len(schema) == 0 {
+		return nil
+	}
+	parameters := make([]ToolParameter, len(schema))
+	for index, parameter := range schema {
+		parameters[index] = ToolParameter{
+			Name:        parameter.Name,
+			Type:        string(parameter.Type),
+			ItemType:    string(parameter.ItemType),
+			ItemFields:  freezeParameters(parameter.ItemSchema),
+			Description: parameter.Description,
+			Values:      parameter.Values,
+			IsOptional:  parameter.IsOptional(),
+		}
+	}
+	return parameters
+}
+
 func RestoreTools(frozenDefinitions []ToolDefinition) []tool.Snapshot {
 	snapshots := make([]tool.Snapshot, len(frozenDefinitions))
 
 	for at, frozenDefinition := range frozenDefinitions {
-		schema := make(tool.Schema, len(frozenDefinition.Parameters))
-		for index, frozenParameter := range frozenDefinition.Parameters {
-			parameter := tool.Parameter{
-				Name:        frozenParameter.Name,
-				Type:        tool.DataType(frozenParameter.Type),
-				ItemType:    tool.DataType(frozenParameter.ItemType),
-				Description: frozenParameter.Description,
-				Values:      frozenParameter.Values,
-			}
-			if frozenParameter.IsOptional {
-				parameter = parameter.Optional()
-			}
-			schema[index] = parameter
-		}
+		schema := restoreParameters(frozenDefinition.Parameters)
 
 		snapshots[at] = tool.Snapshot{
 			Definition: tool.Definition{
@@ -76,4 +73,23 @@ func RestoreTools(frozenDefinitions []ToolDefinition) []tool.Snapshot {
 	}
 
 	return snapshots
+}
+
+func restoreParameters(frozenParameters []ToolParameter) tool.Schema {
+	schema := make(tool.Schema, len(frozenParameters))
+	for index, field := range frozenParameters {
+		parameter := tool.Parameter{
+			Name:        field.Name,
+			Type:        tool.DataType(field.Type),
+			ItemType:    tool.DataType(field.ItemType),
+			ItemSchema:  restoreParameters(field.ItemFields),
+			Description: field.Description,
+			Values:      field.Values,
+		}
+		if field.IsOptional {
+			parameter = parameter.Optional()
+		}
+		schema[index] = parameter
+	}
+	return schema
 }

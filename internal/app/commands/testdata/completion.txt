@@ -14,6 +14,8 @@
   /new [<options>] → /new …  (start a new session)
   /open <target> → /open …  (open a target with its default application)
   /revoke <target>... → /revoke …  (revoke temporary path grants or forwarded ports)
+  /sub <action> → /sub …  (read a subagent's conversation)
+  /subs → /subs  (list this session's subagents)
 "/c"
   /conf → /conf  (edit the config and system prompt)
   /copy <target> → /copy …  (copy a target to the clipboard)
@@ -268,6 +270,17 @@
   workspace-dir → /open workspace-dir
 "/open sn"
   snippets-dir → /open snippets-dir
+"/sub"
+  /sub <action> → /sub …  (read a subagent's conversation)
+  /subs → /subs  (list this session's subagents)
+"/subs "
+"/sub "
+  cat → /sub cat
+"/sub cat "
+  frugal-heron → /sub cat frugal-heron
+  frugal-otter → /sub cat frugal-otter
+"/sub cat frugal-o"
+  frugal-otter → /sub cat frugal-otter
 "//"
   //add <args> → //add …  (Add a task, then continue.)
   //ask <question> → //ask …  (Answer without making changes.)

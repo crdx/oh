@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path"
 	"strconv"
 	"strings"
 	"time"
@@ -20,13 +21,17 @@ import (
 	"crdx.org/oh/internal/app/jobrecord"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/portgrant"
+	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/internal/app/toolset"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tool"
 )
+
+const FileName = "chat.md"
 
 const (
 	formattedBytePrecision = 3
@@ -55,6 +60,7 @@ type Recorder struct {
 	prices        *agent.TokenPrices
 	pendingCalls  []*toolCallEntry
 	pendingCallAt time.Time
+	heldSections  []string
 	callByID      map[string]*toolCallEntry
 }
 
@@ -100,9 +106,8 @@ func (self *Recorder) Event(at time.Time, event agent.Event) error {
 	if self.file == nil {
 		return os.ErrClosed
 	}
-
 	switch event.Kind {
-	case agent.StateChangeEvent, agent.ModelReasoningEvent:
+	case agent.StateChangeEvent, agent.ModelReasoningEvent, subagentrecord.Returned:
 		return nil
 	case conditions.Change, environment.Change:
 		if _, isSaid := harnessNotice(event); !isSaid {
@@ -123,8 +128,11 @@ func (self *Recorder) Event(at time.Time, event agent.Event) error {
 		agent.PrefixRewriteEvent:
 	}
 
-	if err := self.flushToolCalls(); err != nil {
-		return err
+	isHeld := self.isHeldSection(event)
+	if !isHeld {
+		if err := self.flushToolCalls(); err != nil {
+			return err
+		}
 	}
 
 	var output document
@@ -137,13 +145,25 @@ func (self *Recorder) Event(at time.Time, event agent.Event) error {
 		}
 	case agent.FailureEvent:
 		output.fence(agent.FailureText(event))
+	case subagentrecord.Started:
+		output.markdown(event.Text)
+		output.paragraph("Transcript: `" + path.Join(session.ChildrenDirectoryName, event.Subagent, FileName) + "`")
+	case subagentrecord.Sent:
+		output.markdown(event.Text)
+	case subagentrecord.Finished:
+		if event.Text != "" {
+			output.markdown(event.Text)
+		}
+		if failure := subagentrecord.FailureOf(event); failure != "" {
+			output.fence(failure)
+		}
 	case agent.SilentTurnEvent:
 		output.fence(agent.SilentTurnNotice)
 	case agent.CacheRebuildEvent:
 		output.fence(agent.CacheRebuildNotice(event, self.cacheRebuildCost(event)))
 	case agent.PrefixRewriteEvent:
 		output.fence(agent.PrefixRewriteNotice + event.Text)
-	case turn.HarnessPoke, jobrecord.Ended, jobrecord.EndedWithSession, caps.JobStop, caps.ModeChange,
+	case turn.HarnessPoke, jobrecord.Ended, jobrecord.EndedWithSession, caps.JobStop, caps.ModeChange, subagentrecord.ReportsDelivered, subagentrecord.ShellWithdrawnStop,
 		conditions.Change, environment.Change, toolset.AvailabilityChange, pathgrant.Change,
 		portgrant.ForwardChange, hostcommand.Ran:
 		if notice, isSaid := harnessNotice(event); isSaid {
@@ -160,14 +180,17 @@ func (self *Recorder) Event(at time.Time, event agent.Event) error {
 		agent.ToolCallResultEvent, agent.StateChangeEvent:
 	}
 
-	_, err := self.file.WriteString(output.String())
-	return err
+	return self.write(output.String(), isHeld)
 }
 
 func harnessNotice(event agent.Event) (string, bool) {
 	switch event.Kind {
 	case turn.HarnessPoke:
 		return turn.PokeNotice(event)
+	case subagentrecord.ReportsDelivered:
+		return event.Text, true
+	case subagentrecord.ShellWithdrawnStop:
+		return subagentrecord.ShellWithdrawnStopNotice(event)
 	case jobrecord.Ended:
 		return jobrecord.EndedNotice(event)
 	case jobrecord.EndedWithSession:
@@ -243,6 +266,10 @@ func heading(event agent.Event) []string {
 	case portgrant.ForwardChange:
 		summary, _ := portgrant.ForwardSummary(event)
 		return []string{name, summary, prefixed("changed port ", event.Name)}
+	case subagentrecord.Started, subagentrecord.Sent:
+		return []string{name, event.Subagent}
+	case subagentrecord.Finished:
+		return []string{name, event.Subagent, event.Name}
 	case agent.RetryingEvent:
 		return []string{name, "attempt " + strconv.Itoa(event.Attempt), prefixed("waited ", util.CompactDuration(event.Took))}
 	case agent.StartupEvent, agent.UserMessageEvent, agent.ModelMessageEvent, agent.InterruptionEvent, agent.FailureEvent,
@@ -351,6 +378,19 @@ func (self *Recorder) Close() error {
 	return errors.Join(flushError, closeError)
 }
 
+func (self *Recorder) isHeldSection(event agent.Event) bool {
+	return (event.Kind == subagentrecord.Started || event.Kind == subagentrecord.Sent || event.Kind == subagentrecord.Finished) && len(self.callByID) > 0
+}
+
+func (self *Recorder) write(section string, isHeld bool) error {
+	if isHeld {
+		self.heldSections = append(self.heldSections, section)
+		return nil
+	}
+	_, err := self.file.WriteString(section)
+	return err
+}
+
 func (self *Recorder) bufferToolCall(at time.Time, event agent.Event) {
 	self.markPendingCallRun(at)
 	entry := &toolCallEntry{id: event.ID, name: event.Name, subject: logSubject(event.Subject)}
@@ -400,7 +440,9 @@ func (self *Recorder) flushToolCalls() error {
 	var output document
 	output.paragraph("## " + joinParts("Tool calls", self.offset(at)))
 	output.fence(strings.Join(lines, "\n"))
-	_, err := self.file.WriteString(output.String())
+	heldSection := strings.Join(self.heldSections, "")
+	self.heldSections = nil
+	_, err := self.file.WriteString(output.String() + heldSection)
 	return err
 }
 
@@ -434,6 +476,12 @@ func title(kind agent.Kind) string {
 	switch kind {
 	case agent.StartupEvent:
 		return "Startup"
+	case subagentrecord.Started:
+		return "Subagent started"
+	case subagentrecord.Sent:
+		return "Subagent follow-up"
+	case subagentrecord.Finished:
+		return "Subagent finished"
 	case agent.UserMessageEvent:
 		return "User"
 	case agent.ModelReasoningEvent:

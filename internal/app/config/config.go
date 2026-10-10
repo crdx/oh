@@ -59,6 +59,7 @@ type Config struct {
 	Editor   Editor                         `toml:"editor"`
 	Input    Input                          `toml:"input"`
 	Model    Model                          `toml:"model"`
+	Subagent Subagent                       `toml:"subagent"`
 	Provider Provider                       `toml:"provider"`
 	Ports    Ports                          `toml:"ports"`
 	Snippets map[string]snippets.Definition `toml:"snippets"`
@@ -118,6 +119,10 @@ type Editor struct {
 type Input struct {
 	Nudge     string   `toml:"nudge"`
 	SpeedDial []string `toml:"speed_dial"`
+}
+
+type Subagent struct {
+	Model string `toml:"model"`
 }
 
 type Model struct {

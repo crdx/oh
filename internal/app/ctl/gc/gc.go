@@ -20,6 +20,7 @@ import (
 	"crdx.org/oh/internal/app/ctl/console"
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/subagents"
 	"crdx.org/oh/internal/app/table"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/diskutil"
@@ -81,9 +82,10 @@ type Directories struct {
 }
 
 type root struct {
-	path  string
-	label string
-	kind  string
+	path           string
+	label          string
+	kind           string
+	ownedElsewhere []string
 }
 
 type cache struct {
@@ -223,11 +225,19 @@ func collect(directories Directories) ([]root, int, error) {
 			continue
 		}
 
-		roots = append(roots, root{
+		parent := root{
 			path:  filepath.Join(directories.Farm, entry.Name()),
 			label: filepath.Join(farmLabel, entry.Name()),
 			kind:  wholeKind(directories.Sessions, entry.Name()),
-		})
+		}
+		if parent.kind == "" {
+			children := childRoots(parent)
+			if len(children) > 0 {
+				parent.ownedElsewhere = []string{session.ChildrenDirectoryName}
+			}
+			roots = append(roots, children...)
+		}
+		roots = append(roots, parent)
 	}
 
 	if runningCount == 0 {
@@ -235,6 +245,27 @@ func collect(directories Directories) ([]root, int, error) {
 	}
 
 	return roots, runningCount, nil
+}
+
+func childRoots(parent root) []root {
+	entries, err := os.ReadDir(filepath.Join(parent.path, session.ChildrenDirectoryName))
+	if err != nil {
+		return nil
+	}
+	var roots []root
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			continue
+		}
+		scratch := filepath.Join(session.ChildrenDirectoryName, entry.Name())
+		home := filepath.Join(scratch, subagents.HomeName)
+		roots = append(
+			roots,
+			root{path: filepath.Join(parent.path, scratch), label: filepath.Join(parent.label, scratch), ownedElsewhere: []string{subagents.HomeName}},
+			root{path: filepath.Join(parent.path, home), label: filepath.Join(parent.label, home)},
+		)
+	}
+	return roots
 }
 
 func wholeKind(sessions string, name string) string {
@@ -393,6 +424,10 @@ func (self *search) gather(path string, entries []os.DirEntry) error {
 				}
 			}
 
+			continue
+		}
+
+		if path == self.root.path && slices.Contains(self.root.ownedElsewhere, entry.Name()) {
 			continue
 		}
 

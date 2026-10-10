@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Add subagents
 - Fix OpenCode Go's Messages API models
 - Keep valid unsigned thoughts
 - Promote --from to a real flag

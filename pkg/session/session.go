@@ -75,13 +75,17 @@ func Create(directory string, journalMeta json.RawMessage, listingData json.RawM
 		return nil, err
 	}
 
+	return newWriter(directory, name, journalMeta, listingData), nil
+}
+
+func newWriter(directory string, name string, journalMeta json.RawMessage, listingData json.RawMessage) *Writer {
 	return &Writer{
 		directory:   directory,
 		id:          newID(),
 		name:        name,
 		journalMeta: slices.Clone(journalMeta),
 		listingData: slices.Clone(listingData),
-	}, nil
+	}
 }
 
 var ErrInUse = errors.New("the session is already open elsewhere")
@@ -758,12 +762,20 @@ func namesInFormat(directory string, isWanted func(storedFormat int) bool) ([]st
 
 	var names []string
 	for _, entry := range entries {
-		if isWanted(entry.Format) {
+		if isWanted(entry.Format) || !entry.IsArchived && hasChildInFormat(directory, entry.Name, isWanted) {
 			names = append(names, entry.Name)
 		}
 	}
 
 	return names, nil
+}
+
+func hasChildInFormat(directory string, name string, isWanted func(storedFormat int) bool) bool {
+	children, err := Entries(ChildrenDir(directory, name))
+	if err != nil {
+		return false
+	}
+	return slices.ContainsFunc(children, func(child Entry) bool { return isWanted(child.Format) })
 }
 
 func StoredNames(directory string) ([]string, error) {

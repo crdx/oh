@@ -90,17 +90,19 @@ type Policy struct {
 	Yolo    bool `json:"yolo,omitempty"`
 	Network bool `json:"network,omitempty"`
 
-	Deny          []string          `json:"deny,omitempty"`
-	DenyPaths     []string          `json:"deny_paths,omitempty"`
-	Read          []string          `json:"read"`
-	Write         []string          `json:"write"`
-	Sockets       []string          `json:"sockets"`
-	Exec          []string          `json:"exec"`
-	OptionalPaths []string          `json:"optional_paths,omitempty"`
-	TmpDir        string            `json:"tmpdir"`
-	Env           []string          `json:"env"`
-	SetEnv        map[string]string `json:"set_env"`
-	Timeout       time.Duration     `json:"timeout"`
+	Deny           []string          `json:"deny,omitempty"`
+	DenyPaths      []string          `json:"deny_paths,omitempty"`
+	Read           []string          `json:"read"`
+	Write          []string          `json:"write"`
+	Sockets        []string          `json:"sockets"`
+	Exec           []string          `json:"exec"`
+	OptionalPaths  []string          `json:"optional_paths,omitempty"`
+	TmpDir         string            `json:"tmpdir"`
+	ScratchParent  string            `json:"scratch_parent,omitempty"`
+	ParentWritable []string          `json:"parent_writable,omitempty"`
+	Env            []string          `json:"env"`
+	SetEnv         map[string]string `json:"set_env"`
+	Timeout        time.Duration     `json:"timeout"`
 
 	MaxCPUTime   time.Duration `json:"cpu_time"`
 	MaxFileSize  int64         `json:"file_size"`
@@ -116,6 +118,7 @@ func (self Policy) Clone() Policy {
 	self.Sockets = slices.Clone(self.Sockets)
 	self.Exec = slices.Clone(self.Exec)
 	self.OptionalPaths = slices.Clone(self.OptionalPaths)
+	self.ParentWritable = slices.Clone(self.ParentWritable)
 	self.Env = slices.Clone(self.Env)
 	self.SetEnv = maps.Clone(self.SetEnv)
 	return self
@@ -158,6 +161,14 @@ func (self Policy) Writable() bool {
 	}
 
 	return false
+}
+
+func (self Policy) untrustedRoots() []string {
+	roots := slices.Clone(self.ParentWritable)
+	if self.ScratchParent != "" {
+		roots = append(roots, self.ScratchParent)
+	}
+	return roots
 }
 
 type grant struct {

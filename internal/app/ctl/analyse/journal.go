@@ -6,6 +6,7 @@ import (
 	"slices"
 	"strings"
 
+	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 )
@@ -23,21 +24,94 @@ type journalTally struct {
 	tools        map[string]*ToolStatistics
 	usageReports int
 	untimedTurns int
+	children     []childRecord
 }
 
-func analyseJournal(directory string, name string) (SessionStatistics, bool, error) {
+type childRecord struct {
+	name     string
+	provider string
+	model    string
+	usage    agent.Usage
+}
+
+func (self childRecord) statistics() SessionStatistics {
+	return SessionStatistics{
+		Name:     self.name,
+		Provider: self.provider,
+		Model:    self.model,
+		Cache: CacheStatistics{
+			InputTokens:   int64(self.usage.InputTokens),
+			CachedTokens:  int64(cacheReads(self.usage)),
+			WrittenTokens: int64(cacheWrites(self.usage)),
+			OutputTokens:  int64(self.usage.OutputTokens),
+		},
+	}
+}
+
+func cacheReads(usage agent.Usage) int {
+	if usage.Cache == nil {
+		return 0
+	}
+	return usage.Cache.ReadTokens
+}
+
+func cacheWrites(usage agent.Usage) int {
+	if usage.Cache == nil {
+		return 0
+	}
+	return usage.Cache.WriteTokens
+}
+
+func analyseFamily(directory string, name string) (SessionStatistics, bool, error) {
+	statistics, children, isWhole, err := analyseJournal(directory, name)
+	if err != nil {
+		return SessionStatistics{}, false, err
+	}
+
+	childrenDirectory := session.ChildrenDir(directory, name)
+	for _, child := range children {
+		if !session.Exists(childrenDirectory, child.name) {
+			statistics.Subagents = append(statistics.Subagents, child.statistics())
+			statistics.MissingSubagents++
+			continue
+		}
+		childStatistics, _, isChildWhole, err := analyseJournal(childrenDirectory, child.name)
+		if err != nil {
+			return SessionStatistics{}, false, err
+		}
+		isWhole = isWhole && isChildWhole
+		statistics.Subagents = append(statistics.Subagents, asSubagent(childStatistics))
+	}
+
+	return statistics, isWhole, nil
+}
+
+func analyseJournal(directory string, name string) (SessionStatistics, []childRecord, bool, error) {
 	tally := journalTally{
 		statistics: SessionStatistics{Name: name},
 		tools:      map[string]*ToolStatistics{},
 	}
 
 	if err := session.Records(directory, name, tally.record); err != nil {
-		return SessionStatistics{}, false, fmt.Errorf("could not analyse %s: %w", name, err)
+		return SessionStatistics{}, nil, false, fmt.Errorf("could not analyse %s: %w", name, err)
 	}
 
 	statistics, isWhole := tally.finish()
 
-	return statistics, isWhole, nil
+	return statistics, tally.children, isWhole, nil
+}
+
+func (self *journalTally) recordChild(event agent.Event) {
+	index := slices.IndexFunc(self.children, func(child childRecord) bool { return child.name == event.Subagent })
+	if origin, isDecoded := subagentrecord.DecodeOrigin(event); isDecoded && index < 0 {
+		self.children = append(self.children, childRecord{
+			name: event.Subagent, provider: origin.Choice.Provider, model: origin.Choice.ID,
+		})
+		return
+	}
+	if usage := subagentrecord.UsageOf(event); usage != nil && index >= 0 {
+		subagentrecord.AddUsage(&self.children[index].usage, *usage)
+	}
 }
 
 func (self *journalTally) record(line session.Line) error {
@@ -74,6 +148,10 @@ func (self *journalTally) record(line session.Line) error {
 }
 
 func (self *journalTally) recordEvent(event agent.Event) {
+	if event.Subagent != "" {
+		self.recordChild(event)
+		return
+	}
 	switch event.Kind {
 	case agent.UserMessageEvent:
 		self.statistics.Activity.Prompts++

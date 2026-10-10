@@ -1,0 +1,7 @@
+=== screen ===
+[4m[38;2;150;152;150mKind    Size  Path[0m[0m
+[38;2;150;152;150m.cache[0m    4K  farm/tidy-badger/subagents/tidy-adder/.cache
+[38;2;150;152;150m.cache[0m    4K  farm/tidy-badger/subagents/tidy-adder/home/.cache
+
+[38;2;150;152;150m2 paths, 8K reclaimed[0m
+=== failure ===

@@ -23,6 +23,7 @@ import (
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/tool/command"
 	"crdx.org/oh/pkg/tool/middleware/truncate"
@@ -32,6 +33,7 @@ import (
 	"crdx.org/oh/pkg/toolbox/forward"
 	"crdx.org/oh/pkg/toolbox/lookup"
 	"crdx.org/oh/pkg/toolbox/notify"
+	"crdx.org/oh/pkg/toolbox/subagent"
 	"crdx.org/oh/pkg/toolbox/title"
 
 	"crdx.org/oh/internal/app/backend"
@@ -626,7 +628,8 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 			columns, _, _ = term.GetSize(int(os.Stdout.Fd()))
 		}
 		endpoints := backend.EndpointSettings{OverrideURL: endpointURL, OllamaHost: settings.Provider.Ollama.Host}
-		return "", model.List(os.Stdout, modelCachePath,
+		return "", model.List(
+			os.Stdout, modelCachePath,
 			money.Load(location.GetExchangeRateCachePath(), currencyCode(settings.Ui.Currency)),
 			func(providerName string) bool { return backend.IsAvailable(providerName, endpoints) },
 			settings.Model.GetDefaults(), columns,
@@ -1123,8 +1126,35 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	var app *App
 	isTerminalFocused := func() bool { return app != nil && app.terminal.IsFocused() }
 
+	preparedChildren, err := prepareChildManager(childOptions{
+		endpoints:       endpoints,
+		workspace:       workspace,
+		settings:        settings,
+		sessionName:     log.Name(),
+		sessionsDir:     sessionsDir,
+		scratchParent:   tmpDir,
+		runner:          sandboxRunner,
+		isYolo:          args.Yolo,
+		ensurePersisted: log.EnsurePersisted,
+		parentFiles:     files,
+		parentCaps:      mode.Current,
+		parentWritable: func() []string {
+			return slices.Concat([]string{workspace.GetDir(), homeDir, tmpDir}, pathAccess.GetPaths().Write)
+		},
+	}, modelChoices, seenModelsPath, args.IsPrinting)
+	if err != nil {
+		return "", err
+	}
+	childManager := preparedChildren.manager
+	if childManager != nil {
+		defer childManager.Close()
+	}
+
 	snapshots := file.NewSnapshots()
 	toolboxTools := toolbox.RummageWithRunner(files, snapshots, grepRunner(args.Yolo))
+	if childManager != nil {
+		toolboxTools = append(toolboxTools, subagent.New(childManager, childManager.Model()))
+	}
 	askBroker := ask.New()
 	permissionSet, err := settings.BuildPermissions()
 	if err != nil {
@@ -1324,6 +1354,10 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 			GetURL:     forwards.URL,
 		},
 		Jobs: managedJobs(jobManager),
+		Subagents: commands.Subagents{
+			List: func() []commands.SubagentListing { return app.listSubagents() },
+			Show: func(name string) error { return app.showSubagent(name) },
+		},
 		StartHostCommand: func(directory string, command string) error {
 			return app.startHostCommand(directory, command)
 		},
@@ -1377,7 +1411,11 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 			ContextWindowTokens: choice.ContextWindowTokens,
 			Prices:              choice.Prices,
 		}),
-		recorder:        record.New(log),
+		recorder: record.New(log),
+		children: childState{
+			manager:   childManager,
+			directory: session.ChildrenDir(sessionsDir, log.Name()),
+		},
 		editorConfig:    editorConfiguration,
 		toolOutputLimit: toolOutputLimit,
 		experimental:    experimentalToggles,
@@ -1556,6 +1594,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	hasStarted = true
 	hooks.EmitSessionStarted(ctx, cycle.SessionStarted{Session: sessionInfo})
 	transition := app.begin(args.Message)
+	app.endChildren()
 	questionNotifications.WithdrawAll(notificationWithdrawalGrace)
 	*requestedTransition = transition
 	stopReason = transition.StopReason()

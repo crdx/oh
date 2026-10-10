@@ -196,6 +196,18 @@ var defaultTheme = Theme{
 				"list":     {Paint: "normal"},
 			},
 		},
+		"subagent": {
+			Default: ToolAppearance{Name: "subagent", Paint: "status_warning"},
+			Actions: map[string]ToolAppearance{
+				"start":  {Name: "spawn"},
+				"send":   {},
+				"stop":   {},
+				"status": {Paint: "normal"},
+				"output": {Name: "cat", Paint: "normal"},
+				"wait":   {Name: "await", Paint: "normal"},
+				"list":   {Paint: "normal"},
+			},
+		},
 		"forward": {
 			Default: ToolAppearance{Name: "forward", Paint: "status_warning"},
 			Actions: map[string]ToolAppearance{

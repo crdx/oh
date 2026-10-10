@@ -3,6 +3,7 @@ package sandbox
 import (
 	"context"
 	"fmt"
+	"slices"
 	"unsafe"
 
 	"crdx.org/oh/internal/util/pathutil"
@@ -125,6 +126,7 @@ func applyLandlock(policy Policy) (bool, error) {
 	ruleset := int(fd)
 	defer func() { _ = unix.Close(ruleset) }()
 
+	writableRoots := slices.Concat(policy.Write, policy.untrustedRoots())
 	for _, grant := range policy.grants() {
 		if grant.isOptional && !pathutil.Exists(grant.path) {
 			continue
@@ -132,7 +134,7 @@ func applyLandlock(policy Policy) (bool, error) {
 
 		rights := rightsAtVersion(grant.rights, version)
 
-		if err := addRule(ruleset, grant.path, rights, policy.Write); err != nil {
+		if err := addRule(ruleset, grant.path, rights, writableRoots); err != nil {
 			if grant.isOptional && !pathutil.Exists(grant.path) {
 				continue
 			}

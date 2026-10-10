@@ -1,0 +1,14 @@
+
+ ask two subagents and wait for them
+
+
+spawn 2 subagents on GPT-5.6 Sol 1L
+await all 4L
+
+Both reported: the loader is in config.go and the parser is in parse.go.
+
+
+ carry on
+
+
+Carrying on.

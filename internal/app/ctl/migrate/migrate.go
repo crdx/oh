@@ -265,10 +265,38 @@ func Session(options Options, name string) (int, error) {
 }
 
 func migrateSession(options Options, name string, keep func() error) (int, error) {
-	directory := options.Directory
+	isKept := false
+	keepOnce := func() error {
+		if isKept {
+			return nil
+		}
+		isKept = true
+		return keep()
+	}
+
+	fromFormat, err := migrateJournal(options.Directory, options.DryRun, name, keepOnce)
+	if err != nil {
+		return fromFormat, err
+	}
+
+	childrenDirectory := session.ChildrenDir(options.Directory, name)
+	childNames, err := session.StoredNames(childrenDirectory)
+	if err != nil {
+		return fromFormat, err
+	}
+	for _, childName := range childNames {
+		if _, err := migrateJournal(childrenDirectory, options.DryRun, childName, keepOnce); err != nil {
+			return fromFormat, fmt.Errorf("subagent %s: %w", childName, err)
+		}
+	}
+
+	return fromFormat, nil
+}
+
+func migrateJournal(directory string, isDryRun bool, name string, keep func() error) (int, error) {
 	journalPath := filepath.Join(directory, name, "session.jsonl")
 
-	if !options.DryRun {
+	if !isDryRun {
 		heldLock, err := session.AcquireLock(directory, name)
 		if err != nil {
 			return 0, err
@@ -314,7 +342,7 @@ func migrateSession(options Options, name string, keep func() error) (int, error
 
 	lines[0]["version"] = json.RawMessage(strconv.Itoa(session.JournalFormat))
 
-	if options.DryRun {
+	if isDryRun {
 		return fromFormat, nil
 	}
 

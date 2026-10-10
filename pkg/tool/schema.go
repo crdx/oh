@@ -24,6 +24,7 @@ type Parameter struct {
 	Name        string
 	Type        DataType
 	ItemType    DataType
+	ItemSchema  Schema
 	Description string
 	Values      []string
 
@@ -47,6 +48,10 @@ func StringArray(name string, description string) Parameter {
 	return Parameter{Name: name, Type: TypeArray, ItemType: TypeString, Description: description}
 }
 
+func ObjectArray(name string, description string, fields Schema) Parameter {
+	return Parameter{Name: name, Type: TypeArray, ItemType: TypeObject, ItemSchema: fields, Description: description}
+}
+
 func Integer(name string, description string) Parameter {
 	return Parameter{Name: name, Type: TypeInteger, Description: description}
 }
@@ -60,7 +65,10 @@ func Enum(name string, description string, values ...string) Parameter {
 }
 
 type item struct {
-	Type DataType `json:"type"`
+	Type                 DataType            `json:"type"`
+	Properties           map[string]property `json:"properties,omitempty"`
+	RequiredNames        []string            `json:"required,omitempty"`
+	AdditionalProperties *bool               `json:"additionalProperties,omitempty"`
 }
 
 type property struct {
@@ -91,6 +99,18 @@ func (self Schema) MarshalJSON() ([]byte, error) {
 		}
 		if parameter.ItemType != "" {
 			renderedProperty.Items = &item{Type: parameter.ItemType}
+			if parameter.ItemType == TypeObject {
+				var allowsAdditionalProperties bool
+				renderedProperty.Items.AdditionalProperties = &allowsAdditionalProperties
+				properties := make(map[string]property, len(parameter.ItemSchema))
+				for _, field := range parameter.ItemSchema {
+					properties[field.Name] = property{Type: field.Type, Description: field.Description}
+					if !field.IsOptional() {
+						renderedProperty.Items.RequiredNames = append(renderedProperty.Items.RequiredNames, field.Name)
+					}
+				}
+				renderedProperty.Items.Properties = properties
+			}
 		}
 		renderedSchema.Properties[parameter.Name] = renderedProperty
 
@@ -142,6 +162,7 @@ func cloneDefinition(definition Definition) Definition {
 	clonedSchema := make(Schema, len(definition.Schema))
 	for i, parameter := range definition.Schema {
 		parameter.Values = slices.Clone(parameter.Values)
+		parameter.ItemSchema = cloneDefinition(Definition{Schema: parameter.ItemSchema}).Schema
 		clonedSchema[i] = parameter
 	}
 	definition.Schema = clonedSchema

@@ -16,6 +16,7 @@ import (
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/shell"
+	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/snippets"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/width"
@@ -103,6 +104,11 @@ func TestGoldenCompletionMatchesGolden(t *testing.T) {
 		"/edit sn",
 		"/open ",
 		"/open sn",
+		"/sub",
+		"/subs ",
+		"/sub ",
+		"/sub cat ",
+		"/sub cat frugal-o",
 		"//",
 		"//a",
 		"//h",
@@ -121,6 +127,49 @@ func TestGoldenCompletionMatchesGolden(t *testing.T) {
 	}
 
 	assertGolden(t, "completion.txt", output.String())
+}
+
+func TestGoldenSubagentsListsEveryChildTheSessionStarted(t *testing.T) {
+	var shown []string
+	listing := []SubagentListing{{Name: "frugal-otter"}, {Name: "frugal-heron", IsMissing: true}}
+	show := func(name string) error {
+		shown = append(shown, name)
+		return nil
+	}
+	commands := newCommandRegistry(t, commandEnvironment{subagents: Subagents{
+		List: func() []SubagentListing { return listing },
+		Show: show,
+	}})
+	empty := newCommandRegistry(t, commandEnvironment{subagents: Subagents{
+		List: func() []SubagentListing { return nil },
+		Show: show,
+	}})
+	var result strings.Builder
+	for _, run := range []struct {
+		registry slash.Registry
+		input    string
+	}{
+		{empty, "/subs"},
+		{commands, "/subs"},
+		{commands, "/subs frugal-otter"},
+		{commands, "/sub"},
+		{commands, "/sub frugal-otter"},
+		{commands, "/sub cat frugal-otter"},
+		{commands, "/sub cat frugal-nobody"},
+	} {
+		invocation, found := run.registry.Find(run.input)
+		if !found {
+			t.Fatalf("command %s is missing", run.input)
+		}
+		context := newCommandTestContext(t)
+		if err := invocation.Command.Run(context, invocation.Arguments); err != nil {
+			fmt.Fprintf(&result, "=== %s ===\nerror: %v\n", run.input, err)
+			continue
+		}
+		fmt.Fprintf(&result, "=== %s ===\n%s\n", run.input, renderCommandFeedback(context, 70))
+	}
+	fmt.Fprintf(&result, "=== shown ===\n%s\n", strings.Join(shown, "\n"))
+	assertGolden(t, "subagents.txt", result.String())
 }
 
 func TestGoldenContextListingMatchesGolden(t *testing.T) {
@@ -276,7 +325,13 @@ func fixtureEnvironment(t *testing.T) commandEnvironment {
 		getSessionNames: func() []string {
 			return []string{"able-dolphin", "agile-turtle", "tame-impala", "wise-otter"}
 		},
-		getToolNames:      func() []string { return []string{"read", "grep", "bash"} },
+		getToolNames: func() []string { return []string{"read", "grep", "bash"} },
+		subagents: Subagents{
+			List: func() []SubagentListing {
+				return []SubagentListing{{Name: "frugal-otter"}, {Name: "frugal-heron"}, {Name: "frugal-adder", IsMissing: true}}
+			},
+			Show: func(string) error { return nil },
+		},
 		getCustomCapFlags: func() string { return "a" },
 		getInfo: func() (string, error) {
 			return style.Info("cache-usage") + "  5m ttl\n" + style.Info("mode-toggle") + "  " + style.Subtle("rxw ngl"), nil

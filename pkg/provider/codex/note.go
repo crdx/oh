@@ -14,7 +14,7 @@ func (notes) Wrap(note agent.Note) string {
 		return agent.WrapNote("user_shell_command", note.Text)
 	case agent.EnvironmentNote:
 		return agent.WrapNote("environment_context", note.Text)
-	case agent.JobNote, agent.TitleNote, agent.PokeNote:
+	case agent.JobNote, agent.TitleNote, agent.PokeNote, agent.SubagentNote:
 		return agent.WrapNote(`codex_internal_context source="`+string(note.Kind)+`"`, note.Text)
 	}
 

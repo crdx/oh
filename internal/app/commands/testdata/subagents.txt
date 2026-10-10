@@ -1,0 +1,18 @@
+=== /subs ===
+[38;2;129;162;190mNo subagents.[0m
+=== /subs ===
+[38;2;129;162;190mSubagents:[0m
+  frugal-otter
+  frugal-heron [38;2;150;152;150m(its conversation is gone)[0m
+=== /subs frugal-otter ===
+error: invalid command usage
+=== /sub ===
+error: invalid command usage
+=== /sub frugal-otter ===
+error: invalid command usage
+=== /sub cat frugal-otter ===
+[38;2;129;162;190m[0m
+=== /sub cat frugal-nobody ===
+error: no subagent named frugal-nobody
+=== shown ===
+frugal-otter

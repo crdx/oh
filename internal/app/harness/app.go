@@ -115,6 +115,16 @@ func (self *pendingNotices) notices() []string {
 	return notices
 }
 
+func (self *pendingNotices) drawnNotices() []painter.Notice {
+	var notices []painter.Notice
+	for _, item := range self.items {
+		if itemNotices, areSaid := painter.DrawnNotices(item.state); areSaid {
+			notices = append(notices, itemNotices...)
+		}
+	}
+	return notices
+}
+
 func (self *pendingNotices) modelNotes() []agent.Note {
 	var notes []agent.Note
 	for _, item := range self.items {
@@ -209,6 +219,7 @@ type App struct {
 	pathGrants      *pathgrant.Grants
 	forwards        *portgrant.Forwards
 	jobs            jobState
+	children        childState
 	settledNotes    []agent.Note
 	settledCaps     caps.Set
 	pendingNotices  pendingNotices
@@ -325,6 +336,8 @@ func (self *App) begin(message string) cycle.Transition {
 		OnChange:         self.reloadConfig,
 		Conclusions:      self.jobConclusions(),
 		OnJobEnded:       self.jobEnded,
+		SubagentEvents:   self.subagentEvents(),
+		OnSubagentEvent:  self.subagentEvent,
 		ForwardChanges:   self.forwardChanges(),
 		OnForwardChange:  self.holdForwardChange,
 		QuestionChanges:  self.questionChanges(),
@@ -352,6 +365,7 @@ func (self *App) takeBackTTY() {
 }
 
 func (self *App) drawAfterEvent(inputLine *edit.Input) {
+	self.deliverChildCompletions()
 	self.announceUnseenQuestion(self.getNow())
 	self.show(inputLine)
 }
@@ -834,6 +848,9 @@ func (self *App) toggleCap(whichCaps caps.Set) {
 
 	if isWithdrawn {
 		self.stopJobsLosingAccess(whichCaps)
+		if whichCaps.Has(caps.Shell) {
+			self.stopChildrenLosingShell()
+		}
 	}
 
 	self.interruptForAccessChange()
@@ -923,7 +940,7 @@ func (self *App) refreshPendingMessages() {
 		return
 	}
 
-	messages := self.pendingNotices.notices()
+	messages := self.pendingNotices.drawnNotices()
 	if self.pendingNotices.renderer == nil {
 		self.pendingNotices.renderer = painter.NewPendingMessages(
 			messages,
@@ -1234,6 +1251,7 @@ func (self *App) getBarSources() bar.Sources {
 		GetTurnTiming:      self.turnTiming,
 		GetTurnCount:       self.turnCount,
 		GetJobs:            self.getJobs,
+		GetSubagents:       self.getSubagents,
 	}
 }
 
@@ -1432,6 +1450,7 @@ func (self *App) nextRefresh(at time.Time) time.Time {
 		self.nextAnswerRefresh(at),
 		self.nextQuestionAnnouncement(),
 		self.nextHostCommandRefresh(at),
+		self.nextChildDelivery(at),
 	)
 }
 
@@ -1592,7 +1611,9 @@ func (self *App) contextUsage() (int, int) {
 }
 
 func (self *App) sessionSpend() (float64, bool) {
-	return self.metrics.Spend()
+	parentSpend, isPriced := self.metrics.Spend()
+	childSpend, isChildPriced := self.childSpend()
+	return parentSpend + childSpend, isPriced && isChildPriced
 }
 
 func (self *App) grantedCaps() caps.Set {
@@ -1754,6 +1775,7 @@ func (self *App) restore(storedSession *store.Session) {
 	self.agent.RestoreCache(storedSession.CacheReading)
 	self.metrics.Restore(storedSession.Events, storedSession.Turns)
 	self.restoreJobs(storedSession.Events)
+	self.restoreChildren(storedSession.Events)
 
 	self.replayFromTop(len(self.recordedEvents))
 }
@@ -1855,6 +1877,7 @@ func (self *App) startTurn() {
 }
 
 func (self *App) start(message string) {
+	self.queueReadyChildCompletions()
 	userTurnElapsed := self.turnTiming().UserTurn
 	self.settleAccess()
 	self.metrics.BeginTurn()
@@ -2167,11 +2190,12 @@ func (self *App) noticePainter() *painter.Picasso {
 }
 
 func (self *App) wasCutShort() bool {
-	if len(self.recordedEvents) == 0 {
-		return false
+	for _, event := range slices.Backward(self.recordedEvents) {
+		if event.Subagent == "" {
+			return event.Kind == agent.ModelReasoningEvent
+		}
 	}
-
-	return self.recordedEvents[len(self.recordedEvents)-1].Kind == agent.ModelReasoningEvent
+	return false
 }
 
 func (self *App) wasPoked() bool {
@@ -2248,6 +2272,7 @@ func (self *App) finish() {
 		self.agent.AddNotes([]agent.Note{{Kind: agent.PokeNote, Text: message}})
 		self.startTurn()
 	case turn.None:
+		self.deliverChildCompletions()
 	}
 }
 

@@ -1489,3 +1489,78 @@ func TestFormatNineteenMigrationLeavesASessionHoldingNoModelChoiceAlone(t *testi
 		t.Errorf("expected no model choice, got %+v", storedSession.Meta.ModelChoice)
 	}
 }
+
+func storedChild(t *testing.T, directory string, parent string, child string, lines ...string) string {
+	t.Helper()
+
+	childrenDirectory := session.ChildrenDir(directory, parent)
+	if err := os.MkdirAll(filepath.Join(childrenDirectory, child), 0o750); err != nil {
+		t.Fatal(err)
+	}
+	body := strings.Join(lines, "\n") + "\n"
+	if err := os.WriteFile(filepath.Join(childrenDirectory, child, "session.jsonl"), []byte(body), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	return childrenDirectory
+}
+
+func TestEverySubagentJournalIsMigratedBesideItsParent(t *testing.T) {
+	legacyHead := `{"kind":"head","time":"2026-08-01T00:00:00Z","id":"%s","name":"%s","meta":{"workspaceDir":"/workspace"}}`
+	legacyEvent := `{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"tool_call_request","name":"read","highlight":{"kind":"focus","value":"draw.go"}}}`
+	directory, name := storedJournal(t, fmt.Sprintf(legacyHead, "one", "tame-impala"), legacyEvent)
+	childrenDirectory := storedChild(t, directory, name, "tame-otter", fmt.Sprintf(legacyHead, "two", "tame-otter"), legacyEvent)
+	storedChild(t, directory, name, "tame-heron", fmt.Sprintf(legacyHead, "three", "tame-heron"), legacyEvent)
+
+	if _, err := migrate.Session(options(directory), name); err != nil {
+		t.Fatal(err)
+	}
+
+	for _, child := range []string{"tame-otter", "tame-heron"} {
+		lines := journalLines(t, childrenDirectory, child)
+		if got := string(lines[0]["version"]); got != strconv.Itoa(session.JournalFormat) {
+			t.Errorf("%s was left in format %q", child, got)
+		}
+		if strings.Contains(string(lines[1]["event"]), "highlight") {
+			t.Errorf("%s was not carried through every step: %s", child, lines[1]["event"])
+		}
+		if _, err := session.ReadMeta(childrenDirectory, child); err != nil {
+			t.Errorf("%s has no listing after migration: %v", child, err)
+		}
+	}
+	kept := filepath.Join(directory+"_copies", name, session.ChildrenDirectoryName, "tame-otter", "session.jsonl")
+	body, err := os.ReadFile(kept) //nolint:gosec // the test's own path
+	if err != nil || strings.Contains(string(body), `"version"`) {
+		t.Errorf("the copy kept of the children is not the one from before: %q, %v", body, err)
+	}
+}
+
+func TestAStaleSubagentBeneathACurrentParentIsStillMigrated(t *testing.T) {
+	head := fmt.Sprintf(`{"kind":"head","time":"2026-08-01T00:00:00Z","version":%d,"id":"one","name":"tame-impala"}`, session.JournalFormat)
+	directory, name := storedJournal(t, head)
+	childrenDirectory := storedChild(t, directory, name, "tame-otter",
+		`{"kind":"head","time":"2026-08-01T00:00:00Z","id":"two","name":"tame-otter","meta":{"workspaceDir":"/workspace"}}`,
+	)
+
+	if _, err := migrate.Session(options(directory), name); err != nil {
+		t.Fatal(err)
+	}
+
+	if got := string(journalLines(t, childrenDirectory, "tame-otter")[0]["version"]); got != strconv.Itoa(session.JournalFormat) {
+		t.Errorf("a stale child beneath a current parent was left in format %q", got)
+	}
+}
+
+func TestAStaleSubagentMakesItsParentOutdated(t *testing.T) {
+	head := fmt.Sprintf(`{"kind":"head","time":"2026-08-01T00:00:00Z","version":%d,"id":"one","name":"tame-impala"}`, session.JournalFormat)
+	directory, name := storedJournal(t, head)
+	if outdated, err := session.Outdated(directory); err != nil || len(outdated) != 0 {
+		t.Fatalf("a current family was outdated: %v, %v", outdated, err)
+	}
+	storedChild(t, directory, name, "tame-otter",
+		`{"kind":"head","time":"2026-08-01T00:00:00Z","id":"two","name":"tame-otter","meta":{"workspaceDir":"/workspace"}}`,
+	)
+	if outdated, err := session.Outdated(directory); err != nil || !slices.Equal(outdated, []string{name}) {
+		t.Errorf("a stale child left its parent current: %v, %v", outdated, err)
+	}
+}

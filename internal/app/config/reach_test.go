@@ -18,6 +18,7 @@ func TestReachOfNamesWhenASettingLands(t *testing.T) {
 		"ports.hostname":    ReachNextRun,
 		"debug.stalls":      ReachNextRun,
 		"debug.cpu_profile": ReachNextRun,
+		"subagent.model":    ReachNextRun,
 		"caps.default":      ReachNextSession,
 		"model.round_robin": ReachNextSession,
 		"sandbox":           ReachNextRun,

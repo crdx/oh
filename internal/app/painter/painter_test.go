@@ -220,7 +220,7 @@ func TestQueuedMessagePathsAreLinkedAsHostPaths(t *testing.T) {
 	roots := link.Roots{Workspace: workspace}
 	renderings := map[string]string{
 		"footer": strings.Join(RenderQueuedMessages([]string{"check notes.txt"}, true, 80, true, roots), "\n"),
-		"notice": strings.Join(NewPendingMessages([]string{"check notes.txt"}, true, roots).Rows(80), "\n"),
+		"notice": strings.Join(NewPendingMessages(notices("check notes.txt"), true, roots).Rows(80), "\n"),
 	}
 
 	wantTarget := "file://" + filepath.ToSlash(path)
@@ -234,7 +234,7 @@ func TestQueuedMessagePathsAreLinkedAsHostPaths(t *testing.T) {
 }
 
 func TestPendingMessagesShareOneBlock(t *testing.T) {
-	rows := NewPendingMessages([]string{"one", "two"}, false, link.Roots{}).Rows(40)
+	rows := NewPendingMessages(notices("one", "two"), false, link.Roots{}).Rows(40)
 
 	if len(rows) != 4 {
 		t.Fatalf("got %d rows, want the hint, both messages, and a pad: %q", len(rows), rows)
@@ -248,7 +248,7 @@ func TestPendingMessagesShareOneBlock(t *testing.T) {
 }
 
 func TestStandingNoticesSayHowToSendThemNow(t *testing.T) {
-	pending := NewPendingMessages([]string{"one"}, false, link.Roots{})
+	pending := NewPendingMessages(notices("one"), false, link.Roots{})
 
 	standing := pending.Rows(40)
 	if !strings.Contains(style.Plain(standing[len(standing)-1]), sendHint) {
@@ -290,7 +290,7 @@ func TestAQueueAwaitingAStoppingTurnSaysSoRatherThanOfferingToSendItNow(t *testi
 
 func TestTheSendHintIsDroppedWhenItDoesNotFit(t *testing.T) {
 	renderings := map[string][]string{
-		"notices": NewPendingMessages([]string{"one"}, false, link.Roots{}).Rows(len(sendHint)),
+		"notices": NewPendingMessages(notices("one"), false, link.Roots{}).Rows(len(sendHint)),
 		"queue":   RenderQueuedMessages([]string{"one"}, true, len(sendHint), false, link.Roots{}),
 	}
 
@@ -789,4 +789,12 @@ func TestACacheRebuildIsCostedInTheChosenCurrency(t *testing.T) {
 	if want := "Cache rebuilt: 40Kt sent <1m later for £0.12."; !strings.Contains(screenOutput.String(), want) {
 		t.Errorf("got %q, want it to contain %q", screenOutput.String(), want)
 	}
+}
+
+func notices(texts ...string) []Notice {
+	drawn := make([]Notice, len(texts))
+	for index, text := range texts {
+		drawn[index] = Notice{Text: text}
+	}
+	return drawn
 }

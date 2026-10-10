@@ -1,0 +1,843 @@
+=== narrow ===
+
+ split the review and read the readme
+ yourself
+
+
+spawn 2 subagents on Claude Opus 5 1L
+read README.md 1L
+The readme is short; the children are
+still working.
+await tame-alpaca 2L
+
+The readme is a single heading, and
+tame-alpaca counted three TODOs.
+tame-adder is still working.
+
+
+ 🐍 Subagent tame-adder interjects:
+
+    The parser is in parse.go.
+
+
+tame-adder reported too: the parser is
+in parse.go.
+
+
+ start one more and drop shell
+
+
+spawn 1 subagent on Claude Opus 5 1L
+
+It is watching the build.
+
+
+ 🤖 Bash is now refused.
+ 🤖 Subagent tame-anchovy stopped
+    because shell execution was
+    withdrawn.
+
+
+
+ carry on
+
+
+Carrying on without it.
+=== one column ===
+
+
+s
+
+p
+
+l
+
+i
+
+t
+
+t
+
+h
+
+e
+
+r
+
+e
+
+v
+
+i
+
+e
+
+w
+
+a
+
+n
+
+d
+
+r
+
+e
+
+a
+
+d
+
+t
+
+h
+
+e
+
+r
+
+e
+
+a
+
+d
+
+m
+
+e
+
+y
+
+o
+
+u
+
+r
+
+s
+
+e
+
+l
+
+f
+
+
+…
+…
+T
+h
+e
+r
+e
+a
+d
+m
+e
+i
+s
+s
+h
+o
+r
+t
+;
+t
+h
+e
+c
+h
+i
+l
+d
+r
+e
+n
+a
+r
+e
+s
+t
+i
+l
+l
+w
+o
+r
+k
+i
+n
+g
+.
+…
+
+T
+h
+e
+r
+e
+a
+d
+m
+e
+i
+s
+a
+s
+i
+n
+g
+l
+e
+h
+e
+a
+d
+i
+n
+g
+,
+a
+n
+d
+t
+a
+m
+e
+-
+a
+l
+p
+a
+c
+a
+c
+o
+u
+n
+t
+e
+d
+t
+h
+r
+e
+e
+T
+O
+D
+O
+s
+.
+t
+a
+m
+e
+-
+a
+d
+d
+e
+r
+i
+s
+s
+t
+i
+l
+l
+w
+o
+r
+k
+i
+n
+g
+.
+
+
+
+🐍
+
+S
+
+u
+
+b
+
+a
+
+g
+
+e
+
+n
+
+t
+
+t
+
+a
+
+m
+
+e
+
+-
+
+a
+
+d
+
+d
+
+e
+
+r
+
+i
+
+n
+
+t
+
+e
+
+r
+
+j
+
+e
+
+c
+
+t
+
+s
+
+:
+
+
+T
+
+h
+
+e
+
+p
+
+a
+
+r
+
+s
+
+e
+
+r
+
+i
+
+s
+
+i
+
+n
+
+p
+
+a
+
+r
+
+s
+
+e
+
+.
+
+g
+
+o
+
+.
+
+
+t
+a
+m
+e
+-
+a
+d
+d
+e
+r
+r
+e
+p
+o
+r
+t
+e
+d
+t
+o
+o
+:
+t
+h
+e
+p
+a
+r
+s
+e
+r
+i
+s
+i
+n
+p
+a
+r
+s
+e
+.
+g
+o
+.
+
+
+
+s
+
+t
+
+a
+
+r
+
+t
+
+o
+
+n
+
+e
+
+m
+
+o
+
+r
+
+e
+
+a
+
+n
+
+d
+
+d
+
+r
+
+o
+
+p
+
+s
+
+h
+
+e
+
+l
+
+l
+
+
+…
+
+I
+t
+i
+s
+w
+a
+t
+c
+h
+i
+n
+g
+t
+h
+e
+b
+u
+i
+l
+d
+.
+
+
+
+🤖
+
+B
+
+a
+
+s
+
+h
+
+i
+
+s
+
+n
+
+o
+
+w
+
+r
+
+e
+
+f
+
+u
+
+s
+
+e
+
+d
+
+.
+
+🤖
+
+S
+
+u
+
+b
+
+a
+
+g
+
+e
+
+n
+
+t
+
+t
+
+a
+
+m
+
+e
+
+-
+
+a
+
+n
+
+c
+
+h
+
+o
+
+v
+
+y
+
+s
+
+t
+
+o
+
+p
+
+p
+
+e
+
+d
+
+b
+
+e
+
+c
+
+a
+
+u
+
+s
+
+e
+
+s
+
+h
+
+e
+
+l
+
+l
+
+e
+
+x
+
+e
+
+c
+
+u
+
+t
+
+i
+
+o
+
+n
+
+w
+
+a
+
+s
+
+w
+
+i
+
+t
+
+h
+
+d
+
+r
+
+a
+
+w
+
+n
+
+.
+
+
+
+
+c
+
+a
+
+r
+
+r
+
+y
+
+o
+
+n
+
+
+C
+a
+r
+r
+y
+i
+n
+g
+o
+n
+w
+i
+t
+h
+o
+u
+t
+i
+t
+.
+=== printed ===
+
+ split the review and read the readme yourself
+
+
+spawn 2 subagents on Claude Opus 5 1L
+read README.md 1L
+The readme is short; the children are still working.
+await tame-alpaca 2L (Counting the TODOs in the code)
+
+The readme is a single heading, and tame-alpaca counted three TODOs. tame-adder is still working.
+
+
+ 🐍 Subagent tame-adder interjects:
+
+    The parser is in parse.go.
+
+
+tame-adder reported too: the parser is in parse.go.
+
+
+ start one more and drop shell
+
+
+spawn 1 subagent on Claude Opus 5 1L
+
+It is watching the build.
+
+
+ 🤖 Bash is now refused.
+ 🤖 Subagent tame-anchovy stopped because shell execution was withdrawn.
+
+
+
+ carry on
+
+
+Carrying on without it.
+=== tiny ===
+
+ split the
+ review and
+ read the
+ readme
+ yourself
+
+
+spawn 2 … 1L
+read REA… 1L
+The readme
+is short;
+the children
+are still
+working.
+await ta… 2L
+
+The readme
+is a single
+heading, and
+tame-alpaca
+counted
+three TODOs.
+tame-adder
+is still
+working.
+
+
+ 🐍 Subagent
+    tame-add
+    er
+    interjec
+    ts:
+
+    The
+    parser
+    is in
+    parse.go
+    .
+
+
+tame-adder
+reported
+too: the
+parser is in
+parse.go.
+
+
+ start one
+ more and
+ drop shell
+
+
+spawn 1 … 1L
+
+It is
+watching the
+build.
+
+
+ 🤖 Bash is
+    now
+    refused.
+ 🤖 Subagent
+    tame-anc
+    hovy
+    stopped
+    because
+    shell
+    executio
+    n was
+    withdraw
+    n.
+
+
+
+ carry on
+
+
+Carrying on
+without it.
+=== wide ===
+
+ split the review and read the readme yourself
+
+
+spawn 2 subagents on Claude Opus 5 1L
+read README.md 1L
+The readme is short; the children are still working.
+await tame-alpaca 2L (Counting the TODOs in the code)
+
+The readme is a single heading, and tame-alpaca counted three TODOs. tame-adder is still working.
+
+
+ 🐍 Subagent tame-adder interjects:
+
+    The parser is in parse.go.
+
+
+tame-adder reported too: the parser is in parse.go.
+
+
+ start one more and drop shell
+
+
+spawn 1 subagent on Claude Opus 5 1L
+
+It is watching the build.
+
+
+ 🤖 Bash is now refused.
+ 🤖 Subagent tame-anchovy stopped because shell execution was withdrawn.
+
+
+
+ carry on
+
+
+Carrying on without it.

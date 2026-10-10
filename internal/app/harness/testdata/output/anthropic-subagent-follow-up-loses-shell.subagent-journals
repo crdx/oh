@@ -1,0 +1,15 @@
+=== tame-adder ===
+{"kind":"head","version":20,"meta":{"model":"claude-opus-5","workspaceDir":"/workspace/internal","provider":"anthropic","effort":"medium","model_choice":{"provider":"anthropic","id":"claude-opus-5","name":"Claude Opus 5"},"system_prompt":"You are tame-adder, a subagent of session tame-impala, working in /workspace/internal."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rx"}}
+{"kind":"event","event":{"kind":"user_message","text":"Find the config loader"}}
+{"kind":"event","event":{"kind":"model_message","text":"The loader is in config.go."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Find the config loader"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The loader is in config.go."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"mode_change","name":"x","state":"r"}}
+{"kind":"event","event":{"kind":"user_message","text":"Now find its tests"}}
+{"kind":"event","event":{"kind":"model_message","text":"Its tests are in config_test.go."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nBash is now refused.\n\u003c/system-reminder\u003e"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"Now find its tests"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Its tests are in config_test.go."}]}}
+{"kind":"turn_completion","turn":{}}

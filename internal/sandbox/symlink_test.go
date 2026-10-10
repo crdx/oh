@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 
@@ -90,6 +91,18 @@ func plantALinkInAWritablePath(t *testing.T) plantedTree {
 		writable: writable,
 		secret:   secret,
 		planted:  makeLink(t, filepath.Join(writable, "planted"), secret),
+	}
+}
+
+func TestAChildScratchCannotRedirectItsMountIntoTheHost(t *testing.T) {
+	base := settledDir(t)
+	parent := makeDir(t, filepath.Join(base, "parent"))
+	outside := makeDir(t, filepath.Join(base, "outside"))
+	makeDir(t, filepath.Join(outside, "agent-1"))
+	makeLink(t, filepath.Join(parent, "subagents"), outside)
+	child := filepath.Join(parent, "subagents", "agent-1")
+	if err := attachProtected(child, "/tmp", nil, []string{parent}); err == nil || !strings.Contains(err.Error(), "symbolic link") {
+		t.Fatalf("child scratch symlink was not refused: %v", err)
 	}
 }
 
@@ -185,5 +198,23 @@ func TestAPathThatNamesNoOnePlaceIsRefusedBeforeTheChildIsAskedToEnforceIt(t *te
 		if err == nil || !strings.Contains(err.Error(), test.want) {
 			t.Errorf("%s: got %v, want a complaint mentioning %q", test.name, err, test.want)
 		}
+	}
+}
+
+func TestAGrantBeneathAPathAnotherSessionCanWriteNeverFollowsALinkPlantedThere(t *testing.T) {
+	tree := plantALinkInAWritablePath(t)
+	policy := Policy{Read: []string{tree.planted}, ParentWritable: []string{tree.writable}}
+
+	if err := policy.grantPathsSafe(); err == nil || !strings.Contains(err.Error(), "symbolic link") {
+		t.Errorf("got %v, want a link the parent planted refused", err)
+	}
+	if err := (Policy{Read: []string{tree.planted}}).grantPathsSafe(); err != nil {
+		t.Errorf("got %v, want a link nobody else can write left alone", err)
+	}
+	if roots := (Policy{ParentWritable: []string{tree.writable}, ScratchParent: tree.base}).untrustedRoots(); !slices.Equal(roots, []string{tree.writable, tree.base}) {
+		t.Errorf("got untrusted roots %v", roots)
+	}
+	if err := attachProtected(tree.planted, tree.planted, nil, []string{tree.writable}); err == nil || !strings.Contains(err.Error(), "symbolic link") {
+		t.Errorf("got %v, want a mount through a planted link refused", err)
 	}
 }

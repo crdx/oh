@@ -1,0 +1,105 @@
+=== written down ===
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `high`
+- **Provider:** `codex`
+- **Workspace:** `/workspace`
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## User · +0s
+
+split the review and read the readme yourself
+
+## Tool calls · +1s
+
+```
+subagent: 2 subagents [ok, 1 line, 31B, call_1]
+```
+
+## Subagent started · tame-adder · +3s
+
+Find the parser
+
+Transcript: `subagents/tame-adder/chat.md`
+
+## Subagent started · tame-alpaca · +4s
+
+Count the TODOs
+
+Transcript: `subagents/tame-alpaca/chat.md`
+
+## Tool calls · +5s
+
+```
+read: README.md [ok, 1 line, 9B, call_2]
+subagent: tame-alpaca [ok, 2 lines, 40B, call_4]
+```
+
+## Subagent finished · tame-alpaca · done · +9s
+
+There are three TODOs.
+
+## Assistant · +12s
+
+The readme is a single heading, and tame-alpaca counted three TODOs. tame-adder is still working.
+
+## Subagent finished · tame-adder · done · +13s
+
+The parser is in parse.go.
+
+## subagent_completion_submitted · +14s
+
+```
+Subagent tame-adder finished:
+
+tame-adder done: The parser is in parse.go.
+```
+
+## Assistant · +15s
+
+tame-adder reported too: the parser is in parse.go.
+
+## User · +16s
+
+start one more and drop shell
+
+## Tool calls · +17s
+
+```
+subagent: 1 subagent [ok, 1 line, 20B, call_3]
+```
+
+## Subagent started · tame-anchovy · +19s
+
+Watch the build
+
+Transcript: `subagents/tame-anchovy/chat.md`
+
+## Assistant · +20s
+
+It is watching the build.
+
+## Mode · rwngl · toggled x · +21s
+
+```
+Bash is now refused.
+```
+
+## subagent_access_stop · +22s
+
+```
+Subagent tame-anchovy stopped because shell execution was withdrawn.
+```
+
+## Subagent finished · tame-anchovy · stopped · +23s
+
+## User · +24s
+
+carry on
+
+## Assistant · +25s
+
+Carrying on without it.

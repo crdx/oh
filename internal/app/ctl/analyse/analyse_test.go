@@ -818,3 +818,140 @@ func TestPricesAreReadFromTheModelCache(t *testing.T) {
 		t.Error("an absent model cache should quote no prices")
 	}
 }
+
+func writeChildJournal(t *testing.T, directory string, parent string, name string, model string, events ...string) {
+	t.Helper()
+	childrenDirectory := session.ChildrenDir(directory, parent)
+	path := filepath.Join(childrenDirectory, name, "session.jsonl")
+	if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	head := fmt.Sprintf(
+		`{"kind":"head","time":"2026-09-01T00:00:00Z","version":%d,"name":%q,"meta":{"provider":"anthropic","model":%q}}`,
+		session.JournalFormat, name, model,
+	)
+	content := strings.Join(append([]string{head}, events...), "\n") + "\n"
+	if err := os.WriteFile(path, []byte(content), 0o600); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func writeFamily(t *testing.T, directory string, childAnswers ...string) {
+	t.Helper()
+	writeJournal(t, directory, "parent-lynx",
+		event("00:00:01", `{"kind":"user_message","text":"investigate"}`),
+		event("00:00:02", `{"kind":"subagent_started","subagent":"parent-otter","id":"child","text":"inspect","state":{"choice":{"provider":"anthropic","id":"claude-sonnet-4-6"},"workspace":"/workspace"}}`),
+		event("00:00:05", `{"kind":"subagent_finished","subagent":"parent-otter","name":"done","text":"child","state":{"usage":{"input_tokens":1000000,"output_tokens":100,"cache":{"read_tokens":0}}}}`),
+		event("00:00:06", `{"kind":"model_message","text":"parent","usage":{"input_tokens":5000,"output_tokens":150,"cache":{"read_tokens":4000}}}`),
+		`{"kind":"turn_completion","time":"2026-09-01T00:00:07Z","turn":{"took":6000000000}}`,
+	)
+	if len(childAnswers) == 0 {
+		return
+	}
+	var events []string
+	events = append(events, event("00:00:02", `{"kind":"user_message","text":"inspect"}`))
+	events = append(events,
+		event("00:00:03", `{"kind":"tool_call_request","name":"bash","id":"1","usage":{"input_tokens":400000,"output_tokens":40,"cache":{"read_tokens":0}}}`),
+		event("00:00:04", `{"kind":"tool_call_result","name":"bash","id":"1","status":"success"}`),
+	)
+	for _, answer := range childAnswers {
+		events = append(events, event("00:00:05", answer))
+	}
+	events = append(events, `{"kind":"turn_completion","time":"2026-09-01T00:00:05Z","turn":{"took":3000000000}}`)
+	writeChildJournal(t, directory, "parent-lynx", "parent-otter", "claude-sonnet-4-6", events...)
+}
+
+const childAnswer = `{"kind":"model_message","text":"child","usage":{"input_tokens":600000,"output_tokens":60,"cache":{"read_tokens":200000}}}`
+
+func TestAChildIsFoldedIntoItsParentAtItsOwnModel(t *testing.T) {
+	directory := t.TempDir()
+	writeFamily(t, directory, childAnswer)
+	statistics := analyseOne(t, directory, "parent-lynx")
+	if statistics.Cache.Requests != 1 || statistics.Activity.ToolCalls != 0 {
+		t.Fatalf("the parent counted its child as its own: %+v", statistics)
+	}
+	if len(statistics.Subagents) != 1 || statistics.MissingSubagents != 0 {
+		t.Fatalf("the child was not read from its own journal: %+v", statistics.Subagents)
+	}
+	child := statistics.Subagents[0]
+	if child.Cache.Requests != 2 || child.Activity.ToolCalls != 1 || child.Model != "claude-sonnet-4-6" || child.Activity.Sessions != 0 {
+		t.Errorf("the child was read as %+v", child)
+	}
+	analysis := aggregate([]SessionStatistics{statistics}, goldenPricebook())
+	var models []string
+	for _, model := range analysis.Models.Models {
+		models = append(models, model.Provider+"/"+model.Model)
+	}
+	if !slices.Contains(models, "anthropic/claude-sonnet-4-6") || analysis.Activity.Total.Sessions != 1 {
+		t.Errorf("the child was not counted under its own model as part of one session: %v, %+v", models, analysis.Activity.Total)
+	}
+	family := family(analysis.Sessions[0])
+	if family.Cache.Requests != 3 || family.Activity.ToolCalls != 1 || family.Spend <= analysis.Sessions[0].Spend {
+		t.Errorf("the parent's row does not include its child: %+v", family)
+	}
+	var report strings.Builder
+	if err := writeText(analysis, presentation{currency: money.Dollar(), isPerSession: true}, &report); err != nil {
+		t.Fatal(err)
+	}
+	assertGolden(t, "subagent-family.txt", report.String())
+}
+
+func TestAMissingChildIsCountedFromItsParentsRecord(t *testing.T) {
+	directory := t.TempDir()
+	writeFamily(t, directory)
+	statistics := analyseOne(t, directory, "parent-lynx")
+	if statistics.MissingSubagents != 1 || len(statistics.Subagents) != 1 {
+		t.Fatalf("the missing child was not counted: %+v", statistics)
+	}
+	if child := statistics.Subagents[0]; child.Cache.InputTokens != 1000000 || child.Cache.Requests != 0 {
+		t.Errorf("the missing child was counted as %+v", child.Cache)
+	}
+	analysis := aggregate([]SessionStatistics{statistics}, goldenPricebook())
+	if analysis.MissingSubagents != 1 || family(analysis.Sessions[0]).Spend <= analysis.Sessions[0].Spend {
+		t.Errorf("the missing child's spend was dropped: %+v", family(analysis.Sessions[0]))
+	}
+	var report strings.Builder
+	if err := writeText(analysis, presentation{currency: money.Dollar(), isPerSession: true}, &report); err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(report.String(), "1 subagent's journal is gone") {
+		t.Errorf("the report hides the missing child: %s", report.String())
+	}
+	assertGolden(t, "missing-subagent.txt", report.String())
+}
+
+func TestAChildThatCannotAccountForItselfSkipsItsFamily(t *testing.T) {
+	directory := t.TempDir()
+	writeFamily(t, directory)
+	writeChildJournal(t, directory, "parent-lynx", "parent-otter", "claude-sonnet-4-6",
+		event("00:00:02", `{"kind":"user_message","text":"inspect"}`),
+		event("00:00:05", childAnswer),
+		`{"kind":"turn_completion","time":"2026-09-01T00:00:05Z","turn":{}}`,
+	)
+	sessions, skipped, err := readSessions(directory, "", []string{"parent-lynx"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(sessions) != 0 || skipped != 1 {
+		t.Errorf("a family with an unaccountable child was read: %d sessions, %d skipped", len(sessions), skipped)
+	}
+}
+
+func TestTheCacheNoticesAChildMoving(t *testing.T) {
+	directory := t.TempDir()
+	cachePath := filepath.Join(t.TempDir(), "analysis.json")
+	writeFamily(t, directory, childAnswer)
+	first, err := analyseWithCache(directory, cachePath, []string{"parent-lynx"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	writeFamily(t, directory, childAnswer, childAnswer)
+	second, err := analyseWithCache(directory, cachePath, []string{"parent-lynx"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	before, after := first.Sessions[0].Subagents[0].Cache.Requests, second.Sessions[0].Subagents[0].Cache.Requests
+	if after != before+1 {
+		t.Errorf("a child that moved on kept its cached figures: %d then %d", before, after)
+	}
+}

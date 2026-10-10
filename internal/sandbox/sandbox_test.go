@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/sandbox/testnamespace"
 )
 
 func TestMain(m *testing.M) {
@@ -162,5 +163,43 @@ func TestAGrantThroughAModelSymlinkRefusesTheCommand(t *testing.T) {
 
 	if _, statErr := os.Stat(filepath.Join(victim, "pwned")); statErr == nil {
 		t.Error("the redirected grant wrote outside the sandbox")
+	}
+}
+
+func TestAChildScratchStaysMountedAcrossCommandsAndRefusesARedirect(t *testing.T) {
+	requireLandlock(t)
+	if testnamespace.IsUnmapped() {
+		t.Skip("an unmapped namespace does not mount a private scratch")
+	}
+	if err := sandbox.Supported(t.Context()); err != nil {
+		t.Skipf("this machine cannot mount a private sandbox: %v", err)
+	}
+	parent := t.TempDir()
+	child := filepath.Join(parent, "subagents", "agent-1")
+	if err := os.MkdirAll(child, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	policy := sandbox.Policy{
+		TmpDir: child, ScratchParent: parent, Write: []string{sandbox.TmpDir}, Env: []string{"PATH"},
+	}
+	if _, err := sandbox.Run(t.Context(), "/", "printf private > /tmp/probe", policy); err != nil {
+		t.Fatal(err)
+	}
+	result, err := sandbox.Run(t.Context(), "/", "cat /tmp/probe", policy)
+	if err != nil || result.Output != "private" {
+		t.Fatalf("scratch did not persist: %+v, %v", result, err)
+	}
+	outside := t.TempDir()
+	if err := os.Rename(child, child+"-old"); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(outside, child); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := sandbox.Run(t.Context(), "/", "printf escape > /tmp/probe", policy); err == nil || !strings.Contains(err.Error(), "symbolic link") {
+		t.Errorf("a redirected scratch was not refused: %v", err)
+	}
+	if _, err := os.Stat(filepath.Join(outside, "probe")); !errors.Is(err, os.ErrNotExist) {
+		t.Errorf("the outside directory was touched: %v", err)
 	}
 }

@@ -28,10 +28,12 @@ import (
 	"crdx.org/oh/internal/app/segment/sessionName"
 	"crdx.org/oh/internal/app/segment/sessionSpend"
 	"crdx.org/oh/internal/app/segment/subUsage"
+	"crdx.org/oh/internal/app/segment/subagentCounts"
 	"crdx.org/oh/internal/app/segment/turnCount"
 	"crdx.org/oh/internal/app/segment/turnTimer"
 	"crdx.org/oh/internal/app/segment/workspaceDir"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/subagents"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/usage"
 	"crdx.org/oh/internal/app/work"
@@ -61,6 +63,7 @@ const (
 	sessionSpendSegment    = "session-spend"
 	subUsageSegment        = "subscription-usage"
 	jobNamesSegment        = "jobs"
+	subagentCountsSegment  = "subagents"
 )
 
 type Options struct {
@@ -93,6 +96,7 @@ type Sources struct {
 	GetTurnTiming      func() turn.Timing
 	GetTurnCount       func() int
 	GetJobs            func() []jobs.Snapshot
+	GetSubagents       func() []subagents.Snapshot
 }
 
 func NewRegistry(options Options) segment.Registry {
@@ -123,13 +127,14 @@ func NewRegistry(options Options) segment.Registry {
 			options.Session.Directory,
 			options.Sources.IsSessionPersisted,
 		),
-		sessionEmojiSegment: sessionEmoji.New(options.Session.Name),
-		localTimeSegment:    localTime.New(time.Now),
-		turnTimerSegment:    turnTimer.New(options.Sources.GetTurnTiming, options.Sources.IsTurnRunning),
-		turnCountSegment:    turnCount.New(options.Sources.GetTurnCount),
-		gitBranchSegment:    gitBranch.New(options.Workspace.GetDir()),
-		gitStatusSegment:    gitStatus.New(options.Workspace.GetDir()),
-		jobNamesSegment:     jobNames.New(options.Sources.GetJobs, options.Sources.GetForwardedRoutes, time.Now),
+		sessionEmojiSegment:   sessionEmoji.New(options.Session.Name),
+		localTimeSegment:      localTime.New(time.Now),
+		turnTimerSegment:      turnTimer.New(options.Sources.GetTurnTiming, options.Sources.IsTurnRunning),
+		turnCountSegment:      turnCount.New(options.Sources.GetTurnCount),
+		gitBranchSegment:      gitBranch.New(options.Workspace.GetDir()),
+		gitStatusSegment:      gitStatus.New(options.Workspace.GetDir()),
+		jobNamesSegment:       jobNames.New(options.Sources.GetJobs, options.Sources.GetForwardedRoutes, time.Now),
+		subagentCountsSegment: subagentCounts.New(options.Sources.GetSubagents, time.Now),
 		subUsageSegment: subUsage.New(subUsage.Settings{
 			Reporter:         options.UsageReporter,
 			CachePath:        options.UsageCachePath,

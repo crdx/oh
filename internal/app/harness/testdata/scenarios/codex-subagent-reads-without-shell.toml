@@ -1,0 +1,65 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+toggle-before-first = "x"
+
+[[subagent]]
+name = "tame-adder"
+
+[[subagent.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-41","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The logs show no errors."}''',
+    '''{"type":"response.output_text.done","text":"The logs show no errors."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The logs show no errors."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-41","type":"message","role":"assistant","content":[{"type":"output_text","text":"The logs show no errors."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[first]
+prompt = "start a subagent without a shell"
+settle-subagents-after-turn = true
+subagent-debounce-passes = true
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-42","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Read the logs\",\"intent\":\"Reading the logs for errors\"}]}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-43","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"A reader is on it."}''',
+    '''{"type":"response.output_text.done","text":"A reader is on it."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"A reader is on it."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-43","type":"message","role":"assistant","content":[{"type":"output_text","text":"A reader is on it."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-44","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The logs show no errors."}''',
+    '''{"type":"response.output_text.done","text":"The logs show no errors."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The logs show no errors."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-44","type":"message","role":"assistant","content":[{"type":"output_text","text":"The logs show no errors."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-45","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Carrying on."}''',
+    '''{"type":"response.output_text.done","text":"Carrying on."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Carrying on."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-45","type":"message","role":"assistant","content":[{"type":"output_text","text":"Carrying on."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

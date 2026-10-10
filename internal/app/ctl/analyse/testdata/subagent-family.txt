@@ -1,0 +1,38 @@
+Prompt cache
+
+Provider   Sessions  Requests  Hits  Misses  Hit Rate  Input Cached  Tokens Read
+Anthropic         0         2     1       1     50.0%         20.0%        200Kt
+Codex             1         1     1       0    100.0%         80.0%          4Kt
+Total             1         3     2       1     66.7%         20.3%        204Kt
+
+Tokens
+
+Provider   Average Input  Peak Input  Total Input  Cache Reads  Cache Writes  Fresh Input  Output
+Anthropic          500Kt       600Kt          1Mt        200Kt            0t        800Kt    100t
+Codex                5Kt         5Kt          5Kt          4Kt            0t          1Kt    150t
+Total              335Kt       600Kt          1Mt        204Kt            0t        801Kt    250t
+
+Models
+
+Provider   Model              Sessions  Requests  Fresh Input  Cache Reads  Cache Writes  Output  Spend
+Anthropic  claude-sonnet-4-6         0         2        800Kt        200Kt            0t    100t  $2.46
+Codex                                1         1          1Kt          4Kt            0t    150t      —
+Total                                1         3        801Kt        204Kt            0t    250t  $2.46
+1 model has no listed price, so its spend is unknown and missing from the total.
+
+Conversation
+
+Provider   Sessions  Turns  Prompts  Replies  Reasoning  Tool Calls  Average Turn  Longest Turn  Open For
+Anthropic         0      1        1        1          0           1            3s            3s        0s
+Codex             1      1        1        1          0           0            6s            6s        7s
+Total             1      2        2        2          0           1            4s            6s        7s
+
+Tools
+
+Tool  Calls  Failures  Cancelled  Failure Rate  Total Time  Average Call
+bash      1         0          0          0.0%          0s            0s
+
+Sessions
+
+Session      Model  Turns  Requests  Hit Rate  Input  Output  Tool Calls  Open For  Spend
+parent-lynx  —          2         3     66.7%    1Mt    250t           1        7s      —

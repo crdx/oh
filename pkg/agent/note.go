@@ -11,6 +11,7 @@ const (
 	JobNote          NoteKind = "job"
 	TitleNote        NoteKind = "title"
 	PokeNote         NoteKind = "poke"
+	SubagentNote     NoteKind = "subagent"
 )
 
 type Note struct {

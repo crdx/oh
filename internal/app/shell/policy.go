@@ -469,8 +469,55 @@ func New(
 	approveNetwork func(ctx context.Context, command string, intent string) error,
 	runner sandbox.Runner,
 ) tool.Tool {
+	return newShell(workspaceDir, homeDir, tmpDir, Parent{}, pathAccess, mode, files, isYolo, approveNetwork, runner)
+}
+
+type Parent struct {
+	Scratch  string
+	Writable func() []string
+}
+
+func (self Parent) confine(policy sandbox.Policy) sandbox.Policy {
+	policy.ScratchParent = self.Scratch
+	if self.Writable != nil {
+		policy.ParentWritable = self.Writable()
+	}
+	return policy
+}
+
+func NewForSubagent(
+	workspaceDir string,
+	homeDir string,
+	tmpDir string,
+	parent Parent,
+	pathAccess *PathAccess,
+	mode *caps.Mode,
+	files *file.Root,
+	isYolo bool,
+	approveNetwork func(ctx context.Context, command string, intent string) error,
+	runner sandbox.Runner,
+) tool.Tool {
+	return newShell(workspaceDir, homeDir, tmpDir, parent, pathAccess, mode, files, isYolo, approveNetwork, runner)
+}
+
+func newShell(
+	workspaceDir string,
+	homeDir string,
+	tmpDir string,
+	parent Parent,
+	pathAccess *PathAccess,
+	mode *caps.Mode,
+	files *file.Root,
+	isYolo bool,
+	approveNetwork func(ctx context.Context, command string, intent string) error,
+	runner sandbox.Runner,
+) tool.Tool {
 	fresh := func(ctx context.Context) (sandbox.Policy, error) {
-		return freshPolicy(ctx, workspaceDir, homeDir, tmpDir, pathAccess, mode, isYolo)
+		policy, err := freshPolicy(ctx, workspaceDir, homeDir, tmpDir, pathAccess, mode, isYolo)
+		if err == nil && !isYolo {
+			policy = parent.confine(policy)
+		}
+		return policy, err
 	}
 	networkApproval := func(ctx context.Context, command string, intent string) error {
 		if !mode.Current().Has(caps.Network) {

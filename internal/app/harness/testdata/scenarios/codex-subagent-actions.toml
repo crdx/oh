@@ -1,0 +1,129 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[subagent]]
+name = "tame-adder"
+
+[[subagent.response]]
+wait-for-cancellation = true
+
+[first]
+prompt = "exercise every subagent action"
+settle-subagents-after-tool-result = 1
+settle-subagents-after-turn = true
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-26","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Watch the build forever\",\"intent\":\"Watching the build until stopped\"}]}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-27","type":"function_call","call_id":"toolu_2","name":"subagent","arguments":"{\"action\":\"list\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-28","type":"function_call","call_id":"toolu_3","name":"subagent","arguments":"{\"action\":\"status\",\"names\":[]}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-29","type":"function_call","call_id":"toolu_4","name":"subagent","arguments":"{\"action\":\"output\",\"names\":[\"tame-adder\"]}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-91","type":"function_call","call_id":"toolu_11","name":"subagent","arguments":"{\"action\":\"send\",\"name\":\"tame-adder\",\"message\":\"Stop watching\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-95","type":"function_call","call_id":"toolu_15","name":"subagent","arguments":"{\"action\":\"wait\",\"names\":[\"tame-adder\"],\"wait_seconds\":1}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-30","type":"function_call","call_id":"toolu_5","name":"subagent","arguments":"{\"action\":\"stop\",\"names\":[\"tame-adder\"]}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-31","type":"function_call","call_id":"toolu_6","name":"subagent","arguments":"{\"action\":\"wait\",\"names\":[\"tame-adder\"]}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-32","type":"function_call","call_id":"toolu_7","name":"subagent","arguments":"{\"action\":\"stop\",\"names\":[\"tame-adder\"]}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-33","type":"function_call","call_id":"toolu_8","name":"subagent","arguments":"{\"action\":\"status\",\"names\":[\"tame-nobody\"]}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-34","type":"function_call","call_id":"toolu_9","name":"subagent","arguments":"{\"action\":\"start\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-35","type":"function_call","call_id":"toolu_10","name":"subagent","arguments":"{\"action\":\"list\",\"names\":[\"tame-adder\"]}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-92","type":"function_call","call_id":"toolu_12","name":"subagent","arguments":"{\"action\":\"send\",\"name\":\"tame-nobody\",\"message\":\"Hello\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-93","type":"function_call","call_id":"toolu_13","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Read the secrets\",\"intent\":\"Reading the secrets it cannot reach\",\"workspace\":\"/unreadable\"}]}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-94","type":"function_call","call_id":"toolu_14","name":"subagent","arguments":"{\"action\":\"stop\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-36","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Every action answered."}''',
+    '''{"type":"response.output_text.done","text":"Every action answered."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Every action answered."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-36","type":"message","role":"assistant","content":[{"type":"output_text","text":"Every action answered."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-37","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Carrying on."}''',
+    '''{"type":"response.output_text.done","text":"Carrying on."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Carrying on."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-37","type":"message","role":"assistant","content":[{"type":"output_text","text":"Carrying on."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

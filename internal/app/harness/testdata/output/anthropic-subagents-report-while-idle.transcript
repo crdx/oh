@@ -1,0 +1,67 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+split the review between two subagents
+
+## Tool calls · +0s
+
+```
+subagent: 2 subagents [ok, 1 line, 31B, toolu_1]
+```
+
+## Assistant · +0s
+
+Two subagents are working on it.
+
+## Subagent started · tame-adder · +0s
+
+Read the parser and report its entry point
+
+Transcript: `subagents/tame-adder/chat.md`
+
+## Subagent started · tame-alpaca · +0s
+
+Count the open TODO items
+
+Transcript: `subagents/tame-alpaca/chat.md`
+
+## Subagent finished · tame-adder · done · +0s
+
+The parser starts at parse.go.
+
+## Subagent finished · tame-alpaca · done · +0s
+
+There are three open TODO items.
+
+## subagent_completion_submitted · +0s
+
+```
+Subagents tame-adder, tame-alpaca finished:
+
+tame-adder done (its /tmp is your /tmp/subagents/tame-adder): The parser starts at parse.go.
+
+tame-alpaca done (its /tmp is your /tmp/subagents/tame-alpaca): There are three open TODO items.
+```
+
+## Assistant · +0s
+
+Both reported: the parser starts at parse.go and there are three open TODO items.
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+Carrying on.

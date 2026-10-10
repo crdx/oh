@@ -113,6 +113,16 @@ wait_any = { name = "await", paint = "normal" }
 wait_all = { name = "await", paint = "normal" }
 list = { paint = "normal" }
 
+[ui.theme.tool.subagent]
+default = { name = "subagent", paint = "status_warning" }
+start = { name = "spawn" }
+send = {}
+stop = {}
+status = { paint = "normal" }
+output = { name = "cat", paint = "normal" }
+wait = { name = "await", paint = "normal" }
+list = { paint = "normal" }
+
 [ui.theme.tool.forward]
 default = { name = "forward", paint = "status_warning" }
 add = { name = "forward" }
@@ -143,6 +153,9 @@ cpu_profile = false
 effort = "high"
 fast = false
 
+[subagent]
+model = ""
+
 [provider.ollama]
 
 [ports]
@@ -165,6 +178,7 @@ left = [
     { segment = "mode-toggle" },
     { segment = "forwards" },
     { segment = "jobs" },
+    { segment = "subagents" },
     { segment = "grants", type = "base" },
 ]
 center = [

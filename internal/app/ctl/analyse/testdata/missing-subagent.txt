@@ -1,0 +1,29 @@
+Prompt cache
+
+Provider  Sessions  Requests  Hits  Misses  Hit Rate  Input Cached  Tokens Read
+Codex            1         1     1       0    100.0%         80.0%          4Kt
+
+Tokens
+
+Provider  Average Input  Peak Input  Total Input  Cache Reads  Cache Writes  Fresh Input  Output
+Codex               5Kt         5Kt          5Kt          4Kt            0t          1Kt    150t
+
+Models
+
+Provider   Model              Sessions  Requests  Fresh Input  Cache Reads  Cache Writes  Output  Spend
+Anthropic  claude-sonnet-4-6         0         0          1Mt           0t            0t    100t  $3.00
+Codex                                1         1          1Kt          4Kt            0t    150t      —
+Total                                1         1          1Mt          4Kt            0t    250t  $3.00
+1 model has no listed price, so its spend is unknown and missing from the total.
+
+Conversation
+
+Provider  Sessions  Turns  Prompts  Replies  Reasoning  Tool Calls  Average Turn  Longest Turn  Open For
+Codex            1      1        1        1          0           0            6s            6s        7s
+
+Sessions
+
+Session      Model  Turns  Requests  Hit Rate  Input  Output  Tool Calls  Open For  Spend
+parent-lynx  —          1         1    100.0%    1Mt    250t           0        7s      —
+
+1 subagent's journal is gone, so only its usage and spend are counted, from its parent's record.

@@ -5,18 +5,20 @@ import (
 )
 
 type SessionStatistics struct {
-	Name      string             `json:"name"`
-	Provider  string             `json:"provider"`
-	Model     string             `json:"model,omitempty"`
-	Effort    string             `json:"effort,omitempty"`
-	StartedAt time.Time          `json:"started"`
-	EndedAt   time.Time          `json:"ended"`
-	Cache     CacheStatistics    `json:"cache"`
-	Activity  ActivityStatistics `json:"activity"`
-	Faults    FaultStatistics    `json:"faults"`
-	Tools     []ToolStatistics   `json:"tools,omitempty"`
-	Spend     float64            `json:"spend"`
-	IsPriced  bool               `json:"isPriced"`
+	Name             string              `json:"name"`
+	Provider         string              `json:"provider"`
+	Model            string              `json:"model,omitempty"`
+	Effort           string              `json:"effort,omitempty"`
+	StartedAt        time.Time           `json:"started"`
+	EndedAt          time.Time           `json:"ended"`
+	Cache            CacheStatistics     `json:"cache"`
+	Activity         ActivityStatistics  `json:"activity"`
+	Faults           FaultStatistics     `json:"faults"`
+	Tools            []ToolStatistics    `json:"tools,omitempty"`
+	Spend            float64             `json:"spend"`
+	IsPriced         bool                `json:"isPriced"`
+	Subagents        []SessionStatistics `json:"subagents,omitempty"`
+	MissingSubagents int                 `json:"missingSubagents,omitempty"`
 }
 
 type CacheStatistics struct {
@@ -225,4 +227,26 @@ func (self *SessionStatistics) Duration() time.Duration {
 	}
 
 	return self.EndedAt.Sub(self.StartedAt)
+}
+
+func asSubagent(statistics SessionStatistics) SessionStatistics {
+	statistics.Cache.Sessions = 0
+	statistics.Activity.Sessions = 0
+	statistics.Activity.SessionTime = 0
+	statistics.Faults.Sessions = 0
+	return statistics
+}
+
+func family(statistics SessionStatistics) SessionStatistics {
+	for _, child := range statistics.Subagents {
+		statistics.Activity.Turns += child.Activity.Turns
+		statistics.Activity.ToolCalls += child.Activity.ToolCalls
+		statistics.Cache.Requests += child.Cache.Requests
+		statistics.Cache.Hits += child.Cache.Hits
+		statistics.Cache.InputTokens += child.Cache.InputTokens
+		statistics.Cache.OutputTokens += child.Cache.OutputTokens
+		statistics.Spend += child.Spend
+		statistics.IsPriced = statistics.IsPriced && child.IsPriced
+	}
+	return statistics
 }

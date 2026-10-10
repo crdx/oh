@@ -15,11 +15,13 @@ import (
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/internal/app/toolset"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/session"
 )
 
 const (
@@ -41,6 +43,7 @@ const (
 type submittedMessage struct {
 	text string
 	kind submissionKind
+	mark string
 }
 
 func (self submittedMessage) marker() string {
@@ -48,6 +51,9 @@ func (self submittedMessage) marker() string {
 	case pendingHarnessSubmission:
 		return unsentMark + " "
 	case sentHarnessSubmission:
+		if self.mark != "" {
+			return self.mark + " "
+		}
 		return harnessMark + " "
 	case userSubmission:
 		return ""
@@ -158,13 +164,13 @@ func renderHintRow(hint string, columns int) string {
 }
 
 type PendingMessages struct {
-	messages               []string
+	messages               []Notice
 	pathRoots              link.Roots
 	kind                   submissionKind
 	shouldRenderHyperlinks bool
 }
 
-func NewPendingMessages(messages []string, shouldRenderHyperlinks bool, pathRoots link.Roots) *PendingMessages {
+func NewPendingMessages(messages []Notice, shouldRenderHyperlinks bool, pathRoots link.Roots) *PendingMessages {
 	return &PendingMessages{
 		messages:               slices.Clone(messages),
 		pathRoots:              pathRoots,
@@ -173,7 +179,7 @@ func NewPendingMessages(messages []string, shouldRenderHyperlinks bool, pathRoot
 	}
 }
 
-func (self *PendingMessages) Replace(messages []string) {
+func (self *PendingMessages) Replace(messages []Notice) {
 	self.messages = slices.Clone(messages)
 }
 
@@ -190,12 +196,12 @@ func (self *PendingMessages) Rows(columns int) []string {
 	for _, message := range self.messages {
 		parts = append(parts, output.StackPart{
 			Rows: submittedContentRows(
-				submittedMessage{text: message, kind: self.kind},
+				submittedMessage{text: message.Text, kind: self.kind, mark: message.Mark},
 				columns,
 				self.shouldRenderHyperlinks,
 				self.pathRoots,
 			),
-			IsLoose: isLooseNotice(message),
+			IsLoose: isLooseNotice(message.Text),
 		})
 	}
 
@@ -220,6 +226,10 @@ func HarnessNotices(event agent.Event) ([]string, bool) {
 		return oneNotice(caps.JobStopNotice(event))
 	case jobrecord.Ended:
 		return oneNotice(jobrecord.EndedNotice(event))
+	case subagentrecord.ReportsDelivered:
+		return oneNotice(event.Text, true)
+	case subagentrecord.ShellWithdrawnStop:
+		return oneNotice(subagentrecord.ShellWithdrawnStopNotice(event))
 	case jobrecord.EndedWithSession:
 		return oneNotice(jobrecord.EndedWithSessionNotice(event))
 	case hostcommand.Ran:
@@ -245,6 +255,27 @@ func HarnessNotices(event agent.Event) ([]string, bool) {
 	return nil, false
 }
 
+type Notice struct {
+	Text string
+	Mark string
+}
+
+func DrawnNotices(event agent.Event) ([]Notice, bool) {
+	if reports, isReported := subagentrecord.ReportsOf(event); isReported {
+		notices := make([]Notice, len(reports))
+		for index, report := range reports {
+			notices[index] = Notice{Text: report.Notice(), Mark: session.Emoji(report.Name)}
+		}
+		return notices, true
+	}
+	texts, areSaid := HarnessNotices(event)
+	notices := make([]Notice, len(texts))
+	for index, text := range texts {
+		notices[index] = Notice{Text: text}
+	}
+	return notices, areSaid
+}
+
 func HarnessNoteKind(kind agent.Kind) agent.NoteKind {
 	switch kind {
 	case caps.JobStop, jobrecord.Ended, jobrecord.EndedWithSession:
@@ -253,6 +284,8 @@ func HarnessNoteKind(kind agent.Kind) agent.NoteKind {
 		return agent.HostCommandNote
 	case turn.HarnessPoke:
 		return agent.PokeNote
+	case subagentrecord.ReportsDelivered, subagentrecord.ShellWithdrawnStop:
+		return agent.SubagentNote
 	case caps.ModeChange, conditions.Change, environment.Change, toolset.AvailabilityChange, pathgrant.Change,
 		portgrant.ForwardChange:
 		return agent.EnvironmentNote

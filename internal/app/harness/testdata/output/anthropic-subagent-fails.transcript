@@ -1,0 +1,57 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+start a subagent that fails
+
+## Tool calls · +0s
+
+```
+subagent: 1 subagent [ok, 1 line, 18B, toolu_1]
+```
+
+## Assistant · +0s
+
+It is running.
+
+## Subagent started · tame-adder · +0s
+
+Read the logs
+
+Transcript: `subagents/tame-adder/chat.md`
+
+## Subagent finished · tame-adder · failed · +0s
+
+```
+prompt is too long
+```
+
+## subagent_completion_submitted · +0s
+
+```
+Subagent tame-adder finished:
+
+tame-adder failed (its /tmp is your /tmp/subagents/tame-adder): prompt is too long
+```
+
+## Assistant · +0s
+
+The subagent failed, so I will read the logs myself.
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+Carrying on.

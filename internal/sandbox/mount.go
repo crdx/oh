@@ -197,7 +197,7 @@ func applyMounts(policy Policy) error {
 		if isOptional && !pathutil.Exists(refinement.path) {
 			continue
 		}
-		if err := mountWithAccess(refinement); err != nil {
+		if err := mountWithAccess(refinement, policy.untrustedRoots()); err != nil {
 			if isOptional && !pathutil.Exists(refinement.path) {
 				continue
 			}
@@ -214,7 +214,7 @@ func applyMounts(policy Policy) error {
 	}
 
 	if policy.TmpDir != "" {
-		if err := attach(policy.TmpDir, TmpDir, nil); err != nil {
+		if err := attachProtected(policy.TmpDir, TmpDir, nil, policy.untrustedRoots()); err != nil {
 			return err
 		}
 	}
@@ -354,14 +354,14 @@ func writeTemporaryFile(contents string) (string, error) {
 	return file.Name(), nil
 }
 
-func mountWithAccess(refinement mountRefinement) error {
+func mountWithAccess(refinement mountRefinement, untrustedRoots []string) error {
 	attributes := &unix.MountAttr{}
 	if refinement.isReadOnly {
 		attributes.Attr_set = unix.MOUNT_ATTR_RDONLY
 	} else {
 		attributes.Attr_clr = unix.MOUNT_ATTR_RDONLY
 	}
-	return attach(refinement.path, refinement.path, attributes)
+	return attachProtected(refinement.path, refinement.path, attributes, untrustedRoots)
 }
 
 func mountProcessFilesystem() error {
@@ -398,22 +398,42 @@ func mountSharedMemory() error {
 
 func attach(source string, target string, attributes *unix.MountAttr) error {
 	const clone = unix.OPEN_TREE_CLONE | unix.OPEN_TREE_CLOEXEC
-
 	fd, err := unix.OpenTree(unix.AT_FDCWD, source, clone)
 	if err != nil {
 		return fmt.Errorf("could not copy the mount at %s: %w", source, err)
 	}
+	return moveTree(fd, source, target, attributes)
+}
 
+func attachProtected(source string, target string, attributes *unix.MountAttr, untrustedRoots []string) error {
+	if !slices.ContainsFunc(untrustedRoots, func(root string) bool {
+		_, isBeneath := pathutil.RelativeTo(root, source)
+		return isBeneath
+	}) {
+		return attach(source, target, attributes)
+	}
+	pathDescriptor, err := openGrantPath(source, untrustedRoots)
+	if err != nil {
+		return fmt.Errorf("could not open protected path %s: %w", source, err)
+	}
+	defer func() { _ = unix.Close(pathDescriptor) }()
+	const clone = unix.OPEN_TREE_CLONE | unix.OPEN_TREE_CLOEXEC | unix.AT_EMPTY_PATH
+	fd, err := unix.OpenTree(pathDescriptor, "", clone)
+	if err != nil {
+		return fmt.Errorf("could not copy the mount at %s: %w", source, err)
+	}
+	return moveTree(fd, source, target, attributes)
+}
+
+func moveTree(fd int, source string, target string, attributes *unix.MountAttr) error {
 	defer func() { _ = unix.Close(fd) }()
-
 	if attributes != nil {
 		if err := unix.MountSetattr(fd, "", unix.AT_EMPTY_PATH, attributes); err != nil {
 			return fmt.Errorf("could not set the attributes of %s: %w", source, err)
 		}
 	}
 
-	err = unix.MoveMount(fd, "", unix.AT_FDCWD, target, unix.MOVE_MOUNT_F_EMPTY_PATH)
-	if err != nil {
+	if err := unix.MoveMount(fd, "", unix.AT_FDCWD, target, unix.MOVE_MOUNT_F_EMPTY_PATH); err != nil {
 		return fmt.Errorf("could not put %s at %s: %w", source, target, err)
 	}
 
