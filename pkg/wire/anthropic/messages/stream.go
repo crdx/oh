@@ -408,7 +408,7 @@ func (self *reply) close(event event, yield agent.Yield) bool {
 	switch {
 	case heldBlock.kind == "text" && heldBlock.text.Len() > 0:
 		return !yield(agent.Output{Kind: agent.ModelMessageEvent, Done: true, AwaitUsage: true})
-	case heldBlock.kind == "thinking" && heldBlock.text.Len() > 0 && heldBlock.signature.Len() > 0:
+	case heldBlock.kind == "thinking" && heldBlock.text.Len() > 0:
 		return !yield(agent.Output{Kind: agent.ModelReasoningEvent, Done: true, Usage: self.reportedUsage()})
 	default:
 		return false

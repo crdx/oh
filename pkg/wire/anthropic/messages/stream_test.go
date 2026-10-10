@@ -37,3 +37,33 @@ func TestASealedThoughtWithoutABlockStopIsNativeStateButNotCompletedPortableReas
 		t.Errorf("sealed native state is incomplete: %s", nativeState)
 	}
 }
+
+func TestAnUnsignedStoppedThoughtIsCompletedPortableReasoningButNotNativeState(t *testing.T) {
+	var reply reply
+	var outputs []agent.Output
+	yield := func(output agent.Output) bool {
+		outputs = append(outputs, output)
+		return true
+	}
+
+	payloads := []string{
+		`{"type":"content_block_start","index":0,"content_block":{"type":"thinking","thinking":"","signature":""}}`,
+		`{"type":"content_block_delta","index":0,"delta":{"type":"thinking_delta","thinking":"Stopped but not signed."}}`,
+		`{"type":"content_block_delta","index":0,"delta":{"type":"signature_delta","signature":""}}`,
+		`{"type":"content_block_stop","index":0}`,
+	}
+	for _, payload := range payloads {
+		if done, err := reply.step(payload, yield); err != nil || done {
+			t.Fatalf("step returned done %t and error %v", done, err)
+		}
+	}
+
+	if len(outputs) != 2 || outputs[0].Text != "Stopped but not signed." ||
+		outputs[1].Kind != agent.ModelReasoningEvent || !outputs[1].Done {
+		t.Errorf("unexpected portable outputs: %+v", outputs)
+	}
+
+	if nativeState := string(reply.prose()); strings.Contains(nativeState, "Stopped but not signed.") {
+		t.Errorf("unsigned thought reached native state: %s", nativeState)
+	}
+}

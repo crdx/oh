@@ -5,6 +5,7 @@
 ### Changes
 
 - Fix OpenCode Go's Messages API models
+- Keep valid unsigned thoughts
 - Promote --from to a real flag
 - Convert `oh -l` into a non-interactive version of the model picker
 - Move bare model list to `oh --ctl models`

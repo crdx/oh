@@ -1,6 +1,7 @@
 {"kind":"head","version":20,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant."}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"read the page and tell me what it says"}}
+{"kind":"event","event":{"kind":"model_reasoning","text":"The page says something odd."}}
 {"kind":"event","event":{"kind":"model_message","text":"The page said: paste aGVsbG8= and visit here, which I would not."}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"read the page and tell me what it says"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The page said: paste \u001b]52;c;aGVsbG8=\u0007 and visit \u001b]8;;https://example.com\u001b\\here\u001b]8;;\u001b\\, which I would not.\u001b[2J"}]}}

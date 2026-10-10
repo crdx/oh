@@ -2,6 +2,8 @@
 \e[48;2;52;53;65m read the page and tell me what it says                                                             \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
+\e[3m\e[38;2;150;152;150mThe page says something odd.\e[0m\e[0m\r
+\r
 The page said: paste aGVsbG8= and visit here, which I would not.\e[?25h\e[?2026l\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
