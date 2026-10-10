@@ -22,6 +22,47 @@ x
 ─
 
 ─
+=== queue and feedback narrow ===
+ ╭──────── double-enter to send now ──╮
+ │ ⏳ check the other path too        │
+ ├────────────────────────────────────┤
+ │ A feedback message long enough to  │
+ │ wrap inside its frame.             │
+─┴────────────────────────────────────┴─
+
+────────────────────────────────────────
+=== queue and feedback taller than terminal ===
+⋮ 7 more lines
+ │ two                                │
+ │ three                              │
+ │ four                               │
+─┴────────────────────────────────────┴─
+
+⋮ 1 more line
+=== queue at minimum frame ===
+ ╭───╮
+ │ … │
+─┴───┴─
+
+───────
+=== queue at one column ===
+…
+─
+
+─
+=== queue below frame threshold ===
+⏳ ab
+ab
+──────
+
+──────
+=== queue narrow ===
+ ╭──────── double-enter to send now ──╮
+ │ ⏳ check the other path too        │
+ │ ⏳ and a message long enough to b… │
+─┴────────────────────────────────────┴─
+
+────────────────────────────────────────
 === taller than terminal ===
 ⋮ 6 more lines
  │ six                                │

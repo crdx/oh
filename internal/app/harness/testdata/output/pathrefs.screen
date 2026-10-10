@@ -179,14 +179,14 @@ said before
   ⋮ 21 more
 ────────────────────────────────────────────────────────────
 === 25 a short terminal beneath a queued message ===
-                                   double-enter to send now
- ⏳ check the tests too
-
-────────────────────────────────────────────────────────────
+ ╭──────────────────────────── double-enter to send now ──╮
+ │ ⏳ check the tests too                                 │
+─┴────────────────────────────────────────────────────────┴─
 @
 › .github/
   CHANGELOG.md
-  ⋮ 22 more
+  cmd/
+  ⋮ 21 more
 ────────────────────────────────────────────────────────────
 === 26 ctrl+u clears the input and the dropdown ===
 ────────────────────────────────────────────────────────────
@@ -201,10 +201,9 @@ said before
 @harn
 ────────────────────────────────────────────────────────────
 === 29 enter during a running turn queues rather than chooses ===
-                                   double-enter to send now
- ⏳ @harapp
-
-────────────────────────────────────────────────────────────
+ ╭──────────────────────────── double-enter to send now ──╮
+ │ ⏳ @harapp                                             │
+─┴────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────
 === 30 a question hides the dropdown ===

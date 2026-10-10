@@ -64,10 +64,9 @@ answer grows
 
 ⋮ 1 more line
 === ordinary message during answer ===
-                                                                           double-enter to send now
- ⏳ check the other path too
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
+ ╭──────────────────────────────────────────────────────────────────── double-enter to send now ──╮
+ │ ⏳ check the other path too                                                                    │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === queued message as answer starts markdown asap roomy ===
@@ -76,10 +75,9 @@ answer grows
  look into it
 
 
-                                                                           double-enter to send now
- ⏳ check the other path too
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
+ ╭──────────────────────────────────────────────────────────────────── double-enter to send now ──╮
+ │ ⏳ check the other path too                                                                    │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 --- frame 2 ---
@@ -89,10 +87,9 @@ answer grows
 
 The answer starts here.
 
-                                                                           double-enter to send now
- ⏳ check the other path too
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
+ ╭──────────────────────────────────────────────────────────────────── double-enter to send now ──╮
+ │ ⏳ check the other path too                                                                    │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === queued message as answer starts markdown asap terminal-filling ===
@@ -100,15 +97,15 @@ The answer starts here.
 
  look into it
 
-⋮ 15 more lines
- ⏳ queued message 15
- ⏳ queued message 16
- ⏳ queued message 17
- ⏳ queued message 18
- ⏳ queued message 19
- ⏳ queued message 20
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
+⋮ 14 more lines
+ │ ⏳ queued message 14                                                                           │
+ │ ⏳ queued message 15                                                                           │
+ │ ⏳ queued message 16                                                                           │
+ │ ⏳ queued message 17                                                                           │
+ │ ⏳ queued message 18                                                                           │
+ │ ⏳ queued message 19                                                                           │
+ │ ⏳ queued message 20                                                                           │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ⋮ 1 more line
 --- frame 2 ---
@@ -117,15 +114,15 @@ The answer starts here.
 
 
 The answer starts here.
-⋮ 15 more lines
- ⏳ queued message 15
- ⏳ queued message 16
- ⏳ queued message 17
- ⏳ queued message 18
- ⏳ queued message 19
- ⏳ queued message 20
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
+⋮ 14 more lines
+ │ ⏳ queued message 14                                                                           │
+ │ ⏳ queued message 15                                                                           │
+ │ ⏳ queued message 16                                                                           │
+ │ ⏳ queued message 17                                                                           │
+ │ ⏳ queued message 18                                                                           │
+ │ ⏳ queued message 19                                                                           │
+ │ ⏳ queued message 20                                                                           │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ⋮ 1 more line
 === queued message as answer starts markdown line roomy ===
@@ -134,10 +131,9 @@ The answer starts here.
  look into it
 
 
-                                                                           double-enter to send now
- ⏳ check the other path too
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
+ ╭──────────────────────────────────────────────────────────────────── double-enter to send now ──╮
+ │ ⏳ check the other path too                                                                    │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === queued message as answer starts markdown line terminal-filling ===
@@ -145,15 +141,15 @@ The answer starts here.
 
  look into it
 
-⋮ 15 more lines
- ⏳ queued message 15
- ⏳ queued message 16
- ⏳ queued message 17
- ⏳ queued message 18
- ⏳ queued message 19
- ⏳ queued message 20
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
+⋮ 14 more lines
+ │ ⏳ queued message 14                                                                           │
+ │ ⏳ queued message 15                                                                           │
+ │ ⏳ queued message 16                                                                           │
+ │ ⏳ queued message 17                                                                           │
+ │ ⏳ queued message 18                                                                           │
+ │ ⏳ queued message 19                                                                           │
+ │ ⏳ queued message 20                                                                           │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ⋮ 1 more line
 === queued message as answer starts markdown paced roomy ===
@@ -162,10 +158,9 @@ The answer starts here.
  look into it
 
 
-                                                                           double-enter to send now
- ⏳ check the other path too
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
+ ╭──────────────────────────────────────────────────────────────────── double-enter to send now ──╮
+ │ ⏳ check the other path too                                                                    │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 --- frame 2 ---
@@ -175,10 +170,9 @@ The answer starts here.
 
 The answer starts here.
 
-                                                                           double-enter to send now
- ⏳ check the other path too
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
+ ╭──────────────────────────────────────────────────────────────────── double-enter to send now ──╮
+ │ ⏳ check the other path too                                                                    │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === queued message as answer starts markdown paced terminal-filling ===
@@ -186,15 +180,15 @@ The answer starts here.
 
  look into it
 
-⋮ 15 more lines
- ⏳ queued message 15
- ⏳ queued message 16
- ⏳ queued message 17
- ⏳ queued message 18
- ⏳ queued message 19
- ⏳ queued message 20
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
+⋮ 14 more lines
+ │ ⏳ queued message 14                                                                           │
+ │ ⏳ queued message 15                                                                           │
+ │ ⏳ queued message 16                                                                           │
+ │ ⏳ queued message 17                                                                           │
+ │ ⏳ queued message 18                                                                           │
+ │ ⏳ queued message 19                                                                           │
+ │ ⏳ queued message 20                                                                           │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ⋮ 1 more line
 --- frame 2 ---
@@ -203,15 +197,15 @@ The answer starts here.
 
 
 The answer starts here.
-⋮ 15 more lines
- ⏳ queued message 15
- ⏳ queued message 16
- ⏳ queued message 17
- ⏳ queued message 18
- ⏳ queued message 19
- ⏳ queued message 20
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
+⋮ 14 more lines
+ │ ⏳ queued message 14                                                                           │
+ │ ⏳ queued message 15                                                                           │
+ │ ⏳ queued message 16                                                                           │
+ │ ⏳ queued message 17                                                                           │
+ │ ⏳ queued message 18                                                                           │
+ │ ⏳ queued message 19                                                                           │
+ │ ⏳ queued message 20                                                                           │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ⋮ 1 more line
 === queued message as answer starts plain asap roomy ===
@@ -220,10 +214,9 @@ The answer starts here.
  look into it
 
 
-                                                                           double-enter to send now
- ⏳ check the other path too
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
+ ╭──────────────────────────────────────────────────────────────────── double-enter to send now ──╮
+ │ ⏳ check the other path too                                                                    │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 --- frame 2 ---
@@ -233,10 +226,9 @@ The answer starts here.
 
 The answer starts here.
 
-                                                                           double-enter to send now
- ⏳ check the other path too
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
+ ╭──────────────────────────────────────────────────────────────────── double-enter to send now ──╮
+ │ ⏳ check the other path too                                                                    │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === queued message as answer starts plain asap terminal-filling ===
@@ -246,15 +238,15 @@ The answer starts here.
 
 
 The answer starts here.
-⋮ 15 more lines
- ⏳ queued message 15
- ⏳ queued message 16
- ⏳ queued message 17
- ⏳ queued message 18
- ⏳ queued message 19
- ⏳ queued message 20
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
+⋮ 14 more lines
+ │ ⏳ queued message 14                                                                           │
+ │ ⏳ queued message 15                                                                           │
+ │ ⏳ queued message 16                                                                           │
+ │ ⏳ queued message 17                                                                           │
+ │ ⏳ queued message 18                                                                           │
+ │ ⏳ queued message 19                                                                           │
+ │ ⏳ queued message 20                                                                           │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ⋮ 1 more line
 === queued message as answer starts plain line roomy ===
@@ -263,10 +255,9 @@ The answer starts here.
  look into it
 
 
-                                                                           double-enter to send now
- ⏳ check the other path too
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
+ ╭──────────────────────────────────────────────────────────────────── double-enter to send now ──╮
+ │ ⏳ check the other path too                                                                    │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === queued message as answer starts plain line terminal-filling ===
@@ -274,15 +265,15 @@ The answer starts here.
 
  look into it
 
-⋮ 15 more lines
- ⏳ queued message 15
- ⏳ queued message 16
- ⏳ queued message 17
- ⏳ queued message 18
- ⏳ queued message 19
- ⏳ queued message 20
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
+⋮ 14 more lines
+ │ ⏳ queued message 14                                                                           │
+ │ ⏳ queued message 15                                                                           │
+ │ ⏳ queued message 16                                                                           │
+ │ ⏳ queued message 17                                                                           │
+ │ ⏳ queued message 18                                                                           │
+ │ ⏳ queued message 19                                                                           │
+ │ ⏳ queued message 20                                                                           │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ⋮ 1 more line
 === queued message as answer starts plain paced roomy ===
@@ -291,10 +282,9 @@ The answer starts here.
  look into it
 
 
-                                                                           double-enter to send now
- ⏳ check the other path too
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
+ ╭──────────────────────────────────────────────────────────────────── double-enter to send now ──╮
+ │ ⏳ check the other path too                                                                    │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 --- frame 2 ---
@@ -304,10 +294,9 @@ The answer starts here.
 
 The answer starts here.
 
-                                                                           double-enter to send now
- ⏳ check the other path too
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
+ ╭──────────────────────────────────────────────────────────────────── double-enter to send now ──╮
+ │ ⏳ check the other path too                                                                    │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === queued message as answer starts plain paced terminal-filling ===
@@ -317,15 +306,15 @@ The answer starts here.
 
 
 The answer starts here.
-⋮ 15 more lines
- ⏳ queued message 15
- ⏳ queued message 16
- ⏳ queued message 17
- ⏳ queued message 18
- ⏳ queued message 19
- ⏳ queued message 20
-
-────────────────────────────────────────────────────────────────────────────────────────────────────
+⋮ 14 more lines
+ │ ⏳ queued message 14                                                                           │
+ │ ⏳ queued message 15                                                                           │
+ │ ⏳ queued message 16                                                                           │
+ │ ⏳ queued message 17                                                                           │
+ │ ⏳ queued message 18                                                                           │
+ │ ⏳ queued message 19                                                                           │
+ │ ⏳ queued message 20                                                                           │
+─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ⋮ 1 more line
 === reasoning discarded as the turn stops ===

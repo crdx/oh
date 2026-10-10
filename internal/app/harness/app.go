@@ -1074,10 +1074,10 @@ func (self *App) show(inputLine *edit.Input) {
 
 	columns := self.screen.Columns()
 	frame := inputLine.Frame(columns)
-	feedbackWidth := columns
+	tabWidth := input.FeedbackContentWidth(columns)
+	queue := self.queue(tabWidth)
 	topWidth := columns
-	if !self.feedback.IsEmpty() {
-		feedbackWidth = input.FeedbackContentWidth(columns)
+	if !self.feedback.IsEmpty() || len(queue.Rows) > 0 {
 		topWidth = input.FeedbackRuleWidth(columns)
 	}
 
@@ -1092,8 +1092,9 @@ func (self *App) show(inputLine *edit.Input) {
 			segment.BottomLeft, segment.BottomCenter, segment.BottomRight,
 		),
 		Activity:       append(self.hostCommandRows(columns), self.editingRows(columns)...),
-		QueuedMessages: self.queuedMessageRows(columns),
-		Feedback:       self.feedback.Render(feedbackWidth, self.getNow()),
+		QueuedMessages: queue.Rows,
+		QueueHint:      queue.Hint,
+		Feedback:       self.feedback.Render(tabWidth, self.getNow()),
 		Question:       self.questionRows(columns),
 		Rule:           self.ruleStyle(),
 	}
@@ -1178,13 +1179,13 @@ func (self *App) ruleStyle() style.Style {
 	}
 }
 
-func (self *App) queuedMessageRows(columns int) []string {
+func (self *App) queue(columns int) painter.Queue {
 	var notices []string
 	if self.currentTurn.Running() {
 		notices = self.pendingNotices.accessNotices()
 	}
 
-	return painter.RenderQueuedMessagesAndNotices(
+	return painter.RenderQueue(
 		self.currentTurn.GetInterjections(),
 		notices,
 		!self.currentTurn.Cancelled(),

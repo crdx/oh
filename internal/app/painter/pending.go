@@ -70,33 +70,31 @@ func (self submittedMessage) background() style.Style {
 	return style.Harness
 }
 
-func RenderQueuedMessages(
-	messages []string,
-	canBeSentNow bool,
-	columns int,
-	shouldRenderHyperlinks bool,
-	roots link.Roots,
-) []string {
-	return RenderQueuedMessagesAndNotices(messages, nil, canBeSentNow, columns, shouldRenderHyperlinks, roots)
+type Queue struct {
+	Rows []string
+	Hint string
 }
 
-func RenderQueuedMessagesAndNotices(
+func RenderQueue(
 	messages []string,
 	notices []string,
 	canBeSentNow bool,
 	columns int,
 	shouldRenderHyperlinks bool,
 	roots link.Roots,
-) []string {
-	submissions := make([]submittedMessage, 0, len(notices)+len(messages))
+) Queue {
+	if len(messages)+len(notices) == 0 {
+		return Queue{}
+	}
+
+	rows := make([]string, 0, len(notices)+len(messages))
 	for _, notice := range notices {
-		submissions = append(submissions, submittedMessage{text: notice, kind: pendingHarnessSubmission})
+		summary := summariseQueuedMessage(notice, shouldRenderHyperlinks, roots)
+		rows = append(rows, style.Subtle.Over(width.Elide(unsentMark+" "+summary, columns)))
 	}
 	for _, message := range messages {
-		submissions = append(submissions, submittedMessage{text: message, kind: userSubmission})
-	}
-	if len(submissions) == 0 {
-		return nil
+		summary := summariseQueuedMessage(message, shouldRenderHyperlinks, roots)
+		rows = append(rows, width.Elide(unsentMark+" "+summary, columns))
 	}
 
 	hint := sendHint
@@ -104,15 +102,7 @@ func RenderQueuedMessagesAndNotices(
 		hint = stoppingHint
 	}
 
-	rows := make([]string, 0, len(submissions)+2)
-	rows = append(rows, frameQueuedRow(renderHintRow(hint, columns), columns, submissions[0].background()))
-
-	for _, submission := range submissions {
-		summary := summariseQueuedMessage(submission.text, shouldRenderHyperlinks, roots)
-		rows = append(rows, renderQueuedRow(unsentMark+" "+summary, columns, submission.background()))
-	}
-
-	return append(rows, renderQueuedRow("", columns, submissions[len(submissions)-1].background()))
+	return Queue{Rows: rows, Hint: hint}
 }
 
 func summariseQueuedMessage(message string, shouldRenderHyperlinks bool, roots link.Roots) string {
@@ -135,23 +125,6 @@ func summariseQueuedMessage(message string, shouldRenderHyperlinks bool, roots l
 	}
 
 	return summary
-}
-
-func renderQueuedRow(text string, columns int, background style.Style) string {
-	row := ""
-	if text != "" {
-		row = width.Elide(" "+text, columns)
-	}
-
-	return frameQueuedRow(row, columns, background)
-}
-
-func frameQueuedRow(row string, columns int, background style.Style) string {
-	if room := columns - style.Width(row); room > 0 {
-		row += strings.Repeat(" ", room)
-	}
-
-	return background(row)
 }
 
 func renderHintRow(hint string, columns int) string {

@@ -2897,7 +2897,7 @@ func TestAFlushedQueueStandsOnScreenUntilTheTurnItStoppedGivesWay(t *testing.T) 
 	inputLine := edit.NewInput(history)
 
 	typeMessage(t, self, inputLine, history, "check the other path too")
-	if drawn := style.Plain(strings.Join(self.queuedMessageRows(replayColumns), "\n")); !strings.Contains(
+	if drawn := drawnQueue(self); !strings.Contains(
 		drawn, "double-enter to send now",
 	) {
 		t.Errorf("drew %q, want the queue offering to send itself now", drawn)
@@ -2906,7 +2906,7 @@ func TestAFlushedQueueStandsOnScreenUntilTheTurnItStoppedGivesWay(t *testing.T) 
 	self.apply(inputLine, history, key.Key{Code: key.Enter})
 	self.apply(inputLine, history, key.Key{Code: key.Enter})
 
-	drawn := style.Plain(strings.Join(self.queuedMessageRows(replayColumns), "\n"))
+	drawn := drawnQueue(self)
 	if !strings.Contains(drawn, "check the other path too") {
 		t.Errorf("drew %q, want the flushed message still standing", drawn)
 	}
@@ -3147,6 +3147,12 @@ func TestControlDTakesAQueuedMessageBackJustAsEscapeDoes(t *testing.T) {
 	if queued := self.currentTurn.GetInterjections(); len(queued) != 0 {
 		t.Errorf("left %q queued, want nothing", queued)
 	}
+}
+
+func drawnQueue(self *App) string {
+	queue := self.queue(replayColumns)
+
+	return style.Plain(strings.Join(append([]string{queue.Hint}, queue.Rows...), "\n"))
 }
 
 func typeMessage(t *testing.T, self *App, inputLine *edit.Input, history *edit.History, message string) {
@@ -12918,6 +12924,7 @@ type feedbackFrameScenario struct {
 	columns int
 	lines   int
 	text    string
+	queued  []string
 }
 
 func TestGoldenFeedbackFrameDrawsAtEverySize(t *testing.T) {
@@ -12947,6 +12954,39 @@ func TestGoldenFeedbackFrameDrawsAtEverySize(t *testing.T) {
 			lines:   8,
 			text:    "one\ntwo\nthree\nfour\nfive\nsix\nseven\neight",
 		},
+		"queue narrow": {
+			columns: narrowColumns,
+			lines:   replayLines,
+			queued:  []string{"check the other path too", "and a message long enough to be elided at this width"},
+		},
+		"queue and feedback narrow": {
+			columns: narrowColumns,
+			lines:   replayLines,
+			text:    "A feedback message long enough to wrap inside its frame.",
+			queued:  []string{"check the other path too"},
+		},
+		"queue at minimum frame": {
+			columns: input.MinimumFramedFeedbackWidth,
+			lines:   replayLines,
+			queued:  []string{"ab"},
+		},
+		"queue below frame threshold": {
+			columns: input.MinimumFramedFeedbackWidth - 1,
+			lines:   replayLines,
+			text:    "ab",
+			queued:  []string{"ab"},
+		},
+		"queue at one column": {
+			columns: oneColumn,
+			lines:   replayLines,
+			queued:  []string{"x"},
+		},
+		"queue and feedback taller than terminal": {
+			columns: narrowColumns,
+			lines:   8,
+			text:    "one\ntwo\nthree\nfour",
+			queued:  []string{"first", "second", "third", "fourth"},
+		},
 	}
 
 	ansiPasses := make(map[string]func() string, len(scenarios))
@@ -12968,8 +13008,19 @@ func feedbackFrameStream(t *testing.T, scenario feedbackFrameScenario) string {
 	var screenOutput strings.Builder
 	self := slashCommandFixture(t, caps.Read)
 	self.screen = output.NewTerminalOfSize(&screenOutput, scenario.columns, scenario.lines)
-	self.showFeedback(feedback.Command, feedback.Message{Text: scenario.text, Status: agent.InfoStatus})
-	self.show(edit.NewInput(nil))
+	inputLine := edit.NewInput(nil)
+	if len(scenario.queued) > 0 {
+		self.agent = agent.New("", quietProvider{}, nil)
+		self.currentTurn = Turn{Stream: testRunningTurnStream(), painter: self.newPainter(true)}
+		history := edit.NewHistory("", historyLimit)
+		for _, message := range scenario.queued {
+			typeMessage(t, self, inputLine, history, message)
+		}
+	}
+	if scenario.text != "" {
+		self.showFeedback(feedback.Command, feedback.Message{Text: scenario.text, Status: agent.InfoStatus})
+	}
+	self.show(inputLine)
 
 	return screenOutput.String()
 }
@@ -13348,7 +13399,7 @@ const (
 	queuedSnippet
 	queuedTakenBack
 	queuedTakenBackWhileTyping
-	queuedBehindFeedback
+	queuedBesideFeedback
 	queuedFlushed
 	queuedDelivered
 	queuedTallerThanTheTerminal
@@ -13366,7 +13417,7 @@ func TestGoldenQueuedMessagesDrawEveryVisibleState(t *testing.T) {
 		"a markdown emphasis":        func() string { return queuedMessagesStream(t, queuedMarkdownEmphasis) },
 		"escape takes the last back": func() string { return queuedMessagesStream(t, queuedTakenBack) },
 		"taken back while typing":    func() string { return queuedMessagesStream(t, queuedTakenBackWhileTyping) },
-		"feedback takes the footer":  func() string { return queuedMessagesStream(t, queuedBehindFeedback) },
+		"feedback beside the queue":  func() string { return queuedMessagesStream(t, queuedBesideFeedback) },
 		"flushed at a stopping turn": func() string { return queuedMessagesStream(t, queuedFlushed) },
 		"delivered at the boundary":  func() string { return queuedMessagesStream(t, queuedDelivered) },
 		"taller than the terminal":   func() string { return queuedMessagesStream(t, queuedTallerThanTheTerminal) },
@@ -13439,7 +13490,7 @@ func queuedMessagesStream(t *testing.T, scenario queuedMessagesScenario) string 
 		queuedMarkdownEmphasis:      {"check the *other* path too"},
 		queuedTakenBack:             {"check the other path too", "and mention what you find"},
 		queuedTakenBackWhileTyping:  {"check the other path too"},
-		queuedBehindFeedback:        {"check the other path too"},
+		queuedBesideFeedback:        {"check the other path too"},
 		queuedFlushed:               {"check the other path too", "and mention what you find"},
 		queuedDelivered:             {"check the other path too"},
 		queuedTallerThanTheTerminal: tallQueue(),
@@ -13463,10 +13514,8 @@ func queuedMessagesStream(t *testing.T, scenario queuedMessagesScenario) string 
 			self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Rune, Value: value})
 		}
 		self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Escape})
-	case queuedBehindFeedback:
+	case queuedBesideFeedback:
 		self.handleCommand("/help")
-		self.show(inputLine)
-		self.feedback.Clear(feedback.Command)
 		self.show(inputLine)
 	case queuedFlushed:
 		self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Enter})

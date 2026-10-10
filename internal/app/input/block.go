@@ -88,6 +88,7 @@ type Block struct {
 	Bottom         Ruler
 	Activity       []string
 	QueuedMessages []string
+	QueueHint      string
 	Feedback       []string
 	Question       []string
 	Dropdown       []string
@@ -109,11 +110,10 @@ func (self Block) Rows(width int) ([]string, int, int) {
 
 	body, bodyRow, bodyColumn := self.body()
 	rule := self.rule()
-	feedbackRows, topWidth := self.renderFeedback(width, rule)
+	tabRows, topWidth := self.renderTab(width, rule)
 
 	rows = append(rows, self.Activity...)
-	rows = append(rows, self.QueuedMessages...)
-	rows = append(rows, feedbackRows...)
+	rows = append(rows, tabRows...)
 	topRule := top.render(topWidth, rule)
 	if topWidth != width {
 		reach := strings.Repeat("─", feedbackInset)
@@ -126,24 +126,52 @@ func (self Block) Rows(width int) ([]string, int, int) {
 	}
 	rows = append(rows, bottom.render(width, rule))
 
-	return rows, len(self.Activity) + len(self.QueuedMessages) + len(feedbackRows) + bodyRow + 1, bodyColumn
+	return rows, len(self.Activity) + len(tabRows) + bodyRow + 1, bodyColumn
 }
 
-func (self Block) renderFeedback(width int, rule style.Style) ([]string, int) {
-	if len(self.Feedback) == 0 || width < MinimumFramedFeedbackWidth {
-		return self.Feedback, width
+func (self Block) renderTab(width int, rule style.Style) ([]string, int) {
+	if len(self.QueuedMessages) == 0 && len(self.Feedback) == 0 {
+		return nil, width
+	}
+	if width < MinimumFramedFeedbackWidth {
+		return append(append([]string{}, self.QueuedMessages...), self.Feedback...), width
 	}
 
+	ruleWidth := FeedbackRuleWidth(width)
 	contentWidth := FeedbackContentWidth(width)
 	inset := strings.Repeat(" ", feedbackInset)
-	rows := make([]string, 0, len(self.Feedback)+1)
-	rows = append(rows, inset+rule("╭"+strings.Repeat("─", FeedbackRuleWidth(width))+"╮"))
-	for _, feedback := range self.Feedback {
-		padding := strings.Repeat(" ", max(contentWidth-style.Width(feedback), 0))
-		rows = append(rows, inset+rule("│")+" "+feedback+padding+" "+rule("│"))
+	frame := func(content string) string {
+		padding := strings.Repeat(" ", max(contentWidth-style.Width(content), 0))
+		return inset + rule("│") + " " + content + padding + " " + rule("│")
 	}
 
-	return rows, FeedbackRuleWidth(width)
+	rows := make([]string, 0, len(self.QueuedMessages)+len(self.Feedback)+2)
+	rows = append(rows, inset+self.tabTop(ruleWidth, rule))
+	for _, message := range self.QueuedMessages {
+		rows = append(rows, frame(message))
+	}
+	if len(self.QueuedMessages) > 0 && len(self.Feedback) > 0 {
+		rows = append(rows, inset+rule("├"+strings.Repeat("─", ruleWidth)+"┤"))
+	}
+	for _, feedback := range self.Feedback {
+		rows = append(rows, frame(feedback))
+	}
+
+	return rows, ruleWidth
+}
+
+func (self Block) tabTop(ruleWidth int, rule style.Style) string {
+	if len(self.QueuedMessages) == 0 || self.QueueHint == "" {
+		return rule("╭" + strings.Repeat("─", ruleWidth) + "╮")
+	}
+
+	label := " " + self.QueueHint + " "
+	lead := ruleWidth - style.Width(label) - edgePad
+	if lead < edgePad {
+		return rule("╭" + strings.Repeat("─", ruleWidth) + "╮")
+	}
+
+	return rule("╭"+strings.Repeat("─", lead)) + style.Subtle(label) + rule(strings.Repeat("─", edgePad)+"╮")
 }
 
 func (self Block) isAsking() bool {

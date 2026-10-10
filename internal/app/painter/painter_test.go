@@ -219,7 +219,7 @@ func TestQueuedMessagePathsAreLinkedAsHostPaths(t *testing.T) {
 
 	roots := link.Roots{Workspace: workspace}
 	renderings := map[string]string{
-		"footer": strings.Join(RenderQueuedMessages([]string{"check notes.txt"}, true, 80, true, roots), "\n"),
+		"footer": strings.Join(RenderQueue([]string{"check notes.txt"}, nil, true, 80, true, roots).Rows, "\n"),
 		"notice": strings.Join(NewPendingMessages(notices("check notes.txt"), true, roots).Rows(80), "\n"),
 	}
 
@@ -267,31 +267,55 @@ func TestStandingNoticesSayHowToSendThemNow(t *testing.T) {
 }
 
 func TestQueuedMessagesSayHowToSendThemNow(t *testing.T) {
-	rows := RenderQueuedMessages([]string{"one"}, true, 40, false, link.Roots{})
+	queue := RenderQueue([]string{"one"}, nil, true, 40, false, link.Roots{})
 
-	if !strings.Contains(style.Plain(rows[0]), sendHint) {
-		t.Errorf("got rows %q, want the hint above the queued message", rows)
+	if queue.Hint != sendHint {
+		t.Errorf("got hint %q, want %q", queue.Hint, sendHint)
 	}
 }
 
 func TestAQueueAwaitingAStoppingTurnSaysSoRatherThanOfferingToSendItNow(t *testing.T) {
-	rows := RenderQueuedMessages([]string{"one"}, false, 40, false, link.Roots{})
+	queue := RenderQueue([]string{"one"}, nil, false, 40, false, link.Roots{})
 
-	if !strings.Contains(style.Plain(rows[0]), stoppingHint) {
-		t.Errorf("got rows %q, want the stopping hint above the queued message", rows)
+	if queue.Hint != stoppingHint {
+		t.Errorf("got hint %q, want %q", queue.Hint, stoppingHint)
 	}
-	if strings.Contains(style.Plain(rows[0]), sendHint) {
-		t.Errorf("got rows %q, want no offer to send what cannot be sent yet", rows)
+	if len(queue.Rows) != 1 || style.Plain(queue.Rows[0]) != unsentMark+" one" {
+		t.Errorf("got rows %q, want the message still standing unsent", queue.Rows)
 	}
-	if !strings.Contains(style.Plain(rows[1]), unsentMark+" one") {
-		t.Errorf("got rows %q, want the message still standing unsent", rows)
+}
+
+func TestAnEmptyQueueDrawsNothing(t *testing.T) {
+	if queue := RenderQueue(nil, nil, true, 40, false, link.Roots{}); len(queue.Rows) != 0 || queue.Hint != "" {
+		t.Errorf("got %+v, want nothing", queue)
+	}
+}
+
+func TestQueuedNoticesStandDimBeforeTheMessages(t *testing.T) {
+	queue := RenderQueue([]string{"mine"}, []string{"harness"}, true, 40, false, link.Roots{})
+
+	if len(queue.Rows) != 2 {
+		t.Fatalf("got rows %q, want the notice and the message", queue.Rows)
+	}
+	if queue.Rows[0] != style.Subtle.Over(unsentMark+" harness") {
+		t.Errorf("got notice row %q, want it dim", queue.Rows[0])
+	}
+	if queue.Rows[1] != unsentMark+" mine" {
+		t.Errorf("got message row %q, want it plain", queue.Rows[1])
+	}
+}
+
+func TestAQueuedRowIsElidedToItsColumns(t *testing.T) {
+	queue := RenderQueue([]string{"a message far too long for its row"}, nil, true, 12, false, link.Roots{})
+
+	if got := style.Width(queue.Rows[0]); got > 12 {
+		t.Errorf("got a row %d columns wide, want at most 12: %q", got, queue.Rows[0])
 	}
 }
 
 func TestTheSendHintIsDroppedWhenItDoesNotFit(t *testing.T) {
 	renderings := map[string][]string{
 		"notices": NewPendingMessages(notices("one"), false, link.Roots{}).Rows(len(sendHint)),
-		"queue":   RenderQueuedMessages([]string{"one"}, true, len(sendHint), false, link.Roots{}),
 	}
 
 	for name, rows := range renderings {

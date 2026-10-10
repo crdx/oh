@@ -201,22 +201,66 @@ func TestAHistorySearchLabelsTheLeftOfTheTopRule(t *testing.T) {
 	}
 }
 
-func TestQueuedRowsSitAboveTheTopRuleWithoutMovingTheInput(t *testing.T) {
+func plainRowsOf(block Block, width int) ([]string, int) {
+	rows, cursorRow, _ := block.Rows(width)
+	plainRows := make([]string, len(rows))
+	for i, row := range rows {
+		plainRows[i] = style.Plain(row)
+	}
+
+	return plainRows, cursorRow
+}
+
+func TestQueuedMessagesFormABoxHeadedByTheirHint(t *testing.T) {
 	block := Block{
 		Input:          edit.Frame{Rows: []string{"input"}, Row: 0, Column: 3},
-		QueuedMessages: []string{"first queued row", "second queued row"},
+		QueuedMessages: []string{"first", "second"},
+		QueueHint:      "send",
 	}
 
-	rows, cursorRow, cursorColumn := block.Rows(40)
+	rows, cursorRow := plainRowsOf(block, 20)
 
-	if len(rows) != 5 || rows[0] != "first queued row" || rows[1] != "second queued row" {
-		t.Errorf("expected queued rows above the top rule, got %q", rows)
+	want := []string{
+		" ╭──────── send ──╮",
+		" │ first          │",
+		" │ second         │",
+		"─┴────────────────┴─",
+		"input",
+		"────────────────────",
 	}
-	if cursorRow != 3 || cursorColumn != 3 {
-		t.Errorf("queued rows moved the cursor to %d,%d within the footer", cursorRow, cursorColumn)
+	if !slices.Equal(rows, want) {
+		t.Errorf("got rows %q, want %q", rows, want)
 	}
 	if rowsFromBottom := len(rows) - cursorRow; rowsFromBottom != 2 {
-		t.Errorf("queued rows moved the input to %d rows from the bottom, want 2", rowsFromBottom)
+		t.Errorf("the queue moved the input to %d rows from the bottom, want 2", rowsFromBottom)
+	}
+}
+
+func TestAQueueHintThatDoesNotFitTheBorderIsDropped(t *testing.T) {
+	block := Block{
+		Input:          edit.Frame{Rows: []string{""}},
+		QueuedMessages: []string{"one"},
+		QueueHint:      "a hint far too wide",
+	}
+
+	rows, _ := plainRowsOf(block, 20)
+
+	if rows[0] != " ╭────────────────╮" {
+		t.Errorf("got a top border %q, want a plain one", rows[0])
+	}
+}
+
+func TestFeedbackAloneTakesNoQueueHint(t *testing.T) {
+	block := Block{
+		Input:     edit.Frame{Rows: []string{""}},
+		QueueHint: "send",
+		Feedback:  []string{"note"},
+	}
+
+	rows, _ := plainRowsOf(block, 20)
+
+	if rows[0] != " ╭────────────────╮" {
+		t.Errorf("got a top border %q, want no hint without a queue", rows[0])
 	}
 }
 
@@ -321,33 +365,45 @@ func TestTheFeedbackFrameStandsInsideTheEndsOfTheRule(t *testing.T) {
 	}
 }
 
-func TestQueuedRowsStandAboveTheFeedbackFrame(t *testing.T) {
-	const columns = 20
+func TestQueuedMessagesShareTheFeedbackBoxAboveADivider(t *testing.T) {
 	block := Block{
 		Input:          edit.Frame{Rows: []string{"input"}, Row: 0, Column: 3},
 		QueuedMessages: []string{"queued"},
+		QueueHint:      "send",
 		Feedback:       []string{"note"},
 	}
 
-	rows, cursorRow, _ := block.Rows(columns)
-	plainRows := make([]string, len(rows))
-	for i, row := range rows {
-		plainRows[i] = style.Plain(row)
-	}
+	rows, cursorRow := plainRowsOf(block, 20)
 
 	want := []string{
-		"queued",
-		" ╭────────────────╮",
+		" ╭──────── send ──╮",
+		" │ queued         │",
+		" ├────────────────┤",
 		" │ note           │",
 		"─┴────────────────┴─",
 		"input",
 		"────────────────────",
 	}
-	if !slices.Equal(plainRows, want) {
-		t.Errorf("got rows %q, want %q", plainRows, want)
+	if !slices.Equal(rows, want) {
+		t.Errorf("got rows %q, want %q", rows, want)
 	}
-	if cursorRow != 4 {
-		t.Errorf("the cursor is on footer row %d, want 4", cursorRow)
+	if cursorRow != 5 {
+		t.Errorf("the cursor is on footer row %d, want 5", cursorRow)
+	}
+}
+
+func TestQueueAndFeedbackStandUnframedWhereNoFrameFits(t *testing.T) {
+	block := Block{
+		Input:          edit.Frame{Rows: []string{""}},
+		QueuedMessages: []string{"q"},
+		QueueHint:      "send",
+		Feedback:       []string{"f"},
+	}
+
+	rows, _ := plainRowsOf(block, MinimumFramedFeedbackWidth-1)
+
+	if rows[0] != "q" || rows[1] != "f" {
+		t.Errorf("got rows %q, want the queue then the feedback, unframed", rows)
 	}
 }
 

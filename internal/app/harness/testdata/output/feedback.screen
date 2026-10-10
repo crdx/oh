@@ -1,10 +1,9 @@
 === a warning beside queued messages ===
-                                                                           double-enter to send now
- ⏳ check the other path too
- ⏳ and keep the old flag working
- ⏳ then run the whole suite
-
- ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
+ ╭──────────────────────────────────────────────────────────────────── double-enter to send now ──╮
+ │ ⏳ check the other path too                                                                    │
+ │ ⏳ and keep the old flag working                                                               │
+ │ ⏳ then run the whole suite                                                                    │
+ ├────────────────────────────────────────────────────────────────────────────────────────────────┤
  │ chat.md recording disabled: transcript append failed                                           │
 ─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
