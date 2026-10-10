@@ -65,45 +65,7 @@ func (self Label) Elide(room int) dynamic.Label {
 }
 
 func (self Label) Render() string {
-	var name string
-	if self.Name != "" {
-		name = self.style()(self.Name)
-		if self.ResultURI != "" {
-			name = link.RenderURL(name, self.ResultURI)
-		}
-	}
-	line := name
-	if self.Intent != "" {
-		line = strings.TrimSuffix(style.Reasoning(self.Intent)+" "+line, " ")
-	}
-	isQualifierLinked := false
-
-	if self.Subject != "" {
-		subject := self.renderSubject()
-		if firstLine := lineRangeStart(self.lineRange); firstLine != "" {
-			if self.Qualifier != "" {
-				subject += " " + self.renderQualifier()
-				isQualifierLinked = true
-			}
-			pathSubject := cmp.Or(self.pathSubject, self.Subject)
-			subject = link.RenderPathAtLine(subject, pathSubject, self.PathRoots, firstLine)
-		}
-		line += " " + subject
-	}
-
-	if self.Qualifier != "" && !isQualifierLinked {
-		line += " " + self.renderQualifier()
-	}
-
-	for _, continuation := range self.Continuation {
-		if part := continuation.Render(); part != "" {
-			if line != "" {
-				line += " "
-			}
-			line += part
-		}
-	}
-
+	line := self.compose()
 	if self.linkSource != "" {
 		return link.RenderFromSource(line, self.linkSource, self.PathRoots)
 	}
@@ -152,6 +114,49 @@ func (self Label) Width() int {
 	}
 
 	return total
+}
+
+func (self Label) compose() string {
+	var name string
+	if self.Name != "" {
+		name = self.style()(self.Name)
+		if self.ResultURI != "" {
+			name = link.RenderURL(name, self.ResultURI)
+		}
+	}
+	line := name
+	if self.Intent != "" {
+		line = strings.TrimSuffix(style.Reasoning(self.Intent)+" "+line, " ")
+	}
+	isQualifierLinked := false
+
+	if self.Subject != "" {
+		subject := self.renderSubject()
+		if firstLine := lineRangeStart(self.lineRange); firstLine != "" {
+			if self.Qualifier != "" {
+				subject += " " + self.renderQualifier()
+				isQualifierLinked = true
+			}
+			pathSubject := cmp.Or(self.pathSubject, self.Subject)
+			subject = link.RenderPathAtLine(subject, pathSubject, self.PathRoots, firstLine)
+		}
+		line += " " + subject
+	}
+
+	if self.Qualifier != "" && !isQualifierLinked {
+		line += " " + self.renderQualifier()
+	}
+
+	for _, continuation := range self.Continuation {
+		if part := continuation.Render(); part != "" {
+			if line != "" {
+				line += " "
+			}
+			line += part
+		}
+	}
+
+	return line
 }
 
 func (self Label) elide(room int) Label {
