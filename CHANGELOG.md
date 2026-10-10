@@ -6,6 +6,7 @@
 
 - Add subagents
 - Stop simultaneous sessions clobbering input history
+- Add experimental toggle to share input history
 - Fix OpenCode Go's Messages API models
 - Keep valid unsigned thoughts
 - Promote --from to a real flag

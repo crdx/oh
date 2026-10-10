@@ -270,6 +270,9 @@ func (self *App) begin(message string) cycle.Transition {
 	self.initialiseAccess()
 
 	history := edit.NewHistory(location.GetHistoryPath(), historyLimit)
+	history.ShareWhen(func() bool {
+		return self.experimental.IsEnabled(experimental.SharedHistory)
+	})
 	inputLine := edit.NewInput(history)
 	self.inputLine = inputLine
 
