@@ -239,7 +239,7 @@ func (self *Picasso) DrawEvent(event agent.Event) {
 	case portgrant.ForwardChange, hostcommand.Ran, jobrecord.Ended, subagentrecord.ReportsDelivered:
 		self.drawNotices(event, self.drawSubmittedPanel)
 
-	case caps.ModeChange, caps.JobStop, subagentrecord.ShellWithdrawnStop, jobrecord.EndedWithSession,
+	case caps.ModeChange, caps.JobStop, subagentrecord.AccessWithdrawnStop, jobrecord.EndedWithSession,
 		conditions.Change, environment.Change, toolset.AvailabilityChange, pathgrant.Change, turn.HarnessPoke:
 		self.drawNotices(event, self.drawSubmitted)
 
@@ -601,7 +601,7 @@ func (self *Picasso) drawNotices(event agent.Event, draw func(submittedMessage))
 
 func isJoinableNotice(event agent.Event) bool {
 	switch event.Kind {
-	case caps.ModeChange, caps.JobStop, subagentrecord.ShellWithdrawnStop, portgrant.ForwardChange,
+	case caps.ModeChange, caps.JobStop, subagentrecord.AccessWithdrawnStop, portgrant.ForwardChange,
 		jobrecord.Ended, jobrecord.EndedWithSession, conditions.Change, environment.Change, toolset.AvailabilityChange,
 		pathgrant.Change, turn.HarnessPoke,
 		hostcommand.Ran, subagentrecord.ReportsDelivered:

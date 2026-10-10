@@ -280,7 +280,7 @@ func TestRevokingShellStopsOnlyLiveChildren(t *testing.T) {
 			t.Errorf("%s remains %s", snapshot.Name, snapshot.State)
 		}
 	}
-	notice, isNoticed := subagentrecord.ShellWithdrawnStopNotice(agent.Event{Kind: subagentrecord.ShellWithdrawnStop, Name: strings.Join(names, ",")})
+	notice, isNoticed := subagentrecord.AccessWithdrawnStopNotice(agent.Event{Kind: subagentrecord.AccessWithdrawnStop, Name: strings.Join(names, ",")})
 	if !isNoticed || !strings.Contains(notice, strings.Join(names, ", ")) {
 		t.Errorf("missing access withdrawal notice %q", notice)
 	}

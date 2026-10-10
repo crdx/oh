@@ -9,11 +9,11 @@ import (
 )
 
 const (
-	Started            agent.Kind = "subagent_started"
-	Sent               agent.Kind = "subagent_message_sent"
-	Finished           agent.Kind = "subagent_finished"
-	ReportsDelivered   agent.Kind = "subagent_completion_submitted"
-	ShellWithdrawnStop agent.Kind = "subagent_access_stop"
+	Started             agent.Kind = "subagent_started"
+	Sent                agent.Kind = "subagent_message_sent"
+	Finished            agent.Kind = "subagent_finished"
+	ReportsDelivered    agent.Kind = "subagent_completion_submitted"
+	AccessWithdrawnStop agent.Kind = "subagent_access_stop"
 )
 
 type State string
@@ -117,8 +117,8 @@ func IsCounted(event agent.Event) bool {
 	return event.Usage != nil && event.Kind != agent.CacheRebuildEvent
 }
 
-func ShellWithdrawnStopNotice(event agent.Event) (string, bool) {
-	if event.Kind != ShellWithdrawnStop || event.Name == "" {
+func AccessWithdrawnStopNotice(event agent.Event) (string, bool) {
+	if event.Kind != AccessWithdrawnStop || event.Name == "" {
 		return "", false
 	}
 	return namedSubagents(event.Name) + " stopped because shell execution was withdrawn.", true

@@ -78,7 +78,7 @@ func (self *App) stopChildrenLosingShell() {
 	if len(names) == 0 {
 		return
 	}
-	self.pendingNotices.add(agent.Event{Kind: subagentrecord.ShellWithdrawnStop, Name: strings.Join(names, ",")})
+	self.pendingNotices.add(agent.Event{Kind: subagentrecord.AccessWithdrawnStop, Name: strings.Join(names, ",")})
 	if !self.currentTurn.Running() {
 		self.refreshPendingMessages()
 	}

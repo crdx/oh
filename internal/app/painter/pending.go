@@ -201,8 +201,8 @@ func HarnessNotices(event agent.Event) ([]string, bool) {
 		return oneNotice(jobrecord.EndedNotice(event))
 	case subagentrecord.ReportsDelivered:
 		return oneNotice(event.Text, true)
-	case subagentrecord.ShellWithdrawnStop:
-		return oneNotice(subagentrecord.ShellWithdrawnStopNotice(event))
+	case subagentrecord.AccessWithdrawnStop:
+		return oneNotice(subagentrecord.AccessWithdrawnStopNotice(event))
 	case jobrecord.EndedWithSession:
 		return oneNotice(jobrecord.EndedWithSessionNotice(event))
 	case hostcommand.Ran:
@@ -257,7 +257,7 @@ func HarnessNoteKind(kind agent.Kind) agent.NoteKind {
 		return agent.HostCommandNote
 	case turn.HarnessPoke:
 		return agent.PokeNote
-	case subagentrecord.ReportsDelivered, subagentrecord.ShellWithdrawnStop:
+	case subagentrecord.ReportsDelivered, subagentrecord.AccessWithdrawnStop:
 		return agent.SubagentNote
 	case caps.ModeChange, conditions.Change, environment.Change, toolset.AvailabilityChange, pathgrant.Change,
 		portgrant.ForwardChange:

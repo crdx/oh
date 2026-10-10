@@ -93,7 +93,7 @@ func childFixtureEvents() []agent.Event {
 		subagentrecord.StartedEvent("tame-adder", "child-1", "Find the issue", origin),
 		subagentrecord.StartedEvent("tame-alpaca", "child-2", "Check the tests", origin),
 		subagentrecord.FinishedEvent("tame-adder", subagentrecord.Done, "The README says hello.", nil, &agent.Usage{InputTokens: 10}),
-		{Kind: subagentrecord.ShellWithdrawnStop, Name: "tame-alpaca"},
+		{Kind: subagentrecord.AccessWithdrawnStop, Name: "tame-alpaca"},
 		subagentrecord.FinishedEvent("tame-alpaca", subagentrecord.Stopped, "", nil, &agent.Usage{}),
 		subagentrecord.DeliveryEvent([]string{"tame-adder"}, "Subagent tame-adder finished:\n\ntame-adder done: The README says hello.", []subagentrecord.Report{
 			{Name: "tame-adder", State: subagentrecord.Done, Answer: "The README says hello."},

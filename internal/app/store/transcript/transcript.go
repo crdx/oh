@@ -163,7 +163,7 @@ func (self *Recorder) Event(at time.Time, event agent.Event) error {
 		output.fence(agent.CacheRebuildNotice(event, self.cacheRebuildCost(event)))
 	case agent.PrefixRewriteEvent:
 		output.fence(agent.PrefixRewriteNotice + event.Text)
-	case turn.HarnessPoke, jobrecord.Ended, jobrecord.EndedWithSession, caps.JobStop, caps.ModeChange, subagentrecord.ReportsDelivered, subagentrecord.ShellWithdrawnStop,
+	case turn.HarnessPoke, jobrecord.Ended, jobrecord.EndedWithSession, caps.JobStop, caps.ModeChange, subagentrecord.ReportsDelivered, subagentrecord.AccessWithdrawnStop,
 		conditions.Change, environment.Change, toolset.AvailabilityChange, pathgrant.Change,
 		portgrant.ForwardChange, hostcommand.Ran:
 		if notice, isSaid := harnessNotice(event); isSaid {
@@ -189,8 +189,8 @@ func harnessNotice(event agent.Event) (string, bool) {
 		return turn.PokeNotice(event)
 	case subagentrecord.ReportsDelivered:
 		return event.Text, true
-	case subagentrecord.ShellWithdrawnStop:
-		return subagentrecord.ShellWithdrawnStopNotice(event)
+	case subagentrecord.AccessWithdrawnStop:
+		return subagentrecord.AccessWithdrawnStopNotice(event)
 	case jobrecord.Ended:
 		return jobrecord.EndedNotice(event)
 	case jobrecord.EndedWithSession:
@@ -514,7 +514,7 @@ func title(kind agent.Kind) string {
 		return "Job ended"
 	case jobrecord.EndedWithSession:
 		return "Jobs ended with the session"
-	case subagentrecord.ShellWithdrawnStop:
+	case subagentrecord.AccessWithdrawnStop:
 		return "Subagents stopped"
 	case subagentrecord.ReportsDelivered:
 		return "Subagent reports"
