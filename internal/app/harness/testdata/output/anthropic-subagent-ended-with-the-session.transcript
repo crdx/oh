@@ -41,7 +41,7 @@ parent session closed
 ```
 Subagent tame-adder finished:
 
-tame-adder ended (its /tmp is your /tmp/subagents/tame-adder): parent session closed
+tame-adder ended (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): parent session closed
 ```
 
 ## Assistant · +0s

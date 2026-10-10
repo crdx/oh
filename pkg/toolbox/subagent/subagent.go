@@ -61,7 +61,14 @@ func New(manager Manager, model string) tool.Tool {
 			"a subagent knows only a short description of its sandbox, your system_prompt, and its prompt: " +
 			"none of your instructions, context files or conversation reach it, so give it everything it needs; " +
 			"each subagent can read but not write its workspace, and has a shell only while you do, " +
-			"writing only to its own scratch, which you reach as subagents/<name> inside yours; " +
+			"writing only to its own scratch, which is subagents/<name> inside your scratch but which it calls /tmp, " +
+			"so a /tmp path it reports may mean your /tmp/subagents/<name>/...; " +
+			"it cannot read the rest of your scratch, so put what it needs in its prompt, " +
+			"or, for a follow-up, write files into your /tmp/subagents/<name> and refer to them by the /tmp paths it sees; " +
+			"never trust an answer blindly: however confident, it is an unverified claim that may be wrong, " +
+			"miss part of its task, or describe checks it never ran, " +
+			"so before you act on it or pass it on, verify what matters yourself, " +
+			"such as by opening files it reports, rerunning key commands, or reading the code it cites; " +
 			"finished subagents whose answers you have not read through output report back after a short batching window; " +
 			"you are woken by them if you have ended your turn, so end your turn rather than waiting or polling for them",
 		Schema: tool.Schema{

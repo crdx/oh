@@ -18,7 +18,7 @@ ask two subagents and wait for them
 
 ```
 subagent: 2 subagents [ok, 1 line, 31B, toolu_1]
-wait: tame-adder && tame-alpaca [ok, 5 lines, 188B, toolu_2]
+wait: tame-adder && tame-alpaca [ok, 5 lines, 394B, toolu_2]
 ```
 
 ## Assistant · +0s

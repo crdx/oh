@@ -45,7 +45,7 @@ Bash is now refused.
 ```
 Subagent tame-adder finished:
 
-tame-adder done (its /tmp is your /tmp/subagents/tame-adder): The loader is in config.go.
+tame-adder done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The loader is in config.go.
 ```
 
 ## Assistant · +0s
@@ -79,7 +79,7 @@ Its tests are in config_test.go.
 ```
 Subagent tame-adder finished:
 
-tame-adder done (its /tmp is your /tmp/subagents/tame-adder): Its tests are in config_test.go.
+tame-adder done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): Its tests are in config_test.go.
 ```
 
 ## Assistant · +0s

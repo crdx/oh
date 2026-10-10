@@ -41,7 +41,7 @@ prompt is too long
 ```
 Subagent tame-adder finished:
 
-tame-adder failed (its /tmp is your /tmp/subagents/tame-adder): prompt is too long
+tame-adder failed (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): prompt is too long
 ```
 
 ## Assistant · +0s

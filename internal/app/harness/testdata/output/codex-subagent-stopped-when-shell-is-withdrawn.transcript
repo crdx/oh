@@ -59,7 +59,7 @@ Subagent tame-adder stopped because shell execution was withdrawn.
 ```
 Subagent tame-alpaca finished:
 
-tame-alpaca done (its /tmp is your /tmp/subagents/tame-alpaca): The build tool is just.
+tame-alpaca done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-alpaca, so read any /tmp path it reports as beneath that): The build tool is just.
 ```
 
 ## Assistant · +0s

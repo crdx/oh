@@ -29,7 +29,7 @@ Transcript: `subagents/tame-adder/chat.md`
 ## Tool calls · +0s
 
 ```
-wait: tame-adder [ok, 3 lines, 154B, toolu_2]
+wait: tame-adder [ok, 3 lines, 257B, toolu_2]
 ```
 
 ## User · +0s

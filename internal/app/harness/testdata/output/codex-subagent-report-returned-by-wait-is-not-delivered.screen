@@ -3,7 +3,7 @@
 
 
 spawn 2 subagents on GPT-5.6 Sol
-wait tame-adder && tame-alpaca 5L
+wait tame-adder && tame-alpaca 5L ~100t
 
 Both reported: the loader is in config.go and the parser is in parse.go.
 

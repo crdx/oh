@@ -45,7 +45,7 @@ The logs show no errors.
 ```
 Subagent tame-adder finished:
 
-tame-adder done (its /tmp is your /tmp/subagents/tame-adder): The logs show no errors.
+tame-adder done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The logs show no errors.
 ```
 
 ## Assistant · +0s

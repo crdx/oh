@@ -203,7 +203,8 @@ func childPrompt(options childOptions, workspace *work.Space, child subagents.Ch
 		whereabouts = "TMPDIR is " + child.Scratch + "."
 	case child.Caps.Has(caps.Shell):
 		circumstances = "Your workspace is read-only. You have shell execution, but not host networking. " +
-			"/tmp is your private writable scratch, and it outlives your answer."
+			"/tmp is your private writable scratch, and it outlives your answer. " +
+			parentScratchView(child.Name)
 		whereabouts = "/tmp is at " + child.Scratch + " on the host. HOME is " + home + "."
 	default:
 		circumstances = "Your workspace is read-only. " +
@@ -229,12 +230,30 @@ func toolNames(tools []tool.Tool) string {
 	return strings.Join(names, ", ")
 }
 
+func parentScratchPath(name string) string {
+	return filepath.Join(sandbox.TmpDir, subagents.ScratchName, name)
+}
+
+func parentScratchView(name string) string {
+	parentPath := parentScratchPath(name)
+	return "Your parent has its own separate /tmp, where your /tmp appears as " + parentPath + ". " +
+		"Whenever you give your parent a path under /tmp, including one you ask it to write to, " +
+		"give only the path as your parent sees it: write " +
+		filepath.Join(parentPath, "notes.txt") + ", never /tmp/notes.txt, even labelled as your side. " +
+		"You cannot see your parent's /tmp or any other subagent's scratch, " +
+		"but your parent can write files into your /tmp for you. " +
+		"If a /tmp path your parent mentions is missing from your /tmp, it is in your parent's: " +
+		"ask your parent to paste its contents or to copy it to " + filepath.Join(parentPath, "<file>") + "."
+}
+
+const unverifiedNote = "unverified: check what matters before relying on it; "
+
 func childScratchNote(options childOptions) func(string) string {
 	return func(name string) string {
 		if options.isYolo {
-			return "its TMPDIR is " + filepath.Join(options.scratchParent, subagents.ScratchName, name)
+			return unverifiedNote + "its TMPDIR is " + filepath.Join(options.scratchParent, subagents.ScratchName, name)
 		}
-		return "its /tmp is your " + filepath.Join(sandbox.TmpDir, subagents.ScratchName, name)
+		return unverifiedNote + "its /tmp is your " + parentScratchPath(name) + ", so read any /tmp path it reports as beneath that"
 	}
 }
 

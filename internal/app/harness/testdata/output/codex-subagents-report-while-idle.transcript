@@ -49,9 +49,9 @@ There are three open TODO items.
 ```
 Subagents tame-adder, tame-alpaca finished:
 
-tame-adder done (its /tmp is your /tmp/subagents/tame-adder): The parser starts at parse.go.
+tame-adder done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The parser starts at parse.go.
 
-tame-alpaca done (its /tmp is your /tmp/subagents/tame-alpaca): There are three open TODO items.
+tame-alpaca done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-alpaca, so read any /tmp path it reports as beneath that): There are three open TODO items.
 ```
 
 ## Assistant · +0s

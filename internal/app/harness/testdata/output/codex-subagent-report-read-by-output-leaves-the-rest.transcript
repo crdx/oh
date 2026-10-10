@@ -43,7 +43,7 @@ The parser is in parse.go.
 ## Tool calls · +0s
 
 ```
-subagent: tame-adder [ok, 2 lines, 96B, toolu_2]
+subagent: tame-adder [ok, 2 lines, 199B, toolu_2]
 ```
 
 ## Assistant · +0s
@@ -55,7 +55,7 @@ The loader is in config.go; the parser report will follow.
 ```
 Subagent tame-alpaca finished:
 
-tame-alpaca done (its /tmp is your /tmp/subagents/tame-alpaca): The parser is in parse.go.
+tame-alpaca done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-alpaca, so read any /tmp path it reports as beneath that): The parser is in parse.go.
 ```
 
 ## Assistant · +0s

@@ -41,7 +41,7 @@ parent process ended before the subagent completed
 ```
 Subagent tame-adder finished:
 
-tame-adder ended (its /tmp is your /tmp/subagents/tame-adder): parent process ended before the subagent completed
+tame-adder ended (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): parent process ended before the subagent completed
 ```
 
 ## Assistant · +0s

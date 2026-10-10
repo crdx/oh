@@ -206,13 +206,13 @@ func TestAFollowUpKeepsTheToolsItsChildWasFirstOffered(t *testing.T) {
 	}
 }
 
-func TestAChildsScratchIsNamedAsItsParentSeesIt(t *testing.T) {
+func TestAChildsReportIsMarkedUnverifiedAndItsScratchNamedAsItsParentSeesIt(t *testing.T) {
 	confined := childScratchNote(childOptions{scratchParent: "/state/farm/tame-impala"})
-	if note := confined("tame-adder"); note != "its /tmp is your /tmp/subagents/tame-adder" {
+	if note := confined("tame-adder"); note != "unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that" {
 		t.Errorf("a confined parent was told %q", note)
 	}
 	unconfined := childScratchNote(childOptions{scratchParent: "/state/farm/tame-impala", isYolo: true})
-	if note := unconfined("tame-adder"); note != "its TMPDIR is /state/farm/tame-impala/subagents/tame-adder" {
+	if note := unconfined("tame-adder"); note != "unverified: check what matters before relying on it; its TMPDIR is /state/farm/tame-impala/subagents/tame-adder" {
 		t.Errorf("an unconfined parent was told %q", note)
 	}
 }
