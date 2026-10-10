@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Add subagent.concurrency setting to cap how many subagents run at once
 - Add experimental inline reply command and shortcut
 - Offer only file and shell tools in headless mode
 - Move waiting out of jobs into an experimental wait tool

@@ -1161,7 +1161,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	snapshots := file.NewSnapshots()
 	toolboxTools := toolbox.RummageWithRunner(files, snapshots, grepRunner(args.Yolo))
 	if childManager != nil {
-		toolboxTools = append(toolboxTools, subagent.New(childManager, childManager.Model()))
+		toolboxTools = append(toolboxTools, subagent.New(childManager, childManager.Model(), childManager.Concurrency()))
 	}
 	askBroker := ask.New()
 	permissionSet, err := settings.BuildPermissions()

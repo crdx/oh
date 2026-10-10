@@ -101,10 +101,11 @@ func (waitingProvider) Send(ctx context.Context, _ agent.Yield) (agent.Reply, er
 }
 
 type testFamily struct {
-	directory string
-	scratch   string
-	workspace string
-	caps      *caps.Set
+	directory   string
+	scratch     string
+	workspace   string
+	caps        *caps.Set
+	concurrency int
 }
 
 func newTestFamily(t *testing.T) testFamily {
@@ -145,7 +146,8 @@ func (self testFamily) manager(t *testing.T, factory Factory) *Manager {
 			}
 			return directory, nil
 		},
-		Caps: func() caps.Set { return *self.caps },
+		Caps:        func() caps.Set { return *self.caps },
+		Concurrency: self.concurrency,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -199,6 +201,27 @@ func untilFinished(t *testing.T, manager *Manager, count int) []agent.Event {
 		}
 	}
 	return events
+}
+
+func TestTheConcurrencySettingCapsHowManyChildrenRunAtOnce(t *testing.T) {
+	family := newTestFamily(t)
+	family.concurrency = 2
+	manager := family.manager(t, waiting())
+	tasks := func(count int) []subagent.Task {
+		return slices.Repeat([]subagent.Task{{Prompt: "wait"}}, count)
+	}
+	if manager.Concurrency() != 2 {
+		t.Errorf("got concurrency %d, want 2", manager.Concurrency())
+	}
+	if _, err := manager.Start(t.Context(), "", tasks(3)); err == nil || !strings.Contains(err.Error(), "at most 2") {
+		t.Fatalf("three children were started under a limit of two: %v", err)
+	}
+	if _, err := manager.Start(t.Context(), "", tasks(2)); err != nil {
+		t.Fatalf("two children were refused under a limit of two: %v", err)
+	}
+	if _, err := manager.Start(t.Context(), "", tasks(1)); err == nil || !strings.Contains(err.Error(), "at most 2") {
+		t.Fatalf("a third running child was started: %v", err)
+	}
 }
 
 func TestAtMostFiveChildrenRunAtOnceAcrossCalls(t *testing.T) {

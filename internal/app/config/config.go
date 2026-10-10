@@ -122,7 +122,8 @@ type Input struct {
 }
 
 type Subagent struct {
-	Model string `toml:"model"`
+	Model       string `toml:"model"`
+	Concurrency int    `toml:"concurrency"`
 }
 
 type Model struct {
@@ -665,6 +666,9 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 	}
 	if err := normaliseInput(config, meta, displayPath); err != nil {
 		return err
+	}
+	if meta.IsDefined("subagent", "concurrency") && config.Subagent.Concurrency < 1 {
+		return fmt.Errorf("%s: subagent.concurrency must be at least 1, got %d", displayPath, config.Subagent.Concurrency)
 	}
 	if meta.IsDefined("tool", "output") && config.Tool.Output.Bytes < minimumToolOutputBytes {
 		return fmt.Errorf(

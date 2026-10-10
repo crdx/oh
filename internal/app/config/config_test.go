@@ -1634,6 +1634,45 @@ func TestTheToolOutputLimitIsRead(t *testing.T) {
 	}
 }
 
+func TestSubagentConcurrencyDefaultsToFiveAndCanBeOverridden(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "config.toml")
+	if err := writeConfigFile(path, ""); err != nil {
+		t.Fatal(err)
+	}
+	config, err := Load(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if config.Subagent.Concurrency != 5 {
+		t.Errorf("got default concurrency %d, want 5", config.Subagent.Concurrency)
+	}
+
+	if err := writeConfigFile(path, "[subagent]\nconcurrency = 8\n"); err != nil {
+		t.Fatal(err)
+	}
+	if config, err = Load(path); err != nil {
+		t.Fatal(err)
+	}
+	if config.Subagent.Concurrency != 8 {
+		t.Errorf("got concurrency %d, want 8", config.Subagent.Concurrency)
+	}
+	if reports := config.UnknownSettings(); len(reports) > 0 {
+		t.Errorf("got %v", reports)
+	}
+}
+
+func TestASubagentConcurrencyBelowOneIsRefused(t *testing.T) {
+	for _, value := range []string{"0", "-1"} {
+		path := filepath.Join(t.TempDir(), "config.toml")
+		if err := writeConfigFile(path, "[subagent]\nconcurrency = "+value+"\n"); err != nil {
+			t.Fatal(err)
+		}
+		if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "subagent.concurrency must be at least 1") {
+			t.Errorf("concurrency %s: got %v, want a complaint about subagent.concurrency", value, err)
+		}
+	}
+}
+
 func TestAToolOutputLimitTooSmallToSayAnythingWithIsRefused(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
 	if err := writeConfigFile(path, "[tool]\noutput = \"3\"\n"); err != nil {

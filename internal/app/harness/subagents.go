@@ -80,6 +80,7 @@ func prepareChildManager(options childOptions, choices []model.Choice, seenModel
 		EnsureParent: options.ensurePersisted,
 		Workspace:    childWorkspace(options),
 		ScratchNote:  childScratchNote(options),
+		Concurrency:  options.settings.Subagent.Concurrency,
 		Caps: func() caps.Set {
 			if options.isYolo {
 				return caps.Unconfined()

@@ -53,11 +53,12 @@ type Manager interface {
 	List() string
 }
 
-func New(manager Manager, model string) tool.Tool {
+func New(manager Manager, model string, concurrency int) tool.Tool {
 	definition := tool.Definition{
 		Name: Name,
 		Description: "start independent subagents with a shared optional system prompt and individual tasks, " +
-			"send a finished subagent a follow-up, and inspect or control them by name; at most 5 run at once; " +
+			"send a finished subagent a follow-up, and inspect or control them by name; " +
+			fmt.Sprintf("at most %d run at once; ", concurrency) +
 			"a subagent knows only a short description of its sandbox, your system_prompt, and its prompt: " +
 			"none of your instructions, context files or conversation reach it, so give it everything it needs; " +
 			"each subagent can read but not write its workspace, and has a shell only while you do, " +

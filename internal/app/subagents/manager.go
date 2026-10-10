@@ -28,8 +28,8 @@ import (
 )
 
 const (
-	maxChildren  = 5
-	maxChildLife = 30 * time.Minute
+	defaultConcurrency = 5
+	maxChildLife       = 30 * time.Minute
 )
 
 type Child struct {
@@ -71,6 +71,7 @@ type Options struct {
 	Workspace    func(path string) (string, error)
 	Caps         func() caps.Set
 	ScratchNote  func(name string) string
+	Concurrency  int
 }
 
 type Snapshot struct {
@@ -124,6 +125,9 @@ func New(options Options) (*Manager, error) {
 	scratchRoot, err := parentRoot.OpenRoot(ScratchName)
 	if err != nil {
 		return nil, err
+	}
+	if options.Concurrency <= 0 {
+		options.Concurrency = defaultConcurrency
 	}
 	return &Manager{
 		options:     options,
@@ -248,8 +252,8 @@ func (self *Manager) Start(ctx context.Context, sharedPrompt string, tasks []sub
 	if isClosed {
 		return "", errors.New("subagent manager is closed")
 	}
-	if len(tasks) == 0 || liveCount+len(tasks) > maxChildren {
-		return "", fmt.Errorf("at most %d subagents may run at once", maxChildren)
+	if len(tasks) == 0 || liveCount+len(tasks) > self.options.Concurrency {
+		return "", fmt.Errorf("at most %d subagents may run at once", self.options.Concurrency)
 	}
 	if self.options.EnsureParent != nil {
 		if err := self.options.EnsureParent(); err != nil {
@@ -372,6 +376,10 @@ func (self *Manager) ScratchNote(name string) string {
 		return ""
 	}
 	return " (" + self.options.ScratchNote(name) + ")"
+}
+
+func (self *Manager) Concurrency() int {
+	return self.options.Concurrency
 }
 
 func (self *Manager) Model() string {
@@ -787,8 +795,8 @@ func (self *Manager) refuseSend(name string, current *child) error {
 		return fmt.Errorf("no subagent named %s", name)
 	case current.State.IsLive():
 		return fmt.Errorf("%s is still running; wait for it before sending it anything", name)
-	case self.liveCount()+1 > maxChildren:
-		return fmt.Errorf("at most %d subagents may run at once", maxChildren)
+	case self.liveCount()+1 > self.options.Concurrency:
+		return fmt.Errorf("at most %d subagents may run at once", self.options.Concurrency)
 	}
 	return nil
 }

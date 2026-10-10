@@ -159,6 +159,7 @@ fast = false
 
 [subagent]
 model = ""
+concurrency = 5
 
 [provider.ollama]
 
