@@ -554,7 +554,7 @@ func (self *Agent) send(
 			return isListening
 		})
 
-		if !isListening || err == nil {
+		if !isListening || err == nil || ctx.Err() != nil {
 			return reply, askedAt, isListening, err
 		}
 

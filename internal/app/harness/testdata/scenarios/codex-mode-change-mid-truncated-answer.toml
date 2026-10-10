@@ -3,8 +3,8 @@ model = "gpt-5.6-sol"
 effort = "medium"
 
 [first]
-prompt = "change what I am allowed to do while the answer is being asked for again"
-toggle-after-retry-notice = "w"
+prompt = "change what I am allowed to do while the answer is still arriving"
+toggle-after-message-delta = "w"
 
 [[first.response]]
 event = [

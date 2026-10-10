@@ -18204,6 +18204,7 @@ type sessionGoldenTurn struct {
 	CancelAfterQueueing          bool                    `toml:"cancel-after-queueing"`
 	ToggleAfterMessageDelta      string                  `toml:"toggle-after-message-delta"`
 	ToggleAfterToolRequest       string                  `toml:"toggle-after-tool-request"`
+	ToggleAfterRetryNotice       string                  `toml:"toggle-after-retry-notice"`
 	ToggleDuringModeTurn         string                  `toml:"toggle-during-mode-turn"`
 	CancelAfterToolToggle        bool                    `toml:"cancel-after-tool-toggle"`
 	EndJobAfterToolRequest       string                  `toml:"end-job-after-tool-request"`
@@ -18250,6 +18251,7 @@ func (self sessionGoldenTurn) usesTheInterface() bool {
 	return self.ReplaceAfterToolRequest != "" ||
 		self.ToggleAfterMessageDelta != "" ||
 		self.ToggleAfterToolRequest != "" ||
+		self.ToggleAfterRetryNotice != "" ||
 		self.ToggleDuringModeTurn != "" ||
 		self.EndJobAfterToolRequest != "" ||
 		self.EndJobAfterReasoningEvent != "" ||
@@ -20457,6 +20459,9 @@ func runSessionGoldenTurn(
 			retryNotices++
 			if retryNotices == turn.CancelAfterRetryNotice {
 				interruptWithStopKey()
+			}
+			if retryNotices == 1 && turn.ToggleAfterRetryNotice != "" {
+				toggleSessionGoldenCaps(t, testHarness, turn.ToggleAfterRetryNotice)
 			}
 		}
 		if update.Event != nil && update.Event.Kind == agent.ToolCallRequestEvent {

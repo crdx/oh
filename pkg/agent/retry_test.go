@@ -409,3 +409,56 @@ func TestRequestsAreRetriedOnTheFixedCadence(t *testing.T) {
 		t.Errorf("retry waits = %v, want %v", waits, want)
 	}
 }
+
+type stoppedMidStreamProvider struct {
+	stop context.CancelFunc
+
+	sent int
+}
+
+func (self *stoppedMidStreamProvider) Configure(string, []tool.Definition)   {}
+func (self *stoppedMidStreamProvider) AddUserMessage(string)                 {}
+func (self *stoppedMidStreamProvider) AddToolResults([]agent.ToolCallResult) {}
+
+func (self *stoppedMidStreamProvider) Send(_ context.Context, yield agent.Yield) (agent.Reply, error) {
+	self.sent++
+	yield(agent.Output{Kind: agent.ModelMessageEvent, Text: "half an ans"})
+	self.stop()
+
+	return agent.Reply{}, wireDiedError{}
+}
+
+func TestAStreamThatDiesAfterTheTurnWasStoppedIsNotRetried(t *testing.T) {
+	synctest.Test(t, func(t *testing.T) {
+		ctx, stop := context.WithCancel(t.Context())
+		defer stop()
+
+		provider := &stoppedMidStreamProvider{stop: stop}
+		assistant := agent.New("", provider, nil)
+
+		var said strings.Builder
+		var seen []agent.Event
+		for update, err := range assistant.Stream(ctx, "go", nil) {
+			if err != nil {
+				break
+			}
+			if update.Event == nil {
+				continue
+			}
+			seen = append(seen, *update.Event)
+			if update.Event.Kind == agent.ModelMessageEvent {
+				said.WriteString(update.Event.Text)
+			}
+		}
+
+		if provider.sent != 1 {
+			t.Errorf("expected one request, got %d", provider.sent)
+		}
+		if slices.Contains(kinds(seen), agent.RetryingEvent) {
+			t.Errorf("expected no retry to be announced for a stopped turn, got %v", kinds(seen))
+		}
+		if said.String() != "half an ans" {
+			t.Errorf("expected the partial answer to be kept, got %q", said.String())
+		}
+	})
+}
