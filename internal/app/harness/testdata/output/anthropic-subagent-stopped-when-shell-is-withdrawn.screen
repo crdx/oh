@@ -2,7 +2,7 @@
  start two subagents
 
 
-spawn 2 subagents on Claude Opus 5 1L
+spawn 2 subagents on Claude Opus 5
 
 Both are running.
 

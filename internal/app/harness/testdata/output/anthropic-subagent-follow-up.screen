@@ -2,7 +2,7 @@
  ask a subagent to find the config loader
 
 
-Finding where the config loads spawn 1 subagent on Claude Opus 5 1L
+Finding where the config loads spawn 1 subagent on Claude Opus 5
 
 A subagent is looking in internal.
 
@@ -18,7 +18,7 @@ It found the loader in config.go.
  ask the same subagent for the tests
 
 
-send tame-adder 1L (Finding where the config loads)
+send tame-adder (Finding where the config loads)
 
 I asked it again.
 

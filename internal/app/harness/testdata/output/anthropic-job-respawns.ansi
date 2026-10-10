@@ -2,7 +2,7 @@
 \e[48;2;52;53;65m rebuild every time the source changes                                                              \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[3m\e[38;2;150;152;150mRebuilding whenever the source changes\e[0m\e[0m \e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwatch\e[0m \e[38;2;150;152;150mrespawning on exit\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mwatch\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e[3m\e[38;2;150;152;150mRebuilding whenever the source changes\e[0m\e[0m \e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwatch\e[0m \e[38;2;150;152;150mrespawning on exit\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mwatch\e[0m\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mwatch\e[0m\e[48;2;48;58;67m exited: failed after 12s, exit(2), run 1, respawned.                                  \e[0m\r
@@ -27,6 +27,6 @@ The first rebuild failed on getWidth; the watcher is already running again.\e[?2
 \e[48;2;48;58;67m    \e[38;2;150;152;150mgo build ./...\e[0m\e[48;2;48;58;67m                                                                                  \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mcmd/oh/draw.go:41:9: undefined: getWidth\e[0m\e[48;2;48;58;67m                                                        \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150mexit status 1\e[0m\e[48;2;48;58;67m                                                                                   \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[9A\r\e[3m\e[38;2;150;152;150mWatching the source again\e[0m\e[0m \e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwatch\e[0m \e[38;2;150;152;150mrespawning on exit\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mwatch\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[9B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[9A\r\e[3m\e[38;2;150;152;150mWatching the source again\e[0m\e[0m \e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwatch\e[0m \e[38;2;150;152;150mrespawning on exit\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mwatch\e[0m\e[K\e[9B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 It kept failing at once, so it gave up respawning; getWidth needs fixing first.\e[K\r\e[79C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[79C\e[?25h\e[?2026l\r

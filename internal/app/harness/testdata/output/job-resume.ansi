@@ -3,7 +3,7 @@
 \e[48;2;52;53;65m start the docs server and a watcher    \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;150;152;150m1L\e[0m\r
+\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdo…\e[0m\r
 \r
 Both are up.\r
 \r
@@ -19,7 +19,7 @@ Both are up.\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\list\e]8;;\e\\ \e[38;2;192;128;80mjobs\e[0m \e[38;2;150;152;150m2L\e[0m\r
-\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mresta…\e[0m\e]8;;\e\\ \e[38;2;150;152;150m1L\e[0m\r
+\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80m…\e[0m\r
 \r
 Restarted \e[38;2;192;128;80mdocs\e[0m from the command it was\r
 remembered with.\r
@@ -392,7 +392,7 @@ h\r
 \e[48;2;52;53;65m\e[0m
 \e[48;2;52;53;65m start the docs server and a watcher\e[0m
 \e[48;2;52;53;65m\e[0m
-\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;150;152;150m1L\e[0m
+\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m
 
 Both are up.
 
@@ -403,7 +403,7 @@ Both are up.
 \e[48;2;52;53;65m carry on\e[0m
 \e[48;2;52;53;65m\e[0m
 list \e[38;2;192;128;80mjobs\e[0m \e[38;2;150;152;150m2L\e[0m
-\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150m1L\e[0m
+\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m
 
 Restarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembered with.
 
@@ -412,7 +412,7 @@ Restarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembered with.
 \e[48;2;52;53;65m start the docs server and a watcher                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\r
 \r
 Both are up.\r
 \r
@@ -426,7 +426,7 @@ Both are up.\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\list\e]8;;\e\\ \e[38;2;192;128;80mjobs\e[0m \e[38;2;150;152;150m2L\e[0m\r
-\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \r
 Restarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembered with.\r
 
@@ -435,7 +435,7 @@ Restarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembered with.\
 \e[48;2;52;53;65m start the docs server and a watcher                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[K\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[74C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[74C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[K\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[K\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 Both\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth are\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth are up.\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
@@ -449,7 +449,7 @@ Both\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth are\e[K\r\e[8C\e[?25h\e[?2
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 list \e[38;2;192;128;80mjobs\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\list\e]8;;\e\\ \e[38;2;192;128;80mjobs\e[0m \e[38;2;150;152;150m2L\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 Rest\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarte\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted `d\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m fro\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m from th\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m from the co\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m from the comman\e[K\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m from the command it\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m from the command it was\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m from the command it was rem\e[K\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembe\e[K\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembered\e[K\r\e[49C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembered with\e[K\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembered with.\e[K\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[55C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
@@ -458,7 +458,7 @@ Rest\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarte\e[K\r\e[8C\e[?25h\e[?2
 \e[48;2;52;53;65m start the docs server and a watcher                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[K\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[74C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[74C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[K\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[K\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 Both are up.\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
@@ -472,7 +472,7 @@ Both are up.\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 list \e[38;2;192;128;80mjobs\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\list\e]8;;\e\\ \e[38;2;192;128;80mjobs\e[0m \e[38;2;150;152;150m2L\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 Restarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembered with.\e[K\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[55C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
@@ -481,7 +481,7 @@ Restarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembered with.\
 \e[48;2;52;53;65m start the docs server and a watcher                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[K\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[74C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[74C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[K\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[K\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 Both\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth are\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth are up.\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
@@ -495,7 +495,7 @@ Both\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rBoth are\e[K\r\e[8C\e[?25h\e[?2
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 list \e[38;2;192;128;80mjobs\e[0m\e[K\r\e[9C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\list\e]8;;\e\\ \e[38;2;192;128;80mjobs\e[0m \e[38;2;150;152;150m2L\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e[38;2;207;173;0mrestart\e[0m \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[43C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 Rest\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarte\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted `d\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m fro\e[K\r\e[18C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m from th\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m from the co\e[K\r\e[26C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m from the comman\e[K\r\e[30C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m from the command it\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m from the command it was\e[K\r\e[38C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m from the command it was rem\e[K\r\e[42C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembe\e[K\r\e[46C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembered\e[K\r\e[49C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembered with\e[K\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\rRestarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembered with.\e[K\r\e[55C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[55C\e[?25h\e[?2026l\r
 \e]9;4;0\e\\
@@ -551,7 +551,7 @@ with.\r
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
 \e[48;2;52;53;65m start the docs server and a watcher\e[0m\r
 \e[48;2;52;53;65m\e[0m\r
-\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\r
 \r
 Both are up.\r
 \r
@@ -562,7 +562,7 @@ Both are up.\r
 \e[48;2;52;53;65m carry on\e[0m\r
 \e[48;2;52;53;65m\e[0m\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\list\e]8;;\e\\ \e[38;2;192;128;80mjobs\e[0m \e[38;2;150;152;150m2L\e[0m\r
-\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \r
 Restarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembered with.\r
 \e[?25h\e[?2026l
@@ -571,7 +571,7 @@ Restarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembered with.\
 \e[48;2;52;53;65m start the docs server and a watcher                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\r
 \r
 Both are up.\r
 \r
@@ -585,7 +585,7 @@ Both are up.\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\list\e]8;;\e\\ \e[38;2;192;128;80mjobs\e[0m \e[38;2;150;152;150m2L\e[0m\r
-\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_3&session=tame-impala\e\\\e[38;2;207;173;0mrestart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\r
 \r
 Restarted \e[38;2;192;128;80mdocs\e[0m from the command it was remembered with.\r
 \e[?25h\e[?2026l

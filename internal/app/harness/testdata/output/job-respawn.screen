@@ -5,7 +5,7 @@
 
 
 Rebuilding whenever the source changes …
-Keeping the server up start serve re… 1L
+Keeping the server up start serve respa…
 
 Both are running and will come back
 whenever they exit.
@@ -45,8 +45,8 @@ whenever they exit.
 
 
 await watch 3L
-stop watch 1L
-Bringing lint back restart lint resp… 1L
+stop watch
+Bringing lint back restart lint respawn…
 
 The rebuild passed, the watcher is
 stopped, and lint is respawning again.
@@ -1266,8 +1266,8 @@ n
  rebuild whenever the source changes, and keep the server up
 
 
-Rebuilding whenever the source changes start watch respawning on exit $ just watch 1L
-Keeping the server up start serve respawning on exit $ python3 -m http.server 8080 1L
+Rebuilding whenever the source changes start watch respawning on exit $ just watch
+Keeping the server up start serve respawning on exit $ python3 -m http.server 8080
 
 Both are running and will come back whenever they exit.
 
@@ -1296,8 +1296,8 @@ Both are running and will come back whenever they exit.
 
 
 await watch 3L (Rebuilding whenever the source changes)
-stop watch 1L (Rebuilding whenever the source changes)
-Bringing lint back restart lint respawning on exit 1L
+stop watch (Rebuilding whenever the source changes)
+Bringing lint back restart lint respawning on exit
 
 The rebuild passed, the watcher is stopped, and lint is respawning again.
 === tiny ===
@@ -1417,7 +1417,7 @@ they exit.
 
 
 await wa… 3L
-stop wat… 1L
+stop watch
 Bringing li…
 
 The rebuild
@@ -1432,8 +1432,8 @@ again.
  rebuild whenever the source changes, and keep the server up
 
 
-Rebuilding whenever the source changes start watch respawning on exit $ just watch 1L
-Keeping the server up start serve respawning on exit $ python3 -m http.server 8080 1L
+Rebuilding whenever the source changes start watch respawning on exit $ just watch
+Keeping the server up start serve respawning on exit $ python3 -m http.server 8080
 
 Both are running and will come back whenever they exit.
 
@@ -1462,7 +1462,7 @@ Both are running and will come back whenever they exit.
 
 
 await watch 3L (Rebuilding whenever the source changes)
-stop watch 1L (Rebuilding whenever the source changes)
-Bringing lint back restart lint respawning on exit 1L
+stop watch (Rebuilding whenever the source changes)
+Bringing lint back restart lint respawning on exit
 
 The rebuild passed, the watcher is stopped, and lint is respawning again.

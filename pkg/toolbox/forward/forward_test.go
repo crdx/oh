@@ -158,15 +158,15 @@ func TestACallIsRenderedByItsAction(t *testing.T) {
 	}{
 		"forward": {
 			args: Args{Action: actionAdd, Port: 8080},
-			want: tool.CallRendering{Kind: "forward_add", Subject: "8080"},
+			want: tool.CallRendering{Kind: "forward_add", ReportsStatus: true, Subject: "8080"},
 		},
 		"associated forward": {
 			args: Args{Action: actionAdd, Port: 8080, JobName: "docs"},
-			want: tool.CallRendering{Kind: "forward_add", Subject: "docs:8080"},
+			want: tool.CallRendering{Kind: "forward_add", ReportsStatus: true, Subject: "docs:8080"},
 		},
 		"unforward": {
 			args: Args{Action: actionRemove, Port: 8080},
-			want: tool.CallRendering{Kind: "forward_remove", Subject: "8080"},
+			want: tool.CallRendering{Kind: "forward_remove", ReportsStatus: true, Subject: "8080"},
 		},
 		"list": {
 			args: Args{Action: actionList},

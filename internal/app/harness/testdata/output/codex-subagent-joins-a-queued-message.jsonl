@@ -2,7 +2,7 @@
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"ask a subagent to find the config loader"}}
-{"kind":"event","event":{"rendering_kind":"subagent_start","render":"1 subagent","detail":"on GPT-5.6 Sol","intent":"Finding where the config loads","kind":"tool_call_request","id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Find the config loader\",\"intent\":\"Finding where the config loads\"}]}"}}
+{"kind":"event","event":{"rendering_kind":"subagent_start","render":"1 subagent","detail":"on GPT-5.6 Sol","intent":"Finding where the config loads","reports_status":true,"kind":"tool_call_request","id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Find the config loader\",\"intent\":\"Finding where the config loads\"}]}"}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"started tame-adder","id":"toolu_1","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":18}}}
 {"kind":"event","event":{"kind":"subagent_started","subagent":"tame-adder","text":"Find the config loader","id":"session-of-tame-adder","state":{"choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"workspace":"/workspace","intent":"Finding where the config loads"}}}
 {"kind":"event","event":{"kind":"subagent_finished","subagent":"tame-adder","text":"The config loader is in config.go.","name":"done","status":"success","state":{"usage":{}}}}

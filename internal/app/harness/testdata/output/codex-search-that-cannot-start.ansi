@@ -2,7 +2,7 @@
 \e[48;2;52;53;65m search for passata                                                                                 \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150m(\e[0m\e[38;2;138;190;183m?\e[0m\e[38;2;150;152;150mi\e[0m\e[38;2;150;152;150m)\e[0m\e[38;2;150;152;150mpassata\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102mcould not start the search: this machine will not give the sandbox its namesp…\e[0m\r
+\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150m(\e[0m\e[38;2;138;190;183m?\e[0m\e[38;2;150;152;150mi\e[0m\e[38;2;150;152;150m)\e[0m\e[38;2;150;152;150mpassata\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mcould not start the search: this machine will not give the sandbox its namespace…\e[0m\r
 \r
 The search could not run.\e[?25h\e[?2026l\r
 \r

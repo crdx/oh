@@ -223,3 +223,12 @@ func TestASpawnNamesTheModelItsSubagentsRunOn(t *testing.T) {
 		t.Errorf("a wait was qualified as %q", qualifier)
 	}
 }
+
+func TestOnlyActionsThatAnswerWithAStatusReportOne(t *testing.T) {
+	for _, action := range []string{Start, Send, Status, Stop, Output, Wait, List} {
+		doesReportStatus := slices.Contains([]string{Start, Send, Status, Stop}, action)
+		if got := Describe(Args{Action: action}).ReportsStatus; got != doesReportStatus {
+			t.Errorf("%s reports a status: %v, want %v", action, got, doesReportStatus)
+		}
+	}
+}

@@ -24,10 +24,10 @@ Every original tool ran.
 
 stable stable 1L
 changed changed 1L
-revision ✗ 1L the revision tool changed from version 1 to version 2 and is disabled for the remaind…
+revision ✗ the revision tool changed from version 1 to version 2 and is disabled for the remainder …
 schema schema 1L
 compatible compatible 1L
-missing ✗ 1L the missing tool is no longer installed and is disabled for this conversation
+missing ✗ the missing tool is no longer installed and is disabled for this conversation
 added {} ✗ there is no tool called "added"
 
 Tools at compatible versions ran with their frozen definitions; the changed version was refused.

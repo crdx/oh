@@ -10,7 +10,7 @@ context.
 Editing the target without reading it
 again.
 
-edit target.txt ✗ 1L read the file first
+edit target.txt ✗ read the file first
 
 The resumed edit was refused because the
 file has not been read in this session.
@@ -238,7 +238,7 @@ Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800
 
 Editing the target without reading it again.
 
-edit target.txt ✗ 1L read the file first
+edit target.txt ✗ read the file first
 
 The resumed edit was refused because the file has not been read in this session.
 === tiny ===
@@ -263,7 +263,7 @@ without
 reading it
 again.
 
-ed… ✗ 1L re…
+edit ✗ read…
 
 The resumed
 edit was
@@ -282,6 +282,6 @@ Agent 000000000000000000000000 ready in 0s with 0 skills ⧸ 0 snippets ⧸ ~800
 
 Editing the target without reading it again.
 
-edit target.txt ✗ 1L read the file first
+edit target.txt ✗ read the file first
 
 The resumed edit was refused because the file has not been read in this session.

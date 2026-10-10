@@ -2,10 +2,10 @@
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"forward the port and give it to docs"}}
-{"kind":"event","event":{"rendering_kind":"forward_add","render":"8080","kind":"tool_call_request","id":"call-1","name":"forward","arguments":"{\"action\":\"add\",\"port\":8080}"}}
+{"kind":"event","event":{"rendering_kind":"forward_add","render":"8080","reports_status":true,"kind":"tool_call_request","id":"call-1","name":"forward","arguments":"{\"action\":\"add\",\"port\":8080}"}}
 {"kind":"event","event":{"kind":"port_grant_change","name":"8080","state":{"host":"127.82.233.168","ports":[8080]}}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"Use http://127.82.233.168:8080 for the user; use localhost:8080 inside the sandbox.","id":"call-1","name":"forward","status":"success","stats":{"kind":"output","lines":1,"bytes":83}}}
-{"kind":"event","event":{"rendering_kind":"forward_add","render":"docs:8080","kind":"tool_call_request","id":"call-2","name":"forward","arguments":"{\"action\":\"add\",\"port\":8080,\"job_name\":\"docs\"}"}}
+{"kind":"event","event":{"rendering_kind":"forward_add","render":"docs:8080","reports_status":true,"kind":"tool_call_request","id":"call-2","name":"forward","arguments":"{\"action\":\"add\",\"port\":8080,\"job_name\":\"docs\"}"}}
 {"kind":"event","event":{"kind":"port_grant_change","name":"8080","state":{"host":"127.82.233.168","ports":[8080],"job_names":{"8080":"docs"},"adoption":true}}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"Use http://127.82.233.168:8080 for the user; use localhost:8080 inside the sandbox.","id":"call-2","name":"forward","status":"success","stats":{"kind":"output","lines":1,"bytes":83}}}
 {"kind":"event","event":{"kind":"model_message","text":"Port 8080 now belongs to docs."}}
@@ -19,9 +19,9 @@
 {"kind":"item","payload":{"id":"message-3","type":"message","role":"assistant","content":[{"type":"output_text","text":"Port 8080 now belongs to docs."}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"give it to docs again, then to the api"}}
-{"kind":"event","event":{"rendering_kind":"forward_add","render":"docs:8080","kind":"tool_call_request","id":"call-3","name":"forward","arguments":"{\"action\":\"add\",\"port\":8080,\"job_name\":\"docs\"}"}}
+{"kind":"event","event":{"rendering_kind":"forward_add","render":"docs:8080","reports_status":true,"kind":"tool_call_request","id":"call-3","name":"forward","arguments":"{\"action\":\"add\",\"port\":8080,\"job_name\":\"docs\"}"}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"Use http://127.82.233.168:8080 for the user; use localhost:8080 inside the sandbox.","id":"call-3","name":"forward","status":"success","stats":{"kind":"output","lines":1,"bytes":83}}}
-{"kind":"event","event":{"rendering_kind":"forward_add","render":"api:8080","kind":"tool_call_request","id":"call-4","name":"forward","arguments":"{\"action\":\"add\",\"port\":8080,\"job_name\":\"api\"}"}}
+{"kind":"event","event":{"rendering_kind":"forward_add","render":"api:8080","reports_status":true,"kind":"tool_call_request","id":"call-4","name":"forward","arguments":"{\"action\":\"add\",\"port\":8080,\"job_name\":\"api\"}"}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"port 8080 is already forwarded","id":"call-4","name":"forward","status":"error","stats":{"kind":"output","lines":1,"bytes":30}}}
 {"kind":"event","event":{"kind":"model_message","text":"Port 8080 stays with docs."}}
 {"kind":"item","payload":{"role":"user","content":"give it to docs again, then to the api"}}

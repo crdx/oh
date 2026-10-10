@@ -66,9 +66,9 @@ func Describe(args Args) tool.CallRendering {
 		if args.JobName != "" {
 			port = args.JobName + ":" + port
 		}
-		return tool.CallRendering{Kind: "forward_add", Subject: port}
+		return tool.CallRendering{Kind: "forward_add", Subject: port, ReportsStatus: true}
 	case actionRemove:
-		return tool.CallRendering{Kind: "forward_remove", Subject: port}
+		return tool.CallRendering{Kind: "forward_remove", Subject: port, ReportsStatus: true}
 	case actionList:
 		return tool.CallRendering{Kind: "forward_list", Subject: "forwards"}
 	}

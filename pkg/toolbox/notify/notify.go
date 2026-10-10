@@ -149,7 +149,7 @@ func New(writeEscape EscapeWriter, isTerminalFocused func() bool) tool.Tool {
 }
 
 func Describe(args Args) tool.CallRendering {
-	return tool.CallRendering{Subject: args.Title, Qualifier: "— " + args.Message}
+	return tool.CallRendering{Subject: args.Title, Qualifier: "— " + args.Message, ReportsStatus: true}
 }
 
 func validate(args Args) error {

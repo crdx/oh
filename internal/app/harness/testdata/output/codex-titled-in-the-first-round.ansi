@@ -2,7 +2,7 @@
 \e[48;2;52;53;65m split the picker into its own package                                                              \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\title\e]8;;\e\\ \e[38;2;192;128;80msplit picker package\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\title\e]8;;\e\\ \e[38;2;192;128;80msplit picker package\e[0m\r
 \e]8;;oh://tool-result?call=call-2&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \e]8;;oh://tool-result?call=call-3&session=tame-impala\e\\\e[38;2;207;173;0mwork\e[0m\e]8;;\e\\ \e[38;2;192;128;80mwork\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r

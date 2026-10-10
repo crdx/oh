@@ -116,8 +116,13 @@ func New(manager Manager, model string) tool.Tool {
 	})
 }
 
+var statusActions = []string{Start, Send, Status, Stop}
+
 func Describe(args Args) tool.CallRendering {
-	rendering := tool.CallRendering{Kind: Name + "_" + args.Action}
+	rendering := tool.CallRendering{
+		Kind:          Name + "_" + args.Action,
+		ReportsStatus: slices.Contains(statusActions, args.Action),
+	}
 	switch args.Action {
 	case Start:
 		rendering.Subject = fmt.Sprintf("%d subagents", len(args.Subagents))

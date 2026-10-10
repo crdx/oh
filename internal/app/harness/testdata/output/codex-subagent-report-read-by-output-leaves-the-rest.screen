@@ -2,7 +2,7 @@
  ask two subagents and read the first
 
 
-spawn 2 subagents on GPT-5.6 Sol 1L
+spawn 2 subagents on GPT-5.6 Sol
 cat tame-adder 2L (Finding where the config loads)
 
 The loader is in config.go; the parser report will follow.

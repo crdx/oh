@@ -6,7 +6,7 @@
 \e[48;2;52;53;65m start a subagent without a shell                                                                   \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[3m\e[38;2;150;152;150mReading the logs for errors\e[0m\e[0m \e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80m1 subagent\e[0m \e[38;2;150;152;150mon Claude Opus 5\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e[3m\e[38;2;150;152;150mReading the logs for errors\e[0m\e[0m \e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80m1 subagent\e[0m \e[38;2;150;152;150mon Claude Opus 5\e[0m\r
 \r
 A reader is on it.\r
 \r

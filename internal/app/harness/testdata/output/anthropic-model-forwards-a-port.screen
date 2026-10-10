@@ -2,7 +2,7 @@
  put the preview where i can see it
 
 
-forward 8080 1L
+forward 8080
 
 
  🤖 Port 8080 is now forwarded to http://127.82.233.168:8080.
@@ -14,7 +14,7 @@ The preview is forwarded at the address in the tool result above.
  take it down
 
 
-close 8080 1L
+close 8080
 
 
  🤖 Port 8080 is no longer forwarded.

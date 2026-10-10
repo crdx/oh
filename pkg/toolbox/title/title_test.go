@@ -134,3 +134,9 @@ func TestAnUnusableTitleIsRefused(t *testing.T) {
 		t.Errorf("expected the longest usable title to be taken: %v", err)
 	}
 }
+
+func TestATitleReportsAStatusRatherThanOutput(t *testing.T) {
+	if !title.Describe(title.Args{Title: "fix picker clipping"}).ReportsStatus {
+		t.Error("a title call should report a status")
+	}
+}

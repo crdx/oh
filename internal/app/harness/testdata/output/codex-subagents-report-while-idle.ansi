@@ -2,7 +2,7 @@
 \e[48;2;52;53;65m split the review between two subagents                                                             \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80m2 subagents\e[0m \e[38;2;150;152;150mon GPT-5.6 Sol\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80m2 subagents\e[0m \e[38;2;150;152;150mon GPT-5.6 Sol\e[0m\r
 \r
 Two subagents are working on it.\r
 \r

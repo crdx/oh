@@ -2,7 +2,7 @@
  search for passata
 
 
-grep (?i)passata ✗ 1L could not start the search: this machine will not give the sandbox its namesp…
+grep (?i)passata ✗ could not start the search: this machine will not give the sandbox its namespace…
 
 The search could not run.
 

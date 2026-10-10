@@ -582,52 +582,56 @@ func TestAJobCallIsRenderedByItsAction(t *testing.T) {
 		"start": {
 			args: job.Args{Action: "start", Name: "docs", Command: "python3  -m\nhttp.server"},
 			want: tool.CallRendering{
-				Kind:         "job_start",
-				Subject:      "docs",
-				Continuation: []tool.CallRendering{bash.DescribeCommand("python3  -m\nhttp.server")},
-				Introduces:   "docs",
+				Kind:          "job_start",
+				ReportsStatus: true,
+				Subject:       "docs",
+				Continuation:  []tool.CallRendering{bash.DescribeCommand("python3  -m\nhttp.server")},
+				Introduces:    "docs",
 			},
 		},
 		"start with port": {
 			args: job.Args{Action: "start", Name: "docs", Port: 8080, Command: "serve docs"},
 			want: tool.CallRendering{
-				Kind:         "job_start",
-				Subject:      "docs:8080",
-				Emphasis:     tool.Emphasis{Kind: tool.EmphasisLead, Value: "docs"},
-				Continuation: []tool.CallRendering{bash.DescribeCommand("serve docs")},
-				Introduces:   "docs",
+				Kind:          "job_start",
+				ReportsStatus: true,
+				Subject:       "docs:8080",
+				Emphasis:      tool.Emphasis{Kind: tool.EmphasisLead, Value: "docs"},
+				Continuation:  []tool.CallRendering{bash.DescribeCommand("serve docs")},
+				Introduces:    "docs",
 			},
 		},
 		"restart": {
 			args: job.Args{Action: "start", Name: "docs"},
-			want: tool.CallRendering{Kind: "job_restart", Subject: "docs", Introduces: "docs"},
+			want: tool.CallRendering{Kind: "job_restart", ReportsStatus: true, Subject: "docs", Introduces: "docs"},
 		},
 		"restart with port": {
 			args: job.Args{Action: "start", Name: "docs", Port: 8080},
 			want: tool.CallRendering{
-				Kind:       "job_restart",
-				Subject:    "docs:8080",
-				Emphasis:   tool.Emphasis{Kind: tool.EmphasisLead, Value: "docs"},
-				Introduces: "docs",
+				Kind:          "job_restart",
+				ReportsStatus: true,
+				Subject:       "docs:8080",
+				Emphasis:      tool.Emphasis{Kind: tool.EmphasisLead, Value: "docs"},
+				Introduces:    "docs",
 			},
 		},
 		"respawning start": {
 			args: job.Args{Action: "start", Name: "watch", Command: "inotifywait .", Respawn: true},
 			want: tool.CallRendering{
-				Kind:         "job_start",
-				Subject:      "watch",
-				Qualifier:    "respawning on exit",
-				Continuation: []tool.CallRendering{bash.DescribeCommand("inotifywait .")},
-				Introduces:   "watch",
+				Kind:          "job_start",
+				ReportsStatus: true,
+				Subject:       "watch",
+				Qualifier:     "respawning on exit",
+				Continuation:  []tool.CallRendering{bash.DescribeCommand("inotifywait .")},
+				Introduces:    "watch",
 			},
 		},
 		"respawning restart": {
 			args: job.Args{Action: "start", Name: "watch", Respawn: true},
-			want: tool.CallRendering{Kind: "job_restart", Subject: "watch", Qualifier: "respawning on exit", Introduces: "watch"},
+			want: tool.CallRendering{Kind: "job_restart", ReportsStatus: true, Subject: "watch", Qualifier: "respawning on exit", Introduces: "watch"},
 		},
 		"status": {
 			args: job.Args{Action: "status", Name: "docs"},
-			want: tool.CallRendering{Kind: "job_status", Subject: "docs", Mentions: []string{"docs"}},
+			want: tool.CallRendering{Kind: "job_status", ReportsStatus: true, Subject: "docs", Mentions: []string{"docs"}},
 		},
 		"output": {
 			args: job.Args{Action: "output", Name: "docs"},
@@ -635,11 +639,11 @@ func TestAJobCallIsRenderedByItsAction(t *testing.T) {
 		},
 		"stop": {
 			args: job.Args{Action: "stop", Name: "docs"},
-			want: tool.CallRendering{Kind: "job_stop", Subject: "docs", Mentions: []string{"docs"}},
+			want: tool.CallRendering{Kind: "job_stop", ReportsStatus: true, Subject: "docs", Mentions: []string{"docs"}},
 		},
 		"discard": {
 			args: job.Args{Action: "discard", Name: "docs"},
-			want: tool.CallRendering{Kind: "job_discard", Subject: "docs", Mentions: []string{"docs"}},
+			want: tool.CallRendering{Kind: "job_discard", ReportsStatus: true, Subject: "docs", Mentions: []string{"docs"}},
 		},
 		"wait any": {
 			args: job.Args{Action: "wait", Names: []string{"build", "lint"}},
@@ -667,7 +671,7 @@ func TestAJobCallIsRenderedByItsAction(t *testing.T) {
 		},
 		"prune": {
 			args: job.Args{Action: "prune"},
-			want: tool.CallRendering{Kind: "job_prune", Subject: "jobs"},
+			want: tool.CallRendering{Kind: "job_prune", ReportsStatus: true, Subject: "jobs"},
 		},
 	} {
 		t.Run(name, func(t *testing.T) {

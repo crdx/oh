@@ -131,6 +131,7 @@ const hostDescription = "run a shell command in the background, directly on the 
 
 func Describe(args Args) tool.CallRendering {
 	rendering := describeAction(args)
+	rendering.ReportsStatus = slices.Contains(statusActions, args.Action)
 	switch args.Action {
 	case actionStart:
 		rendering.Intent = bash.SpokenIntent(args.Intent)
@@ -142,6 +143,8 @@ func Describe(args Args) tool.CallRendering {
 	}
 	return rendering
 }
+
+var statusActions = []string{actionStart, actionStatus, actionStop, actionDiscard, actionPrune}
 
 func describeAction(args Args) tool.CallRendering {
 	switch args.Action {

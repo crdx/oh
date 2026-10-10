@@ -3,7 +3,7 @@
  start the docs server and keep it up
 
 
-Handling this job for the test start 1L
+Handling this job for the test start do…
 
 The docs server is up.
 
@@ -51,14 +51,14 @@ Cache expired: 97Kt sent after 7m.
  what happened to it
 
 
-status docs 1L
+status docs
 
 
  🤖 Job docs stopped from the keyboard.
 
 
-discard docs 1L
-prune jobs 1L
+discard docs
+prune jobs
 
 It was stopped when write access was
 withdrawn.
@@ -1416,7 +1416,7 @@ n
  start the docs server and keep it up
 
 
-Handling this job for the test start docs $ python3 -m http.server 8080 1L
+Handling this job for the test start docs $ python3 -m http.server 8080
 
 The docs server is up.
 
@@ -1454,14 +1454,14 @@ Cache expired: 97Kt sent after 7m.
  what happened to it
 
 
-status docs 1L (Handling this job for the test)
+status docs (Handling this job for the test)
 
 
  🤖 Job docs stopped from the keyboard.
 
 
-discard docs 1L (Handling this job for the test)
-prune jobs 1L
+discard docs (Handling this job for the test)
+prune jobs
 
 It was stopped when write access was withdrawn.
 === tiny ===
@@ -1595,7 +1595,7 @@ after 7m.
  it
 
 
-status d… 1L
+status docs
 
 
  🤖 Job docs
@@ -1605,8 +1605,8 @@ status d… 1L
     .
 
 
-discard … 1L
-prune jo… 1L
+discard docs
+prune jobs
 
 It was
 stopped when
@@ -1618,7 +1618,7 @@ withdrawn.
  start the docs server and keep it up
 
 
-Handling this job for the test start docs $ python3 -m http.server 8080 1L
+Handling this job for the test start docs $ python3 -m http.server 8080
 
 The docs server is up.
 
@@ -1656,13 +1656,13 @@ Cache expired: 97Kt sent after 7m.
  what happened to it
 
 
-status docs 1L (Handling this job for the test)
+status docs (Handling this job for the test)
 
 
  🤖 Job docs stopped from the keyboard.
 
 
-discard docs 1L (Handling this job for the test)
-prune jobs 1L
+discard docs (Handling this job for the test)
+prune jobs
 
 It was stopped when write access was withdrawn.

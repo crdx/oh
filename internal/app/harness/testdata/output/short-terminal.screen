@@ -94,7 +94,7 @@ grep cursor *.go 1L
 One more pair, and one of them will not be there.
 
 ls 7L
-read nowhere/at/all.go ✗ 1L nowhere/at/all.go: no such file or directory
+read nowhere/at/all.go ✗ nowhere/at/all.go: no such file or directory
 
 That is the lot: four together, then three together, then a pair where only one of them could be
 answered.

@@ -58,16 +58,17 @@ type ToolCall interface {
 }
 
 type CallRendering struct {
-	Kind         string          `json:"kind,omitempty"`
-	Subject      string          `json:"render,omitempty"`
-	Qualifier    string          `json:"detail,omitempty"`
-	PathLine     string          `json:"path_line,omitempty"`
-	Emphasis     Emphasis        `json:"emphasis,omitzero"`
-	Continuation []CallRendering `json:"continuation,omitempty"`
-	Intent       string          `json:"intent,omitempty"`
-	Introduces   string          `json:"introduces,omitempty"`
-	Mentions     []string        `json:"mentions,omitempty"`
-	ShowOutput   bool            `json:"show_output,omitempty"`
+	Kind          string          `json:"kind,omitempty"`
+	Subject       string          `json:"render,omitempty"`
+	Qualifier     string          `json:"detail,omitempty"`
+	PathLine      string          `json:"path_line,omitempty"`
+	Emphasis      Emphasis        `json:"emphasis,omitzero"`
+	Continuation  []CallRendering `json:"continuation,omitempty"`
+	Intent        string          `json:"intent,omitempty"`
+	Introduces    string          `json:"introduces,omitempty"`
+	Mentions      []string        `json:"mentions,omitempty"`
+	ShowOutput    bool            `json:"show_output,omitempty"`
+	ReportsStatus bool            `json:"reports_status,omitempty"`
 }
 
 func (self CallRendering) HasArguments() bool {

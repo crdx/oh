@@ -309,6 +309,9 @@ func TestDescribeReportsTheTitleAndMessage(t *testing.T) {
 	if subject != "Greeting" || qualifier != "— hello" {
 		t.Errorf("got subject %q and qualifier %q", subject, qualifier)
 	}
+	if !rendering.ReportsStatus {
+		t.Error("a notification should report a status rather than output")
+	}
 }
 
 func TestATitleThatLooksLikeAnOptionIsPassedAsText(t *testing.T) {

@@ -2,7 +2,7 @@
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"split the picker into its own package"}}
-{"kind":"event","event":{"render":"split picker package","read_only":true,"kind":"tool_call_request","id":"call-1","name":"title","arguments":"{\"title\":\"split picker package\"}"}}
+{"kind":"event","event":{"render":"split picker package","reports_status":true,"read_only":true,"kind":"tool_call_request","id":"call-1","name":"title","arguments":"{\"title\":\"split picker package\"}"}}
 {"kind":"event","event":{"render":"work","kind":"tool_call_request","id":"call-2","name":"work","arguments":"{}"}}
 {"kind":"event","event":{"kind":"state_change","id":"call-1","name":"title","state":{"title":"split picker package"}}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"session titled \"split picker package\"","id":"call-1","name":"title","status":"success","stats":{"kind":"output","lines":1,"bytes":37}}}

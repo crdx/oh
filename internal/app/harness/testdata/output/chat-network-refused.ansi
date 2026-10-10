@@ -2,7 +2,7 @@
 \e[48;2;52;53;65m run a command the user will refuse the host network                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[3m\e[38;2;150;152;150mChecking what example.com serves\e[0m\e[0m \e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\\e[38;2;204;102;102m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102mhost-network access refused; command did n…\e[0m\r
+\e[3m\e[38;2;150;152;150mChecking what example.com serves\e[0m\e[0m \e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\\e[38;2;204;102;102m$\e[0m\e]8;;\e\\ \e[38;2;129;162;190mcurl\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mexample.com\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mhost-network access refused; command did not …\e[0m\r
 \r
 I will not run that command.\e[?25h\e[?2026l\r
 \r

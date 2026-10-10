@@ -2,7 +2,7 @@
 \e[48;2;52;53;65m ask a subagent to find the config loader                                                           \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[3m\e[38;2;150;152;150mFinding where the config loads\e[0m\e[0m \e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80m1 subagent\e[0m \e[38;2;150;152;150mon GPT-5.6 Sol\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e[3m\e[38;2;150;152;150mFinding where the config loads\e[0m\e[0m \e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80m1 subagent\e[0m \e[38;2;150;152;150mon GPT-5.6 Sol\e[0m\r
 \r
 A subagent is looking in internal.\r
 \r
@@ -18,7 +18,7 @@ It found the loader in config.go.\e[?25h\e[?2026l\r
 \e[48;2;52;53;65m ask the same subagent for the tests                                                                \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[38;2;207;173;0msend\e[0m \e[38;2;192;128;80mtame-adder\e[0m \e[3m\e[38;2;150;152;150m(Finding where the config loads)\e[0m\e[0m\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0msend\e[0m\e]8;;\e\\ \e[38;2;192;128;80mtame-adder\e[0m \e[38;2;150;152;150m1L\e[0m \e[3m\e[38;2;150;152;150m(Finding where the config loads)\e[0m\e[0m\e[K\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[51C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0msend\e[0m \e[38;2;192;128;80mtame-adder\e[0m \e[3m\e[38;2;150;152;150m(Finding where the config loads)\e[0m\e[0m\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0msend\e[0m\e]8;;\e\\ \e[38;2;192;128;80mtame-adder\e[0m \e[3m\e[38;2;150;152;150m(Finding where the config loads)\e[0m\e[0m\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 I asked it again.\e[K\r\e[17C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[17C\e[?25h\e[?2026l\r
 \e[?2026h\e[?25l\r\e[K\r

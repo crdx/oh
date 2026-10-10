@@ -1,7 +1,7 @@
 {"kind":"head","version":20,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","system_prompt":"You are a test assistant.","tools":["title"],"tool_definitions":[{"name":"title","description":"name the task this session is doing, in a few words, as soon as the task is clear; ensure to retitle as the session evolves","revision":"1","parameters":[{"name":"title","type":"string","description":"a 3-word slug description of the task, like \"fix-picker-clipping\""}]}]}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"have a look at the picker"}}
-{"kind":"event","event":{"render":"fix the picker clipping","read_only":true,"kind":"tool_call_request","id":"call-1","name":"title","arguments":"{\"title\":\"fix the picker clipping\"}"}}
+{"kind":"event","event":{"render":"fix the picker clipping","reports_status":true,"read_only":true,"kind":"tool_call_request","id":"call-1","name":"title","arguments":"{\"title\":\"fix the picker clipping\"}"}}
 {"kind":"event","event":{"kind":"state_change","id":"call-1","name":"title","state":{"title":"fix the picker clipping"}}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"session titled \"fix the picker clipping\"","id":"call-1","name":"title","status":"success","stats":{"kind":"output","lines":1,"bytes":40}}}
 {"kind":"event","event":{"kind":"model_message","text":"Named it, and the row is one cell short."}}
@@ -11,9 +11,9 @@
 {"kind":"item","payload":{"role":"assistant","content":"Named it, and the row is one cell short."}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"carry on"}}
-{"kind":"event","event":{"render":"fix the picker clipping","read_only":true,"kind":"tool_call_request","id":"call-2","name":"title","arguments":"{\"title\":\"fix the picker clipping\"}"}}
+{"kind":"event","event":{"render":"fix the picker clipping","reports_status":true,"read_only":true,"kind":"tool_call_request","id":"call-2","name":"title","arguments":"{\"title\":\"fix the picker clipping\"}"}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"title unchanged: \"fix the picker clipping\"","id":"call-2","name":"title","status":"success","stats":{"kind":"output","lines":1,"bytes":42}}}
-{"kind":"event","event":{"render":"give sessions a title","read_only":true,"kind":"tool_call_request","id":"call-3","name":"title","arguments":"{\"title\":\"give sessions a title\"}"}}
+{"kind":"event","event":{"render":"give sessions a title","reports_status":true,"read_only":true,"kind":"tool_call_request","id":"call-3","name":"title","arguments":"{\"title\":\"give sessions a title\"}"}}
 {"kind":"event","event":{"kind":"state_change","id":"call-3","name":"title","state":{"title":"give sessions a title"}}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"session titled \"give sessions a title\"","id":"call-3","name":"title","status":"success","stats":{"kind":"output","lines":1,"bytes":38}}}
 {"kind":"event","event":{"kind":"model_message","text":"The task turned out to be a wider one."}}

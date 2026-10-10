@@ -876,7 +876,7 @@ func (self *Picasso) mark(event agent.Event) {
 		getState(event.Status, label.MarksSuccess),
 		event.Took,
 		call.Summary(event, label.ShowOutput),
-		call.Measurements(event.Metrics),
+		call.ResultMeasurements(event, label.ReportsStatus),
 	)
 
 	self.holdPicture(index, event)

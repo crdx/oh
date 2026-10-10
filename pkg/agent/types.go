@@ -288,6 +288,7 @@ type FallbackRendering struct {
 	Introduces    string               `json:"introduces,omitempty"`
 	Mentions      []string             `json:"mentions,omitempty"`
 	ShowOutput    bool                 `json:"show_output,omitempty"`
+	ReportsStatus bool                 `json:"reports_status,omitempty"`
 	ReadOnly      bool                 `json:"read_only,omitempty"`
 	MarksSuccess  bool                 `json:"marks_success,omitempty"`
 }
@@ -307,6 +308,7 @@ func (self *FallbackRendering) SetRendering(rendering tool.CallRendering) {
 	self.Introduces = rendering.Introduces
 	self.Mentions = slices.Clone(rendering.Mentions)
 	self.ShowOutput = rendering.ShowOutput
+	self.ReportsStatus = rendering.ReportsStatus
 }
 
 type Status string

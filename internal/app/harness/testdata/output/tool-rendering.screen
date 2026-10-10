@@ -5,7 +5,7 @@
 
 
 Running this command for the test $ ✓ 2L
-notify command finished — alpha and … 1L
+notify command finished — alpha and bet…
 lookup how to quote a shell variable 1L
 fetch https://gnu.org/bash as clean_… 1L
 
@@ -120,7 +120,7 @@ e
 
 
 Running this command for the test $ NAME=alpha; case "$NAME" in alpha) echo alpha ;; esac; (ec… ✓ 2L
-notify command finished — alpha and beta were printed 1L
+notify command finished — alpha and beta were printed
 lookup how to quote a shell variable 1L
 fetch https://gnu.org/bash as clean_html 1L
 
@@ -136,7 +136,7 @@ done.
 
 
 Running t… ✓
-notify c… 1L
+notify comm…
 lookup h… 1L
 fetch ht… 1L
 
@@ -147,7 +147,7 @@ done.
 
 
 Running this command for the test $ NAME=alpha; case "$NAME" in alpha) echo alpha ;; esac; (ec… ✓ 2L
-notify command finished — alpha and beta were printed 1L
+notify command finished — alpha and beta were printed
 lookup how to quote a shell variable 1L
 fetch https://gnu.org/bash as clean_html 1L
 

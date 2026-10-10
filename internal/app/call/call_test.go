@@ -9,6 +9,7 @@ import (
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/util"
+	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tool"
 )
 
@@ -438,5 +439,31 @@ func TestFormatDuration(t *testing.T) {
 		if len(want) > durationWidth {
 			t.Errorf("expected %q to fit the column of %d", want, durationWidth)
 		}
+	}
+}
+
+func TestAStatusOrFailedResultDrawsNoLineCount(t *testing.T) {
+	output := tool.GetMetrics("started docs")
+	resources := tool.ToolCallMetrics{Kind: tool.MetricResources, Lines: 3, Bytes: 12}
+	for _, test := range []struct {
+		name             string
+		status           agent.Status
+		metrics          tool.ToolCallMetrics
+		doesReportStatus bool
+		want             string
+	}{
+		{"a status", agent.SuccessStatus, output, true, ""},
+		{"a failure", agent.ErrorStatus, output, false, ""},
+		{"a stopped call", agent.CancelledStatus, output, false, ""},
+		{"an answer", agent.SuccessStatus, output, false, "1L"},
+		{"a failed command", agent.ErrorStatus, resources, false, "3L"},
+	} {
+		event := agent.Event{Status: test.status, Metrics: &test.metrics}
+		if got := style.Plain(ResultMeasurements(event, test.doesReportStatus)); got != test.want {
+			t.Errorf("%s measured %q, want %q", test.name, got, test.want)
+		}
+	}
+	if got := ResultMeasurements(agent.Event{Status: agent.SuccessStatus}, false); got != "" {
+		t.Errorf("a result without metrics measured %q, want nothing", got)
 	}
 }

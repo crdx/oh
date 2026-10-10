@@ -1,5 +1,5 @@
 {"event":{"kind":"user_message","text":"start the docs server and a watcher"}}
-{"event":{"kind":"tool_call_request","id":"call_1","name":"job","arguments":"{\"action\":\"start\",\"name\":\"docs\",\"command\":\"python3 -m http.server 8080\",\"intent\":\"Handling this job for the test\"}","render":"stale job rendering","detail":"stale job qualifier"}}
+{"event":{"reports_status":true,"kind":"tool_call_request","id":"call_1","name":"job","arguments":"{\"action\":\"start\",\"name\":\"docs\",\"command\":\"python3 -m http.server 8080\",\"intent\":\"Handling this job for the test\"}","render":"stale job rendering","detail":"stale job qualifier"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"docs: running, up 0s","id":"call_1","name":"job","took":0,"stats":{"kind":"output","lines":1,"bytes":20}}}
 {"event":{"kind":"job_listing","state":[{"name":"docs","command":"python3 -m http.server 8080","state":"running","started_at":"2026-08-23T14:32:09Z"},{"name":"watch","command":"just watch","state":"running","started_at":"2026-08-23T14:32:11Z"}]}}
 {"event":{"kind":"model_message","text":"Both are up."}}
@@ -7,6 +7,6 @@
 {"event":{"kind":"user_message","text":"carry on"}}
 {"event":{"kind":"tool_call_request","id":"call_2","name":"job","arguments":"{\"action\":\"list\",\"intent\":\"Handling this job for the test\"}","render":"stale listing rendering","detail":"stale listing qualifier"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"docs: ended with the session, ran for 3m12s — python3 -m http.server 8080\nwatch: ended with the session, ran for 3m10s — just watch","id":"call_2","name":"job","took":0,"stats":{"kind":"output","lines":2,"bytes":137}}}
-{"event":{"kind":"tool_call_request","id":"call_3","name":"job","arguments":"{\"action\":\"start\",\"name\":\"docs\",\"intent\":\"Handling this job for the test\"}","render":"stale restart rendering","detail":"stale restart qualifier"}}
+{"event":{"reports_status":true,"kind":"tool_call_request","id":"call_3","name":"job","arguments":"{\"action\":\"start\",\"name\":\"docs\",\"intent\":\"Handling this job for the test\"}","render":"stale restart rendering","detail":"stale restart qualifier"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"docs: running, up 0s","id":"call_3","name":"job","took":0,"stats":{"kind":"output","lines":1,"bytes":20}}}
 {"event":{"kind":"model_message","text":"Restarted `docs` from the command it was remembered with."}}

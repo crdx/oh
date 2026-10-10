@@ -2,13 +2,13 @@
 \e[48;2;52;53;65m serve the docs on the port you forwarded                                                           \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mforward\e[0m\e]8;;\e\\ \e[38;2;192;128;80m8080\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mforward\e[0m\e]8;;\e\\ \e[38;2;192;128;80m8080\e[0m\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to http://127.82.233.168:8080.                                       \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
-\e[3m\e[38;2;150;152;150mServing the documentation\e[0m\e[0m \e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[38;2;150;152;150m:8080\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mdocs\e[0m \e[38;2;150;152;150m2L\e[0m\r
+\e[3m\e[38;2;150;152;150mServing the documentation\e[0m\e[0m \e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m\e[38;2;150;152;150m:8080\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mdocs\e[0m\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Port 8080 now belongs to job docs.                                                              \e[0m\r
@@ -20,7 +20,7 @@ The docs are served on the forwarded port.\e[?25h\e[?2026l\r
 \e[48;2;52;53;65m put the api and a bare forward on that port too                                                    \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[3m\e[38;2;150;152;150mRunning the api on that port\e[0m\e[0m \e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mapi\e[0m\e[38;2;150;152;150m:8080\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mapi\e[0m\e[K\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mRunning the api on that port\e[0m\e[0m \e]8;;oh://tool-result?call=toolu_3&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mapi\e[0m\e[38;2;150;152;150m:8080\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mapi\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102mcould not forward port 8080 for job "ap…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\r\e[38;2;207;173;0mforward\e[0m \e[38;2;192;128;80m8080\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=toolu_4&session=tame-impala\e\\\e[38;2;207;173;0mforward\e[0m\e]8;;\e\\ \e[38;2;192;128;80m8080\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102mport 8080 is already forwarded\e[0m\e[K\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[3m\e[38;2;150;152;150mRunning the api on that port\e[0m\e[0m \e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mapi\e[0m\e[38;2;150;152;150m:8080\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mapi\e[0m\e[K\r\e[54C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mRunning the api on that port\e[0m\e[0m \e]8;;oh://tool-result?call=toolu_3&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mapi\e[0m\e[38;2;150;152;150m:8080\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mapi\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mcould not forward port 8080 for job "api",…\e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\r\e[38;2;207;173;0mforward\e[0m \e[38;2;192;128;80m8080\e[0m\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=toolu_4&session=tame-impala\e\\\e[38;2;207;173;0mforward\e[0m\e]8;;\e\\ \e[38;2;192;128;80m8080\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mport 8080 is already forwarded\e[0m\e[K\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[45C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 Port 8080 already belongs to docs.\e[K\r\e[34C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[34C\e[?25h\e[?2026l\r

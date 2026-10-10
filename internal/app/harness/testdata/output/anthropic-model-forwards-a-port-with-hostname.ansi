@@ -2,7 +2,7 @@
 \e[48;2;52;53;65m put the preview where i can see it                                                                 \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mforward\e[0m\e]8;;\e\\ \e[38;2;192;128;80m8080\e[0m \e[38;2;150;152;150m1L\e[0m\r
+\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mforward\e[0m\e]8;;\e\\ \e[38;2;192;128;80m8080\e[0m\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Port 8080 is now forwarded to \e]8;;http://tame-impala.agent:8080\e\\\e[38;2;129;162;190mhttp://tame-impala.agent:8080\e[0m\e[48;2;48;58;67m\e]8;;\e\\.                                    \e[0m\r
@@ -18,6 +18,6 @@ The preview is forwarded at the address in the tool result above.\e[?25h\e[?2026
 \e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🤖 Port 8080 is no longer forwarded.                                                               \e[0m\r
-\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0mclose\e[0m\e]8;;\e\\ \e[38;2;192;128;80m8080\e[0m \e[38;2;150;152;150m1L\e[0m\e[K\e[4B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[4A\r\e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0mclose\e[0m\e]8;;\e\\ \e[38;2;192;128;80m8080\e[0m\e[K\e[4B\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 Taken down.\e[K\r\e[11C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[11C\e[?25h\e[?2026l\r

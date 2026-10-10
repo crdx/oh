@@ -2,6 +2,6 @@
 {"event":{"kind":"mode_change","name":"s","state":"rxwg"}}
 {"event":{"kind":"tool_call_request","id":"call_1","name":"status","read_only":true}}
 {"event":{"kind":"tool_call_result","id":"call_1","name":"status","status":"success"}}
-{"event":{"kind":"tool_call_request","id":"call_2","name":"notify","arguments":"{\"title\":\"done\",\"message\":\"nothing to report\",\"icon\":\"info\"}","render":"done"}}
+{"event":{"reports_status":true,"kind":"tool_call_request","id":"call_2","name":"notify","arguments":"{\"title\":\"done\",\"message\":\"nothing to report\",\"icon\":\"info\"}","render":"done"}}
 {"event":{"kind":"tool_call_result","id":"call_2","name":"notify","status":"info","took":0}}
 {"event":{"kind":"model_message","text":"Nothing came back."}}

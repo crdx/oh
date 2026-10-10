@@ -11,17 +11,17 @@ Writing the file the rest of this needs.
 
 I'll put a file down to work with.
 
-write notes.md 2… ✗ 1L the filesystem i…
+write notes.md 26B ✗ the filesystem is …
 Reading, then writing, then reading what
 was written.
 
 Now to read it, add to it, and read it
 back.
 
-read notes.md ✗ 1L notes.md: no such fi…
+read notes.md ✗ notes.md: no such file …
 ls 7L
-write notes.md 3… ✗ 1L the filesystem i…
-read notes.md ✗ 1L notes.md: no such fi…
+write notes.md 32B ✗ the filesystem is …
+read notes.md ✗ notes.md: no such file …
 
 The reads went together, the write
 waited for them and ran on its own, and
@@ -476,15 +476,15 @@ Writing the file the rest of this needs.
 
 I'll put a file down to work with.
 
-write notes.md 26B ✗ 1L the filesystem is read-only
+write notes.md 26B ✗ the filesystem is read-only
 Reading, then writing, then reading what was written.
 
 Now to read it, add to it, and read it back.
 
-read notes.md ✗ 1L notes.md: no such file or directory
+read notes.md ✗ notes.md: no such file or directory
 ls 7L
-write notes.md 32B ✗ 1L the filesystem is read-only
-read notes.md ✗ 1L notes.md: no such file or directory
+write notes.md 32B ✗ the filesystem is read-only
+read notes.md ✗ notes.md: no such file or directory
 
 The reads went together, the write waited for them and ran on its own, and the read after it waited
 for the write. Every write was refused because the workspace is read-only, so nothing was there for
@@ -514,7 +514,7 @@ I'll put a
 file down to
 work with.
 
-wr… ✗ 1L th…
+wri… ✗ the …
 Reading,
 then
 writing,
@@ -527,10 +527,10 @@ it, add to
 it, and read
 it back.
 
-re… ✗ 1L no…
+read ✗ note…
 ls 7L
-wr… ✗ 1L th…
-re… ✗ 1L no…
+wri… ✗ the …
+read ✗ note…
 
 The reads
 went
@@ -564,15 +564,15 @@ Writing the file the rest of this needs.
 
 I'll put a file down to work with.
 
-write notes.md 26B ✗ 1L the filesystem is read-only
+write notes.md 26B ✗ the filesystem is read-only
 Reading, then writing, then reading what was written.
 
 Now to read it, add to it, and read it back.
 
-read notes.md ✗ 1L notes.md: no such file or directory
+read notes.md ✗ notes.md: no such file or directory
 ls 7L
-write notes.md 32B ✗ 1L the filesystem is read-only
-read notes.md ✗ 1L notes.md: no such file or directory
+write notes.md 32B ✗ the filesystem is read-only
+read notes.md ✗ notes.md: no such file or directory
 
 The reads went together, the write waited for them and ran on its own, and the read after it waited
 for the write. Every write was refused because the workspace is read-only, so nothing was there for

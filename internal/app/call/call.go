@@ -38,6 +38,7 @@ type Label struct {
 	FocusStyle      style.Style
 	ShowOutput      bool
 	MarksSuccess    bool
+	ReportsStatus   bool
 	ResultURI       string
 	TimeLimit       time.Duration
 	PathRoots       link.Roots

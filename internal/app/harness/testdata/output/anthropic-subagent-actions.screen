@@ -2,21 +2,21 @@
  exercise every subagent action
 
 
-Watching the build until stopped spawn 1 subagent on Claude Opus 5 1L
+Watching the build until stopped spawn 1 subagent on Claude Opus 5
 list subagents 1L
-status all 1L
+status all
 cat tame-adder 1L (Watching the build until stopped)
-send tame-adder ✗ 1L tame-adder is still running; wait for it before sending it anything
+send tame-adder ✗ tame-adder is still running; wait for it before sending it anything
 await tame-adder for up to 1s 3L (Watching the build until stopped)
-stop tame-adder 1L (Watching the build until stopped)
+stop tame-adder (Watching the build until stopped)
 await tame-adder 1L (Watching the build until stopped)
-stop tame-adder ✗ 1L none of the named subagents is running (Watching the build until stopped)
-status tame-nobody ✗ 1L no subagent named tame-nobody
+stop tame-adder ✗ none of the named subagents is running (Watching the build until stopped)
+status tame-nobody ✗ no subagent named tame-nobody
 spawn 0 subagents on Claude Opus 5 ✗ start requires a nonempty subagents list
 list subagents ✗ list takes no names
-send tame-nobody ✗ 1L no subagent named tame-nobody
-Reading the secrets it cannot reach spawn 1 subagent on Claude O… ✗ 1L /unreadable is not a directo…
-stop all ✗ 1L no subagent is running
+send tame-nobody ✗ no subagent named tame-nobody
+Reading the secrets it cannot reach spawn 1 subagent on Claude Op… ✗ /unreadable is not a directory…
+stop all ✗ no subagent is running
 
 Every action answered.
 

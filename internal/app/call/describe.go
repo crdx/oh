@@ -22,6 +22,17 @@ func Summary(event agent.Event, shouldShowOutput bool) string {
 	return ""
 }
 
+func ResultMeasurements(event agent.Event, doesReportStatus bool) string {
+	if event.Metrics == nil {
+		return ""
+	}
+	isFailure := event.Status != agent.SuccessStatus
+	if (doesReportStatus || isFailure) && event.Metrics.Kind == tool.MetricOutput {
+		return ""
+	}
+	return Measurements(event.Metrics)
+}
+
 func Describe(event agent.Event, getTool ToolLookup, workspace *work.Space) agent.FallbackRendering {
 	rendering, _ := describe(event, getTool, workspace)
 	return rendering
@@ -113,6 +124,7 @@ func LabelFor(event agent.Event, getTool ToolLookup, workspace *work.Space) Labe
 	label.Introduces = rendering.Introduces
 	label.Mentions = rendering.Mentions
 	label.MarksSuccess = rendering.MarksSuccess
+	label.ReportsStatus = rendering.ReportsStatus
 	label.lineRange = rendering.PathLine
 	label.Continuation = make([]Label, 0, len(rendering.Continuation))
 	for _, part := range rendering.Continuation {

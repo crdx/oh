@@ -2,7 +2,7 @@
 \e[48;2;52;53;65m look up a topic the user will refuse                                                               \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcurrent weather\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m1L\e[0m \e[38;2;204;102;102mlookup refused; lookup did not run\e[0m\r
+\e]8;;oh://tool-result?call=call-1&session=tame-impala\e\\\e[38;2;129;162;190mlookup\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcurrent weather\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mlookup refused; lookup did not run\e[0m\r
 \r
 I will not look that up then.\e[?25h\e[?2026l\r
 \r

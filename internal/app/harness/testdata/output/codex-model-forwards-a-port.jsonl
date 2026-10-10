@@ -2,7 +2,7 @@
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"put the preview where i can see it"}}
-{"kind":"event","event":{"rendering_kind":"forward_add","render":"8080","kind":"tool_call_request","id":"call-1","name":"forward","arguments":"{\"action\":\"add\",\"port\":8080}"}}
+{"kind":"event","event":{"rendering_kind":"forward_add","render":"8080","reports_status":true,"kind":"tool_call_request","id":"call-1","name":"forward","arguments":"{\"action\":\"add\",\"port\":8080}"}}
 {"kind":"event","event":{"kind":"port_grant_change","name":"8080","state":{"host":"127.82.233.168","ports":[8080]}}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"Use http://127.82.233.168:8080 for the user; use localhost:8080 inside the sandbox.","id":"call-1","name":"forward","status":"success","stats":{"kind":"output","lines":1,"bytes":83}}}
 {"kind":"event","event":{"kind":"model_message","text":"The preview is forwarded at the address in the tool result above."}}
@@ -13,7 +13,7 @@
 {"kind":"item","payload":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"The preview is forwarded at the address in the tool result above."}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"take it down"}}
-{"kind":"event","event":{"rendering_kind":"forward_remove","render":"8080","kind":"tool_call_request","id":"call-2","name":"forward","arguments":"{\"action\":\"remove\",\"port\":8080}"}}
+{"kind":"event","event":{"rendering_kind":"forward_remove","render":"8080","reports_status":true,"kind":"tool_call_request","id":"call-2","name":"forward","arguments":"{\"action\":\"remove\",\"port\":8080}"}}
 {"kind":"event","event":{"kind":"port_grant_change","name":"8080","state":{"host":"127.82.233.168","ports":[]}}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"Forward removed.","id":"call-2","name":"forward","status":"success","stats":{"kind":"output","lines":1,"bytes":16}}}
 {"kind":"event","event":{"kind":"model_message","text":"Taken down."}}

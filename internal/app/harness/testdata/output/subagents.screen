@@ -4,7 +4,7 @@
  yourself
 
 
-spawn 2 subagents on Claude Opus 5 1L
+spawn 2 subagents on Claude Opus 5
 read README.md 1L
 The readme is short; the children are
 still working.
@@ -27,7 +27,7 @@ in parse.go.
  start one more and drop shell
 
 
-spawn 1 subagent on Claude Opus 5 1L
+spawn 1 subagent on Claude Opus 5
 
 It is watching the build.
 
@@ -688,7 +688,7 @@ t
  split the review and read the readme yourself
 
 
-spawn 2 subagents on Claude Opus 5 1L
+spawn 2 subagents on Claude Opus 5
 read README.md 1L
 The readme is short; the children are still working.
 await tame-alpaca 2L (Counting the TODOs in the code)
@@ -707,7 +707,7 @@ tame-adder reported too: the parser is in parse.go.
  start one more and drop shell
 
 
-spawn 1 subagent on Claude Opus 5 1L
+spawn 1 subagent on Claude Opus 5
 
 It is watching the build.
 
@@ -730,7 +730,7 @@ Carrying on without it.
  yourself
 
 
-spawn 2 … 1L
+spawn 2 sub…
 read REA… 1L
 The readme
 is short;
@@ -775,7 +775,7 @@ parse.go.
  drop shell
 
 
-spawn 1 … 1L
+spawn 1 sub…
 
 It is
 watching the
@@ -808,7 +808,7 @@ without it.
  split the review and read the readme yourself
 
 
-spawn 2 subagents on Claude Opus 5 1L
+spawn 2 subagents on Claude Opus 5
 read README.md 1L
 The readme is short; the children are still working.
 await tame-alpaca 2L (Counting the TODOs in the code)
@@ -827,7 +827,7 @@ tame-adder reported too: the parser is in parse.go.
  start one more and drop shell
 
 
-spawn 1 subagent on Claude Opus 5 1L
+spawn 1 subagent on Claude Opus 5
 
 It is watching the build.
 

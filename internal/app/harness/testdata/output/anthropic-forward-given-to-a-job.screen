@@ -2,13 +2,13 @@
  forward the port and give it to docs
 
 
-forward 8080 1L
+forward 8080
 
 
  🤖 Port 8080 is now forwarded to http://127.82.233.168:8080.
 
 
-forward docs:8080 1L
+forward docs:8080
 
 
  🤖 Port 8080 now belongs to job docs.
@@ -20,7 +20,7 @@ Port 8080 now belongs to docs.
  give it to docs again, then to the api
 
 
-forward docs:8080 1L
-forward api:8080 ✗ 1L port 8080 is already forwarded
+forward docs:8080
+forward api:8080 ✗ port 8080 is already forwarded
 
 Port 8080 stays with docs.

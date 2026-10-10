@@ -1,5 +1,5 @@
 {"event":{"kind":"user_message","text":"split the review and read the readme yourself"}}
-{"event":{"kind":"tool_call_request","id":"call_1","name":"subagent","arguments":"{\"action\": \"start\", \"subagents\": [{\"prompt\": \"Find the parser\", \"intent\": \"Finding where the parser lives\"}, {\"prompt\": \"Count the TODOs\", \"intent\": \"Counting the TODOs in the code\"}]}","render":"2 subagents","detail":"on Claude Opus 5","rendering_kind":"subagent_start"}}
+{"event":{"reports_status":true,"kind":"tool_call_request","id":"call_1","name":"subagent","arguments":"{\"action\": \"start\", \"subagents\": [{\"prompt\": \"Find the parser\", \"intent\": \"Finding where the parser lives\"}, {\"prompt\": \"Count the TODOs\", \"intent\": \"Counting the TODOs in the code\"}]}","render":"2 subagents","detail":"on Claude Opus 5","rendering_kind":"subagent_start"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"started tame-adder, tame-alpaca","id":"call_1","name":"subagent","took":0,"stats":{"kind":"output","lines":1,"bytes":31}}}
 {"event":{"kind":"subagent_started","subagent":"tame-adder","text":"Find the parser","id":"session-of-tame-adder","state":{"choice":{"provider":"anthropic","id":"claude-opus-5"},"workspace":"/workspace","intent":"Finding where the parser lives"}}}
 {"event":{"kind":"subagent_started","subagent":"tame-alpaca","text":"Count the TODOs","id":"session-of-tame-alpaca","state":{"choice":{"provider":"anthropic","id":"claude-opus-5"},"workspace":"/workspace","intent":"Counting the TODOs in the code"}}}
@@ -15,7 +15,7 @@
 {"event":{"kind":"subagent_completion_submitted","name":"tame-adder","text":"Subagent tame-adder finished:\n\ntame-adder done: The parser is in parse.go.","state":{"reports":[{"name":"tame-adder","state":"done","answer":"The parser is in parse.go."}]}}}
 {"event":{"kind":"model_message","text":"tame-adder reported too: the parser is in parse.go."}}
 {"event":{"kind":"user_message","text":"start one more and drop shell"}}
-{"event":{"kind":"tool_call_request","id":"call_3","name":"subagent","arguments":"{\"action\": \"start\", \"subagents\": [{\"prompt\": \"Watch the build\", \"intent\": \"Watching the build until stopped\"}]}","render":"1 subagent","detail":"on Claude Opus 5","rendering_kind":"subagent_start"}}
+{"event":{"reports_status":true,"kind":"tool_call_request","id":"call_3","name":"subagent","arguments":"{\"action\": \"start\", \"subagents\": [{\"prompt\": \"Watch the build\", \"intent\": \"Watching the build until stopped\"}]}","render":"1 subagent","detail":"on Claude Opus 5","rendering_kind":"subagent_start"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"started tame-anchovy","id":"call_3","name":"subagent","took":0,"stats":{"kind":"output","lines":1,"bytes":20}}}
 {"event":{"kind":"subagent_started","subagent":"tame-anchovy","text":"Watch the build","id":"session-of-tame-anchovy","state":{"choice":{"provider":"anthropic","id":"claude-opus-5"},"workspace":"/workspace","intent":"Watching the build until stopped"}}}
 {"event":{"kind":"model_message","text":"It is watching the build."}}

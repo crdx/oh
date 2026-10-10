@@ -46,7 +46,7 @@ func New() tool.Tool {
 }
 
 func Describe(args Args) tool.CallRendering {
-	return tool.CallRendering{Subject: normalise(args)}
+	return tool.CallRendering{Subject: normalise(args), ReportsStatus: true}
 }
 
 func normalise(args Args) string {
