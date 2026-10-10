@@ -91,3 +91,25 @@ func TestGoldenANoticeArrivingMidProseWaitsForItToLand(t *testing.T) {
 
 	compareWithGolden(t, "notice-mid-prose", ".screen", passes)
 }
+
+func TestGoldenAnAnswerThatEndsDrawingNothingLeavesNoRow(t *testing.T) {
+	rig := arrivingProseRig(t, output.StreamingModeASAP)
+	rig.chat.recordEvent(agent.Event{Kind: agent.ModelReasoningEvent, Text: "Reading the notes first."})
+	streamDelta(rig.chat, agent.Delta{Kind: agent.ModelMessageEvent, Text: "0"})
+	streamDelta(rig.chat, agent.Delta{Kind: agent.ModelMessageEvent, Text: ")"})
+	rig.chat.recordEvent(agent.Event{Kind: agent.ModelMessageEvent, Text: "0)"})
+	rig.chat.recordEvent(agent.Event{
+		Kind:      agent.ToolCallRequestEvent,
+		ID:        "1",
+		Name:      "read",
+		Arguments: `{"path":"notes.md"}`,
+	})
+	rig.chat.recordEvent(agent.Event{Kind: agent.ToolCallResultEvent, ID: "1", Name: "read", Text: "notes"})
+	landed := closeArrivingProse(rig)
+
+	requireSameVisibleScreen(t, "an answer that ends drawing nothing differs from its replay", replayOfArrivingProse(t, rig), landed)
+
+	compareWithGolden(t, "answer-drawing-nothing", ".screen", map[string]func() string{
+		"streamed": func() string { return shown(t, landed, replayColumns) },
+	})
+}

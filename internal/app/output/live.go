@@ -76,6 +76,12 @@ func (self *Screen) draw(rows []width.ScreenRow, settledRows int, group Group, s
 			return true
 		}
 
+		if !self.live.isStarted {
+			self.live = liveRegion{}
+			self.changed()
+			return true
+		}
+
 		rows = []width.ScreenRow{{}}
 	}
 

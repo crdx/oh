@@ -26,6 +26,7 @@
 - Accept and complete flags in fork and new
 - Reduce the number of ui redraws
 - Stop drawing a long answer twice when a job ends while it streams
+- Leave no stray row under an answer that ends up drawing nothing
 
 ## [0.13.0] - 2026-10-07
 
