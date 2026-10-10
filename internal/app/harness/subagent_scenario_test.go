@@ -224,14 +224,11 @@ func (self *sessionGoldenChildren) manager(
 		Directory: childrenDirectory,
 		Scratch:   self.scratch,
 		Parent:    goldenSessionName,
-		Choice:    choice,
-		Meta: store.Meta{
-			Model:        self.scenario.Model,
-			Provider:     self.scenario.Provider,
-			Effort:       self.scenario.Effort,
-			WorkspaceDir: sessionGoldenWorkspace,
-			ModelChoice:  &choice,
-		},
+		Models: []subagents.ChildModel{{
+			Choice:    choice,
+			Selection: model.Selection{Provider: self.scenario.Provider, Model: self.scenario.Model, Effort: self.scenario.Effort},
+		}},
+		Meta:     store.Meta{WorkspaceDir: sessionGoldenWorkspace},
 		Factory:  factory,
 		PickName: func(int) int { return 0 },
 		Workspace: func(directory string) (string, error) {

@@ -1,10 +1,10 @@
-version = 13
+version = 14
 
-[caps]
-default = "rx"
-
-[editor]
-command = []
+[defaults]
+caps = "rx"
+effort = "high"
+fast = false
+tool_output = "12K"
 
 [input]
 nudge = "continue"
@@ -14,7 +14,6 @@ speed_dial = ["yes", "no"]
 streaming = "line"
 grouping = ["notice", "panel", "reasoning tool", "answer"]
 reasoning = "plain"
-currency = ""
 
 [ui.theme]
 appearance = "auto"
@@ -129,9 +128,6 @@ add = { name = "forward" }
 remove = { name = "close" }
 list = { paint = "normal" }
 
-[tool]
-output = "12K"
-
 [permissions]
 network = "ask"
 fetch = "ask"
@@ -153,18 +149,10 @@ stalls = false
 cpu_profile = false
 heap_profile = false
 
-[model]
-effort = "high"
-fast = false
-
 [subagent]
-model = ""
 concurrency = 5
 
 [provider.ollama]
-
-[ports]
-hostname = ""
 
 [skills]
 include = []
@@ -179,7 +167,7 @@ home = []
 
 [bar.top]
 left = [
-    { segment = "activity-spinner", idle = "·✦·", frames = ["✦··", "·✦·", "··✦", "··✦", "·✦·", "✦··"], rate = "100ms" },
+    { segment = "activity-spinner" },
     { segment = "mode-toggle" },
     { segment = "forwards" },
     { segment = "jobs" },

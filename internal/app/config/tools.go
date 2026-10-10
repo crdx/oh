@@ -24,13 +24,13 @@ type CustomTool struct {
 	Subject            string            `toml:"subject"`
 	Timeout            time.Duration     `toml:"timeout"`
 	Concurrency        int               `toml:"concurrency"`
-	Permission         CustomPermission  `toml:"permission"`
+	Permission         Permission        `toml:"permission"`
 	Group              string            `toml:"group"`
 	IsEnabledByDefault bool              `toml:"enabled"`
 	Version            int               `toml:"version"`
 }
 
-type CustomPermission struct {
+type Permission struct {
 	Rule    string
 	Timeout time.Duration
 }
@@ -43,10 +43,13 @@ type CustomParameter struct {
 	IsOptional  bool     `toml:"optional"`
 }
 
-func (self *CustomPermission) UnmarshalTOML(value any) error {
+func (self *Permission) UnmarshalTOML(value any) error {
 	switch configuredValue := value.(type) {
 	case string:
-		*self = CustomPermission{Rule: configuredValue}
+		if strings.TrimSpace(configuredValue) == "" {
+			return errors.New("permission is empty")
+		}
+		*self = Permission{Rule: configuredValue}
 		return nil
 	case map[string]any:
 		return self.unmarshalTable(configuredValue)
@@ -55,7 +58,7 @@ func (self *CustomPermission) UnmarshalTOML(value any) error {
 	}
 }
 
-func (self *CustomPermission) unmarshalTable(configuredTable map[string]any) error {
+func (self *Permission) unmarshalTable(configuredTable map[string]any) error {
 	var unknown []string
 	for name := range configuredTable {
 		if name != "rule" && name != "timeout" {
@@ -94,23 +97,23 @@ func (self *CustomPermission) unmarshalTable(configuredTable map[string]any) err
 		}
 	}
 
-	*self = CustomPermission{Rule: rule, Timeout: timeout}
+	*self = Permission{Rule: rule, Timeout: timeout}
 	return nil
 }
 
-func (self *CustomPermission) settings() (permission.Rule, time.Duration, error) {
+func (self *Permission) setting() (permission.Setting, error) {
 	rule := permission.Ask
 	if strings.TrimSpace(self.Rule) != "" {
 		var err error
 		if rule, err = permission.ParseRule(self.Rule); err != nil {
-			return "", 0, err
+			return permission.Setting{}, err
 		}
 	}
 	if rule == permission.Allow && self.Timeout != 0 {
-		return "", 0, fmt.Errorf("timeout applies only when rule is %q", permission.Ask)
+		return permission.Setting{}, fmt.Errorf("timeout applies only when rule is %q", permission.Ask)
 	}
 
-	return rule, self.Timeout, nil
+	return permission.Setting{Rule: rule, Timeout: self.Timeout}, nil
 }
 
 func (self Config) BuildCustomTools(options command.Options) ([]tool.Tool, error) {
@@ -189,7 +192,7 @@ func (self Config) declare(name string) (command.Declaration, error) {
 		return command.Declaration{}, fmt.Errorf("group %q is not one lowercase letter", setting.Group)
 	}
 
-	rule, approvalTimeout, err := setting.Permission.settings()
+	approval, err := setting.Permission.setting()
 	if err != nil {
 		return command.Declaration{}, fmt.Errorf("permission: %w", err)
 	}
@@ -219,8 +222,8 @@ func (self Config) declare(name string) (command.Declaration, error) {
 		Subject:         setting.Subject,
 		TimeLimit:       setting.Timeout,
 		Concurrency:     setting.Concurrency,
-		MustAsk:         rule != permission.Allow,
-		ApprovalTimeout: approvalTimeout,
+		MustAsk:         !approval.IsAllowed(),
+		ApprovalTimeout: approval.Timeout,
 		Group:           setting.Group,
 		Version:         setting.Version,
 	}, nil

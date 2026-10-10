@@ -94,6 +94,7 @@ func errorText(err error) string {
 type revision struct {
 	sourceSnapshots         []sourceSnapshot
 	roundRobinFileSnapshots map[string]snapshot
+	roundRobinFileSettings  map[string][]string
 	snippetFileSnapshots    map[string]snapshot
 	snippetSettings         map[string][]string
 	snippetDirectories      []string
@@ -154,7 +155,7 @@ func (self revision) changesSince(previous revision) []SourceChange {
 		if was, isKnown := previous.roundRobinFileSnapshots[path]; isKnown && current.equal(was) {
 			continue
 		}
-		settings := []string{"model.round_robin"}
+		settings := self.roundRobinFileSettings[path]
 		if isEverySettingNamed(settings, isNamed) {
 			continue
 		}
@@ -341,9 +342,11 @@ func readRevision(sources []Source) (Config, revision, error) {
 		snapshots = append(snapshots, sourceSnapshot{source: source, snapshot: readSnapshot(source.Path)})
 	}
 	settings, err := loadSnapshots(snapshots)
+	rotationSnapshots, rotationSettings := settings.rotationFiles()
 	return settings, revision{
 		sourceSnapshots:         snapshots,
-		roundRobinFileSnapshots: settings.roundRobinFileSnapshots,
+		roundRobinFileSnapshots: rotationSnapshots,
+		roundRobinFileSettings:  rotationSettings,
 		snippetFileSnapshots:    settings.snippetFileSnapshots,
 		snippetSettings:         snippetSettings(settings),
 		snippetDirectories:      settings.snippetDirectories,

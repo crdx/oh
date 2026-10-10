@@ -70,7 +70,7 @@ session model: opencode-go/fake@low
 === a rotation naming a model nobody offers ===
 $ oh -p --yolo a question
 Refreshing the model list...
-✗ model.round_robin: "opencode-go/nonesuch": model "opencode-go/nonesuch" does not match any known model
+✗ agent.round_robin: "opencode-go/nonesuch": model "opencode-go/nonesuch" does not match any known model
 [exit 1]
 
 === a rotation naming an offered model ===

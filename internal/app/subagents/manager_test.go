@@ -133,8 +133,7 @@ func (self testFamily) manager(t *testing.T, factory Factory) *Manager {
 		Directory: self.directory,
 		Scratch:   self.scratch,
 		Parent:    parentName,
-		Choice:    choice,
-		Meta:      store.Meta{Provider: "anthropic", Model: "claude-opus-5", ModelChoice: &choice},
+		Models:    []ChildModel{{Choice: choice, Selection: model.Selection{Provider: "anthropic", Model: "claude-opus-5"}}},
 		Factory:   factory,
 		PickName:  func(int) int { return 0 },
 		Workspace: func(directory string) (string, error) {
@@ -686,8 +685,7 @@ func TestAFollowUpRunsOnTheModelTheChildStartedOn(t *testing.T) {
 			Directory: family.directory,
 			Scratch:   family.scratch,
 			Parent:    parentName,
-			Choice:    choice,
-			Meta:      store.Meta{Provider: "anthropic", Model: id, Effort: effort, ModelChoice: &choice},
+			Models:    []ChildModel{{Choice: choice, Selection: model.Selection{Provider: "anthropic", Model: id, Effort: effort}}},
 			Factory:   factory,
 			PickName:  func(int) int { return 0 },
 			Caps:      func() caps.Set { return caps.Read },
@@ -714,6 +712,14 @@ func TestAFollowUpRunsOnTheModelTheChildStartedOn(t *testing.T) {
 		t.Fatal(err)
 	}
 	untilFinished(t, second, 1)
+	untilSettled(t, second, name)
+	stored, err := store.Read(family.directory, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if stored.Meta.Model != "claude-opus-5" || stored.Meta.ModelChoice == nil || stored.Meta.ModelChoice.ID != "claude-opus-5" {
+		t.Errorf("a follow-up stored model %q and %+v, want the model the child started on", stored.Meta.Model, stored.Meta.ModelChoice)
+	}
 	openedMutex.Lock()
 	defer openedMutex.Unlock()
 	if len(opened) != 2 {
@@ -798,23 +804,117 @@ func TestAFollowUpIsToldWhichOfItsToolsChanged(t *testing.T) {
 	}
 }
 
-func TestAManagerNamesItsModelAsPeopleKnowIt(t *testing.T) {
+func TestAManagerNamesItsModelsAsPeopleKnowThem(t *testing.T) {
+	opus := model.Choice{ID: "claude-opus-5", Name: "Claude Opus 5"}
+	haiku := model.Choice{ID: "claude-haiku-5", Name: "Claude Haiku 5"}
+	local := model.Choice{ID: "local-model"}
 	for _, run := range []struct {
-		choice model.Choice
-		want   string
+		choices []model.Choice
+		want    string
 	}{
-		{model.Choice{ID: "claude-opus-5", Name: "Claude Opus 5"}, "Claude Opus 5"},
-		{model.Choice{ID: "local-model"}, "local-model"},
+		{[]model.Choice{opus}, "Claude Opus 5"},
+		{[]model.Choice{local}, "local-model"},
+		{[]model.Choice{opus, opus, haiku}, "Claude Opus 5 or Claude Haiku 5"},
+		{[]model.Choice{haiku, local, opus, local}, "Claude Haiku 5, local-model or Claude Opus 5"},
 	} {
-		choice, want := run.choice, run.want
-		manager, err := New(Options{Directory: t.TempDir(), Scratch: t.TempDir(), Choice: choice})
+		var models []ChildModel
+		for _, choice := range run.choices {
+			models = append(models, ChildModel{Choice: choice})
+		}
+		manager, err := New(Options{Directory: t.TempDir(), Scratch: t.TempDir(), Models: models})
 		if err != nil {
 			t.Fatal(err)
 		}
-		if got := manager.Model(); got != want {
-			t.Errorf("%+v was named %q, want %q", choice, got, want)
+		if got := manager.Model(); got != run.want {
+			t.Errorf("%d choices were named %q, want %q", len(run.choices), got, run.want)
 		}
 		manager.Close()
+	}
+}
+
+func TestEachChildStartsOnTheModelTheRotationChoosesForIt(t *testing.T) {
+	family := newTestFamily(t)
+	var opened []Child
+	var openedMutex sync.Mutex
+	factory := func(ctx context.Context, child Child) (Worker, error) {
+		openedMutex.Lock()
+		opened = append(opened, child)
+		openedMutex.Unlock()
+		return answering(func() agent.Provider { return &answeringProvider{} })(ctx, child)
+	}
+	models := []ChildModel{
+		{Choice: model.Choice{Provider: "anthropic", ID: "claude-opus-5"}, Selection: model.Selection{Provider: "anthropic", Model: "claude-opus-5", Effort: "high"}},
+		{Choice: model.Choice{Provider: "anthropic", ID: "claude-haiku-5"}, Selection: model.Selection{Provider: "anthropic", Model: "claude-haiku-5", Effort: "low"}},
+	}
+	turn := 0
+	manager, err := New(Options{
+		Directory: family.directory,
+		Scratch:   family.scratch,
+		Parent:    parentName,
+		Models:    models,
+		Choose: func() (ChildModel, error) {
+			chosen := models[turn%len(models)]
+			turn++
+			return chosen, nil
+		},
+		Factory:   factory,
+		PickName:  func(int) int { return 0 },
+		Caps:      func() caps.Set { return caps.Read },
+		Workspace: func(string) (string, error) { return family.workspace, nil },
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(manager.Close)
+
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "one"}, {Prompt: "two"}}); err != nil {
+		t.Fatal(err)
+	}
+	finished := untilFinished(t, manager, 2)
+
+	modelOf := map[string]string{}
+	openedMutex.Lock()
+	for _, child := range opened {
+		modelOf[child.Name] = child.Choice.ID
+	}
+	openedMutex.Unlock()
+	for _, event := range finished {
+		untilSettled(t, manager, event.Subagent)
+		stored, err := store.Read(family.directory, event.Subagent)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if stored.Meta.ModelChoice == nil || stored.Meta.ModelChoice.ID != modelOf[event.Subagent] || stored.Meta.Model != modelOf[event.Subagent] {
+			t.Errorf("%s ran on %s but stored %q and %+v", event.Subagent, modelOf[event.Subagent], stored.Meta.Model, stored.Meta.ModelChoice)
+		}
+	}
+	if len(modelOf) != 2 || modelOf[finished[0].Subagent] == modelOf[finished[1].Subagent] {
+		t.Errorf("the children ran on %v, want one on each model", modelOf)
+	}
+}
+
+func TestAStartTheRotationRefusesStartsNothing(t *testing.T) {
+	family := newTestFamily(t)
+	manager, err := New(Options{
+		Directory: family.directory,
+		Scratch:   family.scratch,
+		Parent:    parentName,
+		Choose:    func() (ChildModel, error) { return ChildModel{}, errors.New("the rotation state is locked") },
+		Factory:   waiting(),
+		PickName:  func(int) int { return 0 },
+		Caps:      func() caps.Set { return caps.Read },
+		Workspace: func(string) (string, error) { return family.workspace, nil },
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(manager.Close)
+
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "one"}}); err == nil || !strings.Contains(err.Error(), "locked") {
+		t.Fatalf("got %v, want the rotation's refusal", err)
+	}
+	if snapshots := manager.ListSnapshots(); len(snapshots) != 0 {
+		t.Errorf("a refused start left %+v behind", snapshots)
 	}
 }
 

@@ -109,13 +109,13 @@ func TestWritingAnObservedRoundRobinFileLoadsTheNewRotation(t *testing.T) {
 		t.Fatal(err)
 	}
 	configPath := filepath.Join(directory, "config.toml")
-	if err := writeConfigFile(configPath, "[model]\nround_robin = \"models.txt\"\n"); err != nil {
+	if err := writeConfigFile(configPath, "[agent]\nround_robin = \"models.txt\"\n"); err != nil {
 		t.Fatal(err)
 	}
 
 	settings, observer := observeConfig(t, configPath)
-	if !slices.Equal(settings.Model.RoundRobin, []string{"anthropic/one@high"}) {
-		t.Errorf("got initial rotation %q", settings.Model.RoundRobin)
+	if !slices.Equal(settings.Agent.RoundRobin, []string{"anthropic/one@high"}) {
+		t.Errorf("got initial rotation %q", settings.Agent.RoundRobin)
 	}
 	if err := os.WriteFile(modelsPath, []byte("codex/two@medium\n"), 0o600); err != nil {
 		t.Fatal(err)
@@ -128,7 +128,7 @@ func TestWritingAnObservedRoundRobinFileLoadsTheNewRotation(t *testing.T) {
 	if len(applied.Changes) != 1 || applied.Changes[0].Path != "models.txt" {
 		t.Fatalf("got %v, want the model file alone", applied.Changes)
 	}
-	if want := []string{"model.round_robin"}; !slices.Equal(applied.Changes[0].Settings, want) {
+	if want := []string{"agent.round_robin"}; !slices.Equal(applied.Changes[0].Settings, want) {
 		t.Errorf("got %v, want the setting it supplies: %v", applied.Changes[0].Settings, want)
 	}
 }
@@ -791,7 +791,7 @@ func readFixture(t *testing.T) (string, Observable) {
 	if err := os.WriteFile(filepath.Join(directory, "models.txt"), []byte("anthropic/one@high\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	body := "[model]\nround_robin = \"models.txt\"\n[snippets]\ninline = { prompt = \"Inline.\" }\n"
+	body := "[agent]\nround_robin = \"models.txt\"\n[snippets]\ninline = { prompt = \"Inline.\" }\n"
 	if err := writeConfigFile(filepath.Join(directory, "config.toml"), body); err != nil {
 		t.Fatal(err)
 	}
@@ -824,7 +824,7 @@ func TestAReadConfigStillOnDiskIsNotReadAgain(t *testing.T) {
 func TestAnythingChangedSinceAConfigWasReadIsReadAgainWhenObserved(t *testing.T) {
 	for name, change := range map[string]func(directory string) error{
 		"config": func(directory string) error {
-			return writeConfigFile(filepath.Join(directory, "config.toml"), "[model]\nround_robin = \"models.txt\"\n")
+			return writeConfigFile(filepath.Join(directory, "config.toml"), "[agent]\nround_robin = \"models.txt\"\n")
 		},
 		"rotation file": func(directory string) error {
 			return os.WriteFile(filepath.Join(directory, "models.txt"), []byte("codex/two@medium\n"), 0o600)
@@ -858,11 +858,11 @@ func TestAnythingChangedSinceAConfigWasReadIsReadAgainWhenObserved(t *testing.T)
 			if err != nil {
 				t.Fatal(err)
 			}
-			if !slices.Equal(settings.Model.RoundRobin, want.Model.RoundRobin) ||
+			if !slices.Equal(settings.Agent.RoundRobin, want.Agent.RoundRobin) ||
 				len(settings.Snippets) != len(want.Snippets) ||
 				settings.Snippets["review"].Prompt != want.Snippets["review"].Prompt {
 				t.Errorf("observed %v and %v, want what is on disk: %v and %v",
-					settings.Model.RoundRobin, settings.Snippets, want.Model.RoundRobin, want.Snippets)
+					settings.Agent.RoundRobin, settings.Snippets, want.Agent.RoundRobin, want.Snippets)
 			}
 		})
 	}
@@ -883,5 +883,33 @@ func TestAShadowedSnippetFileArrivingLeavesAReadConfigStanding(t *testing.T) {
 
 	if !observable.current.isStillOnDisk(observable.Config) {
 		t.Error("expected a file shadowed by a defined snippet to change nothing")
+	}
+}
+
+func TestAFileBothRotationsReadNamesBothSettingsWhenItChanges(t *testing.T) {
+	directory := t.TempDir()
+	modelsPath := filepath.Join(directory, "models.txt")
+	if err := os.WriteFile(modelsPath, []byte("anthropic/one@high\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	configPath := filepath.Join(directory, "config.toml")
+	if err := writeConfigFile(configPath, "[agent]\nround_robin = \"models.txt\"\n[subagent]\nround_robin = \"models.txt\"\n"); err != nil {
+		t.Fatal(err)
+	}
+
+	_, observer := observeConfig(t, configPath)
+	if err := os.WriteFile(modelsPath, []byte("codex/two@medium\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	applied := observer.Reload(nil, testSegments())
+	if applied.Status != ReloadApplied {
+		t.Fatalf("reload status=%v failure=%v", applied.Status, applied.Failure)
+	}
+	if len(applied.Changes) != 1 || applied.Changes[0].Path != "models.txt" {
+		t.Fatalf("got %v, want the model file alone", applied.Changes)
+	}
+	if want := []string{"agent.round_robin", "subagent.round_robin"}; !slices.Equal(applied.Changes[0].Settings, want) {
+		t.Errorf("got %v, want both settings it supplies: %v", applied.Changes[0].Settings, want)
 	}
 }

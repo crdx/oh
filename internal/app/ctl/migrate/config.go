@@ -83,6 +83,29 @@ var configSteps = map[int]configStep{
 	config.StreamingNameFormat:     migrateConfigFromVersionTen,
 	config.NudgeFormat:             migrateConfigFromVersionEleven,
 	config.ForwardNameFormat:       migrateConfigFromVersionTwelve,
+	config.ThemePaletteFormat:      migrateConfigFromVersionThirteen,
+}
+
+func migrateConfigFromVersionThirteen(data []byte) ([]byte, error) {
+	_, document, err := readConfigDocument(data)
+	if err != nil {
+		return nil, err
+	}
+
+	migratedData, err := moveRotationToAgent(data, document)
+	if err != nil {
+		return nil, err
+	}
+	_, document, err = readConfigDocument(migratedData)
+	if err != nil {
+		return nil, err
+	}
+	migratedData, err = standardiseDefaults(migratedData, document)
+	if err != nil {
+		return nil, err
+	}
+
+	return rewriteConfigVersion(migratedData, config.DefaultsFormat), nil
 }
 
 func migrateConfigFromVersionTwelve(data []byte) ([]byte, error) {

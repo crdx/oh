@@ -17,12 +17,19 @@ var reaches = map[string]Reach{
 	"ports":    ReachNextRun,
 	"debug":    ReachNextRun,
 	"subagent": ReachNextRun,
-	"caps":     ReachNextSession,
-	"model":    ReachNextSession,
+	"defaults": ReachNextSession,
+	"agent":    ReachNextSession,
 	"tools":    ReachNextSession,
 }
 
+var liveExceptions = map[string]bool{
+	"defaults.tool_output": true,
+}
+
 func ReachOf(setting string) Reach {
+	if liveExceptions[setting] {
+		return ReachLive
+	}
 	table, _, _ := strings.Cut(setting, ".")
 	return reaches[table]
 }

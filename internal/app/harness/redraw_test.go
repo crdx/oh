@@ -65,7 +65,9 @@ func askBeneathTwoCalls(t *testing.T, redraw func(*App)) string {
 		t.Cleanup(broker.Open())
 		self.question.broker = broker
 
-		go func() { _ = approveHostNetwork(t.Context(), broker, permission.Ask, tallQuestionCommand(), "") }()
+		go func() {
+			_ = approveHostNetwork(t.Context(), broker, permission.Setting{Rule: permission.Ask}, tallQuestionCommand(), "")
+		}()
 		<-broker.Changes()
 		self.onQuestionChange()
 		self.show(self.inputLine)

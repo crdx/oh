@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"slices"
 	"sync"
+	"time"
 )
 
 type Rule string
@@ -23,10 +24,26 @@ func ParseRule(value string) (Rule, error) {
 	return "", fmt.Errorf("must be %q or %q, got %q", Ask, Allow, value)
 }
 
+type Setting struct {
+	Rule    Rule
+	Timeout time.Duration
+}
+
+func (self Setting) IsAllowed() bool {
+	return self.Rule == Allow
+}
+
+func (self Setting) TimeoutOr(fallback time.Duration) time.Duration {
+	if self.Timeout > 0 {
+		return self.Timeout
+	}
+	return fallback
+}
+
 type Set struct {
-	Network Rule
-	Lookup  Rule
-	Fetch   Rule
+	Network Setting
+	Lookup  Setting
+	Fetch   Setting
 }
 
 type Live struct {
@@ -52,14 +69,14 @@ func (self *Live) Get() Set {
 	return self.set
 }
 
-func (self *Live) Network() Rule {
+func (self *Live) Network() Setting {
 	return self.Get().Network
 }
 
-func (self *Live) Lookup() Rule {
+func (self *Live) Lookup() Setting {
 	return self.Get().Lookup
 }
 
-func (self *Live) Fetch() Rule {
+func (self *Live) Fetch() Setting {
 	return self.Get().Fetch
 }

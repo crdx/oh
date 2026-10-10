@@ -74,8 +74,8 @@
 === reloaded model rotation file ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ Configuration reloaded automatically                                                           │
- │ models.txt: model.round_robin                                                                  │
- │ applies to new sessions: model.round_robin (dismissing in 10s)                                 │
+ │ models.txt: agent.round_robin                                                                  │
+ │ applies to new sessions: agent.round_robin (dismissing in 10s)                                 │
 ─┴── tame-impala ─────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -100,8 +100,8 @@
 === revision to a setting only a new session picks up ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ Configuration reloaded automatically                                                           │
- │ config.toml: model.round_robin                                                                 │
- │ applies to new sessions: model.round_robin (dismissing in 10s)                                 │
+ │ config.toml: agent.round_robin                                                                 │
+ │ applies to new sessions: agent.round_robin (dismissing in 10s)                                 │
 ─┴── tame-impala ─────────────────────────────────────────────────────────────────────────────────┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────

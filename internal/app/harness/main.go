@@ -132,23 +132,23 @@ func customToolApproval(name string) approval {
 func (self approval) ask(
 	ctx context.Context,
 	broker *ask.Broker,
-	rule permission.Rule,
+	setting permission.Setting,
 	subject string,
 ) error {
-	return self.askFor(ctx, broker, rule, self.confirmation(subject))
+	return self.askFor(ctx, broker, setting, self.confirmation(subject))
 }
 
 func (self approval) askFor(
 	ctx context.Context,
 	broker *ask.Broker,
-	rule permission.Rule,
+	setting permission.Setting,
 	confirmation ask.Confirmation,
 ) error {
-	if rule == permission.Allow {
+	if setting.IsAllowed() {
 		return nil
 	}
 
-	return self.confirmWith(ctx, broker, confirmation, approvalLimit)
+	return self.confirmWith(ctx, broker, confirmation, setting.TimeoutOr(approvalLimit))
 }
 
 func (self approval) confirmation(subject string) ask.Confirmation {
@@ -215,13 +215,13 @@ func (self approval) confirmWith(
 func approveHostNetwork(
 	ctx context.Context,
 	broker *ask.Broker,
-	rule permission.Rule,
+	setting permission.Setting,
 	command string,
 	intent string,
 ) error {
 	confirmation := hostNetworkApproval.confirmation(strings.Join(bash.Steps(command), "\n"))
 	confirmation.Intent = intent
-	return hostNetworkApproval.askFor(ctx, broker, rule, confirmation)
+	return hostNetworkApproval.askFor(ctx, broker, setting, confirmation)
 }
 
 var completableToolNames = []string{
@@ -377,7 +377,7 @@ func configuredRotation(settings config.Config, isSimulated bool) []string {
 		return nil
 	}
 
-	return settings.Model.RoundRobin
+	return settings.Agent.Rotation()
 }
 
 func currentCustomCapFlags(sources []config.Source) string {
@@ -448,7 +448,7 @@ func applyDefaultCaps(options *cli.Options, settings config.Config) error {
 		return nil
 	}
 
-	defaultFlags := string(settings.Caps.Default) + settings.DefaultToolGroupFlags(options.Tools)
+	defaultFlags := string(settings.Defaults.Caps) + settings.DefaultToolGroupFlags(options.Tools)
 	grantedCaps, grantedGroups, err := settings.ParseCaps(defaultFlags)
 	if err != nil {
 		return err
@@ -637,7 +637,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 			os.Stdout, modelCachePath,
 			money.Load(location.GetExchangeRateCachePath(), currencyCode(settings.Ui.Currency)),
 			func(providerName string) bool { return backend.IsAvailable(providerName, endpoints) },
-			settings.Model.GetDefaults(), columns,
+			settings.Defaults.ForSelections(), columns,
 		)
 	}
 
@@ -701,7 +701,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 
 	applyObservedTheme(initial.observable.Config, settings)
 	editorConfiguration := editor.NewConfiguration(settings.Editor.Command)
-	toolOutputLimit := truncate.NewLimit(settings.Tool.Output.Bytes)
+	toolOutputLimit := truncate.NewLimit(settings.Defaults.ToolOutput.Bytes)
 	experimentalToggles := experimental.New(settings.Experimental)
 
 	endpoints := backend.EndpointSettings{
@@ -738,7 +738,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		var err error
 		startup.Wait(func() {
 			chosenModel, err = model.Choose(
-				modelCachePath, currency, isProviderAvailable, keyboard, os.Stdout, settings.Model.GetDefaults(),
+				modelCachePath, currency, isProviderAvailable, keyboard, os.Stdout, settings.Defaults.ForSelections(),
 			)
 		})
 		if errors.Is(err, menu.ErrCancelled) {
@@ -756,7 +756,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	}
 	args, err := inputArgs.Parse(
 		modelChoices,
-		settings.Model.GetDefaults(),
+		settings.Defaults.ForSelections(),
 		configuredToolGroups.CustomFlags(),
 	)
 	if err != nil {
@@ -861,10 +861,10 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	defer func() { _ = homeRoot.Close() }()
 
 	configuredModels, err := model.ParseRoundRobin(
-		modelChoices, configuredRotation(settings, isSimulated), settings.Model.GetDefaults(),
+		modelChoices, configuredRotation(settings, isSimulated), settings.Defaults.ForSelections(),
 	)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("%s: %w", settings.Agent.Setting(), err)
 	}
 	settings.Sandbox, err = shell.PreparePaths(settings.Sandbox, os.Stderr)
 	if err != nil {
@@ -914,7 +914,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	if err != nil {
 		startup.Wait(func() {
 			selection, err = model.ChooseWhenNoneSelected(
-				err, modelCachePath, currency, isProviderAvailable, keyboard, os.Stdout, settings.Model.GetDefaults(),
+				err, modelCachePath, currency, isProviderAvailable, keyboard, os.Stdout, settings.Defaults.ForSelections(),
 			)
 		})
 	}

@@ -152,9 +152,8 @@ func TestOnboardingWritesASelectionThatOrdinaryStartupCanLoad(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := []string{"codex/gpt-5.6-sol@high"}
-	if !slices.Equal(settings.Model.RoundRobin, want) {
-		t.Errorf("got model rotation %v, want %v", settings.Model.RoundRobin, want)
+	if want := "codex/gpt-5.6-sol@high"; settings.Agent.Model != want {
+		t.Errorf("got model %q, want %q", settings.Agent.Model, want)
 	}
 }
 
@@ -620,7 +619,7 @@ func (self writerFunc) Write(piece []byte) (int, error) {
 func TestALocalModelOverrideAvoidsFirstRunOnboarding(t *testing.T) {
 	directory := t.TempDir()
 	overridePath := filepath.Join(directory, "oh.toml")
-	if err := os.WriteFile(overridePath, []byte("[model]\nround_robin = [\"anthropic/local\"]\n"), 0o600); err != nil {
+	if err := os.WriteFile(overridePath, []byte("[agent]\nround_robin = [\"anthropic/local\"]\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -631,8 +630,8 @@ func TestALocalModelOverrideAvoidsFirstRunOnboarding(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !slices.Equal(settings.Model.RoundRobin, []string{"anthropic/local"}) {
-		t.Errorf("got model rotation %#v", settings.Model.RoundRobin)
+	if !slices.Equal(settings.Agent.RoundRobin, []string{"anthropic/local"}) {
+		t.Errorf("got model rotation %#v", settings.Agent.RoundRobin)
 	}
 
 	if _, err := PrepareConfig(Options{Settings: settings, IsPrinting: true}); err != nil {

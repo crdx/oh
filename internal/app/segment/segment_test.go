@@ -767,3 +767,48 @@ func TestTheTurnTimerKeepsCountingBetweenTurns(t *testing.T) {
 		t.Errorf("expected the timer to keep counting while idle, got %s", got.Sub(at))
 	}
 }
+
+func TestTheActivitySegmentSpinsByItselfWhenNamedBare(t *testing.T) {
+	at := time.Date(2026, time.August, 17, 14, 32, 9, 0, time.UTC)
+	for name, run := range map[string]struct {
+		options  string
+		idle     string
+		turnOver time.Duration
+	}{
+		"nothing written":    {options: "", idle: "·✦·", turnOver: 100 * time.Millisecond},
+		"only a rate":        {options: "rate = \"250ms\"\n", idle: "·✦·", turnOver: 250 * time.Millisecond},
+		"only frames":        {options: "frames = [\"*\", \"+\"]\n", idle: " ", turnOver: 100 * time.Millisecond},
+		"only an idle":       {options: "idle = \"-·-\"\n", idle: "-·-", turnOver: 100 * time.Millisecond},
+		"frames and an idle": {options: "idle = \"·\"\nframes = [\"*\", \"+\"]\n", idle: "·", turnOver: 100 * time.Millisecond},
+	} {
+		t.Run(name, func(t *testing.T) {
+			factory := func(isRunning bool) segment.Segment {
+				built, err := activitySpinner.New(
+					func() bool { return isRunning },
+					func() time.Time { return at },
+				)(tomlOptions(run.options))
+				if err != nil {
+					t.Fatal(err)
+				}
+				return built
+			}
+			if got := style.Plain(factory(false).Render(segment.Context{})); got != run.idle {
+				t.Errorf("idle drew %q, want %q", got, run.idle)
+			}
+			layout := segment.Layout{segment.BottomLeft: {factory(true)}}
+			if got := layout.NextRefresh(segment.Phase{At: at, IsRunning: true}); !got.Equal(at.Add(run.turnOver)) {
+				t.Errorf("next frame after %s, want %s", got.Sub(at), run.turnOver)
+			}
+		})
+	}
+}
+
+func TestTheActivitySegmentRefusesFramesWrittenEmpty(t *testing.T) {
+	_, err := activitySpinner.New(
+		func() bool { return false },
+		time.Now,
+	)(tomlOptions("frames = []\n"))
+	if err == nil || !strings.Contains(err.Error(), "leave them out") {
+		t.Errorf("got %v, want empty frames refused with the way out", err)
+	}
+}

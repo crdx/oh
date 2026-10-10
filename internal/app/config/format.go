@@ -14,6 +14,7 @@ const (
 	NudgeFormat             = 11
 	ForwardNameFormat       = 12
 	ThemePaletteFormat      = 13
+	DefaultsFormat          = 14
 
-	Format = ThemePaletteFormat
+	Format = DefaultsFormat
 )

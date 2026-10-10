@@ -74,9 +74,9 @@ include = ["skills"]
 
 	var decoded struct {
 		Version int `toml:"version"`
-		Model   struct {
-			RoundRobin []string `toml:"round_robin"`
-		} `toml:"model"`
+		Agent   struct {
+			Model string `toml:"model"`
+		} `toml:"agent"`
 	}
 	metadata, err := toml.Decode(written, &decoded)
 	if err != nil {
@@ -85,8 +85,8 @@ include = ["skills"]
 	if decoded.Version != config.Format {
 		t.Errorf("got version %d, want %d", decoded.Version, config.Format)
 	}
-	if len(decoded.Model.RoundRobin) != 1 || decoded.Model.RoundRobin[0] != "codex/gpt-5.6-sol@medium" {
-		t.Errorf("got round robin %#v", decoded.Model.RoundRobin)
+	if decoded.Agent.Model != "codex/gpt-5.6-sol@medium" {
+		t.Errorf("got agent model %q", decoded.Agent.Model)
 	}
 	for _, key := range []string{"provider", "effort"} {
 		if metadata.IsDefined(key) {
@@ -115,7 +115,7 @@ func TestAnUnnumberedRoundRobinConfigMigratesThroughEveryFormat(t *testing.T) {
 		t.Fatal(err)
 	}
 	written := string(body)
-	if strings.Count(written, "[model]") != 1 || !strings.Contains(written, currentVersionLine()) {
+	if strings.Count(written, "[agent]") != 1 || !strings.Contains(written, currentVersionLine()) {
 		t.Errorf("unexpected migrated config:\n%s", written)
 	}
 }
@@ -147,7 +147,7 @@ func TestConfigMigrationUsesTheLegacyDefaultSelectionParts(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(string(body), `round_robin = ["codex/gpt-5.6-sol@high"]`) {
+	if !strings.Contains(string(body), `model = "codex/gpt-5.6-sol@high"`) {
 		t.Errorf("legacy defaults were not carried forward:\n%s", body)
 	}
 }
@@ -228,7 +228,7 @@ round_robin = ["codex/gpt@high"]
 		currentVersionLine(),
 		"[editor]",
 		`command = ["subl", "--wait"] # the editor`,
-		`round_robin = ["codex/gpt@high"]`,
+		`model = "codex/gpt@high"`,
 	} {
 		if !strings.Contains(written, expected) {
 			t.Errorf("migration omitted %q from:\n%s", expected, written)
@@ -405,7 +405,7 @@ round_robin = ["codex/gpt@high"]
 		t.Fatal(err)
 	}
 	written := string(body)
-	if !strings.Contains(written, currentVersionLine()) || !strings.Contains(written, `round_robin = ["codex/gpt@high"]`) {
+	if !strings.Contains(written, currentVersionLine()) || !strings.Contains(written, `model = "codex/gpt@high"`) {
 		t.Errorf("unexpected migrated config:\n%s", written)
 	}
 	if _, err := config.Load(path); err != nil {
@@ -439,7 +439,7 @@ round_robin = ["codex/gpt@high"]
 		currentVersionLine(),
 		"[input]",
 		`nudge = "carry on" # what an empty line sends`,
-		`round_robin = ["codex/gpt@high"]`,
+		`model = "codex/gpt@high"`,
 	} {
 		if !strings.Contains(written, expected) {
 			t.Errorf("migration omitted %q from:\n%s", expected, written)
@@ -482,7 +482,7 @@ func TestTheEighthConfigMigrationLeavesAConfigWithoutTheMessageAlone(t *testing.
 }
 
 func TestCurrentConfigIsLeftAlone(t *testing.T) {
-	original := currentVersionLine() + "\n[model]\nround_robin = [\"codex/gpt@high\"]\n"
+	original := currentVersionLine() + "\n[agent]\nmodel = \"codex/gpt@high\"\n"
 	path := configFile(t, original)
 
 	from, isPresent, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path})
@@ -643,7 +643,7 @@ round_robin = ["codex/gpt@high"]
 	for _, expected := range []string{
 		currentVersionLine(),
 		`nudge = "carry on" # what a double enter sends`,
-		`round_robin = ["codex/gpt@high"]`,
+		`model = "codex/gpt@high"`,
 	} {
 		if !strings.Contains(written, expected) {
 			t.Errorf("migration omitted %q from:\n%s", expected, written)
@@ -755,7 +755,7 @@ round_robin = ["codex/gpt@high"]
 		`deploy.default = { name = "ship" }`,
 		`[ui.theme.tool.forward.list]`,
 		`[ui.theme.tool.read.default]`,
-		`round_robin = ["codex/gpt@high"]`,
+		`model = "codex/gpt@high"`,
 	} {
 		if !strings.Contains(written, expected) {
 			t.Errorf("migration omitted %q from:\n%s", expected, written)
@@ -837,7 +837,7 @@ job_start = { name = "kept" }
 }
 
 func TestTheEleventhConfigMigrationOnlyRaisesTheVersionWhereNothingNeedsRenaming(t *testing.T) {
-	original := "version = 11 # current\n\n[model]\nround_robin = [\"codex/gpt@high\"]\n"
+	original := "version = 11 # current\n\n[ui]\ncurrency = \"gbp\"\n"
 	path := configFile(t, original)
 
 	if _, _, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path}); err != nil {
@@ -848,7 +848,7 @@ func TestTheEleventhConfigMigrationOnlyRaisesTheVersionWhereNothingNeedsRenaming
 	if err != nil {
 		t.Fatal(err)
 	}
-	if want := currentVersionLine() + " # current\n\n[model]\nround_robin = [\"codex/gpt@high\"]\n"; string(body) != want {
+	if want := currentVersionLine() + " # current\n\n[ui]\ncurrency = \"gbp\"\n"; string(body) != want {
 		t.Errorf("got:\n%s\nwant:\n%s", body, want)
 	}
 }
@@ -1002,6 +1002,246 @@ func TestAMigratedThemeIsDrawnInTheDarkPaletteAlone(t *testing.T) {
 	}
 	if got, want := loaded.Ui.Theme.Light.Accent, style.DefaultTheme().Light.Accent; got != want {
 		t.Errorf("got light accent %q, want the default %q", got, want)
+	}
+	if unknown := loaded.UnknownSettings(); len(unknown) > 0 {
+		t.Errorf("the migrated config has unknown settings: %v", unknown)
+	}
+}
+
+func TestTheThirteenthConfigMigrationTurnsASingleSelectionIntoTheAgentModel(t *testing.T) {
+	written := migratedConfig(t, `version = 13
+
+# what to talk to
+[model] # models
+round_robin = [ "anthropic/claude-opus-5@high" ] # the usual
+
+[ui]
+currency = "gbp"
+`)
+
+	want := currentVersionLine() + `
+
+# what to talk to
+[agent] # models
+model = "anthropic/claude-opus-5@high" # the usual
+
+[ui]
+currency = "gbp"
+`
+	if written != want {
+		t.Errorf("got:\n%s\nwant:\n%s", written, want)
+	}
+}
+
+func TestTheThirteenthConfigMigrationMovesARotationOutOfTheDefaults(t *testing.T) {
+	written := migratedConfig(t, `version = 13
+
+[model]
+effort = "medium"
+round_robin = [
+    "anthropic/claude-opus-5@high", # mostly
+    "codex/gpt-5.6-sol",
+]
+fast = true
+
+[ui]
+currency = "gbp"
+`)
+
+	want := currentVersionLine() + `
+
+[defaults]
+effort = "medium"
+fast = true
+
+[agent]
+round_robin = [
+    "anthropic/claude-opus-5@high", # mostly
+    "codex/gpt-5.6-sol",
+]
+
+[ui]
+currency = "gbp"
+`
+	if written != want {
+		t.Errorf("got:\n%s\nwant:\n%s", written, want)
+	}
+}
+
+func TestTheThirteenthConfigMigrationMovesARotationFile(t *testing.T) {
+	written := migratedConfig(t, "version = 13\n\n[model]\nround_robin = \"config.models\"\neffort = \"low\"\n")
+
+	want := currentVersionLine() + "\n\n[defaults]\neffort = \"low\"\n\n[agent]\nround_robin = \"config.models\"\n"
+	if written != want {
+		t.Errorf("got:\n%s\nwant:\n%s", written, want)
+	}
+}
+
+func TestTheThirteenthConfigMigrationMovesADottedRotation(t *testing.T) {
+	written := migratedConfig(t, "version = 13\nmodel.round_robin = [\"a/b\", \"c/d\"]\nmodel . round_robin2 = 1\n")
+
+	want := currentVersionLine() + "\nagent.round_robin = [\"a/b\", \"c/d\"]\nmodel . round_robin2 = 1\n"
+	if written != want {
+		t.Errorf("got:\n%s\nwant:\n%s", written, want)
+	}
+}
+
+func TestTheThirteenthConfigMigrationLeavesAConfigWithoutARotationAlone(t *testing.T) {
+	original := "version = 13\n\n[ui]\ncurrency = \"gbp\"\n# model.round_robin = [\"a/b\"]\n"
+	written := migratedConfig(t, original)
+
+	if want := strings.Replace(original, "version = 13", currentVersionLine(), 1); written != want {
+		t.Errorf("got:\n%s\nwant:\n%s", written, want)
+	}
+}
+
+func TestTheThirteenthConfigMigrationRefusesARotationItCannotMove(t *testing.T) {
+	original := "version = 13\nmodel = { round_robin = [\"a/b\"] }\n"
+	path := configFile(t, original)
+
+	_, _, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path})
+	if err == nil || !strings.Contains(err.Error(), "into [agent] by hand") {
+		t.Fatalf("got %v, want a refusal naming what to do", err)
+	}
+	if body, _ := os.ReadFile(path); string(body) != original { //nolint:gosec // the test's own path
+		t.Errorf("a refused migration rewrote the config:\n%s", body)
+	}
+}
+
+func TestAMigratedRotationLoadsAsTheAgentsModels(t *testing.T) {
+	path := configFile(t, "version = 13\n\n[model]\nround_robin = [\"a/b@high\", \"c/d\"]\neffort = \"low\"\n")
+	if _, _, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path}); err != nil {
+		t.Fatal(err)
+	}
+
+	loaded, err := config.Load(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := loaded.Agent.Rotation(); len(got) != 2 || got[0] != "a/b@high" || got[1] != "c/d" {
+		t.Errorf("got rotation %q", got)
+	}
+	if got := loaded.Defaults.Effort; got != "low" {
+		t.Errorf("got effort %q", got)
+	}
+	if unknown := loaded.UnknownSettings(); len(unknown) > 0 {
+		t.Errorf("the migrated config has unknown settings: %v", unknown)
+	}
+}
+
+func TestTheThirteenthConfigMigrationGathersTheDefaultsIntoOneTable(t *testing.T) {
+	written := migratedConfig(t, `version = 13
+
+# who may do what
+[caps]
+default = "rxw"
+
+[model]
+effort = "medium" # most of the time
+fast = true
+
+[ui]
+currency = "gbp"
+
+[tool]
+output = "48K"
+
+[editor]
+command = []
+
+[ports]
+hostname = ""
+`)
+
+	want := currentVersionLine() + `
+
+# who may do what
+[defaults]
+caps = "rxw"
+effort = "medium" # most of the time
+fast = true
+tool_output = "48K"
+
+[ui]
+currency = "gbp"
+`
+	if written != want {
+		t.Errorf("got:\n%s\nwant:\n%s", written, want)
+	}
+}
+
+func TestTheThirteenthConfigMigrationGathersDottedDefaultsWhereTheFirstStood(t *testing.T) {
+	written := migratedConfig(t, `version = 13
+ui.currency = "gbp"
+caps.default = "rx"
+model.effort = "low"
+editor.command = ""
+tool.output = """
+16K"""
+
+[snippets]
+review = """
+[model]
+effort = "not a setting"
+"""
+
+[model]
+fast = true
+`)
+
+	want := currentVersionLine() + `
+ui.currency = "gbp"
+defaults.caps = "rx"
+defaults.effort = "low"
+defaults.fast = true
+defaults.tool_output = """
+16K"""
+
+[snippets]
+review = """
+[model]
+effort = "not a setting"
+"""
+`
+	if written != want {
+		t.Errorf("got:\n%s\nwant:\n%s", written, want)
+	}
+}
+
+func TestTheThirteenthConfigMigrationLeavesSettingsThatSaySomethingAlone(t *testing.T) {
+	original := "version = 13\n\n[ui]\ncurrency = \"gbp\"\n\n[ports]\nhostname = \"{session}.agent\"\n\n[editor]\ncommand = [\"subl\", \"--wait\"]\n"
+	written := migratedConfig(t, original)
+
+	if want := strings.Replace(original, "version = 13", currentVersionLine(), 1); written != want {
+		t.Errorf("got:\n%s\nwant:\n%s", written, want)
+	}
+}
+
+func TestTheThirteenthConfigMigrationRefusesDefaultsItCannotMove(t *testing.T) {
+	original := "version = 13\ncaps = { default = \"rx\" }\n"
+	path := configFile(t, original)
+
+	_, _, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path})
+	if err == nil || !strings.Contains(err.Error(), "into [defaults]") {
+		t.Fatalf("got %v, want a refusal naming what to do", err)
+	}
+	if body, _ := os.ReadFile(path); string(body) != original { //nolint:gosec // the test's own path
+		t.Errorf("a refused migration rewrote the config:\n%s", body)
+	}
+}
+
+func TestAMigratedConfigLoadsItsDefaultsWithNothingUnknown(t *testing.T) {
+	path := configFile(t, "version = 13\n\n[caps]\ndefault = \"rxw\"\n\n[model]\neffort = \"low\"\nfast = true\n\n[tool]\noutput = \"48K\"\n\n[ui]\ncurrency = \"\"\n")
+	if _, _, err := migrate.MigrateConfig(migrate.ConfigOptions{Path: path}); err != nil {
+		t.Fatal(err)
+	}
+
+	loaded, err := config.Load(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := loaded.Defaults; got.Caps != "rxw" || got.Effort != "low" || !got.IsFast || got.ToolOutput.Bytes != 48*1024 {
+		t.Errorf("got defaults %+v", got)
 	}
 	if unknown := loaded.UnknownSettings(); len(unknown) > 0 {
 		t.Errorf("the migrated config has unknown settings: %v", unknown)

@@ -60,29 +60,31 @@ type preparedChildManager struct {
 }
 
 func prepareChildManager(options childOptions, choices []model.Choice, seenModelsPath string, isPrinting bool) (preparedChildManager, error) {
-	if options.settings.Subagent.Model == "" || isPrinting {
+	rotation := options.settings.Subagent.Rotation()
+	if len(rotation) == 0 || isPrinting {
 		return preparedChildManager{}, nil
 	}
-	selection, err := model.ParseSelection(choices, options.settings.Subagent.Model, options.settings.Model.GetDefaults())
+	setting := options.settings.Subagent.Setting()
+	selections, err := model.ParseRoundRobin(choices, rotation, options.settings.Defaults.ForSelections())
 	if err != nil {
-		return preparedChildManager{}, fmt.Errorf("subagent.model: %w", err)
+		return preparedChildManager{}, fmt.Errorf("%s: %w", setting, err)
 	}
-	choice, err := model.Chosen(choices, seenModelsPath, selection.Provider, selection.Model)
-	if err != nil {
-		return preparedChildManager{}, fmt.Errorf("subagent.model: %w", err)
+	models := make([]subagents.ChildModel, 0, len(selections))
+	for _, selection := range selections {
+		choice, err := model.Chosen(choices, seenModelsPath, selection.Provider, selection.Model)
+		if err != nil {
+			return preparedChildManager{}, fmt.Errorf("%s: %w", setting, err)
+		}
+		models = append(models, subagents.ChildModel{Choice: choice, Selection: selection})
 	}
 	manager, err := subagents.New(subagents.Options{
 		Directory: session.ChildrenDir(options.sessionsDir, options.sessionName),
 		Scratch:   options.scratchParent,
 		Parent:    options.sessionName,
-		Choice:    choice,
+		Models:    models,
+		Choose:    childRotation(models, selections, options.endpoints.OverrideURL != ""),
 		Meta: store.Meta{
-			Model:        selection.Model,
 			WorkspaceDir: options.workspace.GetDir(),
-			Provider:     selection.Provider,
-			Effort:       selection.Effort,
-			IsFast:       selection.IsFast,
-			ModelChoice:  &choice,
 			Yolo:         options.isYolo,
 		},
 		Factory:      newChildFactory(options),
@@ -99,6 +101,32 @@ func prepareChildManager(options childOptions, choices []model.Choice, seenModel
 		},
 	})
 	return preparedChildManager{manager: manager}, err
+}
+
+func childRotation(models []subagents.ChildModel, selections []model.Selection, isSimulated bool) func() (subagents.ChildModel, error) {
+	return func() (subagents.ChildModel, error) {
+		now := time.Now()
+		selection, err := model.ReserveAvailableRoundRobin(
+			location.GetSubagentRoundRobinPath(),
+			selections,
+			func(candidate model.Selection) bool {
+				return usage.IsSelectionAvailable(
+					location.GetUsageCachePath(candidate.Provider, isSimulated),
+					candidate.Model,
+					now,
+				)
+			},
+		)
+		if err != nil {
+			return subagents.ChildModel{}, err
+		}
+		for _, candidate := range models {
+			if candidate.Selection == selection {
+				return candidate, nil
+			}
+		}
+		return subagents.ChildModel{}, fmt.Errorf("the subagent rotation chose %s, which it does not hold", selection)
+	}
 }
 
 func newChildFactory(options childOptions) subagents.Factory {

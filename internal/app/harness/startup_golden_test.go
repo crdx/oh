@@ -188,18 +188,18 @@ func TestGoldenStartupResolvesTheModelToUse(t *testing.T) {
 			return run.run(t, "-p", "--yolo", "-m", "nonesuch", "a question") + run.sessionModels(t)
 		},
 		"a rotation naming an offered model": func() string {
-			run := newStartupRun(t, "[model]\nround_robin = [\"opencode-go/fake\"]\n", "Rotated answer.")
+			run := newStartupRun(t, "[agent]\nround_robin = [\"opencode-go/fake\"]\n", "Rotated answer.")
 			return run.run(t, "-p", "--yolo", "a question") + run.sessionModels(t)
 		},
 		"a rotation naming a model nobody offers": func() string {
-			run := newStartupRun(t, "[model]\nround_robin = [\"opencode-go/fake\", \"opencode-go/nonesuch\"]\n")
+			run := newStartupRun(t, "[agent]\nround_robin = [\"opencode-go/fake\", \"opencode-go/nonesuch\"]\n")
 			return run.run(t, "-p", "--yolo", "a question") + run.sessionModels(t)
 		},
 		"a resumed session keeps its model over the rotation": func() string {
 			run := newStartupRun(t, "", "First answer.", "Resumed answer.")
 			first := run.run(t, "-p", "--yolo", "-m", "opencode-go/fake@low", "a question")
 			name := run.onlySessionName(t)
-			run.writeConfig(t, "[model]\nround_robin = [\"opencode-go/fake@high\"]\n")
+			run.writeConfig(t, "[agent]\nround_robin = [\"opencode-go/fake@high\"]\n")
 			resumed := run.run(t, "-p", "-r", name, "another question")
 			return strings.ReplaceAll(first+resumed, name, "<session>") + run.sessionModels(t)
 		},

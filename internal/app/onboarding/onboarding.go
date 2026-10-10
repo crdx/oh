@@ -144,7 +144,7 @@ type Options struct {
 func PrepareConfig(options Options) (bool, error) {
 	configPath := location.GetConfigFile()
 	settings := options.Settings
-	if !isRequired(options, settings.Model.RoundRobin) {
+	if !isRequired(options, settings.Agent.Rotation()) {
 		return false, nil
 	}
 
@@ -160,7 +160,7 @@ func PrepareConfig(options Options) (bool, error) {
 	}
 	harry := wizard{
 		isSimulationOffered: true,
-		defaults:            settings.Model.GetDefaults(),
+		defaults:            settings.Defaults.ForSelections(),
 
 		output:      options.Output,
 		pause:       pause,

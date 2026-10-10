@@ -41,25 +41,25 @@ func TestARuleIsOneOfTheOfferedWords(t *testing.T) {
 
 func TestAReplacedSetIsTheOneEveryReaderSees(t *testing.T) {
 	live := permission.New(permission.Set{
-		Network: permission.Ask,
-		Lookup:  permission.Allow,
-		Fetch:   permission.Allow,
+		Network: permission.Setting{Rule: permission.Ask},
+		Lookup:  permission.Setting{Rule: permission.Allow},
+		Fetch:   permission.Setting{Rule: permission.Allow},
 	})
 
-	if live.Network() != permission.Ask || live.Lookup() != permission.Allow {
+	if live.Network().Rule != permission.Ask || live.Lookup().Rule != permission.Allow {
 		t.Fatalf("got %+v, want the set it was given", live.Get())
 	}
 
 	live.Replace(permission.Set{
-		Network: permission.Allow,
-		Lookup:  permission.Ask,
-		Fetch:   permission.Ask,
+		Network: permission.Setting{Rule: permission.Allow},
+		Lookup:  permission.Setting{Rule: permission.Ask},
+		Fetch:   permission.Setting{Rule: permission.Ask},
 	})
 
-	if live.Network() != permission.Allow {
+	if live.Network().Rule != permission.Allow {
 		t.Errorf("got network %q, want the replacement", live.Network())
 	}
-	if live.Lookup() != permission.Ask || live.Fetch() != permission.Ask {
+	if live.Lookup().Rule != permission.Ask || live.Fetch().Rule != permission.Ask {
 		t.Errorf("got %+v, want the replacement", live.Get())
 	}
 }

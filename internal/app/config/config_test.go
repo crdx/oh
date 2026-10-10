@@ -32,7 +32,7 @@ func TestConfiguredSkillDirectoriesResolvesAbsoluteRelativeAndHomePaths(t *testi
 	absolute := filepath.Join(t.TempDir(), "skills")
 	home := t.TempDir()
 	t.Setenv("HOME", home)
-	contents := "[input]\nnudge = \"carry on\"\n[model]\nround_robin = [\"opencode/deepseek@hi\"]\n[editor]\ncommand = \"  subl  \"\n[skills]\ninclude = [\"" + absolute + "\", \"shared/skills\", \"~/agents/skills\"]\n"
+	contents := "[input]\nnudge = \"carry on\"\n[agent]\nround_robin = [\"opencode/deepseek@hi\"]\n[editor]\ncommand = \"  subl  \"\n[skills]\ninclude = [\"" + absolute + "\", \"shared/skills\", \"~/agents/skills\"]\n"
 	if err := writeConfigFile(path, contents); err != nil {
 		t.Fatal(err)
 	}
@@ -41,8 +41,8 @@ func TestConfiguredSkillDirectoriesResolvesAbsoluteRelativeAndHomePaths(t *testi
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !slices.Equal(config.Model.RoundRobin, []string{"opencode/deepseek@hi"}) {
-		t.Errorf("got model rotation %#v", config.Model.RoundRobin)
+	if !slices.Equal(config.Agent.RoundRobin, []string{"opencode/deepseek@hi"}) {
+		t.Errorf("got model rotation %#v", config.Agent.RoundRobin)
 	}
 	if !slices.Equal(config.Editor.Command, []string{"subl"}) {
 		t.Errorf("got editor %q", config.Editor.Command)
@@ -77,7 +77,7 @@ func TestRoundRobinCanLoadSelectionsFromAFile(t *testing.T) {
 		t.Fatal(err)
 	}
 	configPath := filepath.Join(directory, "config.toml")
-	if err := writeConfigFile(configPath, "[model]\nround_robin = \"models.txt\"\n"); err != nil {
+	if err := writeConfigFile(configPath, "[agent]\nround_robin = \"models.txt\"\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -86,8 +86,8 @@ func TestRoundRobinCanLoadSelectionsFromAFile(t *testing.T) {
 		t.Fatal(err)
 	}
 	want := []string{"anthropic/one@high", "codex/two@medium", "anthropic/one@high"}
-	if !slices.Equal(settings.Model.RoundRobin, want) {
-		t.Errorf("got model rotation %#v, want %#v", settings.Model.RoundRobin, want)
+	if !slices.Equal(settings.Agent.RoundRobin, want) {
+		t.Errorf("got model rotation %#v, want %#v", settings.Agent.RoundRobin, want)
 	}
 }
 
@@ -98,7 +98,7 @@ func TestRoundRobinModelFileSkipsBlankLines(t *testing.T) {
 		t.Fatal(err)
 	}
 	configPath := filepath.Join(directory, "config.toml")
-	if err := writeConfigFile(configPath, "[model]\nround_robin = \"models.txt\"\n"); err != nil {
+	if err := writeConfigFile(configPath, "[agent]\nround_robin = \"models.txt\"\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -107,8 +107,8 @@ func TestRoundRobinModelFileSkipsBlankLines(t *testing.T) {
 		t.Fatal(err)
 	}
 	want := []string{"anthropic/one@high", "anthropic/two@high"}
-	if !slices.Equal(settings.Model.RoundRobin, want) {
-		t.Errorf("got model rotation %#v, want %#v", settings.Model.RoundRobin, want)
+	if !slices.Equal(settings.Agent.RoundRobin, want) {
+		t.Errorf("got model rotation %#v, want %#v", settings.Agent.RoundRobin, want)
 	}
 }
 
@@ -119,7 +119,7 @@ func TestRoundRobinModelFileMustContainASelectionBesideComments(t *testing.T) {
 		t.Fatal(err)
 	}
 	configPath := filepath.Join(directory, "config.toml")
-	if err := writeConfigFile(configPath, "[model]\nround_robin = \"models.txt\"\n"); err != nil {
+	if err := writeConfigFile(configPath, "[agent]\nround_robin = \"models.txt\"\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -131,7 +131,7 @@ func TestRoundRobinModelFileMustContainASelectionBesideComments(t *testing.T) {
 
 func TestConfiguredDefaultCapabilitiesRejectUnknownFlags(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := writeConfigFile(path, "[caps]\ndefault = \"rwz\"\n"); err != nil {
+	if err := writeConfigFile(path, "[defaults]\ncaps = \"rwz\"\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -292,7 +292,7 @@ func TestAMissingConfigFileIsAllowed(t *testing.T) {
 	if want := []string{"yes", "no"}; !slices.Equal(config.Input.SpeedDial, want) {
 		t.Errorf("got default speed dial %q, want %q", config.Input.SpeedDial, want)
 	}
-	if got := string(config.Caps.Default); got != "rx" {
+	if got := string(config.Defaults.Caps); got != "rx" {
 		t.Errorf("got default capabilities %q", got)
 	}
 	if config.Version != Format {
@@ -318,14 +318,14 @@ func TestAnUnversionedOverrideReplacesOnlyWhatItMentions(t *testing.T) {
 	if err := os.Mkdir(filepath.Dir(globalPath), 0o700); err != nil {
 		t.Fatal(err)
 	}
-	if err := writeConfigFile(globalPath, "[ui]\ncurrency = \"GBP\"\n[model]\nround_robin = [\"anthropic/global\"]\n[sandbox]\nread = [\"shared\"]\n"); err != nil {
+	if err := writeConfigFile(globalPath, "[ui]\ncurrency = \"GBP\"\n[agent]\nround_robin = [\"anthropic/global\"]\n[sandbox]\nread = [\"shared\"]\n"); err != nil {
 		t.Fatal(err)
 	}
 	overridePath := filepath.Join(directory, "project", "oh.toml")
 	if err := os.Mkdir(filepath.Dir(overridePath), 0o700); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(overridePath, []byte("[caps]\ndefault = \"rwg\"\n[ui]\ncurrency = \"EUR\"\n[snippets]\nreview = { prompt = \"Review.\", arguments = \"none\" }\n"), 0o600); err != nil {
+	if err := os.WriteFile(overridePath, []byte("[defaults]\ncaps = \"rwg\"\n[ui]\ncurrency = \"EUR\"\n[snippets]\nreview = { prompt = \"Review.\", arguments = \"none\" }\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -339,11 +339,11 @@ func TestAnUnversionedOverrideReplacesOnlyWhatItMentions(t *testing.T) {
 	if settings.Ui.Currency != "EUR" {
 		t.Errorf("got currency %q", settings.Ui.Currency)
 	}
-	if got := string(settings.Caps.Default); got != "rwg" {
+	if got := string(settings.Defaults.Caps); got != "rwg" {
 		t.Errorf("got default capabilities %q", got)
 	}
-	if !slices.Equal(settings.Model.RoundRobin, []string{"anthropic/global"}) {
-		t.Errorf("got model rotation %#v", settings.Model.RoundRobin)
+	if !slices.Equal(settings.Agent.RoundRobin, []string{"anthropic/global"}) {
+		t.Errorf("got model rotation %#v", settings.Agent.RoundRobin)
 	}
 	if !slices.Equal(settings.Sandbox.Read, []string{filepath.Join(filepath.Dir(globalPath), "shared")}) {
 		t.Errorf("got read paths %#v", settings.Sandbox.Read)
@@ -355,7 +355,7 @@ func TestAnUnversionedOverrideReplacesOnlyWhatItMentions(t *testing.T) {
 	if override.Path != overridePath {
 		t.Errorf("got override path %q, want %q", override.Path, overridePath)
 	}
-	wantSettings := []string{"caps.default", "snippets.review", "ui.currency"}
+	wantSettings := []string{"defaults.caps", "snippets.review", "ui.currency"}
 	if !slices.Equal(override.Settings, wantSettings) {
 		t.Errorf("got overridden settings %#v, want %#v", override.Settings, wantSettings)
 	}
@@ -659,10 +659,18 @@ func TestConfiguredSkillExclusionsRejectAnEmptyDirectory(t *testing.T) {
 
 func TestConfiguredStringsCannotBeEmpty(t *testing.T) {
 	for name, contents := range map[string]string{
-		"model round robin":           "[model]\nround_robin = []\n",
-		"model file path":             "[model]\nround_robin = \"\"\n",
-		"model selection":             "[model]\nround_robin = [\"\"]\n",
-		"model selection whitespace":  "[model]\nround_robin = [\"  \"]\n",
+		"model round robin":           "[agent]\nround_robin = []\n",
+		"model file path":             "[agent]\nround_robin = \"\"\n",
+		"model selection":             "[agent]\nround_robin = [\"\"]\n",
+		"model selection whitespace":  "[agent]\nround_robin = [\"  \"]\n",
+		"agent model":                 "[agent]\nmodel = \"\"\n",
+		"agent model whitespace":      "[agent]\nmodel = \"  \"\n",
+		"subagent model":              "[subagent]\nmodel = \"\"\n",
+		"subagent round robin":        "[subagent]\nround_robin = []\n",
+		"ui currency":                 "[ui]\ncurrency = \" \"\n",
+		"ports hostname":              "[ports]\nhostname = \"\"\n",
+		"editor command list":         "[editor]\ncommand = []\n",
+		"editor command string":       "[editor]\ncommand = \"  \"\n",
 		"input nudge":                 "[input]\nnudge = \"\"\n",
 		"input nudge whitespace":      "[input]\nnudge = \"  \"\n",
 		"speed dial entry":            "[input]\nspeed_dial = [\"\"]\n",
@@ -1134,7 +1142,7 @@ func TestTheBuiltInDefaultsSetEverySettingThereIs(t *testing.T) {
 	}
 
 	for _, key := range []string{
-		"version", "caps", "editor", "input", "model", "snippets", "skills", "sandbox", "bar",
+		"version", "defaults", "input", "snippets", "skills", "sandbox", "bar",
 	} {
 		if _, ok := written[key]; !ok {
 			t.Errorf("expected the defaults to say what %q is", key)
@@ -1237,7 +1245,7 @@ func brokenLayout(t *testing.T, body string) (segment.Layout, error) {
 
 func TestAConfigWrittenBeforeThemesExistedNeedsNoMigrating(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := os.WriteFile(path, []byte("version = 13\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte("version = 14\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1556,7 +1564,7 @@ func TestTheStreamingModeDefaultsToWholeLines(t *testing.T) {
 
 func TestAConfigWrittenBeforeTheStreamingModeExistedNeedsNoMigrating(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := os.WriteFile(path, []byte("version = 13\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte("version = 14\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1577,8 +1585,8 @@ func TestTheToolOutputLimitDefaultsToTwelveKilobytes(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if config.Tool.Output.Bytes != 12*1024 {
-		t.Errorf("got tool output limit %d, want %d", config.Tool.Output.Bytes, 12*1024)
+	if config.Defaults.ToolOutput.Bytes != 12*1024 {
+		t.Errorf("got tool output limit %d, want %d", config.Defaults.ToolOutput.Bytes, 12*1024)
 	}
 }
 
@@ -1622,12 +1630,12 @@ func TestTheDebugSettingsAreRead(t *testing.T) {
 
 func TestTheToolOutputLimitIsRead(t *testing.T) {
 	config := configFrom(t, `
-		[tool]
-		output = "48K"
+		[defaults]
+		tool_output = "48K"
 	`)
 
-	if config.Tool.Output.Bytes != 48*1024 {
-		t.Errorf("got tool output limit %d, want %d", config.Tool.Output.Bytes, 48*1024)
+	if config.Defaults.ToolOutput.Bytes != 48*1024 {
+		t.Errorf("got tool output limit %d, want %d", config.Defaults.ToolOutput.Bytes, 48*1024)
 	}
 	if reports := config.UnknownSettings(); len(reports) > 0 {
 		t.Errorf("got %v", reports)
@@ -1675,19 +1683,19 @@ func TestASubagentConcurrencyBelowOneIsRefused(t *testing.T) {
 
 func TestAToolOutputLimitTooSmallToSayAnythingWithIsRefused(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := writeConfigFile(path, "[tool]\noutput = \"3\"\n"); err != nil {
+	if err := writeConfigFile(path, "[defaults]\ntool_output = \"3\"\n"); err != nil {
 		t.Fatal(err)
 	}
 
 	_, err := Load(path)
-	if err == nil || !strings.Contains(err.Error(), "tool.output is too small") {
-		t.Errorf("got %v, want a complaint about tool.output", err)
+	if err == nil || !strings.Contains(err.Error(), "defaults.tool_output is too small") {
+		t.Errorf("got %v, want a complaint about defaults.tool_output", err)
 	}
 }
 
 func TestAToolOutputLimitThatIsNotASizeIsRefused(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := writeConfigFile(path, "[tool]\noutput = \"a bit\"\n"); err != nil {
+	if err := writeConfigFile(path, "[defaults]\ntool_output = \"a bit\"\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1699,7 +1707,7 @@ func TestAToolOutputLimitThatIsNotASizeIsRefused(t *testing.T) {
 
 func TestAConfigWrittenBeforeTheToolOutputLimitExistedNeedsNoMigrating(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := os.WriteFile(path, []byte("version = 13\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte("version = 14\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1707,8 +1715,8 @@ func TestAConfigWrittenBeforeTheToolOutputLimitExistedNeedsNoMigrating(t *testin
 	if err != nil {
 		t.Fatalf("a config from before the setting existed was refused: %v", err)
 	}
-	if config.Tool.Output.Bytes != 12*1024 {
-		t.Errorf("got tool output limit %d, want the default %d", config.Tool.Output.Bytes, 12*1024)
+	if config.Defaults.ToolOutput.Bytes != 12*1024 {
+		t.Errorf("got tool output limit %d, want the default %d", config.Defaults.ToolOutput.Bytes, 12*1024)
 	}
 }
 
@@ -1820,7 +1828,7 @@ func TestTheGroupingDefaultsToReasoningRunningOnFromTools(t *testing.T) {
 
 func TestAConfigWrittenBeforeTheGroupingExistedNeedsNoMigrating(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := os.WriteFile(path, []byte("version = 13\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
+	if err := os.WriteFile(path, []byte("version = 14\n[ui]\ncurrency = \"GBP\"\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1842,7 +1850,7 @@ func TestAConfigWrittenBeforeTheGroupingExistedNeedsNoMigrating(t *testing.T) {
 }
 
 func TestTheShippedModelDefaultsAreHighEffortWithoutFastMode(t *testing.T) {
-	defaults := configFrom(t, "").Model.GetDefaults()
+	defaults := configFrom(t, "").Defaults.ForSelections()
 
 	if defaults != (model.Defaults{Effort: "high"}) {
 		t.Errorf("got %#v", defaults)
@@ -1851,10 +1859,10 @@ func TestTheShippedModelDefaultsAreHighEffortWithoutFastMode(t *testing.T) {
 
 func TestModelDefaultsMayBeConfigured(t *testing.T) {
 	defaults := configFrom(t, `
-		[model]
+		[defaults]
 		effort = "low"
 		fast = false
-	`).Model.GetDefaults()
+	`).Defaults.ForSelections()
 
 	if defaults != (model.Defaults{Effort: "low"}) {
 		t.Errorf("got %#v", defaults)
@@ -1863,7 +1871,7 @@ func TestModelDefaultsMayBeConfigured(t *testing.T) {
 
 func TestAnUnrecognisedDefaultEffortIsRefused(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := writeConfigFile(path, "[model]\neffort = \"tremendous\"\n"); err != nil {
+	if err := writeConfigFile(path, "[defaults]\neffort = \"tremendous\"\n"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1963,10 +1971,10 @@ func TestPermissionsUseSafeDefaults(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if permissions.Network != permission.Ask || permissions.Fetch != permission.Ask {
+	if permissions.Network.Rule != permission.Ask || permissions.Fetch.Rule != permission.Ask {
 		t.Errorf("got %+v, want the host network and fetch to be asked about", permissions)
 	}
-	if permissions.Lookup != permission.Allow {
+	if permissions.Lookup.Rule != permission.Allow {
 		t.Errorf("got lookup %q, want lookup allowed", permissions.Lookup)
 	}
 }
@@ -1993,7 +2001,7 @@ func TestAPermissionNobodyOffersIsRefusedWithItsKey(t *testing.T) {
 
 func TestAConfigNobodyCouldHaveWrittenIsRefusedRatherThanParsed(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	body := append([]byte("version = 13\nx = "), bytes.Repeat([]byte("["), readableBytes)...)
+	body := append([]byte("version = 14\nx = "), bytes.Repeat([]byte("["), readableBytes)...)
 	if err := os.WriteFile(path, body, 0o600); err != nil {
 		t.Fatal(err)
 	}
@@ -2109,14 +2117,11 @@ func TestTheBuiltInDefaultsAreThemselvesAConfigSomebodyMayWrite(t *testing.T) {
 	if !reflect.DeepEqual(written.Ui, built.Ui) {
 		t.Errorf("got ui %+v, want %+v", written.Ui, built.Ui)
 	}
-	if !reflect.DeepEqual(written.Tool, built.Tool) {
-		t.Errorf("got tool %+v, want %+v", written.Tool, built.Tool)
+	if !reflect.DeepEqual(written.Defaults, built.Defaults) {
+		t.Errorf("got defaults %+v, want %+v", written.Defaults, built.Defaults)
 	}
 	if !reflect.DeepEqual(written.Permissions, built.Permissions) {
 		t.Errorf("got permissions %+v, want %+v", written.Permissions, built.Permissions)
-	}
-	if !reflect.DeepEqual(written.Model.GetDefaults(), built.Model.GetDefaults()) {
-		t.Errorf("got model %+v, want %+v", written.Model, built.Model)
 	}
 }
 
@@ -2223,5 +2228,189 @@ func TestAnAppearanceIsReadAndAMistakenOneIsRefused(t *testing.T) {
 	}
 	if _, err := Load(path); err == nil || !strings.Contains(err.Error(), `"sepia" is not an appearance`) {
 		t.Errorf("got %v, want the appearance refused", err)
+	}
+}
+
+func TestASingleAgentModelIsTheWholeRotation(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "config.toml")
+	if err := writeConfigFile(path, "[agent]\nmodel = \"  anthropic/one@high  \"\n"); err != nil {
+		t.Fatal(err)
+	}
+
+	settings, err := Load(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := settings.Agent.Rotation(); !slices.Equal(got, []string{"anthropic/one@high"}) {
+		t.Errorf("got rotation %q", got)
+	}
+	if got := settings.Agent.Setting(); got != "agent.model" {
+		t.Errorf("got setting %q", got)
+	}
+}
+
+func TestAnAgentModelBesideARotationIsRefused(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "config.toml")
+	if err := writeConfigFile(path, "[agent]\nmodel = \"anthropic/one\"\nround_robin = [\"anthropic/two\"]\n"); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := Load(path)
+	if err == nil || !strings.Contains(err.Error(), "agent.model and agent.round_robin cannot both be set") {
+		t.Fatalf("got %v, want both settings refused", err)
+	}
+}
+
+func TestAnOverrideChoosesTheAgentsModelWhicheverWayEitherIsWritten(t *testing.T) {
+	for name, layers := range map[string]struct {
+		global   string
+		override string
+		want     []string
+		setting  string
+	}{
+		"a model over a rotation file": {
+			global:   "[agent]\nround_robin = \"models.txt\"\n",
+			override: "[agent]\nmodel = \"anthropic/local\"\n",
+			want:     []string{"anthropic/local"},
+			setting:  "agent.model",
+		},
+		"a rotation over a model": {
+			global:   "[agent]\nmodel = \"anthropic/global\"\n",
+			override: "[agent]\nround_robin = [\"anthropic/one\", \"anthropic/two\"]\n",
+			want:     []string{"anthropic/one", "anthropic/two"},
+			setting:  "agent.round_robin",
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			directory := t.TempDir()
+			if err := os.WriteFile(filepath.Join(directory, "models.txt"), []byte("anthropic/listed\n"), 0o600); err != nil {
+				t.Fatal(err)
+			}
+			globalPath := filepath.Join(directory, "config.toml")
+			if err := writeConfigFile(globalPath, layers.global); err != nil {
+				t.Fatal(err)
+			}
+			overridePath := filepath.Join(directory, "oh.toml")
+			if err := os.WriteFile(overridePath, []byte(layers.override), 0o600); err != nil {
+				t.Fatal(err)
+			}
+
+			settings, err := LoadSources(Source{Path: globalPath}, Source{Path: overridePath, IsOverride: true})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if got := settings.Agent.Rotation(); !slices.Equal(got, layers.want) {
+				t.Errorf("got rotation %q, want %q", got, layers.want)
+			}
+			if got := settings.Agent.Setting(); got != layers.setting {
+				t.Errorf("got setting %q, want %q", got, layers.setting)
+			}
+			if len(settings.Agent.rotationFile) != 0 {
+				t.Errorf("still watching %v for a rotation nobody reads", settings.Agent.rotationFile)
+			}
+		})
+	}
+}
+
+func TestARotationLeftInTheModelTableIsReportedAsUnknown(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "oh.toml")
+	if err := os.WriteFile(path, []byte("[model]\nround_robin = [\"anthropic/one\"]\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	settings, err := LoadSources(Source{Path: path, IsOverride: true})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := strings.Join(settings.UnknownSettings(), "\n"); !strings.Contains(got, "unknown: model") {
+		t.Errorf("got unknown settings %q, want model.round_robin among them", got)
+	}
+	if got := settings.Agent.Rotation(); len(got) != 0 {
+		t.Errorf("got rotation %q from a setting that no longer exists", got)
+	}
+}
+
+func TestASubagentChoosesItsModelAsTheAgentDoes(t *testing.T) {
+	directory := t.TempDir()
+	if err := os.WriteFile(filepath.Join(directory, "dumb.models"), []byte("anthropic/haiku@low\ncodex/mini\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	for name, run := range map[string]struct {
+		contents string
+		want     []string
+		setting  string
+	}{
+		"nothing":     {"", nil, "subagent.round_robin"},
+		"a model":     {"[subagent]\nmodel = \" anthropic/haiku@low \"\n", []string{"anthropic/haiku@low"}, "subagent.model"},
+		"a list":      {"[subagent]\nround_robin = [\"anthropic/haiku\", \"codex/mini\"]\n", []string{"anthropic/haiku", "codex/mini"}, "subagent.round_robin"},
+		"a file":      {"[subagent]\nround_robin = \"dumb.models\"\n", []string{"anthropic/haiku@low", "codex/mini"}, "subagent.round_robin"},
+		"the agent's": {"[agent]\nmodel = \"anthropic/opus\"\n", nil, "subagent.round_robin"},
+	} {
+		t.Run(name, func(t *testing.T) {
+			path := filepath.Join(directory, "config.toml")
+			if err := writeConfigFile(path, run.contents); err != nil {
+				t.Fatal(err)
+			}
+			settings, err := Load(path)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if got := settings.Subagent.Rotation(); !slices.Equal(got, run.want) {
+				t.Errorf("got rotation %q, want %q", got, run.want)
+			}
+			if got := settings.Subagent.Setting(); got != run.setting {
+				t.Errorf("got setting %q, want %q", got, run.setting)
+			}
+		})
+	}
+}
+
+func TestASubagentModelBesideARotationIsRefused(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "config.toml")
+	if err := writeConfigFile(path, "[subagent]\nmodel = \"anthropic/one\"\nround_robin = [\"anthropic/two\"]\n"); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := Load(path)
+	if err == nil || !strings.Contains(err.Error(), "subagent.model and subagent.round_robin cannot both be set") {
+		t.Fatalf("got %v, want both settings refused", err)
+	}
+}
+
+func TestAGatedActionTakesItsApprovalTimeoutAsACustomToolDoes(t *testing.T) {
+	permissions, err := configFrom(t, `
+		[permissions]
+		network = { rule = "ask", timeout = "2m" }
+		fetch = "allow"
+	`).BuildPermissions()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if permissions.Network != (permission.Setting{Rule: permission.Ask, Timeout: 2 * time.Minute}) {
+		t.Errorf("got network %+v, want ask with two minutes", permissions.Network)
+	}
+	if permissions.Fetch != (permission.Setting{Rule: permission.Allow}) {
+		t.Errorf("got fetch %+v, want allow", permissions.Fetch)
+	}
+
+	for name, body := range map[string]string{
+		"allowed with a timeout": "[permissions]\nnetwork = { rule = \"allow\", timeout = \"2m\" }\n",
+		"no rule":                "[permissions]\nnetwork = { timeout = \"2m\" }\n",
+		"empty":                  "[permissions]\nnetwork = \"\"\n",
+		"unknown key":            "[permissions]\nnetwork = { rule = \"ask\", wait = \"2m\" }\n",
+	} {
+		t.Run(name, func(t *testing.T) {
+			path := filepath.Join(t.TempDir(), "config.toml")
+			if err := writeConfigFile(path, body); err != nil {
+				t.Fatal(err)
+			}
+			settings, err := Load(path)
+			if err == nil {
+				_, err = settings.BuildPermissions()
+			}
+			if err == nil {
+				t.Errorf("%s was accepted", name)
+			}
+		})
 	}
 }

@@ -424,3 +424,28 @@ func TestAReadOnlySessionsSubagentsReadWithoutAShell(t *testing.T) {
 		t.Errorf("%s read %+v, want one successful read", reader.Name, reads)
 	}
 }
+
+func TestASubagentRotationStartsEachChildOnTheNextModel(t *testing.T) {
+	readCall := encodedArguments(map[string]string{"path": "README.md"})
+	rig, _ := newRespondingRig(t, delegatingResponder(sim.Call{Name: "read", Arguments: readCall}))
+	writeSubagentWorkspace(t, rig)
+	writeRigConfig(t, rig, "[subagent]\nround_robin = [\"opencode-go/fake@low\", \"opencode-go/fake@high\"]\n")
+
+	session := rig.start("--yolo", "-m", "opencode-go/fake", delegatingPrompt)
+	session.waitFor(followedUpAnswer)
+	session.quit()
+
+	family := onlyStoredFamily(t, rig)
+	var efforts []string
+	for _, name := range family.order {
+		child := family.children[name]
+		if child.Meta.ModelChoice == nil || child.Meta.ModelChoice.ID != child.Meta.Model {
+			t.Errorf("%s stored model %q beside %+v", name, child.Meta.Model, child.Meta.ModelChoice)
+		}
+		efforts = append(efforts, child.Meta.Effort)
+	}
+	slices.Sort(efforts)
+	if want := []string{"high", "low"}; !slices.Equal(efforts, want) {
+		t.Errorf("the children ran at efforts %q, want one at each the rotation names: %q", efforts, want)
+	}
+}

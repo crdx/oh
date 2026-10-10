@@ -163,8 +163,8 @@ func TestACustomToolOnThePathIsLeftForThePathToFind(t *testing.T) {
 
 func TestCustomToolsCanShareAModeGroup(t *testing.T) {
 	config, _ := configWithACustomTool(t, `
-		[caps]
-		default = "rxa"
+		[defaults]
+		caps = "rxa"
 
 		[tools.weather]
 		version = 2
@@ -192,7 +192,7 @@ func TestCustomToolsCanShareAModeGroup(t *testing.T) {
 	if declaration.Version != 2 {
 		t.Errorf("got version %d", declaration.Version)
 	}
-	if _, grantedGroups, err := config.ParseCaps(string(config.Caps.Default)); err != nil {
+	if _, grantedGroups, err := config.ParseCaps(string(config.Defaults.Caps)); err != nil {
 		t.Fatal(err)
 	} else if grantedGroups != "a" {
 		t.Errorf("got granted groups %q", grantedGroups)

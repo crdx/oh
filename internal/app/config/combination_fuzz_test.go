@@ -30,16 +30,18 @@ type setting struct {
 
 func soundSettings() []setting {
 	return []setting{
-		{"caps", []string{
+		{"defaults", []string{
 			"",
-			"[caps]\ndefault = \"r\"\n",
-			"[caps]\ndefault = \"rwxngl\"\n",
-			"[caps]\ndefault = \"\"\n",
+			"[defaults]\ncaps = \"r\"\n",
+			"[defaults]\ncaps = \"rwxngl\"\ntool_output = \"1M\"\n",
+			"[defaults]\ncaps = \"\"\neffort = \"none\"\n",
+			"[defaults]\neffort = \"low\"\nfast = true\ntool_output = \"1024\"\n",
+			"[defaults]\ntool_output = \"64K\"\n",
 		}},
 		{"editor", []string{
 			"",
 			"[editor]\ncommand = [\"vim\"]\n",
-			"[editor]\ncommand = []\n",
+			"[editor]\ncommand = \"subl --wait\"\n",
 		}},
 		{"input", []string{
 			"",
@@ -47,9 +49,9 @@ func soundSettings() []setting {
 		}},
 		{"model", []string{
 			"",
-			"[model]\nround_robin = [\"anthropic/one\"]\n",
-			"[model]\nround_robin = [\"a\", \"a\", \"b\"]\neffort = \"low\"\nfast = true\n",
-			"[model]\neffort = \"none\"\n",
+			"[agent]\nround_robin = [\"anthropic/one\"]\n",
+			"[agent]\nround_robin = [\"a\", \"a\", \"b\"]\n",
+			"[agent]\nmodel = \"anthropic/one@high\"\n",
 		}},
 		{"provider", []string{
 			"",
@@ -59,7 +61,6 @@ func soundSettings() []setting {
 			"",
 			"[ports]\nhostname = \"{session}\"\n",
 			"[ports]\nhostname = \"{session}.oh.test\"\n",
-			"[ports]\nhostname = \"\"\n",
 		}},
 		{"snippets", []string{
 			"",
@@ -90,12 +91,6 @@ func soundSettings() []setting {
 			"[ui.theme.dark]\nnormal = \"#010203 bold\"\n",
 			"[ui.theme.dark]\ndim = \"default\"\naccent = \"underline:curly\"\n",
 			"[ui.theme.dark]\nuser = \"#ffffff\"\nharness = \"reverse\"\n",
-		}},
-		{"tool", []string{
-			"",
-			"[tool]\noutput = \"1024\"\n",
-			"[tool]\noutput = \"64K\"\n",
-			"[tool]\noutput = \"1M\"\n",
 		}},
 		{"permissions", []string{
 			"",

@@ -21,10 +21,10 @@ Three sources load in order, each overriding the last:
 
 Global and workspace files are watched and auto-reload. A reload applies live to the theme, bar, snippets, permissions, streaming, editor command, speed dial, and tool output cap. Everything else waits, and waits for one of two things:
 
-| Setting                                           | Applies             |
-|---------------------------------------------------|---------------------|
-| `[sandbox]`, `[skills]`, `[provider]`, `[ports]`  | when oh next starts |
-| `caps.default`, `[model]`, `[tools]`, the toolbox | to new sessions     |
+| Setting                                                           | Applies             |
+|-------------------------------------------------------------------|---------------------|
+| `[sandbox]`, `[skills]`, `[provider]`, `[ports]`, `[subagent]`    | when oh next starts |
+| `[defaults]` but `tool_output`, `[agent]`, `[tools]`, the toolbox | to new sessions     |
 
 The first group belongs to the process, so a restart that resumes this very conversation picks it up. The second is frozen into the session when it is first created, and a resumed conversation restores what was frozen, so only a new session reads it afresh.
 
@@ -38,17 +38,20 @@ Where `~/.config/org.crdx/oh/` is a symlink into a dotfiles repository, edit the
 
 `~/.config/org.crdx/oh/config.toml` holds what follows the user between projects, and needs a `version` key. Beside it sit `SYSTEM.md`, prepended to every session, and `snippets/`, where each `<name>.md` is the snippet `//name` without being listed anywhere. Its optional YAML frontmatter sets `description` and `arguments` (`required`, `optional`, or `none`). A `[snippets]` entry of the same name takes precedence, and a workspace has no snippet directory of its own.
 
-- `[model]` — `round_robin` as an array of `provider/model@effort` entries (written `provider/model` for a model that takes no effort) or a path, relative to the supplying config, to a file with one entry per line; blank lines are skipped, lines whose first non-whitespace character is `#` are comments, and duplicates add weight; `effort` and `fast` defaults
+- `[agent]` — the model a new session talks to: `model`, one `provider/model@effort` selection (written `provider/model` for a model that takes no effort), or `round_robin`, an array of selections or a path, relative to the supplying config, to a file with one selection per line; blank lines are skipped, lines whose first non-whitespace character is `#` are comments, and duplicates add weight. One file may set only one of the two, and a later file's choice replaces an earlier one's whichever it writes
+- `[defaults]` — what anything new starts with: `caps`, the capabilities a new session opens with; `effort` and `fast`, filling in whatever any model selection leaves out; and `tool_output`, the cap on a tool result
+- `[subagent]` — `model` or `round_robin`, written as `[agent]` takes them, choose each new subagent's model, and subagents are offered only when one is set; `concurrency` caps how many run at once. A follow-up stays on the model its subagent started on
 - `[provider.ollama]` — `host` for a local or LAN endpoint
 - `[snippets]` — `//name` expansions, inline or `{ file = "path/name.md" }`, whose frontmatter fills any `description` or `arguments` the entry leaves out; `{{ .Arg }}` takes the rest of the line, and a field of any other name, as `{{ .Question }}`, takes it too while naming it `<question>` in completion and help rather than `<args>`; `{{ .Args }}` is the same text split into words
 - `[ui]` — `streaming`, `grouping`, `reasoning`, `currency`, `[ui.theme]`, `[ui.theme.<palette>]`
-- `[permissions]` — `ask` or `allow` per gated action, deciding what a granted capability buys
+- `[permissions]` — `ask` or `allow` per gated action, deciding what a granted capability buys, or `{ rule = "ask", timeout = "2m" }` to change how long its question waits, written as a custom tool's `permission` is
 - `[tools]` — custom tools, each `[tools.<name>]` naming a `command` to run and the parameters the model supplies
-- `[caps]`, `[sandbox]`, `[skills]` — defaults each workspace then overrides
+- `[sandbox]`, `[skills]` — paths each workspace then overrides
 - `[bar.top]`, `[bar.bottom]` — status bar segments, each naming a `segment` and its options
 - `[input]` — `nudge`, defaulting to `"continue"`, is sent by double-enter on an empty input; `speed_dial`, defaulting to `["yes"]`, places messages there through successive tab presses until the input is edited
-- `[editor]`, `[tool]`, `[ports]` — editor command, tool output cap, forwarded-port hostname
-- An empty `editor.command` takes `subl` when a display is set, then `$VISUAL`, `$EDITOR`, `vim`, then whichever of `code`, `zed` (both only with a display), `nvim`, `hx`, `micro`, `nano`, `emacs`, `kak`, `ne`, `joe`, `mcedit`, and `vi` comes first. A terminal editor takes over the terminal until it exits. `/conf`, `/edit`, ctrl+g, which edits the input and opens it where the cursor stands, and, under `experimental.reply_command`, `/reply` and ctrl+., which open the last answer quoted for an inline reply, all use it
+- `[editor]`, `[ports]` — editor command, forwarded-port hostname
+- A setting left out is worked out for you, and an empty one is refused rather than read as "work it out": leave out `ui.currency` to count in dollars, `ports.hostname` to use the numeric address, and `editor.command` to find an editor
+- With no `editor.command`, oh takes `subl` when a display is set, then `$VISUAL`, `$EDITOR`, `vim`, then whichever of `code`, `zed` (both only with a display), `nvim`, `hx`, `micro`, `nano`, `emacs`, `kak`, `ne`, `joe`, `mcedit`, and `vi` comes first. A terminal editor takes over the terminal until it exits. `/conf`, `/edit`, ctrl+g, which edits the input and opens it where the cursor stands, and, under `experimental.reply_command`, `/reply` and ctrl+., which open the last answer quoted for an inline reply, all use it
 
 ## Workspace Config
 
@@ -213,34 +216,34 @@ The right side is drawn whole, and the left and centre are then fitted into what
 
 `/info` draws every segment there is with its current value, naming those drawing nothing, which is how to judge one before putting it in the bar.
 
-| Segment              | Draws                                                                          | Options                                     |
-|----------------------|--------------------------------------------------------------------------------|---------------------------------------------|
-| `active-model`       | the model, its effort as a ladder of squares, and `⚡` when fast               | none                                        |
-| `activity-spinner`   | `frames` in turn while a turn runs, and `idle` otherwise                       | `idle`, `frames`, `rate`                    |
-| `cache-usage`        | what share of the last request the provider read from cache                    | none                                        |
-| `context-usage`      | the context filled, as a percentage and used over total tokens                 | none                                        |
-| `fast-mode`          | `⚡` for the fast model, `·` for the standard one                              | none                                        |
-| `forwards`           | ports as links, prefixed by associated jobs                                    | none                                        |
-| `git-branch`         | the workspace's branch, or a short hash when detached                          | `rate`, default `5s`                        |
-| `git-status`         | a dot for clean, dirty, or mid-operation, then `↑` ahead and `↓` behind        | `rate`, default `5s`                        |
-| `grants`             | each granted path, grouped under its access flags, linked to the path it names | `type`: `base`, `short`, or `full`          |
-| `jobs`               | a mark and name per job, a finished one lingering 30 seconds                   | none                                        |
-| `local-time`         | the clock, its refresh following the format's finest field                     | `format`, a Go layout, default `15:04`      |
-| `mode-toggle`        | the capability letters, lit where granted and dim where not                    | none                                        |
-| `scroll-overflow`    | how many input lines are hidden that way, and nothing where none are           | `direction`: `up` or `down`, and no default |
-| `session-emoji`      | the emoji drawn from the session name                                          | none                                        |
-| `session-name`       | the session name linked to its directory                                       | `emoji`, `true` to append it                |
-| `session-spend`      | what the session has cost, in `ui.currency`                                    | none                                        |
-| `subscription-usage` | a gauge per subscription window, with its freshness and any limit              | `rate`, default `5m`                        |
-| `turn-count`         | `#n`, and nothing before the first turn                                        | none                                        |
-| `turn-timer`         | minutes waited then minutes worked, the running one of the two lit             | none                                        |
-| `workspace-dir`      | the workspace directory, linked to it                                          | `type`: `base`, `short`, or `full`          |
+| Segment              | Draws                                                                          | Options                                       |
+|----------------------|--------------------------------------------------------------------------------|-----------------------------------------------|
+| `active-model`       | the model, its effort as a ladder of squares, and `⚡` when fast               | none                                          |
+| `activity-spinner`   | `frames` in turn while a turn runs, and `idle` otherwise                       | `idle`, `frames`, `rate`, each with a default |
+| `cache-usage`        | what share of the last request the provider read from cache                    | none                                          |
+| `context-usage`      | the context filled, as a percentage and used over total tokens                 | none                                          |
+| `fast-mode`          | `⚡` for the fast model, `·` for the standard one                              | none                                          |
+| `forwards`           | ports as links, prefixed by associated jobs                                    | none                                          |
+| `git-branch`         | the workspace's branch, or a short hash when detached                          | `rate`, default `5s`                          |
+| `git-status`         | a dot for clean, dirty, or mid-operation, then `↑` ahead and `↓` behind        | `rate`, default `5s`                          |
+| `grants`             | each granted path, grouped under its access flags, linked to the path it names | `type`: `base`, `short`, or `full`            |
+| `jobs`               | a mark and name per job, a finished one lingering 30 seconds                   | none                                          |
+| `local-time`         | the clock, its refresh following the format's finest field                     | `format`, a Go layout, default `15:04`        |
+| `mode-toggle`        | the capability letters, lit where granted and dim where not                    | none                                          |
+| `scroll-overflow`    | how many input lines are hidden that way, and nothing where none are           | `direction`: `up` or `down`, and no default   |
+| `session-emoji`      | the emoji drawn from the session name                                          | none                                          |
+| `session-name`       | the session name linked to its directory                                       | `emoji`, `true` to append it                  |
+| `session-spend`      | what the session has cost, in `ui.currency`                                    | none                                          |
+| `subscription-usage` | a gauge per subscription window, with its freshness and any limit              | `rate`, default `5m`                          |
+| `turn-count`         | `#n`, and nothing before the first turn                                        | none                                          |
+| `turn-timer`         | minutes waited then minutes worked, the running one of the two lit             | none                                          |
+| `workspace-dir`      | the workspace directory, linked to it                                          | `type`: `base`, `short`, or `full`            |
 
 A `rate` or a duration takes Go's form, as `125ms`, `10s`, or `5m`. A segment refusing an option says which position it sits in and what the option wanted instead, and startup stops there.
 
 ## Capability Flags
 
-`caps.default` is a string of flags, defaulting to `rx`, and applies when the command line names none. Read is implied whatever the string says. A custom tool may add another flag through its `group`.
+`defaults.caps` is a string of flags, defaulting to `rx`, and applies when the command line names none. Read is implied whatever the string says. A custom tool may add another flag through its `group`.
 
 | Flag | Grants                                               |
 |------|------------------------------------------------------|
@@ -251,9 +254,9 @@ A `rate` or a duration takes Go's form, as `125ms`, `10s`, or `5m`. A segment re
 | `g`  | Write under `.git`, which `w` alone refuses          |
 | `l`  | The lookup tool                                      |
 
-The user toggles capabilities at runtime, so `caps.default` is a starting posture, not a ceiling.
+The user toggles capabilities at runtime, so `defaults.caps` is a starting posture, not a ceiling.
 
-Grant the narrowest set that does the job. Leave `caps.default` to the user: propose a string and name the capabilities it adds.
+Grant the narrowest set that does the job. Leave `defaults.caps` to the user: propose a string and name the capabilities it adds.
 
 ## Custom Tools
 
@@ -282,7 +285,7 @@ The model reads the description alone to choose a tool. Write it for the model. 
 
 `concurrency` greater than one lets separate calls to this custom tool run together, up to that limit and oh's global limit of 16 tool calls. Calls beyond the limit wait for a slot without consuming their command timeout. This setting does not split one call into multiple jobs or make the model issue a batch; it only permits parallel execution when one model response contains multiple calls. Leave it at one for commands that share mutable state without their own locking.
 
-A group using `x`, `w`, `n`, `g`, `l`, or `r` follows that built-in capability. Any other letter appears directly after those letters in the mode display, as in `rxw nglabc`, and ctrl+x followed by that letter toggles every tool in its group. Set `enabled = true` on a tool or add its letter to `caps.default` to grant the group initially. Enabling one tool grants every tool sharing its group. An explicit `-c` overrides both defaults. Read is always granted, so a tool in group `r` is always available.
+A group using `x`, `w`, `n`, `g`, `l`, or `r` follows that built-in capability. Any other letter appears directly after those letters in the mode display, as in `rxw nglabc`, and ctrl+x followed by that letter toggles every tool in its group. Set `enabled = true` on a tool or add its letter to `defaults.caps` to grant the group initially. Enabling one tool grants every tool sharing its group. An explicit `-c` overrides both defaults. Read is always granted, so a tool in group `r` is always available.
 
 With `ask`, oh shows the supplied argument names and values after the tool's group grants access. A no tells the model to try something else. Print mode has nobody to ask, so the call fails. The string `permission = "ask"` uses the five-minute approval timeout. To change it, write `permission = { rule = "ask", timeout = "10m" }`; `rule` is required, and the optional positive `timeout` defaults to five minutes. The countdown starts when a queued question reaches the front. This timeout covers approval only; the tool's top-level `timeout` starts after approval and limits the command. `permission = "allow"` runs without a question, and a permission table that combines `allow` with a timeout is refused.
 
@@ -326,7 +329,7 @@ The result holds standard output and standard error. A non-zero exit reports a f
 
 ## Sandbox Paths
 
-`[sandbox]` decides which user paths exist; `[caps]` decides what may be done with them. The six structured path tools (`read`, `ls`, `find`, `grep`, `write`, and `edit`) share one mounted filesystem root. Sandboxed `bash` and `job` policies are built from the same prepared grants.
+`[sandbox]` decides which user paths exist; capabilities, starting from `defaults.caps`, decide what may be done with them. The six structured path tools (`read`, `ls`, `find`, `grep`, `write`, and `edit`) share one mounted filesystem root. Sandboxed `bash` and `job` policies are built from the same prepared grants.
 
 - `deny` — file or directory name globs that path tools and confined shell commands cannot access anywhere; patterns contain no path separator, and a matched directory denies its whole tree
 - `read` — read-only to path tools and shell commands

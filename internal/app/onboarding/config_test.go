@@ -27,7 +27,7 @@ func TestSetInitialModelCreatesAConfig(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := fmt.Sprintf("version = %d\n\n[model]\nround_robin = [\"codex/gpt-5.6-sol@medium\"]\n", config.Format)
+	want := fmt.Sprintf("version = %d\n\n[agent]\nmodel = \"codex/gpt-5.6-sol@medium\"\n", config.Format)
 	if string(contents) != want {
 		t.Errorf("got:\n%s\nwant:\n%s", contents, want)
 	}
@@ -35,7 +35,7 @@ func TestSetInitialModelCreatesAConfig(t *testing.T) {
 
 func TestSetInitialModelPreservesAnExistingConfig(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	contents := fmt.Sprintf("version = %d\n\n# Keep me.\n[model] # Models live here.\n\n[editor]\ncommand = [\"code\"]\n", config.Format)
+	contents := fmt.Sprintf("version = %d\n\n# Keep me.\n[agent] # Models live here.\n\n[editor]\ncommand = [\"code\"]\n", config.Format)
 	if err := os.WriteFile(path, []byte(contents), 0o600); err != nil {
 		t.Fatal(err)
 	}
@@ -52,7 +52,7 @@ func TestSetInitialModelPreservesAnExistingConfig(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := strings.Replace(contents, "[model] # Models live here.\n", "[model] # Models live here.\nround_robin = [\"anthropic/claude-opus-5@high\"]\n", 1)
+	want := strings.Replace(contents, "[agent] # Models live here.\n", "[agent] # Models live here.\nmodel = \"anthropic/claude-opus-5@high\"\n", 1)
 	if string(updated) != want {
 		t.Errorf("got:\n%s\nwant:\n%s", updated, want)
 	}
@@ -60,7 +60,7 @@ func TestSetInitialModelPreservesAnExistingConfig(t *testing.T) {
 
 func TestSetInitialModelLeavesAnExistingSelectionAlone(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	contents := fmt.Sprintf("version = %d\n\n[model]\nround_robin = [\"codex/already-there@medium\"]\n", config.Format)
+	contents := fmt.Sprintf("version = %d\n\n[agent]\nround_robin = [\"codex/already-there@medium\"]\n", config.Format)
 	if err := os.WriteFile(path, []byte(contents), 0o600); err != nil {
 		t.Fatal(err)
 	}
@@ -120,14 +120,14 @@ func TestConcurrentInitialModelsDoNotOverwriteEachOther(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(settings.Model.RoundRobin) != 1 {
-		t.Errorf("got model rotation %v", settings.Model.RoundRobin)
+	if settings.Agent.Model == "" {
+		t.Errorf("got no model, with rotation %v", settings.Agent.RoundRobin)
 	}
 }
 
 func TestSetInitialModelLooksPastAModelHeaderInsideASnippet(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	prompt := "x = \"\"\"\n[model]\nkeep me\n\"\"\"\n"
+	prompt := "x = \"\"\"\n[agent]\nkeep me\n\"\"\"\n"
 	contents := fmt.Sprintf("version = %d\n\n[snippets]\n%s", config.Format, prompt)
 	if err := os.WriteFile(path, []byte(contents), 0o600); err != nil {
 		t.Fatal(err)
@@ -145,18 +145,18 @@ func TestSetInitialModelLooksPastAModelHeaderInsideASnippet(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got := settings.Model.RoundRobin; len(got) != 1 || got[0] != "anthropic/one@high" {
-		t.Errorf("got round robin %q, want the model to have been written", got)
+	if got := settings.Agent.Model; got != "anthropic/one@high" {
+		t.Errorf("got model %q, want the model to have been written", got)
 	}
-	if got := settings.Snippets["x"].Prompt; !strings.Contains(got, "[model]\nkeep me") {
+	if got := settings.Snippets["x"].Prompt; !strings.Contains(got, "[agent]\nkeep me") {
 		t.Errorf("got snippet %q, want it left alone", got)
 	}
 }
 
 func TestSetInitialModelFindsAHeaderAfterASnippetHasClosed(t *testing.T) {
-	body := "\n[snippets]\nx = '''\n[model]\n'''\ny = \"a \\\"quoted\\\" word\"\n\n[model]\n"
+	body := "\n[snippets]\nx = '''\n[agent]\n'''\ny = \"a \\\"quoted\\\" word\"\n\n[agent]\n"
 	contents := fmt.Sprintf("version = %d\n%s", config.Format, body)
-	want := contents + "round_robin = [\"anthropic/two@high\"]\n"
+	want := contents + "model = \"anthropic/two@high\"\n"
 
 	if got := string(addInitialModel([]byte(contents), "anthropic/two@high")); got != want {
 		t.Errorf("got:\n%s\nwant:\n%s", got, want)

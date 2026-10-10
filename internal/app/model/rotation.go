@@ -36,7 +36,7 @@ type roundRobinState struct {
 }
 
 var ErrNoSelection = errors.New(
-	"no model selected: use -m provider/model@effort[+fast] or configure model.round_robin",
+	"no model selected: use -m provider/model@effort[+fast] or configure agent.model or agent.round_robin",
 )
 
 func ReserveRoundRobin(path string, selections []Selection) (Selection, error) {
@@ -84,7 +84,7 @@ func ParseRoundRobin(choices []Choice, writtenSelections []string, defaults Defa
 	for _, writtenSelection := range writtenSelections {
 		selection, err := ParseSelection(choices, writtenSelection, defaults)
 		if err != nil {
-			return nil, fmt.Errorf("model.round_robin: %q: %w", writtenSelection, err)
+			return nil, fmt.Errorf("%q: %w", writtenSelection, err)
 		}
 
 		selections = append(selections, selection)

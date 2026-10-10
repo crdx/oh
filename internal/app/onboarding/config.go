@@ -6,7 +6,6 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
-	"slices"
 	"strconv"
 	"strings"
 	"syscall"
@@ -27,7 +26,7 @@ func setInitialModel(path string, selection string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	if len(settings.Model.RoundRobin) > 0 {
+	if len(settings.Agent.Rotation()) > 0 {
 		return false, nil
 	}
 
@@ -45,9 +44,9 @@ func setInitialModel(path string, selection string) (bool, error) {
 }
 
 func addInitialModel(contents []byte, selection string) []byte {
-	setting := "round_robin = [" + strconv.Quote(selection) + "]\n"
+	setting := "model = " + strconv.Quote(selection) + "\n"
 	if len(contents) == 0 {
-		return fmt.Appendf(nil, "version = %d\n\n[model]\n%s", config.Format, setting)
+		return fmt.Appendf(nil, "version = %d\n\n[agent]\n%s", config.Format, setting)
 	}
 
 	text := string(contents)
@@ -56,7 +55,7 @@ func addInitialModel(contents []byte, selection string) []byte {
 	if strings.HasSuffix(text, "\n") {
 		separator = ""
 	}
-	if candidate := text + separator + "\n[model]\n" + setting; isSelectionRead(candidate, selection) {
+	if candidate := text + separator + "\n[agent]\n" + setting; isSelectionRead(candidate, selection) {
 		return []byte(candidate)
 	}
 
@@ -76,16 +75,16 @@ func addInitialModel(contents []byte, selection string) []byte {
 
 func isSelectionRead(candidate string, selection string) bool {
 	var document struct {
-		Model struct {
-			RoundRobin []string `toml:"round_robin"`
-		} `toml:"model"`
+		Agent struct {
+			Model string `toml:"model"`
+		} `toml:"agent"`
 	}
 
 	if _, err := toml.Decode(candidate, &document); err != nil {
 		return false
 	}
 
-	return slices.Contains(document.Model.RoundRobin, selection)
+	return document.Agent.Model == selection
 }
 
 func lockConfig(path string) (*os.File, error) {

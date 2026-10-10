@@ -62,6 +62,10 @@ func GetModelRoundRobinPath() string {
 	return GetStateDir("model-round-robin.json")
 }
 
+func GetSubagentRoundRobinPath() string {
+	return GetStateDir("subagent-round-robin.json")
+}
+
 func GetHistoryPath() string {
 	return GetStateDir("history")
 }

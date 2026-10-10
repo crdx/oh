@@ -1125,13 +1125,17 @@ func queuedApprovalStream(t *testing.T, firstOutcome firstApprovalOutcome) strin
 		self.question.broker = broker
 
 		firstResult := make(chan error, 1)
-		go func() { firstResult <- fetchApproval.ask(t.Context(), broker, permission.Ask, "first page") }()
+		go func() {
+			firstResult <- fetchApproval.ask(t.Context(), broker, permission.Setting{Rule: permission.Ask}, "first page")
+		}()
 		<-broker.Changes()
 		self.onQuestionChange()
 		self.show(inputLine)
 
 		secondResult := make(chan error, 1)
-		go func() { secondResult <- fetchApproval.ask(t.Context(), broker, permission.Ask, "second page") }()
+		go func() {
+			secondResult <- fetchApproval.ask(t.Context(), broker, permission.Setting{Rule: permission.Ask}, "second page")
+		}()
 		<-broker.Changes()
 		synctest.Wait()
 
@@ -1349,7 +1353,7 @@ func drawQuestionOverCall(t *testing.T, scene questionOverCall) drawnQuestionOve
 				}, timeout)
 				return
 			}
-			result <- approveHostNetwork(t.Context(), broker, permission.Ask, scene.command, scene.intent)
+			result <- approveHostNetwork(t.Context(), broker, permission.Setting{Rule: permission.Ask}, scene.command, scene.intent)
 		}()
 		<-broker.Changes()
 		chat.onQuestionChange()
@@ -1872,7 +1876,9 @@ func drawQuestionOnATinyTerminal(t *testing.T, lines int, intent string) string 
 		t.Cleanup(broker.Open())
 		self.question.broker = broker
 
-		go func() { _ = approveHostNetwork(t.Context(), broker, permission.Ask, tallQuestionCommand(), intent) }()
+		go func() {
+			_ = approveHostNetwork(t.Context(), broker, permission.Setting{Rule: permission.Ask}, tallQuestionCommand(), intent)
+		}()
 		<-broker.Changes()
 		self.onQuestionChange()
 		self.show(self.inputLine)
@@ -2054,7 +2060,7 @@ func TestARefusedHostNetworkSaysSoInWordsTheModelCanAct(t *testing.T) {
 			broker := ask.New()
 			ctx := test.prepare(t, broker)
 
-			err := approveHostNetwork(ctx, broker, permission.Ask, "curl example.com", "")
+			err := approveHostNetwork(ctx, broker, permission.Setting{Rule: permission.Ask}, "curl example.com", "")
 			if err == nil {
 				t.Fatal("a command nobody allowed was approved")
 			}
@@ -2138,7 +2144,7 @@ func TestAnApprovedHostNetworkRunsTheCommand(t *testing.T) {
 		broker.Current().Choose(0)
 	}()
 
-	if err := approveHostNetwork(t.Context(), broker, permission.Ask, "curl example.com", ""); err != nil {
+	if err := approveHostNetwork(t.Context(), broker, permission.Setting{Rule: permission.Ask}, "curl example.com", ""); err != nil {
 		t.Errorf("got %v, want the approved command to run", err)
 	}
 }
@@ -2154,7 +2160,7 @@ func TestAHostNetworkQuestionCarriesTheIntent(t *testing.T) {
 		broker.Current().Choose(0)
 	}()
 
-	if err := approveHostNetwork(t.Context(), broker, permission.Ask, "curl example.com", "fetch the page"); err != nil {
+	if err := approveHostNetwork(t.Context(), broker, permission.Setting{Rule: permission.Ask}, "curl example.com", "fetch the page"); err != nil {
 		t.Fatalf("got %v, want the approved command to run", err)
 	}
 
@@ -2178,7 +2184,7 @@ func TestAnApprovalChargesTheTimeItStoodToTheCallThatAskedForIt(t *testing.T) {
 			broker.Current().Choose(0)
 		}()
 
-		if err := approveHostNetwork(ctx, broker, permission.Ask, "curl example.com", ""); err != nil {
+		if err := approveHostNetwork(ctx, broker, permission.Setting{Rule: permission.Ask}, "curl example.com", ""); err != nil {
 			t.Fatalf("got %v, want the approved command to run", err)
 		}
 
@@ -5145,7 +5151,7 @@ func testConversation(t *testing.T, screenOutput *bytes.Buffer) *App {
 		commands:        fixtureSnippetRegistry(t, nil),
 		nudge:           settings.Input.Nudge,
 		editorConfig:    editor.NewConfiguration(settings.Editor.Command),
-		toolOutputLimit: truncate.NewLimit(settings.Tool.Output.Bytes),
+		toolOutputLimit: truncate.NewLimit(settings.Defaults.ToolOutput.Bytes),
 	}
 }
 
@@ -8678,9 +8684,9 @@ func TestTheCurrentDirectoryConfigOverridesTheGlobalConfig(t *testing.T) {
 }
 
 func TestTheSimulationAnswersInPlaceOfTheConfiguredRotation(t *testing.T) {
-	settings := config.Config{Model: config.Model{RoundRobin: []string{"anthropic/claude-opus-5@medium"}}}
+	settings := config.Config{Agent: config.Agent{ModelChoice: config.ModelChoice{RoundRobin: []string{"anthropic/claude-opus-5@medium"}}}}
 
-	if got := configuredRotation(settings, false); !slices.Equal(got, settings.Model.RoundRobin) {
+	if got := configuredRotation(settings, false); !slices.Equal(got, settings.Agent.RoundRobin) {
 		t.Errorf("an ordinary session was given %v", got)
 	}
 	if got := configuredRotation(settings, true); len(got) != 0 {
@@ -8690,7 +8696,7 @@ func TestTheSimulationAnswersInPlaceOfTheConfiguredRotation(t *testing.T) {
 
 func TestConfiguredCapabilitiesReplaceTheCommandLineDefault(t *testing.T) {
 	options := cli.Options{Caps: caps.Read | caps.Shell}
-	settings := config.Config{Caps: config.Caps{Default: "rwg"}}
+	settings := config.Config{Defaults: config.Defaults{Caps: "rwg"}}
 
 	if err := applyDefaultCaps(&options, settings); err != nil {
 		t.Fatal(err)
@@ -8704,7 +8710,7 @@ func TestConfiguredCapabilitiesReplaceTheCommandLineDefault(t *testing.T) {
 func TestConfiguredCapabilitiesIncludeCustomToolGroups(t *testing.T) {
 	options := cli.Options{Caps: caps.Read | caps.Shell}
 	settings := config.Config{
-		Caps: config.Caps{Default: "rxa"},
+		Defaults: config.Defaults{Caps: "rxa"},
 		Tools: map[string]config.CustomTool{
 			"weather": {Group: "a"},
 		},
@@ -8721,7 +8727,7 @@ func TestConfiguredCapabilitiesIncludeCustomToolGroups(t *testing.T) {
 func TestACustomToolCanEnableItsModeGroupByDefault(t *testing.T) {
 	options := cli.Options{Caps: caps.Read | caps.Shell}
 	settings := config.Config{
-		Caps: config.Caps{Default: "rx"},
+		Defaults: config.Defaults{Caps: "rx"},
 		Tools: map[string]config.CustomTool{
 			"weather": {Group: "c", IsEnabledByDefault: true},
 		},
@@ -8742,7 +8748,7 @@ func TestExplicitCommandLineCapabilitiesOverrideTheConfig(t *testing.T) {
 		WereCapsChosen: true,
 	}
 	settings := config.Config{
-		Caps: config.Caps{Default: "rwg"},
+		Defaults: config.Defaults{Caps: "rwg"},
 		Tools: map[string]config.CustomTool{
 			"weather": {Group: "c", IsEnabledByDefault: true},
 		},
@@ -10850,9 +10856,9 @@ func TestGoldenTheStartupLineDrawsWhatItDrewBefore(t *testing.T) {
 	}
 
 	wordyConfig := &startup.LocalConfig{Name: "oh.toml", Settings: []string{
-		"caps.default",
+		"agent.round_robin",
+		"defaults.caps",
 		"editor.command",
-		"model.round_robin",
 		"ports.hostname",
 		"skills.include",
 		"ui.currency",
@@ -10968,7 +10974,7 @@ func TestGoldenLocalConfigsDrawMegathoroughly(t *testing.T) {
 			LocalConfig: &startup.LocalConfig{Name: "oh.toml"},
 		},
 		"one local setting": {
-			LocalConfig: &startup.LocalConfig{Name: "oh.toml", Settings: []string{"caps.default"}},
+			LocalConfig: &startup.LocalConfig{Name: "oh.toml", Settings: []string{"defaults.caps"}},
 		},
 		"mixed global and local settings": {
 			LocalConfig: &startup.LocalConfig{
@@ -10980,11 +10986,12 @@ func TestGoldenLocalConfigsDrawMegathoroughly(t *testing.T) {
 			LocalConfig: &startup.LocalConfig{
 				Name: "oh.toml",
 				Settings: []string{
+					"agent.round_robin",
 					"bar.bottom.left",
 					"bar.top.center",
-					"caps.default",
+					"defaults.caps",
+					"defaults.tool_output",
 					"editor.command",
-					"model.round_robin",
 					"ports.hostname",
 					"provider.ollama.host",
 					"sandbox.read",
@@ -10992,7 +10999,6 @@ func TestGoldenLocalConfigsDrawMegathoroughly(t *testing.T) {
 					"skills.exclude",
 					"skills.include",
 					"snippets.review",
-					"tool.output",
 					"ui.currency",
 					"ui.grouping",
 					"ui.reasoning",
@@ -11652,11 +11658,11 @@ func TestTheReloadConfirmationNamesEveryFileAndWhatItChanged(t *testing.T) {
 		"several files": {
 			changes: []config.SourceChange{
 				{Path: "config.toml", Settings: []string{"ui.theme.dim"}},
-				{Path: "oh.toml", Settings: []string{"snippets.fix", "tool.output"}},
+				{Path: "oh.toml", Settings: []string{"defaults.tool_output", "snippets.fix"}},
 			},
 			want: "Configuration reloaded automatically\n" +
 				"config.toml: ui.theme.dim\n" +
-				"oh.toml: snippets.fix, tool.output",
+				"oh.toml: defaults.tool_output, snippets.fix",
 		},
 		"file gone": {
 			changes: []config.SourceChange{
@@ -11687,16 +11693,16 @@ func TestTheReloadConfirmationNamesEveryFileAndWhatItChanged(t *testing.T) {
 		"both waits beside a setting that landed": {
 			changes: []config.SourceChange{
 				{Path: "config.toml", Settings: []string{
-					"caps.default",
-					"model.round_robin",
+					"agent.round_robin",
+					"defaults.caps",
 					"sandbox.exec",
 					"ui.streaming",
 				}},
 			},
 			want: "Configuration reloaded automatically\n" +
-				"config.toml: caps.default, model.round_robin, sandbox.exec, ui.streaming\n" +
+				"config.toml: agent.round_robin, defaults.caps, sandbox.exec, ui.streaming\n" +
 				"applies when oh next starts: sandbox.exec\n" +
-				"applies to new sessions: caps.default, model.round_robin",
+				"applies to new sessions: agent.round_robin, defaults.caps",
 		},
 		"one setting named by two files is said once": {
 			changes: []config.SourceChange{
@@ -12360,8 +12366,8 @@ func TestReloadingConfigChangesTheEditorAndToolOutputLimit(t *testing.T) {
 		[editor]
 		command = ["first-editor", "--wait"]
 
-		[tool]
-		output = "2K"
+		[defaults]
+		tool_output = "2K"
 	`)
 
 	self := testConversation(t, &bytes.Buffer{})
@@ -12371,8 +12377,8 @@ func TestReloadingConfigChangesTheEditorAndToolOutputLimit(t *testing.T) {
 		[editor]
 		command = "second-editor"
 
-		[tool]
-		output = "4K"
+		[defaults]
+		tool_output = "4K"
 	`)
 	settleLiveConfig(t, self)
 
@@ -13818,7 +13824,7 @@ func configReloadStream(t *testing.T, scenario configReloadScenario) string {
 		right = []
 	`
 	if scenario == configReloadRoundRobinFile {
-		initialConfig += "\n[model]\nround_robin = \"models.txt\"\n"
+		initialConfig += "\n[agent]\nround_robin = \"models.txt\"\n"
 		if err := os.WriteFile(
 			filepath.Join(filepath.Dir(path), "models.txt"),
 			[]byte("# primary\nanthropic/one@high\n"),
@@ -13980,7 +13986,7 @@ func configReloadStream(t *testing.T, scenario configReloadScenario) string {
 			[ui]
 			currency = "GBP"
 
-			[model]
+			[agent]
 			round_robin = ["ollama/example"]
 
 			[bar.top]
@@ -15468,7 +15474,7 @@ func customToolDefaultMode(t *testing.T, isEnabled bool) *caps.Mode {
 
 	options := cli.Options{Caps: caps.Read | caps.Shell}
 	settings := config.Config{
-		Caps: config.Caps{Default: "rx"},
+		Defaults: config.Defaults{Caps: "rx"},
 		Tools: map[string]config.CustomTool{
 			"weather": {Group: "c", IsEnabledByDefault: isEnabled},
 		},
@@ -18805,7 +18811,7 @@ func newSessionGoldenTools(
 			tools = append(tools, lookup.New(
 				func() bool { return true },
 				func(ctx context.Context, query string) error {
-					return lookupApproval.ask(ctx, broker, permission.Ask, query)
+					return lookupApproval.ask(ctx, broker, permission.Setting{Rule: permission.Ask}, query)
 				},
 				sessionGoldenSearcher{answer: specification.LookupAnswer},
 			))
@@ -19220,7 +19226,7 @@ func newSessionGoldenRefusingShell(t *testing.T) tool.Tool {
 	return shell.New(
 		workspace, t.TempDir(), t.TempDir(), pathAccess, mode, files, false,
 		func(ctx context.Context, command string, intent string) error {
-			return approveHostNetwork(ctx, broker, permission.Ask, command, intent)
+			return approveHostNetwork(ctx, broker, permission.Setting{Rule: permission.Ask}, command, intent)
 		},
 		sandbox.Direct(),
 	)
@@ -24330,13 +24336,13 @@ func TestAnAllowedPermissionAsksNobody(t *testing.T) {
 
 	for name, ask := range map[string]func() error{
 		"network": func() error {
-			return approveHostNetwork(t.Context(), broker, permission.Allow, "curl example.com", "")
+			return approveHostNetwork(t.Context(), broker, permission.Setting{Rule: permission.Allow}, "curl example.com", "")
 		},
 		"lookup": func() error {
-			return lookupApproval.ask(t.Context(), broker, permission.Allow, "weather")
+			return lookupApproval.ask(t.Context(), broker, permission.Setting{Rule: permission.Allow}, "weather")
 		},
 		"fetch": func() error {
-			return fetchApproval.ask(t.Context(), broker, permission.Allow, "https://example.com")
+			return fetchApproval.ask(t.Context(), broker, permission.Setting{Rule: permission.Allow}, "https://example.com")
 		},
 	} {
 		t.Run(name, func(t *testing.T) {
@@ -24354,19 +24360,19 @@ func TestEveryPermissionRefusesInWordsOfItsOwn(t *testing.T) {
 	}{
 		"network": {
 			ask: func(broker *ask.Broker) error {
-				return approveHostNetwork(t.Context(), broker, permission.Ask, "curl example.com", "")
+				return approveHostNetwork(t.Context(), broker, permission.Setting{Rule: permission.Ask}, "curl example.com", "")
 			},
 			want: "command did not run",
 		},
 		"lookup": {
 			ask: func(broker *ask.Broker) error {
-				return lookupApproval.ask(t.Context(), broker, permission.Ask, "weather")
+				return lookupApproval.ask(t.Context(), broker, permission.Setting{Rule: permission.Ask}, "weather")
 			},
 			want: "lookup did not run",
 		},
 		"fetch": {
 			ask: func(broker *ask.Broker) error {
-				return fetchApproval.ask(t.Context(), broker, permission.Ask, "https://example.com")
+				return fetchApproval.ask(t.Context(), broker, permission.Setting{Rule: permission.Ask}, "https://example.com")
 			},
 			want: "fetch did not run",
 		},
@@ -24810,4 +24816,25 @@ func stringsWithin(value any) []string {
 		return found
 	}
 	return nil
+}
+
+func TestAGatedActionWaitsAsLongAsItsPermissionSays(t *testing.T) {
+	synctest.Test(t, func(t *testing.T) {
+		broker := ask.New()
+		t.Cleanup(broker.Open())
+
+		started := time.Now()
+		err := fetchApproval.ask(
+			t.Context(),
+			broker,
+			permission.Setting{Rule: permission.Ask, Timeout: 90 * time.Second},
+			"https://example.com",
+		)
+		if err == nil || !strings.Contains(err.Error(), "approval timed out after 1m 30s") {
+			t.Fatalf("got %v, want the configured timeout named", err)
+		}
+		if waited := time.Since(started); waited != 90*time.Second {
+			t.Errorf("waited %v, want the configured 90s", waited)
+		}
+	})
 }

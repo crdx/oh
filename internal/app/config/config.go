@@ -47,18 +47,22 @@ const (
 )
 
 const (
-	versionSetting  = "version"
-	snippetsSetting = "snippets"
-	uiSetting       = "ui"
-	themeSetting    = "theme"
+	versionSetting    = "version"
+	snippetsSetting   = "snippets"
+	uiSetting         = "ui"
+	themeSetting      = "theme"
+	agentSetting      = "agent"
+	subagentSetting   = "subagent"
+	modelSetting      = "model"
+	roundRobinSetting = "round_robin"
 )
 
 type Config struct {
 	Version  int                            `toml:"version"`
-	Caps     Caps                           `toml:"caps"`
+	Defaults Defaults                       `toml:"defaults"`
 	Editor   Editor                         `toml:"editor"`
 	Input    Input                          `toml:"input"`
-	Model    Model                          `toml:"model"`
+	Agent    Agent                          `toml:"agent"`
 	Subagent Subagent                       `toml:"subagent"`
 	Provider Provider                       `toml:"provider"`
 	Ports    Ports                          `toml:"ports"`
@@ -68,18 +72,16 @@ type Config struct {
 	Sandbox  sandbox                        `toml:"sandbox"`
 	Bar      Bar                            `toml:"bar"`
 	Ui       Ui                             `toml:"ui"`
-	Tool     Tool                           `toml:"tool"`
 
 	Permissions Permissions `toml:"permissions"`
 	Debug       Debug       `toml:"debug"`
 
 	Experimental map[string]any `toml:"experimental"`
 
-	fallback                *toml.MetaData
-	sources                 []sourceMetadata
-	roundRobinFileSnapshots map[string]snapshot
-	snippetFileSnapshots    map[string]snapshot
-	snippetDirectories      []string
+	fallback             *toml.MetaData
+	sources              []sourceMetadata
+	snippetFileSnapshots map[string]snapshot
+	snippetDirectories   []string
 }
 
 type sourceMetadata struct {
@@ -93,8 +95,15 @@ type Override struct {
 	Settings []string
 }
 
-type Caps struct {
-	Default DefaultCaps `toml:"default"`
+type Defaults struct {
+	Caps       DefaultCaps  `toml:"caps"`
+	Effort     model.Effort `toml:"effort"`
+	IsFast     bool         `toml:"fast"`
+	ToolOutput Size         `toml:"tool_output"`
+}
+
+func (self Defaults) ForSelections() model.Defaults {
+	return model.Defaults{Effort: self.Effort, IsFast: self.IsFast}
 }
 
 type DefaultCaps string
@@ -122,14 +131,42 @@ type Input struct {
 }
 
 type Subagent struct {
-	Model       string `toml:"model"`
-	Concurrency int    `toml:"concurrency"`
+	ModelChoice
+
+	Concurrency int `toml:"concurrency"`
 }
 
-type Model struct {
-	RoundRobin RoundRobin   `toml:"round_robin"`
-	Effort     model.Effort `toml:"effort"`
-	IsFast     bool         `toml:"fast"`
+type Agent struct {
+	ModelChoice
+}
+
+func (self Agent) Setting() string {
+	return self.settingIn(agentSetting)
+}
+
+func (self Subagent) Setting() string {
+	return self.settingIn(subagentSetting)
+}
+
+type ModelChoice struct {
+	Model      string     `toml:"model"`
+	RoundRobin RoundRobin `toml:"round_robin"`
+
+	rotationFile map[string]snapshot
+}
+
+func (self ModelChoice) Rotation() []string {
+	if self.Model != "" {
+		return []string{self.Model}
+	}
+	return self.RoundRobin
+}
+
+func (self ModelChoice) settingIn(table string) string {
+	if self.Model != "" {
+		return table + "." + modelSetting
+	}
+	return table + "." + roundRobinSetting
 }
 
 type RoundRobin []string
@@ -164,10 +201,6 @@ func (self *RoundRobin) filePath() (string, bool) {
 	return strings.CutPrefix((*self)[0], roundRobinFileMarker)
 }
 
-func (self Model) GetDefaults() model.Defaults {
-	return model.Defaults{Effort: self.Effort, IsFast: self.IsFast}
-}
-
 type Provider struct {
 	Ollama Ollama `toml:"ollama"`
 }
@@ -195,10 +228,6 @@ type Ui struct {
 	Theme              style.Theme               `toml:"theme"`
 }
 
-type Tool struct {
-	Output Size `toml:"output"`
-}
-
 type Debug struct {
 	ShouldRecordStalls bool `toml:"stalls"`
 	ShouldProfileCPU   bool `toml:"cpu_profile"`
@@ -206,9 +235,9 @@ type Debug struct {
 }
 
 type Permissions struct {
-	Network string `toml:"network"`
-	Lookup  string `toml:"lookup"`
-	Fetch   string `toml:"fetch"`
+	Network Permission `toml:"network"`
+	Lookup  Permission `toml:"lookup"`
+	Fetch   Permission `toml:"fetch"`
 }
 
 func (self Config) BuildPermissions() (permission.Set, error) {
@@ -219,19 +248,19 @@ func (self Permissions) build() (permission.Set, error) {
 	var set permission.Set
 
 	for _, entry := range []struct {
-		key   string
-		value string
-		rule  *permission.Rule
+		key     string
+		value   Permission
+		setting *permission.Setting
 	}{
-		{key: "network", value: self.Network, rule: &set.Network},
-		{key: "lookup", value: self.Lookup, rule: &set.Lookup},
-		{key: "fetch", value: self.Fetch, rule: &set.Fetch},
+		{key: "network", value: self.Network, setting: &set.Network},
+		{key: "lookup", value: self.Lookup, setting: &set.Lookup},
+		{key: "fetch", value: self.Fetch, setting: &set.Fetch},
 	} {
-		rule, err := permission.ParseRule(entry.value)
+		setting, err := entry.value.setting()
 		if err != nil {
 			return permission.Set{}, fmt.Errorf("permissions.%s: %w", entry.key, err)
 		}
-		*entry.rule = rule
+		*entry.setting = setting
 	}
 
 	return set, nil
@@ -302,7 +331,7 @@ func (self Config) BuildLive(registry segment.Registry) (LiveConfig, error) {
 		Grouping:           self.Ui.Grouping,
 		ReasoningRendering: self.Ui.ReasoningRendering,
 		Theme:              self.Ui.Theme,
-		ToolOutputBytes:    self.Tool.Output.Bytes,
+		ToolOutputBytes:    self.Defaults.ToolOutput.Bytes,
 		Permissions:        permissions,
 		Experimental:       maps.Clone(self.Experimental),
 		UnknownSettings:    self.UnknownSettings(),
@@ -608,8 +637,8 @@ func loadSnapshots(sources []sourceSnapshot) (Config, error) {
 	if err != nil {
 		return config, err
 	}
-	if _, _, err := caps.ParseWithGroups(string(config.Caps.Default), toolGroups.CustomFlags()); err != nil {
-		return config, fmt.Errorf("caps.default: %w", err)
+	if _, _, err := caps.ParseWithGroups(string(config.Defaults.Caps), toolGroups.CustomFlags()); err != nil {
+		return config, fmt.Errorf("defaults.caps: %w", err)
 	}
 
 	return config, nil
@@ -650,9 +679,12 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 
 	config.sources = append(config.sources, sourceMetadata{source: source.source, path: displayPath, meta: &meta})
 
-	if meta.IsDefined("model", "round_robin") {
-		if err := applyRoundRobin(config, source.source.Path, displayPath); err != nil {
-			return err
+	for table, choice := range map[string]*ModelChoice{
+		agentSetting:    &config.Agent.ModelChoice,
+		subagentSetting: &config.Subagent.ModelChoice,
+	} {
+		if err := applyModelChoice(choice, table, meta, source.source.Path); err != nil {
+			return fmt.Errorf("%s: %w", displayPath, err)
 		}
 	}
 	config.Provider.Ollama.Host = strings.TrimSpace(config.Provider.Ollama.Host)
@@ -661,7 +693,11 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 		config.Provider.Ollama.Host,
 		meta.IsDefined("provider", "ollama", "host"),
 		config.Ports.Hostname,
+		meta.IsDefined("ports", "hostname"),
 	); err != nil {
+		return fmt.Errorf("%s: %w", displayPath, err)
+	}
+	if err := refuseEmptySettings(config, meta); err != nil {
 		return fmt.Errorf("%s: %w", displayPath, err)
 	}
 	if err := normaliseInput(config, meta, displayPath); err != nil {
@@ -670,9 +706,9 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 	if meta.IsDefined("subagent", "concurrency") && config.Subagent.Concurrency < 1 {
 		return fmt.Errorf("%s: subagent.concurrency must be at least 1, got %d", displayPath, config.Subagent.Concurrency)
 	}
-	if meta.IsDefined("tool", "output") && config.Tool.Output.Bytes < minimumToolOutputBytes {
+	if meta.IsDefined("defaults", "tool_output") && config.Defaults.ToolOutput.Bytes < minimumToolOutputBytes {
 		return fmt.Errorf(
-			"%s: tool.output is too small to say anything with; write at least %d bytes",
+			"%s: defaults.tool_output is too small to say anything with; write at least %d bytes",
 			displayPath, minimumToolOutputBytes,
 		)
 	}
@@ -814,39 +850,79 @@ func snippetPattern(directory string) string {
 	return filepath.Join(directory, "*"+snippetExtension)
 }
 
-func applyRoundRobin(config *Config, sourcePath string, displayPath string) error {
-	config.roundRobinFileSnapshots = nil
-	if writtenPath, isFile := config.Model.RoundRobin.filePath(); isFile {
-		if err := loadRoundRobinFile(config, sourcePath, writtenPath); err != nil {
-			return fmt.Errorf("%s: model.round_robin: %w", displayPath, err)
+func applyModelChoice(choice *ModelChoice, table string, meta toml.MetaData, sourcePath string) error {
+	modelName := table + "." + modelSetting
+	roundRobinName := table + "." + roundRobinSetting
+	hasModel := meta.IsDefined(table, modelSetting)
+	hasRoundRobin := meta.IsDefined(table, roundRobinSetting)
+	switch {
+	case hasModel && hasRoundRobin:
+		return fmt.Errorf("%s and %s cannot both be set", modelName, roundRobinName)
+	case hasModel:
+		choice.Model = strings.TrimSpace(choice.Model)
+		if choice.Model == "" {
+			return fmt.Errorf("%s is empty", modelName)
+		}
+		choice.RoundRobin = nil
+		choice.rotationFile = nil
+	case hasRoundRobin:
+		choice.Model = ""
+		choice.rotationFile = nil
+		return applyRoundRobin(choice, sourcePath, roundRobinName)
+	}
+	return nil
+}
+
+func applyRoundRobin(choice *ModelChoice, sourcePath string, name string) error {
+	if writtenPath, isFile := choice.RoundRobin.filePath(); isFile {
+		if err := loadRoundRobinFile(choice, sourcePath, writtenPath); err != nil {
+			return fmt.Errorf("%s: %w", name, err)
 		}
 	}
-	if len(config.Model.RoundRobin) == 0 {
-		return fmt.Errorf("%s: model.round_robin is empty, so there is nothing to ask", displayPath)
+	if len(choice.RoundRobin) == 0 {
+		return fmt.Errorf("%s is empty, so there is nothing to ask", name)
 	}
-	for _, selection := range config.Model.RoundRobin {
+	for _, selection := range choice.RoundRobin {
 		if strings.TrimSpace(selection) == "" {
-			return fmt.Errorf("%s: model.round_robin contains an empty selection", displayPath)
+			return fmt.Errorf("%s contains an empty selection", name)
 		}
 	}
 	return nil
 }
 
-func loadRoundRobinFile(config *Config, sourcePath string, writtenPath string) error {
+func loadRoundRobinFile(choice *ModelChoice, sourcePath string, writtenPath string) error {
 	resolvedPath, err := resolveConfigPath(sourcePath, writtenPath)
 	if err != nil {
 		return err
 	}
 	current := readSnapshot(resolvedPath)
-	config.roundRobinFileSnapshots = map[string]snapshot{resolvedPath: current}
+	choice.rotationFile = map[string]snapshot{resolvedPath: current}
 	if current.failure != nil {
 		return fmt.Errorf("could not read %s: %w", resolvedPath, current.failure)
 	}
-	config.Model.RoundRobin, err = parseRoundRobinFile(current.data)
+	choice.RoundRobin, err = parseRoundRobinFile(current.data)
 	if err != nil {
 		return fmt.Errorf("%s: %w", resolvedPath, err)
 	}
 	return nil
+}
+
+func (self Config) rotationFiles() (map[string]snapshot, map[string][]string) {
+	snapshots := map[string]snapshot{}
+	settings := map[string][]string{}
+	for table, choice := range map[string]ModelChoice{
+		agentSetting:    self.Agent.ModelChoice,
+		subagentSetting: self.Subagent.ModelChoice,
+	} {
+		for path, current := range choice.rotationFile {
+			snapshots[path] = current
+			settings[path] = append(settings[path], table+"."+roundRobinSetting)
+		}
+	}
+	for path := range settings {
+		slices.Sort(settings[path])
+	}
+	return snapshots, settings
 }
 
 func parseRoundRobinFile(data []byte) (RoundRobin, error) {
@@ -922,9 +998,23 @@ func refuseWorkspaceSettings(meta toml.MetaData) error {
 	return nil
 }
 
-func validateHostSettings(ollamaHost string, hasOllamaHost bool, hostname string) error {
+func refuseEmptySettings(config *Config, meta toml.MetaData) error {
+	config.Ui.Currency = strings.TrimSpace(config.Ui.Currency)
+	if meta.IsDefined(uiSetting, "currency") && config.Ui.Currency == "" {
+		return errors.New("ui.currency is empty; leave it out to count in dollars")
+	}
+	if meta.IsDefined("editor", "command") && (len(config.Editor.Command) == 0 || config.Editor.Command[0] == "") {
+		return errors.New("editor.command is empty; leave it out to find an editor automatically")
+	}
+	return nil
+}
+
+func validateHostSettings(ollamaHost string, hasOllamaHost bool, hostname string, hasHostname bool) error {
 	if hasOllamaHost && ollamaHost == "" {
 		return errors.New("provider.ollama.host is empty")
+	}
+	if hasHostname && hostname == "" {
+		return errors.New("ports.hostname is empty; leave it out to use the numeric address")
 	}
 	if hostname == "" {
 		return nil

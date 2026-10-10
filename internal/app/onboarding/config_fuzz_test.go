@@ -12,13 +12,14 @@ import (
 func FuzzAnInitialModelIsWrittenWhereItWillBeRead(fuzzer *testing.F) {
 	for _, seed := range []string{
 		"",
+		"[agent]\n",
+		"[agent] # models live here\n",
 		"[model]\n",
-		"[model] # models live here\n",
 		"[editor]\ncommand = [\"vim\"]\n",
-		"[snippets]\nx = \"\"\"\n[model]\n\"\"\"\n",
-		"[snippets]\nx = '''\n[model]\n'''\n",
-		"[snippets]\nx = \"a \\\"[model]\\\" word\"\n",
-		"[ui]\ncurrency = \"GBP\"\n\n[model]\neffort = \"low\"\n",
+		"[snippets]\nx = \"\"\"\n[agent]\n\"\"\"\n",
+		"[snippets]\nx = '''\n[agent]\n'''\n",
+		"[snippets]\nx = \"a \\\"[agent]\\\" word\"\n",
+		"[ui]\ncurrency = \"GBP\"\n\n[defaults]\neffort = \"low\"\n",
 	} {
 		fuzzer.Add(seed)
 	}
@@ -37,7 +38,7 @@ func FuzzAnInitialModelIsWrittenWhereItWillBeRead(fuzzer *testing.F) {
 		}
 
 		settings, err := config.Load(path)
-		if err != nil || len(settings.Model.RoundRobin) > 0 {
+		if err != nil || len(settings.Agent.Rotation()) > 0 {
 			return
 		}
 
@@ -50,8 +51,8 @@ func FuzzAnInitialModelIsWrittenWhereItWillBeRead(fuzzer *testing.F) {
 		if err != nil {
 			t.Fatalf("the config onboarding wrote does not load: %v\n%s", err, updated)
 		}
-		if len(settings.Model.RoundRobin) != 1 || settings.Model.RoundRobin[0] != "anthropic/one@high" {
-			t.Fatalf("the config onboarding wrote names %q\n%s", settings.Model.RoundRobin, updated)
+		if settings.Agent.Model != "anthropic/one@high" {
+			t.Fatalf("the config onboarding wrote names %q\n%s", settings.Agent.Model, updated)
 		}
 	})
 }

@@ -59,11 +59,17 @@ type Worker struct {
 
 type Factory func(context.Context, Child) (Worker, error)
 
+type ChildModel struct {
+	Choice    model.Choice
+	Selection model.Selection
+}
+
 type Options struct {
 	Directory    string
 	Scratch      string
 	Parent       string
-	Choice       model.Choice
+	Models       []ChildModel
+	Choose       func() (ChildModel, error)
 	Meta         store.Meta
 	Factory      Factory
 	PickName     func(int) int
@@ -340,13 +346,18 @@ func (self *Manager) Start(ctx context.Context, sharedPrompt string, tasks []sub
 			discard()
 			return "", err
 		}
-		siblings = append(siblings, name)
-		writer, err := store.CreateNamed(self.options.Directory, name, self.childMeta(workspace))
+		childModel, err := self.choose()
 		if err != nil {
 			discard()
 			return "", err
 		}
-		current := &child{choice: self.options.Choice, selection: self.configuredSelection(), Snapshot: Snapshot{
+		siblings = append(siblings, name)
+		writer, err := store.CreateNamed(self.options.Directory, name, self.childMeta(workspace, childModel))
+		if err != nil {
+			discard()
+			return "", err
+		}
+		current := &child{choice: childModel.Choice, selection: childModel.Selection, Snapshot: Snapshot{
 			Name: name, Task: task.Prompt, Intent: task.Intent, Workspace: workspace, SessionID: writer.ID(), State: subagentrecord.Running, StartedAt: self.options.Now(),
 		}}
 		childContext := self.prepare(ctx, current)
@@ -452,10 +463,20 @@ func (self *Manager) Concurrency() int {
 }
 
 func (self *Manager) Model() string {
-	if self.options.Choice.Name != "" {
-		return self.options.Choice.Name
+	var names []string
+	for _, candidate := range self.options.Models {
+		name := candidate.Choice.Name
+		if name == "" {
+			name = candidate.Choice.ID
+		}
+		if !slices.Contains(names, name) {
+			names = append(names, name)
+		}
 	}
-	return self.options.Choice.ID
+	if len(names) < 2 {
+		return strings.Join(names, "")
+	}
+	return strings.Join(names[:len(names)-1], ", ") + " or " + names[len(names)-1]
 }
 
 func (self *Manager) LiveSpend() (float64, bool) {
@@ -601,6 +622,16 @@ func (self *Manager) Close() {
 	})
 }
 
+func (self *Manager) choose() (ChildModel, error) {
+	if self.options.Choose != nil {
+		return self.options.Choose()
+	}
+	if len(self.options.Models) == 0 {
+		return ChildModel{}, nil
+	}
+	return self.options.Models[0], nil
+}
+
 func (self *Manager) restoreStart(event agent.Event) {
 	if self.children[event.Subagent] != nil {
 		return
@@ -612,9 +643,17 @@ func (self *Manager) restoreStart(event agent.Event) {
 	self.order = append(self.order, event.Subagent)
 }
 
-func (self *Manager) childMeta(workspace string) store.Meta {
+func (self *Manager) childMeta(workspace string, childModel ChildModel) store.Meta {
 	meta := self.options.Meta
 	meta.WorkspaceDir = workspace
+	meta.Provider = childModel.Selection.Provider
+	meta.Model = childModel.Selection.Model
+	meta.Effort = childModel.Selection.Effort
+	meta.IsFast = childModel.Selection.IsFast
+	if childModel.Choice.ID != "" {
+		choice := childModel.Choice
+		meta.ModelChoice = &choice
+	}
 	return meta
 }
 
@@ -875,7 +914,7 @@ func tellModeChange(worker *agent.Agent, recorder *record.Recorder, events []age
 }
 
 func (self *Manager) begin(worker Worker, writer *store.Writer, recorder *record.Recorder, current *child, _ *store.Session) error {
-	meta := self.childMeta(current.Workspace)
+	meta := self.childMeta(current.Workspace, ChildModel{Choice: current.choice, Selection: current.selection})
 	meta.SystemPrompt = worker.SystemPrompt
 	meta.ToolDefinitions = store.FreezeTools(worker.Tools)
 	for _, offeredTool := range worker.Tools {
@@ -968,10 +1007,6 @@ func (self *Manager) interruptionNote(ctx context.Context, current *child) strin
 		return "Turn stopped."
 	}
 	return "Turn stopped because " + reason + "."
-}
-
-func (self *Manager) configuredSelection() model.Selection {
-	return recordedSelection(self.options.Meta)
 }
 
 func recordedSelection(meta store.Meta) model.Selection {
