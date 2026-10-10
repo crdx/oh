@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/experimental"
 	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/markdown"
 	"crdx.org/oh/internal/app/output"
@@ -798,6 +799,7 @@ func TestReasoningDrawnADeltaAtATimeIsTheReasoningDrawnAtOnce(t *testing.T) {
 func TestACacheRebuildIsCostedInTheChosenCurrency(t *testing.T) {
 	var screenOutput bytes.Buffer
 	paint := New(output.NewTerminalOfSize(&screenOutput, 80, 24), false, nil, nil, output.StreamingModeLine)
+	paint.ShowCacheMissNoticesWhen(experimental.New(map[string]any{string(experimental.CacheMissNotices): true}))
 	paint.PriceCacheRebuildsAt(Tariff{
 		Prices:   &agent.TokenPrices{Input: 5, Output: 25, CacheRead: 0.5, CacheWrite: 6.25},
 		Currency: money.In("GBP", 0.5),
@@ -812,6 +814,36 @@ func TestACacheRebuildIsCostedInTheChosenCurrency(t *testing.T) {
 
 	if want := "Cache rebuilt: 40Kt sent <1m later for £0.12."; !strings.Contains(screenOutput.String(), want) {
 		t.Errorf("got %q, want it to contain %q", screenOutput.String(), want)
+	}
+}
+
+func TestCacheMissNoticesFollowLiveExperimentalToggle(t *testing.T) {
+	var screenOutput bytes.Buffer
+	paint := New(output.NewTerminalOfSize(&screenOutput, 80, 24), false, nil, nil, output.StreamingModeLine)
+	toggles := experimental.New(nil)
+	paint.ShowCacheMissNoticesWhen(toggles)
+	event := agent.Event{
+		Kind:  agent.CacheRebuildEvent,
+		Name:  string(agent.CacheExpired),
+		Usage: &agent.Usage{Cache: &agent.CacheUsage{WriteTokens: 40_000}},
+	}
+
+	paint.DrawEvent(event)
+	if strings.Contains(screenOutput.String(), "Cache expired:") {
+		t.Fatal("cache miss notice was drawn with the toggle off")
+	}
+
+	toggles.Replace(map[string]any{string(experimental.CacheMissNotices): true})
+	paint.DrawEvent(event)
+	if !strings.Contains(screenOutput.String(), "Cache expired: 40Kt sent") {
+		t.Fatal("cache miss notice was not drawn after enabling the toggle")
+	}
+
+	before := screenOutput.Len()
+	toggles.Replace(map[string]any{string(experimental.CacheMissNotices): false})
+	paint.DrawEvent(event)
+	if screenOutput.Len() != before {
+		t.Error("cache miss notice was drawn after disabling the toggle")
 	}
 }
 

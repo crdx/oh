@@ -1887,6 +1887,22 @@ func TestCommandsStartTurnsByDefault(t *testing.T) {
 	}
 }
 
+func TestCacheMissNoticesDefaultToOffAndCanBeEnabled(t *testing.T) {
+	defaults := configFrom(t, "")
+	if value, isSet := defaults.Experimental["cache_miss_notices"]; !isSet || value != false {
+		t.Errorf("got experimental defaults %v", defaults.Experimental)
+	}
+
+	enabled := configFrom(t, "[experimental]\ncache_miss_notices = true\n")
+	live, err := enabled.BuildLive(testSegments())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if live.Experimental["cache_miss_notices"] != true {
+		t.Errorf("got live experimental toggles %v", live.Experimental)
+	}
+}
+
 func TestRedrawTimingFeedbackDefaultsToOffAndCanBeEnabled(t *testing.T) {
 	defaults := configFrom(t, "")
 	if value, isSet := defaults.Experimental["redraw_timing_feedback"]; !isSet || value != false {

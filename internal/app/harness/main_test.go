@@ -12429,6 +12429,40 @@ func TestReloadingConfigChangesExperimentalToggles(t *testing.T) {
 	}
 }
 
+func TestReloadingCacheMissNoticesChangesAnExistingPainter(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "config.toml")
+	writeLiveConfig(t, path, "[experimental]\ncache_miss_notices = false\n")
+
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	prepareLiveConfig(t, self, path)
+	paint := self.newPainter(false)
+	event := agent.Event{
+		Kind:  agent.CacheRebuildEvent,
+		Name:  string(agent.CacheRebuilt),
+		Usage: &agent.Usage{Cache: &agent.CacheUsage{WriteTokens: 40_000}},
+	}
+	paint.DrawEvent(event)
+	if strings.Contains(screenOutput.String(), "Cache rebuilt:") {
+		t.Fatal("notice was drawn before the toggle was enabled")
+	}
+
+	writeLiveConfig(t, path, "[experimental]\ncache_miss_notices = true\n")
+	settleLiveConfig(t, self)
+	paint.DrawEvent(event)
+	if !strings.Contains(screenOutput.String(), "Cache rebuilt: 40Kt sent") {
+		t.Fatal("existing painter did not pick up the enabled toggle")
+	}
+
+	writeLiveConfig(t, path, "[experimental]\ncache_miss_notices = false\n")
+	settleLiveConfig(t, self)
+	before := strings.Count(screenOutput.String(), "Cache rebuilt:")
+	paint.DrawEvent(event)
+	if got := strings.Count(screenOutput.String(), "Cache rebuilt:"); got != before {
+		t.Error("existing painter did not pick up the disabled toggle")
+	}
+}
+
 func TestTheSharedHistoryToggleDecidesWhetherASessionRecallsOtherSessions(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
 	writeLiveConfig(t, path, "")
@@ -18365,6 +18399,7 @@ type sessionGoldenScenario struct {
 	IdleAfter             string                    `toml:"idle-after"`
 	Asleep                string                    `toml:"asleep"`
 	Grouping              output.Grouping           `toml:"grouping"`
+	CacheMissNotices      bool                      `toml:"cache-miss-notices"`
 	Hostname              string                    `toml:"hostname"`
 	FirstTokenError       string                    `toml:"first-token-error"`
 	CredentialRefresh     string                    `toml:"credential-refresh"`
@@ -19663,13 +19698,14 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	settleClock(firstAssistant)
 	var firstScreenOutput bytes.Buffer
 	firstHarness = &App{
-		agent:    firstAssistant,
-		screen:   scenario.screen(&firstScreenOutput),
-		recorder: record.New(log),
-		forwards: goldenPorts,
-		display:  scenario.display(),
-		nudge:    builtInConfig(t).Input.Nudge,
-		children: childState{manager: firstChildManager},
+		agent:        firstAssistant,
+		screen:       scenario.screen(&firstScreenOutput),
+		recorder:     record.New(log),
+		forwards:     goldenPorts,
+		display:      scenario.display(),
+		experimental: experimental.New(map[string]any{string(experimental.CacheMissNotices): scenario.CacheMissNotices}),
+		nudge:        builtInConfig(t).Input.Nudge,
+		children:     childState{manager: firstChildManager},
 	}
 	firstHarness.children.directory = session.ChildrenDir(directory, log.Name())
 	if children != nil {
@@ -19797,6 +19833,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		recordedEvents: slices.Clone(storedSession.Events),
 		forwards:       goldenPorts,
 		display:        scenario.display(),
+		experimental:   experimental.New(map[string]any{string(experimental.CacheMissNotices): scenario.CacheMissNotices}),
 		children: childState{
 			manager:   resumedChildManager,
 			directory: session.ChildrenDir(directory, sessionName),
@@ -19874,6 +19911,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		screen:         scenario.screen(&replayOutput),
 		recordedEvents: storedSession.Events,
 		display:        scenario.display(),
+		experimental:   experimental.New(map[string]any{string(experimental.CacheMissNotices): scenario.CacheMissNotices}),
 	}
 	replayHarness.replay()
 
@@ -19891,6 +19929,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		recordedEvents: storedSession.Events,
 		runMode:        runMode{isPrinting: true},
 		display:        scenario.display(),
+		experimental:   experimental.New(map[string]any{string(experimental.CacheMissNotices): scenario.CacheMissNotices}),
 	}
 	printedReplayHarness.replay()
 
@@ -20381,11 +20420,12 @@ func drawPrintedSessionGoldenTurn(
 
 	var screenOutput bytes.Buffer
 	printedHarness := &App{
-		agent:    agent.New(sessionGoldenSystemPrompt, unaskedProvider{}, nil),
-		screen:   scenario.screen(&screenOutput).AppendOnly(),
-		recorder: record.New(log),
-		runMode:  runMode{isPrinting: true},
-		display:  scenario.display(),
+		agent:        agent.New(sessionGoldenSystemPrompt, unaskedProvider{}, nil),
+		screen:       scenario.screen(&screenOutput).AppendOnly(),
+		recorder:     record.New(log),
+		runMode:      runMode{isPrinting: true},
+		display:      scenario.display(),
+		experimental: experimental.New(map[string]any{string(experimental.CacheMissNotices): scenario.CacheMissNotices}),
 	}
 	if len(restoredEvents) > 0 {
 		printedHarness.recordedEvents = slices.Clone(restoredEvents)

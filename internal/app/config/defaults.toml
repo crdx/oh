@@ -138,6 +138,7 @@ lookup = "allow"
 [tools]
 
 [experimental]
+cache_miss_notices = false
 command_starts_turn = true
 redraw_timing_feedback = false
 reply_command = false

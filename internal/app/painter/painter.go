@@ -19,6 +19,7 @@ import (
 	"crdx.org/oh/internal/app/conditions"
 	"crdx.org/oh/internal/app/dynamic"
 	"crdx.org/oh/internal/app/environment"
+	"crdx.org/oh/internal/app/experimental"
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/interrupt"
 	"crdx.org/oh/internal/app/jobrecord"
@@ -64,6 +65,7 @@ type Picasso struct {
 	resultLinkSessionName string
 	forkModelName         string
 	tariff                Tariff
+	cacheMissNotices      *experimental.Toggles
 
 	getTool       func(string) (tool.Tool, bool)
 	workspace     *work.Space
@@ -137,6 +139,10 @@ func (self *Picasso) SuggestForkingWith(modelName string) {
 
 func (self *Picasso) PriceCacheRebuildsAt(tariff Tariff) {
 	self.tariff = tariff
+}
+
+func (self *Picasso) ShowCacheMissNoticesWhen(toggles *experimental.Toggles) {
+	self.cacheMissNotices = toggles
 }
 
 func (self *Picasso) DrawDelta(delta agent.Delta) {
@@ -577,7 +583,9 @@ func (self *Picasso) settleBeforeEvent(kind agent.Kind) {
 }
 
 func (self *Picasso) isTooCheapToNotice(event agent.Event) bool {
-	return event.Kind == agent.CacheRebuildEvent && !agent.IsCacheRebuildWorthNoticing(event, self.tariff.Prices)
+	return event.Kind == agent.CacheRebuildEvent &&
+		(!self.cacheMissNotices.IsEnabled(experimental.CacheMissNotices) ||
+			!agent.IsCacheRebuildWorthNoticing(event, self.tariff.Prices))
 }
 
 func (self *Picasso) drawNotices(event agent.Event, draw func(submittedMessage)) {

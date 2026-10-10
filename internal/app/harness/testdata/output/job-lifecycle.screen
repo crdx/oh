@@ -37,10 +37,6 @@ The docs server is up.
     note: the oldest 1K of output was
     dropped to keep the spool bounded.
 
-
-Cache expired: 97Kt sent after 7m.
-
-
  🤖 Job docs stopped because the
     workspace was made read-only.
  🤖 Job index stopped because access to
@@ -1027,38 +1023,6 @@ d
 .
 
 
-C
-a
-c
-h
-e
-e
-x
-p
-i
-r
-e
-d
-:
-9
-7
-K
-t
-s
-e
-n
-t
-a
-f
-t
-e
-r
-7
-m
-.
-
-
-
 🤖
 
 J
@@ -1442,10 +1406,6 @@ The docs server is up.
  🤖 Job archive exited: complete after 17s with no output.
     note: the oldest 1K of output was dropped to keep the spool bounded.
 
-
-Cache expired: 97Kt sent after 7m.
-
-
  🤖 Job docs stopped because the workspace was made read-only.
  🤖 Job index stopped because access to /reference was revoked.
 
@@ -1562,13 +1522,6 @@ up.
     spool
     bounded.
 
-
-Cache
-expired:
-97Kt sent
-after 7m.
-
-
  🤖 Job docs
     stopped
     because
@@ -1643,10 +1596,6 @@ The docs server is up.
 
  🤖 Job archive exited: complete after 17s with no output.
     note: the oldest 1K of output was dropped to keep the spool bounded.
-
-
-Cache expired: 97Kt sent after 7m.
-
 
  🤖 Job docs stopped because the workspace was made read-only.
  🤖 Job index stopped because access to /reference was revoked.
