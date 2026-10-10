@@ -90,11 +90,7 @@ func (self *App) subagentEvents() <-chan agent.Event {
 
 func (self *App) subagentEvent(event agent.Event) {
 	self.recordChildFact(event)
-	if event.Kind == subagentrecord.Returned {
-		self.children.reportsDue = slices.DeleteFunc(self.children.reportsDue, func(name string) bool { return name == event.Subagent })
-		return
-	}
-	if event.Kind != subagentrecord.Finished || event.Name == string(subagentrecord.Stopped) || hasReturned(self.recordedEvents, event.Subagent) {
+	if event.Kind != subagentrecord.Finished || event.Name == string(subagentrecord.Stopped) {
 		return
 	}
 	if len(self.children.reportsDue) == 0 {
@@ -110,21 +106,8 @@ func (self *App) recordChildFact(event agent.Event) {
 	self.storeEvent(event)
 }
 
-func hasReturned(events []agent.Event, name string) bool {
-	isReturned := false
-	for _, event := range events {
-		if event.Subagent != name {
-			continue
-		}
-		if event.Kind == subagentrecord.Returned || event.Kind == subagentrecord.Sent {
-			isReturned = event.Kind == subagentrecord.Returned
-		}
-	}
-	return isReturned
-}
-
 func (self *App) nextChildDelivery(time.Time) time.Time {
-	if self.currentTurn.Running() || len(self.children.reportsDue) == 0 {
+	if len(self.children.reportsDue) == 0 {
 		return time.Time{}
 	}
 	return self.children.deliveryAt
@@ -137,21 +120,14 @@ func (self *App) deliverChildCompletions() {
 }
 
 func (self *App) queueReadyChildCompletions() bool {
-	if self.currentTurn.Running() || len(self.children.reportsDue) == 0 || self.getNow().Before(self.children.deliveryAt) {
+	if len(self.children.reportsDue) == 0 || self.getNow().Before(self.children.deliveryAt) {
 		return false
 	}
-	names := slices.DeleteFunc(self.children.reportsDue, func(name string) bool {
-		return self.children.manager != nil && self.children.manager.WasReturned(name)
-	})
+	names := self.children.reportsDue
 	self.children.reportsDue = nil
 	self.children.deliveryAt = time.Time{}
-	if len(names) == 0 {
-		return false
-	}
 	message := completionMessage(self.recordedEvents, names, self.children.manager.ScratchNote)
-	self.pendingNotices.add(subagentrecord.DeliveryEvent(names, message, completionReports(self.recordedEvents, names)))
-	self.refreshPendingMessages()
-	return true
+	return self.holdNotice(subagentrecord.DeliveryEvent(names, message, completionReports(self.recordedEvents, names)))
 }
 
 func completionMessage(events []agent.Event, names []string, scratchNote func(string) string) string {
@@ -237,7 +213,7 @@ func (self *App) queueUndeliveredReports(events []agent.Event) {
 		}
 	}
 	for _, name := range order {
-		if pendingChildren[name] && !hasReturned(events, name) && !slices.Contains(self.children.reportsDue, name) {
+		if pendingChildren[name] && !slices.Contains(self.children.reportsDue, name) {
 			self.children.reportsDue = append(self.children.reportsDue, name)
 		}
 	}

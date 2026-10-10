@@ -20,7 +20,7 @@ read: README.md [call_1]
 read: target.txt [call_2]
 ```
 
-## job_ended · +4s
+## Job ended · +4s
 
 ````
 Job `build` exited: failed after 12s, exit(2).
@@ -32,7 +32,7 @@ exit status 1
 ```
 ````
 
-## job_ended · +5s
+## Job ended · +5s
 
 ````
 Job `docs` exited: complete after 14s.

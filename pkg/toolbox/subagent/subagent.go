@@ -71,8 +71,8 @@ func New(manager Manager, model string, concurrency int) tool.Tool {
 			"miss part of its task, or describe checks it never ran, " +
 			"so before you act on it or pass it on, verify what matters yourself, " +
 			"such as by opening files it reports, rerunning key commands, or reading the code it cites; " +
-			"finished subagents whose answers you have not read through output report back after a short batching window; " +
-			"you are woken by them if you have ended your turn, so end your turn rather than waiting or polling for them",
+			"a finished subagent's answer reaches you on its own, between your tool calls while you work " +
+			"or by waking you once you have ended your turn, so carry on or end your turn rather than waiting or polling for it",
 		Schema: tool.Schema{
 			tool.Enum("action", "what to do", Start, Send, Status, Output, Stop, List),
 			tool.StringArray("names", "the subagents for status, output, or stop; empty means all of them").Optional(),

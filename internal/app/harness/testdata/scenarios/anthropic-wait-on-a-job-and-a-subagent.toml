@@ -96,3 +96,13 @@ event = [
     '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
     '''{"type":"message_stop"}''',
 ]
+
+[[resume.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"That is the parser report I already had."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
+    '''{"type":"message_stop"}''',
+]

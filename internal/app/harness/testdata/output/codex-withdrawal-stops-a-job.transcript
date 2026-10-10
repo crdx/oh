@@ -16,7 +16,7 @@
 The workspace is now read-only.
 ```
 
-## job_stop · +0s
+## Job stopped · +0s
 
 ```
 Job `web` stopped because the workspace was made read-only.

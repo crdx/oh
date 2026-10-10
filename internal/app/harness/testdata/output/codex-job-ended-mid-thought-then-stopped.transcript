@@ -18,7 +18,7 @@ has the build finished
 
 Turn stopped because the user pressed escape.
 
-## job_ended · +0s
+## Job ended · +0s
 
 ````
 Job `build` exited: failed after 12s, exit(2).

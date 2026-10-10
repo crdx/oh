@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Title every notice in the readable transcript
 - Refactor config file format a bit
 - Add experimental inline reply command and shortcut
 - Offer only file and shell tools in headless mode

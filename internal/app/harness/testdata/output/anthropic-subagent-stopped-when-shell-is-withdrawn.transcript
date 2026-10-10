@@ -48,13 +48,13 @@ The build tool is just.
 Bash is now refused.
 ```
 
-## subagent_access_stop · +0s
+## Subagents stopped · +0s
 
 ```
 Subagent tame-adder stopped because shell execution was withdrawn.
 ```
 
-## subagent_completion_submitted · +0s
+## Subagent reports · +0s
 
 ```
 Subagent tame-alpaca finished:

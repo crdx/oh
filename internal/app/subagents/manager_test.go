@@ -463,46 +463,6 @@ func TestSendRefusesAChildThatIsStoppingGoneOrReplaced(t *testing.T) {
 	}
 }
 
-func TestAnAnswerReadThroughAWaitIsMarkedReturnedAfterItsFinish(t *testing.T) {
-	manager := newTestFamily(t).manager(t, answering(func() agent.Provider { return &answeringProvider{} }))
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "say hello"}, {Prompt: "say goodbye"}}); err != nil {
-		t.Fatal(err)
-	}
-	snapshots := manager.ListSnapshots()
-	first, second := snapshots[0].Name, snapshots[1].Name
-	output := waitOn(t, manager, wait.Any, 60, first)
-	if !strings.Contains(output, "say hello") {
-		t.Fatalf("wait returned %q, want the answer", output)
-	}
-	if !manager.WasReturned(first) || manager.WasReturned(second) {
-		t.Fatal("only the child whose answer was read should be returned")
-	}
-	var kinds []agent.Kind
-	for event := range manager.Events() {
-		if event.Subagent != first {
-			continue
-		}
-		kinds = append(kinds, event.Kind)
-		if event.Kind == subagentrecord.Returned {
-			break
-		}
-	}
-	finished := slices.Index(kinds, subagentrecord.Finished)
-	returned := slices.Index(kinds, subagentrecord.Returned)
-	if finished < 0 || returned < finished {
-		t.Errorf("got events %v, want the finish before the return", kinds)
-	}
-	restored := newTestFamily(t).manager(t, nil)
-	restored.Restore([]agent.Event{
-		subagentrecord.StartedEvent(first, "id", "say hello", subagentrecord.Origin{}),
-		subagentrecord.FinishedEvent(first, subagentrecord.Done, "hello", nil, nil),
-		subagentrecord.ReturnedEvent(first),
-	})
-	if !restored.WasReturned(first) {
-		t.Error("a restored manager forgot the answer was returned")
-	}
-}
-
 func TestAChildLeftRunningEndsWithWhatItsJournalHolds(t *testing.T) {
 	family := newTestFamily(t)
 	manager := family.manager(t, answering(func() agent.Provider { return &answeringProvider{} }))
@@ -626,9 +586,6 @@ func TestAWaitThatGivesUpSaysWhichSubagentsAreStillRunning(t *testing.T) {
 	report := waitOn(t, manager, wait.Any, 1, name)
 	if want := name + ": running\n\nnote: the wait gave up after 1s, and " + name + " is still running."; report != want {
 		t.Errorf("the report %q does not say %q", report, want)
-	}
-	if manager.WasReturned(name) {
-		t.Error("a running child was marked returned by a wait that gave up")
 	}
 	if intent := manager.ListSnapshots()[0].Intent; intent != "Watching the build" {
 		t.Errorf("the child kept its intent as %q", intent)

@@ -107,7 +107,7 @@ func (self *Recorder) Event(at time.Time, event agent.Event) error {
 		return os.ErrClosed
 	}
 	switch event.Kind {
-	case agent.StateChangeEvent, agent.ModelReasoningEvent, subagentrecord.Returned:
+	case agent.StateChangeEvent, agent.ModelReasoningEvent, jobrecord.Listing:
 		return nil
 	case conditions.Change, environment.Change:
 		if _, isSaid := harnessNotice(event); !isSaid {
@@ -508,6 +508,16 @@ func title(kind agent.Kind) string {
 		return "Poke"
 	case hostcommand.Ran:
 		return "Host command"
+	case caps.JobStop:
+		return "Job stopped"
+	case jobrecord.Ended:
+		return "Job ended"
+	case jobrecord.EndedWithSession:
+		return "Jobs ended with the session"
+	case subagentrecord.ShellWithdrawnStop:
+		return "Subagents stopped"
+	case subagentrecord.ReportsDelivered:
+		return "Subagent reports"
 	case agent.SilentTurnEvent:
 		return "Silent turn"
 	case agent.CacheRebuildEvent:

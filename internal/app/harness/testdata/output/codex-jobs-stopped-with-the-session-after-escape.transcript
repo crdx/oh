@@ -10,8 +10,6 @@
 
 ## Mode · rxwngl · +0s
 
-## job_listing · +0s
-
 ## User · +0s
 
 interrupt while the tool is working
@@ -26,7 +24,7 @@ work: work [cancelled, 2 lines, 88B, call-1]
 
 Turn stopped because the user pressed escape.
 
-## jobs_ended_with_session · +0s
+## Jobs ended with the session · +0s
 
 ```
 The session was closed and reopened after the last turn. Job `docs` stopped when it closed. Restart it if still needed.
@@ -35,5 +33,3 @@ The session was closed and reopened after the last turn. Job `docs` stopped when
 ## Assistant · +0s
 
 The session was reopened, so I will leave the docs server down.
-
-## job_listing · +0s

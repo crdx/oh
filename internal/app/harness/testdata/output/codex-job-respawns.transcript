@@ -20,7 +20,7 @@ rebuild every time the source changes
 job: watch [call-1]
 ```
 
-## job_ended · +0s
+## Job ended · +0s
 
 ````
 Job `watch` exited: failed after 12s, exit(2), run 1, respawned.
@@ -52,7 +52,7 @@ start it again
 job: watch [call-2]
 ```
 
-## job_ended · +0s
+## Job ended · +0s
 
 ````
 Job `watch` exited: failed after 12s, exit(2), run 4, not respawned after 3 runs in a row each ended within 2s.

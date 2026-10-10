@@ -359,3 +359,74 @@ func TestGoldenSubCatDrawsTheChildsConversation(t *testing.T) {
 	compareWithGolden(t, "subagent-conversation", ".ansi", passes)
 	compareWithGolden(t, "subagent-conversation", ".screen", shownPasses(t, passes))
 }
+
+type promptlyAnsweringProvider struct{ unaskedProvider }
+
+func (promptlyAnsweringProvider) Send(_ context.Context, yield agent.Yield) (agent.Reply, error) {
+	yield(agent.Output{Kind: agent.ModelMessageEvent, Text: "done"})
+	yield(agent.Output{Kind: agent.ModelMessageEvent, Done: true})
+	return agent.Reply{}, nil
+}
+
+func TestAReportIsInterjectedIntoARunningTurnEvenOnceItWasRead(t *testing.T) {
+	var drawn bytes.Buffer
+	conversation := testConversation(t, &drawn)
+	current := time.Date(2026, time.October, 8, 10, 0, 0, 0, time.UTC)
+	conversation.now = func() time.Time { return current }
+	scratch := t.TempDir()
+	manager, err := subagents.New(subagents.Options{
+		Directory: filepath.Join(t.TempDir(), "subagents"),
+		Scratch:   scratch,
+		Parent:    "tame-impala",
+		Factory: func(_ context.Context, child subagents.Child) (subagents.Worker, error) {
+			worker := agent.New("child", promptlyAnsweringProvider{}, nil)
+			return subagents.Worker{Agent: worker, SystemPrompt: "child", Close: func() {}}, nil
+		},
+		PickName:  func(int) int { return 0 },
+		Workspace: func(string) (string, error) { return scratch, nil },
+		Caps:      func() caps.Set { return caps.Read },
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(manager.Close)
+	conversation.children.manager = manager
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "one"}, {Prompt: "two"}}); err != nil {
+		t.Fatal(err)
+	}
+	var names []string
+	for finishes := 0; finishes < 2; {
+		event := <-manager.Events()
+		if event.Kind == subagentrecord.Started {
+			names = append(names, event.Subagent)
+		}
+		if event.Kind == subagentrecord.Finished {
+			finishes++
+		}
+		conversation.subagentEvent(event)
+	}
+	if _, err := manager.Output(names[:1]); err != nil {
+		t.Fatal(err)
+	}
+	if _, release, err := manager.WaitSource().Hold(names[1]); err != nil {
+		t.Fatal(err)
+	} else {
+		defer release()
+	}
+	conversation.currentTurn = Turn{painter: conversation.newPainter(true), Stream: testRunningTurnStreamWithCancel(nil)}
+	current = conversation.children.deliveryAt
+	conversation.deliverChildCompletions()
+
+	notes, isNoted := conversation.currentTurn.TakeNotes()
+	if !isNoted || len(notes) != 1 || !strings.Contains(notes[0].Text, names[0]) || !strings.Contains(notes[0].Text, names[1]) {
+		t.Fatalf("the running turn was told %+v, want both reports, read or waited on as they were", notes)
+	}
+	if len(conversation.children.reportsDue) != 0 {
+		t.Errorf("reports still due are %v after they were interjected", conversation.children.reportsDue)
+	}
+	if !slices.ContainsFunc(conversation.recordedEvents, func(event agent.Event) bool {
+		return event.Kind == subagentrecord.ReportsDelivered
+	}) {
+		t.Error("the interjected reports were not recorded")
+	}
+}

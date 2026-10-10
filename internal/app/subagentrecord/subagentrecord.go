@@ -12,7 +12,6 @@ const (
 	Started            agent.Kind = "subagent_started"
 	Sent               agent.Kind = "subagent_message_sent"
 	Finished           agent.Kind = "subagent_finished"
-	Returned           agent.Kind = "subagent_report_returned"
 	ReportsDelivered   agent.Kind = "subagent_completion_submitted"
 	ShellWithdrawnStop agent.Kind = "subagent_access_stop"
 )
@@ -99,10 +98,6 @@ func FailureOf(event agent.Event) string {
 		return ""
 	}
 	return event.Failure.Text()
-}
-
-func ReturnedEvent(name string) agent.Event {
-	return agent.Event{Kind: Returned, Subagent: name}
 }
 
 func AddUsage(total *agent.Usage, usage agent.Usage) {

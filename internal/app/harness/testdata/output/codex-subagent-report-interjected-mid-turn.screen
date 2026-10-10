@@ -1,0 +1,22 @@
+
+ start a subagent and keep working
+
+
+Finding where the parser lives spawn 1 subagent on GPT-5.6 Sol
+probe probe 1L
+
+
+ 🐍 Subagent tame-adder interjects:
+
+    The parser is in parse.go.
+
+
+probe probe 1L
+
+The subagent found the parser in parse.go while I probed.
+
+
+ carry on
+
+
+Carrying on.

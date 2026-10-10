@@ -61,7 +61,7 @@ The loader is in config.go.
 
 It loads once, at startup.
 
-## subagent_completion_submitted · +0s
+## Subagent reports · +0s
 
 ```
 Subagents tame-adder, tame-alpaca finished:

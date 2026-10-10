@@ -13,7 +13,7 @@
 
 think it through while the build finishes
 
-## job_ended · +1s
+## Job ended · +1s
 
 ````
 Job `build` exited: failed after 12s, exit(2).

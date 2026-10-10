@@ -15,3 +15,11 @@ The subagent found the parser; the check is stopped.\e[?25h\e[?2026l\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r
 Carrying on.\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\r
+\e[?2026h\e[?25l\r\e[K\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m ⏳ Subagent tame-adder interjects:                                                                 \e[0m\r
+\e[48;2;48;58;67m                                                                                                    \e[0m\r
+\e[48;2;48;58;67m    The parser is in parse.go.                                                                      \e[0m\r
+\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\e[3A\r\e[48;2;48;58;67m 🐍 Subagent tame-adder interjects:                                                                 \e[0m\e[3B\r\e[48;2;48;58;67m                                                                                                    \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[100C\e[?25h\e[?2026l\e]9;4;3\e\\\e[?2026h\e[?25l\r
+\r\e[K\r
+That is the parser report I already had.\e[K\r\e[40C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[40C\e[?25h\e[?2026l\e]9;4;0\e\\\r

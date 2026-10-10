@@ -30,17 +30,17 @@ Transcript: `subagents/tame-adder/chat.md`
 
 The config loader is in config.go.
 
-## Assistant · +0s
-
-It is looking; I will summarise when you ask.
-
-## subagent_completion_submitted · +0s
+## Subagent reports · +0s
 
 ```
 Subagent tame-adder finished:
 
 tame-adder done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The config loader is in config.go.
 ```
+
+## Assistant · +0s
+
+It is looking; I will summarise when you ask.
 
 ## User · +0s
 

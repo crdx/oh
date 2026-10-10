@@ -19,13 +19,11 @@ start the docs server and a watcher
 job: stale job rendering [ok, 1 line, 20B, call_1]
 ```
 
-## job_listing · +3s
-
 ## Assistant · +4s
 
 Both are up.
 
-## jobs_ended_with_session · +5s
+## Jobs ended with the session · +5s
 
 ```
 The session was closed and reopened after the last turn. Jobs `docs` and `watch` stopped when it closed. Restart each if still needed.

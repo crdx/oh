@@ -555,7 +555,7 @@ func (self *Picasso) Stop() {
 	}
 }
 
-var childFactKinds = []agent.Kind{subagentrecord.Started, subagentrecord.Sent, subagentrecord.Finished, subagentrecord.Returned}
+var childFactKinds = []agent.Kind{subagentrecord.Started, subagentrecord.Sent, subagentrecord.Finished}
 
 func IntroduceSubagent(introductions *Introductions, event agent.Event) {
 	if origin, isDecoded := subagentrecord.DecodeOrigin(event); isDecoded && introductions != nil {

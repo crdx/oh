@@ -40,7 +40,7 @@ The loader is in config.go.
 Bash is now refused.
 ```
 
-## subagent_completion_submitted · +0s
+## Subagent reports · +0s
 
 ```
 Subagent tame-adder finished:
@@ -74,7 +74,7 @@ Now find its tests
 
 Its tests are in config_test.go.
 
-## subagent_completion_submitted · +0s
+## Subagent reports · +0s
 
 ```
 Subagent tame-adder finished:

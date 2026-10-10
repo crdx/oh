@@ -36,7 +36,7 @@ Transcript: `subagents/tame-adder/chat.md`
 parent process ended before the subagent completed
 ```
 
-## subagent_completion_submitted · +0s
+## Subagent reports · +0s
 
 ```
 Subagent tame-adder finished:

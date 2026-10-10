@@ -14,7 +14,7 @@
 
 has the build finished
 
-## job_ended · +0s
+## Job ended · +0s
 
 ````
 Job `build` exited: failed after 12s, exit(2).

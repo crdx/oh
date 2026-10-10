@@ -462,10 +462,16 @@ func (self *sessionGoldenChildTurns) observe(update agent.Update) {
 	if self.toolResults == self.turn.SettleSubagentsAfterResult ||
 		slices.Contains(self.turn.SettleSubagentsAfterResults, self.toolResults) {
 		self.settle()
+		self.testHarness.deliverChildCompletions()
 	}
 }
 
 func (self *sessionGoldenChildTurns) after() [][]TurnEvent {
+	if self.turn.SubagentDebounceEndsTurn {
+		self.children.passDebounce()
+		self.testHarness.deliverChildCompletions()
+		return runQueuedSessionGoldenTurns(self.t, self.testHarness, "", nil)
+	}
 	if !self.turn.SettleSubagentsAfterTurn {
 		return nil
 	}

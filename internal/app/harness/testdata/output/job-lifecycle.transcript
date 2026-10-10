@@ -19,13 +19,11 @@ start the docs server and keep it up
 job: stale job rendering [ok, 1 line, 20B, call_1]
 ```
 
-## job_listing · +3s
-
 ## Assistant · +4s
 
 The docs server is up.
 
-## job_ended · +5s
+## Job ended · +5s
 
 ````
 Job `build` exited: failed after 12s, exit(2).
@@ -37,7 +35,7 @@ exit status 1
 ```
 ````
 
-## job_ended · +6s
+## Job ended · +6s
 
 ````
 Job `seed` exited: complete after 14s.
@@ -49,13 +47,13 @@ seeding the database
 ```
 ````
 
-## job_ended · +7s
+## Job ended · +7s
 
 ```
 Job `empty` exited: complete after 15s with no output.
 ```
 
-## job_ended · +8s
+## Job ended · +8s
 
 ````
 Job `` build`fast `` exited: complete after 16s.
@@ -65,7 +63,7 @@ done
 ```
 ````
 
-## job_ended · +9s
+## Job ended · +9s
 
 ```
 Job `archive` exited: complete after 17s with no output.
@@ -78,13 +76,13 @@ note: the oldest 1K of output was dropped to keep the spool bounded.
 Cache expired: 97Kt sent after 7m.
 ```
 
-## job_stop · +11s
+## Job stopped · +11s
 
 ```
 Job `docs` stopped because the workspace was made read-only.
 ```
 
-## job_stop · +12s
+## Job stopped · +12s
 
 ```
 Job `index` stopped because access to /reference was revoked.
@@ -100,7 +98,7 @@ what happened to it
 job: stale status rendering [ok, 1 line, 26B, call_2]
 ```
 
-## job_stop · +16s
+## Job stopped · +16s
 
 ```
 Job `docs` stopped from the keyboard.

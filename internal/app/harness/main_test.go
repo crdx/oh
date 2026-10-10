@@ -18243,6 +18243,7 @@ type sessionGoldenTurn struct {
 	SettleSubagentsAfterResult   int                     `toml:"settle-subagents-after-tool-result"`
 	SettleSubagentsAfterTurn     bool                    `toml:"settle-subagents-after-turn"`
 	SubagentDebouncePasses       bool                    `toml:"subagent-debounce-passes"`
+	SubagentDebounceEndsTurn     bool                    `toml:"subagent-debounce-passes-after-turn"`
 	ToggleAfterSubagentsSettle   string                  `toml:"toggle-after-subagents-settle"`
 	SettleSubagentsAfterResults  []int                   `toml:"settle-subagents-after-tool-results"`
 	TogglesAfterSubagentsSettle  []string                `toml:"toggles-after-subagents-settle"`

@@ -9,7 +9,6 @@
 {"event":{"kind":"tool_call_request","id":"call_4","name":"subagent","arguments":"{\"action\": \"wait\", \"names\": [\"tame-alpaca\"]}","render":"tame-alpaca","rendering_kind":"subagent_wait","mentions":["subagent:tame-alpaca"]}}
 {"event":{"kind":"subagent_finished","subagent":"tame-alpaca","text":"There are three TODOs.","name":"done","status":"success","state":{"usage":{}}}}
 {"event":{"kind":"tool_call_result","status":"success","text":"tame-alpaca: done\nThere are three TODOs.","id":"call_4","name":"subagent","took":0,"stats":{"kind":"output","lines":2,"bytes":40}}}
-{"event":{"kind":"subagent_report_returned","subagent":"tame-alpaca"}}
 {"event":{"kind":"model_message","text":"The readme is a single heading, and tame-alpaca counted three TODOs. tame-adder is still working."}}
 {"event":{"kind":"subagent_finished","subagent":"tame-adder","text":"The parser is in parse.go.","name":"done","status":"success","state":{"usage":{}}}}
 {"event":{"kind":"subagent_completion_submitted","name":"tame-adder","text":"Subagent tame-adder finished:\n\ntame-adder done: The parser is in parse.go.","state":{"reports":[{"name":"tame-adder","state":"done","answer":"The parser is in parse.go."}]}}}

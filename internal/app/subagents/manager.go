@@ -100,7 +100,6 @@ type child struct {
 
 	cancel     context.CancelFunc
 	over       chan struct{}
-	isReturned bool
 	stopReason string
 	caps       caps.Set
 	choice     model.Choice
@@ -191,7 +190,6 @@ func (self *Manager) Restore(events []agent.Event) []agent.Event {
 func (self *child) restoreFact(event agent.Event) {
 	if event.Kind == subagentrecord.Sent {
 		self.State = subagentrecord.Running
-		self.isReturned = false
 	}
 	if event.Kind == subagentrecord.Finished {
 		self.State = subagentrecord.State(event.Name)
@@ -200,9 +198,6 @@ func (self *child) restoreFact(event agent.Event) {
 		if usage := subagentrecord.UsageOf(event); usage != nil {
 			self.usage = *usage
 		}
-	}
-	if event.Kind == subagentrecord.Returned {
-		self.isReturned = true
 	}
 }
 
@@ -432,7 +427,6 @@ func (self *Manager) Send(ctx context.Context, name string, message string) (str
 	current.State = subagentrecord.Running
 	current.Answer = ""
 	current.Failure = ""
-	current.isReturned = false
 	current.stopReason = ""
 	current.usage = agent.Usage{}
 	current.toolCalls = 0
@@ -562,15 +556,7 @@ func (self *Manager) Output(names []string) (string, error) {
 		}
 		lines = append(lines, heading+"\n"+snapshot.Answer)
 	}
-	self.announceReturned(snapshots)
 	return strings.Join(lines, "\n"), nil
-}
-
-func (self *Manager) WasReturned(name string) bool {
-	self.mutex.Lock()
-	defer self.mutex.Unlock()
-	current := self.children[name]
-	return current != nil && current.isReturned
 }
 
 func (self *Manager) Stop(names []string) (string, error) {
@@ -874,28 +860,6 @@ func (self *Manager) snapshots(names []string) ([]Snapshot, []<-chan struct{}, e
 		}
 	}
 	return found, overs, nil
-}
-
-func (self *Manager) announceReturned(snapshots []Snapshot) {
-	var returnedNames []string
-	self.mutex.Lock()
-	for _, snapshot := range snapshots {
-		current := self.children[snapshot.Name]
-		if current != nil && !snapshot.State.IsLive() && !current.isReturned {
-			current.isReturned = true
-			returnedNames = append(returnedNames, snapshot.Name)
-		}
-	}
-	if self.closed || len(returnedNames) == 0 {
-		self.mutex.Unlock()
-		return
-	}
-	self.workers.Add(1)
-	self.mutex.Unlock()
-	defer self.workers.Done()
-	for _, name := range returnedNames {
-		self.events <- subagentrecord.ReturnedEvent(name)
-	}
 }
 
 func tellModeChange(worker *agent.Agent, recorder *record.Recorder, events []agent.Event, currentCaps caps.Set) error {

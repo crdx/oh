@@ -16,9 +16,12 @@ import (
 	"crdx.org/oh/internal/app/conditions"
 	"crdx.org/oh/internal/app/environment"
 	"crdx.org/oh/internal/app/interrupt"
+	"crdx.org/oh/internal/app/jobrecord"
 	"crdx.org/oh/internal/app/pathgrant"
 	"crdx.org/oh/internal/app/portgrant"
 	"crdx.org/oh/internal/app/store/transcript"
+	"crdx.org/oh/internal/app/subagentrecord"
+	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tool"
 )
@@ -891,5 +894,60 @@ func TestTranscriptEndsWithOneNewlineHoweverMuchWasWritten(t *testing.T) {
 				t.Errorf("ended with %d newlines, want exactly one:\n%q", trailing, written)
 			}
 		})
+	}
+}
+
+func TestEveryNoticeSectionIsHeadedByATitleRatherThanItsKind(t *testing.T) {
+	for _, test := range []struct {
+		event agent.Event
+		title string
+	}{
+		{caps.JobStoppedByUserEvent("web"), "Job stopped"},
+		{jobrecord.EndedEvent(jobs.Conclusion{Snapshot: jobs.Snapshot{Name: "web", State: jobs.StateComplete}}), "Job ended"},
+		{jobrecord.EndedWithSessionEvent([]string{"web"}), "Jobs ended with the session"},
+		{agent.Event{Kind: subagentrecord.ShellWithdrawnStop, Name: "tame-adder"}, "Subagents stopped"},
+		{subagentrecord.DeliveryEvent([]string{"tame-adder"}, "Subagent tame-adder finished:", []subagentrecord.Report{
+			{Name: "tame-adder", State: subagentrecord.Done, Answer: "done"},
+		}), "Subagent reports"},
+	} {
+		path := filepath.Join(t.TempDir(), "transcript.md")
+		recorder, err := transcript.Open(path, transcript.Meta{Name: "tame-impala", StartedAt: time.Unix(1, 0), Model: "model"})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err := recorder.Event(time.Unix(2, 0), test.event); err != nil {
+			t.Fatal(err)
+		}
+		if err := recorder.Close(); err != nil {
+			t.Fatal(err)
+		}
+		stored, err := os.ReadFile(path) //nolint:gosec // the test's own path
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !strings.Contains(string(stored), "\n## "+test.title+" · +1s\n") {
+			t.Errorf("%s is not headed %q:\n%s", test.event.Kind, test.title, stored)
+		}
+	}
+}
+
+func TestTranscriptOmitsTheJobListing(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "transcript.md")
+	recorder, err := transcript.Open(path, transcript.Meta{Name: "tame-impala", StartedAt: time.Unix(1, 0), Model: "model"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := recorder.Event(time.Unix(2, 0), jobrecord.ListingEvent([]jobs.Snapshot{{Name: "web"}})); err != nil {
+		t.Fatal(err)
+	}
+	if err := recorder.Close(); err != nil {
+		t.Fatal(err)
+	}
+	stored, err := os.ReadFile(path) //nolint:gosec // the test's own path
+	if err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(string(stored), "\n## ") {
+		t.Errorf("the job listing, which says nothing, took a section:\n%s", stored)
 	}
 }

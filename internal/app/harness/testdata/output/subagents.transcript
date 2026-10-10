@@ -42,15 +42,15 @@ subagent: tame-alpaca [ok, 2 lines, 40B, call_4]
 
 There are three TODOs.
 
-## Assistant · +12s
+## Assistant · +11s
 
 The readme is a single heading, and tame-alpaca counted three TODOs. tame-adder is still working.
 
-## Subagent finished · tame-adder · done · +13s
+## Subagent finished · tame-adder · done · +12s
 
 The parser is in parse.go.
 
-## subagent_completion_submitted · +14s
+## Subagent reports · +13s
 
 ```
 Subagent tame-adder finished:
@@ -58,48 +58,48 @@ Subagent tame-adder finished:
 tame-adder done: The parser is in parse.go.
 ```
 
-## Assistant · +15s
+## Assistant · +14s
 
 tame-adder reported too: the parser is in parse.go.
 
-## User · +16s
+## User · +15s
 
 start one more and drop shell
 
-## Tool calls · +17s
+## Tool calls · +16s
 
 ```
 subagent: 1 subagent [ok, 1 line, 20B, call_3]
 ```
 
-## Subagent started · tame-anchovy · +19s
+## Subagent started · tame-anchovy · +18s
 
 Watch the build
 
 Transcript: `subagents/tame-anchovy/chat.md`
 
-## Assistant · +20s
+## Assistant · +19s
 
 It is watching the build.
 
-## Mode · rwngl · toggled x · +21s
+## Mode · rwngl · toggled x · +20s
 
 ```
 Bash is now refused.
 ```
 
-## subagent_access_stop · +22s
+## Subagents stopped · +21s
 
 ```
 Subagent tame-anchovy stopped because shell execution was withdrawn.
 ```
 
-## Subagent finished · tame-anchovy · stopped · +23s
+## Subagent finished · tame-anchovy · stopped · +22s
 
-## User · +24s
+## User · +23s
 
 carry on
 
-## Assistant · +25s
+## Assistant · +24s
 
 Carrying on without it.

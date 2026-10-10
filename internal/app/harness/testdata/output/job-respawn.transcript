@@ -20,13 +20,11 @@ job [ok, 1 line, 46B, call_1]
 job [ok, 1 line, 46B, call_2]
 ```
 
-## job_listing · +5s
-
 ## Assistant · +6s
 
 Both are running and will come back whenever they exit.
 
-## job_ended · +7s
+## Job ended · +7s
 
 ````
 Job `watch` exited: complete after 8s, run 1, respawned.
@@ -37,7 +35,7 @@ built in 3s
 ```
 ````
 
-## job_ended · +8s
+## Job ended · +8s
 
 ````
 Job `watch` exited: failed after 8s, exit(1), run 2, respawned.
@@ -48,19 +46,19 @@ cmd/oh/draw.go:41:9: undefined: getWidth
 ```
 ````
 
-## job_ended · +9s
+## Job ended · +9s
 
 ```
 Job `watch` exited: complete after 8s with no output, run 3, respawned.
 ```
 
-## job_ended · +10s
+## Job ended · +10s
 
 ```
 Job `serve` exited: failed after 0s with no output, run 2, the job could not be respawned: no namespaces left.
 ```
 
-## job_ended · +11s
+## Job ended · +11s
 
 ````
 Job `lint` exited: failed after 0s, exit(127), run 4, not respawned after 3 runs in a row each ended within 2s.

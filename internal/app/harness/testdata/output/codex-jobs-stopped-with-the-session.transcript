@@ -10,8 +10,6 @@
 
 ## Mode · rxwngl · +0s
 
-## job_listing · +0s
-
 ## User · +0s
 
 leave the preview running
@@ -20,7 +18,7 @@ leave the preview running
 
 Both are still up.
 
-## jobs_ended_with_session · +0s
+## Jobs ended with the session · +0s
 
 ```
 The session was closed and reopened after the last turn. Jobs `docs` and `watch` stopped when it closed. Restart each if still needed.
@@ -33,5 +31,3 @@ is the preview still up
 ## Assistant · +0s
 
 It went down with the session, and I have left it down.
-
-## job_listing · +0s
