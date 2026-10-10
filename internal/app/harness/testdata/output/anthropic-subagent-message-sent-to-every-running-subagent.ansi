@@ -2,7 +2,7 @@
 \e[48;2;52;53;65m start three subagents, then tell every running one to name the format                              \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80m3 subagents\e[0m \e[38;2;150;152;150mon Claude Opus 5\e[0m\r
+\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80m3 subagents · Reading the readme, Finding where the config loads, Finding where the parser li…\e[0m\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🐍 Subagent tame-adder interjects:                                                                 \e[0m\r

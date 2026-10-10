@@ -2,7 +2,7 @@
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"split the review between two subagents"}}
-{"kind":"event","event":{"rendering_kind":"subagent_start","render":"2 subagents","detail":"on GPT-5.6 Sol","reports_status":true,"kind":"tool_call_request","id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Read the parser and report its entry point\",\"intent\":\"Reading the parser's entry point\"},{\"prompt\":\"Count the open TODO items\",\"intent\":\"Counting the open TODO items\"}],\"system_prompt\":\"Answer in one sentence.\"}"}}
+{"kind":"event","event":{"rendering_kind":"subagent_start","render":"2 subagents · Reading the parser's entry point, Counting the open TODO items","reports_status":true,"kind":"tool_call_request","id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Read the parser and report its entry point\",\"intent\":\"Reading the parser's entry point\"},{\"prompt\":\"Count the open TODO items\",\"intent\":\"Counting the open TODO items\"}],\"system_prompt\":\"Answer in one sentence.\"}"}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"started tame-adder, tame-alpaca; 2 of at most 5 subagents now running","id":"toolu_1","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":69}}}
 {"kind":"event","event":{"kind":"model_message","text":"Two subagents are working on it."}}
 {"kind":"item","payload":{"role":"user","content":"split the review between two subagents"}}

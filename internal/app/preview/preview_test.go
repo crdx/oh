@@ -49,6 +49,22 @@ func conversation() []agent.Event {
 		respawningStart(),
 		{Kind: agent.ToolCallResultEvent, ID: "call-2", Name: "job", Status: agent.SuccessStatus, Text: "watch: running for 0s, run 1, respawns on exit"},
 		respawnedRun(),
+		{Kind: agent.UserMessageEvent, Text: "have two subagents look at it"},
+		{
+			Kind:      agent.ToolCallRequestEvent,
+			ID:        "call-3",
+			Name:      "subagent",
+			Arguments: `{"action":"start","subagents":[{"prompt":"x","intent":"Reading the spinner"},{"prompt":"y","intent":"Timing the beat"}]}`,
+			FallbackRendering: agent.FallbackRendering{
+				RenderingKind: "subagent_start",
+				Subject:       "2 subagents · Reading the spinner, Timing the beat",
+				ReportsStatus: true,
+			},
+		},
+		{
+			Kind: agent.ToolCallResultEvent, ID: "call-3", Name: "subagent", Status: agent.SuccessStatus,
+			Text: "started tame-adder, tame-alpaca; 2 of at most 5 subagents now running",
+		},
 	}
 }
 

@@ -2,7 +2,7 @@
  start two subagents and steer them while they run
 
 
-spawn 2 subagents on GPT-5.6 Sol
+spawn 2 subagents · Finding the largest workspace file, Finding where the config loads
 send tame-adder (Finding the largest workspace file)
 send tame-alpaca (Finding where the config loads)
 

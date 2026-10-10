@@ -2,7 +2,7 @@
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"start a subagent and keep working"}}
-{"kind":"event","event":{"rendering_kind":"subagent_start","render":"1 subagent","detail":"on GPT-5.6 Sol","intent":"Finding where the parser lives","reports_status":true,"kind":"tool_call_request","id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Find the parser\",\"intent\":\"Finding where the parser lives\"}]}"}}
+{"kind":"event","event":{"rendering_kind":"subagent_start","render":"1 subagent","intent":"Finding where the parser lives","reports_status":true,"kind":"tool_call_request","id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Find the parser\",\"intent\":\"Finding where the parser lives\"}]}"}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"started tame-adder; 1 of at most 5 subagents now running","id":"toolu_1","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":56}}}
 {"kind":"event","event":{"render":"probe","kind":"tool_call_request","id":"toolu_2","name":"probe","arguments":"{}"}}
 {"kind":"event","event":{"kind":"state_change","id":"toolu_2","state":1}}

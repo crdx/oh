@@ -17,7 +17,7 @@ ask two subagents and read the first
 ## Tool calls · +0s
 
 ```
-subagent: 2 subagents [ok, 1 line, 69B, toolu_1]
+subagent: 2 subagents · Finding where the config loads, Finding where the parser lives [ok, 1 line, 69B, toolu_1]
 ```
 
 ## Subagent started · tame-adder · +0s

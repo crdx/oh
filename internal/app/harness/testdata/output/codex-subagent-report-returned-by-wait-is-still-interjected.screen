@@ -2,7 +2,7 @@
  ask two subagents and wait for them
 
 
-spawn 2 subagents on GPT-5.6 Sol
+spawn 2 subagents · Finding where the config loads, Finding where the parser lives
 wait tame-adder && tame-alpaca 9L ~300t
 
 Both reported: the loader is in config.go and the parser is in parse.go.

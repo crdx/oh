@@ -3,7 +3,7 @@
 
 
 Checking the whole tree start check $ just check
-Finding where the parser lives spawn 1 subagent on Claude Opus 5
+Finding where the parser lives spawn 1 subagent
 wait docs ✗ nothing is named docs
 wait job:check || tame-adder 4L ~100t (Checking the whole tree; Finding where the parser lives)
 stop check (Checking the whole tree)

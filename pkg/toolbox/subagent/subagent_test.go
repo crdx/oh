@@ -3,8 +3,8 @@ package subagent
 import (
 	"context"
 	"encoding/json"
-	"slices"
 	"regexp"
+	"slices"
 	"strings"
 	"testing"
 
@@ -16,10 +16,7 @@ type fakeManager struct {
 	names   []string
 	sent    string
 	message string
-	model   string
 }
-
-func (self *fakeManager) Model() string { return self.model }
 
 func (self *fakeManager) Start(_ context.Context, _ string, tasks []Task) (string, error) {
 	self.tasks = tasks
@@ -146,19 +143,6 @@ func TestTheDescriptionLeavesTheLimitToStartSinceItCanChange(t *testing.T) {
 	}
 }
 
-func TestTheStartRowNamesTheModelChosenWhenItIsDrawn(t *testing.T) {
-	manager := &fakeManager{model: "claude-sonnet-5"}
-	built := New(manager)
-	manager.model = "claude-haiku-5"
-	parsed, err := built.Parse(`{"action":"start","subagents":[{"prompt":"x","intent":"Doing x"}]}`)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if qualifier := parsed.Rendering().Qualifier; qualifier != "on claude-haiku-5" {
-		t.Errorf("a start drawn after the rotation changed read %q", qualifier)
-	}
-}
-
 func TestInvalidChildArgumentsAreRefused(t *testing.T) {
 	built := New(&fakeManager{})
 	for _, input := range []string{
@@ -217,20 +201,28 @@ func TestEveryCallNamingSubagentsMentionsThem(t *testing.T) {
 	}
 }
 
-func TestASpawnNamesTheModelItsSubagentsRunOn(t *testing.T) {
-	parsed, err := New(&fakeManager{model: "claude-sonnet-5"}).Parse(`{"action":"start","subagents":[{"prompt":"x","intent":"Doing x"}]}`)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if qualifier := parsed.Rendering().Qualifier; qualifier != "on claude-sonnet-5" {
-		t.Errorf("a spawn was qualified as %q", qualifier)
-	}
-	listed, err := New(&fakeManager{model: "claude-sonnet-5"}).Parse(`{"action":"list"}`)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if qualifier := listed.Rendering().Qualifier; qualifier != "" {
-		t.Errorf("a listing was qualified as %q", qualifier)
+func TestAStartRowListsItsIntentsAndNamesNoModel(t *testing.T) {
+	built := New(&fakeManager{})
+	for _, test := range []struct {
+		input   string
+		subject string
+		intent  string
+	}{
+		{
+			`{"action":"start","subagents":[{"prompt":"x","intent":"reading the readme"},{"prompt":"y","intent":"Finding the parser"}]}`,
+			"2 subagents · Reading the readme, Finding the parser",
+			"",
+		},
+		{`{"action":"start","subagents":[{"prompt":"x","intent":"Reading the readme"}]}`, "1 subagent", "Reading the readme"},
+	} {
+		parsed, err := built.Parse(test.input)
+		if err != nil {
+			t.Fatal(err)
+		}
+		rendering := parsed.Rendering()
+		if rendering.Subject != test.subject || rendering.Intent != test.intent || rendering.Qualifier != "" {
+			t.Errorf("a start drew %q, intent %q, qualified %q", rendering.Subject, rendering.Intent, rendering.Qualifier)
+		}
 	}
 }
 

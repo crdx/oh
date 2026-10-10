@@ -22,6 +22,12 @@ The spinner is redrawn on every beat, which is why it stutters while a tool hold
 \e[48;2;66;75;82m                                                                                                    \e[0m
 \e[48;2;66;75;82m    \e[38;2;207;207;207mbuilt in 3s\e[0m\e[48;2;66;75;82m                                                                                     \e[0m
 \e[48;2;66;75;82m                                                                                                    \e[0m
+
+\e[48;2;70;70;78m                                                                                                    \e[0m
+\e[48;2;70;70;78m have two subagents look at it                                                                      \e[0m
+\e[48;2;70;70;78m                                                                                                    \e[0m
+
+\e[38;2;255;226;122mspawn\e[0m \e[38;2;255;196;154m2 subagents · Reading the spinner, Timing the beat\e[0m
 === grey-dark, 100 columns, the context window filled ===
 \e[48;2;70;70;78m                                                                                                    \e[0m
 \e[48;2;70;70;78m carry on with the refactor                                                                         \e[0m
@@ -53,6 +59,12 @@ The spinner is redrawn on every beat, which is why it stutters while a tool hold
 \e[48;2;190;200;208m                                                                                                    \e[0m
 \e[48;2;190;200;208m    \e[38;2;56;59;62mbuilt in 3s\e[0m\e[48;2;190;200;208m                                                                                     \e[0m
 \e[48;2;190;200;208m                                                                                                    \e[0m
+
+\e[48;2;196;196;204m                                                                                                    \e[0m
+\e[48;2;196;196;204m have two subagents look at it                                                                      \e[0m
+\e[48;2;196;196;204m                                                                                                    \e[0m
+
+\e[38;2;86;63;0mspawn\e[0m \e[38;2;106;50;16m2 subagents · Reading the spinner, Timing the beat\e[0m
 === grey-light, 100 columns, the context window filled ===
 \e[48;2;196;196;204m                                                                                                    \e[0m
 \e[48;2;196;196;204m carry on with the refactor                                                                         \e[0m
@@ -84,6 +96,12 @@ The spinner is redrawn on every beat, which is why it stutters while a tool hold
 \e[48;2;226;234;240m                                                                                                    \e[0m
 \e[48;2;226;234;240m    \e[38;2;110;113;117mbuilt in 3s\e[0m\e[48;2;226;234;240m                                                                                     \e[0m
 \e[48;2;226;234;240m                                                                                                    \e[0m
+
+\e[48;2;232;232;239m                                                                                                    \e[0m
+\e[48;2;232;232;239m have two subagents look at it                                                                      \e[0m
+\e[48;2;232;232;239m                                                                                                    \e[0m
+
+\e[38;2;143;106;0mspawn\e[0m \e[38;2;166;93;46m2 subagents · Reading the spinner, Timing the beat\e[0m
 === light, 100 columns, the context window filled ===
 \e[48;2;232;232;239m                                                                                                    \e[0m
 \e[48;2;232;232;239m carry on with the refactor                                                                         \e[0m

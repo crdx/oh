@@ -2,7 +2,7 @@
  start three subagents, then tell every running one to name the format
 
 
-spawn 3 subagents on Claude Opus 5
+spawn 3 subagents · Reading the readme, Finding where the config loads, Finding where the parser li…
 
 
  🐍 Subagent tame-adder interjects:

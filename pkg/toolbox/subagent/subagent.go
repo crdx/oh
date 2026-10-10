@@ -52,7 +52,6 @@ type Manager interface {
 	Output(names []string) (string, error)
 	Stop(names []string) (string, error)
 	List() string
-	Model() string
 }
 
 func New(manager Manager) tool.Tool {
@@ -91,37 +90,34 @@ func New(manager Manager) tool.Tool {
 			}).Optional(),
 		},
 	}
-	describe := func(args Args) tool.CallRendering {
-		rendering := Describe(args)
-		if model := manager.Model(); args.Action == Start && model != "" {
-			rendering.Qualifier = "on " + model
-		}
-		return rendering
-	}
-	return tool.Implement(definition, describe).Decode(decode).Validate(validate).Plain(func(ctx context.Context, args Args) (string, error) {
-		switch args.Action {
-		case Start:
-			tasks := slices.Clone(args.Subagents)
-			for index := range tasks {
-				tasks[index].Intent = bash.SpokenIntent(tasks[index].Intent)
-			}
-			return manager.Start(ctx, args.SystemPrompt, tasks)
-		case Send:
-			if args.Name == "" {
-				return broadcast(ctx, manager, args.Message)
-			}
-			return manager.Send(ctx, args.Name, args.Message)
-		case Status:
-			return manager.Status(args.Names)
-		case Output:
-			return manager.Output(args.Names)
-		case Stop:
-			return manager.Stop(args.Names)
-		case List:
-			return manager.List(), nil
-		}
-		return "", errors.New("unknown subagent action")
+	return tool.Implement(definition, Describe).Decode(decode).Validate(validate).Plain(func(ctx context.Context, args Args) (string, error) {
+		return act(ctx, manager, args)
 	})
+}
+
+func act(ctx context.Context, manager Manager, args Args) (string, error) {
+	switch args.Action {
+	case Start:
+		tasks := slices.Clone(args.Subagents)
+		for index := range tasks {
+			tasks[index].Intent = bash.SpokenIntent(tasks[index].Intent)
+		}
+		return manager.Start(ctx, args.SystemPrompt, tasks)
+	case Send:
+		if args.Name == "" {
+			return broadcast(ctx, manager, args.Message)
+		}
+		return manager.Send(ctx, args.Name, args.Message)
+	case Status:
+		return manager.Status(args.Names)
+	case Output:
+		return manager.Output(args.Names)
+	case Stop:
+		return manager.Stop(args.Names)
+	case List:
+		return manager.List(), nil
+	}
+	return "", errors.New("unknown subagent action")
 }
 
 var statusActions = []string{Start, Send, Status, Stop}
@@ -133,9 +129,8 @@ func Describe(args Args) tool.CallRendering {
 	}
 	switch args.Action {
 	case Start:
-		rendering.Subject = fmt.Sprintf("%d subagents", len(args.Subagents))
+		rendering.Subject = startSubject(args)
 		if len(args.Subagents) == 1 {
-			rendering.Subject = "1 subagent"
 			rendering.Intent = bash.SpokenIntent(args.Subagents[0].Intent)
 		}
 	case Send:
@@ -160,6 +155,21 @@ func broadcast(ctx context.Context, manager Manager, message string) (string, er
 		return "", err
 	}
 	return "queued for " + strings.Join(names, ", ") + ", which each read it once their current step finishes", nil
+}
+
+func startSubject(args Args) string {
+	if len(args.Subagents) == 1 {
+		return "1 subagent"
+	}
+	subject := fmt.Sprintf("%d subagents", len(args.Subagents))
+	if len(args.Subagents) == 0 {
+		return subject
+	}
+	intents := make([]string, len(args.Subagents))
+	for index, task := range args.Subagents {
+		intents[index] = bash.SpokenIntent(task.Intent)
+	}
+	return subject + " · " + strings.Join(intents, ", ")
 }
 
 func everyOrAll(names []string, separator string) string {

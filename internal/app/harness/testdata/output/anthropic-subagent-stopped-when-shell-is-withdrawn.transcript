@@ -17,7 +17,7 @@ start two subagents
 ## Tool calls · +0s
 
 ```
-subagent: 2 subagents [ok, 1 line, 69B, toolu_1]
+subagent: 2 subagents · Watching the build until stopped, Naming the tool that builds this [ok, 1 line, 69B, toolu_1]
 ```
 
 ## Assistant · +0s

@@ -2,7 +2,7 @@
  split the review between two subagents
 
 
-spawn 2 subagents on Claude Opus 5
+spawn 2 subagents · Reading the parser's entry point, Counting the open TODO items
 
 Two subagents are working on it.
 

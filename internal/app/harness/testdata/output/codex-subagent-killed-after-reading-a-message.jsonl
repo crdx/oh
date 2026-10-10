@@ -2,7 +2,7 @@
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"start a subagent and steer it"}}
-{"kind":"event","event":{"rendering_kind":"subagent_start","render":"1 subagent","detail":"on GPT-5.6 Sol","intent":"Watching the build until stopped","reports_status":true,"kind":"tool_call_request","id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Watch the build\",\"intent\":\"Watching the build until stopped\"}]}"}}
+{"kind":"event","event":{"rendering_kind":"subagent_start","render":"1 subagent","intent":"Watching the build until stopped","reports_status":true,"kind":"tool_call_request","id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Watch the build\",\"intent\":\"Watching the build until stopped\"}]}"}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"started tame-adder; 1 of at most 5 subagents now running","id":"toolu_1","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":56}}}
 {"kind":"event","event":{"kind":"subagent_started","subagent":"tame-adder","text":"Watch the build","id":"session-of-tame-adder","state":{"choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"workspace":"/workspace","intent":"Watching the build until stopped"}}}
 {"kind":"event","event":{"rendering_kind":"subagent_send","render":"tame-adder","mentions":["subagent:tame-adder"],"reports_status":true,"kind":"tool_call_request","id":"toolu_2","name":"subagent","arguments":"{\"action\":\"send\",\"name\":\"tame-adder\",\"message\":\"Look closer\"}"}}

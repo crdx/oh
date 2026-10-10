@@ -2,7 +2,7 @@
  ask two subagents and read the first
 
 
-spawn 2 subagents on Claude Opus 5
+spawn 2 subagents · Finding where the config loads, Finding where the parser lives
 cat tame-adder 4L ~100t (Finding where the config loads)
 
 The loader is in config.go; the parser report will follow.
