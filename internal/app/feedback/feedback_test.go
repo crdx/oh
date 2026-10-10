@@ -14,12 +14,13 @@ import (
 
 const testDismissAfter = 4 * time.Second
 
-func TestOnlyCommandAndConfirmationCanBeDismissed(t *testing.T) {
+func TestOnlyCommandConfirmationAndUnknownSettingsCanBeDismissed(t *testing.T) {
 	cases := map[Source]bool{
-		System:       false,
-		Command:      true,
-		Config:       false,
-		Confirmation: true,
+		System:          false,
+		Command:         true,
+		Config:          false,
+		Confirmation:    true,
+		UnknownSettings: true,
 	}
 
 	for source, want := range cases {

@@ -18,11 +18,12 @@ const (
 	Command
 	Config
 	Confirmation
+	UnknownSettings
 )
 
 func (self Source) CanBeDismissed() bool {
 	switch self {
-	case Command, Confirmation:
+	case Command, Confirmation, UnknownSettings:
 		return true
 	case System, Config:
 		return false

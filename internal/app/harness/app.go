@@ -1582,7 +1582,7 @@ func (self *App) notifyUnknownSettings(reports []string) {
 		return
 	}
 
-	self.showFeedback(feedback.Config, feedback.Message{
+	self.showFeedback(feedback.UnknownSettings, feedback.Message{
 		Text:   "Unknown settings were ignored.\n" + strings.Join(reports, "\n"),
 		Status: agent.WarningStatus,
 	})

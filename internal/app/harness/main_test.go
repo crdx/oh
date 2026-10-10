@@ -12827,6 +12827,7 @@ const (
 	feedbackClearedByTurnCompletion
 	feedbackStorageWarnings
 	feedbackUnknownSettings
+	feedbackUnknownSettingsClearedByEscape
 	feedbackTallAnswer
 	feedbackNetworkApproval
 	feedbackConcurrentApproval
@@ -12894,6 +12895,7 @@ func TestGoldenFeedbackDrawsEveryVisibleState(t *testing.T) {
 		"turn completion clears it":         feedbackClearedByTurnCompletion,
 		"combined storage warnings":         feedbackStorageWarnings,
 		"settings nothing reads":            feedbackUnknownSettings,
+		"escape clears unknown settings":    feedbackUnknownSettingsClearedByEscape,
 		"tall answer stays untouched":       feedbackTallAnswer,
 		"network approval":                  feedbackNetworkApproval,
 		"next concurrent approval":          feedbackConcurrentApproval,
@@ -13094,6 +13096,10 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 		reports = append(reports, "oh.toml: unknown: bar.top.center.loudly")
 		self.notifyUnknownSettings(reports)
 		self.show(inputLine)
+	case feedbackUnknownSettingsClearedByEscape:
+		self.notifyUnknownSettings([]string{"config.toml: unknown: ui.mystery"})
+		self.show(inputLine)
+		self.handleKeypressAndShowInput(inputLine, nil, key.Key{Code: key.Escape})
 	case feedbackChainedApproval, feedbackHeredocApproval:
 		broker := ask.New()
 		closeBroker := broker.Open()
