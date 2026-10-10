@@ -1,11 +1,11 @@
 "have a look"                                        printing=false piped=false allowed
 "-p have a look"                                     printing=true  piped=false allowed
 "--print have a look"                                printing=true  piped=false allowed
-"-p"                                                 printing=true  piped=false a printed session needs a prompt
+"-p"                                                 printing=true  piped=false a headless session needs a prompt
 "-p"                                                 printing=true  piped=true  allowed
-"-p -r"                                              printing=true  piped=false a printed session cannot open a picker; name the session or the model instead
-"-p -m"                                              printing=true  piped=false a printed session cannot open a picker; name the session or the model instead
-"-p -r"                                              printing=true  piped=true  a printed session cannot open a picker; name the session or the model instead
+"-p -r"                                              printing=true  piped=false a headless session cannot open a picker; name the session or the model instead
+"-p -m"                                              printing=true  piped=false a headless session cannot open a picker; name the session or the model instead
+"-p -r"                                              printing=true  piped=true  a headless session cannot open a picker; name the session or the model instead
 "-p -r chosen-lobster have a look"                   printing=true  piped=false allowed
 "-p -m codex/gpt-5.3-codex@high have a look"         printing=true  piped=false allowed
 "-p --from chosen-lobster"                           printing=true  piped=false allowed

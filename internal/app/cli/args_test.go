@@ -269,9 +269,9 @@ func TestOptionsAfterTheOptionTerminatorArePromptWords(t *testing.T) {
 	}
 }
 
-func TestAPrintedSessionNeedsMoreThanTheStdinMarker(t *testing.T) {
+func TestAHeadlessSessionNeedsMoreThanTheStdinMarker(t *testing.T) {
 	if err := bind(t, "-p", "-").Check(false); err == nil {
-		t.Error("expected a printed session with nothing piped to be refused")
+		t.Error("expected a headless session with nothing piped to be refused")
 	}
 
 	if err := bind(t, "-p", "-").Check(true); err != nil {

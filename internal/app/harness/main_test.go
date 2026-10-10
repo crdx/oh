@@ -9664,7 +9664,7 @@ const tallRegionScenario = "parallel@rxw.jsonl"
 
 const noticePanelScenario = "notices-mid-round.jsonl"
 
-func TestAPrintedSessionShowsWhatTheInterfaceShowed(t *testing.T) {
+func TestAHeadlessSessionShowsWhatTheInterfaceShowed(t *testing.T) {
 	for _, journal := range everyJournal(t) {
 		t.Run(journal.name, func(t *testing.T) {
 			entries := readJournal(t, journal.path)
@@ -13549,7 +13549,7 @@ func plainFeedback(t *testing.T) string {
 	return strings.TrimSuffix(style.Plain(screenOutput.String()), "\n")
 }
 
-func TestAPrintedSessionAnswersOneCommandAndStops(t *testing.T) {
+func TestAHeadlessSessionAnswersOneCommandAndStops(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := slashCommandFixture(t, caps.Read)
 	self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines).AppendOnly()
@@ -18226,7 +18226,7 @@ const grepToolName = "grep"
 
 const notifyToolName = "notify"
 
-const printedSessionIsImpossible = "this scenario drives the interface, which a printed session has none of\n"
+const printedSessionIsImpossible = "this scenario drives the interface, which a headless session has none of\n"
 
 func (self sessionGoldenScenario) usesTheInterface() bool {
 	if slices.ContainsFunc(self.Tools, func(specification sessionGoldenTool) bool {
@@ -22266,7 +22266,7 @@ func TestAPrintedAppAnswersThroughItsOwnStartingPath(t *testing.T) {
 
 	drawn := style.Plain(screenOutput.String())
 	if !strings.Contains(drawn, "say something") || !strings.Contains(drawn, "Said it.") {
-		t.Errorf("a printed session drew %q", drawn)
+		t.Errorf("a headless session drew %q", drawn)
 	}
 	if got := recordedUserMessages(self.recordedEvents); !slices.Equal(got, []string{"say something"}) {
 		t.Errorf("got user messages %q", got)

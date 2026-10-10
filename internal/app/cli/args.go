@@ -250,11 +250,11 @@ func (self Input) Check(isPromptPiped bool) error {
 	}
 
 	if self.IsSessionPicker || self.IsModelPicker {
-		return errors.New("a printed session cannot open a picker; name the session or the model instead")
+		return errors.New("a headless session cannot open a picker; name the session or the model instead")
 	}
 
 	if len(self.Message) == 0 && self.SourceSession == "" && !isPromptPiped {
-		return errors.New("a printed session needs a prompt")
+		return errors.New("a headless session needs a prompt")
 	}
 
 	return nil
