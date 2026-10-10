@@ -18,7 +18,7 @@
 - Update default shell and job timeouts to 10m
 - Complete ignored paths with `@!`
 - Preserve spacing in completed job output
-- Trim 15ms off startup
+- Trim 15 wasteful milliseconds off startup time
 - Add experimental toggle to show the redraw latency on ctrl+l
 - Tag notes the same way that provider harnesses do it
 - Redraw promptly on resize, no blocking
