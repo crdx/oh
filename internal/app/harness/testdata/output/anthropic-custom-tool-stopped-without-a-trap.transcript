@@ -17,7 +17,7 @@ stop the kitchen while it works
 ## Tool calls · +0s
 
 ```
-kitchen: julienned carrots [cancelled, 2 lines, 70B, toolu_1]
+kitchen: julienned carrots [cancelled, 2 lines, 40B, toolu_1]
 ```
 
 ## Interrupted · +0s
@@ -30,4 +30,4 @@ what did it manage to do
 
 ## Assistant · +0s
 
-It sharpened the knives and would not stop until it was killed.
+It sharpened the knives before it was stopped.

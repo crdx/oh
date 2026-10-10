@@ -2,7 +2,7 @@
  stop the kitchen while it works
 
 
-kitchen julienned carrots – 2L exit(-1): sharpening the knives
+kitchen julienned carrots – 2L killed by SIGKILL after ignoring SIGTERM for 2s: sharpening the kniv…
 
 Turn stopped because the user pressed escape.
 

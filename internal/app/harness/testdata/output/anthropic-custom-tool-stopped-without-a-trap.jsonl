@@ -2,15 +2,15 @@
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"stop the kitchen while it works"}}
 {"kind":"event","event":{"render":"julienned carrots","marks_success":true,"kind":"tool_call_request","id":"toolu_1","name":"kitchen","arguments":"{\"dish\":\"julienned carrots\"}"}}
-{"kind":"event","event":{"kind":"tool_call_result","text":"killed by SIGKILL after ignoring SIGTERM for 2s:\nsharpening the knives","id":"toolu_1","name":"kitchen","status":"cancelled","stats":{"kind":"output","lines":2,"bytes":70}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"killed by SIGTERM:\nsharpening the knives","id":"toolu_1","name":"kitchen","status":"cancelled","stats":{"kind":"output","lines":2,"bytes":40}}}
 {"kind":"event","event":{"kind":"turn_interruption","name":"escape"}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"stop the kitchen while it works"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"kitchen","input":{"dish":"julienned carrots"}}]}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"killed by SIGKILL after ignoring SIGTERM for 2s:\nsharpening the knives","is_error":true}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"killed by SIGTERM:\nsharpening the knives","is_error":true}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTurn stopped because the user pressed escape.\n\u003c/system-reminder\u003e"}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"what did it manage to do"}}
-{"kind":"event","event":{"kind":"model_message","text":"It sharpened the knives and would not stop until it was killed."}}
+{"kind":"event","event":{"kind":"model_message","text":"It sharpened the knives before it was stopped."}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"what did it manage to do"}]}}
-{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"It sharpened the knives and would not stop until it was killed."}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"It sharpened the knives before it was stopped."}]}}
 {"kind":"turn_completion","turn":{}}

@@ -14,6 +14,8 @@ import (
 	"syscall"
 	"time"
 
+	"golang.org/x/sys/unix"
+
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/tool"
 )
@@ -343,17 +345,26 @@ func run(
 	process.Env = append(process.Environ(), toolVariable+"="+declaration.Name)
 	process.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 
-	output, err := runGroup(runContext, process)
+	output, hasEscalated, err := runGroup(runContext, process)
 	text := strings.TrimRight(output, "\n")
 
+	escalation := ""
+	if hasEscalated {
+		escalation = fmt.Sprintf("killed by SIGKILL after ignoring SIGTERM for %s", stopGrace)
+	}
+
 	if errors.Is(runContext.Err(), context.DeadlineExceeded) && ctx.Err() == nil {
-		return status(text, "stopped after its limit of "+timeLimit.String()), ErrCommandFailed
+		note := "stopped after its limit of " + timeLimit.String()
+		if escalation != "" {
+			note += ", and " + escalation
+		}
+		return status(text, note), ErrCommandFailed
 	}
 
 	var exit *exec.ExitError
 	switch {
 	case errors.As(err, &exit):
-		return status(text, fmt.Sprintf("exit(%d)", exit.ExitCode())), ErrCommandFailed
+		return status(text, ending(exit, escalation)), ErrCommandFailed
 	case err != nil:
 		return "", err
 	}
@@ -361,10 +372,25 @@ func run(
 	return text, nil
 }
 
-func runGroup(ctx context.Context, process *exec.Cmd) (string, error) {
+func ending(exit *exec.ExitError, escalation string) string {
+	if escalation != "" {
+		return escalation
+	}
+
+	if waitStatus, isWaitStatus := exit.Sys().(syscall.WaitStatus); isWaitStatus && waitStatus.Signaled() {
+		if name := unix.SignalName(waitStatus.Signal()); name != "" {
+			return "killed by " + name
+		}
+		return fmt.Sprintf("killed by signal %d", waitStatus.Signal())
+	}
+
+	return fmt.Sprintf("exit(%d)", exit.ExitCode())
+}
+
+func runGroup(ctx context.Context, process *exec.Cmd) (string, bool, error) {
 	reader, writer, err := os.Pipe()
 	if err != nil {
-		return "", err
+		return "", false, err
 	}
 	process.Stdout = writer
 	process.Stderr = writer
@@ -373,7 +399,7 @@ func runGroup(ctx context.Context, process *exec.Cmd) (string, error) {
 	_ = writer.Close()
 	if err != nil {
 		_ = reader.Close()
-		return "", err
+		return "", false, err
 	}
 
 	var output strings.Builder
@@ -384,6 +410,7 @@ func runGroup(ctx context.Context, process *exec.Cmd) (string, error) {
 	}()
 
 	group := -process.Process.Pid
+	hasEscalated := false
 	processEnd := make(chan error, 1)
 	go func() { processEnd <- process.Wait() }()
 
@@ -395,6 +422,7 @@ func runGroup(ctx context.Context, process *exec.Cmd) (string, error) {
 		case err = <-processEnd:
 		case <-time.After(stopGrace):
 			_ = syscall.Kill(group, syscall.SIGKILL)
+			hasEscalated = true
 			err = <-processEnd
 		}
 	}
@@ -408,7 +436,7 @@ func runGroup(ctx context.Context, process *exec.Cmd) (string, error) {
 	}
 	_ = reader.Close()
 
-	return output.String(), err
+	return output.String(), hasEscalated, err
 }
 
 func status(output string, note string) string {

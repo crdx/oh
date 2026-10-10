@@ -29,6 +29,7 @@
 - Stop the stall watcher waking an idle session
 - Accept and complete flags in fork and new
 - Stop the custom tool's whole process group when stopped
+- Name the signal that killed a custom tool
 - Stop linking paths that span more than three spaces, for perf
 - Reduce the number of ui redraws
 - Stop drawing a long answer twice when a job ends while it streams

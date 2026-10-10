@@ -659,7 +659,7 @@ func readPid(t *testing.T, path string) string {
 	return strings.TrimSpace(string(content))
 }
 
-func stopOnceItHasAChild(t *testing.T, body string) string {
+func stopOnceItHasAChild(t *testing.T, body string) (string, string) {
 	t.Helper()
 
 	state := t.TempDir()
@@ -682,26 +682,31 @@ wait
 	}
 
 	ctx, cancel := context.WithCancel(t.Context())
-	finished := make(chan struct{})
+	finished := make(chan string, 1)
 	go func() {
-		defer close(finished)
-		_, _ = parsed.Exec(ctx)
+		result, _ := parsed.Exec(ctx)
+		finished <- result.Output
 	}()
 
 	child := readPid(t, filepath.Join(state, "child"))
 	cancel()
 
 	select {
-	case <-finished:
+	case output := <-finished:
+		return child, output
 	case <-time.After(10 * time.Second):
 		t.Fatal("the stopped call never returned")
 	}
 
-	return child
+	return child, ""
 }
 
 func TestStoppingACallStopsEveryProcessItStarted(t *testing.T) {
-	requireGone(t, stopOnceItHasAChild(t, ""))
+	child, output := stopOnceItHasAChild(t, "")
+	requireGone(t, child)
+	if output != "killed by SIGTERM" {
+		t.Errorf("got %q", output)
+	}
 }
 
 func TestAStoppedCallIsAskedToEndBeforeItIsKilled(t *testing.T) {
@@ -771,5 +776,51 @@ echo done
 }
 
 func TestACallThatIgnoresTheRequestToEndIsKilled(t *testing.T) {
-	requireGone(t, stopOnceItHasAChild(t, "trap '' TERM"))
+	child, output := stopOnceItHasAChild(t, "trap '' TERM")
+	requireGone(t, child)
+	if output != "killed by SIGKILL after ignoring SIGTERM for 2s" {
+		t.Errorf("got %q", output)
+	}
+}
+
+func TestACallThatIgnoresItsLimitSaysItWasKilledForIt(t *testing.T) {
+	declaration := command.Declaration{
+		Name:        "build",
+		Description: "build remotely",
+		Command:     []string{writeScript(t, "trap '' TERM\necho started\nsleep 60 & wait $!")},
+		TimeLimit:   100 * time.Millisecond,
+	}
+	subject, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	output, err := call(t, subject, `{}`)
+	if !errors.Is(err, command.ErrCommandFailed) {
+		t.Fatalf("got %v", err)
+	}
+	want := "stopped after its limit of 100ms, and killed by SIGKILL after ignoring SIGTERM for 2s:\nstarted"
+	if output != want {
+		t.Errorf("got %q, want %q", output, want)
+	}
+}
+
+func TestACallKilledByASignalNamesIt(t *testing.T) {
+	declaration := command.Declaration{
+		Name:        "build",
+		Description: "build remotely",
+		Command:     []string{writeScript(t, "echo started\nkill -KILL $$")},
+	}
+	subject, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	output, err := call(t, subject, `{}`)
+	if !errors.Is(err, command.ErrCommandFailed) {
+		t.Fatalf("got %v", err)
+	}
+	if output != "killed by SIGKILL:\nstarted" {
+		t.Errorf("got %q", output)
+	}
 }

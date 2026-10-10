@@ -12,22 +12,22 @@
 
 ## User · +0s
 
-stop the kitchen while it works
+roast something slowly
 
 ## Tool calls · +0s
 
 ```
-kitchen: julienned carrots [cancelled, 2 lines, 70B, toolu_1]
+kitchen: slow-roasted onions [error, 2 lines, 100B, toolu_1]
 ```
-
-## Interrupted · +0s
-
-Turn stopped because the user pressed escape.
-
-## User · +0s
-
-what did it manage to do
 
 ## Assistant · +0s
 
-It sharpened the knives and would not stop until it was killed.
+The oven ran out of time and had to be killed.
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+Carrying on.
