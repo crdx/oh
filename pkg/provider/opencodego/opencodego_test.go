@@ -21,7 +21,7 @@ import (
 func newClient(t *testing.T, url string) *opencodego.Client {
 	t.Helper()
 
-	client, err := opencodego.New(url, "secret", "deepseek-v4-pro", "high", 128_000)
+	client, err := opencodego.New(url, "secret", "deepseek-v4-pro", agent.CompletionsWire, "high", 128_000)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -65,7 +65,7 @@ func sendOnce(t *testing.T, client *opencodego.Client) {
 func TestAChatModelIsAskedThroughChatCompletions(t *testing.T) {
 	server, sent := recordingServer(t, "data: [DONE]\n\n")
 
-	client, err := opencodego.New(server.URL+"/v1/chat/completions", "secret", "deepseek-v4-pro", "low", 16_000)
+	client, err := opencodego.New(server.URL+"/v1/chat/completions", "secret", "deepseek-v4-pro", agent.CompletionsWire, "low", 16_000)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -90,6 +90,7 @@ func TestAResponsesModelIsAskedThroughResponsesBesideChatCompletions(t *testing.
 		server.URL+"/v1/chat/completions",
 		"secret",
 		"muse-spark-1.3-contributor",
+		agent.ResponsesWire,
 		"high",
 		64_000,
 	)
@@ -144,7 +145,7 @@ const stoppedMessage = "event: message_start\ndata: {\"type\":\"message_start\",
 func TestAMessagesModelIsAskedThroughMessagesWithoutClaudeCodesClothes(t *testing.T) {
 	server, sent := recordingServer(t, stoppedMessage)
 
-	client, err := opencodego.New(server.URL+"/v1/chat/completions", "secret", "qwen3.8-max", "xhigh", 64_000)
+	client, err := opencodego.New(server.URL+"/v1/chat/completions", "secret", "qwen3.8-max", agent.MessagesWire, "xhigh", 64_000)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -168,7 +169,7 @@ func TestAMessagesModelIsAskedThroughMessagesWithoutClaudeCodesClothes(t *testin
 		t.Errorf("expected the instructions alone as the system prompt, got %v", system)
 	}
 
-	if sent.header.Get("Authorization") != "Bearer secret" ||
+	if sent.header.Get("X-Api-Key") != "secret" ||
 		sent.header.Get("X-Opencode-Session") != "0123456789ABCDEFGHIJKL" ||
 		sent.header.Get("Anthropic-Version") != messages.Version {
 		t.Errorf("expected an authorised, scoped, versioned request, got %v", sent.header)
@@ -183,10 +184,43 @@ func TestAMessagesModelIsAskedThroughMessagesWithoutClaudeCodesClothes(t *testin
 	}
 }
 
+func TestEachWireCarriesTheKeyWhereItsEndpointReadsIt(t *testing.T) {
+	tests := []struct {
+		wire       agent.Wire
+		response   string
+		keyName    string
+		keyValue   string
+		absentName string
+	}{
+		{agent.CompletionsWire, "data: [DONE]\n\n", "Authorization", "Bearer secret", "X-Api-Key"},
+		{agent.ResponsesWire, completedResponse, "Authorization", "Bearer secret", "X-Api-Key"},
+		{agent.MessagesWire, stoppedMessage, "X-Api-Key", "secret", "Authorization"},
+	}
+
+	for _, test := range tests {
+		t.Run(string(test.wire), func(t *testing.T) {
+			server, sent := recordingServer(t, test.response)
+
+			client, err := opencodego.New(server.URL+"/v1/chat/completions", "secret", "model", test.wire, "high", 64_000)
+			if err != nil {
+				t.Fatal(err)
+			}
+			sendOnce(t, client)
+
+			if got := sent.header.Get(test.keyName); got != test.keyValue {
+				t.Errorf("expected %s of %q, got %q", test.keyName, test.keyValue, got)
+			}
+			if got := sent.header.Get(test.absentName); got != "" {
+				t.Errorf("expected no %s header, got %q", test.absentName, got)
+			}
+		})
+	}
+}
+
 func TestAMessagesModelTakingNoEffortIsAskedToThink(t *testing.T) {
 	server, sent := recordingServer(t, stoppedMessage)
 
-	client, err := opencodego.New(server.URL+"/v1/chat/completions", "secret", "minimax-m3", "", 64_000)
+	client, err := opencodego.New(server.URL+"/v1/chat/completions", "secret", "minimax-m3", agent.MessagesWire, "", 64_000)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -206,7 +240,7 @@ func TestAMessagesModelTakingNoEffortIsAskedToThink(t *testing.T) {
 func TestAResponsesModelTakingNoEffortIsSentNoEffort(t *testing.T) {
 	server, sent := recordingServer(t, completedResponse)
 
-	client, err := opencodego.New(server.URL+"/v1/chat/completions", "secret", "muse-spark-1.3-contributor", "", 64_000)
+	client, err := opencodego.New(server.URL+"/v1/chat/completions", "secret", "muse-spark-1.3-contributor", agent.ResponsesWire, "", 64_000)
 	if err != nil {
 		t.Fatalf("expected a model taking no effort to connect, got %v", err)
 	}
@@ -224,24 +258,25 @@ func TestAResponsesModelTakingNoEffortIsSentNoEffort(t *testing.T) {
 func TestEveryWireIsSentTheOutputLimitCappedAsOpencodeCapsIt(t *testing.T) {
 	tests := []struct {
 		model           string
+		wire            agent.Wire
 		response        string
 		maxOutputTokens int
 		field           string
 		want            float64
 	}{
-		{"muse-spark-1.3-contributor", completedResponse, 131_072, "max_output_tokens", 32_000},
-		{"muse-spark-1.3-contributor", completedResponse, 16_000, "max_output_tokens", 16_000},
-		{"qwen3.8-max", stoppedMessage, 131_072, "max_tokens", 32_000},
-		{"qwen3.8-max", stoppedMessage, 16_000, "max_tokens", 16_000},
-		{"kimi-k2.7-code", "data: [DONE]\n\n", 131_072, "max_completion_tokens", 32_000},
-		{"kimi-k2.7-code", "data: [DONE]\n\n", 16_000, "max_completion_tokens", 16_000},
+		{"muse-spark-1.3-contributor", agent.ResponsesWire, completedResponse, 131_072, "max_output_tokens", 32_000},
+		{"muse-spark-1.3-contributor", agent.ResponsesWire, completedResponse, 16_000, "max_output_tokens", 16_000},
+		{"qwen3.8-max", agent.MessagesWire, stoppedMessage, 131_072, "max_tokens", 32_000},
+		{"qwen3.8-max", agent.MessagesWire, stoppedMessage, 16_000, "max_tokens", 16_000},
+		{"kimi-k2.7-code", agent.CompletionsWire, "data: [DONE]\n\n", 131_072, "max_completion_tokens", 32_000},
+		{"kimi-k2.7-code", agent.CompletionsWire, "data: [DONE]\n\n", 16_000, "max_completion_tokens", 16_000},
 	}
 
 	for _, test := range tests {
 		t.Run(fmt.Sprintf("%s/%d", test.model, test.maxOutputTokens), func(t *testing.T) {
 			server, sent := recordingServer(t, test.response)
 
-			client, err := opencodego.New(server.URL+"/v1/chat/completions", "secret", test.model, "", test.maxOutputTokens)
+			client, err := opencodego.New(server.URL+"/v1/chat/completions", "secret", test.model, test.wire, "", test.maxOutputTokens)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -257,7 +292,7 @@ func TestEveryWireIsSentTheOutputLimitCappedAsOpencodeCapsIt(t *testing.T) {
 func TestAChatModelTakingNoEffortIsSentNoEffort(t *testing.T) {
 	server, sent := recordingServer(t, "data: [DONE]\n\n")
 
-	client, err := opencodego.New(server.URL+"/v1/chat/completions", "secret", "kimi-k2.7-code", "", 64_000)
+	client, err := opencodego.New(server.URL+"/v1/chat/completions", "secret", "kimi-k2.7-code", agent.CompletionsWire, "", 64_000)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -280,18 +315,18 @@ func isTextBlock(block any, text string) bool {
 func TestToolsAreMeasuredInTheWireFormatTheModelIsAskedThrough(t *testing.T) {
 	tools := []tool.Tool{weather()}
 
-	for modelID, want := range map[string]int{
-		"deepseek-v4-pro":            chatcompletions.ToolsSize(tools),
-		"muse-spark-1.3-contributor": responses.ToolsSize(tools),
-		"qwen3.8-max":                messages.ToolsSize(tools),
+	for wire, want := range map[agent.Wire]int{
+		agent.CompletionsWire: chatcompletions.ToolsSize(tools),
+		agent.ResponsesWire:   responses.ToolsSize(tools),
+		agent.MessagesWire:    messages.ToolsSize(tools),
 	} {
-		client, err := opencodego.New("http://somewhere/v1/chat/completions", "secret", modelID, "high", 64_000)
+		client, err := opencodego.New("http://somewhere/v1/chat/completions", "secret", "model", wire, "high", 64_000)
 		if err != nil {
 			t.Fatal(err)
 		}
 
 		if got := client.ToolsSize(tools); got != want {
-			t.Errorf("%s: got %d, want %d", modelID, got, want)
+			t.Errorf("%s: got %d, want %d", wire, got, want)
 		}
 	}
 
@@ -342,20 +377,23 @@ func TestNewPreservesSettingValidation(t *testing.T) {
 		url             string
 		token           string
 		model           string
+		wire            agent.Wire
 		maxOutputTokens int
 		want            string
 	}{
-		{"url", "", "secret", "deepseek-v4-pro", 128_000, "chat: URL is empty"},
-		{"token", "http://somewhere", "", "deepseek-v4-pro", 128_000, "chat: Token is empty"},
-		{"model", "http://somewhere", "secret", "", 128_000, "chat: Model is empty"},
-		{"max tokens", "http://somewhere", "secret", "deepseek-v4-pro", 0, "chat: MaxOutputTokens is 0"},
-		{"responses max tokens", "http://somewhere", "secret", "muse-spark-1.3-contributor", 0, "responses: MaxOutputTokens is 0"},
-		{"messages max tokens", "http://somewhere", "secret", "qwen3.8-max", 0, "anthropic: MaxOutputTokens is 0"},
+		{"url", "", "secret", "deepseek-v4-pro", agent.CompletionsWire, 128_000, "chat: URL is empty"},
+		{"token", "http://somewhere", "", "deepseek-v4-pro", agent.CompletionsWire, 128_000, "chat: Token is empty"},
+		{"model", "http://somewhere", "secret", "", agent.CompletionsWire, 128_000, "chat: Model is empty"},
+		{"max tokens", "http://somewhere", "secret", "deepseek-v4-pro", agent.CompletionsWire, 0, "chat: MaxOutputTokens is 0"},
+		{"responses max tokens", "http://somewhere", "secret", "muse-spark-1.3-contributor", agent.ResponsesWire, 0, "responses: MaxOutputTokens is 0"},
+		{"messages max tokens", "http://somewhere", "secret", "qwen3.8-max", agent.MessagesWire, 0, "anthropic: MaxOutputTokens is 0"},
+		{"no wire", "http://somewhere", "secret", "claude-haiku-5-5", "", 128_000, "no wire protocol is known for claude-haiku-5-5"},
+		{"unknown wire", "http://somewhere", "secret", "gemini-9", "generative-language", 128_000, "no wire protocol is known for gemini-9"},
 	}
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			client, err := opencodego.New(test.url, test.token, test.model, "high", test.maxOutputTokens)
+			client, err := opencodego.New(test.url, test.token, test.model, test.wire, "high", test.maxOutputTokens)
 			if err == nil || !strings.Contains(err.Error(), test.want) {
 				t.Fatalf("expected %q, got %v", test.want, err)
 			}

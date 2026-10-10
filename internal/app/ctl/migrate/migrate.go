@@ -16,6 +16,7 @@ import (
 	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/ctl/console"
 	"crdx.org/oh/internal/app/location"
+	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/format"
@@ -66,6 +67,10 @@ func run(inputArgs *inputOpts, output console.Output) error {
 			style.Subtle(verb(inputArgs.DryRun)),
 			style.Subtle(fmt.Sprintf("%d → %d", configFrom, config.Format)),
 		)
+	}
+
+	if err := migrateSeenModels(inputArgs.DryRun, output); err != nil {
+		return err
 	}
 
 	directory := location.GetSessionsDir()
@@ -182,6 +187,29 @@ func everySessionSubject(count int) string {
 	}
 
 	return fmt.Sprintf("all %d sessions are", count)
+}
+
+func migrateSeenModels(isDryRun bool, output console.Output) error {
+	path := location.GetSeenModelsPath()
+	seenFrom, hasSeenModels, err := MigrateSeenModels(SeenModelsOptions{Path: path, DryRun: isDryRun})
+	if err != nil {
+		return fmt.Errorf("seen models: %w", err)
+	}
+	if !hasSeenModels || seenFrom >= model.SeenModelsFormat {
+		return nil
+	}
+
+	if !isDryRun {
+		_, _ = fmt.Fprintln(output.Screen, style.Subtle("copy kept in ")+seenModelsBackupPath(path))
+	}
+	_, _ = fmt.Fprintf(
+		output.Screen,
+		"%s seen models %s\n",
+		style.Subtle(verb(isDryRun)),
+		style.Subtle(fmt.Sprintf("%d → %d", seenFrom, model.SeenModelsFormat)),
+	)
+
+	return nil
 }
 
 func verb(isDryRun bool) string {

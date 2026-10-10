@@ -47,6 +47,7 @@ var steps = map[int]step{
 	16: {migrateLine: temporaryPathGrantsImplyExecution},
 	17: {migrateLine: contextKindsReplaceNames},
 	18: {migrateLine: intentsJoinRenderings},
+	19: {migrateLine: wiresJoinModelChoices},
 }
 
 var legacyGrantAccess = map[string]string{

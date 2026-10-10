@@ -1,6 +1,8 @@
 package migrate
 
 import (
+	"bytes"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -225,5 +227,101 @@ func assertGolden(t *testing.T, name string, drawn string) {
 	}
 	if drawn != string(want) {
 		t.Errorf("output differs from %s\n--- got ---\n%s--- want ---\n%s", goldenPath, drawn, want)
+	}
+}
+
+const seenModelsBeforeWires = `{"version":1,"providers":{` +
+	`"opencode-go":[` +
+	`{"id":"deepseek-v4-pro","efforts":["high","max"],"output":384000},` +
+	`{"id":"qwen3.8-max","efforts":["high"],"output":64000},` +
+	`{"id":"minimax-m3","effortless":true,"output":64000},` +
+	`{"id":"muse-spark-1.3-contributor","efforts":["high"],"output":128000},` +
+	`{"id":"grok-4.7","efforts":["high"],"output":128000},` +
+	`{"id":"gpt-6-luna","efforts":["high"],"output":128000}],` +
+	`"anthropic":[{"id":"claude-opus-5","efforts":["high"],"output":128000}]}}`
+
+func storedSeenModels(t *testing.T, body string) string {
+	t.Helper()
+
+	path := location.GetSeenModelsPath()
+	if err := os.WriteFile(path, []byte(body), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	return path
+}
+
+func indentedFile(t *testing.T, path string) string {
+	t.Helper()
+
+	data, err := os.ReadFile(path) //nolint:gosec // a file the test wrote
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var indented bytes.Buffer
+	if err := json.Indent(&indented, data, "", "  "); err != nil {
+		t.Fatal(err)
+	}
+
+	return indented.String() + "\n"
+}
+
+func TestGoldenSeenModelsMigrateOntoTheWiresTheyWereSpokenOver(t *testing.T) {
+	directory := goldenSessions(t)
+	path := storedSeenModels(t, seenModelsBeforeWires)
+
+	assertGolden(t, "seen-models.txt", migration(t, directory, &inputOpts{}))
+	assertGolden(t, "seen-models.json", indentedFile(t, path))
+
+	if kept := indentedFile(t, path+".pre-v2"); kept != indentedFile(t, storedSeenModels(t, seenModelsBeforeWires)) {
+		t.Errorf("expected the copy kept aside to be the original, got %s", kept)
+	}
+}
+
+func TestGoldenSeenModelsDryRunLeavesThemAlone(t *testing.T) {
+	directory := goldenSessions(t)
+	path := storedSeenModels(t, seenModelsBeforeWires)
+
+	assertGolden(t, "seen-models-dry-run.txt", migration(t, directory, &inputOpts{DryRun: true}))
+
+	data, err := os.ReadFile(path) //nolint:gosec // a file the test wrote
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(data) != seenModelsBeforeWires {
+		t.Errorf("expected a dry run to leave the seen models alone, got %s", data)
+	}
+	if _, err := os.Stat(path + ".pre-v2"); !os.IsNotExist(err) {
+		t.Errorf("expected a dry run to keep no copy, got %v", err)
+	}
+}
+
+func TestSeenModelsAlreadyCurrentAreLeftAlone(t *testing.T) {
+	directory := goldenSessions(t)
+	current := `{"version":2,"providers":{"opencode-go":[{"id":"qwen3.8-max","wire":"completions"}]}}`
+	path := storedSeenModels(t, current)
+
+	if output := migration(t, directory, &inputOpts{}); strings.Contains(output, "seen models") {
+		t.Errorf("expected nothing said of current seen models, got %s", output)
+	}
+
+	data, err := os.ReadFile(path) //nolint:gosec // a file the test wrote
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(data) != current {
+		t.Errorf("expected current seen models to be left alone, got %s", data)
+	}
+}
+
+func TestSeenModelsFromANewerOhAdviseAnUpgrade(t *testing.T) {
+	goldenSessions(t)
+	storedSeenModels(t, `{"version":3,"providers":{}}`)
+
+	var screen, failure strings.Builder
+	err := run(&inputOpts{}, console.Output{Screen: &screen, Failure: &failure})
+	if err == nil || !strings.Contains(err.Error(), "seen models") || !strings.Contains(err.Error(), "upgrade oh") {
+		t.Errorf("expected newer seen models to advise an upgrade, got %v", err)
 	}
 }

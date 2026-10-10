@@ -1,4 +1,4 @@
-{"kind":"head","version":19,"meta":{"model":"muse-spark-1.3-contributor","workspaceDir":"","provider":"opencode-go","system_prompt":"You are a test assistant.","tools":["work"],"tool_definitions":[{"name":"work","description":"A deterministic scenario tool.","revision":"1"}]}}
+{"kind":"head","version":20,"meta":{"model":"muse-spark-1.3-contributor","workspaceDir":"","provider":"opencode-go","system_prompt":"You are a test assistant.","tools":["work"],"tool_definitions":[{"name":"work","description":"A deterministic scenario tool.","revision":"1"}]}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"reason, call a tool, then answer"}}
 {"kind":"event","event":{"kind":"model_reasoning","text":"Use the tool."}}

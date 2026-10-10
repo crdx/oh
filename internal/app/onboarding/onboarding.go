@@ -45,6 +45,7 @@ const (
 	simulationIdentifier = "simulation"
 
 	validationModel           = "validation"
+	validationWire            = agent.CompletionsWire
 	validationEffort          = "none"
 	validationMaxOutputTokens = 1
 )
@@ -749,7 +750,9 @@ func validateOpenCodeGoKey(key string) error {
 }
 
 func validateOpenCodeGoKeyAt(key string, usageURL string) error {
-	client, err := opencodego.New(opencodego.EndpointURL, key, validationModel, validationEffort, validationMaxOutputTokens)
+	client, err := opencodego.New(
+		opencodego.EndpointURL, key, validationModel, validationWire, validationEffort, validationMaxOutputTokens,
+	)
 	if err != nil {
 		return err
 	}

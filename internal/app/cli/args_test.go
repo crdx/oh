@@ -103,7 +103,7 @@ func useCachedModels(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	data := []byte(`{"version":5,"providers":{"opencode-go":{"models":[{"id":"deepseek-v4-pro","efforts":["high","max"],"output":384000}]}}}`)
+	data := []byte(`{"version":6,"providers":{"opencode-go":{"models":[{"id":"deepseek-v4-pro","efforts":["high","max"],"output":384000,"wire":"completions"}]}}}`)
 	if err := os.WriteFile(path, data, 0o600); err != nil {
 		t.Fatal(err)
 	}

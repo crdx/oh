@@ -16,9 +16,23 @@ const fetchTimeout = 60 * time.Second
 
 type Registry map[string]map[string]agent.Model
 
+var wiresByPackage = map[string]agent.Wire{
+	"@ai-sdk/openai-compatible": agent.CompletionsWire,
+	"@ai-sdk/openai":            agent.ResponsesWire,
+	"@ai-sdk/anthropic":         agent.MessagesWire,
+}
+
+func wireOf(packageName string) agent.Wire {
+	return wiresByPackage[packageName]
+}
+
 type entry struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
+
+	Provider struct {
+		Package string `json:"npm"`
+	} `json:"provider"`
 
 	IsReasoning bool `json:"reasoning"`
 
@@ -74,7 +88,15 @@ func (self entry) getPrices() *agent.TokenPrices {
 	return &prices
 }
 
-func (self entry) model(name string) agent.Model {
+func (self entry) getWire(providerPackage string) agent.Wire {
+	if self.Provider.Package != "" {
+		return wireOf(self.Provider.Package)
+	}
+
+	return wireOf(providerPackage)
+}
+
+func (self entry) model(name string, providerPackage string) agent.Model {
 	id := self.ID
 	if id == "" {
 		id = name
@@ -88,6 +110,7 @@ func (self entry) model(name string) agent.Model {
 		ContextWindowTokens: self.getContextWindowTokens(),
 		MaxOutputTokens:     self.Limit.MaxOutputTokens,
 		Prices:              self.getPrices(),
+		Wire:                self.getWire(providerPackage),
 	}
 }
 
@@ -113,7 +136,8 @@ func Fetch(ctx context.Context, address string, observer req.Observer) (Registry
 	}
 
 	var payload map[string]struct {
-		Models map[string]entry `json:"models"`
+		Package string           `json:"npm"`
+		Models  map[string]entry `json:"models"`
 	}
 
 	if err := requests.Get(ctx, address, nil, &payload); err != nil {
@@ -125,7 +149,7 @@ func Fetch(ctx context.Context, address string, observer req.Observer) (Registry
 	for providerName, describedProvider := range payload {
 		models := make(map[string]agent.Model, len(describedProvider.Models))
 		for modelName, describedModel := range describedProvider.Models {
-			model := describedModel.model(modelName)
+			model := describedModel.model(modelName, describedProvider.Package)
 			if hasDatedVersionSuffix(model.ID) {
 				continue
 			}

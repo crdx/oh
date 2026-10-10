@@ -2,7 +2,9 @@ package model
 
 import (
 	"bytes"
+	"os"
 	"slices"
+	"strings"
 	"testing"
 
 	"crdx.org/oh/internal/state"
@@ -13,11 +15,11 @@ func readSeenModels(t *testing.T) map[string][]agent.Model {
 	t.Helper()
 
 	var record seenModels
-	if err := state.Read(seenModelsPath(), seenModelsFormat, &record); err != nil {
+	if err := state.Read(seenModelsPath(), SeenModelsFormat, &record); err != nil {
 		t.Fatal(err)
 	}
-	if record.Version != seenModelsFormat {
-		t.Errorf("expected the record to carry format %d, got %d", seenModelsFormat, record.Version)
+	if record.Version != SeenModelsFormat {
+		t.Errorf("expected the record to carry format %d, got %d", SeenModelsFormat, record.Version)
 	}
 
 	return record.Providers
@@ -154,5 +156,59 @@ func TestTheModelListOutranksWhatWasSeen(t *testing.T) {
 	choice, err := chosenAnthropicModel("claude-opus-5")
 	if err != nil || choice.MaxOutputTokens != 128_000 {
 		t.Errorf("expected the model list's description, got %+v and %v", choice, err)
+	}
+}
+
+const seenModelsBeforeWires = `{"version":1,"providers":{"opencode-go":[{"id":"qwen3.8-max","efforts":["high"],"output":64000}]}}`
+
+func writeSeenModels(t *testing.T, body string) {
+	t.Helper()
+
+	if err := os.WriteFile(seenModelsPath(), []byte(body), 0o600); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestSeenModelsWrittenBeforeWiresAreRefusedUntilMigrated(t *testing.T) {
+	t.Setenv("XDG_STATE_HOME", t.TempDir())
+	writeSeenModels(t, seenModelsBeforeWires)
+
+	var output bytes.Buffer
+	err := Update(&output, serveRegistry(t, oneCodexModel), modelCachePath(), seenModelsPath(), listingModels(ignoredModelListings()), false)
+	if err == nil || !strings.Contains(err.Error(), "run oh --ctl migrate") {
+		t.Errorf("expected recording what was seen to ask for a migration, got %v", err)
+	}
+
+	data, readError := os.ReadFile(seenModelsPath())
+	if readError != nil {
+		t.Fatal(readError)
+	}
+	if string(data) != seenModelsBeforeWires {
+		t.Errorf("expected the seen models to be left for the migration, got %s", data)
+	}
+}
+
+func TestAModelKnownOnlyFromSeenModelsBeforeWiresAsksForAMigration(t *testing.T) {
+	t.Setenv("XDG_STATE_HOME", t.TempDir())
+	writeSeenModels(t, seenModelsBeforeWires)
+
+	_, err := Chosen(nil, seenModelsPath(), opencodeGoProvider, "qwen3.8-max")
+	if err == nil || !strings.Contains(err.Error(), "run oh --ctl migrate") {
+		t.Errorf("expected a migration to be asked for, got %v", err)
+	}
+
+	listed := []Choice{{Provider: opencodeGoProvider, ID: "qwen3.8-max", Wire: agent.MessagesWire}}
+	if choice, err := Chosen(listed, seenModelsPath(), opencodeGoProvider, "qwen3.8-max"); err != nil || choice.Wire != agent.MessagesWire {
+		t.Errorf("expected a listed model to be chosen whatever the seen models hold, got %+v and %v", choice, err)
+	}
+}
+
+func TestAModelKnownOnlyFromSeenModelsIsChosenOnItsSeenWire(t *testing.T) {
+	t.Setenv("XDG_STATE_HOME", t.TempDir())
+	writeSeenModels(t, `{"version":2,"providers":{"opencode-go":[{"id":"qwen3.8-max","efforts":["high"],"output":64000,"wire":"messages"}]}}`)
+
+	choice, err := Chosen(nil, seenModelsPath(), opencodeGoProvider, "qwen3.8-max")
+	if err != nil || choice.Wire != agent.MessagesWire {
+		t.Errorf("expected the seen model on its seen wire, got %+v and %v", choice, err)
 	}
 }

@@ -1,5 +1,6 @@
 provider = "opencode-go"
 model = "kimi-k2.7-code"
+wire = "completions"
 toggle-before-first = "w"
 
 [first]

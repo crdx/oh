@@ -7000,7 +7000,7 @@ func completedInvalidMermaidScreen(t *testing.T) string {
 func checkedModelCache(providers string) []byte {
 	return fmt.Appendf(
 		nil,
-		`{"version":5,"checked":%q,"providers":%s}`, time.Now().Format(time.RFC3339), providers,
+		`{"version":6,"checked":%q,"providers":%s}`, time.Now().Format(time.RFC3339), providers,
 	)
 }
 
@@ -7431,20 +7431,23 @@ func TestModelUpdateDispatchRunsThroughTheBinary(t *testing.T) {
 	}
 }
 
-func TestOpenCodeRequestsUseTheStoredSessionIdentifier(t *testing.T) {
+func TestOpenCodeRequestsCarryTheKeyAndTheStoredSessionIdentifier(t *testing.T) {
 	binary := buildTestBinary(t)
 
 	for _, test := range []struct {
-		model string
-		path  string
+		wire     string
+		path     string
+		keyName  string
+		keyValue string
 	}{
-		{"fake", "/v1/chat/completions"},
-		{"fake-contributor", "/v1/responses"},
-		{"qwen-fake", "/v1/messages"},
+		{sim.Completions, "/v1/chat/completions", "Authorization", "Bearer stand-in"},
+		{sim.Responses, "/v1/responses", "Authorization", "Bearer stand-in"},
+		{sim.Messages, "/v1/messages", "X-Api-Key", "stand-in"},
 	} {
-		t.Run(test.model, func(t *testing.T) {
+		t.Run(test.wire, func(t *testing.T) {
 			endpoint := sim.New(&sim.Scenario{
-				Model: test.model,
+				Model: "fake",
+				Wire:  test.wire,
 				Turns: []sim.Turn{
 					{Say: "First answer."},
 					{Say: "Second answer."},
@@ -7454,11 +7457,13 @@ func TestOpenCodeRequestsUseTheStoredSessionIdentifier(t *testing.T) {
 			var headerMutex sync.Mutex
 			var sessionHeaders []string
 			var conversationPaths []string
+			var keyHeaders []string
 			server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 				if sessionID := request.Header.Get("X-Opencode-Session"); sessionID != "" {
 					headerMutex.Lock()
 					sessionHeaders = append(sessionHeaders, sessionID)
 					conversationPaths = append(conversationPaths, request.URL.Path)
+					keyHeaders = append(keyHeaders, request.Header.Get(test.keyName))
 					headerMutex.Unlock()
 				}
 				endpoint.ServeHTTP(writer, request)
@@ -7469,7 +7474,7 @@ func TestOpenCodeRequestsUseTheStoredSessionIdentifier(t *testing.T) {
 			stateDirectory := t.TempDir()
 			workspaceDir := reachableWorkspaceDir(t)
 			environment := append(testBinaryEnvironment(t, stateDirectory), backend.EndpointVariable+"="+address)
-			runTestBinary(t, binary, workspaceDir, environment, "-p", "--yolo", "-m", "opencode-go/"+test.model, "first question")
+			runTestBinary(t, binary, workspaceDir, environment, "-p", "--yolo", "-m", "opencode-go/fake", "first question")
 
 			sessionsDirectory := filepath.Join(stateDirectory, "org.crdx", "oh", "sessions")
 			storedSessions, err := store.List(sessionsDirectory)
@@ -7486,6 +7491,7 @@ func TestOpenCodeRequestsUseTheStoredSessionIdentifier(t *testing.T) {
 			headerMutex.Lock()
 			capturedHeaders := slices.Clone(sessionHeaders)
 			capturedPaths := slices.Clone(conversationPaths)
+			capturedKeys := slices.Clone(keyHeaders)
 			headerMutex.Unlock()
 			if !slices.Equal(capturedHeaders, []string{storedSession.ID, storedSession.ID}) {
 				t.Errorf("got OpenCode session headers %q, want the stored ID %q twice", capturedHeaders, storedSession.ID)
@@ -7496,6 +7502,9 @@ func TestOpenCodeRequestsUseTheStoredSessionIdentifier(t *testing.T) {
 			if !slices.Equal(capturedPaths, []string{test.path, test.path}) {
 				t.Errorf("got conversation paths %q, want %s twice", capturedPaths, test.path)
 			}
+			if !slices.Equal(capturedKeys, []string{test.keyValue, test.keyValue}) {
+				t.Errorf("got %s headers %q, want %q twice", test.keyName, capturedKeys, test.keyValue)
+			}
 		})
 	}
 }
@@ -7504,16 +7513,17 @@ func TestAnOpenCodeModelTakingNoEffortIsAskedToThinkAndResumedWithoutOne(t *test
 	binary := buildTestBinary(t)
 
 	for _, test := range []struct {
-		model         string
+		wire          string
 		path          string
 		requireEffort func(t *testing.T, request int, body map[string]any)
 	}{
-		{"minimax-fake", "/messages", requireThinkingWithoutAnEffort},
-		{"fake-contributor", "/responses", requireAReasoningSummaryWithoutAnEffort},
+		{sim.Messages, "/messages", requireThinkingWithoutAnEffort},
+		{sim.Responses, "/responses", requireAReasoningSummaryWithoutAnEffort},
 	} {
-		t.Run(test.model, func(t *testing.T) {
+		t.Run(test.wire, func(t *testing.T) {
 			endpoint := sim.New(&sim.Scenario{
-				Model: test.model,
+				Model: "fake",
+				Wire:  test.wire,
 				Turns: []sim.Turn{{Say: "First answer."}, {Say: "Second answer."}},
 			})
 
@@ -7538,7 +7548,7 @@ func TestAnOpenCodeModelTakingNoEffortIsAskedToThinkAndResumedWithoutOne(t *test
 			if err := os.MkdirAll(filepath.Dir(cachePath), 0o700); err != nil {
 				t.Fatal(err)
 			}
-			cache := checkedModelCache(`{"opencode-go":{"models":[{"id":"` + test.model + `","effortless":true,"output":128000}]}}`)
+			cache := checkedModelCache(`{"opencode-go":{"models":[{"id":"fake","effortless":true,"output":128000,"wire":"` + test.wire + `"}]}}`)
 			if err := os.WriteFile(cachePath, cache, 0o600); err != nil {
 				t.Fatal(err)
 			}
@@ -7547,8 +7557,8 @@ func TestAnOpenCodeModelTakingNoEffortIsAskedToThinkAndResumedWithoutOne(t *test
 			workspaceDir := reachableWorkspaceDir(t)
 			environment := append(testBinaryEnvironment(t, stateDirectory), backend.EndpointVariable+"="+address)
 
-			command := exec.CommandContext( //nolint:gosec // running the binary under test
-				t.Context(), binary, "-p", "--yolo", "-m", "opencode-go/"+test.model+"@high", "refused question",
+			command := exec.CommandContext(
+				t.Context(), binary, "-p", "--yolo", "-m", "opencode-go/fake@high", "refused question",
 			)
 			command.Env = environment
 			command.Dir = workspaceDir
@@ -7556,7 +7566,7 @@ func TestAnOpenCodeModelTakingNoEffortIsAskedToThinkAndResumedWithoutOne(t *test
 				t.Errorf("expected an effort to be refused, got %v: %s", err, refusal)
 			}
 
-			first := runTestBinary(t, binary, workspaceDir, environment, "-p", "--yolo", "-m", "opencode-go/"+test.model, "first question")
+			first := runTestBinary(t, binary, workspaceDir, environment, "-p", "--yolo", "-m", "opencode-go/fake", "first question")
 			if !strings.Contains(first, "First answer.") {
 				t.Errorf("expected the first answer, got %q", first)
 			}
@@ -7730,7 +7740,7 @@ func TestASessionResumesWithTheModelItWasCreatedWithAfterTheModelListForgetsIt(t
 	}
 
 	cachePath := filepath.Join(stateDirectory, "org.crdx", "oh", "models.json")
-	successorCache := checkedModelCache(`{"opencode-go":{"models":[{"id":"fake-2","efforts":["high"],"output":128000}]}}`)
+	successorCache := checkedModelCache(`{"opencode-go":{"models":[{"id":"fake-2","efforts":["high"],"output":128000,"wire":"completions"}]}}`)
 	if err := os.WriteFile(cachePath, successorCache, 0o600); err != nil {
 		t.Fatal(err)
 	}
@@ -7738,6 +7748,268 @@ func TestASessionResumesWithTheModelItWasCreatedWithAfterTheModelListForgetsIt(t
 	resumed := runTestBinary(t, binary, workspaceDir, environment, "-p", "-r", storedSession.Name, "second question")
 	if !strings.Contains(resumed, "Second answer.") {
 		t.Errorf("expected the session to resume on its own model, got %q", resumed)
+	}
+}
+
+func TestASessionResumesOverTheWireItWasCreatedOverAfterTheModelListMovesIt(t *testing.T) {
+	binary := buildTestBinary(t)
+	endpoint := sim.New(&sim.Scenario{
+		Model: "fake",
+		Wire:  sim.Messages,
+		Turns: []sim.Turn{
+			{Say: "First answer."},
+			{Say: "Second answer."},
+		},
+	})
+
+	var pathMutex sync.Mutex
+	var conversationPaths []string
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		if request.Header.Get("X-Opencode-Session") != "" {
+			pathMutex.Lock()
+			conversationPaths = append(conversationPaths, request.URL.Path)
+			pathMutex.Unlock()
+		}
+		endpoint.ServeHTTP(writer, request)
+	}))
+	t.Cleanup(server.Close)
+
+	address := endpoint.Addresses(server.URL)[sim.Completions]
+	stateDirectory := t.TempDir()
+	workspaceDir := reachableWorkspaceDir(t)
+	environment := append(testBinaryEnvironment(t, stateDirectory), backend.EndpointVariable+"="+address)
+	runTestBinary(t, binary, workspaceDir, environment, "-p", "--yolo", "-m", "opencode-go/fake", "first question")
+
+	sessionsDirectory := filepath.Join(stateDirectory, "org.crdx", "oh", "sessions")
+	storedSessions, err := store.List(sessionsDirectory)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(storedSessions) != 1 {
+		t.Fatalf("got %d stored sessions, want one", len(storedSessions))
+	}
+	storedSession := storedSessions[0]
+
+	if frozenChoice := storedSession.Meta.ModelChoice; frozenChoice == nil || frozenChoice.Wire != agent.MessagesWire {
+		t.Fatalf("expected the session to hold the wire it was created over, got %+v", frozenChoice)
+	}
+
+	cachePath := filepath.Join(stateDirectory, "org.crdx", "oh", "models.json")
+	movedCache := checkedModelCache(`{"opencode-go":{"models":[{"id":"fake","efforts":["high"],"output":128000,"wire":"completions"}]}}`)
+	if err := os.WriteFile(cachePath, movedCache, 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	resumed := runTestBinary(t, binary, workspaceDir, environment, "-p", "-r", storedSession.Name, "second question")
+	if !strings.Contains(resumed, "Second answer.") {
+		t.Errorf("expected the session to resume, got %q", resumed)
+	}
+
+	pathMutex.Lock()
+	capturedPaths := slices.Clone(conversationPaths)
+	pathMutex.Unlock()
+	if want := []string{"/v1/messages", "/v1/messages"}; !slices.Equal(capturedPaths, want) {
+		t.Errorf("got conversation paths %q, want %q", capturedPaths, want)
+	}
+}
+
+func TestASessionStoredBeforeWiresWereRecordedIsMigratedOntoTheWireItWasSpokenOver(t *testing.T) {
+	binary := buildTestBinary(t)
+	endpoint := sim.New(&sim.Scenario{
+		Model: "qwen-fake",
+		Wire:  sim.Messages,
+		Turns: []sim.Turn{
+			{Say: "First answer."},
+			{Say: "Second answer."},
+		},
+	})
+
+	var pathMutex sync.Mutex
+	var conversationPaths []string
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		if request.Header.Get("X-Opencode-Session") != "" {
+			pathMutex.Lock()
+			conversationPaths = append(conversationPaths, request.URL.Path)
+			pathMutex.Unlock()
+		}
+		endpoint.ServeHTTP(writer, request)
+	}))
+	t.Cleanup(server.Close)
+
+	address := endpoint.Addresses(server.URL)[sim.Completions]
+	stateDirectory := t.TempDir()
+	workspaceDir := reachableWorkspaceDir(t)
+	environment := append(testBinaryEnvironment(t, stateDirectory), backend.EndpointVariable+"="+address)
+	runTestBinary(t, binary, workspaceDir, environment, "-p", "--yolo", "-m", "opencode-go/qwen-fake", "first question")
+
+	sessionsDirectory := filepath.Join(stateDirectory, "org.crdx", "oh", "sessions")
+	storedSessions, err := store.List(sessionsDirectory)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(storedSessions) != 1 {
+		t.Fatalf("got %d stored sessions, want one", len(storedSessions))
+	}
+	name := storedSessions[0].Name
+
+	rewriteJournalHeadAsFormatNineteen(t, filepath.Join(sessionsDirectory, name, "session.jsonl"), withoutTheWire)
+
+	cachePath := filepath.Join(stateDirectory, "org.crdx", "oh", "models.json")
+	movedCache := checkedModelCache(`{"opencode-go":{"models":[{"id":"qwen-fake","efforts":["high"],"output":128000,"wire":"completions"}]}}`)
+	if err := os.WriteFile(cachePath, movedCache, 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	runTestBinary(t, binary, workspaceDir, environment, "--ctl", "migrate", name)
+
+	migratedSession, err := store.Read(sessionsDirectory, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if choice := migratedSession.Meta.ModelChoice; choice == nil || choice.Wire != agent.MessagesWire {
+		t.Fatalf("expected the migration to record the messages wire, got %+v", choice)
+	}
+
+	resumed := runTestBinary(t, binary, workspaceDir, environment, "-p", "-r", name, "second question")
+	if !strings.Contains(resumed, "Second answer.") {
+		t.Errorf("expected the session to resume, got %q", resumed)
+	}
+
+	pathMutex.Lock()
+	capturedPaths := slices.Clone(conversationPaths)
+	pathMutex.Unlock()
+	if want := []string{"/v1/messages", "/v1/messages"}; !slices.Equal(capturedPaths, want) {
+		t.Errorf("got conversation paths %q, want %q", capturedPaths, want)
+	}
+}
+
+func TestASessionHoldingNoModelChoiceResumesOnTheWireItsSeenModelIsMigratedOnto(t *testing.T) {
+	binary := buildTestBinary(t)
+	endpoint := sim.New(&sim.Scenario{
+		Model: "qwen-fake",
+		Wire:  sim.Messages,
+		Turns: []sim.Turn{
+			{Say: "First answer."},
+			{Say: "Second answer."},
+		},
+	})
+
+	var pathMutex sync.Mutex
+	var conversationPaths []string
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		if request.Header.Get("X-Opencode-Session") != "" {
+			pathMutex.Lock()
+			conversationPaths = append(conversationPaths, request.URL.Path)
+			pathMutex.Unlock()
+		}
+		endpoint.ServeHTTP(writer, request)
+	}))
+	t.Cleanup(server.Close)
+
+	address := endpoint.Addresses(server.URL)[sim.Completions]
+	stateDirectory := t.TempDir()
+	workspaceDir := reachableWorkspaceDir(t)
+	environment := append(testBinaryEnvironment(t, stateDirectory), backend.EndpointVariable+"="+address)
+	runTestBinary(t, binary, workspaceDir, environment, "-p", "--yolo", "-m", "opencode-go/qwen-fake", "first question")
+
+	sessionsDirectory := filepath.Join(stateDirectory, "org.crdx", "oh", "sessions")
+	storedSessions, err := store.List(sessionsDirectory)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(storedSessions) != 1 {
+		t.Fatalf("got %d stored sessions, want one", len(storedSessions))
+	}
+	name := storedSessions[0].Name
+
+	rewriteJournalHeadAsFormatNineteen(t, filepath.Join(sessionsDirectory, name, "session.jsonl"), withoutTheModelChoice)
+
+	stateRoot := filepath.Join(stateDirectory, "org.crdx", "oh")
+	forgottenCache := checkedModelCache(`{"opencode-go":{"models":[{"id":"fake-2","efforts":["high"],"output":128000,"wire":"completions"}]}}`)
+	if err := os.WriteFile(filepath.Join(stateRoot, "models.json"), forgottenCache, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	seenBeforeWires := `{"version":1,"providers":{"opencode-go":[{"id":"qwen-fake","efforts":["high"],"output":128000}]}}`
+	if err := os.WriteFile(filepath.Join(stateRoot, "seen_models.json"), []byte(seenBeforeWires), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	runTestBinary(t, binary, workspaceDir, environment, "--ctl", "migrate")
+
+	migratedSession, err := store.Read(sessionsDirectory, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if migratedSession.Meta.ModelChoice != nil {
+		t.Fatalf("expected the session to still hold no model choice, got %+v", migratedSession.Meta.ModelChoice)
+	}
+
+	resumed := runTestBinary(t, binary, workspaceDir, environment, "-p", "-r", name, "second question")
+	if !strings.Contains(resumed, "Second answer.") {
+		t.Errorf("expected the session to resume, got %q", resumed)
+	}
+
+	pathMutex.Lock()
+	capturedPaths := slices.Clone(conversationPaths)
+	pathMutex.Unlock()
+	if want := []string{"/v1/messages", "/v1/messages"}; !slices.Equal(capturedPaths, want) {
+		t.Errorf("got conversation paths %q, want %q", capturedPaths, want)
+	}
+}
+
+func withoutTheWire(meta map[string]json.RawMessage) error {
+	var choice map[string]json.RawMessage
+	if err := json.Unmarshal(meta["model_choice"], &choice); err != nil {
+		return err
+	}
+
+	delete(choice, "wire")
+	restatedChoice, err := json.Marshal(choice)
+	if err != nil {
+		return err
+	}
+	meta["model_choice"] = restatedChoice
+
+	return nil
+}
+
+func withoutTheModelChoice(meta map[string]json.RawMessage) error {
+	delete(meta, "model_choice")
+
+	return nil
+}
+
+func rewriteJournalHeadAsFormatNineteen(t *testing.T, journalPath string, rewriteMeta func(map[string]json.RawMessage) error) {
+	t.Helper()
+
+	data, err := os.ReadFile(journalPath) //nolint:gosec // a journal the test wrote
+	if err != nil {
+		t.Fatal(err)
+	}
+	headText, rest, _ := strings.Cut(string(data), "\n")
+
+	var head map[string]json.RawMessage
+	if err := json.Unmarshal([]byte(headText), &head); err != nil {
+		t.Fatal(err)
+	}
+	var meta map[string]json.RawMessage
+	if err := json.Unmarshal(head["meta"], &meta); err != nil {
+		t.Fatal(err)
+	}
+	if err := rewriteMeta(meta); err != nil {
+		t.Fatal(err)
+	}
+	if head["meta"], err = json.Marshal(meta); err != nil {
+		t.Fatal(err)
+	}
+	head["version"] = json.RawMessage("19")
+
+	rewrittenHead, err := json.Marshal(head)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(journalPath, []byte(string(rewrittenHead)+"\n"+rest), 0o600); err != nil { //nolint:gosec // a journal the test wrote
+		t.Fatal(err)
 	}
 }
 
@@ -7944,8 +8216,8 @@ func useCommandLineModelCache(t *testing.T) string {
 	data := checkedModelCache(`{` +
 		`"codex":{"models":[{"id":"gpt-5.6-sol","efforts":["none","high"],"output":128000},` +
 		`{"id":"gpt-5.6-mystery","efforts":["whatever"],"output":128000}]},` +
-		`"opencode-go":{"models":[{"id":"deepseek-v4-pro","efforts":["medium"],"output":128000},` +
-		`{"id":"minimax-m3","effortless":true,"output":128000}]},` +
+		`"opencode-go":{"models":[{"id":"deepseek-v4-pro","efforts":["medium"],"output":128000,"wire":"completions"},` +
+		`{"id":"minimax-m3","effortless":true,"output":128000,"wire":"messages"}]},` +
 		`"anthropic":{"models":[` +
 		`{"id":"claude-opus-5","efforts":["medium","max"],"output":128000},` +
 		`{"id":"claude-sonnet-5","efforts":["low","high"],"output":128000},` +
@@ -8127,7 +8399,7 @@ func useRoundRobinModelCache(t *testing.T) string {
 		t.Fatal(err)
 	}
 
-	data := checkedModelCache(`{"codex":{"models":[{"id":"gpt-5.6-sol","efforts":["none","high"],"output":128000}]},"opencode-go":{"models":[{"id":"deepseek-v4-pro","efforts":["high","max"],"output":128000}]},"anthropic":{"models":[{"id":"claude-opus-5","efforts":["high","max"],"output":128000}]}}`)
+	data := checkedModelCache(`{"codex":{"models":[{"id":"gpt-5.6-sol","efforts":["none","high"],"output":128000}]},"opencode-go":{"models":[{"id":"deepseek-v4-pro","efforts":["high","max"],"output":128000,"wire":"completions"}]},"anthropic":{"models":[{"id":"claude-opus-5","efforts":["high","max"],"output":128000}]}}`)
 	if err := os.WriteFile(path, data, 0o600); err != nil {
 		t.Fatal(err)
 	}
@@ -17652,6 +17924,7 @@ type sessionGoldenScenario struct {
 	Name                  string                    `toml:"-"`
 	Provider              string                    `toml:"provider"`
 	Model                 string                    `toml:"model"`
+	Wire                  agent.Wire                `toml:"wire"`
 	Effort                string                    `toml:"effort"`
 	IsFast                bool                      `toml:"fast"`
 	IdleAfter             string                    `toml:"idle-after"`
@@ -17964,7 +18237,7 @@ func newSessionGoldenProvider(
 		client.IsFast = scenario.IsFast
 		return client
 	case "opencode-go":
-		client, err := opencodego.New(endpoint, "test-token", scenario.Model, scenario.Effort, 128_000)
+		client, err := opencodego.New(endpoint, "test-token", scenario.Model, scenario.Wire, scenario.Effort, 128_000)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -21541,7 +21814,7 @@ func TestTheStartupUsageProbeLeavesNoSessionBehind(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	client, err := opencodego.New(server.URL, "token", "model", "medium", 1024)
+	client, err := opencodego.New(server.URL, "token", "model", agent.CompletionsWire, "medium", 1024)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -23943,19 +24216,21 @@ func TestEveryProviderTagsItsNotesTheWayItsOwnHarnessDoes(t *testing.T) {
 	for _, test := range []struct {
 		model   string
 		dialect string
+		wire    string
 		path    string
 		notes   agent.NoteFormat
 	}{
-		{"anthropic/fake", sim.Messages, "/messages", agent.SystemReminders},
-		{"codex/fake", sim.Responses, "/responses", codex.Notes},
-		{"opencode-go/fake", sim.Completions, "/chat/completions", agent.SystemReminders},
-		{"opencode-go/fake-contributor", sim.Completions, "/responses", agent.SystemReminders},
-		{"opencode-go/qwen-fake", sim.Completions, "/messages", agent.SystemReminders},
-		{"ollama/fake", sim.Completions, "/chat/completions", agent.SystemReminders},
+		{"anthropic/fake", sim.Messages, "", "/messages", agent.SystemReminders},
+		{"codex/fake", sim.Responses, "", "/responses", codex.Notes},
+		{"opencode-go/fake", sim.Completions, sim.Completions, "/chat/completions", agent.SystemReminders},
+		{"opencode-go/fake-responses", sim.Completions, sim.Responses, "/responses", agent.SystemReminders},
+		{"opencode-go/fake-messages", sim.Completions, sim.Messages, "/messages", agent.SystemReminders},
+		{"ollama/fake", sim.Completions, "", "/chat/completions", agent.SystemReminders},
 	} {
 		t.Run(test.model, func(t *testing.T) {
 			endpoint := sim.New(&sim.Scenario{
 				Model: strings.SplitN(test.model, "/", 2)[1],
+				Wire:  test.wire,
 				Turns: []sim.Turn{{Think: []string{"Weighing it up."}}, {Say: "Done."}},
 			})
 

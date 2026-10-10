@@ -1,13 +1,15 @@
 package model
 
 import (
+	"fmt"
 	"slices"
 
+	"crdx.org/oh/internal/format"
 	"crdx.org/oh/internal/state"
 	"crdx.org/oh/pkg/agent"
 )
 
-const seenModelsFormat = 1
+const SeenModelsFormat = 2
 
 type seenModels struct {
 	Version   int                      `json:"version"`
@@ -15,7 +17,10 @@ type seenModels struct {
 }
 
 func recordSeenModels(path string, listedByProvider map[string][]agent.Model) error {
-	return state.Update(path, seenModelsFormat, func(record *seenModels) error {
+	return state.Update(path, SeenModelsFormat, func(record *seenModels) error {
+		if err := requireCurrentSeenModels(*record); err != nil {
+			return err
+		}
 		if record.Providers == nil {
 			record.Providers = map[string][]agent.Model{}
 		}
@@ -24,7 +29,7 @@ func recordSeenModels(path string, listedByProvider map[string][]agent.Model) er
 			record.Providers[providerName] = withSeenAgain(record.Providers[providerName], listedModels)
 		}
 
-		record.Version = seenModelsFormat
+		record.Version = SeenModelsFormat
 
 		return nil
 	})
@@ -49,10 +54,13 @@ func withSeenAgain(seenBefore []agent.Model, listedModels []agent.Model) []agent
 	return seenBefore
 }
 
-func seenChoices(path string) []Choice {
+func seenChoices(path string) ([]Choice, error) {
 	var record seenModels
-	if state.Read(path, seenModelsFormat, &record) != nil {
-		return nil
+	if err := state.Read(path, SeenModelsFormat, &record); err != nil {
+		return nil, err
+	}
+	if err := requireCurrentSeenModels(record); err != nil {
+		return nil, err
 	}
 
 	var choices []Choice
@@ -61,5 +69,16 @@ func seenChoices(path string) []Choice {
 		choices = append(choices, choicesFor(providerName, plainModels(record.Providers[providerName]))...)
 	}
 
-	return choices
+	return choices, nil
+}
+
+func requireCurrentSeenModels(record seenModels) error {
+	if record.Version == 0 {
+		return nil
+	}
+	if err := format.Require(record.Version, SeenModelsFormat); err != nil && format.IsOlder(err) {
+		return fmt.Errorf("seen models %w: run oh --ctl migrate", err)
+	}
+
+	return nil
 }

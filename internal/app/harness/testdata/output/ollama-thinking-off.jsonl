@@ -1,4 +1,4 @@
-{"kind":"head","version":19,"meta":{"model":"llama3.3:70b","workspaceDir":"","provider":"ollama","effort":"none","system_prompt":"You are a test assistant."}}
+{"kind":"head","version":20,"meta":{"model":"llama3.3:70b","workspaceDir":"","provider":"ollama","effort":"none","system_prompt":"You are a test assistant."}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"answer without thinking"}}
 {"kind":"event","event":{"kind":"model_message","text":"Ollama answered without thinking.","usage":{"input_tokens":128}}}

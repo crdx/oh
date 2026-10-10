@@ -1,4 +1,4 @@
-{"kind":"head","version":19,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant.","conditions":{"unix_sockets":false,"ipv6":false,"interactive":false}}}
+{"kind":"head","version":20,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant.","conditions":{"unix_sockets":false,"ipv6":false,"interactive":false}}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"bind a listener on ::1"}}
 {"kind":"event","event":{"kind":"model_message","text":"There is no IPv6 here, so 127.0.0.1 instead."}}

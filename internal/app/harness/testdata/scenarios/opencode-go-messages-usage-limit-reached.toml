@@ -1,5 +1,6 @@
 provider = "opencode-go"
 model = "qwen3.8-max"
+wire = "messages"
 effort = "medium"
 
 [first]

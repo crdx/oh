@@ -1,0 +1,11 @@
+\e[4m\e[38;2;150;152;150mProvider      Models  Selectable  Ignored  Source\e[0m\e[0m
+Codex              \e[38;2;150;152;150m—\e[0m                       \e[38;2;150;152;150mit lists no models of its own, and only the registry describes it\e[0m
+OpenCode Go        6           \e[38;2;76;154;44m4\e[0m        \e[38;2;207;173;0m2\e[0m  \e[38;2;129;162;190mendpoint+models.dev\e[0m
+Anthropic          \e[38;2;150;152;150m—\e[0m                       \e[38;2;150;152;150mnot logged in to Anthropic: run the login command with anthropic\e[0m
+Ollama             \e[38;2;150;152;150m—\e[0m                       \e[38;2;150;152;150mGet "http://localhost:11434/api/tags": connect: connection refused\e[0m
+
+\e[4m\e[38;2;150;152;150mProvider     Model       Reason\e[0m\e[0m
+OpenCode Go  gemini-9    \e[38;2;150;152;150munknown wire protocol\e[0m
+OpenCode Go  omen-alpha  \e[38;2;150;152;150munknown effort level\e[0m
+
+\e[38;2;150;152;150mStored model list in \e[0m/state/models.json

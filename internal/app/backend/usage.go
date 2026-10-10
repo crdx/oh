@@ -79,7 +79,7 @@ func opencodeGoUsage() agent.UsageReporter {
 	}
 
 	client, err := opencodego.New(
-		opencodego.EndpointURL, key, listingModel, listingEffort, listingMaxOutputTokens,
+		opencodego.EndpointURL, key, listingModel, listingWire, listingEffort, listingMaxOutputTokens,
 	)
 	if err != nil {
 		return nil

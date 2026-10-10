@@ -25,6 +25,7 @@ func useCachedModels(t *testing.T) {
 				ID:              "deepseek-v4-pro",
 				EffortLevels:    []string{"high", "max"},
 				MaxOutputTokens: 384_000,
+				Wire:            agent.CompletionsWire,
 			}}},
 			anthropicProvider: {Models: []agent.Model{{
 				ID:              "claude-opus-5",
@@ -443,8 +444,8 @@ func useAnEffortlessModel(t *testing.T) {
 		Version: cacheVersion,
 		Providers: map[string]cachedModels{
 			opencodeGoProvider: {Models: []agent.Model{
-				{ID: "minimax-m3", IsEffortless: true, MaxOutputTokens: 128_000},
-				{ID: "kimi-k2.7-code", MaxOutputTokens: 128_000},
+				{ID: "minimax-m3", IsEffortless: true, MaxOutputTokens: 128_000, Wire: agent.MessagesWire},
+				{ID: "kimi-k2.7-code", MaxOutputTokens: 128_000, Wire: agent.CompletionsWire},
 			}},
 			anthropicProvider: {Models: []agent.Model{
 				{ID: "claude-haiku-5", IsEffortless: true, MaxOutputTokens: 128_000},

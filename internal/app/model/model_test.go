@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"maps"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -215,29 +216,71 @@ func TestAModelTakingNoEffortLevelCannotBeSelected(t *testing.T) {
 	}
 }
 
-func TestOpenCodeGoOffersEveryModelOverWhicheverWireServesIt(t *testing.T) {
+func TestOpenCodeGoOffersOnlyTheModelsWhoseWireIsKnown(t *testing.T) {
 	models := []agent.Model{
-		{ID: "minimax-m3", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000},
-		{ID: "qwen3.8-max", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000},
-		{ID: "muse-spark-1.2-contributor", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000},
-		{ID: "ox-alpha-free", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000},
-		{ID: "mimo-v2-omni", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000},
+		{ID: "minimax-m3", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000, Wire: agent.MessagesWire},
+		{ID: "muse-spark-1.2-contributor", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000, Wire: agent.ResponsesWire},
+		{ID: "mimo-v2-omni", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000, Wire: agent.CompletionsWire},
+		{ID: "claude-haiku-5-5", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000},
+		{ID: "gemini-9", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000, Wire: "generative-language"},
 	}
 
-	var offered []string
+	offered := map[string]agent.Wire{}
 	for _, choice := range choicesFor(opencodeGoProvider, models) {
-		offered = append(offered, choice.ID)
+		offered[choice.ID] = choice.Wire
 	}
 
-	want := []string{"minimax-m3", "qwen3.8-max", "muse-spark-1.2-contributor", "ox-alpha-free", "mimo-v2-omni"}
-	if !slices.Equal(offered, want) {
+	want := map[string]agent.Wire{
+		"minimax-m3":                 agent.MessagesWire,
+		"muse-spark-1.2-contributor": agent.ResponsesWire,
+		"mimo-v2-omni":               agent.CompletionsWire,
+	}
+	if !maps.Equal(offered, want) {
 		t.Errorf("offered %v, want %v", offered, want)
+	}
+
+	for _, model := range models[3:] {
+		if got := unselectableReason(opencodeGoProvider, model); got != "unknown wire protocol" {
+			t.Errorf("%s: got reason %q, want an unknown wire protocol", model.ID, got)
+		}
+	}
+}
+
+func TestOnlyOpenCodeGoNeedsToKnowAModelsWire(t *testing.T) {
+	model := agent.Model{ID: "model", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000}
+
+	for _, providerName := range []string{codexProvider, anthropicProvider, ollamaProvider} {
+		if got := unselectableReason(providerName, model); got != "" {
+			t.Errorf("%s: got reason %q for a model without a wire", providerName, got)
+		}
+	}
+}
+
+func TestTheRegistrySaysWhichWireAListedModelIsSpokenTo(t *testing.T) {
+	listed := []agent.Model{{ID: "claude-haiku-5-5"}, {ID: "glm-5.3"}, {ID: "unregistered"}}
+	registered := map[string]agent.Model{
+		"claude-haiku-5-5": {ID: "claude-haiku-5-5", Wire: agent.MessagesWire},
+		"glm-5.3":          {ID: "glm-5.3", Wire: agent.CompletionsWire},
+	}
+
+	got := map[string]agent.Wire{}
+	for _, model := range supplement(opencodeGoProvider, listed, registered) {
+		got[model.ID] = model.Wire
+	}
+
+	want := map[string]agent.Wire{
+		"claude-haiku-5-5": agent.MessagesWire,
+		"glm-5.3":          agent.CompletionsWire,
+		"unregistered":     "",
+	}
+	if !maps.Equal(got, want) {
+		t.Errorf("got wires %v, want %v", got, want)
 	}
 }
 
 func TestAnEffortlessModelIsOfferedOnlyWhereItsProviderCanDriveIt(t *testing.T) {
-	effortless := agent.Model{ID: "longcat-2.0", IsEffortless: true, MaxOutputTokens: 128_000}
-	unknown := agent.Model{ID: "kimi-k2.7-code", MaxOutputTokens: 128_000}
+	effortless := agent.Model{ID: "longcat-2.0", IsEffortless: true, MaxOutputTokens: 128_000, Wire: agent.CompletionsWire}
+	unknown := agent.Model{ID: "kimi-k2.7-code", MaxOutputTokens: 128_000, Wire: agent.CompletionsWire}
 
 	for _, test := range []struct {
 		providerName string
@@ -468,12 +511,12 @@ func TestOnlyAModelThatCanBeUsedSupersedesAnother(t *testing.T) {
 		{
 			providerName: opencodeGoProvider,
 			models: []agent.Model{
-				{ID: "glm-5.2", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000},
-				{ID: "glm-5.3", MaxOutputTokens: 128_000},
-				{ID: "longcat-2.0", IsEffortless: true, MaxOutputTokens: 128_000},
-				{ID: "longcat-2.5", IsEffortless: true, MaxOutputTokens: 128_000},
-				{ID: "kimi-k2", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000},
-				{ID: "kimi-k3", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000},
+				{ID: "glm-5.2", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000, Wire: agent.CompletionsWire},
+				{ID: "glm-5.3", MaxOutputTokens: 128_000, Wire: agent.CompletionsWire},
+				{ID: "longcat-2.0", IsEffortless: true, MaxOutputTokens: 128_000, Wire: agent.CompletionsWire},
+				{ID: "longcat-2.5", IsEffortless: true, MaxOutputTokens: 128_000, Wire: agent.CompletionsWire},
+				{ID: "kimi-k2", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000, Wire: agent.CompletionsWire},
+				{ID: "kimi-k3", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000, Wire: agent.CompletionsWire},
 			},
 			recorded: []string{"glm-5.2", "glm-5.3", "longcat-2.5", "kimi-k3"},
 			ignored: []ignoredModel{

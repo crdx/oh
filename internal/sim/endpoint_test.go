@@ -575,6 +575,7 @@ func TestAnAddressThatNoApiAnswersAtIsRefused(t *testing.T) {
 func TestEachApiIsAnsweredWhereverItsPathStands(t *testing.T) {
 	scenario := &sim.Scenario{
 		Model: "muse-spark-1.3-contributor",
+		Wire:  sim.Responses,
 		Turns: []sim.Turn{{Say: "Hello."}},
 	}
 	endpoint := sim.New(scenario)
@@ -586,6 +587,7 @@ func TestEachApiIsAnsweredWhereverItsPathStands(t *testing.T) {
 		endpoint.Addresses(server.URL)[sim.Completions],
 		"token",
 		scenario.Model,
+		agent.Wire(scenario.Wire),
 		"high",
 		128_000,
 	)

@@ -1,12 +1,13 @@
 Provider      Models  Selectable  Ignored  Source
 Codex              1           1           models.dev (it lists no models of its own, and only the registry describes it)
-OpenCode Go        5           3        2  endpoint
+OpenCode Go        6           3        3  endpoint
 Anthropic          6           2        4  endpoint
 Ollama             5           1        4  endpoint
 
 Provider     Model                                        Reason
 OpenCode Go  minimax-m2.7                                 superseded by minimax-m3
 OpenCode Go  kimi-k2.7-code                               unknown effort level
+OpenCode Go  omen-alpha                                   unknown wire protocol
 Anthropic    claude-sonnet-4-5                            superseded by claude-sonnet-4-6
 Anthropic    claude-opus-4-5                              unsupported request shape
 Anthropic    claude-fable-5-20260609                      superseded by claude-fable-5-1

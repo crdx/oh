@@ -58,10 +58,10 @@ func MigrateConfig(options ConfigOptions) (int, bool, error) {
 	}
 
 	backupPath := configBackupPath(options.Path)
-	if err := keepConfigCopy(backupPath, data); err != nil {
+	if err := keepFileCopy(backupPath, data); err != nil {
 		return fromFormat, true, err
 	}
-	if err := writeConfig(options.Path, migratedData); err != nil {
+	if err := replaceFile(options.Path, migratedData); err != nil {
 		return fromFormat, true, err
 	}
 
@@ -497,7 +497,7 @@ func configBackupPath(path string) string {
 	return fmt.Sprintf("%s.pre-v%d", path, config.Format)
 }
 
-func keepConfigCopy(path string, data []byte) error {
+func keepFileCopy(path string, data []byte) error {
 	file, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0o600) //nolint:gosec // the configured path is ours
 	if errors.Is(err, fs.ErrExist) {
 		return fmt.Errorf("a copy is already kept in %s: move it aside first", path)
@@ -518,8 +518,8 @@ func keepConfigCopy(path string, data []byte) error {
 	return file.Close()
 }
 
-func writeConfig(path string, data []byte) error {
-	file, err := os.CreateTemp(filepath.Dir(path), "config-*.toml")
+func replaceFile(path string, data []byte) error {
+	file, err := os.CreateTemp(filepath.Dir(path), filepath.Base(path)+".*")
 	if err != nil {
 		return err
 	}

@@ -23,12 +23,13 @@ import (
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/provider/anthropic"
 	"crdx.org/oh/pkg/provider/codex"
+	"crdx.org/oh/pkg/provider/opencodego"
 )
 
 const refreshMessage = "Refreshing the model list..."
 
 const (
-	cacheVersion    = 5
+	cacheVersion    = 6
 	updateTimeout   = 90 * time.Second
 	refreshTimeout  = 20 * time.Second
 	maximumCacheAge = 7 * 24 * time.Hour
@@ -207,6 +208,9 @@ func filledFrom(model agent.Model, knownModel agent.Model) agent.Model {
 		prices := *knownModel.Prices
 		model.Prices = &prices
 	}
+	if model.Wire == "" {
+		model.Wire = knownModel.Wire
+	}
 
 	return model
 }
@@ -370,9 +374,15 @@ func unselectableReason(providerName string, model agent.Model) string {
 		return "unknown effort level"
 	case model.MaxOutputTokens <= 0:
 		return "unknown output limit"
+	case !isWireKnown(providerName, model):
+		return "unknown wire protocol"
 	default:
 		return ""
 	}
+}
+
+func isWireKnown(providerName string, model agent.Model) bool {
+	return providerName != OpencodeGoProvider || opencodego.Speaks(model.Wire)
 }
 
 const unnamedModelName = "(unnamed)"
@@ -463,6 +473,7 @@ func choicesFor(providerName string, models []agent.Model) []Choice {
 			ContextWindowTokens: model.ContextWindowTokens,
 			MaxOutputTokens:     model.MaxOutputTokens,
 			Prices:              model.Prices,
+			Wire:                model.Wire,
 		})
 	}
 

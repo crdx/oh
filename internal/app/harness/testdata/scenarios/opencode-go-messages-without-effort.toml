@@ -1,5 +1,6 @@
 provider = "opencode-go"
 model = "minimax-m3"
+wire = "messages"
 
 [[tool]]
 name = "work"

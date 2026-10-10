@@ -1,4 +1,4 @@
-{"kind":"head","version":19,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","model_choice":{"provider":"chat","id":"deepseek-v4-pro","prices":{"input":0.1,"output":0.2,"cache_read":0.002}},"system_prompt":"You are a test assistant.","tools":["work"],"tool_definitions":[{"name":"work","description":"A deterministic scenario tool.","revision":"1"}]}}
+{"kind":"head","version":20,"meta":{"model":"deepseek-v4-pro","workspaceDir":"","provider":"chat","effort":"medium","model_choice":{"provider":"chat","id":"deepseek-v4-pro","prices":{"input":0.1,"output":0.2,"cache_read":0.002}},"system_prompt":"You are a test assistant.","tools":["work"],"tool_definitions":[{"name":"work","description":"A deterministic scenario tool.","revision":"1"}]}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"lose a cheap prompt cache halfway through the turn"}}
 {"kind":"event","event":{"render":"work","kind":"tool_call_request","id":"call-1","name":"work","arguments":"{}","usage":{"input_tokens":48900,"output_tokens":20,"cache":{"read_tokens":48000}}}}

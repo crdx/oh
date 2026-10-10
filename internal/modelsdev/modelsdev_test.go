@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"crdx.org/oh/pkg/agent"
 )
 
 func TestFetchOmitsModelsWithDatedVersionSuffixes(t *testing.T) {
@@ -143,5 +145,52 @@ func TestFetchTellsAModelThatThinksWithoutAnEffortFromOneNothingIsKnownAbout(t *
 
 	if got := models["graded"].EffortLevels; len(got) != 2 {
 		t.Errorf("expected the graded model to keep its levels, got %v", got)
+	}
+}
+
+func TestFetchTakesEachModelsWireFromThePackageItsProviderOrItselfNames(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, _ *http.Request) {
+		writer.Header().Set("Content-Type", "application/json")
+		_, _ = writer.Write([]byte(`{
+			"opencode-go": {"npm": "@ai-sdk/openai-compatible", "models": {
+				"inherits": {},
+				"messages": {"provider": {"npm": "@ai-sdk/anthropic"}},
+				"responses": {"provider": {"npm": "@ai-sdk/openai"}},
+				"foreign": {"provider": {"npm": "@ai-sdk/google"}},
+				"blank": {"provider": {}}
+			}},
+			"elsewhere": {"npm": "@ai-sdk/mistral", "models": {
+				"inherits-the-unknown": {},
+				"names-its-own": {"provider": {"npm": "@ai-sdk/openai-compatible"}}
+			}},
+			"unpackaged": {"models": {
+				"nothing-said": {}
+			}}
+		}`))
+	}))
+	defer server.Close()
+
+	registry, err := Fetch(t.Context(), server.URL, nil)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	for _, test := range []struct {
+		provider string
+		model    string
+		want     agent.Wire
+	}{
+		{"opencode-go", "inherits", agent.CompletionsWire},
+		{"opencode-go", "messages", agent.MessagesWire},
+		{"opencode-go", "responses", agent.ResponsesWire},
+		{"opencode-go", "foreign", ""},
+		{"opencode-go", "blank", agent.CompletionsWire},
+		{"elsewhere", "inherits-the-unknown", ""},
+		{"elsewhere", "names-its-own", agent.CompletionsWire},
+		{"unpackaged", "nothing-said", ""},
+	} {
+		if got := registry.Provider(test.provider)[test.model].Wire; got != test.want {
+			t.Errorf("%s/%s: got wire %q, want %q", test.provider, test.model, got, test.want)
+		}
 	}
 }

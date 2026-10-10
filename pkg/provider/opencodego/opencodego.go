@@ -50,6 +50,7 @@ func New(
 	url string,
 	token string,
 	model string,
+	wire agent.Wire,
 	effort string,
 	maxOutputTokens int,
 ) (*Client, error) {
@@ -70,16 +71,25 @@ func New(
 		maxOutputTokens = min(maxOutputTokens, outputCeiling)
 	}
 
-	switch wireFor(model) {
-	case responsesWire:
+	switch wire {
+	case agent.ResponsesWire:
 		return newResponsesClient(url, token, model, effort, maxOutputTokens)
-	case messagesWire:
+	case agent.MessagesWire:
 		return newMessagesClient(url, token, model, effort, maxOutputTokens)
-	case completionsWire:
+	case agent.CompletionsWire:
 		return newCompletionsClient(url, token, model, effort, maxOutputTokens)
 	}
 
-	return nil, fmt.Errorf("chat: no wire format speaks to %s", model)
+	return nil, fmt.Errorf("chat: no wire protocol is known for %s: run with -u to update the model list", model)
+}
+
+func Speaks(wire agent.Wire) bool {
+	switch wire {
+	case agent.ResponsesWire, agent.MessagesWire, agent.CompletionsWire:
+		return true
+	default:
+		return false
+	}
 }
 
 func newCompletionsClient(url string, token string, model string, effort string, maxOutputTokens int) (*Client, error) {
@@ -114,7 +124,7 @@ func newResponsesClient(url string, token string, model string, effort string, m
 func newMessagesClient(url string, token string, model string, effort string, maxOutputTokens int) (*Client, error) {
 	conversation, err := messages.NewAt(
 		besideCompletions(url, messagesSuffix),
-		requestHeaders(token),
+		messagesHeaders(token),
 		model,
 		effort,
 		maxOutputTokens,
@@ -160,8 +170,16 @@ func (self *Client) headers() http.Header {
 }
 
 func requestHeaders(token string) http.Header {
+	return identifiedHeaders("Authorization", "Bearer "+token)
+}
+
+func messagesHeaders(token string) http.Header {
+	return identifiedHeaders("X-Api-Key", token)
+}
+
+func identifiedHeaders(keyName string, keyValue string) http.Header {
 	header := http.Header{}
-	header.Set("Authorization", "Bearer "+token)
+	header.Set(keyName, keyValue)
 	header.Set("User-Agent", useragent.Get())
 	return header
 }

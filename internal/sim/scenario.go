@@ -10,6 +10,8 @@ import (
 type Scenario struct {
 	Model string `toml:"model"`
 
+	Wire string `toml:"wire"`
+
 	Loop bool `toml:"loop"`
 
 	Strict bool `toml:"strict"`

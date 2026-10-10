@@ -56,7 +56,7 @@ func TestAResumedSessionTakesTheModelItHoldsWithoutAskingTheModelList(t *testing
 func TestASessionHoldingNoModelResumesOnAModelOnlySeen(t *testing.T) {
 	absentCachePath := filepath.Join(t.TempDir(), "models.json")
 	seenModelsPath := filepath.Join(t.TempDir(), "seen_models.json")
-	seenModels := `{"version":1,"providers":{"anthropic":[{"id":"claude-opus-5","efforts":["high"],"output":128000}]}}`
+	seenModels := `{"version":2,"providers":{"anthropic":[{"id":"claude-opus-5","efforts":["high"],"output":128000}]}}`
 	if err := os.WriteFile(seenModelsPath, []byte(seenModels), 0o600); err != nil {
 		t.Fatal(err)
 	}

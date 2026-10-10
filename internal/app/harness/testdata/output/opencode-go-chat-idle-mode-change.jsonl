@@ -1,4 +1,4 @@
-{"kind":"head","version":19,"meta":{"model":"kimi-k2.7-code","workspaceDir":"","provider":"opencode-go","system_prompt":"You are a test assistant."}}
+{"kind":"head","version":20,"meta":{"model":"kimi-k2.7-code","workspaceDir":"","provider":"opencode-go","system_prompt":"You are a test assistant."}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwngl"}}
 {"kind":"event","event":{"kind":"mode_change","name":"w","state":"rxngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"continue with the new mode"}}

@@ -1,5 +1,6 @@
 provider = "opencode-go"
 model = "muse-spark-1.3-contributor"
+wire = "responses"
 effort = "medium"
 
 [[tool]]

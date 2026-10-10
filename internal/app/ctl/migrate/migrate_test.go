@@ -1435,3 +1435,57 @@ func TestFormatEighteenMigrationStoresTheIntentInTheRendering(t *testing.T) {
 		}
 	}
 }
+
+func TestFormatNineteenMigrationRecordsTheWireAnOpenCodeGoSessionWasSpokenOver(t *testing.T) {
+	for _, test := range []struct {
+		choice string
+		want   agent.Wire
+	}{
+		{`{"provider":"opencode-go","id":"deepseek-v4-pro"}`, agent.CompletionsWire},
+		{`{"provider":"opencode-go","id":"grok-4.7"}`, agent.ResponsesWire},
+		{`{"provider":"opencode-go","id":"muse-spark-1.3-contributor"}`, agent.ResponsesWire},
+		{`{"provider":"opencode-go","id":"gpt-6-luna"}`, agent.ResponsesWire},
+		{`{"provider":"opencode-go","id":"minimax-m3"}`, agent.MessagesWire},
+		{`{"provider":"opencode-go","id":"qwen3.8-max"}`, agent.MessagesWire},
+		{`{"provider":"opencode-go","id":"qwen3.8-max","wire":"completions"}`, agent.CompletionsWire},
+		{`{"provider":"anthropic","id":"claude-opus-5"}`, ""},
+	} {
+		directory, name := storedJournal(t,
+			`{"kind":"head","time":"2026-08-01T00:00:00Z","version":19,"id":"one","name":"tame-impala",`+
+				`"meta":{"provider":"opencode-go","model":"m","model_choice":`+test.choice+`}}`,
+		)
+
+		if _, err := migrate.Session(options(directory), name); err != nil {
+			t.Fatal(err)
+		}
+
+		storedSession, err := store.Read(directory, name)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if got := storedSession.Meta.ModelChoice.Wire; got != test.want {
+			t.Errorf("%s: stored the wire %q, want %q", test.choice, got, test.want)
+		}
+	}
+}
+
+func TestFormatNineteenMigrationLeavesASessionHoldingNoModelChoiceAlone(t *testing.T) {
+	directory, name := storedJournal(t,
+		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":19,"id":"one","name":"tame-impala",`+
+			`"meta":{"provider":"opencode-go","model":"deepseek-v4-pro"}}`,
+	)
+
+	if _, err := migrate.Session(options(directory), name); err != nil {
+		t.Fatal(err)
+	}
+
+	storedSession, err := store.Read(directory, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if storedSession.Meta.ModelChoice != nil {
+		t.Errorf("expected no model choice, got %+v", storedSession.Meta.ModelChoice)
+	}
+}

@@ -10,6 +10,7 @@ OpenCode Go  minimax-m3                                   removed
 OpenCode Go  muse-spark-1.3-contributor                   removed
 OpenCode Go  qwen3-max                                    removed
 OpenCode Go  kimi-k2.7-code                               removed
+OpenCode Go  omen-alpha                                   removed
 Anthropic    claude-sonnet-4-7                            added
 Anthropic    claude-haiku-5                               removed
 Anthropic    claude-sonnet-4-6                            removed

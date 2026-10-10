@@ -1,0 +1,63 @@
+{
+  "providers": {
+    "anthropic": [
+      {
+        "efforts": [
+          "high"
+        ],
+        "id": "claude-opus-5",
+        "output": 128000
+      }
+    ],
+    "opencode-go": [
+      {
+        "efforts": [
+          "high",
+          "max"
+        ],
+        "id": "deepseek-v4-pro",
+        "output": 384000,
+        "wire": "completions"
+      },
+      {
+        "efforts": [
+          "high"
+        ],
+        "id": "qwen3.8-max",
+        "output": 64000,
+        "wire": "messages"
+      },
+      {
+        "effortless": true,
+        "id": "minimax-m3",
+        "output": 64000,
+        "wire": "messages"
+      },
+      {
+        "efforts": [
+          "high"
+        ],
+        "id": "muse-spark-1.3-contributor",
+        "output": 128000,
+        "wire": "responses"
+      },
+      {
+        "efforts": [
+          "high"
+        ],
+        "id": "grok-4.7",
+        "output": 128000,
+        "wire": "responses"
+      },
+      {
+        "efforts": [
+          "high"
+        ],
+        "id": "gpt-6-luna",
+        "output": 128000,
+        "wire": "responses"
+      }
+    ]
+  },
+  "version": 2
+}

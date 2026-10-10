@@ -1,12 +1,13 @@
 \e[4m\e[38;2;150;152;150mProvider      Models  Selectable  Ignored  Source\e[0m\e[0m
 Codex              1           \e[38;2;76;154;44m1\e[0m           \e[38;2;129;162;190mmodels.dev\e[0m \e[38;2;150;152;150m(it lists no models of its own, and only the registry describes it)\e[0m
-OpenCode Go        5           \e[38;2;76;154;44m3\e[0m        \e[38;2;207;173;0m2\e[0m  \e[38;2;129;162;190mendpoint\e[0m
+OpenCode Go        6           \e[38;2;76;154;44m3\e[0m        \e[38;2;207;173;0m3\e[0m  \e[38;2;129;162;190mendpoint\e[0m
 Anthropic          6           \e[38;2;76;154;44m2\e[0m        \e[38;2;207;173;0m4\e[0m  \e[38;2;129;162;190mendpoint\e[0m
 Ollama             5           \e[38;2;76;154;44m1\e[0m        \e[38;2;207;173;0m4\e[0m  \e[38;2;129;162;190mendpoint\e[0m
 
 \e[4m\e[38;2;150;152;150mProvider     Model                                        Reason\e[0m\e[0m
 OpenCode Go  minimax-m2.7                                 \e[38;2;150;152;150msuperseded by minimax-m3\e[0m
 OpenCode Go  kimi-k2.7-code                               \e[38;2;150;152;150munknown effort level\e[0m
+OpenCode Go  omen-alpha                                   \e[38;2;150;152;150munknown wire protocol\e[0m
 Anthropic    claude-sonnet-4-5                            \e[38;2;150;152;150msuperseded by claude-sonnet-4-6\e[0m
 Anthropic    claude-opus-4-5                              \e[38;2;150;152;150munsupported request shape\e[0m
 Anthropic    claude-fable-5-20260609                      \e[38;2;150;152;150msuperseded by claude-fable-5-1\e[0m

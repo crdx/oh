@@ -6,6 +6,7 @@ import (
 	"slices"
 	"strings"
 
+	"crdx.org/oh/internal/format"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -17,13 +18,20 @@ type Choice struct {
 	ContextWindowTokens int                `json:"context,omitempty"`
 	MaxOutputTokens     int                `json:"output,omitempty"`
 	Prices              *agent.TokenPrices `json:"prices,omitempty"`
+	Wire                agent.Wire         `json:"wire,omitempty"`
 }
 
 func Chosen(choices []Choice, seenPath string, providerName string, model string) (Choice, error) {
-	for _, choice := range slices.Concat(choices, seenChoices(seenPath)) {
-		if choice.Provider == providerName && choice.ID == model {
-			return choice, nil
-		}
+	if choice, isFound := chosenAmong(choices, providerName, model); isFound {
+		return choice, nil
+	}
+
+	seen, err := seenChoices(seenPath)
+	if err != nil && format.IsOlder(err) {
+		return Choice{}, fmt.Errorf("looking for %s/%s among the models seen before: %w", providerName, model, err)
+	}
+	if choice, isFound := chosenAmong(seen, providerName, model); isFound {
+		return choice, nil
 	}
 
 	if !isDrivable(providerName, model) {
@@ -33,6 +41,17 @@ func Chosen(choices []Choice, seenPath string, providerName string, model string
 	return Choice{}, fmt.Errorf(
 		"nothing is known about %s/%s: run with -u to update the model list", providerName, model,
 	)
+}
+
+func chosenAmong(choices []Choice, providerName string, model string) (Choice, bool) {
+	index := slices.IndexFunc(choices, func(choice Choice) bool {
+		return choice.Provider == providerName && choice.ID == model
+	})
+	if index < 0 {
+		return Choice{}, false
+	}
+
+	return choices[index], true
 }
 
 func Choices(path string) []Choice {

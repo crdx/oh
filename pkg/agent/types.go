@@ -28,6 +28,14 @@ type State interface {
 	Load(items []json.RawMessage)
 }
 
+type Wire string
+
+const (
+	CompletionsWire Wire = "completions"
+	ResponsesWire   Wire = "responses"
+	MessagesWire    Wire = "messages"
+)
+
 type Model struct {
 	ID                  string       `json:"id"`
 	Name                string       `json:"name,omitempty"`
@@ -36,6 +44,7 @@ type Model struct {
 	ContextWindowTokens int          `json:"context,omitempty"`
 	MaxOutputTokens     int          `json:"output,omitempty"`
 	Prices              *TokenPrices `json:"prices,omitempty"`
+	Wire                Wire         `json:"wire,omitempty"`
 }
 
 type TokenPrices struct {

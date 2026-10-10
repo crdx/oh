@@ -553,7 +553,7 @@ func TestEveryConnectionCarriesAWebSearchClient(t *testing.T) {
 
 	for _, providerName := range []string{codexProvider, opencodeGoProvider, anthropicProvider, ollamaProvider} {
 		client, err := Connect(
-			model.Choice{Provider: providerName, ID: "fake", MaxOutputTokens: 128_000},
+			model.Choice{Provider: providerName, ID: "fake", MaxOutputTokens: 128_000, Wire: agent.CompletionsWire},
 			testSelection(),
 			EndpointSettings{OverrideURL: address},
 		)
@@ -577,22 +577,22 @@ func TestAnOpenCodeConnectionMeasuresToolsInItsModelsWireFormat(t *testing.T) {
 
 	offered := []tool.Tool{title.New()}
 
-	for modelID, want := range map[string]int{
-		"deepseek-v4-pro":            chatcompletions.ToolsSize(offered),
-		"muse-spark-1.3-contributor": responses.ToolsSize(offered),
-		"qwen3.8-max":                messages.ToolsSize(offered),
+	for wire, want := range map[agent.Wire]int{
+		agent.CompletionsWire: chatcompletions.ToolsSize(offered),
+		agent.ResponsesWire:   responses.ToolsSize(offered),
+		agent.MessagesWire:    messages.ToolsSize(offered),
 	} {
 		connection, err := Connect(
-			model.Choice{Provider: opencodeGoProvider, ID: modelID, MaxOutputTokens: 128_000},
+			model.Choice{Provider: opencodeGoProvider, ID: "fake", MaxOutputTokens: 128_000, Wire: wire},
 			testSelection(),
 			EndpointSettings{OverrideURL: "http://somewhere/v1/chat/completions"},
 		)
 		if err != nil {
-			t.Fatalf("%s: unexpected error: %v", modelID, err)
+			t.Fatalf("%s: unexpected error: %v", wire, err)
 		}
 
 		if got := connection.ToolsSize(offered); got != want {
-			t.Errorf("%s: measured %d bytes of tools, want %d", modelID, got, want)
+			t.Errorf("%s: measured %d bytes of tools, want %d", wire, got, want)
 		}
 	}
 }
@@ -614,9 +614,15 @@ func TestConnectReportsWhatTheProviderRefused(t *testing.T) {
 		},
 		{
 			"opencode-go",
-			model.Choice{Provider: opencodeGoProvider, ID: "deepseek-v4-pro"},
+			model.Choice{Provider: opencodeGoProvider, ID: "deepseek-v4-pro", Wire: agent.CompletionsWire},
 			"http://somewhere",
 			"chat: MaxOutputTokens is 0",
+		},
+		{
+			"opencode-go without a wire",
+			model.Choice{Provider: opencodeGoProvider, ID: "claude-haiku-5-5", MaxOutputTokens: 128_000},
+			"http://somewhere",
+			"no wire protocol is known for claude-haiku-5-5",
 		},
 		{
 			"anthropic",

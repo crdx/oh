@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/state"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
 )
@@ -139,11 +140,12 @@ func cachedProviderModels(t *testing.T, providerName string) string {
 func ignoredModelListings() map[string][]agent.Model {
 	return map[string][]agent.Model{
 		OpencodeGoProvider: {
-			{ID: "minimax-m2.7", IsEffortless: true, MaxOutputTokens: 32_000},
-			{ID: "minimax-m3", IsEffortless: true, MaxOutputTokens: 32_000},
-			{ID: "muse-spark-1.3-contributor", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
-			{ID: "qwen3-max", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
-			{ID: "kimi-k2.7-code", MaxOutputTokens: 32_000},
+			{ID: "minimax-m2.7", IsEffortless: true, MaxOutputTokens: 32_000, Wire: agent.MessagesWire},
+			{ID: "minimax-m3", IsEffortless: true, MaxOutputTokens: 32_000, Wire: agent.MessagesWire},
+			{ID: "muse-spark-1.3-contributor", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000, Wire: agent.ResponsesWire},
+			{ID: "qwen3-max", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000, Wire: agent.CompletionsWire},
+			{ID: "kimi-k2.7-code", MaxOutputTokens: 32_000, Wire: agent.CompletionsWire},
+			{ID: "omen-alpha", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
 		},
 		AnthropicProvider: {
 			{ID: "claude-haiku-5", IsEffortless: true, MaxOutputTokens: 64_000},
@@ -249,8 +251,8 @@ func secondListings() map[string][]agent.Model {
 func changedModelListings() map[string][]agent.Model {
 	return map[string][]agent.Model{
 		OpencodeGoProvider: {
-			{ID: "minimax-m2.1", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
-			{ID: "minimax-m2.5", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
+			{ID: "minimax-m2.1", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000, Wire: agent.MessagesWire},
+			{ID: "minimax-m2.5", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000, Wire: agent.MessagesWire},
 		},
 		AnthropicProvider: {
 			{ID: "claude-sonnet-4-6", EffortLevels: []string{"high"}, MaxOutputTokens: 64_000},
@@ -535,4 +537,81 @@ func assertGolden(t *testing.T, name string, drawn string) {
 	if drawn != string(want) {
 		t.Errorf("output differs from %s\n--- got ---\n%s--- want ---\n%s", goldenPath, drawn, want)
 	}
+}
+
+const opencodeGoRegistry = `{
+	"opencode-go": {"npm": "@ai-sdk/openai-compatible", "models": {
+		"glm-5.3": {
+			"id": "glm-5.3", "name": "GLM-5.3", "reasoning": true,
+			"reasoning_options": [{"type": "effort", "values": ["high"]}],
+			"limit": {"context": 200000, "output": 64000}
+		},
+		"qwen3.8-max": {
+			"id": "qwen3.8-max", "name": "Qwen3.8 Max", "reasoning": true,
+			"provider": {"npm": "@ai-sdk/anthropic"},
+			"reasoning_options": [{"type": "effort", "values": ["high"]}],
+			"limit": {"context": 256000, "output": 64000}
+		},
+		"muse-spark-1.3-contributor": {
+			"id": "muse-spark-1.3-contributor", "name": "Muse Spark 1.3", "reasoning": true,
+			"provider": {"npm": "@ai-sdk/openai"},
+			"reasoning_options": [{"type": "effort", "values": ["high"]}],
+			"limit": {"context": 400000, "output": 128000}
+		},
+		"minimax-m3": {
+			"id": "minimax-m3", "name": "MiniMax M3", "reasoning": true,
+			"provider": {"npm": "@ai-sdk/openai-compatible"},
+			"reasoning_options": [{"type": "effort", "values": ["high"]}],
+			"limit": {"context": 200000, "output": 64000}
+		},
+		"gemini-9": {
+			"id": "gemini-9", "name": "Gemini 9", "reasoning": true,
+			"provider": {"npm": "@ai-sdk/google"},
+			"reasoning_options": [{"type": "effort", "values": ["high"]}],
+			"limit": {"context": 1000000, "output": 64000}
+		}
+	}}
+}`
+
+func TestGoldenOpenCodeGoSpeaksToEachModelOverTheWireTheRegistryNames(t *testing.T) {
+	t.Setenv("XDG_STATE_HOME", t.TempDir())
+
+	listedIDs := []string{"glm-5.3", "qwen3.8-max", "muse-spark-1.3-contributor", "minimax-m3", "gemini-9", "omen-alpha"}
+	lister := func(ctx context.Context, providerName string) ([]agent.Model, error) {
+		if providerName != OpencodeGoProvider {
+			return unreachableProviders(ctx, providerName)
+		}
+
+		listed := make([]agent.Model, 0, len(listedIDs))
+		for _, id := range listedIDs {
+			listed = append(listed, agent.Model{ID: id})
+		}
+
+		return listed, nil
+	}
+
+	var output bytes.Buffer
+	if err := Update(&output, serveRegistry(t, opencodeGoRegistry), modelCachePath(), seenModelsPath(), lister, true); err != nil {
+		t.Fatal(err)
+	}
+
+	assertGolden(t, "update-opencode-go-wires.ansi", report(t, output.String()))
+	assertGolden(t, "update-opencode-go-wires.models.json", cachedProviderModels(t, OpencodeGoProvider))
+	assertGolden(t, "update-opencode-go-wires.seen.json", seenProviderModels(t, OpencodeGoProvider))
+}
+
+func seenProviderModels(t *testing.T, providerName string) string {
+	t.Helper()
+
+	var record seenModels
+	if err := state.Read(seenModelsPath(), SeenModelsFormat, &record); err != nil {
+		t.Fatal(err)
+	}
+
+	data, err := json.MarshalIndent(record.Providers[providerName], "", "  ")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return string(data) + "\n"
 }

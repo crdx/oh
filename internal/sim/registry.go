@@ -9,6 +9,8 @@ type registryEntry struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
 
+	Provider *registryPackage `json:"provider,omitempty"`
+
 	ReasoningOptions []registryReasoning `json:"reasoning_options"`
 
 	Limit struct {
@@ -29,11 +31,37 @@ type registryReasoning struct {
 	Values []string `json:"values"`
 }
 
+type registryPackage struct {
+	Name string `json:"npm"`
+}
+
 type registryProvider struct {
-	Models map[string]registryEntry `json:"models"`
+	Package string                   `json:"npm"`
+	Models  map[string]registryEntry `json:"models"`
 }
 
 const registryQuery = "providers"
+
+const compatiblePackage = "@ai-sdk/openai-compatible"
+
+var providerPackages = map[string]string{
+	"openai":    "@ai-sdk/openai",
+	"anthropic": "@ai-sdk/anthropic",
+}
+
+var wirePackages = map[string]string{
+	Completions: compatiblePackage,
+	Responses:   "@ai-sdk/openai",
+	Messages:    "@ai-sdk/anthropic",
+}
+
+func packageOf(providerName string) string {
+	if name, isFound := providerPackages[providerName]; isFound {
+		return name
+	}
+
+	return compatiblePackage
+}
 
 func (self *Endpoint) serveRegistry(writer http.ResponseWriter, request *http.Request) {
 	entry := registryEntry{
@@ -51,13 +79,18 @@ func (self *Endpoint) serveRegistry(writer http.ResponseWriter, request *http.Re
 	entry.Cost.CacheRead = simulatedPrices.CacheRead
 	entry.Cost.CacheWrite = simulatedPrices.CacheWrite
 
-	describedProvider := registryProvider{Models: map[string]registryEntry{self.scenario.Model: entry}}
+	if name, isFound := wirePackages[self.scenario.Wire]; isFound {
+		entry.Provider = &registryPackage{Name: name}
+	}
 
 	registry := map[string]registryProvider{}
 
 	for name := range strings.SplitSeq(request.URL.Query().Get(registryQuery), ",") {
 		if name != "" {
-			registry[name] = describedProvider
+			registry[name] = registryProvider{
+				Package: packageOf(name),
+				Models:  map[string]registryEntry{self.scenario.Model: entry},
+			}
 		}
 	}
 

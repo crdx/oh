@@ -27,6 +27,7 @@ const (
 	listingModel           = "listing"
 	listingEffort          = "high"
 	listingMaxOutputTokens = 1
+	listingWire            = agent.CompletionsWire
 )
 
 type Client interface {
@@ -140,6 +141,7 @@ func ListModels(ctx context.Context, providerName string, endpoints EndpointSett
 		Provider:        providerName,
 		ID:              listingModel,
 		MaxOutputTokens: listingMaxOutputTokens,
+		Wire:            listingWire,
 	}
 	selection := model.Selection{Provider: providerName, Model: listingModel, Effort: listingEffort}
 	if err := requireCredentials(providerName, endpoints.OverrideURL); err != nil {
