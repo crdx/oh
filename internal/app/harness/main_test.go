@@ -15682,6 +15682,23 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 			"",
 			segment.Context{},
 		),
+		"subscription-usage / not applicable leaves a page unlinked": goldenSegmentPass(
+			t,
+			subUsage.New(subUsage.Settings{Page: goldenUsagePage, Now: func() time.Time { return at }}),
+			"",
+			segment.Context{},
+		),
+		"subscription-usage / window labels linked to the page": goldenUsagePass(t, at, "gpt-5.6-sol", usageReport{
+			windows: []agent.UsageWindow{
+				{Duration: 5 * time.Hour, Percent: 40, ResetsAt: at.Add(150 * time.Minute)},
+				{Duration: 7 * 24 * time.Hour, Percent: 12, ResetsAt: at.Add(6 * 24 * time.Hour)},
+			},
+			usagePage: goldenUsagePage,
+		}),
+		"subscription-usage / refused leaves a page unlinked": goldenUsagePass(t, at, "gpt-5.6-sol", usageReport{
+			err:       &req.StatusError{Status: 401, Message: "the key is not yours"},
+			usagePage: goldenUsagePage,
+		}),
 		"subscription-usage / even burn": goldenUsagePass(t, at, "gpt-5.6-sol", usageReport{
 			windows: []agent.UsageWindow{
 				{Duration: 5 * time.Hour, Percent: 40, ResetsAt: at.Add(150 * time.Minute)},
@@ -15976,6 +15993,12 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 	passes["subscription-usage / boundless"] = goldenSegmentPass(
 		t,
 		subUsage.New(subUsage.Settings{IsSimulated: true}),
+		"",
+		segment.Context{},
+	)
+	passes["subscription-usage / boundless ignores a page"] = goldenSegmentPass(
+		t,
+		subUsage.New(subUsage.Settings{IsSimulated: true, Page: goldenUsagePage}),
 		"",
 		segment.Context{},
 	)
@@ -21375,10 +21398,13 @@ func shownShortRunningHelpFrames(t *testing.T) string {
 	return strings.TrimSuffix(shown.String(), "\n")
 }
 
+const goldenUsagePage = "https://usage.example/settings"
+
 type usageReport struct {
-	windows []agent.UsageWindow
-	err     error
-	thenErr error
+	windows   []agent.UsageWindow
+	err       error
+	thenErr   error
+	usagePage string
 }
 
 type scriptedUsageReporter struct {
@@ -21432,6 +21458,7 @@ func goldenUsagePass(
 	built, err := subUsage.New(subUsage.Settings{
 		Reporter:         reporter,
 		ModelName:        modelName,
+		Page:             report.usagePage,
 		IsSelfRefreshing: true,
 		Now:              readClock,
 	})(goldenSegmentOptions(""))

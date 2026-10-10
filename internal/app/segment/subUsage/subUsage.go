@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 
+	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/segment/fit"
 	"crdx.org/oh/internal/app/spinner"
@@ -45,6 +46,7 @@ const (
 type Settings struct {
 	Reporter         agent.UsageReporter
 	CachePath        string
+	Page             string
 	ModelName        string
 	IsSelfRefreshing bool
 	IsSimulated      bool
@@ -89,6 +91,7 @@ type state struct {
 	modelName        string
 	rate             time.Duration
 	isSelfRefreshing bool
+	page             string
 	gauges           *usage.Gauges
 	now              func() time.Time
 
@@ -131,6 +134,7 @@ func New(settings Settings) segment.Factory {
 			modelName:        strings.ToLower(settings.ModelName),
 			rate:             args.Rate,
 			isSelfRefreshing: settings.IsSelfRefreshing,
+			page:             settings.Page,
 			gauges:           settings.Gauges,
 			now:              settings.Now,
 			status:           usagePending,
@@ -546,7 +550,7 @@ func (self *state) readWindow(
 
 	if !window.ResetsAt.IsZero() && !window.ResetsAt.After(now) {
 		row.isStale = true
-		row.label = style.Dim(label)
+		row.label = self.linked(style.Dim(label))
 		row.percent = style.Dim(staleLabel)
 
 		return row
@@ -554,7 +558,7 @@ func (self *state) readWindow(
 
 	if window.IsLimited {
 		row.isLimited = true
-		row.label = style.Failure(label)
+		row.label = self.linked(style.Failure(label))
 		row.percent = style.Failure(fmt.Sprintf("%d%%", usedPercent))
 		row.gauge = self.gauges.Draw(usedPercent, nil, usage.PaceCritical, barCells)
 		row.mark = style.Failure(limitedMark)
@@ -572,11 +576,19 @@ func (self *state) readWindow(
 		pace = usage.ClassifyPace(usedPercent, pacePercent)
 	}
 
-	row.label = style.Dim(label)
+	row.label = self.linked(style.Dim(label))
 	row.percent = usage.PaceStyle(pace)(fmt.Sprintf("%d%%", usedPercent))
 	row.gauge = self.gauges.Draw(usedPercent, expectedPercent, pace, barCells)
 
 	return row
+}
+
+func (self *state) linked(label string) string {
+	if self.page == "" {
+		return label
+	}
+
+	return link.RenderURL(label, self.page)
 }
 
 func failureReason(err error) string {

@@ -12,6 +12,8 @@ const (
 	ClientVersion = responses.ClientVersion
 )
 
+const UsagePage = "https://chatgpt.com/settings/usage?tab=overview"
+
 var (
 	Efforts       = responses.Efforts
 	ErrIncomplete = responses.ErrIncomplete

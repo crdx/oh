@@ -121,6 +121,23 @@ func requireCredentials(providerName string, overrideURL string) error {
 	}
 }
 
+func UsagePage(providerName string, overrideURL string) string {
+	if overrideURL != "" {
+		return ""
+	}
+
+	switch providerName {
+	case model.CodexProvider:
+		return codex.UsagePage
+	case model.AnthropicProvider:
+		return anthropic.UsagePage
+	case model.OpencodeGoProvider:
+		return opencodego.UsagePage
+	default:
+		return ""
+	}
+}
+
 func connectProvider(choice model.Choice, selection model.Selection, endpoints EndpointSettings) (*Connection, error) {
 	switch choice.Provider {
 	case model.CodexProvider:

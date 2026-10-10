@@ -11,6 +11,7 @@
 - Convert `oh -l` into a non-interactive version of the model picker
 - Move bare model list to `oh --ctl models`
 - Figure out wire protocol from models.dev data
+- Link the usage segment labels to the provider's usage page
 - Add 4 default themes for different terminal backgrounds
 - Update default shell and job timeouts to 10m
 - Complete ignored paths with `@!`

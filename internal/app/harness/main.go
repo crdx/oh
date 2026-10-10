@@ -1504,6 +1504,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		IsUnconfined:          args.Yolo,
 		UsageReporter:         usageReporter,
 		UsageCachePath:        usageCachePath,
+		UsagePage:             backend.UsagePage(selection.Provider, endpointURL),
 		UsageIsSelfRefreshing: usageReporter != nil,
 		UsageGauges:           usage.GaugesFor(os.Stdout, cellWidth, cellHeight, hasGraphics),
 		Currency:              currency,

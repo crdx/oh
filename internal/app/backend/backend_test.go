@@ -15,8 +15,10 @@ import (
 	"crdx.org/oh/internal/auth"
 	"crdx.org/oh/internal/sim"
 	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/provider/anthropic"
 	"crdx.org/oh/pkg/provider/codex"
 	"crdx.org/oh/pkg/provider/ollama"
+	"crdx.org/oh/pkg/provider/opencodego"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/title"
 	"crdx.org/oh/pkg/wire/anthropic/messages"
@@ -669,5 +671,25 @@ func TestOpenCodeRequiresLogin(t *testing.T) {
 	)
 	if err == nil || !strings.Contains(err.Error(), "login command with opencode-go") {
 		t.Fatalf("got error %v", err)
+	}
+}
+
+func TestOnlyAMeteredProviderOnItsOwnEndpointHasAUsagePage(t *testing.T) {
+	for _, test := range []struct {
+		provider    string
+		overrideURL string
+		want        string
+	}{
+		{provider: model.AnthropicProvider, want: anthropic.UsagePage},
+		{provider: model.CodexProvider, want: codex.UsagePage},
+		{provider: model.OpencodeGoProvider, want: opencodego.UsagePage},
+		{provider: model.OllamaProvider},
+		{provider: model.AnthropicProvider, overrideURL: "http://127.0.0.1:1"},
+		{provider: model.CodexProvider, overrideURL: "http://127.0.0.1:1"},
+		{provider: model.OpencodeGoProvider, overrideURL: "http://127.0.0.1:1"},
+	} {
+		if got := UsagePage(test.provider, test.overrideURL); got != test.want {
+			t.Errorf("%s at %q: got %q, want %q", test.provider, test.overrideURL, got, test.want)
+		}
 	}
 }

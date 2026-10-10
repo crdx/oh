@@ -10,6 +10,8 @@ const (
 	Identity = messages.Identity
 )
 
+const UsagePage = "https://claude.ai/settings/usage"
+
 var (
 	Efforts       = messages.Efforts
 	ErrIncomplete = messages.ErrIncomplete

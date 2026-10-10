@@ -322,6 +322,10 @@ GPTS\e[38;2;150;152;150m5.6\e[0m
 \e[3;38;2;230;168;255m∞\e[0m \e[38;2;150;152;150m░░░░░░░░\e[0m
 \e[3;38;2;230;168;255m∞\e[0m
 
+=== subscription-usage / boundless ignores a page ===
+\e[3;38;2;230;168;255m∞\e[0m \e[38;2;150;152;150m░░░░░░░░\e[0m
+\e[3;38;2;230;168;255m∞\e[0m
+
 === subscription-usage / even burn ===
 \e[38;2;76;154;44m●\e[0m \e[38;2;150;152;150m5h\e[0m \e[38;2;129;162;190m40%\e[0m \e[38;2;129;162;190m███\e[0m\e[38;2;150;152;150m░┃░░░\e[0m \e[38;2;150;152;150mwk\e[0m \e[38;2;129;162;190m12%\e[0m \e[38;2;150;152;150m░┃░░░░░░\e[0m
 \e[38;2;76;154;44m●\e[0m \e[38;2;150;152;150m5h\e[0m \e[38;2;129;162;190m40%\e[0m \e[38;2;129;162;190m███\e[0m\e[38;2;150;152;150m░┃░░░\e[0m \e[38;2;150;152;150mwk\e[0m \e[38;2;129;162;190m12%\e[0m
@@ -356,6 +360,8 @@ GPTS\e[38;2;150;152;150m5.6\e[0m
 
 === subscription-usage / not applicable ===
 \e[38;2;150;152;150musage n/a\e[0m
+=== subscription-usage / not applicable leaves a page unlinked ===
+\e[38;2;150;152;150musage n/a\e[0m
 === subscription-usage / nothing reported yet ===
 usage \e[38;2;150;152;150mpending\e[0m
 === subscription-usage / only other models metered ===
@@ -367,6 +373,8 @@ usage \e[38;2;150;152;150mpending\e[0m
 \e[38;2;204;102;102m●\e[0m \e[38;2;129;162;190m███\e[0m\e[38;2;150;152;150m░┃░░░\e[0m \e[38;2;204;102;102m429\e[0m
 
 === subscription-usage / refused ===
+usage \e[38;2;204;102;102m401\e[0m
+=== subscription-usage / refused leaves a page unlinked ===
 usage \e[38;2;204;102;102m401\e[0m
 === subscription-usage / spent ===
 \e[38;2;76;154;44m●\e[0m \e[38;2;204;102;102m5h\e[0m \e[38;2;204;102;102m100%\e[0m \e[38;2;204;102;102m████████\e[0m \e[38;2;204;102;102m✖\e[0m
@@ -397,6 +405,14 @@ usage \e[38;2;204;102;102mfailed\e[0m
 === subscription-usage / window already elapsed ===
 \e[38;2;76;154;44m●\e[0m \e[38;2;150;152;150m5h\e[0m \e[38;2;150;152;150mstale\e[0m
 \e[38;2;76;154;44m●\e[0m \e[38;2;150;152;150mstale\e[0m
+
+=== subscription-usage / window labels linked to the page ===
+\e[38;2;76;154;44m●\e[0m \e]8;;https://usage.example/settings\e\\\e[38;2;150;152;150m5h\e[0m\e]8;;\e\\ \e[38;2;129;162;190m40%\e[0m \e[38;2;129;162;190m███\e[0m\e[38;2;150;152;150m░┃░░░\e[0m \e]8;;https://usage.example/settings\e\\\e[38;2;150;152;150mwk\e[0m\e]8;;\e\\ \e[38;2;129;162;190m12%\e[0m \e[38;2;150;152;150m░┃░░░░░░\e[0m
+\e[38;2;76;154;44m●\e[0m \e]8;;https://usage.example/settings\e\\\e[38;2;150;152;150m5h\e[0m\e]8;;\e\\ \e[38;2;129;162;190m40%\e[0m \e[38;2;129;162;190m███\e[0m\e[38;2;150;152;150m░┃░░░\e[0m \e]8;;https://usage.example/settings\e\\\e[38;2;150;152;150mwk\e[0m\e]8;;\e\\ \e[38;2;129;162;190m12%\e[0m
+\e[38;2;76;154;44m●\e[0m \e]8;;https://usage.example/settings\e\\\e[38;2;150;152;150m5h\e[0m\e]8;;\e\\ \e[38;2;129;162;190m40%\e[0m \e[38;2;129;162;190m███\e[0m\e[38;2;150;152;150m░┃░░░\e[0m \e[38;2;129;162;190m12%\e[0m
+\e[38;2;76;154;44m●\e[0m \e]8;;https://usage.example/settings\e\\\e[38;2;150;152;150m5h\e[0m\e]8;;\e\\ \e[38;2;129;162;190m40%\e[0m \e[38;2;129;162;190m███\e[0m\e[38;2;150;152;150m░┃░░░\e[0m
+\e[38;2;76;154;44m●\e[0m \e]8;;https://usage.example/settings\e\\\e[38;2;150;152;150m5h\e[0m\e]8;;\e\\ \e[38;2;129;162;190m███\e[0m\e[38;2;150;152;150m░┃░░░\e[0m
+\e[38;2;76;154;44m●\e[0m \e[38;2;129;162;190m███\e[0m\e[38;2;150;152;150m░┃░░░\e[0m
 
 === turn-count / nothing asked yet ===
 

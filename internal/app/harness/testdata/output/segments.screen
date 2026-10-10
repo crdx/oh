@@ -295,6 +295,9 @@ $1.28
 === subscription-usage / boundless ===
 ∞ ░░░░░░░░
 ∞
+=== subscription-usage / boundless ignores a page ===
+∞ ░░░░░░░░
+∞
 === subscription-usage / even burn ===
 ● 5h 40% ███░┃░░░ wk 12% ░┃░░░░░░
 ● 5h 40% ███░┃░░░ wk 12%
@@ -324,6 +327,8 @@ $1.28
 ● ░░░░░░░░
 === subscription-usage / not applicable ===
 usage n/a
+=== subscription-usage / not applicable leaves a page unlinked ===
+usage n/a
 === subscription-usage / nothing reported yet ===
 usage pending
 === subscription-usage / only other models metered ===
@@ -334,6 +339,8 @@ usage unavailable
 ● 5h ███░┃░░░ 429
 ● ███░┃░░░ 429
 === subscription-usage / refused ===
+usage 401
+=== subscription-usage / refused leaves a page unlinked ===
 usage 401
 === subscription-usage / spent ===
 ● 5h 100% ████████ ✖
@@ -360,6 +367,13 @@ usage failed
 === subscription-usage / window already elapsed ===
 ● 5h stale
 ● stale
+=== subscription-usage / window labels linked to the page ===
+● 5h 40% ███░┃░░░ wk 12% ░┃░░░░░░
+● 5h 40% ███░┃░░░ wk 12%
+● 5h 40% ███░┃░░░ 12%
+● 5h 40% ███░┃░░░
+● 5h ███░┃░░░
+● ███░┃░░░
 === turn-count / nothing asked yet ===
 
 === turn-count / third turn ===

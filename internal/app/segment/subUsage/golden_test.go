@@ -16,6 +16,8 @@ import (
 
 var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")
 
+const usagePage = "https://usage.example/settings"
+
 var (
 	payloadPattern    = regexp.MustCompile(`;[A-Za-z0-9+/=]+\x1b\\`)
 	identifierPattern = regexp.MustCompile(`i=\d+`)
@@ -205,7 +207,7 @@ func segmentCases() []segmentCase {
 	}
 }
 
-func drawEachCase(t *testing.T, isPlain bool) string {
+func drawEachCase(t *testing.T, isPlain bool, page string) string {
 	t.Helper()
 
 	var drawn strings.Builder
@@ -222,6 +224,7 @@ func drawEachCase(t *testing.T, isPlain bool) string {
 			modelName:         strings.ToLower(test.modelName),
 			rate:              defaultRate,
 			isSelfRefreshing:  !test.isWaiting,
+			page:              page,
 			gauges:            gauges,
 			now:               clock.read,
 			windows:           test.windows,
@@ -269,17 +272,57 @@ func withoutPayload(drawn string) string {
 }
 
 func TestGoldenEverySegmentMatchesTheGolden(t *testing.T) {
-	checkGolden(t, "segment.txt", drawEachCase(t, true))
+	checkGolden(t, "segment.txt", drawEachCase(t, true, ""))
 }
 
 func TestGoldenEveryStyledSegmentMatchesTheGolden(t *testing.T) {
-	checkGolden(t, "segment.ansi", drawEachCase(t, false))
+	checkGolden(t, "segment.ansi", drawEachCase(t, false, ""))
+}
+
+func TestGoldenEveryLinkedSegmentMatchesTheGolden(t *testing.T) {
+	checkGolden(t, "segment-linked.ansi", drawEachCase(t, false, usagePage))
+}
+
+func TestALinkedSegmentReadsAsTheUnlinkedOneDoes(t *testing.T) {
+	if linked, unlinked := drawEachCase(t, true, usagePage), drawEachCase(t, true, ""); linked != unlinked {
+		t.Errorf("linking changed what is read\n--- linked ---\n%s--- unlinked ---\n%s", linked, unlinked)
+	}
+}
+
+func TestOnlyAWindowLabelIsLinked(t *testing.T) {
+	opening := "\x1b]8;;" + usagePage + "\x1b\\"
+	closing := "\x1b]8;;\x1b\\"
+	labels := map[string]bool{"5h": true, "wk": true, "mo": true}
+
+	for rung := range strings.SplitSeq(drawEachCase(t, false, usagePage), "\n") {
+		if strings.HasPrefix(rung, "=== ") {
+			continue
+		}
+
+		if linkedWidth, plainWidth := style.Width(rung), style.Width(style.Plain(rung)); linkedWidth != plainWidth {
+			t.Errorf("a link costs cells: %d against %d in %q", linkedWidth, plainWidth, rung)
+		}
+
+		for _, part := range strings.Split(rung, opening)[1:] {
+			text, _, isClosed := strings.Cut(part, closing)
+			if !isClosed {
+				t.Errorf("a link is never closed in %q", rung)
+
+				continue
+			}
+
+			if label := style.Plain(text); !labels[label] {
+				t.Errorf("linked %q, which is not a window label, in %q", label, rung)
+			}
+		}
+	}
 }
 
 func TestEveryGoldenIsClaimedByATest(t *testing.T) {
 	claimed := map[string]struct{}{
-		"segment.txt":  {},
-		"segment.ansi": {},
+		"segment.txt":         {},
+		"segment.ansi":        {},
+		"segment-linked.ansi": {},
 	}
 
 	entries, err := os.ReadDir("testdata")

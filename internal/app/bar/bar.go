@@ -75,6 +75,7 @@ type Options struct {
 	IsUnconfined          bool
 	UsageReporter         agent.UsageReporter
 	UsageCachePath        string
+	UsagePage             string
 	UsageIsSelfRefreshing bool
 	UsageGauges           *usage.Gauges
 	Currency              money.Currency
@@ -138,6 +139,7 @@ func NewRegistry(options Options) segment.Registry {
 		subUsageSegment: subUsage.New(subUsage.Settings{
 			Reporter:         options.UsageReporter,
 			CachePath:        options.UsageCachePath,
+			Page:             options.UsagePage,
 			ModelName:        options.Session.Model,
 			IsSelfRefreshing: options.UsageIsSelfRefreshing,
 			IsSimulated:      options.IsSimulated,
