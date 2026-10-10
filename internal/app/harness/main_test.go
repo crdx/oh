@@ -12343,26 +12343,35 @@ func TestReloadingConfigReplacesSnippetsAtomically(t *testing.T) {
 	}
 }
 
-const elidedPathColumns = 38
+const (
+	elidedPathColumns       = 38
+	partlyElidedPathColumns = 60
+	unelidedPathColumns     = 200
+)
 
 func TestGoldenElidedCallPathsKeepTheirCompleteTargets(t *testing.T) {
-	passes := map[string]func() string{
-		"elided path links": func() string { return drawElidedPathLinks(t) },
+	widths := map[string]int{
+		"elided path links":        elidedPathColumns,
+		"partly elided path links": partlyElidedPathColumns,
+		"unelided path links":      unelidedPathColumns,
 	}
-	screenPasses := map[string]func() string{
-		"elided path links": func() string {
-			return shown(t, drawElidedPathLinks(t), elidedPathColumns)
-		},
+	passes := map[string]func() string{}
+	screenPasses := map[string]func() string{}
+	for name, columns := range widths {
+		passes[name] = func() string { return drawElidedPathLinks(t, columns) }
+		screenPasses[name] = func() string {
+			return shown(t, drawElidedPathLinks(t, columns), columns)
+		}
 	}
 
 	compareWithGolden(t, "elided-path-links", ".ansi", passes)
 	compareWithGolden(t, "elided-path-links", ".screen", screenPasses)
 }
 
-func drawElidedPathLinks(t *testing.T) string {
+func drawElidedPathLinks(t *testing.T, columns int) string {
 	t.Helper()
 
-	rig := newReplayRig(t, elidedPathColumns)
+	rig := newReplayRig(t, columns)
 	existingPath := "cmd/oh/line/a-patch-path-that-is-long-enough-to-wrap-after-leading-indentation-and-remain-clickable.patch"
 	calls := []agent.Event{
 		{
@@ -12408,6 +12417,20 @@ func drawElidedPathLinks(t *testing.T) string {
 				},
 			},
 		},
+		elidedShellCall("cat screen.go cmd/oh/line/render.go target.txt", ""),
+		elidedShellCall("curl https://example.com/a/long/address/that/cannot/fit/on/one/row", ""),
+		elidedShellCall("cat screen.go target.txt", "Reading the screen and its target"),
+		elidedShellCall("cat screen.go", "Inspecting every line of the screen before anything draws"),
+		{
+			Name: "old_job",
+			FallbackRendering: agent.FallbackRendering{
+				RenderingKind: "job_start",
+				Subject:       "serve",
+				Intent:        "Serving the files",
+				Introduces:    "serve",
+				Continuation:  []tool.CallRendering{bash.DescribeCommand("cat screen.go cmd/oh/line/render.go")},
+			},
+		},
 	}
 
 	for i, callEvent := range calls {
@@ -12428,6 +12451,14 @@ func drawElidedPathLinks(t *testing.T) string {
 	rig.chat.replay()
 
 	return rig.drawn()
+}
+
+func elidedShellCall(command string, intent string) agent.Event {
+	callEvent := agent.Event{Name: "old_shell"}
+	callEvent.SetRendering(bash.DescribeCommand(command))
+	callEvent.Intent = intent
+
+	return callEvent
 }
 
 func TestGoldenWorkspacePathsInCallLabelsLoseTheirPrefix(t *testing.T) {
