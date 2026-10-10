@@ -28,6 +28,7 @@
 - Leave no stray row under an answer that ends up drawing nothing
 - Stop clearing the scrollback while a long plain thought arrives
 - Draw no blank row for a plain thought that strips to nothing
+- Keep the gap above the startup banner when resuming a session
 - Correctly record a stopped turn's notice
 
 ## [0.13.0] - 2026-10-07

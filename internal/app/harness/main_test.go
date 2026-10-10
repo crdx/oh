@@ -10905,9 +10905,12 @@ func relaidOutBanner(t *testing.T, entries []replayEntry, columns int, isRunning
 	rig.chat.screen.SetTextSizingSupported(true)
 	rig.chat.currentTurn.Stream = testTurnStreamForRunning(isRunning)
 	rig.chat.inputLine = edit.NewInput(nil)
-	rig.load(entries)
-	rig.chat.screen.TopPad()
-	rig.chat.replay()
+	rig.chat.metrics = metrics.New(metrics.Settings{ContextWindowTokens: 200_000})
+	events := make([]agent.Event, 0, len(entries))
+	for _, entry := range entries {
+		events = append(events, *entry.Event)
+	}
+	rig.chat.restore(&store.Session{Events: events})
 	rig.chat.show(rig.chat.inputLine)
 	drawnBefore := rig.drawn()
 

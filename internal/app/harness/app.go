@@ -1755,8 +1755,7 @@ func (self *App) restore(storedSession *store.Session) {
 	self.metrics.Restore(storedSession.Events, storedSession.Turns)
 	self.restoreJobs(storedSession.Events)
 
-	self.screen.Reset()
-	self.replay()
+	self.replayFromTop(len(self.recordedEvents))
 }
 
 func (self *App) newPainter(isRunning bool) *painter.Picasso {
@@ -1827,17 +1826,7 @@ func (self *App) redrawWith(livePainter *painter.Picasso, history int) {
 	self.screen.Sync(func() {
 		self.pendingNotices.renderer = nil
 		self.pendingNotices.block = nil
-		self.screen.Reset()
-		if slices.ContainsFunc(self.recordedEvents[:history], func(event agent.Event) bool {
-			return event.Kind == agent.StartupEvent && startup.IsBannerSized(
-				event,
-				self.screen.Columns(),
-				self.screen.IsTextSizingSupported(),
-			)
-		}) {
-			self.screen.TopPad()
-		}
-		self.replayHistory(history)
+		self.replayFromTop(history)
 		if livePainter != nil {
 			livePainter.Redraw(self.recordedEvents[history:])
 		}
@@ -1845,6 +1834,20 @@ func (self *App) redrawWith(livePainter *painter.Picasso, history int) {
 			self.show(self.inputLine)
 		}
 	})
+}
+
+func (self *App) replayFromTop(history int) {
+	self.screen.Reset()
+	if slices.ContainsFunc(self.recordedEvents[:history], func(event agent.Event) bool {
+		return event.Kind == agent.StartupEvent && startup.IsBannerSized(
+			event,
+			self.screen.Columns(),
+			self.screen.IsTextSizingSupported(),
+		)
+	}) {
+		self.screen.TopPad()
+	}
+	self.replayHistory(history)
 }
 
 func (self *App) startTurn() {
