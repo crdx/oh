@@ -181,6 +181,14 @@ func (self sessionGoldenMessagingManager) Send(ctx context.Context, name string,
 	return result, err
 }
 
+func (self sessionGoldenMessagingManager) Broadcast(ctx context.Context, message string) ([]string, error) {
+	names, err := self.Manager.Broadcast(ctx, message)
+	for _, name := range names {
+		self.children.messageArrivals(name) <- struct{}{}
+	}
+	return names, err
+}
+
 func (self *sessionGoldenChildren) setBlocked(name string, isBlocked bool) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()

@@ -1,18 +1,89 @@
-=== /subs ===
+=== none at all: /subs (70 columns) ===
 [38;2;129;162;190mNo subagents.[0m
-=== /subs ===
-[38;2;129;162;190mSubagents:[0m
-  frugal-otter
-  frugal-heron [38;2;150;152;150m(its conversation is gone)[0m
-=== /subs frugal-otter ===
+=== running and finished: /subs (140 columns) ===
+[38;2;129;162;190mRunning subagents:[0m
+  [38;2;192;128;80mfrugal-otter[0m  running for 1m 30s  [38;2;150;152;150mClaude Haiku@med[0m         [3m[38;2;150;152;150mFinding where the parser lives[0m[0m  [38;2;150;152;150m12 tool calls, last: Reading the parser[0m
+  [38;2;192;128;80mfrugal-lynx[0m   running for 4s      [38;2;150;152;150mDeepSeek V4.1 Flash@max[0m  [3m[38;2;150;152;150mChecking the build[0m[0m              [38;2;150;152;150m0 tool calls[0m
+  [38;2;192;128;80mfrugal-moose[0m  stopping for 2m     [38;2;150;152;150mClaude Haiku@med[0m         [3m[38;2;150;152;150mWatching the logs[0m[0m               [38;2;150;152;150m1 tool call, last: Tailing the log[0m
+[38;2;129;162;190mFinished subagents:[0m
+  [38;2;192;128;80mfrugal-heron[0m  done after 1m     [38;2;150;152;150mClaude Haiku@med[0m         [3m[38;2;150;152;150mReading the readme[0m[0m  [38;2;150;152;150m4 tool calls[0m
+  [38;2;192;128;80mfrugal-wren[0m   failed after 3s   [38;2;150;152;150mDeepSeek V4.1 Flash@max[0m  [3m[38;2;150;152;150mCounting the TODOs[0m[0m  [38;2;150;152;150m1 tool call[0m
+  [38;2;192;128;80mfrugal-ibis[0m   stopped after 2m  [38;2;150;152;150mClaude Haiku@med[0m         [3m[38;2;150;152;150mWatching the build[0m[0m  [38;2;150;152;150m9 tool calls[0m
+=== running and finished: /subs (70 columns) ===
+[38;2;129;162;190mRunning subagents:[0m
+  [38;2;192;128;80mfrugal-otter[0m  running for 1m 30s  [38;2;150;152;150mClaude Haiku@med[0m         [3m[38;2;150;152;150mFinding …[0m
+  [38;2;192;128;80mfrugal-lynx[0m   running for 4s      [38;2;150;152;150mDeepSeek V4.1 Flash@max[0m  [3m[38;2;150;152;150mChecking…[0m
+  [38;2;192;128;80mfrugal-moose[0m  stopping for 2m     [38;2;150;152;150mClaude Haiku@med[0m         [3m[38;2;150;152;150mWatching…[0m
+[38;2;129;162;190mFinished subagents:[0m
+  [38;2;192;128;80mfrugal-heron[0m  done after 1m     [38;2;150;152;150mClaude Haiku@med[0m         [3m[38;2;150;152;150mReading th…[0m
+  [38;2;192;128;80mfrugal-wren[0m   failed after 3s   [38;2;150;152;150mDeepSeek V4.1 Flash@max[0m  [3m[38;2;150;152;150mCounting t…[0m
+  [38;2;192;128;80mfrugal-ibis[0m   stopped after 2m  [38;2;150;152;150mClaude Haiku@med[0m         [3m[38;2;150;152;150mWatching t…[0m
+=== running only: /subs (140 columns) ===
+[38;2;129;162;190mRunning subagents:[0m
+  [38;2;192;128;80mfrugal-otter[0m  running for 1m 30s  [38;2;150;152;150mClaude Haiku@med[0m         [3m[38;2;150;152;150mFinding where the parser lives[0m[0m  [38;2;150;152;150m12 tool calls, last: Reading the parser[0m
+  [38;2;192;128;80mfrugal-lynx[0m   running for 4s      [38;2;150;152;150mDeepSeek V4.1 Flash@max[0m  [3m[38;2;150;152;150mChecking the build[0m[0m              [38;2;150;152;150m0 tool calls[0m
+  [38;2;192;128;80mfrugal-moose[0m  stopping for 2m     [38;2;150;152;150mClaude Haiku@med[0m         [3m[38;2;150;152;150mWatching the logs[0m[0m               [38;2;150;152;150m1 tool call, last: Tailing the log[0m
+=== finished only: /subs (140 columns) ===
+[38;2;129;162;190mFinished subagents:[0m
+  [38;2;192;128;80mfrugal-heron[0m  done after 1m     [38;2;150;152;150mClaude Haiku@med[0m         [3m[38;2;150;152;150mReading the readme[0m[0m  [38;2;150;152;150m4 tool calls[0m
+  [38;2;192;128;80mfrugal-wren[0m   failed after 3s   [38;2;150;152;150mDeepSeek V4.1 Flash@max[0m  [3m[38;2;150;152;150mCounting the TODOs[0m[0m  [38;2;150;152;150m1 tool call[0m
+  [38;2;192;128;80mfrugal-ibis[0m   stopped after 2m  [38;2;150;152;150mClaude Haiku@med[0m         [3m[38;2;150;152;150mWatching the build[0m[0m  [38;2;150;152;150m9 tool calls[0m
+=== restored from an earlier run: /subs (140 columns) ===
+[38;2;129;162;190mFinished subagents:[0m
+  [38;2;192;128;80mfrugal-newt[0m  done   [38;2;150;152;150mClaude Haiku[0m         [3m[38;2;150;152;150mReading the parser[0m[0m  [38;2;150;152;150m[0m
+  [38;2;192;128;80mfrugal-toad[0m  ended  [38;2;150;152;150mDeepSeek V4.1 Flash[0m  [3m[38;2;150;152;150mWatching the logs[0m[0m   [38;2;150;152;150m[0m
+=== more finished than are shown: /subs (140 columns) ===
+[38;2;129;162;190mRunning subagents:[0m
+  [38;2;192;128;80mfrugal-otter[0m  running for 1m 30s  [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mFinding where the parser lives[0m[0m  [38;2;150;152;150m12 tool calls, last: Reading the parser[0m
+[38;2;129;162;190mFinished subagents:[0m
+  [38;2;192;128;80mfrugal-03[0m  stopped after 4s   [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 3[0m[0m   [38;2;150;152;150m3 tool calls[0m
+  [38;2;192;128;80mfrugal-04[0m  done after 5s      [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 4[0m[0m   [38;2;150;152;150m4 tool calls[0m
+  [38;2;192;128;80mfrugal-05[0m  done after 6s      [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 5[0m[0m   [38;2;150;152;150m5 tool calls[0m
+  [38;2;192;128;80mfrugal-06[0m  failed after 7s    [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 6[0m[0m   [38;2;150;152;150m6 tool calls[0m
+  [38;2;192;128;80mfrugal-07[0m  stopped after 8s   [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 7[0m[0m   [38;2;150;152;150m7 tool calls[0m
+  [38;2;192;128;80mfrugal-08[0m  done after 9s      [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 8[0m[0m   [38;2;150;152;150m8 tool calls[0m
+  [38;2;192;128;80mfrugal-09[0m  done after 10s     [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 9[0m[0m   [38;2;150;152;150m9 tool calls[0m
+  [38;2;192;128;80mfrugal-10[0m  failed after 11s   [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 10[0m[0m  [38;2;150;152;150m10 tool calls[0m
+  [38;2;192;128;80mfrugal-11[0m  stopped after 12s  [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 11[0m[0m  [38;2;150;152;150m11 tool calls[0m
+  [38;2;192;128;80mfrugal-12[0m  done after 13s     [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 12[0m[0m  [38;2;150;152;150m12 tool calls[0m
+  [38;2;150;152;150mand 3 earlier: 2 done, 1 failed; /subs all lists them.[0m
+=== every finished one asked for: /subs all (140 columns) ===
+[38;2;129;162;190mRunning subagents:[0m
+  [38;2;192;128;80mfrugal-otter[0m  running for 1m 30s  [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mFinding where the parser lives[0m[0m  [38;2;150;152;150m12 tool calls, last: Reading the parser[0m
+[38;2;129;162;190mFinished subagents:[0m
+  [38;2;192;128;80mfrugal-00[0m  done after 1s      [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 0[0m[0m   [38;2;150;152;150m0 tool calls[0m
+  [38;2;192;128;80mfrugal-01[0m  done after 2s      [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 1[0m[0m   [38;2;150;152;150m1 tool call[0m
+  [38;2;192;128;80mfrugal-02[0m  failed after 3s    [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 2[0m[0m   [38;2;150;152;150m2 tool calls[0m
+  [38;2;192;128;80mfrugal-03[0m  stopped after 4s   [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 3[0m[0m   [38;2;150;152;150m3 tool calls[0m
+  [38;2;192;128;80mfrugal-04[0m  done after 5s      [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 4[0m[0m   [38;2;150;152;150m4 tool calls[0m
+  [38;2;192;128;80mfrugal-05[0m  done after 6s      [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 5[0m[0m   [38;2;150;152;150m5 tool calls[0m
+  [38;2;192;128;80mfrugal-06[0m  failed after 7s    [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 6[0m[0m   [38;2;150;152;150m6 tool calls[0m
+  [38;2;192;128;80mfrugal-07[0m  stopped after 8s   [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 7[0m[0m   [38;2;150;152;150m7 tool calls[0m
+  [38;2;192;128;80mfrugal-08[0m  done after 9s      [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 8[0m[0m   [38;2;150;152;150m8 tool calls[0m
+  [38;2;192;128;80mfrugal-09[0m  done after 10s     [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 9[0m[0m   [38;2;150;152;150m9 tool calls[0m
+  [38;2;192;128;80mfrugal-10[0m  failed after 11s   [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 10[0m[0m  [38;2;150;152;150m10 tool calls[0m
+  [38;2;192;128;80mfrugal-11[0m  stopped after 12s  [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 11[0m[0m  [38;2;150;152;150m11 tool calls[0m
+  [38;2;192;128;80mfrugal-12[0m  done after 13s     [38;2;150;152;150mClaude Haiku@med[0m  [3m[38;2;150;152;150mDoing task 12[0m[0m  [38;2;150;152;150m12 tool calls[0m
+=== every finished one when nothing is folded: /subs all (140 columns) ===
+[38;2;129;162;190mRunning subagents:[0m
+  [38;2;192;128;80mfrugal-otter[0m  running for 1m 30s  [38;2;150;152;150mClaude Haiku@med[0m         [3m[38;2;150;152;150mFinding where the parser lives[0m[0m  [38;2;150;152;150m12 tool calls, last: Reading the parser[0m
+  [38;2;192;128;80mfrugal-lynx[0m   running for 4s      [38;2;150;152;150mDeepSeek V4.1 Flash@max[0m  [3m[38;2;150;152;150mChecking the build[0m[0m              [38;2;150;152;150m0 tool calls[0m
+  [38;2;192;128;80mfrugal-moose[0m  stopping for 2m     [38;2;150;152;150mClaude Haiku@med[0m         [3m[38;2;150;152;150mWatching the logs[0m[0m               [38;2;150;152;150m1 tool call, last: Tailing the log[0m
+[38;2;129;162;190mFinished subagents:[0m
+  [38;2;192;128;80mfrugal-heron[0m  done after 1m     [38;2;150;152;150mClaude Haiku@med[0m         [3m[38;2;150;152;150mReading the readme[0m[0m  [38;2;150;152;150m4 tool calls[0m
+  [38;2;192;128;80mfrugal-wren[0m   failed after 3s   [38;2;150;152;150mDeepSeek V4.1 Flash@max[0m  [3m[38;2;150;152;150mCounting the TODOs[0m[0m  [38;2;150;152;150m1 tool call[0m
+  [38;2;192;128;80mfrugal-ibis[0m   stopped after 2m  [38;2;150;152;150mClaude Haiku@med[0m         [3m[38;2;150;152;150mWatching the build[0m[0m  [38;2;150;152;150m9 tool calls[0m
+=== an argument it does not take: /subs everything (70 columns) ===
 error: invalid command usage
-=== /sub ===
+=== arguments: /subs frugal-otter (70 columns) ===
 error: invalid command usage
-=== /sub frugal-otter ===
+=== no action: /sub (70 columns) ===
 error: invalid command usage
-=== /sub cat frugal-otter ===
+=== no cat: /sub frugal-otter (70 columns) ===
+error: invalid command usage
+=== cat: /sub cat frugal-otter (70 columns) ===
 
-=== /sub cat frugal-nobody ===
+=== cat nobody: /sub cat frugal-nobody (70 columns) ===
 error: no subagent named frugal-nobody
 === shown ===
 frugal-otter

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 	"testing/synctest"
@@ -129,44 +130,82 @@ func TestGoldenCompletionMatchesGolden(t *testing.T) {
 	assertGolden(t, "completion.txt", output.String())
 }
 
-func TestGoldenSubagentsListsEveryChildTheSessionStarted(t *testing.T) {
+func TestGoldenSubagentsListsRunningAndLatestFinishedChildren(t *testing.T) {
 	var shown []string
 	listing := []SubagentListing{{Name: "frugal-otter"}, {Name: "frugal-heron", IsMissing: true}}
-	show := func(name string) error {
-		shown = append(shown, name)
-		return nil
+	running := []SubagentProgress{
+		{
+			Name: "frugal-otter", State: "running", IsLive: true, IsTimed: true, Duration: 90 * time.Second, Model: "Claude Haiku@med",
+			Intent: "Finding where the parser lives", ToolCalls: 12, LastIntent: "Reading the parser",
+		},
+		{Name: "frugal-lynx", State: "running", IsLive: true, IsTimed: true, Duration: 4 * time.Second, Model: "DeepSeek V4.1 Flash@max", Intent: "Checking the build"},
+		{
+			Name: "frugal-moose", State: "stopping", IsLive: true, IsTimed: true, Duration: 2 * time.Minute, Model: "Claude Haiku@med",
+			Intent: "Watching the logs", ToolCalls: 1, LastIntent: "Tailing the log",
+		},
 	}
-	commands := newCommandRegistry(t, commandEnvironment{subagents: Subagents{
-		List: func() []SubagentListing { return listing },
-		Show: show,
-	}})
-	empty := newCommandRegistry(t, commandEnvironment{subagents: Subagents{
-		List: func() []SubagentListing { return nil },
-		Show: show,
-	}})
+	finished := []SubagentProgress{
+		{Name: "frugal-heron", State: "done", IsTimed: true, Duration: time.Minute, Model: "Claude Haiku@med", Intent: "Reading the readme", ToolCalls: 4},
+		{Name: "frugal-wren", State: "failed", IsTimed: true, Duration: 3 * time.Second, Model: "DeepSeek V4.1 Flash@max", Intent: "Counting the TODOs", ToolCalls: 1},
+		{Name: "frugal-ibis", State: "stopped", IsTimed: true, Duration: 2 * time.Minute, Model: "Claude Haiku@med", Intent: "Watching the build", ToolCalls: 9},
+	}
+	restored := []SubagentProgress{
+		{Name: "frugal-newt", State: "done", Model: "Claude Haiku", Intent: "Reading the parser"},
+		{Name: "frugal-toad", State: "ended", Model: "DeepSeek V4.1 Flash", Intent: "Watching the logs"},
+	}
+	var many []SubagentProgress
+	for index := range 13 {
+		state := []string{"done", "done", "failed", "stopped"}[index%4]
+		many = append(many, SubagentProgress{
+			Name: fmt.Sprintf("frugal-%02d", index), State: state, IsTimed: true, Duration: time.Duration(index+1) * time.Second,
+			Model: "Claude Haiku@med", Intent: fmt.Sprintf("Doing task %d", index), ToolCalls: index,
+		})
+	}
+	registry := func(progress []SubagentProgress) slash.Registry {
+		return newCommandRegistry(t, commandEnvironment{subagents: Subagents{
+			List:     func() []SubagentListing { return listing },
+			Progress: func() []SubagentProgress { return progress },
+			Show: func(name string) error {
+				shown = append(shown, name)
+				return nil
+			},
+		}})
+	}
+	commands := registry(slices.Concat(running, finished))
 	var result strings.Builder
 	for _, run := range []struct {
+		label    string
 		registry slash.Registry
 		input    string
+		columns  int
 	}{
-		{empty, "/subs"},
-		{commands, "/subs"},
-		{commands, "/subs frugal-otter"},
-		{commands, "/sub"},
-		{commands, "/sub frugal-otter"},
-		{commands, "/sub cat frugal-otter"},
-		{commands, "/sub cat frugal-nobody"},
+		{"none at all", registry(nil), "/subs", 70},
+		{"running and finished", commands, "/subs", 140},
+		{"running and finished", commands, "/subs", 70},
+		{"running only", registry(running), "/subs", 140},
+		{"finished only", registry(finished), "/subs", 140},
+		{"restored from an earlier run", registry(restored), "/subs", 140},
+		{"more finished than are shown", registry(slices.Concat(running[:1], many)), "/subs", 140},
+		{"every finished one asked for", registry(slices.Concat(running[:1], many)), "/subs all", 140},
+		{"every finished one when nothing is folded", commands, "/subs all", 140},
+		{"an argument it does not take", commands, "/subs everything", 70},
+		{"arguments", commands, "/subs frugal-otter", 70},
+		{"no action", commands, "/sub", 70},
+		{"no cat", commands, "/sub frugal-otter", 70},
+		{"cat", commands, "/sub cat frugal-otter", 70},
+		{"cat nobody", commands, "/sub cat frugal-nobody", 70},
 	} {
 		invocation, found := run.registry.Find(run.input)
 		if !found {
 			t.Fatalf("command %s is missing", run.input)
 		}
 		context := newCommandTestContext(t)
+		heading := fmt.Sprintf("=== %s: %s (%d columns) ===\n", run.label, run.input, run.columns)
 		if err := invocation.Command.Run(context, invocation.Arguments); err != nil {
-			fmt.Fprintf(&result, "=== %s ===\nerror: %v\n", run.input, err)
+			fmt.Fprintf(&result, "%serror: %v\n", heading, err)
 			continue
 		}
-		fmt.Fprintf(&result, "=== %s ===\n%s\n", run.input, renderCommandFeedback(context, 70))
+		fmt.Fprintf(&result, "%s%s\n", heading, renderCommandFeedback(context, run.columns))
 	}
 	fmt.Fprintf(&result, "=== shown ===\n%s\n", strings.Join(shown, "\n"))
 	assertGolden(t, "subagents.txt", result.String())
@@ -331,7 +370,8 @@ func fixtureEnvironment(t *testing.T) commandEnvironment {
 			List: func() []SubagentListing {
 				return []SubagentListing{{Name: "frugal-otter"}, {Name: "frugal-heron"}, {Name: "frugal-adder", IsMissing: true}}
 			},
-			Show: func(string) error { return nil },
+			Progress: func() []SubagentProgress { return nil },
+			Show:     func(string) error { return nil },
 		},
 		getCustomCapFlags: func() string { return "a" },
 		getInfo: func() (string, error) {

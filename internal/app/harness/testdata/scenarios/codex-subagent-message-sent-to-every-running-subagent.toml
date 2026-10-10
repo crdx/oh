@@ -1,0 +1,123 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[subagent]]
+name = "tame-adder"
+
+[[subagent.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-11","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The readme is one heading."}''',
+    '''{"type":"response.output_text.done","text":"The readme is one heading."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The readme is one heading."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-11","type":"message","role":"assistant","content":[{"type":"output_text","text":"The readme is one heading."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[subagent]]
+name = "tame-alpaca"
+
+[[subagent.response]]
+wait-for-message = true
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-12","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The loader is in config.go."}''',
+    '''{"type":"response.output_text.done","text":"The loader is in config.go."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The loader is in config.go."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-12","type":"message","role":"assistant","content":[{"type":"output_text","text":"The loader is in config.go."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[subagent.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-13","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"It reads YAML."}''',
+    '''{"type":"response.output_text.done","text":"It reads YAML."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"It reads YAML."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-13","type":"message","role":"assistant","content":[{"type":"output_text","text":"It reads YAML."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[subagent]]
+name = "tame-anchovy"
+
+[[subagent.response]]
+wait-for-message = true
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-14","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The parser is in parse.go."}''',
+    '''{"type":"response.output_text.done","text":"The parser is in parse.go."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The parser is in parse.go."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-14","type":"message","role":"assistant","content":[{"type":"output_text","text":"The parser is in parse.go."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[subagent.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-15","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"It reads Markdown."}''',
+    '''{"type":"response.output_text.done","text":"It reads Markdown."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"It reads Markdown."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-15","type":"message","role":"assistant","content":[{"type":"output_text","text":"It reads Markdown."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[first]
+prompt = "start three subagents, then tell every running one to name the format"
+settle-subagents-after-tool-result = 1
+settle-subagents-after-turn = true
+subagent-debounce-passes = true
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-16","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Read the readme\",\"intent\":\"Reading the readme\"},{\"prompt\":\"Find the config loader\",\"intent\":\"Finding where the config loads\"},{\"prompt\":\"Find the parser\",\"intent\":\"Finding where the parser lives\"}]}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-17","type":"function_call","call_id":"toolu_2","name":"subagent","arguments":"{\"action\":\"send\",\"message\":\"Also name the format it reads\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-18","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The two still running have the message."}''',
+    '''{"type":"response.output_text.done","text":"The two still running have the message."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The two still running have the message."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-18","type":"message","role":"assistant","content":[{"type":"output_text","text":"The two still running have the message."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-19","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Both named their formats."}''',
+    '''{"type":"response.output_text.done","text":"Both named their formats."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Both named their formats."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-19","type":"message","role":"assistant","content":[{"type":"output_text","text":"Both named their formats."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-20","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Carrying on."}''',
+    '''{"type":"response.output_text.done","text":"Carrying on."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Carrying on."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-20","type":"message","role":"assistant","content":[{"type":"output_text","text":"Carrying on."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

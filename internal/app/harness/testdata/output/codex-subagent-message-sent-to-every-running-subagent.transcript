@@ -1,0 +1,107 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `medium`
+- **Provider:** `codex`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+start three subagents, then tell every running one to name the format
+
+## Tool calls · +0s
+
+```
+subagent: 3 subagents [ok, 1 line, 45B, toolu_1]
+```
+
+## Subagent started · tame-adder · +0s
+
+Read the readme
+
+Transcript: `subagents/tame-adder/chat.md`
+
+## Subagent started · tame-alpaca · +0s
+
+Find the config loader
+
+Transcript: `subagents/tame-alpaca/chat.md`
+
+## Subagent started · tame-anchovy · +0s
+
+Find the parser
+
+Transcript: `subagents/tame-anchovy/chat.md`
+
+## Subagent finished · tame-adder · done · +0s
+
+The readme is one heading.
+
+## Subagent reports · +0s
+
+```
+Subagent tame-adder finished:
+
+tame-adder done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The readme is one heading.
+```
+
+## Tool calls · +0s
+
+```
+subagent: every running subagent [ok, 1 line, 89B, toolu_2]
+```
+
+## Assistant · +0s
+
+The two still running have the message.
+
+## Subagent message · tame-alpaca · +0s
+
+Also name the format it reads
+
+## Subagent finished · tame-alpaca · done · +0s
+
+The loader is in config.go.
+
+It reads YAML.
+
+## Subagent message · tame-anchovy · +0s
+
+Also name the format it reads
+
+## Subagent finished · tame-anchovy · done · +0s
+
+The parser is in parse.go.
+
+It reads Markdown.
+
+## Subagent reports · +0s
+
+```
+Subagents tame-alpaca, tame-anchovy finished:
+
+tame-alpaca done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-alpaca, so read any /tmp path it reports as beneath that): The loader is in config.go.
+
+It reads YAML.
+
+tame-anchovy done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-anchovy, so read any /tmp path it reports as beneath that): The parser is in parse.go.
+
+It reads Markdown.
+```
+
+## Assistant · +0s
+
+Both named their formats.
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+Carrying on.

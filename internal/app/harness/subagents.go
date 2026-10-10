@@ -25,6 +25,7 @@ import (
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tool"
@@ -141,11 +142,7 @@ func newChildFactory(options childOptions) subagents.Factory {
 			return subagents.Worker{}, err
 		}
 		files := file.New(workspace.GetRoot(), caps.RefuseWrite(mode))
-		paths := shell.Paths{
-			Deny: options.settings.Sandbox.Deny,
-			Exec: options.settings.Sandbox.Exec,
-			Path: options.settings.Sandbox.Path,
-		}
+		paths := childPaths(options.settings.Sandbox)
 		access, err := shell.NewPathAccess(files, mode, paths)
 		if err != nil {
 			_ = workspace.Close()
@@ -264,6 +261,16 @@ func childPrompt(options childOptions, workspace *work.Space, child subagents.Ch
 	return strings.Join(append(parts, own), "\n\n")
 }
 
+func childPaths(parentPaths shell.Paths) shell.Paths {
+	return shell.Paths{
+		Deny: parentPaths.Deny,
+		Read: parentPaths.Read,
+		Exec: parentPaths.Exec,
+		Path: parentPaths.Path,
+		Home: parentPaths.Home,
+	}
+}
+
 func reachable(options childOptions, hasShell bool) string {
 	sandboxPaths := options.settings.Sandbox
 	readable := "You can read your workspace, /tmp, HOME, and the read-only system and executable search paths"
@@ -272,6 +279,19 @@ func reachable(options childOptions, hasShell bool) string {
 		readable += ", including " + strings.Join(searchPaths, ", ")
 	}
 	sentences := []string{readable + "."}
+	alsoReadable := slices.Clone(sandboxPaths.Read)
+	var homeViews []string
+	for _, path := range sandboxPaths.Home {
+		if relative, isHomePath := pathutil.RelativeTo(options.userHome, path); options.userHome != "" && isHomePath {
+			homeViews = append(homeViews, path+" appears read-only at HOME/"+relative+".")
+			continue
+		}
+		alsoReadable = append(alsoReadable, path)
+	}
+	if len(alsoReadable) > 0 {
+		sentences = append(sentences, "You can also read "+strings.Join(alsoReadable, ", ")+".")
+	}
+	sentences = append(sentences, homeViews...)
 	if hasShell {
 		sentences = append(sentences,
 			"You can write only /tmp and HOME. "+

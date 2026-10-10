@@ -1,0 +1,37 @@
+
+ start three subagents, then tell every running one to name the format
+
+
+spawn 3 subagents on Claude Opus 5
+
+
+ 🐍 Subagent tame-adder interjects:
+
+    The readme is one heading.
+
+
+send every running subagent
+
+The two still running have the message.
+
+
+ 🦙 Subagent tame-alpaca interjects:
+
+    The loader is in config.go.
+
+    It reads YAML.
+
+ 🐟 Subagent tame-anchovy interjects:
+
+    The parser is in parse.go.
+
+    It reads Markdown.
+
+
+Both named their formats.
+
+
+ carry on
+
+
+Carrying on.

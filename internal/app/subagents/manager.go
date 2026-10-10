@@ -95,6 +95,16 @@ type Snapshot struct {
 	Failure   string
 }
 
+type Progress struct {
+	Snapshot
+
+	Model      string
+	IsTimed    bool
+	Duration   time.Duration
+	ToolCalls  int
+	LastIntent string
+}
+
 type child struct {
 	Snapshot
 
@@ -440,6 +450,58 @@ func (self *Manager) Send(ctx context.Context, name string, message string) (str
 	return "sent to " + name, nil
 }
 
+func (self *Manager) Broadcast(ctx context.Context, message string) ([]string, error) {
+	if ctx.Err() != nil {
+		return nil, ctx.Err()
+	}
+	self.launchMutex.Lock()
+	defer self.launchMutex.Unlock()
+	self.mutex.Lock()
+	var runningNames []string
+	for _, childName := range self.order {
+		if self.children[childName].State == subagentrecord.Running {
+			runningNames = append(runningNames, childName)
+		}
+	}
+	self.mutex.Unlock()
+	var queuedNames []string
+	for _, childName := range runningNames {
+		if isQueued, _ := self.queue(childName, message); isQueued {
+			queuedNames = append(queuedNames, childName)
+		}
+	}
+	if len(queuedNames) == 0 {
+		return nil, errors.New("no subagent is running, so there is nobody to send it to")
+	}
+	return queuedNames, nil
+}
+
+func (self *Manager) Progress() []Progress {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+	progress := make([]Progress, 0, len(self.order))
+	for _, childName := range self.order {
+		current := self.children[childName]
+		var duration time.Duration
+		if !current.StartedAt.IsZero() {
+			endedAt := current.EndedAt
+			if current.State.IsLive() || endedAt.IsZero() {
+				endedAt = self.options.Now()
+			}
+			duration = endedAt.Sub(current.StartedAt)
+		}
+		progress = append(progress, Progress{
+			Snapshot:   current.Snapshot,
+			Model:      current.displayModel(),
+			IsTimed:    !current.StartedAt.IsZero(),
+			Duration:   duration,
+			ToolCalls:  current.toolCalls,
+			LastIntent: current.lastIntent,
+		})
+	}
+	return progress
+}
+
 func (self *Manager) ListSnapshots() []Snapshot {
 	snapshots, _, _ := self.snapshots(nil)
 	return snapshots
@@ -528,6 +590,17 @@ func (self *Manager) Status(names []string) (string, error) {
 		return "no subagents", nil
 	}
 	return strings.Join(lines, "\n"), nil
+}
+
+func (self *child) displayModel() string {
+	name := self.choice.Name
+	if name == "" {
+		name = self.choice.ID
+	}
+	if name != "" && self.selection.Effort != "" {
+		name += "@" + self.selection.Effort
+	}
+	return name
 }
 
 func (self *child) modelName() string {

@@ -47,6 +47,7 @@ type Args struct {
 type Manager interface {
 	Start(ctx context.Context, systemPrompt string, tasks []Task) (string, error)
 	Send(ctx context.Context, name string, message string) (string, error)
+	Broadcast(ctx context.Context, message string) ([]string, error)
 	Status(names []string) (string, error)
 	Output(names []string) (string, error)
 	Stop(names []string) (string, error)
@@ -58,11 +59,14 @@ func New(manager Manager, model string, concurrency int) tool.Tool {
 		Name: Name,
 		Description: "start independent subagents with a shared optional system prompt and individual tasks, " +
 			"send one a message, which a running subagent reads once its current step finishes and a finished one takes as a follow-up, " +
+			"or send every running subagent the same message by leaving out the name, " +
 			"and inspect or control them by name; " +
 			fmt.Sprintf("at most %d run at once; ", concurrency) +
 			"a subagent knows only a short description of its sandbox, your system_prompt, and its prompt: " +
 			"none of your instructions, context files or conversation reach it, so give it everything it needs; " +
 			"each subagent can read but not write its workspace, and has a shell only while you do, " +
+			"it can also read your configured read, home, and executable search paths, " +
+			"but not your configured write paths or anything granted during this session, " +
 			"writing only to its own scratch, which is subagents/<name> inside your scratch but which it calls /tmp, " +
 			"so a /tmp path it reports may mean your /tmp/subagents/<name>/...; " +
 			"it cannot read the rest of your scratch, so put what it needs in its prompt, " +
@@ -76,7 +80,7 @@ func New(manager Manager, model string, concurrency int) tool.Tool {
 		Schema: tool.Schema{
 			tool.Enum("action", "what to do", Start, Send, Status, Output, Stop, List),
 			tool.StringArray("names", "the subagents for status, output, or stop; empty means all of them").Optional(),
-			tool.String("name", "the subagent to send a message to (for send)").Optional(),
+			tool.String("name", "the subagent to send a message to (for send); absent means every running subagent").Optional(),
 			tool.String("message", "the message to send (for send)").Optional(),
 			tool.String("system_prompt", "the only instructions every subagent shares, beside a short description of its sandbox (for start)").Optional(),
 			tool.ObjectArray("subagents", "one task per independent subagent (for start)", tool.Schema{
@@ -102,6 +106,9 @@ func New(manager Manager, model string, concurrency int) tool.Tool {
 			}
 			return manager.Start(ctx, args.SystemPrompt, tasks)
 		case Send:
+			if args.Name == "" {
+				return broadcast(ctx, manager, args.Message)
+			}
 			return manager.Send(ctx, args.Name, args.Message)
 		case Status:
 			return manager.Status(args.Names)
@@ -133,6 +140,10 @@ func Describe(args Args) tool.CallRendering {
 	case Send:
 		rendering.Subject = args.Name
 		rendering.Mentions = mentions([]string{args.Name})
+		if args.Name == "" {
+			rendering.Subject = "every running subagent"
+			rendering.Mentions = nil
+		}
 	case List:
 		rendering.Subject = "subagents"
 	case Status, Output, Stop:
@@ -140,6 +151,14 @@ func Describe(args Args) tool.CallRendering {
 		rendering.Mentions = mentions(args.Names)
 	}
 	return rendering
+}
+
+func broadcast(ctx context.Context, manager Manager, message string) (string, error) {
+	names, err := manager.Broadcast(ctx, message)
+	if err != nil {
+		return "", err
+	}
+	return "queued for " + strings.Join(names, ", ") + ", which each read it once their current step finishes", nil
 }
 
 func everyOrAll(names []string, separator string) string {
@@ -187,8 +206,8 @@ func validate(args Args) error {
 			}
 		}
 	case Send:
-		if args.Name == "" || strings.TrimSpace(args.Message) == "" {
-			return errors.New("send requires a name and a nonempty message")
+		if strings.TrimSpace(args.Message) == "" {
+			return errors.New("send requires a nonempty message")
 		}
 	case Status, Output, Stop, List:
 	default:

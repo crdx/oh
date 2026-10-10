@@ -16,7 +16,7 @@
   /reply → /reply  (reply inline to the last answer in your editor)
   /revoke <target>... → /revoke …  (revoke temporary path grants or forwarded ports)
   /sub <action> → /sub …  (read a subagent's conversation)
-  /subs → /subs  (list this session's subagents)
+  /subs [all] → /subs …  (list this session's running and latest finished subagents)
 "/c"
   /conf → /conf  (edit the config and system prompt)
   /copy <target> → /copy …  (copy a target to the clipboard)
@@ -274,8 +274,9 @@
   snippets-dir → /open snippets-dir
 "/sub"
   /sub <action> → /sub …  (read a subagent's conversation)
-  /subs → /subs  (list this session's subagents)
+  /subs [all] → /subs …  (list this session's running and latest finished subagents)
 "/subs "
+  all → /subs all
 "/sub "
   cat → /sub cat
 "/sub cat "

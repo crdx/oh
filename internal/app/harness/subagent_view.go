@@ -32,6 +32,27 @@ func (self *App) listSubagents() []commands.SubagentListing {
 	return listing
 }
 
+func (self *App) subagentProgress() []commands.SubagentProgress {
+	if self.children.manager == nil {
+		return nil
+	}
+	var progress []commands.SubagentProgress
+	for _, child := range self.children.manager.Progress() {
+		progress = append(progress, commands.SubagentProgress{
+			Name:       child.Name,
+			State:      string(child.State),
+			IsLive:     child.State.IsLive(),
+			Model:      child.Model,
+			IsTimed:    child.IsTimed,
+			Duration:   child.Duration,
+			Intent:     child.Intent,
+			ToolCalls:  child.ToolCalls,
+			LastIntent: child.LastIntent,
+		})
+	}
+	return progress
+}
+
 func (self *App) showSubagent(name string) error {
 	columns, _ := self.screen.Size()
 	rows, err := self.drawSubagent(name, columns)

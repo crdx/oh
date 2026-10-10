@@ -27,6 +27,11 @@ func (self *fakeManager) Send(_ context.Context, name string, message string) (s
 	return "sent to " + name, nil
 }
 
+func (self *fakeManager) Broadcast(_ context.Context, message string) ([]string, error) {
+	self.message = message
+	return []string{"frugal-otter", "frugal-heron"}, nil
+}
+
 func (self *fakeManager) Status(names []string) (string, error) {
 	self.names = names
 	return "running", nil
@@ -111,6 +116,25 @@ func TestSendResumesAFinishedAgent(t *testing.T) {
 	}
 }
 
+func TestSendWithoutANameReachesEveryRunningAgent(t *testing.T) {
+	manager := &fakeManager{}
+	built := New(manager, "", 5)
+	parsed, err := built.Parse(`{"action":"send","message":"stop guessing"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if rendering := parsed.Rendering(); rendering.Subject != "every running subagent" || rendering.Mentions != nil {
+		t.Errorf("a broadcast was drawn as %+v", rendering)
+	}
+	result, err := parsed.Exec(context.Background())
+	if err != nil || manager.message != "stop guessing" || manager.sent != "" {
+		t.Fatalf("got %+v, %v, %+v", result, err, manager)
+	}
+	if want := "queued for frugal-otter, frugal-heron, which each read it once their current step finishes"; result.Output != want {
+		t.Errorf("a broadcast came back %q, want %q", result.Output, want)
+	}
+}
+
 func TestTheDescriptionNamesHowManyRunAtOnce(t *testing.T) {
 	if description := New(&fakeManager{}, "", 3).Description(); !strings.Contains(description, "at most 3 run at once") {
 		t.Errorf("the description does not name the limit: %q", description)
@@ -127,7 +151,7 @@ func TestInvalidChildArgumentsAreRefused(t *testing.T) {
 		`{"action":"start","subagents":[{"prompt":"x","intent":"Doing x","model":"unapproved"}]}`,
 		`{"action":"status","names":["frugal-otter"],"subagents":[{"prompt":"x"}]}`,
 		`{"action":"send","name":"frugal-otter"}`,
-		`{"action":"send","message":"x"}`,
+		`{"action":"send","message":" "}`,
 		`{"action":"start","names":["frugal-otter"],"subagents":[{"prompt":"x"}]}`,
 		`{"action":"list","names":["frugal-otter"]}`,
 		`{"action":"wait","name":"frugal-otter"}`,

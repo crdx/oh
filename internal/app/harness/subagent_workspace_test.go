@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"testing"
 
@@ -108,6 +109,8 @@ func TestAnUnconfinedChildWorksInAnyHostDirectory(t *testing.T) {
 }
 
 var childPromptSettings = config.Config{Sandbox: shell.Paths{
+	Read: []string{"/srv/docs"},
+	Home: []string{"/users/person/.local/share/notes", "/etc/person"},
 	Exec: []string{"/opt"},
 	Path: []string{"/users/person/bin"},
 	Deny: []string{".env"},
@@ -227,5 +230,22 @@ func TestAChildsReportIsMarkedUnverifiedAndItsScratchNamedAsItsParentSeesIt(t *t
 	unconfined := childScratchNote(childOptions{scratchParent: "/state/farm/tame-impala", isYolo: true})
 	if note := unconfined("tame-adder"); note != "unverified: check what matters before relying on it; its TMPDIR is /state/farm/tame-impala/subagents/tame-adder" {
 		t.Errorf("an unconfined parent was told %q", note)
+	}
+}
+
+func TestAChildIsGivenEveryReadablePathItsParentIsConfiguredWith(t *testing.T) {
+	configured := shell.Paths{
+		Deny:  []string{".env"},
+		Read:  []string{"/srv/docs"},
+		Write: []string{"/srv/out"},
+		Exec:  []string{"/opt"},
+		Path:  []string{"/users/person/bin"},
+		Home:  []string{"/users/person/.config/git"},
+	}
+	got := childPaths(configured)
+	want := configured
+	want.Write = nil
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("a child was given %+v, want everything but the writable paths: %+v", got, want)
 	}
 }

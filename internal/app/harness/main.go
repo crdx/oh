@@ -1375,8 +1375,9 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		},
 		Jobs: managedJobs(jobManager),
 		Subagents: commands.Subagents{
-			List: func() []commands.SubagentListing { return app.listSubagents() },
-			Show: func(name string) error { return app.showSubagent(name) },
+			List:     func() []commands.SubagentListing { return app.listSubagents() },
+			Progress: func() []commands.SubagentProgress { return app.subagentProgress() },
+			Show:     func(name string) error { return app.showSubagent(name) },
 		},
 		StartHostCommand: func(directory string, command string) error {
 			return app.startHostCommand(directory, command)

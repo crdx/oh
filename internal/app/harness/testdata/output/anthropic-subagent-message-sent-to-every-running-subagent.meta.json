@@ -1,0 +1,1 @@
+{"data":{"workspaceDir":"","provider":"anthropic","model":"claude-opus-5","effort":"medium"},"messages":5,"name":"tame-impala","started":"2001-01-01T00:00:00Z","title":"start three subagents, then tell every running one to name the format","touched":"2001-01-01T00:00:00Z","version":3}

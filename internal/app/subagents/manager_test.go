@@ -1115,3 +1115,124 @@ func TestAMessageToAChildThatIsFinishingBecomesAFollowUp(t *testing.T) {
 		t.Errorf("the follow-up answered %q", answer)
 	}
 }
+
+func TestABroadcastReachesEveryRunningChildAndNoOther(t *testing.T) {
+	family := newTestFamily(t)
+	gates := map[string]chan struct{}{}
+	var gatesMutex sync.Mutex
+	manager := family.manager(t, func(ctx context.Context, child Child) (Worker, error) {
+		gatesMutex.Lock()
+		gate := make(chan struct{})
+		gates[child.Name] = gate
+		gatesMutex.Unlock()
+		return answering(func() agent.Provider { return &gatedProvider{gate: gate} })(ctx, child)
+	})
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "first"}}); err != nil {
+		t.Fatal(err)
+	}
+	open := func(name string) {
+		deadline := time.Now().Add(5 * time.Second)
+		for time.Now().Before(deadline) {
+			gatesMutex.Lock()
+			gate := gates[name]
+			gatesMutex.Unlock()
+			if gate != nil {
+				close(gate)
+				return
+			}
+			time.Sleep(time.Millisecond)
+		}
+		t.Fatalf("%s never asked its model anything", name)
+	}
+	finished := manager.ListSnapshots()[0].Name
+	open(finished)
+	untilFinished(t, manager, 1)
+	untilSettled(t, manager, finished)
+	if _, err := manager.Broadcast(t.Context(), "anyone?"); err == nil || !strings.Contains(err.Error(), "no subagent is running") {
+		t.Errorf("a broadcast with nobody running came back %v", err)
+	}
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "second"}, {Prompt: "third"}}); err != nil {
+		t.Fatal(err)
+	}
+	queued, err := manager.Broadcast(t.Context(), "again")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var running []string
+	for _, snapshot := range manager.ListSnapshots() {
+		if snapshot.Name != finished {
+			running = append(running, snapshot.Name)
+		}
+	}
+	if !slices.Equal(queued, running) {
+		t.Fatalf("the broadcast reached %v, want the running %v and not the finished %s", queued, running, finished)
+	}
+	for _, name := range running {
+		open(name)
+	}
+	var answers []string
+	for _, event := range untilFinished(t, manager, 2) {
+		if event.Kind == subagentrecord.Finished {
+			answers = append(answers, event.Text)
+		}
+	}
+	slices.Sort(answers)
+	if want := []string{"second\n\nsecond then again", "third\n\nthird then again"}; !slices.Equal(answers, want) {
+		t.Errorf("the children answered %q, want each to read the broadcast", answers)
+	}
+}
+
+func TestProgressSaysHowLongEachChildRanAndWhatItLastDid(t *testing.T) {
+	family := newTestFamily(t)
+	now := time.Date(2026, time.January, 2, 3, 4, 5, 0, time.UTC)
+	manager, err := New(Options{
+		Directory: family.directory,
+		Scratch:   family.scratch,
+		Parent:    parentName,
+		Factory:   waiting(),
+		PickName:  func(int) int { return 0 },
+		Caps:      func() caps.Set { return caps.Read },
+		Workspace: func(string) (string, error) { return family.workspace, nil },
+		Now:       func() time.Time { return now },
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(manager.Close)
+	manager.mutex.Lock()
+	manager.children["frugal-otter"] = &child{
+		Snapshot:   Snapshot{Name: "frugal-otter", State: subagentrecord.Running, StartedAt: now.Add(-90 * time.Second)},
+		cancel:     func() {},
+		toolCalls:  12,
+		lastIntent: "Reading the parser",
+		choice:     model.Choice{Name: "Claude Haiku"},
+		selection:  model.Selection{Effort: "med"},
+	}
+	manager.children["frugal-heron"] = &child{
+		Snapshot: Snapshot{Name: "frugal-heron", State: subagentrecord.Done, StartedAt: now.Add(-time.Hour), EndedAt: now.Add(-59 * time.Minute)},
+		cancel:   func() {},
+	}
+	manager.children["frugal-wren"] = &child{
+		Snapshot: Snapshot{Name: "frugal-wren", State: subagentrecord.Ended},
+		cancel:   func() {},
+		choice:   model.Choice{ID: "claude-opus-5"},
+	}
+	manager.order = append(manager.order, "frugal-otter", "frugal-heron", "frugal-wren")
+	manager.mutex.Unlock()
+	progress := manager.Progress()
+	if len(progress) != 3 {
+		t.Fatalf("got %d children, want 3", len(progress))
+	}
+	if otter := progress[0]; otter.Duration != 90*time.Second || otter.ToolCalls != 12 || otter.LastIntent != "Reading the parser" {
+		t.Errorf("a running child's progress was %+v", otter)
+	}
+	if heron := progress[1]; heron.Duration != time.Minute {
+		t.Errorf("a finished child ran for %v, want the minute between its start and end", heron.Duration)
+	}
+	if wren := progress[2]; wren.Duration != 0 || wren.IsTimed {
+		t.Errorf("a restored child nobody timed ran for %v, timed %t", wren.Duration, wren.IsTimed)
+	}
+	if !progress[0].IsTimed || progress[0].Model != "Claude Haiku@med" || progress[2].Model != "claude-opus-5" {
+		t.Errorf("the children's models read %q and %q", progress[0].Model, progress[2].Model)
+	}
+}

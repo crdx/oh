@@ -239,7 +239,7 @@ func TestSubagentsReportBackThroughTheBinaryAndAreListed(t *testing.T) {
 	session.requireShown(secondChildAnswer)
 
 	session.typeText("/subs" + pressEnter)
-	session.waitFor("Subagents:")
+	session.waitFor("Finished subagents:")
 	session.typeAndSettle(pressEscape)
 	session.quit()
 
