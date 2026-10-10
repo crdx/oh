@@ -17,7 +17,7 @@ start a subagent and keep working
 ## Tool calls · +0s
 
 ```
-subagent: 1 subagent [ok, 1 line, 18B, toolu_1]
+subagent: 1 subagent [ok, 1 line, 56B, toolu_1]
 probe: probe [ok, 1 line, 11B, toolu_2]
 ```
 

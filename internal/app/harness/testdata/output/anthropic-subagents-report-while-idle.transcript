@@ -17,7 +17,7 @@ split the review between two subagents
 ## Tool calls · +0s
 
 ```
-subagent: 2 subagents [ok, 1 line, 31B, toolu_1]
+subagent: 2 subagents [ok, 1 line, 69B, toolu_1]
 ```
 
 ## Assistant · +0s

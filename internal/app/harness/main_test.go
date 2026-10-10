@@ -11704,6 +11704,14 @@ func TestTheReloadConfirmationNamesEveryFileAndWhatItChanged(t *testing.T) {
 				"applies when oh next starts: sandbox.exec\n" +
 				"applies to new sessions: agent.round_robin, defaults.caps",
 		},
+		"an experiment read once at startup": {
+			changes: []config.SourceChange{
+				{Path: "config.toml", Settings: []string{"experimental.reply_command", "experimental.shared_history", "experimental.wait_tool"}},
+			},
+			want: "Configuration reloaded automatically\n" +
+				"config.toml: experimental.reply_command, experimental.shared_history, experimental.wait_tool\n" +
+				"applies when oh next starts: experimental.reply_command, experimental.wait_tool",
+		},
 		"one setting named by two files is said once": {
 			changes: []config.SourceChange{
 				{Path: "config.toml", Settings: []string{"skills.include"}},
@@ -11717,9 +11725,21 @@ func TestTheReloadConfirmationNamesEveryFileAndWhatItChanged(t *testing.T) {
 	}
 
 	for name, testCase := range cases {
-		if got := reloadConfirmation(testCase.changes); got != testCase.want {
+		if got := reloadConfirmation(testCase.changes, config.ReachOf); got != testCase.want {
 			t.Errorf("%s drew %q, want %q", name, got, testCase.want)
 		}
+	}
+
+	subagentChange := []config.SourceChange{{Path: "config.toml", Settings: []string{"subagent.concurrency", "subagent.round_robin"}}}
+	running := childState{manager: &subagents.Manager{}}
+	if got, want := reloadConfirmation(subagentChange, running.reachOf), "Configuration reloaded automatically\n"+
+		"config.toml: subagent.concurrency, subagent.round_robin"; got != want {
+		t.Errorf("subagents that follow a reload drew %q, want %q", got, want)
+	}
+	if got, want := reloadConfirmation(subagentChange, childState{}.reachOf), "Configuration reloaded automatically\n"+
+		"config.toml: subagent.concurrency, subagent.round_robin\n"+
+		"applies when oh next starts: subagent.concurrency, subagent.round_robin"; got != want {
+		t.Errorf("subagents off since startup drew %q, want %q", got, want)
 	}
 }
 
@@ -13119,7 +13139,7 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 			Text: reloadConfirmation([]config.SourceChange{{
 				Path:     "config.toml",
 				Settings: []string{"ui.currency"},
-			}}),
+			}}, config.ReachOf),
 			Status:       agent.SuccessStatus,
 			DismissAfter: configReloadConfirmationDuration,
 		})
@@ -15699,43 +15719,43 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 		),
 		"session-spend / unpriced model": goldenSegmentPass(
 			t,
-			sessionSpend.New(func() (float64, bool) { return 0, false }, money.Dollar()),
+			sessionSpend.New(func() (float64, bool) { return 0, false }, money.Dollar),
 			"",
 			segment.Context{},
 		),
 		"session-spend / nothing spent yet": goldenSegmentPass(
 			t,
-			sessionSpend.New(func() (float64, bool) { return 0, true }, money.Dollar()),
+			sessionSpend.New(func() (float64, bool) { return 0, true }, money.Dollar),
 			"",
 			segment.Context{},
 		),
 		"session-spend / a fraction of a cent": goldenSegmentPass(
 			t,
-			sessionSpend.New(func() (float64, bool) { return 0.000_42, true }, money.Dollar()),
+			sessionSpend.New(func() (float64, bool) { return 0.000_42, true }, money.Dollar),
 			"",
 			segment.Context{},
 		),
 		"session-spend / part way through a session": goldenSegmentPass(
 			t,
-			sessionSpend.New(func() (float64, bool) { return 1.284_5, true }, money.Dollar()),
+			sessionSpend.New(func() (float64, bool) { return 1.284_5, true }, money.Dollar),
 			"",
 			segment.Context{},
 		),
 		"session-spend / a long session": goldenSegmentPass(
 			t,
-			sessionSpend.New(func() (float64, bool) { return 42.5, true }, money.Dollar()),
+			sessionSpend.New(func() (float64, bool) { return 42.5, true }, money.Dollar),
 			"",
 			segment.Context{},
 		),
 		"session-spend / converted to pounds": goldenSegmentPass(
 			t,
-			sessionSpend.New(func() (float64, bool) { return 1.284_5, true }, money.In("GBP", 0.782)),
+			sessionSpend.New(func() (float64, bool) { return 1.284_5, true }, func() money.Currency { return money.In("GBP", 0.782) }),
 			"",
 			segment.Context{},
 		),
 		"session-spend / a currency without a symbol": goldenSegmentPass(
 			t,
-			sessionSpend.New(func() (float64, bool) { return 10, true }, money.In("HUF", 356.4)),
+			sessionSpend.New(func() (float64, bool) { return 10, true }, func() money.Currency { return money.In("HUF", 356.4) }),
 			"",
 			segment.Context{},
 		),

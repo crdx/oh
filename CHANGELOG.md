@@ -4,6 +4,8 @@
 
 ### Changes
 
+- Apply a changed `ui.currency` without restarting
+- State which experimental toggles need a restart
 - Title every notice in the readable transcript
 - Refactor config file format a bit
 - Add experimental inline reply command and shortcut

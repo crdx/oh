@@ -5,7 +5,9 @@ import (
 	"strings"
 	"time"
 
+	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/metrics"
+	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/painter"
 	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/internal/app/subagents"
@@ -18,6 +20,7 @@ const (
 
 type childState struct {
 	manager            *subagents.Manager
+	rotate             func(config.Subagent, model.Defaults) (subagents.Rotation, error)
 	directory          string
 	reportsDue         []string
 	deliveryAt         time.Time
@@ -221,3 +224,24 @@ func (self *App) queueUndeliveredReports(events []agent.Event) {
 		self.children.deliveryAt = self.getNow()
 	}
 }
+
+func (self childState) reconfigure(live config.LiveConfig) error {
+	if self.manager == nil || self.rotate == nil {
+		return nil
+	}
+	rotation, err := self.rotate(live.Subagent, live.SelectionDefaults)
+	if err != nil {
+		return err
+	}
+	self.manager.Reconfigure(rotation)
+	return nil
+}
+
+func (self childState) reachOf(setting string) config.Reach {
+	if strings.HasPrefix(setting, subagentTable) && self.manager == nil {
+		return config.ReachNextRun
+	}
+	return config.ReachOf(setting)
+}
+
+const subagentTable = "subagent."

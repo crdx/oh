@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/app/caps"
+	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/dynamic"
 	"crdx.org/oh/internal/app/edit"
 	"crdx.org/oh/internal/app/editor"
@@ -428,5 +429,71 @@ func TestAReportIsInterjectedIntoARunningTurnEvenOnceItWasRead(t *testing.T) {
 		return event.Kind == subagentrecord.ReportsDelivered
 	}) {
 		t.Error("the interjected reports were not recorded")
+	}
+}
+
+func TestReloadingConfigChangesTheSubagentRotationAndLimitForTheNextStart(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "config.toml")
+	writeLiveConfig(t, path, "[subagent]\nmodel = \"anthropic/claude-opus-5\"\nconcurrency = 2\n")
+
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	prepareLiveConfig(t, self, path)
+	rotate := func(settings config.Subagent, _ model.Defaults) (subagents.Rotation, error) {
+		var models []subagents.ChildModel
+		for _, written := range settings.Rotation() {
+			if strings.Contains(written, "unknown") {
+				return subagents.Rotation{}, errors.New(written + " is not a model anybody offers")
+			}
+			models = append(models, subagents.ChildModel{Choice: model.Choice{ID: written}})
+		}
+		return subagents.Rotation{Models: models, Concurrency: settings.Concurrency}, nil
+	}
+	initial, err := rotate(config.Subagent{ModelChoice: config.ModelChoice{Model: "anthropic/claude-opus-5"}, Concurrency: 2}, model.Defaults{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	manager, err := subagents.New(subagents.Options{
+		Directory:   filepath.Join(t.TempDir(), "subagents"),
+		Scratch:     t.TempDir(),
+		Parent:      "tame-impala",
+		Models:      initial.Models,
+		Concurrency: initial.Concurrency,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(manager.Close)
+	self.children = childState{manager: manager, rotate: rotate}
+
+	writeLiveConfig(t, path, "[subagent]\nmodel = \"anthropic/claude-haiku-5\"\nconcurrency = 7\n")
+	settleLiveConfig(t, self)
+	if got := manager.Concurrency(); got != 7 {
+		t.Errorf("the limit after a reload is %d, want 7", got)
+	}
+	if got := manager.Model(); got != "anthropic/claude-haiku-5" {
+		t.Errorf("the rotation after a reload names %q", got)
+	}
+
+	writeLiveConfig(t, path, "[subagent]\nmodel = \"anthropic/unknown\"\nconcurrency = 3\n")
+	settleLiveConfig(t, self)
+	if got := manager.Concurrency(); got != 7 || manager.Model() != "anthropic/claude-haiku-5" {
+		t.Errorf("a rotation that would not resolve replaced the one standing: %d, %q", got, manager.Model())
+	}
+	if message := self.feedback.Message(); message.Status != agent.ErrorStatus || !strings.Contains(message.Text, "anthropic/unknown") {
+		t.Errorf("a rotation that would not resolve said %+v", message)
+	}
+}
+
+func TestARotationEmptiedLiveRefusesToStartRatherThanRunOnNoModel(t *testing.T) {
+	rotation, err := childRotationOf(config.Subagent{Concurrency: 4}, model.Defaults{}, nil, "", false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if rotation.Concurrency != 4 || len(rotation.Models) != 0 {
+		t.Fatalf("an empty rotation came back as %+v", rotation)
+	}
+	if _, err := rotation.Choose(); err == nil || !strings.Contains(err.Error(), "no subagent model is configured") {
+		t.Errorf("an empty rotation chose with %v", err)
 	}
 }

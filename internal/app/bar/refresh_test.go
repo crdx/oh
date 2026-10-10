@@ -20,7 +20,6 @@ import (
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/jobs"
-	"crdx.org/oh/internal/money"
 )
 
 const (
@@ -174,7 +173,6 @@ func refreshRegistry(workspaceDir string, world refreshWorld) segment.Registry {
 	return NewRegistry(Options{
 		Workspace: work.At(workspaceDir),
 		Session:   cycle.Session{Name: "tame-impala", Model: "claude-haiku-5-5", Effort: "high"},
-		Currency:  money.Dollar(),
 		Sources: Sources{
 			IsTurnRunning:      func() bool { return world.isRunning },
 			IsSessionPersisted: func() bool { return true },

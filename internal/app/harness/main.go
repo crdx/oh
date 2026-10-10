@@ -1162,7 +1162,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	snapshots := file.NewSnapshots()
 	toolboxTools := toolbox.RummageWithRunner(files, snapshots, grepRunner(args.Yolo))
 	if childManager != nil {
-		toolboxTools = append(toolboxTools, subagent.New(childManager, childManager.Model(), childManager.Concurrency()))
+		toolboxTools = append(toolboxTools, subagent.New(childManager))
 	}
 	askBroker := ask.New()
 	permissionSet, err := settings.BuildPermissions()
@@ -1435,6 +1435,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		recorder: record.New(log),
 		children: childState{
 			manager:   childManager,
+			rotate:    preparedChildren.rotate,
 			directory: session.ChildrenDir(sessionsDir, log.Name()),
 		},
 		editorConfig:    editorConfiguration,
@@ -1529,9 +1530,14 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		UsagePage:             backend.UsagePage(selection.Provider, endpointURL),
 		UsageIsSelfRefreshing: usageReporter != nil,
 		UsageGauges:           usage.GaugesFor(os.Stdout, cellWidth, cellHeight, hasGraphics),
-		Currency:              currency,
-		SandboxHostname:       forwardsHostname,
-		Sources:               app.getBarSources(),
+		GetCurrency: func() money.Currency {
+			if app == nil {
+				return currency
+			}
+			return app.getCurrency()
+		},
+		SandboxHostname: forwardsHostname,
+		Sources:         app.getBarSources(),
 	})
 	liveConfig, err := settings.BuildLive(barRegistry)
 	if err != nil {
@@ -1551,6 +1557,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	app.display.theme = liveConfig.Theme
 	app.display.modelName = selection.Model
 	app.display.tariff = painter.Tariff{Prices: choice.Prices, Currency: currency}
+	app.currency = newCurrencyState(settings.Ui.Currency, currency, isSimulated)
 	screen.SetGrouping(liveConfig.Grouping)
 	app.display.bar = bar.NewConfiguration(barRegistry, liveConfig.SegmentLayout)
 

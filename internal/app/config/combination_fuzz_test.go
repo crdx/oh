@@ -20,7 +20,6 @@ import (
 	"crdx.org/oh/internal/app/usage"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/jobs"
-	"crdx.org/oh/internal/money"
 )
 
 type setting struct {
@@ -167,7 +166,6 @@ func testRegistry() segment.Registry {
 		ModelEffortLevels: []string{"low", "high"},
 		UsageCachePath:    filepath.Join(os.TempDir(), "usage-absent.json"),
 		UsageGauges:       usage.FixedGauges(usage.Graphics{}),
-		Currency:          money.Dollar(),
 		SandboxHostname:   "127.0.0.1",
 		Sources: bar.Sources{
 			IsTurnRunning:      func() bool { return false },

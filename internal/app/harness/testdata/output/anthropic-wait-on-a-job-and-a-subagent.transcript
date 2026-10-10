@@ -18,7 +18,7 @@ build in the background, ask a subagent, and wait for them
 
 ```
 job: check [ok, 1 line, 21B, toolu_1]
-subagent: 1 subagent [ok, 1 line, 18B, toolu_2]
+subagent: 1 subagent [ok, 1 line, 56B, toolu_2]
 ```
 
 ## Subagent started · tame-adder · +0s

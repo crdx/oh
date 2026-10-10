@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"slices"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -15,7 +16,10 @@ type fakeManager struct {
 	names   []string
 	sent    string
 	message string
+	model   string
 }
+
+func (self *fakeManager) Model() string { return self.model }
 
 func (self *fakeManager) Start(_ context.Context, _ string, tasks []Task) (string, error) {
 	self.tasks = tasks
@@ -51,7 +55,7 @@ func (self *fakeManager) List() string { return "frugal-otter" }
 
 func TestStartTakesIndependentObjectPrompts(t *testing.T) {
 	manager := &fakeManager{}
-	built := New(manager, "", 5)
+	built := New(manager)
 	schema, err := json.Marshal(built.Schema())
 	if err != nil {
 		t.Fatal(err)
@@ -79,7 +83,7 @@ func TestStartTakesIndependentObjectPrompts(t *testing.T) {
 
 func TestNamesSelectAgentsAndNoNamesMeansAll(t *testing.T) {
 	manager := &fakeManager{}
-	built := New(manager, "", 5)
+	built := New(manager)
 	for _, input := range []string{
 		`{"action":"status","names":["frugal-otter"]}`,
 		`{"action":"output","names":["frugal-otter"]}`,
@@ -105,7 +109,7 @@ func TestNamesSelectAgentsAndNoNamesMeansAll(t *testing.T) {
 
 func TestSendResumesAFinishedAgent(t *testing.T) {
 	manager := &fakeManager{}
-	built := New(manager, "", 5)
+	built := New(manager)
 	parsed, err := built.Parse(`{"action":"send","name":"frugal-otter","message":"now check the tests"}`)
 	if err != nil {
 		t.Fatal(err)
@@ -118,7 +122,7 @@ func TestSendResumesAFinishedAgent(t *testing.T) {
 
 func TestSendWithoutANameReachesEveryRunningAgent(t *testing.T) {
 	manager := &fakeManager{}
-	built := New(manager, "", 5)
+	built := New(manager)
 	parsed, err := built.Parse(`{"action":"send","message":"stop guessing"}`)
 	if err != nil {
 		t.Fatal(err)
@@ -135,14 +139,28 @@ func TestSendWithoutANameReachesEveryRunningAgent(t *testing.T) {
 	}
 }
 
-func TestTheDescriptionNamesHowManyRunAtOnce(t *testing.T) {
-	if description := New(&fakeManager{}, "", 3).Description(); !strings.Contains(description, "at most 3 run at once") {
-		t.Errorf("the description does not name the limit: %q", description)
+func TestTheDescriptionLeavesTheLimitToStartSinceItCanChange(t *testing.T) {
+	description := New(&fakeManager{}).Description()
+	if regexp.MustCompile(`\d`).MatchString(description) || !strings.Contains(description, "start says how many are running against the limit") {
+		t.Errorf("the description freezes a limit that can change, or hides where to find it: %q", description)
+	}
+}
+
+func TestTheStartRowNamesTheModelChosenWhenItIsDrawn(t *testing.T) {
+	manager := &fakeManager{model: "claude-sonnet-5"}
+	built := New(manager)
+	manager.model = "claude-haiku-5"
+	parsed, err := built.Parse(`{"action":"start","subagents":[{"prompt":"x","intent":"Doing x"}]}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if qualifier := parsed.Rendering().Qualifier; qualifier != "on claude-haiku-5" {
+		t.Errorf("a start drawn after the rotation changed read %q", qualifier)
 	}
 }
 
 func TestInvalidChildArgumentsAreRefused(t *testing.T) {
-	built := New(&fakeManager{}, "", 5)
+	built := New(&fakeManager{})
 	for _, input := range []string{
 		`{"action":"start","subagents":[{"prompt":""}]}`,
 		`{"action":"start","subagents":[{"prompt":"x"}]}`,
@@ -167,7 +185,7 @@ func TestInvalidChildArgumentsAreRefused(t *testing.T) {
 }
 
 func TestEveryCallNamingSubagentsMentionsThem(t *testing.T) {
-	built := New(&fakeManager{}, "", 5)
+	built := New(&fakeManager{})
 	for input, want := range map[string][]string{
 		`{"action":"status","names":["frugal-otter","frugal-heron"]}`: {"subagent:frugal-otter", "subagent:frugal-heron"},
 		`{"action":"output","names":["frugal-heron"]}`:                {"subagent:frugal-heron"},
@@ -200,14 +218,14 @@ func TestEveryCallNamingSubagentsMentionsThem(t *testing.T) {
 }
 
 func TestASpawnNamesTheModelItsSubagentsRunOn(t *testing.T) {
-	parsed, err := New(&fakeManager{}, "claude-sonnet-5", 5).Parse(`{"action":"start","subagents":[{"prompt":"x","intent":"Doing x"}]}`)
+	parsed, err := New(&fakeManager{model: "claude-sonnet-5"}).Parse(`{"action":"start","subagents":[{"prompt":"x","intent":"Doing x"}]}`)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if qualifier := parsed.Rendering().Qualifier; qualifier != "on claude-sonnet-5" {
 		t.Errorf("a spawn was qualified as %q", qualifier)
 	}
-	listed, err := New(&fakeManager{}, "claude-sonnet-5", 5).Parse(`{"action":"list"}`)
+	listed, err := New(&fakeManager{model: "claude-sonnet-5"}).Parse(`{"action":"list"}`)
 	if err != nil {
 		t.Fatal(err)
 	}

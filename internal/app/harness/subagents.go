@@ -58,32 +58,27 @@ func userHome() string {
 
 type preparedChildManager struct {
 	manager *subagents.Manager
+	rotate  func(config.Subagent, model.Defaults) (subagents.Rotation, error)
 }
 
 func prepareChildManager(options childOptions, choices []model.Choice, seenModelsPath string, isPrinting bool) (preparedChildManager, error) {
-	rotation := options.settings.Subagent.Rotation()
-	if len(rotation) == 0 || isPrinting {
+	if len(options.settings.Subagent.Rotation()) == 0 || isPrinting {
 		return preparedChildManager{}, nil
 	}
-	setting := options.settings.Subagent.Setting()
-	selections, err := model.ParseRoundRobin(choices, rotation, options.settings.Defaults.ForSelections())
-	if err != nil {
-		return preparedChildManager{}, fmt.Errorf("%s: %w", setting, err)
+	rotate := func(settings config.Subagent, defaults model.Defaults) (subagents.Rotation, error) {
+		return childRotationOf(settings, defaults, choices, seenModelsPath, options.endpoints.OverrideURL != "")
 	}
-	models := make([]subagents.ChildModel, 0, len(selections))
-	for _, selection := range selections {
-		choice, err := model.Chosen(choices, seenModelsPath, selection.Provider, selection.Model)
-		if err != nil {
-			return preparedChildManager{}, fmt.Errorf("%s: %w", setting, err)
-		}
-		models = append(models, subagents.ChildModel{Choice: choice, Selection: selection})
+	rotation, err := rotate(options.settings.Subagent, options.settings.Defaults.ForSelections())
+	if err != nil {
+		return preparedChildManager{}, err
 	}
 	manager, err := subagents.New(subagents.Options{
-		Directory: session.ChildrenDir(options.sessionsDir, options.sessionName),
-		Scratch:   options.scratchParent,
-		Parent:    options.sessionName,
-		Models:    models,
-		Choose:    childRotation(models, selections, options.endpoints.OverrideURL != ""),
+		Directory:   session.ChildrenDir(options.sessionsDir, options.sessionName),
+		Scratch:     options.scratchParent,
+		Parent:      options.sessionName,
+		Models:      rotation.Models,
+		Choose:      rotation.Choose,
+		Concurrency: rotation.Concurrency,
 		Meta: store.Meta{
 			WorkspaceDir: options.workspace.GetDir(),
 			Yolo:         options.isYolo,
@@ -93,7 +88,6 @@ func prepareChildManager(options childOptions, choices []model.Choice, seenModel
 		EnsureParent: options.ensurePersisted,
 		Workspace:    childWorkspace(options),
 		ScratchNote:  childScratchNote(options),
-		Concurrency:  options.settings.Subagent.Concurrency,
 		Caps: func() caps.Set {
 			if options.isYolo {
 				return caps.Unconfined()
@@ -101,7 +95,43 @@ func prepareChildManager(options childOptions, choices []model.Choice, seenModel
 			return options.parentCaps() & (caps.Read | caps.Shell)
 		},
 	})
-	return preparedChildManager{manager: manager}, err
+	return preparedChildManager{manager: manager, rotate: rotate}, err
+}
+
+func childRotationOf(
+	settings config.Subagent,
+	defaults model.Defaults,
+	choices []model.Choice,
+	seenModelsPath string,
+	isSimulated bool,
+) (subagents.Rotation, error) {
+	rotation := settings.Rotation()
+	setting := settings.Setting()
+	if len(rotation) == 0 {
+		return subagents.Rotation{
+			Choose: func() (subagents.ChildModel, error) {
+				return subagents.ChildModel{}, errors.New("no subagent model is configured, so no subagent can start")
+			},
+			Concurrency: settings.Concurrency,
+		}, nil
+	}
+	selections, err := model.ParseRoundRobin(choices, rotation, defaults)
+	if err != nil {
+		return subagents.Rotation{}, fmt.Errorf("%s: %w", setting, err)
+	}
+	models := make([]subagents.ChildModel, 0, len(selections))
+	for _, selection := range selections {
+		choice, err := model.Chosen(choices, seenModelsPath, selection.Provider, selection.Model)
+		if err != nil {
+			return subagents.Rotation{}, fmt.Errorf("%s: %w", setting, err)
+		}
+		models = append(models, subagents.ChildModel{Choice: choice, Selection: selection})
+	}
+	return subagents.Rotation{
+		Models:      models,
+		Choose:      childRotation(models, selections, isSimulated),
+		Concurrency: settings.Concurrency,
+	}, nil
 }
 
 func childRotation(models []subagents.ChildModel, selections []model.Selection, isSimulated bool) func() (subagents.ChildModel, error) {

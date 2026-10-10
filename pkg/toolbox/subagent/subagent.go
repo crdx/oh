@@ -52,16 +52,17 @@ type Manager interface {
 	Output(names []string) (string, error)
 	Stop(names []string) (string, error)
 	List() string
+	Model() string
 }
 
-func New(manager Manager, model string, concurrency int) tool.Tool {
+func New(manager Manager) tool.Tool {
 	definition := tool.Definition{
 		Name: Name,
 		Description: "start independent subagents with a shared optional system prompt and individual tasks, " +
 			"send one a message, which a running subagent reads once its current step finishes and a finished one takes as a follow-up, " +
 			"or send every running subagent the same message by leaving out the name, " +
 			"and inspect or control them by name; " +
-			fmt.Sprintf("at most %d run at once; ", concurrency) +
+			"only a limited number run at once, and start says how many are running against the limit; " +
 			"a subagent knows only a short description of its sandbox, your system_prompt, and its prompt: " +
 			"none of your instructions, context files or conversation reach it, so give it everything it needs; " +
 			"each subagent can read but not write its workspace, and has a shell only while you do, " +
@@ -92,7 +93,7 @@ func New(manager Manager, model string, concurrency int) tool.Tool {
 	}
 	describe := func(args Args) tool.CallRendering {
 		rendering := Describe(args)
-		if args.Action == Start && model != "" {
+		if model := manager.Model(); args.Action == Start && model != "" {
 			rendering.Qualifier = "on " + model
 		}
 		return rendering

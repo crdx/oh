@@ -18,7 +18,7 @@ func render(t *testing.T, dollars float64, isKnown bool) string {
 
 	built, err := sessionSpend.New(func() (float64, bool) {
 		return dollars, isKnown
-	}, money.Dollar())(noOptions{})
+	}, money.Dollar)(noOptions{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -54,7 +54,7 @@ func TestSpendIsDrawnAsMoney(t *testing.T) {
 func TestSpendIsDrawnInTheChosenCurrency(t *testing.T) {
 	built, err := sessionSpend.New(func() (float64, bool) {
 		return 4, true
-	}, money.In("GBP", 0.75))(noOptions{})
+	}, func() money.Currency { return money.In("GBP", 0.75) })(noOptions{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -68,7 +68,7 @@ func TestSpendIsDerivedWhenRendered(t *testing.T) {
 	dollars := 1.0
 	built, err := sessionSpend.New(func() (float64, bool) {
 		return dollars, true
-	}, money.Dollar())(noOptions{})
+	}, money.Dollar)(noOptions{})
 	if err != nil {
 		t.Fatal(err)
 	}

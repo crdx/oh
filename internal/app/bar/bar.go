@@ -78,7 +78,7 @@ type Options struct {
 	UsagePage             string
 	UsageIsSelfRefreshing bool
 	UsageGauges           *usage.Gauges
-	Currency              money.Currency
+	GetCurrency           func() money.Currency
 	SandboxHostname       string
 	Sources               Sources
 }
@@ -105,7 +105,7 @@ func NewRegistry(options Options) segment.Registry {
 		activitySpinnerSegment: activitySpinner.New(options.Sources.IsTurnRunning, time.Now),
 		cacheUsageSegment:      cacheUsage.New(options.Sources.GetCacheUsage),
 		contextUsageSegment:    contextUsage.New(options.Sources.GetContextUsage),
-		sessionSpendSegment:    sessionSpend.New(options.Sources.GetSessionSpend, options.Currency),
+		sessionSpendSegment:    sessionSpend.New(options.Sources.GetSessionSpend, options.GetCurrency),
 		modeToggleSegment:      modeToggleFor(options),
 		grantsSegment:          pathGrants.New(options.Sources.GetPathGrants),
 		forwardsSegment: forwardedPorts.New(forwardedPorts.Routes{

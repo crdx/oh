@@ -19,7 +19,6 @@ import (
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/jobs"
-	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/util/strutil"
 )
 
@@ -203,7 +202,6 @@ func TestInfoLeavesTheStylingOfEveryRealSegmentToTheSegment(t *testing.T) {
 		Workspace:         work.At("/workspace"),
 		Session:           cycle.Session{Name: "tame-impala", Model: "claude-haiku-5-5", Effort: "high"},
 		ModelEffortLevels: []string{"low", "medium", "high", "max"},
-		Currency:          money.Dollar(),
 		Sources: Sources{
 			IsTurnRunning:      func() bool { return false },
 			IsSessionPersisted: func() bool { return true },

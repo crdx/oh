@@ -17,7 +17,7 @@ start three subagents, then tell every running one to name the format
 ## Tool calls · +0s
 
 ```
-subagent: 3 subagents [ok, 1 line, 45B, toolu_1]
+subagent: 3 subagents [ok, 1 line, 83B, toolu_1]
 ```
 
 ## Subagent started · tame-adder · +0s

@@ -120,7 +120,14 @@ type child struct {
 	lastIntent string
 }
 
+type Rotation struct {
+	Models      []ChildModel
+	Choose      func() (ChildModel, error)
+	Concurrency int
+}
+
 type Manager struct {
+	rotation    Rotation
 	launchMutex sync.Mutex
 	eventMutex  sync.Mutex
 	mutex       sync.Mutex
@@ -147,9 +154,6 @@ func New(options Options) (*Manager, error) {
 	if err != nil {
 		return nil, err
 	}
-	if options.Concurrency <= 0 {
-		options.Concurrency = defaultConcurrency
-	}
 	if options.Now == nil {
 		options.Now = time.Now
 	}
@@ -157,6 +161,7 @@ func New(options Options) (*Manager, error) {
 		options.JournalPath = func(name string) string { return session.JournalPath(options.Directory, name) }
 	}
 	return &Manager{
+		rotation:    withDefaultConcurrency(Rotation{Models: options.Models, Choose: options.Choose, Concurrency: options.Concurrency}),
 		options:     options,
 		children:    make(map[string]*child),
 		scratchRoot: scratchRoot,
@@ -316,13 +321,13 @@ func (self *Manager) Start(ctx context.Context, sharedPrompt string, tasks []sub
 	self.launchMutex.Lock()
 	defer self.launchMutex.Unlock()
 	self.mutex.Lock()
-	isClosed, liveCount, siblings := self.closed, self.liveCount(), slices.Clone(self.order)
+	isClosed, liveCount, siblings, concurrency := self.closed, self.liveCount(), slices.Clone(self.order), self.rotation.Concurrency
 	self.mutex.Unlock()
 	if isClosed {
 		return "", errors.New("subagent manager is closed")
 	}
-	if len(tasks) == 0 || liveCount+len(tasks) > self.options.Concurrency {
-		return "", fmt.Errorf("at most %d subagents may run at once", self.options.Concurrency)
+	if len(tasks) == 0 || liveCount+len(tasks) > concurrency {
+		return "", fmt.Errorf("at most %d subagents may run at once", concurrency)
 	}
 	if self.options.EnsureParent != nil {
 		if err := self.options.EnsureParent(); err != nil {
@@ -385,7 +390,7 @@ func (self *Manager) Start(ctx context.Context, sharedPrompt string, tasks []sub
 		})
 		place.start()
 	}
-	return "started " + strings.Join(names, ", "), nil
+	return "started " + strings.Join(names, ", ") + "; " + self.runningAgainstLimit(), nil
 }
 
 func (self *Manager) Send(ctx context.Context, name string, message string) (string, error) {
@@ -515,12 +520,23 @@ func (self *Manager) ScratchNote(name string) string {
 }
 
 func (self *Manager) Concurrency() int {
-	return self.options.Concurrency
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+	return self.rotation.Concurrency
+}
+
+func (self *Manager) Reconfigure(rotation Rotation) {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+	self.rotation = withDefaultConcurrency(rotation)
 }
 
 func (self *Manager) Model() string {
+	self.mutex.Lock()
+	models := self.rotation.Models
+	self.mutex.Unlock()
 	var names []string
-	for _, candidate := range self.options.Models {
+	for _, candidate := range models {
 		name := candidate.Choice.Name
 		if name == "" {
 			name = candidate.Choice.ID
@@ -682,13 +698,23 @@ func (self *Manager) Close() {
 }
 
 func (self *Manager) choose() (ChildModel, error) {
-	if self.options.Choose != nil {
-		return self.options.Choose()
+	self.mutex.Lock()
+	rotation := self.rotation
+	self.mutex.Unlock()
+	if rotation.Choose != nil {
+		return rotation.Choose()
 	}
-	if len(self.options.Models) == 0 {
+	if len(rotation.Models) == 0 {
 		return ChildModel{}, nil
 	}
-	return self.options.Models[0], nil
+	return rotation.Models[0], nil
+}
+
+func withDefaultConcurrency(rotation Rotation) Rotation {
+	if rotation.Concurrency <= 0 {
+		rotation.Concurrency = defaultConcurrency
+	}
+	return rotation
 }
 
 func (self *Manager) restoreStart(event agent.Event) {
@@ -993,8 +1019,8 @@ func (self *Manager) refuseSend(name string, current *child) error {
 		return fmt.Errorf("%s is stopping, so it cannot take a message", name)
 	case current.State.IsLive():
 		return fmt.Errorf("%s is still running; wait for it before sending it anything", name)
-	case self.liveCount()+1 > self.options.Concurrency:
-		return fmt.Errorf("at most %d subagents may run at once", self.options.Concurrency)
+	case self.liveCount()+1 > self.rotation.Concurrency:
+		return fmt.Errorf("at most %d subagents may run at once", self.rotation.Concurrency)
 	}
 	return nil
 }
@@ -1131,4 +1157,10 @@ func (self *Manager) attestation(name string) string {
 		return "confinement: the harness let it write only its own scratch and kept it off the host network"
 	}
 	return "confinement: the harness let it write nothing and kept it off the host network"
+}
+
+func (self *Manager) runningAgainstLimit() string {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+	return fmt.Sprintf("%d of at most %d subagents now running", self.liveCount(), self.rotation.Concurrency)
 }

@@ -7,17 +7,17 @@ import (
 )
 
 type state struct {
-	spend    func() (float64, bool)
-	currency money.Currency
+	spend       func() (float64, bool)
+	getCurrency func() money.Currency
 }
 
-func New(spend func() (float64, bool), currency money.Currency) segment.Factory {
+func New(spend func() (float64, bool), getCurrency func() money.Currency) segment.Factory {
 	return func(options segment.Options) (segment.Segment, error) {
 		if err := options.Read(&struct{}{}); err != nil {
 			return nil, err
 		}
 
-		return state{spend: spend, currency: currency}, nil
+		return state{spend: spend, getCurrency: getCurrency}, nil
 	}
 }
 
@@ -27,5 +27,9 @@ func (self state) Render(segment.Context) string {
 		return ""
 	}
 
-	return style.Quantity(self.currency.Format(dollars))
+	currency := money.Dollar()
+	if self.getCurrency != nil {
+		currency = self.getCurrency()
+	}
+	return style.Quantity(currency.Format(dollars))
 }

@@ -13,6 +13,7 @@ import (
 	"crdx.org/oh/internal/app/tty"
 	"crdx.org/oh/internal/app/turn"
 	"crdx.org/oh/internal/jobs"
+	"crdx.org/oh/internal/money"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -22,30 +23,32 @@ const (
 )
 
 type Handler struct {
-	GetTurnEvents    func() <-chan turn.Event
-	OnKey            func(key.Key) bool
-	OnTurn           func(turn.Event)
-	OnTurnFinished   func() bool
-	OnResize         func()
-	OnBeat           func()
-	Changes          <-chan error
-	OnChange         func(error) bool
-	Conclusions      <-chan jobs.Conclusion
-	OnJobEnded       func(jobs.Conclusion)
-	SubagentEvents   <-chan agent.Event
-	OnSubagentEvent  func(agent.Event)
-	ForwardChanges   <-chan agent.Event
-	OnForwardChange  func(agent.Event)
-	QuestionChanges  <-chan struct{}
-	OnQuestionChange func()
-	TriggerChanges   <-chan struct{}
-	OnTriggerChange  func()
-	HostCommands     <-chan hostcommand.Outcome
-	OnHostCommand    func(hostcommand.Outcome)
-	EditorOutcomes   <-chan editor.Outcome
-	OnEditorEnded    func(editor.Outcome)
-	OnDraw           func()
-	Watch            func(work string) func()
+	GetTurnEvents     func() <-chan turn.Event
+	OnKey             func(key.Key) bool
+	OnTurn            func(turn.Event)
+	OnTurnFinished    func() bool
+	OnResize          func()
+	OnBeat            func()
+	Changes           <-chan error
+	OnChange          func(error) bool
+	Conclusions       <-chan jobs.Conclusion
+	OnJobEnded        func(jobs.Conclusion)
+	SubagentEvents    <-chan agent.Event
+	OnSubagentEvent   func(agent.Event)
+	ForwardChanges    <-chan agent.Event
+	OnForwardChange   func(agent.Event)
+	QuestionChanges   <-chan struct{}
+	OnQuestionChange  func()
+	TriggerChanges    <-chan struct{}
+	OnTriggerChange   func()
+	HostCommands      <-chan hostcommand.Outcome
+	OnHostCommand     func(hostcommand.Outcome)
+	EditorOutcomes    <-chan editor.Outcome
+	OnEditorEnded     func(editor.Outcome)
+	CurrencyRefreshes <-chan money.Refresh
+	OnCurrencyRefresh func(money.Refresh)
+	OnDraw            func()
+	Watch             func(work string) func()
 }
 
 func Run(keyboard *Keyboard, getNextRefresh func(time.Time) time.Time, handler Handler) {
@@ -75,6 +78,7 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 	triggerChanges := handler.TriggerChanges
 	hostCommands := handler.HostCommands
 	editorOutcomes := handler.EditorOutcomes
+	currencyRefreshes := handler.CurrencyRefreshes
 	frames := newFrameGate(turnFrame)
 	defer frames.stop()
 	for {
@@ -86,13 +90,12 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 				return
 			}
 		case event, isRunning := <-handler.GetTurnEvents():
-			if isRunning {
-				handler.OnTurn(event)
-				if frames.shouldWait(time.Now()) {
-					continue
-				}
-			} else if !handler.OnTurnFinished() {
+			step := takeTurnEvent(handler, frames, event, isRunning)
+			if step == stopLoop {
 				return
+			}
+			if step == skipDraw {
+				continue
 			}
 		case <-resizeSignals:
 			if !resizes.Signal(resizeSignals) {
@@ -106,10 +109,7 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 			handler.OnResize()
 		case <-beats:
 			handler.OnBeat()
-
-			select {
-			case <-refreshes:
-			default:
+			if !hasArrived(refreshes) {
 				continue
 			}
 		case <-refreshes:
@@ -148,6 +148,8 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 			handler.OnHostCommand(outcome)
 		case outcome := <-editorOutcomes:
 			handler.OnEditorEnded(outcome)
+		case refresh := <-currencyRefreshes:
+			handler.OnCurrencyRefresh(refresh)
 		case failure, isOpen := <-changes:
 			if !isOpen {
 				changes = nil
@@ -160,6 +162,37 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 
 		handler.OnDraw()
 		frames.drawn(time.Now())
+	}
+}
+
+type loopStep int
+
+const (
+	drawFrame loopStep = iota
+	skipDraw
+	stopLoop
+)
+
+func takeTurnEvent(handler Handler, frames *frameGate, event turn.Event, isRunning bool) loopStep {
+	if !isRunning {
+		if handler.OnTurnFinished() {
+			return drawFrame
+		}
+		return stopLoop
+	}
+	handler.OnTurn(event)
+	if frames.shouldWait(time.Now()) {
+		return skipDraw
+	}
+	return drawFrame
+}
+
+func hasArrived(refreshes <-chan time.Time) bool {
+	select {
+	case <-refreshes:
+		return true
+	default:
+		return false
 	}
 }
 

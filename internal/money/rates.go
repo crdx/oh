@@ -62,6 +62,12 @@ func saveRateCache(path string, cache rateCache) error {
 	return os.WriteFile(path, data, 0o600)
 }
 
+type Refresh struct {
+	Code     string
+	Currency Currency
+	Failure  error
+}
+
 func Load(path string, code string) Currency {
 	if code == "" || code == DollarCode {
 		return Dollar()

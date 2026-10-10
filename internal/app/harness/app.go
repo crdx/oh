@@ -211,6 +211,7 @@ type App struct {
 	screen          *output.Screen
 	recorder        *record.Recorder
 	configObserver  *config.Observer
+	currency        currencyState
 	inputLine       *edit.Input
 	editorConfig    *editor.Config
 	mode            *caps.Mode
@@ -339,26 +340,28 @@ func (self *App) begin(message string) cycle.Transition {
 			self.finish()
 			return !self.isTransitionRequested()
 		},
-		OnResize:         self.redraw,
-		OnBeat:           self.screen.RefreshProgress,
-		Changes:          self.configObserver.Changes(),
-		OnChange:         self.reloadConfig,
-		Conclusions:      self.jobConclusions(),
-		OnJobEnded:       self.jobEnded,
-		SubagentEvents:   self.subagentEvents(),
-		OnSubagentEvent:  self.subagentEvent,
-		ForwardChanges:   self.forwardChanges(),
-		OnForwardChange:  self.holdForwardChange,
-		QuestionChanges:  self.questionChanges(),
-		OnQuestionChange: self.onQuestionChange,
-		TriggerChanges:   self.triggerChanges(),
-		OnTriggerChange:  self.receiveTriggerChange,
-		HostCommands:     self.hostCommandOutcomes(),
-		OnHostCommand:    self.hostCommandEnded,
-		EditorOutcomes:   self.editorOutcomes(),
-		OnEditorEnded:    self.editorEnded,
-		OnDraw:           func() { self.drawAfterEvent(inputLine) },
-		Watch:            self.watchStalls,
+		OnResize:          self.redraw,
+		OnBeat:            self.screen.RefreshProgress,
+		Changes:           self.configObserver.Changes(),
+		OnChange:          self.reloadConfig,
+		Conclusions:       self.jobConclusions(),
+		OnJobEnded:        self.jobEnded,
+		SubagentEvents:    self.subagentEvents(),
+		OnSubagentEvent:   self.subagentEvent,
+		ForwardChanges:    self.forwardChanges(),
+		OnForwardChange:   self.holdForwardChange,
+		QuestionChanges:   self.questionChanges(),
+		OnQuestionChange:  self.onQuestionChange,
+		TriggerChanges:    self.triggerChanges(),
+		OnTriggerChange:   self.receiveTriggerChange,
+		HostCommands:      self.hostCommandOutcomes(),
+		OnHostCommand:     self.hostCommandEnded,
+		EditorOutcomes:    self.editorOutcomes(),
+		OnEditorEnded:     self.editorEnded,
+		CurrencyRefreshes: self.currencyRefreshes(),
+		OnCurrencyRefresh: self.currencyRefreshed,
+		OnDraw:            func() { self.drawAfterEvent(inputLine) },
+		Watch:             self.watchStalls,
 	})
 	self.endHostCommand()
 	self.endEditing()
@@ -1508,13 +1511,20 @@ func (self *App) reloadConfig(watchFailure error) bool {
 		}
 		self.display.bar.ReplaceLayout(result.LiveConfig.SegmentLayout)
 		self.feedback.Clear(feedback.Config)
+		self.followCurrency(result.LiveConfig.Currency)
+		if err := self.children.reconfigure(result.LiveConfig); err != nil {
+			self.showFeedback(feedback.Config, feedback.Message{
+				Text:   "The subagent settings could not be reloaded, so the earlier ones stand: " + err.Error(),
+				Status: agent.ErrorStatus,
+			})
+		}
 		if len(result.LiveConfig.UnknownSettings) > 0 {
 			self.notifyUnknownSettings(result.LiveConfig.UnknownSettings)
 			return true
 		}
 		if self.feedback.Message().Status != agent.ErrorStatus {
 			self.showFeedback(feedback.Confirmation, feedback.Message{
-				Text:         reloadConfirmation(result.Changes),
+				Text:         reloadConfirmation(result.Changes, self.children.reachOf),
 				Status:       agent.SuccessStatus,
 				DismissAfter: configReloadConfirmationDuration,
 			})
@@ -1523,7 +1533,7 @@ func (self *App) reloadConfig(watchFailure error) bool {
 	return true
 }
 
-func reloadConfirmation(changes []config.SourceChange) string {
+func reloadConfirmation(changes []config.SourceChange, reachOf func(string) config.Reach) string {
 	rows := make([]string, 0, len(changes)+1)
 	rows = append(rows, "Configuration reloaded automatically")
 
@@ -1540,7 +1550,7 @@ func reloadConfirmation(changes []config.SourceChange) string {
 		}
 	}
 
-	return strings.Join(append(rows, reachRows(changes)...), "\n")
+	return strings.Join(append(rows, reachRows(changes, reachOf)...), "\n")
 }
 
 var reachDescriptions = map[config.Reach]string{
@@ -1548,13 +1558,13 @@ var reachDescriptions = map[config.Reach]string{
 	config.ReachNextSession: "applies to new sessions",
 }
 
-func reachRows(changes []config.SourceChange) []string {
+func reachRows(changes []config.SourceChange, reachOf func(string) config.Reach) []string {
 	settingsByReach := map[config.Reach][]string{}
 	isRecorded := map[string]bool{}
 
 	for _, change := range changes {
 		for _, setting := range change.Settings {
-			reach := config.ReachOf(setting)
+			reach := reachOf(setting)
 			if reach == config.ReachLive || isRecorded[setting] {
 				continue
 			}

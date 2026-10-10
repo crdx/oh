@@ -265,11 +265,7 @@ func (self *sessionGoldenChildren) withTool(tools []tool.Tool, manager *subagent
 	if self == nil {
 		return tools
 	}
-	tools = append(tools, subagent.New(
-		sessionGoldenMessagingManager{Manager: manager, children: self},
-		manager.Model(),
-		manager.Concurrency(),
-	))
+	tools = append(tools, subagent.New(sessionGoldenMessagingManager{Manager: manager, children: self}))
 	if self.scenario.HasWaitTool {
 		var sources []wait.Source
 		if stored, isStored := sessionGoldenRunningJobs.Load(self.t); isStored {

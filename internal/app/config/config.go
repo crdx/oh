@@ -297,6 +297,9 @@ type LiveConfig struct {
 	ToolOutputBytes    int
 	Permissions        permission.Set
 	Experimental       map[string]any
+	Subagent           Subagent
+	SelectionDefaults  model.Defaults
+	Currency           string
 	UnknownSettings    []string
 }
 
@@ -334,6 +337,9 @@ func (self Config) BuildLive(registry segment.Registry) (LiveConfig, error) {
 		ToolOutputBytes:    self.Defaults.ToolOutput.Bytes,
 		Permissions:        permissions,
 		Experimental:       maps.Clone(self.Experimental),
+		Subagent:           self.Subagent,
+		SelectionDefaults:  self.Defaults.ForSelections(),
+		Currency:           self.Ui.Currency,
 		UnknownSettings:    self.UnknownSettings(),
 	}, nil
 }
