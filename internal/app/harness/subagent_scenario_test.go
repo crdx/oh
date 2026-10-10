@@ -20,9 +20,11 @@ import (
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/internal/app/subagents"
+	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/toolbox/job"
 	"crdx.org/oh/pkg/toolbox/subagent"
 	"crdx.org/oh/pkg/toolbox/wait"
 )
@@ -209,7 +211,13 @@ func (self *sessionGoldenChildren) withTool(tools []tool.Tool, manager *subagent
 	}
 	tools = append(tools, subagent.New(manager, manager.Model()))
 	if self.scenario.HasWaitTool {
-		tools = append(tools, wait.New([]wait.Source{manager.WaitSource()}, agent.MessageArrival))
+		var sources []wait.Source
+		if stored, isStored := sessionGoldenRunningJobs.Load(self.t); isStored {
+			if runningJobs, isManager := stored.(*jobs.Manager); isManager {
+				sources = append(sources, job.WaitSource(runningJobs))
+			}
+		}
+		tools = append(tools, wait.New(append(sources, manager.WaitSource()), agent.MessageArrival))
 	}
 	return tools
 }

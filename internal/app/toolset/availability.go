@@ -17,6 +17,7 @@ const (
 	ToolAvailable ToolStatus = "available"
 	ToolChanged   ToolStatus = "changed"
 	ToolMissing   ToolStatus = "missing"
+	ToolWithheld  ToolStatus = "withheld"
 )
 
 type Availability map[string]ToolStatus
@@ -157,6 +158,8 @@ func availabilityNotice(name string, status ToolStatus, versionChange VersionCha
 		return "The " + markedName + " tool changed since this conversation began and is disabled for this conversation."
 	case ToolMissing:
 		return "The " + markedName + " tool is no longer installed and is disabled for this conversation."
+	case ToolWithheld:
+		return "The " + markedName + " tool needs somebody there, so it is disabled while this session is headless."
 	default:
 		return ""
 	}
@@ -165,6 +168,10 @@ func availabilityNotice(name string, status ToolStatus, versionChange VersionCha
 func changedToolReason(name string, fromVersion string, toVersion string) string {
 	return "the " + name + " tool changed from version " + fromVersion + " to version " + toVersion +
 		" and is disabled for the remainder of this conversation"
+}
+
+func withheldToolReason(name string) string {
+	return "the " + name + " tool needs somebody there, so it is disabled while this session is headless"
 }
 
 func missingToolReason(name string) string {

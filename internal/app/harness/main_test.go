@@ -5660,6 +5660,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"corrupt-session":          {".txt"},
 		"picker-listing":           {".screen"},
 		"picture-detection":        {".screen", ".txt"},
+		"headless-tools":           {".txt"},
 		"rate-refresh":             {".txt"},
 		"spend-currency":           {".screen"},
 		"subagent-timeline":        {".ansi", ".screen"},
@@ -18884,6 +18885,8 @@ func newSessionGoldenLargeReadTool(t *testing.T, scratchDirectory string) tool.T
 	return read.New(root, file.NewSnapshots())
 }
 
+var sessionGoldenRunningJobs sync.Map
+
 func newSessionGoldenRunningJobTool(t *testing.T, ports *portgrant.Forwards) tool.Tool {
 	t.Helper()
 
@@ -18895,6 +18898,8 @@ func newSessionGoldenRunningJobTool(t *testing.T, ports *portgrant.Forwards) too
 
 	manager := jobs.New(stoppableRunner{})
 	t.Cleanup(func() { _ = manager.Close() })
+	sessionGoldenRunningJobs.Store(t, manager)
+	t.Cleanup(func() { sessionGoldenRunningJobs.Delete(t) })
 
 	return job.New(
 		manager,
@@ -19701,7 +19706,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	currentTools := children.withTool(newSessionGoldenTools(
 		t, scenario.Tools, goldenPorts, scenario.ScratchDirectory, toolDirectory, true,
 	), resumedChildManager)
-	restoredTools := toolset.Restore(currentTools, store.RestoreTools(storedSession.Meta.ToolDefinitions))
+	restoredTools := toolset.Restore(currentTools, store.RestoreTools(storedSession.Meta.ToolDefinitions), nil)
 	availabilityRestoration, err := toolset.RestoreAvailability(
 		storedSession.Events,
 		restoredTools.Availability,
@@ -24438,21 +24443,15 @@ func declaredToolScript(t *testing.T) string {
 }
 
 func TestADeclaredToolRunsItsOwnCommandAndReportsWhatItSaid(t *testing.T) {
-	binary := buildTestBinary(t)
 	script := declaredToolScript(t)
-	endpoint := sim.New(&sim.Scenario{
+	rig, endpoint := newEndpointRig(t, sim.New(&sim.Scenario{
 		Model: "fake",
 		Turns: []sim.Turn{
 			{Calls: []sim.Call{{Name: "weather", Arguments: `{"city":"London","days":2}`}}},
 			{Say: "Rain, then."},
 		},
-	})
-	server := httptest.NewServer(endpoint)
-	t.Cleanup(server.Close)
-
-	address := endpoint.Addresses(server.URL)[sim.Messages]
-	environment := append(testBinaryEnvironment(t, t.TempDir()), backend.EndpointVariable+"="+address)
-	writeDeclaredToolConfig(t, environment, `[tools.weather]
+	}))
+	writeRigConfig(t, rig, `[tools.weather]
 description = "report the weather for a city"
 command = ["`+script+`"]
 permission = "allow"
@@ -24463,17 +24462,10 @@ parameters = [
 ]
 `)
 
-	output := runTestBinary(
-		t, binary, reachableWorkspaceDir(t), environment,
-		"-p", "--yolo", "-m", "anthropic/fake", "-c", "a", "what is the weather",
-	)
-
-	if !strings.Contains(output, "weather London 2") {
-		t.Errorf("the declared call was not drawn: %q", output)
-	}
-	if !strings.Contains(output, "Rain, then.") {
-		t.Errorf("the answer did not follow the tool: %q", output)
-	}
+	session := rig.start("--yolo", "-m", "opencode-go/fake", "-c", "a", "what is the weather")
+	session.waitFor("Rain, then.")
+	session.requireShown("weather London 2")
+	session.quit()
 
 	requests := endpoint.Requests()
 	if len(requests) < 2 {
@@ -24495,9 +24487,8 @@ parameters = [
 }
 
 func TestACustomToolVersionControlsCompatibilityWhenTheBinaryResumes(t *testing.T) {
-	binary := buildTestBinary(t)
 	script := declaredToolScript(t)
-	endpoint := sim.New(&sim.Scenario{
+	rig, endpoint := newEndpointRig(t, sim.New(&sim.Scenario{
 		Model: "fake",
 		Turns: []sim.Turn{
 			{Calls: []sim.Call{{Name: "weather", Arguments: `{"city":"London"}`}}},
@@ -24507,18 +24498,9 @@ func TestACustomToolVersionControlsCompatibilityWhenTheBinaryResumes(t *testing.
 			{Calls: []sim.Call{{Name: "weather", Arguments: `{"city":"London"}`}}},
 			{Say: "The new version was disabled."},
 		},
-	})
-	server := httptest.NewServer(endpoint)
-	t.Cleanup(server.Close)
-
-	stateDirectory := t.TempDir()
-	workspaceDirectory := reachableWorkspaceDir(t)
-	environment := append(
-		testBinaryEnvironment(t, stateDirectory),
-		backend.EndpointVariable+"="+endpoint.Addresses(server.URL)[sim.Messages],
-	)
+	}))
 	writeConfig := func(version int, description string) {
-		writeDeclaredToolConfig(t, environment, fmt.Sprintf(`[tools.weather]
+		writeRigConfig(t, rig, fmt.Sprintf(`[tools.weather]
 version = %d
 description = %q
 command = [%q]
@@ -24529,29 +24511,20 @@ parameters = [{ name = "city", kind = "string", description = "the city to repor
 	}
 	writeConfig(1, "report the weather")
 
-	runTestBinary(
-		t, binary, workspaceDirectory, environment,
-		"-p", "--yolo", "-m", "anthropic/fake", "-c", "a", "run weather",
-	)
+	session := rig.start("--yolo", "-m", "opencode-go/fake", "-c", "a", "run weather")
+	session.waitFor("The original tool ran.")
+	session.quit()
 
-	sessionDirectory := filepath.Join(stateDirectory, "org.crdx", "oh", "sessions")
-	entries, err := os.ReadDir(sessionDirectory)
-	if err != nil {
-		t.Fatal(err)
+	storedSessions := rig.storedSessions()
+	if len(storedSessions) != 1 {
+		t.Fatalf("got %d stored sessions", len(storedSessions))
 	}
-	if len(entries) != 1 {
-		t.Fatalf("got %d session entries", len(entries))
-	}
-	sessionName := entries[0].Name()
-	storedSession, err := store.Read(sessionDirectory, sessionName)
-	if err != nil {
-		t.Fatal(err)
-	}
-	frozenWeather := slices.IndexFunc(storedSession.Meta.ToolDefinitions, func(definition store.ToolDefinition) bool {
+	sessionName := storedSessions[0].Name
+	frozenWeather := slices.IndexFunc(storedSessions[0].Meta.ToolDefinitions, func(definition store.ToolDefinition) bool {
 		return definition.Name == "weather"
 	})
-	if frozenWeather < 0 || storedSession.Meta.ToolDefinitions[frozenWeather].Description != "report the weather" {
-		t.Fatalf("got frozen definitions %#v", storedSession.Meta.ToolDefinitions)
+	if frozenWeather < 0 || storedSessions[0].Meta.ToolDefinitions[frozenWeather].Description != "report the weather" {
+		t.Fatalf("got frozen definitions %#v", storedSessions[0].Meta.ToolDefinitions)
 	}
 
 	//nolint:gosec // the declared tool must remain executable after its content changes
@@ -24559,13 +24532,10 @@ parameters = [{ name = "city", kind = "string", description = "the city to repor
 		t.Fatal(err)
 	}
 	writeConfig(1, "forecast the weather")
-	output := runTestBinary(
-		t, binary, workspaceDirectory, environment,
-		"-p", "-r", sessionName, "run weather again",
-	)
-	if strings.Contains(output, "weather tool changed") {
-		t.Errorf("the compatible edit was announced as a change: %q", output)
-	}
+	session = rig.start("-r", sessionName, "run weather again")
+	session.waitFor("The compatible implementation ran.")
+	session.requireHidden("weather tool changed")
+	session.quit()
 
 	requests := endpoint.Requests()
 	var compatibleResult string
@@ -24581,13 +24551,10 @@ parameters = [{ name = "city", kind = "string", description = "the city to repor
 	}
 
 	writeConfig(2, "forecast the weather")
-	output = runTestBinary(
-		t, binary, workspaceDirectory, environment,
-		"-p", "-r", sessionName, "run version two weather",
-	)
-	if !strings.Contains(output, "weather tool changed from version 1 to version 2") {
-		t.Errorf("the resume did not announce the version change: %q", output)
-	}
+	session = rig.start("-r", sessionName, "run version two weather")
+	session.waitFor("The new version was disabled.")
+	session.requireShown("weather tool changed from version 1 to version 2")
+	session.quit()
 
 	requests = endpoint.Requests()
 	var disabledResult string
@@ -24603,16 +24570,10 @@ parameters = [{ name = "city", kind = "string", description = "the city to repor
 	}
 }
 
-func TestADeclaredToolNobodyCanBeAskedAboutDoesNotRun(t *testing.T) {
+func TestAHeadlessSessionOffersNoDeclaredTool(t *testing.T) {
 	binary := buildTestBinary(t)
 	script := declaredToolScript(t)
-	endpoint := sim.New(&sim.Scenario{
-		Model: "fake",
-		Turns: []sim.Turn{
-			{Calls: []sim.Call{{Name: "weather", Arguments: `{"city":"London"}`}}},
-			{Say: "No matter."},
-		},
-	})
+	endpoint := sim.New(&sim.Scenario{Model: "fake", Turns: []sim.Turn{{Say: "No matter."}}})
 	server := httptest.NewServer(endpoint)
 	t.Cleanup(server.Close)
 
@@ -24621,33 +24582,8 @@ func TestADeclaredToolNobodyCanBeAskedAboutDoesNotRun(t *testing.T) {
 	writeDeclaredToolConfig(t, environment, `[tools.weather]
 description = "report the weather for a city"
 command = ["`+script+`"]
-parameters = [
-    { name = "city", kind = "string", description = "the city to report on" },
-]
-`)
-
-	output := runTestBinary(
-		t, binary, reachableWorkspaceDir(t), environment,
-		"-p", "--yolo", "-m", "anthropic/fake", "what is the weather",
-	)
-
-	if strings.Contains(output, "forecast for") {
-		t.Errorf("the declared tool ran with nobody to ask: %q", output)
-	}
-}
-
-func TestADeclaredToolIsOfferedAloneWhenItIsNamed(t *testing.T) {
-	binary := buildTestBinary(t)
-	script := declaredToolScript(t)
-	endpoint := sim.New(&sim.Scenario{Model: "fake", Turns: []sim.Turn{{Say: "Nothing to do."}}})
-	server := httptest.NewServer(endpoint)
-	t.Cleanup(server.Close)
-
-	address := endpoint.Addresses(server.URL)[sim.Messages]
-	environment := append(testBinaryEnvironment(t, t.TempDir()), backend.EndpointVariable+"="+address)
-	writeDeclaredToolConfig(t, environment, `[tools.weather]
-description = "report the weather for a city"
-command = ["`+script+`"]
+permission = "allow"
+group = "a"
 parameters = [
     { name = "city", kind = "string", description = "the city to report on" },
 ]
@@ -24655,8 +24591,32 @@ parameters = [
 
 	runTestBinary(
 		t, binary, reachableWorkspaceDir(t), environment,
-		"-p", "--yolo", "-m", "anthropic/fake", "-t", "weather", "what is the weather",
+		"-p", "--yolo", "-m", "anthropic/fake", "-c", "a", "what is the weather",
 	)
+
+	requests := endpoint.Requests()
+	if len(requests) == 0 {
+		t.Fatal("the endpoint saw no request")
+	}
+	if slices.Contains(requests[0].Tools, "weather") {
+		t.Errorf("a headless session offered the declared tool: %q", requests[0].Tools)
+	}
+}
+
+func TestADeclaredToolIsOfferedAloneWhenItIsNamed(t *testing.T) {
+	script := declaredToolScript(t)
+	rig, endpoint := newEndpointRig(t, sim.New(&sim.Scenario{Model: "fake", Turns: []sim.Turn{{Say: "Nothing to do."}}}))
+	writeRigConfig(t, rig, `[tools.weather]
+description = "report the weather for a city"
+command = ["`+script+`"]
+parameters = [
+    { name = "city", kind = "string", description = "the city to report on" },
+]
+`)
+
+	session := rig.start("--yolo", "-m", "opencode-go/fake", "-t", "weather", "what is the weather")
+	session.waitFor("Nothing to do.")
+	session.quit()
 
 	requests := endpoint.Requests()
 	if len(requests) == 0 {
@@ -24664,6 +24624,21 @@ parameters = [
 	}
 	if !slices.Equal(requests[0].Tools, []string{"weather"}) {
 		t.Errorf("got the tools %q, want the declared tool alone", requests[0].Tools)
+	}
+}
+
+func TestAHeadlessSessionRefusesToNameAToolThatNeedsSomebodyThere(t *testing.T) {
+	binary := buildTestBinary(t)
+	//nolint:gosec // running the binary under test
+	process := exec.CommandContext(t.Context(), binary, "-p", "--yolo", "-t", "read", "-t", "job", "hello")
+	process.Env = testBinaryEnvironment(t, t.TempDir())
+	process.Dir = reachableWorkspaceDir(t)
+	output, err := process.CombinedOutput()
+	if err == nil {
+		t.Fatalf("a headless session offered a job: %q", output)
+	}
+	if !strings.Contains(string(output), "headless session offers only read, ls, find, grep, bash, write, edit, so it cannot offer job") {
+		t.Errorf("got %q", output)
 	}
 }
 

@@ -121,7 +121,7 @@ func TestFrozenToolsKeepTheirOrderAndBindCompatibleImplementations(t *testing.T)
 		func(fakeArgs) tool.CallRendering { return tool.CallRendering{} },
 	).Revision("2").Plain(func(context.Context, fakeArgs) (string, error) { return "", nil })
 
-	restored := Restore([]tool.Tool{readTool, bashTool, changedTool}, snapshots)
+	restored := Restore([]tool.Tool{readTool, bashTool, changedTool}, snapshots, nil)
 	if got := namesOf(restored.OfferedTools); !slices.Equal(got, []string{"bash", "gone", "read", "changed"}) {
 		t.Errorf("got offered order %v", got)
 	}
@@ -172,7 +172,7 @@ func TestEveryToolStillThereIsKeptInTheOrderItWasHeld(t *testing.T) {
 func TestAToolRetiredUnderItsOldNameStaysOnTheWireAndIsRefused(t *testing.T) {
 	snapshots := []tool.Snapshot{tool.TakeSnapshot(namedTool("expose")), tool.TakeSnapshot(namedTool("read"))}
 
-	restored := Restore([]tool.Tool{namedTool("read"), namedTool("forward")}, snapshots)
+	restored := Restore([]tool.Tool{namedTool("read"), namedTool("forward")}, snapshots, nil)
 
 	if got := namesOf(restored.OfferedTools); !slices.Equal(got, []string{"expose", "read"}) {
 		t.Errorf("got offered tools %v, want the frozen set and nothing new", got)
@@ -194,5 +194,71 @@ func TestAToolRetiredUnderItsOldNameStaysOnTheWireAndIsRefused(t *testing.T) {
 	notices, isSaid := AvailabilityNotice(event)
 	if !isSaid || !strings.Contains(strings.Join(notices, " "), "expose") {
 		t.Errorf("got notices %q and %t, want the model told the tool is gone", notices, isSaid)
+	}
+}
+
+func TestAHeadlessSessionKeepsOnlyTheToolsThatWorkAlone(t *testing.T) {
+	var tools []tool.Tool
+	for _, name := range []string{"read", "job", "bash", "title", "weather", "edit", "forward", "subagent", "wait"} {
+		tools = append(tools, namedTool(name))
+	}
+
+	if got := Names(Headless(tools)); !slices.Equal(got, []string{"read", "bash", "edit"}) {
+		t.Errorf("a headless session kept %v", got)
+	}
+}
+
+func TestAHeadlessSessionRefusesEveryToolOutsideItsOwnOnce(t *testing.T) {
+	if err := RefuseOutsideHeadless(HeadlessTools); err != nil {
+		t.Errorf("refused its own tools: %v", err)
+	}
+	err := RefuseOutsideHeadless([]string{"read", "job", "weather", "job"})
+	if err == nil || !strings.HasSuffix(err.Error(), "so it cannot offer job, weather") {
+		t.Errorf("got %v, want job and weather refused once each", err)
+	}
+}
+
+func TestAToolWithheldFromAHeadlessSessionIsToldAsWithheldAndComesBackLater(t *testing.T) {
+	snapshots := []tool.Snapshot{tool.TakeSnapshot(namedTool("read")), tool.TakeSnapshot(namedTool("job"))}
+
+	restored := Restore([]tool.Tool{namedTool("read")}, snapshots, []string{"job"})
+	if restored.Availability["job"] != ToolWithheld || restored.Availability["read"] != ToolAvailable {
+		t.Fatalf("got availability %#v", restored.Availability)
+	}
+	call, err := restored.OfferedTools[1].Parse(`{"path":"x"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := call.Exec(t.Context()); err == nil || !strings.Contains(err.Error(), "disabled while this session is headless") {
+		t.Errorf("a withheld call failed with %v", err)
+	}
+
+	for known, want := range map[ToolStatus]string{
+		ToolAvailable: "The `job` tool needs somebody there, so it is disabled while this session is headless.",
+		ToolWithheld:  "",
+	} {
+		event, err := AvailabilityChangeEvent(Availability{"read": ToolAvailable, "job": known}, restored.Availability)
+		if err != nil {
+			t.Fatal(err)
+		}
+		notices, _ := AvailabilityNotice(event)
+		if got := strings.Join(notices, " "); got != want {
+			t.Errorf("from %s the model was told %q, want %q", known, got, want)
+		}
+	}
+
+	event, err := AvailabilityChangeEvent(restored.Availability, Availability{"read": ToolAvailable, "job": ToolAvailable})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if notices, _ := AvailabilityNotice(event); !slices.Equal(notices, []string{"The `job` tool is available again."}) {
+		t.Errorf("an interactive resume told the model %q", notices)
+	}
+}
+
+func TestOnlyToolsOutsideAHeadlessSessionAreWithheld(t *testing.T) {
+	tools := []tool.Tool{namedTool("read"), namedTool("job"), namedTool("bash"), namedTool("title")}
+	if got := WithheldFromHeadless(tools); !slices.Equal(got, []string{"job", "title"}) {
+		t.Errorf("got %v", got)
 	}
 }

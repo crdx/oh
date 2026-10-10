@@ -1,0 +1,52 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+build in the background, ask a subagent, and wait for them
+
+## Tool calls · +0s
+
+```
+job: check [ok, 1 line, 21B, toolu_1]
+subagent: 1 subagent [ok, 1 line, 18B, toolu_2]
+```
+
+## Subagent started · tame-adder · +0s
+
+Find the parser
+
+Transcript: `subagents/tame-adder/chat.md`
+
+## Subagent finished · tame-adder · done · +0s
+
+The parser is in parse.go.
+
+## Tool calls · +0s
+
+```
+wait: docs [error, 1 line, 21B, toolu_3]
+wait: job:check || tame-adder [ok, 2 lines, 88B, toolu_4]
+job: check [ok, 1 line, 97B, toolu_5]
+```
+
+## Assistant · +0s
+
+The subagent found the parser; the check is stopped.
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+Carrying on.

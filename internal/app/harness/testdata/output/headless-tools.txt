@@ -1,0 +1,116 @@
+=== a headless session beside every other kind of tool ===
+$ oh -p --yolo -m opencode-go/fake -c a a question
+Refreshing the model list...
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+Headless answer.
+
+oh -r <session>
+[exit 0]
+session tools: read, ls, find, grep, write, edit, bash
+
+=== a headless session naming its own tools ===
+$ oh -p --yolo -m opencode-go/fake -t read -t bash a question
+Refreshing the model list...
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+Narrow answer.
+
+oh -r <session>
+[exit 0]
+session tools: read, bash
+
+=== a headless session naming tools that need somebody there ===
+$ oh -p --yolo -m opencode-go/fake -t read -t job -t weather -t wait a question
+✗ A headless session offers only read, ls, find, grep, bash, write, edit, so it cannot offer job, weather, wait
+[exit 1]
+
+=== a headless session resumed interactively ===
+$ oh -p -r <session> another question
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+Interactive answer.
+
+
+ 🤖 The session is non-interactive: questions, approvals, and /! commands for the user are unavailable. A background job does not wake the conversation when it ends.
+ 🤖 The fetch tool needs somebody there, so it is disabled while this session is headless.
+ 🤖 The job tool needs somebody there, so it is disabled while this session is headless.
+ 🤖 The lookup tool needs somebody there, so it is disabled while this session is headless.
+ 🤖 The subagent tool needs somebody there, so it is disabled while this session is headless.
+ 🤖 The title tool needs somebody there, so it is disabled while this session is headless.
+ 🤖 The wait tool needs somebody there, so it is disabled while this session is headless.
+ 🤖 The weather tool needs somebody there, so it is disabled while this session is headless.
+
+
+ another question
+
+Headless answer.
+
+oh -r <session>
+[exit 0]
+session tools: read, ls, find, grep, write, edit, subagent, bash, job, wait, title, lookup, fetch, weather
+  bash: available
+  edit: available
+  fetch: available
+  find: available
+  grep: available
+  job: available
+  lookup: available
+  ls: available
+  read: available
+  subagent: available
+  title: available
+  wait: available
+  weather: available
+  write: available
+
+=== an interactive session resumed headless ===
+$ oh -p -r <session> another question
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+Interactive answer.
+
+
+ 🤖 The session is non-interactive: questions, approvals, and /! commands for the user are unavailable. A background job does not wake the conversation when it ends.
+ 🤖 The fetch tool needs somebody there, so it is disabled while this session is headless.
+ 🤖 The job tool needs somebody there, so it is disabled while this session is headless.
+ 🤖 The lookup tool needs somebody there, so it is disabled while this session is headless.
+ 🤖 The subagent tool needs somebody there, so it is disabled while this session is headless.
+ 🤖 The title tool needs somebody there, so it is disabled while this session is headless.
+ 🤖 The wait tool needs somebody there, so it is disabled while this session is headless.
+ 🤖 The weather tool needs somebody there, so it is disabled while this session is headless.
+
+
+ another question
+
+Resumed answer.
+
+oh -r <session>
+[exit 0]
+session tools: read, ls, find, grep, write, edit, subagent, bash, job, wait, title, lookup, fetch, weather
+  bash: available
+  edit: available
+  fetch: withheld
+  find: available
+  grep: available
+  job: withheld
+  lookup: withheld
+  ls: available
+  read: available
+  subagent: withheld
+  title: withheld
+  wait: withheld
+  weather: withheld
+  write: available

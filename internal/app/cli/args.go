@@ -12,6 +12,7 @@ import (
 	"crdx.org/oh/internal/app/cycle"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/startup"
+	"crdx.org/oh/internal/app/toolset"
 )
 
 const (
@@ -251,6 +252,10 @@ func (self Input) Check(isPromptPiped bool) error {
 
 	if self.IsSessionPicker || self.IsModelPicker {
 		return errors.New("a headless session cannot open a picker; name the session or the model instead")
+	}
+
+	if err := toolset.RefuseOutsideHeadless(self.Tools); err != nil {
+		return err
 	}
 
 	if len(self.Message) == 0 && self.SourceSession == "" && !isPromptPiped {

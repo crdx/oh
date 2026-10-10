@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Offer only file and shell tools in headless mode
 - Move waiting out of jobs into an experimental wait tool
 - Stop simultaneous sessions clobbering input history
 - Add experimental toggle to share input history

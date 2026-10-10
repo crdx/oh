@@ -8,12 +8,14 @@ import (
 	"errors"
 	"fmt"
 	"image/png"
+	"maps"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"strings"
 	"sync/atomic"
 	"testing"
@@ -26,6 +28,7 @@ import (
 	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/app/pictures"
+	"crdx.org/oh/internal/app/toolset"
 )
 
 var (
@@ -446,5 +449,80 @@ func TestGoldenAPictureIsDrawnOnlyWhereTheTerminalSaidItCould(t *testing.T) {
 	compareWithGolden(t, "picture-detection", ".txt", map[string]func() string{
 		"a terminal that answers the graphics probe": func() string { return answered.protocol },
 		"a terminal that ignores the graphics probe": func() string { return ignored.protocol },
+	})
+}
+
+func (self *startupRun) sessionTools(t *testing.T) string {
+	t.Helper()
+
+	var tools strings.Builder
+	for _, stored := range self.rig.storedSessions() {
+		names := slices.DeleteFunc(slices.Clone(stored.Meta.Tools), isMachineDependentTool)
+		fmt.Fprintf(&tools, "session tools: %s\n", strings.Join(names, ", "))
+		if availability, isRecorded := toolset.LastRecordedAvailability(stored.Events); isRecorded {
+			for _, name := range slices.Sorted(maps.Keys(availability)) {
+				if isMachineDependentTool(name) {
+					continue
+				}
+				fmt.Fprintf(&tools, "  %s: %s\n", name, availability[name])
+			}
+		}
+	}
+
+	return tools.String()
+}
+
+const machineDependentTool = "notify"
+
+func isMachineDependentTool(name string) bool {
+	return name == machineDependentTool
+}
+
+func withoutMachineDependentTools(text string) string {
+	lines := strings.Split(text, "\n")
+	return strings.Join(slices.DeleteFunc(lines, func(line string) bool {
+		return strings.Contains(line, "The "+machineDependentTool+" tool")
+	}), "\n")
+}
+
+func TestGoldenAHeadlessSessionOffersOnlyTheToolsThatWorkAlone(t *testing.T) {
+	const everythingElse = "[experimental]\nwait_tool = true\n\n[subagent]\nmodel = \"opencode-go/fake\"\n\n" +
+		"[tools.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\npermission = \"allow\"\ngroup = \"a\"\n"
+	compareWithGolden(t, "headless-tools", ".txt", map[string]func() string{
+		"a headless session beside every other kind of tool": func() string {
+			run := newStartupRun(t, everythingElse, "Headless answer.")
+			return run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "-c", "a", "a question") + run.sessionTools(t)
+		},
+		"a headless session naming its own tools": func() string {
+			run := newStartupRun(t, everythingElse, "Narrow answer.")
+			return run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "-t", "read", "-t", "bash", "a question") + run.sessionTools(t)
+		},
+		"a headless session naming tools that need somebody there": func() string {
+			run := newStartupRun(t, everythingElse)
+			return run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "-t", "read", "-t", "job", "-t", "weather", "-t", "wait", "a question") +
+				run.sessionTools(t)
+		},
+		"an interactive session resumed headless": func() string {
+			run := newStartupRun(t, everythingElse, "Interactive answer.", "Resumed answer.")
+			session := run.rig.start("--yolo", "-m", "opencode-go/fake", "-c", "a", "a question")
+			session.waitFor("Interactive answer.")
+			session.quit()
+			name := run.onlySessionName(t)
+			resumed := run.run(t, "-p", "-r", name, "another question")
+			return strings.ReplaceAll(withoutMachineDependentTools(resumed)+run.sessionTools(t), name, "<session>")
+		},
+		"a headless session resumed interactively": func() string {
+			run := newStartupRun(t, everythingElse, "Interactive answer.", "Headless answer.", "Interactive again.")
+			session := run.rig.start("--yolo", "-m", "opencode-go/fake", "-c", "a", "a question")
+			session.waitFor("Interactive answer.")
+			session.quit()
+			name := run.onlySessionName(t)
+			headless := run.run(t, "-p", "-r", name, "another question")
+			session = run.rig.start("-r", name, "back at the keyboard")
+			session.waitFor("Interactive again.")
+			session.requireShown("tool is available again.")
+			session.quit()
+			return strings.ReplaceAll(withoutMachineDependentTools(headless)+run.sessionTools(t), name, "<session>")
+		},
 	})
 }

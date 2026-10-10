@@ -465,10 +465,15 @@ type preparedTools struct {
 	availabilityRestoration toolset.AvailabilityRestoration
 }
 
-func prepareFrozenTools(resumedSession *store.Session, toolboxTools []tool.Tool) (preparedTools, error) {
+func prepareFrozenTools(
+	resumedSession *store.Session,
+	toolboxTools []tool.Tool,
+	withheldTools []string,
+) (preparedTools, error) {
 	restoredTools := toolset.Restore(
 		toolboxTools,
 		store.RestoreTools(resumedSession.Meta.ToolDefinitions),
+		withheldTools,
 	)
 	availabilityRestoration, err := toolset.RestoreAvailability(
 		resumedSession.Events,
@@ -1237,11 +1242,16 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	}
 
 	toolboxTools = truncate.Tools(toolboxTools, toolOutputLimit)
+	var withheldTools []string
+	if args.IsPrinting {
+		withheldTools = append(toolset.WithheldFromHeadless(toolboxTools), subagent.Name)
+		toolboxTools = toolset.Headless(toolboxTools)
+	}
 
 	var preparedToolbox preparedTools
 	hasFrozenDefinitions := resumedSession != nil && len(resumedSession.Meta.ToolDefinitions) > 0
 	if hasFrozenDefinitions {
-		preparedToolbox, err = prepareFrozenTools(resumedSession, toolboxTools)
+		preparedToolbox, err = prepareFrozenTools(resumedSession, toolboxTools, withheldTools)
 	} else {
 		preparedToolbox, err = prepareLegacyTools(resumedSession, toolboxTools, args.Tools, notices)
 	}

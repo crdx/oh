@@ -1,0 +1,17 @@
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m build in the background, ask a subagent, and wait for them                                         \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e[3m\e[38;2;150;152;150mChecking the whole tree\e[0m\e[0m \e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mjust\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190mcheck\e[0m\r
+\e[3m\e[38;2;150;152;150mFinding where the parser lives\e[0m\e[0m \e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80m1 subagent\e[0m \e[38;2;150;152;150mon Claude Opus 5\e[0m\r
+\e]8;;oh://tool-result?call=toolu_3&session=tame-impala\e\\wait\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mnothing is named docs\e[0m\r
+\e]8;;oh://tool-result?call=toolu_4&session=tame-impala\e\\wait\e]8;;\e\\ \e[38;2;192;128;80mjob:check || tame-adder\e[0m \e[38;2;150;152;150m2L\e[0m \e[3m\e[38;2;150;152;150m(Checking the whole tree; Finding where the parser lives)\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=toolu_5&session=tame-impala\e\\\e[38;2;207;173;0mstop\e[0m\e]8;;\e\\ \e[38;2;192;128;80mcheck\e[0m \e[3m\e[38;2;150;152;150m(Checking the whole tree)\e[0m\e[0m\r
+\r
+The subagent found the parser; the check is stopped.\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m carry on                                                                                           \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+Carrying on.\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[12C\e[?25h\e[?2026l\r

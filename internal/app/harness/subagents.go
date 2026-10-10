@@ -179,7 +179,7 @@ func childAgent(prompt string, provider agent.Provider, tools []tool.Tool, child
 	if len(child.FrozenTools) == 0 {
 		return agent.New(prompt, provider, tools), nil, nil
 	}
-	frozenSet := toolset.Restore(tools, store.RestoreTools(child.FrozenTools))
+	frozenSet := toolset.Restore(tools, store.RestoreTools(child.FrozenTools), nil)
 	availability, err := toolset.RestoreAvailability(child.History, frozenSet.Availability, frozenSet.VersionChanges)
 	if err != nil {
 		return nil, nil, err

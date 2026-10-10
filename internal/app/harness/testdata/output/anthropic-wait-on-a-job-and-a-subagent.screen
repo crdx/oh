@@ -1,0 +1,17 @@
+
+ build in the background, ask a subagent, and wait for them
+
+
+Checking the whole tree start check $ just check
+Finding where the parser lives spawn 1 subagent on Claude Opus 5
+wait docs ✗ nothing is named docs
+wait job:check || tame-adder 2L (Checking the whole tree; Finding where the parser lives)
+stop check (Checking the whole tree)
+
+The subagent found the parser; the check is stopped.
+
+
+ carry on
+
+
+Carrying on.

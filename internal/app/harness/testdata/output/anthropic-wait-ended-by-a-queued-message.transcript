@@ -1,0 +1,57 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwngl · +0s
+
+## User · +0s
+
+start a long subagent and wait for it
+
+## Tool calls · +0s
+
+```
+subagent: 1 subagent [ok, 1 line, 18B, toolu_1]
+```
+
+## Subagent started · tame-adder · +0s
+
+Watch the build forever
+
+Transcript: `subagents/tame-adder/chat.md`
+
+## Tool calls · +0s
+
+```
+wait: tame-adder [ok, 3 lines, 154B, toolu_2]
+```
+
+## User · +0s
+
+never mind that, look at this instead
+
+## Tool calls · +0s
+
+```
+subagent: tame-adder [ok, 1 line, 19B, toolu_3]
+```
+
+## Assistant · +0s
+
+Stopped waiting for your message.
+
+## Subagent finished · tame-adder · stopped · +0s
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+Carrying on.

@@ -466,3 +466,15 @@ func TestAnOptionIsDescribedAsTheHelpDescribesIt(t *testing.T) {
 		}
 	}
 }
+
+func TestAHeadlessSessionNamesOnlyToolsThatWorkAlone(t *testing.T) {
+	if err := bind(t, "-p", "-t", "read", "-t", "bash", "hello").Check(false); err != nil {
+		t.Errorf("refused tools a headless session offers: %v", err)
+	}
+	if err := bind(t, "-p", "-t", "read", "-t", "job", "hello").Check(false); err == nil || !strings.Contains(err.Error(), "cannot offer job") {
+		t.Errorf("got %v, want the job refused", err)
+	}
+	if err := bind(t, "-t", "job", "hello").Check(false); err != nil {
+		t.Errorf("an interactive session refused a job: %v", err)
+	}
+}

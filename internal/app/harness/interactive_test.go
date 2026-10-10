@@ -209,7 +209,13 @@ func newInteractiveRig(t *testing.T, answers ...string) *interactiveRig {
 func newScriptedRig(t *testing.T, turns ...sim.Turn) *interactiveRig {
 	t.Helper()
 
-	endpoint := sim.New(&sim.Scenario{Model: "fake", Turns: turns})
+	rig, _ := newEndpointRig(t, sim.New(&sim.Scenario{Model: "fake", Turns: turns}))
+	return rig
+}
+
+func newEndpointRig(t *testing.T, endpoint *sim.Endpoint) (*interactiveRig, *sim.Endpoint) {
+	t.Helper()
+
 	server := httptest.NewServer(endpoint)
 	t.Cleanup(server.Close)
 
@@ -224,7 +230,7 @@ func newScriptedRig(t *testing.T, turns ...sim.Turn) *interactiveRig {
 			backend.EndpointVariable+"="+endpoint.Addresses(server.URL)[sim.Completions],
 			"TERM=xterm-256color",
 		),
-	}
+	}, endpoint
 }
 
 func (self *interactiveRig) start(arguments ...string) *interactiveSession {

@@ -683,3 +683,35 @@ func withIntent(t *testing.T, encoded []byte) []byte {
 	}
 	return withIntent
 }
+
+func TestAJobIsWaitedForByItsBareNameAndReportedWhetherItEndedOrNot(t *testing.T) {
+	source := job.WaitSource(withFinishedJobs(t))
+
+	if source.Kind() != "job" || source.Mention("build") != "build" {
+		t.Errorf("a job source is %q and mentions build as %q", source.Kind(), source.Mention("build"))
+	}
+	if !source.Knows("build") || source.Knows("ghost") {
+		t.Error("a job source knew the wrong jobs")
+	}
+	over, release, err := source.Hold("watch")
+	if err != nil {
+		t.Fatal(err)
+	}
+	release()
+	select {
+	case <-over:
+	default:
+		t.Error("a finished job was held as though it still ran")
+	}
+	if _, _, err := source.Hold("ghost"); err == nil {
+		t.Error("an unknown job was held")
+	}
+	for _, report := range []string{source.Ended("build"), source.Running("build")} {
+		if !strings.HasPrefix(report, "build: failed") {
+			t.Errorf("got %q, want the failed build reported", report)
+		}
+	}
+	if got := source.Ended("ghost"); got != "ghost: "+jobs.ErrNotFound.Error() {
+		t.Errorf("got %q, want an unknown job named", got)
+	}
+}

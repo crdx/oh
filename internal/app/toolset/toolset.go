@@ -8,6 +8,42 @@ import (
 	"crdx.org/oh/pkg/tool"
 )
 
+var HeadlessTools = []string{"read", "ls", "find", "grep", "bash", "write", "edit"}
+
+func Headless(tools []tool.Tool) []tool.Tool {
+	return slices.DeleteFunc(slices.Clone(tools), func(candidate tool.Tool) bool {
+		return !slices.Contains(HeadlessTools, candidate.Name())
+	})
+}
+
+func WithheldFromHeadless(tools []tool.Tool) []string {
+	var names []string
+	for _, candidate := range tools {
+		if !slices.Contains(HeadlessTools, candidate.Name()) {
+			names = append(names, candidate.Name())
+		}
+	}
+	return names
+}
+
+func RefuseOutsideHeadless(names []string) error {
+	var refusedNames []string
+	for _, name := range names {
+		if !slices.Contains(HeadlessTools, name) && !slices.Contains(refusedNames, name) {
+			refusedNames = append(refusedNames, name)
+		}
+	}
+	if len(refusedNames) == 0 {
+		return nil
+	}
+
+	return fmt.Errorf(
+		"a headless session offers only %s, so it cannot offer %s",
+		strings.Join(HeadlessTools, ", "),
+		strings.Join(refusedNames, ", "),
+	)
+}
+
 func Offers(enabledToolNames []string, name string) bool {
 	return len(enabledToolNames) == 0 || slices.Contains(enabledToolNames, name)
 }
@@ -92,7 +128,7 @@ type Restoration struct {
 	CompatibleNames []string
 }
 
-func Restore(availableTools []tool.Tool, snapshots []tool.Snapshot) Restoration {
+func Restore(availableTools []tool.Tool, snapshots []tool.Snapshot, withheldNames []string) Restoration {
 	availableByName := indexByName(availableTools)
 	result := Restoration{
 		OfferedTools:    make([]tool.Tool, 0, len(snapshots)),
@@ -105,6 +141,10 @@ func Restore(availableTools []tool.Tool, snapshots []tool.Snapshot) Restoration 
 		currentTool, isInstalled := availableByName[snapshot.Definition.Name]
 		status := ToolMissing
 		offeredTool := tool.Unavailable(snapshot, missingToolReason(snapshot.Definition.Name))
+		if slices.Contains(withheldNames, snapshot.Definition.Name) {
+			status = ToolWithheld
+			offeredTool = tool.Unavailable(snapshot, withheldToolReason(snapshot.Definition.Name))
+		}
 		if isInstalled {
 			status = ToolChanged
 			offeredTool = tool.Unavailable(
