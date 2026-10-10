@@ -170,3 +170,32 @@ func TestTryUpdateTakesFreeState(t *testing.T) {
 		t.Errorf("got %+v", state)
 	}
 }
+
+func TestLockedWorkOnAPlainFileLosesNoConcurrentWrite(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "plain")
+	const writers = 20
+
+	var wait sync.WaitGroup
+	for range writers {
+		wait.Go(func() {
+			if err := Locked(path, func() error {
+				data, err := os.ReadFile(path) //nolint:gosec // the path is the test's own
+				if err != nil && !errors.Is(err, os.ErrNotExist) {
+					return err
+				}
+				return WriteFile(path, append(data, 'x'))
+			}); err != nil {
+				t.Error(err)
+			}
+		})
+	}
+	wait.Wait()
+
+	data, err := os.ReadFile(path) //nolint:gosec // the path is the test's own
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(data) != writers {
+		t.Errorf("got %d writes, want %d", len(data), writers)
+	}
+}

@@ -3,6 +3,8 @@ package edit
 import (
 	"path/filepath"
 	"slices"
+	"strconv"
+	"sync"
 	"testing"
 )
 
@@ -197,5 +199,104 @@ func TestASearchThatStopsMatchingKeepsItsLastMatchWhenAskedAgain(t *testing.T) {
 	}
 	if got := self.getQuery(); got != "status!" {
 		t.Errorf("got query %q, want what was typed", got)
+	}
+}
+
+func TestSessionsSharingAHistoryFileKeepEachOthersEntries(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "history")
+	first := NewHistory(path, 0)
+	second := NewHistory(path, 0)
+
+	first.Add("from the first")
+	second.Add("from the second")
+	first.Add("first again")
+
+	want := []string{"from the first", "from the second", "first again"}
+	if got := NewHistory(path, 0).lines; !slices.Equal(got, want) {
+		t.Errorf("read back %q, want %q", got, want)
+	}
+}
+
+func TestConcurrentSessionsLoseNoHistoryEntry(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "history")
+	const sessions = 20
+
+	var wait sync.WaitGroup
+	for index := range sessions {
+		history := NewHistory(path, 0)
+		wait.Go(func() {
+			history.Add(strconv.Itoa(index))
+		})
+	}
+	wait.Wait()
+
+	if got := NewHistory(path, 0).lines; len(got) != sessions {
+		t.Errorf("read back %d entries, want %d: %q", len(got), sessions, got)
+	}
+}
+
+func TestASessionNotSharingRecallsOnlyItsOwnEntries(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "history")
+	first := NewHistory(path, 0)
+	second := NewHistory(path, 0)
+
+	second.Add("from the second")
+	first.Add("from the first")
+
+	if want := []string{"from the first"}; !slices.Equal(first.lines, want) {
+		t.Errorf("recalled %q, want %q", first.lines, want)
+	}
+}
+
+func TestASessionSharingRecallsEveryEntryOnceItAddsOne(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "history")
+	first := NewHistory(path, 0)
+	isShared := true
+	first.ShareWhen(func() bool { return isShared })
+	second := NewHistory(path, 0)
+
+	second.Add("from the second")
+	first.Add("from the first")
+
+	if want := []string{"from the second", "from the first"}; !slices.Equal(first.lines, want) {
+		t.Errorf("recalled %q, want %q", first.lines, want)
+	}
+
+	isShared = false
+	second.Add("second again")
+	first.Add("first again")
+
+	if want := []string{"from the second", "from the first", "first again"}; !slices.Equal(first.lines, want) {
+		t.Errorf("recalled %q after sharing stopped, want %q", first.lines, want)
+	}
+}
+
+func TestAnEntryAnotherSessionJustAddedIsNotStoredTwice(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "history")
+	first := NewHistory(path, 0)
+	second := NewHistory(path, 0)
+
+	first.Add("same")
+	second.Add("same")
+
+	if want := []string{"same"}; !slices.Equal(NewHistory(path, 0).lines, want) {
+		t.Errorf("read back %q, want %q", NewHistory(path, 0).lines, want)
+	}
+	if want := []string{"same"}; !slices.Equal(second.lines, want) {
+		t.Errorf("second recalled %q, want %q", second.lines, want)
+	}
+}
+
+func TestStoredHistoryKeepsOnlyTheMostRecentEntriesUpToItsLimit(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "history")
+	first := NewHistory(path, 2)
+	second := NewHistory(path, 2)
+
+	first.Add("one")
+	second.Add("two")
+	first.Add("three")
+
+	if want := []string{"two", "three"}; !slices.Equal(NewHistory(path, 0).lines, want) {
+		t.Errorf("read back %q, want %q", NewHistory(path, 0).lines, want)
 	}
 }

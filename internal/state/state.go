@@ -39,6 +39,16 @@ func Read[State any](path string, supportedFormat int, state *State) error {
 	return read(path, supportedFormat, state)
 }
 
+func Locked(path string, work func() error) error {
+	lock, err := lock(path, syscall.LOCK_EX)
+	if err != nil {
+		return err
+	}
+	defer release(lock)
+
+	return work()
+}
+
 func updateHeld[State any](path string, supportedFormat int, update func(*State) error) error {
 	var state State
 	if err := read(path, supportedFormat, &state); err != nil {
@@ -108,6 +118,10 @@ func write(path string, state any) error {
 		return err
 	}
 
+	return WriteFile(path, data)
+}
+
+func WriteFile(path string, data []byte) error {
 	pendingFile, err := os.CreateTemp(filepath.Dir(path), filepath.Base(path)+".*")
 	if err != nil {
 		return fmt.Errorf("write state: %w", err)

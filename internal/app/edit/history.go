@@ -2,33 +2,24 @@ package edit
 
 import (
 	"os"
-	"path/filepath"
 	"strings"
+
+	"crdx.org/oh/internal/state"
 )
 
 type History struct {
-	path  string
-	limit int
-	lines []string
+	path     string
+	limit    int
+	lines    []string
+	isShared func() bool
 }
 
 func NewHistory(path string, limit int) *History {
-	self := &History{path: path, limit: limit}
+	return &History{path: path, limit: limit, lines: readHistory(path, limit)}
+}
 
-	data, err := os.ReadFile(path) //nolint:gosec // the path is ours, not user input
-	if err != nil {
-		return self
-	}
-
-	for line := range strings.SplitSeq(string(data), "\n") {
-		if line != "" {
-			self.lines = append(self.lines, unescape(line))
-		}
-	}
-
-	self.trim()
-
-	return self
+func (self *History) ShareWhen(isShared func() bool) {
+	self.isShared = isShared
 }
 
 func (self *History) Add(line string) {
@@ -36,13 +27,32 @@ func (self *History) Add(line string) {
 		return
 	}
 
-	if len(self.lines) > 0 && self.lines[len(self.lines)-1] == line {
+	own, _ := withEntry(self.lines, line, self.limit)
+
+	if self.path == "" {
+		self.lines = own
 		return
 	}
 
-	self.lines = append(self.lines, line)
-	self.trim()
-	self.save()
+	_ = state.Locked(self.path, func() error {
+		everyEntry, isAdded := withEntry(readHistory(self.path, self.limit), line, self.limit)
+
+		if self.isSharing() {
+			own = everyEntry
+		}
+
+		if !isAdded {
+			return nil
+		}
+
+		return state.WriteFile(self.path, []byte(encodeHistory(everyEntry)))
+	})
+
+	self.lines = own
+}
+
+func (self *History) isSharing() bool {
+	return self.isShared != nil && self.isShared()
 }
 
 func (self *History) recall() *Recall {
@@ -60,29 +70,51 @@ func (self *History) search(current string) *historySearch {
 	}
 }
 
-func (self *History) trim() {
-	if self.limit > 0 && len(self.lines) > self.limit {
-		self.lines = self.lines[len(self.lines)-self.limit:]
+func withEntry(lines []string, line string, limit int) ([]string, bool) {
+	if len(lines) > 0 && lines[len(lines)-1] == line {
+		return lines, false
 	}
+
+	return trimmed(append(lines, line), limit), true
 }
 
-func (self *History) save() {
-	if self.path == "" {
-		return
+func trimmed(lines []string, limit int) []string {
+	if limit > 0 && len(lines) > limit {
+		return lines[len(lines)-limit:]
+	}
+	return lines
+}
+
+func readHistory(path string, limit int) []string {
+	if path == "" {
+		return nil
 	}
 
-	if err := os.MkdirAll(filepath.Dir(self.path), 0o700); err != nil {
-		return
+	data, err := os.ReadFile(path) //nolint:gosec // the path is ours, not user input
+	if err != nil {
+		return nil
 	}
 
+	var lines []string
+
+	for line := range strings.SplitSeq(string(data), "\n") {
+		if line != "" {
+			lines = append(lines, unescape(line))
+		}
+	}
+
+	return trimmed(lines, limit)
+}
+
+func encodeHistory(lines []string) string {
 	var out strings.Builder
 
-	for _, line := range self.lines {
+	for _, line := range lines {
 		out.WriteString(escape(line))
 		out.WriteString("\n")
 	}
 
-	_ = os.WriteFile(self.path, []byte(out.String()), 0o600)
+	return out.String()
 }
 
 func escape(line string) string {
