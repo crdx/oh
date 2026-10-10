@@ -5686,6 +5686,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"notice-mid-prose":         {".screen"},
 		"thought-drawing-nothing":  {".screen"},
 		"answer-drawing-nothing":   {".screen"},
+		"thought-still-guessing":   {".screen"},
 		"streaming-modes":          {".screen"},
 		"groupings":                {".screen"},
 		"reasonings":               {".ansi", ".screen"},

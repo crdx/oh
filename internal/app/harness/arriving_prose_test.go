@@ -5,6 +5,7 @@ import (
 	"strings"
 	"testing"
 
+	"crdx.org/oh/internal/app/ansi"
 	"crdx.org/oh/internal/app/dynamic"
 	"crdx.org/oh/internal/app/link"
 	"crdx.org/oh/internal/app/output"
@@ -41,15 +42,10 @@ func closeArrivingProse(rig *replayRig) string {
 	return rig.drawn()
 }
 
-func replayOfArrivingProse(t *testing.T, rig *replayRig) string {
+func replayOfArrivingProse(t *testing.T, rig *replayRig, columns int) string {
 	t.Helper()
 
-	recorded := make([]replayEntry, len(rig.chat.recordedEvents))
-	for index := range rig.chat.recordedEvents {
-		recorded[index] = replayEntry{Event: &rig.chat.recordedEvents[index]}
-	}
-
-	return replayAtWidth(t, recorded, replayColumns)
+	return replayAtWidth(t, entriesRecordedBy(rig), columns)
 }
 
 func tallProse() string {
@@ -63,8 +59,6 @@ func tallProse() string {
 
 func TestGoldenANoticeArrivingMidProseWaitsForItToLand(t *testing.T) {
 	passes := map[string]func() string{}
-	prose := tallProse()
-	middle := len(prose) / 2
 
 	for proseName, kind := range map[string]agent.Kind{
 		"an answer": agent.ModelMessageEvent,
@@ -72,17 +66,11 @@ func TestGoldenANoticeArrivingMidProseWaitsForItToLand(t *testing.T) {
 	} {
 		for noticeName := range noticesDrawnBesideAnOpenBlock(nil) {
 			name := fmt.Sprintf("%s in the middle of %s", noticeName, proseName)
-
-			rig := arrivingProseRig(t, output.StreamingModeLine)
-			streamArriving(rig, kind, prose[:middle])
-			noticesDrawnBesideAnOpenBlock(rig.chat)[noticeName]()
-			arriving := rig.drawn()
-			streamArriving(rig, kind, prose[middle:])
-			rig.chat.recordEvent(agent.Event{Kind: kind, Text: prose})
-			landed := closeArrivingProse(rig)
-
-			requireNothingDrawnAboveTheScreen(t, name, landed, arrivingProseLines)
-			requireSameVisibleScreen(t, name+" differs from its replay", replayOfArrivingProse(t, rig), landed)
+			arriving, landed := drawNoticesMidProse(t, name, arrivingNotices{
+				mode:    output.StreamingModeLine,
+				kind:    kind,
+				notices: []string{noticeName},
+			})
 
 			passes[name+", arriving"] = func() string { return shownInLines(t, arriving, arrivingProseLines) }
 			passes[name+", landed"] = func() string { return shown(t, landed, replayColumns) }
@@ -107,9 +95,105 @@ func TestGoldenAnAnswerThatEndsDrawingNothingLeavesNoRow(t *testing.T) {
 	rig.chat.recordEvent(agent.Event{Kind: agent.ToolCallResultEvent, ID: "1", Name: "read", Text: "notes"})
 	landed := closeArrivingProse(rig)
 
-	requireSameVisibleScreen(t, "an answer that ends drawing nothing differs from its replay", replayOfArrivingProse(t, rig), landed)
+	requireSameVisibleScreen(t, "an answer that ends drawing nothing differs from its replay", replayOfArrivingProse(t, rig, replayColumns), landed)
 
 	compareWithGolden(t, "answer-drawing-nothing", ".screen", map[string]func() string{
 		"streamed": func() string { return shown(t, landed, replayColumns) },
 	})
+}
+
+const (
+	guessingColumns = 40
+	guessingLines   = 4
+)
+
+const guessingLine = "Checking the flag `--yolo first, since it changes what the sandbox allows and every later " +
+	"step depends on whether the shell can reach the host network or not, so it has to be settled first. " +
+	"It also decides which paths are readable, which ports can be forwarded, and whether a job may outlive its call."
+
+type guessingThought struct {
+	before string
+	line   string
+	rest   string
+	mode   output.StreamingMode
+}
+
+func TestGoldenAThoughtStillGuessingKeepsItsRowsOutOfScrollback(t *testing.T) {
+	plainLine := strings.ReplaceAll(guessingLine, "`", "")
+	passes := map[string]func() string{}
+
+	for name, scene := range map[string]guessingThought{
+		"an unclosed backtick": {line: guessingLine, rest: "\n\nDone.", mode: output.StreamingModeLine},
+		"an unclosed backtick drawn as it arrives": {
+			line: guessingLine, rest: "\n\nDone.", mode: output.StreamingModeASAP,
+		},
+		"an unclosed backtick drawn in paced steps": {
+			line: guessingLine, rest: "\n\nDone.", mode: output.StreamingModePaced,
+		},
+		"an unclosed star": {
+			line: strings.Replace(plainLine, "the flag", "the *flag", 1), rest: "\n\nDone.", mode: output.StreamingModeLine,
+		},
+		"an unfinished autolink": {
+			line: "See <https://example.com/" + strings.Repeat("a/rather/long/address/", 8) + "index.html> for it.",
+			rest: "\n\nDone.",
+			mode: output.StreamingModeLine,
+		},
+		"a table header": {
+			line: "| " + strings.Repeat("a rather long column heading | ", 6),
+			rest: "\n|" + strings.Repeat(" --- |", 6) + "\n| 1 | 2 | 3 | 4 | 5 | 6 |\n\nDone.",
+			mode: output.StreamingModeLine,
+		},
+		"a closing fence": {
+			before: strings.Repeat("`", 200) + "\ncode\n",
+			line:   strings.Repeat("`", 190),
+			rest:   strings.Repeat("`", 10) + "\nDone.",
+			mode:   output.StreamingModeLine,
+		},
+		"nothing open": {line: plainLine, rest: "\n\nDone.", mode: output.StreamingModeLine},
+	} {
+		arriving, landed := drawGuessingThought(t, name, scene)
+
+		passes[name+", arriving"] = func() string {
+			return strings.Join(playScreenOfSize(t, arriving, guessingColumns, guessingLines).text(), "\n")
+		}
+		passes[name+", landed"] = func() string {
+			return strings.Join(playScreenOfSize(t, landed, guessingColumns, guessingLines).text(), "\n")
+		}
+	}
+
+	compareWithGolden(t, "thought-still-guessing", ".screen", passes)
+}
+
+func drawGuessingThought(t *testing.T, name string, scene guessingThought) (string, string) {
+	t.Helper()
+
+	thought := scene.before + scene.line + scene.rest
+
+	rig := newRig(t, func(written *strings.Builder, workspaceDir string) *output.Screen {
+		return output.NewTerminalOfSize(written, guessingColumns, guessingLines).
+			LinkPathsUnder(link.Roots{Workspace: workspaceDir})
+	})
+	rig.chat.display.reasoningRendering = output.ReasoningPlain
+	rig.chat.display.streamingMode = scene.mode
+	rig.chat.currentTurn = Turn{Stream: testRunningTurnStream(), painter: rig.chat.newPainter(true)}
+	rig.chat.recordEvent(agent.Event{Kind: agent.UserMessageEvent, Text: "check it"})
+
+	streamArriving(rig, agent.ModelReasoningEvent, scene.before+scene.line)
+	arriving := rig.drawn()
+	streamArriving(rig, agent.ModelReasoningEvent, scene.rest)
+	rig.chat.recordEvent(agent.Event{Kind: agent.ModelReasoningEvent, Text: thought})
+	landed := closeArrivingProse(rig)
+
+	if strings.Contains(landed, ansi.EraseScrollback) {
+		t.Errorf("a thought holding %q cleared the scrollback", name)
+	}
+	requireSameVisibleScreenInColumns(
+		t,
+		"a thought holding "+name+" differs from its replay",
+		guessingColumns,
+		replayOfArrivingProse(t, rig, guessingColumns),
+		landed,
+	)
+
+	return arriving, landed
 }

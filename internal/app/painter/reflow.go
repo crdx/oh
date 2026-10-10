@@ -12,14 +12,28 @@ type paragraphReflow struct {
 	columns     int
 	settledText string
 	settledRows []string
+	stableRows  int
+	stableTail  wrappedStableTail
+}
+
+type wrappedStableTail struct {
+	settledBytes int
+	stableLength int
+	rows         int
 }
 
 func (self *paragraphReflow) Reset() {
 	self.settledText = ""
 	self.settledRows = nil
+	self.stableRows = 0
+	self.stableTail = wrappedStableTail{}
 }
 
-func (self *paragraphReflow) Wrap(text string, settledLength int, columns int) []string {
+func (self *paragraphReflow) StableRows() int {
+	return self.stableRows
+}
+
+func (self *paragraphReflow) Wrap(text string, settledLength int, stableLength int, columns int) []string {
 	if columns != self.columns || !strings.HasPrefix(text, self.settledText) {
 		self.Reset()
 		self.columns = columns
@@ -42,8 +56,30 @@ func (self *paragraphReflow) Wrap(text string, settledLength int, columns int) [
 
 	output := make([]string, 0, len(self.settledRows)+len(rows))
 	output = append(output, self.settledRows...)
+	output = append(output, rows...)
 
-	return append(output, rows...)
+	stableRows := len(rows)
+	if stableLength < len(text) {
+		stableRows = self.stableTailRows(text, stableLength, columns)
+	}
+	self.stableRows = len(self.settledRows) + max(0, stableRows-unsettledRowsBeforeABoundary)
+
+	return output
+}
+
+const unsettledRowsBeforeABoundary = 2
+
+func (self *paragraphReflow) stableTailRows(text string, stableLength int, columns int) int {
+	previous := self.stableTail
+	if previous.settledBytes == len(self.settledText) && previous.stableLength == stableLength && previous.rows > 0 {
+		return previous.rows
+	}
+
+	stableTail := text[len(self.settledText):max(stableLength, len(self.settledText))]
+	rows := len(width.Rows(style.Reasoning(stableTail), columns))
+	self.stableTail = wrappedStableTail{settledBytes: len(self.settledText), stableLength: stableLength, rows: rows}
+
+	return rows
 }
 
 func rowTexts(wrappedRows []width.Row) []string {

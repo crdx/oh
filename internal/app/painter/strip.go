@@ -2,6 +2,7 @@ package painter
 
 import (
 	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 	"unicode"
@@ -24,6 +25,14 @@ type plainThought struct {
 	settledText   strings.Builder
 	fenceMark     byte
 	fenceLength   int
+	stable        stableTail
+}
+
+type stableTail struct {
+	consumedBytes int
+	lineBytes     int
+	length        int
+	isKnown       bool
 }
 
 func (self *plainThought) Reset() {
@@ -32,6 +41,7 @@ func (self *plainThought) Reset() {
 	self.settledText.Reset()
 	self.fenceMark = 0
 	self.fenceLength = 0
+	self.stable = stableTail{}
 }
 
 func (self *plainThought) Text(source string, isSettled bool) (string, string) {
@@ -67,6 +77,44 @@ func (self *plainThought) Text(source string, isSettled bool) (string, string) {
 	return self.settledText.String(), tail
 }
 
+const (
+	stableTailRefreshBytes = 256
+	lineStartCharacters    = "-*_=#>+|:`~ \t0123456789.)"
+)
+
+var (
+	everyLineContinuations = []string{"", "x", "  ", "\\"}
+	lineStartContinuations = []string{
+		" x", ". x", ") x", "-", "=", "|", " |", "-|", "- |",
+		"`", "``", "```", "~~~", "*", "**", "***", "_", "__", "___",
+	}
+	tableRowContinuations = []string{"|", " |"}
+	markContinuations     = map[byte][]string{
+		'`':  {"`", "``", "```"},
+		'*':  {"*", "**", "***"},
+		'_':  {"_", "__", "___"},
+		'~':  {"~", "~~"},
+		'[':  {"]", "](x)", "(x)", ")"},
+		']':  {"](x)", "(x)", ")"},
+		'(':  {")"},
+		'\\': {"*", "_", "`", "["},
+	}
+)
+
+func (self *plainThought) StableTail(tail string) int {
+	line := self.source[self.consumedBytes:]
+	previous := self.stable
+	if previous.isKnown && previous.consumedBytes == self.consumedBytes && previous.lineBytes <= len(line) &&
+		len(line)-previous.lineBytes < stableTailRefreshBytes {
+		return min(previous.length, len(tail))
+	}
+
+	stable := self.measureStableTail(line, tail)
+	self.stable = stableTail{consumedBytes: self.consumedBytes, lineBytes: len(line), length: stable, isKnown: true}
+
+	return stable
+}
+
 func (self *plainThought) settle(text string) {
 	for field := range strings.FieldsSeq(text) {
 		if self.settledText.Len() > 0 {
@@ -82,6 +130,79 @@ func (self *plainThought) peek(line string, boundary lineBoundary) (string, bool
 	self.fenceMark, self.fenceLength = fenceMark, fenceLength
 
 	return text, isKept
+}
+
+func (self *plainThought) measureStableTail(line string, tail string) int {
+	if self.fenceLength > 0 && strings.Trim(line, " \t"+string(self.fenceMark)) == "" {
+		return 0
+	}
+
+	stable := len(tail)
+
+	for _, continuation := range continuationsFor(line) {
+		for _, boundary := range []lineBoundary{endOfArrival, endOfLine} {
+			text, isKept := self.peek(line+continuation, boundary)
+			if !isKept {
+				text = ""
+			}
+			stable = min(stable, commonPrefixLength(tail, text))
+		}
+	}
+
+	if at := strings.LastIndexByte(tail[:stable], '&'); at >= 0 && isEntityPrefix(tail[at+1:]) {
+		stable = at
+	}
+	if at := strings.LastIndexByte(tail[:stable], '<'); at >= 0 && isOpenAutolink(tail[at+1:]) {
+		stable = at
+	}
+
+	for stable > 0 && stable < len(tail) && !utf8.RuneStart(tail[stable]) {
+		stable--
+	}
+
+	return stable
+}
+
+func continuationsFor(line string) []string {
+	continuations := slices.Clone(everyLineContinuations)
+
+	lineText := strings.TrimLeft(line, " \t")
+	if strings.Trim(lineText, lineStartCharacters) == "" {
+		continuations = append(continuations, lineStartContinuations...)
+	}
+	if strings.HasPrefix(lineText, "|") {
+		continuations = append(continuations, tableRowContinuations...)
+	}
+	for mark, closers := range markContinuations {
+		if strings.IndexByte(line, mark) >= 0 {
+			continuations = append(continuations, closers...)
+		}
+	}
+
+	return continuations
+}
+
+func isOpenAutolink(text string) bool {
+	return !strings.ContainsAny(text, " \t>")
+}
+
+func commonPrefixLength(first string, second string) int {
+	length := 0
+	for length < len(first) && length < len(second) && first[length] == second[length] {
+		length++
+	}
+
+	return length
+}
+
+func isEntityPrefix(text string) bool {
+	for _, character := range text {
+		if character != '#' && !unicode.IsLetter(character) && !unicode.IsDigit(character) {
+			return false
+		}
+	}
+
+	return true
 }
 
 func (self *plainThought) strip(line string, boundary lineBoundary) (string, bool) {

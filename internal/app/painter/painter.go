@@ -419,14 +419,16 @@ func renderReasoningWith(
 ) []string {
 	if rendering == output.ReasoningPlain {
 		settledText, tail := plain.Text(thought, isSettled)
-		text := settledText
-		if tailText := strings.Join(strings.Fields(tail), " "); tailText != "" {
-			if text != "" {
-				text += " "
-			}
-			text += tailText
+		text := joinedThought(settledText, tail)
+		if text == "" {
+			reflow.Reset()
+			return nil
 		}
-		return reflow.Wrap(text, len(settledText), columns)
+		stableLength := len(text)
+		if !isSettled {
+			stableLength = len(joinedThought(settledText, tail[:plain.StableTail(tail)]))
+		}
+		return reflow.Wrap(text, len(settledText), stableLength, columns)
 	}
 
 	options := markdown.Options{Columns: columns}
@@ -441,6 +443,18 @@ func renderReasoningWith(
 	}
 
 	return renderedRows
+}
+
+func joinedThought(settledText string, tail string) string {
+	tailText := strings.Join(strings.Fields(tail), " ")
+	if tailText == "" {
+		return settledText
+	}
+	if settledText == "" {
+		return tailText
+	}
+
+	return settledText + " " + tailText
 }
 
 func (self *Picasso) Stale() bool { return self.isStale }
@@ -710,7 +724,11 @@ func (self *Picasso) drawReasoning(isSettled bool) {
 
 	self.reasoning.MarkRowsDrawn(len(rows), isTailHidden || isRowArriving)
 	settledRows := len(rows)
-	if !isSettled && self.reasoningRendering != output.ReasoningPlain {
+	switch {
+	case isSettled:
+	case self.reasoningRendering == output.ReasoningPlain:
+		settledRows = min(settledRows, self.reasoningReflow.StableRows())
+	default:
 		settledRows = min(settledRows, self.reasoningRenderer.SettledRows())
 	}
 	if !self.screen.DrawArrivingReasoning(rows, settledRows) {

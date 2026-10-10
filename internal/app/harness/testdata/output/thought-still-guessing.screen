@@ -1,0 +1,168 @@
+=== a closing fence, arriving ===
+
+ check it
+
+
+⋮ 2 more lines
+````````````````````````````````````````
+````````````````````````````````````````
+````````````````````````````````````````
+=== a closing fence, landed ===
+
+ check it
+
+
+code Done.
+=== a table header, arriving ===
+
+ check it
+
+
+a rather long column heading a rather
+long column heading a rather long column
+heading a rather long column heading a
+rather long column heading a rather long
+=== a table header, landed ===
+
+ check it
+
+
+a rather long column heading a rather
+long column heading a rather long column
+heading a rather long column heading a
+rather long column heading a rather long
+column heading 1 2 3 4 5 6 Done.
+=== an unclosed backtick drawn as it arrives, arriving ===
+
+ check it
+
+
+⋮ 5 more lines
+decides which paths are readable, which
+ports can be forwarded, and whether a
+job may outlive its call.
+=== an unclosed backtick drawn as it arrives, landed ===
+
+ check it
+
+
+Checking the flag `--yolo first, since
+it changes what the sandbox allows and
+every later step depends on whether the
+shell can reach the host network or not,
+so it has to be settled first. It also
+decides which paths are readable, which
+ports can be forwarded, and whether a
+job may outlive its call. Done.
+=== an unclosed backtick drawn in paced steps, arriving ===
+
+ check it
+
+
+⋮ 5 more lines
+decides which paths are readable, which
+ports can be forwarded, and whether a
+job may outlive its call
+=== an unclosed backtick drawn in paced steps, landed ===
+
+ check it
+
+
+Checking the flag `--yolo first, since
+it changes what the sandbox allows and
+every later step depends on whether the
+shell can reach the host network or not,
+so it has to be settled first. It also
+decides which paths are readable, which
+ports can be forwarded, and whether a
+job may outlive its call. Done.
+=== an unclosed backtick, arriving ===
+
+ check it
+
+
+⋮ 4 more lines
+so it has to be settled first. It also
+decides which paths are readable, which
+ports can be forwarded, and whether a
+=== an unclosed backtick, landed ===
+
+ check it
+
+
+Checking the flag `--yolo first, since
+it changes what the sandbox allows and
+every later step depends on whether the
+shell can reach the host network or not,
+so it has to be settled first. It also
+decides which paths are readable, which
+ports can be forwarded, and whether a
+job may outlive its call. Done.
+=== an unclosed star, arriving ===
+
+ check it
+
+
+⋮ 4 more lines
+so it has to be settled first. It also
+decides which paths are readable, which
+ports can be forwarded, and whether a
+=== an unclosed star, landed ===
+
+ check it
+
+
+Checking the *flag --yolo first, since
+it changes what the sandbox allows and
+every later step depends on whether the
+shell can reach the host network or not,
+so it has to be settled first. It also
+decides which paths are readable, which
+ports can be forwarded, and whether a
+job may outlive its call. Done.
+=== an unfinished autolink, arriving ===
+
+ check it
+
+
+⋮ 3 more lines
+dress/a/rather/long/address/a/rather/lon
+g/address/a/rather/long/address/a/rather
+/long/address/a/rather/long/address/inde
+=== an unfinished autolink, landed ===
+
+ check it
+
+
+See
+https://example.com/a/rather/long/addres
+s/a/rather/long/address/a/rather/long/ad
+dress/a/rather/long/address/a/rather/lon
+g/address/a/rather/long/address/a/rather
+/long/address/a/rather/long/address/inde
+x.html for it. Done.
+=== nothing open, arriving ===
+
+ check it
+
+
+Checking the flag --yolo first, since it
+changes what the sandbox allows and
+every later step depends on whether the
+shell can reach the host network or not,
+so it has to be settled first. It also
+decides which paths are readable, which
+ports can be forwarded, and whether a
+=== nothing open, landed ===
+
+ check it
+
+
+Checking the flag --yolo first, since it
+changes what the sandbox allows and
+every later step depends on whether the
+shell can reach the host network or not,
+so it has to be settled first. It also
+decides which paths are readable, which
+ports can be forwarded, and whether a
+job may outlive its call. Done.

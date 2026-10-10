@@ -18,6 +18,7 @@ func TestGoldenAThoughtThatEndsDrawingNothingLeavesNoRow(t *testing.T) {
 
 	for name, scene := range map[string]thoughtDrawingNothing{
 		"drawn as markdown": {rendering: output.ReasoningMarkdown, pieces: []string{"0", ")"}},
+		"drawn plainly":     {rendering: output.ReasoningPlain, pieces: []string{"-", "-", "-"}},
 	} {
 		rig := arrivingProseRig(t, output.StreamingModeASAP)
 		rig.chat.display.reasoningRendering = scene.rendering
