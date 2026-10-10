@@ -1,0 +1,56 @@
+#!/bin/bash
+set -euo pipefail
+
+RED='\e[31m'
+GREEN='\e[32m'
+YELLOW='\e[33m'
+NC='\e[0m'
+
+ROUNDS=${1:-3}
+WIDTH=${2:-4}
+shift 2 || shift $#
+PACKAGES=("${@:-./...}")
+RESULTS=$(mktemp -d -t oh-flakes.XXXXXX)
+
+function failures {
+    jq -r 'select(.Action == "fail" and .Test != null) | "\(.Package) \(.Test)"' "$@"
+}
+
+function failure_output {
+    local RUN=$1
+    local PACKAGE=$2
+    local TEST=$3
+    jq -r --arg package "$PACKAGE" --arg test "$TEST" \
+        'select(.Package == $package and .Test == $test and .Action == "output") | .Output' \
+        "$RUN" |
+        grep -v '^=== \(RUN\|PAUSE\|CONT\)' |
+        tail -40
+}
+
+go test -count=1 -run '^$' "${PACKAGES[@]}" > /dev/null
+
+for ROUND in $(seq 1 "$ROUNDS"); do
+    for LANE in $(seq 1 "$WIDTH"); do
+        go test -json -count=1 -cover "${PACKAGES[@]}" \
+            > "$RESULTS/$ROUND-$LANE.json" 2> "$RESULTS/$ROUND-$LANE.stderr" &
+    done
+    wait || true
+    echo -e "${YELLOW}round $ROUND of $ROUNDS done${NC}"
+done
+
+if [[ -z $(failures "$RESULTS"/*.json) ]]; then
+    echo -e "${GREEN}no failures in $((ROUNDS * WIDTH)) runs${NC}"
+    rm -rf "$RESULTS"
+    exit 0
+fi
+
+for RUN in "$RESULTS"/*.json; do
+    failures "$RUN" | while read -r PACKAGE TEST; do
+        echo -e "${RED}$(basename "$RUN" .json) $PACKAGE $TEST${NC}"
+        failure_output "$RUN" "$PACKAGE" "$TEST"
+    done
+done
+
+echo -e "${RED}failures in $((ROUNDS * WIDTH)) runs, kept in $RESULTS:${NC}"
+failures "$RESULTS"/*.json | sort | uniq -c | sort -rn
+exit 1

@@ -24,8 +24,25 @@ fmt:
 fix:
     golangci-lint run --color never --fix
 
+# run every test, naming the failures last
 test:
-    go test -cover ./...
+    #!/bin/bash
+    set -uo pipefail
+    RED='\e[31m'
+    NC='\e[0m'
+    LOG=$(mktemp -t oh-test.XXXXXX)
+    trap 'rm -f "$LOG"' EXIT
+    go test -cover ./... 2>&1 | tee "$LOG"
+    STATUS=${PIPESTATUS[0]}
+    if [[ $STATUS -ne 0 ]]; then
+        echo -e "${RED}Failed:${NC}"
+        grep -E '^ *--- FAIL|^FAIL\s|^panic: ' "$LOG" || true
+    fi
+    exit "$STATUS"
+
+# run the suite rounds times, width at once, and report every test that failed
+flakes rounds='3' width='4' *packages:
+    ./script/flakes {{ rounds }} {{ width }} {{ packages }}
 
 # run the sandbox tests without privs
 sandbox *args:
