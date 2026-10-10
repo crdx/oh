@@ -5750,6 +5750,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"schedule":                 {".ansi", ".screen"},
 		"segments":                 {".ansi", ".screen"},
 		"shedding":                 {".ansi", ".screen"},
+		"shared-history":           {".ansi", ".screen"},
 		"signal-restoration":       {".ansi"},
 		"special-links":            {".ansi", ".screen"},
 		"startup":                  {".ansi", ".screen"},
@@ -11397,6 +11398,71 @@ func readlineInputStream(t *testing.T, historyLines []string, text string, keypr
 	return screenOutput.String()
 }
 
+func TestGoldenSharedHistoryRecallsWhatItsToggleAllows(t *testing.T) {
+	up := key.Key{Code: key.Up}
+	search := key.Key{Code: key.Rune, Value: 'r', Mod: key.Ctrl}
+	character := func(value rune) key.Key {
+		return key.Key{Code: key.Rune, Value: value}
+	}
+	toggles := map[string]map[string]any{
+		"absent": {},
+		"off":    {string(experimental.SharedHistory): false},
+		"on":     {string(experimental.SharedHistory): true},
+	}
+	actions := map[string][]key.Key{
+		"1 up once":             {up},
+		"2 up twice":            {up, up},
+		"3 up past every entry": {up, up, up, up, up},
+		"4 ctrl+r away":         {search, character('a'), character('w')},
+	}
+
+	passes := map[string]func() string{}
+	shownPasses := map[string]func() string{}
+	for toggleName, values := range toggles {
+		for actionName, keypresses := range actions {
+			name := toggleName + " " + actionName
+			passes[name] = func() string {
+				return sharedHistoryStream(t, values, keypresses...)
+			}
+			shownPasses[name] = func() string {
+				return shown(t, sharedHistoryStream(t, values, keypresses...), sharedHistoryColumns)
+			}
+		}
+	}
+
+	compareWithGolden(t, "shared-history", ".ansi", passes)
+	compareWithGolden(t, "shared-history", ".screen", shownPasses)
+}
+
+const sharedHistoryColumns = 40
+
+func sharedHistoryStream(t *testing.T, toggles map[string]any, keypresses ...key.Key) string {
+	t.Helper()
+
+	self := slashCommandFixture(t, caps.Read)
+	self.experimental = experimental.New(toggles)
+	var screenOutput strings.Builder
+	self.screen = output.NewTerminalOfSize(&screenOutput, sharedHistoryColumns, replayLines)
+
+	historyPath := filepath.Join(t.TempDir(), "history")
+	history := self.openHistory(historyPath)
+	elsewhere := edit.NewHistory(historyPath, historyLimit)
+
+	elsewhere.Add("away one")
+	history.Add("here one")
+	elsewhere.Add("away two")
+	history.Add("here two")
+
+	inputLine := edit.NewInput(history)
+	self.show(inputLine)
+
+	for _, keypress := range keypresses {
+		self.handleKeypressAndShowInput(inputLine, history, keypress)
+	}
+
+	return screenOutput.String()
+}
+
 const structuredThought = "## A heading\n\n- first\n- second\n"
 
 func drawAThoughtThenACall(self *App, thought string) {
@@ -12306,6 +12372,80 @@ func TestReloadingConfigChangesExperimentalToggles(t *testing.T) {
 
 	if self.experimental.IsEnabled(experimental.RedrawTimingFeedback) {
 		t.Error("the reloaded toggle is still enabled")
+	}
+}
+
+func TestTheSharedHistoryToggleDecidesWhetherASessionRecallsOtherSessions(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "config.toml")
+	writeLiveConfig(t, path, "")
+
+	self := testConversation(t, &bytes.Buffer{})
+	prepareLiveConfig(t, self, path)
+
+	historyPath := filepath.Join(t.TempDir(), "history")
+	history := self.openHistory(historyPath)
+	elsewhere := edit.NewHistory(historyPath, historyLimit)
+
+	elsewhere.Add("elsewhere one")
+	history.Add("here one")
+
+	if got, want := recalledHistory(history), []string{"here one"}; !slices.Equal(got, want) {
+		t.Errorf("with the toggle absent, recalled %q, want %q", got, want)
+	}
+
+	writeLiveConfig(t, path, "[experimental]\nshared_history = true\n")
+	settleLiveConfig(t, self)
+
+	elsewhere.Add("elsewhere two")
+	history.Add("here two")
+
+	if got, want := recalledHistory(history), []string{
+		"here two",
+		"elsewhere two",
+		"here one",
+		"elsewhere one",
+	}; !slices.Equal(got, want) {
+		t.Errorf("with the toggle on, recalled %q, want %q", got, want)
+	}
+
+	writeLiveConfig(t, path, "[experimental]\nshared_history = false\n")
+	settleLiveConfig(t, self)
+
+	elsewhere.Add("elsewhere three")
+	history.Add("here three")
+
+	if got, want := recalledHistory(history), []string{
+		"here three",
+		"here two",
+		"elsewhere two",
+		"here one",
+		"elsewhere one",
+	}; !slices.Equal(got, want) {
+		t.Errorf("with the toggle off, recalled %q, want %q", got, want)
+	}
+
+	if got, want := recalledHistory(edit.NewHistory(historyPath, historyLimit)), []string{
+		"here three",
+		"elsewhere three",
+		"here two",
+		"elsewhere two",
+		"here one",
+		"elsewhere one",
+	}; !slices.Equal(got, want) {
+		t.Errorf("a fresh session recalled %q, want every entry from both sessions", got)
+	}
+}
+
+func recalledHistory(history *edit.History) []string {
+	inputLine := edit.NewInput(history)
+	var recalled []string
+	for {
+		previous := inputLine.Text()
+		inputLine.Apply(key.Key{Code: key.Up}, false)
+		if inputLine.Text() == previous {
+			return recalled
+		}
+		recalled = append(recalled, inputLine.Text())
 	}
 }
 

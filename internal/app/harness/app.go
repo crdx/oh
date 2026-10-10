@@ -266,13 +266,18 @@ type TurnEvent = turn.Event
 
 const historyLimit = 1000
 
-func (self *App) begin(message string) cycle.Transition {
-	self.initialiseAccess()
-
-	history := edit.NewHistory(location.GetHistoryPath(), historyLimit)
+func (self *App) openHistory(path string) *edit.History {
+	history := edit.NewHistory(path, historyLimit)
 	history.ShareWhen(func() bool {
 		return self.experimental.IsEnabled(experimental.SharedHistory)
 	})
+	return history
+}
+
+func (self *App) begin(message string) cycle.Transition {
+	self.initialiseAccess()
+
+	history := self.openHistory(location.GetHistoryPath())
 	inputLine := edit.NewInput(history)
 	self.inputLine = inputLine
 
