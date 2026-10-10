@@ -2,7 +2,7 @@
 \e[48;2;52;53;65m roast something slowly                                                                             \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mkitchen\e[0m\e]8;;\e\\ \e[38;2;192;128;80mslow-roasted onions\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;150;152;150m2L\e[0m \e[38;2;204;102;102mstopped after its limit of 2s, and killed by SIGKILL after ignorin…\e[0m\r
+\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mkitchen\e[0m\e]8;;\e\\ \e[38;2;192;128;80mslow-roasted onions\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mstopped after its limit of 2s, and killed by SIGKILL after ignoring S…\e[0m\r
 \r
 The oven ran out of time and had to be killed.\e[?25h\e[?2026l\r
 \r

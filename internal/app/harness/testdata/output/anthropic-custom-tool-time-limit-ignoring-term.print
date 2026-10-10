@@ -2,7 +2,7 @@
  roast something slowly
 
 
-kitchen slow-roasted onions ✗ 2L stopped after its limit of 2s, and killed by SIGKILL after ignorin…
+kitchen slow-roasted onions ✗ stopped after its limit of 2s, and killed by SIGKILL after ignoring S…
 
 The oven ran out of time and had to be killed.
 

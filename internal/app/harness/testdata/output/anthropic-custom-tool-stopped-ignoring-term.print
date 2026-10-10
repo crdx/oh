@@ -2,7 +2,7 @@
  stop the kitchen while it works
 
 
-kitchen julienned carrots – 2L killed by SIGKILL after ignoring SIGTERM for 2s: sharpening the kniv…
+kitchen julienned carrots – killed by SIGKILL after ignoring SIGTERM for 2s: sharpening the knives
 
 Turn stopped because the user pressed escape.
 
