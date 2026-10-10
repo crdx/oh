@@ -21,6 +21,7 @@ const (
 	terminalDeadline = 10 * time.Second
 	pressEnd         = "\x1b[F"
 	pressEnter       = "\r"
+	anyLoopbackPort  = "127.0.0.1:0"
 )
 
 var presentedState = regexp.MustCompile(`[?&]state=([0-9a-f]+)`)
@@ -79,6 +80,8 @@ func TestASignInOverATerminalTakesThePastedRedirect(t *testing.T) {
 			t.Cleanup(server.Close)
 			codex.TokenURL, anthropic.TokenURL = server.URL, server.URL
 			t.Cleanup(func() { codex.TokenURL, anthropic.TokenURL = "", "" })
+			codex.CallbackHost, anthropic.CallbackHost = anyLoopbackPort, anyLoopbackPort
+			t.Cleanup(func() { codex.CallbackHost, anthropic.CallbackHost = "", "" })
 
 			controller, terminal := ptytest.OpenSized(t, 400, 30)
 			screen := ptytest.Record(controller)

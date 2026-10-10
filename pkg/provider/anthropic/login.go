@@ -73,7 +73,17 @@ var callbackListener = listenOnCallbackHost
 func listenOnCallbackHost(ctx context.Context) (net.Listener, error) {
 	var config net.ListenConfig
 
-	return config.Listen(ctx, "tcp", callbackHost)
+	return config.Listen(ctx, "tcp", callbackAddress())
+}
+
+var CallbackHost string
+
+func callbackAddress() string {
+	if CallbackHost != "" {
+		return CallbackHost
+	}
+
+	return callbackHost
 }
 
 func printAuthorisationAddress(address string) {
