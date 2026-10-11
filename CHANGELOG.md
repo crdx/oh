@@ -2,49 +2,109 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
-### Changes
+## [0.14.0] - 2026-10-11
 
-- Apply a changed `ui.currency` without restarting
-- State which experimental toggles need a restart
-- Title every notice in the readable transcript
-- Refactor config file format a bit
+### Subagents
+
+- Run subagents in parallel, each with its own scratch and workspace
+- Gate subagents behind an `s` capability, off by default and toggled with ctrl+x s
+- Confine each subagent to read and execute, writing only its own scratch
+- Let subagents read the parent's configured read, exec, path, and home paths
+- Tell each subagent what it can read, write, and execute
+- Keep subagent prompts lean, without SYSTEM.md or AGENTS.md
+- Share an optional system prompt across subagents
+- Choose subagent models with `subagent.model` or `subagent.round_robin`
+- Cap concurrent subagents with `subagent.concurrency`
+- Keep ollama sessions to ollama subagents (assumes ollama is local, for now)
+- Withhold `s` from a new session when no configured subagent model can start
+- Interject each subagent's report into the conversation as it finishes
+- Message a running subagent, or broadcast to every running one
+- Resume a finished subagent with a follow-up message
+- Show each subagent's time, model, tool calls, tokens, and latest intent with `status`
+- Read a subagent's report with `output`
+- List each task's intent on the spawn row
+- Stop subagents that lose access when `s` or `x` is withdrawn
+- Show running subagents and recent finishes in a `subagents` bar segment
+- List subagents with `/subs` and `/subs all`
+- Read a subagent's conversation with `/sub cat <name>`
+- Count subagent usage with its parent in `oh --ctl analyse`
+- Migrate subagent sessions alongside their parents
+
+### Experimental
+
 - Add experimental inline reply command and shortcut
-- Offer only file and shell tools in headless mode
 - Move waiting out of jobs into an experimental wait tool
-- Stop simultaneous sessions clobbering input history
 - Add experimental toggle to share input history
+- Add experimental toggle to show the redraw latency on ctrl+l
+- Hide cache miss notices behind an experimental toggle
+
+### Models and providers
+
 - Fix OpenCode Go's Messages API models
 - Keep valid unsigned thoughts
-- Promote --from to a real flag
 - Convert `oh -l` into a non-interactive version of the model picker
 - Move bare model list to `oh --ctl models`
 - Figure out wire protocol from models.dev data
-- Link the usage segment labels to the provider's usage page
-- Add 4 default themes for different terminal backgrounds
-- Update default shell and job timeouts to 10m
-- Complete ignored paths with `@!`
-- Preserve spacing in completed job output
-- Trim 15 wasteful milliseconds off startup time
-- Add experimental toggle to show the redraw latency on ctrl+l
 - Tag notes the same way that provider harnesses do it
-- Redraw promptly on resize, no blocking
-- Keep multiline commands on one row
-- Interject advice sooner in untitled sessions
-- Speed up redraws in conversations that mention many paths
-- Add debug toggles for cpu, stall, and heap profiling
-- Stop the stall watcher waking an idle session
-- Accept and complete flags in fork and new
+
+### Tools and jobs
+
+- Run grep's ripgrep inside the sandbox
+- Offer only file and shell tools in headless mode
+- Preserve spacing in completed job output
 - Stop the custom tool's whole process group when stopped
 - Name the signal that killed a custom tool
-- Stop linking paths that span more than three spaces, for perf
-- Reduce the number of ui redraws
+- Shorten job notice wording
+- Update default shell and job timeouts to 10m
+
+### Input and commands
+
+- Stop simultaneous sessions clobbering input history
+- Complete ignored paths with `@!`
+- Trim trailing whitespace on ctrl+del
+- Accept and complete flags in fork and new
+- Promote --from to a real flag
+- Interject advice sooner in untitled sessions
+
+### Configuration
+
+- Apply a changed `ui.currency` without restarting
+- State which experimental toggles need a restart
+- Refactor config file format a bit
+- Let the unknown settings notice be dismissed
+- Name each unknown setting once rather than every key beneath it
+- Add debug toggles for cpu, stall, and heap profiling
+
+### Drawing
+
+- Add 4 default themes for different terminal backgrounds
+- Show queued messages and feedback together in one box
+- Drop line counts from status and failed tool rows
+- Draw a picture in a windowed block once its first row is visible
+- Link scratch paths in questions and shorten them to `<s>`
+- Keep status colour out of styled command listings
+- Keep multiline commands on one row
+- Link the usage segment labels to the provider's usage page
+- Redraw promptly on resize, no blocking
 - Stop drawing a long answer twice when a job ends while it streams
 - Leave no stray row under an answer that ends up drawing nothing
 - Stop clearing the scrollback while a long plain thought arrives
 - Draw no blank row for a plain thought that strips to nothing
 - Keep the gap above the startup banner when resuming a session
+
+### Performance
+
+- Trim 15 wasteful milliseconds off startup time
+- Speed up redraws in conversations that mention many paths
+- Stop linking paths that span more than three spaces, for perf
+- Reduce the number of ui redraws
+- Stop the stall watcher waking an idle session
+
+### Turns and sessions
+
+- Stop retrying a turn that was stopped
 - Correctly record a stopped turn's notice
-- Add subagents with all the trimmings
+- Title every notice in the readable transcript
 
 ## [0.13.0] - 2026-10-07
 
