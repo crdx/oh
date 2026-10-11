@@ -3,7 +3,7 @@
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"start two subagents and steer them while they run"}}
 {"kind":"event","event":{"rendering_kind":"subagent_start","render":"2 subagents · Finding the largest workspace file, Finding where the config loads","reports_status":true,"kind":"tool_call_request","id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Find the largest file\",\"intent\":\"Finding the largest workspace file\"},{\"prompt\":\"Find the config loader\",\"intent\":\"Finding where the config loads\"}]}"}}
-{"kind":"event","event":{"kind":"tool_call_result","text":"started tame-adder, tame-alpaca; 2 of at most 5 subagents now running","id":"toolu_1","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":69}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"started tame-adder, tame-alpaca; 2/5 subagents running","id":"toolu_1","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":54}}}
 {"kind":"event","event":{"kind":"subagent_started","subagent":"tame-adder","text":"Find the largest file","id":"session-of-tame-adder","state":{"choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"workspace":"/workspace","intent":"Finding the largest workspace file"}}}
 {"kind":"event","event":{"kind":"subagent_started","subagent":"tame-alpaca","text":"Find the config loader","id":"session-of-tame-alpaca","state":{"choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"workspace":"/workspace","intent":"Finding where the config loads"}}}
 {"kind":"event","event":{"rendering_kind":"subagent_send","render":"tame-adder","mentions":["subagent:tame-adder"],"reports_status":true,"kind":"tool_call_request","id":"toolu_2","name":"subagent","arguments":"{\"action\":\"send\",\"name\":\"tame-adder\",\"message\":\"Also say how big it is\"}"}}
@@ -13,7 +13,7 @@
 {"kind":"event","event":{"kind":"model_message","text":"Both are working."}}
 {"kind":"item","payload":{"role":"user","content":"start two subagents and steer them while they run"}}
 {"kind":"item","payload":{"id":"call-item-15","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Find the largest file\",\"intent\":\"Finding the largest workspace file\"},{\"prompt\":\"Find the config loader\",\"intent\":\"Finding where the config loads\"}]}"}}
-{"kind":"item","payload":{"type":"function_call_output","call_id":"toolu_1","output":"started tame-adder, tame-alpaca; 2 of at most 5 subagents now running"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"toolu_1","output":"started tame-adder, tame-alpaca; 2/5 subagents running"}}
 {"kind":"item","payload":{"id":"call-item-16","type":"function_call","call_id":"toolu_2","name":"subagent","arguments":"{\"action\":\"send\",\"name\":\"tame-adder\",\"message\":\"Also say how big it is\"}"}}
 {"kind":"item","payload":{"type":"function_call_output","call_id":"toolu_2","output":"queued for tame-adder, which reads it once its current step finishes"}}
 {"kind":"item","payload":{"id":"call-item-17","type":"function_call","call_id":"toolu_3","name":"subagent","arguments":"{\"action\":\"send\",\"name\":\"tame-alpaca\",\"message\":\"Also say when it loads\"}"}}

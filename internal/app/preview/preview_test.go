@@ -63,7 +63,7 @@ func conversation() []agent.Event {
 		},
 		{
 			Kind: agent.ToolCallResultEvent, ID: "call-3", Name: "subagent", Status: agent.SuccessStatus,
-			Text: "started tame-adder, tame-alpaca; 2 of at most 5 subagents now running",
+			Text: "started tame-adder, tame-alpaca; 2/5 subagents running",
 		},
 	}
 }

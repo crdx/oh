@@ -2,11 +2,11 @@
 {"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"ask a subagent to find the config loader"}}
 {"kind":"event","event":{"rendering_kind":"subagent_start","render":"1 subagent","intent":"Finding where the config loads","reports_status":true,"kind":"tool_call_request","id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Find the config loader\",\"intent\":\"Finding where the config loads\",\"workspace\":\"/workspace/internal\"}]}"}}
-{"kind":"event","event":{"kind":"tool_call_result","text":"started tame-adder; 1 of at most 5 subagents now running","id":"toolu_1","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":56}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"started tame-adder; 1/5 subagents running","id":"toolu_1","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":41}}}
 {"kind":"event","event":{"kind":"model_message","text":"A subagent is looking in internal."}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"ask a subagent to find the config loader"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"subagent","input":{"action":"start","subagents":[{"prompt":"Find the config loader","intent":"Finding where the config loads","workspace":"/workspace/internal"}]}}]}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"started tame-adder; 1 of at most 5 subagents now running"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"started tame-adder; 1/5 subagents running"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"A subagent is looking in internal."}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"subagent_started","subagent":"tame-adder","text":"Find the config loader","id":"session-of-tame-adder","state":{"choice":{"provider":"anthropic","id":"claude-opus-5","name":"Claude Opus 5"},"workspace":"/workspace/internal","intent":"Finding where the config loads"}}}

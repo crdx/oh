@@ -4,7 +4,7 @@
 {"kind":"event","event":{"rendering_kind":"job_start","render":"check","continuation":[{"kind":"bash","render":"just check","emphasis":{"kind":"syntax","value":"bash"},"show_output":true}],"intent":"Checking the whole tree","introduces":"check","reports_status":true,"kind":"tool_call_request","id":"toolu_1","name":"job","arguments":"{\"action\":\"start\",\"name\":\"check\",\"command\":\"just check\",\"intent\":\"Checking the whole tree\"}"}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"check: running for 0s","id":"toolu_1","name":"job","status":"success","stats":{"kind":"output","lines":1,"bytes":21}}}
 {"kind":"event","event":{"rendering_kind":"subagent_start","render":"1 subagent","intent":"Finding where the parser lives","reports_status":true,"kind":"tool_call_request","id":"toolu_2","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Find the parser\",\"intent\":\"Finding where the parser lives\"}]}"}}
-{"kind":"event","event":{"kind":"tool_call_result","text":"started tame-adder; 1 of at most 5 subagents now running","id":"toolu_2","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":56}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"started tame-adder; 1/5 subagents running","id":"toolu_2","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":41}}}
 {"kind":"event","event":{"kind":"subagent_started","subagent":"tame-adder","text":"Find the parser","id":"session-of-tame-adder","state":{"choice":{"provider":"anthropic","id":"claude-opus-5","name":"Claude Opus 5"},"workspace":"/workspace","intent":"Finding where the parser lives"}}}
 {"kind":"event","event":{"kind":"subagent_finished","subagent":"tame-adder","text":"The parser is in parse.go.","name":"done","status":"success","state":{"usage":{}}}}
 {"kind":"event","event":{"render":"docs","mentions":["docs","subagent:docs"],"kind":"tool_call_request","id":"toolu_3","name":"wait","arguments":"{\"names\":[\"docs\"]}"}}
@@ -18,7 +18,7 @@
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"job","input":{"action":"start","name":"check","command":"just check","intent":"Checking the whole tree"}}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"check: running for 0s"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_2","name":"subagent","input":{"action":"start","subagents":[{"prompt":"Find the parser","intent":"Finding where the parser lives"}]}}]}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_2","content":"started tame-adder; 1 of at most 5 subagents now running"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_2","content":"started tame-adder; 1/5 subagents running"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_3","name":"wait","input":{"names":["docs"]}}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_3","content":"nothing is named docs","is_error":true}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_4","name":"wait","input":{"names":["job:check","tame-adder"]}}]}}

@@ -3,7 +3,7 @@
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"start a subagent and keep working"}}
 {"kind":"event","event":{"rendering_kind":"subagent_start","render":"1 subagent","intent":"Finding where the parser lives","reports_status":true,"kind":"tool_call_request","id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Find the parser\",\"intent\":\"Finding where the parser lives\"}]}"}}
-{"kind":"event","event":{"kind":"tool_call_result","text":"started tame-adder; 1 of at most 5 subagents now running","id":"toolu_1","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":56}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"started tame-adder; 1/5 subagents running","id":"toolu_1","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":41}}}
 {"kind":"event","event":{"render":"probe","kind":"tool_call_request","id":"toolu_2","name":"probe","arguments":"{}"}}
 {"kind":"event","event":{"kind":"state_change","id":"toolu_2","state":1}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"first probe","id":"toolu_2","name":"probe","status":"success","stats":{"kind":"output","lines":1,"bytes":11}}}
@@ -16,7 +16,7 @@
 {"kind":"event","event":{"kind":"model_message","text":"The subagent found the parser in parse.go while I probed."}}
 {"kind":"item","payload":{"role":"user","content":"start a subagent and keep working"}}
 {"kind":"item","payload":{"id":"call-item-12","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Find the parser\",\"intent\":\"Finding where the parser lives\"}]}"}}
-{"kind":"item","payload":{"type":"function_call_output","call_id":"toolu_1","output":"started tame-adder; 1 of at most 5 subagents now running"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"toolu_1","output":"started tame-adder; 1/5 subagents running"}}
 {"kind":"item","payload":{"id":"call-item-13","type":"function_call","call_id":"toolu_2","name":"probe","arguments":"{}"}}
 {"kind":"item","payload":{"type":"function_call_output","call_id":"toolu_2","output":"first probe"}}
 {"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"subagent\"\u003e\nSubagent tame-adder finished:\n\ntame-adder done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The parser is in parse.go.\n\u003c/codex_internal_context\u003e"}}

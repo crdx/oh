@@ -2,7 +2,7 @@
 {"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"start a long subagent and wait for it"}}
 {"kind":"event","event":{"rendering_kind":"subagent_start","render":"1 subagent","intent":"Watching the build until stopped","reports_status":true,"kind":"tool_call_request","id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Watch the build forever\",\"intent\":\"Watching the build until stopped\"}]}"}}
-{"kind":"event","event":{"kind":"tool_call_result","text":"started tame-adder; 1 of at most 5 subagents now running","id":"toolu_1","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":56}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"started tame-adder; 1/5 subagents running","id":"toolu_1","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":41}}}
 {"kind":"event","event":{"kind":"subagent_started","subagent":"tame-adder","text":"Watch the build forever","id":"session-of-tame-adder","state":{"choice":{"provider":"anthropic","id":"claude-opus-5","name":"Claude Opus 5"},"workspace":"/workspace","intent":"Watching the build until stopped"}}}
 {"kind":"event","event":{"render":"tame-adder","mentions":["subagent:tame-adder"],"kind":"tool_call_request","id":"toolu_2","name":"wait","arguments":"{\"names\":[\"tame-adder\"]}"}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"tame-adder: running (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that)\n\nnote: the user sent a message, so the wait ended early, and tame-adder is still running.","id":"toolu_2","name":"wait","status":"success","stats":{"kind":"output","lines":3,"bytes":257}}}
@@ -12,7 +12,7 @@
 {"kind":"event","event":{"kind":"model_message","text":"Stopped waiting for your message."}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"start a long subagent and wait for it"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"subagent","input":{"action":"start","subagents":[{"prompt":"Watch the build forever","intent":"Watching the build until stopped"}]}}]}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"started tame-adder; 1 of at most 5 subagents now running"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"started tame-adder; 1/5 subagents running"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_2","name":"wait","input":{"names":["tame-adder"]}}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_2","content":"tame-adder: running (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that)\n\nnote: the user sent a message, so the wait ended early, and tame-adder is still running."}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"never mind that, look at this instead"}]}}

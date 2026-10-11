@@ -3,7 +3,7 @@
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"ask two subagents and read the first"}}
 {"kind":"event","event":{"rendering_kind":"subagent_start","render":"2 subagents · Finding where the config loads, Finding where the parser lives","reports_status":true,"kind":"tool_call_request","id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Find the config loader\",\"intent\":\"Finding where the config loads\"},{\"prompt\":\"Find the parser\",\"intent\":\"Finding where the parser lives\"}]}"}}
-{"kind":"event","event":{"kind":"tool_call_result","text":"started tame-adder, tame-alpaca; 2 of at most 5 subagents now running","id":"toolu_1","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":69}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"started tame-adder, tame-alpaca; 2/5 subagents running","id":"toolu_1","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":54}}}
 {"kind":"event","event":{"kind":"subagent_started","subagent":"tame-adder","text":"Find the config loader","id":"session-of-tame-adder","state":{"choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"workspace":"/workspace","intent":"Finding where the config loads"}}}
 {"kind":"event","event":{"kind":"subagent_started","subagent":"tame-alpaca","text":"Find the parser","id":"session-of-tame-alpaca","state":{"choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"workspace":"/workspace","intent":"Finding where the parser lives"}}}
 {"kind":"event","event":{"kind":"subagent_finished","subagent":"tame-adder","text":"The config loader is in config.go.","name":"done","status":"success","state":{"usage":{}}}}
@@ -13,7 +13,7 @@
 {"kind":"event","event":{"kind":"model_message","text":"The loader is in config.go; the parser report will follow."}}
 {"kind":"item","payload":{"role":"user","content":"ask two subagents and read the first"}}
 {"kind":"item","payload":{"id":"call-item-51","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Find the config loader\",\"intent\":\"Finding where the config loads\"},{\"prompt\":\"Find the parser\",\"intent\":\"Finding where the parser lives\"}]}"}}
-{"kind":"item","payload":{"type":"function_call_output","call_id":"toolu_1","output":"started tame-adder, tame-alpaca; 2 of at most 5 subagents now running"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"toolu_1","output":"started tame-adder, tame-alpaca; 2/5 subagents running"}}
 {"kind":"item","payload":{"id":"call-item-52","type":"function_call","call_id":"toolu_2","name":"subagent","arguments":"{\"action\":\"output\",\"names\":[\"tame-adder\"]}"}}
 {"kind":"item","payload":{"type":"function_call_output","call_id":"toolu_2","output":"tame-adder: done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that)\nconfinement: the harness let it write only its own scratch and kept it off the host network\njournal: /state/sessions/tame-impala/subagents/tame-adder/session.jsonl\nThe config loader is in config.go."}}
 {"kind":"item","payload":{"id":"message-53","type":"message","role":"assistant","content":[{"type":"output_text","text":"The loader is in config.go; the parser report will follow."}]}}

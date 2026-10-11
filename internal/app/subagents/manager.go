@@ -1166,5 +1166,5 @@ func (self *Manager) attestation(name string) string {
 func (self *Manager) runningAgainstLimit() string {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
-	return fmt.Sprintf("%d of at most %d subagents now running", self.liveCount(), self.rotation.Concurrency)
+	return fmt.Sprintf("%d/%d subagents running", self.liveCount(), self.rotation.Concurrency)
 }

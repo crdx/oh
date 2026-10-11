@@ -3,7 +3,7 @@
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"exercise every subagent action"}}
 {"kind":"event","event":{"rendering_kind":"subagent_start","render":"1 subagent","intent":"Watching the build until stopped","reports_status":true,"kind":"tool_call_request","id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Watch the build forever\",\"intent\":\"Watching the build until stopped\"}]}"}}
-{"kind":"event","event":{"kind":"tool_call_result","text":"started tame-adder; 1 of at most 5 subagents now running","id":"toolu_1","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":56}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"started tame-adder; 1/5 subagents running","id":"toolu_1","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":41}}}
 {"kind":"event","event":{"kind":"subagent_started","subagent":"tame-adder","text":"Watch the build forever","id":"session-of-tame-adder","state":{"choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"workspace":"/workspace","intent":"Watching the build until stopped"}}}
 {"kind":"event","event":{"rendering_kind":"subagent_list","render":"subagents","kind":"tool_call_request","id":"toolu_2","name":"subagent","arguments":"{\"action\":\"list\"}"}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"tame-adder: running","id":"toolu_2","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":19}}}
@@ -36,7 +36,7 @@
 {"kind":"event","event":{"kind":"model_message","text":"Every action answered."}}
 {"kind":"item","payload":{"role":"user","content":"exercise every subagent action"}}
 {"kind":"item","payload":{"id":"call-item-26","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Watch the build forever\",\"intent\":\"Watching the build until stopped\"}]}"}}
-{"kind":"item","payload":{"type":"function_call_output","call_id":"toolu_1","output":"started tame-adder; 1 of at most 5 subagents now running"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"toolu_1","output":"started tame-adder; 1/5 subagents running"}}
 {"kind":"item","payload":{"id":"call-item-27","type":"function_call","call_id":"toolu_2","name":"subagent","arguments":"{\"action\":\"list\"}"}}
 {"kind":"item","payload":{"type":"function_call_output","call_id":"toolu_2","output":"tame-adder: running"}}
 {"kind":"item","payload":{"id":"call-item-28","type":"function_call","call_id":"toolu_3","name":"subagent","arguments":"{\"action\":\"status\",\"names\":[]}"}}
