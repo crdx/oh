@@ -14,7 +14,6 @@
 - "session.jsonl": the journal (JSONL), the single source of truth
 - "meta.json": the listing entry (name, title, timestamps, message count)
 - "chat.md": the readable transcript
-- "wire.http.zst": raw traffic between the harness and the model endpoint; read it with zstdcat or zstdgrep
 - User settings: /config/config.toml. User instructions: /config/SYSTEM.md
 - A session name given without context means: read that session's files
 - A file path in a user message can start with "@", which is not part of the path

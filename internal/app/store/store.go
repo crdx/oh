@@ -40,6 +40,7 @@ type Meta struct {
 	Conditions            *conditions.Conditions `json:"conditions,omitempty"`
 	Environment           *environment.Snapshot  `json:"environment,omitempty"`
 	Yolo                  bool                   `json:"yolo,omitempty"`
+	ShouldSkipWire        bool                   `json:"skip_wire,omitempty"`
 }
 
 func (self Meta) Prices() *agent.TokenPrices {
@@ -150,7 +151,7 @@ func create(
 		directory:                directory,
 		meta:                     meta,
 		transcriptLoggingEnabled: true,
-		wireRecordingEnabled:     true,
+		wireRecordingEnabled:     !meta.ShouldSkipWire,
 	}, nil
 }
 
@@ -173,7 +174,7 @@ func Open(directory string, name string) (*Writer, error) {
 		directory:                directory,
 		meta:                     meta,
 		transcriptLoggingEnabled: true,
-		wireRecordingEnabled:     true,
+		wireRecordingEnabled:     !meta.ShouldSkipWire,
 	}
 	writer.startRecorders()
 	return writer, nil
@@ -209,6 +210,12 @@ func (self *Writer) CompleteTurn(summary session.TurnSummary) error {
 func (self *Writer) Name() string { return self.innerWriter.Name() }
 
 func (self *Writer) ID() string { return self.innerWriter.ID() }
+
+func (self *Writer) RecordsWire() bool {
+	self.writerMutex.Lock()
+	defer self.writerMutex.Unlock()
+	return !self.meta.ShouldSkipWire
+}
 
 func (self *Writer) SetMeta(meta Meta) error {
 	journalMeta, data, err := encodeMeta(meta)

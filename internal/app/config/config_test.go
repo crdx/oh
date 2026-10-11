@@ -1604,6 +1604,9 @@ func TestNothingIsDebuggedByDefault(t *testing.T) {
 	if config.Debug.ShouldProfileHeap {
 		t.Error("expected no heap profile by default")
 	}
+	if config.Debug.ShouldRecordWire {
+		t.Error("expected no wire transcript by default")
+	}
 }
 
 func TestTheDebugSettingsAreRead(t *testing.T) {
@@ -1612,6 +1615,7 @@ func TestTheDebugSettingsAreRead(t *testing.T) {
 		stalls = true
 		cpu_profile = true
 		heap_profile = true
+		wire = true
 	`)
 
 	if !config.Debug.ShouldRecordStalls {
@@ -1622,6 +1626,9 @@ func TestTheDebugSettingsAreRead(t *testing.T) {
 	}
 	if !config.Debug.ShouldProfileHeap {
 		t.Error("expected the heap profiled")
+	}
+	if !config.Debug.ShouldRecordWire {
+		t.Error("expected the wire recorded")
 	}
 	if reports := config.UnknownSettings(); len(reports) > 0 {
 		t.Errorf("got %v", reports)

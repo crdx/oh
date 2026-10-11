@@ -2,6 +2,10 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+### Changes
+
+- Record `wire.http.zst` only when `[debug] wire = true` is set as a session is created
+
 ### Performance
 
 - Stop long replies over Chat Completions allocating gigabytes as they stream

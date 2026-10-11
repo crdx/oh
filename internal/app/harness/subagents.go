@@ -43,6 +43,7 @@ type childOptions struct {
 	runner          sandbox.Runner
 	ensurePersisted func() error
 	isYolo          bool
+	recordsWire     bool
 	parentFiles     *file.Root
 	parentWritable  func() []string
 	parentCaps      func() caps.Set
@@ -81,8 +82,9 @@ func prepareChildManager(options childOptions, choices []model.Choice, seenModel
 		Choose:      rotation.Choose,
 		Concurrency: rotation.Concurrency,
 		Meta: store.Meta{
-			WorkspaceDir: options.workspace.GetDir(),
-			Yolo:         options.isYolo,
+			WorkspaceDir:   options.workspace.GetDir(),
+			Yolo:           options.isYolo,
+			ShouldSkipWire: !options.recordsWire,
 		},
 		Factory:      newChildFactory(options),
 		PickName:     rand.IntN,

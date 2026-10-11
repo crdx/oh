@@ -1030,3 +1030,71 @@ func TestAStaleListingOverAnOlderJournalIsLeftForTheMigration(t *testing.T) {
 		t.Error("expected no listing to be written from a journal nobody has migrated")
 	}
 }
+
+func TestASessionCreatedWithoutTheWireNeverRecordsIt(t *testing.T) {
+	directory := t.TempDir()
+	log, err := store.Create(directory, store.Meta{
+		Model:          "model",
+		Effort:         "high",
+		Provider:       "codex",
+		WorkspaceDir:   "/workspace",
+		ShouldSkipWire: true,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if log.RecordsWire() {
+		t.Error("expected a session created without the wire to say it records none")
+	}
+
+	request := req.Request{StartedAt: time.Now(), Method: "POST", URL: "https://example.com", Protocol: "HTTP/1.1"}
+	if err := log.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "hello"}); err != nil {
+		t.Fatal(err)
+	}
+	if exchange := log.Observer().Start(request); exchange != nil {
+		t.Error("expected no exchange recorded")
+	}
+	if err := log.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	resumed, err := store.Open(directory, log.Name())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resumed.RecordsWire() {
+		t.Error("expected a resumed session to keep the choice it was created with")
+	}
+	if err := resumed.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "again"}); err != nil {
+		t.Fatal(err)
+	}
+	if exchange := resumed.Observer().Start(request); exchange != nil {
+		t.Error("expected no exchange recorded after resuming")
+	}
+	if err := resumed.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := os.Stat(filepath.Join(directory, log.Name(), "wire.http.zst")); !os.IsNotExist(err) {
+		t.Errorf("expected no wire transcript: %v", err)
+	}
+	if _, err := os.Stat(filepath.Join(directory, log.Name(), "chat.md")); err != nil {
+		t.Errorf("expected the readable transcript still kept: %v", err)
+	}
+}
+
+func TestASessionCreatedWithTheWireKeepsRecordingItWhenResumed(t *testing.T) {
+	directory := t.TempDir()
+	id := write(t, directory)
+
+	resumed, err := store.Open(directory, id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !resumed.RecordsWire() {
+		t.Error("expected a session created with the wire to keep recording it")
+	}
+	if err := resumed.Close(); err != nil {
+		t.Fatal(err)
+	}
+}

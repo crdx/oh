@@ -5728,6 +5728,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"context-codex":            {".prompt"},
 		"context-simulation":       {".prompt"},
 		"context-yolo":             {".prompt"},
+		"context-wire":             {".prompt"},
 		"host-command":             {".ansi", ".screen"},
 		"host-command-running":     {".ansi", ".screen"},
 		"inputblock":               {".ansi", ".screen"},
@@ -8819,6 +8820,7 @@ type promptGolden struct {
 	isLookupGranted     bool
 	hasCustomTool       bool
 	hasProjectSkillOnly bool
+	recordsWire         bool
 	notes               agent.NoteFormat
 }
 
@@ -8843,6 +8845,7 @@ func TestGoldenTheCompleteSystemPromptMatchesTheGolden(t *testing.T) {
 		"context-custom-tool":   {hasCustomTool: true},
 		"context-project-skill": {hasProjectSkillOnly: true},
 		"context-codex":         {notes: codex.Notes},
+		"context-wire":          {recordsWire: true},
 		"context-repository-print": {
 			isRepository: true,
 			isPrinting:   true,
@@ -8973,6 +8976,7 @@ func compareSystemPromptWithGolden(t *testing.T, name string, shape promptGolden
 		NetworkGranted: currentCaps.Has(caps.Network),
 		Yolo:           shape.isYolo,
 		Notes:          shape.notes,
+		RecordsWire:    shape.recordsWire,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -24915,4 +24919,113 @@ func TestAGatedActionWaitsAsLongAsItsPermissionSays(t *testing.T) {
 			t.Errorf("waited %v, want the configured 90s", waited)
 		}
 	})
+}
+
+func TestASessionKeepsTheWireChoiceItWasCreatedWith(t *testing.T) {
+	binary := buildTestBinary(t)
+
+	for _, test := range []struct {
+		name          string
+		isWireOn      bool
+		isWireOnLater bool
+	}{
+		{name: "recorded then turned off", isWireOn: true, isWireOnLater: false},
+		{name: "unrecorded then turned on", isWireOn: false, isWireOnLater: true},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			endpoint := sim.New(&sim.Scenario{Model: "fake", Loop: true, Turns: []sim.Turn{{Say: "Done."}}})
+			var bodyMutex sync.Mutex
+			var bodies []string
+			server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+				if strings.HasSuffix(request.URL.Path, "/messages") {
+					raw, _ := io.ReadAll(request.Body)
+					bodyMutex.Lock()
+					bodies = append(bodies, string(raw))
+					bodyMutex.Unlock()
+					request.Body = io.NopCloser(bytes.NewReader(raw))
+				}
+				endpoint.ServeHTTP(writer, request)
+			}))
+			t.Cleanup(server.Close)
+
+			stateDirectory := t.TempDir()
+			configDirectory := t.TempDir()
+			configPath := filepath.Join(configDirectory, "org.crdx", "oh", "config.toml")
+			if err := os.MkdirAll(filepath.Dir(configPath), 0o700); err != nil {
+				t.Fatal(err)
+			}
+			writeConfig := func(isWireOn bool) {
+				body := fmt.Sprintf("version = %d\n\n[debug]\nwire = %t\n", config.Format, isWireOn)
+				if err := os.WriteFile(configPath, []byte(body), 0o600); err != nil {
+					t.Fatal(err)
+				}
+			}
+			environment := append(
+				os.Environ(),
+				"HOME="+t.TempDir(),
+				"XDG_CONFIG_HOME="+configDirectory,
+				"XDG_STATE_HOME="+stateDirectory,
+				"OH_STATE_DIR=",
+				backend.EndpointVariable+"="+endpoint.Addresses(server.URL)[sim.Messages],
+			)
+			workspace := reachableWorkspaceDir(t)
+			sessionsDirectory := filepath.Join(stateDirectory, "org.crdx", "oh", "sessions")
+
+			writeConfig(test.isWireOn)
+			runTestBinary(t, binary, workspace, environment, "-p", "--yolo", "-m", "anthropic/fake", "say something")
+			entries, err := os.ReadDir(sessionsDirectory)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var sessionName string
+			for _, entry := range entries {
+				if entry.IsDir() {
+					sessionName = entry.Name()
+				}
+			}
+			if sessionName == "" {
+				t.Fatal("expected a stored session")
+			}
+			wirePath := filepath.Join(sessionsDirectory, sessionName, "wire.http.zst")
+			firstSize := fileSizeOrZero(t, wirePath)
+			if isRecorded := firstSize > 0; isRecorded != test.isWireOn {
+				t.Fatalf("expected the wire recorded to be %t, got a transcript of %d bytes", test.isWireOn, firstSize)
+			}
+
+			writeConfig(test.isWireOnLater)
+			runTestBinary(t, binary, workspace, environment, "-p", "--yolo", "-r", sessionName, "say it again")
+			secondSize := fileSizeOrZero(t, wirePath)
+			if test.isWireOn && secondSize <= firstSize {
+				t.Errorf("expected the resumed session to keep recording, got %d bytes then %d", firstSize, secondSize)
+			}
+			if !test.isWireOn && secondSize != 0 {
+				t.Errorf("expected the resumed session to keep recording nothing, got %d bytes", secondSize)
+			}
+
+			bodyMutex.Lock()
+			captured := slices.Clone(bodies)
+			bodyMutex.Unlock()
+			if len(captured) != 2 {
+				t.Fatalf("got %d conversation requests, want one for each run", len(captured))
+			}
+			for i, body := range captured {
+				if isTold := strings.Contains(body, `\"wire.http.zst\"`); isTold != test.isWireOn {
+					t.Errorf("request %d: expected the prompt naming the wire transcript to be %t", i, test.isWireOn)
+				}
+			}
+		})
+	}
+}
+
+func fileSizeOrZero(t *testing.T, path string) int64 {
+	t.Helper()
+
+	info, err := os.Stat(path)
+	if os.IsNotExist(err) {
+		return 0
+	}
+	if err != nil {
+		t.Fatal(err)
+	}
+	return info.Size()
 }

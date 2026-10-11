@@ -982,13 +982,14 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	}
 
 	meta := store.Meta{
-		Model:        selection.Model,
-		WorkspaceDir: workspaceDir,
-		Provider:     selection.Provider,
-		Effort:       selection.Effort,
-		IsFast:       selection.IsFast,
-		ModelChoice:  &choice,
-		Yolo:         args.Yolo,
+		Model:          selection.Model,
+		WorkspaceDir:   workspaceDir,
+		Provider:       selection.Provider,
+		Effort:         selection.Effort,
+		IsFast:         selection.IsFast,
+		ModelChoice:    &choice,
+		Yolo:           args.Yolo,
+		ShouldSkipWire: !settings.Debug.ShouldRecordWire,
 	}
 
 	log, err := sessions.OpenWriter(sessionsDir, resumedSession, meta)
@@ -1136,6 +1137,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 			GroupStatus:    mode.Groups(),
 			Yolo:           args.Yolo,
 			Notes:          agent.NoteFormatOf(client.Client),
+			RecordsWire:    log.RecordsWire(),
 		})
 		if err != nil {
 			return "", err
@@ -1191,6 +1193,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		scratchParent:   tmpDir,
 		runner:          sandboxRunner,
 		isYolo:          args.Yolo,
+		recordsWire:     log.RecordsWire(),
 		ensurePersisted: log.EnsurePersisted,
 		parentFiles:     files,
 		parentCaps:      mode.Current,

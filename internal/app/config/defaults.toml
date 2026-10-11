@@ -149,6 +149,7 @@ wait_tool = false
 stalls = false
 cpu_profile = false
 heap_profile = false
+wire = false
 
 [subagent]
 concurrency = 5

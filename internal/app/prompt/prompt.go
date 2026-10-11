@@ -70,8 +70,8 @@ var (
 		- "session.jsonl": the journal (JSONL), the single source of truth
 		- "meta.json": the listing entry (name, title, timestamps, message count)
 		- "chat.md": the readable transcript
-		- "wire.http.zst": raw traffic between the harness and the model endpoint; read it with zstdcat or zstdgrep
-		- User settings: {{ .ConfigFile }}. User instructions: {{ .GlobalPath }}
+		{{ if .RecordsWire }}- "wire.http.zst": raw traffic between the harness and the model endpoint; read it with zstdcat or zstdgrep
+		{{ end }}- User settings: {{ .ConfigFile }}. User instructions: {{ .GlobalPath }}
 		- A session name given without context means: read that session's files
 		- A file path in a user message can start with "@", which is not part of the path
 
@@ -156,6 +156,7 @@ type harnessContextTemplateData struct {
 	GroupStatus       caps.GroupStatus
 	Yolo              bool
 	NoteRule          string
+	RecordsWire       bool
 }
 
 func ProjectContextPaths(workspace *work.Space) []string {
@@ -194,6 +195,7 @@ type Config struct {
 	GroupStatus    caps.GroupStatus
 	Yolo           bool
 	Notes          agent.NoteFormat
+	RecordsWire    bool
 }
 
 func Load(config Config) (string, []File, error) {
@@ -311,6 +313,7 @@ func harnessContext(config Config) string {
 		GroupStatus:       config.GroupStatus,
 		Yolo:              config.Yolo,
 		NoteRule:          noteRule(config.Notes),
+		RecordsWire:       config.RecordsWire,
 	}
 
 	var renderedText strings.Builder
