@@ -23493,11 +23493,11 @@ func TestGoldenADoubleReturnFlushesPendingNoticesWithoutTheNudge(t *testing.T) {
 		"7d a restored job flushed after an expired pair":  drawnAtWithDelays(restoreOneJob, 0, time.Second, 0),
 		"8 a stopped job standing":                         drawnAt(stopAJobAndGrantWritesBack, 0),
 		"9 a stopped job flushed":                          drawnAt(stopAJobAndGrantWritesBack, 2),
-		"subagent 1 restored and standing":               drawnAt(restoreSubagents("tame-adder"), 0),
-		"subagent 2 restored after one return":           drawnAt(restoreSubagents("tame-adder"), 1),
-		"subagent 3 restored and flushed":                drawnAt(restoreSubagents("tame-adder"), 2),
-		"subagents 4 restored together and standing":     drawnAt(restoreSubagents("tame-adder", "tame-alpaca"), 0),
-		"subagents 5 restored together and flushed":      drawnAt(restoreSubagents("tame-adder", "tame-alpaca"), 2),
+		"subagent 1 restored and standing":                 drawnAt(restoreSubagents("tame-adder"), 0),
+		"subagent 2 restored after one return":             drawnAt(restoreSubagents("tame-adder"), 1),
+		"subagent 3 restored and flushed":                  drawnAt(restoreSubagents("tame-adder"), 2),
+		"subagents 4 restored together and standing":       drawnAt(restoreSubagents("tame-adder", "tame-alpaca"), 0),
+		"subagents 5 restored together and flushed":        drawnAt(restoreSubagents("tame-adder", "tame-alpaca"), 2),
 	}
 
 	compareWithGolden(t, "pending-notices", ".ansi", passes)
