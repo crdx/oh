@@ -722,7 +722,7 @@ func sortedEntries(entries []Entry) []Entry {
 
 func appendEntries(entries []Entry, directory string, names []string, isArchived bool) []Entry {
 	for _, name := range names {
-		head, err := readHeadSummary(directory, name)
+		head, err := HeadSummary(directory, name)
 		if err != nil {
 			continue
 		}
@@ -810,7 +810,7 @@ func ListNames(directory string) ([]string, []string, error) {
 	return storedNames, archivedNames, nil
 }
 
-func readHeadSummary(directory string, name string) (Line, error) {
+func HeadSummary(directory string, name string) (Line, error) {
 	file, err := OpenJournal(directory, name)
 	if err != nil {
 		return Line{}, err
