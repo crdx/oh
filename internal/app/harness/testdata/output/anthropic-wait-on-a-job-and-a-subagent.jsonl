@@ -27,13 +27,10 @@
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_5","content":"check: stopped after 0s, exit(143), note: the shell reports that a process was killed by SIGTERM."}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The subagent found the parser; the check is stopped."}]}}
 {"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"subagent_completion_submitted","text":"Subagent tame-adder finished:\n\ntame-adder done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The parser is in parse.go.","name":"tame-adder","state":{"reports":[{"name":"tame-adder","state":"done","answer":"The parser is in parse.go."}]}}}
 {"kind":"event","event":{"kind":"user_message","text":"carry on"}}
 {"kind":"event","event":{"kind":"model_message","text":"Carrying on."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nSubagent tame-adder finished:\n\ntame-adder done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The parser is in parse.go.\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"carry on"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Carrying on."}]}}
-{"kind":"turn_completion","turn":{}}
-{"kind":"event","event":{"kind":"subagent_completion_submitted","text":"Subagent tame-adder finished:\n\ntame-adder done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The parser is in parse.go.","name":"tame-adder","state":{"reports":[{"name":"tame-adder","state":"done","answer":"The parser is in parse.go."}]}}}
-{"kind":"event","event":{"kind":"model_message","text":"That is the parser report I already had."}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nSubagent tame-adder finished:\n\ntame-adder done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The parser is in parse.go.\n\u003c/system-reminder\u003e"}]}}
-{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"That is the parser report I already had."}]}}
 {"kind":"turn_completion","turn":{}}

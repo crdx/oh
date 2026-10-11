@@ -44,14 +44,10 @@ Subagent tame-adder finished:
 tame-adder ended (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): parent session closed
 ```
 
-## Assistant · +0s
-
-The subagent ended with the last session.
-
 ## User · +0s
 
 carry on
 
 ## Assistant · +0s
 
-Carrying on.
+The subagent ended with the last session.

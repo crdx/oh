@@ -43,14 +43,6 @@ job: check [ok, 1 line, 97B, toolu_5]
 
 The subagent found the parser; the check is stopped.
 
-## User · +0s
-
-carry on
-
-## Assistant · +0s
-
-Carrying on.
-
 ## Subagent reports · +0s
 
 ```
@@ -59,6 +51,10 @@ Subagent tame-adder finished:
 tame-adder done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The parser is in parse.go.
 ```
 
+## User · +0s
+
+carry on
+
 ## Assistant · +0s
 
-That is the parser report I already had.
+Carrying on.

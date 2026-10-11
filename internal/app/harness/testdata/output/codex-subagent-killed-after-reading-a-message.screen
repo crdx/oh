@@ -15,12 +15,10 @@ It is working.
     Ended: parent process ended before the subagent completed.
 
 
-status all
-
-It ended after its first pass.
-
 
  carry on
 
 
-Carrying on.
+status all
+
+It ended after its first pass.

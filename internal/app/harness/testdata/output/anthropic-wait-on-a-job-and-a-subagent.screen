@@ -11,15 +11,13 @@ stop check (Checking the whole tree)
 The subagent found the parser; the check is stopped.
 
 
- carry on
-
-
-Carrying on.
-
-
  🐍 Subagent tame-adder interjects:
 
     The parser is in parse.go.
 
 
-That is the parser report I already had.
+
+ carry on
+
+
+Carrying on.

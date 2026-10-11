@@ -449,15 +449,6 @@ func (self *sessionGoldenChildren) hooks(t *testing.T, testHarness *App, turn se
 	return &sessionGoldenChildTurns{t: t, children: self, testHarness: testHarness, turn: turn}
 }
 
-func (self *sessionGoldenChildTurns) before() [][]TurnEvent {
-	if !self.turn.DeliverSubagentsBefore {
-		return nil
-	}
-	self.testHarness.currentTurn = Turn{}
-	self.testHarness.deliverChildCompletions()
-	return runQueuedSessionGoldenTurns(self.t, self.testHarness, "", nil)
-}
-
 func (self *sessionGoldenChildTurns) observe(update agent.Update) {
 	if update.Event == nil || update.Event.Kind != agent.ToolCallResultEvent {
 		return

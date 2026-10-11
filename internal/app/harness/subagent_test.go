@@ -82,6 +82,17 @@ func TestGoldenSubagentEventsDrawCompactlyAndReplay(t *testing.T) {
 			conversation.replay()
 			return drawn.String()
 		},
+		"restored pending": func() string {
+			var drawn bytes.Buffer
+			conversation := testConversation(t, &drawn)
+			conversation.screen = output.NewTerminalOfSize(&drawn, replayColumns, replayLines)
+			conversation.children.directory = t.TempDir()
+			conversation.recordedEvents = []agent.Event{finished("tame-adder", "The README says hello.")}
+			conversation.restoreChildren(conversation.recordedEvents)
+			conversation.replay()
+			conversation.refreshPendingMessages()
+			return drawn.String()
+		},
 	}
 	compareWithGolden(t, "subagent-timeline", ".ansi", passes)
 	compareWithGolden(t, "subagent-timeline", ".screen", shownPasses(t, passes))
@@ -168,6 +179,35 @@ func TestReadyChildrenJoinTheNextUserTurn(t *testing.T) {
 	}
 	if notices != 1 || questions != 1 || len(conversation.children.reportsDue) != 0 {
 		t.Fatalf("completion did not join the user turn: notices=%d questions=%d", notices, questions)
+	}
+}
+
+func TestARestoredSubagentReportWaitsForTheNextTurn(t *testing.T) {
+	var drawn bytes.Buffer
+	conversation := testConversation(t, &drawn)
+	conversation.children.directory = t.TempDir()
+	conversation.recordedEvents = []agent.Event{finished("tame-adder", "child answer")}
+	conversation.restoreChildren(conversation.recordedEvents)
+	conversation.deliverChildCompletions()
+
+	if conversation.currentTurn.Running() || len(conversation.children.reportsDue) != 0 {
+		t.Fatal("restoring a report started a turn or scheduled a wake-up")
+	}
+	if len(conversation.pendingNotices.items) != 1 || conversation.pendingNotices.items[0].state.Kind != subagentrecord.ReportsDelivered {
+		t.Fatalf("restored report was not pending: %+v", conversation.pendingNotices.items)
+	}
+	if len(conversation.recordedEvents) != 1 {
+		t.Fatal("pending report was recorded before being sent")
+	}
+	conversation.start("carry on")
+	for event := range conversation.currentTurn.Events() {
+		conversation.takeTurn(event)
+	}
+	conversation.finish()
+	if len(conversation.pendingNotices.items) != 0 || len(conversation.recordedEvents) < 2 ||
+		conversation.recordedEvents[1].Kind != subagentrecord.ReportsDelivered ||
+		!strings.Contains(conversation.recordedEvents[1].Text, "child answer") {
+		t.Fatalf("next turn did not submit the pending report: %+v", conversation.recordedEvents)
 	}
 }
 

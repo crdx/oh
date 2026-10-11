@@ -18305,7 +18305,6 @@ type sessionGoldenTurn struct {
 	ToggleAfterSubagentsSettle   string                  `toml:"toggle-after-subagents-settle"`
 	SettleSubagentsAfterResults  []int                   `toml:"settle-subagents-after-tool-results"`
 	TogglesAfterSubagentsSettle  []string                `toml:"toggles-after-subagents-settle"`
-	DeliverSubagentsBefore       bool                    `toml:"deliver-subagents-before-prompt"`
 }
 
 const forwardToolName = "forward"
@@ -20475,7 +20474,6 @@ func runSessionGoldenTurn(
 
 	var drawnTurnEvents []TurnEvent
 	childTurns := children.hooks(t, testHarness, turn)
-	settledTurns := childTurns.before()
 
 	var streamContext context.Context
 	var cancel context.CancelCauseFunc
@@ -20573,7 +20571,6 @@ func runSessionGoldenTurn(
 	testHarness.finish()
 
 	return slices.Concat(
-		settledTurns,
 		[][]TurnEvent{drawnTurnEvents},
 		runQueuedSessionGoldenTurns(t, testHarness, turn.ToggleDuringModeTurn, childTurns.observe),
 		childTurns.after(),
@@ -23453,6 +23450,16 @@ func TestGoldenADoubleReturnFlushesPendingNoticesWithoutTheNudge(t *testing.T) {
 		})
 		self.refreshPendingMessages()
 	}
+	restoreSubagents := func(names ...string) func(*App) {
+		return func(self *App) {
+			self.children.directory = t.TempDir()
+			for _, name := range names {
+				self.recordedEvents = append(self.recordedEvents, finished(name, "2+2 = 4"))
+			}
+			self.restoreChildren(self.recordedEvents)
+			self.refreshPendingMessages()
+		}
+	}
 	endOneJob := func(self *App) {
 		self.jobs = jobState{manager: jobs.New(nil)}
 		self.jobEnded(jobs.Conclusion{
@@ -23486,6 +23493,11 @@ func TestGoldenADoubleReturnFlushesPendingNoticesWithoutTheNudge(t *testing.T) {
 		"7d a restored job flushed after an expired pair":  drawnAtWithDelays(restoreOneJob, 0, time.Second, 0),
 		"8 a stopped job standing":                         drawnAt(stopAJobAndGrantWritesBack, 0),
 		"9 a stopped job flushed":                          drawnAt(stopAJobAndGrantWritesBack, 2),
+		"subagent 1 restored and standing":               drawnAt(restoreSubagents("tame-adder"), 0),
+		"subagent 2 restored after one return":           drawnAt(restoreSubagents("tame-adder"), 1),
+		"subagent 3 restored and flushed":                drawnAt(restoreSubagents("tame-adder"), 2),
+		"subagents 4 restored together and standing":     drawnAt(restoreSubagents("tame-adder", "tame-alpaca"), 0),
+		"subagents 5 restored together and flushed":      drawnAt(restoreSubagents("tame-adder", "tame-alpaca"), 2),
 	}
 
 	compareWithGolden(t, "pending-notices", ".ansi", passes)

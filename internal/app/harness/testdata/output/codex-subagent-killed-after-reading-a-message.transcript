@@ -56,6 +56,10 @@ Subagent tame-adder finished:
 tame-adder ended (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The first pass found nothing. (parent process ended before the subagent completed)
 ```
 
+## User · +0s
+
+carry on
+
 ## Tool calls · +0s
 
 ```
@@ -65,11 +69,3 @@ subagent: all [ok, 1 line, 112B, toolu_3]
 ## Assistant · +0s
 
 It ended after its first pass.
-
-## User · +0s
-
-carry on
-
-## Assistant · +0s
-
-Carrying on.

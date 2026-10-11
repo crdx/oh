@@ -18,16 +18,13 @@
 {"kind":"event","event":{"kind":"subagent_message_sent","subagent":"tame-adder","text":"Look closer"}}
 {"kind":"event","event":{"kind":"subagent_finished","subagent":"tame-adder","text":"The first pass found nothing.","failure":{"kind":"generic_error","message":"parent process ended before the subagent completed"},"name":"ended","status":"cancelled","state":{"usage":{"input_tokens":1000,"output_tokens":25,"cache":{"read_tokens":0}}}}}
 {"kind":"event","event":{"kind":"subagent_completion_submitted","text":"Subagent tame-adder finished:\n\ntame-adder ended (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The first pass found nothing. (parent process ended before the subagent completed)","name":"tame-adder","state":{"reports":[{"name":"tame-adder","state":"ended","answer":"The first pass found nothing.","failure":"parent process ended before the subagent completed"}]}}}
+{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
 {"kind":"event","event":{"rendering_kind":"subagent_status","render":"all","reports_status":true,"kind":"tool_call_request","id":"toolu_3","name":"subagent","arguments":"{\"action\":\"status\"}"}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"tame-adder: ended — parent process ended before the subagent completed (on codex/gpt-5.6-sol; 1Kt in, 25t out)","id":"toolu_3","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":112}}}
 {"kind":"event","event":{"kind":"model_message","text":"It ended after its first pass."}}
 {"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"subagent\"\u003e\nSubagent tame-adder finished:\n\ntame-adder ended (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The first pass found nothing. (parent process ended before the subagent completed)\n\u003c/codex_internal_context\u003e"}}
+{"kind":"item","payload":{"role":"user","content":"carry on"}}
 {"kind":"item","payload":{"id":"call-item-15","type":"function_call","call_id":"toolu_3","name":"subagent","arguments":"{\"action\":\"status\"}"}}
 {"kind":"item","payload":{"type":"function_call_output","call_id":"toolu_3","output":"tame-adder: ended — parent process ended before the subagent completed (on codex/gpt-5.6-sol; 1Kt in, 25t out)"}}
 {"kind":"item","payload":{"id":"message-16","type":"message","role":"assistant","content":[{"type":"output_text","text":"It ended after its first pass."}]}}
-{"kind":"turn_completion","turn":{}}
-{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
-{"kind":"event","event":{"kind":"model_message","text":"Carrying on."}}
-{"kind":"item","payload":{"role":"user","content":"carry on"}}
-{"kind":"item","payload":{"id":"message-17","type":"message","role":"assistant","content":[{"type":"output_text","text":"Carrying on."}]}}
 {"kind":"turn_completion","turn":{}}

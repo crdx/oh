@@ -13,12 +13,9 @@
 {"kind":"event","event":{"kind":"subagent_started","subagent":"tame-adder","text":"Watch the build forever","id":"session-of-tame-adder","state":{"choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol"},"workspace":"/workspace","intent":"Watching the build until stopped"}}}
 {"kind":"event","event":{"kind":"subagent_finished","subagent":"tame-adder","failure":{"kind":"generic_error","message":"parent session closed"},"name":"ended","status":"cancelled","state":{"usage":{}}}}
 {"kind":"event","event":{"kind":"subagent_completion_submitted","text":"Subagent tame-adder finished:\n\ntame-adder ended (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): parent session closed","name":"tame-adder","state":{"reports":[{"name":"tame-adder","state":"ended","failure":"parent session closed"}]}}}
+{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
 {"kind":"event","event":{"kind":"model_message","text":"The subagent ended with the last session."}}
 {"kind":"item","payload":{"role":"user","content":"\u003ccodex_internal_context source=\"subagent\"\u003e\nSubagent tame-adder finished:\n\ntame-adder ended (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): parent session closed\n\u003c/codex_internal_context\u003e"}}
-{"kind":"item","payload":{"id":"message-20","type":"message","role":"assistant","content":[{"type":"output_text","text":"The subagent ended with the last session."}]}}
-{"kind":"turn_completion","turn":{}}
-{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
-{"kind":"event","event":{"kind":"model_message","text":"Carrying on."}}
 {"kind":"item","payload":{"role":"user","content":"carry on"}}
-{"kind":"item","payload":{"id":"message-21","type":"message","role":"assistant","content":[{"type":"output_text","text":"Carrying on."}]}}
+{"kind":"item","payload":{"id":"message-20","type":"message","role":"assistant","content":[{"type":"output_text","text":"The subagent ended with the last session."}]}}
 {"kind":"turn_completion","turn":{}}

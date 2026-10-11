@@ -12,12 +12,9 @@
 {"kind":"event","event":{"kind":"subagent_started","subagent":"tame-adder","text":"Watch the build forever","id":"session-of-tame-adder","state":{"choice":{"provider":"anthropic","id":"claude-opus-5","name":"Claude Opus 5"},"workspace":"/workspace","intent":"Watching the build until stopped"}}}
 {"kind":"event","event":{"kind":"subagent_finished","subagent":"tame-adder","failure":{"kind":"generic_error","message":"parent session closed"},"name":"ended","status":"cancelled","state":{"usage":{}}}}
 {"kind":"event","event":{"kind":"subagent_completion_submitted","text":"Subagent tame-adder finished:\n\ntame-adder ended (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): parent session closed","name":"tame-adder","state":{"reports":[{"name":"tame-adder","state":"ended","failure":"parent session closed"}]}}}
+{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
 {"kind":"event","event":{"kind":"model_message","text":"The subagent ended with the last session."}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nSubagent tame-adder finished:\n\ntame-adder ended (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): parent session closed\n\u003c/system-reminder\u003e"}]}}
-{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The subagent ended with the last session."}]}}
-{"kind":"turn_completion","turn":{}}
-{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
-{"kind":"event","event":{"kind":"model_message","text":"Carrying on."}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"carry on"}]}}
-{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"Carrying on."}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The subagent ended with the last session."}]}}
 {"kind":"turn_completion","turn":{}}
