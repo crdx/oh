@@ -443,6 +443,66 @@ func sessionDefaults(selection model.Selection) model.Defaults {
 	return model.Defaults{Effort: model.Effort(selection.Effort), IsFast: selection.IsFast}
 }
 
+type sessionModelRequest struct {
+	requestedSelection   model.Selection
+	resumedSession       *store.Session
+	settings             config.Config
+	modelChoices         []model.Choice
+	seenModelsPath       string
+	modelCachePath       string
+	currency             money.Currency
+	isProviderAvailable  func(providerName string) bool
+	keyboard             *os.File
+	isSimulated          bool
+	isEndpointOverridden bool
+}
+
+func chooseSessionModel(request sessionModelRequest) (model.Selection, model.Choice, error) {
+	settings := request.settings
+	configuredModels, err := model.ParseRoundRobin(
+		request.modelChoices, configuredRotation(settings, request.isSimulated), settings.Defaults.ForSelections(),
+	)
+	if err != nil {
+		return model.Selection{}, model.Choice{}, fmt.Errorf("%s: %w", settings.Agent.Setting(), err)
+	}
+
+	selectionTime := time.Now()
+	selection, err := backend.ResolveAvailable(
+		request.requestedSelection,
+		sessions.ModelSelection(request.resumedSession),
+		configuredModels,
+		location.GetModelRoundRobinPath(),
+		func(candidate model.Selection) bool {
+			return usage.IsSelectionAvailable(
+				location.GetUsageCachePath(candidate.Provider, request.isEndpointOverridden),
+				candidate.Model,
+				selectionTime,
+			)
+		},
+	)
+	if err != nil {
+		startup.Wait(func() {
+			selection, err = model.ChooseWhenNoneSelected(
+				err,
+				request.modelCachePath,
+				request.currency,
+				request.isProviderAvailable,
+				request.keyboard,
+				os.Stdout,
+				settings.Defaults.ForSelections(),
+			)
+		})
+	}
+	if err != nil {
+		return model.Selection{}, model.Choice{}, err
+	}
+	choice, err := sessions.ModelChoice(request.resumedSession, request.modelChoices, request.seenModelsPath, selection)
+	if err != nil {
+		return model.Selection{}, model.Choice{}, err
+	}
+	return selection, choice, nil
+}
+
 func applyDefaultCaps(options *cli.Options, settings config.Config) error {
 	if options.WereCapsChosen {
 		return nil
@@ -854,41 +914,22 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		return "", fmt.Errorf("could not prepare the shell home: %w", err)
 	}
 
-	configuredModels, err := model.ParseRoundRobin(
-		modelChoices, configuredRotation(settings, isSimulated), settings.Defaults.ForSelections(),
-	)
-	if err != nil {
-		return "", fmt.Errorf("%s: %w", settings.Agent.Setting(), err)
-	}
-
-	selectionTime := time.Now()
-	selection, err := backend.ResolveAvailable(
-		args.Selection,
-		sessions.ModelSelection(resumedSession),
-		configuredModels,
-		location.GetModelRoundRobinPath(),
-		func(candidate model.Selection) bool {
-			return usage.IsSelectionAvailable(
-				location.GetUsageCachePath(candidate.Provider, endpointURL != ""),
-				candidate.Model,
-				selectionTime,
-			)
-		},
-	)
-	if err != nil {
-		startup.Wait(func() {
-			selection, err = model.ChooseWhenNoneSelected(
-				err, modelCachePath, currency, isProviderAvailable, keyboard, os.Stdout, settings.Defaults.ForSelections(),
-			)
-		})
-	}
+	selection, choice, err := chooseSessionModel(sessionModelRequest{
+		requestedSelection:   args.Selection,
+		resumedSession:       resumedSession,
+		settings:             settings,
+		modelChoices:         modelChoices,
+		seenModelsPath:       seenModelsPath,
+		modelCachePath:       modelCachePath,
+		currency:             currency,
+		isProviderAvailable:  isProviderAvailable,
+		keyboard:             keyboard,
+		isSimulated:          isSimulated,
+		isEndpointOverridden: endpointURL != "",
+	})
 	if errors.Is(err, menu.ErrCancelled) {
 		return "", nil
 	}
-	if err != nil {
-		return "", err
-	}
-	choice, err := sessions.ModelChoice(resumedSession, modelChoices, seenModelsPath, selection)
 	if err != nil {
 		return "", err
 	}
