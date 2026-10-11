@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"slices"
+	"strings"
 
 	"crdx.org/oh/internal/sse"
 	"crdx.org/oh/pkg/agent"
@@ -18,9 +19,9 @@ var ErrTruncated = sse.ErrTruncated
 var ErrIncomplete = errors.New("the response was cut short")
 
 type reply struct {
-	content         string
-	reasoning       string
-	tools           map[int]*toolCall
+	content         strings.Builder
+	reasoning       strings.Builder
+	tools           map[int]*arrivingCall
 	usage           agent.Usage
 	stopReason      string
 	isReasoningOpen bool
@@ -28,20 +29,20 @@ type reply struct {
 }
 
 func (self *reply) isEmpty() bool {
-	return self.content == "" && self.reasoning == "" && len(self.tools) == 0
+	return self.content.Len() == 0 && self.reasoning.Len() == 0 && len(self.tools) == 0
 }
 
 func (self *reply) message() message {
 	return message{
 		Role:             "assistant",
-		Content:          self.content,
-		ReasoningContent: self.reasoning,
+		Content:          self.content.String(),
+		ReasoningContent: self.reasoning.String(),
 		ToolCalls:        self.orderedToolCalls(),
 	}
 }
 
 func (self *reply) hasSpoken() bool {
-	return self.content != "" || self.reasoning != ""
+	return self.content.Len() > 0 || self.reasoning.Len() > 0
 }
 
 func (self *reply) prose() message {
@@ -73,7 +74,7 @@ func (self *reply) orderedToolCalls() []toolCall {
 
 	calls := make([]toolCall, 0, len(indexes))
 	for _, index := range indexes {
-		calls = append(calls, *self.tools[index])
+		calls = append(calls, self.tools[index].toolCall())
 	}
 	return calls
 }
@@ -133,6 +134,24 @@ type toolCall struct {
 	Function functionCall `json:"function"`
 }
 
+type arrivingCall struct {
+	id        string
+	kind      string
+	name      strings.Builder
+	arguments strings.Builder
+}
+
+func (self *arrivingCall) toolCall() toolCall {
+	return toolCall{
+		ID:   self.id,
+		Type: self.kind,
+		Function: functionCall{
+			Name:      self.name.String(),
+			Arguments: self.arguments.String(),
+		},
+	}
+}
+
 type functionDelta struct {
 	Name      string `json:"name"`
 	Arguments string `json:"arguments"`
@@ -147,8 +166,8 @@ type chunkError struct {
 	Message string `json:"message"`
 }
 
-func readReply(body io.Reader, yield agent.Yield) (reply, error) {
-	reply := reply{tools: make(map[int]*toolCall)}
+func readReply(body io.Reader, yield agent.Yield) (*reply, error) {
+	reply := &reply{tools: make(map[int]*arrivingCall)}
 	err := sse.Read(body, func(payload string) (bool, error) {
 		return reply.step(payload, yield)
 	})
@@ -204,7 +223,7 @@ func (self *reply) step(payload string, yield agent.Yield) (bool, error) {
 		reasoning = delta.Reasoning
 	}
 	if reasoning != "" {
-		self.reasoning += reasoning
+		self.reasoning.WriteString(reasoning)
 		self.isReasoningOpen = true
 		if !yield(agent.Output{Kind: agent.ModelReasoningEvent, Text: reasoning}) {
 			return true, nil
@@ -219,7 +238,7 @@ func (self *reply) step(payload string, yield agent.Yield) (bool, error) {
 			return true, nil
 		}
 
-		self.content += sentence
+		self.content.WriteString(sentence)
 		self.isContentOpen = true
 		if !yield(agent.Output{Kind: agent.ModelMessageEvent, Text: sentence}) {
 			return true, nil
@@ -233,17 +252,17 @@ func (self *reply) step(payload string, yield agent.Yield) (bool, error) {
 	for _, fragment := range delta.ToolCalls {
 		call := self.tools[fragment.Index]
 		if call == nil {
-			call = &toolCall{}
+			call = &arrivingCall{}
 			self.tools[fragment.Index] = call
 		}
 		if fragment.ID != "" {
-			call.ID = fragment.ID
+			call.id = fragment.ID
 		}
 		if fragment.Type != "" {
-			call.Type = fragment.Type
+			call.kind = fragment.Type
 		}
-		call.Function.Name += fragment.Function.Name
-		call.Function.Arguments += fragment.Function.Arguments
+		call.name.WriteString(fragment.Function.Name)
+		call.arguments.WriteString(fragment.Function.Arguments)
 	}
 
 	return false, nil

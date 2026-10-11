@@ -2,6 +2,10 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+### Performance
+
+- Stop long replies over Chat Completions allocating gigabytes as they stream
+
 ## [0.14.0] - 2026-10-11
 
 ### Subagents

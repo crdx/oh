@@ -11,6 +11,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"runtime"
 	"slices"
 	"strings"
 	"testing"
@@ -644,5 +645,50 @@ func TestATurnThatFailedKeepsWhatItSaidAndNotWhatItAskedFor(t *testing.T) {
 
 	if strings.Contains(held.String(), "call-1") {
 		t.Errorf("expected an unanswerable call to be left out, got %s", held.String())
+	}
+}
+
+func TestALongStreamIsGatheredWithoutCopyingEverythingBeforeEachDelta(t *testing.T) {
+	const deltas = 4000
+	const deltaBytes = 256
+	const allocationCeiling = 128 << 20
+
+	fragment := strings.Repeat("x", deltaBytes)
+	var stream strings.Builder
+	for range deltas {
+		fmt.Fprintf(&stream, "data: {\"choices\":[{\"delta\":{\"reasoning_content\":%q}}]}\n\n", fragment)
+	}
+	for range deltas {
+		fmt.Fprintf(&stream, "data: {\"choices\":[{\"delta\":{\"content\":%q}}]}\n\n", fragment)
+	}
+	for range deltas {
+		fmt.Fprintf(&stream, "data: {\"choices\":[{\"delta\":{\"tool_calls\":[{\"index\":0,\"function\":{\"arguments\":%q}}]}}]}\n\n", fragment)
+	}
+	stream.WriteString("data: [DONE]\n\n")
+	body := []byte(stream.String())
+
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		_, _ = io.Copy(io.Discard, request.Body)
+		writer.Header().Set("Content-Type", "text/event-stream")
+		_, _ = writer.Write(body)
+	}))
+	t.Cleanup(server.Close)
+
+	client := newClient(t, server.URL)
+	client.AddUserMessage("think at length")
+
+	var before, after runtime.MemStats
+	runtime.ReadMemStats(&before)
+	reply, err := client.Send(t.Context(), func(agent.Output) bool { return true })
+	runtime.ReadMemStats(&after)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(reply.Calls) != 1 || len(reply.Calls[0].Arguments) != deltas*deltaBytes {
+		t.Fatalf("expected one call gathering every fragment, got %d calls", len(reply.Calls))
+	}
+	if allocated := after.TotalAlloc - before.TotalAlloc; allocated > allocationCeiling {
+		t.Errorf("expected gathering %d deltas to allocate under %d bytes, allocated %d", 3*deltas, allocationCeiling, allocated)
 	}
 }
