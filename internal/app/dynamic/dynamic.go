@@ -147,12 +147,20 @@ func (self *Block) ResumeTiming() {
 }
 
 func (self *Block) Rows(columns int) []string {
+	rows, _ := self.RowsWithPriority(columns)
+
+	return rows
+}
+
+func (self *Block) RowsWithPriority(columns int) ([]string, []int) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 
 	rows := make([]string, 0, len(self.rows))
+	priority := make([]int, 0, len(self.rows))
 
 	for _, item := range self.rows {
+		priority = append(priority, len(rows))
 		rows = append(rows, self.line(item, columns))
 
 		if item.picture != nil {
@@ -160,7 +168,7 @@ func (self *Block) Rows(columns int) []string {
 		}
 	}
 
-	return rows
+	return rows, priority
 }
 
 func (self *Block) FinaliseRow(

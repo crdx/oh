@@ -1746,6 +1746,34 @@ func drawNoticeBesideTwoCalls(t *testing.T, lines int, isRedrawn bool) frameEdge
 	return frameEdgeStreams{live: live, sealed: screenOutput.String()}
 }
 
+func TestRunningCallsAndAReportSurviveARedraw(t *testing.T) {
+	const concurrentCallLines = 12
+	draw := func(isRedrawn bool) string {
+		var screenOutput bytes.Buffer
+		self := frameEdgeConversation(t, &screenOutput, concurrentCallLines)
+		requestTwoCalls(self)
+		self.recordEvent(subagentrecord.DeliveryEvent([]string{"tame-adder"}, "report", []subagentrecord.Report{{
+			Name: "tame-adder", State: subagentrecord.Done,
+			Answer: strings.Repeat("A long report about the current work.\n", 30),
+		}}))
+		self.show(self.inputLine)
+		if isRedrawn {
+			self.redraw()
+		}
+
+		return screenOutput.String()
+	}
+
+	live := draw(false)
+	visible := strings.Join(playScreenOfSize(t, live, replayColumns, concurrentCallLines).onScreen(), "\n")
+	for _, command := range []string{"sleep 60", "sleep 61"} {
+		if !strings.Contains(visible, command) {
+			t.Errorf("running %s was hidden by the report: %q", command, visible)
+		}
+	}
+	requireSameVisibleScreenOfSize(t, "running calls beside a report, redrawn", replayColumns, concurrentCallLines, live, draw(true))
+}
+
 const longProse = "The first sentence of a long stretch of prose that has to wrap. " +
 	"Every sentence after it adds another row, so the prose soon outgrows a short terminal. " +
 	"A third sentence keeps going so the rows keep arriving while the footer stands. " +
@@ -5737,6 +5765,8 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"legacy-alt-enter":         {".ansi", ".screen"},
 		"lifecycle":                {".ansi", ".screen"},
 		"line-resize":              {".screen"},
+		"live-child-windows":       {".ansi", ".screen"},
+		"live-child-pictures":      {".ansi", ".screen"},
 		"short-terminal":           {".screen"},
 		"notice-mid-prose-modes":   {".screen"},
 		"notice-mid-prose":         {".screen"},
@@ -9880,7 +9910,8 @@ func TestGoldenATurnStillRunningDrawsWhatItDrewBefore(t *testing.T) {
 	entries := readJournal(t, filepath.Join("testdata", "input", lifecycleScenario))
 
 	passes := map[string]func() string{
-		"a call still running": func() string { return replayWhileRunning(t, entries) },
+		"a call still running":              func() string { return replayWhileRunning(t, entries) },
+		"lookup beside an oversized report": drawRunningLookupBesideReport,
 		"a call carrying on after its question": func() string {
 			return replayAfterAQuestion(t, entries)
 		},
@@ -9913,6 +9944,59 @@ func TestGoldenATurnStillRunningDrawsWhatItDrewBefore(t *testing.T) {
 		}
 	}
 	compareWithGolden(t, "running", ".screen", screenPasses)
+}
+
+func TestARunningLookupAndReportAreBothInTheLiveWindow(t *testing.T) {
+	played := playScreenOfSize(t, drawRunningLookupBesideReport(), replayColumns, shortLines)
+	visible := strings.Join(played.onScreen(), "\n")
+	lookupAt := strings.Index(visible, "lookup RFC 8620 changes")
+	reportAt := strings.Index(visible, "more lines")
+	if lookupAt < 0 || reportAt < 0 || lookupAt > reportAt {
+		t.Errorf("lookup and report did not keep their order: %q", visible)
+	}
+}
+
+func TestAWindowedSubagentReportKeepsItsBackground(t *testing.T) {
+	const roomyLines = 12
+	played := playScreenOfSize(t, drawRunningLookupBesideReportInLines(roomyLines), replayColumns, roomyLines)
+	var panelStyle, noticeStyle string
+	for index, row := range played.text() {
+		if len(played.rows[index]) == 0 {
+			continue
+		}
+		switch {
+		case strings.Contains(row, "Subagent tame-adder interjects"):
+			panelStyle = played.rows[index][0].styles
+		case strings.Contains(row, "more lines"):
+			noticeStyle = played.rows[index][0].styles
+		}
+	}
+	background := regexp.MustCompile(`48;2;[0-9]+;[0-9]+;[0-9]+`).FindString(panelStyle)
+	if background == "" || !strings.Contains(noticeStyle, background) {
+		t.Errorf("report background %q did not continue through the hidden-rows notice %q", panelStyle, noticeStyle)
+	}
+}
+
+func drawRunningLookupBesideReport() string {
+	return drawRunningLookupBesideReportInLines(shortLines)
+}
+
+func drawRunningLookupBesideReportInLines(lines int) string {
+	var drawn strings.Builder
+	screen := output.NewTerminalOfSize(&drawn, replayColumns, lines)
+	paint := painter.New(screen, true, nil, nil, output.StreamingModeLine)
+	paint.DrawEvent(agent.Event{
+		Kind: agent.ToolCallRequestEvent,
+		ID:   "lookup-1", Name: "lookup",
+		FallbackRendering: agent.FallbackRendering{Subject: "RFC 8620 changes"},
+	})
+	report := strings.Repeat("A long subagent report takes the visible area.\n", 40)
+	paint.DrawEvent(subagentrecord.DeliveryEvent([]string{"tame-adder"}, "report", []subagentrecord.Report{{
+		Name: "tame-adder", State: subagentrecord.Done, Answer: report,
+	}}))
+	screen.Footer([]string{footerPrompt}, 0, len(footerPrompt))
+
+	return drawn.String()
 }
 
 func drawDiscardedReasoning(t *testing.T) string {

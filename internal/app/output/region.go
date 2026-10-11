@@ -349,6 +349,19 @@ func (self *Screen) hiddenRowsNotice(hiddenLines int) string {
 	return style.Rule(notice)
 }
 
+func (self *Screen) hiddenBlocksNotice(blocks int, lines int) string {
+	noun := "blocks"
+	if blocks == 1 {
+		noun = "block"
+	}
+	notice := fmt.Sprintf("%s %d more %s · %d %s", width.VerticalEllipsis, blocks, noun, lines, plural(lines))
+	if self.columns > 0 {
+		notice = width.Elide(notice, self.columns)
+	}
+
+	return style.Rule(notice)
+}
+
 func plural(count int) string {
 	if count == 1 {
 		return "line"

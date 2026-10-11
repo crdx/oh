@@ -31,6 +31,20 @@ type framedBlock struct {
 	frame  Frame
 }
 
+type hiddenNoticeFramer interface {
+	FrameHiddenNotice(text string, columns int) string
+}
+
+func (self *framedBlock) FrameHiddenNotice(text string, columns int) string {
+	for _, block := range self.blocks {
+		if framer, ok := block.(hiddenNoticeFramer); ok {
+			return framer.FrameHiddenNotice(text, columns)
+		}
+	}
+
+	return text
+}
+
 type LooseBlock interface {
 	Block
 
@@ -210,18 +224,51 @@ func (self *Screen) Refresh() {
 	}
 }
 
-func renderGroupedBlocks(blocks []groupedBlock, columns int, grouping Grouping) ([]string, Group, Group) {
-	var rows []string
+type priorityRows interface {
+	RowsWithPriority(columns int) ([]string, []int)
+}
 
-	for i, groupedBlock := range blocks {
-		if i > 0 && !grouping.runsOn(blocks[i-1].group, groupedBlock.group) {
+type blockSpan struct {
+	start    int
+	end      int
+	gap      int
+	group    Group
+	priority []int
+	framer   hiddenNoticeFramer
+}
+
+func renderGroupedBlocks(blocks []groupedBlock, columns int, grouping Grouping) ([]string, Group, Group) {
+	rows, firstGroup, lastGroup, _ := renderGroupedBlocksWithSpans(blocks, columns, grouping)
+
+	return rows, firstGroup, lastGroup
+}
+
+func renderGroupedBlocksWithSpans(blocks []groupedBlock, columns int, grouping Grouping) ([]string, Group, Group, []blockSpan) {
+	var rows []string
+	spans := make([]blockSpan, 0, len(blocks))
+
+	for i, block := range blocks {
+		gap := 0
+		if i > 0 && !grouping.runsOn(blocks[i-1].group, block.group) {
 			rows = append(rows, "")
+			gap = 1
 		}
 
-		rows = append(rows, groupedBlock.Rows(columns)...)
+		start := len(rows)
+		var content []string
+		var priority []int
+		if important, ok := block.Block.(priorityRows); ok {
+			content, priority = important.RowsWithPriority(columns)
+		} else {
+			content = block.Rows(columns)
+		}
+		rows = append(rows, content...)
+		span := blockSpan{start: start, end: len(rows), gap: gap, group: block.group, priority: priority}
+		span.framer, _ = block.Block.(hiddenNoticeFramer)
+		spans = append(spans, span)
 	}
 
-	return rows, blocks[0].group, blocks[len(blocks)-1].group
+	return rows, blocks[0].group, blocks[len(blocks)-1].group, spans
 }
 
 type textBlock struct {

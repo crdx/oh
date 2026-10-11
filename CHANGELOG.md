@@ -4,11 +4,9 @@
 
 ### Changes
 
-- Record `wire.http.zst` only when `[debug] wire = true` is set as a session is created
-
-### Performance
-
-- Stop long replies over Chat Completions allocating gigabytes as they stream
+- Add debug toggle for wire log storage
+- Don't allocate tons of memory when streaming long replies
+- Keep short live calls visible and truncate long subagent interjections
 
 ## [0.14.0] - 2026-10-11
 

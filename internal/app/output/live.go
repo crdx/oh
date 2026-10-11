@@ -107,13 +107,13 @@ func (self *Screen) hasLiveRegion() bool {
 	return len(self.blocks) > 0 || len(self.live.rows) > 0
 }
 
-func (self *Screen) liveContent() ([]width.ScreenRow, Group, Group) {
+func (self *Screen) liveContent() ([]width.ScreenRow, Group, Group, []blockSpan) {
 	if len(self.blocks) > 0 {
-		rows, firstGroup, lastGroup := renderGroupedBlocks(self.blocks, self.columns, self.grouping)
-		return width.HardRows(rows), firstGroup, lastGroup
+		rows, firstGroup, lastGroup, spans := renderGroupedBlocksWithSpans(self.blocks, self.columns, self.grouping)
+		return width.HardRows(rows), firstGroup, lastGroup, spans
 	}
 
-	return self.live.rows, self.live.firstGroup, self.live.lastGroup
+	return self.live.rows, self.live.firstGroup, self.live.lastGroup, nil
 }
 
 func (self *Screen) seal() {
@@ -123,7 +123,7 @@ func (self *Screen) seal() {
 		return
 	}
 
-	rows, firstGroup, lastGroup := self.liveContent()
+	rows, firstGroup, lastGroup, _ := self.liveContent()
 	shouldLinkPaths := spansOneGroup(firstGroup, lastGroup, AnswerGroup) && self.live.shouldLinkPaths
 	rest := rows[min(len(self.live.committedRows), len(rows)):]
 
@@ -199,7 +199,7 @@ func (self *Screen) liveFrameRows(room int) []width.ScreenRow {
 		return nil
 	}
 
-	rows, firstGroup, lastGroup := self.liveContent()
+	rows, firstGroup, lastGroup, spans := self.liveContent()
 	shouldLinkPaths := spansOneGroup(firstGroup, lastGroup, AnswerGroup) && self.live.shouldLinkPaths
 
 	if padding := self.live.height - len(rows); padding > 0 {
@@ -208,7 +208,7 @@ func (self *Screen) liveFrameRows(room int) []width.ScreenRow {
 	self.live.height = len(rows)
 
 	if len(self.blocks) > 0 {
-		return self.windowed(rows, self.liveGap(firstGroup), room)
+		return self.windowedBlocks(rows, spans, self.liveGap(firstGroup), room)
 	}
 
 	visible := rows[min(len(self.live.committedRows), len(rows)):]
@@ -258,6 +258,226 @@ func endingOnARow(rows []width.ScreenRow, count int) int {
 	}
 
 	return 0
+}
+
+func (self *Screen) windowedBlocks(rows []width.ScreenRow, spans []blockSpan, gap int, room int) []width.ScreenRow {
+	if room < 0 || gap+len(rows) <= room {
+		return append(make([]width.ScreenRow, gap), rows...)
+	}
+
+	active := make([]int, 0, len(spans))
+	for index, span := range spans {
+		if span.end > span.start {
+			active = append(active, index)
+		}
+	}
+	if len(active) < 2 {
+		return self.windowed(rows, gap, room)
+	}
+	if room <= len(active) {
+		return self.summariseCrowdedBlocks(rows, spans, active, room)
+	}
+
+	if gap > 0 && room-gap >= len(active)+1 {
+		room -= gap
+	} else {
+		gap = 0
+	}
+
+	separators := 0
+	for _, index := range active[1:] {
+		separators += spans[index].gap
+	}
+	if room < len(active)+separators {
+		separators = 0
+	}
+
+	budgets := make([]int, len(spans))
+	remainingRows := room - separators
+	for _, index := range active {
+		if remainingRows == 0 {
+			break
+		}
+		budgets[index] = 1
+		remainingRows--
+	}
+	for _, index := range active {
+		for len(spans[index].priority) > budgets[index] && remainingRows > 0 {
+			budgets[index]++
+			remainingRows--
+		}
+	}
+	for _, index := range active {
+		if remainingRows == 0 {
+			break
+		}
+		if spans[index].end-spans[index].start > budgets[index] {
+			budgets[index]++
+			remainingRows--
+		}
+	}
+	for remainingRows > 0 {
+		best := -1
+		for _, index := range active {
+			rowsNeeded := spans[index].end - spans[index].start - budgets[index]
+			if rowsNeeded <= 0 {
+				continue
+			}
+			if best < 0 || rowsNeeded < spans[best].end-spans[best].start-budgets[best] {
+				best = index
+			}
+		}
+		if best < 0 {
+			break
+		}
+		budgets[best]++
+		remainingRows--
+	}
+
+	visible := make([]width.ScreenRow, gap, gap+room)
+	previous := -1
+	for _, index := range active {
+		span := spans[index]
+		if previous >= 0 && separators > 0 && span.gap > 0 {
+			visible = append(visible, width.ScreenRow{})
+		}
+		visible = append(visible, self.windowBlock(rows[span.start:span.end], budgets[index], span)...)
+		previous = index
+	}
+
+	return visible
+}
+
+func (self *Screen) summariseCrowdedBlocks(rows []width.ScreenRow, spans []blockSpan, active []int, room int) []width.ScreenRow {
+	if room <= 0 {
+		return nil
+	}
+	isSelected := make([]bool, len(spans))
+	chosenBlocks := 0
+	for _, index := range slices.Backward(active) {
+		if spans[index].group == ToolGroup && chosenBlocks < room {
+			isSelected[index] = true
+			chosenBlocks++
+		}
+	}
+	for _, index := range active {
+		if chosenBlocks >= room-1 {
+			break
+		}
+		if !isSelected[index] {
+			isSelected[index] = true
+			chosenBlocks++
+		}
+	}
+	if chosenBlocks == room && room > 1 {
+		for _, index := range active {
+			if isSelected[index] {
+				isSelected[index] = false
+				break
+			}
+		}
+	}
+
+	visible := make([]width.ScreenRow, 0, room)
+	hiddenRows := 0
+	hiddenBlocks := 0
+	for _, index := range active {
+		span := spans[index]
+		if !isSelected[index] {
+			hiddenBlocks++
+			hiddenRows += span.end - span.start + span.gap
+			continue
+		}
+		visible = append(visible, self.windowBlock(rows[span.start:span.end], 1, span)...)
+		if span.group == ToolGroup {
+			hiddenRows += span.end - span.start - 1
+		}
+	}
+	if hiddenBlocks > 0 && len(visible) < room {
+		visible = append(visible, width.ScreenRow{Text: self.hiddenBlocksNotice(hiddenBlocks, hiddenRows)})
+	}
+
+	return visible
+}
+
+func (self *Screen) childHiddenRowsNotice(hiddenRows int, span blockSpan) string {
+	notice := self.hiddenRowsNotice(hiddenRows)
+	if span.framer != nil {
+		return span.framer.FrameHiddenNotice(notice, self.columns)
+	}
+
+	return notice
+}
+
+func (self *Screen) windowBlock(rows []width.ScreenRow, room int, span blockSpan) []width.ScreenRow {
+	if room <= 0 {
+		return nil
+	}
+	rows = withoutTrailingBlankRows(rows)
+	if len(rows) <= room {
+		return rows
+	}
+	priority := slices.DeleteFunc(slices.Clone(span.priority), func(index int) bool {
+		return index < 0 || index >= len(rows)
+	})
+	if len(priority) > 0 {
+		return self.windowPriorityRows(rows, room, priority)
+	}
+	if room == 1 {
+		if span.group == ToolGroup {
+			return rows[:1]
+		}
+		return []width.ScreenRow{{Text: self.childHiddenRowsNotice(len(rows), span)}}
+	}
+
+	head := min(2, max(0, room-2))
+	tail := room - head - 1
+	shownTail := withVisiblePictureTransmissions(rows[head:], rows[len(rows)-tail:])
+	visible := append([]width.ScreenRow{}, rows[:head]...)
+	visible = append(visible, width.ScreenRow{Text: self.childHiddenRowsNotice(len(rows)-head-tail, span)})
+
+	return append(visible, shownTail...)
+}
+
+func (self *Screen) windowPriorityRows(rows []width.ScreenRow, room int, priority []int) []width.ScreenRow {
+	if room == 1 {
+		return rows[priority[len(priority)-1] : priority[len(priority)-1]+1]
+	}
+
+	first := max(0, len(priority)-(room-1))
+	isSelected := make([]bool, len(rows))
+	for _, index := range priority[first:] {
+		isSelected[index] = true
+	}
+	spareRows := room - len(priority[first:]) - 1
+	for index := len(rows) - 1; index >= 0 && spareRows > 0; index-- {
+		if !isSelected[index] {
+			isSelected[index] = true
+			spareRows--
+		}
+	}
+
+	hiddenRows := len(rows) - room + 1
+	visible := make([]width.ScreenRow, 0, room)
+	hasNotice := false
+	for index := 0; index < len(rows); {
+		if !isSelected[index] {
+			if !hasNotice {
+				visible = append(visible, width.ScreenRow{Text: self.hiddenRowsNotice(hiddenRows)})
+				hasNotice = true
+			}
+			index++
+			continue
+		}
+		end := index + 1
+		for end < len(rows) && isSelected[end] {
+			end++
+		}
+		visible = append(visible, withVisiblePictureTransmissions(rows[:end], rows[index:end])...)
+		index = end
+	}
+
+	return visible
 }
 
 func (self *Screen) windowed(rows []width.ScreenRow, gap int, room int) []width.ScreenRow {

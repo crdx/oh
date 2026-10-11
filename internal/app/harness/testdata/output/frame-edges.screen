@@ -2,7 +2,7 @@
 
  run them
 
-    exit status 1
+$ sleep 61
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -11,8 +11,8 @@
 
  run them
 
-⋮ 7 more lines
-    exit status 1
+$ sleep 61
+⋮ 1 more block · 8 lines
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -21,9 +21,9 @@
 
  run them
 
+$ sleep 61
 
-⋮ 7 more lines
-    exit status 1
+⋮ 5 more lines
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -33,9 +33,9 @@
  run them
 
 
-⋮ 6 more lines
-    undefined: getWidth
-    exit status 1
+$ sleep 61
+
+⋮ 5 more lines
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -45,10 +45,10 @@
  run them
 
 
-⋮ 5 more lines
+$ sleep 60
+$ sleep 61
 
-    undefined: getWidth
-    exit status 1
+⋮ 5 more lines
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -58,10 +58,10 @@
  run them
 
 
-⋮ 4 more lines
- 🤖 Job build exited: failed, exit(2).
+$ sleep 60
+$ sleep 61
 
-    undefined: getWidth
+⋮ 4 more lines
     exit status 1
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -72,11 +72,11 @@
  run them
 
 
+$ sleep 60
+$ sleep 61
+
+
 ⋮ 3 more lines
-
- 🤖 Job build exited: failed, exit(2).
-
-    undefined: getWidth
     exit status 1
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -87,12 +87,12 @@
  run them
 
 
-⋮ 2 more lines
+$ sleep 60
+$ sleep 61
 
 
  🤖 Job build exited: failed, exit(2).
-
-    undefined: getWidth
+⋮ 2 more lines
     exit status 1
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -174,9 +174,9 @@ $ sleep 61
  run them
 
 
-⋮ 6 more lines
-    undefined: getWidth
-    exit status 1
+$ sleep 61
+
+⋮ 5 more lines
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 

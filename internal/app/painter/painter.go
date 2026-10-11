@@ -508,7 +508,7 @@ func (self *Picasso) Redraw(liveEvents []agent.Event) {
 
 func isDrawnBesideAnOpenBlock(event agent.Event) bool {
 	switch event.Kind { //nolint:exhaustive // Only these notices arrive while a call is in flight.
-	case portgrant.ForwardChange, hostcommand.Ran, jobrecord.Ended:
+	case portgrant.ForwardChange, hostcommand.Ran, jobrecord.Ended, subagentrecord.ReportsDelivered:
 		return true
 	default:
 		return false
@@ -635,8 +635,9 @@ func (self *Picasso) drawSubmittedPanel(message submittedMessage) {
 
 func (self *Picasso) submittedPanel(message submittedMessage) (output.Block, output.Frame) {
 	return submittedRows{
-			render:  func(columns int) []string { return self.submittedContent(message, columns) },
-			isLoose: isLooseNotice(message.text),
+			render:     func(columns int) []string { return self.submittedContent(message, columns) },
+			isLoose:    isLooseNotice(message.text),
+			background: message.background(),
 		},
 		func(content []string, columns int) []string {
 			return frameSubmitted("", content, "", columns, message.background())
@@ -644,8 +645,17 @@ func (self *Picasso) submittedPanel(message submittedMessage) (output.Block, out
 }
 
 type submittedRows struct {
-	render  func(columns int) []string
-	isLoose bool
+	render     func(columns int) []string
+	isLoose    bool
+	background style.Style
+}
+
+func (self submittedRows) FrameHiddenNotice(text string, columns int) string {
+	if room := columns - style.Width(text); room > 0 {
+		text += strings.Repeat(" ", room)
+	}
+
+	return self.background.Over(text)
 }
 
 func (self submittedRows) IsLoose() bool {

@@ -2,6 +2,7 @@ package dynamic
 
 import (
 	"regexp"
+	"slices"
 	"strings"
 	"sync/atomic"
 	"testing"
@@ -32,6 +33,21 @@ func (self textLabel) Elide(room int) Label { return textLabel{text: width.Elide
 func (self textLabel) Render() string { return self.text }
 
 func (self textLabel) Width() int { return width.Of(self.text) }
+
+func TestPictureRowsDoNotHideThePositionsOfCalls(t *testing.T) {
+	block := testBlock()
+	block.rows = []row{
+		{label: textLabel{text: "first"}, state: Done, picture: &pictureRows{columns: 40, rows: []string{"image row 1", "image row 2"}}},
+		{label: textLabel{text: "second"}, state: Done},
+	}
+	rows, priority := block.RowsWithPriority(40)
+	if !slices.Equal(rows, []string{"first", "image row 1", "image row 2", "second"}) {
+		t.Errorf("rendered rows = %q", rows)
+	}
+	if !slices.Equal(priority, []int{0, 3}) {
+		t.Errorf("priority rows = %v, want each call's row", priority)
+	}
+}
 
 func rowLabel(name string, subject string) Label {
 	return textLabel{text: name + " " + subject}

@@ -63,6 +63,13 @@ answer grows
 ─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 
 ⋮ 1 more line
+=== lookup beside an oversized report ===
+lookup RFC 8620 changes
+
+⋮ 42 more lines
+    A long subagent report takes the visible area.
+
+> ask something else
 === ordinary message during answer ===
  ╭──────────────────────────────────────────────────────────────────── double-enter to send now ──╮
  │ ⏳ check the other path too                                                                    │

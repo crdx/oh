@@ -291,6 +291,206 @@ func TestARegionTallerThanTheTerminalIsWindowedToTheRoomItHas(t *testing.T) {
 	}
 }
 
+func TestAShortRunningCallStaysVisibleBesideATallReport(t *testing.T) {
+	screenOutput := &strings.Builder{}
+	screen := &Screen{writer: screenOutput, isTerminal: true, canRepaint: true, columns: 40, lines: 8}
+	screen.OpenTool(textBlock{text: "lookup RFC 8620 2m 4s"})
+	report := &rowsBlock{rows: make([]string, 80)}
+	for index := range report.rows {
+		report.rows[index] = "subagent report line"
+	}
+	screen.Panel(report, framed)
+	screen.Footer([]string{"> "}, 0, 2)
+
+	rows := drawnTexts(screen)
+	if !slices.Contains(rows, "lookup RFC 8620 2m 4s") {
+		t.Errorf("short running call was windowed away: %q", rows)
+	}
+	if !strings.Contains(strings.Join(rows, "\n"), "report") {
+		t.Errorf("long report disappeared: %q", rows)
+	}
+	if !strings.Contains(strings.Join(rows, "\n"), "more lines") {
+		t.Errorf("long report did not name its hidden rows: %q", rows)
+	}
+}
+
+type priorityBlock struct {
+	rows     []string
+	priority []int
+}
+
+func (self priorityBlock) Rows(_ int) []string { return self.rows }
+
+func (self priorityBlock) RowsWithPriority(_ int) ([]string, []int) {
+	return self.rows, self.priority
+}
+
+func TestPictureRowsCannotDisplaceOtherRunningCalls(t *testing.T) {
+	screenOutput := &strings.Builder{}
+	screen := &Screen{writer: screenOutput, isTerminal: true, canRepaint: true, columns: 40, lines: 8}
+	screen.OpenTool(priorityBlock{
+		rows:     []string{"call one", "picture one", "picture two", "call two"},
+		priority: []int{0, 3},
+	})
+	report := &rowsBlock{rows: make([]string, 80)}
+	for index := range report.rows {
+		report.rows[index] = "report line"
+	}
+	screen.Panel(report, framed)
+	screen.Footer([]string{"> "}, 0, 2)
+
+	rows := drawnTexts(screen)
+	for _, call := range []string{"call one", "call two"} {
+		if !slices.Contains(rows, call) {
+			t.Errorf("lost %q behind a picture or report: %q", call, rows)
+		}
+	}
+	callOne := slices.Index(rows, "call one")
+	callTwo := slices.Index(rows, "call two")
+	if callOne >= 0 && callTwo >= 0 && (callOne >= callTwo || !strings.Contains(rows[callOne+1], "more lines")) {
+		t.Errorf("hidden picture did not stand between its calls: %q", rows)
+	}
+}
+
+func TestABlankFinalCallCannotPointOutsideTheWindow(t *testing.T) {
+	screen := &Screen{columns: 40}
+	rows := width.HardRows([]string{"call one", "picture row", ""})
+	visible := screen.windowBlock(rows, 1, blockSpan{group: ToolGroup, priority: []int{0, 2}})
+	if len(visible) != 1 || visible[0].Text != "call one" {
+		t.Errorf("got %v, want the nonblank call row", visible)
+	}
+}
+
+func TestPriorityCallRowsSurviveEveryPictureAndBlankBoundary(t *testing.T) {
+	screen := &Screen{columns: 40}
+	for callCount := 1; callCount <= 5; callCount++ {
+		for pictureRows := range 7 {
+			for trailingBlanks := range 4 {
+				rows := make([]string, 0, callCount+pictureRows+trailingBlanks)
+				priority := make([]int, 0, callCount)
+				for index := range callCount {
+					priority = append(priority, len(rows))
+					rows = append(rows, "call "+strconv.Itoa(index))
+					if index == 0 {
+						for range pictureRows {
+							rows = append(rows, "picture")
+						}
+					}
+				}
+				for range trailingBlanks {
+					rows = append(rows, "")
+				}
+				for room := 1; room <= 8; room++ {
+					visible := screen.windowBlock(width.HardRows(rows), room, blockSpan{group: ToolGroup, priority: priority})
+					if len(visible) > room {
+						t.Errorf("%d calls, %d picture rows, %d blanks, %d-room window drew %d rows", callCount, pictureRows, trailingBlanks, room, len(visible))
+					}
+					if room > callCount {
+						shown := strings.Join(width.Texts(visible), "\n")
+						for index := range callCount {
+							if !strings.Contains(shown, "call "+strconv.Itoa(index)) {
+								t.Errorf("%d calls, %d picture rows, %d blanks, %d-room window hid call %d: %q", callCount, pictureRows, trailingBlanks, room, index, shown)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+func TestPriorityCallsUseSpareRoomAroundPictures(t *testing.T) {
+	screen := &Screen{columns: 40}
+	rows := width.HardRows([]string{"call one", "picture one", "picture two", "picture three", "call two"})
+	visible := screen.windowPriorityRows(rows, 4, []int{0, 4})
+	texts := width.Texts(visible)
+	for index, text := range texts {
+		texts[index] = style.Plain(text)
+	}
+	if !slices.Equal(texts, []string{"call one", "⋮ 2 more lines", "picture three", "call two"}) {
+		t.Errorf("window drew %q, want the spare row around both calls", texts)
+	}
+}
+
+func TestSeveralShortCallsStayVisibleBesideATallReport(t *testing.T) {
+	screenOutput := &strings.Builder{}
+	screen := &Screen{writer: screenOutput, isTerminal: true, canRepaint: true, columns: 40, lines: 10}
+	screen.OpenTool(&rowsBlock{rows: []string{"call one", "call two", "call three"}})
+	report := &rowsBlock{rows: make([]string, 80)}
+	for index := range report.rows {
+		report.rows[index] = "report line"
+	}
+	screen.Panel(report, framed)
+	screen.Footer([]string{"> "}, 0, 2)
+
+	rows := drawnTexts(screen)
+	for _, call := range []string{"call one", "call two", "call three"} {
+		if !slices.Contains(rows, call) {
+			t.Errorf("lost %q among the report rows: %q", call, rows)
+		}
+	}
+	if len(rows) > screen.lines {
+		t.Errorf("live viewport grew to %d rows on %d-line terminal", len(rows), screen.lines)
+	}
+}
+
+func TestATinyViewportPrefersTheCallOverTheReport(t *testing.T) {
+	screenOutput := &strings.Builder{}
+	screen := &Screen{writer: screenOutput, isTerminal: true, canRepaint: true, columns: 40, lines: 3}
+	screen.OpenTool(textBlock{text: "lookup still running"})
+	screen.Panel(&rowsBlock{rows: []string{"report one", "report two", "report three"}}, framed)
+	screen.Footer([]string{"> "}, 0, 2)
+
+	if !slices.Contains(drawnTexts(screen), "lookup still running") {
+		t.Errorf("running lookup vanished in a tiny window: %q", drawnTexts(screen))
+	}
+}
+
+func TestMoreChildrenThanRowsStillNameTheRunningCall(t *testing.T) {
+	screenOutput := &strings.Builder{}
+	screen := &Screen{writer: screenOutput, isTerminal: true, canRepaint: true, columns: 40, lines: 4}
+	screen.OpenTool(textBlock{text: "lookup still running"})
+	screen.Panel(textBlock{text: "first report"}, framed)
+	screen.Line("another harness notice")
+	screen.Footer([]string{"> "}, 0, 2)
+
+	rows := drawnTexts(screen)
+	if !slices.Contains(rows, "lookup still running") {
+		t.Errorf("lost running call among %d children: %q", len(screen.blocks), rows)
+	}
+	if !strings.Contains(strings.Join(rows, "\n"), "more blocks") {
+		t.Errorf("did not count omitted children: %q", rows)
+	}
+	if len(rows) > screen.lines {
+		t.Errorf("drew %d rows in %d-line terminal", len(rows), screen.lines)
+	}
+}
+
+func TestManyLiveChildrenAlwaysFitTheTerminal(t *testing.T) {
+	for lines := 1; lines <= 12; lines++ {
+		for calls := 1; calls <= 6; calls++ {
+			for reportLines := 1; reportLines <= 12; reportLines++ {
+				screen := &Screen{writer: &strings.Builder{}, isTerminal: true, canRepaint: true, columns: 40, lines: lines}
+				toolRows := make([]string, calls)
+				for index := range toolRows {
+					toolRows[index] = "running call " + strconv.Itoa(index)
+				}
+				screen.OpenTool(&rowsBlock{rows: toolRows})
+				report := &rowsBlock{rows: make([]string, reportLines)}
+				for index := range report.rows {
+					report.rows[index] = "report line"
+				}
+				screen.Panel(report, framed)
+				screen.Line("other notice")
+				screen.Footer([]string{"─", "> ", "─"}, 1, 2)
+				if got := len(screen.canvas.rows); got > lines {
+					t.Errorf("height %d, %d calls, %d report rows painted %d rows", lines, calls, reportLines, got)
+				}
+			}
+		}
+	}
+}
+
 func TestAWindowedRegionKeepsItsGroupingGap(t *testing.T) {
 	screenOutput := &strings.Builder{}
 	screen := &Screen{writer: screenOutput, isTerminal: true, canRepaint: true, columns: 40, lines: 8}
