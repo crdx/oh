@@ -32,7 +32,7 @@ Transcript: `subagents/tame-adder/chat.md`
 subagent: subagents [ok, 1 line, 19B, toolu_2]
 subagent: all [ok, 1 line, 75B, toolu_3]
 subagent: tame-adder [ok, 1 line, 168B, toolu_4]
-subagent: tame-adder [ok, 1 line, 68B, toolu_11]
+subagent: tame-adder [ok, 1 line, 21B, toolu_11]
 wait: tame-adder [ok, 3 lines, 234B, toolu_15]
 subagent: tame-adder [ok, 1 line, 19B, toolu_5]
 wait: tame-adder [ok, 3 lines, 331B, toolu_6]

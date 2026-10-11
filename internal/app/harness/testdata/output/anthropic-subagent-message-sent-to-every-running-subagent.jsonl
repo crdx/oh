@@ -9,14 +9,14 @@
 {"kind":"event","event":{"kind":"subagent_finished","subagent":"tame-adder","text":"The readme is one heading.","name":"done","status":"success","state":{"usage":{}}}}
 {"kind":"event","event":{"kind":"subagent_completion_submitted","text":"Subagent tame-adder finished:\n\ntame-adder done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The readme is one heading.","name":"tame-adder","state":{"reports":[{"name":"tame-adder","state":"done","answer":"The readme is one heading."}]}}}
 {"kind":"event","event":{"rendering_kind":"subagent_send","render":"every running subagent","reports_status":true,"kind":"tool_call_request","id":"toolu_2","name":"subagent","arguments":"{\"action\":\"send\",\"message\":\"Also name the format it reads\"}"}}
-{"kind":"event","event":{"kind":"tool_call_result","text":"queued for tame-alpaca, tame-anchovy, which each read it once their current step finishes","id":"toolu_2","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":89}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"queued for tame-alpaca and tame-anchovy","id":"toolu_2","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":39}}}
 {"kind":"event","event":{"kind":"model_message","text":"The two still running have the message."}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"start three subagents, then tell every running one to name the format"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"subagent","input":{"action":"start","subagents":[{"prompt":"Read the readme","intent":"Reading the readme"},{"prompt":"Find the config loader","intent":"Finding where the config loads"},{"prompt":"Find the parser","intent":"Finding where the parser lives"}]}}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"started tame-adder, tame-alpaca, tame-anchovy; 3/5 subagents running"}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nSubagent tame-adder finished:\n\ntame-adder done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The readme is one heading.\n\u003c/system-reminder\u003e"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_2","name":"subagent","input":{"action":"send","message":"Also name the format it reads"}}]}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_2","content":"queued for tame-alpaca, tame-anchovy, which each read it once their current step finishes"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_2","content":"queued for tame-alpaca and tame-anchovy"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The two still running have the message."}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"subagent_message_sent","subagent":"tame-alpaca","text":"Also name the format it reads"}}

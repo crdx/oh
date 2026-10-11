@@ -400,7 +400,7 @@ func (self *Manager) Send(ctx context.Context, name string, message string) (str
 	self.launchMutex.Lock()
 	defer self.launchMutex.Unlock()
 	if isQueued, over := self.queue(name, message); isQueued {
-		return "queued for " + name + ", which reads it once its current step finishes", nil
+		return "queued for " + name, nil
 	} else if over != nil {
 		select {
 		case <-over:

@@ -156,7 +156,10 @@ func broadcast(ctx context.Context, manager Manager, message string) (string, er
 	if err != nil {
 		return "", err
 	}
-	return "queued for " + strings.Join(names, ", ") + ", which each read it once their current step finishes", nil
+	if len(names) == 1 {
+		return "queued for " + names[0], nil
+	}
+	return "queued for " + strings.Join(names[:len(names)-1], ", ") + " and " + names[len(names)-1], nil
 }
 
 func startSubject(args Args) string {

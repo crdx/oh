@@ -35,8 +35,8 @@ Transcript: `subagents/tame-alpaca/chat.md`
 ## Tool calls · +0s
 
 ```
-subagent: tame-adder [ok, 1 line, 68B, toolu_2]
-subagent: tame-alpaca [ok, 1 line, 69B, toolu_3]
+subagent: tame-adder [ok, 1 line, 21B, toolu_2]
+subagent: tame-alpaca [ok, 1 line, 22B, toolu_3]
 ```
 
 ## Assistant · +0s

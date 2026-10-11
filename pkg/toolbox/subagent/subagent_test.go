@@ -13,10 +13,11 @@ import (
 )
 
 type fakeManager struct {
-	tasks   []Task
-	names   []string
-	sent    string
-	message string
+	tasks       []Task
+	names       []string
+	sent        string
+	message     string
+	broadcastTo []string
 }
 
 func (self *fakeManager) Start(_ context.Context, _ string, tasks []Task) (string, error) {
@@ -31,6 +32,9 @@ func (self *fakeManager) Send(_ context.Context, name string, message string) (s
 
 func (self *fakeManager) Broadcast(_ context.Context, message string) ([]string, error) {
 	self.message = message
+	if self.broadcastTo != nil {
+		return self.broadcastTo, nil
+	}
 	return []string{"frugal-otter", "frugal-heron"}, nil
 }
 
@@ -157,8 +161,28 @@ func TestSendWithoutANameReachesEveryRunningAgent(t *testing.T) {
 	if err != nil || manager.message != "stop guessing" || manager.sent != "" {
 		t.Fatalf("got %+v, %v, %+v", result, err, manager)
 	}
-	if want := "queued for frugal-otter, frugal-heron, which each read it once their current step finishes"; result.Output != want {
+	if want := "queued for frugal-otter and frugal-heron"; result.Output != want {
 		t.Errorf("a broadcast came back %q, want %q", result.Output, want)
+	}
+}
+
+func TestABroadcastNamesItsRecipientsAsProse(t *testing.T) {
+	for _, test := range []struct {
+		recipients []string
+		want       string
+	}{
+		{[]string{"frugal-otter"}, "queued for frugal-otter"},
+		{[]string{"frugal-otter", "frugal-heron"}, "queued for frugal-otter and frugal-heron"},
+		{[]string{"frugal-otter", "frugal-heron", "frugal-stoat"}, "queued for frugal-otter, frugal-heron and frugal-stoat"},
+	} {
+		parsed, err := New(&fakeManager{broadcastTo: test.recipients}, isGranted).Parse(`{"action":"send","message":"stop guessing"}`)
+		if err != nil {
+			t.Fatal(err)
+		}
+		result, err := parsed.Exec(context.Background())
+		if err != nil || result.Output != test.want {
+			t.Errorf("a broadcast to %v came back %q, %v, want %q", test.recipients, result.Output, err, test.want)
+		}
 	}
 }
 
