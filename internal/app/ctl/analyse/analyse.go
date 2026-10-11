@@ -155,33 +155,24 @@ func run(settings Settings, output console.Output) error {
 }
 
 func selectNames(directory string, requestedNames []string) ([]string, error) {
-	entries, err := session.Entries(directory)
+	storedNames, archivedNames, err := session.ListNames(directory)
 	if err != nil {
 		return nil, err
 	}
 
-	isArchived := make(map[string]bool, len(entries))
-	for _, entry := range entries {
-		isArchived[entry.Name] = entry.IsArchived
-	}
-
 	if len(requestedNames) == 0 {
-		names := make([]string, 0, len(entries))
-		for _, entry := range entries {
-			if entry.IsArchived {
-				continue
-			}
-			names = append(names, entry.Name)
-		}
-		return names, nil
+		return storedNames, nil
 	}
 
 	for _, name := range requestedNames {
-		if _, exists := isArchived[name]; !exists {
+		if slices.Contains(archivedNames, name) {
+			return nil, fmt.Errorf("the session %q is archived", name)
+		}
+		if !slices.Contains(storedNames, name) {
 			return nil, fmt.Errorf("there is no stored session named %q", name)
 		}
-		if isArchived[name] {
-			return nil, fmt.Errorf("the session %q is archived", name)
+		if _, err := session.HeadSummary(directory, name); err != nil {
+			return nil, fmt.Errorf("there is no stored session named %q", name)
 		}
 	}
 
@@ -201,6 +192,7 @@ type sessionAnalysis struct {
 	err              error
 	hasCached        bool
 	isWhole          bool
+	ignore           bool
 }
 
 func readSessions(directory string, cachePath string, names []string) ([]SessionStatistics, int, error) {
@@ -231,6 +223,7 @@ func readSessions(directory string, cachePath string, names []string) ([]Session
 
 	sessions := make([]SessionStatistics, 0, len(names))
 	skippedCount := 0
+	isCacheChanged := false
 	var firstError error
 	for result := range results {
 		if result.err != nil {
@@ -239,8 +232,12 @@ func readSessions(directory string, cachePath string, names []string) ([]Session
 			}
 			continue
 		}
+		if result.ignore {
+			continue
+		}
 		if result.hasCached {
 			cache.Sessions[result.name] = result.cachedStatistics
+			isCacheChanged = true
 		}
 		if !result.isWhole {
 			skippedCount++
@@ -253,7 +250,9 @@ func readSessions(directory string, cachePath string, names []string) ([]Session
 	if firstError != nil {
 		return nil, 0, firstError
 	}
-	_ = writeAnalysisCache(cachePath, cache)
+	if isCacheChanged {
+		_ = writeAnalysisCache(cachePath, cache)
+	}
 
 	slices.SortFunc(sessions, func(first SessionStatistics, second SessionStatistics) int {
 		return strings.Compare(first.Name, second.Name)
@@ -490,11 +489,17 @@ func analyseSessionWithCache(
 ) sessionAnalysis {
 	files, err := openSession(directory, name)
 	if err != nil {
+		if _, headError := session.HeadSummary(directory, name); headError != nil {
+			return sessionAnalysis{ignore: true}
+		}
 		return sessionAnalysis{err: fmt.Errorf("could not read %s: %w", name, err)}
 	}
 
 	if hasCached && cachedStatistics.matches(files) {
 		return sessionAnalysis{statistics: cachedStatistics.Statistics, isWhole: cachedStatistics.IsWhole}
+	}
+	if _, err := session.HeadSummary(directory, name); err != nil {
+		return sessionAnalysis{ignore: true}
 	}
 
 	statistics, isWhole, err := analyseFamily(directory, name)

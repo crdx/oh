@@ -64,6 +64,58 @@ func TestHistoricalAnalysisCacheIsReusedAndInvalidated(t *testing.T) {
 	}
 }
 
+func TestUnchangedAnalysisDoesNotRewriteTheCache(t *testing.T) {
+	directory := t.TempDir()
+	writeJournal(t, directory, "cached-otter", event("00:00:01", `{"kind":"model_message","usage":{"input_tokens":50,"output_tokens":1,"cache":{"read_tokens":0}}}`))
+	cachePath := filepath.Join(t.TempDir(), "analysis.json")
+	if _, err := analyseWithCache(directory, cachePath, []string{"cached-otter"}); err != nil {
+		t.Fatal(err)
+	}
+
+	originalTime := time.Date(2020, time.January, 1, 0, 0, 0, 0, time.UTC)
+	if err := os.Chtimes(cachePath, originalTime, originalTime); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := analyseWithCache(directory, cachePath, []string{"cached-otter"}); err != nil {
+		t.Fatal(err)
+	}
+	info, err := os.Stat(cachePath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !info.ModTime().Equal(originalTime) {
+		t.Errorf("unchanged cache was rewritten at %s", info.ModTime())
+	}
+}
+
+func TestInvalidJournalHeadsAreIgnoredWhenListingAllSessions(t *testing.T) {
+	directory := t.TempDir()
+	writeJournal(t, directory, "valid-otter", event("00:00:01", `{"kind":"model_message","usage":{"input_tokens":50,"output_tokens":1,"cache":{"read_tokens":0}}}`))
+	invalidDirectory := filepath.Join(directory, "invalid-otter")
+	if err := os.Mkdir(invalidDirectory, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(invalidDirectory, "session.jsonl"), []byte("not json\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	names, err := selectNames(directory, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	analysis, err := analyseWithCache(directory, filepath.Join(t.TempDir(), "analysis.json"), names)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(analysis.Sessions) != 1 || analysis.Sessions[0].Name != "valid-otter" || analysis.SkippedSessions != 0 {
+		t.Errorf("got sessions %#v and %d skipped, want only valid-otter", analysis.Sessions, analysis.SkippedSessions)
+	}
+	if _, err := selectNames(directory, []string{"invalid-otter"}); err == nil ||
+		!strings.Contains(err.Error(), "no stored session") {
+		t.Errorf("got %v, want a missing session refusal", err)
+	}
+}
+
 func TestOutputTokensArrivingAfterTheirRequestAreCounted(t *testing.T) {
 	directory := t.TempDir()
 	writeJournal(t, directory, "thoughtful-ibis",
