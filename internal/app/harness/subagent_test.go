@@ -585,3 +585,27 @@ func TestAnOllamaSessionStartsSubagentsOnlyOnOllamaModels(t *testing.T) {
 		t.Errorf("an ollama session with only hosted subagents chose with %v", err)
 	}
 }
+
+func TestASessionCanStartChildrenOnlyWhenItsRotationKeepsAModel(t *testing.T) {
+	local := model.Choice{Provider: model.OllamaProvider, ID: "qwen3:8b", EffortLevels: []string{"none"}}
+	hosted := model.Choice{Provider: model.AnthropicProvider, ID: "claude-opus-5", EffortLevels: []string{"high"}}
+	choices := []model.Choice{local, hosted}
+	onlyHosted := config.Config{Subagent: config.Subagent{
+		ModelChoice: config.ModelChoice{Model: "anthropic/claude-opus-5@high"},
+		Concurrency: 4,
+	}}
+	for _, test := range []struct {
+		name     string
+		parent   model.Choice
+		settings config.Config
+		want     bool
+	}{
+		{"no subagent model", hosted, config.Config{}, false},
+		{"an ollama session with only hosted subagents", local, onlyHosted, false},
+		{"a hosted session with hosted subagents", hosted, onlyHosted, true},
+	} {
+		if got := canStartChildren(test.parent, test.settings, choices, "", false); got != test.want {
+			t.Errorf("%s: canStartChildren is %t, want %t", test.name, got, test.want)
+		}
+	}
+}

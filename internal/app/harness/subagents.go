@@ -99,6 +99,19 @@ func prepareChildManager(options childOptions, choices []model.Choice, seenModel
 	return preparedChildManager{manager: manager, rotate: rotate}, err
 }
 
+func canStartChildren(
+	parentChoice model.Choice,
+	settings config.Config,
+	choices []model.Choice,
+	seenModelsPath string,
+	isSimulated bool,
+) bool {
+	rotation, err := childRotationOf(
+		parentChoice, settings.Subagent, settings.Defaults.ForSelections(), choices, seenModelsPath, isSimulated,
+	)
+	return err == nil && len(rotation.Models) > 0
+}
+
 func childRotationOf(
 	parentChoice model.Choice,
 	settings config.Subagent,

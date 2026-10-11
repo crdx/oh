@@ -854,48 +854,12 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		return "", fmt.Errorf("could not prepare the shell home: %w", err)
 	}
 
-	mode := caps.NewModeWithGroups(args.Caps, args.GroupFlags, frozenToolGroups, activeToolGroups)
-
-	files := file.New(workspace.GetRoot(), caps.RefuseWrite(mode))
-	homeRoot := shell.MountHomeDirectory(files, homeDir, mode)
-	defer func() { _ = homeRoot.Close() }()
-
 	configuredModels, err := model.ParseRoundRobin(
 		modelChoices, configuredRotation(settings, isSimulated), settings.Defaults.ForSelections(),
 	)
 	if err != nil {
 		return "", fmt.Errorf("%s: %w", settings.Agent.Setting(), err)
 	}
-	settings.Sandbox, err = shell.PreparePaths(settings.Sandbox, os.Stderr)
-	if err != nil {
-		return "", err
-	}
-	pathAccess, err := shell.NewPathAccess(files, mode, settings.Sandbox)
-	if err != nil {
-		return "", err
-	}
-	defer pathAccess.Close()
-
-	builtinSkillDir := location.GetStateDir(skill.DirectoryName)
-	if err := skill.Materialise(builtinSkillDir); err != nil {
-		style.WriteWarningf(os.Stderr, "%v", err)
-		builtinSkillDir = ""
-	}
-
-	globalSkillDirs := append(
-		[]string{builtinSkillDir, location.GetConfigDir(skill.DirectoryName)},
-		settings.Skills.Include...,
-	)
-	availableSkills, err := skill.Discover(workspace.GetDir(), globalSkillDirs, os.Stderr)
-	if err != nil {
-		return "", err
-	}
-
-	availableSkills = skill.ExcludeGlobal(availableSkills, settings.Skills.Exclude)
-
-	skillRoots := skill.MountGlobalSkills(files, availableSkills)
-	defer skill.Close(skillRoots)
-	pathAccess.ShareSkills(skill.GlobalDirectories(availableSkills))
 
 	selectionTime := time.Now()
 	selection, err := backend.ResolveAvailable(
@@ -928,6 +892,48 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	if err != nil {
 		return "", err
 	}
+
+	if resumedSession == nil && !args.WereCapsChosen &&
+		!canStartChildren(choice, settings, modelChoices, seenModelsPath, endpoints.OverrideURL != "") {
+		args.Caps &^= caps.Subagents
+	}
+
+	mode := caps.NewModeWithGroups(args.Caps, args.GroupFlags, frozenToolGroups, activeToolGroups)
+
+	files := file.New(workspace.GetRoot(), caps.RefuseWrite(mode))
+	homeRoot := shell.MountHomeDirectory(files, homeDir, mode)
+	defer func() { _ = homeRoot.Close() }()
+
+	settings.Sandbox, err = shell.PreparePaths(settings.Sandbox, os.Stderr)
+	if err != nil {
+		return "", err
+	}
+	pathAccess, err := shell.NewPathAccess(files, mode, settings.Sandbox)
+	if err != nil {
+		return "", err
+	}
+	defer pathAccess.Close()
+
+	builtinSkillDir := location.GetStateDir(skill.DirectoryName)
+	if err := skill.Materialise(builtinSkillDir); err != nil {
+		style.WriteWarningf(os.Stderr, "%v", err)
+		builtinSkillDir = ""
+	}
+
+	globalSkillDirs := append(
+		[]string{builtinSkillDir, location.GetConfigDir(skill.DirectoryName)},
+		settings.Skills.Include...,
+	)
+	availableSkills, err := skill.Discover(workspace.GetDir(), globalSkillDirs, os.Stderr)
+	if err != nil {
+		return "", err
+	}
+
+	availableSkills = skill.ExcludeGlobal(availableSkills, settings.Skills.Exclude)
+
+	skillRoots := skill.MountGlobalSkills(files, availableSkills)
+	defer skill.Close(skillRoots)
+	pathAccess.ShareSkills(skill.GlobalDirectories(availableSkills))
 
 	client, err := backend.Connect(choice, selection, endpoints)
 	if err != nil {

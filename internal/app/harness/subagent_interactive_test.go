@@ -449,3 +449,43 @@ func TestASubagentRotationStartsEachChildOnTheNextModel(t *testing.T) {
 		t.Errorf("the children ran at efforts %q, want one at each the rotation names: %q", efforts, want)
 	}
 }
+
+func TestANewSessionOpensWithSubagentsWithheldWhenNoSubagentCanStart(t *testing.T) {
+	for _, test := range []struct {
+		name      string
+		config    string
+		arguments []string
+		want      caps.Set
+	}{
+		{
+			name:   "defaulted on with no subagent model",
+			config: "[defaults]\ncaps = \"rs\"\n",
+			want:   caps.Unconfined(),
+		},
+		{
+			name:   "defaulted on with a subagent model",
+			config: "[defaults]\ncaps = \"rs\"\n\n[subagent]\nmodel = \"opencode-go/fake\"\n",
+			want:   caps.Unconfined() | caps.Subagents,
+		},
+		{
+			name:      "chosen with no subagent model",
+			arguments: []string{"-c", "s"},
+			want:      caps.Unconfined() | caps.Subagents,
+		},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			rig := newInteractiveRig(t, "Noted.")
+			writeRigConfig(t, rig, test.config)
+			arguments := append([]string{"-p", "--yolo", "-m", "opencode-go/fake"}, test.arguments...)
+			runTestBinary(t, rig.binary, rig.workspace, rig.environment, append(arguments, "hello")...)
+
+			storedSessions := rig.storedSessions()
+			if len(storedSessions) != 1 {
+				t.Fatalf("got %d stored sessions, want one", len(storedSessions))
+			}
+			if got, found := caps.LastRecordedMode(storedSessions[0].Events); !found || got != test.want {
+				t.Errorf("opened in %s (recorded: %t), want %s", got.Flags(), found, test.want.Flags())
+			}
+		})
+	}
+}
