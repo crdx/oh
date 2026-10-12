@@ -301,7 +301,7 @@ func interactiveEnvironment(t *testing.T, stateDirectory string) []string {
 	}
 
 	environment := testBinaryEnvironment(t, stateDirectory)
-	return append(environment, "XDG_CONFIG_HOME="+configDirectory, "OH_STATE_DIR=")
+	return append(environment, "XDG_CONFIG_HOME="+configDirectory, "OH_STATE_DIR=", "KITTY_WINDOW_ID=")
 }
 
 type interactiveSession struct {
