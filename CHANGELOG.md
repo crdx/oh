@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Move send-now notice to the top left, a bit closer to the text it concerns
 - Add experimental toggle to let alt+enter interrupt a running turn
 - Add debug toggle for wire log storage, and move them under the debug folder
 - Don't allocate tons of memory when streaming long replies

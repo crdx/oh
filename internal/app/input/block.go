@@ -166,12 +166,12 @@ func (self Block) tabTop(ruleWidth int, rule style.Style) string {
 	}
 
 	label := " " + self.QueueHint + " "
-	lead := ruleWidth - style.Width(label) - edgePad
-	if lead < edgePad {
+	tail := ruleWidth - style.Width(label) - edgePad
+	if tail < edgePad {
 		return rule("╭" + strings.Repeat("─", ruleWidth) + "╮")
 	}
 
-	return rule("╭"+strings.Repeat("─", lead)) + style.Subtle(label) + rule(strings.Repeat("─", edgePad)+"╮")
+	return rule("╭"+strings.Repeat("─", edgePad)) + style.Subtle(label) + rule(strings.Repeat("─", tail)+"╮")
 }
 
 func (self Block) isAsking() bool {

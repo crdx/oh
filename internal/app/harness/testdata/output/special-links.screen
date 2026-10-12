@@ -16,11 +16,11 @@ person-at-example.test
 
  ⏳ Granted temporary read-only access
     to /reference.
-               double-enter to send now
+                   double-enter to send
 === pending message with a heading and a list ===
 
  ⏳ Heading
 
     • first item
     • second item
-               double-enter to send now
+                   double-enter to send

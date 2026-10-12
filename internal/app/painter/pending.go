@@ -28,7 +28,7 @@ const (
 	unsentMark              = "⏳"
 	harnessMark             = "🤖"
 	unwrappedPreviewColumns = 1 << 16
-	sendHint                = "double-enter to send now"
+	sendHint                = "double-enter to send"
 	stoppingHint            = "sending" + width.Ellipsis
 )
 

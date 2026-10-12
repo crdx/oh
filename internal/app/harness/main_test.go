@@ -3012,7 +3012,7 @@ func TestAFlushedQueueStandsOnScreenUntilTheTurnItStoppedGivesWay(t *testing.T) 
 
 	typeMessage(t, self, inputLine, history, "check the other path too")
 	if drawn := drawnQueue(self); !strings.Contains(
-		drawn, "double-enter to send now",
+		drawn, "double-enter to send",
 	) {
 		t.Errorf("drew %q, want the queue offering to send itself now", drawn)
 	}

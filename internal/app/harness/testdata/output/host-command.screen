@@ -42,7 +42,7 @@ Model returned no reply.
     ?? notes.txt
 
     Exit code: 0
-                                                                           double-enter to send now
+                                                                               double-enter to send
 === completed during a running turn ===
 
  🤖 The user ran the following command on the host:
@@ -60,7 +60,7 @@ Previous answer.
 
 ⋮ 20 more lines
     Exit code: 0
-                                                                           double-enter to send now
+                                                                               double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -127,7 +127,7 @@ Previous answer.
     Enumerating objects: 5, done.
 
     Interrupted by the user after 4s
-                                                                           double-enter to send now
+                                                                               double-enter to send
 === printed nothing ===
 
  🤖 The user ran the following command on the host, producing no output:

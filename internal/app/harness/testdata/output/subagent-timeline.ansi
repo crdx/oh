@@ -19,4 +19,4 @@
 \e[48;2;48;58;67m ⏳ Subagent tame-adder interjects:                                                                 \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    The README says hello.                                                                          \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l

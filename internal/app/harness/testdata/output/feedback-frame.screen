@@ -23,7 +23,7 @@ x
 
 ─
 === queue and feedback narrow ===
- ╭──────── double-enter to send now ──╮
+ ╭── double-enter to send ────────────╮
  │ ⏳ check the other path too        │
  ├────────────────────────────────────┤
  │ A feedback message long enough to  │
@@ -57,7 +57,7 @@ ab
 
 ──────
 === queue narrow ===
- ╭──────── double-enter to send now ──╮
+ ╭── double-enter to send ────────────╮
  │ ⏳ check the other path too        │
  │ ⏳ and a message long enough to b… │
 ─┴────────────────────────────────────┴─

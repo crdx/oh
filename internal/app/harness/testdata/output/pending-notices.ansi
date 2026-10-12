@@ -2,7 +2,7 @@
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m ⏳ The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\r
 \e[48;2;48;58;67m    Restart it if still needed.                                                                     \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
@@ -11,7 +11,7 @@
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m ⏳ The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\r
 \e[48;2;48;58;67m    Restart it if still needed.                                                                     \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
@@ -21,7 +21,7 @@
 === 3 an ended job standing ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m ⏳ Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed with no output.                                                        \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
@@ -29,7 +29,7 @@
 === 4 an ended job flushed ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m ⏳ Job \e[38;2;192;128;80mbuild\e[0m\e[48;2;48;58;67m exited: failed with no output.                                                        \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
@@ -39,7 +39,7 @@
 === 5 a mode change flushed ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m ⏳ The workspace is now read-only.                                                                 \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
@@ -60,7 +60,7 @@
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m ⏳ The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\r
 \e[48;2;48;58;67m    Restart it if still needed.                                                                     \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
@@ -69,7 +69,7 @@
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m ⏳ The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\r
 \e[48;2;48;58;67m    Restart it if still needed.                                                                     \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
@@ -80,7 +80,7 @@
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m ⏳ The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\r
 \e[48;2;48;58;67m    Restart it if still needed.                                                                     \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
@@ -89,7 +89,7 @@
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m ⏳ The session was closed and reopened after the last turn. Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m stopped when it closed.       \e[0m\r
 \e[48;2;48;58;67m    Restart it if still needed.                                                                     \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
@@ -99,9 +99,9 @@
 === 8 a stopped job standing ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m ⏳ The workspace is now read-only.                                                                 \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m ⏳ Job \e[38;2;192;128;80mweb\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                       \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m ⏳ The workspace is now read-write.                                                                \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m ⏳ Job \e[38;2;192;128;80mweb\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                       \e[0m\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m ⏳ The workspace is now read-write.                                                                \e[0m\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
@@ -109,9 +109,9 @@
 === 9 a stopped job flushed ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m ⏳ The workspace is now read-only.                                                                 \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m ⏳ Job \e[38;2;192;128;80mweb\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                       \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m ⏳ The workspace is now read-write.                                                                \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m ⏳ Job \e[38;2;192;128;80mweb\e[0m\e[48;2;48;58;67m stopped because the workspace was made read-only.                                       \e[0m\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[48;2;48;58;67m ⏳ The workspace is now read-write.                                                                \e[0m\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
@@ -123,7 +123,7 @@
 \e[48;2;48;58;67m ⏳ Subagent tame-adder interjects:                                                                 \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    2+2 = 4                                                                                         \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
@@ -133,7 +133,7 @@
 \e[48;2;48;58;67m ⏳ Subagent tame-adder interjects:                                                                 \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    2+2 = 4                                                                                         \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
@@ -143,7 +143,7 @@
 \e[48;2;48;58;67m ⏳ Subagent tame-adder interjects:                                                                 \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    2+2 = 4                                                                                         \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
@@ -159,7 +159,7 @@
 \e[48;2;48;58;67m ⏳ Subagent tame-alpaca interjects:                                                                \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    2+2 = 4                                                                                         \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r
@@ -173,7 +173,7 @@
 \e[48;2;48;58;67m ⏳ Subagent tame-alpaca interjects:                                                                \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    2+2 = 4                                                                                         \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r\e[100C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r

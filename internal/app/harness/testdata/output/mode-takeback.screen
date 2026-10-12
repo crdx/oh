@@ -20,33 +20,33 @@ conversation remains in scrollback
  ⏳ The workspace is now read-only.
  ⏳ Job web stopped because the workspace was made read-only.
  ⏳ The workspace is now read-write.
-                                                                           double-enter to send now
+                                                                               double-enter to send
 === 12 toggled twice past a stopped job ===
 
  ⏳ The workspace is now read-only.
  ⏳ Job web stopped because the workspace was made read-only.
-                                                                           double-enter to send now
+                                                                               double-enter to send
 === 13 toggled thrice past a stopped job ===
 
  ⏳ The workspace is now read-only.
  ⏳ Job web stopped because the workspace was made read-only.
  ⏳ The workspace is now read-write.
-                                                                           double-enter to send now
+                                                                               double-enter to send
 === 14 toggled four times past a stopped job ===
 
  ⏳ The workspace is now read-only.
  ⏳ Job web stopped because the workspace was made read-only.
-                                                                           double-enter to send now
+                                                                               double-enter to send
 === 15 toggled past a job another capability stopped ===
 
  ⏳ Job web stopped because the bash tool was refused.
-                                                                           double-enter to send now
+                                                                               double-enter to send
 === 2 after ctrl+x l ===
 conversation remains in scrollback
 
 
  ⏳ Lookup can now access the internet.
-                                                                           double-enter to send now
+                                                                               double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -63,7 +63,7 @@ conversation remains in scrollback
 
  ⏳ Bash may now request the host network.
  ⏳ Fetch can now access the internet.
-                                                                           double-enter to send now
+                                                                               double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -86,7 +86,7 @@ conversation remains in scrollback
 
 
  ⏳ The workspace is now read-only.
-                                                                           double-enter to send now
+                                                                               double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -98,7 +98,7 @@ conversation remains in scrollback
  ⏳ The workspace is now read-only.
  ⏳ Lookup can now access the internet.
  ⏳ .git is now read-write.
-                                                                           double-enter to send now
+                                                                               double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -109,7 +109,7 @@ conversation remains in scrollback
 
  ⏳ The workspace is now read-only.
  ⏳ .git is now read-write.
-                                                                           double-enter to send now
+                                                                               double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 

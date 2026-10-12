@@ -2,7 +2,7 @@
 
  ⏳ The session was closed and reopened after the last turn. Job docs stopped when it closed.
     Restart it if still needed.
-                                                                           double-enter to send now
+                                                                               double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -21,7 +21,7 @@ Model returned no reply.
 === 3 an ended job standing ===
 
  ⏳ Job build exited: failed with no output.
-                                                                           double-enter to send now
+                                                                               double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -60,7 +60,7 @@ Model returned no reply.
 
  ⏳ The session was closed and reopened after the last turn. Job docs stopped when it closed.
     Restart it if still needed.
-                                                                           double-enter to send now
+                                                                               double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -80,7 +80,7 @@ Model returned no reply.
 
  ⏳ The session was closed and reopened after the last turn. Job docs stopped when it closed.
     Restart it if still needed.
-                                                                           double-enter to send now
+                                                                               double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -101,7 +101,7 @@ Model returned no reply.
  ⏳ The workspace is now read-only.
  ⏳ Job web stopped because the workspace was made read-only.
  ⏳ The workspace is now read-write.
-                                                                           double-enter to send now
+                                                                               double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -123,7 +123,7 @@ Model returned no reply.
  ⏳ Subagent tame-adder interjects:
 
     2+2 = 4
-                                                                           double-enter to send now
+                                                                               double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -133,7 +133,7 @@ Model returned no reply.
  ⏳ Subagent tame-adder interjects:
 
     2+2 = 4
-                                                                           double-enter to send now
+                                                                               double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -159,7 +159,7 @@ Model returned no reply.
  ⏳ Subagent tame-alpaca interjects:
 
     2+2 = 4
-                                                                           double-enter to send now
+                                                                               double-enter to send
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 

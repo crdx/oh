@@ -9,7 +9,7 @@
 \e[48;2;48;58;67m    \e[38;2;192;128;80m/skills/revised/SKILL.md\e[0m\e[48;2;48;58;67m.                                                                       \e[0m\r
 \e[48;2;48;58;67m ⏳ The workspace is now a Git repository.                                                          \e[0m\r
 \e[48;2;48;58;67m ⏳ Host-facing URLs for forwarded sandbox ports now use \e[38;2;192;128;80mnew.agent.test\e[0m\e[48;2;48;58;67m instead of \e[38;2;192;128;80mold.agent.test\e[0m\e[48;2;48;58;67m.  \e[0m\r
-\e[48;2;48;58;67m                                                                           \e[38;2;150;152;150mdouble-enter to send now\e[0m\e[48;2;48;58;67m \e[0m\r
+\e[48;2;48;58;67m                                                                               \e[38;2;150;152;150mdouble-enter to send\e[0m\e[48;2;48;58;67m \e[0m\r
 \e[K\r
 \e[38;2;150;152;150m────────────────────────────────────────────────────────────────────────────────────────────────────\e[0m\r
 \e[K\r

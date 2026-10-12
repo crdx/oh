@@ -221,7 +221,7 @@ func TestQueuedMessagesFormABoxHeadedByTheirHint(t *testing.T) {
 	rows, cursorRow := plainRowsOf(block, 20)
 
 	want := []string{
-		" ╭──────── send ──╮",
+		" ╭── send ────────╮",
 		" │ first          │",
 		" │ second         │",
 		"─┴────────────────┴─",
@@ -376,7 +376,7 @@ func TestQueuedMessagesShareTheFeedbackBoxAboveADivider(t *testing.T) {
 	rows, cursorRow := plainRowsOf(block, 20)
 
 	want := []string{
-		" ╭──────── send ──╮",
+		" ╭── send ────────╮",
 		" │ queued         │",
 		" ├────────────────┤",
 		" │ note           │",
