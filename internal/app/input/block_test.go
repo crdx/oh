@@ -236,6 +236,26 @@ func TestQueuedMessagesFormABoxHeadedByTheirHint(t *testing.T) {
 	}
 }
 
+func TestOnlyTheSendingQueueHintTakesTheWarningColour(t *testing.T) {
+	block := Block{
+		Input:          edit.Frame{Rows: []string{""}},
+		QueuedMessages: []string{"one"},
+		QueueHint:      "sending…",
+		IsQueueSending: true,
+	}
+
+	rows, _, _ := block.Rows(25)
+	if !strings.Contains(rows[0], style.Change("sending…")) {
+		t.Errorf("sending hint is not in the warning colour: %q", rows[0])
+	}
+	if strings.Contains(rows[0], style.Change(" sending… ")) {
+		t.Errorf("sending hint coloured its surrounding spaces: %q", rows[0])
+	}
+	if !strings.Contains(rows[0], style.Rule("╭──")) || !strings.Contains(rows[0], style.Rule("─────────╮")) {
+		t.Errorf("sending hint changed the border colour: %q", rows[0])
+	}
+}
+
 func TestAQueueHintThatDoesNotFitTheBorderIsDropped(t *testing.T) {
 	block := Block{
 		Input:          edit.Frame{Rows: []string{""}},

@@ -532,6 +532,13 @@ func (self *pathRefRig) show() {
 	self.app.show(self.input)
 }
 
+func (self *pathRefRig) revealQueue() {
+	self.show()
+	queuedAt := self.app.getNow()
+	self.app.now = func() time.Time { return queuedAt.Add(queuedNoticeDelay) }
+	self.show()
+}
+
 func (self *pathRefRig) press(keypresses ...key.Key) {
 	for _, keypress := range keypresses {
 		self.app.handleKeypressAndShowInput(self.input, self.history, keypress)
@@ -732,6 +739,7 @@ func pathRefScenarios(t *testing.T) map[string]pathRefScenario {
 			steps: func(rig *pathRefRig) {
 				rig.app.currentTurn.Interject("check the tests too")
 				rig.typeAndList("@")
+				rig.revealQueue()
 			},
 		},
 		"26 ctrl+u clears the input and the dropdown": at(60, 24, func(rig *pathRefRig) {
@@ -758,6 +766,7 @@ func pathRefScenarios(t *testing.T) map[string]pathRefScenario {
 			steps: func(rig *pathRefRig) {
 				rig.typeAndList("@harapp")
 				rig.press(pathRefEnter)
+				rig.revealQueue()
 			},
 		},
 		"30 a question hides the dropdown": at(60, 24, func(rig *pathRefRig) {

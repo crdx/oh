@@ -71,8 +71,9 @@ func (self submittedMessage) background() style.Style {
 }
 
 type Queue struct {
-	Rows []string
-	Hint string
+	Rows      []string
+	Hint      string
+	IsSending bool
 }
 
 func RenderQueue(
@@ -102,7 +103,7 @@ func RenderQueue(
 		hint = stoppingHint
 	}
 
-	return Queue{Rows: rows, Hint: hint}
+	return Queue{Rows: rows, Hint: hint, IsSending: !canBeSentNow}
 }
 
 func summariseQueuedMessage(message string, shouldRenderHyperlinks bool, roots link.Roots) string {

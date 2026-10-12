@@ -89,6 +89,7 @@ type Block struct {
 	Activity       []string
 	QueuedMessages []string
 	QueueHint      string
+	IsQueueSending bool
 	Feedback       []string
 	Question       []string
 	Dropdown       []string
@@ -171,7 +172,12 @@ func (self Block) tabTop(ruleWidth int, rule style.Style) string {
 		return rule("╭" + strings.Repeat("─", ruleWidth) + "╮")
 	}
 
-	return rule("╭"+strings.Repeat("─", edgePad)) + style.Subtle(label) + rule(strings.Repeat("─", tail)+"╮")
+	styledLabel := style.Subtle(label)
+	if self.IsQueueSending {
+		styledLabel = style.Subtle(" ") + style.Change(self.QueueHint) + style.Subtle(" ")
+	}
+
+	return rule("╭"+strings.Repeat("─", edgePad)) + styledLabel + rule(strings.Repeat("─", tail)+"╮")
 }
 
 func (self Block) isAsking() bool {

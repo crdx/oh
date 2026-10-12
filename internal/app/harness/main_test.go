@@ -3029,6 +3029,86 @@ func TestAFlushedQueueStandsOnScreenUntilTheTurnItStoppedGivesWay(t *testing.T) 
 	}
 }
 
+func TestAFastQueuedMessageSkipsTheNoticeButStartsItsTurnAtOnce(t *testing.T) {
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
+	queuedAt := time.Now()
+	currentTime := queuedAt
+	self.now = func() time.Time { return currentTime }
+	self.currentTurn = Turn{Stream: testRunningTurnStream(), painter: self.newPainter(true)}
+	history := edit.NewHistory("", historyLimit)
+	inputLine := edit.NewInput(history)
+
+	typeMessage(t, self, inputLine, history, "check the other path too")
+	self.show(inputLine)
+	if drawn := drawnQueue(self); drawn != "" {
+		t.Errorf("queued message appeared before 100 ms: %q", drawn)
+	}
+	if got := self.nextRefresh(queuedAt); !got.Equal(queuedAt.Add(queuedNoticeDelay)) {
+		t.Errorf("queue refresh = %s, want %s", got, queuedAt.Add(queuedNoticeDelay))
+	}
+
+	currentTime = queuedAt.Add(queuedNoticeDelay - time.Millisecond)
+	self.finish()
+	if !self.currentTurn.Running() || self.currentTurn.HasInterjections() {
+		t.Fatal("the queued message was delayed until the notice could appear")
+	}
+	for report := range self.currentTurn.Events() {
+		self.takeTurn(report)
+	}
+	self.finish()
+	if !slices.ContainsFunc(self.recordedEvents, func(event agent.Event) bool {
+		return event.Kind == agent.UserMessageEvent && event.Text == "check the other path too"
+	}) {
+		t.Error("the queued message did not start its turn")
+	}
+}
+
+func TestAQueuedNoticeAppearsAfter100msOnlyWhileItsMessageIsWaiting(t *testing.T) {
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
+	queuedAt := time.Now()
+	currentTime := queuedAt
+	self.now = func() time.Time { return currentTime }
+	self.currentTurn = Turn{Stream: testRunningTurnStream(), painter: self.newPainter(true)}
+	history := edit.NewHistory("", historyLimit)
+	inputLine := edit.NewInput(history)
+
+	self.currentTurn.Interject("first")
+	self.show(inputLine)
+	currentTime = queuedAt.Add(queuedNoticeDelay - time.Millisecond)
+	self.currentTurn.Interject("second")
+	self.show(inputLine)
+	if drawn := drawnQueue(self); drawn != "" {
+		t.Errorf("queued notice appeared too early: %q", drawn)
+	}
+	deadline := queuedAt.Add(queuedNoticeDelay)
+	if got := self.nextRefresh(currentTime); !got.Equal(deadline) {
+		t.Errorf("queue refresh = %s, want %s", got, deadline)
+	}
+
+	currentTime = deadline
+	self.drawAfterEvent(inputLine)
+	if drawn := drawnQueue(self); !strings.Contains(drawn, "first") || !strings.Contains(drawn, "second") {
+		t.Errorf("queued notice was not shown once waiting lasted 100 ms: %q", drawn)
+	}
+	if got := self.nextQueueReveal(currentTime); !got.IsZero() {
+		t.Errorf("queue asked to redraw again after its notice appeared: %s", got)
+	}
+	self.finish()
+	for report := range self.currentTurn.Events() {
+		self.takeTurn(report)
+	}
+	self.finish()
+	if !slices.ContainsFunc(self.recordedEvents, func(event agent.Event) bool {
+		return event.Kind == agent.UserMessageEvent && event.Text == "first\n\nsecond"
+	}) {
+		t.Error("the queued messages were not sent together")
+	}
+}
+
 func TestAMessageTypedWhileTheStoppingTurnLingersJoinsTheFlushedOne(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
@@ -6667,7 +6747,14 @@ func pendingModeMessagesDuringCallStream(t *testing.T, change func(*App, *edit.I
 
 	inputLine := edit.NewInput(nil)
 	change(self, inputLine)
+	queuedAt := time.Now()
+	currentTime := queuedAt
+	self.now = func() time.Time { return currentTime }
 	self.show(inputLine)
+	if self.currentTurn.HasInterjections() {
+		currentTime = queuedAt.Add(queuedNoticeDelay)
+		self.show(inputLine)
+	}
 
 	return screenOutput.String()
 }
@@ -10168,7 +10255,14 @@ func drawAcceptedInputDuringStream(t *testing.T, message string, kind agent.Kind
 	self.currentTurn.painter.DrawDelta(agent.Delta{Kind: kind, Text: "still working"})
 	framesBeforeCommand := len(writer.frames)
 
+	queuedAt := time.Now()
+	currentTime := queuedAt
+	self.now = func() time.Time { return currentTime }
 	self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Enter})
+	if self.currentTurn.HasInterjections() {
+		currentTime = queuedAt.Add(queuedNoticeDelay)
+		self.show(inputLine)
+	}
 
 	frames := writer.frames[framesBeforeCommand:]
 	self.currentTurn.painter.Close(dynamic.Cancelled)
@@ -10256,6 +10350,11 @@ func answerStartsAfterAcceptedInputFrames(t *testing.T, scenario answerStartScen
 	for _, message := range scenario.messages {
 		typeMessage(t, self, inputLine, history, message)
 	}
+	queuedAt := time.Now()
+	currentTime := queuedAt
+	self.now = func() time.Time { return currentTime }
+	self.show(inputLine)
+	currentTime = queuedAt.Add(queuedNoticeDelay)
 	self.show(inputLine)
 	framesBeforeAnswer := len(writer.frames)
 
@@ -13329,7 +13428,14 @@ func feedbackFrameStream(t *testing.T, scenario feedbackFrameScenario) string {
 	if scenario.text != "" {
 		self.showFeedback(feedback.Command, feedback.Message{Text: scenario.text, Status: agent.InfoStatus})
 	}
+	queuedAt := time.Now()
+	currentTime := queuedAt
+	self.now = func() time.Time { return currentTime }
 	self.show(inputLine)
+	if len(scenario.queued) > 0 {
+		currentTime = queuedAt.Add(queuedNoticeDelay)
+		self.show(inputLine)
+	}
 
 	return screenOutput.String()
 }
@@ -13468,6 +13574,11 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 		typeMessage(t, self, inputLine, history, "and keep the old flag working")
 		typeMessage(t, self, inputLine, history, "then run the whole suite")
 		self.notifyFailure("chat.md recording disabled: transcript append failed")
+		queuedAt := time.Now()
+		currentTime := queuedAt
+		self.now = func() time.Time { return currentTime }
+		self.show(inputLine)
+		currentTime = queuedAt.Add(queuedNoticeDelay)
 		self.show(inputLine)
 	case feedbackChainedApproval, feedbackHeredocApproval:
 		broker := ask.New()
@@ -13710,6 +13821,7 @@ const (
 	queuedTakenBackWhileTyping
 	queuedBesideFeedback
 	queuedFlushed
+	queuedQuickHandoff
 	queuedDelivered
 	queuedInterruptedWithAlt
 	queuedInterruptedWithEnter
@@ -13728,32 +13840,33 @@ const (
 
 func TestGoldenQueuedMessagesDrawEveryVisibleState(t *testing.T) {
 	passes := map[string]func() string{
-		"one queued":                 func() string { return queuedMessagesStream(t, queuedOne) },
-		"a path queued":              func() string { return queuedMessagesStream(t, queuedPath) },
-		"two queued":                 func() string { return queuedMessagesStream(t, queuedTwo) },
-		"several queued":             func() string { return queuedMessagesStream(t, queuedSeveral) },
-		"a snippet queued":           func() string { return queuedMessagesStream(t, queuedSnippet) },
-		"a long message elided":      func() string { return queuedMessagesStream(t, queuedLongMessage) },
-		"a multiline message":        func() string { return queuedMessagesStream(t, queuedMultilineMessage) },
-		"a markdown emphasis":        func() string { return queuedMessagesStream(t, queuedMarkdownEmphasis) },
-		"escape takes the last back": func() string { return queuedMessagesStream(t, queuedTakenBack) },
-		"taken back while typing":    func() string { return queuedMessagesStream(t, queuedTakenBackWhileTyping) },
-		"feedback beside the queue":  func() string { return queuedMessagesStream(t, queuedBesideFeedback) },
-		"flushed at a stopping turn": func() string { return queuedMessagesStream(t, queuedFlushed) },
-		"delivered at the boundary":  func() string { return queuedMessagesStream(t, queuedDelivered) },
-		"alt interrupts":             func() string { return queuedMessagesStream(t, queuedInterruptedWithAlt) },
-		"swapped enter interrupts":   func() string { return queuedMessagesStream(t, queuedInterruptedWithEnter) },
-		"swapped alt queues":         func() string { return queuedMessagesStream(t, queuedAltSwapped) },
-		"slash enter rejected":       func() string { return queuedMessagesStream(t, queuedSlashEnterDefault) },
-		"swapped slash rejected":     func() string { return queuedMessagesStream(t, queuedSlashEnterSwapped) },
-		"swapped known command runs": func() string { return queuedMessagesStream(t, queuedKnownCommandSwapped) },
-		"literal slash queues":       func() string { return queuedMessagesStream(t, queuedLiteralSlashDefault) },
-		"swapped literal interrupts": func() string { return queuedMessagesStream(t, queuedLiteralSlashSwapped) },
-		"path enter queues":          func() string { return queuedMessagesStream(t, queuedPathEnterDefault) },
-		"swapped path enter stops":   func() string { return queuedMessagesStream(t, queuedPathEnterSwapped) },
-		"path alt interrupts":        func() string { return queuedMessagesStream(t, queuedPathAltDefault) },
-		"swapped path alt queues":    func() string { return queuedMessagesStream(t, queuedPathAltSwapped) },
-		"taller than the terminal":   func() string { return queuedMessagesStream(t, queuedTallerThanTheTerminal) },
+		"one queued":                   func() string { return queuedMessagesStream(t, queuedOne) },
+		"a path queued":                func() string { return queuedMessagesStream(t, queuedPath) },
+		"two queued":                   func() string { return queuedMessagesStream(t, queuedTwo) },
+		"several queued":               func() string { return queuedMessagesStream(t, queuedSeveral) },
+		"a snippet queued":             func() string { return queuedMessagesStream(t, queuedSnippet) },
+		"a long message elided":        func() string { return queuedMessagesStream(t, queuedLongMessage) },
+		"a multiline message":          func() string { return queuedMessagesStream(t, queuedMultilineMessage) },
+		"a markdown emphasis":          func() string { return queuedMessagesStream(t, queuedMarkdownEmphasis) },
+		"escape takes the last back":   func() string { return queuedMessagesStream(t, queuedTakenBack) },
+		"taken back while typing":      func() string { return queuedMessagesStream(t, queuedTakenBackWhileTyping) },
+		"feedback beside the queue":    func() string { return queuedMessagesStream(t, queuedBesideFeedback) },
+		"flushed at a stopping turn":   func() string { return queuedMessagesStream(t, queuedFlushed) },
+		"quick hand-off stays unboxed": func() string { return queuedMessagesStream(t, queuedQuickHandoff) },
+		"delivered at the boundary":    func() string { return queuedMessagesStream(t, queuedDelivered) },
+		"alt interrupts":               func() string { return queuedMessagesStream(t, queuedInterruptedWithAlt) },
+		"swapped enter interrupts":     func() string { return queuedMessagesStream(t, queuedInterruptedWithEnter) },
+		"swapped alt queues":           func() string { return queuedMessagesStream(t, queuedAltSwapped) },
+		"slash enter rejected":         func() string { return queuedMessagesStream(t, queuedSlashEnterDefault) },
+		"swapped slash rejected":       func() string { return queuedMessagesStream(t, queuedSlashEnterSwapped) },
+		"swapped known command runs":   func() string { return queuedMessagesStream(t, queuedKnownCommandSwapped) },
+		"literal slash queues":         func() string { return queuedMessagesStream(t, queuedLiteralSlashDefault) },
+		"swapped literal interrupts":   func() string { return queuedMessagesStream(t, queuedLiteralSlashSwapped) },
+		"path enter queues":            func() string { return queuedMessagesStream(t, queuedPathEnterDefault) },
+		"swapped path enter stops":     func() string { return queuedMessagesStream(t, queuedPathEnterSwapped) },
+		"path alt interrupts":          func() string { return queuedMessagesStream(t, queuedPathAltDefault) },
+		"swapped path alt queues":      func() string { return queuedMessagesStream(t, queuedPathAltSwapped) },
+		"taller than the terminal":     func() string { return queuedMessagesStream(t, queuedTallerThanTheTerminal) },
 	}
 
 	compareWithGolden(t, "queued-messages", ".ansi", passes)
@@ -13803,6 +13916,9 @@ func queuedMessagesStream(t *testing.T, scenario queuedMessagesScenario) string 
 	history := edit.NewHistory("", historyLimit)
 	inputLine := edit.NewInput(history)
 	self.inputLine = inputLine
+	queuedAt := time.Now()
+	currentTime := queuedAt
+	self.now = func() time.Time { return currentTime }
 	self.currentTurn = Turn{Stream: testRunningTurnStream(), painter: self.newPainter(true)}
 	self.currentTurn.painter.DrawEvent(agent.Event{Kind: agent.UserMessageEvent, Text: "look at the first path"})
 	self.currentTurn.painter.DrawEvent(agent.Event{
@@ -13825,6 +13941,7 @@ func queuedMessagesStream(t *testing.T, scenario queuedMessagesScenario) string 
 		queuedTakenBackWhileTyping:  {"check the other path too"},
 		queuedBesideFeedback:        {"check the other path too"},
 		queuedFlushed:               {"check the other path too", "and mention what you find"},
+		queuedQuickHandoff:          {"check the other path too"},
 		queuedDelivered:             {"check the other path too"},
 		queuedInterruptedWithAlt:    {"check the other path too"},
 		queuedInterruptedWithEnter:  {"check the other path too"},
@@ -13845,12 +13962,19 @@ func queuedMessagesStream(t *testing.T, scenario queuedMessagesScenario) string 
 		typeMessage(t, self, inputLine, history, message)
 	}
 	self.show(inputLine)
+	if scenario != queuedQuickHandoff {
+		currentTime = queuedAt.Add(queuedNoticeDelay)
+		self.show(inputLine)
+	}
 
 	switch scenario {
 	case queuedOne, queuedPath, queuedTwo, queuedSeveral, queuedLongMessage, queuedMultilineMessage,
 		queuedMarkdownEmphasis, queuedTallerThanTheTerminal:
+	case queuedQuickHandoff:
 	case queuedSnippet:
 		self.handleCommand("//add review the second path")
+		self.show(inputLine)
+		currentTime = currentTime.Add(queuedNoticeDelay)
 		self.show(inputLine)
 	case queuedTakenBack:
 		self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Escape})

@@ -69,6 +69,7 @@ const (
 	configReloadConfirmationDuration = 10 * time.Second
 	redrawFeedbackDuration           = 2 * time.Second
 	focusLossGrace                   = 5 * time.Second
+	queuedNoticeDelay                = 100 * time.Millisecond
 )
 
 type SessionLogger = record.Session
@@ -246,6 +247,7 @@ type App struct {
 	question        questionState
 	transition      cycle.Transition
 	queuedTurn      turn.Queue
+	queueRevealAt   time.Time
 	currentTurn     Turn
 	startedAt       time.Time
 	keyboard        *os.File
@@ -1107,6 +1109,13 @@ func (self *App) show(inputLine *edit.Input) {
 	columns := self.screen.Columns()
 	frame := inputLine.Frame(columns)
 	tabWidth := input.FeedbackContentWidth(columns)
+	if self.currentTurn.HasInterjections() {
+		if self.queueRevealAt.IsZero() {
+			self.queueRevealAt = self.getNow().Add(queuedNoticeDelay)
+		}
+	} else {
+		self.queueRevealAt = time.Time{}
+	}
 	queue := self.queue(tabWidth)
 	topWidth := columns
 	if !self.feedback.IsEmpty() || len(queue.Rows) > 0 {
@@ -1126,6 +1135,7 @@ func (self *App) show(inputLine *edit.Input) {
 		Activity:       append(self.hostCommandRows(columns), self.editingRows(columns)...),
 		QueuedMessages: queue.Rows,
 		QueueHint:      queue.Hint,
+		IsQueueSending: queue.IsSending,
 		Feedback:       self.feedback.Render(tabWidth, self.getNow()),
 		Question:       self.questionRows(columns),
 		Rule:           self.ruleStyle(),
@@ -1217,8 +1227,13 @@ func (self *App) queue(columns int) painter.Queue {
 		notices = self.pendingNotices.accessNotices()
 	}
 
+	messages := self.currentTurn.GetInterjections()
+	if !self.queueRevealAt.IsZero() && self.getNow().Before(self.queueRevealAt) {
+		messages = nil
+	}
+
 	return painter.RenderQueue(
-		self.currentTurn.GetInterjections(),
+		messages,
 		notices,
 		!self.currentTurn.Cancelled(),
 		columns,
@@ -1487,7 +1502,16 @@ func (self *App) nextRefresh(at time.Time) time.Time {
 		self.nextQuestionAnnouncement(),
 		self.nextHostCommandRefresh(at),
 		self.nextChildDelivery(at),
+		self.nextQueueReveal(at),
 	)
+}
+
+func (self *App) nextQueueReveal(at time.Time) time.Time {
+	if at.Before(self.queueRevealAt) && self.currentTurn.HasInterjections() {
+		return self.queueRevealAt
+	}
+
+	return time.Time{}
 }
 
 func (self *App) nextAnswerRefresh(at time.Time) time.Time {
