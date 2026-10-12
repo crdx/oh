@@ -16,6 +16,7 @@ import (
 
 	"crdx.org/oh/internal/app/conditions"
 	"crdx.org/oh/internal/app/contextsource"
+	"crdx.org/oh/internal/app/diagnostics"
 	"crdx.org/oh/internal/app/environment"
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/model"
@@ -350,7 +351,12 @@ func (self *Writer) startRecorders() {
 		}
 	}
 	if self.wireRecorder == nil && self.wireRecordingEnabled {
-		recorder, err := wire.Open(filepath.Join(bundleDirectory, wireName), wire.Meta{
+		if err := os.MkdirAll(filepath.Join(bundleDirectory, diagnostics.DirectoryName), 0o700); err != nil {
+			self.wireRecordingEnabled = false
+			self.warnings = append(self.warnings, fmt.Errorf("debug/wire.http.zst recording disabled: %w", err))
+			return
+		}
+		recorder, err := wire.Open(filepath.Join(bundleDirectory, diagnostics.DirectoryName, wireName), wire.Meta{
 			Name:      self.Name(),
 			StartedAt: startedAt,
 			Model:     self.meta.Model,
@@ -360,7 +366,7 @@ func (self *Writer) startRecorders() {
 		}, self.queueWarning)
 		if err != nil {
 			self.wireRecordingEnabled = false
-			self.warnings = append(self.warnings, fmt.Errorf("wire.http.zst recording disabled: %w", err))
+			self.warnings = append(self.warnings, fmt.Errorf("debug/wire.http.zst recording disabled: %w", err))
 		} else {
 			self.wireRecorder = recorder
 		}

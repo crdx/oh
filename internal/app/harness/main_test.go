@@ -5756,7 +5756,6 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"context-codex":            {".prompt"},
 		"context-simulation":       {".prompt"},
 		"context-yolo":             {".prompt"},
-		"context-wire":             {".prompt"},
 		"host-command":             {".ansi", ".screen"},
 		"host-command-running":     {".ansi", ".screen"},
 		"inputblock":               {".ansi", ".screen"},
@@ -8850,7 +8849,6 @@ type promptGolden struct {
 	isLookupGranted     bool
 	hasCustomTool       bool
 	hasProjectSkillOnly bool
-	recordsWire         bool
 	notes               agent.NoteFormat
 }
 
@@ -8875,7 +8873,6 @@ func TestGoldenTheCompleteSystemPromptMatchesTheGolden(t *testing.T) {
 		"context-custom-tool":   {hasCustomTool: true},
 		"context-project-skill": {hasProjectSkillOnly: true},
 		"context-codex":         {notes: codex.Notes},
-		"context-wire":          {recordsWire: true},
 		"context-repository-print": {
 			isRepository: true,
 			isPrinting:   true,
@@ -9006,7 +9003,6 @@ func compareSystemPromptWithGolden(t *testing.T, name string, shape promptGolden
 		NetworkGranted: currentCaps.Has(caps.Network),
 		Yolo:           shape.isYolo,
 		Notes:          shape.notes,
-		RecordsWire:    shape.recordsWire,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -13299,7 +13295,7 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 		self.finish()
 		self.show(inputLine)
 	case feedbackStorageWarnings:
-		self.notifyFailure("chat.md recording disabled: transcript append failed\nwire.http.zst recording disabled: wire append failed")
+		self.notifyFailure("chat.md recording disabled: transcript append failed\ndebug/wire.http.zst recording disabled: wire append failed")
 		self.show(inputLine)
 	case feedbackUnknownSettings:
 		settings := configFrom(t, `
@@ -18478,6 +18474,7 @@ type sessionGoldenEnvironment struct {
 	Skills          []sessionGoldenSkill `toml:"skill"`
 	IsRepository    bool                 `toml:"repository"`
 	PortHostname    string               `toml:"hostname"`
+	WireLogPath     string               `toml:"wire-log-path"`
 }
 
 type sessionGoldenScenario struct {
@@ -20330,6 +20327,7 @@ func (self sessionGoldenEnvironment) snapshot() environment.Snapshot {
 		Skills:       skills,
 		IsRepository: self.IsRepository,
 		PortHostname: self.PortHostname,
+		WireLogPath:  self.WireLogPath,
 	}
 }
 
@@ -21143,7 +21141,7 @@ func TestAuxiliaryRecorderWarningsAreShownOnceAndRemainCanonical(t *testing.T) {
 		SessionLogger: innerLog,
 		warnings: []error{
 			errors.New("chat.md recording disabled: transcript append failed"),
-			errors.New("wire.http.zst recording disabled: wire append failed"),
+			errors.New("debug/wire.http.zst recording disabled: wire append failed"),
 		},
 	}
 	testHarness := newStorageFaultHarness(log, agent.New("", quietProvider{}, nil))
@@ -25070,7 +25068,7 @@ func TestASessionKeepsTheWireChoiceItWasCreatedWith(t *testing.T) {
 			if sessionName == "" {
 				t.Fatal("expected a stored session")
 			}
-			wirePath := filepath.Join(sessionsDirectory, sessionName, "wire.http.zst")
+			wirePath := filepath.Join(sessionsDirectory, sessionName, "debug", "wire.http.zst")
 			firstSize := fileSizeOrZero(t, wirePath)
 			if isRecorded := firstSize > 0; isRecorded != test.isWireOn {
 				t.Fatalf("expected the wire recorded to be %t, got a transcript of %d bytes", test.isWireOn, firstSize)
@@ -25093,8 +25091,8 @@ func TestASessionKeepsTheWireChoiceItWasCreatedWith(t *testing.T) {
 				t.Fatalf("got %d conversation requests, want one for each run", len(captured))
 			}
 			for i, body := range captured {
-				if isTold := strings.Contains(body, `\"wire.http.zst\"`); isTold != test.isWireOn {
-					t.Errorf("request %d: expected the prompt naming the wire transcript to be %t", i, test.isWireOn)
+				if strings.Contains(body, `wire.http.zst`) {
+					t.Errorf("request %d: the system prompt names an internal wire transcript", i)
 				}
 			}
 		})
@@ -25112,4 +25110,48 @@ func fileSizeOrZero(t *testing.T, path string) int64 {
 		t.Fatal(err)
 	}
 	return info.Size()
+}
+
+func TestAResumedSessionWithoutAnEnvironmentSnapshotIsToldWhenItsWireMoved(t *testing.T) {
+	sessionDirectory := t.TempDir()
+	current := environment.Snapshot{WireLogPath: "debug/wire.http.zst"}
+	restored, err := environment.Restore(nil, nil, current)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !restored.NeedsBaseline || restored.IsChanged {
+		t.Fatalf("expected an unknown baseline, got %+v", restored)
+	}
+
+	withoutFile, err := restoreLegacyWireLocation(restored, current, sessionDirectory)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if withoutFile.IsChanged {
+		t.Error("a missing log was described as moved")
+	}
+	path := filepath.Join(sessionDirectory, current.WireLogPath)
+	if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(path, []byte("log"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	withFile, err := restoreLegacyWireLocation(restored, current, sessionDirectory)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !withFile.NeedsBaseline || !withFile.IsChanged {
+		t.Fatalf("expected a pending change beside the baseline, got %+v", withFile)
+	}
+	if notices, isSaid := environment.Notice(withFile.Change); !isSaid || !strings.Contains(strings.Join(notices, "\n"), "debug/wire.http.zst") {
+		t.Errorf("the moved file was not mentioned: %q", notices)
+	}
+	again, err := environment.Restore(nil, []agent.Event{withFile.Change}, current)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if again.IsChanged || again.NeedsBaseline {
+		t.Errorf("a recorded change was offered again: %+v", again)
+	}
 }

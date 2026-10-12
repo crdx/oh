@@ -1216,7 +1216,7 @@ func TestAPlainWireTranscriptIsCompressedWithoutLosingAByte(t *testing.T) {
 		t.Errorf("expected the plain transcript to be gone: %v", err)
 	}
 
-	compressedPath := filepath.Join(directory, name, "wire.http.zst")
+	compressedPath := filepath.Join(directory, name, "debug", "wire.http.zst")
 	if decompressedWire(t, compressedPath) != plainWireTranscript() {
 		t.Error("expected the compressed transcript to hold every byte of the plain one")
 	}
@@ -1248,7 +1248,7 @@ func TestRecordingCarriesOnFromAMigratedWireTranscript(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	path := filepath.Join(directory, name, "wire.http.zst")
+	path := filepath.Join(directory, name, "debug", "wire.http.zst")
 	recorder, err := wire.Open(path, wire.Meta{}, func(err error) {
 		t.Errorf("unexpected recorder failure: %v", err)
 	})
@@ -1276,7 +1276,7 @@ func TestASessionWithoutAWireTranscriptMigratesWithoutOne(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	for _, wireName := range []string{"wire.http", "wire.http.zst"} {
+	for _, wireName := range []string{"wire.http", "wire.http.zst", filepath.Join("debug", "wire.http.zst")} {
 		if _, err := os.Stat(filepath.Join(directory, name, wireName)); !os.IsNotExist(err) {
 			t.Errorf("expected no %s: %v", wireName, err)
 		}
@@ -1671,5 +1671,125 @@ func TestAStaleSubagentMakesItsParentOutdated(t *testing.T) {
 	)
 	if outdated, err := session.Outdated(directory); err != nil || !slices.Equal(outdated, []string{name}) {
 		t.Errorf("a stale child left its parent current: %v, %v", outdated, err)
+	}
+}
+
+func TestFormatTwentyOneMovesTheWireOfParentsAndSubagents(t *testing.T) {
+	oldPrompt := `# Harness
+- "wire.http.zst": raw traffic between the harness and the model endpoint; read it with zstdcat or zstdgrep
+- User settings: /config/config.toml`
+	head := fmt.Sprintf(`{"kind":"head","time":"2026-08-01T00:00:00Z","version":21,"id":"one","name":"tame-impala","meta":{"workspaceDir":"/workspace","system_prompt":%q}}`, oldPrompt)
+	directory, name := storedJournal(t, head)
+	childrenDirectory := storedChild(t, directory, name, "tame-otter", strings.ReplaceAll(head, "tame-impala", "tame-otter"))
+
+	for _, bundle := range []string{filepath.Join(directory, name), filepath.Join(childrenDirectory, "tame-otter")} {
+		path := filepath.Join(bundle, "wire.http.zst")
+		recorder, err := wire.Open(path, wire.Meta{}, func(err error) { t.Error(err) })
+		if err != nil {
+			t.Fatal(err)
+		}
+		recorder.Start(req.Request{StartedAt: time.Unix(9, 0), Method: http.MethodPost}).Finish(time.Unix(10, 0), nil, false)
+		if err := recorder.Close(); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	if _, err := migrate.Session(options(directory), name); err != nil {
+		t.Fatal(err)
+	}
+
+	for _, entry := range []struct{ directory, name string }{{directory, name}, {childrenDirectory, "tame-otter"}} {
+		bundle := filepath.Join(entry.directory, entry.name)
+		path := filepath.Join(bundle, "debug", "wire.http.zst")
+		if text := decompressedWire(t, path); !strings.Contains(text, "# exchange 1 start") {
+			t.Errorf("the migrated wire transcript in %s lost its exchange", bundle)
+		}
+		if _, err := os.Lstat(filepath.Join(bundle, "wire.http.zst")); !os.IsNotExist(err) {
+			t.Errorf("the old wire transcript remains in %s: %v", bundle, err)
+		}
+		if _, err := os.Stat(filepath.Join(options(directory).BackupDir, strings.TrimPrefix(bundle, directory+string(filepath.Separator)), "wire.http.zst")); err != nil {
+			t.Errorf("the original wire transcript was not backed up: %v", err)
+		}
+		lines := journalLines(t, entry.directory, entry.name)
+		var meta struct {
+			SystemPrompt string `json:"system_prompt"`
+		}
+		if err := json.Unmarshal(lines[0]["meta"], &meta); err != nil {
+			t.Fatal(err)
+		}
+		if meta.SystemPrompt != oldPrompt {
+			t.Errorf("the migration changed the stored prompt: %q", meta.SystemPrompt)
+		}
+	}
+}
+
+func TestFormatTwentyOneRefusesToOverwriteAWireAlreadyInDebug(t *testing.T) {
+	directory, name := storedJournal(t, `{"kind":"head","time":"2026-08-01T00:00:00Z","version":21,"id":"one","name":"tame-impala"}`)
+	bundle := filepath.Join(directory, name)
+	if err := os.MkdirAll(filepath.Join(bundle, "debug"), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	for _, path := range []string{filepath.Join(bundle, "wire.http.zst"), filepath.Join(bundle, "debug", "wire.http.zst")} {
+		if err := os.WriteFile(path, []byte("keep me"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if _, err := migrate.Session(options(directory), name); err == nil || !strings.Contains(err.Error(), "both wire.http.zst and debug/wire.http.zst") {
+		t.Errorf("expected a collision to be reported, got %v", err)
+	}
+	if got := string(journalLines(t, directory, name)[0]["version"]); got != "21" {
+		t.Errorf("a failed move marked the journal current: %s", got)
+	}
+	for _, path := range []string{filepath.Join(bundle, "wire.http.zst"), filepath.Join(bundle, "debug", "wire.http.zst")} {
+		if data, err := os.ReadFile(path); err != nil || string(data) != "keep me" { //nolint:gosec // the test's own path
+			t.Errorf("the conflicting transcript at %s was changed: %q, %v", path, data, err)
+		}
+	}
+}
+
+func TestFormatTwentyOneMovesWireInArchivedParentsAndSubagents(t *testing.T) {
+	head := `{"kind":"head","time":"2026-08-01T00:00:00Z","version":21,"id":"one","name":"tame-impala"}`
+	directory, name := storedJournal(t, head)
+	childrenDirectory := storedChild(t, directory, name, "tame-otter", strings.ReplaceAll(head, "tame-impala", "tame-otter"))
+	for _, bundle := range []string{filepath.Join(directory, name), filepath.Join(childrenDirectory, "tame-otter")} {
+		if err := os.WriteFile(filepath.Join(bundle, "wire.http.zst"), []byte("wire data"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := session.Archive(directory, name); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := migrate.Session(options(directory), name); err != nil {
+		t.Fatal(err)
+	}
+	if !session.IsArchived(directory, name) {
+		t.Fatal("the migrated parent was not archived again")
+	}
+	if err := session.Restore(directory, name); err != nil {
+		t.Fatal(err)
+	}
+	for _, bundle := range []string{filepath.Join(directory, name), filepath.Join(childrenDirectory, "tame-otter")} {
+		data, err := os.ReadFile(filepath.Join(bundle, "debug", "wire.http.zst")) //nolint:gosec // the test's own path
+		if err != nil || string(data) != "wire data" {
+			t.Errorf("the archived wire in %s was not moved: %q, %v", bundle, data, err)
+		}
+	}
+}
+
+func TestFormatTwentyOneRetriesAfterTheWireWasMovedButTheJournalWasNot(t *testing.T) {
+	directory, name := storedJournal(t, `{"kind":"head","time":"2026-08-01T00:00:00Z","version":21,"id":"one","name":"tame-impala"}`)
+	path := filepath.Join(directory, name, "debug", "wire.http.zst")
+	if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(path, []byte("already moved"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := migrate.Session(options(directory), name); err != nil {
+		t.Fatal(err)
+	}
+	data, err := os.ReadFile(path) //nolint:gosec // the test's own path
+	if err != nil || string(data) != "already moved" {
+		t.Errorf("the earlier move was not kept: %q, %v", data, err)
 	}
 }

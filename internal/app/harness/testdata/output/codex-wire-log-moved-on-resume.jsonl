@@ -1,0 +1,15 @@
+{"kind":"head","version":22,"meta":{"model":"gpt-5.6-sol","workspaceDir":"","provider":"codex","effort":"medium","system_prompt":"You are a test assistant.","environment":{"sandbox":{"deny":["secret.yml"],"read":["/reference"]},"skills":[{"name":"steady","description":"use the steady process","location":"/skills/steady/SKILL.md"}],"is_repository":true,"port_hostname":"session.agent.test"}}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
+{"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
+{"kind":"event","event":{"kind":"user_message","text":"remember what is available"}}
+{"kind":"event","event":{"kind":"model_message","text":"I have the original environment."}}
+{"kind":"item","payload":{"role":"user","content":"remember what is available"}}
+{"kind":"item","payload":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"I have the original environment."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"environment_change","state":{"known":{"sandbox":{"deny":["secret.yml"],"read":["/reference"]},"skills":[{"name":"steady","description":"use the steady process","location":"/skills/steady/SKILL.md"}],"is_repository":true,"port_hostname":"session.agent.test"},"current":{"sandbox":{"deny":["secret.yml"],"read":["/reference"]},"skills":[{"name":"steady","description":"use the steady process","location":"/skills/steady/SKILL.md"}],"is_repository":true,"port_hostname":"session.agent.test","wire_log_path":"debug/wire.http.zst"}}}}
+{"kind":"event","event":{"kind":"user_message","text":"what was lost"}}
+{"kind":"event","event":{"kind":"model_message","text":"I see the new wire log path."}}
+{"kind":"item","payload":{"role":"user","content":"\u003cenvironment_context\u003e\nThe session environment changed since this conversation last ran. This is what changed:\n\nThe wire log moved from `wire.http.zst` to `debug/wire.http.zst` in this session directory.\n\u003c/environment_context\u003e"}}
+{"kind":"item","payload":{"role":"user","content":"what was lost"}}
+{"kind":"item","payload":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"I see the new wire log path."}]}}
+{"kind":"turn_completion","turn":{}}

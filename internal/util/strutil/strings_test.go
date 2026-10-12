@@ -37,13 +37,13 @@ func TestUncapitaliseLowercasesTheFirstRune(t *testing.T) {
 
 func TestCapitaliseSentenceLeavesANameAsItWasWritten(t *testing.T) {
 	for text, want := range map[string]string{
-		"":                                     "",
-		"the turn was interrupted":             "The turn was interrupted",
-		"the conversation\ncould not be saved": "The conversation\ncould not be saved",
-		"chat.md recording disabled":           "chat.md recording disabled",
-		"wire.http.zst recording disabled":     "wire.http.zst recording disabled",
-		"cmd/oh/main.go could not be read":     "cmd/oh/main.go could not be read",
-		"exit(1) was returned":                 "exit(1) was returned",
+		"":                                       "",
+		"the turn was interrupted":               "The turn was interrupted",
+		"the conversation\ncould not be saved":   "The conversation\ncould not be saved",
+		"chat.md recording disabled":             "chat.md recording disabled",
+		"debug/wire.http.zst recording disabled": "debug/wire.http.zst recording disabled",
+		"cmd/oh/main.go could not be read":       "cmd/oh/main.go could not be read",
+		"exit(1) was returned":                   "exit(1) was returned",
 	} {
 		if got := strutil.CapitaliseSentence(text); got != want {
 			t.Errorf("CapitaliseSentence(%q) = %q, want %q", text, got, want)

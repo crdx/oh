@@ -110,3 +110,24 @@ func digestOfDecompressed(from io.Reader) (hash.Hash, error) {
 
 	return digest, nil
 }
+
+func moveWireTranscript(directory string, name string) error {
+	bundle := filepath.Join(directory, name)
+	from := filepath.Join(bundle, compressedWireName)
+	to := filepath.Join(bundle, "debug", compressedWireName)
+
+	if _, err := os.Lstat(from); errors.Is(err, os.ErrNotExist) {
+		return nil
+	} else if err != nil {
+		return err
+	}
+	if _, err := os.Lstat(to); err == nil {
+		return fmt.Errorf("both %s and debug/%s are present", compressedWireName, compressedWireName)
+	} else if !errors.Is(err, os.ErrNotExist) {
+		return err
+	}
+	if err := os.MkdirAll(filepath.Dir(to), 0o700); err != nil {
+		return err
+	}
+	return os.Rename(from, to)
+}

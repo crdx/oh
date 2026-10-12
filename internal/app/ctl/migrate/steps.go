@@ -21,6 +21,7 @@ import (
 type step struct {
 	migrateLine    func(line map[string]json.RawMessage) error
 	migrateJournal func(lines []map[string]json.RawMessage) ([]map[string]json.RawMessage, error)
+	beforeWrite    func(directory, name string) error
 	finalise       func(directory, name string) error
 }
 
@@ -41,7 +42,7 @@ var steps = map[int]step{
 		finalise:       addSessionMeta,
 	},
 	12: {migrateLine: lookupFlagReplacesWebFlag},
-	13: {finalise: compressWireTranscript},
+	13: {beforeWrite: compressWireTranscript},
 	14: {migrateLine: completeToolCallRendering},
 	15: {migrateLine: forwardKindsReplaceExposeKinds, migrateJournal: dropHostLoopbackPorts},
 	16: {migrateLine: temporaryPathGrantsImplyExecution},
@@ -49,6 +50,7 @@ var steps = map[int]step{
 	18: {migrateLine: intentsJoinRenderings},
 	19: {migrateLine: wiresJoinModelChoices},
 	20: {migrateJournal: subagentsBecomeACapability},
+	21: {beforeWrite: moveWireTranscript},
 }
 
 var legacyGrantAccess = map[string]string{

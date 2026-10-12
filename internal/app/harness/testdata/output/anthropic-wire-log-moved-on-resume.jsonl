@@ -1,0 +1,14 @@
+{"kind":"head","version":22,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant.","environment":{"sandbox":{"deny":["secret.yml"],"read":["/reference"]},"skills":[{"name":"steady","description":"use the steady process","location":"/skills/steady/SKILL.md"}],"is_repository":true,"port_hostname":"session.agent.test"}}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
+{"kind":"event","event":{"kind":"user_message","text":"remember the environment"}}
+{"kind":"event","event":{"kind":"model_message","text":"I have it."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"remember the environment"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"I have it."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"environment_change","state":{"known":{"sandbox":{"deny":["secret.yml"],"read":["/reference"]},"skills":[{"name":"steady","description":"use the steady process","location":"/skills/steady/SKILL.md"}],"is_repository":true,"port_hostname":"session.agent.test"},"current":{"sandbox":{"deny":["secret.yml"],"read":["/reference"]},"skills":[{"name":"steady","description":"use the steady process","location":"/skills/steady/SKILL.md"}],"is_repository":true,"port_hostname":"session.agent.test","wire_log_path":"debug/wire.http.zst"}}}}
+{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
+{"kind":"event","event":{"kind":"model_message","text":"I see the new wire log path."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nThe session environment changed since this conversation last ran. This is what changed:\n\nThe wire log moved from `wire.http.zst` to `debug/wire.http.zst` in this session directory.\n\u003c/system-reminder\u003e"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"carry on"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"I see the new wire log path."}]}}
+{"kind":"turn_completion","turn":{}}

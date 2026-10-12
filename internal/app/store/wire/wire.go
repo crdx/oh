@@ -168,7 +168,7 @@ func (self *Recorder) fail(err error) {
 		self.file = nil
 	}
 	if self.report != nil {
-		self.report(fmt.Errorf("wire.http.zst recording disabled: %w", err))
+		self.report(fmt.Errorf("debug/wire.http.zst recording disabled: %w", err))
 	}
 }
 

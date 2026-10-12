@@ -18,7 +18,7 @@ func TestCaptureClonesAndCanonicalisesTheEnvironment(t *testing.T) {
 	}
 	skills := []skill.Skill{{Name: "write", Description: "write things", Location: "/skills/write/SKILL.md"}}
 
-	captured := Capture(paths, skills, true, "session.test")
+	captured := Capture(paths, skills, true, "session.test", "debug/wire.http.zst")
 	paths.Deny[0] = "changed"
 	skills[0].Name = "changed"
 
@@ -209,5 +209,44 @@ func TestManyEnvironmentChangesAreNotTruncated(t *testing.T) {
 		if !strings.Contains(joined, "/"+label) || !strings.Contains(joined, "`"+label+"`") {
 			t.Errorf("the large environment change omitted %s", label)
 		}
+	}
+}
+
+func TestMigratedWireLogLocationIsNotedOnceOnResume(t *testing.T) {
+	original := Snapshot{}
+	current := Snapshot{WireLogPath: "debug/wire.http.zst"}
+	first, err := Restore(&original, nil, current)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !first.IsChanged {
+		t.Fatal("the first resume did not report the relocated wire log")
+	}
+	notices, isSaid := Notice(first.Change)
+	if !isSaid || !strings.Contains(strings.Join(notices, "\n"), "`wire.http.zst` to `debug/wire.http.zst`") {
+		t.Errorf("the changed path was not reported: %q", notices)
+	}
+	modelNotices, isTold := ModelNotice(first.Change)
+	if !isTold || !strings.Contains(strings.Join(modelNotices, "\n"), "`wire.http.zst` to `debug/wire.http.zst`") {
+		t.Errorf("the model was not told the new path: %q", modelNotices)
+	}
+	second, err := Restore(&original, []agent.Event{first.Change}, current)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if second.IsChanged {
+		t.Error("the path change was queued after the notice was recorded")
+	}
+}
+
+func TestAnUnrecordedWireLogAddsNoResumeNotice(t *testing.T) {
+	original := Snapshot{}
+	current := Snapshot{}
+	restored, err := Restore(&original, nil, current)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if restored.IsChanged {
+		t.Error("a session with no wire log has a path change")
 	}
 }

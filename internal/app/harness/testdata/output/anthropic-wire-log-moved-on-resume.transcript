@@ -1,0 +1,33 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwsngl · +0s
+
+## User · +0s
+
+remember the environment
+
+## Assistant · +0s
+
+I have it.
+
+## Environment · wire log path · +0s
+
+```
+The wire log moved from `wire.http.zst` to `debug/wire.http.zst` in this session directory.
+```
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+I see the new wire log path.

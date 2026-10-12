@@ -1089,11 +1089,16 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 
 	forwardsAddress := portgrant.AddressFor(log.Name())
 	forwardsHostname := settings.Ports.GetHostname(log.Name(), forwardsAddress)
+	wireLogPath := ""
+	if log.RecordsWire() {
+		wireLogPath = "debug/wire.http.zst"
+	}
 	currentEnvironment := environment.Capture(
 		settings.Sandbox,
 		availableSkills,
 		pathutil.Exists(filepath.Join(workspace.GetDir(), ".git")),
 		forwardsHostname,
+		wireLogPath,
 	)
 	var createdEnvironment *environment.Snapshot
 	if resumedSession != nil {
@@ -1102,6 +1107,12 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	restoredEnvironment, err := environment.Restore(createdEnvironment, recordedEvents, currentEnvironment)
 	if err != nil {
 		return "", err
+	}
+	if resumedSession != nil {
+		restoredEnvironment, err = restoreLegacyWireLocation(restoredEnvironment, currentEnvironment, session.Dir(sessionsDir, log.Name()))
+		if err != nil {
+			return "", err
+		}
 	}
 
 	var systemPrompt string
@@ -1137,7 +1148,6 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 			GroupStatus:    mode.Groups(),
 			Yolo:           args.Yolo,
 			Notes:          agent.NoteFormatOf(client.Client),
-			RecordsWire:    log.RecordsWire(),
 		})
 		if err != nil {
 			return "", err
@@ -1689,6 +1699,26 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	}
 
 	return "", nil
+}
+
+func restoreLegacyWireLocation(restoration environment.Restoration, current environment.Snapshot, sessionDirectory string) (environment.Restoration, error) {
+	if !restoration.NeedsBaseline || current.WireLogPath == "" {
+		return restoration, nil
+	}
+	if _, err := os.Stat(filepath.Join(sessionDirectory, current.WireLogPath)); errors.Is(err, os.ErrNotExist) {
+		return restoration, nil
+	} else if err != nil {
+		return restoration, err
+	}
+	previous := current
+	previous.WireLogPath = ""
+	change, err := environment.ChangeEvent(previous, current)
+	if err != nil {
+		return restoration, err
+	}
+	restoration.Change = change
+	restoration.IsChanged = true
+	return restoration, nil
 }
 
 func isSessionLeftToResume(isPersisted bool, isSimulated bool, kind cycle.TransitionKind) bool {

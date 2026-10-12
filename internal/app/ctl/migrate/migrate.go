@@ -350,6 +350,15 @@ func migrateJournal(directory string, isDryRun bool, name string, keep func() er
 		return fromFormat, err
 	}
 
+	for index, migrationStep := range appliedSteps {
+		if migrationStep.beforeWrite == nil {
+			continue
+		}
+		if err := migrationStep.beforeWrite(directory, name); err != nil {
+			return fromFormat, fmt.Errorf("format %d: %w", fromFormat+index, err)
+		}
+	}
+
 	if err := writeJournal(journalPath, lines); err != nil {
 		return fromFormat, err
 	}

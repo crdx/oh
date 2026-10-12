@@ -646,7 +646,7 @@ func TestHTTPObservationDoesNotCreateTheBundleBeforeTheFirstEvent(t *testing.T) 
 		t.Fatal(err)
 	}
 
-	for _, name := range []string{"session.jsonl", "meta.json", "chat.md", "wire.http.zst"} {
+	for _, name := range []string{"session.jsonl", "meta.json", "chat.md", filepath.Join("debug", "wire.http.zst")} {
 		if _, err := os.Stat(filepath.Join(bundle, name)); err != nil {
 			t.Errorf("expected %s: %v", name, err)
 		}
@@ -672,7 +672,7 @@ func TestTheFirstRecordCreatesACompleteBundle(t *testing.T) {
 	}
 
 	bundle := filepath.Join(directory, log.Name())
-	for _, name := range []string{"session.jsonl", "meta.json", "chat.md", "wire.http.zst"} {
+	for _, name := range []string{"session.jsonl", "meta.json", "chat.md", filepath.Join("debug", "wire.http.zst")} {
 		info, err := os.Stat(filepath.Join(bundle, name))
 		if err != nil {
 			t.Errorf("expected %s: %v", name, err)
@@ -1075,7 +1075,7 @@ func TestASessionCreatedWithoutTheWireNeverRecordsIt(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if _, err := os.Stat(filepath.Join(directory, log.Name(), "wire.http.zst")); !os.IsNotExist(err) {
+	if _, err := os.Stat(filepath.Join(directory, log.Name(), "debug", "wire.http.zst")); !os.IsNotExist(err) {
 		t.Errorf("expected no wire transcript: %v", err)
 	}
 	if _, err := os.Stat(filepath.Join(directory, log.Name(), "chat.md")); err != nil {

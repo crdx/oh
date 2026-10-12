@@ -32,9 +32,10 @@ type Snapshot struct {
 	Skills       []Skill `json:"skills,omitempty"`
 	IsRepository bool    `json:"is_repository"`
 	PortHostname string  `json:"port_hostname"`
+	WireLogPath  string  `json:"wire_log_path,omitempty"`
 }
 
-func Capture(paths shell.Paths, availableSkills []skill.Skill, isRepository bool, portHostname string) Snapshot {
+func Capture(paths shell.Paths, availableSkills []skill.Skill, isRepository bool, portHostname string, wireLogPath string) Snapshot {
 	skills := make([]Skill, len(availableSkills))
 	for index, availableSkill := range availableSkills {
 		skills[index] = Skill{
@@ -56,6 +57,7 @@ func Capture(paths shell.Paths, availableSkills []skill.Skill, isRepository bool
 		Skills:       skills,
 		IsRepository: isRepository,
 		PortHostname: portHostname,
+		WireLogPath:  wireLogPath,
 	})
 }
 
@@ -189,6 +191,13 @@ func changeNotices(
 			"Host-facing URLs for forwarded sandbox ports now use "+markdown.CodeSpan(current.PortHostname)+
 				" instead of "+markdown.CodeSpan(knownEnvironment.PortHostname)+".",
 		)
+	}
+	if current.WireLogPath != "" && knownEnvironment.WireLogPath != current.WireLogPath {
+		previousPath := knownEnvironment.WireLogPath
+		if previousPath == "" {
+			previousPath = "wire.http.zst"
+		}
+		notices = append(notices, "The wire log moved from "+markdown.CodeSpan(previousPath)+" to "+markdown.CodeSpan(current.WireLogPath)+" in this session directory.")
 	}
 	return notices
 }
@@ -407,6 +416,9 @@ func Summary(event agent.Event) (string, bool) {
 	}
 	if state.KnownEnvironment.PortHostname != state.Current.PortHostname {
 		subjects = append(subjects, "port hostname")
+	}
+	if state.KnownEnvironment.WireLogPath != state.Current.WireLogPath {
+		subjects = append(subjects, "wire log path")
 	}
 	return strings.Join(subjects, ", "), len(subjects) > 0
 }
