@@ -1260,3 +1260,43 @@ func TestProgressSaysHowLongEachChildRanAndWhatItLastDid(t *testing.T) {
 		t.Errorf("the children's models read %q and %q", progress[0].Model, progress[2].Model)
 	}
 }
+
+func TestModelActivityFlashesOncePerBurst(t *testing.T) {
+	at := time.Date(2026, time.March, 18, 12, 0, 0, 0, time.UTC)
+	manager := &Manager{options: Options{Now: func() time.Time { return at }}, activity: make(chan struct{}, 1)}
+	current := &child{Snapshot: Snapshot{Name: "tame-adder"}}
+	modelText := agent.Update{Delta: &agent.Delta{Kind: agent.ModelMessageEvent, Text: "hello"}}
+	manager.markActivity(current, agent.Update{Event: &agent.Event{Kind: agent.ToolCallResultEvent}})
+	if !current.ActivityAt.IsZero() {
+		t.Fatal("a tool result triggered a model activity flash")
+	}
+	manager.markActivity(current, modelText)
+	if !current.ActivityAt.Equal(at) {
+		t.Fatalf("model text flashed at %s, want %s", current.ActivityAt, at)
+	}
+	select {
+	case <-manager.Activity():
+	default:
+		t.Fatal("new model activity did not wake the screen")
+	}
+	at = at.Add(time.Second)
+	manager.markActivity(current, agent.Update{Event: &agent.Event{Kind: agent.ToolCallRequestEvent}})
+	if !current.ActivityAt.Equal(at.Add(-time.Second)) {
+		t.Fatal("activity extended the flash instead of letting it go dark")
+	}
+	select {
+	case <-manager.Activity():
+		t.Fatal("continuous activity woke the screen during the pause")
+	default:
+	}
+	at = at.Add(time.Second)
+	manager.markActivity(current, agent.Update{Event: &agent.Event{Kind: agent.ToolCallRequestEvent}})
+	if !current.ActivityAt.Equal(at) {
+		t.Fatal("a later tool call did not start another flash")
+	}
+	select {
+	case <-manager.Activity():
+	default:
+		t.Fatal("the later flash did not wake the screen")
+	}
+}

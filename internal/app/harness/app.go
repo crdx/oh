@@ -347,6 +347,7 @@ func (self *App) begin(message string) cycle.Transition {
 		Conclusions:       self.jobConclusions(),
 		OnJobEnded:        self.jobEnded,
 		SubagentEvents:    self.subagentEvents(),
+		SubagentActivity:  self.subagentActivity(),
 		OnSubagentEvent:   self.subagentEvent,
 		ForwardChanges:    self.forwardChanges(),
 		OnForwardChange:   self.holdForwardChange,

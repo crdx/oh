@@ -83,16 +83,17 @@ type Options struct {
 }
 
 type Snapshot struct {
-	Name      string
-	Task      string
-	Intent    string
-	Workspace string
-	SessionID string
-	State     subagentrecord.State
-	StartedAt time.Time
-	EndedAt   time.Time
-	Answer    string
-	Failure   string
+	Name       string
+	Task       string
+	Intent     string
+	Workspace  string
+	SessionID  string
+	State      subagentrecord.State
+	StartedAt  time.Time
+	EndedAt    time.Time
+	ActivityAt time.Time
+	Answer     string
+	Failure    string
 }
 
 type Progress struct {
@@ -136,6 +137,7 @@ type Manager struct {
 	order       []string
 	scratchRoot *os.Root
 	events      chan agent.Event
+	activity    chan struct{}
 	closed      bool
 	workers     sync.WaitGroup
 	closeOnce   sync.Once
@@ -166,10 +168,13 @@ func New(options Options) (*Manager, error) {
 		children:    make(map[string]*child),
 		scratchRoot: scratchRoot,
 		events:      make(chan agent.Event, 256),
+		activity:    make(chan struct{}, 1),
 	}, nil
 }
 
 func (self *Manager) Events() <-chan agent.Event { return self.events }
+
+func (self *Manager) Activity() <-chan struct{} { return self.activity }
 
 func (self *Manager) Directory() string { return self.options.Directory }
 
@@ -854,6 +859,7 @@ func (self *Manager) converse(ctx context.Context, current *child, writer *store
 				streamError = failure
 				break
 			}
+			self.markActivity(current, update)
 			if update.Event == nil {
 				continue
 			}
@@ -882,6 +888,31 @@ func (self *Manager) converse(ctx context.Context, current *child, writer *store
 		}
 	}
 	return runAnswer(runEvents), streamError
+}
+
+const (
+	ActivityFlash = time.Second
+	activityPause = time.Second
+)
+
+func (self *Manager) markActivity(current *child, update agent.Update) {
+	if (update.Delta == nil || update.Delta.Text == "") &&
+		(update.Event == nil || update.Event.Kind != agent.ToolCallRequestEvent &&
+			update.Event.Kind != agent.ModelMessageEvent && update.Event.Kind != agent.ModelReasoningEvent) {
+		return
+	}
+	self.mutex.Lock()
+	now := self.options.Now()
+	if now.Before(current.ActivityAt.Add(ActivityFlash + activityPause)) {
+		self.mutex.Unlock()
+		return
+	}
+	current.ActivityAt = now
+	self.mutex.Unlock()
+	select {
+	case self.activity <- struct{}{}:
+	default:
+	}
 }
 
 func (self *Manager) count(current *child, event agent.Event) {

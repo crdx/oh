@@ -92,6 +92,13 @@ func (self *App) subagentEvents() <-chan agent.Event {
 	return self.children.manager.Events()
 }
 
+func (self *App) subagentActivity() <-chan struct{} {
+	if self.children.manager == nil {
+		return nil
+	}
+	return self.children.manager.Activity()
+}
+
 func (self *App) subagentEvent(event agent.Event) {
 	self.recordChildFact(event)
 	if event.Kind != subagentrecord.Finished || event.Name == string(subagentrecord.Stopped) {

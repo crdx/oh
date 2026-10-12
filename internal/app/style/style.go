@@ -46,13 +46,14 @@ var (
 	Write       Style = warning()
 	StoppedTurn Style = warning()
 
-	Info         Style = information()
-	Shell        Style = information()
-	Network      Style = information()
-	Subagents    Style = information()
-	Lookup       Style = information()
-	Git          Style = information()
-	ScratchAlias Style = decorate(col.Italic, Info)
+	Info          Style = information()
+	Shell         Style = information()
+	Network       Style = information()
+	Subagents     Style = information()
+	QuietSubagent Style = col.Dim
+	Lookup        Style = information()
+	Git           Style = information()
+	ScratchAlias  Style = decorate(col.Italic, Info)
 
 	Failure Style = danger()
 	Hazard  Style = danger()

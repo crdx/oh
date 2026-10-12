@@ -32,7 +32,7 @@ import (
 func TestGoldenSubagentBarSummarisesEveryState(t *testing.T) {
 	at := time.Date(2026, time.March, 18, 12, 0, 0, 0, time.UTC)
 	states := []subagents.Snapshot{
-		{Name: "tame-adder", State: subagentrecord.Running},
+		{Name: "tame-adder", State: subagentrecord.Running, ActivityAt: at},
 		{Name: "tame-alpaca", State: subagentrecord.Stopping},
 		{Name: "tame-anchovy", State: subagentrecord.Done, EndedAt: at.Add(-time.Second)},
 		{Name: "tame-badger", State: subagentrecord.Failed, EndedAt: at.Add(-time.Second)},
@@ -47,6 +47,7 @@ func TestGoldenSubagentBarSummarisesEveryState(t *testing.T) {
 	}
 	passes := map[string]func() string{
 		"one running one stopping one done one failed": func() string { return render(at, states) },
+		"flash expires but running continues":          func() string { return render(at.Add(time.Second), states) },
 		"idle after outcomes expire":                   func() string { return render(at.Add(31*time.Second), states[2:]) },
 		"restored ended child stays hidden": func() string {
 			return render(at, []subagents.Snapshot{{Name: "tame-adder", State: subagentrecord.Ended}})

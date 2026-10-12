@@ -33,7 +33,7 @@ func (self state) Render(segment.Context) string {
 	doneCount, failureCount := 0, 0
 	for _, snapshot := range self.get() {
 		if snapshot.State.IsLive() {
-			labels = append(labels, childMark(snapshot))
+			labels = append(labels, childMark(snapshot, self.now()))
 			continue
 		}
 		if snapshot.EndedAt.IsZero() || self.now().Sub(snapshot.EndedAt) >= ghostLife {
@@ -54,10 +54,13 @@ func (self state) Render(segment.Context) string {
 	return strings.Join(labels, " ")
 }
 
-func childMark(snapshot subagents.Snapshot) string {
+func childMark(snapshot subagents.Snapshot, now time.Time) string {
 	mark := session.Emoji(snapshot.Name)
 	if mark == "" {
 		mark = style.Info("●")
+	}
+	if snapshot.ActivityAt.IsZero() || !now.Before(snapshot.ActivityAt.Add(subagents.ActivityFlash)) {
+		mark = style.QuietSubagent(mark)
 	}
 	if snapshot.State == subagentrecord.Stopping {
 		return mark + style.Change("…")
@@ -68,6 +71,12 @@ func childMark(snapshot subagents.Snapshot) string {
 func (self state) NextRefresh(segment.Phase) time.Time {
 	var due time.Time
 	for _, snapshot := range self.get() {
+		if snapshot.State.IsLive() && !snapshot.ActivityAt.IsZero() {
+			expires := snapshot.ActivityAt.Add(subagents.ActivityFlash)
+			if expires.After(self.now()) && (due.IsZero() || expires.Before(due)) {
+				due = expires
+			}
+		}
 		if snapshot.EndedAt.IsZero() {
 			continue
 		}

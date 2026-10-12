@@ -34,6 +34,7 @@ type Handler struct {
 	Conclusions       <-chan jobs.Conclusion
 	OnJobEnded        func(jobs.Conclusion)
 	SubagentEvents    <-chan agent.Event
+	SubagentActivity  <-chan struct{}
 	OnSubagentEvent   func(agent.Event)
 	ForwardChanges    <-chan agent.Event
 	OnForwardChange   func(agent.Event)
@@ -71,6 +72,7 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 	changes := handler.Changes
 	conclusions := handler.Conclusions
 	subagentEvents := handler.SubagentEvents
+	subagentActivity := handler.SubagentActivity
 	forwardChanges := handler.ForwardChanges
 	resizes := NewResizeBatch()
 	defer resizes.Stop()
@@ -86,7 +88,7 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 
 		select {
 		case keypress, isOpen := <-keys:
-			if !isOpen || !handler.OnKey(keypress) {
+			if !takeKey(handler, keypress, isOpen) {
 				return
 			}
 		case event, isRunning := <-handler.GetTurnEvents():
@@ -120,6 +122,7 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 				continue
 			}
 			handler.OnJobEnded(conclusion)
+		case <-subagentActivity:
 		case event, isOpen := <-subagentEvents:
 			if !isOpen {
 				subagentEvents = nil
@@ -163,6 +166,10 @@ func run(keys <-chan key.Key, resizeSignals <-chan os.Signal, refreshes <-chan t
 		handler.OnDraw()
 		frames.drawn(time.Now())
 	}
+}
+
+func takeKey(handler Handler, keypress key.Key, isOpen bool) bool {
+	return isOpen && handler.OnKey(keypress)
 }
 
 type loopStep int
