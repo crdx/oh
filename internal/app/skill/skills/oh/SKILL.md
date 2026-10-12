@@ -281,7 +281,7 @@ Put custom tools in the global config. A workspace `oh.toml` that sets `[tools]`
 | `group`       | one lowercase mode flag that must grant access         |
 | `enabled`     | grant the tool's group initially; `false` by default   |
 
-The model reads the description alone to choose a tool. Write it for the model. The subject leads the tool's call row and, when approval is required, its supplied arguments.
+The model reads the description alone to choose a tool. Write it for the model. The subject leads the tool's call row and, when approval is required, its supplied arguments. Remove a tool's table to stop offering it in new sessions. An ungrouped tool with `enabled = false` is refused at startup, since that setting only controls a group's initial access.
 
 `concurrency` greater than one lets separate calls to this custom tool run together, up to that limit and oh's global limit of 16 tool calls. Calls beyond the limit wait for a slot without consuming their command timeout. This setting does not split one call into multiple jobs or make the model issue a batch; it only permits parallel execution when one model response contains multiple calls. Leave it at one for commands that share mutable state without their own locking.
 

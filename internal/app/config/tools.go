@@ -140,6 +140,9 @@ func (self Config) CustomToolGroups() (caps.ToolGroups, error) {
 	for _, name := range self.CustomToolNames() {
 		group := self.Tools[name].Group
 		if group == "" {
+			if !self.Tools[name].IsEnabledByDefault && self.getSourcePath(toolsSetting, name, "enabled") != "" {
+				return nil, self.complain(name, errors.New("enabled = false has no effect without a group; add a group or remove the tool"))
+			}
 			continue
 		}
 		if utf8.RuneCountInString(group) != 1 || group[0] < 'a' || group[0] > 'z' {

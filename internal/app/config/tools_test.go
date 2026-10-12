@@ -225,6 +225,47 @@ func TestACustomToolCanEnableItsModeGroupByDefault(t *testing.T) {
 	}
 }
 
+func TestAnUngroupedCustomToolCannotBeExplicitlyDisabled(t *testing.T) {
+	directory := t.TempDir()
+	path := filepath.Join(directory, "config.toml")
+	body := "[tools.rpc]\ndescription = \"run a host tool\"\ncommand = [\"true\"]\nenabled = false\n"
+	if err := writeConfigFile(path, body); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := Load(path)
+	if err == nil || !strings.Contains(err.Error(), "tools.rpc: enabled = false has no effect without a group") {
+		t.Errorf("got %v", err)
+	}
+	if err == nil || !strings.Contains(err.Error(), "config.toml") {
+		t.Errorf("the failure did not name the config: %v", err)
+	}
+}
+
+func TestAnUngroupedCustomToolWithoutEnabledStillLoads(t *testing.T) {
+	config, _ := configWithACustomTool(t, `
+		[tools.weather]
+		description = "report the weather"
+		command = ["true"]
+	`)
+	if got := config.CustomToolNames(); len(got) != 1 || got[0] != "weather" {
+		t.Errorf("got tools %v", got)
+	}
+}
+
+func TestAGroupedCustomToolExplicitlyDisabledByDefaultStillLoads(t *testing.T) {
+	config, _ := configWithACustomTool(t, `
+		[tools.weather]
+		description = "report the weather"
+		command = ["true"]
+		group = "z"
+		enabled = false
+	`)
+	if got := config.DefaultToolGroupFlags(nil); got != "" {
+		t.Errorf("got default groups %q", got)
+	}
+}
+
 func TestASessionCanPreserveAnUngroupedCustomTool(t *testing.T) {
 	config, _ := configWithACustomTool(t, `
 		[tools.weather]
