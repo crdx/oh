@@ -392,6 +392,9 @@ func (self *App) acceptInitialInput(inputLine *edit.Input, history *edit.History
 
 	history.Add(message)
 	if self.handleCommand(message) == dispatch.Proceed {
+		if dispatch.LiteralSlash(message) {
+			message = strings.TrimSpace(message)
+		}
 		self.start(message)
 		return
 	}
@@ -525,7 +528,7 @@ func (self *App) apply(inputLine *edit.Input, history *edit.History, keypress ke
 		action = edit.DrawInput
 	}
 	switch action {
-	case edit.AcceptInput, edit.ForceAcceptInput:
+	case edit.AcceptInput, edit.AlternateAcceptInput:
 		self.acceptKeypress(inputLine, history, action)
 
 	case edit.ContinueTurn:
@@ -777,23 +780,15 @@ func (self *App) sendCommandPrompt(message string) {
 }
 
 func (self *App) acceptKeypress(inputLine *edit.Input, history *edit.History, action edit.Action) {
-	message := strings.TrimSpace(inputLine.Text())
 	wasRunning := self.currentTurn.Running()
-	wasSubmitted := message != ""
-	if action == edit.ForceAcceptInput {
-		self.submitInput(inputLine, history, message)
-	} else {
-		wasSubmitted = self.acceptInput(inputLine, history)
-	}
+	wasSubmitted := self.acceptInput(inputLine, history)
 	if !wasRunning || !wasSubmitted || self.currentTurn.Cancelled() {
 		return
 	}
 
 	shouldInterrupt := self.experimental.IsEnabled(experimental.EnterInterrupts)
-	if action == edit.ForceAcceptInput {
-		if _, isCommand := self.commands.CommandName(message); !isCommand {
-			shouldInterrupt = !shouldInterrupt
-		}
+	if action == edit.AlternateAcceptInput {
+		shouldInterrupt = !shouldInterrupt
 	}
 	if shouldInterrupt {
 		self.interruptTurn(interrupt.Replacement)
@@ -801,9 +796,14 @@ func (self *App) acceptKeypress(inputLine *edit.Input, history *edit.History, ac
 }
 
 func (self *App) acceptInput(inputLine *edit.Input, history *edit.History) bool {
-	message := strings.TrimSpace(inputLine.Text())
-	switch self.handleCommand(message) {
+	rawMessage := inputLine.Text()
+	message := strings.TrimSpace(rawMessage)
+	switch self.handleCommand(rawMessage) {
 	case dispatch.Handled:
+		history.Add(message)
+		inputLine.Reset()
+		return false
+	case dispatch.PromptSent:
 		history.Add(message)
 		inputLine.Reset()
 		return true
@@ -816,7 +816,11 @@ func (self *App) acceptInput(inputLine *edit.Input, history *edit.History) bool 
 }
 
 func (self *App) submitInput(inputLine *edit.Input, history *edit.History, message string) {
-	history.Add(message)
+	if rawMessage := inputLine.Text(); dispatch.LiteralSlash(rawMessage) {
+		history.Add(rawMessage)
+	} else {
+		history.Add(message)
+	}
 	inputLine.Reset()
 
 	if message == "" {
@@ -1759,7 +1763,11 @@ func (self *App) acceptTypedLines(history *edit.History, initialMessage string, 
 	reader := bufio.NewScanner(source)
 
 	for reader.Scan() {
-		self.acceptPlainInput(history, strings.TrimSpace(reader.Text()))
+		message := reader.Text()
+		if !dispatch.LiteralSlash(message) {
+			message = strings.TrimSpace(message)
+		}
+		self.acceptPlainInput(history, message)
 		if self.isTransitionRequested() {
 			return
 		}
@@ -1775,7 +1783,13 @@ func (self *App) acceptPlainInput(history *edit.History, message string) {
 		return
 	}
 	if self.handleCommand(message) == dispatch.Proceed {
-		self.ask(history, message)
+		if dispatch.LiteralSlash(message) {
+			history.Add(message)
+			self.start(strings.TrimSpace(message))
+			self.waitForCurrentTurn()
+		} else {
+			self.ask(history, message)
+		}
 		return
 	}
 

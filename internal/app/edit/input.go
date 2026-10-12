@@ -13,7 +13,7 @@ type Action int
 const (
 	DrawInput Action = iota
 	AcceptInput
-	ForceAcceptInput
+	AlternateAcceptInput
 	ContinueTurn
 	CancelTurn
 	QuitSession
@@ -371,7 +371,7 @@ func (self *Input) enter(keypress key.Key) Action {
 		case isCoolingOff:
 			return DrawInput
 		case keypress.Mod.Has(key.Alt):
-			return ForceAcceptInput
+			return AlternateAcceptInput
 		default:
 			return AcceptInput
 		}

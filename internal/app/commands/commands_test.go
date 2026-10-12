@@ -399,7 +399,7 @@ func TestForkRequiresAPersistedSession(t *testing.T) {
 	if result != dispatch.Rejected {
 		t.Fatalf("expected the command to be refused, got result %d", result)
 	}
-	want := "/fork: Session does not exist yet (alt+enter to send)"
+	want := "/fork: Session does not exist yet (prepend a space to send)"
 	if failure != want {
 		t.Errorf("got %q, want %q", failure, want)
 	}
@@ -477,7 +477,7 @@ func TestAModelThatCannotBeResolvedLeavesTheCommandToBeCorrected(t *testing.T) {
 		t.Fatalf("expected the command to be refused, got result %d", result)
 	}
 
-	want := `/new: Model "opus" is ambiguous (alt+enter to send)`
+	want := `/new: Model "opus" is ambiguous (prepend a space to send)`
 	if failure != want {
 		t.Errorf("got %q, want %q", failure, want)
 	}

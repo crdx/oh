@@ -988,10 +988,10 @@ func TestTabInOrdinaryInputBecomesSpaces(t *testing.T) {
 	}
 }
 
-func TestAltReturnForceAcceptsNonEmptyInput(t *testing.T) {
+func TestAltReturnSelectsTheAlternateAcceptAction(t *testing.T) {
 	self := inputFromKeys(t, "/unknown")
 
-	if got := self.Apply(key.Key{Code: key.Enter, Mod: key.Alt}, false); got != ForceAcceptInput {
+	if got := self.Apply(key.Key{Code: key.Enter, Mod: key.Alt}, false); got != AlternateAcceptInput {
 		t.Errorf("got action %v", got)
 	}
 }

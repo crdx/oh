@@ -19,7 +19,7 @@ Model returned no reply.
 
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ /grant: /golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/reference     │
- │ already has temporary read-only access (alt+enter to send)                                     │
+ │ already has temporary read-only access (prepend a space to send)                               │
 ─┴── ·✦· ─ r[reference] ─────────────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -31,13 +31,13 @@ Model returned no reply.
  │ or directory; could not resolve                                                                │
  │ /golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/missing/deeper: lstat │
  │ /golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/missing: no such file │
- │ or directory (alt+enter to send)                                                               │
+ │ or directory (prepend a space to send)                                                         │
 ─┴── ·✦· ────────────────────────────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === executable access rejected ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
- │ Usage: /grant {r|rw} <path>... (alt+enter to send)                                             │
+ │ Usage: /grant {r|rw} <path>... (prepend a space to send)                                       │
 ─┴── ·✦· ────────────────────────────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -71,7 +71,7 @@ Model returned no reply.
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ /grant: Could not resolve ~/missing: lstat                                                     │
  │ /golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/user/missing: no such │
- │ file or directory (alt+enter to send)                                                          │
+ │ file or directory (prepend a space to send)                                                    │
 ─┴── ·✦· ────────────────────────────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -80,7 +80,7 @@ Model returned no reply.
  │ /grant: Could not resolve                                                                      │
  │ /golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/missing: lstat        │
  │ /golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/missing: no such file │
- │ or directory (alt+enter to send)                                                               │
+ │ or directory (prepend a space to send)                                                         │
 ─┴── ·✦· ────────────────────────────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -143,7 +143,7 @@ Model returned no reply.
 === revoke without grant rejected ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ /revoke: /golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/reference    │
- │ has no temporary grant (alt+enter to send)                                                     │
+ │ has no temporary grant (prepend a space to send)                                               │
 ─┴── ·✦· ────────────────────────────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -174,7 +174,7 @@ Model returned no reply.
  │ /grant: Could not resolve                                                                      │
  │ /golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/missing: lstat        │
  │ /golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/missing: no such file │
- │ or directory (alt+enter to send)                                                               │
+ │ or directory (prepend a space to send)                                                         │
 ─┴── ·✦· ─ r[reference user] ────────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -201,7 +201,7 @@ Model returned no reply.
 
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
  │ /revoke: /golden-grants/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/missing has  │
- │ no temporary grant (alt+enter to send)                                                         │
+ │ no temporary grant (prepend a space to send)                                                   │
 ─┴── ·✦· ────────────────────────────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -224,13 +224,13 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === unclosed quote rejected ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
- │ Usage: /grant {r|rw} <path>... (alt+enter to send)                                             │
+ │ Usage: /grant {r|rw} <path>... (prepend a space to send)                                       │
 ─┴── ·✦· ────────────────────────────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === unknown access rejected ===
  ╭────────────────────────────────────────────────────────────────────────────────────────────────╮
- │ Usage: /grant {r|rw} <path>... (alt+enter to send)                                             │
+ │ Usage: /grant {r|rw} <path>... (prepend a space to send)                                       │
 ─┴── ·✦· ────────────────────────────────────────────────────────────────────────── tame-impala ──┴─
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────

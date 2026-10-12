@@ -58,7 +58,7 @@
 ────────────────────────────────────────────────────────────
 === 08 enter submits rather than chooses ===
  ╭────────────────────────────────────────────────────────╮
- │ Command not found: /qu (alt+enter to send)             │
+ │ Command not found: /qu (prepend a space to send)       │
 ─┴────────────────────────────────────────────────────────┴─
 /qu
 › /quit  leave the session, and say goodbye in a line long …
@@ -421,7 +421,7 @@ see /co
 === 66 enter on an option missing its value shows the usage ===
  ╭────────────────────────────────────────────────────────╮
  │ Usage: /new [-m <model>] [-c <flags>] [-t <tool>]...   │
- │ [--yolo] [-f <session>] (alt+enter to send)            │
+ │ [--yolo] [-f <session>] (prepend a space to send)      │
 ─┴────────────────────────────────────────────────────────┴─
 /new -m
 › -m  pick which model to use
@@ -436,36 +436,37 @@ see /co
 === 67 enter on sandboxed capabilities beside the waiver refuses them ===
  ╭────────────────────────────────────────────────────────╮
  │ /new: --yolo leaves rxwng always on, so --caps takes   │
- │ only sl and custom tool groups (got "rx") (alt+enter   │
- │ to send)                                               │
+ │ only sl and custom tool groups (got "rx") (prepend a   │
+ │ space to send)                                         │
 ─┴────────────────────────────────────────────────────────┴─
 /new --yolo -c rx
 ────────────────────────────────────────────────────────────
 === 68 enter on sandboxed capabilities in a waived session refuses them ===
  ╭────────────────────────────────────────────────────────╮
  │ /fork: --yolo leaves rxwng always on, so --caps takes  │
- │ only sl and custom tool groups (got "w") (alt+enter to │
- │ send)                                                  │
+ │ only sl and custom tool groups (got "w") (prepend a    │
+ │ space to send)                                         │
 ─┴────────────────────────────────────────────────────────┴─
 /fork -c w
 ────────────────────────────────────────────────────────────
 === 69 enter on an unknown capability refuses it ===
  ╭────────────────────────────────────────────────────────╮
  │ /new: Unknown capability flag "z" — must be one of     │
- │ "rxwsngla" (alt+enter to send)                         │
+ │ "rxwsngla" (prepend a space to send)                   │
 ─┴────────────────────────────────────────────────────────┴─
 /new -c rz
 ────────────────────────────────────────────────────────────
 === 70 enter on an unknown tool refuses it ===
  ╭────────────────────────────────────────────────────────╮
- │ /fork: Tools not available: nope (alt+enter to send)   │
+ │ /fork: Tools not available: nope (prepend a space to   │
+ │ send)                                                  │
 ─┴────────────────────────────────────────────────────────┴─
 /fork -t nope
 ────────────────────────────────────────────────────────────
 === 71 enter on an unknown model refuses it ===
  ╭────────────────────────────────────────────────────────╮
  │ /new: Model "nope" does not match any known model      │
- │ (alt+enter to send)                                    │
+ │ (prepend a space to send)                              │
 ─┴────────────────────────────────────────────────────────┴─
 /new -m nope --yolo
 ────────────────────────────────────────────────────────────
@@ -492,7 +493,7 @@ see /co
 === 76 enter on a bare model beside -m shows the usage ===
  ╭────────────────────────────────────────────────────────╮
  │ Usage: /new [-m <model>] [-c <flags>] [-t <tool>]...   │
- │ [--yolo] [-f <session>] (alt+enter to send)            │
+ │ [--yolo] [-f <session>] (prepend a space to send)      │
 ─┴────────────────────────────────────────────────────────┴─
 /new sonnet -m opus
 ────────────────────────────────────────────────────────────

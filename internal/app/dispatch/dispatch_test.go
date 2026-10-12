@@ -30,7 +30,7 @@ func TestHandleRejectsExistingPathsWithFewerThanTwoParts(t *testing.T) {
 		}
 
 		result, failure := dispatch.Handle(registry, dispatch.Actions{}, path)
-		wantFailure := "Command not found: " + path + " (alt+enter to send)"
+		wantFailure := "Command not found: " + path + " (prepend a space to send)"
 		if result != dispatch.Rejected || failure != wantFailure {
 			t.Errorf("Handle(%q) got result %d and failure %q, want %q", path, result, failure, wantFailure)
 		}
@@ -77,6 +77,57 @@ func TestAPastedPathIsAMessageRatherThanACommand(t *testing.T) {
 				t.Errorf("got %v with %q, want it sent as a message", result, feedback)
 			}
 		})
+	}
+}
+
+func TestALeadingSpaceSendsCommandsAndSnippetsLiterally(t *testing.T) {
+	registry := newTestRegistry(t)
+	for _, message := range []string{" /unknown", "  /!true", " //add review this"} {
+		if !dispatch.LiteralSlash(message) {
+			t.Errorf("%q was not recognised as a literal slash", message)
+		}
+		result, failure := dispatch.Handle(registry, dispatch.Actions{}, message)
+		if result != dispatch.Proceed || failure != "" {
+			t.Errorf("%q got result %d and failure %q, want a literal message", message, result, failure)
+		}
+	}
+	for _, message := range []string{"/unknown", "//add review this", "x /unknown", "\t/unknown"} {
+		if dispatch.LiteralSlash(message) {
+			t.Errorf("%q was mistaken for an escaped slash", message)
+		}
+	}
+}
+
+func TestDispatchDistinguishesACommandThatSendsAMessage(t *testing.T) {
+	set, err := slash.NewCommandSet("/",
+		slash.Command{Name: "show", Run: func(slash.Context, slash.Arguments) error { return nil }},
+		slash.Command{Name: "say", Run: func(context slash.Context, _ slash.Arguments) error {
+			context.Send("hello")
+			return nil
+		}},
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	registry, err := slash.NewRegistry(set)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var sent string
+	for _, test := range []struct {
+		message string
+		want    dispatch.Result
+	}{
+		{message: "/show", want: dispatch.Handled},
+		{message: "/say", want: dispatch.PromptSent},
+	} {
+		result, failure := dispatch.Handle(registry, dispatch.Actions{SendPrompt: func(message string) { sent = message }}, test.message)
+		if result != test.want || failure != "" {
+			t.Errorf("%s returned %v and %q, want %v", test.message, result, failure, test.want)
+		}
+	}
+	if sent != "hello" {
+		t.Errorf("sent %q, want hello", sent)
 	}
 }
 

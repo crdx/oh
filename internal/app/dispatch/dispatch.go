@@ -12,7 +12,7 @@ type Result int
 
 const (
 	commandNotFoundMessage = "Command not found"
-	sendAsMessageHint      = " (alt+enter to send)"
+	sendAsMessageHint      = " (prepend a space to send)"
 	snippetNotFoundMessage = "Snippet not found"
 	snippetPrefix          = "//"
 )
@@ -20,6 +20,7 @@ const (
 const (
 	Proceed Result = iota
 	Handled
+	PromptSent
 	Rejected
 )
 
@@ -34,11 +35,28 @@ type Actions struct {
 	ShowPlainListingFeedback  func(string)
 }
 
+func LiteralSlash(message string) bool {
+	return strings.HasPrefix(message, " ") && strings.HasPrefix(strings.TrimLeft(message, " "), "/")
+}
+
 func Handle(registry slash.Registry, actions Actions, message string) (Result, string) {
+	if LiteralSlash(message) {
+		return Proceed, ""
+	}
+
 	invocation, found := registry.Find(message)
 	if found {
+		isPromptSent := false
+		sendPrompt := actions.SendPrompt
+		actions.SendPrompt = func(prompt string) {
+			isPromptSent = true
+			sendPrompt(prompt)
+		}
 		if err := invocation.Command.Run(actions, invocation.Arguments); err != nil {
 			return Rejected, slash.FormatError(invocation, err) + sendAsMessageHint
+		}
+		if isPromptSent {
+			return PromptSent, ""
 		}
 		return Handled, ""
 	}

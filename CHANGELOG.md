@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Use alt+enter to reverse turn interruption for commands and snippets
 - Fuzzy match model in `/new` and `/fork` also
 - Show a pending `/!` result while a model answer is still streaming
 - Move send-now notice to the top left, a bit closer to the text it concerns

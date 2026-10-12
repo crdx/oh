@@ -1,0 +1,40 @@
+=== alt+enter on a command ===
+
+ /nosuch
+
+
+Model returned no reply.
+
+────────────────────────────────────────
+
+────────────────────────────────────────
+=== alt+enter on a snippet ===
+
+ //add review this
+
+
+Model returned no reply.
+
+────────────────────────────────────────
+
+────────────────────────────────────────
+=== enter on a command ===
+
+ /nosuch
+
+
+Model returned no reply.
+
+────────────────────────────────────────
+
+────────────────────────────────────────
+=== enter on a snippet ===
+
+ //add review this
+
+
+Model returned no reply.
+
+────────────────────────────────────────
+
+────────────────────────────────────────
