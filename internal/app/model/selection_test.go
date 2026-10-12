@@ -388,17 +388,49 @@ func TestAmbiguousModelSelectionShowsEveryMatch(t *testing.T) {
 	}
 }
 
-func TestAQueryScatteredThroughANameIsReadOnlyWhenGuessingIsAllowed(t *testing.T) {
-	if matches := RankedChoices("gp56", listedModels()); len(matches) != 1 {
-		t.Errorf("expected a loose reading to find the model, got %v", matches)
+func TestSessionQueriesMatchScatteredLettersWithinAProvider(t *testing.T) {
+	choices := []Choice{
+		{Provider: codexProvider, ID: "gpt-6-luna", EffortLevels: []string{"high"}},
+		{Provider: opencodeGoProvider, ID: "gpt-6-luna", EffortLevels: []string{"high"}},
 	}
 
-	if matches := RankedChoicesWithoutGuessing("gp56", listedModels()); matches != nil {
-		t.Errorf("expected the scattered query to name nothing, got %v", matches)
+	for query, want := range map[string]string{
+		"codex/luna":       codexProvider,
+		"opencode-go/luna": opencodeGoProvider,
+		"CODEX/LUNA":       codexProvider,
+	} {
+		selection, err := ResolveQuery(query, choices, Defaults{})
+		if err != nil {
+			t.Errorf("%s: %v", query, err)
+			continue
+		}
+		if selection.Provider != want || selection.Model != "gpt-6-luna" {
+			t.Errorf("%s: got %s/%s, want %s/gpt-6-luna", query, selection.Provider, selection.Model, want)
+		}
 	}
 
-	if matches := RankedChoicesWithoutGuessing("sonnet", listedModels()); len(matches) != 1 {
-		t.Errorf("expected a query held within a name to still be read, got %v", matches)
+	if _, err := ResolveQuery("luna", choices, Defaults{}); err == nil ||
+		!strings.Contains(err.Error(), "ambiguous; matches: codex/gpt-6-luna, opencode-go/gpt-6-luna") {
+		t.Errorf("expected both providers to be named as ambiguous, got %v", err)
+	}
+	if _, err := ResolveQuery("codex/moon", choices, Defaults{}); err == nil ||
+		!strings.Contains(err.Error(), "does not match any known model") {
+		t.Errorf("expected an unmatched query to be refused, got %v", err)
+	}
+}
+
+func TestSessionQueriesPreferContiguousMatchesOverScatteredLetters(t *testing.T) {
+	choices := []Choice{
+		{Provider: codexProvider, ID: "gpt-6-luna", EffortLevels: []string{"high"}},
+		{Provider: codexProvider, ID: "luna", EffortLevels: []string{"high"}},
+	}
+
+	selection, err := ResolveQuery("codex/luna", choices, Defaults{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if selection.Model != "luna" {
+		t.Errorf("got %s, want the contiguous model name", selection.Model)
 	}
 }
 

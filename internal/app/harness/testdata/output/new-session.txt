@@ -107,6 +107,8 @@
 "opus-5@max"                 new -m anthropic/claude-opus-5@max --from able-dolphin
 "haiku"                      new -m anthropic/claude-haiku-5@high --from able-dolphin
 "gpt"                        new -m codex/gpt-5.6-sol@high+fast --from able-dolphin
+"gp56"                       new -m codex/gpt-5.6-sol@high+fast --from able-dolphin
+"codex/sol"                  new -m codex/gpt-5.6-sol@high+fast --from able-dolphin
 "gpt@high"                   new -m codex/gpt-5.6-sol@high --from able-dolphin
 "gpt@high+fast"              new -m codex/gpt-5.6-sol@high+fast --from able-dolphin
 "minimax"                    new -m opencode-go/minimax-m3 --from able-dolphin
@@ -121,6 +123,8 @@
 "anthropic/claude-opus-4-5"  new -m anthropic/claude-opus-4-5@high
 "sonnet"                     new -m anthropic/claude-sonnet-4-5@medium
 "gpt"                        new -m codex/gpt-5.6-sol@high
+"gp56"                       new -m codex/gpt-5.6-sol@high
+"codex/sol"                  new -m codex/gpt-5.6-sol@high
 "opus-5@high"                error: effort "high" does not match any of: medium, max
 "opus-4-5@high"              new -m anthropic/claude-opus-4-5@high
 "opus-4-5@hi"                new -m anthropic/claude-opus-4-5@high

@@ -138,7 +138,7 @@ func ResolveQuery(query string, choices []Choice, defaults Defaults) (Selection,
 		return Selection{}, fmt.Errorf("model must be written as model or model@effort[+fast], got %q", query)
 	}
 
-	choice, err := onlyMatch(modelQuery, RankedChoicesWithoutGuessing(modelQuery, choices))
+	choice, err := onlyMatch(modelQuery, RankedChoices(modelQuery, choices))
 	if err != nil {
 		return Selection{}, err
 	}
@@ -378,13 +378,12 @@ func ResolveEffort(name string) string {
 
 type matcher func(candidate string, query string) bool
 
-var certainMatchTiers = []matcher{
+var matchTiers = []matcher{
 	func(candidate string, query string) bool { return candidate == query },
 	strings.HasPrefix,
 	strings.Contains,
+	holdsInOrder,
 }
-
-var matchTiers = slices.Concat(certainMatchTiers, []matcher{holdsInOrder})
 
 func matchModel(query string, choices []Choice) (Choice, error) {
 	if len(choices) == 0 {
@@ -411,10 +410,6 @@ func onlyMatch(query string, matches []Choice) (Choice, error) {
 
 func RankedChoices(query string, choices []Choice) []Choice {
 	return rankedChoices(query, choices, matchTiers)
-}
-
-func RankedChoicesWithoutGuessing(query string, choices []Choice) []Choice {
-	return rankedChoices(query, choices, certainMatchTiers)
 }
 
 func rankedChoices(query string, choices []Choice, tiers []matcher) []Choice {

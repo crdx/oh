@@ -8629,7 +8629,7 @@ func resolveForkedSessionGlobs(t *testing.T) string {
 	var written strings.Builder
 
 	for _, glob := range []string{
-		"", "opus-5", "opus-5@max", "haiku", "gpt", "gpt@high", "gpt@high+fast", "minimax", "minimax@high", "nope",
+		"", "opus-5", "opus-5@max", "haiku", "gpt", "gp56", "codex/sol", "gpt@high", "gpt@high+fast", "minimax", "minimax@high", "nope",
 	} {
 		transition, err := cycle.ForkedSessionTransition(cycle.SessionOptions{ModelGlob: glob}, choices, model.Defaults{Effort: "medium", IsFast: true}, "able-dolphin")
 		if err != nil {
@@ -8658,6 +8658,8 @@ func resolveNewSessionGlobs(t *testing.T) string {
 		"anthropic/claude-opus-4-5",
 		"sonnet",
 		"gpt",
+		"gp56",
+		"codex/sol",
 		"opus-5@high",
 		"opus-4-5@high",
 		"opus-4-5@hi",
