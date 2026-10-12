@@ -28,6 +28,6 @@ func MountHomeCache(files *file.Root, homeDirectory string) *file.Root {
 
 func MountTemporaryDirectory(files *file.Root, temporaryDirectory string) *file.Root {
 	temporaryRoot := file.NewLazy(temporaryDirectory, func(string) error { return nil })
-	files.Mount(sandbox.TmpDir, temporaryRoot)
+	files.MountVirtual(sandbox.TmpDir, temporaryRoot)
 	return temporaryRoot
 }

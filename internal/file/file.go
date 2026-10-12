@@ -34,9 +34,10 @@ func RefuseGitDir(name string) error {
 }
 
 type mountedRoot struct {
-	root    *Root
-	name    string
-	isExact bool
+	root      *Root
+	name      string
+	isExact   bool
+	isVirtual bool
 }
 
 type Root struct {
@@ -76,14 +77,11 @@ func NewExactFile(path string, refuseWrite func(name string) error) *Root {
 }
 
 func (self *Root) Mount(path string, root *Root) {
-	self.mountsMutex.Lock()
-	defer self.mountsMutex.Unlock()
-	root.setAccessRefusal(self.access)
-	root.setExcludedNames(self.excludedNames)
-	if root != self {
-		root.SetGitWriteAllowed(self.gitWriteAllowed)
-	}
-	self.mounts[filepath.Clean(path)] = mountedRoot{root: root, name: "."}
+	self.mount(path, root, false)
+}
+
+func (self *Root) MountVirtual(path string, root *Root) {
+	self.mount(path, root, true)
 }
 
 func (self *Root) MountFile(path string, root *Root, name string) {
@@ -152,27 +150,28 @@ func (self *Root) Resolve(path string) (*Root, string, error) {
 		return self, path, nil
 	}
 
+	self.mountsMutex.RLock()
+	directRoot, directName, isVirtual := self.mountedAt(path)
+	self.mountsMutex.RUnlock()
+	if isVirtual {
+		return directRoot, directName, nil
+	}
+	workspaceName, isWithinWorkspace := pathutil.RelativeTo(self.Name(), path)
 	canonical := pathutil.Canonicalise(path)
 	if canonical != path {
 		self.mountsMutex.RLock()
-		root, name := self.mountedAt(canonical)
+		resolvedRoot, resolvedName, isResolvedVirtual := self.mountedAt(canonical)
 		self.mountsMutex.RUnlock()
-		if root != nil {
-			return root, name, nil
+		if resolvedRoot != nil && (!isResolvedVirtual || isWithinWorkspace || directRoot != nil) {
+			return resolvedRoot, resolvedName, nil
 		}
 	}
-
-	if name, ok := pathutil.RelativeTo(self.Name(), path); ok {
-		return self, name, nil
+	if isWithinWorkspace {
+		return self, workspaceName, nil
 	}
-
-	self.mountsMutex.RLock()
-	defer self.mountsMutex.RUnlock()
-
-	if root, name := self.mountedAt(path); root != nil {
-		return root, name, nil
+	if directRoot != nil {
+		return directRoot, directName, nil
 	}
-
 	return nil, "", ErrOutsideRoot
 }
 
@@ -326,6 +325,17 @@ func (self *Root) MkdirAll(name string, perm os.FileMode) error {
 	return self.mkdirWithRefusals(root, name, perm)
 }
 
+func (self *Root) mount(path string, root *Root, isVirtual bool) {
+	self.mountsMutex.Lock()
+	defer self.mountsMutex.Unlock()
+	root.setAccessRefusal(self.access)
+	root.setExcludedNames(self.excludedNames)
+	if root != self {
+		root.SetGitWriteAllowed(self.gitWriteAllowed)
+	}
+	self.mounts[filepath.Clean(path)] = mountedRoot{root: root, name: ".", isVirtual: isVirtual}
+}
+
 func (self *Root) getRoot() (*os.Root, error) {
 	if self.lazyPath == "" {
 		return self.root, nil
@@ -386,10 +396,11 @@ func (self rootFileSystem) ReadDir(name string) ([]fs.DirEntry, error) {
 	return self.root.ReadDir(name)
 }
 
-func (self *Root) mountedAt(path string) (*Root, string) {
+func (self *Root) mountedAt(path string) (*Root, string, bool) {
 	var resolvedRoot *Root
 	resolvedName := ""
 	resolvedAt := ""
+	isVirtual := false
 
 	for at, mountedRoot := range self.mounts {
 		name, below := pathutil.RelativeTo(at, path)
@@ -400,9 +411,10 @@ func (self *Root) mountedAt(path string) (*Root, string) {
 		resolvedRoot = mountedRoot.root
 		resolvedName = filepath.Join(mountedRoot.name, name)
 		resolvedAt = at
+		isVirtual = mountedRoot.isVirtual
 	}
 
-	return resolvedRoot, resolvedName
+	return resolvedRoot, resolvedName, isVirtual
 }
 
 func (self *Root) refuseWrite(name string) error {

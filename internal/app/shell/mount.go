@@ -127,6 +127,9 @@ func (self *PathAccess) Grant(path string, access Access) (bool, error) {
 	defer self.mutex.Unlock()
 
 	path = filepath.Clean(path)
+	if err := refuseTmpAlias(path); err != nil {
+		return false, err
+	}
 	if err := self.denials.Refuse(path); err != nil {
 		return false, err
 	}
@@ -425,6 +428,9 @@ func PreparePaths(paths Paths, warnings io.Writer) (Paths, error) {
 
 	for _, list := range lists {
 		for _, path := range list.source {
+			if err := RefuseHostTmpPath(path); err != nil {
+				return Paths{}, err
+			}
 			_, err := os.Stat(path)
 			if errors.Is(err, fs.ErrNotExist) {
 				if err := os.MkdirAll(path, 0o700); err != nil {
@@ -514,7 +520,30 @@ func newMountedRoot(mode *caps.Mode, mount configuredMount, access Access) *file
 	return file.NewLazy(mount.directory, refuseWrite)
 }
 
+func RefuseHostTmpPath(path string) error {
+	resolvedPath := pathutil.Canonicalise(path)
+	_, isSpellingInTmp := pathutil.RelativeTo(sandbox.TmpDir, path)
+	_, isTargetInTmp := pathutil.RelativeTo(sandbox.TmpDir, resolvedPath)
+	if !isSpellingInTmp && !isTargetInTmp {
+		return nil
+	}
+	if resolvedPath != filepath.Clean(path) {
+		return fmt.Errorf("path %s resolves to %s across the session /tmp boundary", pathutil.Shorten(path), pathutil.Shorten(resolvedPath))
+	}
+	return fmt.Errorf("host %s path %s is shadowed by session scratch", sandbox.TmpDir, pathutil.Shorten(path))
+}
+
+func refuseTmpAlias(path string) error {
+	if pathutil.Canonicalise(path) == filepath.Clean(path) {
+		return nil
+	}
+	return RefuseHostTmpPath(path)
+}
+
 func findConfiguredMount(path string) (configuredMount, error) {
+	if err := refuseTmpAlias(path); err != nil {
+		return configuredMount{}, err
+	}
 	info, err := os.Stat(path)
 	if err != nil {
 		return configuredMount{}, err

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"slices"
@@ -31,6 +32,10 @@ func TestGoldenShellPoliciesHandleFilesystemChanges(t *testing.T) {
 		"=== missing protection root ===\n" + missingProtectionRootGolden(t),
 		"=== symlinked workspace metadata ===\n" + symlinkedWorkspaceGolden(t),
 		"=== git-only file tools ===\n" + gitOnlyGolden(t),
+		"=== explicit workspace write grant ===\n" + workspaceWriteGrantGolden(t),
+		"=== absolute denied home secret ===\n" + absoluteDenyGolden(t),
+		"=== host tmp aliases refused ===\n" + hostTmpAliasGolden(t),
+		"=== virtual tmp mount attribution ===\n" + virtualTmpMountGolden(t),
 	}
 	compareShellGolden(t, "policies.txt", strings.Join(sections, "\n\n")+"\n")
 }
@@ -55,8 +60,8 @@ func workspacePathAliasesGolden(t *testing.T) string {
 func outsidePathAliasGolden(t *testing.T) string {
 	t.Helper()
 
-	workspace := t.TempDir()
-	outside := t.TempDir()
+	workspace := outsideTmpTestDirectory(t)
+	outside := outsideTmpTestDirectory(t)
 	alias := filepath.Join(workspace, "latest")
 	if err := os.Symlink(outside, alias); err != nil {
 		t.Fatal(err)
@@ -267,6 +272,120 @@ func symlinkedWorkspaceGolden(t *testing.T) string {
 		return "error: " + err.Error()
 	}
 	return "read:\n" + renderPaths(workspace, policy.Read)
+}
+
+func hostTmpAliasGolden(t *testing.T) string {
+	t.Helper()
+	outside := outsideTmpTestDirectory(t)
+	hostTemporary := hostTmpTestDirectory(t)
+	alias := filepath.Join(outside, "into-tmp")
+	if err := os.Symlink(hostTemporary, alias); err != nil {
+		t.Fatal(err)
+	}
+	_, configuredError := PreparePaths(Paths{Read: []string{alias}}, io.Discard)
+	_, directError := PreparePaths(Paths{Read: []string{hostTemporary}}, io.Discard)
+	_, ordinaryError := PreparePaths(Paths{Read: []string{outside}}, io.Discard)
+	mode := caps.NewMode(caps.Read)
+	files := configuredPathTestRoot(t, mode)
+	access, err := NewPathAccess(files, mode, Paths{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(access.Close)
+	changed, grantError := access.Grant(alias, ReadAccess)
+	return fmt.Sprintf("configured alias refused: %t\ndirect host tmp refused: %t\ntemporary grant refused: %t\nordinary path accepted: %t",
+		configuredError != nil, directError != nil, grantError != nil && !changed, ordinaryError == nil)
+}
+
+func virtualTmpMountGolden(t *testing.T) string {
+	t.Helper()
+	workspace := outsideTmpTestDirectory(t)
+	openedRoot, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = openedRoot.Close() })
+	files := file.New(openedRoot, func(string) error { return file.ErrReadOnly })
+	scratchRoot := MountTemporaryDirectory(files, outsideTmpTestDirectory(t))
+	t.Cleanup(func() { _ = scratchRoot.Close() })
+	hostTemporary := hostTmpTestDirectory(t)
+	unlisted := filepath.Join(outsideTmpTestDirectory(t), "unlisted")
+	if err := os.Symlink(hostTemporary, unlisted); err != nil {
+		t.Fatal(err)
+	}
+	inside := filepath.Join(workspace, "inside")
+	if err := os.Symlink(hostTemporary, inside); err != nil {
+		t.Fatal(err)
+	}
+	_, _, unlistedError := files.Resolve(filepath.Join(unlisted, "note"))
+	insideRoot, _, insideError := files.Resolve(filepath.Join(inside, "note"))
+	directRoot, _, directError := files.Resolve(filepath.Join(hostTemporary, "note"))
+	return fmt.Sprintf("unlisted alias refused: %t\nworkspace alias sees scratch: %t\ndirect tmp sees scratch: %t",
+		errors.Is(unlistedError, file.ErrOutsideRoot), insideError == nil && insideRoot == scratchRoot, directError == nil && directRoot == scratchRoot)
+}
+
+func workspaceWriteGrantGolden(t *testing.T) string {
+	t.Helper()
+	workspace := t.TempDir()
+	root, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = root.Close() })
+	mode := caps.NewMode(caps.Read | caps.Shell)
+	files := file.New(root, caps.RefuseWrite(mode))
+	access, err := NewPathAccess(files, mode, Paths{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(access.Close)
+	if _, err := access.Grant(workspace, ReadAccess|WriteAccess); err != nil {
+		t.Fatal(err)
+	}
+	paths, optional := access.getPaths()
+	policy, err := createPolicyWithSupportProbe(context.Background(), workspace, t.TempDir(), t.TempDir(), paths, optional,
+		mode.Current(), func(context.Context) error { return nil })
+	if err != nil {
+		t.Fatal(err)
+	}
+	written := files.WriteFile("note", []byte("yes"), 0o600)
+	access.Revoke(workspace)
+	revoked := files.WriteFile("note", []byte("no"), 0o600)
+	return fmt.Sprintf("shell writable: %t\nfile tools writable: %t\nfile tools read-only after revoke: %t",
+		slices.Contains(policy.Write, workspace), written == nil, errors.Is(revoked, file.ErrReadOnly))
+}
+
+func absoluteDenyGolden(t *testing.T) string {
+	t.Helper()
+	workspace := t.TempDir()
+	secret := filepath.Join(workspace, "auth.json")
+	if err := os.WriteFile(secret, []byte("private"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	root, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = root.Close() })
+	mode := caps.NewMode(caps.Read)
+	files := file.New(root, caps.RefuseWrite(mode))
+	access, err := NewPathAccess(files, mode, Paths{Deny: []string{secret}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(access.Close)
+	_, fileError := files.ReadFile("auth.json")
+	policy := sandbox.Policy{Deny: []string{secret}, Read: []string{workspace}}
+	walks := 0
+	deniedPaths, err := policy.DiscoverDenyPathsWith(func([]string, string, string) ([]string, error) {
+		walks++
+		return nil, nil
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	return fmt.Sprintf("directory walks: %d\nshell denies exact path: %t\nfile tools deny read: %t",
+		walks, slices.Contains(deniedPaths, secret), errors.Is(fileError, ErrDenied))
 }
 
 func gitOnlyGolden(t *testing.T) string {

@@ -14,6 +14,7 @@ import (
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/util/pathutil"
 )
 
 func configuredPathTestRoot(t *testing.T, mode *caps.Mode) *file.Root {
@@ -27,7 +28,170 @@ func configuredPathTestRoot(t *testing.T, mode *caps.Mode) *file.Root {
 	return file.New(root, caps.RefuseWrite(mode))
 }
 
+func outsideTmpTestDirectory(t *testing.T) string {
+	t.Helper()
+	home, err := os.UserHomeDir()
+	if err != nil {
+		t.Fatal(err)
+	}
+	directory, err := os.MkdirTemp(filepath.Join(home, ".cache"), "oh-path-alias-") //nolint:usetesting // the test needs a path outside /tmp
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.RemoveAll(directory) })
+	return directory
+}
+
+func hostTmpTestDirectory(t *testing.T) string {
+	t.Helper()
+	directory, err := os.MkdirTemp(sandbox.TmpDir, "oh-path-target-") //nolint:usetesting // the test needs the host's /tmp
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.RemoveAll(directory) })
+	return directory
+}
+
+func TestConfiguredAliasesCrossingTheTmpBoundaryAreRefused(t *testing.T) {
+	outside := outsideTmpTestDirectory(t)
+	hostTemporary := hostTmpTestDirectory(t)
+	intoTmp := filepath.Join(outside, "into-tmp")
+	if err := os.Symlink(hostTemporary, intoTmp); err != nil {
+		t.Fatal(err)
+	}
+	outOfTmp := filepath.Join(hostTemporary, "out-of-tmp")
+	if err := os.Symlink(outside, outOfTmp); err != nil {
+		t.Fatal(err)
+	}
+
+	for _, alias := range []string{intoTmp, outOfTmp} {
+		for name, paths := range map[string]Paths{
+			"read":  {Read: []string{alias}},
+			"write": {Write: []string{alias}},
+			"exec":  {Exec: []string{alias}},
+			"path":  {Path: []string{alias}},
+			"home":  {Home: []string{alias}},
+		} {
+			t.Run(name+"/"+filepath.Base(alias), func(t *testing.T) {
+				if _, err := PreparePaths(paths, io.Discard); err == nil || !strings.Contains(err.Error(), "/tmp boundary") {
+					t.Errorf("configured alias %s was not refused: %v", alias, err)
+				}
+			})
+		}
+	}
+
+	missing := filepath.Join(intoTmp, "not-created")
+	if _, err := PreparePaths(Paths{Write: []string{missing}}, io.Discard); err == nil {
+		t.Error("a missing path under an alias into host tmp was accepted")
+	}
+	if _, err := os.Stat(filepath.Join(hostTemporary, "not-created")); !errors.Is(err, fs.ErrNotExist) {
+		t.Errorf("preparing the alias created a host tmp path: %v", err)
+	}
+	if _, err := PreparePaths(Paths{Read: []string{hostTemporary}}, io.Discard); err == nil {
+		t.Error("a direct host tmp path was accepted despite the scratch overlay")
+	}
+}
+
+func TestTemporaryGrantsCannotCrossTheTmpBoundaryThroughAliases(t *testing.T) {
+	mode := caps.NewMode(caps.Read)
+	files := configuredPathTestRoot(t, mode)
+	access, err := NewPathAccess(files, mode, Paths{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer access.Close()
+	outside := outsideTmpTestDirectory(t)
+	hostTemporary := hostTmpTestDirectory(t)
+	for alias, target := range map[string]string{
+		filepath.Join(outside, "into-tmp"):         hostTemporary,
+		filepath.Join(hostTemporary, "out-of-tmp"): outside,
+	} {
+		if err := os.Symlink(target, alias); err != nil {
+			t.Fatal(err)
+		}
+		if changed, err := access.Grant(alias, ReadAccess|WriteAccess); changed || err == nil {
+			t.Errorf("alias grant changed=%t, err=%v, want refusal", changed, err)
+		}
+		if slices.Contains(access.GetPaths().Write, alias) {
+			t.Errorf("the refused alias %s became writable to the shell", alias)
+		}
+	}
+}
+
+func TestHostTmpPathsResolveOnlyToSessionScratchWithoutGrants(t *testing.T) {
+	workspace := outsideTmpTestDirectory(t)
+	openedRoot, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = openedRoot.Close() }()
+	files := file.New(openedRoot, func(string) error { return file.ErrReadOnly })
+	scratch := outsideTmpTestDirectory(t)
+	scratchRoot := MountTemporaryDirectory(files, scratch)
+	defer func() { _ = scratchRoot.Close() }()
+	hostTemporary := hostTmpTestDirectory(t)
+	hostFile := filepath.Join(hostTemporary, "note")
+	if err := os.WriteFile(hostFile, []byte("host"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	scratchFile := filepath.Join(scratch, filepath.Base(hostTemporary), "note")
+	if err := os.MkdirAll(filepath.Dir(scratchFile), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(scratchFile, []byte("scratch"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	resolvedRoot, name, err := files.Resolve(hostFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if content, err := resolvedRoot.ReadFile(name); err != nil || string(content) != "scratch" {
+		t.Errorf("host /tmp spelled path read %q and %v, want only session scratch", content, err)
+	}
+}
+
+func TestAnUnlistedAliasCannotBorrowTheScratchMount(t *testing.T) {
+	workspace := outsideTmpTestDirectory(t)
+	openedRoot, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = openedRoot.Close() }()
+	files := file.New(openedRoot, func(string) error { return file.ErrReadOnly })
+	scratch := outsideTmpTestDirectory(t)
+	scratchRoot := MountTemporaryDirectory(files, scratch)
+	defer func() { _ = scratchRoot.Close() }()
+	hostTemporary := hostTmpTestDirectory(t)
+	scratchFile := filepath.Join(scratch, filepath.Base(hostTemporary), "note")
+	if err := os.MkdirAll(filepath.Dir(scratchFile), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(scratchFile, []byte("scratch"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	unlistedAlias := filepath.Join(outsideTmpTestDirectory(t), "unlisted")
+	if err := os.Symlink(hostTemporary, unlistedAlias); err != nil {
+		t.Fatal(err)
+	}
+	if _, _, err := files.Resolve(filepath.Join(unlistedAlias, "note")); !errors.Is(err, file.ErrOutsideRoot) {
+		t.Errorf("unlisted alias into host tmp reached scratch: %v", err)
+	}
+	workspaceAlias := filepath.Join(workspace, "linked-tmp")
+	if err := os.Symlink(hostTemporary, workspaceAlias); err != nil {
+		t.Fatal(err)
+	}
+	resolvedRoot, name, err := files.Resolve(filepath.Join(workspaceAlias, "note"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if content, err := resolvedRoot.ReadFile(name); err != nil || string(content) != "scratch" {
+		t.Errorf("workspace alias into tmp read %q and %v, want scratch", content, err)
+	}
+}
+
 func TestMissingConfiguredPathsAreCreatedAndKept(t *testing.T) {
+	t.Setenv("TMPDIR", outsideTmpTestDirectory(t))
 	existingRead := filepath.Join(t.TempDir(), "read")
 	if err := os.WriteFile(existingRead, []byte("content"), 0o600); err != nil {
 		t.Fatal(err)
@@ -84,6 +248,7 @@ func TestMissingConfiguredPathsAreCreatedAndKept(t *testing.T) {
 }
 
 func TestAReadPathAlreadyCoveredByAnotherListIsWarnedAbout(t *testing.T) {
+	t.Setenv("TMPDIR", outsideTmpTestDirectory(t))
 	written := t.TempDir()
 	executed := t.TempDir()
 	both := t.TempDir()
@@ -104,21 +269,22 @@ func TestAReadPathAlreadyCoveredByAnotherListIsWarnedAbout(t *testing.T) {
 
 	reported := warnings.String()
 	for _, want := range []string{
-		"configured path " + written + " is redundant in [sandbox.read] due to sandbox.write",
-		"configured path " + executed + " is redundant in [sandbox.read] due to sandbox.exec",
-		"configured path " + both + " is redundant in [sandbox.read] due to sandbox.write",
-		"configured path " + both + " is redundant in [sandbox.read] due to sandbox.exec",
+		"configured path " + pathutil.Shorten(written) + " is redundant in [sandbox.read] due to sandbox.write",
+		"configured path " + pathutil.Shorten(executed) + " is redundant in [sandbox.read] due to sandbox.exec",
+		"configured path " + pathutil.Shorten(both) + " is redundant in [sandbox.read] due to sandbox.write",
+		"configured path " + pathutil.Shorten(both) + " is redundant in [sandbox.read] due to sandbox.exec",
 	} {
 		if !strings.Contains(reported, want) {
 			t.Errorf("warnings do not report %q: %q", want, reported)
 		}
 	}
-	if strings.Contains(reported, readOnly+" is redundant") {
+	if strings.Contains(reported, pathutil.Shorten(readOnly)+" is redundant") {
 		t.Errorf("a read-only path was reported as covered: %q", reported)
 	}
 }
 
 func TestAPathInBothWriteAndExecIsNotWarnedAbout(t *testing.T) {
+	t.Setenv("TMPDIR", outsideTmpTestDirectory(t))
 	shared := t.TempDir()
 
 	var warnings strings.Builder
@@ -466,7 +632,7 @@ func TestConfiguredFilesAreMountedWithoutTheirSiblings(t *testing.T) {
 func TestAConfiguredFileSymlinkCannotDisguiseRepositoryMetadata(t *testing.T) {
 	mode := caps.NewMode(caps.Read | caps.Write)
 	files := configuredPathTestRoot(t, mode)
-	repository := t.TempDir()
+	repository := outsideTmpTestDirectory(t)
 	target := filepath.Join(repository, ".git", "config")
 	if err := os.Mkdir(filepath.Dir(target), 0o700); err != nil {
 		t.Fatal(err)
@@ -474,7 +640,7 @@ func TestAConfiguredFileSymlinkCannotDisguiseRepositoryMetadata(t *testing.T) {
 	if err := os.WriteFile(target, []byte("original"), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	alias := filepath.Join(t.TempDir(), "shared")
+	alias := filepath.Join(outsideTmpTestDirectory(t), "shared")
 	if err := os.Symlink(target, alias); err != nil {
 		t.Fatal(err)
 	}
@@ -501,7 +667,7 @@ func TestAConfiguredFileSymlinkCannotDisguiseRepositoryMetadata(t *testing.T) {
 func spelledThroughASymlink(t *testing.T) (string, string) {
 	t.Helper()
 
-	system, err := filepath.EvalSymlinks(t.TempDir())
+	system, err := filepath.EvalSymlinks(outsideTmpTestDirectory(t))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -509,7 +675,7 @@ func spelledThroughASymlink(t *testing.T) (string, string) {
 		t.Fatal(err)
 	}
 
-	elsewhere := t.TempDir()
+	elsewhere := outsideTmpTestDirectory(t)
 	if err := os.Symlink(system, filepath.Join(elsewhere, "org.crdx")); err != nil {
 		t.Fatal(err)
 	}
@@ -542,6 +708,7 @@ func TestAGrantIsHeldByItsRealPathWhileAHomeMappingKeepsItsSpelling(t *testing.T
 }
 
 func TestAGrantSwallowedByAWiderGrantIsReported(t *testing.T) {
+	t.Setenv("TMPDIR", outsideTmpTestDirectory(t))
 	outer := t.TempDir()
 	inner := filepath.Join(outer, "inner")
 	if err := os.Mkdir(inner, 0o700); err != nil {
@@ -574,6 +741,7 @@ func TestAGrantSwallowedByAWiderGrantIsReported(t *testing.T) {
 }
 
 func TestAGrantRefiningAReadGrantIsNotReported(t *testing.T) {
+	t.Setenv("TMPDIR", outsideTmpTestDirectory(t))
 	outer := t.TempDir()
 	inner := filepath.Join(outer, "inner")
 	if err := os.Mkdir(inner, 0o700); err != nil {
@@ -597,6 +765,7 @@ func TestAGrantRefiningAReadGrantIsNotReported(t *testing.T) {
 }
 
 func TestNestedGrantsOnTheirOwnAreNotReported(t *testing.T) {
+	t.Setenv("TMPDIR", outsideTmpTestDirectory(t))
 	outer := t.TempDir()
 	inner := filepath.Join(outer, "inner")
 	if err := os.Mkdir(inner, 0o700); err != nil {

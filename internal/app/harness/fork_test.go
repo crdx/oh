@@ -140,8 +140,8 @@ func drawForkGolden(t *testing.T, source forkGoldenSource) forkGoldenDrawing {
 	t.Helper()
 
 	paths := forkGoldenPaths{
-		reference: stableGoldenPath(t, "reference", true),
-		missing:   stableGoldenPath(t, "missing", false),
+		reference: stableGoldenGrantPath(t, "reference", true),
+		missing:   stableGoldenGrantPath(t, "missing", false),
 	}
 
 	var screenOutput bytes.Buffer
@@ -206,6 +206,7 @@ func drawForkGolden(t *testing.T, source forkGoldenSource) forkGoldenDrawing {
 		"\n--- chat.md ---\n" + canonicalSessionTranscript(string(transcript), sessionName)
 
 	stable := func(text string) string {
+		text = stableGoldenGrantText(text, filepath.Dir(paths.reference))
 		return strings.ReplaceAll(text, goldenProcessIdentity(), stableProcessIdentity)
 	}
 

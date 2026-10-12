@@ -2486,7 +2486,7 @@ func TestAForkCarriesItsSourcesGrantsForwardsAndJobs(t *testing.T) {
 	}, "127.9.9.9")
 	self.jobs = jobState{manager: jobs.New(nil)}
 
-	grantedPath, err := filepath.EvalSymlinks(t.TempDir())
+	grantedPath, err := filepath.EvalSymlinks(outsideHostTmpFixture(t))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -17088,7 +17088,7 @@ func TestPathGrantCommandBecomesPendingAccessAndUpdatesTheModel(t *testing.T) {
 	self := testConversation(t, &screenOutput)
 	grants := preparePathGrantCommands(t, self, openTestWorkspace(t, t.TempDir()))
 	self.settleAccess()
-	directory := t.TempDir()
+	directory := outsideHostTmpFixture(t)
 
 	if got := self.handleCommand("/grant r " + directory); got != dispatch.Handled {
 		t.Fatalf("got slash input result %d", got)
@@ -17209,7 +17209,7 @@ func TestPathGrantCommandInterruptsAnActiveTurn(t *testing.T) {
 	preparePathGrantCommands(t, self, openTestWorkspace(t, t.TempDir()))
 	self.currentTurn = Turn{Stream: testRunningTurnStream(), painter: self.newPainter(true)}
 
-	if got := self.handleCommand("/grant r " + t.TempDir()); got != dispatch.Handled {
+	if got := self.handleCommand("/grant r " + outsideHostTmpFixture(t)); got != dispatch.Handled {
 		t.Fatalf("got slash input result %d", got)
 	}
 	if !self.currentTurn.Cancelled() {
@@ -17224,11 +17224,11 @@ func TestPathGrantCommandInterruptsAnActiveTurn(t *testing.T) {
 func TestARegrantedPathIsForgottenByEveryPendingMessage(t *testing.T) {
 	self := testConversation(t, &bytes.Buffer{})
 	grants := preparePathGrantCommands(t, self, openTestWorkspace(t, t.TempDir()))
-	firstPath, err := filepath.EvalSymlinks(t.TempDir())
+	firstPath, err := filepath.EvalSymlinks(outsideHostTmpFixture(t))
 	if err != nil {
 		t.Fatal(err)
 	}
-	secondPath, err := filepath.EvalSymlinks(t.TempDir())
+	secondPath, err := filepath.EvalSymlinks(outsideHostTmpFixture(t))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -17263,7 +17263,7 @@ func FuzzPendingPathGrantsSayWhatTheModelHasNotBeenTold(fuzzer *testing.F) {
 
 		paths := make([]string, 3)
 		for i := range paths {
-			path, err := filepath.EvalSymlinks(t.TempDir())
+			path, err := filepath.EvalSymlinks(outsideHostTmpFixture(t))
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -17335,11 +17335,11 @@ func assertPendingPathGrants(t *testing.T, self *App, grants *pathgrant.Grants, 
 func TestAGrantTakenBackBeforeItIsSentLeavesNothingBehind(t *testing.T) {
 	self := testConversation(t, &bytes.Buffer{})
 	grants := preparePathGrantCommands(t, self, openTestWorkspace(t, t.TempDir()))
-	firstPath, err := filepath.EvalSymlinks(t.TempDir())
+	firstPath, err := filepath.EvalSymlinks(outsideHostTmpFixture(t))
 	if err != nil {
 		t.Fatal(err)
 	}
-	secondPath, err := filepath.EvalSymlinks(t.TempDir())
+	secondPath, err := filepath.EvalSymlinks(outsideHostTmpFixture(t))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -17373,7 +17373,7 @@ func TestAGrantTakenBackBeforeItIsSentLeavesNothingBehind(t *testing.T) {
 func TestAGrantChangedBeforeItIsSentReplacesItsNotice(t *testing.T) {
 	self := testConversation(t, &bytes.Buffer{})
 	preparePathGrantCommands(t, self, openTestWorkspace(t, t.TempDir()))
-	path, err := filepath.EvalSymlinks(t.TempDir())
+	path, err := filepath.EvalSymlinks(outsideHostTmpFixture(t))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -17814,10 +17814,15 @@ func pathGrantGoldenStream(t *testing.T, scenario pathGrantGoldenScenario) strin
 		t.Fatal(err)
 	}
 	self.display.bar = bar.NewConfiguration(registry, live.SegmentLayout)
-	referencePath := stableGoldenPath(t, "reference", true)
-	missingPath := stableGoldenPath(t, "missing", false)
-	homePath := stableGoldenPath(t, "user", true)
+	referencePath := stableGoldenGrantPath(t, "reference", true)
+	missingPath := stableGoldenGrantPath(t, "missing", false)
+	homePath := stableGoldenGrantPath(t, "user", true)
+	home, err := os.UserHomeDir()
+	if err != nil {
+		t.Fatal(err)
+	}
 	t.Setenv("HOME", homePath)
+	defer t.Setenv("HOME", home)
 
 	inputLine := edit.NewInput(nil)
 	self.inputLine = inputLine
@@ -17847,7 +17852,7 @@ func pathGrantGoldenStream(t *testing.T, scenario pathGrantGoldenScenario) strin
 	case pathGrantMissing:
 		self.handleCommand("/grant r " + missingPath)
 	case pathGrantHomePath:
-		if err := os.Mkdir(filepath.Join(homePath, "reference"), 0o700); err != nil {
+		if err := os.MkdirAll(filepath.Join(homePath, "reference"), 0o700); err != nil {
 			t.Fatal(err)
 		}
 		self.handleCommand("/grant r ~/reference")
@@ -17866,7 +17871,7 @@ func pathGrantGoldenStream(t *testing.T, scenario pathGrantGoldenScenario) strin
 		self.handleCommand("/grant r " + referencePath)
 	case pathGrantMany:
 		pathAccess := pathGrantAccess(t, self.mode, workspace)
-		manyGrants := stableManyGrantGoldenPaths(t)
+		manyGrants := stableManyGrantGoldenPaths(t, filepath.Dir(referencePath))
 		grants, result := pathgrant.NewRestored(workspace, pathAccess, manyGrants)
 		if len(result.Failures) != 0 {
 			t.Fatalf("got restoration failures %#v", result.Failures)
@@ -17884,7 +17889,7 @@ func pathGrantGoldenStream(t *testing.T, scenario pathGrantGoldenScenario) strin
 		self.waitForCurrentTurn()
 	case pathGrantQuoted:
 		spacedPath := filepath.Join(referencePath, "meeting notes")
-		if err := os.Mkdir(spacedPath, 0o700); err != nil {
+		if err := os.MkdirAll(spacedPath, 0o700); err != nil {
 			t.Fatal(err)
 		}
 		self.handleCommand(`/grant r "` + spacedPath + `"`)
@@ -17925,7 +17930,8 @@ func pathGrantGoldenStream(t *testing.T, scenario pathGrantGoldenScenario) strin
 	}
 	self.show(inputLine)
 
-	return strings.ReplaceAll(screenOutput.String(), goldenProcessIdentity(), stableProcessIdentity)
+	stable := stableGoldenGrantText(screenOutput.String(), filepath.Dir(referencePath))
+	return strings.ReplaceAll(stable, goldenProcessIdentity(), stableProcessIdentity)
 }
 
 const stableProcessIdentity = "0000000000"
@@ -17934,10 +17940,66 @@ func goldenProcessIdentity() string {
 	return fmt.Sprintf("%010d", os.Getpid())
 }
 
+func outsideHostTmpFixture(t *testing.T) string {
+	t.Helper()
+	home, err := os.UserHomeDir()
+	if err != nil {
+		t.Fatal(err)
+	}
+	directory, err := os.MkdirTemp(filepath.Join(home, ".cache"), "oh-grant-fixture-") //nolint:usetesting // a public grant cannot be under host /tmp
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.RemoveAll(directory) })
+	return directory
+}
+
 func stableGoldenPath(t *testing.T, label string, shouldExist bool) string {
 	t.Helper()
+	return stableGoldenPathAt(t, "/tmp", label, shouldExist)
+}
 
-	parent := "/tmp/oh-golden-" + label + "-" + goldenProcessIdentity()
+const goldenGrantParentWidth = 72
+
+func stableGoldenGrantParent(t *testing.T) string {
+	t.Helper()
+	home, err := os.UserHomeDir()
+	if err != nil {
+		t.Fatal(err)
+	}
+	base := filepath.Join(home, ".cache", "oh-"+goldenProcessIdentity())
+	if len(base) > goldenGrantParentWidth {
+		t.Fatalf("golden grant root %s needs more than %d columns", base, goldenGrantParentWidth)
+	}
+	parent := base + strings.Repeat("x", goldenGrantParentWidth-len(base))
+	if err := os.MkdirAll(parent, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.RemoveAll(parent) })
+	return parent
+}
+
+func stableGoldenGrantPath(t *testing.T, label string, shouldExist bool) string {
+	t.Helper()
+	path := filepath.Join(stableGoldenGrantParent(t), label)
+	if shouldExist {
+		if err := os.MkdirAll(path, 0o700); err != nil {
+			t.Fatal(err)
+		}
+	} else if err := os.RemoveAll(path); err != nil {
+		t.Fatal(err)
+	}
+	return path
+}
+
+func stableGoldenGrantText(text string, parent string) string {
+	stableParent := "/golden-grants/" + strings.Repeat("x", goldenGrantParentWidth-len("/golden-grants/"))
+	return strings.ReplaceAll(text, parent, stableParent)
+}
+
+func stableGoldenPathAt(t *testing.T, root string, label string, shouldExist bool) string {
+	t.Helper()
+	parent := filepath.Join(root, "oh-golden-"+label+"-"+goldenProcessIdentity())
 	path := filepath.Join(parent, label)
 	if err := os.RemoveAll(parent); err != nil {
 		t.Fatal(err)
@@ -17954,18 +18016,8 @@ func stableGoldenPath(t *testing.T, label string, shouldExist bool) string {
 	return path
 }
 
-func manyGrantParent() string {
-	return "/tmp/oh-many-grants-" + goldenProcessIdentity()
-}
-
-func stableManyGrantGoldenPaths(t *testing.T) []pathgrant.Grant {
+func stableManyGrantGoldenPaths(t *testing.T, parent string) []pathgrant.Grant {
 	t.Helper()
-
-	parent := manyGrantParent()
-	if err := os.RemoveAll(parent); err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() { _ = os.RemoveAll(parent) })
 
 	grants := make([]pathgrant.Grant, 50)
 	for i := range grants {

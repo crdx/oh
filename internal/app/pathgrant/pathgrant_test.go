@@ -12,11 +12,37 @@ import (
 	"crdx.org/oh/internal/app/shell"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/file"
+	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/pkg/agent"
 )
 
+func outsideTmpTestDirectory(t *testing.T) string {
+	t.Helper()
+	home, err := os.UserHomeDir()
+	if err != nil {
+		t.Fatal(err)
+	}
+	directory, err := os.MkdirTemp(filepath.Join(home, ".cache"), "oh-grant-test-") //nolint:usetesting // the fixture must stand outside host /tmp
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.RemoveAll(directory) })
+	return directory
+}
+
+func hostTmpTestDirectory(t *testing.T) string {
+	t.Helper()
+	directory, err := os.MkdirTemp(sandbox.TmpDir, "oh-host-tmp-test-") //nolint:usetesting // the fixture must stand inside host /tmp
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.RemoveAll(directory) })
+	return directory
+}
+
 func openTestWorkspace(t *testing.T) *work.Space {
 	t.Helper()
+	t.Setenv("TMPDIR", outsideTmpTestDirectory(t))
 
 	workspace := work.At(t.TempDir())
 	if err := workspace.Open(); err != nil {
@@ -40,6 +66,23 @@ func newTestGrants(t *testing.T) (*Grants, *file.Root, *caps.Mode) {
 	}
 	t.Cleanup(access.Close)
 	return New(workspace, access), files, mode
+}
+
+func TestPublicGrantRejectsHostTmpPathsAfterCanonicalisingAliases(t *testing.T) {
+	grants, files, _ := newTestGrants(t)
+	hostTemporary := hostTmpTestDirectory(t)
+	alias := filepath.Join(outsideTmpTestDirectory(t), "host-tmp")
+	if err := os.Symlink(hostTemporary, alias); err != nil {
+		t.Fatal(err)
+	}
+	for _, path := range []string{hostTemporary, alias} {
+		if _, err := grants.Grant(path, ReadAccess); err == nil {
+			t.Errorf("public grant accepted host tmp path %s", path)
+		}
+	}
+	if _, _, err := files.Resolve(hostTemporary); !errors.Is(err, file.ErrOutsideRoot) {
+		t.Errorf("file tools reached host tmp through refused grants: %v", err)
+	}
 }
 
 func TestReadAndWriteGrantsReachTheFileTools(t *testing.T) {
@@ -229,6 +272,25 @@ func TestTheLatestCompleteEventRestoresTheGrantCollection(t *testing.T) {
 	want := []Grant{{Path: secondPath, Access: ReadAccess | WriteAccess}}
 	if !found || !reflect.DeepEqual(restored, want) {
 		t.Errorf("got %#v and %t", restored, found)
+	}
+}
+
+func TestARestoredHostTmpGrantIsWithdrawn(t *testing.T) {
+	workspace := openTestWorkspace(t)
+	mode := caps.NewMode(caps.Read)
+	files := file.New(workspace.GetRoot(), caps.RefuseWrite(mode))
+	access, err := shell.NewPathAccess(files, mode, shell.Paths{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(access.Close)
+	hostTemporary := hostTmpTestDirectory(t)
+	grants, result := NewRestored(workspace, access, []Grant{{Path: hostTemporary, Access: ReadAccess}})
+	if len(result.Failures) != 1 || len(grants.GetCurrent()) != 0 {
+		t.Errorf("restored host tmp with failures %+v and grants %+v", result.Failures, grants.GetCurrent())
+	}
+	if _, _, err := files.Resolve(hostTemporary); !errors.Is(err, file.ErrOutsideRoot) {
+		t.Errorf("restored host tmp resolved through file tools: %v", err)
 	}
 }
 

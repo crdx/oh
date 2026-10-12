@@ -76,6 +76,9 @@ func NewRestored(
 		}
 		canonicalPath := ""
 		if err == nil {
+			err = shell.RefuseHostTmpPath(grant.Path)
+		}
+		if err == nil {
 			canonicalPath, err = filepath.EvalSymlinks(grant.Path)
 		}
 		if err == nil && filepath.Clean(canonicalPath) != grant.Path {
@@ -180,6 +183,11 @@ func (self *Grants) canonicalPath(path string, mustExist bool) (string, error) {
 		path = filepath.Join(self.workspace.GetResolvedDir(), path)
 	}
 	path = filepath.Clean(path)
+	if mustExist {
+		if err := shell.RefuseHostTmpPath(path); err != nil {
+			return "", err
+		}
+	}
 
 	canonicalPath, err := filepath.EvalSymlinks(path)
 	if err == nil {
