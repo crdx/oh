@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"crdx.org/oh/internal/app/model"
+	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/session"
 )
 
@@ -54,7 +55,7 @@ func TestCompletionRequestReadsTheKindAndWord(t *testing.T) {
 }
 
 func TestOptionCompletionsComeFromTheUsage(t *testing.T) {
-	options := usageOptions(usage)
+	options := strutil.OptionNames(usage)
 
 	for _, wanted := range []string{"-L", "--login", "-r", "--resume", "-f", "--from", "-m", "--model", "-t", "--tool", "-l", "--list", "-h", "--help", "-U", "--usage", "-J", "--json"} {
 		if !slices.Contains(options, wanted) {
@@ -70,7 +71,7 @@ func TestOptionCompletionsComeFromTheUsage(t *testing.T) {
 }
 
 func TestEveryOptionDescriptionIsTwentyThreeCharacters(t *testing.T) {
-	for _, option := range usageOptions(usage) {
+	for _, option := range strutil.OptionNames(usage) {
 		description := OptionDescription(option)
 		if len(description) != 23 {
 			t.Errorf("expected %s to be described in 23 characters, got %d %q", option, len(description), description)

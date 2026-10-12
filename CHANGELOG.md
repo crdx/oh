@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Add session ctl flag to delete a stored or archived session by label
 - Use alt+enter to reverse turn interruption for commands and snippets
 - Fuzzy match model in `/new` and `/fork` also
 - Show a pending `/!` result while a model answer is still streaming

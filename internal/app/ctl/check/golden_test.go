@@ -20,7 +20,7 @@ import (
 var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")
 
 func TestGoldenUsageMatchesTheGolden(t *testing.T) {
-	assertGolden(t, "usage.txt", strings.ReplaceAll(usage, "$0", "oh"))
+	assertGolden(t, "usage.txt", strings.ReplaceAll(Usage, "$0", "oh"))
 }
 
 func TestGoldenAHealthyEmptyStoreMatchesTheGolden(t *testing.T) {

@@ -19,13 +19,17 @@ function _oh {
 
         if [[ -z $COMMAND || ( ${#TOKENS[@]} -eq 3 && -n $WORD ) ]]; then
             KIND=command
+        elif [[ $WORD == -* ]]; then
+            KIND=option
         elif [[ $COMMAND == analyse || $COMMAND == regenerate || $COMMAND == migrate ]]; then
             KIND=session
+        elif [[ $COMMAND == sessions && ( $PREVIOUS == -d || $PREVIOUS == --delete ) ]]; then
+            KIND=deletable
         else
             return
         fi
 
-        mapfile -t COMPREPLY < <("${COMP_WORDS[0]}" --ctl --complete "$KIND" "$WORD")
+        mapfile -t COMPREPLY < <("${COMP_WORDS[0]}" --ctl --complete "$KIND" "$WORD" "$COMMAND")
         return
     fi
 

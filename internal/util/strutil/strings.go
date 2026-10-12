@@ -3,10 +3,29 @@ package strutil
 import (
 	"fmt"
 	"regexp"
+	"slices"
 	"strings"
 	"unicode"
 	"unicode/utf8"
 )
+
+func OptionNames(usage string) []string {
+	var options []string
+
+	for line := range strings.SplitSeq(usage, "\n") {
+		for field := range strings.FieldsSeq(line) {
+			name := strings.TrimSuffix(field, ",")
+			if !strings.HasPrefix(name, "-") || name == "-" {
+				break
+			}
+			options = append(options, name)
+		}
+	}
+
+	slices.Sort(options)
+
+	return options
+}
 
 func Capitalise(text string) string {
 	characters := []rune(text)

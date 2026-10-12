@@ -12,7 +12,7 @@ import (
 	"crdx.org/oh/pkg/session"
 )
 
-const usage = `oh --ctl regenerate — write stored transcripts again
+const Usage = `oh --ctl regenerate — write stored transcripts again
 
 Usage:
     $0 --ctl regenerate [<session>...]
@@ -27,7 +27,7 @@ type inputOpts struct {
 }
 
 func Run() error {
-	options := duckopt.MustBind[inputOpts](usage, "$0")
+	options := duckopt.MustBind[inputOpts](Usage, "$0")
 	return run(location.GetSessionsDir(), options.Sessions, console.Standard())
 }
 

@@ -21,16 +21,19 @@ import (
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/strutil"
+	"crdx.org/oh/pkg/session"
 
 	ohSessions "crdx.org/oh/internal/app/sessions"
 )
 
-const usage = `oh --ctl sessions — list the stored sessions
+const Usage = `oh --ctl sessions — list or delete stored sessions
 
 Usage:
-    $0 --ctl sessions [options] [<filter>]
+    $0 --ctl sessions [-j] [-w <dir>] [-r] [-a] [<filter>]
+    $0 --ctl sessions (-d | --delete) <label>
 
 Options:
+    -d, --delete             Delete one stored or archived session by its exact label
     -j, --json               Write the listing as JSON
     -w, --workspace <dir>    List only the sessions of one workspace
     -r, --running            List only the sessions that are running
@@ -57,6 +60,8 @@ type inputOpts struct {
 	Workspace     string `docopt:"--workspace"`
 	Running       bool   `docopt:"--running"`
 	Archived      bool   `docopt:"--archived"`
+	Delete        bool   `docopt:"--delete"`
+	Label         string `docopt:"<label>"`
 	Filter        string `docopt:"<filter>"`
 }
 
@@ -79,11 +84,22 @@ type Listing struct {
 }
 
 func Run() error {
-	return run(duckopt.MustBind[inputOpts](usage, "$0"), console.Standard())
+	return run(duckopt.MustBind[inputOpts](Usage, "$0"), console.Standard())
 }
 
 func run(options *inputOpts, output console.Output) error {
 	directory := location.GetSessionsDir()
+	if options.Delete {
+		if !session.Exists(directory, options.Label) {
+			return fmt.Errorf("no stored or archived session named %q", options.Label)
+		}
+		if err := session.Delete(directory, options.Label); err != nil {
+			return fmt.Errorf("could not delete session %q: %w", options.Label, err)
+		}
+		_, err := fmt.Fprintf(output.Screen, "deleted session %q\n", options.Label)
+		return err
+	}
+
 	storedSessions, unlistedCount, err := loadRequestedSessions(directory, options, output.Failure)
 	if err != nil {
 		if migrationError := ohSessions.ValidateFormats(directory); migrationError != nil {

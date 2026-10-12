@@ -27,7 +27,7 @@ import (
 	"crdx.org/oh/pkg/session"
 )
 
-const usage = `oh --ctl gc — remove what sessions leave behind
+const Usage = `oh --ctl gc — remove what sessions leave behind
 
 Usage:
     $0 --ctl gc [options]
@@ -118,7 +118,7 @@ type options struct {
 }
 
 func Run() error {
-	bound := duckopt.MustBind[inputOpts](usage, "$0")
+	bound := duckopt.MustBind[inputOpts](Usage, "$0")
 
 	directories := Directories{
 		Farm:     location.GetFarmDir(),

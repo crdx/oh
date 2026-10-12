@@ -20,7 +20,8 @@ const Flag = "--ctl"
 const usage = `oh --ctl — oh control
 
 Usage:
-    oh --ctl sessions [options] [<filter>]
+    oh --ctl sessions [-j] [-w <dir>] [-r] [-a] [<filter>]
+    oh --ctl sessions (-d | --delete) <label>
     oh --ctl check [<session>...]
     oh --ctl analyse [options] [<session>...]
     oh --ctl regenerate [<session>...]
@@ -29,7 +30,7 @@ Usage:
     oh --ctl models
 
 Commands:
-    sessions      List the stored sessions
+    sessions      List or delete stored sessions
     check         Check configuration and stored session health
     analyse       Analyse stored sessions
     regenerate    Write stored transcripts again from their journals

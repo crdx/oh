@@ -21,7 +21,7 @@ const (
 var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")
 
 func TestGoldenUsageMatchesTheGolden(t *testing.T) {
-	assertGolden(t, "usage.txt", helpText(usage))
+	assertGolden(t, "usage.txt", helpText(Usage))
 }
 
 func TestGoldenWhatIsWrittenAgainMatchesTheGolden(t *testing.T) {

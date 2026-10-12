@@ -24,7 +24,7 @@ import (
 	"crdx.org/oh/pkg/session"
 )
 
-const usage = `oh --ctl migrate — bring configuration and stored sessions up to their current formats
+const Usage = `oh --ctl migrate — bring configuration and stored sessions up to their current formats
 
 Usage:
     $0 --ctl migrate [options] [<session>...]
@@ -48,7 +48,7 @@ type inputOpts struct {
 }
 
 func Run() error {
-	return run(duckopt.MustBind[inputOpts](usage, "$0"), console.Standard())
+	return run(duckopt.MustBind[inputOpts](Usage, "$0"), console.Standard())
 }
 
 func run(inputArgs *inputOpts, output console.Output) error {

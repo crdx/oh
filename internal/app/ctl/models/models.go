@@ -10,7 +10,7 @@ import (
 	"crdx.org/oh/internal/app/model"
 )
 
-const usage = `oh --ctl models — print the qualified names of usable models
+const Usage = `oh --ctl models — print the qualified names of usable models
 
 Usage:
     $0 --ctl models
@@ -25,7 +25,7 @@ type inputOpts struct {
 }
 
 func Run() error {
-	duckopt.MustBind[inputOpts](usage, "$0")
+	duckopt.MustBind[inputOpts](Usage, "$0")
 	endpoints := backend.EndpointSettings{OverrideURL: os.Getenv(backend.EndpointVariable)}
 	return model.ListNames(os.Stdout, location.GetModelCachePath(), func(providerName string) bool {
 		return backend.IsAvailable(providerName, endpoints)

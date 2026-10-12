@@ -10,6 +10,7 @@ import (
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/sessions"
 	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/internal/util/strutil"
 )
 
 const completeFlag = "--complete"
@@ -73,7 +74,7 @@ func WriteCompletions(out io.Writer, args []string, getSources func() Sources) b
 func completions(kind string, word string, sources Sources) []string {
 	switch kind {
 	case completeOption:
-		return optionCompletions(word, usageOptions(usage))
+		return optionCompletions(word, strutil.OptionNames(usage))
 	case completeModel:
 		return model.SelectionsMatching(word, model.SignedInChoices(sources.ModelCachePath, sources.IsLoggedIn))
 	case completeEffort:
@@ -109,24 +110,6 @@ func optionCompletions(word string, options []string) []string {
 	}
 
 	return withPrefix(word, options)
-}
-
-func usageOptions(text string) []string {
-	var options []string
-
-	for line := range strings.SplitSeq(text, "\n") {
-		for field := range strings.FieldsSeq(line) {
-			name := strings.TrimSuffix(field, ",")
-			if !strings.HasPrefix(name, "-") || name == "-" {
-				break
-			}
-			options = append(options, name)
-		}
-	}
-
-	slices.Sort(options)
-
-	return options
 }
 
 func effortCompletions(word string, choices []model.Choice) []string {

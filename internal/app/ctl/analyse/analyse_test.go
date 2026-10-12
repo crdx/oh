@@ -136,7 +136,7 @@ func TestOutputTokensArrivingAfterTheirRequestAreCounted(t *testing.T) {
 }
 
 func TestGoldenUsageMatchesTheGolden(t *testing.T) {
-	assertGolden(t, "usage.txt", strings.ReplaceAll(usage, "$0", "oh"))
+	assertGolden(t, "usage.txt", strings.ReplaceAll(Usage, "$0", "oh"))
 }
 
 func TestAJournalReportsTurnsToolsAndFaults(t *testing.T) {

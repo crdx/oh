@@ -13,3 +13,27 @@ able-dolphin
 chewy-sardine
 === sessions beginning with a word ===
 able-dolphin
+=== deletable sessions ===
+able-dolphin
+chewy-sardine
+tame-impala
+=== deletable sessions beginning with a word ===
+tame-impala
+=== sessions options beginning with a dash ===
+--archived
+--delete
+--help
+--json
+--running
+--workspace
+-a
+-d
+-h
+-j
+-r
+-w
+=== sessions options beginning with a word ===
+--delete
+=== check options beginning with a dash ===
+--help
+-h

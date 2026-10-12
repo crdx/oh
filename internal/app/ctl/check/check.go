@@ -24,7 +24,7 @@ import (
 	"crdx.org/oh/pkg/session"
 )
 
-const usage = `oh --ctl check — check configuration and stored session health
+const Usage = `oh --ctl check — check configuration and stored session health
 
 Usage:
     $0 --ctl check [<session>...]
@@ -55,7 +55,7 @@ type candidate struct {
 }
 
 func Run() error {
-	options := duckopt.MustBind[inputOpts](usage, "$0")
+	options := duckopt.MustBind[inputOpts](Usage, "$0")
 	workingDirectory, err := os.Getwd()
 	if err != nil {
 		return err

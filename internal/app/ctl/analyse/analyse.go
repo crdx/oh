@@ -23,7 +23,7 @@ import (
 	"crdx.org/oh/pkg/session"
 )
 
-const usage = `oh --ctl analyse — analyse stored sessions
+const Usage = `oh --ctl analyse — analyse stored sessions
 
 Usage:
     $0 --ctl analyse [options] [<session>...]
@@ -104,7 +104,7 @@ type Settings struct {
 }
 
 func Run() error {
-	options := duckopt.MustBind[inputOpts](usage, "$0")
+	options := duckopt.MustBind[inputOpts](Usage, "$0")
 
 	return run(Settings{
 		SessionsDir:    location.GetSessionsDir(),

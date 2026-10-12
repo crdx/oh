@@ -34,14 +34,30 @@ func TestOnlyACompletionRequestIsAnsweredAtAll(t *testing.T) {
 }
 
 func TestEveryCommandIsOffered(t *testing.T) {
-	if got := completions(kindCommand, "mod"); !slices.Equal(got, []string{"models"}) {
+	if got := completions(kindCommand, "mod", ""); !slices.Equal(got, []string{"models"}) {
 		t.Errorf("got the commands %v", got)
 	}
-	if got := completions(kindCommand, "s"); !slices.Equal(got, []string{"sessions"}) {
+	if got := completions(kindCommand, "s", ""); !slices.Equal(got, []string{"sessions"}) {
 		t.Errorf("got the commands %v", got)
 	}
-	if got := completions("nonsense", ""); got != nil {
+	if got := completions("nonsense", "", ""); got != nil {
 		t.Errorf("expected nothing for an unknown kind, got %v", got)
+	}
+}
+
+func TestEveryCommandOffersItsOwnOptions(t *testing.T) {
+	got := completions(kindOption, "-", "sessions")
+	if !slices.Contains(got, "-d") || !slices.Contains(got, "--archived") || !slices.Contains(got, "--delete") {
+		t.Errorf("expected the sessions flags, got %v", got)
+	}
+	if got := completions(kindOption, "--del", "sessions"); !slices.Equal(got, []string{"--delete"}) {
+		t.Errorf("expected the --delete flag, got %v", got)
+	}
+	if got := completions(kindOption, "-", "check"); !slices.Equal(got, []string{"--help", "-h"}) {
+		t.Errorf("expected the check flags, got %v", got)
+	}
+	if got := completions(kindOption, "-", "nonsense"); got != nil {
+		t.Errorf("expected nothing for an unknown command, got %v", got)
 	}
 }
 
@@ -78,6 +94,11 @@ func TestGoldenWhatEachKindOffersMatchesTheGolden(t *testing.T) {
 		{name: "commands beginning with a word", args: []string{Flag, kindCommand, "se"}},
 		{name: "sessions", args: []string{Flag, kindSession, ""}},
 		{name: "sessions beginning with a word", args: []string{Flag, kindSession, "able"}},
+		{name: "deletable sessions", args: []string{Flag, kindDeletable, ""}},
+		{name: "deletable sessions beginning with a word", args: []string{Flag, kindDeletable, "tame"}},
+		{name: "sessions options beginning with a dash", args: []string{Flag, kindOption, "-", "sessions"}},
+		{name: "sessions options beginning with a word", args: []string{Flag, kindOption, "--del", "sessions"}},
+		{name: "check options beginning with a dash", args: []string{Flag, kindOption, "-", "check"}},
 	}
 
 	var drawn strings.Builder
@@ -114,6 +135,27 @@ func assertGolden(t *testing.T, name string, drawn string) {
 	}
 }
 
+func TestAnArchivedSessionIsStillOfferedForDeletion(t *testing.T) {
+	stateDir := t.TempDir()
+	t.Setenv(location.StateDirVariable, stateDir)
+
+	directory := location.GetSessionsDir()
+	writeStoredJournal(t, directory, "tame-impala")
+	if err := session.Archive(directory, "tame-impala"); err != nil {
+		t.Fatal(err)
+	}
+
+	if got := completions(kindSession, "", ""); slices.Contains(got, "tame-impala") {
+		t.Errorf("expected the archived session to be gone from the stored ones, got %v", got)
+	}
+	if got := completions(kindDeletable, "", ""); !slices.Contains(got, "tame-impala") {
+		t.Errorf("expected the archived session to be offered for deletion, got %v", got)
+	}
+	if got := completions(kindDeletable, "tam", ""); !slices.Equal(got, []string{"tame-impala"}) {
+		t.Errorf("expected the archived session to be matched by a prefix, got %v", got)
+	}
+}
+
 func TestAStoredSessionCompletesUntilItIsArchived(t *testing.T) {
 	stateDir := t.TempDir()
 	t.Setenv(location.StateDirVariable, stateDir)
@@ -132,7 +174,7 @@ func TestAStoredSessionCompletesUntilItIsArchived(t *testing.T) {
 	}
 
 	name := writer.Name()
-	if got := completions(kindSession, ""); !slices.Contains(got, name) {
+	if got := completions(kindSession, "", ""); !slices.Contains(got, name) {
 		t.Errorf("expected the stored session to be offered, got %v", got)
 	}
 
@@ -140,7 +182,7 @@ func TestAStoredSessionCompletesUntilItIsArchived(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if got := completions(kindSession, ""); slices.Contains(got, name) {
+	if got := completions(kindSession, "", ""); slices.Contains(got, name) {
 		t.Errorf("expected the archived session to be gone from the stored ones, got %v", got)
 	}
 }
