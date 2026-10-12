@@ -161,6 +161,10 @@ func (self *PendingMessages) MarkSent() {
 	self.kind = sentHarnessSubmission
 }
 
+func (self *PendingMessages) KeepsBottomPadding() bool {
+	return true
+}
+
 func (self *PendingMessages) Rows(columns int) []string {
 	if len(self.messages) == 0 {
 		return nil

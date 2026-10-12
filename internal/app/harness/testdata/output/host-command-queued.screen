@@ -51,13 +51,13 @@ Paragraph 23 of something taller than the terminal.
 
 Paragraph 24 of something taller than the terminal.
 
-⋮ 4 more lines
-
+⋮ 5 more lines
     Output:
 
     fatal: not a repository
 
     Exit code: 128
+
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -185,13 +185,13 @@ Paragraph 23 of something taller than the terminal.
 
 Paragraph 24 of something taller than the terminal.
 
-⋮ 4 more lines
-
+⋮ 5 more lines
     Output:
 
      M README.md
 
     Exit code: 0
+
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -285,13 +285,13 @@ the terminal. Paragraph 20 of something taller than the terminal. Paragraph 21 o
 than the terminal. Paragraph 22 of something taller than the terminal. Paragraph 23 of something
 taller than the terminal. Paragraph 24 of something taller than the terminal.
 
-
- 🤖 The user started the following command on the host, then interrupted it before it finished or
+⋮ 2 more lines
     printed anything:
 
     $ git status --short
 
     Interrupted by the user after 0s
+
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 

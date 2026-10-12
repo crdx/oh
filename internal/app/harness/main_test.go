@@ -10185,6 +10185,14 @@ func TestGoldenATurnStillRunningDrawsWhatItDrewBefore(t *testing.T) {
 			return shownAnswerStartsAfterAcceptedInputFrames(t, scenario)
 		}
 	}
+	screenPasses["windowed subagent report"] = func() string {
+		const lines = 12
+		return shownInLines(t, drawRunningLookupBesideReportInLines(lines), lines)
+	}
+	screenPasses["narrow windowed subagent report"] = func() string {
+		const lines = 12
+		return strings.Join(playScreenOfSize(t, drawRunningLookupBesideReportAtSize(narrowColumns, lines), narrowColumns, lines).text(), "\n")
+	}
 	compareWithGolden(t, "running", ".screen", screenPasses)
 }
 
@@ -10202,6 +10210,7 @@ func TestAWindowedSubagentReportKeepsItsBackground(t *testing.T) {
 	const roomyLines = 12
 	played := playScreenOfSize(t, drawRunningLookupBesideReportInLines(roomyLines), replayColumns, roomyLines)
 	var panelStyle, noticeStyle string
+	lastReportRow := -1
 	for index, row := range played.text() {
 		if len(played.rows[index]) == 0 {
 			continue
@@ -10211,11 +10220,21 @@ func TestAWindowedSubagentReportKeepsItsBackground(t *testing.T) {
 			panelStyle = played.rows[index][0].styles
 		case strings.Contains(row, "more lines"):
 			noticeStyle = played.rows[index][0].styles
+		case strings.Contains(row, "A long subagent report takes the visible area"):
+			lastReportRow = index
 		}
 	}
 	background := regexp.MustCompile(`48;2;[0-9]+;[0-9]+;[0-9]+`).FindString(panelStyle)
 	if background == "" || !strings.Contains(noticeStyle, background) {
 		t.Errorf("report background %q did not continue through the hidden-rows notice %q", panelStyle, noticeStyle)
+	}
+	if lastReportRow < 0 || lastReportRow+1 >= len(played.rows) {
+		t.Fatal("the report's last line has no row below it")
+	}
+	padding := played.rows[lastReportRow+1]
+	if len(padding) == 0 || strings.TrimSpace(played.text()[lastReportRow+1]) != "" ||
+		!strings.Contains(padding[0].styles, background) {
+		t.Errorf("row after the report has no blue bottom padding: %q", played.text()[lastReportRow+1])
 	}
 }
 
@@ -10224,8 +10243,12 @@ func drawRunningLookupBesideReport() string {
 }
 
 func drawRunningLookupBesideReportInLines(lines int) string {
+	return drawRunningLookupBesideReportAtSize(replayColumns, lines)
+}
+
+func drawRunningLookupBesideReportAtSize(columns int, lines int) string {
 	var drawn strings.Builder
-	screen := output.NewTerminalOfSize(&drawn, replayColumns, lines)
+	screen := output.NewTerminalOfSize(&drawn, columns, lines)
 	paint := painter.New(screen, true, nil, nil, output.StreamingModeLine)
 	paint.DrawEvent(agent.Event{
 		Kind: agent.ToolCallRequestEvent,

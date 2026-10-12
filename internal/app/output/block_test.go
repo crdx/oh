@@ -491,6 +491,64 @@ func TestManyLiveChildrenAlwaysFitTheTerminal(t *testing.T) {
 	}
 }
 
+func TestAWindowedPanelKeepsItsBottomPadding(t *testing.T) {
+	for _, columns := range []int{20, 40} {
+		for _, lines := range []int{7, 9} {
+			screen := &Screen{writer: &strings.Builder{}, isTerminal: true, canRepaint: true, columns: columns, lines: lines}
+			block := &rowsBlock{}
+			for i := range 20 {
+				block.rows = append(block.rows, "line "+strconv.Itoa(i))
+			}
+			screen.Panel(block, func(rows []string, width int) []string {
+				return slices.Concat([]string{style.Harness("top")}, rows, []string{style.Harness(strings.Repeat(" ", width))})
+			})
+			screen.Footer([]string{"─", "> ", "─"}, 1, 2)
+
+			shown := drawnTexts(screen)
+			if len(shown) > lines {
+				t.Errorf("painted %d rows in %d lines: %q", len(shown), lines, shown)
+			}
+			if len(shown) < 6 || !strings.Contains(shown[0], "more lines") || shown[len(shown)-6] != "line 19" ||
+				shown[len(shown)-5] != style.Harness(strings.Repeat(" ", columns)) {
+				t.Errorf("width %d height %d windowed to %q, want the last content line followed by the blue padding", columns, lines, shown)
+			}
+		}
+	}
+}
+
+func TestATwoRowPanelWindowPrefersContentOverPadding(t *testing.T) {
+	screen := &Screen{writer: &strings.Builder{}, isTerminal: true, canRepaint: true, columns: 40, lines: 6}
+	block := &rowsBlock{rows: []string{"first", "second", "last word"}}
+	screen.Panel(block, func(rows []string, columns int) []string {
+		return slices.Concat([]string{style.Harness("top")}, rows, []string{style.Harness(strings.Repeat(" ", columns))})
+	})
+	screen.Footer([]string{"─", "> ", "─"}, 1, 2)
+
+	shown := drawnTexts(screen)
+	if !strings.Contains(shown[0], "more lines") || shown[1] != "last word" {
+		t.Errorf("two-row window showed %q, want the notice and the last content line", shown)
+	}
+}
+
+func TestAPanelBesideAToolKeepsItsBottomPadding(t *testing.T) {
+	screen := &Screen{writer: &strings.Builder{}, isTerminal: true, canRepaint: true, columns: 40, lines: 10}
+	screen.OpenTool(textBlock{text: "lookup docs"})
+	block := &rowsBlock{}
+	for i := range 20 {
+		block.rows = append(block.rows, "line "+strconv.Itoa(i))
+	}
+	screen.Panel(block, func(rows []string, columns int) []string {
+		return slices.Concat([]string{style.Harness("top")}, rows, []string{style.Harness(strings.Repeat(" ", columns))})
+	})
+	screen.Footer([]string{"─", "> ", "─"}, 1, 2)
+
+	shown := drawnTexts(screen)
+	padding := style.Harness(strings.Repeat(" ", 40))
+	if !slices.Contains(shown, padding) || shown[len(shown)-6] != "line 19" {
+		t.Errorf("tool and panel windowed to %q, want the last content line and its blue bottom padding", shown)
+	}
+}
+
 func TestAWindowedRegionKeepsItsGroupingGap(t *testing.T) {
 	screenOutput := &strings.Builder{}
 	screen := &Screen{writer: screenOutput, isTerminal: true, canRepaint: true, columns: 40, lines: 8}

@@ -70,6 +70,19 @@ lookup RFC 8620 changes
     A long subagent report takes the visible area.
 
 > ask something else
+=== narrow windowed subagent report ===
+lookup RFC 8620 changes
+
+
+ 🐍 Subagent tame-adder interjects:
+⋮ 77 more lines
+    A long subagent report takes the
+    visible area.
+    A long subagent report takes the
+    visible area.
+
+
+> ask something else
 === ordinary message during answer ===
 ────────────────────────────────────────────────────────────────────────────────────────────────────
  ╭── double-enter to send ────────────────────────────────────────────────────────────────────────╮
@@ -362,3 +375,16 @@ Turn stopped because the user pressed escape.
 ─┴────────────────────────────────────────────────────────────────────────────────────────────────┴─
 //unknown
 ────────────────────────────────────────────────────────────────────────────────────────────────────
+=== windowed subagent report ===
+lookup RFC 8620 changes
+
+
+ 🐍 Subagent tame-adder interjects:
+⋮ 37 more lines
+    A long subagent report takes the visible area.
+    A long subagent report takes the visible area.
+    A long subagent report takes the visible area.
+    A long subagent report takes the visible area.
+
+
+> ask something else

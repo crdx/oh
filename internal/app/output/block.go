@@ -31,6 +31,14 @@ type framedBlock struct {
 	frame  Frame
 }
 
+func (self *framedBlock) KeepsBottomPadding() bool {
+	return true
+}
+
+type bottomPaddingKeeper interface {
+	KeepsBottomPadding() bool
+}
+
 type hiddenNoticeFramer interface {
 	FrameHiddenNotice(text string, columns int) string
 }
@@ -229,12 +237,13 @@ type priorityRows interface {
 }
 
 type blockSpan struct {
-	start    int
-	end      int
-	gap      int
-	group    Group
-	priority []int
-	framer   hiddenNoticeFramer
+	start              int
+	end                int
+	gap                int
+	group              Group
+	priority           []int
+	framer             hiddenNoticeFramer
+	keepsBottomPadding bool
 }
 
 func renderGroupedBlocks(blocks []groupedBlock, columns int, grouping Grouping) ([]string, Group, Group) {
@@ -265,6 +274,9 @@ func renderGroupedBlocksWithSpans(blocks []groupedBlock, columns int, grouping G
 		rows = append(rows, content...)
 		span := blockSpan{start: start, end: len(rows), gap: gap, group: block.group, priority: priority}
 		span.framer, _ = block.Block.(hiddenNoticeFramer)
+		if keeper, ok := block.Block.(bottomPaddingKeeper); ok {
+			span.keepsBottomPadding = keeper.KeepsBottomPadding()
+		}
 		spans = append(spans, span)
 	}
 

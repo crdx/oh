@@ -10,7 +10,10 @@ import (
 	"crdx.org/oh/internal/app/width"
 )
 
-const eraseRow = ansi.EraseLine
+const (
+	eraseRow                = ansi.EraseLine
+	minimumPaddedWindowRows = 3
+)
 
 type liveRegion struct {
 	rows            []width.ScreenRow
@@ -228,7 +231,7 @@ func (self *Screen) liveFrameRows(room int) []width.ScreenRow {
 		}
 
 		if gap+len(visible) > room {
-			visible = self.windowed(visible, gap, room)
+			visible = self.windowed(visible, gap, room, false)
 			gap = 0
 		}
 	}
@@ -272,7 +275,8 @@ func (self *Screen) windowedBlocks(rows []width.ScreenRow, spans []blockSpan, ga
 		}
 	}
 	if len(active) < 2 {
-		return self.windowed(rows, gap, room)
+		shouldKeepBottomPadding := len(active) == 1 && spans[active[0]].keepsBottomPadding
+		return self.windowed(rows, gap, room, shouldKeepBottomPadding)
 	}
 	if room <= len(active) {
 		return self.summariseCrowdedBlocks(rows, spans, active, room)
@@ -413,7 +417,9 @@ func (self *Screen) windowBlock(rows []width.ScreenRow, room int, span blockSpan
 	if room <= 0 {
 		return nil
 	}
-	rows = withoutTrailingBlankRows(rows)
+	if !span.keepsBottomPadding || room < minimumPaddedWindowRows {
+		rows = withoutTrailingBlankRows(rows)
+	}
 	if len(rows) <= room {
 		return rows
 	}
@@ -431,6 +437,9 @@ func (self *Screen) windowBlock(rows []width.ScreenRow, room int, span blockSpan
 	}
 
 	head := min(2, max(0, room-2))
+	if span.keepsBottomPadding && room >= minimumPaddedWindowRows {
+		head = min(head, room-minimumPaddedWindowRows)
+	}
 	tail := room - head - 1
 	shownTail := withVisiblePictureTransmissions(rows[head:], rows[len(rows)-tail:])
 	visible := append([]width.ScreenRow{}, rows[:head]...)
@@ -480,7 +489,7 @@ func (self *Screen) windowPriorityRows(rows []width.ScreenRow, room int, priorit
 	return visible
 }
 
-func (self *Screen) windowed(rows []width.ScreenRow, gap int, room int) []width.ScreenRow {
+func (self *Screen) windowed(rows []width.ScreenRow, gap int, room int, shouldKeepBottomPadding bool) []width.ScreenRow {
 	withGap := func(visible []width.ScreenRow) []width.ScreenRow {
 		return append(make([]width.ScreenRow, gap), visible...)
 	}
@@ -497,7 +506,9 @@ func (self *Screen) windowed(rows []width.ScreenRow, gap int, room int) []width.
 		return withGap(rows)
 	}
 
-	rows = withoutTrailingBlankRows(rows)
+	if !shouldKeepBottomPadding || room < minimumPaddedWindowRows {
+		rows = withoutTrailingBlankRows(rows)
+	}
 	if len(rows) <= room {
 		return withGap(rows)
 	}
