@@ -13900,7 +13900,7 @@ func TestGoldenQueuedMessagesDrawEveryVisibleState(t *testing.T) {
 		"taken back while typing":           func() string { return queuedMessagesStream(t, queuedTakenBackWhileTyping) },
 		"feedback beside the queue":         func() string { return queuedMessagesStream(t, queuedBesideFeedback) },
 		"flushed at a stopping turn":        func() string { return queuedMessagesStream(t, queuedFlushed) },
-		"quick hand-off stays unboxed":      func() string { return queuedMessagesStream(t, queuedQuickHandoff) },
+		"quick delivery stays unboxed":      func() string { return queuedMessagesStream(t, queuedQuickHandoff) },
 		"delivered at the boundary":         func() string { return queuedMessagesStream(t, queuedDelivered) },
 		"alt interrupts":                    func() string { return queuedMessagesStream(t, queuedInterruptedWithAlt) },
 		"swapped enter interrupts":          func() string { return queuedMessagesStream(t, queuedInterruptedWithEnter) },
@@ -13922,6 +13922,16 @@ func TestGoldenQueuedMessagesDrawEveryVisibleState(t *testing.T) {
 
 	compareWithGolden(t, "queued-messages", ".ansi", passes)
 	compareWithGolden(t, "queued-messages", ".screen", shownPasses(t, passes))
+}
+
+func TestAQuickDeliveryNeverPaintsTheQueuedNotice(t *testing.T) {
+	stream := queuedMessagesStream(t, queuedQuickHandoff)
+	if strings.Contains(stream, "⏳") {
+		t.Errorf("a queued notice flashed before delivery: %q", stream)
+	}
+	if !strings.Contains(stream, "check the other path too") {
+		t.Error("the message never appeared in the conversation")
+	}
 }
 
 func tallQueue() []string {
@@ -14025,6 +14035,14 @@ func queuedMessagesStream(t *testing.T, scenario queuedMessagesScenario) string 
 	case queuedOne, queuedPath, queuedTwo, queuedSeveral, queuedLongMessage, queuedMultilineMessage,
 		queuedMarkdownEmphasis, queuedTallerThanTheTerminal:
 	case queuedQuickHandoff:
+		currentTime = queuedAt.Add(queuedNoticeDelay - time.Millisecond)
+		self.show(inputLine)
+		delivered, _ := self.currentTurn.TakeInterjections()
+		event := agent.Event{Kind: agent.UserMessageEvent, Text: delivered}
+		self.takeTurn(TurnEvent{Update: agent.Update{Event: &event}})
+		self.show(inputLine)
+		currentTime = queuedAt.Add(queuedNoticeDelay)
+		self.show(inputLine)
 	case queuedSnippet:
 		self.handleCommand("//add review the second path")
 		self.show(inputLine)
