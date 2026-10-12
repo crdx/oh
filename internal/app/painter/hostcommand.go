@@ -29,10 +29,12 @@ func RenderHostCommand(command string, latestLine string, elapsedTime time.Durat
 	return append(rows, hostCommandOutputIndent+style.Subtle(width.Elide(latestLine, room)))
 }
 
+func RenderQueuedHostCommand(command string, columns int) string {
+	return style.Subtle.Over(width.Elide("⏳ "+hostCommandLabel(command).Render(), columns))
+}
+
 func runningHostCommand(command string, elapsedTime time.Duration, columns int) string {
-	rendering := bash.DescribeCommand(command)
-	rendering.Subject = strutil.Flatten(rendering.Subject)
-	label := call.LabelForRendering(rendering)
+	label := hostCommandLabel(command)
 	line := dynamic.RunningLine(label, elapsedTime, hostcommand.TimeLimit, 0)
 
 	gap := columns - style.Width(line) - style.Width(hostCommandStopHint)
@@ -41,4 +43,10 @@ func runningHostCommand(command string, elapsedTime time.Duration, columns int) 
 	}
 
 	return line + strings.Repeat(" ", gap) + style.Subtle(hostCommandStopHint)
+}
+
+func hostCommandLabel(command string) call.Label {
+	rendering := bash.DescribeCommand(command)
+	rendering.Subject = strutil.Flatten(rendering.Subject)
+	return call.LabelForRendering(rendering)
 }

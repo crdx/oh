@@ -5996,6 +5996,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"context-yolo":             {".prompt"},
 		"host-command":             {".ansi", ".screen"},
 		"host-command-running":     {".ansi", ".screen"},
+		"host-command-queued":      {".screen"},
 		"inputblock":               {".ansi", ".screen"},
 		"pathrefs":                 {".ansi", ".screen"},
 		"slashcommands":            {".ansi", ".screen"},

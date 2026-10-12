@@ -135,13 +135,19 @@ func (self *App) endHostCommand() {
 }
 
 func (self *App) hostCommandRows(columns int) []string {
-	if !self.isHostCommandUnderway() {
-		return nil
+	var rows []string
+	if self.isHostCommandUnderway() {
+		elapsedTime := self.getNow().Sub(self.hostCommand.startedAt)
+		rows = painter.RenderHostCommand(self.hostCommand.command, self.hostCommand.output.LatestLine(), elapsedTime, columns)
 	}
 
-	elapsedTime := self.getNow().Sub(self.hostCommand.startedAt)
+	for _, event := range self.currentTurn.heldNotices {
+		if event.Kind == hostcommand.Ran {
+			rows = append(rows, painter.RenderQueuedHostCommand(event.Name, columns))
+		}
+	}
 
-	return painter.RenderHostCommand(self.hostCommand.command, self.hostCommand.output.LatestLine(), elapsedTime, columns)
+	return rows
 }
 
 func (self *App) nextHostCommandRefresh(at time.Time) time.Time {

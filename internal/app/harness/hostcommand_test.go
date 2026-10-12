@@ -11,12 +11,14 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/app/commands"
+	"crdx.org/oh/internal/app/dynamic"
 	"crdx.org/oh/internal/app/edit"
 	"crdx.org/oh/internal/app/hostcommand"
 	"crdx.org/oh/internal/app/key"
 	"crdx.org/oh/internal/app/output"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/work"
+	"crdx.org/oh/pkg/agent"
 )
 
 type heldHostCommand struct {
@@ -101,6 +103,58 @@ func TestAHostCommandRunsWithoutHoldingTheInterface(t *testing.T) {
 	}) {
 		t.Errorf("the pending command was recorded as sent: %q", messages)
 	}
+}
+
+func TestGoldenCompletedHostCommandsStayVisibleWhileProseStreams(t *testing.T) {
+	passes := map[string]func() string{}
+
+	for name, scene := range map[string]struct {
+		kind   agent.Kind
+		result hostcommand.Result
+	}{
+		"answer, succeeded": {kind: agent.ModelMessageEvent, result: hostcommand.Result{Command: "git status --short", Output: " M README.md\n"}},
+		"answer, failed":    {kind: agent.ModelMessageEvent, result: hostcommand.Result{Command: "git status --short", Output: "fatal: not a repository\n", ExitCode: 128}},
+		"thought, stopped":  {kind: agent.ModelReasoningEvent, result: hostcommand.Result{Command: "git status --short", IsStoppedByUser: true}},
+	} {
+		rig := arrivingProseRig(t, output.StreamingModeASAP)
+		prose := tallProse()
+		streamArriving(rig, scene.kind, prose[:len(prose)/2])
+		held := holdHostCommands(rig.chat)
+		if err := rig.chat.startHostCommand(t.TempDir(), "git status --short"); err != nil {
+			t.Fatal(err)
+		}
+		<-held.started
+		inputLine := edit.NewInput(nil)
+		rig.chat.show(inputLine)
+		running := rig.drawn()
+		passes[name+", running"] = func() string { return shownInLines(t, running, arrivingProseLines) }
+
+		held.finishes <- scene.result
+		endHeldHostCommand(t, rig.chat)
+		if len(rig.chat.currentTurn.heldNotices) != 1 {
+			t.Fatal("the completed host command was not held behind the prose")
+		}
+		rig.chat.show(inputLine)
+		queued := rig.drawn()
+		passes[name+", queued"] = func() string { return shownInLines(t, queued, arrivingProseLines) }
+
+		streamArriving(rig, scene.kind, prose[len(prose)/2:])
+		rig.chat.recordEvent(agent.Event{Kind: scene.kind, Text: prose})
+		rig.chat.show(inputLine)
+		landed := rig.drawn()
+		passes[name+", landed"] = func() string { return shownInLines(t, landed, arrivingProseLines) }
+		if len(rig.chat.currentTurn.heldNotices) != 0 {
+			t.Error("the host command stayed queued after the prose landed")
+		}
+		rig.chat.currentTurn.painter.Close(dynamic.Done)
+		rig.chat.screen.End()
+		rig.chat.screen.Release(true)
+		replayed := replayOfArrivingProse(t, rig, replayColumns)
+		requireSameVisibleScreen(t, name+" differs from its replay", replayed, rig.drawn())
+		requireNothingDrawnAboveTheScreen(t, name, rig.drawn(), arrivingProseLines)
+	}
+
+	compareWithGolden(t, "host-command-queued", ".screen", passes)
 }
 
 func TestALongHostCommandDoesNotLeaveItsPendingWindowInScrollback(t *testing.T) {

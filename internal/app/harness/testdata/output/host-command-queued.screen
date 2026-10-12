@@ -1,0 +1,332 @@
+=== answer, failed, landed ===
+
+ explain it
+
+
+Paragraph 1 of something taller than the terminal.
+
+Paragraph 2 of something taller than the terminal.
+
+Paragraph 3 of something taller than the terminal.
+
+Paragraph 4 of something taller than the terminal.
+
+Paragraph 5 of something taller than the terminal.
+
+Paragraph 6 of something taller than the terminal.
+
+Paragraph 7 of something taller than the terminal.
+
+Paragraph 8 of something taller than the terminal.
+
+Paragraph 9 of something taller than the terminal.
+
+Paragraph 10 of something taller than the terminal.
+
+Paragraph 11 of something taller than the terminal.
+
+Paragraph 12 of something taller than the terminal.
+
+Paragraph 13 of something taller than the terminal.
+
+Paragraph 14 of something taller than the terminal.
+
+Paragraph 15 of something taller than the terminal.
+
+Paragraph 16 of something taller than the terminal.
+
+Paragraph 17 of something taller than the terminal.
+
+Paragraph 18 of something taller than the terminal.
+
+Paragraph 19 of something taller than the terminal.
+
+Paragraph 20 of something taller than the terminal.
+
+Paragraph 21 of something taller than the terminal.
+
+Paragraph 22 of something taller than the terminal.
+
+Paragraph 23 of something taller than the terminal.
+
+Paragraph 24 of something taller than the terminal.
+
+⋮ 4 more lines
+
+    Output:
+
+    fatal: not a repository
+
+    Exit code: 128
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== answer, failed, queued ===
+
+ explain it
+
+
+Paragraph 1 of something taller than the terminal.
+
+Paragraph 2 of something taller than the terminal.
+
+Paragraph 3 of something taller than the terminal.
+
+Paragraph 4 of something taller than the terminal.
+
+Paragraph 5 of something taller than the terminal.
+
+Paragraph 6 of something taller than the terminal.
+
+Paragraph 7 of something taller than the terminal.
+
+Paragraph 8 of something taller than the terminal.
+
+Paragraph 9 of something taller than the terminal.
+
+Paragraph 10 of something taller than the terminal.
+
+Paragraph 11 of something taller than the terminal.
+
+Paragraph 12 of something taller than the terminal.
+
+Par
+
+⏳ $ git status --short
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== answer, failed, running ===
+
+ explain it
+
+
+Paragraph 1 of something taller than the terminal.
+
+Paragraph 2 of something taller than the terminal.
+
+Paragraph 3 of something taller than the terminal.
+
+Paragraph 4 of something taller than the terminal.
+
+Paragraph 5 of something taller than the terminal.
+
+Paragraph 6 of something taller than the terminal.
+
+Paragraph 7 of something taller than the terminal.
+
+Paragraph 8 of something taller than the terminal.
+
+Paragraph 9 of something taller than the terminal.
+
+Paragraph 10 of something taller than the terminal.
+
+Paragraph 11 of something taller than the terminal.
+
+Paragraph 12 of something taller than the terminal.
+
+Par
+
+$ git status --short                                                                     esc to stop
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== answer, succeeded, landed ===
+
+ explain it
+
+
+Paragraph 1 of something taller than the terminal.
+
+Paragraph 2 of something taller than the terminal.
+
+Paragraph 3 of something taller than the terminal.
+
+Paragraph 4 of something taller than the terminal.
+
+Paragraph 5 of something taller than the terminal.
+
+Paragraph 6 of something taller than the terminal.
+
+Paragraph 7 of something taller than the terminal.
+
+Paragraph 8 of something taller than the terminal.
+
+Paragraph 9 of something taller than the terminal.
+
+Paragraph 10 of something taller than the terminal.
+
+Paragraph 11 of something taller than the terminal.
+
+Paragraph 12 of something taller than the terminal.
+
+Paragraph 13 of something taller than the terminal.
+
+Paragraph 14 of something taller than the terminal.
+
+Paragraph 15 of something taller than the terminal.
+
+Paragraph 16 of something taller than the terminal.
+
+Paragraph 17 of something taller than the terminal.
+
+Paragraph 18 of something taller than the terminal.
+
+Paragraph 19 of something taller than the terminal.
+
+Paragraph 20 of something taller than the terminal.
+
+Paragraph 21 of something taller than the terminal.
+
+Paragraph 22 of something taller than the terminal.
+
+Paragraph 23 of something taller than the terminal.
+
+Paragraph 24 of something taller than the terminal.
+
+⋮ 4 more lines
+
+    Output:
+
+     M README.md
+
+    Exit code: 0
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== answer, succeeded, queued ===
+
+ explain it
+
+
+Paragraph 1 of something taller than the terminal.
+
+Paragraph 2 of something taller than the terminal.
+
+Paragraph 3 of something taller than the terminal.
+
+Paragraph 4 of something taller than the terminal.
+
+Paragraph 5 of something taller than the terminal.
+
+Paragraph 6 of something taller than the terminal.
+
+Paragraph 7 of something taller than the terminal.
+
+Paragraph 8 of something taller than the terminal.
+
+Paragraph 9 of something taller than the terminal.
+
+Paragraph 10 of something taller than the terminal.
+
+Paragraph 11 of something taller than the terminal.
+
+Paragraph 12 of something taller than the terminal.
+
+Par
+
+⏳ $ git status --short
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== answer, succeeded, running ===
+
+ explain it
+
+
+Paragraph 1 of something taller than the terminal.
+
+Paragraph 2 of something taller than the terminal.
+
+Paragraph 3 of something taller than the terminal.
+
+Paragraph 4 of something taller than the terminal.
+
+Paragraph 5 of something taller than the terminal.
+
+Paragraph 6 of something taller than the terminal.
+
+Paragraph 7 of something taller than the terminal.
+
+Paragraph 8 of something taller than the terminal.
+
+Paragraph 9 of something taller than the terminal.
+
+Paragraph 10 of something taller than the terminal.
+
+Paragraph 11 of something taller than the terminal.
+
+Paragraph 12 of something taller than the terminal.
+
+Par
+
+$ git status --short                                                                     esc to stop
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== thought, stopped, landed ===
+
+ explain it
+
+
+Paragraph 1 of something taller than the terminal. Paragraph 2 of something taller than the
+terminal. Paragraph 3 of something taller than the terminal. Paragraph 4 of something taller than
+the terminal. Paragraph 5 of something taller than the terminal. Paragraph 6 of something taller
+than the terminal. Paragraph 7 of something taller than the terminal. Paragraph 8 of something
+taller than the terminal. Paragraph 9 of something taller than the terminal. Paragraph 10 of
+something taller than the terminal. Paragraph 11 of something taller than the terminal. Paragraph 12
+of something taller than the terminal. Paragraph 13 of something taller than the terminal. Paragraph
+14 of something taller than the terminal. Paragraph 15 of something taller than the terminal.
+Paragraph 16 of something taller than the terminal. Paragraph 17 of something taller than the
+terminal. Paragraph 18 of something taller than the terminal. Paragraph 19 of something taller than
+the terminal. Paragraph 20 of something taller than the terminal. Paragraph 21 of something taller
+than the terminal. Paragraph 22 of something taller than the terminal. Paragraph 23 of something
+taller than the terminal. Paragraph 24 of something taller than the terminal.
+
+
+ 🤖 The user started the following command on the host, then interrupted it before it finished or
+    printed anything:
+
+    $ git status --short
+
+    Interrupted by the user after 0s
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== thought, stopped, queued ===
+
+ explain it
+
+
+Paragraph 1 of something taller than the terminal. Paragraph 2 of something taller than the
+terminal. Paragraph 3 of something taller than the terminal. Paragraph 4 of something taller than
+the terminal. Paragraph 5 of something taller than the terminal. Paragraph 6 of something taller
+than the terminal. Paragraph 7 of something taller than the terminal. Paragraph 8 of something
+taller than the terminal. Paragraph 9 of something taller than the terminal. Paragraph 10 of
+something taller than the terminal. Paragraph 11 of something taller than the terminal. Paragraph 12
+of something taller than the terminal. Par
+
+⏳ $ git status --short
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== thought, stopped, running ===
+
+ explain it
+
+
+Paragraph 1 of something taller than the terminal. Paragraph 2 of something taller than the
+terminal. Paragraph 3 of something taller than the terminal. Paragraph 4 of something taller than
+the terminal. Paragraph 5 of something taller than the terminal. Paragraph 6 of something taller
+than the terminal. Paragraph 7 of something taller than the terminal. Paragraph 8 of something
+taller than the terminal. Paragraph 9 of something taller than the terminal. Paragraph 10 of
+something taller than the terminal. Paragraph 11 of something taller than the terminal. Paragraph 12
+of something taller than the terminal. Par
+
+$ git status --short                                                                     esc to stop
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
