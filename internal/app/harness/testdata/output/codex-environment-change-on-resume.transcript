@@ -23,7 +23,7 @@ I have the original environment.
 ```
 Sandbox deny patterns added: `new-secret.yml`.
 Sandbox deny patterns removed: `old-secret.yml`.
-Paths matching a sandbox deny pattern appear empty and unreadable; treat them as sandbox artefacts and ask for access only when needed.
+Paths matching a sandbox deny pattern appear empty and unreadable; treat them as sandbox artefacts.
 Configured read-only paths added: `/new/reference`.
 Configured read-only paths removed: `/old/reference`.
 Configured read-write paths added: `/new/output`.

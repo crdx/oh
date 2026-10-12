@@ -363,6 +363,22 @@ func TestASymbolicLinkInsideTheRootIsStillSearched(t *testing.T) {
 
 func allowAll(string) error { return nil }
 
+func TestAnAbsoluteDeniedFileIsNotReadBySearches(t *testing.T) {
+	root := testRoot(t, map[string]string{
+		"auth.json":  "private-token\n",
+		"other.json": "public-token\n",
+	})
+	root.SetExcludedNames([]string{filepath.Join(root.Name(), "auth.json")})
+
+	output, err := runGrep(t, root, `{"pattern":"private-token"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if output != "(no matches)" {
+		t.Errorf("got %q, want no matches", output)
+	}
+}
+
 func TestDeniedNamesAreNotReadBySearches(t *testing.T) {
 	root := testRoot(t, map[string]string{
 		"foo.txt":        "secret\n",

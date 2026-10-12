@@ -6,6 +6,8 @@
 
 - Move send-now notice to the top left, a bit closer to the text it concerns
 - Flash subagent emojis on model activity so you have some idea of what's going on
+- Accept literal absolute paths in `sandbox.deny`
+- Fail closed when denied names cannot be discovered or mounted
 - Honour explicit workspace write grants in file tools
 - Add experimental toggle to let alt+enter interrupt a running turn
 - Add debug toggle for wire log storage, and move them under the debug folder

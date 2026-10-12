@@ -150,7 +150,7 @@ func TestContextcontextFilesFollowTheOrderTheyAreConcatenatedIn(t *testing.T) {
 
 func TestConfiguredPathsAreDisclosedInTheHarnessContext(t *testing.T) {
 	paths := shell.Paths{
-		Deny:  []string{"*.env"},
+		Deny:  []string{"*.env", "/workspace/auth.json"},
 		Read:  []string{"/reference"},
 		Write: []string{"/output"},
 		Exec:  []string{"/commands"},
@@ -166,6 +166,7 @@ func TestConfiguredPathsAreDisclosedInTheHarnessContext(t *testing.T) {
 
 	for _, want := range []string{
 		"cannot access a file or directory whose name matches the deny pattern *.env",
+		"cannot access the denied path /workspace/auth.json or anything beneath it",
 		"A denied path shows as an empty, unreadable file or directory",
 		"This is a sandbox artefact: exclude the path, and keep it out of progress updates, summaries, and handoffs",
 		"A request to handle all changes does not include a denied path",

@@ -25,6 +25,7 @@ import (
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
@@ -363,8 +364,13 @@ func reachable(options childOptions, hasShell bool) string {
 	} else {
 		sentences = append(sentences, "You can write nothing.")
 	}
-	if len(sandboxPaths.Deny) > 0 {
-		sentences = append(sentences, "A file or directory named "+strings.Join(sandboxPaths.Deny, ", ")+" is hidden from you.")
+	if names := util.DenyNamePatterns(sandboxPaths.Deny); len(names) > 0 {
+		sentences = append(sentences, "A file or directory named "+strings.Join(names, ", ")+" is hidden from you.")
+	}
+	for _, entry := range sandboxPaths.Deny {
+		if filepath.IsAbs(entry) {
+			sentences = append(sentences, "The path "+entry+" is hidden from you.")
+		}
 	}
 	home := "HOME and ~ are your own, not the user's"
 	if options.userHome != "" {

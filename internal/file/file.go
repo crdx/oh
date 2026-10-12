@@ -465,6 +465,9 @@ func (self *Root) refuseWrite(name string) error {
 
 			remainingPath := strings.Join(parts[i+1:], string(filepath.Separator))
 			resolvedName = filepath.Clean(filepath.Join(filepath.Dir(prefix), target, remainingPath))
+			if err := self.refuseAccess(resolvedName); err != nil {
+				return err
+			}
 			if err := self.refuse(resolvedName); err != nil {
 				return err
 			}

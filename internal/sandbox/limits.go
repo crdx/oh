@@ -91,9 +91,14 @@ func (self Policy) sane() error {
 			return fmt.Errorf("scratch %s must be beneath its parent %s", self.TmpDir, self.ScratchParent)
 		}
 	}
-	for _, pattern := range self.Deny {
-		if err := util.ValidateNameGlob(pattern); err != nil {
-			return fmt.Errorf("invalid deny pattern %q: %w", pattern, err)
+	for _, entry := range self.Deny {
+		if err := util.ValidateDenyEntry(entry); err != nil {
+			return fmt.Errorf("invalid deny entry %q: %w", entry, err)
+		}
+		if filepath.IsAbs(entry) {
+			if err := namedPathSane(entry); err != nil {
+				return err
+			}
 		}
 	}
 

@@ -145,6 +145,28 @@ func TestListFilesHonoursIgnoresAndExclusions(t *testing.T) {
 	}
 }
 
+func TestListFilesHidesAnAbsoluteDeniedPathWithoutHidingItsNameElsewhere(t *testing.T) {
+	directory := t.TempDir()
+	for _, name := range []string{"auth.json", "nested/auth.json", "visible.go"} {
+		full := filepath.Join(directory, name)
+		if err := os.MkdirAll(filepath.Dir(full), 0o700); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(full, []byte("content"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	files, isTruncated, err := pathref.ListFiles(context.Background(), directory, []string{filepath.Join(directory, "auth.json")})
+	if err != nil || isTruncated {
+		t.Fatalf("listing: %q, truncated %t, %v", files, isTruncated, err)
+	}
+	slices.Sort(files)
+	if want := []string{"nested/auth.json", "visible.go"}; !slices.Equal(files, want) {
+		t.Errorf("got %q, want %q", files, want)
+	}
+}
+
 func TestListIgnoredFilesOnlyShowsIgnoredAndPermittedPaths(t *testing.T) {
 	directory := t.TempDir()
 	contents := map[string]string{

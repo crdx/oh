@@ -2,6 +2,7 @@ package environment
 
 import (
 	"encoding/json"
+	"path/filepath"
 	"slices"
 	"strings"
 
@@ -167,9 +168,15 @@ func changeNotices(
 	wording skillWording,
 ) []string {
 	var notices []string
-	notices = append(notices, setChangeNotices("Sandbox deny patterns", knownEnvironment.Sandbox.DenyPatterns, current.Sandbox.DenyPatterns)...)
+	denyLabel := "Sandbox deny patterns"
+	denyExplanation := "Paths matching a sandbox deny pattern appear empty and unreadable; treat them as sandbox artefacts."
+	if slices.ContainsFunc(slices.Concat(knownEnvironment.Sandbox.DenyPatterns, current.Sandbox.DenyPatterns), filepath.IsAbs) {
+		denyLabel = "Sandbox deny entries"
+		denyExplanation = "Paths denied by sandbox.deny appear empty and unreadable; treat them as sandbox artefacts."
+	}
+	notices = append(notices, setChangeNotices(denyLabel, knownEnvironment.Sandbox.DenyPatterns, current.Sandbox.DenyPatterns)...)
 	if len(difference(current.Sandbox.DenyPatterns, knownEnvironment.Sandbox.DenyPatterns)) > 0 {
-		notices = append(notices, "Paths matching a sandbox deny pattern appear empty and unreadable; treat them as sandbox artefacts and ask for access only when needed.")
+		notices = append(notices, denyExplanation)
 	}
 	notices = append(notices, setChangeNotices("Configured read-only paths", knownEnvironment.Sandbox.ReadPaths, current.Sandbox.ReadPaths)...)
 	notices = append(notices, setChangeNotices("Configured read-write paths", knownEnvironment.Sandbox.WritePaths, current.Sandbox.WritePaths)...)

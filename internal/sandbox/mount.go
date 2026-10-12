@@ -237,9 +237,6 @@ func prepareDenialMounts(paths []string) ([]denialMount, error) {
 	mounts := make([]denialMount, 0, len(paths))
 	for _, path := range paths {
 		info, err := os.Stat(path)
-		if errors.Is(err, os.ErrNotExist) {
-			continue
-		}
 		if err != nil {
 			closeDenialMounts(mounts)
 			return nil, fmt.Errorf("could not inspect denied path %s: %w", path, err)
@@ -294,7 +291,7 @@ func makeDenialBacking(isDirectory bool) (string, error) {
 func installDenialMounts(mounts []denialMount) error {
 	for _, mount := range mounts {
 		if !pathutil.Exists(mount.path) {
-			continue
+			return fmt.Errorf("denied path %s disappeared before it could be protected", mount.path)
 		}
 		if err := unix.MoveMount(mount.fd, "", unix.AT_FDCWD, mount.path, unix.MOVE_MOUNT_F_EMPTY_PATH); err != nil {
 			return fmt.Errorf("could not deny access to %s: %w", mount.path, err)

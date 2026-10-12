@@ -8,9 +8,12 @@ import (
 	"fmt"
 	"os/exec"
 	"path"
+	"path/filepath"
 	"strings"
 	"sync"
 	"time"
+
+	"crdx.org/oh/internal/util/pathutil"
 )
 
 const (
@@ -172,8 +175,15 @@ func listFiles(ctx context.Context, directory string, excludedNames []string, is
 	if isIncludingIgnored {
 		arguments = append(arguments, "--no-ignore")
 	}
-	for _, pattern := range excludedNames {
-		arguments = append(arguments, "--glob=!"+pattern)
+	var deniedRelativePaths []string
+	for _, entry := range excludedNames {
+		if filepath.IsAbs(entry) {
+			if relative, isInside := pathutil.RelativeTo(pathutil.Canonicalise(directory), pathutil.Canonicalise(entry)); isInside {
+				deniedRelativePaths = append(deniedRelativePaths, filepath.ToSlash(relative))
+			}
+			continue
+		}
+		arguments = append(arguments, "--glob=!"+entry)
 	}
 
 	listContext, stopListing := context.WithCancel(ctx)
@@ -198,12 +208,16 @@ func listFiles(ctx context.Context, directory string, excludedNames []string, is
 	scanner := bufio.NewScanner(stdout)
 	scanner.Split(splitAtNull)
 	for scanner.Scan() {
+		listedPath := strings.TrimPrefix(scanner.Text(), "./")
+		if isDeniedListingPath(listedPath, deniedRelativePaths) {
+			continue
+		}
 		if len(files) == MaxPaths {
 			isTruncated = true
 			stopListing()
 			break
 		}
-		files = append(files, strings.TrimPrefix(scanner.Text(), "./"))
+		files = append(files, listedPath)
 	}
 	scanErr := scanner.Err()
 
@@ -228,6 +242,15 @@ func listFiles(ctx context.Context, directory string, excludedNames []string, is
 	}
 
 	return files, false, nil
+}
+
+func isDeniedListingPath(listedPath string, deniedRelativePaths []string) bool {
+	for _, deniedPath := range deniedRelativePaths {
+		if deniedPath == "." || listedPath == deniedPath || strings.HasPrefix(listedPath, deniedPath+"/") {
+			return true
+		}
+	}
+	return false
 }
 
 func splitAtNull(data []byte, isAtEOF bool) (int, []byte, error) {

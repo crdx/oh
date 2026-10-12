@@ -14,6 +14,56 @@ import (
 	"crdx.org/oh/internal/sandbox"
 )
 
+func TestAnAbsoluteDenyPathProtectsAHomeWorkspace(t *testing.T) {
+	workspace := t.TempDir()
+	secret := filepath.Join(workspace, "auth.json")
+	if err := os.WriteFile(secret, []byte("private"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(secret, filepath.Join(workspace, "alias")); err != nil {
+		t.Fatal(err)
+	}
+	root, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = root.Close() }()
+	files := file.New(root, func(string) error { return nil })
+	access, err := NewPathAccess(files, caps.NewMode(caps.All()), Paths{Deny: []string{secret}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer access.Close()
+
+	for _, name := range []string{"auth.json", "alias"} {
+		if _, err := files.ReadFile(name); !errors.Is(err, ErrDenied) {
+			t.Errorf("reading %s: %v", name, err)
+		}
+		if err := files.WriteFile(name, []byte("changed"), 0o600); !errors.Is(err, ErrDenied) {
+			t.Errorf("writing %s: %v", name, err)
+		}
+	}
+	if changed, err := access.Grant(secret, ReadAccess); changed || !errors.Is(err, ErrDenied) {
+		t.Errorf("grant changed=%t and err=%v, want denial", changed, err)
+	}
+	if entries, err := files.ReadDir("."); err != nil {
+		t.Fatal(err)
+	} else {
+		for _, entry := range entries {
+			if entry.Name() == "auth.json" || entry.Name() == "alias" {
+				t.Errorf("listed denied path %s", entry.Name())
+			}
+		}
+	}
+}
+
+func TestAnAbsentAbsoluteDenyPathRefusesStartup(t *testing.T) {
+	secret := filepath.Join(t.TempDir(), "auth.json")
+	if _, err := newPathDenials([]string{secret}); err == nil {
+		t.Error("a missing denied path was accepted")
+	}
+}
+
 func TestDenyGlobsMatchNamesAtEveryDepth(t *testing.T) {
 	root := t.TempDir()
 	denials, err := newPathDenials([]string{"*.env"})
@@ -110,36 +160,68 @@ func TestPathToolsCannotReadDeniedPathsOrGrantThem(t *testing.T) {
 	}
 }
 
-func TestDenySearchKeyDependsOnThePatternSetRatherThanItsOrder(t *testing.T) {
-	left := denySearchKey([]string{"*.env", "secrets.yml"}, "/read")
-	right := denySearchKey([]string{"secrets.yml", "*.env"}, "/read")
-	if left != right {
-		t.Error("equivalent patterns produced different cache keys")
+func TestADanglingSymlinkCannotWriteIntoADeniedDirectory(t *testing.T) {
+	workspace := t.TempDir()
+	private := filepath.Join(workspace, "private")
+	if err := os.Mkdir(private, 0o700); err != nil {
+		t.Fatal(err)
 	}
-	if denySearchKey([]string{"*.env"}, "/other") == left {
-		t.Error("a different root produced the same cache key")
+	if err := os.Symlink("private/newfile", filepath.Join(workspace, "alias")); err != nil {
+		t.Fatal(err)
+	}
+	root, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = root.Close() }()
+	files := file.New(root, func(string) error { return nil })
+	access, err := NewPathAccess(files, caps.NewMode(caps.All()), Paths{Deny: []string{"private"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer access.Close()
+
+	if err := files.WriteFile("alias", []byte("blocked"), 0o600); !errors.Is(err, ErrDenied) {
+		t.Errorf("write through a dangling alias: %v", err)
+	}
+	if _, err := os.Stat(filepath.Join(private, "newfile")); !errors.Is(err, os.ErrNotExist) {
+		t.Errorf("a denied file was created: %v", err)
 	}
 }
 
-func TestAGrantSearchesOnlyTheRootItAdds(t *testing.T) {
-	access, searched := denySearchRecorder(t)
-	first := t.TempDir()
-	second := t.TempDir()
+func TestDenySearchKeyDependsOnThePatternSetRatherThanItsOrder(t *testing.T) {
+	left := denySearchKey([]string{"*.env", "secrets.yml"}, "/read", "")
+	right := denySearchKey([]string{"secrets.yml", "*.env"}, "/read", "")
+	if left != right {
+		t.Error("equivalent patterns produced different cache keys")
+	}
+	if denySearchKey([]string{"*.env"}, "/other", "") == left {
+		t.Error("a different root produced the same cache key")
+	}
+	if denySearchKey([]string{"*.env", "secrets.yml"}, "/read", "/scratch") == left {
+		t.Error("a skipped subtree reused a whole-tree search")
+	}
+}
 
-	policy := sandbox.Policy{Deny: []string{"*.env"}, Read: []string{first}}
-	if _, err := access.getDenyPaths(policy); err != nil {
+func TestANameAppearingAfterTheFirstSearchIsDeniedOnTheNextCommand(t *testing.T) {
+	mode := caps.NewMode(caps.All())
+	access, err := NewPathAccess(configuredPathTestRoot(t, mode), mode, Paths{Deny: []string{"auth.json"}})
+	if err != nil {
 		t.Fatal(err)
 	}
-	if !slices.Contains(searched(), first) {
-		t.Fatalf("the first search covered %v, want %s among them", searched(), first)
+	defer access.Close()
+	workspace := t.TempDir()
+	policy := sandbox.Policy{Deny: []string{"auth.json"}, Read: []string{workspace}}
+	if paths, err := access.getDenyPaths(policy); err != nil || len(paths) != 0 {
+		t.Fatalf("first search found %v: %v", paths, err)
 	}
 
-	policy.Read = []string{first, second}
-	if _, err := access.getDenyPaths(policy); err != nil {
+	secret := filepath.Join(workspace, "auth.json")
+	if err := os.WriteFile(secret, []byte("private"), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	if roots := searched(); !slices.Equal(roots, []string{second}) {
-		t.Errorf("the search after the grant covered %v, want only %s", roots, second)
+	if paths, err := access.getDenyPaths(policy); err != nil || !slices.Contains(paths, secret) {
+		t.Errorf("second search found %v: %v, want %s denied", paths, err, secret)
 	}
 }
 
@@ -159,7 +241,7 @@ func TestAPathIsGrantedWhileADenySearchIsStillWalking(t *testing.T) {
 		close(hasStarted)
 		<-release
 	})
-	access.searchDeny = func([]string, string) ([]string, error) {
+	access.searchDeny = func([]string, string, string) ([]string, error) {
 		hold()
 		return nil, nil
 	}
@@ -204,7 +286,7 @@ func TestConcurrentPoliciesShareOneSearchOfTheSameRoot(t *testing.T) {
 
 	var mutex sync.Mutex
 	searches := make(map[string]int)
-	access.searchDeny = func(_ []string, root string) ([]string, error) {
+	access.searchDeny = func(_ []string, root string, _ string) ([]string, error) {
 		mutex.Lock()
 		searches[root]++
 		mutex.Unlock()
@@ -236,31 +318,3 @@ const (
 	denyGrantWait   = 10 * time.Second
 	denyOverlapWait = 50 * time.Millisecond
 )
-
-func denySearchRecorder(t *testing.T) (*PathAccess, func() []string) {
-	t.Helper()
-
-	mode := caps.NewMode(caps.All())
-	access, err := NewPathAccess(configuredPathTestRoot(t, mode), mode, Paths{Deny: []string{"*.env"}})
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(access.Close)
-
-	var mutex sync.Mutex
-	var roots []string
-	access.searchDeny = func(_ []string, root string) ([]string, error) {
-		mutex.Lock()
-		defer mutex.Unlock()
-		roots = append(roots, root)
-		return nil, nil
-	}
-
-	return access, func() []string {
-		mutex.Lock()
-		defer mutex.Unlock()
-		taken := slices.Clone(roots)
-		roots = nil
-		return taken
-	}
-}

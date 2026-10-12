@@ -12,10 +12,10 @@ import (
 	"crdx.org/oh/internal/util/pathutil"
 )
 
-type DenySearch func(patterns []string, root string) ([]string, error)
+type DenySearch func(patterns []string, root string, skip string) ([]string, error)
 
 func (self Policy) DiscoverDenyPaths() ([]string, error) {
-	return self.DiscoverDenyPathsWith(FindDenyPaths)
+	return self.DiscoverDenyPathsWith(FindDenyPathsSkipping)
 }
 
 func (self Policy) DiscoverDenyPathsWith(search DenySearch) ([]string, error) {
@@ -24,8 +24,41 @@ func (self Policy) DiscoverDenyPathsWith(search DenySearch) ([]string, error) {
 	}
 
 	var matches []string
-	for _, root := range self.denyRoots() {
-		found, err := search(self.Deny, root)
+	roots := self.denyRoots()
+	for _, entry := range self.Deny {
+		if !filepath.IsAbs(entry) {
+			continue
+		}
+		resolvedPath, err := filepath.EvalSymlinks(entry)
+		if err != nil {
+			return nil, fmt.Errorf("cannot protect denied path %s: %w", entry, err)
+		}
+		for _, root := range roots {
+			if _, isReachable := pathutil.RelativeTo(root, resolvedPath); isReachable {
+				matches = append(matches, resolvedPath)
+				break
+			}
+		}
+		if self.TmpDir != "" {
+			if relative, isScratch := pathutil.RelativeTo(self.TmpDir, resolvedPath); isScratch {
+				matches = append(matches, filepath.Join(TmpDir, relative))
+			}
+		}
+	}
+	patterns := util.DenyNamePatterns(self.Deny)
+	if len(patterns) == 0 {
+		return outermostPaths(matches), nil
+	}
+	isScratchReachableAtHostPath := false
+	for _, root := range roots {
+		skip := ""
+		if self.TmpDir != "" {
+			if relative, isCovered := pathutil.RelativeTo(root, self.TmpDir); isCovered && relative != "." {
+				skip = self.TmpDir
+				isScratchReachableAtHostPath = true
+			}
+		}
+		found, err := search(patterns, root, skip)
 		if err != nil {
 			return nil, err
 		}
@@ -35,7 +68,7 @@ func (self Policy) DiscoverDenyPathsWith(search DenySearch) ([]string, error) {
 		return outermostPaths(matches), nil
 	}
 
-	scratchMatches, err := search(self.Deny, self.TmpDir)
+	scratchMatches, err := search(patterns, self.TmpDir, "")
 	if err != nil {
 		return nil, err
 	}
@@ -43,12 +76,23 @@ func (self Policy) DiscoverDenyPathsWith(search DenySearch) ([]string, error) {
 		relative, isScratchPath := pathutil.RelativeTo(self.TmpDir, match)
 		if isScratchPath {
 			matches = append(matches, filepath.Join(TmpDir, relative))
+			if isScratchReachableAtHostPath {
+				matches = append(matches, match)
+			}
 		}
 	}
 	return outermostPaths(matches), nil
 }
 
 func FindDenyPaths(patterns []string, root string) ([]string, error) {
+	return FindDenyPathsSkipping(patterns, root, "")
+}
+
+func FindDenyPathsSkipping(patterns []string, root string, skip string) ([]string, error) {
+	return findDenyPathsWithWalk(patterns, root, skip, filepath.WalkDir)
+}
+
+func findDenyPathsWithWalk(patterns []string, root string, skip string, walk func(string, fs.WalkDirFunc) error) ([]string, error) {
 	for _, pattern := range patterns {
 		if err := util.ValidateNameGlob(pattern); err != nil {
 			return nil, fmt.Errorf("invalid deny pattern %q: %w", pattern, err)
@@ -56,12 +100,16 @@ func FindDenyPaths(patterns []string, root string) ([]string, error) {
 	}
 
 	var matches []string
-	err := filepath.WalkDir(root, func(name string, entry fs.DirEntry, walkErr error) error {
+	err := walk(root, func(name string, entry fs.DirEntry, walkErr error) error {
+		if name == skip {
+			return filepath.SkipDir
+		}
 		if walkErr != nil {
-			if name == root {
-				return walkErr
+			if entry != nil && entry.IsDir() && errors.Is(walkErr, fs.ErrPermission) {
+				matches = append(matches, pathutil.Canonicalise(name))
+				return filepath.SkipDir
 			}
-			return nil
+			return walkErr
 		}
 		if !util.MatchNameGlobs(patterns, name) {
 			return nil
@@ -77,7 +125,7 @@ func FindDenyPaths(patterns []string, root string) ([]string, error) {
 		}
 		return nil
 	})
-	if err != nil && !errors.Is(err, fs.ErrNotExist) {
+	if err != nil {
 		return nil, fmt.Errorf("could not search for denied names beneath %s: %w", root, err)
 	}
 
@@ -90,18 +138,11 @@ func (self Policy) denyRoots() []string {
 		if grant.isOptional && !pathutil.Exists(grant.path) {
 			continue
 		}
-		if grant.path == SharedMemoryPath {
+		if grant.path == SharedMemoryPath || grant.path == processFilesystemPath {
 			continue
 		}
-		if self.TmpDir != "" {
-			if grant.path == TmpDir {
-				continue
-			}
-			if grant.path != self.TmpDir {
-				if _, coversScratch := pathutil.RelativeTo(grant.path, self.TmpDir); coversScratch {
-					continue
-				}
-			}
+		if self.TmpDir != "" && grant.path == TmpDir {
+			continue
 		}
 		roots = append(roots, filepath.Clean(grant.path))
 		resolvedPath, err := filepath.EvalSymlinks(grant.path)

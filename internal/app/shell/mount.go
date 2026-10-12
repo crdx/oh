@@ -42,7 +42,6 @@ type PathAccess struct {
 	configuredMounts map[string]mountedPath
 	temporaryMounts  map[string]mountedPath
 	temporaryAccess  map[string]Access
-	denyPathCache    map[string][]string
 	denySearches     map[string]*pendingDenySearch
 	denials          pathDenials
 	roots            []*file.Root
@@ -71,13 +70,12 @@ func NewPathAccess(files *file.Root, mode *caps.Mode, paths Paths) (*PathAccess,
 	access := &PathAccess{
 		files:            files,
 		mode:             mode,
-		searchDeny:       sandbox.FindDenyPaths,
+		searchDeny:       sandbox.FindDenyPathsSkipping,
 		configuredPaths:  clonePaths(paths),
 		baselineMounts:   make(map[string]mountedPath),
 		configuredMounts: make(map[string]mountedPath),
 		temporaryMounts:  make(map[string]mountedPath),
 		temporaryAccess:  make(map[string]Access),
-		denyPathCache:    make(map[string][]string),
 		denySearches:     make(map[string]*pendingDenySearch),
 		denials:          denials,
 	}
@@ -199,14 +197,10 @@ func (self *PathAccess) getDenyPaths(policy sandbox.Policy) ([]string, error) {
 	return policy.DiscoverDenyPathsWith(self.searchDenyPaths)
 }
 
-func (self *PathAccess) searchDenyPaths(patterns []string, root string) ([]string, error) {
-	key := denySearchKey(patterns, root)
+func (self *PathAccess) searchDenyPaths(patterns []string, root string, skip string) ([]string, error) {
+	key := denySearchKey(patterns, root, skip)
 
 	self.mutex.Lock()
-	if paths, isSearched := self.denyPathCache[key]; isSearched {
-		self.mutex.Unlock()
-		return slices.Clone(paths), nil
-	}
 	if sharedSearch, isRunning := self.denySearches[key]; isRunning {
 		self.mutex.Unlock()
 		<-sharedSearch.over
@@ -216,22 +210,19 @@ func (self *PathAccess) searchDenyPaths(patterns []string, root string) ([]strin
 	self.denySearches[key] = search
 	self.mutex.Unlock()
 
-	search.paths, search.err = self.searchDeny(patterns, root)
+	search.paths, search.err = self.searchDeny(patterns, root, skip)
 
 	self.mutex.Lock()
 	delete(self.denySearches, key)
-	if search.err == nil {
-		self.denyPathCache[key] = search.paths
-	}
 	self.mutex.Unlock()
 	close(search.over)
 
 	return slices.Clone(search.paths), search.err
 }
 
-func denySearchKey(patterns []string, root string) string {
+func denySearchKey(patterns []string, root string, skip string) string {
 	sortedPatterns := slices.Sorted(slices.Values(patterns))
-	return strings.Join(sortedPatterns, "\x00") + "\x01" + root
+	return strings.Join(sortedPatterns, "\x00") + "\x01" + root + "\x00" + skip
 }
 
 func (self *PathAccess) getPaths() (Paths, []string) {

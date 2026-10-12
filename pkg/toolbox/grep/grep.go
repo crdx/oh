@@ -17,6 +17,7 @@ import (
 	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/internal/util"
+	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/pkg/sandbox"
 	"crdx.org/oh/pkg/tool"
 )
@@ -125,8 +126,16 @@ func run(ctx context.Context, root *file.Root, args Args, runner sandbox.ArgvRun
 	if args.Glob != "" {
 		arguments = append(arguments, "--glob="+args.Glob)
 	}
-	for _, pattern := range root.ExcludedNames() {
-		arguments = append(arguments, "--glob=!"+pattern)
+	var deniedPaths []string
+	for _, entry := range root.ExcludedNames() {
+		if filepath.IsAbs(entry) {
+			deniedPaths = append(deniedPaths, entry)
+			if relative, isInside := pathutil.RelativeTo(root.Name(), entry); isInside {
+				arguments = append(arguments, "--glob=!/"+filepath.ToSlash(relative))
+			}
+			continue
+		}
+		arguments = append(arguments, "--glob=!"+entry)
 	}
 	arguments = append(arguments, "--regexp="+args.Pattern, "--", name)
 
@@ -134,6 +143,7 @@ func run(ctx context.Context, root *file.Root, args Args, runner sandbox.ArgvRun
 	defer stopSearch()
 	output := newSearchOutput(stopSearch)
 	policy := sandbox.Policy{
+		Deny:    deniedPaths,
 		Read:    []string{root.Name()},
 		Exec:    []string{binary},
 		Env:     []string{"LANG", "TERM"},

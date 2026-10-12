@@ -395,8 +395,12 @@ func scopeRules(data harnessContextTemplateData) string {
 		lines = append(lines, "- "+untrustedDropsRule(dropsDirectory))
 	}
 	if !data.Yolo {
-		for _, pattern := range extraPaths.Deny {
-			lines = append(lines, "- Path tools and the shell cannot access a file or directory whose name matches the deny pattern "+pattern+".")
+		for _, entry := range extraPaths.Deny {
+			if filepath.IsAbs(entry) {
+				lines = append(lines, "- Path tools and the shell cannot access the denied path "+entry+" or anything beneath it.")
+			} else {
+				lines = append(lines, "- Path tools and the shell cannot access a file or directory whose name matches the deny pattern "+entry+".")
+			}
 		}
 		if len(extraPaths.Deny) > 0 {
 			lines = append(lines, "- A denied path shows as an empty, unreadable file or directory, so tools such as git can falsely report it as modified. This is a sandbox artefact: exclude the path, and keep it out of progress updates, summaries, and handoffs. A request to handle all changes does not include a denied path. Ask for access only if the user names the path or the work cannot exclude it.")

@@ -33,6 +33,22 @@ func TestCaptureClonesAndCanonicalisesTheEnvironment(t *testing.T) {
 	}
 }
 
+func TestAnAbsoluteDenyPathIsDescribedAsAnEntryNotANamePattern(t *testing.T) {
+	event, err := ChangeEvent(Snapshot{}, Snapshot{Sandbox: Sandbox{DenyPatterns: []string{"/home/example/auth.json"}}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	notices, areSaid := Notice(event)
+	if !areSaid {
+		t.Fatal("the denied path was not announced")
+	}
+	joined := strings.Join(notices, "\n")
+	if !strings.Contains(joined, "Sandbox deny entries added: `/home/example/auth.json`.") ||
+		strings.Contains(joined, "deny pattern") {
+		t.Errorf("the absolute path was misdescribed: %s", joined)
+	}
+}
+
 func TestEveryEnvironmentChangeIsDescribed(t *testing.T) {
 	known := Snapshot{
 		Sandbox: Sandbox{

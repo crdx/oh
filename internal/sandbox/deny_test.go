@@ -1,11 +1,90 @@
 package sandbox
 
 import (
+	"errors"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"slices"
 	"testing"
 )
+
+func TestAnAbsoluteDenyPathDoesNotWalkTheWorkspace(t *testing.T) {
+	workspace := t.TempDir()
+	secret := filepath.Join(workspace, "auth.json")
+	if err := os.WriteFile(secret, []byte("private"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	searches := 0
+	policy := Policy{Deny: []string{secret}, Read: []string{workspace}}
+	paths, err := policy.DiscoverDenyPathsWith(func([]string, string, string) ([]string, error) {
+		searches++
+		return nil, nil
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if searches != 0 || !slices.Equal(paths, []string{secret}) {
+		t.Errorf("searched %d roots and denied %v, want no walk and %s", searches, paths, secret)
+	}
+}
+
+func TestAnAbsoluteDeniedPathOutsideEveryGrantNeedsNoShellMount(t *testing.T) {
+	workspace := t.TempDir()
+	elsewhere := t.TempDir()
+	secret := filepath.Join(elsewhere, "auth.json")
+	if err := os.WriteFile(secret, []byte("private"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	policy := Policy{Deny: []string{secret}, Read: []string{workspace}}
+	paths, err := policy.DiscoverDenyPaths()
+	if err != nil || len(paths) != 0 {
+		t.Errorf("found denied mounts %v with error %v for an unreachable file", paths, err)
+	}
+}
+
+func TestAnAbsoluteScratchDenialUsesTheVirtualTmpPath(t *testing.T) {
+	scratch := t.TempDir()
+	secret := filepath.Join(scratch, "auth.json")
+	if err := os.WriteFile(secret, []byte("private"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	policy := Policy{Deny: []string{secret}, TmpDir: scratch, Write: []string{TmpDir}}
+	paths, err := policy.DiscoverDenyPaths()
+	if err != nil || !slices.Equal(paths, []string{filepath.Join(TmpDir, "auth.json")}) {
+		t.Errorf("found denied mounts %v with error %v, want the virtual scratch path", paths, err)
+	}
+}
+
+func TestAnAbsentAbsoluteDenyPathFailsClosed(t *testing.T) {
+	secret := filepath.Join(t.TempDir(), "auth.json")
+	policy := Policy{Deny: []string{secret}}
+	if _, err := policy.DiscoverDenyPaths(); err == nil {
+		t.Error("a missing absolute deny path was silently ignored")
+	}
+}
+
+func TestAnUnreadableSubtreeIsDeniedAsAWhole(t *testing.T) {
+	root := t.TempDir()
+	hidden := filepath.Join(root, "unlistable")
+	if err := os.Mkdir(hidden, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	entries, err := os.ReadDir(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	paths, err := findDenyPathsWithWalk([]string{"auth.json"}, root, "", func(_ string, visit fs.WalkDirFunc) error {
+		visitError := visit(hidden, entries[0], &fs.PathError{Op: "readdir", Path: hidden, Err: fs.ErrPermission})
+		if errors.Is(visitError, filepath.SkipDir) {
+			return nil
+		}
+		return visitError
+	})
+	if err != nil || !slices.Equal(paths, []string{hidden}) {
+		t.Errorf("denied paths %v and error %v, want the whole unreadable directory", paths, err)
+	}
+}
 
 func TestDenyNamesAreFoundAtEveryDepthOfGrantedTrees(t *testing.T) {
 	root := t.TempDir()
@@ -89,15 +168,40 @@ func TestPrivateSharedMemoryIsNotSearchedForDeniedNames(t *testing.T) {
 	}
 }
 
-func TestAGrantContainingTheScratchIsNotSearched(t *testing.T) {
+func TestThePrivateProcessFilesystemIsNotSearchedOnTheHost(t *testing.T) {
+	if slices.Contains(Policy{Deny: []string{"auth.json"}}.denyRoots(), processFilesystemPath) {
+		t.Error("the host's changing /proc tree was searched instead of the sandbox's private one")
+	}
+}
+
+func TestAGrantContainingScratchStillFindsDeniedNamesBesideIt(t *testing.T) {
 	farm := t.TempDir()
 	scratch := filepath.Join(farm, "session")
 	if err := os.Mkdir(scratch, 0o700); err != nil {
 		t.Fatal(err)
 	}
-	policy := Policy{Read: []string{farm}, TmpDir: scratch, Write: []string{TmpDir}}
+	for _, name := range []string{filepath.Join(farm, "auth.json"), filepath.Join(scratch, "auth.json")} {
+		if err := os.WriteFile(name, []byte("private"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	policy := Policy{Deny: []string{"auth.json"}, Read: []string{farm}, TmpDir: scratch, Write: []string{TmpDir}}
 
-	if slices.Contains(policy.denyRoots(), farm) {
-		t.Errorf("scratch container %s remained a deny discovery root", farm)
+	var skips []string
+	paths, err := policy.DiscoverDenyPathsWith(func(patterns []string, root string, skip string) ([]string, error) {
+		skips = append(skips, root+":"+skip)
+		return FindDenyPathsSkipping(patterns, root, skip)
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := []string{filepath.Join(TmpDir, "auth.json"), filepath.Join(farm, "auth.json"), filepath.Join(scratch, "auth.json")}
+	for _, name := range want {
+		if !slices.Contains(paths, name) {
+			t.Errorf("denied paths %q miss %s", paths, name)
+		}
+	}
+	if !slices.Contains(skips, farm+":"+scratch) {
+		t.Errorf("searches %q scanned scratch as part of its parent", skips)
 	}
 }
