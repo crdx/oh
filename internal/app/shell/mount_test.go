@@ -3,6 +3,7 @@ package shell
 import (
 	"errors"
 	"io"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"slices"
@@ -951,4 +952,96 @@ func openDescriptors(t *testing.T) int {
 	}
 
 	return len(entries)
+}
+
+func TestGitAloneCannotCreateMetadataOrFollowItsAlias(t *testing.T) {
+	workspace := t.TempDir()
+	root, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = root.Close() }()
+	mode := caps.NewMode(caps.Read | caps.Git)
+	files := file.New(root, caps.RefuseWrite(mode))
+	access, err := NewPathAccess(files, mode, Paths{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer access.Close()
+
+	if err := files.MkdirAll(".git/hooks", 0o700); !errors.Is(err, file.ErrReadOnly) {
+		t.Errorf("creating missing metadata with g but not w: %v", err)
+	}
+	if _, err := os.Lstat(filepath.Join(workspace, ".git")); !errors.Is(err, fs.ErrNotExist) {
+		t.Errorf("metadata was created: %v", err)
+	}
+	if err := os.Mkdir(filepath.Join(workspace, "ordinary"), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink("ordinary", filepath.Join(workspace, ".git")); err != nil {
+		t.Fatal(err)
+	}
+	if err := files.WriteFile(".git/config", []byte("write"), 0o600); !errors.Is(err, file.ErrReadOnly) {
+		t.Errorf("writing through metadata alias with g but not w: %v", err)
+	}
+	if err := os.Remove(filepath.Join(workspace, ".git")); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Mkdir(filepath.Join(workspace, ".git"), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := files.WriteFile(".git/config", []byte("allowed"), 0o600); err != nil {
+		t.Errorf("writing into existing metadata with g: %v", err)
+	}
+}
+
+func TestAChangingSymlinkCannotRedirectAFileToolWriteIntoGit(t *testing.T) {
+	workspace := t.TempDir()
+	for _, name := range []string{".git", "ordinary"} {
+		if err := os.Mkdir(filepath.Join(workspace, name), 0o700); err != nil {
+			t.Fatal(err)
+		}
+	}
+	metadata := filepath.Join(workspace, ".git", "config")
+	if err := os.WriteFile(metadata, []byte("intact"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	root, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = root.Close() }()
+	mode := caps.NewMode(caps.Read | caps.Write)
+	files := file.New(root, caps.RefuseWrite(mode))
+	access, err := NewPathAccess(files, mode, Paths{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer access.Close()
+
+	alias := filepath.Join(workspace, "alias")
+	finished := make(chan struct{})
+	var swapping sync.WaitGroup
+	swapping.Go(func() {
+		for {
+			select {
+			case <-finished:
+				return
+			default:
+			}
+			for _, target := range []string{"ordinary", ".git"} {
+				_ = os.Remove(alias)
+				_ = os.Symlink(target, alias)
+			}
+		}
+	})
+	for range 1000 {
+		_ = files.WriteFile("alias/config", []byte("changed"), 0o600)
+	}
+	close(finished)
+	swapping.Wait()
+	content, err := os.ReadFile(metadata) //nolint:gosec // a path made by this test
+	if err != nil || string(content) != "intact" {
+		t.Errorf("repository metadata changed to %q: %v", content, err)
+	}
 }

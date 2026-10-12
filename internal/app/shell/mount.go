@@ -62,6 +62,11 @@ func NewPathAccess(files *file.Root, mode *caps.Mode, paths Paths) (*PathAccess,
 	}
 	files.SetAccessRefusal(denials.Refuse)
 	files.SetExcludedNames(paths.Deny)
+	files.SetGitWriteAllowed(func() bool { return mode.Current().Has(caps.Git) })
+	files.SetGitOnly(func() bool {
+		current := mode.Current()
+		return current.Has(caps.Git) && !current.Has(caps.Write)
+	})
 
 	access := &PathAccess{
 		files:            files,

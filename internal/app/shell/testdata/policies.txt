@@ -72,3 +72,12 @@ optional: false
 
 === missing protection root ===
 error: lstat /missing: no such file or directory
+
+=== symlinked workspace metadata ===
+read:
+nested/.git
+
+=== git-only file tools ===
+missing metadata refused: true
+existing metadata writable: true
+ordinary file refused: true

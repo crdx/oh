@@ -2,6 +2,7 @@ package shell
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -28,6 +29,8 @@ func TestGoldenShellPoliciesHandleFilesystemChanges(t *testing.T) {
 		"=== vanished read and write grant ===\n" + temporaryGrantGolden(t, ReadAccess|WriteAccess, false),
 		"=== configured path with temporary write access ===\n" + configuredPathGolden(t),
 		"=== missing protection root ===\n" + missingProtectionRootGolden(t),
+		"=== symlinked workspace metadata ===\n" + symlinkedWorkspaceGolden(t),
+		"=== git-only file tools ===\n" + gitOnlyGolden(t),
 	}
 	compareShellGolden(t, "policies.txt", strings.Join(sections, "\n\n")+"\n")
 }
@@ -246,4 +249,47 @@ func compareShellGolden(t *testing.T, name string, got string) {
 	if got != string(want) {
 		t.Errorf("output differs from %s\n--- got ---\n%s--- want ---\n%s", path, got, want)
 	}
+}
+
+func symlinkedWorkspaceGolden(t *testing.T) string {
+	t.Helper()
+	workspace := t.TempDir()
+	metadata := filepath.Join(workspace, "nested", ".git")
+	if err := os.MkdirAll(metadata, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	alias := filepath.Join(t.TempDir(), "workspace")
+	if err := os.Symlink(workspace, alias); err != nil {
+		t.Fatal(err)
+	}
+	policy, err := protectedPolicy(sandbox.Policy{Write: []string{alias}}, []string{alias})
+	if err != nil {
+		return "error: " + err.Error()
+	}
+	return "read:\n" + renderPaths(workspace, policy.Read)
+}
+
+func gitOnlyGolden(t *testing.T) string {
+	t.Helper()
+	workspace := t.TempDir()
+	root, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = root.Close() })
+	mode := caps.NewMode(caps.Read | caps.Git)
+	files := file.New(root, caps.RefuseWrite(mode))
+	access, err := NewPathAccess(files, mode, Paths{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(access.Close)
+	missing := files.MkdirAll(".git/hooks", 0o700)
+	if err := os.Mkdir(filepath.Join(workspace, ".git"), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	present := files.WriteFile(".git/config", []byte("ok"), 0o600)
+	ordinary := files.WriteFile("ordinary", []byte("no"), 0o600)
+	return fmt.Sprintf("missing metadata refused: %t\nexisting metadata writable: %t\nordinary file refused: %t",
+		errors.Is(missing, file.ErrReadOnly), present == nil, errors.Is(ordinary, file.ErrReadOnly))
 }

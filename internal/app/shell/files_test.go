@@ -1,6 +1,7 @@
 package shell_test
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
 	"testing"
@@ -92,5 +93,22 @@ func TestPrivateCacheIsWritableByFileToolsAtEveryWorkspaceWriteState(t *testing.
 				t.Errorf("private cache was not writable: %v", err)
 			}
 		})
+	}
+}
+
+func TestGitAloneCannotWriteTheShellHomeMetadata(t *testing.T) {
+	workspaceRoot, err := os.OpenRoot(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = workspaceRoot.Close() }()
+
+	files := file.New(workspaceRoot, func(string) error { return file.ErrReadOnly })
+	home := t.TempDir()
+	mode := caps.NewMode(caps.Read | caps.Git)
+	homeRoot := shell.MountHomeDirectory(files, home, mode)
+	defer func() { _ = homeRoot.Close() }()
+	if err := homeRoot.WriteFile(".git/config", []byte("write"), 0o600); !errors.Is(err, file.ErrReadOnly) {
+		t.Errorf("home metadata write with g but not w: %v", err)
 	}
 }

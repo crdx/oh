@@ -9,7 +9,12 @@ import (
 )
 
 func MountHomeDirectory(files *file.Root, homeDirectory string, mode *caps.Mode) *file.Root {
-	homeRoot := file.NewLazy(homeDirectory, caps.RefuseWrite(mode))
+	homeRoot := file.NewLazy(homeDirectory, func(name string) error {
+		if !mode.Current().Has(caps.Write) {
+			return file.ErrReadOnly
+		}
+		return caps.RefuseWrite(mode)(name)
+	})
 	files.Mount(homeDirectory, homeRoot)
 	return homeRoot
 }

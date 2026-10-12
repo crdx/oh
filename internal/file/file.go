@@ -40,15 +40,17 @@ type mountedRoot struct {
 }
 
 type Root struct {
-	root          *os.Root
-	lazyPath      string
-	lazyOpen      sync.Once
-	lazyError     error
-	exactPath     string
-	exactName     string
-	refuse        func(name string) error
-	access        func(path string) error
-	excludedNames []string
+	root            *os.Root
+	lazyPath        string
+	lazyOpen        sync.Once
+	lazyError       error
+	exactPath       string
+	exactName       string
+	refuse          func(name string) error
+	access          func(path string) error
+	excludedNames   []string
+	gitWriteAllowed func() bool
+	gitOnly         func() bool
 
 	mountsMutex sync.RWMutex
 	mounts      map[string]mountedRoot
@@ -77,6 +79,9 @@ func (self *Root) Mount(path string, root *Root) {
 	defer self.mountsMutex.Unlock()
 	root.setAccessRefusal(self.access)
 	root.setExcludedNames(self.excludedNames)
+	if root != self {
+		root.SetGitWriteAllowed(self.gitWriteAllowed)
+	}
 	self.mounts[filepath.Clean(path)] = mountedRoot{root: root, name: "."}
 }
 
@@ -85,6 +90,9 @@ func (self *Root) MountFile(path string, root *Root, name string) {
 	defer self.mountsMutex.Unlock()
 	root.setAccessRefusal(self.access)
 	root.setExcludedNames(self.excludedNames)
+	if root != self {
+		root.SetGitWriteAllowed(self.gitWriteAllowed)
+	}
 	self.mounts[filepath.Clean(path)] = mountedRoot{root: root, name: name, isExact: true}
 }
 
@@ -92,6 +100,21 @@ func (self *Root) SetAccessRefusal(refuse func(path string) error) {
 	self.mountsMutex.Lock()
 	defer self.mountsMutex.Unlock()
 	self.setAccessRefusal(refuse)
+}
+
+func (self *Root) SetGitOnly(gitOnly func() bool) {
+	self.gitOnly = gitOnly
+}
+
+func (self *Root) SetGitWriteAllowed(isGitWriteAllowed func() bool) {
+	self.mountsMutex.Lock()
+	defer self.mountsMutex.Unlock()
+	self.gitWriteAllowed = isGitWriteAllowed
+	for _, mount := range self.mounts {
+		if mount.root != self {
+			mount.root.SetGitWriteAllowed(isGitWriteAllowed)
+		}
+	}
 }
 
 func (self *Root) SetExcludedNames(patterns []string) {
@@ -152,7 +175,7 @@ func (self *Root) RefuseWrite(name string) error {
 	if err := self.refuseAccess(name); err != nil {
 		return err
 	}
-	return self.refuse(name)
+	return self.refuseWrite(name)
 }
 
 func (self *Root) Name() string {
@@ -275,6 +298,9 @@ func (self *Root) WriteFile(name string, data []byte, perm os.FileMode) error {
 	if err != nil {
 		return err
 	}
+	if (self.gitWriteAllowed != nil && !self.gitWriteAllowed()) || (self.gitOnly != nil && self.gitOnly()) {
+		return writeWithoutSymlinks(root, name, data, perm)
+	}
 	return root.WriteFile(name, data, perm)
 }
 
@@ -289,7 +315,10 @@ func (self *Root) MkdirAll(name string, perm os.FileMode) error {
 	if err != nil {
 		return err
 	}
-	return root.MkdirAll(name, perm)
+	if (self.gitWriteAllowed != nil && !self.gitWriteAllowed()) || (self.gitOnly != nil && self.gitOnly()) {
+		return self.mkdirWithoutSymlinks(root, name, perm)
+	}
+	return self.mkdirWithRefusals(root, name, perm)
 }
 
 func (self *Root) getRoot() (*os.Root, error) {
@@ -377,6 +406,19 @@ func (self *Root) refuseWrite(name string) error {
 	}
 	if err := self.refuse(name); err != nil {
 		return err
+	}
+	if self.gitOnly != nil && self.gitOnly() && InGitDir(name) {
+		root, err := self.getRoot()
+		if err != nil {
+			return err
+		}
+		info, err := root.Lstat(".git")
+		if errors.Is(err, fs.ErrNotExist) || (err == nil && !info.IsDir()) {
+			return ErrReadOnly
+		}
+		if err != nil {
+			return err
+		}
 	}
 
 	if err := self.refuseOtherExactFile(name); err != nil {

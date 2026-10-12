@@ -3,6 +3,7 @@ package caps
 import (
 	"fmt"
 	"maps"
+	"path/filepath"
 	"slices"
 	"strings"
 
@@ -122,7 +123,13 @@ func RefuseWrite(mode *Mode) func(name string) error {
 
 	return func(name string) error {
 		if file.InGitDir(name) {
-			return refuseGitWrite(name)
+			if err := refuseGitWrite(name); err != nil {
+				return err
+			}
+			first, _, _ := strings.Cut(filepath.Clean(name), string(filepath.Separator))
+			if first == ".git" && filepath.Clean(name) != ".git" {
+				return nil
+			}
 		}
 
 		if mode.Current().Has(Write) {

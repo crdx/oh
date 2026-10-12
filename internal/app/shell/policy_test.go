@@ -1456,3 +1456,23 @@ func TestASubagentShellDistrustsEveryPathItsParentCanWrite(t *testing.T) {
 		t.Errorf("a session with no parent distrusted %+v", session)
 	}
 }
+
+func TestASymlinkedWorkspaceStillProtectsNestedMetadata(t *testing.T) {
+	workspace := t.TempDir()
+	metadata := filepath.Join(workspace, "nested", ".git")
+	if err := os.MkdirAll(metadata, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	alias := filepath.Join(t.TempDir(), "workspace")
+	if err := os.Symlink(workspace, alias); err != nil {
+		t.Fatal(err)
+	}
+
+	policy, err := protectedPolicy(sandbox.Policy{Write: []string{alias}}, []string{alias})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !slices.Contains(policy.Read, metadata) {
+		t.Errorf("metadata under symlinked workspace is writable: %v", policy.Read)
+	}
+}

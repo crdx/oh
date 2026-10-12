@@ -375,7 +375,7 @@ func protectedPolicyWithOptionalRoots(
 			continue
 		}
 
-		err = filepath.WalkDir(root, func(path string, entry os.DirEntry, err error) error {
+		err = filepath.WalkDir(resolvedRoot, func(path string, entry os.DirEntry, err error) error {
 			if err != nil {
 				if path != root && entry != nil && entry.IsDir() && errors.Is(err, fs.ErrPermission) {
 					if !slices.Contains(policy.Read, path) && !slices.Contains(readOnlyPaths, path) {
