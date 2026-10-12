@@ -30,7 +30,7 @@ const (
 	backoffFactor    = 2
 	barCells         = 8
 	scopeMark        = "⚡"
-	limitedMark      = "✖"
+	limitedMark      = "⊘"
 	staleLabel       = "stale"
 	failureLabel     = "failed"
 	boundlessMark    = "∞"

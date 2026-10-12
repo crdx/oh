@@ -566,7 +566,7 @@ func TestASpentWindowIsMarked(t *testing.T) {
 		IsLimited: true,
 	}}})
 
-	if got := renderSettled(t, built); got != "● 5h 100% ████████ ✖" {
+	if got := renderSettled(t, built); got != "● 5h 100% ████████ ⊘" {
 		t.Errorf("got %q", got)
 	}
 }

@@ -343,9 +343,9 @@ usage 401
 === subscription-usage / refused leaves a page unlinked ===
 usage 401
 === subscription-usage / spent ===
-● 5h 100% ████████ ✖
-● 5h ████████ ✖
-● ████████ ✖
+● 5h 100% ████████ ⊘
+● 5h ████████ ⊘
+● ████████ ⊘
 === subscription-usage / three windows ===
 ● 5h 39% █┃█░░░░░ wk 15% █┃░░░░░░ mo 13% █░┃░░░░░
 ● 5h 39% █┃█░░░░░ wk 15% mo 13%
