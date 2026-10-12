@@ -85,6 +85,44 @@ func TestPublicGrantRejectsHostTmpPathsAfterCanonicalisingAliases(t *testing.T) 
 	}
 }
 
+func TestAnUnconfinedGrantCanNameHostTmp(t *testing.T) {
+	workspace := openTestWorkspace(t)
+	mode := caps.NewMode(caps.All())
+	files := file.New(workspace.GetRoot(), caps.RefuseWrite(mode))
+	access, err := shell.NewPathAccessForMode(files, mode, shell.Paths{}, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(access.Close)
+	scratch := outsideTmpTestDirectory(t)
+	roots := shell.MountHostTemporaryDirectory(files, scratch)
+	t.Cleanup(func() {
+		for _, root := range roots {
+			_ = root.Close()
+		}
+	})
+	hostTemporary := hostTmpTestDirectory(t)
+	hostFile := filepath.Join(hostTemporary, "note")
+	if err := os.WriteFile(hostFile, []byte("host"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	grants := New(workspace, access)
+	if _, err := grants.Grant(hostTemporary, ReadAccess); err != nil {
+		t.Errorf("host tmp grant was refused under yolo: %v", err)
+	}
+	resolvedRoot, name, err := files.Resolve(hostFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if content, err := resolvedRoot.ReadFile(name); err != nil || string(content) != "host" {
+		t.Errorf("unconfined read got %q and %v, want host tmp", content, err)
+	}
+	_, restored := NewRestored(workspace, access, []Grant{{Path: hostTemporary, Access: ReadAccess}})
+	if len(restored.Failures) != 0 {
+		t.Errorf("restoring the host tmp grant under yolo failed: %+v", restored.Failures)
+	}
+}
+
 func TestReadAndWriteGrantsReachTheFileTools(t *testing.T) {
 	grants, files, mode := newTestGrants(t)
 	directory := t.TempDir()

@@ -34,9 +34,14 @@ func TestGoldenShellPoliciesHandleFilesystemChanges(t *testing.T) {
 		"=== git-only file tools ===\n" + gitOnlyGolden(t),
 		"=== multiply-linked metadata ===\n" + hardLinkGolden(t),
 		"=== explicit workspace write grant ===\n" + workspaceWriteGrantGolden(t),
+		"=== nested write grant scope ===\n" + nestedWriteGrantGolden(t),
+		"=== aliased write grant scope ===\n" + aliasedWriteGrantGolden(t),
+		"=== configured mount changed before use ===\n" + changedMountedPathGolden(t),
+		"=== git withdrawal job scope ===\n" + gitWithdrawalGolden(),
 		"=== absolute denied home secret ===\n" + absoluteDenyGolden(t),
 		"=== host tmp aliases refused ===\n" + hostTmpAliasGolden(t),
 		"=== virtual tmp mount attribution ===\n" + virtualTmpMountGolden(t),
+		"=== unconfined host tmp ===\n" + yoloTmpGolden(t),
 	}
 	compareShellGolden(t, "policies.txt", strings.Join(sections, "\n\n")+"\n")
 }
@@ -298,6 +303,46 @@ func hostTmpAliasGolden(t *testing.T) string {
 		configuredError != nil, directError != nil, grantError != nil && !changed, ordinaryError == nil)
 }
 
+func yoloTmpGolden(t *testing.T) string {
+	t.Helper()
+	workspace := outsideTmpTestDirectory(t)
+	openedRoot, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = openedRoot.Close() })
+	files := file.New(openedRoot, func(string) error { return file.ErrReadOnly })
+	hostTemporary := hostTmpTestDirectory(t)
+	hostFile := filepath.Join(hostTemporary, "note")
+	if err := os.WriteFile(hostFile, []byte("host"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	scratch := outsideTmpTestDirectory(t)
+	scratchFile := filepath.Join(scratch, "note")
+	if err := os.WriteFile(scratchFile, []byte("scratch"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	roots := MountHostTemporaryDirectory(files, scratch)
+	t.Cleanup(func() {
+		for _, root := range roots {
+			_ = root.Close()
+		}
+	})
+	hostRoot, hostName, hostError := files.Resolve(hostFile)
+	scratchRoot, scratchName, scratchError := files.Resolve(scratchFile)
+	hostContent := []byte(nil)
+	if hostError == nil {
+		hostContent, hostError = hostRoot.ReadFile(hostName)
+	}
+	scratchContent := []byte(nil)
+	if scratchError == nil {
+		scratchContent, scratchError = scratchRoot.ReadFile(scratchName)
+	}
+	_, configuredError := PreparePathsForMode(Paths{Read: []string{hostTemporary}}, io.Discard, true)
+	return fmt.Sprintf("host tmp is host: %t\nscratch stays reachable: %t\nhost tmp config allowed: %t",
+		hostError == nil && string(hostContent) == "host", scratchError == nil && string(scratchContent) == "scratch", configuredError == nil)
+}
+
 func virtualTmpMountGolden(t *testing.T) string {
 	t.Helper()
 	workspace := outsideTmpTestDirectory(t)
@@ -323,6 +368,125 @@ func virtualTmpMountGolden(t *testing.T) string {
 	directRoot, _, directError := files.Resolve(filepath.Join(hostTemporary, "note"))
 	return fmt.Sprintf("unlisted alias refused: %t\nworkspace alias sees scratch: %t\ndirect tmp sees scratch: %t",
 		errors.Is(unlistedError, file.ErrOutsideRoot), insideError == nil && insideRoot == scratchRoot, directError == nil && directRoot == scratchRoot)
+}
+
+func changedMountedPathGolden(t *testing.T) string {
+	t.Helper()
+	workspace := outsideTmpTestDirectory(t)
+	parent := outsideTmpTestDirectory(t)
+	grant := filepath.Join(parent, "grant")
+	metadata := filepath.Join(parent, ".git")
+	for _, directory := range []string{grant, metadata} {
+		if err := os.Mkdir(directory, 0o700); err != nil {
+			t.Fatal(err)
+		}
+	}
+	metadataRoot, err := os.OpenRoot(metadata)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = metadataRoot.Close() })
+	if err := metadataRoot.WriteFile("config", []byte("intact"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	openedRoot, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = openedRoot.Close() })
+	mode := caps.NewMode(caps.Read | caps.Write)
+	files := file.New(openedRoot, caps.RefuseWrite(mode))
+	access, err := NewPathAccess(files, mode, Paths{Write: []string{grant}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(access.Close)
+	mountedRoot, name, err := files.Resolve(filepath.Join(grant, "config"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Rename(grant, grant+"-old"); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(metadata, grant); err != nil {
+		t.Fatal(err)
+	}
+	_, readError := mountedRoot.ReadFile(name)
+	writeError := mountedRoot.WriteFile(name, []byte("changed"), 0o600)
+	content, err := metadataRoot.ReadFile("config")
+	if err != nil {
+		t.Fatal(err)
+	}
+	return fmt.Sprintf("read refused: %t\nwrite refused: %t\nmetadata unchanged: %t",
+		errors.Is(readError, file.ErrMountChanged), errors.Is(writeError, file.ErrMountChanged), string(content) == "intact")
+}
+
+func gitWithdrawalGolden() string {
+	home := "/session-home"
+	stops, _ := StoppedBy(caps.Git, "/workspace")
+	metadata := sandbox.Policy{Write: []string{"/workspace/.git"}, SetEnv: map[string]string{"HOME": home}}
+	configured := sandbox.Policy{Write: []string{"/reference"}, SetEnv: map[string]string{"HOME": home}}
+	caches := sandbox.Policy{Write: []string{filepath.Join(home, ".cache"), sandbox.TmpDir}, SetEnv: map[string]string{"HOME": home}}
+	return fmt.Sprintf("metadata job stopped: %t\nconfigured writer stopped: %t\ncache-only job kept: %t",
+		stops(metadata), stops(configured), !stops(caches))
+}
+
+func aliasedWriteGrantGolden(t *testing.T) string {
+	t.Helper()
+	workspace := outsideTmpTestDirectory(t)
+	writable := filepath.Join(workspace, "writable")
+	if err := os.Mkdir(writable, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	alias := filepath.Join(workspace, "alias")
+	if err := os.Symlink("writable", alias); err != nil {
+		t.Fatal(err)
+	}
+	root, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = root.Close() })
+	mode := caps.NewMode(caps.Read)
+	files := file.New(root, caps.RefuseWrite(mode))
+	access, err := NewPathAccess(files, mode, Paths{Write: []string{writable}, Home: []string{alias}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(access.Close)
+	return fmt.Sprintf("configured write wins equal real path: %t", files.RefuseWrite("writable/note") == nil)
+}
+
+func nestedWriteGrantGolden(t *testing.T) string {
+	t.Helper()
+	workspace := outsideTmpTestDirectory(t)
+	readOnly := filepath.Join(workspace, "read-only")
+	writable := filepath.Join(readOnly, "writable")
+	if err := os.MkdirAll(writable, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	root, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = root.Close() })
+	mode := caps.NewMode(caps.Read | caps.Write)
+	files := file.New(root, caps.RefuseWrite(mode))
+	paths := Paths{Read: []string{readOnly}, Write: []string{writable}}
+	access, err := NewPathAccess(files, mode, paths)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(access.Close)
+	readRefusal := files.RefuseWrite("read-only/note")
+	writeRefusal := files.RefuseWrite("read-only/writable/note")
+	policy, err := createTestPolicy(t, workspace, t.TempDir(), t.TempDir(), paths, mode.Current())
+	if err != nil {
+		t.Fatal(err)
+	}
+	return fmt.Sprintf("nested read refused: %t\nnested write allowed: %t\nshell keeps read-only scope: %t",
+		errors.Is(readRefusal, file.ErrReadOnly), writeRefusal == nil,
+		slices.Contains(policy.Read, readOnly) && !slices.Contains(policy.Write, readOnly) && slices.Contains(policy.Write, writable))
 }
 
 func workspaceWriteGrantGolden(t *testing.T) string {
@@ -450,6 +614,13 @@ func gitOnlyGolden(t *testing.T) string {
 	}
 	present := files.WriteFile(".git/config", []byte("ok"), 0o600)
 	ordinary := files.WriteFile("ordinary", []byte("no"), 0o600)
-	return fmt.Sprintf("missing metadata refused: %t\nexisting metadata writable: %t\nordinary file refused: %t",
-		errors.Is(missing, file.ErrReadOnly), present == nil, errors.Is(ordinary, file.ErrReadOnly))
+	home := t.TempDir()
+	policy, err := createTestPolicy(t, workspace, home, t.TempDir(), Paths{}, mode.Current())
+	if err != nil {
+		t.Fatal(err)
+	}
+	return fmt.Sprintf("missing metadata refused: %t\nexisting metadata writable: %t\nordinary file refused: %t\nshell home read-only: %t\nshell cache writable: %t",
+		errors.Is(missing, file.ErrReadOnly), present == nil, errors.Is(ordinary, file.ErrReadOnly),
+		!slices.Contains(policy.Write, home) && slices.Contains(policy.Read, home),
+		slices.Contains(policy.Write, filepath.Join(home, ".cache")))
 }

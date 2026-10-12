@@ -206,7 +206,7 @@ func newChildFactory(options childOptions) subagents.Factory {
 		}
 		files := file.New(workspace.GetRoot(), caps.RefuseWrite(mode))
 		paths := childPaths(options.settings.Sandbox)
-		access, err := shell.NewPathAccess(files, mode, paths)
+		access, err := shell.NewPathAccessForMode(files, mode, paths, options.isYolo)
 		if err != nil {
 			_ = workspace.Close()
 			return subagents.Worker{}, err
@@ -218,8 +218,16 @@ func newChildFactory(options childOptions) subagents.Factory {
 			return subagents.Worker{}, err
 		}
 		files.Mount(home, file.New(homeDirectoryRoot, func(string) error { return nil }))
-		files.Mount(sandbox.TmpDir, file.New(child.ScratchRoot, func(string) error { return nil }))
+		var tmpRoots []*file.Root
+		if options.isYolo {
+			tmpRoots = shell.MountHostTemporaryDirectory(files, child.Scratch)
+		} else {
+			files.MountVirtual(sandbox.TmpDir, file.New(child.ScratchRoot, func(string) error { return nil }))
+		}
 		closeChild := func() {
+			for _, root := range tmpRoots {
+				_ = root.Close()
+			}
 			_ = homeDirectoryRoot.Close()
 			access.Close()
 			_ = workspace.Close()

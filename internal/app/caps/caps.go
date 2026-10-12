@@ -401,7 +401,7 @@ func withdrawal(withdrawnCaps Set) string {
 	case withdrawnCaps.Has(Write):
 		return "the workspace was made read-only"
 	case withdrawnCaps.Has(Git):
-		return "the .git directory was made read-only"
+		return "g was withdrawn while it had write access"
 	default:
 		return ""
 	}

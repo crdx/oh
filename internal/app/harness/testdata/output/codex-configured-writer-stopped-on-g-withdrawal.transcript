@@ -1,0 +1,39 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `medium`
+- **Provider:** `codex`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwsngl · +0s
+
+## Mode · rxwsnl · toggled g · +0s
+
+```
+.git is now read-only.
+```
+
+## Job stopped · +0s
+
+```
+Job `docs` stopped because g was withdrawn while it had write access.
+```
+
+## User · +0s
+
+is the configured writer still running
+
+## Assistant · +0s
+
+No. It was stopped conservatively when g was withdrawn.
+
+## User · +0s
+
+start it again
+
+## Assistant · +0s
+
+It can restart with its configured write grant; g remains withheld.

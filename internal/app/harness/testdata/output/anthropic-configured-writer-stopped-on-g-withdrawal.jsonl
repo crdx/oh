@@ -1,0 +1,15 @@
+{"kind":"head","version":22,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant.","environment":{"sandbox":{"write":["/reference"]},"is_repository":false,"port_hostname":""}}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
+{"kind":"event","event":{"kind":"mode_change","name":"g","state":"rxwsnl"}}
+{"kind":"event","event":{"kind":"job_stop","name":"docs","state":"g"}}
+{"kind":"event","event":{"kind":"user_message","text":"is the configured writer still running"}}
+{"kind":"event","event":{"kind":"model_message","text":"No. It was stopped conservatively when g was withdrawn."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\n.git is now read-only.\n\u003c/system-reminder\u003e\n\n\u003csystem-reminder\u003e\nJob `docs` stopped because g was withdrawn while it had write access.\n\u003c/system-reminder\u003e"}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"is the configured writer still running"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"No. It was stopped conservatively when g was withdrawn."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"start it again"}}
+{"kind":"event","event":{"kind":"model_message","text":"It can restart with its configured write grant; g remains withheld."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"start it again"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"It can restart with its configured write grant; g remains withheld."}]}}
+{"kind":"turn_completion","turn":{}}

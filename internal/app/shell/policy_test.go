@@ -656,7 +656,7 @@ func TestAGoModuleCacheThatIsNotADirectoryIsRejected(t *testing.T) {
 }
 
 func TestWithdrawingACapabilityStopsOnlyTheJobsThatRelyOnIt(t *testing.T) {
-	workspace := t.TempDir()
+	workspace := "/workspace"
 	writing := sandbox.Policy{Write: []string{workspace}}
 	reading := sandbox.Policy{}
 
@@ -685,6 +685,46 @@ func TestWithdrawingACapabilityStopsOnlyTheJobsThatRelyOnIt(t *testing.T) {
 				t.Errorf("a job only reading stopped=%t, want %t", got, testCase.stopsReading)
 			}
 		})
+	}
+}
+
+func TestGitWithdrawalStopsEveryJobWithWritesBeyondItsPrivateCaches(t *testing.T) {
+	workspace := "/workspace"
+	home := "/session-home"
+	cache := filepath.Join(home, ".cache")
+	stops, doesStop := StoppedBy(caps.Git, workspace)
+	if !doesStop {
+		t.Fatal("withdrawing g did not stop any jobs")
+	}
+	for _, testCase := range []struct {
+		name       string
+		writes     []string
+		shouldStop bool
+	}{
+		{"metadata alone", []string{filepath.Join(workspace, ".git"), cache, sandbox.TmpDir}, true},
+		{"configured write", []string{"/reference", cache, sandbox.TmpDir}, true},
+		{"workspace and home", []string{workspace, home, cache, sandbox.TmpDir}, true},
+		{"private caches", []string{cache, sandbox.TmpDir}, false},
+		{"read-only", nil, false},
+	} {
+		policy := sandbox.Policy{Write: testCase.writes, SetEnv: map[string]string{"HOME": home}}
+		if got := stops(policy); got != testCase.shouldStop {
+			t.Errorf("%s stopped=%t, want %t", testCase.name, got, testCase.shouldStop)
+		}
+	}
+}
+
+func TestWriteWithdrawalStopsHomeWritersButKeepsConfiguredWrites(t *testing.T) {
+	home := "/session-home"
+	stops, doesStop := StoppedBy(caps.Write, "/workspace")
+	if !doesStop {
+		t.Fatal("withdrawing w did not stop any jobs")
+	}
+	if !stops(sandbox.Policy{Write: []string{home}, SetEnv: map[string]string{"HOME": home}}) {
+		t.Error("a job writing the shell home kept running after w was withdrawn")
+	}
+	if stops(sandbox.Policy{Write: []string{"/reference"}, SetEnv: map[string]string{"HOME": home}}) {
+		t.Error("a configured write path was lost when w was withdrawn")
 	}
 }
 
@@ -757,9 +797,35 @@ func TestACommitOnlyShellMayChangeTheHistoryAlone(t *testing.T) {
 	if slices.Contains(policy.Write, workspace) {
 		t.Errorf("expected the tree itself to be read-only, got %v", policy.Write)
 	}
+	if slices.Contains(policy.Write, home) || !slices.Contains(policy.Read, home) {
+		t.Errorf("g alone made the shell home writable: read %v, write %v", policy.Read, policy.Write)
+	}
+	if !slices.Contains(policy.Write, filepath.Join(home, ".cache")) {
+		t.Errorf("g alone lost the writable private cache: %v", policy.Write)
+	}
 
 	if !slices.Contains(policy.Read, workspace) {
 		t.Errorf("expected the tree to be readable, got %v", policy.Read)
+	}
+}
+
+func TestGitAloneDoesNotWriteThroughASymlinkedMetadataDirectory(t *testing.T) {
+	workspace := t.TempDir()
+	home := t.TempDir()
+	if err := os.Mkdir(filepath.Join(workspace, "elsewhere"), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink("elsewhere", filepath.Join(workspace, ".git")); err != nil {
+		t.Fatal(err)
+	}
+	policy, err := createTestPolicy(t, workspace, home, t.TempDir(), Paths{}, caps.Git)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, path := range []string{workspace, home, filepath.Join(workspace, ".git")} {
+		if slices.Contains(policy.Write, path) {
+			t.Errorf("g alone made %s writable: %v", path, policy.Write)
+		}
 	}
 }
 

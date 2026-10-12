@@ -117,3 +117,11 @@ func TestAJobStoppedForACapabilityStillNamesTheCapability(t *testing.T) {
 		t.Errorf("got %q (shown %v), want the coded job name and capability reason preserved", notice, isShown)
 	}
 }
+
+func TestAJobStoppedOnGitWithdrawalDoesNotClaimItWroteGit(t *testing.T) {
+	notice, isShown := JobStopNotice(JobStopEvent("docs", Git))
+	want := "Job `docs` stopped because g was withdrawn while it had write access."
+	if !isShown || notice != want {
+		t.Errorf("got %q (shown %t), want %q", notice, isShown, want)
+	}
+}

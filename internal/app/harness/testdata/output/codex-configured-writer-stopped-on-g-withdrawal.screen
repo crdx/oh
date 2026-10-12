@@ -1,0 +1,16 @@
+
+ 🤖 .git is now read-only.
+ 🤖 Job docs stopped because g was withdrawn while it had write access.
+
+
+
+ is the configured writer still running
+
+
+No. It was stopped conservatively when g was withdrawn.
+
+
+ start it again
+
+
+It can restart with its configured write grant; g remains withheld.

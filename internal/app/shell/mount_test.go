@@ -118,6 +118,33 @@ func TestTemporaryGrantsCannotCrossTheTmpBoundaryThroughAliases(t *testing.T) {
 	}
 }
 
+func TestUnconfinedConfiguredPathsCanReachHostTmp(t *testing.T) {
+	outside := outsideTmpTestDirectory(t)
+	hostTemporary := hostTmpTestDirectory(t)
+	alias := filepath.Join(outside, "host-tmp")
+	if err := os.Symlink(hostTemporary, alias); err != nil {
+		t.Fatal(err)
+	}
+	prepared, err := PreparePathsForMode(Paths{Read: []string{alias}, Home: []string{alias}}, io.Discard, true)
+	if err != nil {
+		t.Fatalf("unconfined paths refused host tmp: %v", err)
+	}
+	if !slices.Contains(prepared.Read, hostTemporary) || !slices.Contains(prepared.Home, alias) {
+		t.Errorf("prepared paths did not preserve target and spelling: %+v", prepared)
+	}
+	mode := caps.NewMode(caps.All())
+	files := configuredPathTestRoot(t, mode)
+	access, err := NewPathAccessForMode(files, mode, prepared, true)
+	if err != nil {
+		t.Errorf("unconfined mount refused the alias: %v", err)
+	} else {
+		defer access.Close()
+		if !access.IsUnconfined() {
+			t.Error("host tmp mount forgot that it was unconfined")
+		}
+	}
+}
+
 func TestHostTmpPathsResolveOnlyToSessionScratchWithoutGrants(t *testing.T) {
 	workspace := outsideTmpTestDirectory(t)
 	openedRoot, err := os.OpenRoot(workspace)
@@ -1229,6 +1256,234 @@ func TestAWriteGrantInsideTheWorkspaceDoesNotUnlockItsSiblings(t *testing.T) {
 	}
 }
 
+func TestNestedReadAndExecPathsNarrowWorkspaceFileToolWrites(t *testing.T) {
+	workspace := outsideTmpTestDirectory(t)
+	for _, name := range []string{"read/writable", "exec", "path"} {
+		if err := os.MkdirAll(filepath.Join(workspace, name), 0o700); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := os.Symlink("read", filepath.Join(workspace, "alias")); err != nil {
+		t.Fatal(err)
+	}
+	root, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = root.Close() }()
+	mode := caps.NewMode(caps.Read | caps.Write)
+	files := file.New(root, caps.RefuseWrite(mode))
+	access, err := NewPathAccess(files, mode, Paths{
+		Read:  []string{filepath.Join(workspace, "read")},
+		Exec:  []string{filepath.Join(workspace, "exec")},
+		Path:  []string{filepath.Join(workspace, "path")},
+		Write: []string{filepath.Join(workspace, "read", "writable")},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer access.Close()
+	for _, name := range []string{"read/file", "alias/file", "exec/file", "path/file"} {
+		if err := files.RefuseWrite(name); !errors.Is(err, file.ErrReadOnly) {
+			t.Errorf("narrower read or exec path %s got %v, want read-only", name, err)
+		}
+	}
+	for _, name := range []string{"read/writable/file", "sibling"} {
+		if err := files.RefuseWrite(name); err != nil {
+			t.Errorf("write outside the narrower read mount %s: %v", name, err)
+		}
+	}
+}
+
+func TestTemporaryReadNarrowsAConfiguredWriteUntilRevoked(t *testing.T) {
+	workspace := outsideTmpTestDirectory(t)
+	parent := filepath.Join(workspace, "writable")
+	child := filepath.Join(parent, "read-only")
+	if err := os.MkdirAll(child, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	root, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = root.Close() }()
+	mode := caps.NewMode(caps.Read)
+	files := file.New(root, caps.RefuseWrite(mode))
+	access, err := NewPathAccess(files, mode, Paths{Write: []string{parent}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer access.Close()
+	if changed, err := access.Grant(child, ReadAccess); err != nil || !changed {
+		t.Fatalf("temporary read changed=%t: %v", changed, err)
+	}
+	if err := files.RefuseWrite("writable/read-only/file"); !errors.Is(err, file.ErrReadOnly) {
+		t.Errorf("temporary read did not narrow the child: %v", err)
+	}
+	if err := files.RefuseWrite("writable/file"); err != nil {
+		t.Errorf("configured writable parent was narrowed: %v", err)
+	}
+	if !access.Revoke(child) {
+		t.Fatal("temporary read could not be revoked")
+	}
+	if err := files.RefuseWrite("writable/read-only/file"); err != nil {
+		t.Errorf("revoking the read grant did not restore the write: %v", err)
+	}
+}
+
+func TestATemporaryReadKeepsAConfiguredWriteAtTheSamePath(t *testing.T) {
+	workspace := outsideTmpTestDirectory(t)
+	shared := filepath.Join(workspace, "shared")
+	if err := os.Mkdir(shared, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	root, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = root.Close() }()
+	mode := caps.NewMode(caps.Read)
+	files := file.New(root, caps.RefuseWrite(mode))
+	access, err := NewPathAccess(files, mode, Paths{Write: []string{shared}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer access.Close()
+	if changed, err := access.Grant(shared, ReadAccess); err != nil || !changed {
+		t.Fatalf("temporary read changed=%t: %v", changed, err)
+	}
+	if err := files.RefuseWrite("shared/file"); err != nil {
+		t.Errorf("a read grant narrowed a configured write on the same path: %v", err)
+	}
+	mountedRoot, name, err := files.Resolve(filepath.Join(shared, "file"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := mountedRoot.RefuseWrite(name); err != nil {
+		t.Errorf("the mounted root lost its configured write: %v", err)
+	}
+}
+
+func TestWriteAndHomeAliasOfTheSameDirectoryChooseWriteEveryTime(t *testing.T) {
+	workspace := outsideTmpTestDirectory(t)
+	writable := filepath.Join(workspace, "writable")
+	if err := os.Mkdir(writable, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	alias := filepath.Join(workspace, "home-alias")
+	if err := os.Symlink("writable", alias); err != nil {
+		t.Fatal(err)
+	}
+	root, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = root.Close() }()
+	mode := caps.NewMode(caps.Read)
+	files := file.New(root, caps.RefuseWrite(mode))
+	access, err := NewPathAccess(files, mode, Paths{Write: []string{writable}, Home: []string{alias}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer access.Close()
+	for range 100 {
+		if err := files.RefuseWrite("writable/note"); err != nil {
+			t.Fatalf("a read-only alias narrowed the configured write: %v", err)
+		}
+	}
+}
+
+func TestAConfiguredReadMountCannotChangeBeforeItsFirstRead(t *testing.T) {
+	workspace := outsideTmpTestDirectory(t)
+	parent := outsideTmpTestDirectory(t)
+	granted := filepath.Join(parent, "reference")
+	private := filepath.Join(parent, "private")
+	for _, directory := range []string{granted, private} {
+		if err := os.Mkdir(directory, 0o700); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := os.WriteFile(filepath.Join(private, "marker"), []byte("private"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	openedRoot, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = openedRoot.Close() }()
+	mode := caps.NewMode(caps.Read)
+	files := file.New(openedRoot, caps.RefuseWrite(mode))
+	access, err := NewPathAccess(files, mode, Paths{Read: []string{granted}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer access.Close()
+	mountedRoot, name, err := files.Resolve(filepath.Join(granted, "marker"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Rename(granted, granted+"-old"); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(private, granted); err != nil {
+		t.Fatal(err)
+	}
+	if content, err := mountedRoot.ReadFile(name); !errors.Is(err, file.ErrMountChanged) || len(content) != 0 {
+		t.Errorf("retargeted configured read returned %q and %v", content, err)
+	}
+}
+
+func TestAConfiguredMountCannotMoveIntoGitBeforeItsFirstWrite(t *testing.T) {
+	workspace := outsideTmpTestDirectory(t)
+	parent := outsideTmpTestDirectory(t)
+	grant := filepath.Join(parent, "grant")
+	metadata := filepath.Join(parent, ".git")
+	for _, directory := range []string{grant, metadata} {
+		if err := os.Mkdir(directory, 0o700); err != nil {
+			t.Fatal(err)
+		}
+	}
+	metadataRoot, err := os.OpenRoot(metadata)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = metadataRoot.Close() }()
+	if err := metadataRoot.WriteFile("config", []byte("intact"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	openedRoot, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = openedRoot.Close() }()
+	mode := caps.NewMode(caps.Read | caps.Write)
+	files := file.New(openedRoot, caps.RefuseWrite(mode))
+	access, err := NewPathAccess(files, mode, Paths{Write: []string{grant}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer access.Close()
+	mountedRoot, name, err := files.Resolve(filepath.Join(grant, "config"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Rename(grant, grant+"-old"); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(metadata, grant); err != nil {
+		t.Fatal(err)
+	}
+	if err := mountedRoot.WriteFile(name, []byte("changed"), 0o600); !errors.Is(err, file.ErrMountChanged) {
+		t.Errorf("retargeted lazy grant got %v, want mount-change refusal", err)
+	}
+	if _, err := mountedRoot.ReadFile(name); !errors.Is(err, file.ErrMountChanged) {
+		t.Errorf("retargeted lazy grant read got %v, want the same refusal", err)
+	}
+	if content, err := metadataRoot.ReadFile("config"); err != nil || string(content) != "intact" {
+		t.Errorf("repository metadata changed to %q: %v", content, err)
+	}
+}
+
 func TestAFileToolCannotAlterHardlinkedMetadataInEitherMode(t *testing.T) {
 	workspace := t.TempDir()
 	metadata := filepath.Join(workspace, ".git", "config")
@@ -1374,5 +1629,46 @@ func TestAChangingSymlinkCannotRedirectAFileToolWriteIntoGit(t *testing.T) {
 	content, err := os.ReadFile(metadata) //nolint:gosec // a path made by this test
 	if err != nil || string(content) != "intact" {
 		t.Errorf("repository metadata changed to %q: %v", content, err)
+	}
+}
+
+func TestTemporaryMountIsWritableBeneathAConfiguredReadPath(t *testing.T) {
+	workspaceRoot, err := os.OpenRoot(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = workspaceRoot.Close() }()
+
+	files := file.New(workspaceRoot, func(string) error { return file.ErrReadOnly })
+
+	farm := outsideTmpTestDirectory(t)
+	scratch := filepath.Join(farm, "tranquil-guppy")
+	if err := os.MkdirAll(scratch, 0o700); err != nil {
+		t.Fatal(err)
+	}
+
+	paths, err := PreparePaths(Paths{Read: []string{farm}}, io.Discard)
+	if err != nil {
+		t.Fatal(err)
+	}
+	mode := caps.NewMode(caps.Read | caps.Shell | caps.Subagents)
+	access, err := NewPathAccess(files, mode, paths)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer access.Close()
+
+	tmpRoot := MountTemporaryDirectory(files, scratch)
+	defer func() { _ = tmpRoot.Close() }()
+
+	resolvedRoot, name, err := files.Resolve("/tmp/probe.txt")
+	if err != nil {
+		t.Fatalf("resolve: %v", err)
+	}
+	if err := resolvedRoot.RefuseWrite(name); err != nil {
+		t.Fatalf("the scratch was not writable: %v", err)
+	}
+	if err := resolvedRoot.WriteFile(name, []byte("written"), 0o600); err != nil {
+		t.Fatalf("write: %v", err)
 	}
 }

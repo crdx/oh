@@ -945,11 +945,11 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	homeRoot := shell.MountHomeDirectory(files, homeDir, mode)
 	defer func() { _ = homeRoot.Close() }()
 
-	settings.Sandbox, err = shell.PreparePaths(settings.Sandbox, os.Stderr)
+	settings.Sandbox, err = shell.PreparePathsForMode(settings.Sandbox, os.Stderr, args.Yolo)
 	if err != nil {
 		return "", err
 	}
-	pathAccess, err := shell.NewPathAccess(files, mode, settings.Sandbox)
+	pathAccess, err := shell.NewPathAccessForMode(files, mode, settings.Sandbox, args.Yolo)
 	if err != nil {
 		return "", err
 	}
@@ -1158,8 +1158,17 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		fixedContextSources = identifyStaticContextSources(systemPrompt, contextFiles, availableSkills)
 	}
 
-	tmpRoot := shell.MountTemporaryDirectory(files, tmpDir)
-	defer func() { _ = tmpRoot.Close() }()
+	var tmpRoots []*file.Root
+	if args.Yolo {
+		tmpRoots = shell.MountHostTemporaryDirectory(files, tmpDir)
+	} else {
+		tmpRoots = []*file.Root{shell.MountTemporaryDirectory(files, tmpDir)}
+	}
+	defer func() {
+		for _, root := range tmpRoots {
+			_ = root.Close()
+		}
+	}()
 
 	pathGrants := pathgrant.New(workspace, pathAccess)
 	var pathGrantRestoreResult pathgrant.RestoreResult

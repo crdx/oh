@@ -1,0 +1,33 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+job-holding-git = "meta"
+toggle-before-first = "g"
+
+[first]
+prompt = "is the preview still up"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-1","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"No. The metadata job stopped when g was withdrawn."}''',
+    '''{"type":"response.output_text.done","text":"No. The metadata job stopped when g was withdrawn."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"No. The metadata job stopped when g was withdrawn."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"No. The metadata job stopped when g was withdrawn."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "start it again"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-2","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"g is withheld, so it cannot write repository metadata."}''',
+    '''{"type":"response.output_text.done","text":"g is withheld, so it cannot write repository metadata."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"g is withheld, so it cannot write repository metadata."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"g is withheld, so it cannot write repository metadata."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

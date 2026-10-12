@@ -565,11 +565,33 @@ func StoppedBy(withdrawnCaps caps.Set, workspaceDir string) (func(sandbox.Policy
 		return func(sandbox.Policy) bool { return true }, true
 	}
 
-	if withdrawnCaps.Has(caps.Write) || withdrawnCaps.Has(caps.Git) {
-		return StoppedByWritablePath(workspaceDir), true
+	if withdrawnCaps.Has(caps.Git) {
+		return holdsWritesBeyondCaches, true
+	}
+	if withdrawnCaps.Has(caps.Write) {
+		holdsWorkspace := StoppedByWritablePath(workspaceDir)
+		return func(policy sandbox.Policy) bool {
+			home := policy.SetEnv["HOME"]
+			return holdsWorkspace(policy) || home != "" && slices.Contains(policy.Write, home)
+		}, true
 	}
 
 	return nil, false
+}
+
+func holdsWritesBeyondCaches(policy sandbox.Policy) bool {
+	home := policy.SetEnv["HOME"]
+	return slices.ContainsFunc(policy.Write, func(path string) bool {
+		if _, isScratch := pathutil.RelativeTo(sandbox.TmpDir, path); isScratch {
+			return false
+		}
+		if home != "" {
+			if _, isCache := pathutil.RelativeTo(filepath.Join(home, ".cache"), path); isCache {
+				return false
+			}
+		}
+		return true
+	})
 }
 
 func StoppedByWritablePath(path string) func(sandbox.Policy) bool {
@@ -639,8 +661,9 @@ func writablePaths(workspaceDir string, homeDir string, currentCaps caps.Set) []
 	case currentCaps.Has(caps.Write):
 		return []string{workspaceDir, homeDir}
 	case currentCaps.Has(caps.Git):
-		if metadata := filepath.Join(workspaceDir, ".git"); pathutil.Exists(metadata) {
-			return []string{metadata, homeDir}
+		metadata := filepath.Join(workspaceDir, ".git")
+		if info, err := os.Lstat(metadata); err == nil && info.IsDir() {
+			return []string{metadata}
 		}
 	}
 

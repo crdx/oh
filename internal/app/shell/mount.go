@@ -20,10 +20,11 @@ import (
 )
 
 type configuredMount struct {
-	directory string
-	target    string
-	name      string
-	isExact   bool
+	directory     string
+	directoryInfo os.FileInfo
+	target        string
+	name          string
+	isExact       bool
 }
 
 type mountedPath struct {
@@ -34,6 +35,7 @@ type mountedPath struct {
 type PathAccess struct {
 	files      *file.Root
 	mode       *caps.Mode
+	isYolo     bool
 	searchDeny sandbox.DenySearch
 
 	mutex            sync.RWMutex
@@ -55,6 +57,10 @@ type pendingDenySearch struct {
 }
 
 func NewPathAccess(files *file.Root, mode *caps.Mode, paths Paths) (*PathAccess, error) {
+	return NewPathAccessForMode(files, mode, paths, false)
+}
+
+func NewPathAccessForMode(files *file.Root, mode *caps.Mode, paths Paths, isYolo bool) (*PathAccess, error) {
 	denials, err := newPathDenials(paths.Deny)
 	if err != nil {
 		return nil, err
@@ -70,6 +76,7 @@ func NewPathAccess(files *file.Root, mode *caps.Mode, paths Paths) (*PathAccess,
 	access := &PathAccess{
 		files:            files,
 		mode:             mode,
+		isYolo:           isYolo,
 		searchDeny:       sandbox.FindDenyPathsSkipping,
 		configuredPaths:  clonePaths(paths),
 		baselineMounts:   make(map[string]mountedPath),
@@ -90,6 +97,7 @@ func NewPathAccess(files *file.Root, mode *caps.Mode, paths Paths) (*PathAccess,
 			access.Close()
 			return nil, fmt.Errorf("could not mount baseline path %s: %w", path, err)
 		}
+		baselineMount.root.DeferWrites()
 		access.baselineMounts[path] = baselineMount
 		access.install(path, baselineMount)
 	}
@@ -122,13 +130,19 @@ func (self *PathAccess) GetPaths() Paths {
 	return paths
 }
 
+func (self *PathAccess) IsUnconfined() bool {
+	return self.isYolo
+}
+
 func (self *PathAccess) Grant(path string, access Access) (bool, error) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 
 	path = filepath.Clean(path)
-	if err := refuseTmpAlias(path); err != nil {
-		return false, err
+	if !self.isYolo {
+		if err := refuseTmpAlias(path); err != nil {
+			return false, err
+		}
 	}
 	if err := self.denials.Refuse(path); err != nil {
 		return false, err
@@ -137,7 +151,13 @@ func (self *PathAccess) Grant(path string, access Access) (bool, error) {
 		return false, nil
 	}
 
-	temporaryPathMount, err := self.openMountedPath(path, access)
+	mountAccess := access
+	for _, configuredGrant := range self.configuredPaths.ConfiguredGrants() {
+		if configuredGrant.Path == path {
+			mountAccess |= configuredGrant.Access
+		}
+	}
+	temporaryPathMount, err := self.openMountedPath(path, mountAccess)
 	if err != nil {
 		return false, err
 	}
@@ -276,7 +296,7 @@ func (self *PathAccess) releaseTemporaryMount(path string) {
 }
 
 func (self *PathAccess) openMountedPath(path string, access Access) (mountedPath, error) {
-	mount, err := findConfiguredMount(path)
+	mount, err := findConfiguredMount(path, self.isYolo)
 	if err != nil {
 		return mountedPath{}, err
 	}
@@ -290,7 +310,7 @@ func (self *PathAccess) mountLazily(mount configuredMount, access Access) mounte
 }
 
 func (self *PathAccess) openBaselineMountedPath(path string) (mountedPath, error) {
-	mount, err := findConfiguredMount(path)
+	mount, err := findConfiguredMount(path, self.isYolo)
 	if err != nil {
 		return mountedPath{}, err
 	}
@@ -408,6 +428,10 @@ func reportContainment(warnings io.Writer, pair containment) {
 }
 
 func PreparePaths(paths Paths, warnings io.Writer) (Paths, error) {
+	return PreparePathsForMode(paths, warnings, false)
+}
+
+func PreparePathsForMode(paths Paths, warnings io.Writer, isYolo bool) (Paths, error) {
 	denials, err := newPathDenials(paths.Deny)
 	if err != nil {
 		return Paths{}, err
@@ -428,8 +452,10 @@ func PreparePaths(paths Paths, warnings io.Writer) (Paths, error) {
 
 	for _, list := range lists {
 		for _, path := range list.source {
-			if err := RefuseHostTmpPath(path); err != nil {
-				return Paths{}, err
+			if !isYolo {
+				if err := RefuseHostTmpPath(path); err != nil {
+					return Paths{}, err
+				}
 			}
 			_, err := os.Stat(path)
 			if errors.Is(err, fs.ErrNotExist) {
@@ -517,7 +543,7 @@ func newMountedRoot(mode *caps.Mode, mount configuredMount, access Access) *file
 			return currentRefusal(filepath.Join(mount.target, name))
 		}
 	}
-	return file.NewLazy(mount.directory, refuseWrite)
+	return file.NewLazyWithIdentity(mount.directory, mount.directoryInfo, refuseWrite)
 }
 
 func RefuseHostTmpPath(path string) error {
@@ -540,9 +566,11 @@ func refuseTmpAlias(path string) error {
 	return RefuseHostTmpPath(path)
 }
 
-func findConfiguredMount(path string) (configuredMount, error) {
-	if err := refuseTmpAlias(path); err != nil {
-		return configuredMount{}, err
+func findConfiguredMount(path string, isYolo bool) (configuredMount, error) {
+	if !isYolo {
+		if err := refuseTmpAlias(path); err != nil {
+			return configuredMount{}, err
+		}
 	}
 	info, err := os.Stat(path)
 	if err != nil {
@@ -550,18 +578,24 @@ func findConfiguredMount(path string) (configuredMount, error) {
 	}
 
 	if info.IsDir() {
-		return configuredMount{directory: path, target: path, name: "."}, nil
+		return configuredMount{directory: path, directoryInfo: info, target: path, name: "."}, nil
 	}
 
 	target, err := filepath.EvalSymlinks(path)
 	if err != nil {
 		return configuredMount{}, err
 	}
+	directory := filepath.Dir(target)
+	directoryInfo, err := os.Stat(directory)
+	if err != nil {
+		return configuredMount{}, err
+	}
 	return configuredMount{
-		directory: filepath.Dir(target),
-		target:    target,
-		name:      filepath.Base(target),
-		isExact:   true,
+		directory:     directory,
+		directoryInfo: directoryInfo,
+		target:        target,
+		name:          filepath.Base(target),
+		isExact:       true,
 	}, nil
 }
 

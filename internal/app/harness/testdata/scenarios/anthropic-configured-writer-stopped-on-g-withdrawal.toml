@@ -1,0 +1,34 @@
+provider = "anthropic"
+model = "claude-opus-5"
+effort = "medium"
+job-holding-configured = "docs"
+toggle-before-first = "g"
+
+[environment]
+write = ["/reference"]
+
+[first]
+prompt = "is the configured writer still running"
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"No. It was stopped conservatively when g was withdrawn."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[resume]
+prompt = "start it again"
+
+[[resume.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"It can restart with its configured write grant; g remains withheld."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
+    '''{"type":"message_stop"}''',
+]

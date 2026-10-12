@@ -46,6 +46,16 @@ IFS= read -r line
 printf '\033[?1049l'
 `
 
+func hostTmpRigFixture(t *testing.T) string {
+	t.Helper()
+	directory, err := os.MkdirTemp(sandbox.TmpDir, "oh-yolo-host-") //nolint:usetesting // the yolo test must reach host /tmp
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.RemoveAll(directory) })
+	return directory
+}
+
 func withFakePager(t *testing.T, rig *interactiveRig) {
 	t.Helper()
 
@@ -422,6 +432,74 @@ func TestAReadOnlySessionsSubagentsReadWithoutAShell(t *testing.T) {
 	reader := family.childWithTask(t, "Read the README")
 	if reads := childEventsOf(reader, agent.ToolCallResultEvent); len(reads) != 1 || reads[0].Status != agent.SuccessStatus {
 		t.Errorf("%s read %+v, want one successful read", reader.Name, reads)
+	}
+}
+
+func TestAnUnconfinedParentReadsHostTmpThroughTheBinary(t *testing.T) {
+	hostDirectory := hostTmpRigFixture(t)
+	hostFile := filepath.Join(hostDirectory, "note")
+	if err := os.WriteFile(hostFile, []byte("host-tmp-parent\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	readCall := encodedArguments(map[string]string{"path": hostFile})
+	rig, _ := newRespondingRig(t, func(request sim.Request) sim.Turn {
+		if hasCallOutput(request) {
+			return sim.Turn{Say: "Host tmp checked."}
+		}
+		return sim.Turn{Calls: []sim.Call{{Name: "read", Arguments: readCall}}}
+	})
+	session := rig.start("--yolo", "-m", "opencode-go/fake", "read the host tmp note")
+	session.waitFor("Host tmp checked.")
+	session.quit()
+
+	stored := rig.storedSessions()
+	if len(stored) != 1 {
+		t.Fatalf("got %d sessions, want one", len(stored))
+	}
+	var results []agent.Event
+	for _, event := range stored[0].Events {
+		if event.Kind == agent.ToolCallResultEvent {
+			results = append(results, event)
+		}
+	}
+	if len(results) != 1 || results[0].Status != agent.SuccessStatus || !strings.Contains(results[0].Text, "host-tmp-parent") {
+		t.Errorf("parent read of host tmp got %+v", results)
+	}
+}
+
+func TestAnUnconfinedChildReadsHostTmpThroughTheBinary(t *testing.T) {
+	hostDirectory := hostTmpRigFixture(t)
+	hostFile := filepath.Join(hostDirectory, "note")
+	if err := os.WriteFile(hostFile, []byte("host-tmp-is-real\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	readCall := encodedArguments(map[string]string{"path": hostFile})
+	start := encodedArguments(subagent.Args{Action: subagent.Start, Subagents: []subagent.Task{{
+		Prompt: "Read " + hostFile,
+		Intent: "Reading the host temporary file",
+	}}})
+	rig, _ := newRespondingRig(t, func(request sim.Request) sim.Turn {
+		if strings.Contains(request.Instructions, childIdentity) {
+			if !hasCallOutput(request) {
+				return sim.Turn{Calls: []sim.Call{{Name: "read", Arguments: readCall}}}
+			}
+			return sim.Turn{Say: "Read the temporary file."}
+		}
+		if hasCallOutput(request) {
+			return sim.Turn{Say: "Delegated."}
+		}
+		return sim.Turn{Calls: []sim.Call{{Name: subagent.Name, Arguments: start}}}
+	})
+	writeRigConfig(t, rig, "[subagent]\nmodel = \"opencode-go/fake\"\n")
+	session := rig.start("--yolo", "-c", "s", "-m", "opencode-go/fake", "read the host tmp note with a child")
+	session.waitFor("Read the temporary file.")
+	session.quit()
+
+	family := onlyStoredFamily(t, rig)
+	reader := family.childWithTask(t, "Read "+hostFile)
+	results := childEventsOf(reader, agent.ToolCallResultEvent)
+	if len(results) != 1 || results[0].Status != agent.SuccessStatus || !strings.Contains(results[0].Text, "host-tmp-is-real") {
+		t.Errorf("child read of host tmp got %+v", results)
 	}
 }
 

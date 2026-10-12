@@ -75,7 +75,7 @@ func NewRestored(
 			err = fmt.Errorf("invalid recorded access %q", grant.Access.Flags())
 		}
 		canonicalPath := ""
-		if err == nil {
+		if err == nil && !pathAccess.IsUnconfined() {
 			err = shell.RefuseHostTmpPath(grant.Path)
 		}
 		if err == nil {
@@ -183,7 +183,7 @@ func (self *Grants) canonicalPath(path string, mustExist bool) (string, error) {
 		path = filepath.Join(self.workspace.GetResolvedDir(), path)
 	}
 	path = filepath.Clean(path)
-	if mustExist {
+	if mustExist && !self.pathAccess.IsUnconfined() {
 		if err := shell.RefuseHostTmpPath(path); err != nil {
 			return "", err
 		}

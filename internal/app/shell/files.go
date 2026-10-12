@@ -31,3 +31,11 @@ func MountTemporaryDirectory(files *file.Root, temporaryDirectory string) *file.
 	files.MountVirtual(sandbox.TmpDir, temporaryRoot)
 	return temporaryRoot
 }
+
+func MountHostTemporaryDirectory(files *file.Root, scratchDirectory string) []*file.Root {
+	hostRoot := file.NewLazy(sandbox.TmpDir, func(string) error { return nil })
+	files.Mount(sandbox.TmpDir, hostRoot)
+	scratchRoot := file.NewLazy(scratchDirectory, func(string) error { return nil })
+	files.Mount(scratchDirectory, scratchRoot)
+	return []*file.Root{hostRoot, scratchRoot}
+}

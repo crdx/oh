@@ -309,6 +309,52 @@ func TestTheMostSpecificMountResolvesANestedPath(t *testing.T) {
 	}
 }
 
+func TestAnImplicitReadMountDefersWritesToAnExplicitParent(t *testing.T) {
+	isWritable := true
+	root, workspace := testRoot(t, &isWritable)
+	parent := filepath.Join(workspace, "granted")
+	nested := filepath.Join(parent, "baseline")
+	if err := os.MkdirAll(nested, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	writeRoot := file.NewLazy(parent, func(string) error { return nil })
+	readRoot := file.NewLazy(nested, func(string) error { return file.ErrReadOnly })
+	root.Mount(parent, writeRoot)
+	root.Mount(nested, readRoot)
+	if err := root.RefuseWrite("granted/baseline/file"); !errors.Is(err, file.ErrReadOnly) {
+		t.Errorf("an explicit nested read grant got %v, want read-only", err)
+	}
+	readRoot.DeferWrites()
+	for name, check := range map[string]func() error{
+		"enclosing root": func() error { return root.RefuseWrite("granted/baseline/file") },
+		"mounted root":   func() error { return readRoot.RefuseWrite("file") },
+	} {
+		if err := check(); err != nil {
+			t.Errorf("%s did not inherit the explicit parent write: %v", name, err)
+		}
+	}
+}
+
+func TestEqualRealMountsKeepAHardRefusalRegardlessOfOrder(t *testing.T) {
+	isWritable := true
+	root, workspace := testRoot(t, &isWritable)
+	target := filepath.Join(workspace, "target")
+	if err := os.Mkdir(target, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	alias := filepath.Join(workspace, "alias")
+	if err := os.Symlink("target", alias); err != nil {
+		t.Fatal(err)
+	}
+	root.Mount(target, file.NewLazy(target, func(string) error { return nil }))
+	root.Mount(alias, file.NewLazy(alias, func(string) error { return file.ErrGitDir }))
+	for range 100 {
+		if err := root.RefuseWrite("target/note"); !errors.Is(err, file.ErrGitDir) {
+			t.Fatalf("a writable alias bypassed a hard refusal: %v", err)
+		}
+	}
+}
+
 func TestAnUnmountedPathNoLongerResolves(t *testing.T) {
 	isWritable := false
 	root, _ := testRoot(t, &isWritable)
@@ -455,6 +501,50 @@ func TestALazyRootOpensItsDirectoryOnlyWhenFirstUsed(t *testing.T) {
 	}
 	if err := root.MkdirAll("nested", 0o700); err != nil {
 		t.Errorf("mkdir got %v", err)
+	}
+}
+
+func TestALazyRootPinsItsGrantedDirectoryIdentityOnFirstUse(t *testing.T) {
+	parent := t.TempDir()
+	granted := filepath.Join(parent, "granted")
+	private := filepath.Join(parent, "private")
+	for _, directory := range []string{granted, private} {
+		if err := os.Mkdir(directory, 0o700); err != nil {
+			t.Fatal(err)
+		}
+	}
+	initialInfo, err := os.Stat(granted)
+	if err != nil {
+		t.Fatal(err)
+	}
+	root := file.NewLazyWithIdentity(granted, initialInfo, func(string) error { return nil })
+	t.Cleanup(func() { _ = root.Close() })
+	if err := os.Rename(granted, granted+"-old"); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(private, granted); err != nil {
+		t.Fatal(err)
+	}
+	for range 2 {
+		if _, err := root.ReadFile("note"); !errors.Is(err, file.ErrMountChanged) {
+			t.Errorf("changed root opened with %v, want persistent refusal", err)
+		}
+	}
+}
+
+func TestAnUnchangedLazyRootReadsNewContent(t *testing.T) {
+	directory := t.TempDir()
+	initialInfo, err := os.Stat(directory)
+	if err != nil {
+		t.Fatal(err)
+	}
+	root := file.NewLazyWithIdentity(directory, initialInfo, func(string) error { return nil })
+	t.Cleanup(func() { _ = root.Close() })
+	if err := os.WriteFile(filepath.Join(directory, "later"), []byte("new"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if content, err := root.ReadFile("later"); err != nil || string(content) != "new" {
+		t.Errorf("unchanged mounted directory read %q and %v", content, err)
 	}
 }
 

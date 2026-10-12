@@ -1,0 +1,36 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+job-holding-configured = "docs"
+toggle-before-first = "g"
+
+[environment]
+write = ["/reference"]
+
+[first]
+prompt = "is the configured writer still running"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-1","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"No. It was stopped conservatively when g was withdrawn."}''',
+    '''{"type":"response.output_text.done","text":"No. It was stopped conservatively when g was withdrawn."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"No. It was stopped conservatively when g was withdrawn."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-1","type":"message","role":"assistant","content":[{"type":"output_text","text":"No. It was stopped conservatively when g was withdrawn."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "start it again"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-2","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"It can restart with its configured write grant; g remains withheld."}''',
+    '''{"type":"response.output_text.done","text":"It can restart with its configured write grant; g remains withheld."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"It can restart with its configured write grant; g remains withheld."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-2","type":"message","role":"assistant","content":[{"type":"output_text","text":"It can restart with its configured write grant; g remains withheld."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

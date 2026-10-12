@@ -81,6 +81,8 @@ nested/.git
 missing metadata refused: true
 existing metadata writable: true
 ordinary file refused: true
+shell home read-only: true
+shell cache writable: true
 
 === multiply-linked metadata ===
 without g refused: true
@@ -92,6 +94,24 @@ single-link metadata writable with g: true
 shell writable: true
 file tools writable: true
 file tools read-only after revoke: true
+
+=== nested write grant scope ===
+nested read refused: true
+nested write allowed: true
+shell keeps read-only scope: true
+
+=== aliased write grant scope ===
+configured write wins equal real path: true
+
+=== configured mount changed before use ===
+read refused: true
+write refused: true
+metadata unchanged: true
+
+=== git withdrawal job scope ===
+metadata job stopped: true
+configured writer stopped: true
+cache-only job kept: true
 
 === absolute denied home secret ===
 directory walks: 0
@@ -108,3 +128,8 @@ ordinary path accepted: true
 unlisted alias refused: true
 workspace alias sees scratch: true
 direct tmp sees scratch: true
+
+=== unconfined host tmp ===
+host tmp is host: true
+scratch stays reachable: true
+host tmp config allowed: true

@@ -18959,8 +18959,8 @@ func (self sessionGoldenScenario) usesTheInterface() bool {
 	}
 
 	return self.ToggleBeforeFirst != "" || self.EndJobBeforeFirst != "" ||
-		self.RunBeforeFirst != "" || self.JobHoldingWorkspace != "" ||
-		self.FirstTurn.usesTheInterface()
+		self.RunBeforeFirst != "" || self.JobHoldingWorkspace != "" || self.JobHoldingGit != "" ||
+		self.JobHoldingConfigured != "" || self.FirstTurn.usesTheInterface()
 }
 
 func (self sessionGoldenTurn) usesTheInterface() bool {
@@ -19045,6 +19045,8 @@ type sessionGoldenScenario struct {
 	EndJobBeforeFirst     string                    `toml:"end-job-before-first"`
 	EndJobOutput          string                    `toml:"end-job-output"`
 	JobHoldingWorkspace   string                    `toml:"job-holding-workspace"`
+	JobHoldingGit         string                    `toml:"job-holding-git"`
+	JobHoldingConfigured  string                    `toml:"job-holding-configured"`
 	JobsRunningIntoResume []string                  `toml:"jobs-running-into-resume"`
 	RunBeforeFirst        string                    `toml:"run-before-first"`
 	Prices                *sessionGoldenPrices      `toml:"prices"`
@@ -20353,7 +20355,13 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	firstHarness.environment = environment.NewRestored(firstEnvironment, firstEnvironment)
 	settleSessionGoldenMode(firstHarness)
 	if scenario.JobHoldingWorkspace != "" {
-		startSessionGoldenJobHoldingTheWorkspace(t, firstHarness, scenario.JobHoldingWorkspace)
+		startSessionGoldenJobHoldingPath(t, firstHarness, scenario.JobHoldingWorkspace, sessionGoldenWorkspace)
+	}
+	if scenario.JobHoldingGit != "" {
+		startSessionGoldenJobHoldingPath(t, firstHarness, scenario.JobHoldingGit, filepath.Join(sessionGoldenWorkspace, ".git"))
+	}
+	if scenario.JobHoldingConfigured != "" {
+		startSessionGoldenJobHoldingPath(t, firstHarness, scenario.JobHoldingConfigured, sessionGoldenConfiguredWrite)
 	}
 	if len(scenario.JobsRunningIntoResume) > 0 {
 		recordSessionGoldenRunningJobs(firstHarness, scenario.JobsRunningIntoResume)
@@ -20363,8 +20371,10 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		firstHarness.settleAccess()
 		firstAssistant.AddNotes(firstHarness.takeSettledNotes())
 	}
-	if scenario.JobHoldingWorkspace != "" {
-		settleSessionGoldenJob(t, firstHarness, scenario.JobHoldingWorkspace)
+	for _, name := range []string{scenario.JobHoldingWorkspace, scenario.JobHoldingGit, scenario.JobHoldingConfigured} {
+		if name != "" {
+			settleSessionGoldenJob(t, firstHarness, name)
+		}
 	}
 	if scenario.EndJobBeforeFirst != "" {
 		conclusion := endedSessionGoldenJob(scenario.EndJobBeforeFirst)
@@ -20930,18 +20940,23 @@ func settleResumedSessionGoldenMode(testHarness *App, events []agent.Event) {
 	testHarness.settledCaps = resumedCaps
 }
 
-const sessionGoldenWorkspace = "/workspace"
+const (
+	sessionGoldenWorkspace       = "/workspace"
+	sessionGoldenConfiguredWrite = "/reference"
+)
 
-func startSessionGoldenJobHoldingTheWorkspace(t *testing.T, testHarness *App, name string) {
+func startSessionGoldenJobHoldingPath(t *testing.T, testHarness *App, name string, path string) {
 	t.Helper()
 
-	manager := jobs.New(stoppableRunner{})
-	t.Cleanup(func() { _ = manager.Close() })
-
-	testHarness.jobs = jobState{manager: manager}
+	manager := testHarness.jobs.manager
+	if manager == nil {
+		manager = jobs.New(stoppableRunner{})
+		t.Cleanup(func() { _ = manager.Close() })
+		testHarness.jobs = jobState{manager: manager}
+	}
 	testHarness.workspace = work.At(sessionGoldenWorkspace)
 
-	policy := sandbox.Policy{Write: []string{sessionGoldenWorkspace}}
+	policy := sandbox.Policy{Write: []string{path}}
 	if _, err := manager.Start(t.Context(), name, ".", "just "+name, policy); err != nil {
 		t.Fatalf("the job did not start: %v", err)
 	}
