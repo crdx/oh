@@ -995,6 +995,71 @@ func TestGitAloneCannotCreateMetadataOrFollowItsAlias(t *testing.T) {
 	}
 }
 
+func TestAWorkspaceWriteGrantLetsFileToolsWriteUntilItIsRevoked(t *testing.T) {
+	workspace := t.TempDir()
+	root, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = root.Close() }()
+	mode := caps.NewMode(caps.Read)
+	files := file.New(root, caps.RefuseWrite(mode))
+	access, err := NewPathAccess(files, mode, Paths{Deny: []string{"*.env"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer access.Close()
+
+	if err := files.WriteFile("note", []byte("before"), 0o600); !errors.Is(err, file.ErrReadOnly) {
+		t.Errorf("write before the grant: %v", err)
+	}
+	if changed, err := access.Grant(workspace, ReadAccess|WriteAccess); err != nil || !changed {
+		t.Fatalf("grant changed=%t: %v", changed, err)
+	}
+	if err := files.WriteFile("note", []byte("granted"), 0o600); err != nil {
+		t.Errorf("relative workspace write: %v", err)
+	}
+	if err := files.WriteFile(".git/config", []byte("blocked"), 0o600); !errors.Is(err, file.ErrGitDir) {
+		t.Errorf("write into repository metadata without g: %v", err)
+	}
+	if err := files.WriteFile("auth.env", []byte("blocked"), 0o600); err == nil {
+		t.Error("write grant overrode a denied name")
+	}
+	if !access.Revoke(workspace) {
+		t.Fatal("workspace grant could not be revoked")
+	}
+	if err := files.WriteFile("note", []byte("after"), 0o600); !errors.Is(err, file.ErrReadOnly) {
+		t.Errorf("write after revocation: %v", err)
+	}
+}
+
+func TestAWriteGrantInsideTheWorkspaceDoesNotUnlockItsSiblings(t *testing.T) {
+	workspace := t.TempDir()
+	granted := filepath.Join(workspace, "granted")
+	if err := os.Mkdir(granted, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	root, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = root.Close() }()
+	mode := caps.NewMode(caps.Read)
+	files := file.New(root, caps.RefuseWrite(mode))
+	access, err := NewPathAccess(files, mode, Paths{Write: []string{granted}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer access.Close()
+
+	if err := files.WriteFile("granted/note", []byte("allowed"), 0o600); err != nil {
+		t.Errorf("configured write grant: %v", err)
+	}
+	if err := files.WriteFile("sibling", []byte("blocked"), 0o600); !errors.Is(err, file.ErrReadOnly) {
+		t.Errorf("write beside a narrower grant: %v", err)
+	}
+}
+
 func TestAChangingSymlinkCannotRedirectAFileToolWriteIntoGit(t *testing.T) {
 	workspace := t.TempDir()
 	for _, name := range []string{".git", "ordinary"} {

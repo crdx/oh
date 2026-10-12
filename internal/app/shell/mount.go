@@ -81,6 +81,7 @@ func NewPathAccess(files *file.Root, mode *caps.Mode, paths Paths) (*PathAccess,
 		denySearches:     make(map[string]*pendingDenySearch),
 		denials:          denials,
 	}
+	files.SetWriteGrant(access.workspaceWriteGrantAllows)
 
 	for _, path := range implicitReadablePaths(files.Name(), paths.Write) {
 		baselineMount, err := access.openBaselineMountedPath(path)
@@ -168,6 +169,30 @@ func (self *PathAccess) Close() {
 	defer self.mutex.Unlock()
 	closeRoots(self.roots)
 	self.roots = nil
+}
+
+func (self *PathAccess) workspaceWriteGrantAllows(name string) bool {
+	if !filepath.IsLocal(name) {
+		return false
+	}
+	requestedPath := pathutil.Canonicalise(filepath.Join(self.files.Name(), name))
+
+	self.mutex.RLock()
+	defer self.mutex.RUnlock()
+	for _, path := range self.configuredPaths.Write {
+		if _, isCovered := pathutil.RelativeTo(pathutil.Canonicalise(path), requestedPath); isCovered {
+			return true
+		}
+	}
+	for path, access := range self.temporaryAccess {
+		if !access.Has(WriteAccess) {
+			continue
+		}
+		if _, isCovered := pathutil.RelativeTo(pathutil.Canonicalise(path), requestedPath); isCovered {
+			return true
+		}
+	}
+	return false
 }
 
 func (self *PathAccess) getDenyPaths(policy sandbox.Policy) ([]string, error) {

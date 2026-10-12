@@ -40,17 +40,18 @@ type mountedRoot struct {
 }
 
 type Root struct {
-	root            *os.Root
-	lazyPath        string
-	lazyOpen        sync.Once
-	lazyError       error
-	exactPath       string
-	exactName       string
-	refuse          func(name string) error
-	access          func(path string) error
-	excludedNames   []string
-	gitWriteAllowed func() bool
-	gitOnly         func() bool
+	root             *os.Root
+	lazyPath         string
+	lazyOpen         sync.Once
+	lazyError        error
+	exactPath        string
+	exactName        string
+	refuse           func(name string) error
+	access           func(path string) error
+	excludedNames    []string
+	gitWriteAllowed  func() bool
+	gitOnly          func() bool
+	writeGrantAllows func(name string) bool
 
 	mountsMutex sync.RWMutex
 	mounts      map[string]mountedRoot
@@ -104,6 +105,10 @@ func (self *Root) SetAccessRefusal(refuse func(path string) error) {
 
 func (self *Root) SetGitOnly(gitOnly func() bool) {
 	self.gitOnly = gitOnly
+}
+
+func (self *Root) SetWriteGrant(writeGrantAllows func(name string) bool) {
+	self.writeGrantAllows = writeGrantAllows
 }
 
 func (self *Root) SetGitWriteAllowed(isGitWriteAllowed func() bool) {
@@ -405,7 +410,9 @@ func (self *Root) refuseWrite(name string) error {
 		return err
 	}
 	if err := self.refuse(name); err != nil {
-		return err
+		if !errors.Is(err, ErrReadOnly) || self.writeGrantAllows == nil || !self.writeGrantAllows(name) {
+			return err
+		}
 	}
 	if self.gitOnly != nil && self.gitOnly() && InGitDir(name) {
 		root, err := self.getRoot()
