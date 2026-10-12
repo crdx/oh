@@ -4,8 +4,8 @@
 
 ### Changes
 
-- Add debug toggle for wire log storage
-- Move wire logs under debug folder
+- Add experimental toggle to let alt+enter interrupt a running turn
+- Add debug toggle for wire log storage, and move them under the debug folder
 - Don't allocate tons of memory when streaming long replies
 - Keep short live calls visible and truncate long subagent interjections
 

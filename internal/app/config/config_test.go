@@ -1894,6 +1894,22 @@ func TestCommandsStartTurnsByDefault(t *testing.T) {
 	}
 }
 
+func TestEnterInterruptsDefaultsToOffAndCanBeEnabled(t *testing.T) {
+	defaults := configFrom(t, "")
+	if value, isSet := defaults.Experimental["enter_interrupts"]; !isSet || value != false {
+		t.Errorf("got experimental defaults %v", defaults.Experimental)
+	}
+
+	enabled := configFrom(t, "[experimental]\nenter_interrupts = true\n")
+	live, err := enabled.BuildLive(testSegments())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if live.Experimental["enter_interrupts"] != true {
+		t.Errorf("got live experimental toggles %v", live.Experimental)
+	}
+}
+
 func TestCacheMissNoticesDefaultToOffAndCanBeEnabled(t *testing.T) {
 	defaults := configFrom(t, "")
 	if value, isSet := defaults.Experimental["cache_miss_notices"]; !isSet || value != false {

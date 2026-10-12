@@ -12,6 +12,7 @@ type Name string
 const (
 	CacheMissNotices     Name = "cache_miss_notices"
 	CommandStartsTurn    Name = "command_starts_turn"
+	EnterInterrupts      Name = "enter_interrupts"
 	RedrawTimingFeedback Name = "redraw_timing_feedback"
 	ReplyCommand         Name = "reply_command"
 	SharedHistory        Name = "shared_history"
@@ -44,6 +45,7 @@ func (self Kind) String() string {
 var toggleKinds = map[Name]Kind{
 	CacheMissNotices:     BooleanKind,
 	CommandStartsTurn:    BooleanKind,
+	EnterInterrupts:      BooleanKind,
 	RedrawTimingFeedback: BooleanKind,
 	ReplyCommand:         BooleanKind,
 	SharedHistory:        BooleanKind,

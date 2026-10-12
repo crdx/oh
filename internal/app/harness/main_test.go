@@ -515,21 +515,28 @@ func (self terminalInput) apply(t *testing.T, app *App, editor *edit.Input, hist
 func TestGoldenLegacyAltEnterDrawsWhatItDrewBefore(t *testing.T) {
 	compareWithGolden(t, "legacy-alt-enter", ".ansi", map[string]func() string{
 		"force sends an unknown command": func() string {
-			return drawLegacyAltEnter(t)
+			return drawLegacyAltEnter(t, false)
+		},
+		"swapped still sends the command literally": func() string {
+			return drawLegacyAltEnter(t, true)
 		},
 	})
 	compareWithGolden(t, "legacy-alt-enter", ".screen", map[string]func() string{
 		"force sends an unknown command": func() string {
-			return shown(t, drawLegacyAltEnter(t), terminalInputColumns)
+			return shown(t, drawLegacyAltEnter(t, false), terminalInputColumns)
+		},
+		"swapped still sends the command literally": func() string {
+			return shown(t, drawLegacyAltEnter(t, true), terminalInputColumns)
 		},
 	})
 }
 
-func drawLegacyAltEnter(t *testing.T) string {
+func drawLegacyAltEnter(t *testing.T, shouldInterruptOnEnter bool) string {
 	t.Helper()
 
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
+	self.experimental = experimental.New(map[string]any{string(experimental.EnterInterrupts): shouldInterruptOnEnter})
 	self.screen = output.NewTerminalOfSize(&screenOutput, terminalInputColumns, replayLines)
 	history := edit.NewHistory("", historyLimit)
 	editor := edit.NewInput(history)
@@ -2861,6 +2868,58 @@ func TestCompletedEventsAreRenderedAfterCancellation(t *testing.T) {
 	}
 }
 
+func TestEnterAndAltEnterChooseWhetherToInterruptARunningTurn(t *testing.T) {
+	cases := []struct {
+		name             string
+		message          string
+		interruptOnEnter bool
+		keypress         key.Key
+		wantInterrupted  bool
+	}{
+		{name: "default enter queues", message: "check the next file", keypress: key.Key{Code: key.Enter}},
+		{name: "default alt interrupts", message: "check the next file", keypress: key.Key{Code: key.Enter, Mod: key.Alt}, wantInterrupted: true},
+		{name: "swapped enter interrupts", message: "check the next file", interruptOnEnter: true, keypress: key.Key{Code: key.Enter}, wantInterrupted: true},
+		{name: "swapped alt queues", message: "check the next file", interruptOnEnter: true, keypress: key.Key{Code: key.Enter, Mod: key.Alt}},
+		{name: "default literal slash queues", message: "/unknown", keypress: key.Key{Code: key.Enter, Mod: key.Alt}},
+		{name: "swapped literal slash interrupts", message: "/unknown", interruptOnEnter: true, keypress: key.Key{Code: key.Enter, Mod: key.Alt}, wantInterrupted: true},
+		{name: "default path enter queues", message: "/tmp/file", keypress: key.Key{Code: key.Enter}},
+		{name: "default path alt interrupts", message: "/tmp/file", keypress: key.Key{Code: key.Enter, Mod: key.Alt}, wantInterrupted: true},
+		{name: "swapped path enter interrupts", message: "/tmp/file", interruptOnEnter: true, keypress: key.Key{Code: key.Enter}, wantInterrupted: true},
+		{name: "swapped path alt queues", message: "/tmp/file", interruptOnEnter: true, keypress: key.Key{Code: key.Enter, Mod: key.Alt}},
+	}
+
+	for _, test := range cases {
+		t.Run(test.name, func(t *testing.T) {
+			cancellations := 0
+			self := &App{
+				commands:     fixtureCommandRegistry(t),
+				currentTurn:  Turn{Stream: testTurnStream(nil, func(error) { cancellations++ }, turn.State{Running: true})},
+				experimental: experimental.New(map[string]any{string(experimental.EnterInterrupts): test.interruptOnEnter}),
+			}
+			history := edit.NewHistory("", historyLimit)
+			inputLine := edit.NewInput(history)
+			self.currentTurn.Interject("queued first")
+			for _, letter := range test.message {
+				self.apply(inputLine, history, key.Key{Code: key.Rune, Value: letter})
+			}
+			self.apply(inputLine, history, test.keypress)
+
+			if got := self.currentTurn.GetInterjections(); !slices.Equal(got, []string{"queued first", test.message}) {
+				t.Errorf("queued %q, want the first and submitted messages", got)
+			}
+			if got := self.currentTurn.Cancelled(); got != test.wantInterrupted {
+				t.Errorf("cancelled = %v, want %v", got, test.wantInterrupted)
+			}
+			if got := cancellations; got != 0 && !test.wantInterrupted || got != 1 && test.wantInterrupted {
+				t.Errorf("cancelled %d times, want interrupted = %v", got, test.wantInterrupted)
+			}
+			if inputLine.Text() != "" {
+				t.Errorf("input still holds %q", inputLine.Text())
+			}
+		})
+	}
+}
+
 func TestAnAcceptedMessageDisappearsIntoTheQueueWithoutStoppingTheTurn(t *testing.T) {
 	self := &App{
 		currentTurn: Turn{Stream: testTurnStream(make(chan TurnEvent), func(error) {}, turn.State{Running: true})},
@@ -3026,6 +3085,26 @@ func TestAStopKeyTakesAFlushedMessageBackWhileTheTurnIsStillStopping(t *testing.
 	}
 	if queued := self.currentTurn.GetInterjections(); len(queued) != 0 {
 		t.Errorf("left %q queued, want nothing", queued)
+	}
+}
+
+func TestEmptyAltEnterFlushesTheQueueUnderEitherSetting(t *testing.T) {
+	for _, interruptOnEnter := range []bool{false, true} {
+		self := &App{
+			currentTurn:  Turn{Stream: testTurnStream(nil, func(error) {}, turn.State{Running: true})},
+			experimental: experimental.New(map[string]any{string(experimental.EnterInterrupts): interruptOnEnter}),
+		}
+		history := edit.NewHistory("", historyLimit)
+		inputLine := edit.NewInput(history)
+		self.currentTurn.Interject("already queued")
+		self.apply(inputLine, history, key.Key{Code: key.Enter, Mod: key.Alt})
+		if self.currentTurn.Cancelled() {
+			t.Errorf("enter_interrupts=%v: stopped on the first empty enter", interruptOnEnter)
+		}
+		self.apply(inputLine, history, key.Key{Code: key.Enter, Mod: key.Alt})
+		if !self.currentTurn.Cancelled() || !slices.Equal(self.currentTurn.GetInterjections(), []string{"already queued"}) {
+			t.Errorf("enter_interrupts=%v: double-enter did not flush the standing queue", interruptOnEnter)
+		}
 	}
 }
 
@@ -3274,6 +3353,66 @@ func TestFlushingTheQueueCancelsProvisionalReasoningAndStartsTheNextTurn(t *test
 	}
 	if reasoningEvents != 0 {
 		t.Errorf("stored %d provisional reasoning events", reasoningEvents)
+	}
+}
+
+func TestEnterDoesNotInterruptForARejectedSlashCommand(t *testing.T) {
+	for _, interruptOnEnter := range []bool{false, true} {
+		self := &App{
+			commands:     fixtureCommandRegistry(t),
+			currentTurn:  Turn{Stream: testTurnStream(nil, func(error) {}, turn.State{Running: true})},
+			experimental: experimental.New(map[string]any{string(experimental.EnterInterrupts): interruptOnEnter}),
+		}
+		history := edit.NewHistory("", historyLimit)
+		inputLine := edit.NewInput(history)
+		for _, letter := range "/unknown" {
+			self.apply(inputLine, history, key.Key{Code: key.Rune, Value: letter})
+		}
+		self.apply(inputLine, history, key.Key{Code: key.Enter})
+
+		if self.currentTurn.Cancelled() || self.currentTurn.HasInterjections() || inputLine.Text() != "/unknown" {
+			t.Errorf("enter_interrupts=%v: command changed the turn or input: cancelled %v, queued %q, input %q", interruptOnEnter, self.currentTurn.Cancelled(), self.currentTurn.GetInterjections(), inputLine.Text())
+		}
+	}
+}
+
+func TestAltEnterInterruptsAndCarriesEveryQueuedMessageToTheNextTurn(t *testing.T) {
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	history := edit.NewHistory("", historyLimit)
+	inputLine := edit.NewInput(history)
+
+	self.start("first")
+	firstEvents := self.currentTurn.Events()
+	typeMessage(t, self, inputLine, history, "queued first")
+	for _, letter := range "interrupt now" {
+		self.apply(inputLine, history, key.Key{Code: key.Rune, Value: letter})
+	}
+	self.apply(inputLine, history, key.Key{Code: key.Enter, Mod: key.Alt})
+	if !self.currentTurn.Cancelled() {
+		t.Fatal("expected alt+enter to stop the running turn")
+	}
+	if queued := self.currentTurn.GetInterjections(); !slices.Equal(queued, []string{"queued first", "interrupt now"}) {
+		t.Fatalf("queued %q, want both messages visible until the turn finishes", queued)
+	}
+
+	for report := range firstEvents {
+		self.takeTurn(report)
+	}
+	self.finish()
+	for report := range self.currentTurn.Events() {
+		self.takeTurn(report)
+	}
+	self.finish()
+
+	var messages []string
+	for _, event := range self.recordedEvents {
+		if event.Kind == agent.UserMessageEvent {
+			messages = append(messages, event.Text)
+		}
+	}
+	if !slices.Equal(messages, []string{"first", "queued first\n\ninterrupt now"}) {
+		t.Errorf("sent %q", messages)
 	}
 }
 
@@ -12499,20 +12638,20 @@ func TestReloadingConfigChangesTheEditorAndToolOutputLimit(t *testing.T) {
 
 func TestReloadingConfigChangesExperimentalToggles(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	writeLiveConfig(t, path, "[experimental]\nredraw_timing_feedback = true\n")
+	writeLiveConfig(t, path, "[experimental]\nredraw_timing_feedback = true\nenter_interrupts = false\n")
 
 	self := testConversation(t, &bytes.Buffer{})
 	prepareLiveConfig(t, self, path)
 
-	if !self.experimental.IsEnabled(experimental.RedrawTimingFeedback) {
-		t.Fatal("the toggle was not read from the configuration")
+	if !self.experimental.IsEnabled(experimental.RedrawTimingFeedback) || self.experimental.IsEnabled(experimental.EnterInterrupts) {
+		t.Fatal("the toggles were not read from the configuration")
 	}
 
-	writeLiveConfig(t, path, "[experimental]\nredraw_timing_feedback = false\n")
+	writeLiveConfig(t, path, "[experimental]\nredraw_timing_feedback = false\nenter_interrupts = true\n")
 	settleLiveConfig(t, self)
 
-	if self.experimental.IsEnabled(experimental.RedrawTimingFeedback) {
-		t.Error("the reloaded toggle is still enabled")
+	if self.experimental.IsEnabled(experimental.RedrawTimingFeedback) || !self.experimental.IsEnabled(experimental.EnterInterrupts) {
+		t.Error("the reloaded toggles did not take effect")
 	}
 }
 
@@ -13572,6 +13711,18 @@ const (
 	queuedBesideFeedback
 	queuedFlushed
 	queuedDelivered
+	queuedInterruptedWithAlt
+	queuedInterruptedWithEnter
+	queuedAltSwapped
+	queuedSlashEnterDefault
+	queuedSlashEnterSwapped
+	queuedKnownCommandSwapped
+	queuedLiteralSlashDefault
+	queuedLiteralSlashSwapped
+	queuedPathEnterDefault
+	queuedPathEnterSwapped
+	queuedPathAltDefault
+	queuedPathAltSwapped
 	queuedTallerThanTheTerminal
 )
 
@@ -13590,6 +13741,18 @@ func TestGoldenQueuedMessagesDrawEveryVisibleState(t *testing.T) {
 		"feedback beside the queue":  func() string { return queuedMessagesStream(t, queuedBesideFeedback) },
 		"flushed at a stopping turn": func() string { return queuedMessagesStream(t, queuedFlushed) },
 		"delivered at the boundary":  func() string { return queuedMessagesStream(t, queuedDelivered) },
+		"alt interrupts":             func() string { return queuedMessagesStream(t, queuedInterruptedWithAlt) },
+		"swapped enter interrupts":   func() string { return queuedMessagesStream(t, queuedInterruptedWithEnter) },
+		"swapped alt queues":         func() string { return queuedMessagesStream(t, queuedAltSwapped) },
+		"slash enter rejected":       func() string { return queuedMessagesStream(t, queuedSlashEnterDefault) },
+		"swapped slash rejected":     func() string { return queuedMessagesStream(t, queuedSlashEnterSwapped) },
+		"swapped known command runs": func() string { return queuedMessagesStream(t, queuedKnownCommandSwapped) },
+		"literal slash queues":       func() string { return queuedMessagesStream(t, queuedLiteralSlashDefault) },
+		"swapped literal interrupts": func() string { return queuedMessagesStream(t, queuedLiteralSlashSwapped) },
+		"path enter queues":          func() string { return queuedMessagesStream(t, queuedPathEnterDefault) },
+		"swapped path enter stops":   func() string { return queuedMessagesStream(t, queuedPathEnterSwapped) },
+		"path alt interrupts":        func() string { return queuedMessagesStream(t, queuedPathAltDefault) },
+		"swapped path alt queues":    func() string { return queuedMessagesStream(t, queuedPathAltSwapped) },
 		"taller than the terminal":   func() string { return queuedMessagesStream(t, queuedTallerThanTheTerminal) },
 	}
 
@@ -13663,6 +13826,18 @@ func queuedMessagesStream(t *testing.T, scenario queuedMessagesScenario) string 
 		queuedBesideFeedback:        {"check the other path too"},
 		queuedFlushed:               {"check the other path too", "and mention what you find"},
 		queuedDelivered:             {"check the other path too"},
+		queuedInterruptedWithAlt:    {"check the other path too"},
+		queuedInterruptedWithEnter:  {"check the other path too"},
+		queuedAltSwapped:            {"check the other path too"},
+		queuedSlashEnterDefault:     {"check the other path too"},
+		queuedSlashEnterSwapped:     {"check the other path too"},
+		queuedKnownCommandSwapped:   {"check the other path too"},
+		queuedLiteralSlashDefault:   {"check the other path too"},
+		queuedLiteralSlashSwapped:   {"check the other path too"},
+		queuedPathEnterDefault:      {"check the other path too"},
+		queuedPathEnterSwapped:      {"check the other path too"},
+		queuedPathAltDefault:        {"check the other path too"},
+		queuedPathAltSwapped:        {"check the other path too"},
 		queuedTallerThanTheTerminal: tallQueue(),
 	}[scenario]
 
@@ -13690,6 +13865,11 @@ func queuedMessagesStream(t *testing.T, scenario queuedMessagesScenario) string 
 	case queuedFlushed:
 		self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Enter})
 		self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Enter})
+	case queuedInterruptedWithAlt, queuedInterruptedWithEnter, queuedAltSwapped,
+		queuedSlashEnterDefault, queuedSlashEnterSwapped, queuedKnownCommandSwapped,
+		queuedLiteralSlashDefault, queuedLiteralSlashSwapped,
+		queuedPathEnterDefault, queuedPathEnterSwapped, queuedPathAltDefault, queuedPathAltSwapped:
+		drawQueuedEnterCase(self, inputLine, history, scenario)
 	case queuedDelivered:
 		delivered, _ := self.currentTurn.TakeInterjections()
 		event := agent.Event{Kind: agent.UserMessageEvent, Text: delivered}
@@ -13698,6 +13878,35 @@ func queuedMessagesStream(t *testing.T, scenario queuedMessagesScenario) string 
 	}
 
 	return strings.ReplaceAll(screenOutput.String(), self.workspace.GetDir(), workspaceMarker)
+}
+
+func drawQueuedEnterCase(self *App, inputLine *edit.Input, history *edit.History, scenario queuedMessagesScenario) {
+	cases := map[queuedMessagesScenario]struct {
+		message          string
+		modifier         key.Modifier
+		interruptOnEnter bool
+	}{
+		queuedInterruptedWithAlt:   {message: "and mention what you find", modifier: key.Alt},
+		queuedInterruptedWithEnter: {message: "and mention what you find", interruptOnEnter: true},
+		queuedAltSwapped:           {message: "and mention what you find", modifier: key.Alt, interruptOnEnter: true},
+		queuedSlashEnterDefault:    {message: "/unknown"},
+		queuedSlashEnterSwapped:    {message: "/unknown", interruptOnEnter: true},
+		queuedKnownCommandSwapped:  {message: "/help", interruptOnEnter: true},
+		queuedLiteralSlashDefault:  {message: "/unknown", modifier: key.Alt},
+		queuedLiteralSlashSwapped:  {message: "/unknown", modifier: key.Alt, interruptOnEnter: true},
+		queuedPathEnterDefault:     {message: "/tmp/file"},
+		queuedPathEnterSwapped:     {message: "/tmp/file", interruptOnEnter: true},
+		queuedPathAltDefault:       {message: "/tmp/file", modifier: key.Alt},
+		queuedPathAltSwapped:       {message: "/tmp/file", modifier: key.Alt, interruptOnEnter: true},
+	}
+	test := cases[scenario]
+	if test.interruptOnEnter {
+		self.experimental = experimental.New(map[string]any{string(experimental.EnterInterrupts): true})
+	}
+	for _, letter := range test.message {
+		self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Rune, Value: letter})
+	}
+	self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Enter, Mod: test.modifier})
 }
 
 func plainFeedback(t *testing.T) string {

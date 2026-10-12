@@ -522,11 +522,8 @@ func (self *App) apply(inputLine *edit.Input, history *edit.History, keypress ke
 		action = edit.DrawInput
 	}
 	switch action {
-	case edit.AcceptInput:
-		self.acceptInput(inputLine, history)
-
-	case edit.ForceAcceptInput:
-		self.submitInput(inputLine, history, strings.TrimSpace(inputLine.Text()))
+	case edit.AcceptInput, edit.ForceAcceptInput:
+		self.acceptKeypress(inputLine, history, action)
 
 	case edit.ContinueTurn:
 		self.continueOrFlush(inputLine, history)
@@ -776,7 +773,31 @@ func (self *App) sendCommandPrompt(message string) {
 	self.start(message)
 }
 
-func (self *App) acceptInput(inputLine *edit.Input, history *edit.History) {
+func (self *App) acceptKeypress(inputLine *edit.Input, history *edit.History, action edit.Action) {
+	message := strings.TrimSpace(inputLine.Text())
+	wasRunning := self.currentTurn.Running()
+	wasSubmitted := message != ""
+	if action == edit.ForceAcceptInput {
+		self.submitInput(inputLine, history, message)
+	} else {
+		wasSubmitted = self.acceptInput(inputLine, history)
+	}
+	if !wasRunning || !wasSubmitted || self.currentTurn.Cancelled() {
+		return
+	}
+
+	shouldInterrupt := self.experimental.IsEnabled(experimental.EnterInterrupts)
+	if action == edit.ForceAcceptInput {
+		if _, isCommand := self.commands.CommandName(message); !isCommand {
+			shouldInterrupt = !shouldInterrupt
+		}
+	}
+	if shouldInterrupt {
+		self.interruptTurn(interrupt.Replacement)
+	}
+}
+
+func (self *App) acceptInput(inputLine *edit.Input, history *edit.History) bool {
 	message := strings.TrimSpace(inputLine.Text())
 	switch self.handleCommand(message) {
 	case dispatch.Handled:
@@ -784,8 +805,10 @@ func (self *App) acceptInput(inputLine *edit.Input, history *edit.History) {
 		inputLine.Reset()
 	case dispatch.Proceed:
 		self.submitInput(inputLine, history, message)
+		return true
 	case dispatch.Rejected:
 	}
+	return false
 }
 
 func (self *App) submitInput(inputLine *edit.Input, history *edit.History, message string) {
