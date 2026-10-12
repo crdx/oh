@@ -83,6 +83,8 @@ func Choose(store Store, terminal *os.File, screen io.Writer) (*Session, error) 
 type sessionList struct {
 	store               Store
 	sizeMeasurements    map[*Session]struct{}
+	workspaceRows       [2][]*Session
+	workspaceRowsReady  [2]bool
 	isArchivedView      bool
 	isAllWorkspacesView bool
 }
@@ -307,10 +309,12 @@ func (self *sessionList) forget(index int) {
 	movedSession := self.at(index)
 	if self.isArchivedView {
 		self.store.ArchivedSessions = deleteSession(self.store.ArchivedSessions, movedSession)
+		self.workspaceRowsReady[1] = false
 		return
 	}
 
 	self.store.Sessions = deleteSession(self.store.Sessions, movedSession)
+	self.workspaceRowsReady[0] = false
 }
 
 func deleteSession(sessions []*Session, deletedSession *Session) []*Session {
@@ -328,6 +332,7 @@ func (self *sessionList) restore(movedSession *Session, restoredBytes int64) {
 	self.store.ArchivedSessions = deleteSession(self.store.ArchivedSessions, movedSession)
 	self.store.Sessions = append(self.store.Sessions, movedSession)
 	newestFirst(self.store.Sessions)
+	self.workspaceRowsReady = [2]bool{}
 }
 
 func (self *sessionList) archive(movedSession *Session, archivedBytes int64) {
@@ -336,20 +341,29 @@ func (self *sessionList) archive(movedSession *Session, archivedBytes int64) {
 	self.store.Sessions = deleteSession(self.store.Sessions, movedSession)
 	self.store.ArchivedSessions = append(self.store.ArchivedSessions, movedSession)
 	newestFirst(self.store.ArchivedSessions)
+	self.workspaceRowsReady = [2]bool{}
 }
 
 func (self *sessionList) rows() []*Session {
+	view := 0
 	sessions := self.store.Sessions
 	if self.isArchivedView {
+		view = 1
 		sessions = self.store.ArchivedSessions
 	}
 	if self.isAllWorkspacesView {
 		return sessions
 	}
-
-	return slices.DeleteFunc(slices.Clone(sessions), func(storedSession *Session) bool {
-		return storedSession.IsOtherWorkspace
-	})
+	if !self.workspaceRowsReady[view] {
+		self.workspaceRows[view] = self.workspaceRows[view][:0]
+		for _, storedSession := range sessions {
+			if !storedSession.IsOtherWorkspace {
+				self.workspaceRows[view] = append(self.workspaceRows[view], storedSession)
+			}
+		}
+		self.workspaceRowsReady[view] = true
+	}
+	return self.workspaceRows[view]
 }
 
 func (self *sessionList) openFirstPopulatedView() {

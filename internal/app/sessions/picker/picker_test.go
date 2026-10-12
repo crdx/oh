@@ -530,3 +530,27 @@ func TestAnUnavailableSizeIsMeasuredOnlyOnce(t *testing.T) {
 		t.Errorf("attempted the measurement %d times", measured)
 	}
 }
+
+func TestWorkspaceRowsAreReusedUntilTheListingChanges(t *testing.T) {
+	first := &Session{Name: "first"}
+	other := &Session{Name: "other", IsOtherWorkspace: true}
+	second := &Session{Name: "second"}
+	self := &sessionList{store: Store{Sessions: []*Session{first, other, second}}}
+
+	initial := self.rows()
+	if len(initial) != 2 || initial[0] != first || initial[1] != second {
+		t.Fatalf("wrong workspace sessions: %v", initial)
+	}
+	if &self.rows()[0] != &initial[0] {
+		t.Fatal("the unchanged workspace was filtered again")
+	}
+
+	self.forget(0)
+	if rows := self.rows(); len(rows) != 1 || rows[0] != second {
+		t.Fatalf("deleting a session kept the old workspace rows: %v", rows)
+	}
+	self.SwitchScope()
+	if rows := self.rows(); len(rows) != 2 || rows[0] != other {
+		t.Fatalf("switching scope hid a session: %v", rows)
+	}
+}

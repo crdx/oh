@@ -3,6 +3,7 @@ package session
 import (
 	"archive/tar"
 	"compress/gzip"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -11,6 +12,7 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 const (
@@ -19,9 +21,10 @@ const (
 )
 
 const (
-	ArchiveSuffix   = ".tgz"
-	archiveFileMode = 0o600
-	archiveDirMode  = 0o700
+	ArchiveSuffix          = ".tgz"
+	ArchiveMetaCacheSuffix = ".meta-cache"
+	archiveFileMode        = 0o600
+	archiveDirMode         = 0o700
 )
 
 var (
@@ -76,6 +79,9 @@ func Archive(directory string, name string) error {
 		return err
 	}
 
+	if meta, err := ReadMeta(directory, name); err == nil {
+		cacheArchivedMeta(directory, name, meta)
+	}
 	if err := os.RemoveAll(Dir(directory, name)); err != nil {
 		return err
 	}
@@ -218,7 +224,11 @@ func Delete(directory string, name string) error {
 	}
 
 	if IsArchived(directory, name) {
-		return os.Remove(ArchivePath(directory, name))
+		if err := os.Remove(ArchivePath(directory, name)); err != nil {
+			return err
+		}
+		_ = os.Remove(archiveMetaCachePath(directory, name))
+		return nil
 	}
 
 	heldLock, err := AcquireLock(directory, name)
@@ -255,7 +265,11 @@ func Restore(directory string, name string) error {
 		return err
 	}
 
-	return os.Remove(ArchivePath(directory, name))
+	if err := os.Remove(ArchivePath(directory, name)); err != nil {
+		return err
+	}
+	_ = os.Remove(archiveMetaCachePath(directory, name))
+	return nil
 }
 
 func unpackArchive(archivePath string, unpackedDir string, name string) error {
@@ -354,16 +368,86 @@ func Unarchived(directory string, name string, change func() error) error {
 }
 
 func ArchivedMeta(directory string, name string) (*Meta, error) {
-	if !IsArchived(directory, name) {
+	if err := validateName(name); err != nil {
+		return nil, err
+	}
+	archivePath := ArchivePath(directory, name)
+	archiveInfo, err := os.Stat(archivePath)
+	if err != nil || !archiveInfo.Mode().IsRegular() {
 		return nil, fmt.Errorf("%w %q", ErrNotArchived, name)
 	}
+	if cachedMeta, ok := readArchivedMetaCache(directory, name, archiveInfo); ok {
+		return cachedMeta, nil
+	}
 
-	encodedMeta, err := readArchivedFile(ArchivePath(directory, name), path.Join(name, metaName))
+	encodedMeta, err := readArchivedFile(archivePath, path.Join(name, metaName))
 	if err != nil {
 		return nil, err
 	}
+	meta, err := decodeMeta(encodedMeta, name)
+	if err == nil {
+		cacheArchivedMeta(directory, name, meta)
+	}
+	return meta, err
+}
 
-	return decodeMeta(encodedMeta, name)
+type archivedMetaCache struct {
+	Size       int64           `json:"size"`
+	ModifiedAt time.Time       `json:"modified_at"`
+	Meta       json.RawMessage `json:"meta"`
+}
+
+func archiveMetaCachePath(directory string, name string) string {
+	return filepath.Join(directory, name+ArchiveMetaCacheSuffix)
+}
+
+func readArchivedMetaCache(directory string, name string, archiveInfo os.FileInfo) (*Meta, bool) {
+	file, err := os.Open(archiveMetaCachePath(directory, name))
+	if err != nil {
+		return nil, false
+	}
+	defer func() { _ = file.Close() }()
+	encodedCache, err := io.ReadAll(io.LimitReader(file, maxHeadLine+1))
+	if err != nil || len(encodedCache) > maxHeadLine {
+		return nil, false
+	}
+	var cacheEntry archivedMetaCache
+	if json.Unmarshal(encodedCache, &cacheEntry) != nil || cacheEntry.Size != archiveInfo.Size() ||
+		!cacheEntry.ModifiedAt.Equal(archiveInfo.ModTime()) {
+		return nil, false
+	}
+	meta, err := decodeMeta(cacheEntry.Meta, name)
+	return meta, err == nil
+}
+
+func cacheArchivedMeta(directory string, name string, meta *Meta) {
+	archiveInfo, err := os.Stat(ArchivePath(directory, name))
+	if err != nil {
+		return
+	}
+	encodedMeta, err := json.Marshal(meta)
+	if err != nil {
+		return
+	}
+	encodedCache, err := json.Marshal(archivedMetaCache{
+		Size: archiveInfo.Size(), ModifiedAt: archiveInfo.ModTime(), Meta: encodedMeta,
+	})
+	if err != nil {
+		return
+	}
+	file, err := os.CreateTemp(directory, name+"-*"+ArchiveMetaCacheSuffix)
+	if err != nil {
+		return
+	}
+	defer func() { _ = os.Remove(file.Name()) }()
+	if _, err := file.Write(encodedCache); err != nil {
+		_ = file.Close()
+		return
+	}
+	if err := file.Close(); err != nil {
+		return
+	}
+	_ = os.Rename(file.Name(), archiveMetaCachePath(directory, name))
 }
 
 func readArchivedFile(archivePath string, storedName string) ([]byte, error) {

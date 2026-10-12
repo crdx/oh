@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"crdx.org/oh/pkg/session"
 )
@@ -270,5 +271,57 @@ func TestARunningSessionCannotBeDeleted(t *testing.T) {
 func TestDeletingRefusesAPathLikeName(t *testing.T) {
 	if err := session.Delete(t.TempDir(), "../elsewhere"); err == nil {
 		t.Error("expected a path-like name to be refused")
+	}
+}
+
+func TestArchivedMetadataIsCachedAndInvalidatedWithTheArchive(t *testing.T) {
+	directory, name := archivedSession(t)
+	if err := session.Archive(directory, name); err != nil {
+		t.Fatal(err)
+	}
+	cachePath := filepath.Join(directory, name+".meta-cache")
+	if _, err := os.Stat(cachePath); err != nil {
+		t.Fatalf("archive did not keep its metadata beside it: %v", err)
+	}
+
+	if err := os.WriteFile(cachePath, []byte("invalid"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	meta, err := session.ArchivedMeta(directory, name)
+	if err != nil || meta.Name != name {
+		t.Fatalf("corrupt cache was not rebuilt: %#v, %v", meta, err)
+	}
+
+	archivePath := session.ArchivePath(directory, name)
+	info, err := os.Stat(archivePath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	later := info.ModTime().Add(time.Second)
+	if err := os.Chtimes(archivePath, later, later); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := session.ArchivedMeta(directory, name); err != nil {
+		t.Fatalf("archive metadata could not be reread after the archive changed: %v", err)
+	}
+
+	if err := session.Restore(directory, name); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(cachePath); !os.IsNotExist(err) {
+		t.Fatalf("restoring left the archive cache behind: %v", err)
+	}
+}
+
+func TestDeletingAnArchiveRemovesItsMetadataCache(t *testing.T) {
+	directory, name := archivedSession(t)
+	if err := session.Archive(directory, name); err != nil {
+		t.Fatal(err)
+	}
+	if err := session.Delete(directory, name); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(filepath.Join(directory, name+".meta-cache")); !os.IsNotExist(err) {
+		t.Fatalf("deletion left the archive cache behind: %v", err)
 	}
 }

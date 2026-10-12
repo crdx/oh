@@ -134,6 +134,9 @@ func sessionCandidates(directory string, requestedNames []string) ([]candidate, 
 		switch {
 		case entry.IsDir() && session.IsName(entryName):
 			candidates = append(candidates, candidate{name: entryName, target: entryName})
+		case entry.Type().IsRegular() && strings.HasSuffix(entryName, session.ArchiveMetaCacheSuffix) &&
+			session.IsArchived(directory, strings.TrimSuffix(entryName, session.ArchiveMetaCacheSuffix)):
+			continue
 		case entry.Type().IsRegular() && strings.HasSuffix(entryName, session.ArchiveSuffix):
 			name := strings.TrimSuffix(entryName, session.ArchiveSuffix)
 			if session.IsName(name) {
