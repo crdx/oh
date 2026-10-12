@@ -32,6 +32,7 @@ func TestGoldenShellPoliciesHandleFilesystemChanges(t *testing.T) {
 		"=== missing protection root ===\n" + missingProtectionRootGolden(t),
 		"=== symlinked workspace metadata ===\n" + symlinkedWorkspaceGolden(t),
 		"=== git-only file tools ===\n" + gitOnlyGolden(t),
+		"=== multiply-linked metadata ===\n" + hardLinkGolden(t),
 		"=== explicit workspace write grant ===\n" + workspaceWriteGrantGolden(t),
 		"=== absolute denied home secret ===\n" + absoluteDenyGolden(t),
 		"=== host tmp aliases refused ===\n" + hostTmpAliasGolden(t),
@@ -386,6 +387,46 @@ func absoluteDenyGolden(t *testing.T) string {
 	}
 	return fmt.Sprintf("directory walks: %d\nshell denies exact path: %t\nfile tools deny read: %t",
 		walks, slices.Contains(deniedPaths, secret), errors.Is(fileError, ErrDenied))
+}
+
+func hardLinkGolden(t *testing.T) string {
+	t.Helper()
+	workspace := t.TempDir()
+	metadata := filepath.Join(workspace, ".git", "config")
+	if err := os.MkdirAll(filepath.Dir(metadata), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(metadata, []byte("intact"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Link(metadata, filepath.Join(workspace, "ordinary")); err != nil {
+		t.Fatal(err)
+	}
+	root, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = root.Close() })
+	mode := caps.NewMode(caps.Read | caps.Write)
+	files := file.New(root, caps.RefuseWrite(mode))
+	access, err := NewPathAccess(files, mode, Paths{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(access.Close)
+	before := files.WriteFile("ordinary", []byte("changed"), 0o600)
+	mode.Toggle(caps.Git)
+	after := files.WriteFile("ordinary", []byte("changed"), 0o600)
+	content, err := files.ReadFile(".git/config")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Remove(filepath.Join(workspace, "ordinary")); err != nil {
+		t.Fatal(err)
+	}
+	singleLink := files.WriteFile(".git/config", []byte("allowed"), 0o600)
+	return fmt.Sprintf("without g refused: %t\nwith g refused: %t\nmetadata unchanged: %t\nsingle-link metadata writable with g: %t",
+		errors.Is(before, file.ErrMultipleHardLinks), errors.Is(after, file.ErrMultipleHardLinks), string(content) == "intact", singleLink == nil)
 }
 
 func gitOnlyGolden(t *testing.T) string {

@@ -9,6 +9,39 @@ import (
 	"syscall"
 )
 
+func writeRootFileSafely(root *os.Root, name string, data []byte, permission os.FileMode) error {
+	file, err := root.OpenFile(name, os.O_WRONLY|os.O_CREATE, permission.Perm())
+	if err != nil {
+		return err
+	}
+	defer func() { _ = file.Close() }()
+	return writeOpenedFileSafely(file, data)
+}
+
+func writeExactFileSafely(path string, data []byte, permission os.FileMode) error {
+	directory, err := os.OpenRoot(filepath.Dir(path))
+	if err != nil {
+		return err
+	}
+	defer func() { _ = directory.Close() }()
+	return writeRootFileSafely(directory, filepath.Base(path), data, permission)
+}
+
+func writeOpenedFileSafely(file *os.File, data []byte) error {
+	var info syscall.Stat_t
+	if err := syscall.Fstat(int(file.Fd()), &info); err != nil {
+		return err
+	}
+	if info.Nlink > 1 {
+		return ErrMultipleHardLinks
+	}
+	if err := file.Truncate(0); err != nil {
+		return err
+	}
+	_, err := file.Write(data)
+	return err
+}
+
 func writeWithoutSymlinks(root *os.Root, name string, data []byte, permission os.FileMode) error {
 	if !filepath.IsLocal(name) {
 		return ErrOutsideRoot
@@ -19,7 +52,7 @@ func writeWithoutSymlinks(root *os.Root, name string, data []byte, permission os
 	}
 	defer func() { _ = directory.Close() }()
 
-	descriptor, err := syscall.Openat(int(directory.Fd()), filepath.Base(name), syscall.O_WRONLY|syscall.O_CREAT|syscall.O_TRUNC|syscall.O_NOFOLLOW|syscall.O_CLOEXEC, uint32(permission.Perm()))
+	descriptor, err := syscall.Openat(int(directory.Fd()), filepath.Base(name), syscall.O_WRONLY|syscall.O_CREAT|syscall.O_NOFOLLOW|syscall.O_CLOEXEC, uint32(permission.Perm()))
 	if errors.Is(err, syscall.ELOOP) {
 		return ErrGitDir
 	}
@@ -28,8 +61,7 @@ func writeWithoutSymlinks(root *os.Root, name string, data []byte, permission os
 	}
 	file := os.NewFile(uintptr(descriptor), name)
 	defer func() { _ = file.Close() }()
-	_, err = file.Write(data)
-	return err
+	return writeOpenedFileSafely(file, data)
 }
 
 func openDirectoryWithoutSymlinks(root *os.Root, name string) (*os.File, error) {

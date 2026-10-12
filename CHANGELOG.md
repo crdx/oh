@@ -9,6 +9,7 @@
 - Move send-now notice to the top left, a bit closer to the text it concerns
 - Show queued messages only after a long enough wait, and make the sending text yellow
 - Flash subagent emojis on model activity so you have some idea of what's going on
+- Refuse file writes through multiple hard links
 - Refuse ungranted aliases into the virtual `/tmp` mount
 - Refuse host `/tmp` path grants and aliases crossing its private boundary
 - Accept literal absolute paths in `sandbox.deny`

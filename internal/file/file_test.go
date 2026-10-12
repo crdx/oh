@@ -50,6 +50,57 @@ func TestWritingGoesThroughWhileTheTreeMayBeChanged(t *testing.T) {
 	}
 }
 
+func TestAWritableFileWithMultipleHardLinksIsRefusedInEveryMode(t *testing.T) {
+	isWritable := true
+	root, directory := testRoot(t, &isWritable)
+	isGitAllowed := false
+	root.SetGitWriteAllowed(func() bool { return isGitAllowed })
+	original := filepath.Join(directory, "original")
+	alias := filepath.Join(directory, "alias")
+	if err := os.WriteFile(original, []byte("intact"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Link(original, alias); err != nil {
+		t.Fatal(err)
+	}
+	for _, isGitGranted := range []bool{false, true} {
+		isGitAllowed = isGitGranted
+		if err := root.WriteFile("alias", []byte("changed"), 0o600); !errors.Is(err, file.ErrMultipleHardLinks) {
+			t.Errorf("writing a shared inode with g=%t: %v", isGitGranted, err)
+		}
+	}
+	for _, name := range []string{"original", "alias"} {
+		if content, err := root.ReadFile(name); err != nil || string(content) != "intact" {
+			t.Errorf("%s changed to %q: %v", name, content, err)
+		}
+	}
+	if err := os.Remove(original); err != nil {
+		t.Fatal(err)
+	}
+	if err := root.WriteFile("alias", []byte("allowed"), 0o600); err != nil {
+		t.Errorf("a file with one link remained blocked: %v", err)
+	}
+}
+
+func TestAnExactFileRootRefusesMultipleHardLinksWithoutAMode(t *testing.T) {
+	directory := t.TempDir()
+	original := filepath.Join(directory, "original")
+	alias := filepath.Join(directory, "alias")
+	if err := os.WriteFile(original, []byte("intact"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Link(original, alias); err != nil {
+		t.Fatal(err)
+	}
+	root := file.NewExactFile(alias, func(string) error { return nil })
+	if err := root.WriteFile("alias", []byte("changed"), 0o600); !errors.Is(err, file.ErrMultipleHardLinks) {
+		t.Errorf("exact root write got %v, want hard-link refusal", err)
+	}
+	if content, err := root.ReadFile("alias"); err != nil || string(content) != "intact" {
+		t.Errorf("the exact root changed to %q: %v", content, err)
+	}
+}
+
 func TestWritingIsRefusedWhileTheTreeIsReadOnly(t *testing.T) {
 	isWritable := false
 	root, directory := testRoot(t, &isWritable)

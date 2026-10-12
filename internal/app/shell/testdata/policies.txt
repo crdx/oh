@@ -82,6 +82,12 @@ missing metadata refused: true
 existing metadata writable: true
 ordinary file refused: true
 
+=== multiply-linked metadata ===
+without g refused: true
+with g refused: true
+metadata unchanged: true
+single-link metadata writable with g: true
+
 === explicit workspace write grant ===
 shell writable: true
 file tools writable: true

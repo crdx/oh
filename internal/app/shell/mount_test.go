@@ -1229,6 +1229,103 @@ func TestAWriteGrantInsideTheWorkspaceDoesNotUnlockItsSiblings(t *testing.T) {
 	}
 }
 
+func TestAFileToolCannotAlterHardlinkedMetadataInEitherMode(t *testing.T) {
+	workspace := t.TempDir()
+	metadata := filepath.Join(workspace, ".git", "config")
+	if err := os.MkdirAll(filepath.Dir(metadata), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(metadata, []byte("intact"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Link(metadata, filepath.Join(workspace, "ordinary")); err != nil {
+		t.Fatal(err)
+	}
+	openedRoot, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = openedRoot.Close() }()
+	mode := caps.NewMode(caps.Read | caps.Write)
+	files := file.New(openedRoot, caps.RefuseWrite(mode))
+	access, err := NewPathAccess(files, mode, Paths{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer access.Close()
+
+	if err := files.WriteFile("ordinary", []byte("changed"), 0o600); !errors.Is(err, file.ErrMultipleHardLinks) {
+		t.Errorf("write without g got %v, want hard-link refusal", err)
+	}
+	if content, err := files.ReadFile(".git/config"); err != nil || string(content) != "intact" {
+		t.Errorf("repository metadata changed to %q: %v", content, err)
+	}
+	mode.Toggle(caps.Git)
+	if err := files.WriteFile("ordinary", []byte("changed"), 0o600); !errors.Is(err, file.ErrMultipleHardLinks) {
+		t.Errorf("write with g got %v, want the same hard-link refusal", err)
+	}
+	if content, err := files.ReadFile(".git/config"); err != nil || string(content) != "intact" {
+		t.Errorf("g let the shared inode change to %q: %v", content, err)
+	}
+	if err := os.Remove(filepath.Join(workspace, "ordinary")); err != nil {
+		t.Fatal(err)
+	}
+	if err := files.WriteFile(".git/config", []byte("allowed"), 0o600); err != nil {
+		t.Errorf("g did not permit a single-link metadata write: %v", err)
+	}
+	if content, err := files.ReadFile(".git/config"); err != nil || string(content) != "allowed" {
+		t.Errorf("single-link metadata remained %q: %v", content, err)
+	}
+}
+
+func TestAnExactWriteGrantCannotAlterHardlinkedMetadata(t *testing.T) {
+	parent := outsideTmpTestDirectory(t)
+	workspace := filepath.Join(parent, "workspace")
+	aliasDirectory := filepath.Join(parent, "granted")
+	metadata := filepath.Join(workspace, ".git", "config")
+	for _, directory := range []string{filepath.Dir(metadata), aliasDirectory} {
+		if err := os.MkdirAll(directory, 0o700); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := os.WriteFile(metadata, []byte("intact"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	alias := filepath.Join(aliasDirectory, "shared")
+	if err := os.Link(metadata, alias); err != nil {
+		t.Fatal(err)
+	}
+	openedRoot, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = openedRoot.Close() }()
+	mode := caps.NewMode(caps.Read | caps.Write)
+	files := file.New(openedRoot, caps.RefuseWrite(mode))
+	access, err := NewPathAccess(files, mode, Paths{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer access.Close()
+	if changed, err := access.Grant(alias, ReadAccess|WriteAccess); err != nil || !changed {
+		t.Fatalf("exact grant changed=%t: %v", changed, err)
+	}
+	mountedRoot, name, err := files.Resolve(alias)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := mountedRoot.WriteFile(name, []byte("changed"), 0o600); !errors.Is(err, file.ErrMultipleHardLinks) {
+		t.Errorf("write under an exact grant got %v, want hard-link refusal", err)
+	}
+	if content, err := files.ReadFile(".git/config"); err != nil || string(content) != "intact" {
+		t.Errorf("repository metadata changed to %q: %v", content, err)
+	}
+	mode.Toggle(caps.Git)
+	if err := mountedRoot.WriteFile(name, []byte("changed"), 0o600); !errors.Is(err, file.ErrMultipleHardLinks) {
+		t.Errorf("exact grant with g got %v, want hard-link refusal", err)
+	}
+}
+
 func TestAChangingSymlinkCannotRedirectAFileToolWriteIntoGit(t *testing.T) {
 	workspace := t.TempDir()
 	for _, name := range []string{".git", "ordinary"} {

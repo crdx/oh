@@ -13,11 +13,12 @@ import (
 	"crdx.org/oh/internal/util/pathutil"
 )
 
-var ErrReadOnly = errors.New("the filesystem is read-only")
-
-var ErrGitDir = errors.New("refusing to touch anything inside a .git directory")
-
-var ErrOutsideRoot = errors.New("path is outside the root")
+var (
+	ErrReadOnly          = errors.New("the filesystem is read-only")
+	ErrGitDir            = errors.New("refusing to touch anything inside a .git directory")
+	ErrMultipleHardLinks = errors.New("refusing to overwrite a file with multiple hard links")
+	ErrOutsideRoot       = errors.New("path is outside the root")
+)
 
 func InGitDir(name string) bool {
 	segments := strings.Split(filepath.Clean(name), string(filepath.Separator))
@@ -296,7 +297,7 @@ func (self *Root) WriteFile(name string, data []byte, perm os.FileMode) error {
 		return err
 	}
 	if self.exactPath != "" {
-		return os.WriteFile(self.exactPath, data, perm)
+		return writeExactFileSafely(self.exactPath, data, perm)
 	}
 	root, err := self.getRoot()
 	if err != nil {
@@ -305,7 +306,7 @@ func (self *Root) WriteFile(name string, data []byte, perm os.FileMode) error {
 	if (self.gitWriteAllowed != nil && !self.gitWriteAllowed()) || (self.gitOnly != nil && self.gitOnly()) {
 		return writeWithoutSymlinks(root, name, data, perm)
 	}
-	return root.WriteFile(name, data, perm)
+	return writeRootFileSafely(root, name, data, perm)
 }
 
 func (self *Root) MkdirAll(name string, perm os.FileMode) error {
