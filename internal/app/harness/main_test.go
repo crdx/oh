@@ -2872,6 +2872,7 @@ func TestEnterAndAltEnterChooseWhetherToInterruptARunningTurn(t *testing.T) {
 	cases := []struct {
 		name             string
 		message          string
+		wantQueued       string
 		interruptOnEnter bool
 		keypress         key.Key
 		wantInterrupted  bool
@@ -2886,13 +2887,25 @@ func TestEnterAndAltEnterChooseWhetherToInterruptARunningTurn(t *testing.T) {
 		{name: "default path alt interrupts", message: "/tmp/file", keypress: key.Key{Code: key.Enter, Mod: key.Alt}, wantInterrupted: true},
 		{name: "swapped path enter interrupts", message: "/tmp/file", interruptOnEnter: true, keypress: key.Key{Code: key.Enter}, wantInterrupted: true},
 		{name: "swapped path alt queues", message: "/tmp/file", interruptOnEnter: true, keypress: key.Key{Code: key.Enter, Mod: key.Alt}},
+		{name: "default command leaves turn running", message: "/help", keypress: key.Key{Code: key.Enter}},
+		{name: "swapped command interrupts", message: "/help", interruptOnEnter: true, keypress: key.Key{Code: key.Enter}, wantInterrupted: true},
+		{name: "default host command leaves turn running", message: "/!true", keypress: key.Key{Code: key.Enter}},
+		{name: "swapped host command interrupts", message: "/!true", interruptOnEnter: true, keypress: key.Key{Code: key.Enter}, wantInterrupted: true},
+		{name: "default snippet queues", message: "//add review this", wantQueued: "Add the following: review this", keypress: key.Key{Code: key.Enter}},
+		{name: "swapped snippet interrupts", message: "//add review this", wantQueued: "Add the following: review this", interruptOnEnter: true, keypress: key.Key{Code: key.Enter}, wantInterrupted: true},
 	}
 
 	for _, test := range cases {
 		t.Run(test.name, func(t *testing.T) {
 			cancellations := 0
 			self := &App{
-				commands:     fixtureCommandRegistry(t),
+				commands: fixtureCommandRegistryWithSnippets(t,
+					map[string]snippets.Definition{
+						"add": {Prompt: "Add the following: {{ .Arg }}", Arguments: snippets.ArgumentsRequired},
+					},
+					slash.Command{Name: "help", Run: slashTestHandler},
+					slash.Command{Name: "!", Run: slashTestHandler}.WithAttachedArgument("<command>"),
+				),
 				currentTurn:  Turn{Stream: testTurnStream(nil, func(error) { cancellations++ }, turn.State{Running: true})},
 				experimental: experimental.New(map[string]any{string(experimental.EnterInterrupts): test.interruptOnEnter}),
 			}
@@ -2904,8 +2917,14 @@ func TestEnterAndAltEnterChooseWhetherToInterruptARunningTurn(t *testing.T) {
 			}
 			self.apply(inputLine, history, test.keypress)
 
-			if got := self.currentTurn.GetInterjections(); !slices.Equal(got, []string{"queued first", test.message}) {
-				t.Errorf("queued %q, want the first and submitted messages", got)
+			wantQueued := []string{"queued first"}
+			if test.wantQueued != "" {
+				wantQueued = append(wantQueued, test.wantQueued)
+			} else if !strings.HasPrefix(test.message, "/help") && !strings.HasPrefix(test.message, "/!") {
+				wantQueued = append(wantQueued, test.message)
+			}
+			if got := self.currentTurn.GetInterjections(); !slices.Equal(got, wantQueued) {
+				t.Errorf("queued %q, want %q", got, wantQueued)
 			}
 			if got := self.currentTurn.Cancelled(); got != test.wantInterrupted {
 				t.Errorf("cancelled = %v, want %v", got, test.wantInterrupted)
@@ -13828,7 +13847,10 @@ const (
 	queuedAltSwapped
 	queuedSlashEnterDefault
 	queuedSlashEnterSwapped
+	queuedKnownCommandDefault
 	queuedKnownCommandSwapped
+	queuedSnippetEnterDefault
+	queuedSnippetEnterSwapped
 	queuedLiteralSlashDefault
 	queuedLiteralSlashSwapped
 	queuedPathEnterDefault
@@ -13840,33 +13862,36 @@ const (
 
 func TestGoldenQueuedMessagesDrawEveryVisibleState(t *testing.T) {
 	passes := map[string]func() string{
-		"one queued":                   func() string { return queuedMessagesStream(t, queuedOne) },
-		"a path queued":                func() string { return queuedMessagesStream(t, queuedPath) },
-		"two queued":                   func() string { return queuedMessagesStream(t, queuedTwo) },
-		"several queued":               func() string { return queuedMessagesStream(t, queuedSeveral) },
-		"a snippet queued":             func() string { return queuedMessagesStream(t, queuedSnippet) },
-		"a long message elided":        func() string { return queuedMessagesStream(t, queuedLongMessage) },
-		"a multiline message":          func() string { return queuedMessagesStream(t, queuedMultilineMessage) },
-		"a markdown emphasis":          func() string { return queuedMessagesStream(t, queuedMarkdownEmphasis) },
-		"escape takes the last back":   func() string { return queuedMessagesStream(t, queuedTakenBack) },
-		"taken back while typing":      func() string { return queuedMessagesStream(t, queuedTakenBackWhileTyping) },
-		"feedback beside the queue":    func() string { return queuedMessagesStream(t, queuedBesideFeedback) },
-		"flushed at a stopping turn":   func() string { return queuedMessagesStream(t, queuedFlushed) },
-		"quick hand-off stays unboxed": func() string { return queuedMessagesStream(t, queuedQuickHandoff) },
-		"delivered at the boundary":    func() string { return queuedMessagesStream(t, queuedDelivered) },
-		"alt interrupts":               func() string { return queuedMessagesStream(t, queuedInterruptedWithAlt) },
-		"swapped enter interrupts":     func() string { return queuedMessagesStream(t, queuedInterruptedWithEnter) },
-		"swapped alt queues":           func() string { return queuedMessagesStream(t, queuedAltSwapped) },
-		"slash enter rejected":         func() string { return queuedMessagesStream(t, queuedSlashEnterDefault) },
-		"swapped slash rejected":       func() string { return queuedMessagesStream(t, queuedSlashEnterSwapped) },
-		"swapped known command runs":   func() string { return queuedMessagesStream(t, queuedKnownCommandSwapped) },
-		"literal slash queues":         func() string { return queuedMessagesStream(t, queuedLiteralSlashDefault) },
-		"swapped literal interrupts":   func() string { return queuedMessagesStream(t, queuedLiteralSlashSwapped) },
-		"path enter queues":            func() string { return queuedMessagesStream(t, queuedPathEnterDefault) },
-		"swapped path enter stops":     func() string { return queuedMessagesStream(t, queuedPathEnterSwapped) },
-		"path alt interrupts":          func() string { return queuedMessagesStream(t, queuedPathAltDefault) },
-		"swapped path alt queues":      func() string { return queuedMessagesStream(t, queuedPathAltSwapped) },
-		"taller than the terminal":     func() string { return queuedMessagesStream(t, queuedTallerThanTheTerminal) },
+		"one queued":                        func() string { return queuedMessagesStream(t, queuedOne) },
+		"a path queued":                     func() string { return queuedMessagesStream(t, queuedPath) },
+		"two queued":                        func() string { return queuedMessagesStream(t, queuedTwo) },
+		"several queued":                    func() string { return queuedMessagesStream(t, queuedSeveral) },
+		"a snippet queued":                  func() string { return queuedMessagesStream(t, queuedSnippet) },
+		"a long message elided":             func() string { return queuedMessagesStream(t, queuedLongMessage) },
+		"a multiline message":               func() string { return queuedMessagesStream(t, queuedMultilineMessage) },
+		"a markdown emphasis":               func() string { return queuedMessagesStream(t, queuedMarkdownEmphasis) },
+		"escape takes the last back":        func() string { return queuedMessagesStream(t, queuedTakenBack) },
+		"taken back while typing":           func() string { return queuedMessagesStream(t, queuedTakenBackWhileTyping) },
+		"feedback beside the queue":         func() string { return queuedMessagesStream(t, queuedBesideFeedback) },
+		"flushed at a stopping turn":        func() string { return queuedMessagesStream(t, queuedFlushed) },
+		"quick hand-off stays unboxed":      func() string { return queuedMessagesStream(t, queuedQuickHandoff) },
+		"delivered at the boundary":         func() string { return queuedMessagesStream(t, queuedDelivered) },
+		"alt interrupts":                    func() string { return queuedMessagesStream(t, queuedInterruptedWithAlt) },
+		"swapped enter interrupts":          func() string { return queuedMessagesStream(t, queuedInterruptedWithEnter) },
+		"swapped alt queues":                func() string { return queuedMessagesStream(t, queuedAltSwapped) },
+		"slash enter rejected":              func() string { return queuedMessagesStream(t, queuedSlashEnterDefault) },
+		"swapped slash rejected":            func() string { return queuedMessagesStream(t, queuedSlashEnterSwapped) },
+		"known command leaves turn running": func() string { return queuedMessagesStream(t, queuedKnownCommandDefault) },
+		"swapped known command interrupts":  func() string { return queuedMessagesStream(t, queuedKnownCommandSwapped) },
+		"snippet leaves turn running":       func() string { return queuedMessagesStream(t, queuedSnippetEnterDefault) },
+		"swapped snippet interrupts":        func() string { return queuedMessagesStream(t, queuedSnippetEnterSwapped) },
+		"literal slash queues":              func() string { return queuedMessagesStream(t, queuedLiteralSlashDefault) },
+		"swapped literal interrupts":        func() string { return queuedMessagesStream(t, queuedLiteralSlashSwapped) },
+		"path enter queues":                 func() string { return queuedMessagesStream(t, queuedPathEnterDefault) },
+		"swapped path enter stops":          func() string { return queuedMessagesStream(t, queuedPathEnterSwapped) },
+		"path alt interrupts":               func() string { return queuedMessagesStream(t, queuedPathAltDefault) },
+		"swapped path alt queues":           func() string { return queuedMessagesStream(t, queuedPathAltSwapped) },
+		"taller than the terminal":          func() string { return queuedMessagesStream(t, queuedTallerThanTheTerminal) },
 	}
 
 	compareWithGolden(t, "queued-messages", ".ansi", passes)
@@ -13948,7 +13973,10 @@ func queuedMessagesStream(t *testing.T, scenario queuedMessagesScenario) string 
 		queuedAltSwapped:            {"check the other path too"},
 		queuedSlashEnterDefault:     {"check the other path too"},
 		queuedSlashEnterSwapped:     {"check the other path too"},
+		queuedKnownCommandDefault:   {"check the other path too"},
 		queuedKnownCommandSwapped:   {"check the other path too"},
+		queuedSnippetEnterDefault:   {"check the other path too"},
+		queuedSnippetEnterSwapped:   {"check the other path too"},
 		queuedLiteralSlashDefault:   {"check the other path too"},
 		queuedLiteralSlashSwapped:   {"check the other path too"},
 		queuedPathEnterDefault:      {"check the other path too"},
@@ -13990,7 +14018,8 @@ func queuedMessagesStream(t *testing.T, scenario queuedMessagesScenario) string 
 		self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Enter})
 		self.handleKeypressAndShowInput(inputLine, history, key.Key{Code: key.Enter})
 	case queuedInterruptedWithAlt, queuedInterruptedWithEnter, queuedAltSwapped,
-		queuedSlashEnterDefault, queuedSlashEnterSwapped, queuedKnownCommandSwapped,
+		queuedSlashEnterDefault, queuedSlashEnterSwapped,
+		queuedKnownCommandDefault, queuedKnownCommandSwapped, queuedSnippetEnterDefault, queuedSnippetEnterSwapped,
 		queuedLiteralSlashDefault, queuedLiteralSlashSwapped,
 		queuedPathEnterDefault, queuedPathEnterSwapped, queuedPathAltDefault, queuedPathAltSwapped:
 		drawQueuedEnterCase(self, inputLine, history, scenario)
@@ -14015,7 +14044,10 @@ func drawQueuedEnterCase(self *App, inputLine *edit.Input, history *edit.History
 		queuedAltSwapped:           {message: "and mention what you find", modifier: key.Alt, interruptOnEnter: true},
 		queuedSlashEnterDefault:    {message: "/unknown"},
 		queuedSlashEnterSwapped:    {message: "/unknown", interruptOnEnter: true},
+		queuedKnownCommandDefault:  {message: "/help"},
 		queuedKnownCommandSwapped:  {message: "/help", interruptOnEnter: true},
+		queuedSnippetEnterDefault:  {message: "//add review the other path"},
+		queuedSnippetEnterSwapped:  {message: "//add review the other path", interruptOnEnter: true},
 		queuedLiteralSlashDefault:  {message: "/unknown", modifier: key.Alt},
 		queuedLiteralSlashSwapped:  {message: "/unknown", modifier: key.Alt, interruptOnEnter: true},
 		queuedPathEnterDefault:     {message: "/tmp/file"},

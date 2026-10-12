@@ -806,6 +806,7 @@ func (self *App) acceptInput(inputLine *edit.Input, history *edit.History) bool 
 	case dispatch.Handled:
 		history.Add(message)
 		inputLine.Reset()
+		return true
 	case dispatch.Proceed:
 		self.submitInput(inputLine, history, message)
 		return true
