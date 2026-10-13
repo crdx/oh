@@ -17,7 +17,7 @@ start a subagent and steer it
 ## Tool calls · +0s
 
 ```
-subagent: 1 subagent · codex/gpt-5.6-sol@medium [ok, 1 line, 41B, toolu_1]
+subagent: subagent · codex/gpt-5.6-sol@medium [ok, 1 line, 41B, toolu_1]
 ```
 
 ## Subagent started · tame-adder · +0s

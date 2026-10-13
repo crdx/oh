@@ -157,7 +157,7 @@ func TestSendWithoutANameReachesEveryRunningAgent(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if rendering := parsed.Rendering(); rendering.Subject != "every running subagent" || rendering.Mentions != nil {
+	if rendering := parsed.Rendering(); rendering.Subject != "all" || rendering.Mentions != nil {
 		t.Errorf("a broadcast was drawn as %+v", rendering)
 	}
 	result, err := parsed.Exec(context.Background())
@@ -268,7 +268,7 @@ func TestAStartRowShowsSelectionsBeforeItsIntents(t *testing.T) {
 			"2 subagents · anthropic/claude-opus-5, anthropic/claude-opus-5 · Reading the readme, Finding the parser",
 			"",
 		},
-		{`{"action":"start","subagents":[{"model":"anthropic/claude-opus-5","prompt":"x","intent":"Reading the readme"}]}`, "1 subagent · anthropic/claude-opus-5", "Reading the readme"},
+		{`{"action":"start","subagents":[{"model":"anthropic/claude-opus-5","prompt":"x","intent":"Reading the readme"}]}`, "subagent · anthropic/claude-opus-5", "Reading the readme"},
 	} {
 		parsed, err := built.Parse(test.input)
 		if err != nil {

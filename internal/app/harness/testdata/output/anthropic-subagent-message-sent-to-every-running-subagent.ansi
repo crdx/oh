@@ -10,7 +10,7 @@
 \e[48;2;48;58;67m    The readme is one heading.                                                                      \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \r
-\e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0msend\e[0m\e]8;;\e\\ \e[38;2;192;128;80mevery running subagent\e[0m\r
+\e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0msend\e[0m\e]8;;\e\\ \e[38;2;192;128;80mall\e[0m\r
 \r
 The two still running have the message.\r
 \r

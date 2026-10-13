@@ -17,7 +17,7 @@ start a long subagent
 ## Tool calls · +0s
 
 ```
-subagent: 1 subagent · codex/gpt-5.6-sol@medium [ok, 1 line, 41B, toolu_1]
+subagent: subagent · codex/gpt-5.6-sol@medium [ok, 1 line, 41B, toolu_1]
 ```
 
 ## Assistant · +0s

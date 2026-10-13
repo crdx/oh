@@ -148,7 +148,7 @@ func Describe(args Args) tool.CallRendering {
 		rendering.Subject = args.Name
 		rendering.Mentions = mentions([]string{args.Name})
 		if args.Name == "" {
-			rendering.Subject = "every running subagent"
+			rendering.Subject = "all"
 			rendering.Mentions = nil
 		}
 	case List:
@@ -176,9 +176,9 @@ func broadcast(ctx context.Context, manager Manager, message string) (string, er
 func startSubject(args Args) string {
 	if len(args.Subagents) == 1 {
 		if args.Subagents[0].Model != "" {
-			return "1 subagent · " + args.Subagents[0].Model
+			return "subagent · " + args.Subagents[0].Model
 		}
-		return "1 subagent"
+		return "subagent"
 	}
 	subject := fmt.Sprintf("%d subagents", len(args.Subagents))
 	if len(args.Subagents) == 0 {

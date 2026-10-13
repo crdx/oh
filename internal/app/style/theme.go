@@ -203,6 +203,7 @@ var defaultTheme = Theme{
 				"status": {Paint: "normal"},
 				"output": {Name: "cat", Paint: "normal"},
 				"list":   {Paint: "normal"},
+				"models": {Name: "list", Paint: "normal"},
 			},
 		},
 		"wait": {Default: ToolAppearance{Name: "wait", Paint: "normal"}},

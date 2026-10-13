@@ -480,7 +480,7 @@ func (self *Manager) Broadcast(ctx context.Context, message string) ([]string, e
 		}
 	}
 	if len(queuedNames) == 0 {
-		return nil, errors.New("no subagent is running, so there is nobody to send it to")
+		return nil, errors.New("no subagent is running; send one a message by name to wake it up")
 	}
 	return queuedNames, nil
 }

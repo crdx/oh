@@ -20,6 +20,6 @@ tame-alpaca named the build tool; tame-adder stopped when subagents went.
  start one more subagent
 
 
-Naming the tool that runs tests spawn 1 subagent · anthropic/cl… ✗ subagents unavailable; ctrl+x s …
+Naming the tool that runs tests spawn subagent · anthropic/clau… ✗ subagents unavailable; ctrl+x s …
 
 Subagents are refused until you grant them with ctrl+x s.

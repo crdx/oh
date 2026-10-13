@@ -73,7 +73,7 @@ start one more subagent
 ## Tool calls · +0s
 
 ```
-subagent: 1 subagent · codex/gpt-5.6-sol@medium [error, 1 line, 43B, toolu_2]
+subagent: subagent · codex/gpt-5.6-sol@medium [error, 1 line, 43B, toolu_2]
 ```
 
 ## Assistant · +0s

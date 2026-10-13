@@ -17,7 +17,7 @@ exercise every subagent action
 ## Tool calls · +0s
 
 ```
-subagent: 1 subagent · anthropic/claude-opus-5@medium [ok, 1 line, 41B, toolu_1]
+subagent: subagent · anthropic/claude-opus-5@medium [ok, 1 line, 41B, toolu_1]
 ```
 
 ## Subagent started · tame-adder · +0s
@@ -41,8 +41,9 @@ subagent: tame-nobody [error, 1 line, 29B, toolu_8]
 subagent: 0 subagents [error, toolu_9]
 subagent: subagents [error, toolu_10]
 subagent: tame-nobody [error, 1 line, 29B, toolu_12]
-subagent: 1 subagent · anthropic/claude-opus-5@medium [error, 1 line, 43B, toolu_13]
+subagent: subagent · anthropic/claude-opus-5@medium [error, 1 line, 43B, toolu_13]
 subagent: all [error, 1 line, 22B, toolu_14]
+subagent: all [error, 1 line, 64B, toolu_16]
 ```
 
 ## Assistant · +0s

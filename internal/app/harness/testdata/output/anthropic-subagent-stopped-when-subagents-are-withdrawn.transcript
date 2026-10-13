@@ -73,7 +73,7 @@ start one more subagent
 ## Tool calls · +0s
 
 ```
-subagent: 1 subagent · anthropic/claude-opus-5@medium [error, 1 line, 43B, toolu_2]
+subagent: subagent · anthropic/claude-opus-5@medium [error, 1 line, 43B, toolu_2]
 ```
 
 ## Assistant · +0s

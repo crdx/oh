@@ -10,7 +10,7 @@ spawn 3 subagents · anthropic/claude-opus-5@medium, anthropic/claude-opus-5@med
     The readme is one heading.
 
 
-send every running subagent
+send all
 
 The two still running have the message.
 

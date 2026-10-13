@@ -10,7 +10,7 @@ spawn 3 subagents · codex/gpt-5.6-sol@medium, codex/gpt-5.6-sol@medium, codex/g
     The readme is one heading.
 
 
-send every running subagent
+send all
 
 The two still running have the message.
 

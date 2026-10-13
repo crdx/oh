@@ -1168,7 +1168,7 @@ func TestABroadcastReachesEveryRunningChildAndNoOther(t *testing.T) {
 	open(finished)
 	untilFinished(t, manager, 1)
 	untilSettled(t, manager, finished)
-	if _, err := manager.Broadcast(t.Context(), "anyone?"); err == nil || !strings.Contains(err.Error(), "no subagent is running") {
+	if _, err := manager.Broadcast(t.Context(), "anyone?"); err == nil || err.Error() != "no subagent is running; send one a message by name to wake it up" {
 		t.Errorf("a broadcast with nobody running came back %v", err)
 	}
 	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "second"}, {Model: "anthropic/claude-opus-5", Prompt: "third"}}); err != nil {

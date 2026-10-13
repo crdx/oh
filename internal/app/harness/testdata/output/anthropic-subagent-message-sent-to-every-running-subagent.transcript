@@ -53,7 +53,7 @@ tame-adder done (unverified: check what matters before relying on it; its /tmp i
 ## Tool calls · +0s
 
 ```
-subagent: every running subagent [ok, 1 line, 39B, toolu_2]
+subagent: all [ok, 1 line, 39B, toolu_2]
 ```
 
 ## Assistant · +0s

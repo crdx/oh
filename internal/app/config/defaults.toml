@@ -118,6 +118,7 @@ stop = {}
 status = { paint = "normal" }
 output = { name = "cat", paint = "normal" }
 list = { paint = "normal" }
+models = { name = "list", paint = "normal" }
 
 [ui.theme.tool.wait]
 default = { name = "wait", paint = "normal" }

@@ -2,7 +2,7 @@
 {"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"exercise every subagent action"}}
-{"kind":"event","event":{"rendering_kind":"subagent_start","render":"1 subagent · codex/gpt-5.6-sol@medium","intent":"Watching the build until stopped","reports_status":true,"kind":"tool_call_request","id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Watch the build forever\",\"intent\":\"Watching the build until stopped\"}]}"}}
+{"kind":"event","event":{"rendering_kind":"subagent_start","render":"subagent · codex/gpt-5.6-sol@medium","intent":"Watching the build until stopped","reports_status":true,"kind":"tool_call_request","id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Watch the build forever\",\"intent\":\"Watching the build until stopped\"}]}"}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"started tame-adder; 1/5 subagents running","id":"toolu_1","name":"subagent","status":"success","stats":{"kind":"output","lines":1,"bytes":41}}}
 {"kind":"event","event":{"kind":"subagent_started","subagent":"tame-adder","text":"Watch the build forever","id":"session-of-tame-adder","state":{"choice":{"provider":"codex","id":"gpt-5.6-sol","name":"GPT-5.6 Sol","efforts":["medium"]},"workspace":"/workspace","intent":"Watching the build until stopped"}}}
 {"kind":"event","event":{"rendering_kind":"subagent_list","render":"subagents","kind":"tool_call_request","id":"toolu_2","name":"subagent","arguments":"{\"action\":\"list\"}"}}
@@ -29,10 +29,12 @@
 {"kind":"event","event":{"kind":"tool_call_result","text":"list takes no names","id":"toolu_10","name":"subagent","status":"error"}}
 {"kind":"event","event":{"rendering_kind":"subagent_send","render":"tame-nobody","mentions":["subagent:tame-nobody"],"reports_status":true,"kind":"tool_call_request","id":"toolu_12","name":"subagent","arguments":"{\"action\":\"send\",\"name\":\"tame-nobody\",\"message\":\"Hello\"}"}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"no subagent named tame-nobody","id":"toolu_12","name":"subagent","status":"error","stats":{"kind":"output","lines":1,"bytes":29}}}
-{"kind":"event","event":{"rendering_kind":"subagent_start","render":"1 subagent · codex/gpt-5.6-sol@medium","intent":"Reading the secrets it cannot reach","reports_status":true,"kind":"tool_call_request","id":"toolu_13","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Read the secrets\",\"intent\":\"Reading the secrets it cannot reach\",\"workspace\":\"/unreadable\"}]}"}}
+{"kind":"event","event":{"rendering_kind":"subagent_start","render":"subagent · codex/gpt-5.6-sol@medium","intent":"Reading the secrets it cannot reach","reports_status":true,"kind":"tool_call_request","id":"toolu_13","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Read the secrets\",\"intent\":\"Reading the secrets it cannot reach\",\"workspace\":\"/unreadable\"}]}"}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"/unreadable is not a directory you can read","id":"toolu_13","name":"subagent","status":"error","stats":{"kind":"output","lines":1,"bytes":43}}}
 {"kind":"event","event":{"rendering_kind":"subagent_stop","render":"all","reports_status":true,"kind":"tool_call_request","id":"toolu_14","name":"subagent","arguments":"{\"action\":\"stop\"}"}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"no subagent is running","id":"toolu_14","name":"subagent","status":"error","stats":{"kind":"output","lines":1,"bytes":22}}}
+{"kind":"event","event":{"rendering_kind":"subagent_send","render":"all","reports_status":true,"kind":"tool_call_request","id":"toolu_16","name":"subagent","arguments":"{\"action\":\"send\",\"message\":\"Anyone there?\"}"}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"no subagent is running; send one a message by name to wake it up","id":"toolu_16","name":"subagent","status":"error","stats":{"kind":"output","lines":1,"bytes":64}}}
 {"kind":"event","event":{"kind":"model_message","text":"Every action answered."}}
 {"kind":"item","payload":{"role":"user","content":"exercise every subagent action"}}
 {"kind":"item","payload":{"id":"call-item-26","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Watch the build forever\",\"intent\":\"Watching the build until stopped\"}]}"}}
@@ -65,6 +67,8 @@
 {"kind":"item","payload":{"type":"function_call_output","call_id":"toolu_13","output":"/unreadable is not a directory you can read"}}
 {"kind":"item","payload":{"id":"call-item-94","type":"function_call","call_id":"toolu_14","name":"subagent","arguments":"{\"action\":\"stop\"}"}}
 {"kind":"item","payload":{"type":"function_call_output","call_id":"toolu_14","output":"no subagent is running"}}
+{"kind":"item","payload":{"id":"call-item-96","type":"function_call","call_id":"toolu_16","name":"subagent","arguments":"{\"action\":\"send\",\"message\":\"Anyone there?\"}"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"toolu_16","output":"no subagent is running; send one a message by name to wake it up"}}
 {"kind":"item","payload":{"id":"message-36","type":"message","role":"assistant","content":[{"type":"output_text","text":"Every action answered."}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"subagent_message_sent","subagent":"tame-adder","text":"Stop watching"}}

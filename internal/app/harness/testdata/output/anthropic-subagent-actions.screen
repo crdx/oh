@@ -2,7 +2,7 @@
  exercise every subagent action
 
 
-Watching the build until stopped spawn 1 subagent · anthropic/claude-opus-5@medium
+Watching the build until stopped spawn subagent · anthropic/claude-opus-5@medium
 list subagents 1L
 status all
 cat tame-adder 1L (Watching the build until stopped)
@@ -15,8 +15,9 @@ status tame-nobody ✗ no subagent named tame-nobody
 spawn 0 subagents ✗ start requires a nonempty subagents list
 list subagents ✗ list takes no names
 send tame-nobody ✗ no subagent named tame-nobody
-Reading the secrets it cannot reach spawn 1 subagent · anthropic/… ✗ /unreadable is not a directory…
+Reading the secrets it cannot reach spawn subagent · anthropic/cl… ✗ /unreadable is not a directory…
 stop all ✗ no subagent is running
+send all ✗ no subagent is running; send one a message by name to wake it up
 
 Every action answered.
 

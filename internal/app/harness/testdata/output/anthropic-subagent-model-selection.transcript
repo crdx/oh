@@ -18,10 +18,10 @@ list valid subagent models, reject missing and ineligible selections, then choos
 
 ```
 subagent: models [ok, 3 lines, 178B, toolu_1]
-subagent: 1 subagent [error, toolu_2]
-subagent: 1 subagent · anthropic/claude-opus-5-5@high [error, 1 line, 109B, toolu_3]
-subagent: 1 subagent · anthropic/claude-haiku-5-5@medium+fast [error, toolu_fast]
-subagent: 1 subagent · anthropic/claude-haiku-5-5@medium [ok, 1 line, 41B, toolu_4]
+subagent: subagent [error, toolu_2]
+subagent: subagent · anthropic/claude-opus-5-5@high [error, 1 line, 109B, toolu_3]
+subagent: subagent · anthropic/claude-haiku-5-5@medium+fast [error, toolu_fast]
+subagent: subagent · anthropic/claude-haiku-5-5@medium [ok, 1 line, 41B, toolu_4]
 ```
 
 ## Assistant · +0s
