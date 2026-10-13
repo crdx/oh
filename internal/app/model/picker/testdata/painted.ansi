@@ -7,8 +7,8 @@
   Anthropic     Opus 5                        high          200K      $35.05     $15.00     $75.00  \e[38;2;150;152;150mclaude-opus-5\e[0m\e[K\r
   Codex         Sol Pro                       medium        272K    $2595.18    $150.00    $600.00  \e[38;2;150;152;150mgpt-5.3-sol-pro\e[0m\e[K\r
   OpenCode Go   MiniMax M3                    —               1M       $5.19      $0.30      $1.20  \e[38;2;150;152;150mminimax-m3\e[0m\e[K\r
+  OpenCode Go   Step Preview Free 5           high          256K       $0.00      $0.00      $0.00  \e[38;2;150;152;150mstep-5-preview-free\e[0m\e[K\r
   Ollama        Qwen Coder 3 30B              medium           —           —          —          —  \e[38;2;150;152;150mqwen3-coder:30b\e[0m\e[K\r
-\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -32,8 +32,8 @@
   Anthropic     Opus 5                        high          200K  \e[38;2;150;152;150mclaude-opus-5\e[0m\e[K\r
   Codex         Sol Pro                       medium        272K  \e[38;2;150;152;150mgpt-5.3-sol-p…\e[0m\e[K\r
   OpenCode Go   MiniMax M3                    —               1M  \e[38;2;150;152;150mminimax-m3\e[0m\e[K\r
+  OpenCode Go   Step Preview Free 5           high          256K  \e[38;2;150;152;150mstep-5-previe…\e[0m\e[K\r
   Ollama        Qwen Coder 3 30B              medium           —  \e[38;2;150;152;150mqwen3-coder:3…\e[0m\e[K\r
-\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -61,8 +61,8 @@
   Anthropic     Opus 5                       …\e[K\r
   Codex         Sol Pro                      …\e[K\r
   OpenCode Go   MiniMax M3                   …\e[K\r
+  OpenCode Go   Step Preview Free 5          …\e[K\r
   Ollama        Qwen Coder 3 30B             …\e[K\r
-\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r
@@ -82,7 +82,7 @@
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context  Identifier\e[0m\e[0m\e[K\r
 \e[38;2;192;128;80m› OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M  \e[38;2;150;152;150mdeepseek-v4-f…\e[0m\e[K\r
   OpenCode Go   MiniMax M3                    —               1M  \e[38;2;150;152;150mminimax-m3\e[0m\e[K\r
-\e[K\r
+  OpenCode Go   Step Preview Free 5           high          256K  \e[38;2;150;152;150mstep-5-previe…\e[0m\e[K\r
 \e[K\r
 \e[K\r
 \e[K\r

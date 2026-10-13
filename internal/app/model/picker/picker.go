@@ -132,8 +132,8 @@ func (self *modelList) Sort(indexes []int) {
 	slices.SortStableFunc(indexes, func(firstIndex, secondIndex int) int {
 		first := self.models[firstIndex].Prices
 		second := self.models[secondIndex].Prices
-		isFirstKnown := first != nil && first.IsKnown()
-		isSecondKnown := second != nil && second.IsKnown()
+		isFirstKnown := first != nil
+		isSecondKnown := second != nil
 		switch {
 		case isFirstKnown && !isSecondKnown:
 			return -1
@@ -264,7 +264,7 @@ func contextWindow(tokens int) string {
 }
 
 func estimatedCost(prices *agent.TokenPrices, currency money.Currency) string {
-	if prices == nil || !prices.IsKnown() {
+	if prices == nil {
 		return unknownQuantity
 	}
 
@@ -280,7 +280,7 @@ func outputRate(prices agent.TokenPrices) float64 {
 }
 
 func price(prices *agent.TokenPrices, currency money.Currency, rate func(agent.TokenPrices) float64) string {
-	if prices == nil || !prices.IsKnown() {
+	if prices == nil {
 		return unknownQuantity
 	}
 

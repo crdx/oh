@@ -479,12 +479,16 @@ func TestEveryListedPriceIsReadFromTheCacheEvenWhenTheModelCannotBeChosen(t *tes
 	err := StoreSimulated(path, AnthropicProvider, []agent.Model{
 		{ID: "claude-sonnet-4-6", Prices: &prices},
 		{ID: "claude-haiku-4-6"},
+		{ID: "quoted-free", Prices: &agent.TokenPrices{}},
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	want := []PricedModel{{Provider: AnthropicProvider, ID: "claude-sonnet-4-6", Prices: prices}}
+	want := []PricedModel{
+		{Provider: AnthropicProvider, ID: "claude-sonnet-4-6", Prices: prices},
+		{Provider: AnthropicProvider, ID: "quoted-free"},
+	}
 	if got := ListedPrices(path); !reflect.DeepEqual(got, want) {
 		t.Errorf("got %#v, want %#v", got, want)
 	}

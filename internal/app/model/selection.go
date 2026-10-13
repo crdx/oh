@@ -93,7 +93,7 @@ func ListedPrices(path string) []PricedModel {
 		}
 
 		for _, listedModel := range listing.Models {
-			if listedModel.ID == "" || listedModel.Prices == nil || !listedModel.Prices.IsKnown() {
+			if listedModel.ID == "" || listedModel.Prices == nil {
 				continue
 			}
 

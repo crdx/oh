@@ -1,5 +1,6 @@
 --- 0 columns ---
   Provider      Model                         Effort     Context      Cost ↑      Input     Output  Identifier
+  OpenCode Go   Step Preview Free 5           high          256K       $0.00      $0.00      $0.00  step-5-preview-free
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       $1.30      $0.08      $0.30  deepseek-v4-flash-vision-exp
   Codex         Codex 5.3                     medium ⚡     272K       $3.01      $1.25     $10.00  gpt-5.3-codex
   OpenCode Go   MiniMax M3                    —               1M       $5.19      $0.30      $1.20  minimax-m3
@@ -10,6 +11,7 @@
 
 --- 100 columns ---
   Provider      Model                         Effort     Context      Cost ↑  Identifier
+  OpenCode Go   Step Preview Free 5           high          256K       $0.00  step-5-preview-free
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       $1.30  deepseek-v4-flash-vis…
   Codex         Codex 5.3                     medium ⚡     272K       $3.01  gpt-5.3-codex
   OpenCode Go   MiniMax M3                    —               1M       $5.19  minimax-m3
@@ -20,6 +22,7 @@
 
 --- 46 columns ---
   Provider      Model                        …
+  OpenCode Go   Step Preview Free 5          …
   OpenCode Go   DeepSeek Flash Vision Exp 4  …
   Codex         Codex 5.3                    …
   OpenCode Go   MiniMax M3                   …

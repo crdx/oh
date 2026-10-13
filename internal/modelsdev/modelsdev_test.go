@@ -81,7 +81,11 @@ func TestFetchTakesThePriceOfEachTokenKind(t *testing.T) {
 			"anthropic": {"models": {
 				"priced": {"cost": {"input": 3, "output": 15, "cache_read": 0.3, "cache_write": 3.75}},
 				"free": {"cost": {"input": 0, "output": 0}},
-				"unpriced": {}
+				"unpriced": {},
+				"empty-cost": {"cost": {}},
+				"partial-zero": {"cost": {"input": 0}},
+				"null-cost": {"cost": null},
+				"negative-cost": {"cost": {"input": -1, "output": -2}}
 			}}
 		}`))
 	}))
@@ -102,11 +106,13 @@ func TestFetchTakesThePriceOfEachTokenKind(t *testing.T) {
 		t.Errorf("got %+v", *prices)
 	}
 
-	if anthropic["free"].Prices != nil {
-		t.Error("expected a model costing nothing to carry no prices")
+	if prices := anthropic["free"].Prices; prices == nil || *prices != (agent.TokenPrices{}) {
+		t.Errorf("expected an explicit zero quote for a free model, got %+v", prices)
 	}
-	if anthropic["unpriced"].Prices != nil {
-		t.Error("expected a model without costs to carry no prices")
+	for _, name := range []string{"unpriced", "empty-cost", "partial-zero", "null-cost", "negative-cost"} {
+		if anthropic[name].Prices != nil {
+			t.Errorf("%s: an absent or invalid quote became %+v", name, anthropic[name].Prices)
+		}
 	}
 }
 

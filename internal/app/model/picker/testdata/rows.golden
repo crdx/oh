@@ -6,6 +6,7 @@
   Anthropic     Opus 5                        high          200K      $35.05     $15.00     $75.00  [38;2;150;152;150mclaude-opus-5[0m
   Codex         Sol Pro                       medium        272K    $2595.18    $150.00    $600.00  [38;2;150;152;150mgpt-5.3-sol-pro[0m
   OpenCode Go   MiniMax M3                    —               1M       $5.19      $0.30      $1.20  [38;2;150;152;150mminimax-m3[0m
+  OpenCode Go   Step Preview Free 5           high          256K       $0.00      $0.00      $0.00  [38;2;150;152;150mstep-5-preview-free[0m
   Ollama        Qwen Coder 3 30B              medium           —           —          —          —  [38;2;150;152;150mqwen3-coder:30b[0m
 
 --- 100 columns ---
@@ -16,6 +17,7 @@
   Anthropic     Opus 5                        high          200K      $35.05  [38;2;150;152;150mclaude-opus-5[0m
   Codex         Sol Pro                       medium        272K    $2595.18  [38;2;150;152;150mgpt-5.3-sol-pro[0m
   OpenCode Go   MiniMax M3                    —               1M       $5.19  [38;2;150;152;150mminimax-m3[0m
+  OpenCode Go   Step Preview Free 5           high          256K       $0.00  [38;2;150;152;150mstep-5-preview-free[0m
   Ollama        Qwen Coder 3 30B              medium           —           —  [38;2;150;152;150mqwen3-coder:30b[0m
 
 --- 80 columns ---
@@ -26,6 +28,7 @@
   Anthropic     Opus 5                        high          200K  [38;2;150;152;150mclaude-opus-5[0m
   Codex         Sol Pro                       medium        272K  [38;2;150;152;150mgpt-5.3-sol-p…[0m
   OpenCode Go   MiniMax M3                    —               1M  [38;2;150;152;150mminimax-m3[0m
+  OpenCode Go   Step Preview Free 5           high          256K  [38;2;150;152;150mstep-5-previe…[0m
   Ollama        Qwen Coder 3 30B              medium           —  [38;2;150;152;150mqwen3-coder:3…[0m
 
 --- 46 columns ---
@@ -36,6 +39,7 @@
   Anthropic     Opus 5                       …
   Codex         Sol Pro                      …
   OpenCode Go   MiniMax M3                   …
+  OpenCode Go   Step Preview Free 5          …
   Ollama        Qwen Coder 3 30B             …
 
 --- 150 columns in pounds ---
@@ -45,4 +49,5 @@
   Anthropic     Opus 5                        high          200K      £28.04     £12.00     £60.00  [38;2;150;152;150mclaude-opus-5[0m
   Codex         Sol Pro                       medium        272K    £2076.14    £120.00    £480.00  [38;2;150;152;150mgpt-5.3-sol-pro[0m
   OpenCode Go   MiniMax M3                    —               1M       £4.15      £0.24      £0.96  [38;2;150;152;150mminimax-m3[0m
+  OpenCode Go   Step Preview Free 5           high          256K       £0.00      £0.00      £0.00  [38;2;150;152;150mstep-5-preview-free[0m
   Ollama        Qwen Coder 3 30B              medium           —           —          —          —  [38;2;150;152;150mqwen3-coder:30b[0m

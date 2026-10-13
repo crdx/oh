@@ -1,5 +1,6 @@
 --- 97 columns ---
 [4m[38;2;150;152;150m  Provider      Model                         Effort     Context  Identifier[0m[0m
+  OpenCode Go   Step Preview Free 5           high          256K  [38;2;150;152;150mstep-5-preview-free[0m
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M  [38;2;150;152;150mdeepseek-v4-flash-vision-exp[0m
   Codex         Codex 5.3                     medium ⚡     272K  [38;2;150;152;150mgpt-5.3-codex[0m
   OpenCode Go   MiniMax M3                    —               1M  [38;2;150;152;150mminimax-m3[0m
@@ -9,6 +10,7 @@
   Ollama        Qwen Coder 3 30B              medium           —  [38;2;150;152;150mqwen3-coder:30b[0m
 --- 98 columns ---
 [4m[38;2;150;152;150m  Provider      Model                         Effort     Context      Cost ↑  Identifier[0m[0m
+  OpenCode Go   Step Preview Free 5           high          256K       $0.00  [38;2;150;152;150mstep-5-preview-free[0m
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       $1.30  [38;2;150;152;150mdeepseek-v4-flash-v…[0m
   Codex         Codex 5.3                     medium ⚡     272K       $3.01  [38;2;150;152;150mgpt-5.3-codex[0m
   OpenCode Go   MiniMax M3                    —               1M       $5.19  [38;2;150;152;150mminimax-m3[0m
@@ -18,6 +20,7 @@
   Ollama        Qwen Coder 3 30B              medium           —           —  [38;2;150;152;150mqwen3-coder:30b[0m
 --- 127 columns ---
 [4m[38;2;150;152;150m  Provider      Model                         Effort     Context      Cost ↑  Identifier[0m[0m
+  OpenCode Go   Step Preview Free 5           high          256K       $0.00  [38;2;150;152;150mstep-5-preview-free[0m
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       $1.30  [38;2;150;152;150mdeepseek-v4-flash-vision-exp[0m
   Codex         Codex 5.3                     medium ⚡     272K       $3.01  [38;2;150;152;150mgpt-5.3-codex[0m
   OpenCode Go   MiniMax M3                    —               1M       $5.19  [38;2;150;152;150mminimax-m3[0m
@@ -27,6 +30,7 @@
   Ollama        Qwen Coder 3 30B              medium           —           —  [38;2;150;152;150mqwen3-coder:30b[0m
 --- 128 columns ---
 [4m[38;2;150;152;150m  Provider      Model                         Effort     Context      Cost ↑      Input     Output  Identifier[0m[0m
+  OpenCode Go   Step Preview Free 5           high          256K       $0.00      $0.00      $0.00  [38;2;150;152;150mstep-5-preview-free[0m
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       $1.30      $0.08      $0.30  [38;2;150;152;150mdeepseek-v4-flash-vision-exp[0m
   Codex         Codex 5.3                     medium ⚡     272K       $3.01      $1.25     $10.00  [38;2;150;152;150mgpt-5.3-codex[0m
   OpenCode Go   MiniMax M3                    —               1M       $5.19      $0.30      $1.20  [38;2;150;152;150mminimax-m3[0m

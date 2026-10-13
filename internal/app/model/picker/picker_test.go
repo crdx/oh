@@ -122,6 +122,16 @@ func availableModels() []*Model {
 			Prices:              &agent.TokenPrices{Input: 0.3, Output: 1.2},
 		},
 		{
+			Provider:            "OpenCode Go",
+			ProviderID:          "opencode-go",
+			Name:                "Step Preview Free 5",
+			ID:                  "step-5-preview-free",
+			EffortLevels:        levels("high"),
+			Effort:              Effort{Level: "high"},
+			ContextWindowTokens: 256000,
+			Prices:              &agent.TokenPrices{},
+		},
+		{
 			Provider:            "Ollama",
 			ProviderID:          "ollama",
 			Name:                "Qwen Coder 3 30B",
@@ -292,8 +302,8 @@ func TestCostSortingUsesUnroundedEstimatesAndLeavesUnknownPricesLast(t *testing.
 		{Prices: &agent.TokenPrices{Input: 2, Output: 10, CacheRead: 0.1}},
 	}}
 	for _, want := range [][]int{
-		{5, 4, 1, 6, 0, 2, 3},
-		{0, 1, 6, 4, 5, 2, 3},
+		{3, 5, 4, 1, 6, 0, 2},
+		{0, 1, 6, 4, 5, 3, 2},
 		{0, 1, 2, 3, 4, 5, 6},
 	} {
 		rows.CycleSort()
@@ -405,9 +415,21 @@ func TestTheCostColumnFitsSmallEstimatesInEveryCurrency(t *testing.T) {
 }
 
 func TestAnUnknownCostIsADashRatherThanAnEstimate(t *testing.T) {
-	for _, prices := range []*agent.TokenPrices{nil, {}} {
-		if got := estimatedCost(prices, money.Dollar()); got != unknownQuantity {
-			t.Errorf("got %q, want a dash", got)
+	if got := estimatedCost(nil, money.Dollar()); got != unknownQuantity {
+		t.Errorf("got %q, want a dash", got)
+	}
+}
+
+func TestFreeModelsShowZeroInEveryPriceColumn(t *testing.T) {
+	prices := &agent.TokenPrices{}
+	pounds := money.In("GBP", 0.8)
+	for name, got := range map[string]string{
+		"estimated cost": estimatedCost(prices, pounds),
+		"input":          price(prices, pounds, inputRate),
+		"output":         price(prices, pounds, outputRate),
+	} {
+		if got != "£0.00" {
+			t.Errorf("%s: got %q, want £0.00", name, got)
 		}
 	}
 }

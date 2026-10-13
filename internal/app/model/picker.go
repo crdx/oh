@@ -11,6 +11,7 @@ import (
 	"crdx.org/oh/internal/app/model/picker"
 	"crdx.org/oh/internal/app/tty"
 	"crdx.org/oh/internal/money"
+	"crdx.org/oh/pkg/agent"
 )
 
 var ErrNotLoggedIn = errors.New("not logged in to any provider: run oh -L to sign in")
@@ -122,6 +123,11 @@ func offered(choices []Choice, defaults Defaults) []*picker.Model {
 			effort = efforts[0]
 		}
 
+		prices := choice.Prices
+		if prices == nil && choice.IsGoQuotaExempt() {
+			prices = &agent.TokenPrices{}
+		}
+
 		models = append(models, &picker.Model{
 			Provider:            ProviderName(choice.Provider),
 			ProviderID:          choice.Provider,
@@ -130,7 +136,7 @@ func offered(choices []Choice, defaults Defaults) []*picker.Model {
 			EffortLevels:        effortLadder(efforts, SupportsFastMode(choice.Provider)),
 			Effort:              picker.Effort{Level: effort, IsFast: defaults.IsFastFor(choice.Provider)},
 			ContextWindowTokens: choice.ContextWindowTokens,
-			Prices:              choice.Prices,
+			Prices:              prices,
 		})
 	}
 

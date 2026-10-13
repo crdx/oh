@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"slices"
+	"strings"
 	"testing"
 	"time"
 
@@ -43,6 +44,69 @@ func TestAModelIsOfferedAtTheEffortNearestTheOneWanted(t *testing.T) {
 	}
 	if offers[0].Provider != "Codex" || offers[0].ProviderID != "codex" {
 		t.Errorf("expected the provider named for a person, got %q of %q", offers[0].Provider, offers[0].ProviderID)
+	}
+}
+
+func TestFreeGoModelsCarryZeroPricesWithoutMakingUnquotedModelsFree(t *testing.T) {
+	free := &agent.TokenPrices{}
+	paid := &agent.TokenPrices{Input: 1}
+	for name, test := range map[string]struct {
+		choice Choice
+		want   *agent.TokenPrices
+	}{
+		"free suffix": {
+			choice: Choice{Provider: OpencodeGoProvider, ID: "preview-free"},
+			want:   free,
+		},
+		"quoted zero": {
+			choice: Choice{Provider: OpencodeGoProvider, ID: "zero-price", Prices: free},
+			want:   free,
+		},
+		"free suffix with a paid quote": {
+			choice: Choice{Provider: OpencodeGoProvider, ID: "preview-free", Prices: paid},
+			want:   paid,
+		},
+		"unquoted hosted model": {
+			choice: Choice{Provider: OpencodeGoProvider, ID: "unquoted"},
+		},
+		"unquoted local model": {
+			choice: Choice{Provider: OllamaProvider, ID: "local-free"},
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			prices := offered([]Choice{test.choice}, Defaults{})[0].Prices
+			if test.want == nil {
+				if prices != nil {
+					t.Errorf("an unknown price became %+v", *prices)
+				}
+			} else if prices == nil || *prices != *test.want {
+				t.Errorf("got %+v, want %+v", prices, test.want)
+			}
+		})
+	}
+}
+
+func TestListingPutsANamedFreeGoModelBeforePaidAndUnpricedModels(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "models.json")
+	models := []agent.Model{
+		{ID: "paid", EffortLevels: []string{"high"}, MaxOutputTokens: 32000, Wire: agent.CompletionsWire, Prices: &agent.TokenPrices{Input: 1, Output: 4}},
+		{ID: "unpriced", EffortLevels: []string{"high"}, MaxOutputTokens: 32000, Wire: agent.CompletionsWire},
+		{ID: "step-5-preview-free", EffortLevels: []string{"high"}, MaxOutputTokens: 32000, Wire: agent.CompletionsWire},
+	}
+	if err := StoreSimulated(path, OpencodeGoProvider, models); err != nil {
+		t.Fatal(err)
+	}
+
+	var output strings.Builder
+	if err := List(&output, path, money.In("GBP", 0.8), everyoneSignedIn, Defaults{}, 0); err != nil {
+		t.Fatal(err)
+	}
+	text := output.String()
+	freeAt := strings.Index(text, "step-5-preview-free")
+	paidAt := strings.Index(text, "paid")
+	unknownAt := strings.Index(text, "unpriced")
+	if freeAt < 0 || paidAt <= freeAt || unknownAt <= paidAt || !strings.Contains(text, "£0.00") {
+		t.Errorf("free, paid and unpriced offers were not listed in cost order:\n%s", text)
 	}
 }
 

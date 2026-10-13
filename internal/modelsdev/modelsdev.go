@@ -47,11 +47,11 @@ type entry struct {
 		MaxOutputTokens     int `json:"output"`
 	} `json:"limit"`
 
-	Cost struct {
-		Input      float64 `json:"input"`
-		Output     float64 `json:"output"`
-		CacheRead  float64 `json:"cache_read"`
-		CacheWrite float64 `json:"cache_write"`
+	Cost *struct {
+		Input      *float64 `json:"input"`
+		Output     *float64 `json:"output"`
+		CacheRead  float64  `json:"cache_read"`
+		CacheWrite float64  `json:"cache_write"`
 	} `json:"cost"`
 }
 
@@ -74,14 +74,21 @@ func (self entry) getEffortLevels() []string {
 }
 
 func (self entry) getPrices() *agent.TokenPrices {
+	if self.Cost == nil {
+		return nil
+	}
+
 	prices := agent.TokenPrices{
-		Input:      self.Cost.Input,
-		Output:     self.Cost.Output,
 		CacheRead:  self.Cost.CacheRead,
 		CacheWrite: self.Cost.CacheWrite,
 	}
-
-	if !prices.IsKnown() {
+	if self.Cost.Input != nil {
+		prices.Input = *self.Cost.Input
+	}
+	if self.Cost.Output != nil {
+		prices.Output = *self.Cost.Output
+	}
+	if !prices.IsKnown() && (prices != (agent.TokenPrices{}) || self.Cost.Input == nil || self.Cost.Output == nil) {
 		return nil
 	}
 

@@ -21,6 +21,7 @@
     ],
     "context": 262144,
     "output": 131072,
+    "prices": {},
     "wire": "completions"
   },
   {
