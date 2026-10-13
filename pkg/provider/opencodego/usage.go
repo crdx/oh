@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	EndpointURL      = "https://opencode.ai/zen/go/v1/chat/completions"
-	UsageEndpointURL = "https://opencode.ai/zen/go/v1/usage"
+	EndpointURL      = "https://opencode.ai/inference/go/v1/chat/completions"
+	UsageEndpointURL = "https://opencode.ai/inference/go/v1/usage"
 	UsagePage        = "https://opencode.ai/console/go"
 )
 

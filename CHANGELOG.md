@@ -2,6 +2,10 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+### Models and providers
+
+- Use the latest OpenCode Go endpoint
+
 ## [0.15.0] - 2026-10-13
 
 ### Security

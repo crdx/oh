@@ -26,8 +26,8 @@ func TestEveryOtherAddressStandsBesideTheCompletionsAddress(t *testing.T) {
 		suffix  string
 		want    string
 	}{
-		{"https://opencode.ai/zen/go/v1/chat/completions", responsesSuffix, "https://opencode.ai/zen/go/v1/responses"},
-		{"https://opencode.ai/zen/go/v1/chat/completions", messagesSuffix, "https://opencode.ai/zen/go/v1/messages"},
+		{"https://opencode.ai/inference/go/v1/chat/completions", responsesSuffix, "https://opencode.ai/inference/go/v1/responses"},
+		{"https://opencode.ai/inference/go/v1/chat/completions", messagesSuffix, "https://opencode.ai/inference/go/v1/messages"},
 		{"http://127.0.0.1:8000", responsesSuffix, "http://127.0.0.1:8000/responses"},
 	} {
 		if got := besideCompletions(test.address, test.suffix); got != test.want {
