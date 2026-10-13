@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Run the bar segment's git process inside the sandbox
 - Hide leading reasoning summary when conversational reasoning follows
 - Use OpenCode Zen info for missing OpenCode Go model data
 - Ignore Codex `ultra` delegation mode

@@ -39,6 +39,7 @@ import (
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/internal/money"
+	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/pkg/agent"
 )
 
@@ -133,7 +134,7 @@ func NewRegistry(options Options) segment.Registry {
 		turnTimerSegment:      turnTimer.New(options.Sources.GetTurnTiming, options.Sources.IsTurnRunning),
 		turnCountSegment:      turnCount.New(options.Sources.GetTurnCount),
 		gitBranchSegment:      gitBranch.New(options.Workspace.GetDir()),
-		gitStatusSegment:      gitStatus.New(options.Workspace.GetDir()),
+		gitStatusSegment:      gitStatus.New(options.Workspace.GetDir(), sandbox.ArgvFor(options.IsUnconfined)),
 		jobNamesSegment:       jobNames.New(options.Sources.GetJobs, options.Sources.GetForwardedRoutes, time.Now),
 		subagentCountsSegment: subagentCounts.New(options.Sources.GetSubagents, time.Now),
 		subUsageSegment: subUsage.New(subUsage.Settings{

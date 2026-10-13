@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"slices"
 	"strconv"
 	"strings"
 	"sync"
@@ -17,6 +18,8 @@ import (
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/segment/fit"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/util/pathutil"
 )
 
 var _ segment.Refresher = &state{}
@@ -56,6 +59,7 @@ type tree struct {
 type state struct {
 	workspaceDir string
 	rate         time.Duration
+	runner       sandbox.ArgvRunner
 
 	mutex        sync.Mutex
 	tree         tree
@@ -66,7 +70,7 @@ type state struct {
 	shouldRedraw bool
 }
 
-func New(workspaceDir string) segment.Factory {
+func New(workspaceDir string, runner sandbox.ArgvRunner) segment.Factory {
 	return func(options segment.Options) (segment.Segment, error) {
 		var args struct {
 			Rate time.Duration `toml:"rate"`
@@ -84,7 +88,7 @@ func New(workspaceDir string) segment.Factory {
 			args.Rate = defaultRate
 		}
 
-		return &state{workspaceDir: workspaceDir, rate: args.Rate}, nil
+		return &state{workspaceDir: workspaceDir, rate: args.Rate, runner: runner}, nil
 	}
 }
 
@@ -141,7 +145,7 @@ func (self *state) Ladder(segment.Context) []string {
 }
 
 func (self *state) read(gitDir string) {
-	current, err := readTree(self.workspaceDir, gitDir)
+	current, err := readTree(self.runner, self.workspaceDir, gitDir)
 
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
@@ -154,29 +158,102 @@ func (self *state) read(gitDir string) {
 	self.shouldRedraw = true
 }
 
-func readTree(workspaceDir string, gitDir string) (tree, error) {
+func readTree(runner sandbox.ArgvRunner, workspaceDir string, gitDir string) (tree, error) {
 	readingContext, stop := context.WithTimeout(context.Background(), readingTimeout)
 	defer stop()
 
-	command := exec.CommandContext(
-		readingContext,
-		"git",
-		"--no-optional-locks",
-		"status",
-		"--porcelain=v2",
-		"--branch",
-	)
-	command.Dir = workspaceDir
+	binary, err := exec.LookPath("git")
+	if err != nil {
+		return tree{}, fmt.Errorf("git is unavailable: %w", err)
+	}
+	binary, err = filepath.Abs(binary)
+	if err != nil {
+		return tree{}, err
+	}
 
-	output, err := command.Output()
+	policy := sandbox.Policy{
+		Read:    append(readablePaths(workspaceDir, gitDir), userConfigPaths()...),
+		Exec:    []string{binary},
+		Env:     []string{"LANG", "HOME", "XDG_CONFIG_HOME", "GIT_CONFIG_GLOBAL", "GIT_CONFIG_NOSYSTEM"},
+		Timeout: readingTimeout,
+	}
+	arguments := []string{binary, "--no-optional-locks", "status", "--porcelain=v2", "--branch"}
+
+	result, err := runner.RunArgv(readingContext, workspaceDir, arguments, policy)
 	if err != nil {
 		return tree{}, fmt.Errorf("git status failed: %w", err)
 	}
+	if result.ExitCode != 0 {
+		return tree{}, fmt.Errorf("git status failed with exit code %d", result.ExitCode)
+	}
 
-	current := parseStatus(output)
+	current := parseStatus([]byte(result.Output))
 	current.operation = operationIn(gitDir)
 
 	return current, nil
+}
+
+func readablePaths(workspaceDir string, gitDir string) []string {
+	paths := []string{filepath.Clean(workspaceDir)}
+	for _, path := range []string{gitDir, commonDir(gitDir)} {
+		if path == "" || !filepath.IsAbs(path) {
+			continue
+		}
+		path = filepath.Clean(path)
+		if _, err := os.Stat(path); err != nil || slices.ContainsFunc(paths, func(root string) bool {
+			_, isBeneath := pathutil.RelativeTo(root, path)
+			return isBeneath
+		}) {
+			continue
+		}
+		paths = append(paths, path)
+	}
+	return paths
+}
+
+func userConfigPaths() []string {
+	var candidates []string
+	configHome := os.Getenv("XDG_CONFIG_HOME")
+	if home, err := os.UserHomeDir(); err == nil {
+		candidates = append(candidates, filepath.Join(home, ".gitconfig"))
+		if !filepath.IsAbs(configHome) {
+			configHome = filepath.Join(home, ".config")
+		}
+	}
+	if filepath.IsAbs(configHome) {
+		for _, name := range []string{"config", "ignore", "attributes"} {
+			candidates = append(candidates, filepath.Join(configHome, "git", name))
+		}
+	}
+	if global := os.Getenv("GIT_CONFIG_GLOBAL"); filepath.IsAbs(global) {
+		candidates = append(candidates, global)
+	}
+
+	var paths []string
+	for _, path := range candidates {
+		target, err := filepath.EvalSymlinks(path)
+		if err != nil {
+			continue
+		}
+		for _, readable := range []string{filepath.Clean(path), target} {
+			if !slices.Contains(paths, readable) {
+				paths = append(paths, readable)
+			}
+		}
+	}
+	return paths
+}
+
+func commonDir(gitDir string) string {
+	pointer, err := os.ReadFile(filepath.Join(gitDir, "commondir")) //nolint:gosec // the repository's own metadata
+	if err != nil {
+		return ""
+	}
+	common := strings.TrimSpace(string(pointer))
+	if !filepath.IsAbs(common) {
+		common = filepath.Join(gitDir, common)
+	}
+	return common
 }
 
 func parseStatus(output []byte) tree {

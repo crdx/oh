@@ -15872,7 +15872,7 @@ func goldenGitStatusSchedulePass(t *testing.T, workspaceDir string, span time.Du
 
 			startedAt := time.Now()
 
-			built, err := gitStatus.New(workspaceDir)(goldenSegmentOptions(""))
+			built, err := gitStatus.New(workspaceDir, testexec.New())(goldenSegmentOptions(""))
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -16234,25 +16234,25 @@ func TestGoldenEverySegmentDrawsItsRepresentativeStates(t *testing.T) {
 		),
 		"git-status / outside a repository": goldenSegmentPass(
 			t,
-			gitStatus.New(workspaceMarker),
+			gitStatus.New(workspaceMarker, testexec.New()),
 			"",
 			segment.Context{},
 		),
 		"git-status / clean": goldenSettledSegmentPass(
 			t,
-			gitStatus.New(goldenGitRepository(t, goldenCleanRepository)),
+			gitStatus.New(goldenGitRepository(t, goldenCleanRepository), testexec.New()),
 		),
 		"git-status / dirty": goldenSettledSegmentPass(
 			t,
-			gitStatus.New(goldenGitRepository(t, goldenCleanRepository+"echo changed > file\n")),
+			gitStatus.New(goldenGitRepository(t, goldenCleanRepository+"echo changed > file\n"), testexec.New()),
 		),
 		"git-status / diverged": goldenSettledSegmentPass(
 			t,
-			gitStatus.New(goldenGitRepository(t, goldenDivergedRepository)),
+			gitStatus.New(goldenGitRepository(t, goldenDivergedRepository), testexec.New()),
 		),
 		"git-status / rebasing": goldenSettledSegmentPass(
 			t,
-			gitStatus.New(goldenGitRepository(t, goldenRebasingRepository)),
+			gitStatus.New(goldenGitRepository(t, goldenRebasingRepository), testexec.New()),
 		),
 		"turn-count / nothing asked yet": goldenSegmentPass(
 			t,

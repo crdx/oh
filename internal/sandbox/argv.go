@@ -27,6 +27,13 @@ func UnconfinedArgv() ArgvRunner {
 	return runner{isUnconfined: true}
 }
 
+func ArgvFor(isUnconfined bool) ArgvRunner {
+	if isUnconfined {
+		return UnconfinedArgv()
+	}
+	return DirectArgv()
+}
+
 func (self runner) RunArgv(
 	ctx context.Context,
 	directory string,

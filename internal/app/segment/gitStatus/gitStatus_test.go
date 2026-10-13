@@ -1,19 +1,30 @@
 package gitStatus
 
 import (
+	"context"
+	"errors"
+	"io/fs"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"slices"
 	"testing"
 	"time"
 
 	"crdx.org/oh/internal/app/gitrepo"
 	"crdx.org/oh/internal/app/segment"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/sandbox/testexec"
 	"github.com/BurntSushi/toml"
 )
 
 const settleLimit = 10 * time.Second
+
+func TestMain(testingMain *testing.M) {
+	sandbox.Init()
+	os.Exit(testingMain.Run())
+}
 
 type tomlOptions string
 
@@ -52,7 +63,7 @@ func repository(t *testing.T, script string) string {
 func build(t *testing.T, workspaceDir string, options string) *state {
 	t.Helper()
 
-	built, err := New(workspaceDir)(tomlOptions(options))
+	built, err := New(workspaceDir, testexec.New())(tomlOptions(options))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -334,7 +345,89 @@ func TestTheSegmentAsksForARedrawOnceItHasRead(t *testing.T) {
 }
 
 func TestTheSegmentRefusesARateThatRunsBackwards(t *testing.T) {
-	if _, err := New(t.TempDir())(tomlOptions("rate = \"-1s\"\n")); err == nil {
+	if _, err := New(t.TempDir(), testexec.New())(tomlOptions("rate = \"-1s\"\n")); err == nil {
 		t.Fatal("expected a negative rate to be refused")
+	}
+}
+
+type observedRunner struct {
+	inner  sandbox.ArgvRunner
+	policy sandbox.Policy
+}
+
+func (self *observedRunner) RunArgv(
+	ctx context.Context,
+	directory string,
+	arguments []string,
+	policy sandbox.Policy,
+) (sandbox.Result, error) {
+	self.policy = policy
+	return self.inner.RunArgv(ctx, directory, arguments, policy)
+}
+
+func (self *observedRunner) StartArgv(
+	ctx context.Context,
+	directory string,
+	arguments []string,
+	policy sandbox.Policy,
+	output sandbox.Output,
+) (sandbox.Command, error) {
+	self.policy = policy
+	return self.inner.StartArgv(ctx, directory, arguments, policy, output)
+}
+
+func TestGitRunsUnderAReadOnlyPolicy(t *testing.T) {
+	isolateGit(t)
+
+	workspaceDir := repository(t, "git init -q -b main\n")
+	runner := &observedRunner{inner: testexec.New()}
+	if _, err := readTree(runner, workspaceDir, gitrepo.Dir(workspaceDir)); err != nil {
+		t.Fatal(err)
+	}
+
+	policy := runner.policy
+	if len(policy.Write) != 0 || policy.Network || policy.Yolo || policy.TmpDir != "" || policy.Timeout <= 0 {
+		t.Errorf("git status used an unsafe policy: %+v", policy)
+	}
+	if len(policy.Exec) != 1 || filepath.Base(policy.Exec[0]) != "git" {
+		t.Errorf("expected only git to be executable, got %v", policy.Exec)
+	}
+	if !slices.Contains(policy.Read, workspaceDir) {
+		t.Errorf("expected the workspace to be readable, got %v", policy.Read)
+	}
+}
+
+func TestAWorktreeCanReadItsCommonMetadata(t *testing.T) {
+	isolateGit(t)
+
+	mainDir := repository(t, "git init -q -b main\ngit commit -q --allow-empty -m base\n")
+	worktreeDir := filepath.Join(t.TempDir(), "worktree")
+	command := exec.CommandContext(t.Context(), "git", "worktree", "add", "-q", worktreeDir) //nolint:gosec // the fixture's own setup
+	command.Dir = mainDir
+	if output, err := command.CombinedOutput(); err != nil {
+		t.Fatalf("failed to add a worktree: %s\n%s", err, output)
+	}
+
+	paths := readablePaths(worktreeDir, gitrepo.Dir(worktreeDir))
+	if !slices.Contains(paths, filepath.Join(mainDir, ".git")) {
+		t.Errorf("expected the common metadata to be readable, got %v", paths)
+	}
+}
+
+func TestAPlantedFilesystemMonitorCannotTouchTheHost(t *testing.T) {
+	if err := sandbox.Supported(t.Context()); err != nil {
+		t.Skipf("this machine cannot sandbox commands: %v", err)
+	}
+	isolateGit(t)
+
+	marker := filepath.Join(t.TempDir(), "planted")
+	workspaceDir := repository(t, "git init -q -b main\ngit config core.fsmonitor 'touch "+marker+"; false'\n")
+
+	if _, err := readTree(sandbox.DirectArgv(), workspaceDir, gitrepo.Dir(workspaceDir)); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := os.Stat(marker); !errors.Is(err, fs.ErrNotExist) {
+		t.Errorf("a monitor planted in the repository ran with host access: %v", err)
 	}
 }

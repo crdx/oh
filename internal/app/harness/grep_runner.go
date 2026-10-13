@@ -5,8 +5,5 @@ package harness
 import "crdx.org/oh/internal/sandbox"
 
 func grepRunner(isUnconfined bool) sandbox.ArgvRunner {
-	if isUnconfined {
-		return sandbox.UnconfinedArgv()
-	}
-	return sandbox.DirectArgv()
+	return sandbox.ArgvFor(isUnconfined)
 }

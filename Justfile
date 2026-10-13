@@ -59,6 +59,7 @@ sandbox *args:
         ./internal/sandbox/keeper
         ./internal/jobs
         ./internal/app/shell
+        ./internal/app/segment/gitStatus
         ./pkg/toolbox/bash
     )
     if [[ $# -gt 0 ]]; then
