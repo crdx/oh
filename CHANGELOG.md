@@ -2,7 +2,9 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
-### Models and providers
+## [0.15.1] - 2026-10-13
+
+### Changes
 
 - Use the latest OpenCode Go endpoint
 
