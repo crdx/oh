@@ -15,7 +15,7 @@ Ollama    qwen3.8:27b         1         3          9Kt           0t            0
 1 of 1 session is in a legacy format and was not considered.
 
 === one provider, which is its own total ===
-Prompt cache
+Cache
 
 Provider  Sessions  Requests  Hits  Misses  Hit Rate  Input Cached  Tokens Read
 Codex            1         2     1       1     50.0%         66.7%          8Kt
@@ -26,7 +26,7 @@ Provider  Average Input  Peak Input  Total Input  Cache Reads  Cache Writes  Fre
 Codex               6Kt         9Kt         12Kt          8Kt           1Kt          3Kt     3Kt
 
 === counts in their thousands, tokens in their billions, and nothing written ===
-Prompt cache
+Cache
 
 Provider  Sessions  Requests  Hits  Misses  Hit Rate  Input Cached  Tokens Read
 Codex          186       22K   22K     335     98.5%         98.4%        3.8Bt

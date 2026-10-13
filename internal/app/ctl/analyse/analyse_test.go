@@ -352,7 +352,7 @@ func TestAnUnknownModelHasNoSpend(t *testing.T) {
 }
 
 func TestASectionTitleIsDrawnLikeAMarkdownHeading(t *testing.T) {
-	const title = "Prompt cache"
+	const title = "Cache"
 
 	rows := markdown.Render("# "+title, 80)
 	drawn := style.MarkdownHeading(title)

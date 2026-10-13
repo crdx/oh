@@ -1,4 +1,4 @@
-\e[1m\e[38;2;207;173;0mPrompt cache\e[0m\e[0m
+\e[1m\e[38;2;207;173;0mCache\e[0m\e[0m
 
 \e[4m\e[38;2;150;152;150mProvider    Sessions  Requests  Hits  Misses  Hit Rate  Input Cached  Tokens Read\e[0m\e[0m
 Anthropic          2         8     6       2     75.0%         90.0%        450Kt

@@ -1,4 +1,4 @@
-Prompt cache
+Cache
 
 Provider    Sessions  Requests  Hits  Misses  Hit Rate  Input Cached  Tokens Read
 Anthropic          2         8     6       2     75.0%         90.0%        450Kt

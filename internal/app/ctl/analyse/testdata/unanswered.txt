@@ -1,4 +1,4 @@
-Prompt cache
+Cache
 
 Provider  Sessions  Requests  Hits  Misses  Hit Rate  Input Cached  Tokens Read
 Codex            2         2     1       1     50.0%         18.9%        3.9Kt

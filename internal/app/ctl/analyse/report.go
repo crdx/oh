@@ -147,7 +147,7 @@ func cacheSection(analysis PromptCacheAnalysis) section {
 	}
 
 	return section{
-		title:  "Prompt cache",
+		title:  "Cache",
 		header: []string{"Provider", "Sessions", "Requests", "Hits", "Misses", "Hit Rate", "Input Cached", "Tokens Read"},
 		rows:   rows,
 	}
