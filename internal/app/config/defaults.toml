@@ -175,7 +175,6 @@ left = [
     { segment = "mode-toggle" },
     { segment = "forwards" },
     { segment = "jobs" },
-    { segment = "subagents" },
     { segment = "grants", type = "base" },
 ]
 center = [
@@ -194,6 +193,7 @@ left = [
 ]
 center = [
     { segment = "session-name", emoji = true },
+    { segment = "subagents" },
 ]
 right = [
     { segment = "subscription-usage" },
