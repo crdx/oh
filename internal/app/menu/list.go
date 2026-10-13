@@ -60,8 +60,13 @@ type ScopeSwitchable interface {
 	SwitchScope() bool
 }
 
+type Sortable interface {
+	Sort(indexes []int)
+	CycleSort()
+}
+
 type KeyboardHelp interface {
-	KeyboardHelp() []Shortcut
+	KeyboardHelp(room int) []Shortcut
 }
 
 type Shortcut struct {
@@ -282,6 +287,10 @@ func (self *state) apply(keypress key.Key) action {
 		if keypress.Value == 'c' && keypress.Mod.Has(key.Ctrl) {
 			return choiceCancelled
 		}
+		if keypress.Value == 's' && keypress.Mod.Has(key.Ctrl) {
+			self.cycleSort()
+			return continuePicking
+		}
 		if keypress.Value == '\t' && !keypress.Mod.Has(key.Shift) {
 			self.switchScope()
 			return continuePicking
@@ -438,8 +447,30 @@ func (self *state) refilter() {
 		}
 	}
 
+	if rows, isSortable := self.list.(Sortable); isSortable {
+		rows.Sort(self.matches)
+	}
+
 	self.cursor = self.firstChoosable()
 	self.offset = 0
+}
+
+func (self *state) cycleSort() {
+	rows, isSortable := self.list.(Sortable)
+	if !isSortable {
+		return
+	}
+
+	wantedIndex := -1
+	if self.cursor >= 0 {
+		wantedIndex = self.chosen()
+	}
+
+	rows.CycleSort()
+	self.refilter()
+	if at := slices.Index(self.matches, wantedIndex); at >= 0 {
+		self.cursor = at
+	}
 }
 
 func (self *state) move(direction int) {
@@ -625,7 +656,7 @@ func (self *state) filterLine(room int) string {
 		{Key: "esc", Description: "close"},
 	}
 	if rows, hasKeyboardHelp := self.list.(KeyboardHelp); hasKeyboardHelp {
-		shortcuts = rows.KeyboardHelp()
+		shortcuts = rows.KeyboardHelp(room)
 	}
 	help := renderKeyboardHelp(shortcuts)
 

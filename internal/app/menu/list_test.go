@@ -226,6 +226,68 @@ func TestAControlSequenceIsNotTypedIntoTheFilter(t *testing.T) {
 	}
 }
 
+type sortableList struct {
+	*fakeList
+
+	isReverse bool
+}
+
+func (self *sortableList) CycleSort() {
+	self.isReverse = !self.isReverse
+}
+
+func (self *sortableList) Sort(indexes []int) {
+	if self.isReverse {
+		slices.Reverse(indexes)
+	}
+}
+
+func TestSortingKeepsTheFilterAndTheChosenRow(t *testing.T) {
+	rows := &sortableList{fakeList: rowsNamed("pear", "plum", "apple", "apricot")}
+	self := listState(rows, 0)
+	self.narrow("ap")
+	if self.chosen() != 2 {
+		t.Fatalf("got chosen row %d", self.chosen())
+	}
+
+	keypress := key.Key{Code: key.Rune, Value: 's', Mod: key.Ctrl}
+	self.apply(keypress)
+	if self.query != "ap" || self.chosen() != 2 || !slices.Equal(self.matches, []int{3, 2}) {
+		t.Errorf("sort changed the filter or choice: query %q, choice %d, matches %v", self.query, self.chosen(), self.matches)
+	}
+
+	self.narrow("apri")
+	if !slices.Equal(self.matches, []int{3}) {
+		t.Errorf("got %v", self.matches)
+	}
+	self.narrow("ap")
+	if !slices.Equal(self.matches, []int{3, 2}) || self.chosen() != 3 {
+		t.Errorf("filter lost the order or choice: %v, choice %d", self.matches, self.chosen())
+	}
+
+	self.apply(keypress)
+	if !slices.Equal(self.matches, []int{2, 3}) || self.chosen() != 3 {
+		t.Errorf("restoring the order lost the choice: %v, choice %d", self.matches, self.chosen())
+	}
+}
+
+func TestSortingAnEmptyFilterOrAnUnsortableListDoesNothing(t *testing.T) {
+	for _, rows := range []List{rowsNamed("apple"), &sortableList{fakeList: rowsNamed("apple")}} {
+		self := listState(rows, 0)
+		self.narrow("nothing")
+		self.apply(key.Key{Code: key.Rune, Value: 's', Mod: key.Ctrl})
+		if self.cursor != -1 || self.query != "nothing" || len(self.matches) != 0 {
+			t.Errorf("sort changed an empty filter: %+v", self)
+		}
+	}
+
+	self := defaultState()
+	self.apply(key.Key{Code: key.Rune, Value: 's', Mod: key.Ctrl})
+	if self.chosen() != 0 || self.query != "" {
+		t.Error("ctrl+s changed an unsortable list")
+	}
+}
+
 func TestAnEmptyListIsNothingToChooseFrom(t *testing.T) {
 	if _, err := Choose(&fakeList{}, nil, nil); !errors.Is(err, ErrCancelled) {
 		t.Errorf("expected the choice to be abandoned, got %v", err)

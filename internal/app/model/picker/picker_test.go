@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 
@@ -280,6 +281,75 @@ func TestGoldenTheStaticModelListMatchesThePicker(t *testing.T) {
 	compareWithGolden(t, "static-list.ansi", coloured.String())
 }
 
+func TestCostSortingUsesUnroundedEstimatesAndLeavesUnknownPricesLast(t *testing.T) {
+	rows := &modelList{models: []*Model{
+		{Prices: &agent.TokenPrices{Input: 1, Output: 10, CacheRead: 0.5}},
+		{Prices: &agent.TokenPrices{Input: 2, Output: 10, CacheRead: 0.1}},
+		{},
+		{Prices: &agent.TokenPrices{}},
+		{Prices: &agent.TokenPrices{Input: 0.002}},
+		{Prices: &agent.TokenPrices{Input: 0.001}},
+		{Prices: &agent.TokenPrices{Input: 2, Output: 10, CacheRead: 0.1}},
+	}}
+	for _, want := range [][]int{
+		{5, 4, 1, 6, 0, 2, 3},
+		{0, 1, 6, 4, 5, 2, 3},
+		{0, 1, 2, 3, 4, 5, 6},
+	} {
+		rows.CycleSort()
+		indexes := []int{0, 1, 2, 3, 4, 5, 6}
+		rows.Sort(indexes)
+		if !slices.Equal(indexes, want) {
+			t.Errorf("order %d: got %v, want %v", rows.order, indexes, want)
+		}
+	}
+}
+
+func TestTheStaticListIsCheapestFirstWithoutChangingTheModels(t *testing.T) {
+	models := availableModels()
+	original := slices.Clone(models)
+	var listing strings.Builder
+	if err := Print(&listing, models, money.Dollar(), 0); err != nil {
+		t.Fatal(err)
+	}
+	if !slices.Equal(models, original) {
+		t.Error("printing changed the caller's model order")
+	}
+	first := strings.Index(listing.String(), "DeepSeek Flash Vision")
+	second := strings.Index(listing.String(), "Codex 5.3")
+	third := strings.Index(listing.String(), "MiniMax M3")
+	if first < 0 || second <= first || third <= second {
+		t.Errorf("the list is not cheapest first:\n%s", listing.String())
+	}
+}
+
+func TestGoldenEveryCostSortOrderFitsThePicker(t *testing.T) {
+	var output strings.Builder
+	for _, room := range []int{150, 100, 80} {
+		for _, query := range []string{"", "opencode", "no matching model"} {
+			rows := &modelList{models: availableModels()}
+			for range sortOrderCount {
+				fmt.Fprintf(&output, "=== %d columns, %s, filter %q ===\n", room, rows.sortLabel(), query)
+				output.WriteString(strutil.VisibleEscapes(menu.Paint(rows, room, 12, 0, query)))
+				output.WriteByte('\n')
+				rows.CycleSort()
+			}
+		}
+	}
+	compareWithGolden(t, "sort.ansi", output.String())
+}
+
+func TestGoldenTheCostColumnAppearsOnlyWhenItFits(t *testing.T) {
+	var output strings.Builder
+	for _, room := range []int{costRoom - 1, costRoom, rateRoom - 1, rateRoom} {
+		fmt.Fprintf(&output, "--- %d columns ---\n", room)
+		if err := Print(&output, availableModels(), money.Dollar(), room); err != nil {
+			t.Fatal(err)
+		}
+	}
+	compareWithGolden(t, "cost-widths.ansi", output.String())
+}
+
 func TestTheStaticModelListReportsWriterFailures(t *testing.T) {
 	if err := Print(failingWriter{}, availableModels(), money.Dollar(), 0); err == nil {
 		t.Error("expected a writer failure")
@@ -325,10 +395,50 @@ func TestGoldenWhatTheModelPickerPaintsMatchesTheGolden(t *testing.T) {
 	compareWithGolden(t, "painted.ansi", output.String())
 }
 
-func TestTheCostColumnFitsTheLongestTierItCanDraw(t *testing.T) {
-	for _, priceTier := range agent.PriceTiers() {
-		if got := width.Of(priceTier.String()); got > costColumn {
-			t.Errorf("%q needs %d cells, but the column holds %d", priceTier, got, costColumn)
+func TestTheCostColumnFitsSmallEstimatesInEveryCurrency(t *testing.T) {
+	for _, currency := range []money.Currency{money.Dollar(), money.In("CHF", 1)} {
+		prices := &agent.TokenPrices{Input: 0.001}
+		if got := width.Of(estimatedCost(prices, currency)); got > costColumn {
+			t.Errorf("the estimate needs %d cells, but the column holds %d", got, costColumn)
 		}
+	}
+}
+
+func TestAnUnknownCostIsADashRatherThanAnEstimate(t *testing.T) {
+	for _, prices := range []*agent.TokenPrices{nil, {}} {
+		if got := estimatedCost(prices, money.Dollar()); got != unknownQuantity {
+			t.Errorf("got %q, want a dash", got)
+		}
+	}
+}
+
+func TestEveryModelPriceColumnStopsAtTwoDecimalPlaces(t *testing.T) {
+	prices := &agent.TokenPrices{Input: 0.01, Output: 0.02, CacheRead: 0.001}
+	pounds := money.In("GBP", 0.8)
+	for name, got := range map[string]string{
+		"estimated cost": estimatedCost(prices, pounds),
+		"input":          price(prices, pounds, inputRate),
+	} {
+		if got != "<£0.01" {
+			t.Errorf("%s: got %q, want <£0.01", name, got)
+		}
+	}
+	if got := price(prices, pounds, outputRate); got != "£0.02" {
+		t.Errorf("output: got %q, want £0.02", got)
+	}
+
+	prices.Input = 1.25
+	if got := price(prices, money.Dollar(), inputRate); got != "$1.25" {
+		t.Errorf("input: got %q, want $1.25", got)
+	}
+}
+
+func TestTheCostColumnUsesTheCurrencyAndTheCacheAwareEstimate(t *testing.T) {
+	prices := &agent.TokenPrices{Input: 1.25, Output: 10, CacheRead: 0.125}
+	if got := estimatedCost(prices, money.Dollar()); got != "$0.03" {
+		t.Errorf("got %q", got)
+	}
+	if got := estimatedCost(prices, money.In("GBP", 0.8)); got != "£0.02" {
+		t.Errorf("got %q", got)
 	}
 }

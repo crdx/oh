@@ -1,6 +1,7 @@
 package picker
 
 import (
+	"cmp"
 	"fmt"
 	"io"
 	"os"
@@ -11,7 +12,6 @@ import (
 	"crdx.org/oh/internal/app/segment/fastMode"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/table"
-	"crdx.org/oh/internal/app/width"
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/strutil"
@@ -35,24 +35,14 @@ const (
 	shortenedIdentifier = 18
 )
 
-const costTitle = "Cost"
-
-var costColumn = widestPriceTier()
-
-func widestPriceTier() int {
-	widest := width.Of(costTitle)
-	for _, priceTier := range agent.PriceTiers() {
-		widest = max(widest, width.Of(priceTier.String()))
-	}
-
-	return widest
-}
-
-var costRoom = markWidth + providerColumn + nameColumn + effortColumn +
-	contextColumn + costColumn + shortenedIdentifier + costGaps*table.Gap
-
-var rateRoom = markWidth + providerColumn + nameColumn + effortColumn + contextColumn +
-	costColumn + inputColumn + outputColumn + identifierColumn + rateGaps*table.Gap
+const (
+	costTitle  = "Cost/req"
+	costColumn = 10
+	costRoom   = markWidth + providerColumn + nameColumn + effortColumn +
+		contextColumn + costColumn + shortenedIdentifier + costGaps*table.Gap
+	rateRoom = markWidth + providerColumn + nameColumn + effortColumn + contextColumn +
+		costColumn + inputColumn + outputColumn + identifierColumn + rateGaps*table.Gap
+)
 
 type Effort struct {
 	Level  string
@@ -93,11 +83,16 @@ func Choose(
 }
 
 func Print(output io.Writer, models []*Model, currency money.Currency, columns int) error {
-	rows := modelList{models: models, currency: currency}
+	rows := modelList{models: models, currency: currency, order: cheapestFirst}
 	if _, err := fmt.Fprintln(output, style.Column(rows.ColumnHeader(columns))); err != nil {
 		return err
 	}
+	indexes := make([]int, len(models))
 	for index := range models {
+		indexes[index] = index
+	}
+	rows.Sort(indexes)
+	for _, index := range indexes {
 		if _, err := fmt.Fprintln(output, rows.Row(index, false, columns)); err != nil {
 			return err
 		}
@@ -105,19 +100,74 @@ func Print(output io.Writer, models []*Model, currency money.Currency, columns i
 	return nil
 }
 
+type sortOrder int
+
+const (
+	providerOrder sortOrder = iota
+	cheapestFirst
+	dearestFirst
+)
+
+const (
+	sortOrderCount = 3
+	sortHelpRoom   = 100
+)
+
 type modelList struct {
 	models   []*Model
 	currency money.Currency
+	order    sortOrder
+}
+
+func (self *modelList) CycleSort() {
+	self.order = (self.order + 1) % sortOrderCount
+}
+
+func (self *modelList) Sort(indexes []int) {
+	if self.order == providerOrder {
+		return
+	}
+
+	slices.SortStableFunc(indexes, func(firstIndex, secondIndex int) int {
+		first := self.models[firstIndex].Prices
+		second := self.models[secondIndex].Prices
+		isFirstKnown := first != nil && first.IsKnown()
+		isSecondKnown := second != nil && second.IsKnown()
+		switch {
+		case isFirstKnown && !isSecondKnown:
+			return -1
+		case !isFirstKnown && isSecondKnown:
+			return 1
+		case !isFirstKnown:
+			return 0
+		}
+
+		comparison := cmp.Compare(first.EstimatedRequestCost(), second.EstimatedRequestCost())
+		if self.order == dearestFirst {
+			return -comparison
+		}
+
+		return comparison
+	})
 }
 
 func (self *modelList) Len() int { return len(self.models) }
 
 func (self *modelList) IsChoosable(int) bool { return true }
 
-func (self *modelList) KeyboardHelp() []menu.Shortcut {
+func (self *modelList) KeyboardHelp(room int) []menu.Shortcut {
+	if room < sortHelpRoom {
+		return []menu.Shortcut{
+			{Key: "ctrl+s", Description: "sort: " + self.sortLabel()},
+			{Key: "enter", Description: "choose"},
+			{Key: "esc", Description: "close"},
+		}
+	}
+
 	return []menu.Shortcut{
 		{Key: "↑↓", Description: "move"},
 		{Key: "← →", Description: "effort"},
+		{Key: "ctrl+s", Description: "sort: " + self.sortLabel()},
 		{Key: "enter", Description: "choose"},
 		{Key: "esc", Description: "close"},
 	}
@@ -143,7 +193,7 @@ func (self *modelList) Adjust(index int, direction int) {
 }
 
 func (self *modelList) ColumnHeader(room int) string {
-	return modelTable().Header(room)
+	return modelTable(self.order).Header(room)
 }
 
 func (self *modelList) Row(index int, isChosen bool, room int) string {
@@ -155,13 +205,34 @@ func (self *modelList) Row(index int, isChosen bool, room int) string {
 	return paint.Over(modelRow(self.models[index], self.currency, isChosen, room))
 }
 
-func modelTable() *table.Table {
+func (self *modelList) sortLabel() string {
+	switch self.order {
+	case cheapestFirst:
+		return "cost ↑"
+	case dearestFirst:
+		return "cost ↓"
+	case providerOrder:
+		return "provider"
+	}
+	return "provider"
+}
+
+func modelTable(order sortOrder) *table.Table {
+	title := costTitle
+	switch order {
+	case cheapestFirst:
+		title += " ↑"
+	case dearestFirst:
+		title += " ↓"
+	case providerOrder:
+	}
+
 	return table.New(
 		table.Column{Title: "  Provider", Width: markWidth + providerColumn},
 		table.Column{Title: "Model", Width: nameColumn},
 		table.Column{Title: "Effort", Width: effortColumn},
 		table.Column{Title: "Context", Width: contextColumn, Align: table.Right},
-		table.Column{Title: costTitle, Width: costColumn, MinRoom: costRoom},
+		table.Column{Title: title, Width: costColumn, Align: table.Right, MinRoom: costRoom},
 		table.Column{Title: "Input", Width: inputColumn, Align: table.Right, MinRoom: rateRoom},
 		table.Column{Title: "Output", Width: outputColumn, Align: table.Right, MinRoom: rateRoom},
 		table.Column{Title: "Identifier", Width: identifierColumn, Style: style.Subtle},
@@ -169,12 +240,12 @@ func modelTable() *table.Table {
 }
 
 func modelRow(model *Model, currency money.Currency, isChosen bool, room int) string {
-	return modelTable().Row([]string{
+	return modelTable(providerOrder).Row([]string{
 		menu.Mark(isChosen) + " " + model.Provider,
 		model.Name,
 		strutil.OrDash(model.Effort.String()),
 		contextWindow(model.ContextWindowTokens),
-		tier(model.Prices),
+		estimatedCost(model.Prices, currency),
 		price(model.Prices, currency, inputRate),
 		price(model.Prices, currency, outputRate),
 		model.ID,
@@ -191,24 +262,12 @@ func contextWindow(tokens int) string {
 	return util.FormatWholeThousands(tokens)
 }
 
-func tier(prices *agent.TokenPrices) string {
-	if prices == nil {
+func estimatedCost(prices *agent.TokenPrices, currency money.Currency) string {
+	if prices == nil || !prices.IsKnown() {
 		return unknownQuantity
 	}
 
-	priceTier := prices.Tier()
-	if priceTier == agent.PriceUnknown {
-		return unknownQuantity
-	}
-
-	return priceTierStyles[priceTier](priceTier.String())
-}
-
-var priceTierStyles = map[agent.PriceTier]style.Style{
-	agent.PriceLow:     style.LowPrice,
-	agent.PriceMedium:  style.MediumPrice,
-	agent.PriceHigh:    style.HighPrice,
-	agent.PriceExtreme: style.WtfPrice,
+	return currency.FormatPrice(prices.EstimatedRequestCost())
 }
 
 func inputRate(prices agent.TokenPrices) float64 {
@@ -224,5 +283,5 @@ func price(prices *agent.TokenPrices, currency money.Currency, rate func(agent.T
 		return unknownQuantity
 	}
 
-	return currency.FormatRate(rate(*prices))
+	return currency.FormatPrice(rate(*prices))
 }

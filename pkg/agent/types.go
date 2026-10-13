@@ -58,57 +58,27 @@ func (self TokenPrices) IsKnown() bool {
 	return self.Input > 0 || self.Output > 0 || self.CacheRead > 0 || self.CacheWrite > 0
 }
 
-type PriceTier int
-
 const (
-	PriceUnknown PriceTier = iota
-	PriceLow
-	PriceMedium
-	PriceHigh
-	PriceExtreme
+	representativeFreshTokens  = 947
+	representativeReadTokens   = 167530
+	representativeWriteTokens  = 2667
+	representativeOutputTokens = 467
 )
 
-const (
-	inputTokensPerOutputToken = 3
-	mediumPriceFrom           = 2.0
-	highPriceFrom             = 10.0
-	extremePriceFrom          = 50.0
-)
-
-func (self TokenPrices) BlendedRate() float64 {
-	return (self.Input*inputTokensPerOutputToken + self.Output) / (inputTokensPerOutputToken + 1)
-}
-
-func (self TokenPrices) Tier() PriceTier {
-	switch rate := self.BlendedRate(); {
-	case !self.IsKnown():
-		return PriceUnknown
-	case rate >= extremePriceFrom:
-		return PriceExtreme
-	case rate >= highPriceFrom:
-		return PriceHigh
-	case rate >= mediumPriceFrom:
-		return PriceMedium
-	default:
-		return PriceLow
+func (self TokenPrices) EstimatedRequestCost() float64 {
+	readPrice := self.CacheRead
+	if readPrice <= 0 {
+		readPrice = self.Input
 	}
-}
+	writePrice := self.CacheWrite
+	if writePrice <= 0 {
+		writePrice = self.Input
+	}
 
-func PriceTiers() []PriceTier {
-	return []PriceTier{PriceLow, PriceMedium, PriceHigh, PriceExtreme}
-}
-
-const square = "◼"
-
-var priceTierNames = map[PriceTier]string{
-	PriceLow:     square,
-	PriceMedium:  square + square,
-	PriceHigh:    square + square + square,
-	PriceExtreme: square + square + square + square,
-}
-
-func (self PriceTier) String() string {
-	return priceTierNames[self]
+	return (representativeFreshTokens*self.Input +
+		representativeReadTokens*readPrice +
+		representativeWriteTokens*writePrice +
+		representativeOutputTokens*self.Output) / TokensPerPricedUnit
 }
 
 type Lister interface {

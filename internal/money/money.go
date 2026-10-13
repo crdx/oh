@@ -106,6 +106,16 @@ func (self Currency) FormatRate(dollars float64) string {
 	return symbol + trimmedTo(formatPlaces(amount, significantPlaces(amount)), shownRatePlaces)
 }
 
+func (self Currency) FormatPrice(dollars float64) string {
+	symbol, amount := self.convert(dollars)
+
+	if amount > 0 && amount < smallAmount {
+		return belowMark + symbol + formatPlaces(smallAmount, moneyPlaces)
+	}
+
+	return symbol + formatPlaces(max(amount, 0), moneyPlaces)
+}
+
 func trimmedTo(formattedAmount string, minimumPlaces int) string {
 	point := strings.IndexByte(formattedAmount, '.')
 	if point < 0 {

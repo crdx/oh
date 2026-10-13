@@ -1,38 +1,53 @@
 package agent_test
 
 import (
+	"math"
 	"testing"
 
 	"crdx.org/oh/pkg/agent"
 )
 
-func TestEachModelFallsIntoAPriceTier(t *testing.T) {
+func TestAnEstimatedRequestCostsTheSameWorkloadAtEveryModelPrice(t *testing.T) {
 	for name, test := range map[string]struct {
 		prices agent.TokenPrices
-		want   agent.PriceTier
+		want   float64
 	}{
-		"nothing quoted":          {prices: agent.TokenPrices{}, want: agent.PriceUnknown},
-		"a small local model":     {prices: agent.TokenPrices{Input: 0.25, Output: 2}, want: agent.PriceLow},
-		"a fast hosted model":     {prices: agent.TokenPrices{Input: 0.8, Output: 4}, want: agent.PriceLow},
-		"a workhorse":             {prices: agent.TokenPrices{Input: 1.25, Output: 10}, want: agent.PriceMedium},
-		"a capable model":         {prices: agent.TokenPrices{Input: 3, Output: 15}, want: agent.PriceMedium},
-		"the top of the range":    {prices: agent.TokenPrices{Input: 15, Output: 75}, want: agent.PriceHigh},
-		"one that beggars belief": {prices: agent.TokenPrices{Input: 150, Output: 600}, want: agent.PriceExtreme},
-		"exactly on fair":         {prices: agent.TokenPrices{Input: 2, Output: 2}, want: agent.PriceMedium},
-		"exactly on dear":         {prices: agent.TokenPrices{Input: 10, Output: 10}, want: agent.PriceHigh},
-		"exactly on silly":        {prices: agent.TokenPrices{Input: 50, Output: 50}, want: agent.PriceExtreme},
-		"output alone is dear":    {prices: agent.TokenPrices{Output: 160}, want: agent.PriceHigh},
+		"all four prices": {
+			prices: agent.TokenPrices{Input: 3, Output: 15, CacheRead: 0.3, CacheWrite: 3.75},
+			want:   (947*3 + 167530*0.3 + 2667*3.75 + 467*15) / 1000000,
+		},
+		"automatic cache writes use input": {
+			prices: agent.TokenPrices{Input: 1.25, Output: 10, CacheRead: 0.125},
+			want:   (947*1.25 + 167530*0.125 + 2667*1.25 + 467*10) / 1000000,
+		},
+		"no cache rates use ordinary input": {
+			prices: agent.TokenPrices{Input: 3, Output: 15},
+			want:   (171144*3 + 467*15) / 1000000.0,
+		},
+		"a cache write rate without a read rate": {
+			prices: agent.TokenPrices{Input: 3, Output: 15, CacheWrite: 3.75},
+			want:   (168477*3 + 2667*3.75 + 467*15) / 1000000,
+		},
+		"nothing quoted": {want: 0},
 	} {
 		t.Run(name, func(t *testing.T) {
-			if got := test.prices.Tier(); got != test.want {
-				t.Errorf("got %q (rate %v), want %q", got, test.prices.BlendedRate(), test.want)
+			if got := test.prices.EstimatedRequestCost(); math.Abs(got-test.want) > 1e-12 {
+				t.Errorf("got %v, want %v", got, test.want)
 			}
 		})
 	}
 }
 
-func TestAnUnknownTierIsNamedByNothing(t *testing.T) {
-	if got := agent.PriceUnknown.String(); got != "" {
-		t.Errorf("got %q, want nothing", got)
+func TestCachePricingCanReverseTheOrderOfTwoModels(t *testing.T) {
+	cheapInput := agent.TokenPrices{Input: 1, Output: 10, CacheRead: 0.5}
+	cheapCache := agent.TokenPrices{Input: 2, Output: 10, CacheRead: 0.1}
+	if cheapCache.EstimatedRequestCost() >= cheapInput.EstimatedRequestCost() {
+		t.Error("the model with dearer fresh input should be cheaper for the cache-heavy workload")
+	}
+
+	dearWrites := cheapCache
+	dearWrites.CacheWrite = 100
+	if dearWrites.EstimatedRequestCost() <= cheapInput.EstimatedRequestCost() {
+		t.Error("dearer cache writes should count against the estimate")
 	}
 }

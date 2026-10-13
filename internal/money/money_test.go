@@ -32,6 +32,34 @@ func TestAnAmountIsDrawnAsMoneyOrAsARate(t *testing.T) {
 	}
 }
 
+func TestAPriceIsShownToTheNearestPenny(t *testing.T) {
+	for dollars, want := range map[float64]string{
+		0:        "$0.00",
+		0.00001:  "<$0.01",
+		0.009999: "<$0.01",
+		0.01:     "$0.01",
+		0.014:    "$0.01",
+		0.015:    "$0.02",
+		0.029751: "$0.03",
+		1.25:     "$1.25",
+		600:      "$600.00",
+	} {
+		if got := Dollar().FormatPrice(dollars); got != want {
+			t.Errorf("FormatPrice(%v) = %q, want %q", dollars, got, want)
+		}
+	}
+
+	if got := In("GBP", 0.8).FormatPrice(0.029751); got != "£0.02" {
+		t.Errorf("got %q", got)
+	}
+	if got := In("GBP", 0.8).FormatPrice(0.01); got != "<£0.01" {
+		t.Errorf("got %q", got)
+	}
+	if got := (Currency{}).FormatPrice(1.25); got != "$1.25" {
+		t.Errorf("got %q", got)
+	}
+}
+
 func TestAnotherCurrencyIsConvertedAndNamed(t *testing.T) {
 	pounds := In("GBP", 0.8)
 

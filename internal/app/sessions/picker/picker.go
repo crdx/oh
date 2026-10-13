@@ -112,7 +112,7 @@ func (self *sessionList) SwitchScope() bool {
 	return true
 }
 
-func (self *sessionList) KeyboardHelp() []menu.Shortcut {
+func (self *sessionList) KeyboardHelp(int) []menu.Shortcut {
 	return []menu.Shortcut{
 		{Key: "tab", Description: "scope"},
 		{Key: "← →", Description: "view"},
