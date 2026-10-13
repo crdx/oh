@@ -79,7 +79,7 @@ type ToolAnalysis struct {
 	Total ToolStatistics   `json:"total"`
 }
 
-const analysisCacheFormat = 6
+const analysisCacheFormat = 8
 
 type analysisCache struct {
 	Format   int                      `json:"format"`

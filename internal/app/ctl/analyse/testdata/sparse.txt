@@ -3,7 +3,7 @@ Nothing was recorded.
 
 === nothing was read, and every session was skipped ===
 Nothing was recorded.
-496 sessions are in a legacy format and were not considered.
+496 of 496 sessions are in a legacy format and were not considered.
 
 === one session skipped beside one unpriced model ===
 Models
@@ -12,7 +12,7 @@ Provider  Model        Sessions  Requests  Fresh Input  Cache Reads  Cache Write
 Ollama    qwen3.8:27b         1         3          9Kt           0t            0t    600t      —
 1 model has no listed price, so its spend is unknown and missing from the total.
 
-1 session is in a legacy format and was not considered.
+1 of 1 session is in a legacy format and was not considered.
 
 === one provider, which is its own total ===
 Prompt cache

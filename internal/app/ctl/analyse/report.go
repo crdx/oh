@@ -62,7 +62,7 @@ func drawText(analysis Analysis, report presentation, writer io.Writer) error {
 		sections = append(sections, sessionSection(analysis.Sessions, report.currency))
 	}
 
-	if err := writeSections(writer, sections, analysis.SkippedSessions); err != nil {
+	if err := writeSections(writer, sections, analysis.SkippedSessions, len(analysis.Sessions)+analysis.SkippedSessions); err != nil {
 		return err
 	}
 	if analysis.MissingSubagents == 0 {
@@ -78,7 +78,7 @@ func drawText(analysis Analysis, report presentation, writer io.Writer) error {
 	return err
 }
 
-func writeSections(writer io.Writer, sections []section, skippedCount int) error {
+func writeSections(writer io.Writer, sections []section, skippedCount int, sessionCount int) error {
 	isFirstSection := true
 
 	for _, part := range sections {
@@ -111,10 +111,10 @@ func writeSections(writer io.Writer, sections []section, skippedCount int) error
 		}
 	}
 
-	return writeSkipped(writer, skippedCount, isFirstSection)
+	return writeSkipped(writer, skippedCount, sessionCount, isFirstSection)
 }
 
-func writeSkipped(writer io.Writer, skippedCount int, isReportEmpty bool) error {
+func writeSkipped(writer io.Writer, skippedCount int, sessionCount int, isReportEmpty bool) error {
 	if skippedCount == 0 {
 		return nil
 	}
@@ -126,9 +126,11 @@ func writeSkipped(writer io.Writer, skippedCount int, isReportEmpty bool) error 
 	}
 
 	_, err := fmt.Fprintln(writer, style.Subtle(fmt.Sprintf(
-		"%s %s in a legacy format and %s not considered.",
+		"%s of %s %s %s in a legacy format and %s not considered.",
 		util.FormatCount(skippedCount),
-		pluralise(skippedCount, "session is", "sessions are"),
+		util.FormatCount(sessionCount),
+		pluralise(sessionCount, "session", "sessions"),
+		pluralise(skippedCount, "is", "are"),
 		pluralise(skippedCount, "was", "were"),
 	)))
 

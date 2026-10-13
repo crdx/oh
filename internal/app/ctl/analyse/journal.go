@@ -263,12 +263,16 @@ func (self *journalTally) finish() (SessionStatistics, bool) {
 		return strings.Compare(first.Name, second.Name)
 	})
 
-	isWhole := self.usageReports > 0 &&
+	isUnanswered := self.usageReports == 0 &&
+		statistics.Cache.OutputTokens == 0 &&
+		statistics.Activity.Replies == 0
+	isAnswered := statistics.Activity.Replies > 0 || statistics.Activity.ToolCalls > 0
+	isMeasured := self.usageReports > 0 &&
 		statistics.Cache.Requests == self.usageReports &&
-		statistics.Cache.OutputTokens > 0 &&
-		self.untimedTurns == 0
+		(statistics.Cache.OutputTokens > 0 || !isAnswered)
+	isWhole := (isUnanswered || isMeasured) && self.untimedTurns == 0
 
-	if isWhole {
+	if isWhole && isMeasured {
 		statistics.Cache.Sessions = 1
 	}
 

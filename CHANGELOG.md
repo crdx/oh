@@ -2,9 +2,11 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
-### Fixes
+### Changes
 
 - Store the analysis cache under the state dir
+- Stop counting sessions stopped or refused before first response as legacy
+- Show the legacy session count out of all sessions in analyse
 
 ## [0.16.0] - 2026-10-13
 

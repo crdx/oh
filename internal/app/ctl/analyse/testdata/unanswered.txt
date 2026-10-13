@@ -1,0 +1,27 @@
+Prompt cache
+
+Provider  Sessions  Requests  Hits  Misses  Hit Rate  Input Cached  Tokens Read
+Codex            2         2     1       1     50.0%         18.9%        3.9Kt
+
+Tokens
+
+Provider  Average Input  Peak Input  Total Input  Cache Reads  Cache Writes  Fresh Input  Output
+Codex              10Kt        16Kt         21Kt        3.9Kt          12Kt        5.1Kt     29t
+
+Models
+
+Provider  Model  Sessions  Requests  Fresh Input  Cache Reads  Cache Writes  Output  Spend
+Codex                   3         2        5.1Kt        3.9Kt          12Kt     29t      —
+1 model has no listed price, so its spend is unknown and missing from the total.
+
+Conversation
+
+Provider  Sessions  Turns  Prompts  Replies  Reasoning  Tool Calls  Average Turn  Longest Turn  Open For
+Codex            3      3        3        1          1           0            7s           17s       24s
+
+Faults
+
+Provider  Retries  Interruptions  Failures  Silent Turns  Rewrites  Rebuilds  Rebuilt Tokens
+Codex           0              1         1             0         0         0              0t
+
+1 of 4 sessions is in a legacy format and was not considered.

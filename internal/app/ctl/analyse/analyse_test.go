@@ -242,6 +242,40 @@ func TestEverySessionTheJournalCannotAnswerForIsSkipped(t *testing.T) {
 	}
 }
 
+func TestGoldenATurnStoppedOrRefusedBeforeAnyReplyIsCountedRatherThanSkipped(t *testing.T) {
+	directory := t.TempDir()
+	writeJournal(t, directory, "answered-oryx",
+		event("00:00:01", `{"kind":"user_message","text":"hello"}`),
+		event("00:00:05", `{"kind":"model_message","text":"hi","usage":{"input_tokens":5100,"output_tokens":29,"cache":{"read_tokens":0}}}`),
+		`{"kind":"turn_completion","time":"2026-09-01T00:00:17Z","turn":{"took":17000000000}}`,
+	)
+	writeJournal(t, directory, "stopped-kite",
+		event("00:00:01", `{"kind":"user_message","text":"hello"}`),
+		event("00:00:03", `{"kind":"turn_interruption"}`),
+		`{"kind":"turn_completion","time":"2026-09-01T00:00:03Z","turn":{"took":2000000000}}`,
+	)
+	writeJournal(t, directory, "refused-wren",
+		event("00:00:01", `{"kind":"user_message","text":"hello"}`),
+		event("00:00:02", `{"kind":"model_reasoning","text":"thinking","usage":{"input_tokens":15563,"cache":{"read_tokens":3914,"write_tokens":11645}}}`),
+		event("00:00:04", `{"kind":"turn_failure","failure":{"kind":"generic_error","message":"blocked"}}`),
+		`{"kind":"turn_completion","time":"2026-09-01T00:00:04Z","turn":{"took":3000000000}}`,
+	)
+	writeJournal(t, directory, "silent-swift",
+		event("00:00:01", `{"kind":"model_message","text":"hello"}`),
+	)
+
+	analysis, err := analyseWithCache(directory, "", []string{"answered-oryx", "refused-wren", "silent-swift", "stopped-kite"})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var output bytes.Buffer
+	if err := writeText(analysis, presentation{currency: money.Dollar()}, &output); err != nil {
+		t.Fatal(err)
+	}
+	assertGolden(t, "unanswered.txt", output.String())
+}
+
 func TestAnAverageTurnCoversEveryTurnThatWasRead(t *testing.T) {
 	directory := t.TempDir()
 	writeJournal(t, directory, "hasty-crane",
