@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Hide leading reasoning summary when conversational reasoning follows
 - Use OpenCode Zen info for missing OpenCode Go model data
 - Ignore Codex `ultra` delegation mode
 - Let parents choose children themselves

@@ -45,7 +45,7 @@ func (self *plainThought) Reset() {
 }
 
 func (self *plainThought) Text(source string, isSettled bool) (string, string) {
-	if !strings.HasPrefix(source, self.source[:min(self.consumedBytes, len(source))]) {
+	if len(source) < self.consumedBytes || !strings.HasPrefix(source, self.source[:self.consumedBytes]) {
 		self.Reset()
 	}
 	self.source = source

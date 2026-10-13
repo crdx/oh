@@ -222,6 +222,12 @@ func newScriptedRig(t *testing.T, turns ...sim.Turn) *interactiveRig {
 func newEndpointRig(t *testing.T, endpoint *sim.Endpoint) (*interactiveRig, *sim.Endpoint) {
 	t.Helper()
 
+	return newEndpointRigOn(t, endpoint, sim.Completions)
+}
+
+func newEndpointRigOn(t *testing.T, endpoint *sim.Endpoint, dialect string) (*interactiveRig, *sim.Endpoint) {
+	t.Helper()
+
 	server := httptest.NewServer(endpoint)
 	t.Cleanup(server.Close)
 
@@ -233,7 +239,7 @@ func newEndpointRig(t *testing.T, endpoint *sim.Endpoint) (*interactiveRig, *sim
 		stateDirectory: stateDirectory,
 		environment: append(
 			interactiveEnvironment(t, stateDirectory),
-			backend.EndpointVariable+"="+endpoint.Addresses(server.URL)[sim.Completions],
+			backend.EndpointVariable+"="+endpoint.Addresses(server.URL)[dialect],
 			"TERM=xterm-256color",
 		),
 	}, endpoint

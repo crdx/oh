@@ -1,0 +1,31 @@
+{"event":{"kind":"user_message","text":"show title-only thoughts separately and conversational thoughts without their leading bold titles"}}
+{"event":{"kind":"model_reasoning","text":"**Documenting simulated model testing**"}}
+{"event":{"kind":"model_reasoning","text":"**Documenting simulated model testing**"}}
+{"event":{"kind":"model_reasoning","text":"**Documenting simulated model testing**"}}
+{"event":{"kind":"model_reasoning","text":"**Documenting simulated model testing**"}}
+{"event":{"kind":"model_reasoning","text":"**Documenting simulated model testing**\n\nI’m preparing a screenshot of the mocked model."}}
+{"event":{"kind":"model_reasoning","text":"**A title with a bold body**\n\n**The body starts in bold** and stays."}}
+{"event":{"kind":"model_reasoning","text":"**A title with an italic body**\n\n*The body starts in italics* and stays."}}
+{"event":{"kind":"model_reasoning","text":"**A repeated title**\n\n**A repeated title**\n\nOnly the leading title is removed."}}
+{"event":{"kind":"model_reasoning","text":"**A title with a list**\n\n- First body item\n- Second body item"}}
+{"event":{"kind":"model_reasoning","text":"**A title with a fence**\n\n```go\nfunc main() {}\n```"}}
+{"event":{"kind":"model_reasoning","text":"**A title without a body**\n\n"}}
+{"event":{"kind":"model_reasoning","text":"**A title with whitespace only**\n\n \t\n"}}
+{"event":{"kind":"model_reasoning","text":"**A title with spaced prose**\n\n \tI’m keeping the body.\n\nThen the next paragraph."}}
+{"event":{"kind":"model_reasoning","text":"**Only the leading title**\n\nI’m keeping this paragraph.\n\n**A later bold paragraph**\n\nThis stays too."}}
+{"event":{"kind":"model_reasoning","text":"**A single newline**\nThe title stays."}}
+{"event":{"kind":"model_reasoning","text":"**An extra blank line**\n\n\nOnly the body stays."}}
+{"event":{"kind":"model_reasoning","text":"**Carriage returns**\r\n\r\nThe normalised heading is hidden."}}
+{"event":{"kind":"model_reasoning","text":"**A space after the title** \n\nThe title stays."}}
+{"event":{"kind":"model_reasoning","text":" **An indented title**\n\nThe title stays."}}
+{"event":{"kind":"model_reasoning","text":"Prose before **a title**\n\nThe title stays."}}
+{"event":{"kind":"model_reasoning","text":"# A hash heading\n\nThe heading stays."}}
+{"event":{"kind":"model_reasoning","text":"__An underscore title__\n\nThe title stays."}}
+{"event":{"kind":"model_reasoning","text":"***Bold and italic***\n\nThe title stays."}}
+{"event":{"kind":"model_reasoning","text":"**Two bold** and **spans**\n\nBoth stay."}}
+{"event":{"kind":"model_reasoning","text":"****\n\nThe empty title is untouched."}}
+{"event":{"kind":"model_reasoning","text":"** **\n\nThe blank title is untouched."}}
+{"event":{"kind":"model_reasoning","text":"**A multiline\ntitle**\n\nThe title stays."}}
+{"event":{"kind":"model_reasoning","text":"**An unclosed title\n\nThe text stays."}}
+{"event":{"kind":"model_reasoning","text":"```text\n**A fenced title**\n\nThe title stays.\n```"}}
+{"event":{"kind":"model_message","text":"Title-only thoughts stay on separate lines; only exact leading titles with a body are hidden."}}

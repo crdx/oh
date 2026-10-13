@@ -6035,6 +6035,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"streaming-modes":          {".screen"},
 		"groupings":                {".screen"},
 		"reasonings":               {".ansi", ".screen"},
+		"reasoning-heading":        {".ansi", ".screen"},
 		"mermaid-streaming":        {".screen"},
 		"message-marks":            {".screen"},
 		"mode-takeback":            {".ansi", ".screen"},

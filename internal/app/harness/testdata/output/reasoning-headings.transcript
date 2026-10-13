@@ -1,0 +1,18 @@
+=== written down ===
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Effort:** `high`
+- **Provider:** `codex`
+- **Workspace:** `/workspace`
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## User · +0s
+
+show title-only thoughts separately and conversational thoughts without their leading bold titles
+
+## Assistant · +30s
+
+Title-only thoughts stay on separate lines; only exact leading titles with a body are hidden.

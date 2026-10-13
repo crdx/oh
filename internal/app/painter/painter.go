@@ -427,6 +427,7 @@ func renderReasoningWith(
 	shouldRenderHyperlinks bool,
 	pathRoots link.Roots,
 ) []string {
+	thought, canLoseHeading := withoutReasoningHeading(thought)
 	if rendering == output.ReasoningPlain {
 		settledText, tail := plain.Text(thought, isSettled)
 		text := joinedThought(settledText, tail)
@@ -438,7 +439,12 @@ func renderReasoningWith(
 		if !isSettled {
 			stableLength = len(joinedThought(settledText, tail[:plain.StableTail(tail)]))
 		}
-		return reflow.Wrap(text, len(settledText), stableLength, columns)
+		settledLength := len(settledText)
+		if !isSettled && canLoseHeading {
+			settledLength = 0
+			stableLength = 0
+		}
+		return reflow.Wrap(text, settledLength, stableLength, columns)
 	}
 
 	options := markdown.Options{Columns: columns}
@@ -766,9 +772,12 @@ func (self *Picasso) drawReasoning(isSettled bool) {
 	}
 
 	self.reasoning.MarkRowsDrawn(len(rows), isTailHidden || isRowArriving)
+	_, canLoseHeading := withoutReasoningHeading(thought)
 	settledRows := len(rows)
 	switch {
 	case isSettled:
+	case canLoseHeading:
+		settledRows = 0
 	case self.reasoningRendering == output.ReasoningPlain:
 		settledRows = min(settledRows, self.reasoningReflow.StableRows())
 	default:

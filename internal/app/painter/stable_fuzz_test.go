@@ -65,6 +65,13 @@ func requirePlainThoughtKeepsItsSettledRows(t *testing.T, thought string, column
 
 func FuzzAPlainThoughtNeverChangesARowItSettled(fuzzer *testing.F) {
 	for _, thought := range []string{
+		"**" + strings.TrimSpace(strings.Repeat("A title which may disappear ", 20)) + "**\n\nThe conversational body stays.",
+		"**" + strings.TrimSpace(strings.Repeat("A title which stays ", 20)) + "**\n\n \t",
+		"**A title**\n\n*the body*",
+		"**A title**\n\n**the body**",
+		"**A title**\n\n**A title**\n\nThe body.",
+		"**A title**\n\n- first\n- second",
+		"**A title**\n\n```go\nfunc main() {}\n```",
 		"Checking the flag `--yolo first, since it changes what the sandbox allows and every later step depends on it.",
 		"See <https://example.com/a/long/address/that/wraps/over/rows> for the details of it all.",
 		"Use **bold that runs on and on across several rows before it closes** and then more.",

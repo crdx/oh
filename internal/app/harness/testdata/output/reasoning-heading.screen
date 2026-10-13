@@ -1,0 +1,3480 @@
+=== markdown asap 1 open title ===
+⋮ 4 more lines
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title
+=== markdown asap 2 closed title ===
+⋮ 3 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== markdown asap 3 first newline ===
+⋮ 3 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== markdown asap 4 blank line ===
+⋮ 3 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== markdown asap 5 whitespace only ===
+⋮ 3 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== markdown asap 6 body arriving ===
+ I
+=== markdown asap 7 complete body ===
+ I am keeping only the conversational body.
+=== markdown asap 8 body settled ===
+ I am keeping only the conversational body.
+=== markdown line 1 open title ===
+⋮ 3 more lines
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+=== markdown line 2 closed title ===
+⋮ 3 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== markdown line 3 first newline ===
+⋮ 3 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== markdown line 4 blank line ===
+⋮ 3 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== markdown line 5 whitespace only ===
+⋮ 3 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== markdown line 6 body arriving ===
+ I
+=== markdown line 7 complete body ===
+ I am keeping only the conversational body.
+=== markdown line 8 body settled ===
+ I am keeping only the conversational body.
+=== markdown narrow ===
+
+ show title-only thoughts separately
+ and conversational thoughts without
+ their leading bold titles
+
+
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+I’m preparing a screenshot of the mocked
+model.
+The body starts in bold and stays.
+The body starts in italics and stays.
+A repeated title
+
+Only the leading title is removed.
+• First body item
+• Second body item
+func main() {}
+A title without a body
+A title with whitespace only
+ I’m keeping the body.
+
+Then the next paragraph.
+I’m keeping this paragraph.
+
+A later bold paragraph
+
+This stays too.
+A single newline
+The title stays.
+Only the body stays.
+The normalised heading is hidden.
+A space after the title
+
+The title stays.
+An indented title
+
+The title stays.
+Prose before a title
+
+The title stays.
+A hash heading
+
+The heading stays.
+An underscore title
+
+The title stays.
+Bold and italic
+
+The title stays.
+Two bold and spans
+
+Both stay.
+────────────────────────────────────────
+
+The empty title is untouched.
+────────────────────────────────────────
+
+The blank title is untouched.
+A multiline
+title
+
+The title stays.
+**An unclosed title
+
+The text stays.
+**A fenced title**
+
+The title stays.
+
+Title-only thoughts stay on separate
+lines; only exact leading titles with a
+body are hidden.
+=== markdown one column ===
+
+
+s
+
+h
+
+o
+
+w
+
+t
+
+i
+
+t
+
+l
+
+e
+
+-
+
+o
+
+n
+
+l
+
+y
+
+t
+
+h
+
+o
+
+u
+
+g
+
+h
+
+t
+
+s
+
+s
+
+e
+
+p
+
+a
+
+r
+
+a
+
+t
+
+e
+
+l
+
+y
+
+a
+
+n
+
+d
+
+c
+
+o
+
+n
+
+v
+
+e
+
+r
+
+s
+
+a
+
+t
+
+i
+
+o
+
+n
+
+a
+
+l
+
+t
+
+h
+
+o
+
+u
+
+g
+
+h
+
+t
+
+s
+
+w
+
+i
+
+t
+
+h
+
+o
+
+u
+
+t
+
+t
+
+h
+
+e
+
+i
+
+r
+
+l
+
+e
+
+a
+
+d
+
+i
+
+n
+
+g
+
+b
+
+o
+
+l
+
+d
+
+t
+
+i
+
+t
+
+l
+
+e
+
+s
+
+
+D
+o
+c
+u
+m
+e
+n
+t
+i
+n
+g
+s
+i
+m
+u
+l
+a
+t
+e
+d
+m
+o
+d
+e
+l
+t
+e
+s
+t
+i
+n
+g
+D
+o
+c
+u
+m
+e
+n
+t
+i
+n
+g
+s
+i
+m
+u
+l
+a
+t
+e
+d
+m
+o
+d
+e
+l
+t
+e
+s
+t
+i
+n
+g
+D
+o
+c
+u
+m
+e
+n
+t
+i
+n
+g
+s
+i
+m
+u
+l
+a
+t
+e
+d
+m
+o
+d
+e
+l
+t
+e
+s
+t
+i
+n
+g
+D
+o
+c
+u
+m
+e
+n
+t
+i
+n
+g
+s
+i
+m
+u
+l
+a
+t
+e
+d
+m
+o
+d
+e
+l
+t
+e
+s
+t
+i
+n
+g
+I
+’
+m
+p
+r
+e
+p
+a
+r
+i
+n
+g
+a
+s
+c
+r
+e
+e
+n
+s
+h
+o
+t
+o
+f
+t
+h
+e
+m
+o
+c
+k
+e
+d
+m
+o
+d
+e
+l
+.
+T
+h
+e
+b
+o
+d
+y
+s
+t
+a
+r
+t
+s
+i
+n
+b
+o
+l
+d
+a
+n
+d
+s
+t
+a
+y
+s
+.
+T
+h
+e
+b
+o
+d
+y
+s
+t
+a
+r
+t
+s
+i
+n
+i
+t
+a
+l
+i
+c
+s
+a
+n
+d
+s
+t
+a
+y
+s
+.
+A
+r
+e
+p
+e
+a
+t
+e
+d
+t
+i
+t
+l
+e
+
+O
+n
+l
+y
+t
+h
+e
+l
+e
+a
+d
+i
+n
+g
+t
+i
+t
+l
+e
+i
+s
+r
+e
+m
+o
+v
+e
+d
+.
+•
+F
+i
+r
+s
+t
+b
+o
+d
+y
+i
+t
+e
+m
+•
+S
+e
+c
+o
+n
+d
+b
+o
+d
+y
+i
+t
+e
+m
+f
+u
+n
+c
+m
+a
+i
+n
+(
+)
+{
+}
+A
+t
+i
+t
+l
+e
+w
+i
+t
+h
+o
+u
+t
+a
+b
+o
+d
+y
+A
+t
+i
+t
+l
+e
+w
+i
+t
+h
+w
+h
+i
+t
+e
+s
+p
+a
+c
+e
+o
+n
+l
+y
+
+I
+’
+m
+k
+e
+e
+p
+i
+n
+g
+t
+h
+e
+b
+o
+d
+y
+.
+
+T
+h
+e
+n
+t
+h
+e
+n
+e
+x
+t
+p
+a
+r
+a
+g
+r
+a
+p
+h
+.
+I
+’
+m
+k
+e
+e
+p
+i
+n
+g
+t
+h
+i
+s
+p
+a
+r
+a
+g
+r
+a
+p
+h
+.
+
+A
+l
+a
+t
+e
+r
+b
+o
+l
+d
+p
+a
+r
+a
+g
+r
+a
+p
+h
+
+T
+h
+i
+s
+s
+t
+a
+y
+s
+t
+o
+o
+.
+A
+s
+i
+n
+g
+l
+e
+n
+e
+w
+l
+i
+n
+e
+T
+h
+e
+t
+i
+t
+l
+e
+s
+t
+a
+y
+s
+.
+O
+n
+l
+y
+t
+h
+e
+b
+o
+d
+y
+s
+t
+a
+y
+s
+.
+T
+h
+e
+n
+o
+r
+m
+a
+l
+i
+s
+e
+d
+h
+e
+a
+d
+i
+n
+g
+i
+s
+h
+i
+d
+d
+e
+n
+.
+A
+s
+p
+a
+c
+e
+a
+f
+t
+e
+r
+t
+h
+e
+t
+i
+t
+l
+e
+
+T
+h
+e
+t
+i
+t
+l
+e
+s
+t
+a
+y
+s
+.
+A
+n
+i
+n
+d
+e
+n
+t
+e
+d
+t
+i
+t
+l
+e
+
+T
+h
+e
+t
+i
+t
+l
+e
+s
+t
+a
+y
+s
+.
+P
+r
+o
+s
+e
+b
+e
+f
+o
+r
+e
+a
+t
+i
+t
+l
+e
+
+T
+h
+e
+t
+i
+t
+l
+e
+s
+t
+a
+y
+s
+.
+A
+h
+a
+s
+h
+h
+e
+a
+d
+i
+n
+g
+
+T
+h
+e
+h
+e
+a
+d
+i
+n
+g
+s
+t
+a
+y
+s
+.
+A
+n
+u
+n
+d
+e
+r
+s
+c
+o
+r
+e
+t
+i
+t
+l
+e
+
+T
+h
+e
+t
+i
+t
+l
+e
+s
+t
+a
+y
+s
+.
+B
+o
+l
+d
+a
+n
+d
+i
+t
+a
+l
+i
+c
+
+T
+h
+e
+t
+i
+t
+l
+e
+s
+t
+a
+y
+s
+.
+T
+w
+o
+b
+o
+l
+d
+a
+n
+d
+s
+p
+a
+n
+s
+
+B
+o
+t
+h
+s
+t
+a
+y
+.
+─
+
+T
+h
+e
+e
+m
+p
+t
+y
+t
+i
+t
+l
+e
+i
+s
+u
+n
+t
+o
+u
+c
+h
+e
+d
+.
+─
+
+T
+h
+e
+b
+l
+a
+n
+k
+t
+i
+t
+l
+e
+i
+s
+u
+n
+t
+o
+u
+c
+h
+e
+d
+.
+A
+m
+u
+l
+t
+i
+l
+i
+n
+e
+t
+i
+t
+l
+e
+
+T
+h
+e
+t
+i
+t
+l
+e
+s
+t
+a
+y
+s
+.
+*
+*
+A
+n
+u
+n
+c
+l
+o
+s
+e
+d
+t
+i
+t
+l
+e
+
+T
+h
+e
+t
+e
+x
+t
+s
+t
+a
+y
+s
+.
+*
+*
+A
+f
+e
+n
+c
+e
+d
+t
+i
+t
+l
+e
+*
+*
+
+T
+h
+e
+t
+i
+t
+l
+e
+s
+t
+a
+y
+s
+.
+
+T
+i
+t
+l
+e
+-
+o
+n
+l
+y
+t
+h
+o
+u
+g
+h
+t
+s
+s
+t
+a
+y
+o
+n
+s
+e
+p
+a
+r
+a
+t
+e
+l
+i
+n
+e
+s
+;
+o
+n
+l
+y
+e
+x
+a
+c
+t
+l
+e
+a
+d
+i
+n
+g
+t
+i
+t
+l
+e
+s
+w
+i
+t
+h
+a
+b
+o
+d
+y
+a
+r
+e
+h
+i
+d
+d
+e
+n
+.
+=== markdown paced 1 open title ===
+⋮ 4 more lines
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title
+=== markdown paced 2 closed title ===
+⋮ 4 more lines
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title
+=== markdown paced 3 first newline ===
+⋮ 4 more lines
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title
+=== markdown paced 4 blank line ===
+⋮ 4 more lines
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title
+=== markdown paced 5 whitespace only ===
+⋮ 4 more lines
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title
+=== markdown paced 6 body arriving ===
+⋮ 4 more lines
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title A provisional title A provisional title A provisional title A provisional title A provisional
+title
+=== markdown paced 7 complete body ===
+ I am keeping only the conversational body.
+=== markdown paced 8 body settled ===
+ I am keeping only the conversational body.
+=== markdown printed ===
+
+ show title-only thoughts separately and conversational thoughts without their leading bold titles
+
+
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+I’m preparing a screenshot of the mocked model.
+The body starts in bold and stays.
+The body starts in italics and stays.
+A repeated title
+
+Only the leading title is removed.
+• First body item
+• Second body item
+func main() {}
+A title without a body
+A title with whitespace only
+ I’m keeping the body.
+
+Then the next paragraph.
+I’m keeping this paragraph.
+
+A later bold paragraph
+
+This stays too.
+A single newline
+The title stays.
+Only the body stays.
+The normalised heading is hidden.
+A space after the title
+
+The title stays.
+An indented title
+
+The title stays.
+Prose before a title
+
+The title stays.
+A hash heading
+
+The heading stays.
+An underscore title
+
+The title stays.
+Bold and italic
+
+The title stays.
+Two bold and spans
+
+Both stay.
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+The empty title is untouched.
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+The blank title is untouched.
+A multiline
+title
+
+The title stays.
+**An unclosed title
+
+The text stays.
+**A fenced title**
+
+The title stays.
+
+Title-only thoughts stay on separate lines; only exact leading titles with a body are hidden.
+=== markdown streamed asap ===
+
+ show title-only thoughts separately and conversational thoughts without their leading bold titles
+
+
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+I’m preparing a screenshot of the mocked model.
+The body starts in bold and stays.
+The body starts in italics and stays.
+A repeated title
+
+Only the leading title is removed.
+• First body item
+• Second body item
+func main() {}
+A title without a body
+A title with whitespace only
+ I’m keeping the body.
+
+Then the next paragraph.
+I’m keeping this paragraph.
+
+A later bold paragraph
+
+This stays too.
+A single newline
+The title stays.
+Only the body stays.
+The normalised heading is hidden.
+A space after the title
+
+The title stays.
+An indented title
+
+The title stays.
+Prose before a title
+
+The title stays.
+A hash heading
+
+The heading stays.
+An underscore title
+
+The title stays.
+Bold and italic
+
+The title stays.
+Two bold and spans
+
+Both stay.
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+The empty title is untouched.
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+The blank title is untouched.
+A multiline
+title
+
+The title stays.
+**An unclosed title
+
+The text stays.
+**A fenced title**
+
+The title stays.
+
+Title-only thoughts stay on separate lines; only exact leading titles with a body are hidden.
+=== markdown streamed line ===
+
+ show title-only thoughts separately and conversational thoughts without their leading bold titles
+
+
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+I’m preparing a screenshot of the mocked model.
+The body starts in bold and stays.
+The body starts in italics and stays.
+A repeated title
+
+Only the leading title is removed.
+• First body item
+• Second body item
+func main() {}
+A title without a body
+A title with whitespace only
+ I’m keeping the body.
+
+Then the next paragraph.
+I’m keeping this paragraph.
+
+A later bold paragraph
+
+This stays too.
+A single newline
+The title stays.
+Only the body stays.
+The normalised heading is hidden.
+A space after the title
+
+The title stays.
+An indented title
+
+The title stays.
+Prose before a title
+
+The title stays.
+A hash heading
+
+The heading stays.
+An underscore title
+
+The title stays.
+Bold and italic
+
+The title stays.
+Two bold and spans
+
+Both stay.
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+The empty title is untouched.
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+The blank title is untouched.
+A multiline
+title
+
+The title stays.
+**An unclosed title
+
+The text stays.
+**A fenced title**
+
+The title stays.
+
+Title-only thoughts stay on separate lines; only exact leading titles with a body are hidden.
+=== markdown streamed paced ===
+
+ show title-only thoughts separately and conversational thoughts without their leading bold titles
+
+
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+I’m preparing a screenshot of the mocked model.
+The body starts in bold and stays.
+The body starts in italics and stays.
+A repeated title
+
+Only the leading title is removed.
+• First body item
+• Second body item
+func main() {}
+A title without a body
+A title with whitespace only
+ I’m keeping the body.
+
+Then the next paragraph.
+I’m keeping this paragraph.
+
+A later bold paragraph
+
+This stays too.
+A single newline
+The title stays.
+Only the body stays.
+The normalised heading is hidden.
+A space after the title
+
+The title stays.
+An indented title
+
+The title stays.
+Prose before a title
+
+The title stays.
+A hash heading
+
+The heading stays.
+An underscore title
+
+The title stays.
+Bold and italic
+
+The title stays.
+Two bold and spans
+
+Both stay.
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+The empty title is untouched.
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+The blank title is untouched.
+A multiline
+title
+
+The title stays.
+**An unclosed title
+
+The text stays.
+**A fenced title**
+
+The title stays.
+
+Title-only thoughts stay on separate lines; only exact leading titles with a body are hidden.
+=== markdown tiny ===
+
+ show
+ title-only
+ thoughts
+ separately
+ and
+ conversati
+ onal
+ thoughts
+ without
+ their
+ leading
+ bold
+ titles
+
+
+Documenting
+simulated
+model
+testing
+Documenting
+simulated
+model
+testing
+Documenting
+simulated
+model
+testing
+Documenting
+simulated
+model
+testing
+I’m
+preparing a
+screenshot
+of the
+mocked
+model.
+The body
+starts in
+bold and
+stays.
+The body
+starts in
+italics and
+stays.
+A repeated
+title
+
+Only the
+leading
+title is
+removed.
+• First body
+  item
+• Second
+  body item
+func main()
+{}
+A title
+without a
+body
+A title with
+whitespace
+only
+ I’m keeping
+the body.
+
+Then the
+next
+paragraph.
+I’m keeping
+this
+paragraph.
+
+A later bold
+paragraph
+
+This stays
+too.
+A single
+newline
+The title
+stays.
+Only the
+body stays.
+The
+normalised
+heading is
+hidden.
+A space
+after the
+title
+
+The title
+stays.
+An indented
+title
+
+The title
+stays.
+Prose before
+a title
+
+The title
+stays.
+A hash
+heading
+
+The heading
+stays.
+An
+underscore
+title
+
+The title
+stays.
+Bold and
+italic
+
+The title
+stays.
+Two bold and
+spans
+
+Both stay.
+────────────
+
+The empty
+title is
+untouched.
+────────────
+
+The blank
+title is
+untouched.
+A multiline
+title
+
+The title
+stays.
+**An
+unclosed
+title
+
+The text
+stays.
+**A fenced
+title**
+
+The title
+stays.
+
+Title-only
+thoughts
+stay on
+separate
+lines; only
+exact
+leading
+titles with
+a body are
+hidden.
+=== markdown wide ===
+
+ show title-only thoughts separately and conversational thoughts without their leading bold titles
+
+
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+I’m preparing a screenshot of the mocked model.
+The body starts in bold and stays.
+The body starts in italics and stays.
+A repeated title
+
+Only the leading title is removed.
+• First body item
+• Second body item
+func main() {}
+A title without a body
+A title with whitespace only
+ I’m keeping the body.
+
+Then the next paragraph.
+I’m keeping this paragraph.
+
+A later bold paragraph
+
+This stays too.
+A single newline
+The title stays.
+Only the body stays.
+The normalised heading is hidden.
+A space after the title
+
+The title stays.
+An indented title
+
+The title stays.
+Prose before a title
+
+The title stays.
+A hash heading
+
+The heading stays.
+An underscore title
+
+The title stays.
+Bold and italic
+
+The title stays.
+Two bold and spans
+
+Both stay.
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+The empty title is untouched.
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+The blank title is untouched.
+A multiline
+title
+
+The title stays.
+**An unclosed title
+
+The text stays.
+**A fenced title**
+
+The title stays.
+
+Title-only thoughts stay on separate lines; only exact leading titles with a body are hidden.
+=== plain asap 1 open title ===
+⋮ 3 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== plain asap 2 closed title ===
+⋮ 3 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== plain asap 3 first newline ===
+⋮ 3 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== plain asap 4 blank line ===
+⋮ 3 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== plain asap 5 whitespace only ===
+⋮ 3 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== plain asap 6 body arriving ===
+I
+=== plain asap 7 complete body ===
+I am keeping only the conversational body.
+=== plain asap 8 body settled ===
+I am keeping only the conversational body.
+=== plain line 1 open title ===
+⋮ 2 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== plain line 2 closed title ===
+⋮ 2 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== plain line 3 first newline ===
+⋮ 2 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== plain line 4 blank line ===
+⋮ 2 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== plain line 5 whitespace only ===
+⋮ 2 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== plain line 6 body arriving ===
+I
+=== plain line 7 complete body ===
+I am keeping only the conversational body.
+=== plain line 8 body settled ===
+I am keeping only the conversational body.
+=== plain narrow ===
+
+ show title-only thoughts separately
+ and conversational thoughts without
+ their leading bold titles
+
+
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+I’m preparing a screenshot of the mocked
+model.
+The body starts in bold and stays.
+The body starts in italics and stays.
+A repeated title Only the leading title
+is removed.
+• First body item • Second body item
+func main() {}
+A title without a body
+A title with whitespace only
+I’m keeping the body. Then the next
+paragraph.
+I’m keeping this paragraph. A later bold
+paragraph This stays too.
+A single newline The title stays.
+Only the body stays.
+The normalised heading is hidden.
+A space after the title The title stays.
+An indented title The title stays.
+Prose before a title The title stays.
+A hash heading The heading stays.
+An underscore title The title stays.
+Bold and italic The title stays.
+Two bold and spans Both stay.
+The empty title is untouched.
+** ** The blank title is untouched.
+**A multiline title** The title stays.
+**An unclosed title The text stays.
+**A fenced title** The title stays.
+
+Title-only thoughts stay on separate
+lines; only exact leading titles with a
+body are hidden.
+=== plain one column ===
+
+
+s
+
+h
+
+o
+
+w
+
+t
+
+i
+
+t
+
+l
+
+e
+
+-
+
+o
+
+n
+
+l
+
+y
+
+t
+
+h
+
+o
+
+u
+
+g
+
+h
+
+t
+
+s
+
+s
+
+e
+
+p
+
+a
+
+r
+
+a
+
+t
+
+e
+
+l
+
+y
+
+a
+
+n
+
+d
+
+c
+
+o
+
+n
+
+v
+
+e
+
+r
+
+s
+
+a
+
+t
+
+i
+
+o
+
+n
+
+a
+
+l
+
+t
+
+h
+
+o
+
+u
+
+g
+
+h
+
+t
+
+s
+
+w
+
+i
+
+t
+
+h
+
+o
+
+u
+
+t
+
+t
+
+h
+
+e
+
+i
+
+r
+
+l
+
+e
+
+a
+
+d
+
+i
+
+n
+
+g
+
+b
+
+o
+
+l
+
+d
+
+t
+
+i
+
+t
+
+l
+
+e
+
+s
+
+
+D
+o
+c
+u
+m
+e
+n
+t
+i
+n
+g
+s
+i
+m
+u
+l
+a
+t
+e
+d
+m
+o
+d
+e
+l
+t
+e
+s
+t
+i
+n
+g
+D
+o
+c
+u
+m
+e
+n
+t
+i
+n
+g
+s
+i
+m
+u
+l
+a
+t
+e
+d
+m
+o
+d
+e
+l
+t
+e
+s
+t
+i
+n
+g
+D
+o
+c
+u
+m
+e
+n
+t
+i
+n
+g
+s
+i
+m
+u
+l
+a
+t
+e
+d
+m
+o
+d
+e
+l
+t
+e
+s
+t
+i
+n
+g
+D
+o
+c
+u
+m
+e
+n
+t
+i
+n
+g
+s
+i
+m
+u
+l
+a
+t
+e
+d
+m
+o
+d
+e
+l
+t
+e
+s
+t
+i
+n
+g
+I
+’
+m
+p
+r
+e
+p
+a
+r
+i
+n
+g
+a
+s
+c
+r
+e
+e
+n
+s
+h
+o
+t
+o
+f
+t
+h
+e
+m
+o
+c
+k
+e
+d
+m
+o
+d
+e
+l
+.
+T
+h
+e
+b
+o
+d
+y
+s
+t
+a
+r
+t
+s
+i
+n
+b
+o
+l
+d
+a
+n
+d
+s
+t
+a
+y
+s
+.
+T
+h
+e
+b
+o
+d
+y
+s
+t
+a
+r
+t
+s
+i
+n
+i
+t
+a
+l
+i
+c
+s
+a
+n
+d
+s
+t
+a
+y
+s
+.
+A
+r
+e
+p
+e
+a
+t
+e
+d
+t
+i
+t
+l
+e
+O
+n
+l
+y
+t
+h
+e
+l
+e
+a
+d
+i
+n
+g
+t
+i
+t
+l
+e
+i
+s
+r
+e
+m
+o
+v
+e
+d
+.
+•
+F
+i
+r
+s
+t
+b
+o
+d
+y
+i
+t
+e
+m
+•
+S
+e
+c
+o
+n
+d
+b
+o
+d
+y
+i
+t
+e
+m
+f
+u
+n
+c
+m
+a
+i
+n
+(
+)
+{
+}
+A
+t
+i
+t
+l
+e
+w
+i
+t
+h
+o
+u
+t
+a
+b
+o
+d
+y
+A
+t
+i
+t
+l
+e
+w
+i
+t
+h
+w
+h
+i
+t
+e
+s
+p
+a
+c
+e
+o
+n
+l
+y
+I
+’
+m
+k
+e
+e
+p
+i
+n
+g
+t
+h
+e
+b
+o
+d
+y
+.
+T
+h
+e
+n
+t
+h
+e
+n
+e
+x
+t
+p
+a
+r
+a
+g
+r
+a
+p
+h
+.
+I
+’
+m
+k
+e
+e
+p
+i
+n
+g
+t
+h
+i
+s
+p
+a
+r
+a
+g
+r
+a
+p
+h
+.
+A
+l
+a
+t
+e
+r
+b
+o
+l
+d
+p
+a
+r
+a
+g
+r
+a
+p
+h
+T
+h
+i
+s
+s
+t
+a
+y
+s
+t
+o
+o
+.
+A
+s
+i
+n
+g
+l
+e
+n
+e
+w
+l
+i
+n
+e
+T
+h
+e
+t
+i
+t
+l
+e
+s
+t
+a
+y
+s
+.
+O
+n
+l
+y
+t
+h
+e
+b
+o
+d
+y
+s
+t
+a
+y
+s
+.
+T
+h
+e
+n
+o
+r
+m
+a
+l
+i
+s
+e
+d
+h
+e
+a
+d
+i
+n
+g
+i
+s
+h
+i
+d
+d
+e
+n
+.
+A
+s
+p
+a
+c
+e
+a
+f
+t
+e
+r
+t
+h
+e
+t
+i
+t
+l
+e
+T
+h
+e
+t
+i
+t
+l
+e
+s
+t
+a
+y
+s
+.
+A
+n
+i
+n
+d
+e
+n
+t
+e
+d
+t
+i
+t
+l
+e
+T
+h
+e
+t
+i
+t
+l
+e
+s
+t
+a
+y
+s
+.
+P
+r
+o
+s
+e
+b
+e
+f
+o
+r
+e
+a
+t
+i
+t
+l
+e
+T
+h
+e
+t
+i
+t
+l
+e
+s
+t
+a
+y
+s
+.
+A
+h
+a
+s
+h
+h
+e
+a
+d
+i
+n
+g
+T
+h
+e
+h
+e
+a
+d
+i
+n
+g
+s
+t
+a
+y
+s
+.
+A
+n
+u
+n
+d
+e
+r
+s
+c
+o
+r
+e
+t
+i
+t
+l
+e
+T
+h
+e
+t
+i
+t
+l
+e
+s
+t
+a
+y
+s
+.
+B
+o
+l
+d
+a
+n
+d
+i
+t
+a
+l
+i
+c
+T
+h
+e
+t
+i
+t
+l
+e
+s
+t
+a
+y
+s
+.
+T
+w
+o
+b
+o
+l
+d
+a
+n
+d
+s
+p
+a
+n
+s
+B
+o
+t
+h
+s
+t
+a
+y
+.
+T
+h
+e
+e
+m
+p
+t
+y
+t
+i
+t
+l
+e
+i
+s
+u
+n
+t
+o
+u
+c
+h
+e
+d
+.
+*
+*
+*
+*
+T
+h
+e
+b
+l
+a
+n
+k
+t
+i
+t
+l
+e
+i
+s
+u
+n
+t
+o
+u
+c
+h
+e
+d
+.
+*
+*
+A
+m
+u
+l
+t
+i
+l
+i
+n
+e
+t
+i
+t
+l
+e
+*
+*
+T
+h
+e
+t
+i
+t
+l
+e
+s
+t
+a
+y
+s
+.
+*
+*
+A
+n
+u
+n
+c
+l
+o
+s
+e
+d
+t
+i
+t
+l
+e
+T
+h
+e
+t
+e
+x
+t
+s
+t
+a
+y
+s
+.
+*
+*
+A
+f
+e
+n
+c
+e
+d
+t
+i
+t
+l
+e
+*
+*
+T
+h
+e
+t
+i
+t
+l
+e
+s
+t
+a
+y
+s
+.
+
+T
+i
+t
+l
+e
+-
+o
+n
+l
+y
+t
+h
+o
+u
+g
+h
+t
+s
+s
+t
+a
+y
+o
+n
+s
+e
+p
+a
+r
+a
+t
+e
+l
+i
+n
+e
+s
+;
+o
+n
+l
+y
+e
+x
+a
+c
+t
+l
+e
+a
+d
+i
+n
+g
+t
+i
+t
+l
+e
+s
+w
+i
+t
+h
+a
+b
+o
+d
+y
+a
+r
+e
+h
+i
+d
+d
+e
+n
+.
+=== plain paced 1 open title ===
+⋮ 3 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== plain paced 2 closed title ===
+⋮ 3 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== plain paced 3 first newline ===
+⋮ 3 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== plain paced 4 blank line ===
+⋮ 3 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== plain paced 5 whitespace only ===
+⋮ 3 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== plain paced 6 body arriving ===
+⋮ 3 more lines
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+A provisional title A provisional title A provisional title A provisional title A provisional title
+=== plain paced 7 complete body ===
+I am keeping only the conversational body.
+=== plain paced 8 body settled ===
+I am keeping only the conversational body.
+=== plain printed ===
+
+ show title-only thoughts separately and conversational thoughts without their leading bold titles
+
+
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+I’m preparing a screenshot of the mocked model.
+The body starts in bold and stays.
+The body starts in italics and stays.
+A repeated title Only the leading title is removed.
+• First body item • Second body item
+func main() {}
+A title without a body
+A title with whitespace only
+I’m keeping the body. Then the next paragraph.
+I’m keeping this paragraph. A later bold paragraph This stays too.
+A single newline The title stays.
+Only the body stays.
+The normalised heading is hidden.
+A space after the title The title stays.
+An indented title The title stays.
+Prose before a title The title stays.
+A hash heading The heading stays.
+An underscore title The title stays.
+Bold and italic The title stays.
+Two bold and spans Both stay.
+The empty title is untouched.
+** ** The blank title is untouched.
+**A multiline title** The title stays.
+**An unclosed title The text stays.
+**A fenced title** The title stays.
+
+Title-only thoughts stay on separate lines; only exact leading titles with a body are hidden.
+=== plain streamed asap ===
+
+ show title-only thoughts separately and conversational thoughts without their leading bold titles
+
+
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+I’m preparing a screenshot of the mocked model.
+The body starts in bold and stays.
+The body starts in italics and stays.
+A repeated title Only the leading title is removed.
+• First body item • Second body item
+func main() {}
+A title without a body
+A title with whitespace only
+I’m keeping the body. Then the next paragraph.
+I’m keeping this paragraph. A later bold paragraph This stays too.
+A single newline The title stays.
+Only the body stays.
+The normalised heading is hidden.
+A space after the title The title stays.
+An indented title The title stays.
+Prose before a title The title stays.
+A hash heading The heading stays.
+An underscore title The title stays.
+Bold and italic The title stays.
+Two bold and spans Both stay.
+The empty title is untouched.
+** ** The blank title is untouched.
+**A multiline title** The title stays.
+**An unclosed title The text stays.
+**A fenced title** The title stays.
+
+Title-only thoughts stay on separate lines; only exact leading titles with a body are hidden.
+=== plain streamed line ===
+
+ show title-only thoughts separately and conversational thoughts without their leading bold titles
+
+
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+I’m preparing a screenshot of the mocked model.
+The body starts in bold and stays.
+The body starts in italics and stays.
+A repeated title Only the leading title is removed.
+• First body item • Second body item
+func main() {}
+A title without a body
+A title with whitespace only
+I’m keeping the body. Then the next paragraph.
+I’m keeping this paragraph. A later bold paragraph This stays too.
+A single newline The title stays.
+Only the body stays.
+The normalised heading is hidden.
+A space after the title The title stays.
+An indented title The title stays.
+Prose before a title The title stays.
+A hash heading The heading stays.
+An underscore title The title stays.
+Bold and italic The title stays.
+Two bold and spans Both stay.
+The empty title is untouched.
+** ** The blank title is untouched.
+**A multiline title** The title stays.
+**An unclosed title The text stays.
+**A fenced title** The title stays.
+
+Title-only thoughts stay on separate lines; only exact leading titles with a body are hidden.
+=== plain streamed paced ===
+
+ show title-only thoughts separately and conversational thoughts without their leading bold titles
+
+
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+I’m preparing a screenshot of the mocked model.
+The body starts in bold and stays.
+The body starts in italics and stays.
+A repeated title Only the leading title is removed.
+• First body item • Second body item
+func main() {}
+A title without a body
+A title with whitespace only
+I’m keeping the body. Then the next paragraph.
+I’m keeping this paragraph. A later bold paragraph This stays too.
+A single newline The title stays.
+Only the body stays.
+The normalised heading is hidden.
+A space after the title The title stays.
+An indented title The title stays.
+Prose before a title The title stays.
+A hash heading The heading stays.
+An underscore title The title stays.
+Bold and italic The title stays.
+Two bold and spans Both stay.
+The empty title is untouched.
+** ** The blank title is untouched.
+**A multiline title** The title stays.
+**An unclosed title The text stays.
+**A fenced title** The title stays.
+
+Title-only thoughts stay on separate lines; only exact leading titles with a body are hidden.
+=== plain tiny ===
+
+ show
+ title-only
+ thoughts
+ separately
+ and
+ conversati
+ onal
+ thoughts
+ without
+ their
+ leading
+ bold
+ titles
+
+
+Documenting
+simulated
+model
+testing
+Documenting
+simulated
+model
+testing
+Documenting
+simulated
+model
+testing
+Documenting
+simulated
+model
+testing
+I’m
+preparing a
+screenshot
+of the
+mocked
+model.
+The body
+starts in
+bold and
+stays.
+The body
+starts in
+italics and
+stays.
+A repeated
+title Only
+the leading
+title is
+removed.
+• First body
+item •
+Second body
+item
+func main()
+{}
+A title
+without a
+body
+A title with
+whitespace
+only
+I’m keeping
+the body.
+Then the
+next
+paragraph.
+I’m keeping
+this
+paragraph. A
+later bold
+paragraph
+This stays
+too.
+A single
+newline The
+title stays.
+Only the
+body stays.
+The
+normalised
+heading is
+hidden.
+A space
+after the
+title The
+title stays.
+An indented
+title The
+title stays.
+Prose before
+a title The
+title stays.
+A hash
+heading The
+heading
+stays.
+An
+underscore
+title The
+title stays.
+Bold and
+italic The
+title stays.
+Two bold and
+spans Both
+stay.
+The empty
+title is
+untouched.
+** ** The
+blank title
+is
+untouched.
+**A
+multiline
+title** The
+title stays.
+**An
+unclosed
+title The
+text stays.
+**A fenced
+title** The
+title stays.
+
+Title-only
+thoughts
+stay on
+separate
+lines; only
+exact
+leading
+titles with
+a body are
+hidden.
+=== plain wide ===
+
+ show title-only thoughts separately and conversational thoughts without their leading bold titles
+
+
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+Documenting simulated model testing
+I’m preparing a screenshot of the mocked model.
+The body starts in bold and stays.
+The body starts in italics and stays.
+A repeated title Only the leading title is removed.
+• First body item • Second body item
+func main() {}
+A title without a body
+A title with whitespace only
+I’m keeping the body. Then the next paragraph.
+I’m keeping this paragraph. A later bold paragraph This stays too.
+A single newline The title stays.
+Only the body stays.
+The normalised heading is hidden.
+A space after the title The title stays.
+An indented title The title stays.
+Prose before a title The title stays.
+A hash heading The heading stays.
+An underscore title The title stays.
+Bold and italic The title stays.
+Two bold and spans Both stay.
+The empty title is untouched.
+** ** The blank title is untouched.
+**A multiline title** The title stays.
+**An unclosed title The text stays.
+**A fenced title** The title stays.
+
+Title-only thoughts stay on separate lines; only exact leading titles with a body are hidden.
