@@ -174,6 +174,11 @@ func childRotation(models []subagents.ChildModel, selections []model.Selection, 
 			location.GetSubagentRoundRobinPath(),
 			selections,
 			func(candidate model.Selection) bool {
+				if slices.ContainsFunc(models, func(child subagents.ChildModel) bool {
+					return child.Selection == candidate && child.Choice.IsGoQuotaExempt()
+				}) {
+					return true
+				}
 				return usage.IsSelectionAvailable(
 					location.GetUsageCachePath(candidate.Provider, isSimulated),
 					candidate.Model,
@@ -261,10 +266,12 @@ func newChildFactory(options childOptions) subagents.Factory {
 		connection.UseSession(options.sessionName + "-" + child.Name)
 		connection.ObserveHTTP(child.Observer)
 		provider := usage.Guard(ctx, connection.Client, usage.GuardSettings{
-			ProviderName: model.ProviderName(child.Selection.Provider),
-			ModelName:    child.Selection.Model,
-			CachePath:    location.GetUsageCachePath(child.Selection.Provider, options.endpoints.OverrideURL != ""),
-			Now:          time.Now,
+			ProviderName:        model.ProviderName(child.Selection.Provider),
+			ModelName:           child.Selection.Model,
+			CachePath:           location.GetUsageCachePath(child.Selection.Provider, options.endpoints.OverrideURL != ""),
+			Now:                 time.Now,
+			IsQuotaExempt:       child.Choice.IsGoQuotaExempt(),
+			CanRetryLimitedSend: child.Selection.Provider == model.OpencodeGoProvider,
 		})
 		worker, changes, err := childAgent(prompt, provider, tools, child)
 		if err != nil {

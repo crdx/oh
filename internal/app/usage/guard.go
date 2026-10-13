@@ -29,10 +29,12 @@ type StatefulProvider interface {
 }
 
 type GuardSettings struct {
-	ProviderName string
-	ModelName    string
-	CachePath    string
-	Now          func() time.Time
+	ProviderName        string
+	ModelName           string
+	CachePath           string
+	Now                 func() time.Time
+	IsQuotaExempt       bool
+	CanRetryLimitedSend bool
 }
 
 type guardedProvider struct {
@@ -101,9 +103,11 @@ func (self *guardedProvider) Load(items []json.RawMessage) {
 
 func (self *guardedProvider) Send(ctx context.Context, yield agent.Yield) (agent.Reply, error) {
 	storedCache := self.refreshIfDue(ctx)
-	storedCache = self.refreshForRetry(ctx, storedCache)
-	if windows := activeLimitedWindows(storedCache.Windows, self.settings.ModelName, self.settings.Now()); len(windows) > 0 {
-		return agent.Reply{}, limitedError(self.settings.ProviderName, windows, self.settings.Now())
+	if !self.settings.CanRetryLimitedSend && !self.settings.IsQuotaExempt {
+		storedCache = self.refreshForRetry(ctx, storedCache)
+		if windows := activeLimitedWindows(storedCache.Windows, self.settings.ModelName, self.settings.Now()); len(windows) > 0 {
+			return agent.Reply{}, limitedError(self.settings.ProviderName, windows, self.settings.Now())
+		}
 	}
 
 	reply, err := self.provider.Send(ctx, yield)
@@ -112,11 +116,24 @@ func (self *guardedProvider) Send(ctx context.Context, yield agent.Yield) (agent
 		if learnedLimit := self.limitAfterRefusal(ctx, err); learnedLimit != nil {
 			return reply, learnedLimit
 		}
+		if err == nil && self.settings.CanRetryLimitedSend && !self.settings.IsQuotaExempt &&
+			len(activeLimitedWindows(storedCache.Windows, self.settings.ModelName, self.settings.Now())) > 0 {
+			if storeErr := self.clearLimit(); storeErr != nil {
+				return reply, fmt.Errorf("share provider usage: %w", storeErr)
+			}
+		}
 
 		return reply, err
 	}
 
-	if storeErr := self.recordLimit(limit.Windows); storeErr != nil {
+	windows := limit.Windows
+	if self.settings.IsQuotaExempt {
+		windows = slices.Clone(windows)
+		for i := range windows {
+			windows[i].Scope = self.settings.ModelName
+		}
+	}
+	if storeErr := self.recordLimit(windows); storeErr != nil {
 		return reply, errors.Join(limit, fmt.Errorf("share provider usage: %w", storeErr))
 	}
 	self.wakeMonitor()
@@ -148,6 +165,19 @@ func (self *guardedProvider) limitAfterRefusal(ctx context.Context, err error) e
 	}
 
 	return limitedError(self.settings.ProviderName, windows, self.settings.Now())
+}
+
+func (self *guardedProvider) clearLimit() error {
+	return self.store.update(func(storedCache *cache) error {
+		for i := range storedCache.Windows {
+			if storedCache.Windows[i].Scope == "" {
+				storedCache.Windows[i].IsLimited = false
+			}
+		}
+		storedCache.FetchedAt = self.settings.Now()
+
+		return nil
+	})
 }
 
 func (self *guardedProvider) recordLimit(windows []agent.UsageWindow) error {

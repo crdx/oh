@@ -109,6 +109,57 @@ func TestAProviderUsageLimitStopsOtherSessionsBeforeTheySend(t *testing.T) {
 	}
 }
 
+func TestAGoRequestTestsCreditsDespiteAnOldRefusal(t *testing.T) {
+	path := cachePath(t)
+	clock := &testClock{now: testNow}
+	window := agent.UsageWindow{
+		Duration:  5 * time.Hour,
+		Percent:   100,
+		ResetsAt:  testNow.Add(time.Hour),
+		IsLimited: true,
+	}
+	settings := guardSettings(path, "paid-go", clock)
+	settings.CanRetryLimitedSend = true
+	refused := &providerStub{err: &agent.UsageLimitError{Cause: errors.New("no credits"), Windows: []agent.UsageWindow{window}}}
+	_, _ = usage.Guard(stoppedContext(t), refused, settings).Send(t.Context(), func(agent.Output) bool { return true })
+	if usage.IsSelectionAvailable(path, "paid-go", testNow) {
+		t.Fatal("the explicit refusal was not recorded")
+	}
+
+	paid := &providerStub{probe: agent.UsageProbe{
+		Windows:      []agent.UsageWindow{{Duration: 5 * time.Hour, Percent: 100}},
+		Availability: agent.UsageAvailabilityUnknown,
+	}}
+	_, err := usage.Guard(stoppedContext(t), paid, settings).Send(t.Context(), func(agent.Output) bool { return true })
+	if err != nil || paid.sendCount != 1 {
+		t.Fatalf("the request was withheld: err=%v sends=%d", err, paid.sendCount)
+	}
+	if !usage.IsSelectionAvailable(path, "paid-go", testNow) {
+		t.Error("a successful paid request did not clear the cached refusal")
+	}
+}
+
+func TestAFreeGoModelBypassesAnOldRefusalWithoutClearingIt(t *testing.T) {
+	path := cachePath(t)
+	clock := &testClock{now: testNow}
+	window := agent.UsageWindow{Duration: 5 * time.Hour, ResetsAt: testNow.Add(time.Hour), IsLimited: true}
+	paidSettings := guardSettings(path, "paid-go", clock)
+	paidSettings.CanRetryLimitedSend = true
+	refused := &providerStub{err: &agent.UsageLimitError{Cause: errors.New("no credits"), Windows: []agent.UsageWindow{window}}}
+	_, _ = usage.Guard(stoppedContext(t), refused, paidSettings).Send(t.Context(), func(agent.Output) bool { return true })
+
+	freeSettings := paidSettings
+	freeSettings.ModelName = "step-5-preview-free"
+	freeSettings.IsQuotaExempt = true
+	free := &providerStub{}
+	if _, err := usage.Guard(stoppedContext(t), free, freeSettings).Send(t.Context(), func(agent.Output) bool { return true }); err != nil {
+		t.Fatal(err)
+	}
+	if free.sendCount != 1 || usage.IsSelectionAvailable(path, "paid-go", testNow) {
+		t.Errorf("free send count = %d, paid limit still active = %t", free.sendCount, !usage.IsSelectionAvailable(path, "paid-go", testNow))
+	}
+}
+
 func TestAnObservedLimitWaitsBehindTheProbeAndIsThenShared(t *testing.T) {
 	path := cachePath(t)
 	if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {

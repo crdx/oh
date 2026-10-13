@@ -36,6 +36,30 @@ func useCachedModels(t *testing.T) {
 	})
 }
 
+func TestOnlyKnownFreeGoModelsBypassTheGoAllowance(t *testing.T) {
+	free := &agent.TokenPrices{}
+	paid := &agent.TokenPrices{Input: 1}
+	for _, test := range []struct {
+		choice Choice
+		want   bool
+	}{
+		{choice: Choice{Provider: OpencodeGoProvider, ID: "step-5-preview-free"}, want: true},
+		{choice: Choice{Provider: OpencodeGoProvider, ID: "another-preview-free"}, want: true},
+		{choice: Choice{Provider: OpencodeGoProvider, ID: "free-new", Prices: free}, want: true},
+		{choice: Choice{Provider: OpencodeGoProvider, ID: "unknown-price"}},
+		{choice: Choice{Provider: OpencodeGoProvider, ID: "paid", Prices: paid}},
+		{choice: Choice{Provider: OpencodeGoProvider, ID: "no-longer-free", Prices: paid}},
+		{choice: Choice{Provider: CodexProvider, ID: "free", Prices: free}},
+	} {
+		if got := test.choice.IsGoQuotaExempt(); got != test.want {
+			t.Errorf("%+v: exempt = %t, want %t", test.choice, got, test.want)
+		}
+		if got := IsGoQuotaExempt([]Choice{test.choice}, Selection{Provider: test.choice.Provider, Model: test.choice.ID}); got != test.want {
+			t.Errorf("%+v: selection exempt = %t, want %t", test.choice, got, test.want)
+		}
+	}
+}
+
 func TestModelSelectionAcceptsQualifiedAndFuzzyNames(t *testing.T) {
 	useCachedModels(t)
 

@@ -21,6 +21,19 @@ type Choice struct {
 	Wire                agent.Wire         `json:"wire,omitempty"`
 }
 
+const freeGoModelSuffix = "-free"
+
+func (self Choice) IsGoQuotaExempt() bool {
+	return self.Provider == OpencodeGoProvider && (self.Prices == nil || !self.Prices.IsKnown()) &&
+		(strings.HasSuffix(self.ID, freeGoModelSuffix) || self.Prices != nil)
+}
+
+func IsGoQuotaExempt(choices []Choice, selection Selection) bool {
+	choice, found := chosenAmong(choices, selection.Provider, selection.Model)
+
+	return found && choice.IsGoQuotaExempt()
+}
+
 func Chosen(choices []Choice, seenPath string, providerName string, model string) (Choice, error) {
 	if choice, isFound := chosenAmong(choices, providerName, model); isFound {
 		return choice, nil

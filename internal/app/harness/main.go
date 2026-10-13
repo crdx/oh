@@ -473,6 +473,9 @@ func chooseSessionModel(request sessionModelRequest) (model.Selection, model.Cho
 		configuredModels,
 		location.GetModelRoundRobinPath(),
 		func(candidate model.Selection) bool {
+			if model.IsGoQuotaExempt(request.modelChoices, candidate) {
+				return true
+			}
 			return usage.IsSelectionAvailable(
 				location.GetUsageCachePath(candidate.Provider, request.isEndpointOverridden),
 				candidate.Model,
@@ -1488,10 +1491,12 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 
 	usageCachePath := location.GetUsageCachePath(selection.Provider, endpointURL != "")
 	providerClient := usage.Guard(ctx, client.Client, usage.GuardSettings{
-		ProviderName: model.ProviderName(selection.Provider),
-		ModelName:    selection.Model,
-		CachePath:    usageCachePath,
-		Now:          time.Now,
+		ProviderName:        model.ProviderName(selection.Provider),
+		ModelName:           selection.Model,
+		CachePath:           usageCachePath,
+		Now:                 time.Now,
+		IsQuotaExempt:       choice.IsGoQuotaExempt(),
+		CanRetryLimitedSend: selection.Provider == model.OpencodeGoProvider,
 	})
 
 	app = &App{
