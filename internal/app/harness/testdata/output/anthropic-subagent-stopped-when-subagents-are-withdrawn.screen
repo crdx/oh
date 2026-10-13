@@ -2,7 +2,7 @@
  start two subagents
 
 
-spawn 2 subagents · anthropic/claude-opus-5@medium, anthropic/claude-opus-5@medium · Watching the b…
+spawn 2 subagents · anthropic/claude-opus-5@medium, anthropic/claude-opus-5@medium
 
 Both are running.
 
@@ -20,6 +20,6 @@ tame-alpaca named the build tool; tame-adder stopped when subagents went.
  start one more subagent
 
 
-Naming the tool that runs tests spawn subagent · anthropic/clau… ✗ subagents unavailable; ctrl+x s …
+spawn subagent · anthropic/claude-opus-5@medium ✗ subagents unavailable; ctrl+x s grants them
 
 Subagents are refused until you grant them with ctrl+x s.

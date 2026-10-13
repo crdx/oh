@@ -14,6 +14,7 @@
 - Ignore Codex `ultra` delegation mode
 - Let parents choose children themselves
 - Show chosen subagent selections on spawn rows
+- Show job and subagent intents after the call in parentheses
 
 ## [0.15.3] - 2026-10-13
 

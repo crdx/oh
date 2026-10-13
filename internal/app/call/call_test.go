@@ -350,8 +350,8 @@ func TestElidedBashCountsWideUnicodeInTerminalCells(t *testing.T) {
 	}
 }
 
-func TestAnIntentLeadsTheRowLikeReasoning(t *testing.T) {
-	label := Label{Name: "$", Subject: "go test ./...", Qualifier: "2L", Intent: "Running every test"}
+func TestAShellIntentLeadsTheRowLikeReasoning(t *testing.T) {
+	label := Label{Name: "$", Subject: "go test ./...", Qualifier: "2L", Intent: "Running every test", IntentLeads: true}
 
 	if got := style.Plain(label.Render()); got != "Running every test $ go test ./... 2L" {
 		t.Errorf("got %q", got)
@@ -369,6 +369,7 @@ func TestAnIntentIsCutLast(t *testing.T) {
 		Name:         "start",
 		Subject:      "golden",
 		Intent:       "Regenerating every golden",
+		IntentLeads:  true,
 		Continuation: []Label{{Name: "$", Subject: "cd /tmp/oh && just golden"}},
 	}
 	for room, want := range map[int]string{
@@ -390,10 +391,31 @@ func TestAnIntentIsCutLast(t *testing.T) {
 }
 
 func TestANarrowRowIsFilledByTheIntentFirst(t *testing.T) {
-	label := Label{Name: "start", Intent: "Regenerating every golden"}
+	label := Label{Name: "start", Intent: "Regenerating every golden", IntentLeads: true}
 
 	if got := style.Plain(elided(t, label, 20).Render()); got != "Regenerating every …" {
 		t.Errorf("got %q", got)
+	}
+}
+
+func TestAnIntentThatDoesNotLeadIsAnAsideAfterTheCall(t *testing.T) {
+	label := Label{Name: "start", Subject: "docs serve docs", Intent: "Serving the docs"}
+
+	if got := style.Plain(label.Render()); got != "start docs serve docs" {
+		t.Errorf("got %q", got)
+	}
+	if got, want := label.Width(), width.Of("start docs serve docs"); got != want {
+		t.Errorf("got width %d, want %d", got, want)
+	}
+	if got := label.LeadWidth(); got != 0 {
+		t.Errorf("got lead width %d, want none", got)
+	}
+	if got := label.GetAside(); got != "Serving the docs" {
+		t.Errorf("got aside %q", got)
+	}
+	label.Aside = "Watching the logs"
+	if got := label.GetAside(); got != "Serving the docs; Watching the logs" {
+		t.Errorf("got aside %q", got)
 	}
 }
 

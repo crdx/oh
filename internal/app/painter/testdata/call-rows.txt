@@ -389,112 +389,112 @@ Vetting every… ✗
 Pausing for t… –
 
 ── job start · 120 columns
-Serving the documentation locally start docs $ python3 -m http.server 8080
+start docs $ python3 -m http.server 8080 (Serving the documentation locally)
 
 ── job start · 80 columns
-Serving the documentation locally start docs $ python3 -m http.server 8080
+start docs $ python3 -m http.server 8080 (Serving the documentation locally)
 
 ── job start · 60 columns
-Serving the documentation locally start docs $ python3 -m h…
+start docs $ python3 -m http.server 8080
 
 ── job start · 44 columns
-Serving the documentation locally start docs
+start docs $ python3 -m http.server 8080
 
 ── job start · 30 columns
-Serving the documentation loc…
+start docs $ python3 -m http.…
 
 ── job start · 16 columns
-Serving the doc…
+start docs $ py…
 
 ── job start with a forwarded port · 120 columns
-Serving the docs on the forwarded port start docs:8080 $ just docs
+start docs:8080 $ just docs (Serving the docs on the forwarded port)
 
 ── job start with a forwarded port · 80 columns
-Serving the docs on the forwarded port start docs:8080 $ just docs
+start docs:8080 $ just docs (Serving the docs on the forwarded port)
 
 ── job start with a forwarded port · 60 columns
-Serving the docs on the forwarded port start docs:8080 $ ju…
+start docs:8080 $ just docs
 
 ── job start with a forwarded port · 44 columns
-Serving the docs on the forwarded port start
+start docs:8080 $ just docs
 
 ── job start with a forwarded port · 30 columns
-Serving the docs on the forwa…
+start docs:8080 $ just docs
 
 ── job start with a forwarded port · 16 columns
-Serving the doc…
+start docs:8080
 
 ── job start with a multi-line command · 120 columns
-Rebuilding every five seconds start watch $ while true; do just build; sleep 5; done 4L
+start watch $ while true; do just build; sleep 5; done 4L (Rebuilding every five seconds)
 
 ── job start with a multi-line command · 80 columns
-Rebuilding every five seconds start watch $ while true; do just build; sleep 5;…
+start watch $ while true; do just build; sleep 5; done 4L
 
 ── job start with a multi-line command · 60 columns
-Rebuilding every five seconds start watch $ while true; do …
+start watch $ while true; do just build; sleep 5; done 4L
 
 ── job start with a multi-line command · 44 columns
-Rebuilding every five seconds start watch $
+start watch $ while true; do just build; sl…
 
 ── job start with a multi-line command · 30 columns
-Rebuilding every five seconds
+start watch $ while true; do …
 
 ── job start with a multi-line command · 16 columns
-Rebuilding ever…
+start watch $ w…
 
 ── job restart · 120 columns
-Restarting the documentation server restart docs
+restart docs (Restarting the documentation server)
 
 ── job restart · 80 columns
-Restarting the documentation server restart docs
+restart docs (Restarting the documentation server)
 
 ── job restart · 60 columns
-Restarting the documentation server restart docs
+restart docs (Restarting the documentation server)
 
 ── job restart · 44 columns
-Restarting the documentation server restart
+restart docs
 
 ── job restart · 30 columns
-Restarting the documentation …
+restart docs
 
 ── job restart · 16 columns
-Restarting the …
+restart docs
 
 ── job restart with a port · 120 columns
-Restarting the docs on its port restart docs:8080
+restart docs:8080 (Restarting the docs on its port)
 
 ── job restart with a port · 80 columns
-Restarting the docs on its port restart docs:8080
+restart docs:8080 (Restarting the docs on its port)
 
 ── job restart with a port · 60 columns
-Restarting the docs on its port restart docs:8080
+restart docs:8080 (Restarting the docs on its port)
 
 ── job restart with a port · 44 columns
-Restarting the docs on its port restart doc…
+restart docs:8080
 
 ── job restart with a port · 30 columns
-Restarting the docs on its po…
+restart docs:8080
 
 ── job restart with a port · 16 columns
-Restarting the …
+restart docs:80…
 
 ── job start refused · 120 columns
-Serving the documentation locally start docs $ just docs ✗ a job of that name is already running
+start docs $ just docs ✗ a job of that name is already running (Serving the documentation locally)
 
 ── job start refused · 80 columns
-Serving the documentation locally start docs $ just do… ✗ a job of that name is…
+start docs $ just docs ✗ a job of that name is already running
 
 ── job start refused · 60 columns
-Serving the documentation locally start docs ✗ a job of th…
+start docs $ just docs ✗ a job of that name is already runn…
 
 ── job start refused · 44 columns
-Serving the documentation locally st… ✗ a j…
+start docs $ just d… ✗ a job of that name i…
 
 ── job start refused · 30 columns
-Serving the documentation l… ✗
+start docs $ ✗ a job of that…
 
 ── job start refused · 16 columns
-Serving the d… ✗
+start ✗ a job …
 
 ── job start without an intent · 120 columns
 start docs $ just docs ✗ intent is required to start a job
@@ -515,22 +515,22 @@ start docs $ ✗ intent is req…
 start ✗ intent…
 
 ── job start with an invalid name · 120 columns
-Trying a name that is too long start way-too-long-a-name $ true ✗ job name must match [a-z0-9-]{1,10}
+start way-too-long-a-name $ true ✗ job name must match [a-z0-9-]{1,10} (Trying a name that is too long)
 
 ── job start with an invalid name · 80 columns
-Trying a name that is too long start way-too-long-a-n… ✗ job name must match [a…
+start way-too-long-a-name $ true ✗ job name must match [a-z0-9-]{1,10}
 
 ── job start with an invalid name · 60 columns
-Trying a name that is too long start way-to… ✗ job name mus…
+start way-too-long-a-name $ ✗ job name must match [a-z0-9-…
 
 ── job start with an invalid name · 44 columns
-Trying a name that is too long start ✗ job …
+start way-too-long-… ✗ job name must match …
 
 ── job start with an invalid name · 30 columns
-Trying a name that is too l… ✗
+start way-to… ✗ job name must…
 
 ── job start with an invalid name · 16 columns
-Trying a name… ✗
+start ✗ job na…
 
 ── job calls naming nobody's job · 120 columns
 status docs
@@ -557,177 +557,177 @@ status docs
 cat docs 1L
 
 ── job calls reminded of their job · 120 columns
-Serving the documentation locally start docs $ just docs
+start docs $ just docs (Serving the documentation locally)
 status docs (Serving the documentation locally)
 cat docs 2L (Serving the documentation locally)
 stop docs (Serving the documentation locally)
 discard docs (Serving the documentation locally)
 
 ── job calls reminded of their job · 80 columns
-Serving the documentation locally start docs $ just docs
+start docs $ just docs (Serving the documentation locally)
 status docs (Serving the documentation locally)
 cat docs 2L (Serving the documentation locally)
 stop docs (Serving the documentation locally)
 discard docs (Serving the documentation locally)
 
 ── job calls reminded of their job · 60 columns
-Serving the documentation locally start docs $ just docs
+start docs $ just docs (Serving the documentation locally)
 status docs (Serving the documentation locally)
 cat docs 2L (Serving the documentation locally)
 stop docs (Serving the documentation locally)
 discard docs (Serving the documentation locally)
 
 ── job calls reminded of their job · 44 columns
-Serving the documentation locally start docs
+start docs $ just docs
 status docs
 cat docs 2L
 stop docs
 discard docs
 
 ── job calls reminded of their job · 30 columns
-Serving the documentation loc…
+start docs $ just docs
 status docs
 cat docs 2L
 stop docs
 discard docs
 
 ── job calls reminded of their job · 16 columns
-Serving the doc…
+start docs $ ju…
 status docs
 cat docs 2L
 stop docs
 discard docs
 
 ── waits reminded of every job · 120 columns
-Serving the documentation locally start docs $ just docs
-Building every package start build $ just build
+start docs $ just docs (Serving the documentation locally)
+start build $ just build (Building every package)
 wait docs || build 1L (Serving the documentation locally; Building every package)
 wait docs && build for up to 20s 2L (Serving the documentation locally; Building every package)
 wait docs || other 1L (Serving the documentation locally)
 
 ── waits reminded of every job · 80 columns
-Serving the documentation locally start docs $ just docs
-Building every package start build $ just build
+start docs $ just docs (Serving the documentation locally)
+start build $ just build (Building every package)
 wait docs || build 1L
 wait docs && build for up to 20s 2L
 wait docs || other 1L (Serving the documentation locally)
 
 ── waits reminded of every job · 60 columns
-Serving the documentation locally start docs $ just docs
-Building every package start build $ just build
+start docs $ just docs (Serving the documentation locally)
+start build $ just build (Building every package)
 wait docs || build 1L
 wait docs && build for up to 20s 2L
 wait docs || other 1L (Serving the documentation locally)
 
 ── waits reminded of every job · 44 columns
-Serving the documentation locally start docs
-Building every package start build $ just b…
+start docs $ just docs
+start build $ just build
 wait docs || build 1L
 wait docs && build for up to 20s 2L
 wait docs || other 1L
 
 ── waits reminded of every job · 30 columns
-Serving the documentation loc…
-Building every package start …
+start docs $ just docs
+start build $ just build
 wait docs || build 1L
 wait docs && build for up … 2L
 wait docs || other 1L
 
 ── waits reminded of every job · 16 columns
-Serving the doc…
-Building every …
+start docs $ ju…
+start build $ j…
 wait docs ||… 1L
 wait docs &&… 2L
 wait docs ||… 1L
 
 ── job reminded of its newest start · 120 columns
-Serving the documentation locally start docs $ just docs
+start docs $ just docs (Serving the documentation locally)
 status docs (Serving the documentation locally)
-Serving the docs on a new port start docs $ just docs
+start docs $ just docs (Serving the docs on a new port)
 status docs (Serving the docs on a new port)
 
 ── job reminded of its newest start · 80 columns
-Serving the documentation locally start docs $ just docs
+start docs $ just docs (Serving the documentation locally)
 status docs (Serving the documentation locally)
-Serving the docs on a new port start docs $ just docs
+start docs $ just docs (Serving the docs on a new port)
 status docs (Serving the docs on a new port)
 
 ── job reminded of its newest start · 60 columns
-Serving the documentation locally start docs $ just docs
+start docs $ just docs (Serving the documentation locally)
 status docs (Serving the documentation locally)
-Serving the docs on a new port start docs $ just docs
+start docs $ just docs (Serving the docs on a new port)
 status docs (Serving the docs on a new port)
 
 ── job reminded of its newest start · 44 columns
-Serving the documentation locally start docs
+start docs $ just docs
 status docs
-Serving the docs on a new port start docs $
+start docs $ just docs
 status docs (Serving the docs on a new port)
 
 ── job reminded of its newest start · 30 columns
-Serving the documentation loc…
+start docs $ just docs
 status docs
-Serving the docs on a new port
+start docs $ just docs
 status docs
 
 ── job reminded of its newest start · 16 columns
-Serving the doc…
+start docs $ ju…
 status docs
-Serving the doc…
+start docs $ ju…
 status docs
 
 ── job calls naming no job · 120 columns
-Serving the documentation locally start docs $ just docs
+start docs $ just docs (Serving the documentation locally)
 list jobs 2L
 prune jobs
 
 ── job calls naming no job · 80 columns
-Serving the documentation locally start docs $ just docs
+start docs $ just docs (Serving the documentation locally)
 list jobs 2L
 prune jobs
 
 ── job calls naming no job · 60 columns
-Serving the documentation locally start docs $ just docs
+start docs $ just docs (Serving the documentation locally)
 list jobs 2L
 prune jobs
 
 ── job calls naming no job · 44 columns
-Serving the documentation locally start docs
+start docs $ just docs
 list jobs 2L
 prune jobs
 
 ── job calls naming no job · 30 columns
-Serving the documentation loc…
+start docs $ just docs
 list jobs 2L
 prune jobs
 
 ── job calls naming no job · 16 columns
-Serving the doc…
+start docs $ ju…
 list jobs 2L
 prune jobs
 
 ── wait stopped by the user · 120 columns
-Running the full check start check $ just check
+start check $ just check (Running the full check)
 wait check for up to 4m 30s – stopped because the user pressed escape (Running the full check)
 
 ── wait stopped by the user · 80 columns
-Running the full check start check $ just check
+start check $ just check (Running the full check)
 wait check for up to 4m 30s – stopped because the user pressed escape
 
 ── wait stopped by the user · 60 columns
-Running the full check start check $ just check
+start check $ just check (Running the full check)
 wait check for up to 4m 30s – stopped because the user pres…
 
 ── wait stopped by the user · 44 columns
-Running the full check start check $ just c…
+start check $ just check
 wait check for up t… – stopped because the …
 
 ── wait stopped by the user · 30 columns
-Running the full check start …
+start check $ just check
 wait check f… – stopped becau…
 
 ── wait stopped by the user · 16 columns
-Running the ful…
+start check $ j…
 wait … – stoppe…
 
 ── job call with an unknown action · 120 columns
@@ -749,31 +749,31 @@ job explode … ✗ action must b…
 job e… ✗ action…
 
 ── shell and job calls mixed in one round · 120 columns
-Serving the documentation locally start docs $ just docs
+start docs $ just docs (Serving the documentation locally)
 Checking the docs answer requests $ curl -s localhost:8080 | head -1 ✓ 0.2s 1L 28M <!DOCTYPE html>
 stop docs (Serving the documentation locally)
 
 ── shell and job calls mixed in one round · 80 columns
-Serving the documentation locally start docs $ just docs
+start docs $ just docs (Serving the documentation locally)
 Checking the docs answer requests $ curl -s localhost:8080 | head… ✓ 0.2s 1L 28M
 stop docs (Serving the documentation locally)
 
 ── shell and job calls mixed in one round · 60 columns
-Serving the documentation locally start docs $ just docs
+start docs $ just docs (Serving the documentation locally)
 Checking the docs answer requests $ curl -s l… ✓ 0.2s 1L 28M
 stop docs (Serving the documentation locally)
 
 ── shell and job calls mixed in one round · 44 columns
-Serving the documentation locally start docs
+start docs $ just docs
 Checking the docs answer requests $ curl … ✓
 stop docs
 
 ── shell and job calls mixed in one round · 30 columns
-Serving the documentation loc…
+start docs $ just docs
 Checking the docs answer re… ✓
 stop docs
 
 ── shell and job calls mixed in one round · 16 columns
-Serving the doc…
+start docs $ ju…
 Checking the … ✓
 stop docs

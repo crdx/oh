@@ -40,6 +40,10 @@ const CommandTimeout = 10 * time.Minute
 
 const IntentDescription = `what you are doing, as a 5 to 7 word phrase opening with a capitalised -ing verb, such as "Regenerating every golden in the scratch copy"`
 
+func IsRenderingKind(kind string) bool {
+	return kind == bashRenderingKind || kind == hostNetworkRenderingKind
+}
+
 func SpokenIntent(intent string) string {
 	runes := []rune(strings.TrimSpace(intent))
 	if len(runes) == 0 {

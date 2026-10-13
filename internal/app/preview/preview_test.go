@@ -57,7 +57,8 @@ func conversation() []agent.Event {
 			Arguments: `{"action":"start","subagents":[{"prompt":"x","intent":"Reading the spinner"},{"prompt":"y","intent":"Timing the beat"}]}`,
 			FallbackRendering: agent.FallbackRendering{
 				RenderingKind: "subagent_start",
-				Subject:       "2 subagents · Reading the spinner, Timing the beat",
+				Subject:       "2 subagents",
+				Intent:        "Reading the spinner; Timing the beat",
 				ReportsStatus: true,
 			},
 		},

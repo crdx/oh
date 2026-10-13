@@ -3,7 +3,7 @@
 \e[48;2;52;53;65m start the docs server and keep it up   \e[0m\r
 \e[48;2;52;53;65m                                        \e[0m\r
 \r
-\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdo…\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\r
 \r
 The docs server is up.\r
 \r
@@ -122,7 +122,7 @@ withdrawn.\r
 \e[48;2;52;53;65mp\e[0m\r
 \e[48;2;52;53;65m \e[0m\r
 \r
-\e[3m\e[38;2;150;152;150m…\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0m…\e[0m\e]8;;\e\\\r
 \r
 T\r
 h\r
@@ -1382,7 +1382,7 @@ n\r
 \e[48;2;52;53;65m\e[0m
 \e[48;2;52;53;65m start the docs server and keep it up\e[0m
 \e[48;2;52;53;65m\e[0m
-\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m
+\e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[3m\e[38;2;150;152;150m(Handling this job for the test)\e[0m\e[0m
 
 The docs server is up.
 
@@ -1428,7 +1428,7 @@ It was stopped when write access was withdrawn.
 \e[48;2;52;53;65m start the docs server and keep it up                                                               \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[3m\e[38;2;150;152;150m(Handling this job for the test)\e[0m\e[0m\r
 \r
 The docs server is up.\r
 \r
@@ -1478,7 +1478,7 @@ It was stopped when write access was withdrawn.\r
 \e[48;2;52;53;65m start the docs server and keep it up                                                               \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[K\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[K\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[3m\e[38;2;150;152;150m(Handling this job for the test)\e[0m\e[0m\e[K\r\e[73C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[3m\e[38;2;150;152;150m(Handling this job for the test)\e[0m\e[0m\e[K\r\e[73C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[73C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs ser\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs server\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs server is u\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs server is up.\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
@@ -1528,7 +1528,7 @@ It w\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was s\e[K\r\e[8C\e[?25h\e[?2
 \e[48;2;52;53;65m start the docs server and keep it up                                                               \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[K\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[K\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[3m\e[38;2;150;152;150m(Handling this job for the test)\e[0m\e[0m\e[K\r\e[73C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[3m\e[38;2;150;152;150m(Handling this job for the test)\e[0m\e[0m\e[K\r\e[73C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[73C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 The docs server is up.\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
@@ -1578,7 +1578,7 @@ It was stopped when write access was withdrawn.\e[K\r\e[47C\e[?25h\e[?2026l\e[?2
 \e[48;2;52;53;65m start the docs server and keep it up                                                               \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \e[?2026h\e[?25l\e[?7l\r\e[K\r\e[?25h\e[?2026l\e[?2026h\e[?25l\r
-\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[K\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\e[K\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[71C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
+\e[38;2;207;173;0mstart\e[0m \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[3m\e[38;2;150;152;150m(Handling this job for the test)\e[0m\e[0m\e[K\r\e[73C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[3m\e[38;2;150;152;150m(Handling this job for the test)\e[0m\e[0m\e[K\r\e[73C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[73C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
 The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs\e[K\r\e[8C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs ser\e[K\r\e[12C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs server\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs server is u\e[K\r\e[20C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe docs server is up.\e[K\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[22C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \r\e[K\r
@@ -1631,7 +1631,7 @@ It w\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt was s\e[K\r\e[8C\e[?25h\e[?2
 \e[48;2;52;53;65m keep it up \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
-\e[3m\e[38;2;150;152;150mHandling th…\e[0m\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m\r
 \r
 The docs\r
 server is\r
@@ -1782,7 +1782,7 @@ withdrawn.\r
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m\e[0m\r
 \e[48;2;52;53;65m start the docs server and keep it up\e[0m\r
 \e[48;2;52;53;65m\e[0m\r
-\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[3m\e[38;2;150;152;150m(Handling this job for the test)\e[0m\e[0m\r
 \r
 The docs server is up.\r
 \r
@@ -1828,7 +1828,7 @@ It was stopped when write access was withdrawn.\r
 \e[48;2;52;53;65m start the docs server and keep it up                                                               \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e[3m\e[38;2;150;152;150mHandling this job for the test\e[0m\e[0m \e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m\r
+\e]8;;oh://tool-result?call=call_1&session=tame-impala\e\\\e[38;2;207;173;0mstart\e[0m\e]8;;\e\\ \e[38;2;192;128;80mdocs\e[0m \e[38;2;129;162;190m$\e[0m \e[38;2;129;162;190mpython3\e[0m\e[38;2;150;152;150m \e[0m\e[38;2;129;162;190m-m\e[0m\e[38;2;150;152;150m http.server 8080\e[0m \e[3m\e[38;2;150;152;150m(Handling this job for the test)\e[0m\e[0m\r
 \r
 The docs server is up.\r
 \r

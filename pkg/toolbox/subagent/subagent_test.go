@@ -245,18 +245,18 @@ func TestEveryCallNamingSubagentsMentionsThem(t *testing.T) {
 		t.Fatal(err)
 	}
 	if intent := single.Rendering().Intent; intent != "Reading the parser" {
-		t.Errorf("a single spawn led with %q", intent)
+		t.Errorf("a single spawn intended %q", intent)
 	}
 	several, err := built.Parse(`{"action":"start","subagents":[{"model":"anthropic/claude-opus-5","prompt":"x","intent":"Reading"},{"model":"anthropic/claude-opus-5","prompt":"y","intent":"Writing"}]}`)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if intent := several.Rendering().Intent; intent != "" {
-		t.Errorf("a spawn of several led with %q", intent)
+	if intent := several.Rendering().Intent; intent != "Reading; Writing" {
+		t.Errorf("a spawn of several intended %q", intent)
 	}
 }
 
-func TestAStartRowShowsSelectionsBeforeItsIntents(t *testing.T) {
+func TestAStartRowShowsSelectionsApartFromItsIntents(t *testing.T) {
 	built := New(&fakeManager{}, isGranted)
 	for _, test := range []struct {
 		input   string
@@ -265,8 +265,8 @@ func TestAStartRowShowsSelectionsBeforeItsIntents(t *testing.T) {
 	}{
 		{
 			`{"action":"start","subagents":[{"model":"anthropic/claude-opus-5","prompt":"x","intent":"reading the readme"},{"model":"anthropic/claude-opus-5","prompt":"y","intent":"Finding the parser"}]}`,
-			"2 subagents · anthropic/claude-opus-5, anthropic/claude-opus-5 · Reading the readme, Finding the parser",
-			"",
+			"2 subagents · anthropic/claude-opus-5, anthropic/claude-opus-5",
+			"Reading the readme; Finding the parser",
 		},
 		{`{"action":"start","subagents":[{"model":"anthropic/claude-opus-5","prompt":"x","intent":"Reading the readme"}]}`, "subagent · anthropic/claude-opus-5", "Reading the readme"},
 	} {
@@ -316,8 +316,11 @@ func TestABatchedStartShowsEveryChosenSelection(t *testing.T) {
 		{Model: "codex/gpt-6-luna@low", Intent: "Reviewing the parser"},
 		{Model: "opencode-go/step-5-preview-free@high", Intent: "Checking the tests"},
 	}})
-	want := "2 subagents · codex/gpt-6-luna@low, opencode-go/step-5-preview-free@high · Reviewing the parser, Checking the tests"
+	want := "2 subagents · codex/gpt-6-luna@low, opencode-go/step-5-preview-free@high"
 	if rendering.Subject != want {
 		t.Errorf("batch rendered %q, want %q", rendering.Subject, want)
+	}
+	if rendering.Intent != "Reviewing the parser; Checking the tests" {
+		t.Errorf("batch intended %q", rendering.Intent)
 	}
 }

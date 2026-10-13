@@ -133,6 +133,8 @@ func act(ctx context.Context, manager Manager, args Args) (string, error) {
 
 var statusActions = []string{Start, Send, Status, Stop}
 
+const intentSeparator = "; "
+
 func Describe(args Args) tool.CallRendering {
 	rendering := tool.CallRendering{
 		Kind:          Name + "_" + args.Action,
@@ -141,9 +143,7 @@ func Describe(args Args) tool.CallRendering {
 	switch args.Action {
 	case Start:
 		rendering.Subject = startSubject(args)
-		if len(args.Subagents) == 1 {
-			rendering.Intent = bash.SpokenIntent(args.Subagents[0].Intent)
-		}
+		rendering.Intent = startIntent(args)
 	case Send:
 		rendering.Subject = args.Name
 		rendering.Mentions = mentions([]string{args.Name})
@@ -185,17 +185,25 @@ func startSubject(args Args) string {
 		return subject
 	}
 	var selections []string
-	intents := make([]string, len(args.Subagents))
-	for index, task := range args.Subagents {
+	for _, task := range args.Subagents {
 		if task.Model != "" {
 			selections = append(selections, task.Model)
 		}
-		intents[index] = bash.SpokenIntent(task.Intent)
 	}
 	if len(selections) > 0 {
 		subject += " · " + strings.Join(selections, ", ")
 	}
-	return subject + " · " + strings.Join(intents, ", ")
+	return subject
+}
+
+func startIntent(args Args) string {
+	intents := make([]string, 0, len(args.Subagents))
+	for _, task := range args.Subagents {
+		if intent := bash.SpokenIntent(task.Intent); intent != "" {
+			intents = append(intents, intent)
+		}
+	}
+	return strings.Join(intents, intentSeparator)
 }
 
 func everyOrAll(names []string, separator string) string {

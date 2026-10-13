@@ -10,6 +10,7 @@ import (
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/toolbox/bash"
 )
 
 type ToolLookup func(string) (tool.Tool, bool)
@@ -121,6 +122,7 @@ func LabelFor(event agent.Event, getTool ToolLookup, workspace *work.Space) Labe
 	}, event.Name, rendering.ReadOnly)
 	label.TimeLimit = timeLimit
 	label.Intent = rendering.Intent
+	label.IntentLeads = bash.IsRenderingKind(renderingKind)
 	label.Introduces = rendering.Introduces
 	label.Mentions = rendering.Mentions
 	label.MarksSuccess = rendering.MarksSuccess

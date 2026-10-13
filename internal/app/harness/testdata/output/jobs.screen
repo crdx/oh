@@ -4,11 +4,11 @@
  then stop it
 
 
-Handling this job for the test start do…
+start docs $ python3 -m http.server 808…
 status docs
 cat docs 3L
 job wait docs Handling this job for … 3L
-Handling this job for the test st… ✗ a …
+start docs $ pyth… ✗ a job of that name…
 list jobs 4L ~100t
 job wait Handling this job for… 5L ~100t
 stop docs
@@ -228,11 +228,11 @@ t
  start the docs server, check on it, then stop it
 
 
-Handling this job for the test start docs $ python3 -m http.server 8080; --bind localhost 2L
+start docs $ python3 -m http.server 8080; --bind localhost 2L (Handling this job for the test)
 status docs (Handling this job for the test)
 cat docs 3L (Handling this job for the test)
 job wait docs Handling this job for the test 3L
-Handling this job for the test start docs $ python3 -m http.ser… ✗ a job of that name is already ru…
+start docs $ python3 -m http.server 8080 ✗ a job of that name is already running
 list jobs 4L ~100t
 job wait Handling this job for the test 5L ~100t
 stop docs (Handling this job for the test)
@@ -251,11 +251,11 @@ exceeding its 2s processor limit.
  stop it
 
 
-Handling th…
+start docs $
 status docs
 cat docs 3L
 job wait… 3L
-Handling … ✗
+sta… ✗ a jo…
 li… 4L ~100t
 job 5L ~100t
 stop docs
@@ -282,11 +282,11 @@ limit.
  start the docs server, check on it, then stop it
 
 
-Handling this job for the test start docs $ python3 -m http.server 8080; --bind localhost 2L
+start docs $ python3 -m http.server 8080; --bind localhost 2L (Handling this job for the test)
 status docs (Handling this job for the test)
 cat docs 3L (Handling this job for the test)
 job wait docs Handling this job for the test 3L
-Handling this job for the test start docs $ python3 -m http.ser… ✗ a job of that name is already ru…
+start docs $ python3 -m http.server 8080 ✗ a job of that name is already running
 list jobs 4L ~100t
 job wait Handling this job for the test 5L ~100t
 stop docs (Handling this job for the test)

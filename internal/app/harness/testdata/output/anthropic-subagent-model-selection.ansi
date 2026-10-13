@@ -3,10 +3,10 @@
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
 \e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\list\e]8;;\e\\ \e[38;2;192;128;80mmodels\e[0m \e[38;2;150;152;150m3L\e[0m\r
-\e[3m\e[38;2;150;152;150mReviewing the parser for missed errors\e[0m\e[0m \e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80msubagent\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msubagents[0].model is required; call action…\e[0m\r
-\e[3m\e[38;2;150;152;150mReviewing the parser for missed errors\e[0m\e[0m \e]8;;oh://tool-result?call=toolu_3&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80msubagent · anthropic/c…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msubagents[0].model "anthropi…\e[0m\r
-\e[3m\e[38;2;150;152;150mReviewing the parser for missed errors\e[0m\e[0m \e]8;;oh://tool-result?call=toolu_fast&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80msubagent · anthropic/c…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msubagents[0].model must use …\e[0m\r
-\e[3m\e[38;2;150;152;150mReviewing the parser for missed errors\e[0m\e[0m \e]8;;oh://tool-result?call=toolu_4&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80msubagent · anthropic/claude-haiku-5-5@medium\e[0m\r
+\e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80msubagent\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msubagents[0].model is required; call action=models for valid selections\e[0m\r
+\e]8;;oh://tool-result?call=toolu_3&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80msubagent · anthropic/claude-opus-5-5@high\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msubagents[0].model "anthropic/claude-opus-5-5@hig…\e[0m\r
+\e]8;;oh://tool-result?call=toolu_fast&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80msubagent · anthropic/claude-haiku-5-5@med…\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102msubagents[0].model must use provider/model@effor…\e[0m\r
+\e]8;;oh://tool-result?call=toolu_4&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80msubagent · anthropic/claude-haiku-5-5@medium\e[0m \e[3m\e[38;2;150;152;150m(Reviewing the parser for missed errors)\e[0m\e[0m\r
 \r
 I chose the listed model explicitly.\r
 \r

@@ -2,7 +2,7 @@
  start two subagents
 
 
-spawn 2 subagents · codex/gpt-5.6-sol@medium, codex/gpt-5.6-sol@medium · Watching the build until s…
+spawn 2 subagents · codex/gpt-5.6-sol@medium, codex/gpt-5.6-sol@medium
 
 Both are running.
 

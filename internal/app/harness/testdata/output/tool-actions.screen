@@ -8,8 +8,8 @@ forward docs:8001
 close 8000
 list forwards
 forward ✗ action must be add, remove, o…
-Handling this job for the test start do…
-Handling this job for the test restart …
+start docs:8002 $ serve docs
+restart docs
 status docs
 cat docs
 job wait Handling this job for the test
@@ -141,8 +141,8 @@ forward docs:8001
 close 8000
 list forwards
 forward ✗ action must be add, remove, or list (got "bogus")
-Handling this job for the test start docs:8002 $ serve docs
-Handling this job for the test restart docs
+start docs:8002 $ serve docs (Handling this job for the test)
+restart docs (Handling this job for the test)
 status docs (Handling this job for the test)
 cat docs (Handling this job for the test)
 job wait Handling this job for the test
@@ -166,8 +166,8 @@ forward doc…
 close 8000
 list forwar…
 for… ✗ acti…
-Handling th…
-Handling th…
+start docs:…
+restart docs
 status docs
 cat docs
 job wait Ha…
@@ -190,8 +190,8 @@ forward docs:8001
 close 8000
 list forwards
 forward ✗ action must be add, remove, or list (got "bogus")
-Handling this job for the test start docs:8002 $ serve docs
-Handling this job for the test restart docs
+start docs:8002 $ serve docs (Handling this job for the test)
+restart docs (Handling this job for the test)
 status docs (Handling this job for the test)
 cat docs (Handling this job for the test)
 job wait Handling this job for the test

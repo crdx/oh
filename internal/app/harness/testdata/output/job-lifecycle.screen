@@ -3,7 +3,7 @@
  start the docs server and keep it up
 
 
-Handling this job for the test start do…
+start docs $ python3 -m http.server 8080
 
 The docs server is up.
 
@@ -1381,7 +1381,7 @@ n
  start the docs server and keep it up
 
 
-Handling this job for the test start docs $ python3 -m http.server 8080
+start docs $ python3 -m http.server 8080 (Handling this job for the test)
 
 The docs server is up.
 
@@ -1433,7 +1433,7 @@ It was stopped when write access was withdrawn.
  keep it up
 
 
-Handling th…
+start docs $
 
 The docs
 server is
@@ -1584,7 +1584,7 @@ withdrawn.
  start the docs server and keep it up
 
 
-Handling this job for the test start docs $ python3 -m http.server 8080
+start docs $ python3 -m http.server 8080 (Handling this job for the test)
 
 The docs server is up.
 

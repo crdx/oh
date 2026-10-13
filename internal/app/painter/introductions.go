@@ -6,8 +6,6 @@ import (
 	"crdx.org/oh/internal/app/call"
 )
 
-const asideSeparator = "; "
-
 type Introductions struct {
 	intents map[string]string
 }
@@ -34,7 +32,7 @@ func (self *Introductions) recall(names []string) string {
 		}
 	}
 
-	return strings.Join(intents, asideSeparator)
+	return strings.Join(intents, call.AsideSeparator)
 }
 
 func (self *Introductions) note(label call.Label) {

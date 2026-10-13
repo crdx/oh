@@ -22,6 +22,8 @@ const (
 	bytesPerMegabyte = 1 << 20
 
 	noTimeAtAll = "0s"
+
+	AsideSeparator = "; "
 )
 
 type Label struct {
@@ -30,6 +32,7 @@ type Label struct {
 	Emphasis        tool.Emphasis
 	Qualifier       string
 	Intent          string
+	IntentLeads     bool
 	Introduces      string
 	Mentions        []string
 	Aside           string
@@ -50,11 +53,18 @@ type Label struct {
 }
 
 func (self Label) GetAside() string {
-	return self.Aside
+	if self.IntentLeads || self.Intent == "" {
+		return self.Aside
+	}
+	if self.Aside == "" {
+		return self.Intent
+	}
+
+	return self.Intent + AsideSeparator + self.Aside
 }
 
 func (self Label) LeadWidth() int {
-	if self.Intent == "" {
+	if !self.IntentLeads || self.Intent == "" {
 		return 0
 	}
 
@@ -107,7 +117,7 @@ func (self Label) Width() int {
 		total += partWidth
 	}
 
-	if self.Intent != "" {
+	if self.IntentLeads && self.Intent != "" {
 		if total > 0 {
 			total++
 		}
@@ -126,7 +136,7 @@ func (self Label) compose() string {
 		}
 	}
 	line := name
-	if self.Intent != "" {
+	if self.IntentLeads && self.Intent != "" {
 		line = strings.TrimSuffix(style.Reasoning(self.Intent)+" "+line, " ")
 	}
 	isQualifierLinked := false
@@ -168,7 +178,7 @@ func (self Label) elide(room int) Label {
 		self.pathSubject = self.Subject
 	}
 
-	if self.Intent != "" {
+	if self.IntentLeads && self.Intent != "" {
 		self.Intent = width.Elide(self.Intent, room)
 		room -= width.Of(self.Intent) + 1
 	}

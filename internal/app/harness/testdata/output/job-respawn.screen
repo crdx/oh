@@ -4,8 +4,8 @@
  and keep the server up
 
 
-Rebuilding whenever the source changes …
-Keeping the server up start serve respa…
+start watch respawning on exit $ just w…
+start serve respawning on exit $ python…
 
 Both are running and will come back
 whenever they exit.
@@ -46,7 +46,7 @@ whenever they exit.
 
 job wait watch Waiting for the next … 3L
 stop watch
-Bringing lint back restart lint respawn…
+restart lint respawning on exit
 
 The rebuild passed, the watcher is
 stopped, and lint is respawning again.
@@ -1266,8 +1266,8 @@ n
  rebuild whenever the source changes, and keep the server up
 
 
-Rebuilding whenever the source changes start watch respawning on exit $ just watch
-Keeping the server up start serve respawning on exit $ python3 -m http.server 8080
+start watch respawning on exit $ just watch (Rebuilding whenever the source changes)
+start serve respawning on exit $ python3 -m http.server 8080 (Keeping the server up)
 
 Both are running and will come back whenever they exit.
 
@@ -1297,7 +1297,7 @@ Both are running and will come back whenever they exit.
 
 job wait watch Waiting for the next rebuild 3L
 stop watch (Rebuilding whenever the source changes)
-Bringing lint back restart lint respawning on exit
+restart lint respawning on exit (Bringing lint back)
 
 The rebuild passed, the watcher is stopped, and lint is respawning again.
 === tiny ===
@@ -1311,8 +1311,8 @@ The rebuild passed, the watcher is stopped, and lint is respawning again.
  up
 
 
-Rebuilding …
-Keeping the…
+start watch
+start serve
 
 Both are
 running and
@@ -1427,7 +1427,7 @@ they exit.
 
 job wait… 3L
 stop watch
-Bringing li…
+restart lint
 
 The rebuild
 passed, the
@@ -1441,8 +1441,8 @@ again.
  rebuild whenever the source changes, and keep the server up
 
 
-Rebuilding whenever the source changes start watch respawning on exit $ just watch
-Keeping the server up start serve respawning on exit $ python3 -m http.server 8080
+start watch respawning on exit $ just watch (Rebuilding whenever the source changes)
+start serve respawning on exit $ python3 -m http.server 8080 (Keeping the server up)
 
 Both are running and will come back whenever they exit.
 
@@ -1472,6 +1472,6 @@ Both are running and will come back whenever they exit.
 
 job wait watch Waiting for the next rebuild 3L
 stop watch (Rebuilding whenever the source changes)
-Bringing lint back restart lint respawning on exit
+restart lint respawning on exit (Bringing lint back)
 
 The rebuild passed, the watcher is stopped, and lint is respawning again.
