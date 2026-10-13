@@ -2,7 +2,7 @@
  split the review between two subagents
 
 
-spawn 2 subagents · Reading the parser's entry point, Counting the open TODO items
+spawn 2 subagents · anthropic/claude-opus-5@medium, anthropic/claude-opus-5@medium · Reading the pa…
 
 Two subagents are working on it.
 

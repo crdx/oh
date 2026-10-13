@@ -75,7 +75,7 @@ var (
 func newRespondingRig(t *testing.T, respond sim.Responder) (*interactiveRig, *sim.Endpoint) {
 	t.Helper()
 
-	endpoint := sim.NewResponder(&sim.Scenario{Model: "fake"}, respond)
+	endpoint := sim.NewResponder(&sim.Scenario{Model: "deepseek-v4.1-flash"}, respond)
 	server := httptest.NewServer(endpoint)
 	t.Cleanup(server.Close)
 
@@ -122,8 +122,8 @@ func readmeReaderIn(request sim.Request) string {
 
 func delegatingResponder(firstChildCall sim.Call) sim.Responder {
 	start := encodedArguments(subagent.Args{Action: subagent.Start, Subagents: []subagent.Task{
-		{Prompt: "Read the README and quote it", Intent: "Quoting what the README says"},
-		{Prompt: "Count the TODO items", Intent: "Counting the TODO items in docs", Workspace: secondWorkspace},
+		{Model: "opencode-go/deepseek-v4.1-flash@low", Prompt: "Read the README and quote it", Intent: "Quoting what the README says"},
+		{Model: "opencode-go/deepseek-v4.1-flash@high", Prompt: "Count the TODO items", Intent: "Counting the TODO items in docs", Workspace: secondWorkspace},
 	}})
 	return func(request sim.Request) sim.Turn {
 		isChild := strings.Contains(request.Instructions, childIdentity)
@@ -154,7 +154,7 @@ func delegatingResponder(firstChildCall sim.Call) sim.Responder {
 func writeSubagentWorkspace(t *testing.T, rig *interactiveRig) {
 	t.Helper()
 
-	writeRigConfig(t, rig, "[subagent]\nmodel = \"opencode-go/fake\"\n")
+	writeRigConfig(t, rig, "[subagent]\nmodel = \"opencode-go/deepseek-v4.1-flash\"\n")
 	if err := os.WriteFile(filepath.Join(rig.workspace, "README.md"), []byte("hello\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
@@ -242,7 +242,7 @@ func TestSubagentsReportBackThroughTheBinaryAndAreListed(t *testing.T) {
 	writeSubagentWorkspace(t, rig)
 	withFakePager(t, rig)
 
-	session := rig.start("--yolo", "-c", "s", "-m", "opencode-go/fake", delegatingPrompt)
+	session := rig.start("--yolo", "-c", "s", "-m", "opencode-go/deepseek-v4.1-flash", delegatingPrompt)
 	session.waitFor(delegatedAnswer)
 	session.waitFor(firstChildAnswer)
 	session.waitFor(followedUpAnswer)
@@ -314,7 +314,7 @@ func TestAConfinedSubagentKeepsItsScratchPrivateAndTheWorkspaceReadOnly(t *testi
 	rig, _ := newRespondingRig(t, delegatingResponder(sim.Call{Name: "bash", Arguments: bashCall}))
 	writeSubagentWorkspace(t, rig)
 
-	session := rig.start("-c", "rxs", "-m", "opencode-go/fake", delegatingPrompt)
+	session := rig.start("-c", "rxs", "-m", "opencode-go/deepseek-v4.1-flash", delegatingPrompt)
 	session.waitFor(followedUpAnswer)
 	session.quit()
 
@@ -351,7 +351,7 @@ func preparingResponder() sim.Responder {
 		"intent":  "Preparing a folder for the subagent",
 	})
 	start := encodedArguments(subagent.Args{Action: subagent.Start, Subagents: []subagent.Task{
-		{Prompt: "Read the prepared notes", Intent: "Reading the notes left for it", Workspace: "/tmp/job"},
+		{Model: "opencode-go/deepseek-v4.1-flash@high", Prompt: "Read the prepared notes", Intent: "Reading the notes left for it", Workspace: "/tmp/job"},
 	}})
 	probe := encodedArguments(map[string]string{
 		"command": "cat notes.txt; echo; pwd; echo changed > notes.txt || echo refused",
@@ -382,7 +382,7 @@ func TestAConfinedSubagentReadsButNeverWritesAFolderItsParentPrepared(t *testing
 	rig, _ := newRespondingRig(t, preparingResponder())
 	writeSubagentWorkspace(t, rig)
 
-	session := rig.start("-c", "rxs", "-m", "opencode-go/fake", "prepare a folder and hand it to a subagent")
+	session := rig.start("-c", "rxs", "-m", "opencode-go/deepseek-v4.1-flash", "prepare a folder and hand it to a subagent")
 	session.waitFor(preparedDone)
 	session.quit()
 
@@ -415,7 +415,7 @@ func TestAReadOnlySessionsSubagentsReadWithoutAShell(t *testing.T) {
 	rig, _ := newRespondingRig(t, delegatingResponder(sim.Call{Name: "read", Arguments: readCall}))
 	writeSubagentWorkspace(t, rig)
 
-	session := rig.start("-c", "rs", "-m", "opencode-go/fake", delegatingPrompt)
+	session := rig.start("-c", "rs", "-m", "opencode-go/deepseek-v4.1-flash", delegatingPrompt)
 	session.waitFor(followedUpAnswer)
 	session.quit()
 
@@ -448,7 +448,7 @@ func TestAnUnconfinedParentReadsHostTmpThroughTheBinary(t *testing.T) {
 		}
 		return sim.Turn{Calls: []sim.Call{{Name: "read", Arguments: readCall}}}
 	})
-	session := rig.start("--yolo", "-m", "opencode-go/fake", "read the host tmp note")
+	session := rig.start("--yolo", "-m", "opencode-go/deepseek-v4.1-flash", "read the host tmp note")
 	session.waitFor("Host tmp checked.")
 	session.quit()
 
@@ -475,6 +475,7 @@ func TestAnUnconfinedChildReadsHostTmpThroughTheBinary(t *testing.T) {
 	}
 	readCall := encodedArguments(map[string]string{"path": hostFile})
 	start := encodedArguments(subagent.Args{Action: subagent.Start, Subagents: []subagent.Task{{
+		Model:  "opencode-go/deepseek-v4.1-flash@high",
 		Prompt: "Read " + hostFile,
 		Intent: "Reading the host temporary file",
 	}}})
@@ -490,8 +491,8 @@ func TestAnUnconfinedChildReadsHostTmpThroughTheBinary(t *testing.T) {
 		}
 		return sim.Turn{Calls: []sim.Call{{Name: subagent.Name, Arguments: start}}}
 	})
-	writeRigConfig(t, rig, "[subagent]\nmodel = \"opencode-go/fake\"\n")
-	session := rig.start("--yolo", "-c", "s", "-m", "opencode-go/fake", "read the host tmp note with a child")
+	writeRigConfig(t, rig, "[subagent]\nmodel = \"opencode-go/deepseek-v4.1-flash\"\n")
+	session := rig.start("--yolo", "-c", "s", "-m", "opencode-go/deepseek-v4.1-flash", "read the host tmp note with a child")
 	session.waitFor("Read the temporary file.")
 	session.quit()
 
@@ -503,13 +504,13 @@ func TestAnUnconfinedChildReadsHostTmpThroughTheBinary(t *testing.T) {
 	}
 }
 
-func TestASubagentRotationStartsEachChildOnTheNextModel(t *testing.T) {
+func TestTheParentChoosesEachSubagentsEffortDespiteTheConfiguredRotation(t *testing.T) {
 	readCall := encodedArguments(map[string]string{"path": "README.md"})
 	rig, _ := newRespondingRig(t, delegatingResponder(sim.Call{Name: "read", Arguments: readCall}))
 	writeSubagentWorkspace(t, rig)
-	writeRigConfig(t, rig, "[subagent]\nround_robin = [\"opencode-go/fake@low\", \"opencode-go/fake@high\"]\n")
+	writeRigConfig(t, rig, "[subagent]\nround_robin = [\"opencode-go/deepseek-v4.1-flash@low\", \"opencode-go/deepseek-v4.1-flash@high\"]\n")
 
-	session := rig.start("--yolo", "-c", "s", "-m", "opencode-go/fake", delegatingPrompt)
+	session := rig.start("--yolo", "-c", "s", "-m", "opencode-go/deepseek-v4.1-flash", delegatingPrompt)
 	session.waitFor(followedUpAnswer)
 	session.quit()
 
@@ -524,11 +525,11 @@ func TestASubagentRotationStartsEachChildOnTheNextModel(t *testing.T) {
 	}
 	slices.Sort(efforts)
 	if want := []string{"high", "low"}; !slices.Equal(efforts, want) {
-		t.Errorf("the children ran at efforts %q, want one at each the rotation names: %q", efforts, want)
+		t.Errorf("the children ran at efforts %q, want the efforts the parent requested: %q", efforts, want)
 	}
 }
 
-func TestANewSessionOpensWithSubagentsWithheldWhenNoSubagentCanStart(t *testing.T) {
+func TestANewSessionOffersSubagentsWithoutAConfiguredRotation(t *testing.T) {
 	for _, test := range []struct {
 		name      string
 		config    string
@@ -538,11 +539,11 @@ func TestANewSessionOpensWithSubagentsWithheldWhenNoSubagentCanStart(t *testing.
 		{
 			name:   "defaulted on with no subagent model",
 			config: "[defaults]\ncaps = \"rs\"\n",
-			want:   caps.Unconfined(),
+			want:   caps.Unconfined() | caps.Subagents,
 		},
 		{
 			name:   "defaulted on with a subagent model",
-			config: "[defaults]\ncaps = \"rs\"\n\n[subagent]\nmodel = \"opencode-go/fake\"\n",
+			config: "[defaults]\ncaps = \"rs\"\n\n[subagent]\nmodel = \"opencode-go/deepseek-v4.1-flash\"\n",
 			want:   caps.Unconfined() | caps.Subagents,
 		},
 		{
@@ -552,9 +553,9 @@ func TestANewSessionOpensWithSubagentsWithheldWhenNoSubagentCanStart(t *testing.
 		},
 	} {
 		t.Run(test.name, func(t *testing.T) {
-			rig := newInteractiveRig(t, "Noted.")
+			rig, _ := newRespondingRig(t, func(sim.Request) sim.Turn { return sim.Turn{Say: "Noted."} })
 			writeRigConfig(t, rig, test.config)
-			arguments := append([]string{"-p", "--yolo", "-m", "opencode-go/fake"}, test.arguments...)
+			arguments := append([]string{"-p", "--yolo", "-m", "opencode-go/deepseek-v4.1-flash"}, test.arguments...)
 			runTestBinary(t, rig.binary, rig.workspace, rig.environment, append(arguments, "hello")...)
 
 			storedSessions := rig.storedSessions()

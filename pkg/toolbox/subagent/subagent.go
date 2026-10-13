@@ -25,9 +25,11 @@ const (
 	Output = "output"
 	Stop   = "stop"
 	List   = "list"
+	Models = "models"
 )
 
 type Task struct {
+	Model     string `json:"model"`
 	Prompt    string `json:"prompt"`
 	Intent    string `json:"intent"`
 	Workspace string `json:"workspace,omitempty"`
@@ -54,6 +56,7 @@ type Manager interface {
 	Output(names []string) (string, error)
 	Stop(names []string) (string, error)
 	List() string
+	Models() string
 }
 
 func New(manager Manager, isAllowed func() bool) tool.Tool {
@@ -63,6 +66,9 @@ func New(manager Manager, isAllowed func() bool) tool.Tool {
 			"send one a message, which a running subagent reads once its current step finishes and a finished one takes as a follow-up, " +
 			"or send every running subagent the same message by leaving out the name, " +
 			"and inspect or control them by name; " +
+			"call models to list valid models and their supported efforts, " +
+			"then give every task an explicit provider/model@effort selection from that list; use provider/model when no efforts are listed; " +
+			"a follow-up keeps the model the subagent started on; " +
 			"only a limited number run at once, and start says how many are running against the limit; " +
 			"a subagent knows only a short description of its sandbox, your system_prompt, and its prompt: " +
 			"none of your instructions, context files or conversation reach it, so give it everything it needs; " +
@@ -80,12 +86,13 @@ func New(manager Manager, isAllowed func() bool) tool.Tool {
 			"a finished subagent's answer reaches you on its own, between your tool calls while you work " +
 			"or by waking you once you have ended your turn, so carry on or end your turn rather than waiting or polling for it",
 		Schema: tool.Schema{
-			tool.Enum("action", "what to do", Start, Send, Status, Output, Stop, List),
+			tool.Enum("action", "what to do", Start, Send, Status, Output, Stop, List, Models),
 			tool.StringArray("names", "the subagents for status, output, or stop; empty means all of them").Optional(),
 			tool.String("name", "the subagent to send a message to (for send); absent means every running subagent").Optional(),
 			tool.String("message", "the message to send (for send)").Optional(),
 			tool.String("system_prompt", "the only instructions every subagent shares, beside a short description of its sandbox (for start)").Optional(),
 			tool.ObjectArray("subagents", "one task per independent subagent (for start)", tool.Schema{
+				tool.String("model", "the exact provider/model@effort selection from action=models; omit @effort only for a model that takes no effort"),
 				tool.String("prompt", "the whole task for this subagent, with whatever context it needs"),
 				tool.String("intent", "what this subagent is for, as a 5 to 7 word phrase opening with a capitalised -ing verb, such as \"Reviewing the parser for missed errors\""),
 				tool.String("workspace", "the subagent's read-only workspace, any directory you can read; absent means yours").Optional(),
@@ -118,6 +125,8 @@ func act(ctx context.Context, manager Manager, args Args) (string, error) {
 		return manager.Stop(args.Names)
 	case List:
 		return manager.List(), nil
+	case Models:
+		return manager.Models(), nil
 	}
 	return "", errors.New("unknown subagent action")
 }
@@ -144,6 +153,8 @@ func Describe(args Args) tool.CallRendering {
 		}
 	case List:
 		rendering.Subject = "subagents"
+	case Models:
+		rendering.Subject = "models"
 	case Status, Output, Stop:
 		rendering.Subject = everyOrAll(args.Names, ", ")
 		rendering.Mentions = mentions(args.Names)
@@ -164,15 +175,25 @@ func broadcast(ctx context.Context, manager Manager, message string) (string, er
 
 func startSubject(args Args) string {
 	if len(args.Subagents) == 1 {
+		if args.Subagents[0].Model != "" {
+			return "1 subagent · " + args.Subagents[0].Model
+		}
 		return "1 subagent"
 	}
 	subject := fmt.Sprintf("%d subagents", len(args.Subagents))
 	if len(args.Subagents) == 0 {
 		return subject
 	}
+	var selections []string
 	intents := make([]string, len(args.Subagents))
 	for index, task := range args.Subagents {
+		if task.Model != "" {
+			selections = append(selections, task.Model)
+		}
 		intents[index] = bash.SpokenIntent(task.Intent)
+	}
+	if len(selections) > 0 {
+		subject += " · " + strings.Join(selections, ", ")
 	}
 	return subject + " · " + strings.Join(intents, ", ")
 }
@@ -214,6 +235,12 @@ func validate(args Args) error {
 			return errors.New("start requires a nonempty subagents list")
 		}
 		for index, task := range args.Subagents {
+			if strings.TrimSpace(task.Model) == "" {
+				return fmt.Errorf("subagents[%d].model is required; call action=models for valid selections", index)
+			}
+			if strings.Contains(task.Model, "+") {
+				return fmt.Errorf("subagents[%d].model must use provider/model@effort or provider/model", index)
+			}
 			if strings.TrimSpace(task.Prompt) == "" {
 				return fmt.Errorf("subagents[%d].prompt is empty", index)
 			}
@@ -225,12 +252,12 @@ func validate(args Args) error {
 		if strings.TrimSpace(args.Message) == "" {
 			return errors.New("send requires a nonempty message")
 		}
-	case Status, Output, Stop, List:
+	case Status, Output, Stop, List, Models:
 	default:
 		return fmt.Errorf("unknown subagent action %q", args.Action)
 	}
-	if args.Action == List && len(args.Names) > 0 {
-		return errors.New("list takes no names")
+	if (args.Action == List || args.Action == Models) && len(args.Names) > 0 {
+		return fmt.Errorf("%s takes no names", args.Action)
 	}
 	if (isStart || isSend) && len(args.Names) > 0 {
 		return errors.New("names is for status, output, and stop")

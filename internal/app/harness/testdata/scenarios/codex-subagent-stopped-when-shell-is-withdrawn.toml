@@ -30,7 +30,7 @@ toggle-after-subagents-settle = "x"
 
 [[first.response]]
 event = [
-    '''{"type":"response.output_item.done","item":{"id":"call-item-13","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Watch the build forever\",\"intent\":\"Watching the build until stopped\"},{\"prompt\":\"Name the build tool\",\"intent\":\"Naming the tool that builds this\"}]}"}}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-13","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Watch the build forever\",\"intent\":\"Watching the build until stopped\"},{\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Name the build tool\",\"intent\":\"Naming the tool that builds this\"}]}"}}''',
     '''{"type":"response.completed","response":{"status":"completed"}}''',
 ]
 

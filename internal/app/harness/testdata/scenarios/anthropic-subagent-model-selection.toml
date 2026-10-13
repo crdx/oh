@@ -1,0 +1,104 @@
+provider = "anthropic"
+model = "claude-haiku-5-5"
+effort = "medium"
+
+[[subagent]]
+name = "tame-adder"
+
+[[subagent.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"The explicit model reviewed the parser."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[first]
+prompt = "list valid subagent models, reject missing and ineligible selections, then choose a listed model"
+settle-subagents-after-turn = true
+subagent-debounce-passes = true
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_1","name":"subagent","input":{}}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"action\":\"models\"}"}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"tool_use"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_2","name":"subagent","input":{}}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Review the parser\",\"intent\":\"Reviewing the parser for missed errors\"}]}"}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"tool_use"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_3","name":"subagent","input":{}}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"action\":\"start\",\"subagents\":[{\"model\":\"anthropic/claude-opus-5-5@high\",\"prompt\":\"Review the parser\",\"intent\":\"Reviewing the parser for missed errors\"}]}"}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"tool_use"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_fast","name":"subagent","input":{}}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"action\":\"start\",\"subagents\":[{\"model\":\"anthropic/claude-haiku-5-5@medium+fast\",\"prompt\":\"Review the parser\",\"intent\":\"Reviewing the parser for missed errors\"}]}"}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"tool_use"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_4","name":"subagent","input":{}}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"action\":\"start\",\"subagents\":[{\"model\":\"anthropic/claude-haiku-5-5@medium\",\"prompt\":\"Review the parser\",\"intent\":\"Reviewing the parser for missed errors\"}]}"}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"tool_use"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"I chose the listed model explicitly."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"The selected subagent completed the review."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"The explicit selection survives replay."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
+    '''{"type":"message_stop"}''',
+]

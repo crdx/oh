@@ -207,7 +207,7 @@ func TestTheConcurrencySettingCapsHowManyChildrenRunAtOnce(t *testing.T) {
 	family.concurrency = 2
 	manager := family.manager(t, waiting())
 	tasks := func(count int) []subagent.Task {
-		return slices.Repeat([]subagent.Task{{Prompt: "wait"}}, count)
+		return slices.Repeat([]subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "wait"}}, count)
 	}
 	if manager.Concurrency() != 2 {
 		t.Errorf("got concurrency %d, want 2", manager.Concurrency())
@@ -226,7 +226,7 @@ func TestTheConcurrencySettingCapsHowManyChildrenRunAtOnce(t *testing.T) {
 func TestAtMostFiveChildrenRunAtOnceAcrossCalls(t *testing.T) {
 	manager := newTestFamily(t).manager(t, waiting())
 	tasks := func(count int) []subagent.Task {
-		return slices.Repeat([]subagent.Task{{Prompt: "wait"}}, count)
+		return slices.Repeat([]subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "wait"}}, count)
 	}
 	if _, err := manager.Start(t.Context(), "", tasks(6)); err == nil || !strings.Contains(err.Error(), "at most 5") {
 		t.Fatalf("six children in one call were started: %v", err)
@@ -247,7 +247,7 @@ func TestAtMostFiveChildrenRunAtOnceAcrossCalls(t *testing.T) {
 
 func TestChildrenShareTheParentsAdjectiveAndNotItsEmoji(t *testing.T) {
 	manager := newTestFamily(t).manager(t, waiting())
-	if _, err := manager.Start(t.Context(), "", slices.Repeat([]subagent.Task{{Prompt: "wait"}}, 3)); err != nil {
+	if _, err := manager.Start(t.Context(), "", slices.Repeat([]subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "wait"}}, 3)); err != nil {
 		t.Fatal(err)
 	}
 	emojis := []string{session.Emoji(parentName)}
@@ -264,7 +264,7 @@ func TestChildrenShareTheParentsAdjectiveAndNotItsEmoji(t *testing.T) {
 
 func TestRevokingShellStopsOnlyLiveChildren(t *testing.T) {
 	manager := newTestFamily(t).manager(t, waiting())
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "first"}, {Prompt: "second"}}); err != nil {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "first"}, {Model: "anthropic/claude-opus-5", Prompt: "second"}}); err != nil {
 		t.Fatal(err)
 	}
 	names := manager.StopLosing(caps.Shell)
@@ -300,7 +300,7 @@ func TestAChildRecordsItsConversationInItsOwnJournal(t *testing.T) {
 			Close:        func() {},
 		}, nil
 	})
-	if _, err := manager.Start(t.Context(), "shared", []subagent.Task{{Prompt: "investigate"}}); err != nil {
+	if _, err := manager.Start(t.Context(), "shared", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "investigate"}}); err != nil {
 		t.Fatal(err)
 	}
 	events := untilFinished(t, manager, 1)
@@ -352,10 +352,10 @@ func TestAChildKeepsItsScratchAndItsWorkspaceIsChosenByItsParent(t *testing.T) {
 		}
 		return answering(func() agent.Provider { return &answeringProvider{} })(ctx, child)
 	})
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "unread", Workspace: "/unreadable"}}); err == nil {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "unread", Workspace: "/unreadable"}}); err == nil {
 		t.Fatal("a child started in a directory its parent cannot read")
 	}
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "here"}, {Prompt: "there", Workspace: prepared}}); err != nil {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "here"}, {Model: "anthropic/claude-opus-5", Prompt: "there", Workspace: prepared}}); err != nil {
 		t.Fatal(err)
 	}
 	events := untilFinished(t, manager, 2)
@@ -390,7 +390,7 @@ func TestAChildKeepsItsScratchAndItsWorkspaceIsChosenByItsParent(t *testing.T) {
 func TestSendResumesAFinishedChildInItsOwnSession(t *testing.T) {
 	family := newTestFamily(t)
 	manager := family.manager(t, answering(func() agent.Provider { return &answeringProvider{} }))
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "first"}}); err != nil {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "first"}}); err != nil {
 		t.Fatal(err)
 	}
 	name := untilFinished(t, manager, 1)[0].Subagent
@@ -436,7 +436,7 @@ func TestSendRefusesAChildThatIsStoppingGoneOrReplaced(t *testing.T) {
 
 	finished := newTestFamily(t)
 	manager := finished.manager(t, answering(func() agent.Provider { return &answeringProvider{} }))
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "first"}, {Prompt: "second"}}); err != nil {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "first"}, {Model: "anthropic/claude-opus-5", Prompt: "second"}}); err != nil {
 		t.Fatal(err)
 	}
 	events := untilFinished(t, manager, 2)
@@ -466,7 +466,7 @@ func TestSendRefusesAChildThatIsStoppingGoneOrReplaced(t *testing.T) {
 func TestAChildLeftRunningEndsWithWhatItsJournalHolds(t *testing.T) {
 	family := newTestFamily(t)
 	manager := family.manager(t, answering(func() agent.Provider { return &answeringProvider{} }))
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "partial"}, {Prompt: "lost"}}); err != nil {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "partial"}, {Model: "anthropic/claude-opus-5", Prompt: "lost"}}); err != nil {
 		t.Fatal(err)
 	}
 	events := untilFinished(t, manager, 2)
@@ -498,11 +498,11 @@ func TestWithdrawingShellStopsOnlyTheChildrenHoldingOne(t *testing.T) {
 	family := newTestFamily(t)
 	manager := family.manager(t, waiting())
 	*family.caps = caps.Read
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "read"}}); err != nil {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "read"}}); err != nil {
 		t.Fatal(err)
 	}
 	*family.caps = caps.Read | caps.Shell
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "run"}}); err != nil {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "run"}}); err != nil {
 		t.Fatal(err)
 	}
 	holder := manager.ListSnapshots()[1].Name
@@ -518,11 +518,11 @@ func TestWithdrawingSubagentsStopsEveryRunningChild(t *testing.T) {
 	family := newTestFamily(t)
 	manager := family.manager(t, waiting())
 	*family.caps = caps.Read
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "read"}}); err != nil {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "read"}}); err != nil {
 		t.Fatal(err)
 	}
 	*family.caps = caps.Read | caps.Shell
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "run"}}); err != nil {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "run"}}); err != nil {
 		t.Fatal(err)
 	}
 	stopped := manager.StopLosing(caps.Subagents)
@@ -540,7 +540,7 @@ func TestWithdrawingSubagentsStopsEveryRunningChild(t *testing.T) {
 
 func TestAChildStoppedJustBeforeItsParentClosesIsRecordedAsStopped(t *testing.T) {
 	manager := newTestFamily(t).manager(t, waiting())
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "wait"}}); err != nil {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "wait"}}); err != nil {
 		t.Fatal(err)
 	}
 	if stopped := manager.StopLosing(caps.Shell); len(stopped) != 1 {
@@ -563,6 +563,7 @@ func TestTheBarIsNeverHeldUpByAStartDoingIO(t *testing.T) {
 	resolving := make(chan struct{})
 	release := make(chan struct{})
 	manager, err := New(Options{
+		Models:    []ChildModel{{Choice: model.Choice{Provider: "anthropic", ID: "claude-opus-5"}, Selection: model.Selection{Provider: "anthropic", Model: "claude-opus-5"}}},
 		Directory: family.directory,
 		Scratch:   family.scratch,
 		Parent:    parentName,
@@ -581,7 +582,7 @@ func TestTheBarIsNeverHeldUpByAStartDoingIO(t *testing.T) {
 	t.Cleanup(manager.Close)
 	started := make(chan error, 1)
 	go func() {
-		_, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "slow"}})
+		_, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "slow"}})
 		started <- err
 	}()
 	<-resolving
@@ -603,7 +604,7 @@ func TestTheBarIsNeverHeldUpByAStartDoingIO(t *testing.T) {
 
 func TestAWaitThatGivesUpSaysWhichSubagentsAreStillRunning(t *testing.T) {
 	manager := newTestFamily(t).manager(t, waiting())
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "wait", Intent: "Watching the build"}}); err != nil {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "wait", Intent: "Watching the build"}}); err != nil {
 		t.Fatal(err)
 	}
 	name := manager.ListSnapshots()[0].Name
@@ -628,7 +629,7 @@ func (self *stallingProvider) Send(ctx context.Context, _ agent.Yield) (agent.Re
 func TestAStoppedChildIsToldWhyWhenItIsResumed(t *testing.T) {
 	family := newTestFamily(t)
 	manager := family.manager(t, answering(func() agent.Provider { return &stallingProvider{} }))
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "run the tests"}}); err != nil {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "run the tests"}}); err != nil {
 		t.Fatal(err)
 	}
 	name := manager.ListSnapshots()[0].Name
@@ -661,7 +662,7 @@ func TestAFollowUpRunsOnTheModelTheChildStartedOn(t *testing.T) {
 		return answering(func() agent.Provider { return &answeringProvider{} })(ctx, child)
 	}
 	configured := func(id string, effort string) *Manager {
-		choice := model.Choice{Provider: "anthropic", ID: id}
+		choice := model.Choice{Provider: "anthropic", ID: id, EffortLevels: []string{effort}}
 		manager, err := New(Options{
 			Directory: family.directory,
 			Scratch:   family.scratch,
@@ -679,7 +680,7 @@ func TestAFollowUpRunsOnTheModelTheChildStartedOn(t *testing.T) {
 		return manager
 	}
 	first := configured("claude-opus-5", "high")
-	if _, err := first.Start(t.Context(), "", []subagent.Task{{Prompt: "first"}}); err != nil {
+	if _, err := first.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5@high", Prompt: "first"}}); err != nil {
 		t.Fatal(err)
 	}
 	events := untilFinished(t, first, 1)
@@ -762,7 +763,7 @@ func TestAFollowUpIsToldWhichOfItsToolsChanged(t *testing.T) {
 		}
 		return worker, err
 	})
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "first"}}); err != nil {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "first"}}); err != nil {
 		t.Fatal(err)
 	}
 	name := untilFinished(t, manager, 1)[0].Subagent
@@ -813,7 +814,7 @@ func TestAManagerNamesItsModelsAsPeopleKnowThem(t *testing.T) {
 	}
 }
 
-func TestEachChildStartsOnTheModelTheRotationChoosesForIt(t *testing.T) {
+func TestEachChildStartsOnTheModelTheParentChoosesForIt(t *testing.T) {
 	family := newTestFamily(t)
 	var opened []Child
 	var openedMutex sync.Mutex
@@ -824,20 +825,14 @@ func TestEachChildStartsOnTheModelTheRotationChoosesForIt(t *testing.T) {
 		return answering(func() agent.Provider { return &answeringProvider{} })(ctx, child)
 	}
 	models := []ChildModel{
-		{Choice: model.Choice{Provider: "anthropic", ID: "claude-opus-5"}, Selection: model.Selection{Provider: "anthropic", Model: "claude-opus-5", Effort: "high"}},
-		{Choice: model.Choice{Provider: "anthropic", ID: "claude-haiku-5"}, Selection: model.Selection{Provider: "anthropic", Model: "claude-haiku-5", Effort: "low"}},
+		{Choice: model.Choice{Provider: "anthropic", ID: "claude-opus-5", EffortLevels: []string{"high"}}, Selection: model.Selection{Provider: "anthropic", Model: "claude-opus-5", Effort: "high"}},
+		{Choice: model.Choice{Provider: "anthropic", ID: "claude-haiku-5", EffortLevels: []string{"low"}}, Selection: model.Selection{Provider: "anthropic", Model: "claude-haiku-5", Effort: "low"}},
 	}
-	turn := 0
 	manager, err := New(Options{
 		Directory: family.directory,
 		Scratch:   family.scratch,
 		Parent:    parentName,
 		Models:    models,
-		Choose: func() (ChildModel, error) {
-			chosen := models[turn%len(models)]
-			turn++
-			return chosen, nil
-		},
 		Factory:   factory,
 		PickName:  func(int) int { return 0 },
 		Caps:      func() caps.Set { return caps.Read },
@@ -848,7 +843,7 @@ func TestEachChildStartsOnTheModelTheRotationChoosesForIt(t *testing.T) {
 	}
 	t.Cleanup(manager.Close)
 
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "one"}, {Prompt: "two"}}); err != nil {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5@high", Prompt: "one"}, {Model: "anthropic/claude-haiku-5@low", Prompt: "two"}}); err != nil {
 		t.Fatal(err)
 	}
 	finished := untilFinished(t, manager, 2)
@@ -874,13 +869,12 @@ func TestEachChildStartsOnTheModelTheRotationChoosesForIt(t *testing.T) {
 	}
 }
 
-func TestAStartTheRotationRefusesStartsNothing(t *testing.T) {
+func TestAStartWithAnUnavailableModelStartsNothing(t *testing.T) {
 	family := newTestFamily(t)
 	manager, err := New(Options{
 		Directory: family.directory,
 		Scratch:   family.scratch,
 		Parent:    parentName,
-		Choose:    func() (ChildModel, error) { return ChildModel{}, errors.New("the rotation state is locked") },
 		Factory:   waiting(),
 		PickName:  func(int) int { return 0 },
 		Caps:      func() caps.Set { return caps.Read },
@@ -891,8 +885,8 @@ func TestAStartTheRotationRefusesStartsNothing(t *testing.T) {
 	}
 	t.Cleanup(manager.Close)
 
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "one"}}); err == nil || !strings.Contains(err.Error(), "locked") {
-		t.Fatalf("got %v, want the rotation's refusal", err)
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "one"}}); err == nil || !strings.Contains(err.Error(), "not available") {
+		t.Fatalf("got %v, want an unavailable-model refusal", err)
 	}
 	if snapshots := manager.ListSnapshots(); len(snapshots) != 0 {
 		t.Errorf("a refused start left %+v behind", snapshots)
@@ -902,6 +896,7 @@ func TestAStartTheRotationRefusesStartsNothing(t *testing.T) {
 func TestAReportNamesWhereItsChildWrites(t *testing.T) {
 	family := newTestFamily(t)
 	manager, err := New(Options{
+		Models:      []ChildModel{{Choice: model.Choice{Provider: "anthropic", ID: "claude-opus-5"}, Selection: model.Selection{Provider: "anthropic", Model: "claude-opus-5"}}},
 		Directory:   family.directory,
 		Scratch:     family.scratch,
 		Parent:      parentName,
@@ -915,7 +910,7 @@ func TestAReportNamesWhereItsChildWrites(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Cleanup(manager.Close)
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "hello"}}); err != nil {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "hello"}}); err != nil {
 		t.Fatal(err)
 	}
 	name := untilFinished(t, manager, 1)[0].Subagent
@@ -954,7 +949,7 @@ func TestAMessageSentToARunningChildIsReadBeforeItFinishes(t *testing.T) {
 	family := newTestFamily(t)
 	gate := make(chan struct{})
 	manager := family.manager(t, answering(func() agent.Provider { return &gatedProvider{gate: gate} }))
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "first"}}); err != nil {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "first"}}); err != nil {
 		t.Fatal(err)
 	}
 	name := manager.ListSnapshots()[0].Name
@@ -999,6 +994,7 @@ func TestAStatusSaysHowFarEachChildHasGot(t *testing.T) {
 	family := newTestFamily(t)
 	now := time.Date(2026, time.January, 2, 3, 4, 5, 0, time.UTC)
 	manager, err := New(Options{
+		Models:    []ChildModel{{Choice: model.Choice{Provider: "anthropic", ID: "claude-opus-5"}, Selection: model.Selection{Provider: "anthropic", Model: "claude-opus-5"}}},
 		Directory: family.directory,
 		Scratch:   family.scratch,
 		Parent:    parentName,
@@ -1101,7 +1097,7 @@ func TestAMessageToAChildThatIsFinishingBecomesAFollowUp(t *testing.T) {
 	family := newTestFamily(t)
 	gate := make(chan struct{})
 	manager := family.manager(t, answering(func() agent.Provider { return &gatedProvider{gate: gate} }))
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "first"}}); err != nil {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "first"}}); err != nil {
 		t.Fatal(err)
 	}
 	name := manager.ListSnapshots()[0].Name
@@ -1151,7 +1147,7 @@ func TestABroadcastReachesEveryRunningChildAndNoOther(t *testing.T) {
 		gatesMutex.Unlock()
 		return answering(func() agent.Provider { return &gatedProvider{gate: gate} })(ctx, child)
 	})
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "first"}}); err != nil {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "first"}}); err != nil {
 		t.Fatal(err)
 	}
 	open := func(name string) {
@@ -1175,7 +1171,7 @@ func TestABroadcastReachesEveryRunningChildAndNoOther(t *testing.T) {
 	if _, err := manager.Broadcast(t.Context(), "anyone?"); err == nil || !strings.Contains(err.Error(), "no subagent is running") {
 		t.Errorf("a broadcast with nobody running came back %v", err)
 	}
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "second"}, {Prompt: "third"}}); err != nil {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "second"}, {Model: "anthropic/claude-opus-5", Prompt: "third"}}); err != nil {
 		t.Fatal(err)
 	}
 	queued, err := manager.Broadcast(t.Context(), "again")
@@ -1210,6 +1206,7 @@ func TestProgressSaysHowLongEachChildRanAndWhatItLastDid(t *testing.T) {
 	family := newTestFamily(t)
 	now := time.Date(2026, time.January, 2, 3, 4, 5, 0, time.UTC)
 	manager, err := New(Options{
+		Models:    []ChildModel{{Choice: model.Choice{Provider: "anthropic", ID: "claude-opus-5"}, Selection: model.Selection{Provider: "anthropic", Model: "claude-opus-5"}}},
 		Directory: family.directory,
 		Scratch:   family.scratch,
 		Parent:    parentName,
@@ -1298,5 +1295,64 @@ func TestModelActivityFlashesOncePerBurst(t *testing.T) {
 	case <-manager.Activity():
 	default:
 		t.Fatal("the later flash did not wake the screen")
+	}
+}
+
+func TestInvalidSelectionsRefuseTheWholeBatchBeforePersisting(t *testing.T) {
+	for _, written := range []string{"", " ", "anthropic/unknown", "opus", "anthropic/claude-opus-5@unknown"} {
+		t.Run(written, func(t *testing.T) {
+			family := newTestFamily(t)
+			manager := family.manager(t, waiting())
+			if _, err := manager.Start(t.Context(), "", []subagent.Task{
+				{Model: "anthropic/claude-opus-5", Prompt: "valid"},
+				{Model: written, Prompt: "invalid"},
+			}); err == nil {
+				t.Fatal("accepted an invalid selection")
+			}
+			if len(manager.ListSnapshots()) != 0 {
+				t.Fatal("a refused batch started a child")
+			}
+			if names, err := session.AllNames(family.directory); err == nil && len(names) != 0 {
+				t.Errorf("a refused batch persisted child sessions: %v", names)
+			}
+		})
+	}
+}
+
+func TestTheCatalogueListsExactSelectionsAndSupportedEfforts(t *testing.T) {
+	manager := newTestFamily(t).manager(t, waiting())
+	manager.Reconfigure(Rotation{Models: []ChildModel{
+		{Choice: model.Choice{Provider: "anthropic", ID: "claude-haiku-5.5", EffortLevels: []string{"low", "high"}, ContextWindowTokens: 200000}, Selection: model.Selection{Provider: "anthropic", Model: "claude-haiku-5.5", Effort: "high"}},
+		{Choice: model.Choice{Provider: "opencode-go", ID: "step-5-preview-free"}, Selection: model.Selection{Provider: "opencode-go", Model: "step-5-preview-free"}},
+		{Choice: model.Choice{Provider: "ollama", ID: "future-local-model", EffortLevels: []string{"high"}}, Selection: model.Selection{Provider: "ollama", Model: "future-local-model", Effort: "high"}},
+	}})
+	want := modelSelectionGuide + "\n\n- anthropic/claude-haiku-5.5; cheap; efforts: low, high\n- opencode-go/step-5-preview-free; free\n- ollama/future-local-model; free; efforts: high"
+	if got := manager.Models(); got != want {
+		t.Errorf("models returned %q, want %q", got, want)
+	}
+	selected, err := manager.selectModels([]subagent.Task{{Model: "anthropic/claude-haiku-5.5@low"}, {Model: "opencode-go/step-5-preview-free"}})
+	if err != nil || len(selected) != 2 || selected[0].Selection.Effort != "low" || selected[1].Selection.Effort != "" {
+		t.Errorf("catalogue selections resolved to %+v, %v", selected, err)
+	}
+	manager.Reconfigure(Rotation{})
+	if got := manager.Models(); got != "No eligible subagent models are available." {
+		t.Errorf("an empty catalogue returned %q", got)
+	}
+}
+
+func TestSubagentsNeverSelectFastMode(t *testing.T) {
+	manager := newTestFamily(t).manager(t, waiting())
+	manager.Reconfigure(Rotation{Models: []ChildModel{{
+		Choice:    model.Choice{Provider: "codex", ID: "gpt-6-luna", EffortLevels: []string{"low", "high"}},
+		Selection: model.Selection{Provider: "codex", Model: "gpt-6-luna", Effort: "high", IsFast: true},
+	}}})
+	for _, written := range []string{"codex/gpt-6-luna", "codex/gpt-6-luna@h", "codex/gpt-6-luna+fast", "codex/gpt-6-luna@high+fast"} {
+		if _, err := manager.selectModels([]subagent.Task{{Model: written}}); err == nil {
+			t.Errorf("accepted fast selection %q", written)
+		}
+	}
+	selectedModels, err := manager.selectModels([]subagent.Task{{Model: "codex/gpt-6-luna@high"}})
+	if err != nil || len(selectedModels) != 1 || selectedModels[0].Selection.IsFast {
+		t.Errorf("inherited fast mode reached a subagent: %+v, %v", selectedModels, err)
 	}
 }

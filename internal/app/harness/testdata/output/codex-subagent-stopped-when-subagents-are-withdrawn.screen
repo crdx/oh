@@ -2,7 +2,7 @@
  start two subagents
 
 
-spawn 2 subagents · Watching the build until stopped, Naming the tool that builds this
+spawn 2 subagents · codex/gpt-5.6-sol@medium, codex/gpt-5.6-sol@medium · Watching the build until s…
 
 Both are running.
 
@@ -20,6 +20,6 @@ tame-alpaca named the build tool; tame-adder stopped when subagents went.
  start one more subagent
 
 
-Naming the tool that runs tests spawn 1 subagent ✗ subagents unavailable; ctrl+x s grants them
+Naming the tool that runs tests spawn 1 subagent · codex/gpt-5.… ✗ subagents unavailable; ctrl+x s …
 
 Subagents are refused until you grant them with ctrl+x s.

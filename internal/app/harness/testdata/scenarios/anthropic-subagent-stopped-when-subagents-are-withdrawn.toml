@@ -31,7 +31,7 @@ toggle-after-subagents-settle = "s"
 event = [
     '''{"type":"message_start","message":{}}''',
     '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_1","name":"subagent","input":{}}}''',
-    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Watch the build forever\",\"intent\":\"Watching the build until stopped\"},{\"prompt\":\"Name the build tool\",\"intent\":\"Naming the tool that builds this\"}]}"}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"action\":\"start\",\"subagents\":[{\"model\":\"anthropic/claude-opus-5@medium\",\"prompt\":\"Watch the build forever\",\"intent\":\"Watching the build until stopped\"},{\"model\":\"anthropic/claude-opus-5@medium\",\"prompt\":\"Name the build tool\",\"intent\":\"Naming the tool that builds this\"}]}"}}''',
     '''{"type":"content_block_stop","index":0}''',
     '''{"type":"message_delta","delta":{"stop_reason":"tool_use"}}''',
     '''{"type":"message_stop"}''',
@@ -64,7 +64,7 @@ prompt = "start one more subagent"
 event = [
     '''{"type":"message_start","message":{}}''',
     '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_2","name":"subagent","input":{}}}''',
-    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Name the test runner\",\"intent\":\"Naming the tool that runs tests\"}]}"}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"action\":\"start\",\"subagents\":[{\"model\":\"anthropic/claude-opus-5@medium\",\"prompt\":\"Name the test runner\",\"intent\":\"Naming the tool that runs tests\"}]}"}}''',
     '''{"type":"content_block_stop","index":0}''',
     '''{"type":"message_delta","delta":{"stop_reason":"tool_use"}}''',
     '''{"type":"message_stop"}''',

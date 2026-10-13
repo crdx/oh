@@ -1,0 +1,25 @@
+
+ list valid subagent models, reject missing and ineligible selections, then choose a listed model
+
+
+subagent models 3L
+Reviewing the parser for missed errors spawn 1 subagent ✗ subagents[0].model is required; call acti…
+Reviewing the parser for missed errors spawn 1 subagent · anthropic… ✗ subagents[0].model "anthropi…
+Reviewing the parser for missed errors spawn 1 subagent · anthropic… ✗ subagents[0].model must use …
+Reviewing the parser for missed errors spawn 1 subagent · anthropic/claude-haiku-5-5@medium
+
+I chose the listed model explicitly.
+
+
+ 🐍 Subagent tame-adder interjects:
+
+    The explicit model reviewed the parser.
+
+
+The selected subagent completed the review.
+
+
+ carry on
+
+
+The explicit selection survives replay.

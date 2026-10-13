@@ -17,7 +17,7 @@ start two subagents
 ## Tool calls · +0s
 
 ```
-subagent: 2 subagents · Watching the build until stopped, Naming the tool that builds this [ok, 1 line, 54B, toolu_1]
+subagent: 2 subagents · anthropic/claude-opus-5@medium, anthropic/claude-opus-5@medium · W… [ok, 1 line, 54B, toolu_1]
 ```
 
 ## Assistant · +0s

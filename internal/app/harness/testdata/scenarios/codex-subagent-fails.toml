@@ -16,7 +16,7 @@ subagent-debounce-passes = true
 
 [[first.response]]
 event = [
-    '''{"type":"response.output_item.done","item":{"id":"call-item-38","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Read the logs\",\"intent\":\"Reading the logs for errors\"}]}"}}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-38","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Read the logs\",\"intent\":\"Reading the logs for errors\"}]}"}}''',
     '''{"type":"response.completed","response":{"status":"completed"}}''',
 ]
 

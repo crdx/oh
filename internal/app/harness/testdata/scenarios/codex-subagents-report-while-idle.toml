@@ -47,7 +47,7 @@ subagent-debounce-passes = true
 
 [[first.response]]
 event = [
-    '''{"type":"response.output_item.done","item":{"id":"call-item-1","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Read the parser and report its entry point\",\"intent\":\"Reading the parser's entry point\"},{\"prompt\":\"Count the open TODO items\",\"intent\":\"Counting the open TODO items\"}],\"system_prompt\":\"Answer in one sentence.\"}"}}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-1","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Read the parser and report its entry point\",\"intent\":\"Reading the parser's entry point\"},{\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Count the open TODO items\",\"intent\":\"Counting the open TODO items\"}],\"system_prompt\":\"Answer in one sentence.\"}"}}''',
     '''{"type":"response.completed","response":{"status":"completed"}}''',
 ]
 

@@ -32,8 +32,9 @@ import (
 var sessionGoldenChildClock = time.Date(2026, time.January, 2, 3, 4, 5, 0, time.UTC)
 
 var sessionGoldenModelNames = map[string]string{
-	"claude-opus-5": "Claude Opus 5",
-	"gpt-5.6-sol":   "GPT-5.6 Sol",
+	"claude-opus-5":    "Claude Opus 5",
+	"claude-haiku-5-5": "Claude Haiku 5.5",
+	"gpt-5.6-sol":      "GPT-5.6 Sol",
 }
 
 const (
@@ -139,7 +140,7 @@ func (self *sessionGoldenChildren) serves(writer http.ResponseWriter, request *h
 		http.Error(writer, "no message was queued for "+name, http.StatusConflict)
 		return true
 	}
-	serveSessionGoldenResponse(writer, request, response, make(chan struct{}, 1), make(chan struct{}, 1))
+	serveSessionGoldenResponse(writer, request, response, make(chan struct{}, 1))
 	return true
 }
 
@@ -206,10 +207,11 @@ func (self *sessionGoldenChildren) manager(
 
 	self.endpoint = serverURL
 	choice := model.Choice{
-		Provider: self.scenario.Provider,
-		ID:       self.scenario.Model,
-		Name:     sessionGoldenModelNames[self.scenario.Model],
-		Prices:   self.scenario.prices(),
+		Provider:     self.scenario.Provider,
+		ID:           self.scenario.Model,
+		EffortLevels: []string{self.scenario.Effort},
+		Name:         sessionGoldenModelNames[self.scenario.Model],
+		Prices:       self.scenario.prices(),
 	}
 	factory := func(_ context.Context, child subagents.Child) (subagents.Worker, error) {
 		prompt := child.SystemPrompt

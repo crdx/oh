@@ -937,8 +937,12 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		return "", err
 	}
 
+	childChoices := slices.DeleteFunc(slices.Clone(modelChoices), func(candidate model.Choice) bool {
+		return !isProviderAvailable(candidate.Provider)
+	})
+
 	if resumedSession == nil && !args.WereCapsChosen &&
-		!canStartChildren(choice, settings, modelChoices, seenModelsPath, endpoints.OverrideURL != "") {
+		!canStartChildren(choice, settings, childChoices) {
 		args.Caps &^= caps.Subagents
 	}
 
@@ -1223,7 +1227,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		parentWritable: func() []string {
 			return slices.Concat([]string{workspace.GetDir(), homeDir, tmpDir}, pathAccess.GetPaths().Write)
 		},
-	}, modelChoices, seenModelsPath, args.IsPrinting)
+	}, childChoices, args.IsPrinting)
 	if err != nil {
 		return "", err
 	}

@@ -34,7 +34,7 @@ subagent-debounce-passes = true
 
 [[first.response]]
 event = [
-    '''{"type":"response.output_item.done","item":{"id":"call-item-13","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"prompt\":\"Find the config loader\",\"intent\":\"Finding where the config loads\",\"workspace\":\"/workspace/internal\"}]}"}}''',
+    '''{"type":"response.output_item.done","item":{"id":"call-item-13","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Find the config loader\",\"intent\":\"Finding where the config loads\",\"workspace\":\"/workspace/internal\"}]}"}}''',
     '''{"type":"response.completed","response":{"status":"completed"}}''',
 ]
 

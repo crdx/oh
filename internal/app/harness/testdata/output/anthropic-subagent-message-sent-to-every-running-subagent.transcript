@@ -17,7 +17,7 @@ start three subagents, then tell every running one to name the format
 ## Tool calls · +0s
 
 ```
-subagent: 3 subagents · Reading the readme, Finding where the config loads, Finding where … [ok, 1 line, 68B, toolu_1]
+subagent: 3 subagents · anthropic/claude-opus-5@medium, anthropic/claude-opus-5@medium, an… [ok, 1 line, 68B, toolu_1]
 ```
 
 ## Subagent started · tame-adder · +0s

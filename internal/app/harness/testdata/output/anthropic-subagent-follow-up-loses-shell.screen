@@ -2,7 +2,7 @@
  ask a subagent to find the config loader
 
 
-Finding where the config loads spawn 1 subagent
+Finding where the config loads spawn 1 subagent · anthropic/claude-opus-5@medium
 
 A subagent is looking in internal.
 

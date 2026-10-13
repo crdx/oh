@@ -55,16 +55,19 @@ func (self *fakeManager) Stop(names []string) (string, error) {
 
 func (self *fakeManager) List() string { return "frugal-otter" }
 
+func (self *fakeManager) Models() string { return "- anthropic/claude-haiku-5@high" }
+
 func isGranted() bool { return true }
 
 func TestEveryActionIsRefusedWithoutSubagentAccess(t *testing.T) {
 	for _, arguments := range []string{
-		`{"action":"start","subagents":[{"prompt":"x","intent":"Doing x"}]}`,
+		`{"action":"start","subagents":[{"model":"anthropic/claude-opus-5","prompt":"x","intent":"Doing x"}]}`,
 		`{"action":"send","name":"frugal-otter","message":"hello"}`,
 		`{"action":"status"}`,
 		`{"action":"output"}`,
 		`{"action":"stop"}`,
 		`{"action":"list"}`,
+		`{"action":"models"}`,
 	} {
 		manager := &fakeManager{}
 		call, err := New(manager, func() bool { return false }).Parse(arguments)
@@ -87,12 +90,12 @@ func TestStartTakesIndependentObjectPrompts(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, required := range []string{`"prompt"`, `"required":["prompt","intent"]`, `"additionalProperties":false`} {
+	for _, required := range []string{`"prompt"`, `"required":["model","prompt","intent"]`, `"additionalProperties":false`} {
 		if !strings.Contains(string(schema), required) {
 			t.Errorf("schema %s omits %s", schema, required)
 		}
 	}
-	parsed, err := built.Parse(`{"action":"start","system_prompt":"review independently","subagents":[{"prompt":"same","intent":"reviewing the same thing"},{"prompt":"same","intent":"Reviewing it again","workspace":"/tmp/job"}]}`)
+	parsed, err := built.Parse(`{"action":"start","system_prompt":"review independently","subagents":[{"model":"anthropic/claude-opus-5","prompt":"same","intent":"reviewing the same thing"},{"model":"anthropic/claude-opus-5","prompt":"same","intent":"Reviewing it again","workspace":"/tmp/job"}]}`)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -196,15 +199,17 @@ func TestTheDescriptionLeavesTheLimitToStartSinceItCanChange(t *testing.T) {
 func TestInvalidChildArgumentsAreRefused(t *testing.T) {
 	built := New(&fakeManager{}, isGranted)
 	for _, input := range []string{
-		`{"action":"start","subagents":[{"prompt":""}]}`,
-		`{"action":"start","subagents":[{"prompt":"x"}]}`,
-		`{"action":"start","subagents":[{"prompt":"x","intent":" "}]}`,
+		`{"action":"start","subagents":[{"model":"anthropic/claude-opus-5","prompt":""}]}`,
+		`{"action":"start","subagents":[{"model":"anthropic/claude-opus-5","prompt":"x"}]}`,
+		`{"action":"start","subagents":[{"model":"anthropic/claude-opus-5","prompt":"x","intent":" "}]}`,
 		`{"action":"status","wait_seconds":5}`,
-		`{"action":"start","subagents":[{"prompt":"x","intent":"Doing x","model":"unapproved"}]}`,
-		`{"action":"status","names":["frugal-otter"],"subagents":[{"prompt":"x"}]}`,
+		`{"action":"start","subagents":[{"prompt":"x","intent":"Doing x"}]}`,
+		`{"action":"start","subagents":[{"model":" ","prompt":"x","intent":"Doing x"}]}`,
+		`{"action":"start","subagents":[{"model":"codex/gpt-6-luna@high+fast","prompt":"x","intent":"Doing x"}]}`,
+		`{"action":"status","names":["frugal-otter"],"subagents":[{"model":"anthropic/claude-opus-5","prompt":"x"}]}`,
 		`{"action":"send","name":"frugal-otter"}`,
 		`{"action":"send","message":" "}`,
-		`{"action":"start","names":["frugal-otter"],"subagents":[{"prompt":"x"}]}`,
+		`{"action":"start","names":["frugal-otter"],"subagents":[{"model":"anthropic/claude-opus-5","prompt":"x"}]}`,
 		`{"action":"list","names":["frugal-otter"]}`,
 		`{"action":"wait","name":"frugal-otter"}`,
 		`{"action":"wait"}`,
@@ -235,14 +240,14 @@ func TestEveryCallNamingSubagentsMentionsThem(t *testing.T) {
 			t.Errorf("%s mentioned %v, want %v", input, got, want)
 		}
 	}
-	single, err := built.Parse(`{"action":"start","subagents":[{"prompt":"x","intent":"reading the parser"}]}`)
+	single, err := built.Parse(`{"action":"start","subagents":[{"model":"anthropic/claude-opus-5","prompt":"x","intent":"reading the parser"}]}`)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if intent := single.Rendering().Intent; intent != "Reading the parser" {
 		t.Errorf("a single spawn led with %q", intent)
 	}
-	several, err := built.Parse(`{"action":"start","subagents":[{"prompt":"x","intent":"Reading"},{"prompt":"y","intent":"Writing"}]}`)
+	several, err := built.Parse(`{"action":"start","subagents":[{"model":"anthropic/claude-opus-5","prompt":"x","intent":"Reading"},{"model":"anthropic/claude-opus-5","prompt":"y","intent":"Writing"}]}`)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -251,7 +256,7 @@ func TestEveryCallNamingSubagentsMentionsThem(t *testing.T) {
 	}
 }
 
-func TestAStartRowListsItsIntentsAndNamesNoModel(t *testing.T) {
+func TestAStartRowShowsSelectionsBeforeItsIntents(t *testing.T) {
 	built := New(&fakeManager{}, isGranted)
 	for _, test := range []struct {
 		input   string
@@ -259,11 +264,11 @@ func TestAStartRowListsItsIntentsAndNamesNoModel(t *testing.T) {
 		intent  string
 	}{
 		{
-			`{"action":"start","subagents":[{"prompt":"x","intent":"reading the readme"},{"prompt":"y","intent":"Finding the parser"}]}`,
-			"2 subagents · Reading the readme, Finding the parser",
+			`{"action":"start","subagents":[{"model":"anthropic/claude-opus-5","prompt":"x","intent":"reading the readme"},{"model":"anthropic/claude-opus-5","prompt":"y","intent":"Finding the parser"}]}`,
+			"2 subagents · anthropic/claude-opus-5, anthropic/claude-opus-5 · Reading the readme, Finding the parser",
 			"",
 		},
-		{`{"action":"start","subagents":[{"prompt":"x","intent":"Reading the readme"}]}`, "1 subagent", "Reading the readme"},
+		{`{"action":"start","subagents":[{"model":"anthropic/claude-opus-5","prompt":"x","intent":"Reading the readme"}]}`, "1 subagent · anthropic/claude-opus-5", "Reading the readme"},
 	} {
 		parsed, err := built.Parse(test.input)
 		if err != nil {
@@ -277,10 +282,42 @@ func TestAStartRowListsItsIntentsAndNamesNoModel(t *testing.T) {
 }
 
 func TestOnlyActionsThatAnswerWithAStatusReportOne(t *testing.T) {
-	for _, action := range []string{Start, Send, Status, Stop, Output, List} {
+	for _, action := range []string{Start, Send, Status, Stop, Output, List, Models} {
 		doesReportStatus := slices.Contains([]string{Start, Send, Status, Stop}, action)
 		if got := Describe(Args{Action: action}).ReportsStatus; got != doesReportStatus {
 			t.Errorf("%s reports a status: %v, want %v", action, got, doesReportStatus)
 		}
+	}
+}
+
+func TestModelsListsValidSelectionsWithoutNamingAChild(t *testing.T) {
+	parsed, err := New(&fakeManager{}, isGranted).Parse(`{"action":"models"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	result, err := parsed.Exec(t.Context())
+	if err != nil || result.Output != "- anthropic/claude-haiku-5@high" {
+		t.Fatalf("models returned %+v, %v", result, err)
+	}
+	if rendering := parsed.Rendering(); rendering.Subject != "models" || rendering.ReportsStatus || len(rendering.Mentions) != 0 {
+		t.Errorf("models rendered as %+v", rendering)
+	}
+}
+
+func TestTheDescriptionExplainsValidSelectionRatherThanProviderExceptions(t *testing.T) {
+	description := New(&fakeManager{}, isGranted).Description()
+	if !strings.Contains(description, "provider/model@effort") || strings.Contains(description, "+fast") || strings.Contains(description, "ollama") {
+		t.Errorf("the description does not explain just the valid selection format: %s", description)
+	}
+}
+
+func TestABatchedStartShowsEveryChosenSelection(t *testing.T) {
+	rendering := Describe(Args{Action: Start, Subagents: []Task{
+		{Model: "codex/gpt-6-luna@low", Intent: "Reviewing the parser"},
+		{Model: "opencode-go/step-5-preview-free@high", Intent: "Checking the tests"},
+	}})
+	want := "2 subagents · codex/gpt-6-luna@low, opencode-go/step-5-preview-free@high · Reviewing the parser, Checking the tests"
+	if rendering.Subject != want {
+		t.Errorf("batch rendered %q, want %q", rendering.Subject, want)
 	}
 }

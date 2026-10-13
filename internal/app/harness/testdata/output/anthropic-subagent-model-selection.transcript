@@ -1,0 +1,59 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-haiku-5-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwsngl · +0s
+
+## User · +0s
+
+list valid subagent models, reject missing and ineligible selections, then choose a listed model
+
+## Tool calls · +0s
+
+```
+subagent: models [ok, 3 lines, 178B, toolu_1]
+subagent: 1 subagent [error, toolu_2]
+subagent: 1 subagent · anthropic/claude-opus-5-5@high [error, 1 line, 109B, toolu_3]
+subagent: 1 subagent · anthropic/claude-haiku-5-5@medium+fast [error, toolu_fast]
+subagent: 1 subagent · anthropic/claude-haiku-5-5@medium [ok, 1 line, 41B, toolu_4]
+```
+
+## Assistant · +0s
+
+I chose the listed model explicitly.
+
+## Subagent started · tame-adder · +0s
+
+Review the parser
+
+Transcript: `subagents/tame-adder/chat.md`
+
+## Subagent finished · tame-adder · done · +0s
+
+The explicit model reviewed the parser.
+
+## Subagent reports · +0s
+
+```
+Subagent tame-adder finished:
+
+tame-adder done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The explicit model reviewed the parser.
+```
+
+## Assistant · +0s
+
+The selected subagent completed the review.
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+The explicit selection survives replay.

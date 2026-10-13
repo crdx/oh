@@ -17,7 +17,7 @@ start a long subagent and wait for it
 ## Tool calls · +0s
 
 ```
-subagent: 1 subagent [ok, 1 line, 41B, toolu_1]
+subagent: 1 subagent · anthropic/claude-opus-5@medium [ok, 1 line, 41B, toolu_1]
 ```
 
 ## Subagent started · tame-adder · +0s

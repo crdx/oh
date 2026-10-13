@@ -2,7 +2,7 @@
  start two subagents
 
 
-spawn 2 subagents · Watching the build until stopped, Naming the tool that builds this
+spawn 2 subagents · anthropic/claude-opus-5@medium, anthropic/claude-opus-5@medium · Watching the b…
 
 Both are running.
 

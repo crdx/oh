@@ -302,7 +302,7 @@ func childStoppedWhileIdleStream(t *testing.T, childCount int) string {
 	var screenOutput strings.Builder
 	self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
 	self.children.manager = waitingChildManager(t)
-	tasks := slices.Repeat([]subagent.Task{{Prompt: "Watch the build"}}, childCount)
+	tasks := slices.Repeat([]subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "Watch the build"}}, childCount)
 	if _, err := self.children.manager.Start(t.Context(), "", tasks); err != nil {
 		t.Fatal(err)
 	}
@@ -317,6 +317,7 @@ func waitingChildManager(t *testing.T) *subagents.Manager {
 	t.Helper()
 
 	manager, err := subagents.New(subagents.Options{
+		Models:    []subagents.ChildModel{{Choice: model.Choice{Provider: "anthropic", ID: "claude-opus-5"}, Selection: model.Selection{Provider: "anthropic", Model: "claude-opus-5"}}},
 		Directory: t.TempDir(),
 		Scratch:   t.TempDir(),
 		Parent:    goldenSessionName,
@@ -417,6 +418,7 @@ func TestAReportIsInterjectedIntoARunningTurnEvenOnceItWasRead(t *testing.T) {
 	conversation.now = func() time.Time { return current }
 	scratch := t.TempDir()
 	manager, err := subagents.New(subagents.Options{
+		Models:    []subagents.ChildModel{{Choice: model.Choice{Provider: "anthropic", ID: "claude-opus-5"}, Selection: model.Selection{Provider: "anthropic", Model: "claude-opus-5"}}},
 		Directory: filepath.Join(t.TempDir(), "subagents"),
 		Scratch:   scratch,
 		Parent:    "tame-impala",
@@ -433,7 +435,7 @@ func TestAReportIsInterjectedIntoARunningTurnEvenOnceItWasRead(t *testing.T) {
 	}
 	t.Cleanup(manager.Close)
 	conversation.children.manager = manager
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Prompt: "one"}, {Prompt: "two"}}); err != nil {
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "one"}, {Model: "anthropic/claude-opus-5", Prompt: "two"}}); err != nil {
 		t.Fatal(err)
 	}
 	var names []string
@@ -526,27 +528,24 @@ func TestReloadingConfigChangesTheSubagentRotationAndLimitForTheNextStart(t *tes
 	}
 }
 
-func TestARotationEmptiedLiveRefusesToStartRatherThanRunOnNoModel(t *testing.T) {
-	rotation, err := childRotationOf(model.Choice{}, config.Subagent{Concurrency: 4}, model.Defaults{}, nil, "", false)
+func TestAnEmptySubagentCatalogueKeepsItsConcurrency(t *testing.T) {
+	rotation, err := childRotationOf(model.Choice{}, config.Subagent{Concurrency: 4}, model.Defaults{}, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if rotation.Concurrency != 4 || len(rotation.Models) != 0 {
 		t.Fatalf("an empty rotation came back as %+v", rotation)
 	}
-	if _, err := rotation.Choose(); err == nil || !strings.Contains(err.Error(), "no subagent model is configured") {
-		t.Errorf("an empty rotation chose with %v", err)
-	}
 }
 
 func TestAnOllamaSessionStartsSubagentsOnlyOnOllamaModels(t *testing.T) {
-	local := model.Choice{Provider: model.OllamaProvider, ID: "qwen3:8b", EffortLevels: []string{"none"}}
-	other := model.Choice{Provider: model.OllamaProvider, ID: "gemma4:12b", EffortLevels: []string{"none"}}
-	hosted := model.Choice{Provider: model.AnthropicProvider, ID: "claude-opus-5", EffortLevels: []string{"high"}}
+	local := model.Choice{Provider: model.OllamaProvider, ID: "qwen3.8:27b-mtp-q8_0-256k", EffortLevels: []string{"none"}}
+	other := model.Choice{Provider: model.OllamaProvider, ID: "muse-glimmer-128k:latest", EffortLevels: []string{"none"}}
+	hosted := model.Choice{Provider: model.AnthropicProvider, ID: "claude-haiku-5-5", EffortLevels: []string{"high"}}
 	choices := []model.Choice{local, other, hosted}
 	everyModel := config.Subagent{
 		ModelChoice: config.ModelChoice{RoundRobin: config.RoundRobin{
-			"ollama/qwen3:8b@none", "anthropic/claude-opus-5@high", "ollama/gemma4:12b@none",
+			"ollama/qwen3.8:27b-mtp-q8_0-256k@none", "anthropic/claude-haiku-5-5@high", "ollama/muse-glimmer-128k:latest@none",
 		}},
 		Concurrency: 4,
 	}
@@ -554,10 +553,10 @@ func TestAnOllamaSessionStartsSubagentsOnlyOnOllamaModels(t *testing.T) {
 		parent model.Choice
 		want   []string
 	}{
-		{local, []string{"qwen3:8b", "gemma4:12b"}},
-		{hosted, []string{"qwen3:8b", "claude-opus-5", "gemma4:12b"}},
+		{local, []string{"qwen3.8:27b-mtp-q8_0-256k", "muse-glimmer-128k:latest"}},
+		{hosted, []string{"claude-haiku-5-5"}},
 	} {
-		rotation, err := childRotationOf(test.parent, everyModel, model.Defaults{}, choices, "", false)
+		rotation, err := childRotationOf(test.parent, everyModel, model.Defaults{}, choices)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -574,22 +573,18 @@ func TestAnOllamaSessionStartsSubagentsOnlyOnOllamaModels(t *testing.T) {
 		ModelChoice: config.ModelChoice{Model: "anthropic/claude-opus-5@high"},
 		Concurrency: 4,
 	}
-	rotation, err := childRotationOf(local, onlyHosted, model.Defaults{}, choices, "", false)
+	rotation, err := childRotationOf(local, onlyHosted, model.Defaults{}, choices)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(rotation.Models) != 0 || rotation.Concurrency != 4 {
+	if len(rotation.Models) != 2 || rotation.Models[0].Choice.ID != local.ID || rotation.Concurrency != 4 {
 		t.Fatalf("an ollama session kept %+v", rotation)
-	}
-	want := "no available subagent models"
-	if _, err := rotation.Choose(); err == nil || err.Error() != want {
-		t.Errorf("an ollama session with only hosted subagents chose with %v", err)
 	}
 }
 
-func TestASessionCanStartChildrenOnlyWhenItsRotationKeepsAModel(t *testing.T) {
-	local := model.Choice{Provider: model.OllamaProvider, ID: "qwen3:8b", EffortLevels: []string{"none"}}
-	hosted := model.Choice{Provider: model.AnthropicProvider, ID: "claude-opus-5", EffortLevels: []string{"high"}}
+func TestASessionCanStartChildrenFromTheCatalogueWithoutARotation(t *testing.T) {
+	local := model.Choice{Provider: model.OllamaProvider, ID: "qwen3.8:27b-mtp-q8_0-256k", EffortLevels: []string{"none"}}
+	hosted := model.Choice{Provider: model.AnthropicProvider, ID: "claude-haiku-5-5", EffortLevels: []string{"high"}}
 	choices := []model.Choice{local, hosted}
 	onlyHosted := config.Config{Subagent: config.Subagent{
 		ModelChoice: config.ModelChoice{Model: "anthropic/claude-opus-5@high"},
@@ -601,12 +596,54 @@ func TestASessionCanStartChildrenOnlyWhenItsRotationKeepsAModel(t *testing.T) {
 		settings config.Config
 		want     bool
 	}{
-		{"no subagent model", hosted, config.Config{}, false},
-		{"an ollama session with only hosted subagents", local, onlyHosted, false},
+		{"no configured subagent model", hosted, config.Config{}, true},
+		{"an ollama session ignores the hosted rotation", local, onlyHosted, true},
 		{"a hosted session with hosted subagents", hosted, onlyHosted, true},
 	} {
-		if got := canStartChildren(test.parent, test.settings, choices, "", false); got != test.want {
+		if got := canStartChildren(test.parent, test.settings, choices); got != test.want {
 			t.Errorf("%s: canStartChildren is %t, want %t", test.name, got, test.want)
 		}
+	}
+}
+
+func TestGoldenSubagentProviderPools(t *testing.T) {
+	choices := []model.Choice{
+		{Provider: model.CodexProvider, ID: "gpt-6.1-sol", EffortLevels: []string{"high"}},
+		{Provider: model.CodexProvider, ID: "gpt-6-luna", EffortLevels: []string{"high"}},
+		{Provider: model.AnthropicProvider, ID: "claude-opus-5-5", EffortLevels: []string{"high"}},
+		{Provider: model.AnthropicProvider, ID: "claude-sonnet-5-5", EffortLevels: []string{"high"}},
+		{Provider: model.AnthropicProvider, ID: "claude-haiku-5-5", EffortLevels: []string{"high"}},
+		{Provider: model.OpencodeGoProvider, ID: "deepseek-v4.1-flash", EffortLevels: []string{"high"}},
+		{Provider: model.OpencodeGoProvider, ID: "gpt-6-luna", EffortLevels: []string{"high"}},
+		{Provider: model.OpencodeGoProvider, ID: "claude-haiku-5-5", EffortLevels: []string{"high"}},
+		{Provider: model.OpencodeGoProvider, ID: "longcat-2.5-preview-free"},
+		{Provider: model.OpencodeGoProvider, ID: "step-5-preview-free", EffortLevels: []string{"high"}},
+		{Provider: model.OpencodeGoProvider, ID: "cat-jam-free", EffortLevels: []string{"high"}},
+		{Provider: model.OllamaProvider, ID: "muse-glimmer-128k:latest", EffortLevels: []string{"high"}},
+		{Provider: model.OllamaProvider, ID: "qwen3.8:27b-mtp-q8_0-256k", EffortLevels: []string{"high"}},
+	}
+	passes := map[string]func() string{}
+	for _, provider := range model.ProviderNames() {
+		passes[provider] = func() string {
+			rotation, err := childRotationOf(model.Choice{Provider: provider}, config.Subagent{}, model.Defaults{}, choices)
+			if err != nil {
+				t.Fatal(err)
+			}
+			manager, err := subagents.New(subagents.Options{Directory: t.TempDir(), Scratch: t.TempDir(), Models: rotation.Models})
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer manager.Close()
+			return manager.Models()
+		}
+	}
+	compareWithGolden(t, "subagent-provider-pools", ".txt", passes)
+}
+
+func TestSubagentCatalogueIgnoresFastDefaults(t *testing.T) {
+	choice := model.Choice{Provider: model.CodexProvider, ID: "gpt-6-luna", EffortLevels: []string{"high"}}
+	rotation, err := childRotationOf(choice, config.Subagent{}, model.Defaults{IsFast: true}, []model.Choice{choice})
+	if err != nil || len(rotation.Models) != 1 || rotation.Models[0].Selection.IsFast {
+		t.Errorf("fast defaults reached the subagent catalogue: %+v, %v", rotation, err)
 	}
 }

@@ -1,0 +1,26 @@
+=== anthropic ===
+Write selections as provider/model@effort, e.g. codex/gpt-6-luna@high. For models with no effort levels, use provider/model.
+
+- anthropic/claude-haiku-5-5; cheap; efforts: high
+- opencode-go/longcat-2.5-preview-free; free
+- opencode-go/step-5-preview-free; free; efforts: high
+- opencode-go/cat-jam-free; free; efforts: high
+=== codex ===
+Write selections as provider/model@effort, e.g. codex/gpt-6-luna@high. For models with no effort levels, use provider/model.
+
+- codex/gpt-6-luna; cheap; efforts: high
+- opencode-go/longcat-2.5-preview-free; free
+- opencode-go/step-5-preview-free; free; efforts: high
+- opencode-go/cat-jam-free; free; efforts: high
+=== ollama ===
+Write selections as provider/model@effort, e.g. codex/gpt-6-luna@high. For models with no effort levels, use provider/model.
+
+- ollama/muse-glimmer-128k:latest; free; efforts: high
+- ollama/qwen3.8:27b-mtp-q8_0-256k; free; efforts: high
+=== opencode-go ===
+Write selections as provider/model@effort, e.g. codex/gpt-6-luna@high. For models with no effort levels, use provider/model.
+
+- opencode-go/deepseek-v4.1-flash; cheap; efforts: high
+- opencode-go/longcat-2.5-preview-free; free
+- opencode-go/step-5-preview-free; free; efforts: high
+- opencode-go/cat-jam-free; free; efforts: high

@@ -17,7 +17,7 @@ start two subagents
 ## Tool calls · +0s
 
 ```
-subagent: 2 subagents · Watching the build until stopped, Naming the tool that builds this [ok, 1 line, 54B, toolu_1]
+subagent: 2 subagents · codex/gpt-5.6-sol@medium, codex/gpt-5.6-sol@medium · Watching the … [ok, 1 line, 54B, toolu_1]
 ```
 
 ## Assistant · +0s
@@ -73,7 +73,7 @@ start one more subagent
 ## Tool calls · +0s
 
 ```
-subagent: 1 subagent [error, 1 line, 43B, toolu_2]
+subagent: 1 subagent · codex/gpt-5.6-sol@medium [error, 1 line, 43B, toolu_2]
 ```
 
 ## Assistant · +0s

@@ -28,8 +28,9 @@ import (
 )
 
 const (
-	defaultConcurrency = 5
-	maxChildLife       = 30 * time.Minute
+	defaultConcurrency  = 5
+	maxChildLife        = 30 * time.Minute
+	modelSelectionGuide = "Write selections as provider/model@effort, e.g. codex/gpt-6-luna@high. For models with no effort levels, use provider/model."
 )
 
 type Child struct {
@@ -69,7 +70,6 @@ type Options struct {
 	Scratch      string
 	Parent       string
 	Models       []ChildModel
-	Choose       func() (ChildModel, error)
 	Meta         store.Meta
 	Factory      Factory
 	PickName     func(int) int
@@ -123,7 +123,6 @@ type child struct {
 
 type Rotation struct {
 	Models      []ChildModel
-	Choose      func() (ChildModel, error)
 	Concurrency int
 }
 
@@ -163,7 +162,7 @@ func New(options Options) (*Manager, error) {
 		options.JournalPath = func(name string) string { return session.JournalPath(options.Directory, name) }
 	}
 	return &Manager{
-		rotation:    withDefaultConcurrency(Rotation{Models: options.Models, Choose: options.Choose, Concurrency: options.Concurrency}),
+		rotation:    withDefaultConcurrency(Rotation{Models: options.Models, Concurrency: options.Concurrency}),
 		options:     options,
 		children:    make(map[string]*child),
 		scratchRoot: scratchRoot,
@@ -334,6 +333,10 @@ func (self *Manager) Start(ctx context.Context, sharedPrompt string, tasks []sub
 	if len(tasks) == 0 || liveCount+len(tasks) > concurrency {
 		return "", fmt.Errorf("at most %d subagents may run at once", concurrency)
 	}
+	selectedModels, err := self.selectModels(tasks)
+	if err != nil {
+		return "", err
+	}
 	if self.options.EnsureParent != nil {
 		if err := self.options.EnsureParent(); err != nil {
 			return "", err
@@ -350,7 +353,7 @@ func (self *Manager) Start(ctx context.Context, sharedPrompt string, tasks []sub
 			_ = place.writer.Close()
 		}
 	}
-	for _, task := range tasks {
+	for index, task := range tasks {
 		workspace, err := self.options.Workspace(task.Workspace)
 		if err != nil {
 			discard()
@@ -361,11 +364,7 @@ func (self *Manager) Start(ctx context.Context, sharedPrompt string, tasks []sub
 			discard()
 			return "", err
 		}
-		childModel, err := self.choose()
-		if err != nil {
-			discard()
-			return "", err
-		}
+		childModel := selectedModels[index]
 		siblings = append(siblings, name)
 		writer, err := store.CreateNamed(self.options.Directory, name, self.childMeta(workspace, childModel))
 		if err != nil {
@@ -556,6 +555,28 @@ func (self *Manager) Model() string {
 	return strings.Join(names[:len(names)-1], ", ") + " or " + names[len(names)-1]
 }
 
+func (self *Manager) Models() string {
+	self.mutex.Lock()
+	models := self.rotation.Models
+	self.mutex.Unlock()
+	if len(models) == 0 {
+		return "No eligible subagent models are available."
+	}
+	var lines []string
+	for _, candidate := range models {
+		group := "cheap"
+		if candidate.Choice.Provider == model.OllamaProvider || model.IsFreeSubagentModel(candidate.Choice) {
+			group = "free"
+		}
+		line := "- " + candidate.Choice.Provider + "/" + candidate.Choice.ID + "; " + group
+		if len(candidate.Choice.EffortLevels) > 0 {
+			line += "; efforts: " + strings.Join(candidate.Choice.EffortLevels, ", ")
+		}
+		lines = append(lines, line)
+	}
+	return modelSelectionGuide + "\n\n" + strings.Join(lines, "\n")
+}
+
 func (self *Manager) LiveSpend() (float64, bool) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
@@ -706,17 +727,38 @@ func (self *Manager) Close() {
 	})
 }
 
-func (self *Manager) choose() (ChildModel, error) {
+func (self *Manager) selectModels(tasks []subagent.Task) ([]ChildModel, error) {
 	self.mutex.Lock()
-	rotation := self.rotation
+	models := self.rotation.Models
 	self.mutex.Unlock()
-	if rotation.Choose != nil {
-		return rotation.Choose()
+	selectedModels := make([]ChildModel, len(tasks))
+	for index, task := range tasks {
+		if strings.Contains(task.Model, "+") {
+			return nil, fmt.Errorf("subagents[%d].model: use provider/model@effort, or provider/model for an effort-less model", index)
+		}
+		modelName, _, _ := strings.Cut(task.Model, "@")
+		candidate := slices.IndexFunc(models, func(candidate ChildModel) bool {
+			return modelName == candidate.Choice.Provider+"/"+candidate.Choice.ID
+		})
+		if candidate < 0 {
+			return nil, fmt.Errorf("subagents[%d].model %q is not available; call action=models for valid selections", index, task.Model)
+		}
+		chosenModel := models[candidate]
+		if len(chosenModel.Choice.EffortLevels) > 0 && !strings.Contains(task.Model, "@") {
+			return nil, fmt.Errorf("subagents[%d].model: choose an effort for %s: %s", index, chosenModel.Choice.ID, strings.Join(chosenModel.Choice.EffortLevels, ", "))
+		}
+		selection, err := model.ParseSelection([]model.Choice{chosenModel.Choice}, task.Model, model.Defaults{
+			Effort: model.Effort(chosenModel.Selection.Effort),
+		})
+		if err != nil {
+			return nil, fmt.Errorf("subagents[%d].model: %w", index, err)
+		}
+		if selection.String() != task.Model {
+			return nil, fmt.Errorf("subagents[%d].model: use the exact selection %s", index, selection)
+		}
+		selectedModels[index] = ChildModel{Choice: chosenModel.Choice, Selection: selection}
 	}
-	if len(rotation.Models) == 0 {
-		return ChildModel{}, nil
-	}
-	return rotation.Models[0], nil
+	return selectedModels, nil
 }
 
 func withDefaultConcurrency(rotation Rotation) Rotation {
