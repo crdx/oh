@@ -99,6 +99,15 @@ func drawnCases() []drawnCase {
 	return []drawnCase{
 		{name: "every provider", sources: everyProvider(), at: minuteLater},
 		{
+			name: "go allowance exhausted without a refusal",
+			sources: []Source{{
+				Provider: "opencode-go",
+				Label:    "OpenCode Go",
+				Reporter: reporting(sessionWindow(100), weeklyWindow(49)),
+			}},
+			at: minuteLater,
+		},
+		{
 			name: "a provider that was refused",
 			sources: []Source{{
 				Provider: "anthropic",

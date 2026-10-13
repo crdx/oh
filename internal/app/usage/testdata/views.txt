@@ -12,6 +12,10 @@ Spark Session  12% █░░░░░░░░░░┃░░░░ ▼ 1h 29m
 ● OpenCode Go
 Session         3% ░░░░░░░░░┃░░░░░░ ▼ 1h 59m
 Month         100% ████████████████ ⊘ limited
+=== go allowance exhausted without a refusal ===
+● OpenCode Go
+Session 100% █████████┃██████ ▲ 1h 59m
+Week     49% ███████░░░░┃░░░░ ▼ 1d 23h
 === a provider that was refused ===
 ✖ Anthropic refused with 429
 === a scope nothing has been spent on ===

@@ -109,7 +109,7 @@ func TestTheThreeGoWindowsAreReportedInOrder(t *testing.T) {
 	want := []agent.UsageWindow{
 		{Duration: 5 * time.Hour, Percent: 39},
 		{Duration: 7 * 24 * time.Hour, Percent: 15},
-		{Duration: 30 * 24 * time.Hour, Percent: 100, IsLimited: true},
+		{Duration: 30 * 24 * time.Hour, Percent: 100},
 	}
 
 	if len(windows) != len(want) {
@@ -130,6 +130,29 @@ func TestTheThreeGoWindowsAreReportedInOrder(t *testing.T) {
 		if got.ResetsAt.IsZero() {
 			t.Errorf("window %d carries no reset", at)
 		}
+	}
+}
+
+func TestGoQuotaProbeDoesNotMistakeAnExhaustedAllowanceForADenial(t *testing.T) {
+	for _, test := range []struct {
+		status string
+		want   agent.UsageAvailability
+	}{
+		{status: "ok", want: agent.UsageAvailabilityAllowed},
+		{status: "rate-limited", want: agent.UsageAvailabilityUnknown},
+	} {
+		t.Run(test.status, func(t *testing.T) {
+			server := usageServer(t, http.StatusOK, `{"usage":{"rolling":{"status":"`+test.status+`","percent":100}}}`)
+			client := newClient(t, "http://127.0.0.1:1/v1/chat/completions")
+			client.UsageURL = server.URL
+			probe, err := client.ProbeUsage(t.Context())
+			if err != nil {
+				t.Fatal(err)
+			}
+			if probe.Availability != test.want || len(probe.Windows) != 1 || probe.Windows[0].IsLimited {
+				t.Errorf("got %+v, want availability %v without a denied window", probe, test.want)
+			}
+		})
 	}
 }
 
@@ -188,10 +211,10 @@ func TestEveryShapeOfUsagePayloadIsReadTheSameWay(t *testing.T) {
 			want:    nil,
 		},
 		{
-			name:    "a window the endpoint is refusing work against",
+			name:    "an exhausted included allowance with unknown paid availability",
 			payload: `{"usage": {"rolling": {"status": "rate-limited", "percent": 100}}}`,
 			want: []agent.UsageWindow{
-				{Duration: 5 * time.Hour, Percent: 100, IsLimited: true},
+				{Duration: 5 * time.Hour, Percent: 100},
 			},
 		},
 		{

@@ -116,6 +116,7 @@ func (self *Client) ProbeUsage(ctx context.Context) (agent.UsageProbe, error) {
 	}
 
 	var windows []agent.UsageWindow
+	isQuotaExhausted := false
 
 	for _, reportedWindow := range []struct {
 		limit    usageLimit
@@ -127,18 +128,15 @@ func (self *Client) ProbeUsage(ctx context.Context) (agent.UsageProbe, error) {
 	} {
 		if window, ok := usageWindow(reportedWindow.limit, reportedWindow.duration); ok {
 			windows = append(windows, window)
+			if reportedWindow.limit.Status != usageOK {
+				isQuotaExhausted = true
+			}
 		}
 	}
 
 	availability := agent.UsageAvailabilityUnknown
-	if len(windows) > 0 {
+	if len(windows) > 0 && !isQuotaExhausted {
 		availability = agent.UsageAvailabilityAllowed
-	}
-	for _, window := range windows {
-		if window.IsLimited {
-			availability = agent.UsageAvailabilityLimited
-			break
-		}
 	}
 
 	return agent.UsageProbe{
@@ -154,9 +152,8 @@ func usageWindow(limit usageLimit, duration time.Duration) (agent.UsageWindow, b
 	}
 
 	window := agent.UsageWindow{
-		Duration:  duration,
-		Percent:   limit.Percent,
-		IsLimited: limit.Status != usageOK,
+		Duration: duration,
+		Percent:  limit.Percent,
 	}
 
 	if resetsAt, err := time.Parse(time.RFC3339, limit.ResetsAt); err == nil {
