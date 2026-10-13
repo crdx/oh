@@ -2,15 +2,10 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
-### Changes
+## [0.15.0] - 2026-10-13
 
-- Add session ctl flag to delete a stored or archived session by label
-- Use alt+enter to reverse turn interruption for commands and snippets
-- Fuzzy match model in `/new` and `/fork` also
-- Show a pending `/!` result while a model answer is still streaming
-- Move send-now notice to the top left, a bit closer to the text it concerns
-- Show queued messages only after a long enough wait, and make the sending text yellow
-- Flash subagent emojis on model activity so you have some idea of what's going on
+### Security
+
 - Refuse retargeted configured directories before first access
 - Let file tools read host `/tmp` under `--yolo`
 - Stop jobs holding non-cache writes when `g` is withdrawn
@@ -22,11 +17,43 @@
 - Accept literal absolute paths in `sandbox.deny`
 - Fail closed when denied names cannot be discovered or mounted
 - Honour explicit workspace write grants in file tools
+- Tighten file-tool write protections around git dirs
+
+### Input and commands
+
+- Add session ctl flag to delete a stored or archived session by label
+- Use alt+enter to reverse turn interruption for commands and snippets
+- Fuzzy match model in `/new` and `/fork` also
+- Show a pending `/!` result while a model answer is still streaming
 - Add experimental toggle to let alt+enter interrupt a running turn
+
+### Drawing
+
+- Move send-now notice to the top left, a bit closer to the text it concerns
+- Show queued messages immediately, but pause for interruption
+- Make the pending message "sending..." text stand out more
+- Keep short live calls visible and truncate long subagent interjections
+- Mark a limited provider with ⊘ instead of ✖ in the usage segment
+- Reserve right- and bottom-padding of 1 char minimum in ui blocks
+
+### Subagents
+
+- Flash subagent emojis on model activity so you have some idea of what's going on
+
+### Models and providers
+
+- Stop reading an exhausted OpenCode Go allowance as a refusal
+- Bypass stale usage limit refusals for OpenCode Go models
+
+### Configuration
+
 - Add debug toggle for wire log storage, and move them under the debug folder
+- Error on `enabled = false` for a custom tool without a group
+
+### Performance
+
 - Don't allocate tons of memory when streaming long replies
 - Speed up the session picker by caching archive metadata
-- Keep short live calls visible and truncate long subagent interjections
 
 ## [0.14.0] - 2026-10-11
 
