@@ -241,15 +241,16 @@
 \e[48;2;52;53;65m and \e]8;;file:///workspace/spaced%20target.txt\e\\spaced\e]8;;\e\\ \e[0m\r
 \e[48;2;52;53;65m \e]8;;file:///workspace/spaced%20target.txt\e\\target.txt\e]8;;\e\\ \e[0m\r
 \e[48;2;52;53;65m and        \e[0m\r
-\e[48;2;52;53;65m \e]8;;file:///workspace/cmd/oh/line/render.go#12:3\e\\cmd/oh/line\e]8;;\e\\\e[0m\r
-\e[48;2;52;53;65m \e]8;;file:///workspace/cmd/oh/line/render.go#12:3\e\\/render.go:\e]8;;\e\\\e[0m\r
-\e[48;2;52;53;65m \e]8;;file:///workspace/cmd/oh/line/render.go#12:3\e\\12:3\e]8;;\e\\; also \e[0m\r
+\e[48;2;52;53;65m \e]8;;file:///workspace/cmd/oh/line/render.go#12:3\e\\cmd/oh/lin\e]8;;\e\\ \e[0m\r
+\e[48;2;52;53;65m \e]8;;file:///workspace/cmd/oh/line/render.go#12:3\e\\e/render.g\e]8;;\e\\ \e[0m\r
+\e[48;2;52;53;65m \e]8;;file:///workspace/cmd/oh/line/render.go#12:3\e\\o:12:3\e]8;;\e\\;    \e[0m\r
+\e[48;2;52;53;65m also       \e[0m\r
 \e[48;2;52;53;65m \e]8;;file:///etc/hosts\e\\/etc/hosts\e]8;;\e\\ \e[0m\r
 \e[48;2;52;53;65m and \e]8;;https://example.test\e\\\e[38;2;129;162;190mthe\e[0m\e[48;2;52;53;65m\e]8;;\e\\    \e[0m\r
 \e[48;2;52;53;65m \e]8;;https://example.test\e\\\e[38;2;129;162;190mtarget\e[0m\e[48;2;52;53;65m\e]8;;\e\\\e[38;2;150;152;150m\e[0m\e[48;2;52;53;65m     \e[0m\r
-\e[48;2;52;53;65m \e[38;2;150;152;150m(\e]8;;https://example.test\e\\https://ex\e[0m\e[48;2;52;53;65m\e]8;;\e\\\e[0m\r
-\e[48;2;52;53;65m \e]8;;https://example.test\e\\\e[38;2;150;152;150mample.test\e]8;;\e\\)\e[0m\e[48;2;52;53;65m\e[0m\r
-\e[48;2;52;53;65m .          \e[0m\r
+\e[48;2;52;53;65m \e[38;2;150;152;150m(\e]8;;https://example.test\e\\https://e\e[0m\e[48;2;52;53;65m\e]8;;\e\\ \e[0m\r
+\e[48;2;52;53;65m \e]8;;https://example.test\e\\\e[38;2;150;152;150mxample.tes\e[0m\e[48;2;52;53;65m\e]8;;\e\\ \e[0m\r
+\e[48;2;52;53;65m \e]8;;https://example.test\e\\\e[38;2;150;152;150mt\e]8;;\e\\)\e[0m\e[48;2;52;53;65m.        \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \e[?25h\e[?2026l
 === wide ===

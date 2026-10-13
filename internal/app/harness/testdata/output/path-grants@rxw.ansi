@@ -1070,13 +1070,14 @@ I wi\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI will n\e[K\r\e[8C\e[?25h\e[?2
 \r
 \e[48;2;48;58;67m            \e[0m\r
 \e[48;2;48;58;67m 🤖 Granted \e[0m\r
-\e[48;2;48;58;67m    temporar\e[0m\r
-\e[48;2;48;58;67m    y       \e[0m\r
-\e[48;2;48;58;67m    read-onl\e[0m\r
-\e[48;2;48;58;67m    y access\e[0m\r
+\e[48;2;48;58;67m    tempora \e[0m\r
+\e[48;2;48;58;67m    ry      \e[0m\r
+\e[48;2;48;58;67m    read-on \e[0m\r
+\e[48;2;48;58;67m    ly      \e[0m\r
+\e[48;2;48;58;67m    access  \e[0m\r
 \e[48;2;48;58;67m    to      \e[0m\r
-\e[48;2;48;58;67m    /referen\e[0m\r
-\e[48;2;48;58;67m    ce.     \e[0m\r
+\e[48;2;48;58;67m    /refere \e[0m\r
+\e[48;2;48;58;67m    nce.    \e[0m\r
 \e[48;2;48;58;67m            \e[0m\r
 \r
 I can read\r
@@ -1086,14 +1087,14 @@ now.\r
 \r
 \e[48;2;48;58;67m            \e[0m\r
 \e[48;2;48;58;67m 🤖 Granted \e[0m\r
-\e[48;2;48;58;67m    temporar\e[0m\r
-\e[48;2;48;58;67m    y read  \e[0m\r
+\e[48;2;48;58;67m    tempora \e[0m\r
+\e[48;2;48;58;67m    ry read \e[0m\r
 \e[48;2;48;58;67m    and     \e[0m\r
 \e[48;2;48;58;67m    write   \e[0m\r
 \e[48;2;48;58;67m    access  \e[0m\r
 \e[48;2;48;58;67m    to      \e[0m\r
-\e[48;2;48;58;67m    /referen\e[0m\r
-\e[48;2;48;58;67m    ce.     \e[0m\r
+\e[48;2;48;58;67m    /refere \e[0m\r
+\e[48;2;48;58;67m    nce.    \e[0m\r
 \e[48;2;48;58;67m            \e[0m\r
 \r
 I can also\r
@@ -1102,10 +1103,11 @@ now.\r
 \r
 \e[48;2;48;58;67m            \e[0m\r
 \e[48;2;48;58;67m 🤖 Granted \e[0m\r
-\e[48;2;48;58;67m    temporar\e[0m\r
-\e[48;2;48;58;67m    y       \e[0m\r
-\e[48;2;48;58;67m    read-onl\e[0m\r
-\e[48;2;48;58;67m    y access\e[0m\r
+\e[48;2;48;58;67m    tempora \e[0m\r
+\e[48;2;48;58;67m    ry      \e[0m\r
+\e[48;2;48;58;67m    read-on \e[0m\r
+\e[48;2;48;58;67m    ly      \e[0m\r
+\e[48;2;48;58;67m    access  \e[0m\r
 \e[48;2;48;58;67m    to      \e[0m\r
 \e[48;2;48;58;67m    /tools. \e[0m\r
 \e[48;2;48;58;67m            \e[0m\r
@@ -1118,8 +1120,8 @@ now.\r
 \r
 \e[48;2;48;58;67m            \e[0m\r
 \e[48;2;48;58;67m 🤖 Granted \e[0m\r
-\e[48;2;48;58;67m    temporar\e[0m\r
-\e[48;2;48;58;67m    y read  \e[0m\r
+\e[48;2;48;58;67m    tempora \e[0m\r
+\e[48;2;48;58;67m    ry read \e[0m\r
 \e[48;2;48;58;67m    and     \e[0m\r
 \e[48;2;48;58;67m    write   \e[0m\r
 \e[48;2;48;58;67m    access  \e[0m\r
@@ -1135,13 +1137,15 @@ it.\r
 \r
 \e[48;2;48;58;67m            \e[0m\r
 \e[48;2;48;58;67m 🤖 Revoked \e[0m\r
-\e[48;2;48;58;67m    temporar\e[0m\r
-\e[48;2;48;58;67m    y access\e[0m\r
+\e[48;2;48;58;67m    tempora \e[0m\r
+\e[48;2;48;58;67m    ry      \e[0m\r
+\e[48;2;48;58;67m    access  \e[0m\r
 \e[48;2;48;58;67m    to      \e[0m\r
 \e[48;2;48;58;67m    /build. \e[0m\r
 \e[48;2;48;58;67m 🤖 Revoked \e[0m\r
-\e[48;2;48;58;67m    temporar\e[0m\r
-\e[48;2;48;58;67m    y access\e[0m\r
+\e[48;2;48;58;67m    tempora \e[0m\r
+\e[48;2;48;58;67m    ry      \e[0m\r
+\e[48;2;48;58;67m    access  \e[0m\r
 \e[48;2;48;58;67m    to      \e[0m\r
 \e[48;2;48;58;67m    /tools. \e[0m\r
 \e[48;2;48;58;67m            \e[0m\r
@@ -1154,11 +1158,12 @@ here.\r
 \r
 \e[48;2;48;58;67m            \e[0m\r
 \e[48;2;48;58;67m 🤖 Revoked \e[0m\r
-\e[48;2;48;58;67m    temporar\e[0m\r
-\e[48;2;48;58;67m    y access\e[0m\r
+\e[48;2;48;58;67m    tempora \e[0m\r
+\e[48;2;48;58;67m    ry      \e[0m\r
+\e[48;2;48;58;67m    access  \e[0m\r
 \e[48;2;48;58;67m    to      \e[0m\r
-\e[48;2;48;58;67m    /referen\e[0m\r
-\e[48;2;48;58;67m    ce.     \e[0m\r
+\e[48;2;48;58;67m    /refere \e[0m\r
+\e[48;2;48;58;67m    nce.    \e[0m\r
 \e[48;2;48;58;67m            \e[0m\r
 \r
 I will no\r

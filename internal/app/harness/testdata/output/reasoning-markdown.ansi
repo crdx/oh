@@ -1145,8 +1145,9 @@ The\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThe read\e[K\r\e[8C\e[?25h\e[?20
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
-\e[48;2;52;53;65m think about\e[0m\r
-\e[48;2;52;53;65m it in      \e[0m\r
+\e[48;2;52;53;65m think      \e[0m\r
+\e[48;2;52;53;65m about it   \e[0m\r
+\e[48;2;52;53;65m in         \e[0m\r
 \e[48;2;52;53;65m markdown   \e[0m\r
 \e[48;2;52;53;65m before you \e[0m\r
 \e[48;2;52;53;65m answer     \e[0m\r

@@ -374,7 +374,8 @@
 \e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
 \e[48;2;52;53;65m show the   \e[0m\r
 \e[48;2;52;53;65m retry      \e[0m\r
-\e[48;2;52;53;65m interaction\e[0m\r
+\e[48;2;52;53;65m interactio \e[0m\r
+\e[48;2;52;53;65m n          \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
 \e[3m\e[38;2;150;152;150mTracing the\e[0m\r

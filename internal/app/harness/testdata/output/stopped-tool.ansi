@@ -257,8 +257,9 @@ Left\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rLeft alo\e[K\r\e[8C\e[?25h\e[?2
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
 \e[48;2;52;53;65m build it   \e[0m\r
-\e[48;2;52;53;65m and tell me\e[0m\r
-\e[48;2;52;53;65m what broke \e[0m\r
+\e[48;2;52;53;65m and tell   \e[0m\r
+\e[48;2;52;53;65m me what    \e[0m\r
+\e[48;2;52;53;65m broke      \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
 Building\r

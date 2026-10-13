@@ -399,9 +399,9 @@ fun\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[38;2;201;166;212mfunc\e[0m co
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
 \e[48;2;52;53;65m run each   \e[0m\r
 \e[48;2;52;53;65m shape of   \e[0m\r
-\e[48;2;52;53;65m command and\e[0m\r
-\e[48;2;52;53;65m load the   \e[0m\r
-\e[48;2;52;53;65m skill      \e[0m\r
+\e[48;2;52;53;65m command    \e[0m\r
+\e[48;2;52;53;65m and load   \e[0m\r
+\e[48;2;52;53;65m the skill  \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
 \e[3m\e[38;2;150;152;150mRunning t…\e[0m\e[0m \e[38;2;76;154;44m✓\e[0m\r

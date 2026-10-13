@@ -8,7 +8,9 @@ probe probe 1L
 
  🐍 Subagent tame-adder interjects:
 
-    The parser is in parse.go.
+    The parser is in parse.go. See
+    internal/app/harness/testdata/scenarios/anthropic-subagent-report-interjected-mid-turn.toml
+    from the longer case.
 
 
 probe probe 1L

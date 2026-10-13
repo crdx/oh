@@ -800,15 +800,16 @@ Unsupported script links (javascript:alert(1)), relative links (docs/page.md), h
 An image remains a fallback: diagram (diagram.png).
 === tiny ===
 
- compare the
+ compare
+ the
  references
- (https://ex
- ample.test/
- question)
- with
- https://exa
- mple.test/r
- equest
+ (https://e
+ xample.tes
+ t/question
+ ) with
+ https://ex
+ ample.test
+ /request
 
 
 Terminal

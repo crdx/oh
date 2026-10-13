@@ -631,8 +631,9 @@ An\e[K\r\e[2C\e[?25h\e[?2026l\e[?2026h\e[?25l\rAnd the an\e[K\r\e[10C\e[?25h\e[?
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
-\e[48;2;52;53;65m stream some\e[0m\r
-\e[48;2;52;53;65m code at me \e[0m\r
+\e[48;2;52;53;65m stream     \e[0m\r
+\e[48;2;52;53;65m some code  \e[0m\r
+\e[48;2;52;53;65m at me      \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
 A fence\r

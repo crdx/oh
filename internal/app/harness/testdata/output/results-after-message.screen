@@ -266,12 +266,13 @@ read scr… 3L
 grep spi… 1L
 
 
- 🤖 Job docs
+ 🤖 Job
+    docs
     exited:
-    complete
-    after
-    12s with
-    no
+    complet
+    e after
+    12s
+    with no
     output.
 
 

@@ -665,7 +665,8 @@ Model returned no reply.
  walk every
  pair of
  groups so
- the spacing
+ the
+ spacing
  between
  them is
  written
@@ -690,12 +691,12 @@ ls 2L
  🤖 Port
     8080 is
     now
-    forwarde
-    d to
-    http://1
-    27.27.19
-    2.223:80
-    80.
+    forward
+    ed to
+    http://
+    127.27.
+    192.223
+    :8080.
 
 
 A tool ran,

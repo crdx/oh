@@ -569,18 +569,22 @@ The build failed on an undefined getWidth, and the read has to come first.
     failed
     after
     12s,
-    exit(2).
+    exit(2)
+    .
 
-    go build
+    go
+    build
     ./...
-    cmd/oh/d
-    raw.go:4
-    1:9:
-    undefine
-    d:
-    getWidth
+    cmd/oh/
+    draw.go
+    :41:9:
+    undefin
+    ed:
+    getWidt
+    h
     exit
-    status 1
+    status
+    1
 
 
 Checking

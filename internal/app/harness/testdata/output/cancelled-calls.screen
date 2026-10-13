@@ -1,7 +1,7 @@
 === narrow ===
 
- read both of those files, then wait for
- check
+ read both of those files, then wait
+ for check
 
 
 read one.txt 1L
@@ -157,9 +157,9 @@ Turn stopped.
 
  read both
  of those
- files, then
- wait for
- check
+ files,
+ then wait
+ for check
 
 
 read one… 1L
@@ -170,8 +170,9 @@ Turn
 stopped.
 
 
- one was all
- I needed
+ one was
+ all I
+ needed
 === wide ===
 
  read both of those files, then wait for check

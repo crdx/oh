@@ -411,9 +411,9 @@ Restarted docs from the command it was remembered with.
 === tiny ===
 
  start the
- docs server
- and a
- watcher
+ docs
+ server and
+ a watcher
 
 
 Handling th…
@@ -426,12 +426,14 @@ Both are up.
     was
     closed
     and
-    reopened
-    after
-    the last
+    reopene
+    d after
+    the
+    last
     turn.
     Jobs
-    docs and
+    docs
+    and
     watch
     stopped
     when it

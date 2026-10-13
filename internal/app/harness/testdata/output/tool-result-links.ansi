@@ -209,7 +209,8 @@ Ever\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rEvery fi\e[K\r\e[8C\e[?25h\e[?2
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
 \e[48;2;52;53;65m show every \e[0m\r
-\e[48;2;52;53;65m tool result\e[0m\r
+\e[48;2;52;53;65m tool       \e[0m\r
+\e[48;2;52;53;65m result     \e[0m\r
 \e[48;2;52;53;65m link state \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r

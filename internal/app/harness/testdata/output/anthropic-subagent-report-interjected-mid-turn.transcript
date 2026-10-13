@@ -29,14 +29,14 @@ Transcript: `subagents/tame-adder/chat.md`
 
 ## Subagent finished · tame-adder · done · +0s
 
-The parser is in parse.go.
+The parser is in parse.go. See internal/app/harness/testdata/scenarios/anthropic-subagent-report-interjected-mid-turn.toml from the longer case.
 
 ## Subagent reports · +0s
 
 ```
 Subagent tame-adder finished:
 
-tame-adder done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The parser is in parse.go.
+tame-adder done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The parser is in parse.go. See internal/app/harness/testdata/scenarios/anthropic-subagent-report-interjected-mid-turn.toml from the longer case.
 ```
 
 ## Tool calls · +0s

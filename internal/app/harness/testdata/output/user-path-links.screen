@@ -237,15 +237,16 @@ t
  and spaced
  target.txt
  and
- cmd/oh/line
- /render.go:
- 12:3; also
+ cmd/oh/lin
+ e/render.g
+ o:12:3;
+ also
  /etc/hosts
  and the
  target
- (https://ex
- ample.test)
- .
+ (https://e
+ xample.tes
+ t).
 === wide ===
 
  read target.txt and spaced target.txt and cmd/oh/line/render.go:12:3; also /etc/hosts and the

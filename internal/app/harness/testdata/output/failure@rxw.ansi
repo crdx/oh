@@ -584,8 +584,9 @@ I ca\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can on\e[K\r\e[8C\e[?25h\e[?2
 \e[38;2;150;152;150mcontext.\e[0m\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
-\e[48;2;52;53;65m have a look\e[0m\r
-\e[48;2;52;53;65m at that    \e[0m\r
+\e[48;2;52;53;65m have a     \e[0m\r
+\e[48;2;52;53;65m look at    \e[0m\r
+\e[48;2;52;53;65m that       \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
 \e[3m\e[38;2;150;152;150mThis one\e[0m\r
@@ -598,8 +599,9 @@ I ca\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rI can on\e[K\r\e[8C\e[?25h\e[?2
 \e[38;2;204;102;102mdid\e[0m\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
-\e[48;2;52;53;65m have a look\e[0m\r
-\e[48;2;52;53;65m at that    \e[0m\r
+\e[48;2;52;53;65m have a     \e[0m\r
+\e[48;2;52;53;65m look at    \e[0m\r
+\e[48;2;52;53;65m that       \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
 Let me think\r
@@ -609,8 +611,9 @@ about that.\r
 \e[38;2;204;102;102moverloaded\e[0m\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
-\e[48;2;52;53;65m have a look\e[0m\r
-\e[48;2;52;53;65m at that    \e[0m\r
+\e[48;2;52;53;65m have a     \e[0m\r
+\e[48;2;52;53;65m look at    \e[0m\r
+\e[48;2;52;53;65m that       \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
 I can only\r
@@ -622,8 +625,9 @@ before\r
 \e[38;2;204;102;102mshort\e[0m\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
-\e[48;2;52;53;65m have a look\e[0m\r
-\e[48;2;52;53;65m at that    \e[0m\r
+\e[48;2;52;53;65m have a     \e[0m\r
+\e[48;2;52;53;65m look at    \e[0m\r
+\e[48;2;52;53;65m that       \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
 \e[38;2;204;102;102mThe endpoint\e[0m\r

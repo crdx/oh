@@ -587,8 +587,9 @@ answere\e[K\r\e[7C\e[?25h\e[?2026l\e[?2026h\e[?25l\ranswered.\e[K\r\e[9C\e[?25h\
 \e[38;2;150;152;150mcontext.\e[0m\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
-\e[48;2;52;53;65m have a look\e[0m\r
-\e[48;2;52;53;65m at that    \e[0m\r
+\e[48;2;52;53;65m have a     \e[0m\r
+\e[48;2;52;53;65m look at    \e[0m\r
+\e[48;2;52;53;65m that       \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
 \e[3m\e[38;2;150;152;150mTaking the\e[0m\r

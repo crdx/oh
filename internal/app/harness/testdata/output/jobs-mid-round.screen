@@ -1,7 +1,7 @@
 === narrow ===
 
- read both files while the build and the
- docs finish
+ read both files while the build and
+ the docs finish
 
 
 Reading both in one round so the jobs
@@ -18,7 +18,8 @@ read target.txt 1L
     getWidth
     exit status 1
 
- 🤖 Job docs exited: complete after 14s.
+ 🤖 Job docs exited: complete after
+    14s.
 
     docs written
 
@@ -665,10 +666,11 @@ Both files are read. The build failed on an undefined getWidth, and the docs are
 === tiny ===
 
  read both
- files while
- the build
- and the
- docs finish
+ files
+ while the
+ build and
+ the docs
+ finish
 
 
 Reading both
@@ -686,23 +688,28 @@ read tar… 1L
     failed
     after
     12s,
-    exit(2).
+    exit(2)
+    .
 
-    go build
+    go
+    build
     ./...
-    cmd/oh/d
-    raw.go:4
-    1:9:
-    undefine
-    d:
-    getWidth
+    cmd/oh/
+    draw.go
+    :41:9:
+    undefin
+    ed:
+    getWidt
+    h
     exit
-    status 1
+    status
+    1
 
- 🤖 Job docs
+ 🤖 Job
+    docs
     exited:
-    complete
-    after
+    complet
+    e after
     14s.
 
     docs
@@ -711,12 +718,12 @@ read tar… 1L
  🤖 Port
     8080 is
     now
-    forwarde
-    d to
-    http://1
-    27.27.19
-    2.223:80
-    80.
+    forward
+    ed to
+    http://
+    127.27.
+    192.223
+    :8080.
 
 
 Both files

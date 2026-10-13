@@ -906,13 +906,14 @@ I will no longer use it.
 
 
  🤖 Granted
-    temporar
-    y
-    read-onl
-    y access
+    tempora
+    ry
+    read-on
+    ly
+    access
     to
-    /referen
-    ce.
+    /refere
+    nce.
 
 
 I can read
@@ -922,14 +923,14 @@ now.
 
 
  🤖 Granted
-    temporar
-    y read
+    tempora
+    ry read
     and
     write
     access
     to
-    /referen
-    ce.
+    /refere
+    nce.
 
 
 I can also
@@ -938,10 +939,11 @@ now.
 
 
  🤖 Granted
-    temporar
-    y
-    read-onl
-    y access
+    tempora
+    ry
+    read-on
+    ly
+    access
     to
     /tools.
 
@@ -954,8 +956,8 @@ now.
 
 
  🤖 Granted
-    temporar
-    y read
+    tempora
+    ry read
     and
     write
     access
@@ -971,13 +973,15 @@ it.
 
 
  🤖 Revoked
-    temporar
-    y access
+    tempora
+    ry
+    access
     to
     /build.
  🤖 Revoked
-    temporar
-    y access
+    tempora
+    ry
+    access
     to
     /tools.
 
@@ -990,11 +994,12 @@ here.
 
 
  🤖 Revoked
-    temporar
-    y access
+    tempora
+    ry
+    access
     to
-    /referen
-    ce.
+    /refere
+    nce.
 
 
 I will no

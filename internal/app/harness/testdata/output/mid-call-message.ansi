@@ -373,8 +373,8 @@ It h\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rIt holds\e[K\r\e[8C\e[?25h\e[?2
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
 \e[48;2;52;53;65m read the   \e[0m\r
 \e[48;2;52;53;65m renderer   \e[0m\r
-\e[48;2;52;53;65m and tell me\e[0m\r
-\e[48;2;52;53;65m what it    \e[0m\r
+\e[48;2;52;53;65m and tell   \e[0m\r
+\e[48;2;52;53;65m me what it \e[0m\r
 \e[48;2;52;53;65m does       \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
@@ -394,9 +394,11 @@ read \e[38;2;192;128;80m\e]8;;file:///workspace/cmd/oh/line/render.go\e\\cmd/…
 \e[38;2;207;173;0mstopped.\e[0m\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
-\e[48;2;52;53;65m never mind,\e[0m\r
-\e[48;2;52;53;65m what is in \e[0m\r
-\e[48;2;52;53;65m \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\?\e[0m\r
+\e[48;2;52;53;65m never      \e[0m\r
+\e[48;2;52;53;65m mind, what \e[0m\r
+\e[48;2;52;53;65m is in      \e[0m\r
+\e[48;2;52;53;65m \e]8;;file:///workspace/target.txt\e\\target.txt\e]8;;\e\\ \e[0m\r
+\e[48;2;52;53;65m ?          \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\read\e]8;;\e\\ \e[38;2;192;128;80m\e]8;;file:///workspace/target.txt\e\\tar…\e]8;;\e\\\e[0m \e[38;2;150;152;150m1L\e[0m\r

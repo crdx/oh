@@ -43,7 +43,8 @@ The spinner is redrawn on every beat, which is why it stutters while a tool hold
 \e[38;2;207;173;0mContext window full.\e[0m
 === 46 columns ===
 \e[48;2;52;53;65m                                              \e[0m
-\e[48;2;52;53;65m why does the spinner stutter when a tool runs\e[0m
+\e[48;2;52;53;65m why does the spinner stutter when a tool     \e[0m
+\e[48;2;52;53;65m runs                                         \e[0m
 \e[48;2;52;53;65m                                              \e[0m
 
 \e[3m\e[38;2;150;152;150mLooking for where the spinner is drawn.\e[0m\e[0m

@@ -391,10 +391,11 @@ writing.\r
 \r
 \e[48;2;48;58;67m            \e[0m\r
 \e[48;2;48;58;67m 🤖 The     \e[0m\r
-\e[48;2;48;58;67m    workspac\e[0m\r
-\e[48;2;48;58;67m    e is now\e[0m\r
-\e[48;2;48;58;67m    read-wri\e[0m\r
-\e[48;2;48;58;67m    te.     \e[0m\r
+\e[48;2;48;58;67m    workspa \e[0m\r
+\e[48;2;48;58;67m    ce is   \e[0m\r
+\e[48;2;48;58;67m    now     \e[0m\r
+\e[48;2;48;58;67m    read-wr \e[0m\r
+\e[48;2;48;58;67m    ite.    \e[0m\r
 \e[48;2;48;58;67m            \e[0m\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
@@ -408,7 +409,8 @@ down.\r
 \e[48;2;48;58;67m            \e[0m\r
 \e[48;2;48;58;67m 🤖 Bash is \e[0m\r
 \e[48;2;48;58;67m    now     \e[0m\r
-\e[48;2;48;58;67m    refused.\e[0m\r
+\e[48;2;48;58;67m    refused \e[0m\r
+\e[48;2;48;58;67m    .       \e[0m\r
 \e[48;2;48;58;67m            \e[0m\r
 \r
 Done.\r

@@ -665,10 +665,10 @@ Tha\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThat is\e[K\r\e[7C\e[?25h\e[?202
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
-\e[48;2;52;53;65m show me how\e[0m\r
-\e[48;2;52;53;65m to count   \e[0m\r
-\e[48;2;52;53;65m the go     \e[0m\r
-\e[48;2;52;53;65m files      \e[0m\r
+\e[48;2;52;53;65m show me    \e[0m\r
+\e[48;2;52;53;65m how to     \e[0m\r
+\e[48;2;52;53;65m count the  \e[0m\r
+\e[48;2;52;53;65m go files   \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
 \e[3m\e[38;2;150;152;150mA loop over\e[0m\r

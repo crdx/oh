@@ -146,8 +146,8 @@
 \e[?25h\e[?2026l
 === stopped at its limit ===
 \e[?2026h\e[?25l\e[?7l\r\e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🤖 The user started the following command on the host, which was killed at its time limit before it\e[0m\r
-\e[48;2;48;58;67m    finished or printed anything:                                                                   \e[0m\r
+\e[48;2;48;58;67m 🤖 The user started the following command on the host, which was killed at its time limit before   \e[0m\r
+\e[48;2;48;58;67m    it finished or printed anything:                                                                \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    \e[38;2;150;152;150m$\e[0m\e[48;2;48;58;67m \e[38;2;150;152;150msleep\e[0m\e[48;2;48;58;67m \e[38;2;192;128;80m600\e[0m\e[48;2;48;58;67m                                                                                     \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r

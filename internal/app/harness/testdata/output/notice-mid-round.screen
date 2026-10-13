@@ -298,10 +298,11 @@ ls 2L
 The preview is up, and the notes hold one line.
 === tiny ===
 
- forward the
- preview and
- read the
- notes
+ forward
+ the
+ preview
+ and read
+ the notes
 
 
 Looking at
@@ -317,12 +318,12 @@ ls 2L
  🤖 Port
     8080 is
     now
-    forwarde
-    d to
-    http://1
-    27.27.19
-    2.223:80
-    80.
+    forward
+    ed to
+    http://
+    127.27.
+    192.223
+    :8080.
 
 
 The preview

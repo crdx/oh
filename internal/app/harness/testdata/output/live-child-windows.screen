@@ -161,12 +161,12 @@ lookup query 0
 === grouped panel and tool at 12 columns by 12 lines ===
 lookup quer…
 
- 🤖 Subagent
-⋮ 161 more …
-    detail.
+ 🤖 Subagen
+⋮ 203 more …
     A line
     of
-    verified
+    verifie
+    d
     detail.
 
 
@@ -177,24 +177,24 @@ lookup quer…
 === grouped panel and tool at 12 columns by 24 lines ===
 lookup quer…
 
- 🤖 Subagent
-⋮ 149 more …
+ 🤖 Subagen
+⋮ 191 more …
+    d
     detail.
     A line
     of
-    verified
+    verifie
+    d
     detail.
     A line
     of
-    verified
+    verifie
+    d
     detail.
     A line
     of
-    verified
-    detail.
-    A line
-    of
-    verified
+    verifie
+    d
     detail.
 
 
@@ -210,13 +210,13 @@ lookup quer…
 >
 === grouped panel and tool at 12 columns by 5 lines ===
 lookup quer…
-⋮ 167 more …
+⋮ 209 more …
     detail.
 
 >
 === grouped panel and tool at 12 columns by 6 lines ===
 lookup quer…
-⋮ 167 more …
+⋮ 209 more …
     detail.
 
 
@@ -224,7 +224,7 @@ lookup quer…
 === grouped panel and tool at 12 columns by 7 lines ===
 lookup quer…
 
-⋮ 166 more …
+⋮ 208 more …
     detail.
 
 
@@ -232,8 +232,8 @@ lookup quer…
 === grouped panel and tool at 12 columns by 8 lines ===
 lookup quer…
 
- 🤖 Subagent
-⋮ 165 more …
+ 🤖 Subagen
+⋮ 207 more …
     detail.
 
 
@@ -482,11 +482,11 @@ lookup query 0
 lookup quer…
 
 
- 🤖 Subagent
-⋮ 162 more …
-    A line
+ 🤖 Subagen
+⋮ 204 more …
     of
-    verified
+    verifie
+    d
     detail.
 
 
@@ -498,23 +498,23 @@ lookup quer…
 lookup quer…
 
 
- 🤖 Subagent
-⋮ 150 more …
-    A line
-    of
-    verified
+ 🤖 Subagen
+⋮ 192 more …
     detail.
     A line
     of
-    verified
+    verifie
+    d
     detail.
     A line
     of
-    verified
+    verifie
+    d
     detail.
     A line
     of
-    verified
+    verifie
+    d
     detail.
 
 
@@ -531,20 +531,20 @@ lookup quer…
 === one call and long report at 12 columns by 5 lines ===
 lookup quer…
 
-⋮ 168 more …
+⋮ 210 more …
 
 >
 === one call and long report at 12 columns by 6 lines ===
 lookup quer…
 
-⋮ 167 more …
+⋮ 209 more …
     detail.
 
 >
 === one call and long report at 12 columns by 7 lines ===
 lookup quer…
 
-⋮ 167 more …
+⋮ 209 more …
     detail.
 
 
@@ -553,7 +553,7 @@ lookup quer…
 lookup quer…
 
 
-⋮ 166 more …
+⋮ 208 more …
     detail.
 
 
@@ -786,11 +786,11 @@ lookup query 0
 lookup quer…
 
 
- 🤖 Subagent
-⋮ 6 more li…
-    A line
+ 🤖 Subagen
+⋮ 9 more li…
     of
-    verified
+    verifie
+    d
     detail.
 
 
@@ -802,16 +802,19 @@ lookup quer…
 lookup quer…
 
 
- 🤖 Subagent
-    tame-add
-    er-0
-    interjec
-    ts:
+ 🤖 Subagen
+    t
+    tame-ad
+    der-0
+    interje
+    cts:
 
-    Report 0
+    Report
+    0
     A line
     of
-    verified
+    verifie
+    d
     detail.
 
 
@@ -828,20 +831,20 @@ lookup quer…
 === one call and short report at 12 columns by 5 lines ===
 lookup quer…
 
-⋮ 12 more l…
+⋮ 15 more l…
 
 >
 === one call and short report at 12 columns by 6 lines ===
 lookup quer…
 
-⋮ 11 more l…
+⋮ 14 more l…
     detail.
 
 >
 === one call and short report at 12 columns by 7 lines ===
 lookup quer…
 
-⋮ 11 more l…
+⋮ 14 more l…
     detail.
 
 
@@ -850,7 +853,7 @@ lookup quer…
 lookup quer…
 
 
-⋮ 10 more l…
+⋮ 13 more l…
     detail.
 
 
@@ -1083,7 +1086,7 @@ a separate harness notice
 lookup quer…
 
 
-⋮ 166 more …
+⋮ 208 more …
     detail.
 
 
@@ -1099,19 +1102,19 @@ lookup quer…
 lookup quer…
 
 
- 🤖 Subagent
-⋮ 154 more …
-    A line
-    of
-    verified
+ 🤖 Subagen
+⋮ 196 more …
+    d
     detail.
     A line
     of
-    verified
+    verifie
+    d
     detail.
     A line
     of
-    verified
+    verifie
+    d
     detail.
 
 
@@ -1131,13 +1134,13 @@ lookup quer…
 >
 === one call report and notice at 12 columns by 5 lines ===
 lookup quer…
-⋮ 168 more …
+⋮ 210 more …
 ⋮ 1 more bl…
 
 >
 === one call report and notice at 12 columns by 6 lines ===
 lookup quer…
-⋮ 167 more …
+⋮ 209 more …
     detail.
 ⋮ 3 more li…
 
@@ -1145,7 +1148,7 @@ lookup quer…
 === one call report and notice at 12 columns by 7 lines ===
 lookup quer…
 
-⋮ 168 more …
+⋮ 210 more …
 
 ⋮ 3 more li…
 
@@ -1153,7 +1156,7 @@ lookup quer…
 === one call report and notice at 12 columns by 8 lines ===
 lookup quer…
 
-⋮ 167 more …
+⋮ 209 more …
     detail.
 
 ⋮ 3 more li…
@@ -1400,14 +1403,14 @@ l
 
 >
 === only one long report at 12 columns by 12 lines ===
-⋮ 160 more …
-    A line
-    of
-    verified
+⋮ 202 more …
+    verifie
+    d
     detail.
     A line
     of
-    verified
+    verifie
+    d
     detail.
 
 
@@ -1416,26 +1419,26 @@ l
     detail.
 >
 === only one long report at 12 columns by 24 lines ===
-⋮ 148 more …
+⋮ 190 more …
     A line
     of
-    verified
+    verifie
+    d
     detail.
     A line
     of
-    verified
+    verifie
+    d
     detail.
     A line
     of
-    verified
+    verifie
+    d
     detail.
     A line
     of
-    verified
-    detail.
-    A line
-    of
-    verified
+    verifie
+    d
     detail.
 
 
@@ -1445,36 +1448,36 @@ l
 
 >
 === only one long report at 12 columns by 4 lines ===
-⋮ 167 more …
+⋮ 209 more …
     detail.
 
 >
 === only one long report at 12 columns by 5 lines ===
-⋮ 167 more …
+⋮ 209 more …
     detail.
 
 
 >
 === only one long report at 12 columns by 6 lines ===
-⋮ 166 more …
-    verified
+⋮ 208 more …
+    d
     detail.
 
 
 >
 === only one long report at 12 columns by 7 lines ===
-⋮ 165 more …
-    of
-    verified
+⋮ 207 more …
+    verifie
+    d
     detail.
 
 
 >
 === only one long report at 12 columns by 8 lines ===
-⋮ 164 more …
-    A line
+⋮ 206 more …
     of
-    verified
+    verifie
+    d
     detail.
 
 
@@ -1917,9 +1920,9 @@ lookup quer…
 lookup quer…
 
 
- 🤖 Subagent
-⋮ 164 more …
-    verified
+ 🤖 Subagen
+⋮ 206 more …
+    d
     detail.
 
 
@@ -1933,21 +1936,21 @@ lookup quer…
 lookup quer…
 
 
- 🤖 Subagent
-⋮ 152 more …
-    verified
+ 🤖 Subagen
+⋮ 194 more …
+    of
+    verifie
+    d
     detail.
     A line
     of
-    verified
+    verifie
+    d
     detail.
     A line
     of
-    verified
-    detail.
-    A line
-    of
-    verified
+    verifie
+    d
     detail.
 
 
@@ -1964,14 +1967,14 @@ lookup quer…
 === three calls and long report at 12 columns by 5 lines ===
 lookup quer…
 
-⋮ 168 more …
+⋮ 210 more …
 
 >
 === three calls and long report at 12 columns by 6 lines ===
 ⋮ 2 more li…
 lookup quer…
 
-⋮ 168 more …
+⋮ 210 more …
 
 >
 === three calls and long report at 12 columns by 7 lines ===
@@ -1979,7 +1982,7 @@ lookup quer…
 lookup quer…
 lookup quer…
 
-⋮ 168 more …
+⋮ 210 more …
 
 >
 === three calls and long report at 12 columns by 8 lines ===
@@ -1987,7 +1990,7 @@ lookup quer…
 lookup quer…
 lookup quer…
 
-⋮ 167 more …
+⋮ 209 more …
     detail.
 
 >
@@ -2237,9 +2240,9 @@ lookup quer…
 lookup quer…
 
 
- 🤖 Subagent
-⋮ 156 more …
-    verified
+ 🤖 Subagen
+⋮ 196 more …
+    d
     detail.
 
 
@@ -2253,21 +2256,21 @@ lookup quer…
 lookup quer…
 
 
- 🤖 Subagent
-⋮ 144 more …
-    verified
+ 🤖 Subagen
+⋮ 184 more …
+    of
+    verifie
+    d
     detail.
     A line
     of
-    verified
+    verifie
+    d
     detail.
     A line
     of
-    verified
-    detail.
-    A line
-    of
-    verified
+    verifie
+    d
     detail.
 
 
@@ -2284,14 +2287,14 @@ lookup quer…
 === three calls and two reports at 12 columns by 5 lines ===
 lookup quer…
 
-⋮ 160 more …
+⋮ 200 more …
 
 >
 === three calls and two reports at 12 columns by 6 lines ===
 ⋮ 2 more li…
 lookup quer…
 
-⋮ 160 more …
+⋮ 200 more …
 
 >
 === three calls and two reports at 12 columns by 7 lines ===
@@ -2299,7 +2302,7 @@ lookup quer…
 lookup quer…
 lookup quer…
 
-⋮ 160 more …
+⋮ 200 more …
 
 >
 === three calls and two reports at 12 columns by 8 lines ===
@@ -2307,7 +2310,7 @@ lookup quer…
 lookup quer…
 lookup quer…
 
-⋮ 159 more …
+⋮ 199 more …
     detail.
 
 >

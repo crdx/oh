@@ -851,7 +851,8 @@ thr\e[K\r\e[3C\e[?25h\e[?2026l\e[?2026h\e[?25l\rthree\e[K\r\e[5C\e[?25h\e[?2026l
 \e[48;2;52;53;65m what does  \e[0m\r
 \e[48;2;52;53;65m the        \e[0m\r
 \e[48;2;52;53;65m accented   \e[0m\r
-\e[48;2;52;53;65m file say? 🖊\e[0m\r
+\e[48;2;52;53;65m file say?  \e[0m\r
+\e[48;2;52;53;65m 🖊          \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
 \e[3m\e[38;2;150;152;150mReading the\e[0m\r

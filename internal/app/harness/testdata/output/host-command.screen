@@ -137,8 +137,8 @@ Previous answer.
     Exit code: 0
 === stopped at its limit ===
 
- 🤖 The user started the following command on the host, which was killed at its time limit before it
-    finished or printed anything:
+ 🤖 The user started the following command on the host, which was killed at its time limit before
+    it finished or printed anything:
 
     $ sleep 600
 

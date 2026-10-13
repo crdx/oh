@@ -218,7 +218,8 @@ That\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rThat is\e[K\r\e[7C\e[?25h\e[?20
 \e]9;4;0\e\\
 === tiny ===
 \e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
-\e[48;2;52;53;65m the awkward\e[0m\r
+\e[48;2;52;53;65m the        \e[0m\r
+\e[48;2;52;53;65m awkward    \e[0m\r
 \e[48;2;52;53;65m shapes     \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r

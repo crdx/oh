@@ -331,12 +331,13 @@ together.\r
 \e]8;;oh://tool-result?call=call_2&session=tame-impala\e\\grep\e]8;;\e\\ \e[38;2;150;152;150mspi\e[0m\e[38;2;150;152;150m…\e[0m \e[38;2;150;152;150m1L\e[0m\r
 \r
 \e[48;2;48;58;67m            \e[0m\r
-\e[48;2;48;58;67m 🤖 Job \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m\e[0m\r
+\e[48;2;48;58;67m 🤖 Job     \e[0m\r
+\e[48;2;48;58;67m    \e[38;2;192;128;80mdocs\e[0m\e[48;2;48;58;67m    \e[0m\r
 \e[48;2;48;58;67m    exited: \e[0m\r
-\e[48;2;48;58;67m    complete\e[0m\r
-\e[48;2;48;58;67m    after   \e[0m\r
-\e[48;2;48;58;67m    12s with\e[0m\r
-\e[48;2;48;58;67m    no      \e[0m\r
+\e[48;2;48;58;67m    complet \e[0m\r
+\e[48;2;48;58;67m    e after \e[0m\r
+\e[48;2;48;58;67m    12s     \e[0m\r
+\e[48;2;48;58;67m    with no \e[0m\r
 \e[48;2;48;58;67m    output. \e[0m\r
 \e[48;2;48;58;67m            \e[0m\r
 \r

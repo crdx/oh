@@ -155,7 +155,8 @@ Every finished call has a result link, whether or not it returned anything.
 === tiny ===
 
  show every
- tool result
+ tool
+ result
  link state
 
 

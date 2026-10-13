@@ -11,8 +11,8 @@ Both are running and will come back
 whenever they exit.
 
 
- 🤖 Job watch exited: complete after 8s,
-    run 1, respawned.
+ 🤖 Job watch exited: complete after
+    8s, run 1, respawned.
 
     go build ./...
     built in 3s
@@ -27,9 +27,9 @@ whenever they exit.
  🤖 Job watch exited: complete after 8s
     with no output, run 3, respawned.
  🤖 Job serve exited: failed after 0s
-    with no output, run 2, the job could
-    not be respawned: no namespaces
-    left.
+    with no output, run 2, the job
+    could not be respawned: no
+    namespaces left.
  🤖 Job lint exited: failed after 0s,
     exit(127), run 4, not respawned
     after 3 runs in a row each ended
@@ -1325,17 +1325,18 @@ they exit.
  🤖 Job
     watch
     exited:
-    complete
-    after
+    complet
+    e after
     8s, run
     1,
-    respawne
-    d.
+    respawn
+    ed.
 
-    go build
+    go
+    build
     ./...
-    built in
-    3s
+    built
+    in 3s
 
  🤖 Job
     watch
@@ -1343,65 +1344,73 @@ they exit.
     failed
     after
     8s,
-    exit(1),
-    run 2,
-    respawne
-    d.
+    exit(1)
+    , run
+    2,
+    respawn
+    ed.
 
-    go build
+    go
+    build
     ./...
-    cmd/oh/d
-    raw.go:4
-    1:9:
-    undefine
-    d:
-    getWidth
+    cmd/oh/
+    draw.go
+    :41:9:
+    undefin
+    ed:
+    getWidt
+    h
 
  🤖 Job
     watch
     exited:
-    complete
-    after 8s
-    with no
+    complet
+    e after
+    8s with
+    no
     output,
     run 3,
-    respawne
-    d.
+    respawn
+    ed.
  🤖 Job
     serve
     exited:
     failed
-    after 0s
-    with no
+    after
+    0s with
+    no
     output,
     run 2,
     the job
     could
     not be
-    respawne
-    d: no
-    namespac
-    es left.
- 🤖 Job lint
+    respawn
+    ed: no
+    namespa
+    ces
+    left.
+ 🤖 Job
+    lint
     exited:
     failed
     after
     0s,
-    exit(127
-    ), run
+    exit(12
+    7), run
     4, not
-    respawne
-    d after
-    3 runs
-    in a row
+    respawn
+    ed
+    after 3
+    runs in
+    a row
     each
     ended
     within
     2s.
 
     bash:
-    golangci
-    -lint:
+    golangc
+    i-lint:
     command
     not
     found

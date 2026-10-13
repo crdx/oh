@@ -736,7 +736,8 @@ snippets ⧸
 context.
 
 
- what is the
+ what is
+ the
  current go
  release,
  and what
@@ -777,21 +778,25 @@ header.
 
 
  now read
- the release
+ the
+ release
  notes as
  plain text
 
 
 
- 🤖 Bash may
-    no
+ 🤖 Bash
+    may no
     longer
     request
-    the host
-    network.
- 🤖 Fetch is
-    now
-    refused.
+    the
+    host
+    network
+    .
+ 🤖 Fetch
+    is now
+    refused
+    .
 
 
 fet… ✗ netw…

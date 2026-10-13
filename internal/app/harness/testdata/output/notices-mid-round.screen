@@ -678,8 +678,8 @@ forward 8005
 All five previews are up.
 === tiny ===
 
- forward the
- five
+ forward
+ the five
  preview
  ports
 
@@ -697,48 +697,48 @@ forward 8005
  🤖 Port
     8001 is
     now
-    forwarde
-    d to
-    http://1
-    27.27.19
-    2.223:80
-    01.
+    forward
+    ed to
+    http://
+    127.27.
+    192.223
+    :8001.
  🤖 Port
     8002 is
     now
-    forwarde
-    d to
-    http://1
-    27.27.19
-    2.223:80
-    02.
+    forward
+    ed to
+    http://
+    127.27.
+    192.223
+    :8002.
  🤖 Port
     8003 is
     now
-    forwarde
-    d to
-    http://1
-    27.27.19
-    2.223:80
-    03.
+    forward
+    ed to
+    http://
+    127.27.
+    192.223
+    :8003.
  🤖 Port
     8004 is
     now
-    forwarde
-    d to
-    http://1
-    27.27.19
-    2.223:80
-    04.
+    forward
+    ed to
+    http://
+    127.27.
+    192.223
+    :8004.
  🤖 Port
     8005 is
     now
-    forwarde
-    d to
-    http://1
-    27.27.19
-    2.223:80
-    05.
+    forward
+    ed to
+    http://
+    127.27.
+    192.223
+    :8005.
 
 
 All five

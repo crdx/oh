@@ -904,17 +904,18 @@ is still\r
 working.\r
 \r
 \e[48;2;48;58;67m            \e[0m\r
-\e[48;2;48;58;67m 🐍 Subagent\e[0m\r
-\e[48;2;48;58;67m    tame-add\e[0m\r
-\e[48;2;48;58;67m    er      \e[0m\r
-\e[48;2;48;58;67m    interjec\e[0m\r
-\e[48;2;48;58;67m    ts:     \e[0m\r
+\e[48;2;48;58;67m 🐍 Subagen \e[0m\r
+\e[48;2;48;58;67m    t       \e[0m\r
+\e[48;2;48;58;67m    tame-ad \e[0m\r
+\e[48;2;48;58;67m    der     \e[0m\r
+\e[48;2;48;58;67m    interje \e[0m\r
+\e[48;2;48;58;67m    cts:    \e[0m\r
 \e[48;2;48;58;67m            \e[0m\r
 \e[48;2;48;58;67m    The     \e[0m\r
 \e[48;2;48;58;67m    parser  \e[0m\r
 \e[48;2;48;58;67m    is in   \e[0m\r
-\e[48;2;48;58;67m    parse.go\e[0m\r
-\e[48;2;48;58;67m    .       \e[0m\r
+\e[48;2;48;58;67m    parse.g \e[0m\r
+\e[48;2;48;58;67m    o.      \e[0m\r
 \e[48;2;48;58;67m            \e[0m\r
 \r
 tame-adder\r
@@ -938,17 +939,19 @@ build.\r
 \e[48;2;48;58;67m            \e[0m\r
 \e[48;2;48;58;67m 🤖 Bash is \e[0m\r
 \e[48;2;48;58;67m    now     \e[0m\r
-\e[48;2;48;58;67m    refused.\e[0m\r
-\e[48;2;48;58;67m 🤖 Subagent\e[0m\r
-\e[48;2;48;58;67m    tame-anc\e[0m\r
-\e[48;2;48;58;67m    hovy    \e[0m\r
+\e[48;2;48;58;67m    refused \e[0m\r
+\e[48;2;48;58;67m    .       \e[0m\r
+\e[48;2;48;58;67m 🤖 Subagen \e[0m\r
+\e[48;2;48;58;67m    t       \e[0m\r
+\e[48;2;48;58;67m    tame-an \e[0m\r
+\e[48;2;48;58;67m    chovy   \e[0m\r
 \e[48;2;48;58;67m    stopped \e[0m\r
 \e[48;2;48;58;67m    because \e[0m\r
 \e[48;2;48;58;67m    shell   \e[0m\r
-\e[48;2;48;58;67m    executio\e[0m\r
-\e[48;2;48;58;67m    n was   \e[0m\r
-\e[48;2;48;58;67m    withdraw\e[0m\r
-\e[48;2;48;58;67m    n.      \e[0m\r
+\e[48;2;48;58;67m    executi \e[0m\r
+\e[48;2;48;58;67m    on was  \e[0m\r
+\e[48;2;48;58;67m    withdra \e[0m\r
+\e[48;2;48;58;67m    wn.     \e[0m\r
 \e[48;2;48;58;67m            \e[0m\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r

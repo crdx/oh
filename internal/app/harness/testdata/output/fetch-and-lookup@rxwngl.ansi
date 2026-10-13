@@ -855,7 +855,8 @@ Fetc\e[K\r\e[4C\e[?25h\e[?2026l\e[?2026h\e[?25l\rFetching\e[K\r\e[8C\e[?25h\e[?2
 \e[38;2;150;152;150mcontext.\e[0m\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
-\e[48;2;52;53;65m what is the\e[0m\r
+\e[48;2;52;53;65m what is    \e[0m\r
+\e[48;2;52;53;65m the        \e[0m\r
 \e[48;2;52;53;65m current go \e[0m\r
 \e[48;2;52;53;65m release,   \e[0m\r
 \e[48;2;52;53;65m and what   \e[0m\r
@@ -896,21 +897,25 @@ header.\r
 \r
 \e]133;A\e\\\e[48;2;52;53;65m            \e[0m\r
 \e[48;2;52;53;65m now read   \e[0m\r
-\e[48;2;52;53;65m the release\e[0m\r
+\e[48;2;52;53;65m the        \e[0m\r
+\e[48;2;52;53;65m release    \e[0m\r
 \e[48;2;52;53;65m notes as   \e[0m\r
 \e[48;2;52;53;65m plain text \e[0m\r
 \e[48;2;52;53;65m            \e[0m\r
 \r
 \e[48;2;48;58;67m            \e[0m\r
-\e[48;2;48;58;67m 🤖 Bash may\e[0m\r
-\e[48;2;48;58;67m    no      \e[0m\r
+\e[48;2;48;58;67m 🤖 Bash    \e[0m\r
+\e[48;2;48;58;67m    may no  \e[0m\r
 \e[48;2;48;58;67m    longer  \e[0m\r
 \e[48;2;48;58;67m    request \e[0m\r
-\e[48;2;48;58;67m    the host\e[0m\r
-\e[48;2;48;58;67m    network.\e[0m\r
-\e[48;2;48;58;67m 🤖 Fetch is\e[0m\r
-\e[48;2;48;58;67m    now     \e[0m\r
-\e[48;2;48;58;67m    refused.\e[0m\r
+\e[48;2;48;58;67m    the     \e[0m\r
+\e[48;2;48;58;67m    host    \e[0m\r
+\e[48;2;48;58;67m    network \e[0m\r
+\e[48;2;48;58;67m    .       \e[0m\r
+\e[48;2;48;58;67m 🤖 Fetch   \e[0m\r
+\e[48;2;48;58;67m    is now  \e[0m\r
+\e[48;2;48;58;67m    refused \e[0m\r
+\e[48;2;48;58;67m    .       \e[0m\r
 \e[48;2;48;58;67m            \e[0m\r
 \r
 \e]8;;oh://tool-result?call=call_4&session=tame-impala\e\\\e[38;2;129;162;190mfet…\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102mnetw…\e[0m\r

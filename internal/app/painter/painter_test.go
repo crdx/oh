@@ -105,6 +105,37 @@ func TestOnlyTerminalConversationMessagesContainHyperlinks(t *testing.T) {
 	}
 }
 
+func TestSubmittedBoxesReserveBothSideMarginsWhenTextWraps(t *testing.T) {
+	for _, columns := range []int{8, 12, 24, 40, 100} {
+		for name, text := range map[string]string{
+			"prose":    strings.Repeat("word ", columns),
+			"unbroken": strings.Repeat("x", columns*3),
+			"list":     "- " + strings.Repeat("word ", columns),
+		} {
+			for kindName, kind := range map[string]submissionKind{
+				"user":            userSubmission,
+				"pending harness": pendingHarnessSubmission,
+				"sent harness":    sentHarnessSubmission,
+			} {
+				t.Run(name+"/"+kindName+"/"+strconv.Itoa(columns), func(t *testing.T) {
+					message := submittedMessage{kind: kind, text: text}
+					content := submittedContentRows(message, columns, false, link.Roots{})
+					rows := frameSubmitted(content, "", columns, message.background())
+					if len(content) < 2 {
+						t.Fatalf("want wrapped content, got %q", content)
+					}
+					for _, row := range rows[1 : len(rows)-1] {
+						plain := style.Plain(row)
+						if width.Of(plain) != columns || !strings.HasPrefix(plain, " ") || !strings.HasSuffix(plain, " ") {
+							t.Errorf("content row %q has no left and right margin at %d columns", plain, columns)
+						}
+					}
+				})
+			}
+		}
+	}
+}
+
 func TestAWrappedMissingPathDoesNotLinkItsExistingPrefix(t *testing.T) {
 	workspace := t.TempDir()
 	parent := filepath.Join(workspace, "parent")
