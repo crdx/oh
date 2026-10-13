@@ -11,7 +11,7 @@ const responsesSuffix = "/responses"
 
 const modelsSuffix = "/models"
 
-const ClientVersion = "0.155.0"
+const ClientVersion = "0.162.1"
 
 const listedVisibility = "list"
 
