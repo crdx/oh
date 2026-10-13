@@ -32,6 +32,40 @@ func TestAnAbsoluteStateDirectoryIsTakenOverTheHomeDirectory(t *testing.T) {
 	}
 }
 
+func TestTheAnalysisCacheFollowsTheStateDirectory(t *testing.T) {
+	for _, scenario := range []struct {
+		name           string
+		stateDirectory string
+		usesXDGState   bool
+	}{
+		{name: "home fallback"},
+		{name: "XDG state", usesXDGState: true},
+		{name: "absolute override", stateDirectory: "/isolated/state", usesXDGState: true},
+		{name: "relative override", stateDirectory: "relative/state", usesXDGState: true},
+	} {
+		t.Run(scenario.name, func(t *testing.T) {
+			home := t.TempDir()
+			t.Setenv("HOME", home)
+			t.Setenv("XDG_CACHE_HOME", t.TempDir())
+			t.Setenv("XDG_STATE_HOME", "")
+			t.Setenv(location.StateDirVariable, scenario.stateDirectory)
+
+			root := filepath.Join(home, ".local", "state")
+			if scenario.usesXDGState {
+				root = t.TempDir()
+				t.Setenv("XDG_STATE_HOME", root)
+			}
+			want := filepath.Join(root, "org.crdx", "oh", "analysis.json")
+			if filepath.IsAbs(scenario.stateDirectory) {
+				want = filepath.Join(scenario.stateDirectory, "analysis.json")
+			}
+			if got := location.GetAnalysisCachePath(); got != want {
+				t.Errorf("got %q, want %q", got, want)
+			}
+		})
+	}
+}
+
 func TestARelativeStateDirectoryIsIgnored(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)

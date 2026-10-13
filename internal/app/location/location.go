@@ -51,7 +51,7 @@ func GetUsageCachePath(provider string, isSimulation bool) string {
 }
 
 func GetAnalysisCachePath() string {
-	return xdg.CachePath(namespace, app, "analysis.json")
+	return GetStateDir("analysis.json")
 }
 
 func GetExchangeRateCachePath() string {

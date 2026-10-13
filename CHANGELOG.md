@@ -2,6 +2,10 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+### Fixes
+
+- Store the analysis cache under the state dir
+
 ## [0.16.0] - 2026-10-13
 
 ### Changes
