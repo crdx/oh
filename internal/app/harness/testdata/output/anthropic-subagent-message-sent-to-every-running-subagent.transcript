@@ -17,7 +17,7 @@ start three subagents, then tell every running one to name the format
 ## Tool calls · +0s
 
 ```
-subagent: 3 subagents · anthropic/claude-opus-5@medium, anthropic/claude-opus-5@medium, an… [ok, 1 line, 68B, toolu_1]
+subagent start: 3 subagents · anthropic/claude-opus-5@medium, anthropic/claude-opus-5@medium, an… [ok, 1 line, 68B, toolu_1]
 ```
 
 ## Subagent started · tame-adder · +0s
@@ -53,7 +53,7 @@ tame-adder done (unverified: check what matters before relying on it; its /tmp i
 ## Tool calls · +0s
 
 ```
-subagent: all [ok, 1 line, 39B, toolu_2]
+subagent send: all [ok, 1 line, 39B, toolu_2]
 ```
 
 ## Assistant · +0s

@@ -16,7 +16,7 @@ split the review and read the readme yourself
 ## Tool calls · +1s
 
 ```
-subagent: 2 subagents [ok, 1 line, 31B, call_1]
+subagent start: 2 subagents [ok, 1 line, 31B, call_1]
 ```
 
 ## Subagent started · tame-adder · +3s
@@ -35,7 +35,7 @@ Transcript: `subagents/tame-alpaca/chat.md`
 
 ```
 read: README.md [ok, 1 line, 9B, call_2]
-subagent: tame-alpaca [ok, 2 lines, 40B, call_4]
+subagent wait: tame-alpaca [ok, 2 lines, 40B, call_4]
 ```
 
 ## Subagent finished · tame-alpaca · done · +9s
@@ -69,7 +69,7 @@ start one more and drop shell
 ## Tool calls · +16s
 
 ```
-subagent: 1 subagent [ok, 1 line, 20B, call_3]
+subagent start: 1 subagent [ok, 1 line, 20B, call_3]
 ```
 
 ## Subagent started · tame-anchovy · +18s

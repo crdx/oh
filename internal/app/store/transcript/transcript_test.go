@@ -200,6 +200,33 @@ func TestTranscriptLogsACallAndItsResultOnOneLine(t *testing.T) {
 	}
 }
 
+func TestTranscriptNamesTheActionOfACallThatTakesOne(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "transcript.md")
+	recorder, err := transcript.Open(path, transcript.Meta{Name: "tame-impala", StartedAt: time.Unix(1, 2), Model: "model"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	request := agent.Event{Kind: agent.ToolCallRequestEvent, ID: "call-1", Name: "subagent", Arguments: `{"action":"send","message":"hello"}`}
+	request.Subject = "all"
+	if err := recorder.Event(time.Unix(3, 4), request); err != nil {
+		t.Fatal(err)
+	}
+	if err := recorder.Event(time.Unix(5, 6), agent.Event{Kind: agent.ToolCallResultEvent, ID: "call-1", Name: "subagent", Status: agent.ErrorStatus}); err != nil {
+		t.Fatal(err)
+	}
+	if err := recorder.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	stored, err := os.ReadFile(path) //nolint:gosec // the test's own path
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := "subagent send: all [error, call-1]"; !strings.Contains(string(stored), want) {
+		t.Errorf("expected %q, got:\n%s", want, stored)
+	}
+}
+
 func TestTranscriptDoesNotAttributeToolCallsToTheUser(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "transcript.md")
 	recorder, err := transcript.Open(path, transcript.Meta{Name: "tame-impala", StartedAt: time.Unix(1, 2), Model: "model"})

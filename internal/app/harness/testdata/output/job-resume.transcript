@@ -16,7 +16,7 @@ start the docs server and a watcher
 ## Tool calls · +1s
 
 ```
-job: stale job rendering [ok, 1 line, 20B, call_1]
+job start: stale job rendering [ok, 1 line, 20B, call_1]
 ```
 
 ## Assistant · +4s
@@ -36,8 +36,8 @@ carry on
 ## Tool calls · +7s
 
 ```
-job: stale listing rendering [ok, 2 lines, 137B, call_2]
-job: stale restart rendering [ok, 1 line, 20B, call_3]
+job list: stale listing rendering [ok, 2 lines, 137B, call_2]
+job start: stale restart rendering [ok, 1 line, 20B, call_3]
 ```
 
 ## Assistant · +11s

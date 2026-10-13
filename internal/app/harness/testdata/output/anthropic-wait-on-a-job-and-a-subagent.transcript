@@ -17,8 +17,8 @@ build in the background, ask a subagent, and wait for them
 ## Tool calls · +0s
 
 ```
-job: check [ok, 1 line, 21B, toolu_1]
-subagent: subagent · anthropic/claude-opus-5@medium [ok, 1 line, 41B, toolu_2]
+job start: check [ok, 1 line, 21B, toolu_1]
+subagent start: subagent · anthropic/claude-opus-5@medium [ok, 1 line, 41B, toolu_2]
 ```
 
 ## Subagent started · tame-adder · +0s
@@ -36,7 +36,7 @@ The parser is in parse.go.
 ```
 wait: docs [error, 1 line, 21B, toolu_3]
 wait: job:check || tame-adder [ok, 4 lines, 355B, toolu_4]
-job: check [ok, 1 line, 97B, toolu_5]
+job stop: check [ok, 1 line, 97B, toolu_5]
 ```
 
 ## Assistant · +0s

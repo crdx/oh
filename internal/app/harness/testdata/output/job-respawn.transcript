@@ -16,8 +16,8 @@ rebuild whenever the source changes, and keep the server up
 ## Tool calls · +1s
 
 ```
-job [ok, 1 line, 46B, call_1]
-job [ok, 1 line, 46B, call_2]
+job start [ok, 1 line, 46B, call_1]
+job start [ok, 1 line, 46B, call_2]
 ```
 
 ## Assistant · +6s
@@ -75,9 +75,9 @@ wait for the next rebuild, stop it, then bring lint back
 ## Tool calls · +13s
 
 ```
-job [ok, 3 lines, 69B, call_3]
-job [ok, 1 line, 30B, call_4]
-job [ok, 1 line, 45B, call_5]
+job wait [ok, 3 lines, 69B, call_3]
+job stop [ok, 1 line, 30B, call_4]
+job start [ok, 1 line, 45B, call_5]
 ```
 
 ## Assistant · +19s

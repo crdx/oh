@@ -17,7 +17,7 @@ rebuild every time the source changes
 ## Tool calls · +0s
 
 ```
-job: watch [toolu_1]
+job start: watch [toolu_1]
 ```
 
 ## Job ended · +0s
@@ -49,7 +49,7 @@ start it again
 ## Tool calls · +0s
 
 ```
-job: watch [toolu_2]
+job start: watch [toolu_2]
 ```
 
 ## Job ended · +0s

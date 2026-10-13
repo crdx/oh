@@ -17,7 +17,7 @@ ask a subagent to find the config loader
 ## Tool calls · +0s
 
 ```
-subagent: subagent · codex/gpt-5.6-sol@medium [ok, 1 line, 41B, toolu_1]
+subagent start: subagent · codex/gpt-5.6-sol@medium [ok, 1 line, 41B, toolu_1]
 ```
 
 ## Assistant · +0s
@@ -53,7 +53,7 @@ ask the same subagent for the tests
 ## Tool calls · +0s
 
 ```
-subagent: tame-adder [ok, 1 line, 18B, toolu_2]
+subagent send: tame-adder [ok, 1 line, 18B, toolu_2]
 ```
 
 ## Assistant · +0s

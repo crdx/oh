@@ -17,7 +17,7 @@ start two subagents and steer them while they run
 ## Tool calls · +0s
 
 ```
-subagent: 2 subagents · codex/gpt-5.6-sol@medium, codex/gpt-5.6-sol@medium · Finding the l… [ok, 1 line, 54B, toolu_1]
+subagent start: 2 subagents · codex/gpt-5.6-sol@medium, codex/gpt-5.6-sol@medium · Finding the l… [ok, 1 line, 54B, toolu_1]
 ```
 
 ## Subagent started · tame-adder · +0s
@@ -35,8 +35,8 @@ Transcript: `subagents/tame-alpaca/chat.md`
 ## Tool calls · +0s
 
 ```
-subagent: tame-adder [ok, 1 line, 21B, toolu_2]
-subagent: tame-alpaca [ok, 1 line, 22B, toolu_3]
+subagent send: tame-adder [ok, 1 line, 21B, toolu_2]
+subagent send: tame-alpaca [ok, 1 line, 22B, toolu_3]
 ```
 
 ## Assistant · +0s
@@ -76,8 +76,8 @@ It loads once, at startup.
 ## Tool calls · +0s
 
 ```
-subagent: all [ok, 2 lines, 206B, toolu_4]
-subagent: all [ok, 10 lines, 758B, toolu_5]
+subagent status: all [ok, 2 lines, 206B, toolu_4]
+subagent output: all [ok, 10 lines, 758B, toolu_5]
 ```
 
 ## Assistant · +0s
@@ -91,8 +91,8 @@ how did they get on?
 ## Tool calls · +0s
 
 ```
-subagent: all [ok, 2 lines, 118B, toolu_6]
-subagent: all [ok, 8 lines, 574B, toolu_7]
+subagent status: all [ok, 2 lines, 118B, toolu_6]
+subagent output: all [ok, 8 lines, 574B, toolu_7]
 ```
 
 ## Assistant · +0s

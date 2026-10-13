@@ -17,7 +17,7 @@ start a subagent and keep working
 ## Tool calls · +0s
 
 ```
-subagent: subagent · codex/gpt-5.6-sol@medium [ok, 1 line, 41B, toolu_1]
+subagent start: subagent · codex/gpt-5.6-sol@medium [ok, 1 line, 41B, toolu_1]
 probe: probe [ok, 1 line, 11B, toolu_2]
 ```
 

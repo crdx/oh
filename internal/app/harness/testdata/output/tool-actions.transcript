@@ -16,21 +16,21 @@ show every action-oriented tool label
 ## Tool calls · +1s
 
 ```
-forward: 8000 [ok, forward]
-forward: docs:8001 [ok, forward-job]
-forward: 8000 [ok, unforward]
-forward: forwards [ok, list-ports]
-forward [error, forward-malformed]
-job [ok, start]
-job [ok, restart]
-job [ok, status]
-job [ok, output]
-job [ok, wait-any]
-job [ok, wait-all]
-job [ok, stop]
-job [ok, list-jobs]
-job [ok, discard]
-job [ok, prune]
+forward add: 8000 [ok, forward]
+forward add: docs:8001 [ok, forward-job]
+forward remove: 8000 [ok, unforward]
+forward list: forwards [ok, list-ports]
+forward bogus [error, forward-malformed]
+job start [ok, start]
+job start [ok, restart]
+job status [ok, status]
+job output [ok, output]
+job wait [ok, wait-any]
+job wait [ok, wait-all]
+job stop [ok, stop]
+job list [ok, list-jobs]
+job discard [ok, discard]
+job prune [ok, prune]
 ```
 
 ## Assistant · +31s

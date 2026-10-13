@@ -17,7 +17,7 @@ forward the port and give it to docs
 ## Tool calls · +0s
 
 ```
-forward: 8080 [call-1]
+forward add: 8080 [call-1]
 ```
 
 ## Port forward · 1 forwarded port · changed port 8080 · +0s
@@ -30,7 +30,7 @@ Port 8080 is now forwarded to http://127.82.233.168:8080.
 
 ```
 forward [ok, 1 line, 83B, call-1]
-forward: docs:8080 [call-2]
+forward add: docs:8080 [call-2]
 ```
 
 ## Port forward · 1 forwarded port · changed port 8080 · +0s
@@ -56,8 +56,8 @@ give it to docs again, then to the api
 ## Tool calls · +0s
 
 ```
-forward: docs:8080 [ok, 1 line, 83B, call-3]
-forward: api:8080 [error, 1 line, 30B, call-4]
+forward add: docs:8080 [ok, 1 line, 83B, call-3]
+forward add: api:8080 [error, 1 line, 30B, call-4]
 ```
 
 ## Assistant · +0s

@@ -17,7 +17,7 @@ put the preview where i can see it
 ## Tool calls · +0s
 
 ```
-forward: 8080 [call-1]
+forward add: 8080 [call-1]
 ```
 
 ## Port forward · 1 forwarded port · changed port 8080 · +0s
@@ -43,7 +43,7 @@ take it down
 ## Tool calls · +0s
 
 ```
-forward: 8080 [call-2]
+forward remove: 8080 [call-2]
 ```
 
 ## Port forward · none · changed port 8080 · +0s

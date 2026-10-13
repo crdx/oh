@@ -1,6 +1,7 @@
 package transcript
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -280,6 +281,17 @@ func heading(event agent.Event) []string {
 	return []string{name}
 }
 
+func callName(event agent.Event) string {
+	var arguments struct {
+		Action string `json:"action"`
+	}
+	if json.Unmarshal([]byte(event.Arguments), &arguments) != nil || arguments.Action == "" {
+		return event.Name
+	}
+
+	return event.Name + " " + arguments.Action
+}
+
 func logSubject(subject string) string {
 	subject = strings.Join(strings.Fields(subject), " ")
 	runes := []rune(subject)
@@ -393,7 +405,7 @@ func (self *Recorder) write(section string, isHeld bool) error {
 
 func (self *Recorder) bufferToolCall(at time.Time, event agent.Event) {
 	self.markPendingCallRun(at)
-	entry := &toolCallEntry{id: event.ID, name: event.Name, subject: logSubject(event.Subject)}
+	entry := &toolCallEntry{id: event.ID, name: callName(event), subject: logSubject(event.Subject)}
 	self.pendingCalls = append(self.pendingCalls, entry)
 	if event.ID == "" {
 		return

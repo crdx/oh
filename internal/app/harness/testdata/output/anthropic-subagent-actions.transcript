@@ -17,7 +17,7 @@ exercise every subagent action
 ## Tool calls · +0s
 
 ```
-subagent: subagent · anthropic/claude-opus-5@medium [ok, 1 line, 41B, toolu_1]
+subagent start: subagent · anthropic/claude-opus-5@medium [ok, 1 line, 41B, toolu_1]
 ```
 
 ## Subagent started · tame-adder · +0s
@@ -29,21 +29,21 @@ Transcript: `subagents/tame-adder/chat.md`
 ## Tool calls · +0s
 
 ```
-subagent: subagents [ok, 1 line, 19B, toolu_2]
-subagent: all [ok, 1 line, 75B, toolu_3]
-subagent: tame-adder [ok, 1 line, 168B, toolu_4]
-subagent: tame-adder [ok, 1 line, 21B, toolu_11]
+subagent list: subagents [ok, 1 line, 19B, toolu_2]
+subagent status: all [ok, 1 line, 75B, toolu_3]
+subagent output: tame-adder [ok, 1 line, 168B, toolu_4]
+subagent send: tame-adder [ok, 1 line, 21B, toolu_11]
 wait: tame-adder [ok, 3 lines, 234B, toolu_15]
-subagent: tame-adder [ok, 1 line, 19B, toolu_5]
+subagent stop: tame-adder [ok, 1 line, 19B, toolu_5]
 wait: tame-adder [ok, 3 lines, 331B, toolu_6]
-subagent: tame-adder [error, 1 line, 38B, toolu_7]
-subagent: tame-nobody [error, 1 line, 29B, toolu_8]
-subagent: 0 subagents [error, toolu_9]
-subagent: subagents [error, toolu_10]
-subagent: tame-nobody [error, 1 line, 29B, toolu_12]
-subagent: subagent · anthropic/claude-opus-5@medium [error, 1 line, 43B, toolu_13]
-subagent: all [error, 1 line, 22B, toolu_14]
-subagent: all [error, 1 line, 64B, toolu_16]
+subagent stop: tame-adder [error, 1 line, 38B, toolu_7]
+subagent status: tame-nobody [error, 1 line, 29B, toolu_8]
+subagent start: 0 subagents [error, toolu_9]
+subagent list: subagents [error, toolu_10]
+subagent send: tame-nobody [error, 1 line, 29B, toolu_12]
+subagent start: subagent · anthropic/claude-opus-5@medium [error, 1 line, 43B, toolu_13]
+subagent stop: all [error, 1 line, 22B, toolu_14]
+subagent send: all [error, 1 line, 64B, toolu_16]
 ```
 
 ## Assistant · +0s

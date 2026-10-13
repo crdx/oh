@@ -17,7 +17,7 @@ start two subagents
 ## Tool calls · +0s
 
 ```
-subagent: 2 subagents · anthropic/claude-opus-5@medium, anthropic/claude-opus-5@medium · W… [ok, 1 line, 54B, toolu_1]
+subagent start: 2 subagents · anthropic/claude-opus-5@medium, anthropic/claude-opus-5@medium · W… [ok, 1 line, 54B, toolu_1]
 ```
 
 ## Assistant · +0s
@@ -73,7 +73,7 @@ start one more subagent
 ## Tool calls · +0s
 
 ```
-subagent: subagent · anthropic/claude-opus-5@medium [error, 1 line, 43B, toolu_2]
+subagent start: subagent · anthropic/claude-opus-5@medium [error, 1 line, 43B, toolu_2]
 ```
 
 ## Assistant · +0s

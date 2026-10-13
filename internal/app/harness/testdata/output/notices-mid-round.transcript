@@ -16,11 +16,11 @@ forward the five preview ports
 ## Tool calls · +2s
 
 ```
-forward: 8001 [call_1]
-forward: 8002 [call_2]
-forward: 8003 [call_3]
-forward: 8004 [call_4]
-forward: 8005 [call_5]
+forward add: 8001 [call_1]
+forward add: 8002 [call_2]
+forward add: 8003 [call_3]
+forward add: 8004 [call_4]
+forward add: 8005 [call_5]
 ```
 
 ## Port forward · 1 forwarded port · changed port 8001 · +7s
