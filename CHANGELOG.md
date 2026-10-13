@@ -2,6 +2,10 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+### Changes
+
+- Use OpenCode Zen info for missing OpenCode Go model data
+
 ## [0.15.3] - 2026-10-13
 
 ### Changes

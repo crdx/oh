@@ -600,6 +600,61 @@ func TestGoldenOpenCodeGoSpeaksToEachModelOverTheWireTheRegistryNames(t *testing
 	assertGolden(t, "update-opencode-go-wires.seen.json", seenProviderModels(t, OpencodeGoProvider))
 }
 
+const opencodeGoRegistryWithZen = `{
+	"opencode-go": {"npm": "@ai-sdk/openai-compatible", "models": {
+		"glm-5.3": {
+			"id": "glm-5.3", "name": "GLM-5.3", "reasoning": true,
+			"reasoning_options": [{"type": "effort", "values": ["high"]}],
+			"limit": {"context": 200000, "output": 64000}
+		}
+	}},
+	"opencode": {"npm": "@ai-sdk/openai-compatible", "models": {
+		"glm-5.3": {
+			"id": "glm-5.3", "name": "GLM-5.3 on Zen", "reasoning": true,
+			"reasoning_options": [{"type": "effort", "values": ["low"]}],
+			"limit": {"context": 100000, "output": 1000}
+		},
+		"cat-jam-free": {
+			"id": "cat-jam-free", "name": "Cat Jam Free", "reasoning": true,
+			"reasoning_options": [{"type": "effort", "values": ["low", "medium", "high", "xhigh", "max"]}],
+			"limit": {"context": 262144, "output": 131072},
+			"cost": {"input": 0, "output": 0, "cache_read": 0}
+		},
+		"claude-opus-5-5": {
+			"id": "claude-opus-5-5", "name": "Claude Opus 5.5", "reasoning": true,
+			"provider": {"npm": "@ai-sdk/anthropic"},
+			"reasoning_options": [{"type": "effort", "values": ["high"]}],
+			"limit": {"context": 1000000, "output": 128000}
+		}
+	}}
+}`
+
+func TestGoldenOpenCodeGoFallsBackToZenForListedModelsItsRegistryMisses(t *testing.T) {
+	t.Setenv("XDG_STATE_HOME", t.TempDir())
+
+	listedIDs := []string{"glm-5.3", "cat-jam-free", "omen-alpha"}
+	lister := func(ctx context.Context, providerName string) ([]agent.Model, error) {
+		if providerName != OpencodeGoProvider {
+			return unreachableProviders(ctx, providerName)
+		}
+
+		listed := make([]agent.Model, 0, len(listedIDs))
+		for _, id := range listedIDs {
+			listed = append(listed, agent.Model{ID: id})
+		}
+
+		return listed, nil
+	}
+
+	var output bytes.Buffer
+	if err := Update(&output, serveRegistry(t, opencodeGoRegistryWithZen), modelCachePath(), seenModelsPath(), lister, true); err != nil {
+		t.Fatal(err)
+	}
+
+	assertGolden(t, "update-opencode-go-zen-fallback.ansi", report(t, output.String()))
+	assertGolden(t, "update-opencode-go-zen-fallback.models.json", cachedProviderModels(t, OpencodeGoProvider))
+}
+
 func seenProviderModels(t *testing.T, providerName string) string {
 	t.Helper()
 

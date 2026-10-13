@@ -758,7 +758,7 @@ func TestTheRegistryIsReadFromAStandInEndpointWhenOneIsNamed(t *testing.T) {
 	}
 
 	want := "http://localhost:8080" + simulatedRegistryPath +
-		"?providers=anthropic%2Copenai%2Copencode-go"
+		"?providers=anthropic%2Copenai%2Copencode%2Copencode-go"
 
 	if got := registryAddress("http://localhost:8080/v1/messages"); got != want {
 		t.Errorf("expected %q, got %q", want, got)
@@ -803,6 +803,7 @@ func TestProviderDescriptionCoversEveryEndpointAndRegistryCombination(t *testing
 				t.Context(),
 				codexProvider,
 				test.registered,
+				nil,
 				func(context.Context, string) ([]agent.Model, error) {
 					return test.listed, test.listingErr
 				},
@@ -825,6 +826,7 @@ func TestEndpointListingExcludesRegistryModelsTheProviderCannotUse(t *testing.T)
 		t.Context(),
 		codexProvider,
 		registered,
+		nil,
 		func(context.Context, string) ([]agent.Model, error) {
 			return listed, nil
 		},
@@ -832,6 +834,73 @@ func TestEndpointListingExcludesRegistryModelsTheProviderCannotUse(t *testing.T)
 
 	if source != sourceBoth || len(models) != 1 || models[0].ID != "gpt-5.6-sol" {
 		t.Errorf("got models=%v source=%q", models, source)
+	}
+}
+
+func TestTheFallbackRegistryDescribesOnlyListedModelsTheRegistryMisses(t *testing.T) {
+	listed := []agent.Model{{ID: "glm-5.3"}, {ID: "cat-jam-free"}, {ID: "omen-alpha"}}
+	registered := map[string]agent.Model{
+		"glm-5.3": {ID: "glm-5.3", EffortLevels: []string{"high"}, MaxOutputTokens: 64_000},
+	}
+	fallback := map[string]agent.Model{
+		"glm-5.3":        {ID: "glm-5.3", EffortLevels: []string{"low"}, MaxOutputTokens: 1_000},
+		"cat-jam-free":   {ID: "cat-jam-free", EffortLevels: []string{"low", "max"}, MaxOutputTokens: 131_072},
+		"claude-opus-55": {ID: "claude-opus-55", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000},
+	}
+
+	models, source, _, _ := describeProviderModels(
+		t.Context(),
+		opencodeGoProvider,
+		registered,
+		fallback,
+		func(context.Context, string) ([]agent.Model, error) {
+			return listed, nil
+		},
+	)
+
+	if source != sourceBoth || len(models) != len(listed) {
+		t.Fatalf("got models=%v source=%q", models, source)
+	}
+
+	if !slices.Equal(models[0].EffortLevels, []string{"high"}) || models[0].MaxOutputTokens != 64_000 {
+		t.Errorf("expected the registry to win over the fallback, got %+v", models[0])
+	}
+
+	if !slices.Equal(models[1].EffortLevels, []string{"low", "max"}) || models[1].MaxOutputTokens != 131_072 {
+		t.Errorf("expected the fallback to describe a model the registry misses, got %+v", models[1])
+	}
+
+	if len(models[2].EffortLevels) != 0 || models[2].MaxOutputTokens != 0 {
+		t.Errorf("expected a model neither describes to stay bare, got %+v", models[2])
+	}
+}
+
+func TestTheFallbackRegistryNeverStandsInForAMissingListing(t *testing.T) {
+	fallback := map[string]agent.Model{
+		"cat-jam-free": {ID: "cat-jam-free", EffortLevels: []string{"high"}, MaxOutputTokens: 131_072},
+	}
+
+	for name, registered := range map[string]map[string]agent.Model{
+		"with a registry":    {"glm-5.3": {ID: "glm-5.3", EffortLevels: []string{"high"}, MaxOutputTokens: 64_000}},
+		"without a registry": nil,
+	} {
+		t.Run(name, func(t *testing.T) {
+			models, _, _, _ := describeProviderModels(
+				t.Context(),
+				opencodeGoProvider,
+				registered,
+				fallback,
+				func(context.Context, string) ([]agent.Model, error) {
+					return nil, nil
+				},
+			)
+
+			for _, model := range models {
+				if model.ID == "cat-jam-free" {
+					t.Errorf("expected the fallback to describe listed models only, got %v", models)
+				}
+			}
+		})
 	}
 }
 

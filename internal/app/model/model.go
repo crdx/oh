@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"maps"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -46,6 +47,10 @@ var registryNames = map[string]string{
 	CodexProvider:      "openai",
 	OpencodeGoProvider: "opencode-go",
 	AnthropicProvider:  "anthropic",
+}
+
+var registryFallbackNames = map[string]string{
+	OpencodeGoProvider: "opencode",
 }
 
 func ProviderNames() []string {
@@ -98,8 +103,11 @@ func registryAddress(endpoint string) string {
 		return ""
 	}
 
-	wantedNames := make([]string, 0, len(registryNames))
+	wantedNames := make([]string, 0, len(registryNames)+len(registryFallbackNames))
 	for _, name := range registryNames {
+		wantedNames = append(wantedNames, name)
+	}
+	for _, name := range registryFallbackNames {
 		wantedNames = append(wantedNames, name)
 	}
 
@@ -213,6 +221,17 @@ func filledFrom(model agent.Model, knownModel agent.Model) agent.Model {
 	}
 
 	return model
+}
+
+func withFallback(registeredModels map[string]agent.Model, fallbackModels map[string]agent.Model) map[string]agent.Model {
+	describingModels := maps.Clone(fallbackModels)
+	if describingModels == nil {
+		describingModels = make(map[string]agent.Model, len(registeredModels))
+	}
+
+	maps.Copy(describingModels, registeredModels)
+
+	return describingModels
 }
 
 func fromRegistry(registeredModels map[string]agent.Model) []agent.Model {
@@ -600,12 +619,14 @@ func updateModels(
 
 	for _, providerName := range ProviderNames() {
 		registeredModels := registry.Provider(registryNames[providerName])
+		fallbackModels := registry.Provider(registryFallbackNames[providerName])
 		storedListing, isStored := cache.Providers[providerName]
 
 		listedModels, source, why, listingError := describeProviderModels(
 			ctx,
 			providerName,
 			registeredModels,
+			fallbackModels,
 			listProviderModels,
 		)
 		if errors.As(listingError, new(NoLoginError)) {
@@ -703,6 +724,7 @@ func describeProviderModels(
 	ctx context.Context,
 	providerName string,
 	registeredModels map[string]agent.Model,
+	fallbackModels map[string]agent.Model,
 	listProviderModels ProviderLister,
 ) ([]agent.Model, string, string, error) {
 	listedModels, err := listProviderModels(ctx, providerName)
@@ -713,11 +735,12 @@ func describeProviderModels(
 	}
 
 	if len(listedModels) > 0 {
-		if len(registeredModels) == 0 {
+		describingModels := withFallback(registeredModels, fallbackModels)
+		if len(describingModels) == 0 {
 			return listedModels, sourceEndpoint, "", nil
 		}
 
-		return supplement(providerName, listedModels, registeredModels), sourceBoth, "", nil
+		return supplement(providerName, listedModels, describingModels), sourceBoth, "", nil
 	}
 
 	if len(registeredModels) > 0 && !errors.As(err, new(NoLoginError)) {
