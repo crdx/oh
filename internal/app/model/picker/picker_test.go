@@ -415,13 +415,11 @@ func TestAnUnknownCostIsADashRatherThanAnEstimate(t *testing.T) {
 func TestEveryModelPriceColumnStopsAtTwoDecimalPlaces(t *testing.T) {
 	prices := &agent.TokenPrices{Input: 0.01, Output: 0.02, CacheRead: 0.001}
 	pounds := money.In("GBP", 0.8)
-	for name, got := range map[string]string{
-		"estimated cost": estimatedCost(prices, pounds),
-		"input":          price(prices, pounds, inputRate),
-	} {
-		if got != "<£0.01" {
-			t.Errorf("%s: got %q, want <£0.01", name, got)
-		}
+	if got := estimatedCost(prices, pounds); got != "£0.02" {
+		t.Errorf("estimated cost: got %q, want £0.02", got)
+	}
+	if got := price(prices, pounds, inputRate); got != "<£0.01" {
+		t.Errorf("input: got %q, want <£0.01", got)
 	}
 	if got := price(prices, pounds, outputRate); got != "£0.02" {
 		t.Errorf("output: got %q, want £0.02", got)
@@ -433,12 +431,26 @@ func TestEveryModelPriceColumnStopsAtTwoDecimalPlaces(t *testing.T) {
 	}
 }
 
-func TestTheCostColumnUsesTheCurrencyAndTheCacheAwareEstimate(t *testing.T) {
+func TestCheapModelsHaveDistinctHundredRequestEstimates(t *testing.T) {
+	for _, test := range []struct {
+		prices agent.TokenPrices
+		want   string
+	}{
+		{prices: agent.TokenPrices{Input: 0.01, Output: 0.02, CacheRead: 0.001}, want: "£0.02"},
+		{prices: agent.TokenPrices{Input: 0.02, Output: 0.04, CacheRead: 0.002}, want: "£0.03"},
+	} {
+		if got := estimatedCost(&test.prices, money.In("GBP", 0.8)); got != test.want {
+			t.Errorf("got %q, want %q", got, test.want)
+		}
+	}
+}
+
+func TestTheCostColumnEstimatesOneHundredRequestsInTheChosenCurrency(t *testing.T) {
 	prices := &agent.TokenPrices{Input: 1.25, Output: 10, CacheRead: 0.125}
-	if got := estimatedCost(prices, money.Dollar()); got != "$0.03" {
+	if got := estimatedCost(prices, money.Dollar()); got != "$3.01" {
 		t.Errorf("got %q", got)
 	}
-	if got := estimatedCost(prices, money.In("GBP", 0.8)); got != "£0.02" {
+	if got := estimatedCost(prices, money.In("GBP", 0.8)); got != "£2.41" {
 		t.Errorf("got %q", got)
 	}
 }

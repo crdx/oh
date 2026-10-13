@@ -36,9 +36,10 @@ const (
 )
 
 const (
-	costTitle  = "Cost/req"
-	costColumn = 10
-	costRoom   = markWidth + providerColumn + nameColumn + effortColumn +
+	costTitle        = "Cost"
+	costRequestCount = 100
+	costColumn       = 10
+	costRoom         = markWidth + providerColumn + nameColumn + effortColumn +
 		contextColumn + costColumn + shortenedIdentifier + costGaps*table.Gap
 	rateRoom = markWidth + providerColumn + nameColumn + effortColumn + contextColumn +
 		costColumn + inputColumn + outputColumn + identifierColumn + rateGaps*table.Gap
@@ -267,7 +268,7 @@ func estimatedCost(prices *agent.TokenPrices, currency money.Currency) string {
 		return unknownQuantity
 	}
 
-	return currency.FormatPrice(prices.EstimatedRequestCost())
+	return currency.FormatPrice(prices.EstimatedRequestCost() * costRequestCount)
 }
 
 func inputRate(prices agent.TokenPrices) float64 {
