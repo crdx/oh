@@ -2,6 +2,8 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+## [0.16.0] - 2026-10-13
+
 ### Changes
 
 - Colour model costs using fixed bands
