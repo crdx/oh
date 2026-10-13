@@ -49,6 +49,7 @@ func TestGoldenSubagentBarSummarisesEveryState(t *testing.T) {
 		"one running one stopping one done one failed": func() string { return render(at, states) },
 		"flash expires but running continues":          func() string { return render(at.Add(time.Second), states) },
 		"idle after outcomes expire":                   func() string { return render(at.Add(31*time.Second), states[2:]) },
+		"just finished child stays hidden":             func() string { return render(at, states[2:3]) },
 		"restored ended child stays hidden": func() string {
 			return render(at, []subagents.Snapshot{{Name: "tame-adder", State: subagentrecord.Ended}})
 		},

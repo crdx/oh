@@ -7,6 +7,7 @@
 - Round all model price columns to two decimal places
 - Sort model listings by cost and cycle picker sorting with ctrl+s
 - Compare model costs using a new, better estimator
+- Remove the transient finished-subagent count from the bar
 - Run the bar segment's git process inside the sandbox
 - Hide leading reasoning summary when conversational reasoning follows
 - Use OpenCode Zen info for missing OpenCode Go model data

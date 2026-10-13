@@ -1,7 +1,9 @@
 === flash expires but running continues ===
-\e[2m🐍\e[0m \e[2m🦙\e[0m\e[38;2;207;173;0m…\e[0m \e[38;2;150;152;150m○ 1\e[0m \e[38;2;204;102;102m✗ 1\e[0m
+\e[2m🐍\e[0m \e[2m🦙\e[0m\e[38;2;207;173;0m…\e[0m \e[38;2;204;102;102m✗ 1\e[0m
 === idle after outcomes expire ===
 
+=== just finished child stays hidden ===
+
 === one running one stopping one done one failed ===
-🐍 \e[2m🦙\e[0m\e[38;2;207;173;0m…\e[0m \e[38;2;150;152;150m○ 1\e[0m \e[38;2;204;102;102m✗ 1\e[0m
+🐍 \e[2m🦙\e[0m\e[38;2;207;173;0m…\e[0m \e[38;2;204;102;102m✗ 1\e[0m
 === restored ended child stays hidden ===

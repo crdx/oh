@@ -30,7 +30,7 @@ func New(get func() []subagents.Snapshot, now func() time.Time) segment.Factory 
 
 func (self state) Render(segment.Context) string {
 	var labels []string
-	doneCount, failureCount := 0, 0
+	failureCount := 0
 	for _, snapshot := range self.get() {
 		if snapshot.State.IsLive() {
 			labels = append(labels, childMark(snapshot, self.now()))
@@ -41,12 +41,7 @@ func (self state) Render(segment.Context) string {
 		}
 		if snapshot.State == subagentrecord.Failed {
 			failureCount++
-		} else {
-			doneCount++
 		}
-	}
-	if doneCount > 0 {
-		labels = append(labels, style.Dim("○ "+strconv.Itoa(doneCount)))
 	}
 	if failureCount > 0 {
 		labels = append(labels, style.Failure("✗ "+strconv.Itoa(failureCount)))
@@ -77,7 +72,7 @@ func (self state) NextRefresh(segment.Phase) time.Time {
 				due = expires
 			}
 		}
-		if snapshot.EndedAt.IsZero() {
+		if snapshot.State != subagentrecord.Failed || snapshot.EndedAt.IsZero() {
 			continue
 		}
 		expires := snapshot.EndedAt.Add(ghostLife)
