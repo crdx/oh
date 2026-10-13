@@ -150,9 +150,7 @@ func apply(isEnabled bool) {
 }
 
 func (self Style) Over(text string) string {
-	const marker = "\x00"
-
-	openingSequence, closingSequence, found := strings.Cut(self(marker), marker)
+	openingSequence, closingSequence, found := self.sequences()
 	if !found || openingSequence == "" {
 		return text
 	}
@@ -165,6 +163,35 @@ func (self Style) Over(text string) string {
 	return openingSequence + resumedText + closingSequence
 }
 
+func (self Style) ForceOver(text string) string {
+	openingSequence, closingSequence, found := self.sequences()
+	if !found || openingSequence == "" {
+		return text
+	}
+
+	var output strings.Builder
+	output.WriteString(openingSequence)
+	for at := 0; at < len(text); {
+		offset := strings.IndexByte(text[at:], '\x1b')
+		if offset < 0 {
+			output.WriteString(text[at:])
+			break
+		}
+
+		start := at + offset
+		output.WriteString(text[at:start])
+		sequence := escape.GetSequence(text, start)
+		output.WriteString(text[start:sequence.End])
+		if sequence.IsStyle && text[sequence.End-1] == 'm' {
+			output.WriteString(openingSequence)
+		}
+		at = sequence.End
+	}
+	output.WriteString(closingSequence)
+
+	return output.String()
+}
+
 func (self Style) Join(parts ...string) string {
 	joinedText := util.JoinNonEmpty(parts...)
 	if joinedText == "" {
@@ -172,6 +199,12 @@ func (self Style) Join(parts ...string) string {
 	}
 
 	return self(joinedText)
+}
+
+func (self Style) sequences() (string, string, bool) {
+	const marker = "\x00"
+
+	return strings.Cut(self(marker), marker)
 }
 
 func Width(text string) int {

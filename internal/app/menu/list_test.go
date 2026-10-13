@@ -44,6 +44,27 @@ func (self *fakeList) Adjust(index int, direction int) {
 	self.adjusted[index] += direction
 }
 
+type colourfulList struct {
+	*fakeList
+}
+
+func (self *colourfulList) Row(index int, isChosen bool, room int) string {
+	return style.LowPrice(self.fakeList.Row(index, isChosen, room))
+}
+
+func TestTheMenuOwnsSelectionColourEvenWhenAListColoursItsRows(t *testing.T) {
+	rows := &colourfulList{fakeList: rowsNamed("first", "second")}
+	drawn := Paint(rows, 80, 6, 0, "")
+	chosen := style.ChosenRow.ForceOver(rows.Row(0, true, 80))
+	ordinary := rows.Row(1, false, 80)
+	if !strings.Contains(drawn, chosen) {
+		t.Errorf("the list's colour won over menu selection:\n%q", drawn)
+	}
+	if !strings.Contains(drawn, ordinary) {
+		t.Errorf("the menu changed an unselected row's colour:\n%q", drawn)
+	}
+}
+
 func listState(rows List, cursor int) *state {
 	self := newState(rows)
 	self.cursor = cursor

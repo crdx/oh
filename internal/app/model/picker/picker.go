@@ -204,12 +204,7 @@ func (self *modelList) ColumnHeader(room int) string {
 }
 
 func (self *modelList) Row(index int, isChosen bool, room int) string {
-	paint := style.Answer
-	if isChosen {
-		paint = style.ChosenRow
-	}
-
-	return paint.Over(modelRow(self.models[index], self.currency, isChosen, room))
+	return style.Answer.Over(modelRow(self.models[index], self.currency, isChosen, room))
 }
 
 func (self *modelList) sortLabel() string {

@@ -220,14 +220,8 @@ func (self *sessionList) Row(index int, isChosen bool, room int) string {
 	line := rowInView(storedSession, isChosen, room, self.isAllWorkspacesView)
 
 	switch {
-	case isChosen && storedSession.IsOtherWorkspace:
-		return style.ChosenRow.Over(line)
 	case storedSession.IsOtherWorkspace:
 		return style.OtherWorkspaceSession.Over(line)
-	case isChosen && storedSession.IsRunning:
-		return style.ChosenRunningSession.Over(line)
-	case isChosen:
-		return style.ChosenRow.Over(line)
 	case storedSession.IsRunning:
 		return style.RunningSession.Over(line)
 	}

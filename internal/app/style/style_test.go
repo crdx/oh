@@ -300,6 +300,48 @@ func TestAStyleOverAnotherPaintsNothingWhereNothingIsPainted(t *testing.T) {
 	}
 }
 
+func TestAForcedStyleOverridesInnerColoursWithoutDroppingLinksOrDecorations(t *testing.T) {
+	enableColor(t)
+
+	opening, closing, _ := ChosenRow.sequences()
+	innerOpening, _, _ := LowPrice.sequences()
+	const hyperlinkOpening = "\x1b]8;;https://example.test/model\x1b\\"
+	const hyperlinkClosing = "\x1b]8;;\x1b\\"
+	text := "\x1b[3mrow " + LowPrice(hyperlinkOpening+"cost"+hyperlinkClosing) + " tail"
+	got := ChosenRow.ForceOver(text)
+
+	if !strings.Contains(got, "\x1b[3m"+opening+"row ") {
+		t.Errorf("the forced style dropped the italic decoration: %q", got)
+	}
+	if !strings.Contains(got, innerOpening+opening+hyperlinkOpening+"cost"+hyperlinkClosing) {
+		t.Errorf("the inner colour won or its link was lost: %q", got)
+	}
+	if !strings.HasPrefix(got, opening) || !strings.HasSuffix(got, closing) {
+		t.Errorf("the forced style was not closed around the row: %q", got)
+	}
+	if got := Plain(got); got != "row cost tail" {
+		t.Errorf("the row's text changed: %q", got)
+	}
+}
+
+func TestAForcedStylePreservesNonStyleEscapeSequences(t *testing.T) {
+	enableColor(t)
+
+	const text = "before\x1b[2C\x1b]66;s=2;big\x1b\\after"
+	opening, closing, _ := ChosenRow.sequences()
+	if got, want := ChosenRow.ForceOver(text), opening+text+closing; got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
+func TestAForcedStylePaintsNothingWhenColourIsDisabled(t *testing.T) {
+	t.Cleanup(Init(&strings.Builder{}))
+
+	if got := ChosenRow.ForceOver("row note"); got != "row note" {
+		t.Errorf("got %q, want the text left alone", got)
+	}
+}
+
 func TestItalicTextStylesAreItalic(t *testing.T) {
 	enableColor(t)
 

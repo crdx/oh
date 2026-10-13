@@ -131,7 +131,7 @@ func (self *menu) render(shouldClear bool) string {
 	for i := self.offset; i < self.offset+self.rows; i++ {
 		line := "  " + self.labels[i]
 		if i == self.cursor {
-			line = style.ChosenRow.Over("› " + self.labels[i])
+			line = style.ChosenRow.ForceOver("› " + self.labels[i])
 		}
 		if shouldClear {
 			renderedText.WriteString(clearLine)

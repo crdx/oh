@@ -1,7 +1,7 @@
 === 150 columns, provider, filter "" ===
 \e[H\e[38;2;150;152;150mFilter: \e[0m                                                                       ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m effort\e[0m\e[38;2;150;152;150m · \e[0mctrl+s\e[38;2;150;152;150m sort: provider\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context        Cost      Input     Output  Identifier\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› Anthropic     Sonnet 5                      medium        200K       \e[38;2;207;173;0m$7.01\e[0m\e[38;2;192;128;80m      $3.00     $15.00  \e[38;2;150;152;150mclaude-sonnet-5\e[0m\e[K\r
+\e[38;2;192;128;80m› Anthropic     Sonnet 5                      medium        200K       \e[38;2;207;173;0m\e[38;2;192;128;80m$7.01\e[0m\e[38;2;192;128;80m      $3.00     $15.00  \e[38;2;150;152;150m\e[38;2;192;128;80mclaude-sonnet-5\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
   Codex         Codex 5.3                     medium ⚡     272K       \e[38;2;129;162;190m$3.01\e[0m      $1.25     $10.00  \e[38;2;150;152;150mgpt-5.3-codex\e[0m\e[K\r
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       \e[38;2;129;162;190m$1.30\e[0m      $0.08      $0.30  \e[38;2;150;152;150mdeepseek-v4-flash-vision-exp\e[0m\e[K\r
   Anthropic     Opus 5                        high          200K      \e[38;2;204;102;102m$35.05\e[0m     $15.00     $75.00  \e[38;2;150;152;150mclaude-opus-5\e[0m\e[K\r
@@ -14,7 +14,7 @@
 === 150 columns, cost ↑, filter "" ===
 \e[H\e[38;2;150;152;150mFilter: \e[0m                                                                         ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m effort\e[0m\e[38;2;150;152;150m · \e[0mctrl+s\e[38;2;150;152;150m sort: cost ↑\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context      Cost ↑      Input     Output  Identifier\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› OpenCode Go   Step Preview Free 5           high          256K       \e[38;2;76;154;44m$0.00\e[0m\e[38;2;192;128;80m      $0.00      $0.00  \e[38;2;150;152;150mstep-5-preview-free\e[0m\e[K\r
+\e[38;2;192;128;80m› OpenCode Go   Step Preview Free 5           high          256K       \e[38;2;76;154;44m\e[38;2;192;128;80m$0.00\e[0m\e[38;2;192;128;80m      $0.00      $0.00  \e[38;2;150;152;150m\e[38;2;192;128;80mstep-5-preview-free\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       \e[38;2;129;162;190m$1.30\e[0m      $0.08      $0.30  \e[38;2;150;152;150mdeepseek-v4-flash-vision-exp\e[0m\e[K\r
   Codex         Codex 5.3                     medium ⚡     272K       \e[38;2;129;162;190m$3.01\e[0m      $1.25     $10.00  \e[38;2;150;152;150mgpt-5.3-codex\e[0m\e[K\r
   OpenCode Go   MiniMax M3                    —               1M       \e[38;2;207;173;0m$5.19\e[0m      $0.30      $1.20  \e[38;2;150;152;150mminimax-m3\e[0m\e[K\r
@@ -27,7 +27,7 @@
 === 150 columns, cost ↓, filter "" ===
 \e[H\e[38;2;150;152;150mFilter: \e[0m                                                                         ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m effort\e[0m\e[38;2;150;152;150m · \e[0mctrl+s\e[38;2;150;152;150m sort: cost ↓\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context      Cost ↓      Input     Output  Identifier\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› Codex         Sol Pro                       medium        272K    \e[38;2;204;102;102m$2595.18\e[0m\e[38;2;192;128;80m    $150.00    $600.00  \e[38;2;150;152;150mgpt-5.3-sol-pro\e[0m\e[K\r
+\e[38;2;192;128;80m› Codex         Sol Pro                       medium        272K    \e[38;2;204;102;102m\e[38;2;192;128;80m$2595.18\e[0m\e[38;2;192;128;80m    $150.00    $600.00  \e[38;2;150;152;150m\e[38;2;192;128;80mgpt-5.3-sol-pro\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
   Anthropic     Opus 5                        high          200K      \e[38;2;204;102;102m$35.05\e[0m     $15.00     $75.00  \e[38;2;150;152;150mclaude-opus-5\e[0m\e[K\r
   Anthropic     Sonnet 5                      medium        200K       \e[38;2;207;173;0m$7.01\e[0m      $3.00     $15.00  \e[38;2;150;152;150mclaude-sonnet-5\e[0m\e[K\r
   OpenCode Go   MiniMax M3                    —               1M       \e[38;2;207;173;0m$5.19\e[0m      $0.30      $1.20  \e[38;2;150;152;150mminimax-m3\e[0m\e[K\r
@@ -40,7 +40,7 @@
 === 150 columns, provider, filter "opencode" ===
 \e[H\e[38;2;150;152;150mFilter: \e[0mopencode                                                               ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m effort\e[0m\e[38;2;150;152;150m · \e[0mctrl+s\e[38;2;150;152;150m sort: provider\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context        Cost      Input     Output  Identifier\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       \e[38;2;129;162;190m$1.30\e[0m\e[38;2;192;128;80m      $0.08      $0.30  \e[38;2;150;152;150mdeepseek-v4-flash-vision-exp\e[0m\e[K\r
+\e[38;2;192;128;80m› OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       \e[38;2;129;162;190m\e[38;2;192;128;80m$1.30\e[0m\e[38;2;192;128;80m      $0.08      $0.30  \e[38;2;150;152;150m\e[38;2;192;128;80mdeepseek-v4-flash-vision-exp\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
   OpenCode Go   MiniMax M3                    —               1M       \e[38;2;207;173;0m$5.19\e[0m      $0.30      $1.20  \e[38;2;150;152;150mminimax-m3\e[0m\e[K\r
   OpenCode Go   Step Preview Free 5           high          256K       \e[38;2;76;154;44m$0.00\e[0m      $0.00      $0.00  \e[38;2;150;152;150mstep-5-preview-free\e[0m\e[K\r
 \e[K\r
@@ -53,7 +53,7 @@
 === 150 columns, cost ↑, filter "opencode" ===
 \e[H\e[38;2;150;152;150mFilter: \e[0mopencode                                                                 ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m effort\e[0m\e[38;2;150;152;150m · \e[0mctrl+s\e[38;2;150;152;150m sort: cost ↑\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context      Cost ↑      Input     Output  Identifier\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› OpenCode Go   Step Preview Free 5           high          256K       \e[38;2;76;154;44m$0.00\e[0m\e[38;2;192;128;80m      $0.00      $0.00  \e[38;2;150;152;150mstep-5-preview-free\e[0m\e[K\r
+\e[38;2;192;128;80m› OpenCode Go   Step Preview Free 5           high          256K       \e[38;2;76;154;44m\e[38;2;192;128;80m$0.00\e[0m\e[38;2;192;128;80m      $0.00      $0.00  \e[38;2;150;152;150m\e[38;2;192;128;80mstep-5-preview-free\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       \e[38;2;129;162;190m$1.30\e[0m      $0.08      $0.30  \e[38;2;150;152;150mdeepseek-v4-flash-vision-exp\e[0m\e[K\r
   OpenCode Go   MiniMax M3                    —               1M       \e[38;2;207;173;0m$5.19\e[0m      $0.30      $1.20  \e[38;2;150;152;150mminimax-m3\e[0m\e[K\r
 \e[K\r
@@ -66,7 +66,7 @@
 === 150 columns, cost ↓, filter "opencode" ===
 \e[H\e[38;2;150;152;150mFilter: \e[0mopencode                                                                 ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m effort\e[0m\e[38;2;150;152;150m · \e[0mctrl+s\e[38;2;150;152;150m sort: cost ↓\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context      Cost ↓      Input     Output  Identifier\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› OpenCode Go   MiniMax M3                    —               1M       \e[38;2;207;173;0m$5.19\e[0m\e[38;2;192;128;80m      $0.30      $1.20  \e[38;2;150;152;150mminimax-m3\e[0m\e[K\r
+\e[38;2;192;128;80m› OpenCode Go   MiniMax M3                    —               1M       \e[38;2;207;173;0m\e[38;2;192;128;80m$5.19\e[0m\e[38;2;192;128;80m      $0.30      $1.20  \e[38;2;150;152;150m\e[38;2;192;128;80mminimax-m3\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       \e[38;2;129;162;190m$1.30\e[0m      $0.08      $0.30  \e[38;2;150;152;150mdeepseek-v4-flash-vision-exp\e[0m\e[K\r
   OpenCode Go   Step Preview Free 5           high          256K       \e[38;2;76;154;44m$0.00\e[0m      $0.00      $0.00  \e[38;2;150;152;150mstep-5-preview-free\e[0m\e[K\r
 \e[K\r
@@ -118,7 +118,7 @@
 === 100 columns, provider, filter "" ===
 \e[H\e[38;2;150;152;150mFilter: \e[0m                     ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m effort\e[0m\e[38;2;150;152;150m · \e[0mctrl+s\e[38;2;150;152;150m sort: provider\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context        Cost  Identifier\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› Anthropic     Sonnet 5                      medium        200K       \e[38;2;207;173;0m$7.01\e[0m\e[38;2;192;128;80m  \e[38;2;150;152;150mclaude-sonnet-5\e[0m\e[K\r
+\e[38;2;192;128;80m› Anthropic     Sonnet 5                      medium        200K       \e[38;2;207;173;0m\e[38;2;192;128;80m$7.01\e[0m\e[38;2;192;128;80m  \e[38;2;150;152;150m\e[38;2;192;128;80mclaude-sonnet-5\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
   Codex         Codex 5.3                     medium ⚡     272K       \e[38;2;129;162;190m$3.01\e[0m  \e[38;2;150;152;150mgpt-5.3-codex\e[0m\e[K\r
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       \e[38;2;129;162;190m$1.30\e[0m  \e[38;2;150;152;150mdeepseek-v4-flash-vis…\e[0m\e[K\r
   Anthropic     Opus 5                        high          200K      \e[38;2;204;102;102m$35.05\e[0m  \e[38;2;150;152;150mclaude-opus-5\e[0m\e[K\r
@@ -131,7 +131,7 @@
 === 100 columns, cost ↑, filter "" ===
 \e[H\e[38;2;150;152;150mFilter: \e[0m                       ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m effort\e[0m\e[38;2;150;152;150m · \e[0mctrl+s\e[38;2;150;152;150m sort: cost ↑\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context      Cost ↑  Identifier\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› OpenCode Go   Step Preview Free 5           high          256K       \e[38;2;76;154;44m$0.00\e[0m\e[38;2;192;128;80m  \e[38;2;150;152;150mstep-5-preview-free\e[0m\e[K\r
+\e[38;2;192;128;80m› OpenCode Go   Step Preview Free 5           high          256K       \e[38;2;76;154;44m\e[38;2;192;128;80m$0.00\e[0m\e[38;2;192;128;80m  \e[38;2;150;152;150m\e[38;2;192;128;80mstep-5-preview-free\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       \e[38;2;129;162;190m$1.30\e[0m  \e[38;2;150;152;150mdeepseek-v4-flash-vis…\e[0m\e[K\r
   Codex         Codex 5.3                     medium ⚡     272K       \e[38;2;129;162;190m$3.01\e[0m  \e[38;2;150;152;150mgpt-5.3-codex\e[0m\e[K\r
   OpenCode Go   MiniMax M3                    —               1M       \e[38;2;207;173;0m$5.19\e[0m  \e[38;2;150;152;150mminimax-m3\e[0m\e[K\r
@@ -144,7 +144,7 @@
 === 100 columns, cost ↓, filter "" ===
 \e[H\e[38;2;150;152;150mFilter: \e[0m                       ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m effort\e[0m\e[38;2;150;152;150m · \e[0mctrl+s\e[38;2;150;152;150m sort: cost ↓\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context      Cost ↓  Identifier\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› Codex         Sol Pro                       medium        272K    \e[38;2;204;102;102m$2595.18\e[0m\e[38;2;192;128;80m  \e[38;2;150;152;150mgpt-5.3-sol-pro\e[0m\e[K\r
+\e[38;2;192;128;80m› Codex         Sol Pro                       medium        272K    \e[38;2;204;102;102m\e[38;2;192;128;80m$2595.18\e[0m\e[38;2;192;128;80m  \e[38;2;150;152;150m\e[38;2;192;128;80mgpt-5.3-sol-pro\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
   Anthropic     Opus 5                        high          200K      \e[38;2;204;102;102m$35.05\e[0m  \e[38;2;150;152;150mclaude-opus-5\e[0m\e[K\r
   Anthropic     Sonnet 5                      medium        200K       \e[38;2;207;173;0m$7.01\e[0m  \e[38;2;150;152;150mclaude-sonnet-5\e[0m\e[K\r
   OpenCode Go   MiniMax M3                    —               1M       \e[38;2;207;173;0m$5.19\e[0m  \e[38;2;150;152;150mminimax-m3\e[0m\e[K\r
@@ -157,7 +157,7 @@
 === 100 columns, provider, filter "opencode" ===
 \e[H\e[38;2;150;152;150mFilter: \e[0mopencode             ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m effort\e[0m\e[38;2;150;152;150m · \e[0mctrl+s\e[38;2;150;152;150m sort: provider\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context        Cost  Identifier\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       \e[38;2;129;162;190m$1.30\e[0m\e[38;2;192;128;80m  \e[38;2;150;152;150mdeepseek-v4-flash-vis…\e[0m\e[K\r
+\e[38;2;192;128;80m› OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       \e[38;2;129;162;190m\e[38;2;192;128;80m$1.30\e[0m\e[38;2;192;128;80m  \e[38;2;150;152;150m\e[38;2;192;128;80mdeepseek-v4-flash-vis…\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
   OpenCode Go   MiniMax M3                    —               1M       \e[38;2;207;173;0m$5.19\e[0m  \e[38;2;150;152;150mminimax-m3\e[0m\e[K\r
   OpenCode Go   Step Preview Free 5           high          256K       \e[38;2;76;154;44m$0.00\e[0m  \e[38;2;150;152;150mstep-5-preview-free\e[0m\e[K\r
 \e[K\r
@@ -170,7 +170,7 @@
 === 100 columns, cost ↑, filter "opencode" ===
 \e[H\e[38;2;150;152;150mFilter: \e[0mopencode               ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m effort\e[0m\e[38;2;150;152;150m · \e[0mctrl+s\e[38;2;150;152;150m sort: cost ↑\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context      Cost ↑  Identifier\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› OpenCode Go   Step Preview Free 5           high          256K       \e[38;2;76;154;44m$0.00\e[0m\e[38;2;192;128;80m  \e[38;2;150;152;150mstep-5-preview-free\e[0m\e[K\r
+\e[38;2;192;128;80m› OpenCode Go   Step Preview Free 5           high          256K       \e[38;2;76;154;44m\e[38;2;192;128;80m$0.00\e[0m\e[38;2;192;128;80m  \e[38;2;150;152;150m\e[38;2;192;128;80mstep-5-preview-free\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       \e[38;2;129;162;190m$1.30\e[0m  \e[38;2;150;152;150mdeepseek-v4-flash-vis…\e[0m\e[K\r
   OpenCode Go   MiniMax M3                    —               1M       \e[38;2;207;173;0m$5.19\e[0m  \e[38;2;150;152;150mminimax-m3\e[0m\e[K\r
 \e[K\r
@@ -183,7 +183,7 @@
 === 100 columns, cost ↓, filter "opencode" ===
 \e[H\e[38;2;150;152;150mFilter: \e[0mopencode               ↑↓\e[38;2;150;152;150m move\e[0m\e[38;2;150;152;150m · \e[0m← →\e[38;2;150;152;150m effort\e[0m\e[38;2;150;152;150m · \e[0mctrl+s\e[38;2;150;152;150m sort: cost ↓\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context      Cost ↓  Identifier\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› OpenCode Go   MiniMax M3                    —               1M       \e[38;2;207;173;0m$5.19\e[0m\e[38;2;192;128;80m  \e[38;2;150;152;150mminimax-m3\e[0m\e[K\r
+\e[38;2;192;128;80m› OpenCode Go   MiniMax M3                    —               1M       \e[38;2;207;173;0m\e[38;2;192;128;80m$5.19\e[0m\e[38;2;192;128;80m  \e[38;2;150;152;150m\e[38;2;192;128;80mminimax-m3\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       \e[38;2;129;162;190m$1.30\e[0m  \e[38;2;150;152;150mdeepseek-v4-flash-vis…\e[0m\e[K\r
   OpenCode Go   Step Preview Free 5           high          256K       \e[38;2;76;154;44m$0.00\e[0m  \e[38;2;150;152;150mstep-5-preview-free\e[0m\e[K\r
 \e[K\r
@@ -235,7 +235,7 @@
 === 80 columns, provider, filter "" ===
 \e[H\e[38;2;150;152;150mFilter: \e[0m                        ctrl+s\e[38;2;150;152;150m sort: provider\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context  Identifier\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› Anthropic     Sonnet 5                      medium        200K  \e[38;2;150;152;150mclaude-sonnet…\e[0m\e[K\r
+\e[38;2;192;128;80m› Anthropic     Sonnet 5                      medium        200K  \e[38;2;150;152;150m\e[38;2;192;128;80mclaude-sonnet…\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
   Codex         Codex 5.3                     medium ⚡     272K  \e[38;2;150;152;150mgpt-5.3-codex\e[0m\e[K\r
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M  \e[38;2;150;152;150mdeepseek-v4-f…\e[0m\e[K\r
   Anthropic     Opus 5                        high          200K  \e[38;2;150;152;150mclaude-opus-5\e[0m\e[K\r
@@ -248,7 +248,7 @@
 === 80 columns, cost ↑, filter "" ===
 \e[H\e[38;2;150;152;150mFilter: \e[0m                          ctrl+s\e[38;2;150;152;150m sort: cost ↑\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context  Identifier\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› OpenCode Go   Step Preview Free 5           high          256K  \e[38;2;150;152;150mstep-5-previe…\e[0m\e[K\r
+\e[38;2;192;128;80m› OpenCode Go   Step Preview Free 5           high          256K  \e[38;2;150;152;150m\e[38;2;192;128;80mstep-5-previe…\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M  \e[38;2;150;152;150mdeepseek-v4-f…\e[0m\e[K\r
   Codex         Codex 5.3                     medium ⚡     272K  \e[38;2;150;152;150mgpt-5.3-codex\e[0m\e[K\r
   OpenCode Go   MiniMax M3                    —               1M  \e[38;2;150;152;150mminimax-m3\e[0m\e[K\r
@@ -261,7 +261,7 @@
 === 80 columns, cost ↓, filter "" ===
 \e[H\e[38;2;150;152;150mFilter: \e[0m                          ctrl+s\e[38;2;150;152;150m sort: cost ↓\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context  Identifier\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› Codex         Sol Pro                       medium        272K  \e[38;2;150;152;150mgpt-5.3-sol-p…\e[0m\e[K\r
+\e[38;2;192;128;80m› Codex         Sol Pro                       medium        272K  \e[38;2;150;152;150m\e[38;2;192;128;80mgpt-5.3-sol-p…\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
   Anthropic     Opus 5                        high          200K  \e[38;2;150;152;150mclaude-opus-5\e[0m\e[K\r
   Anthropic     Sonnet 5                      medium        200K  \e[38;2;150;152;150mclaude-sonnet…\e[0m\e[K\r
   OpenCode Go   MiniMax M3                    —               1M  \e[38;2;150;152;150mminimax-m3\e[0m\e[K\r
@@ -274,7 +274,7 @@
 === 80 columns, provider, filter "opencode" ===
 \e[H\e[38;2;150;152;150mFilter: \e[0mopencode                ctrl+s\e[38;2;150;152;150m sort: provider\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context  Identifier\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M  \e[38;2;150;152;150mdeepseek-v4-f…\e[0m\e[K\r
+\e[38;2;192;128;80m› OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M  \e[38;2;150;152;150m\e[38;2;192;128;80mdeepseek-v4-f…\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
   OpenCode Go   MiniMax M3                    —               1M  \e[38;2;150;152;150mminimax-m3\e[0m\e[K\r
   OpenCode Go   Step Preview Free 5           high          256K  \e[38;2;150;152;150mstep-5-previe…\e[0m\e[K\r
 \e[K\r
@@ -287,7 +287,7 @@
 === 80 columns, cost ↑, filter "opencode" ===
 \e[H\e[38;2;150;152;150mFilter: \e[0mopencode                  ctrl+s\e[38;2;150;152;150m sort: cost ↑\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context  Identifier\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› OpenCode Go   Step Preview Free 5           high          256K  \e[38;2;150;152;150mstep-5-previe…\e[0m\e[K\r
+\e[38;2;192;128;80m› OpenCode Go   Step Preview Free 5           high          256K  \e[38;2;150;152;150m\e[38;2;192;128;80mstep-5-previe…\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M  \e[38;2;150;152;150mdeepseek-v4-f…\e[0m\e[K\r
   OpenCode Go   MiniMax M3                    —               1M  \e[38;2;150;152;150mminimax-m3\e[0m\e[K\r
 \e[K\r
@@ -300,7 +300,7 @@
 === 80 columns, cost ↓, filter "opencode" ===
 \e[H\e[38;2;150;152;150mFilter: \e[0mopencode                  ctrl+s\e[38;2;150;152;150m sort: cost ↓\e[0m\e[38;2;150;152;150m · \e[0menter\e[38;2;150;152;150m choose\e[0m\e[38;2;150;152;150m · \e[0mesc\e[38;2;150;152;150m close\e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context  Identifier\e[0m\e[0m\e[K\r
-\e[38;2;192;128;80m› OpenCode Go   MiniMax M3                    —               1M  \e[38;2;150;152;150mminimax-m3\e[0m\e[K\r
+\e[38;2;192;128;80m› OpenCode Go   MiniMax M3                    —               1M  \e[38;2;150;152;150m\e[38;2;192;128;80mminimax-m3\e[0m\e[38;2;192;128;80m\e[0m\e[K\r
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M  \e[38;2;150;152;150mdeepseek-v4-f…\e[0m\e[K\r
   OpenCode Go   Step Preview Free 5           high          256K  \e[38;2;150;152;150mstep-5-previe…\e[0m\e[K\r
 \e[K\r

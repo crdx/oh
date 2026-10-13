@@ -1,7 +1,7 @@
 \e[?1049h\e[?25l\e[H\e[38;2;150;152;150mFilter: \e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Agent  Title\e[0m\e[0m\e[K\r
   chewy-sardine   why does the spinner stutte…\e[K\r
-› thick-poodle    add support for reasoning t…\e[K\r
+\e[38;2;192;128;80m› thick-poodle    add support for reasoning t…\e[0m\e[K\r
   quiet-marmot    tidy the changelog\e[K\r
 \e[K\r
 \e[K\r
@@ -73,7 +73,7 @@ The prompt is drawn by layout, which wraps th…\e[0m\e[K\r
 \e[38;2;150;152;150m──────────────────────────────────────────────\e[0m\e[K\e[J\e[H\e[38;2;150;152;150mFilter: \e[0m\e[K\r
 \e[4m\e[38;2;150;152;150m  Agent  Title\e[0m\e[0m\e[K\r
   chewy-sardine   why does the spinner stutte…\e[K\r
-› thick-poodle    add support for reasoning t…\e[K\r
+\e[38;2;192;128;80m› thick-poodle    add support for reasoning t…\e[0m\e[K\r
   quiet-marmot    tidy the changelog\e[K\r
 \e[K\r
 \e[K\r

@@ -600,7 +600,12 @@ func (self *state) draw() {
 
 	for at := self.offset; at < self.offset+rows; at++ {
 		if at < len(self.matches) {
-			output.WriteString(self.list.Row(self.matches[at], at == self.cursor, room))
+			isChosen := at == self.cursor
+			line := self.list.Row(self.matches[at], isChosen, room)
+			if isChosen {
+				line = style.ChosenRow.ForceOver(line)
+			}
+			output.WriteString(line)
 		}
 		output.WriteString(eraseLine)
 		if at+1 < self.offset+rows {

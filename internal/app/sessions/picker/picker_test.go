@@ -36,18 +36,18 @@ func TestEveryConversationIsDrawnAlikeWhateverItHolds(t *testing.T) {
 	if got, want := self.Row(1, false, 80), style.Answer(row(self.at(1), false, 80)); got != want {
 		t.Errorf("expected a longer conversation to be drawn plainly, got %q", got)
 	}
-	if got, want := self.Row(0, true, 80), style.ChosenRow(row(self.at(0), true, 80)); got != want {
-		t.Errorf("expected the chosen row to keep its own colour, got %q", got)
+	if got, want := self.Row(0, true, 80), style.Answer(row(self.at(0), true, 80)); got != want {
+		t.Errorf("expected the chosen row to leave its selection colour to the menu, got %q", got)
 	}
 	if got, want := self.Row(2, false, 80), style.RunningSession(row(self.at(2), false, 80)); got != want {
 		t.Errorf("expected a running session to stay running whatever it holds, got %q", got)
 	}
-	if got, want := self.Row(2, true, 80), style.ChosenRunningSession(row(self.at(2), true, 80)); got != want {
-		t.Errorf("expected the chosen row to take its colour even while running, got %q", got)
+	if got, want := self.Row(2, true, 80), style.RunningSession(row(self.at(2), true, 80)); got != want {
+		t.Errorf("expected a running row to keep its semantic style before the menu applies selection, got %q", got)
 	}
 }
 
-func TestAChosenSessionFromAnotherWorkspaceUsesTheOrdinaryChosenStyle(t *testing.T) {
+func TestAChosenSessionFromAnotherWorkspaceLeavesSelectionColourToTheMenu(t *testing.T) {
 	storedSession := &Session{Name: "wiry-turtle", IsOtherWorkspace: true}
 	self := &sessionList{
 		store:               Store{Sessions: []*Session{storedSession}},
@@ -55,9 +55,9 @@ func TestAChosenSessionFromAnotherWorkspaceUsesTheOrdinaryChosenStyle(t *testing
 	}
 
 	got := self.Row(0, true, 120)
-	want := style.ChosenRow.Over(rowInView(storedSession, true, 120, true))
+	want := style.OtherWorkspaceSession.Over(rowInView(storedSession, true, 120, true))
 	if got != want {
-		t.Errorf("expected the ordinary chosen style, got %q", got)
+		t.Errorf("expected the workspace style before the menu applies selection, got %q", got)
 	}
 }
 
