@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Colour model costs using fixed bands
 - Round all model price columns to two decimal places
 - Sort model listings by cost and cycle picker sorting with ctrl+s
 - Compare model costs using a new, better estimator

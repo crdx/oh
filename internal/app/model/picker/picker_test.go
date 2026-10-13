@@ -4,6 +4,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"math"
 	"os"
 	"path/filepath"
 	"slices"
@@ -414,8 +415,43 @@ func TestTheCostColumnFitsSmallEstimatesInEveryCurrency(t *testing.T) {
 	}
 }
 
+func TestCostColoursUseFixedDollarBoundaries(t *testing.T) {
+	for _, test := range []struct {
+		dollars float64
+		want    style.Style
+	}{
+		{dollars: 0, want: style.LowPrice},
+		{dollars: math.Nextafter(1, 0), want: style.LowPrice},
+		{dollars: 1, want: style.MediumPrice},
+		{dollars: math.Nextafter(5, 0), want: style.MediumPrice},
+		{dollars: 5, want: style.HighPrice},
+		{dollars: math.Nextafter(10, 0), want: style.HighPrice},
+		{dollars: 10, want: style.WtfPrice},
+		{dollars: 100, want: style.WtfPrice},
+	} {
+		if got := costStyle(test.dollars)("cost"); got != test.want("cost") {
+			t.Errorf("cost %v: got %q, want %q", test.dollars, got, test.want("cost"))
+		}
+	}
+}
+
+func TestCurrencyConversionNeverChangesTheCostColour(t *testing.T) {
+	prices := &agent.TokenPrices{Input: 1, Output: 1, CacheRead: 0.1, CacheWrite: 1}
+	dollars := prices.EstimatedRequestCost() * costRequestCount
+	for _, currency := range []money.Currency{
+		money.Dollar(),
+		money.In("GBP", 0.1),
+		money.In("JPY", 200),
+	} {
+		want := style.MediumPrice(currency.FormatPrice(dollars))
+		if got := estimatedCost(prices, currency); got != want {
+			t.Errorf("currency %s: got %q, want %q", currency.Code, got, want)
+		}
+	}
+}
+
 func TestAnUnknownCostIsADashRatherThanAnEstimate(t *testing.T) {
-	if got := estimatedCost(nil, money.Dollar()); got != unknownQuantity {
+	if got := estimatedCost(nil, money.Dollar()); got != style.Subtle(unknownQuantity) {
 		t.Errorf("got %q, want a dash", got)
 	}
 }
@@ -428,7 +464,7 @@ func TestFreeModelsShowZeroInEveryPriceColumn(t *testing.T) {
 		"input":          price(prices, pounds, inputRate),
 		"output":         price(prices, pounds, outputRate),
 	} {
-		if got != "£0.00" {
+		if style.Plain(got) != "£0.00" {
 			t.Errorf("%s: got %q, want £0.00", name, got)
 		}
 	}
@@ -437,7 +473,7 @@ func TestFreeModelsShowZeroInEveryPriceColumn(t *testing.T) {
 func TestEveryModelPriceColumnStopsAtTwoDecimalPlaces(t *testing.T) {
 	prices := &agent.TokenPrices{Input: 0.01, Output: 0.02, CacheRead: 0.001}
 	pounds := money.In("GBP", 0.8)
-	if got := estimatedCost(prices, pounds); got != "£0.02" {
+	if got := style.Plain(estimatedCost(prices, pounds)); got != "£0.02" {
 		t.Errorf("estimated cost: got %q, want £0.02", got)
 	}
 	if got := price(prices, pounds, inputRate); got != "<£0.01" {
@@ -461,7 +497,7 @@ func TestCheapModelsHaveDistinctHundredRequestEstimates(t *testing.T) {
 		{prices: agent.TokenPrices{Input: 0.01, Output: 0.02, CacheRead: 0.001}, want: "£0.02"},
 		{prices: agent.TokenPrices{Input: 0.02, Output: 0.04, CacheRead: 0.002}, want: "£0.03"},
 	} {
-		if got := estimatedCost(&test.prices, money.In("GBP", 0.8)); got != test.want {
+		if got := style.Plain(estimatedCost(&test.prices, money.In("GBP", 0.8))); got != test.want {
 			t.Errorf("got %q, want %q", got, test.want)
 		}
 	}
@@ -469,10 +505,10 @@ func TestCheapModelsHaveDistinctHundredRequestEstimates(t *testing.T) {
 
 func TestTheCostColumnEstimatesOneHundredRequestsInTheChosenCurrency(t *testing.T) {
 	prices := &agent.TokenPrices{Input: 1.25, Output: 10, CacheRead: 0.125}
-	if got := estimatedCost(prices, money.Dollar()); got != "$3.01" {
+	if got := style.Plain(estimatedCost(prices, money.Dollar())); got != "$3.01" {
 		t.Errorf("got %q", got)
 	}
-	if got := estimatedCost(prices, money.In("GBP", 0.8)); got != "£2.41" {
+	if got := style.Plain(estimatedCost(prices, money.In("GBP", 0.8))); got != "£2.41" {
 		t.Errorf("got %q", got)
 	}
 }

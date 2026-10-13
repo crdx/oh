@@ -45,6 +45,12 @@ const (
 		costColumn + inputColumn + outputColumn + identifierColumn + rateGaps*table.Gap
 )
 
+const (
+	mediumCostFrom  = 1.0
+	highCostFrom    = 5.0
+	extremeCostFrom = 10.0
+)
+
 type Effort struct {
 	Level  string
 	IsFast bool
@@ -265,10 +271,25 @@ func contextWindow(tokens int) string {
 
 func estimatedCost(prices *agent.TokenPrices, currency money.Currency) string {
 	if prices == nil {
-		return unknownQuantity
+		return style.Subtle(unknownQuantity)
 	}
 
-	return currency.FormatPrice(prices.EstimatedRequestCost() * costRequestCount)
+	dollars := prices.EstimatedRequestCost() * costRequestCount
+
+	return costStyle(dollars)(currency.FormatPrice(dollars))
+}
+
+func costStyle(dollars float64) style.Style {
+	switch {
+	case dollars >= extremeCostFrom:
+		return style.WtfPrice
+	case dollars >= highCostFrom:
+		return style.HighPrice
+	case dollars >= mediumCostFrom:
+		return style.MediumPrice
+	default:
+		return style.LowPrice
+	}
 }
 
 func inputRate(prices agent.TokenPrices) float64 {
