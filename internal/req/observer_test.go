@@ -67,3 +67,40 @@ func TestObserverSeesTheBytesConsumedByTheCaller(t *testing.T) {
 		t.Errorf("unexpected response snapshot: %+v", exchange.response)
 	}
 }
+
+func TestABodyCompletedBeforeItsCloseIsNotAnIncompleteClose(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		_, _ = writer.Write([]byte("whole response and more"))
+	}))
+	t.Cleanup(server.Close)
+
+	exchange := &observedExchange{}
+	client := req.New(time.Second)
+	client.Observe(observer{exchange: exchange})
+	body, _, err := client.Stream(t.Context(), server.URL, map[string]string{}, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	consumed := make([]byte, len("whole response"))
+	if _, err := io.ReadFull(body, consumed); err != nil {
+		t.Fatal(err)
+	}
+	completer, isCompleter := body.(interface{ Complete() })
+	if !isCompleter {
+		t.Fatal("expected an observed body to be completable")
+	}
+	completer.Complete()
+	if _, err := io.ReadFull(body, make([]byte, len(" and"))); err != nil {
+		t.Fatal(err)
+	}
+	if err := body.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	if !exchange.isFinished || exchange.incomplete || exchange.err != nil {
+		t.Errorf("expected a completed exchange, got %+v", exchange)
+	}
+	if string(exchange.body) != "whole response" {
+		t.Errorf("expected nothing observed after completion, got %q", exchange.body)
+	}
+}

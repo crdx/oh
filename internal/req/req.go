@@ -253,13 +253,17 @@ type observedBody struct {
 
 func (self *observedBody) Read(buffer []byte) (int, error) {
 	count, err := self.ReadCloser.Read(buffer)
-	if count > 0 {
+	if count > 0 && !self.isFinished {
 		self.observer.Body(time.Now(), bytes.Clone(buffer[:count]))
 	}
 	if err != nil {
 		self.finish(err, false)
 	}
 	return count, err
+}
+
+func (self *observedBody) Complete() {
+	self.finish(nil, false)
 }
 
 func (self *observedBody) Close() error {

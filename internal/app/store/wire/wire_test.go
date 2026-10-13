@@ -4,9 +4,11 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
+	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"strings"
@@ -17,6 +19,7 @@ import (
 
 	"crdx.org/oh/internal/app/store/wire"
 	"crdx.org/oh/internal/req"
+	"crdx.org/oh/internal/sse"
 )
 
 func TestANewTranscriptOpensWithItsHeaderAndNumbersFromOne(t *testing.T) {
@@ -679,5 +682,61 @@ func TestANestedErrorCodeIsKeptWhileATopLevelOAuthCodeIsCensored(t *testing.T) {
 	}
 	if strings.Count(transcript, "[REDACTED]") != 1 {
 		t.Errorf("expected one replacement, got:\n%s", transcript)
+	}
+}
+
+func TestAStreamReadToItsOwnEndIsRecordedAsCompleted(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		writer.Header().Set("Content-Type", "text/event-stream")
+		_, _ = writer.Write([]byte("data: one\n\ndata: [DONE]\n\n"))
+		_ = http.NewResponseController(writer).Flush()
+		<-request.Context().Done()
+	}))
+	t.Cleanup(server.Close)
+
+	errUnwanted := errors.New("unwanted")
+	for name, test := range map[string]struct {
+		failure   error
+		wantState string
+	}{
+		"read to the end":         {wantState: " completed\n"},
+		"abandoned partway along": {failure: errUnwanted, wantState: " incomplete close\n"},
+	} {
+		t.Run(name, func(t *testing.T) {
+			path := filepath.Join(t.TempDir(), "wire.http.zst")
+			recorder, err := wire.Open(path, wire.Meta{Name: "tame-impala", StartedAt: time.Unix(1, 0)}, func(err error) {
+				t.Errorf("unexpected recorder failure: %v", err)
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			client := req.New(time.Second)
+			client.Observe(recorder)
+			body, _, err := client.Stream(t.Context(), server.URL, map[string]string{}, nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err := sse.Read(body, func(payload string) (bool, error) {
+				return payload == "[DONE]", test.failure
+			}); !errors.Is(err, test.failure) {
+				t.Fatal(err)
+			}
+			if err := body.Close(); err != nil {
+				t.Fatal(err)
+			}
+			if err := recorder.Close(); err != nil {
+				t.Fatal(err)
+			}
+
+			transcript := decompressed(t, path)
+			endAt := strings.Index(transcript, "# exchange 1 end ")
+			if endAt < 0 {
+				t.Fatalf("expected the exchange to end in:\n%s", transcript)
+			}
+			if end, _, _ := strings.Cut(transcript[endAt:], "\n"); !strings.HasSuffix(end+"\n", test.wantState) {
+				t.Errorf("expected the exchange to end%q, got %q", test.wantState, end)
+			}
+		})
 	}
 }

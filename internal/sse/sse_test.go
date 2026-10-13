@@ -221,3 +221,41 @@ func TestTheReadersOwnFailureIsHandedBack(t *testing.T) {
 		t.Errorf("expected the reader's own failure, got %v", err)
 	}
 }
+
+type completingReader struct {
+	io.Reader
+
+	isComplete bool
+}
+
+func (self *completingReader) Complete() {
+	self.isComplete = true
+}
+
+func TestAStreamIsCompletedWhenItsLastPayloadArrives(t *testing.T) {
+	tests := map[string]struct {
+		stream         string
+		done           bool
+		failure        error
+		wantIsComplete bool
+	}{
+		"the stream's own end":                 {stream: "data: end\n\n", done: true, wantIsComplete: true},
+		"an end that also reports a failure":   {stream: "data: end\n\n", done: true, failure: errors.New("cut short"), wantIsComplete: true},
+		"a failure partway through the stream": {stream: "data: one\n\n", failure: errors.New("unreadable"), wantIsComplete: false},
+		"a stream that stops before its end":   {stream: "data: one\n\n", wantIsComplete: false},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			body := &completingReader{Reader: strings.NewReader(test.stream)}
+
+			_ = sse.Read(body, func(string) (bool, error) {
+				return test.done, test.failure
+			})
+
+			if body.isComplete != test.wantIsComplete {
+				t.Errorf("expected complete %t, got %t", test.wantIsComplete, body.isComplete)
+			}
+		})
+	}
+}

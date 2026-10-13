@@ -22,6 +22,10 @@ func (truncation) RetryAfter() time.Duration { return 0 }
 
 type Step func(payload string) (bool, error)
 
+type completer interface {
+	Complete()
+}
+
 func Read(body io.Reader, step Step) error {
 	reader := bufio.NewReader(body)
 
@@ -46,7 +50,12 @@ func Read(body io.Reader, step Step) error {
 			data.Reset()
 
 			if payload != "" {
-				switch done, err := step(payload); {
+				done, err := step(payload)
+				if stream, isCompleter := body.(completer); done && isCompleter {
+					stream.Complete()
+				}
+
+				switch {
 				case err != nil:
 					return err
 				case done:
