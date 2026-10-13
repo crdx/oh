@@ -456,13 +456,25 @@ func TestAnUnknownCostIsADashRatherThanAnEstimate(t *testing.T) {
 	}
 }
 
-func TestFreeModelsShowZeroInEveryPriceColumn(t *testing.T) {
+func TestFreeModelsShowAGreenDashInEveryCurrency(t *testing.T) {
+	prices := &agent.TokenPrices{}
+	for _, currency := range []money.Currency{
+		money.Dollar(),
+		money.In("GBP", 0.8),
+		money.In("JPY", 200),
+	} {
+		if got := estimatedCost(prices, currency); got != style.LowPrice("—") {
+			t.Errorf("currency %s: got %q, want a green em dash", currency.Code, got)
+		}
+	}
+}
+
+func TestFreeModelsKeepZeroInTheTokenPriceColumns(t *testing.T) {
 	prices := &agent.TokenPrices{}
 	pounds := money.In("GBP", 0.8)
 	for name, got := range map[string]string{
-		"estimated cost": estimatedCost(prices, pounds),
-		"input":          price(prices, pounds, inputRate),
-		"output":         price(prices, pounds, outputRate),
+		"input":  price(prices, pounds, inputRate),
+		"output": price(prices, pounds, outputRate),
 	} {
 		if style.Plain(got) != "£0.00" {
 			t.Errorf("%s: got %q, want £0.00", name, got)

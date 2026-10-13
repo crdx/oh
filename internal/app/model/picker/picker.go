@@ -270,6 +270,9 @@ func estimatedCost(prices *agent.TokenPrices, currency money.Currency) string {
 	}
 
 	dollars := prices.EstimatedRequestCost() * costRequestCount
+	if dollars == 0 {
+		return style.LowPrice(unknownQuantity)
+	}
 
 	return costStyle(dollars)(currency.FormatPrice(dollars))
 }

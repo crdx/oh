@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Show free model costs as a green em dash
 - Implement selected row highlighting in picker itself
 - Store the analysis cache under the state dir
 - Stop counting sessions stopped or refused before first response as legacy

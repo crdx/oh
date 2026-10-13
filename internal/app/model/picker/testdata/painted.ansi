@@ -7,7 +7,7 @@
   Anthropic     Opus 5                        high          200K      \e[38;2;204;102;102m$35.05\e[0m     $15.00     $75.00  \e[38;2;150;152;150mclaude-opus-5\e[0m\e[K\r
   Codex         Sol Pro                       medium        272K    \e[38;2;204;102;102m$2595.18\e[0m    $150.00    $600.00  \e[38;2;150;152;150mgpt-5.3-sol-pro\e[0m\e[K\r
   OpenCode Go   MiniMax M3                    —               1M       \e[38;2;207;173;0m$5.19\e[0m      $0.30      $1.20  \e[38;2;150;152;150mminimax-m3\e[0m\e[K\r
-  OpenCode Go   Step Preview Free 5           high          256K       \e[38;2;76;154;44m$0.00\e[0m      $0.00      $0.00  \e[38;2;150;152;150mstep-5-preview-free\e[0m\e[K\r
+  OpenCode Go   Step Preview Free 5           high          256K           \e[38;2;76;154;44m—\e[0m      $0.00      $0.00  \e[38;2;150;152;150mstep-5-preview-free\e[0m\e[K\r
   Ollama        Qwen Coder 3 30B              medium           —           \e[38;2;150;152;150m—\e[0m          —          —  \e[38;2;150;152;150mqwen3-coder:30b\e[0m\e[K\r
 \e[K\r
 \e[K\r

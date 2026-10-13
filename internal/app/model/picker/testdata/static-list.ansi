@@ -1,6 +1,6 @@
 --- 150 columns ---
 [4m[38;2;150;152;150m  Provider      Model                         Effort     Context      Cost ↑      Input     Output  Identifier[0m[0m
-  OpenCode Go   Step Preview Free 5           high          256K       [38;2;76;154;44m$0.00[0m      $0.00      $0.00  [38;2;150;152;150mstep-5-preview-free[0m
+  OpenCode Go   Step Preview Free 5           high          256K           [38;2;76;154;44m—[0m      $0.00      $0.00  [38;2;150;152;150mstep-5-preview-free[0m
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       [38;2;129;162;190m$1.30[0m      $0.08      $0.30  [38;2;150;152;150mdeepseek-v4-flash-vision-exp[0m
   Codex         Codex 5.3                     medium ⚡     272K       [38;2;129;162;190m$3.01[0m      $1.25     $10.00  [38;2;150;152;150mgpt-5.3-codex[0m
   OpenCode Go   MiniMax M3                    —               1M       [38;2;207;173;0m$5.19[0m      $0.30      $1.20  [38;2;150;152;150mminimax-m3[0m
@@ -11,7 +11,7 @@
 
 --- 100 columns ---
 [4m[38;2;150;152;150m  Provider      Model                         Effort     Context      Cost ↑  Identifier[0m[0m
-  OpenCode Go   Step Preview Free 5           high          256K       [38;2;76;154;44m$0.00[0m  [38;2;150;152;150mstep-5-preview-free[0m
+  OpenCode Go   Step Preview Free 5           high          256K           [38;2;76;154;44m—[0m  [38;2;150;152;150mstep-5-preview-free[0m
   OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       [38;2;129;162;190m$1.30[0m  [38;2;150;152;150mdeepseek-v4-flash-vis…[0m
   Codex         Codex 5.3                     medium ⚡     272K       [38;2;129;162;190m$3.01[0m  [38;2;150;152;150mgpt-5.3-codex[0m
   OpenCode Go   MiniMax M3                    —               1M       [38;2;207;173;0m$5.19[0m  [38;2;150;152;150mminimax-m3[0m
