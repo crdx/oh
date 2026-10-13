@@ -139,7 +139,7 @@ func (self *sessionGoldenChildren) serves(writer http.ResponseWriter, request *h
 		http.Error(writer, "no message was queued for "+name, http.StatusConflict)
 		return true
 	}
-	serveSessionGoldenResponse(writer, request, response, make(chan struct{}, 1))
+	serveSessionGoldenResponse(writer, request, response, make(chan struct{}, 1), make(chan struct{}, 1))
 	return true
 }
 

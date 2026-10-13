@@ -7,13 +7,15 @@ import (
 	"crdx.org/oh/pkg/agent"
 )
 
-const responsesSuffix = "/responses"
+const (
+	responsesSuffix = "/responses"
+	modelsSuffix    = "/models"
 
-const modelsSuffix = "/models"
+	ClientVersion = "0.162.1"
 
-const ClientVersion = "0.162.1"
-
-const listedVisibility = "list"
+	listedVisibility = "list"
+	delegationMode   = "ultra"
+)
 
 func SupportsResponses(id string) bool {
 	for segment := range strings.SplitSeq(id, "-") {
@@ -50,7 +52,7 @@ func (self listedModel) efforts() []string {
 	efforts := make([]string, 0, len(self.Levels))
 
 	for _, level := range self.Levels {
-		if level.Effort != "" {
+		if level.Effort != "" && level.Effort != delegationMode {
 			efforts = append(efforts, level.Effort)
 		}
 	}

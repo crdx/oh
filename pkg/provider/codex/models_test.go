@@ -62,6 +62,27 @@ func TestModelsComeFromTheCodexCatalogue(t *testing.T) {
 	}
 }
 
+func TestTheCodexDelegationModeIsNotOfferedAsAnEffort(t *testing.T) {
+	models, _ := listModels(t, `{"models":[
+		{"slug":"first","display_name":"First","visibility":"list",
+			"supported_reasoning_levels":[{"effort":"high"},{"effort":"max"},{"effort":"ultra"}]},
+		{"slug":"second","display_name":"Second","visibility":"list",
+			"supported_reasoning_levels":[{"effort":"ultra"}]}
+	]}`)
+
+	if len(models) != 2 {
+		t.Fatalf("got models %+v", models)
+	}
+
+	if !slices.Equal(models[0].EffortLevels, []string{"high", "max"}) {
+		t.Errorf("expected ultra to be left out, got effort levels %v", models[0].EffortLevels)
+	}
+
+	if len(models[1].EffortLevels) != 0 {
+		t.Errorf("expected a model offering only ultra to have no known efforts, got %v", models[1].EffortLevels)
+	}
+}
+
 func TestModelsCodexCannotDriveAreNotOffered(t *testing.T) {
 	models, _ := listModels(t, `{"models":[
 		{"slug":"first","display_name":"First","visibility":"list"},

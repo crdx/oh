@@ -5,6 +5,7 @@
 ### Changes
 
 - Use OpenCode Zen info for missing OpenCode Go model data
+- Ignore Codex `ultra` delegation mode
 
 ## [0.15.3] - 2026-10-13
 

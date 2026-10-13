@@ -19935,6 +19935,7 @@ func serveSessionGoldenResponse(
 	request *http.Request,
 	response sessionGoldenResponse,
 	cancelSignals chan<- struct{},
+	holdSignals chan<- struct{},
 ) {
 	if response.RefuseConnection {
 		resetSessionGoldenConnection(writer)
@@ -19974,6 +19975,7 @@ func serveSessionGoldenResponse(
 		}
 	}
 	if response.WaitForCancellation {
+		holdSignals <- struct{}{}
 		<-request.Context().Done()
 	}
 }
@@ -20262,6 +20264,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		append(slices.Clone(scenario.FirstTurn.Responses), scenario.ResumeTurn.Responses...),
 	)
 	cancelSignals := make(chan struct{}, len(responses))
+	holdSignals := make(chan struct{}, len(responses))
 	var requestCount atomic.Int32
 	var requestMutex sync.Mutex
 	var requestBodies [][]byte
@@ -20284,7 +20287,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 			http.Error(writer, "scenario has no response for this request", http.StatusConflict)
 			return
 		}
-		serveSessionGoldenResponse(writer, request, responses[requestIndex], cancelSignals)
+		serveSessionGoldenResponse(writer, request, responses[requestIndex], cancelSignals, holdSignals)
 	}))
 	defer server.Close()
 
@@ -20396,7 +20399,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 		firstAssistant.AddNotes(firstHarness.takeSettledNotes())
 	}
 	firstHarness.currentTurn = Turn{Stream: testRunningTurnStream(), painter: firstHarness.newPainter(true)}
-	firstTurns := runSessionGoldenTurn(t, firstHarness, scenario.FirstTurn, cancelSignals, children)
+	firstTurns := runSessionGoldenTurn(t, firstHarness, scenario.FirstTurn, cancelSignals, holdSignals, children)
 	firstHarness.dropPendingInput()
 	if children != nil {
 		if scenario.SubagentsKilled {
@@ -20517,7 +20520,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	)
 	resumedHarness.settleAccess()
 	resumedAssistant.AddNotes(resumedHarness.prelude())
-	resumeTurns := runSessionGoldenTurn(t, resumedHarness, scenario.ResumeTurn, cancelSignals, children)
+	resumeTurns := runSessionGoldenTurn(t, resumedHarness, scenario.ResumeTurn, cancelSignals, holdSignals, children)
 	resumedHarness.dropPendingInput()
 
 	printedScreen := printedSessionIsImpossible
@@ -21115,11 +21118,57 @@ func drawPrintedSessionGoldenTurn(
 	return drawn
 }
 
+type heldStreamDeadline struct {
+	done chan struct{}
+}
+
+func newHeldStreamDeadline(
+	parent context.Context, holdSignals <-chan struct{}, timeout time.Duration,
+) heldStreamDeadline {
+	deadline := heldStreamDeadline{done: make(chan struct{})}
+
+	go func() {
+		defer close(deadline.done)
+
+		select {
+		case <-holdSignals:
+		case <-parent.Done():
+			return
+		}
+
+		timer := time.NewTimer(timeout)
+		defer timer.Stop()
+
+		select {
+		case <-timer.C:
+		case <-parent.Done():
+		}
+	}()
+
+	return deadline
+}
+
+func (heldStreamDeadline) Deadline() (time.Time, bool) { return time.Time{}, false }
+
+func (self heldStreamDeadline) Done() <-chan struct{} { return self.done }
+
+func (self heldStreamDeadline) Err() error {
+	select {
+	case <-self.done:
+		return context.DeadlineExceeded
+	default:
+		return nil
+	}
+}
+
+func (heldStreamDeadline) Value(any) any { return nil }
+
 func runSessionGoldenTurn(
 	t *testing.T,
 	testHarness *App,
 	turn sessionGoldenTurn,
 	cancelSignals <-chan struct{},
+	holdSignals <-chan struct{},
 	children *sessionGoldenChildren,
 ) [][]TurnEvent {
 	t.Helper()
@@ -21136,9 +21185,7 @@ func runSessionGoldenTurn(
 		if err != nil {
 			t.Fatal(err)
 		}
-		timed, stopTimer := context.WithTimeout(t.Context(), timeout)
-		defer stopTimer()
-		streamContext, cancel = context.WithCancelCause(timed)
+		streamContext, cancel = context.WithCancelCause(newHeldStreamDeadline(t.Context(), holdSignals, timeout))
 	}
 	defer cancel(nil)
 	testHarness.currentTurn.Stream = testRunningTurnStreamWithCancel(cancel)
