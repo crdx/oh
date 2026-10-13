@@ -1233,7 +1233,7 @@ func (self *App) queue(columns int) painter.Queue {
 	}
 
 	messages := self.currentTurn.GetInterjections()
-	if !self.queueRevealAt.IsZero() && self.getNow().Before(self.queueRevealAt) {
+	if self.currentTurn.Cancelled() && !self.queueRevealAt.IsZero() && self.getNow().Before(self.queueRevealAt) {
 		messages = nil
 	}
 
@@ -1512,7 +1512,7 @@ func (self *App) nextRefresh(at time.Time) time.Time {
 }
 
 func (self *App) nextQueueReveal(at time.Time) time.Time {
-	if at.Before(self.queueRevealAt) && self.currentTurn.HasInterjections() {
+	if self.currentTurn.Cancelled() && at.Before(self.queueRevealAt) && self.currentTurn.HasInterjections() {
 		return self.queueRevealAt
 	}
 

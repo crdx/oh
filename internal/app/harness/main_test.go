@@ -3066,7 +3066,7 @@ func TestAFlushedQueueStandsOnScreenUntilTheTurnItStoppedGivesWay(t *testing.T) 
 	}
 }
 
-func TestAFastQueuedMessageSkipsTheNoticeButStartsItsTurnAtOnce(t *testing.T) {
+func TestAQueuedMessageAppearsImmediatelyAndStartsItsTurnAtOnce(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
 	self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
@@ -3079,11 +3079,11 @@ func TestAFastQueuedMessageSkipsTheNoticeButStartsItsTurnAtOnce(t *testing.T) {
 
 	typeMessage(t, self, inputLine, history, "check the other path too")
 	self.show(inputLine)
-	if drawn := drawnQueue(self); drawn != "" {
-		t.Errorf("queued message appeared before 100 ms: %q", drawn)
+	if drawn := drawnQueue(self); !strings.Contains(drawn, "check the other path too") {
+		t.Errorf("queued message did not appear immediately: %q", drawn)
 	}
-	if got := self.nextRefresh(queuedAt); !got.Equal(queuedAt.Add(queuedNoticeDelay)) {
-		t.Errorf("queue refresh = %s, want %s", got, queuedAt.Add(queuedNoticeDelay))
+	if got := self.nextQueueReveal(queuedAt); !got.IsZero() {
+		t.Errorf("queued message requested a delayed redraw at %s", got)
 	}
 
 	currentTime = queuedAt.Add(queuedNoticeDelay - time.Millisecond)
@@ -3102,7 +3102,7 @@ func TestAFastQueuedMessageSkipsTheNoticeButStartsItsTurnAtOnce(t *testing.T) {
 	}
 }
 
-func TestAQueuedNoticeAppearsAfter100msOnlyWhileItsMessageIsWaiting(t *testing.T) {
+func TestAnInterruptingNoticeAppearsAfter100msOnlyWhileItsMessageIsWaiting(t *testing.T) {
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
 	self.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
@@ -3114,6 +3114,7 @@ func TestAQueuedNoticeAppearsAfter100msOnlyWhileItsMessageIsWaiting(t *testing.T
 	inputLine := edit.NewInput(history)
 
 	self.currentTurn.Interject("first")
+	self.currentTurn.SetCancelled(true)
 	self.show(inputLine)
 	currentTime = queuedAt.Add(queuedNoticeDelay - time.Millisecond)
 	self.currentTurn.Interject("second")
@@ -3134,6 +3135,7 @@ func TestAQueuedNoticeAppearsAfter100msOnlyWhileItsMessageIsWaiting(t *testing.T
 	if got := self.nextQueueReveal(currentTime); !got.IsZero() {
 		t.Errorf("queue asked to redraw again after its notice appeared: %s", got)
 	}
+	self.currentTurn.SetCancelled(false)
 	self.finish()
 	for report := range self.currentTurn.Events() {
 		self.takeTurn(report)
@@ -13885,6 +13887,7 @@ const (
 	queuedBesideFeedback
 	queuedFlushed
 	queuedQuickHandoff
+	queuedImmediate
 	queuedDelivered
 	queuedInterruptedWithAlt
 	queuedInterruptedWithEnter
@@ -13922,7 +13925,8 @@ func TestGoldenQueuedMessagesDrawEveryVisibleState(t *testing.T) {
 		"taken back while typing":                       func() string { return queuedMessagesStream(t, queuedTakenBackWhileTyping) },
 		"feedback beside the queue":                     func() string { return queuedMessagesStream(t, queuedBesideFeedback) },
 		"flushed at a stopping turn":                    func() string { return queuedMessagesStream(t, queuedFlushed) },
-		"quick delivery stays unboxed":                  func() string { return queuedMessagesStream(t, queuedQuickHandoff) },
+		"quick delivery shows its queue":                func() string { return queuedMessagesStream(t, queuedQuickHandoff) },
+		"queue appears immediately":                     func() string { return queuedMessagesStream(t, queuedImmediate) },
 		"delivered at the boundary":                     func() string { return queuedMessagesStream(t, queuedDelivered) },
 		"alt interrupts":                                func() string { return queuedMessagesStream(t, queuedInterruptedWithAlt) },
 		"swapped enter interrupts":                      func() string { return queuedMessagesStream(t, queuedInterruptedWithEnter) },
@@ -13950,10 +13954,10 @@ func TestGoldenQueuedMessagesDrawEveryVisibleState(t *testing.T) {
 	compareWithGolden(t, "queued-messages", ".screen", shownPasses(t, passes))
 }
 
-func TestAQuickDeliveryNeverPaintsTheQueuedNotice(t *testing.T) {
+func TestAQuickDeliveryShowsTheQueuedNoticeImmediately(t *testing.T) {
 	stream := queuedMessagesStream(t, queuedQuickHandoff)
-	if strings.Contains(stream, "⏳") {
-		t.Errorf("a queued notice flashed before delivery: %q", stream)
+	if !strings.Contains(stream, "⏳") {
+		t.Errorf("the queued notice did not appear before delivery: %q", stream)
 	}
 	if !strings.Contains(stream, "check the other path too") {
 		t.Error("the message never appeared in the conversation")
@@ -14018,6 +14022,7 @@ func queuedMessagesStream(t *testing.T, scenario queuedMessagesScenario) string 
 
 	queued := map[queuedMessagesScenario][]string{
 		queuedOne:                    {"check the other path too"},
+		queuedImmediate:              {"check the other path too"},
 		queuedPath:                   {"check screen.go too"},
 		queuedTwo:                    {"check the other path too", "and mention what you find"},
 		queuedSeveral:                {"the first", "the second", "the third", "the fourth", "the fifth"},
@@ -14056,13 +14061,13 @@ func queuedMessagesStream(t *testing.T, scenario queuedMessagesScenario) string 
 		typeMessage(t, self, inputLine, history, message)
 	}
 	self.show(inputLine)
-	if scenario != queuedQuickHandoff {
+	if scenario != queuedQuickHandoff && scenario != queuedImmediate {
 		currentTime = queuedAt.Add(queuedNoticeDelay)
 		self.show(inputLine)
 	}
 
 	switch scenario {
-	case queuedOne, queuedPath, queuedTwo, queuedSeveral, queuedLongMessage, queuedMultilineMessage,
+	case queuedOne, queuedImmediate, queuedPath, queuedTwo, queuedSeveral, queuedLongMessage, queuedMultilineMessage,
 		queuedMarkdownEmphasis, queuedTallerThanTheTerminal:
 	case queuedQuickHandoff:
 		currentTime = queuedAt.Add(queuedNoticeDelay - time.Millisecond)
