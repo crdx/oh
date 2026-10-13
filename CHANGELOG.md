@@ -2,6 +2,8 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+## [0.17.0] - 2026-10-13
+
 ### Changes
 
 - Show free model costs as a green em dash
