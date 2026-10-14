@@ -151,7 +151,6 @@ func delegatingResponder(firstChildCall sim.Call) sim.Responder {
 func writeSubagentWorkspace(t *testing.T, rig *interactiveRig) {
 	t.Helper()
 
-	writeRigConfig(t, rig, "[subagent]\nmodel = \"opencode-go/deepseek-v4.1-flash\"\n")
 	if err := os.WriteFile(filepath.Join(rig.workspace, "README.md"), []byte("hello\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}
@@ -453,7 +452,6 @@ func TestAChildOfAnUnconfinedParentCannotReadHostTmpThroughTheBinary(t *testing.
 		}
 		return sim.Turn{Calls: []sim.Call{{Name: subagent.Name, Arguments: start}}}
 	})
-	writeRigConfig(t, rig, "[subagent]\nmodel = \"opencode-go/deepseek-v4.1-flash\"\n")
 	session := rig.start("--yolo", "-c", "s", "-m", "opencode-go/deepseek-v4.1-flash", "read the host tmp note with a child")
 	session.waitFor("Read the temporary file.")
 	session.quit()
@@ -469,11 +467,10 @@ func TestAChildOfAnUnconfinedParentCannotReadHostTmpThroughTheBinary(t *testing.
 	}
 }
 
-func TestTheParentChoosesEachSubagentsEffortDespiteTheConfiguredRotation(t *testing.T) {
+func TestTheParentChoosesEachSubagentsEffort(t *testing.T) {
 	readCall := encodedArguments(map[string]string{"path": "README.md"})
 	rig, _ := newRespondingRig(t, delegatingResponder(sim.Call{Name: "read", Arguments: readCall}))
 	writeSubagentWorkspace(t, rig)
-	writeRigConfig(t, rig, "[subagent]\nround_robin = [\"opencode-go/deepseek-v4.1-flash@low\", \"opencode-go/deepseek-v4.1-flash@high\"]\n")
 
 	session := rig.start("--yolo", "-c", "s", "-m", "opencode-go/deepseek-v4.1-flash", delegatingPrompt)
 	session.waitFor(followedUpAnswer)
@@ -507,8 +504,8 @@ func TestANewSessionOffersSubagentsWithoutAConfiguredRotation(t *testing.T) {
 			want:   caps.Unconfined() | caps.Subagents,
 		},
 		{
-			name:   "defaulted on with a subagent model",
-			config: "[defaults]\ncaps = \"rs\"\n\n[subagent]\nmodel = \"opencode-go/deepseek-v4.1-flash\"\n",
+			name:   "defaulted on with a concurrency limit",
+			config: "[defaults]\ncaps = \"rs\"\n\n[subagent]\nconcurrency = 2\n",
 			want:   caps.Unconfined() | caps.Subagents,
 		},
 		{

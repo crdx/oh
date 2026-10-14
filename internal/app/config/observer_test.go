@@ -886,7 +886,7 @@ func TestAShadowedSnippetFileArrivingLeavesAReadConfigStanding(t *testing.T) {
 	}
 }
 
-func TestAFileBothRotationsReadNamesBothSettingsWhenItChanges(t *testing.T) {
+func TestARotationFileNamesOnlyTheAgentSettingWhenItChanges(t *testing.T) {
 	directory := t.TempDir()
 	modelsPath := filepath.Join(directory, "models.txt")
 	if err := os.WriteFile(modelsPath, []byte("anthropic/one@high\n"), 0o600); err != nil {
@@ -909,7 +909,7 @@ func TestAFileBothRotationsReadNamesBothSettingsWhenItChanges(t *testing.T) {
 	if len(applied.Changes) != 1 || applied.Changes[0].Path != "models.txt" {
 		t.Fatalf("got %v, want the model file alone", applied.Changes)
 	}
-	if want := []string{"agent.round_robin", "subagent.round_robin"}; !slices.Equal(applied.Changes[0].Settings, want) {
-		t.Errorf("got %v, want both settings it supplies: %v", applied.Changes[0].Settings, want)
+	if want := []string{"agent.round_robin"}; !slices.Equal(applied.Changes[0].Settings, want) {
+		t.Errorf("got %v, want the agent setting alone: %v", applied.Changes[0].Settings, want)
 	}
 }

@@ -665,8 +665,6 @@ func TestConfiguredStringsCannotBeEmpty(t *testing.T) {
 		"model selection whitespace":  "[agent]\nround_robin = [\"  \"]\n",
 		"agent model":                 "[agent]\nmodel = \"\"\n",
 		"agent model whitespace":      "[agent]\nmodel = \"  \"\n",
-		"subagent model":              "[subagent]\nmodel = \"\"\n",
-		"subagent round robin":        "[subagent]\nround_robin = []\n",
 		"ui currency":                 "[ui]\ncurrency = \" \"\n",
 		"ports hostname":              "[ports]\nhostname = \"\"\n",
 		"editor command list":         "[editor]\ncommand = []\n",
@@ -2369,50 +2367,34 @@ func TestARotationLeftInTheModelTableIsReportedAsUnknown(t *testing.T) {
 	}
 }
 
-func TestASubagentChoosesItsModelAsTheAgentDoes(t *testing.T) {
-	directory := t.TempDir()
-	if err := os.WriteFile(filepath.Join(directory, "dumb.models"), []byte("anthropic/haiku@low\ncodex/mini\n"), 0o600); err != nil {
-		t.Fatal(err)
-	}
-	for name, run := range map[string]struct {
-		contents string
-		want     []string
-		setting  string
-	}{
-		"nothing":     {"", nil, "subagent.round_robin"},
-		"a model":     {"[subagent]\nmodel = \" anthropic/haiku@low \"\n", []string{"anthropic/haiku@low"}, "subagent.model"},
-		"a list":      {"[subagent]\nround_robin = [\"anthropic/haiku\", \"codex/mini\"]\n", []string{"anthropic/haiku", "codex/mini"}, "subagent.round_robin"},
-		"a file":      {"[subagent]\nround_robin = \"dumb.models\"\n", []string{"anthropic/haiku@low", "codex/mini"}, "subagent.round_robin"},
-		"the agent's": {"[agent]\nmodel = \"anthropic/opus\"\n", nil, "subagent.round_robin"},
-	} {
-		t.Run(name, func(t *testing.T) {
-			path := filepath.Join(directory, "config.toml")
-			if err := writeConfigFile(path, run.contents); err != nil {
+func TestRemovedSubagentModelSettingsAreReportedAsUnknown(t *testing.T) {
+	for _, source := range []Source{{}, {IsOverride: true}} {
+		for _, body := range []string{
+			"model = \"anthropic/one\"\nround_robin = [\"anthropic/two\"]\n",
+			"model = \"\"\nround_robin = \"missing.models\"\n",
+		} {
+			path := filepath.Join(t.TempDir(), "config.toml")
+			if err := writeConfigFile(path, "[agent]\nmodel = \"anthropic/parent\"\n[subagent]\nconcurrency = 3\n"+body); err != nil {
 				t.Fatal(err)
 			}
-			settings, err := Load(path)
+			source.Path = path
+			settings, err := LoadSources(source)
 			if err != nil {
 				t.Fatal(err)
 			}
-			if got := settings.Subagent.Rotation(); !slices.Equal(got, run.want) {
-				t.Errorf("got rotation %q, want %q", got, run.want)
+			if settings.Agent.Model != "anthropic/parent" || settings.Subagent.Concurrency != 3 {
+				t.Fatalf("removed settings changed the agent or concurrency: %+v, %+v", settings.Agent, settings.Subagent)
 			}
-			if got := settings.Subagent.Setting(); got != run.setting {
-				t.Errorf("got setting %q, want %q", got, run.setting)
+			warnings := strings.Join(settings.UnknownSettings(), "\n")
+			for _, name := range []string{"subagent.model", "subagent.round_robin"} {
+				if !strings.Contains(warnings, name) {
+					t.Errorf("unknown settings %q did not name %s", warnings, name)
+				}
 			}
-		})
-	}
-}
-
-func TestASubagentModelBesideARotationIsRefused(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "config.toml")
-	if err := writeConfigFile(path, "[subagent]\nmodel = \"anthropic/one\"\nround_robin = [\"anthropic/two\"]\n"); err != nil {
-		t.Fatal(err)
-	}
-
-	_, err := Load(path)
-	if err == nil || !strings.Contains(err.Error(), "subagent.model and subagent.round_robin cannot both be set") {
-		t.Fatalf("got %v, want both settings refused", err)
+			if _, settings := settings.rotationFiles(); len(settings) != 0 {
+				t.Errorf("removed settings watched model files: %v", settings)
+			}
+		}
 	}
 }
 

@@ -52,7 +52,6 @@ const (
 	uiSetting         = "ui"
 	themeSetting      = "theme"
 	agentSetting      = "agent"
-	subagentSetting   = "subagent"
 	modelSetting      = "model"
 	roundRobinSetting = "round_robin"
 )
@@ -131,8 +130,6 @@ type Input struct {
 }
 
 type Subagent struct {
-	ModelChoice
-
 	Concurrency int `toml:"concurrency"`
 }
 
@@ -142,10 +139,6 @@ type Agent struct {
 
 func (self Agent) Setting() string {
 	return self.settingIn(agentSetting)
-}
-
-func (self Subagent) Setting() string {
-	return self.settingIn(subagentSetting)
 }
 
 type ModelChoice struct {
@@ -686,13 +679,8 @@ func applySnapshot(config *Config, source sourceSnapshot) error {
 
 	config.sources = append(config.sources, sourceMetadata{source: source.source, path: displayPath, meta: &meta})
 
-	for table, choice := range map[string]*ModelChoice{
-		agentSetting:    &config.Agent.ModelChoice,
-		subagentSetting: &config.Subagent.ModelChoice,
-	} {
-		if err := applyModelChoice(choice, table, meta, source.source.Path); err != nil {
-			return fmt.Errorf("%s: %w", displayPath, err)
-		}
+	if err := applyModelChoice(&config.Agent.ModelChoice, agentSetting, meta, source.source.Path); err != nil {
+		return fmt.Errorf("%s: %w", displayPath, err)
 	}
 	config.Provider.Ollama.Host = strings.TrimSpace(config.Provider.Ollama.Host)
 	config.Ports.Hostname = strings.TrimSpace(config.Ports.Hostname)
@@ -917,17 +905,9 @@ func loadRoundRobinFile(choice *ModelChoice, sourcePath string, writtenPath stri
 func (self Config) rotationFiles() (map[string]snapshot, map[string][]string) {
 	snapshots := map[string]snapshot{}
 	settings := map[string][]string{}
-	for table, choice := range map[string]ModelChoice{
-		agentSetting:    self.Agent.ModelChoice,
-		subagentSetting: self.Subagent.ModelChoice,
-	} {
-		for path, current := range choice.rotationFile {
-			snapshots[path] = current
-			settings[path] = append(settings[path], table+"."+roundRobinSetting)
-		}
-	}
-	for path := range settings {
-		slices.Sort(settings[path])
+	for path, current := range self.Agent.rotationFile {
+		snapshots[path] = current
+		settings[path] = []string{agentSetting + "." + roundRobinSetting}
 	}
 	return snapshots, settings
 }

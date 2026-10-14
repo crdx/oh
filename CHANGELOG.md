@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Remove `subagent.{model,round_robin}` configuration keys
 - Confine subagents even under `--yolo`
 
 ## [0.17.0] - 2026-10-13

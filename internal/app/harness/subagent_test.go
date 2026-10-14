@@ -476,24 +476,18 @@ func TestAReportIsInterjectedIntoARunningTurnEvenOnceItWasRead(t *testing.T) {
 	}
 }
 
-func TestReloadingConfigChangesTheSubagentRotationAndLimitForTheNextStart(t *testing.T) {
+func TestReloadingConfigChangesTheSubagentLimitForTheNextStart(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config.toml")
-	writeLiveConfig(t, path, "[subagent]\nmodel = \"anthropic/claude-opus-5\"\nconcurrency = 2\n")
+	writeLiveConfig(t, path, "[subagent]\nconcurrency = 2\n")
 
 	var screenOutput bytes.Buffer
 	self := testConversation(t, &screenOutput)
 	prepareLiveConfig(t, self, path)
-	rotate := func(settings config.Subagent, _ model.Defaults) (subagents.Rotation, error) {
-		var models []subagents.ChildModel
-		for _, written := range settings.Rotation() {
-			if strings.Contains(written, "unknown") {
-				return subagents.Rotation{}, errors.New(written + " is not a model anybody offers")
-			}
-			models = append(models, subagents.ChildModel{Choice: model.Choice{ID: written}})
-		}
-		return subagents.Rotation{Models: models, Concurrency: settings.Concurrency}, nil
+	choice := model.Choice{Provider: model.AnthropicProvider, ID: "claude-haiku-5-5", EffortLevels: []string{"high"}}
+	rotate := func(settings config.Subagent, defaults model.Defaults) (subagents.Rotation, error) {
+		return childRotationOf(choice, settings, defaults, []model.Choice{choice})
 	}
-	initial, err := rotate(config.Subagent{ModelChoice: config.ModelChoice{Model: "anthropic/claude-opus-5"}, Concurrency: 2}, model.Defaults{})
+	initial, err := rotate(config.Subagent{Concurrency: 2}, model.Defaults{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -510,22 +504,22 @@ func TestReloadingConfigChangesTheSubagentRotationAndLimitForTheNextStart(t *tes
 	t.Cleanup(manager.Close)
 	self.children = childState{manager: manager, rotate: rotate}
 
-	writeLiveConfig(t, path, "[subagent]\nmodel = \"anthropic/claude-haiku-5\"\nconcurrency = 7\n")
+	writeLiveConfig(t, path, "[subagent]\nconcurrency = 7\n")
 	settleLiveConfig(t, self)
 	if got := manager.Concurrency(); got != 7 {
 		t.Errorf("the limit after a reload is %d, want 7", got)
 	}
-	if got := manager.Model(); got != "anthropic/claude-haiku-5" {
-		t.Errorf("the rotation after a reload names %q", got)
+	if got := manager.Model(); got != choice.ID {
+		t.Errorf("the automatic pool after a reload names %q, want %q", got, choice.ID)
 	}
 
-	writeLiveConfig(t, path, "[subagent]\nmodel = \"anthropic/unknown\"\nconcurrency = 3\n")
+	writeLiveConfig(t, path, "[subagent]\nconcurrency = 0\n")
 	settleLiveConfig(t, self)
-	if got := manager.Concurrency(); got != 7 || manager.Model() != "anthropic/claude-haiku-5" {
-		t.Errorf("a rotation that would not resolve replaced the one standing: %d, %q", got, manager.Model())
+	if got := manager.Concurrency(); got != 7 || manager.Model() != choice.ID {
+		t.Errorf("an invalid limit replaced the one standing: %d, %q", got, manager.Model())
 	}
-	if message := self.feedback.Message(); message.Status != agent.ErrorStatus || !strings.Contains(message.Text, "anthropic/unknown") {
-		t.Errorf("a rotation that would not resolve said %+v", message)
+	if message := self.feedback.Message(); message.Status != agent.ErrorStatus || !strings.Contains(message.Text, "subagent.concurrency") {
+		t.Errorf("an invalid limit said %+v", message)
 	}
 }
 
@@ -544,12 +538,6 @@ func TestAnOllamaSessionStartsSubagentsOnlyOnOllamaModels(t *testing.T) {
 	other := model.Choice{Provider: model.OllamaProvider, ID: "muse-glimmer-128k:latest", EffortLevels: []string{"none"}}
 	hosted := model.Choice{Provider: model.AnthropicProvider, ID: "claude-haiku-5-5", EffortLevels: []string{"high"}}
 	choices := []model.Choice{local, other, hosted}
-	everyModel := config.Subagent{
-		ModelChoice: config.ModelChoice{RoundRobin: config.RoundRobin{
-			"ollama/qwen3.8:27b-mtp-q8_0-256k@none", "anthropic/claude-haiku-5-5@high", "ollama/muse-glimmer-128k:latest@none",
-		}},
-		Concurrency: 4,
-	}
 	for _, test := range []struct {
 		parent model.Choice
 		want   []string
@@ -557,7 +545,7 @@ func TestAnOllamaSessionStartsSubagentsOnlyOnOllamaModels(t *testing.T) {
 		{local, []string{"qwen3.8:27b-mtp-q8_0-256k", "muse-glimmer-128k:latest"}},
 		{hosted, []string{"claude-haiku-5-5"}},
 	} {
-		rotation, err := childRotationOf(test.parent, everyModel, model.Defaults{}, choices)
+		rotation, err := childRotationOf(test.parent, config.Subagent{Concurrency: 4}, model.Defaults{}, choices)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -569,28 +557,12 @@ func TestAnOllamaSessionStartsSubagentsOnlyOnOllamaModels(t *testing.T) {
 			t.Errorf("a session on %s rotates over %v, want %v", test.parent.Provider, got, test.want)
 		}
 	}
-
-	onlyHosted := config.Subagent{
-		ModelChoice: config.ModelChoice{Model: "anthropic/claude-opus-5@high"},
-		Concurrency: 4,
-	}
-	rotation, err := childRotationOf(local, onlyHosted, model.Defaults{}, choices)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if len(rotation.Models) != 2 || rotation.Models[0].Choice.ID != local.ID || rotation.Concurrency != 4 {
-		t.Fatalf("an ollama session kept %+v", rotation)
-	}
 }
 
 func TestASessionCanStartChildrenFromTheCatalogueWithoutARotation(t *testing.T) {
 	local := model.Choice{Provider: model.OllamaProvider, ID: "qwen3.8:27b-mtp-q8_0-256k", EffortLevels: []string{"none"}}
 	hosted := model.Choice{Provider: model.AnthropicProvider, ID: "claude-haiku-5-5", EffortLevels: []string{"high"}}
 	choices := []model.Choice{local, hosted}
-	onlyHosted := config.Config{Subagent: config.Subagent{
-		ModelChoice: config.ModelChoice{Model: "anthropic/claude-opus-5@high"},
-		Concurrency: 4,
-	}}
 	for _, test := range []struct {
 		name     string
 		parent   model.Choice
@@ -598,8 +570,9 @@ func TestASessionCanStartChildrenFromTheCatalogueWithoutARotation(t *testing.T) 
 		want     bool
 	}{
 		{"no configured subagent model", hosted, config.Config{}, true},
-		{"an ollama session ignores the hosted rotation", local, onlyHosted, true},
-		{"a hosted session with hosted subagents", hosted, onlyHosted, true},
+		{"an ollama session keeps its local pool", local, config.Config{}, true},
+		{"a concurrency limit keeps the automatic pool", hosted, config.Config{Subagent: config.Subagent{Concurrency: 2}}, true},
+		{"a hosted session cannot use local or another provider's paid models", model.Choice{Provider: model.CodexProvider}, config.Config{}, false},
 	} {
 		if got := canStartChildren(test.parent, test.settings, choices); got != test.want {
 			t.Errorf("%s: canStartChildren is %t, want %t", test.name, got, test.want)

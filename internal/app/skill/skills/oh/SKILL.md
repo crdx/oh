@@ -23,7 +23,7 @@ Global and workspace files are watched and auto-reload. A reload applies live to
 
 | Setting                                                           | Applies             |
 |-------------------------------------------------------------------|---------------------|
-| `[sandbox]`, `[skills]`, `[provider]`, `[ports]`, `[subagent]`    | when oh next starts |
+| `[sandbox]`, `[skills]`, `[provider]`, `[ports]`                  | when oh next starts |
 | `[defaults]` but `tool_output`, `[agent]`, `[tools]`, the toolbox | to new sessions     |
 
 The first group belongs to the process, so a restart that resumes this very conversation picks it up. The second is frozen into the session when it is first created, and a resumed conversation restores what was frozen, so only a new session reads it afresh.
@@ -40,7 +40,7 @@ Where `~/.config/org.crdx/oh/` is a symlink into a dotfiles repository, edit the
 
 - `[agent]` — the model a new session talks to: `model`, one `provider/model@effort` selection (written `provider/model` for a model that takes no effort), or `round_robin`, an array of selections or a path, relative to the supplying config, to a file with one selection per line; blank lines are skipped, lines whose first non-whitespace character is `#` are comments, and duplicates add weight. One file may set only one of the two, and a later file's choice replaces an earlier one's whichever it writes
 - `[defaults]` — what anything new starts with: `caps`, the capabilities a new session opens with; `effort` and `fast`, filling in whatever any model selection leaves out; and `tool_output`, the cap on a tool result
-- `[subagent]` — `model` or `round_robin`, written as `[agent]` takes them, choose each new subagent's model, and subagents are offered only when one is set; `concurrency` caps how many run at once. A follow-up stays on the model its subagent started on
+- `[subagent]` — `concurrency` caps how many run at once and reloads live while subagents are offered. The parent chooses a model and effort for each task from the automatic cheap and free model pool. Local sessions delegate only to Ollama models, and remote sessions only to remote models. A follow-up stays on the model its subagent started on
 - `[provider.ollama]` — `host` for a local or LAN endpoint
 - `[snippets]` — `//name` expansions, inline or `{ file = "path/name.md" }`, whose frontmatter fills any `description` or `arguments` the entry leaves out; `{{ .Arg }}` takes the rest of the line, and a field of any other name, as `{{ .Question }}`, takes it too while naming it `<question>` in completion and help rather than `<args>`; `{{ .Args }}` is the same text split into words
 - `[ui]` — `streaming`, `grouping`, `reasoning`, `currency`, `[ui.theme]`, `[ui.theme.<palette>]`

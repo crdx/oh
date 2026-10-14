@@ -12120,15 +12120,15 @@ func TestTheReloadConfirmationNamesEveryFileAndWhatItChanged(t *testing.T) {
 		}
 	}
 
-	subagentChange := []config.SourceChange{{Path: "config.toml", Settings: []string{"subagent.concurrency", "subagent.round_robin"}}}
+	subagentChange := []config.SourceChange{{Path: "config.toml", Settings: []string{"subagent.concurrency"}}}
 	running := childState{manager: &subagents.Manager{}}
 	if got, want := reloadConfirmation(subagentChange, running.reachOf), "Configuration reloaded automatically\n"+
-		"config.toml: subagent.concurrency, subagent.round_robin"; got != want {
+		"config.toml: subagent.concurrency"; got != want {
 		t.Errorf("subagents that follow a reload drew %q, want %q", got, want)
 	}
 	if got, want := reloadConfirmation(subagentChange, childState{}.reachOf), "Configuration reloaded automatically\n"+
-		"config.toml: subagent.concurrency, subagent.round_robin\n"+
-		"applies when oh next starts: subagent.concurrency, subagent.round_robin"; got != want {
+		"config.toml: subagent.concurrency\n"+
+		"applies when oh next starts: subagent.concurrency"; got != want {
 		t.Errorf("subagents off since startup drew %q, want %q", got, want)
 	}
 }
@@ -13307,6 +13307,7 @@ const (
 	feedbackClearedByTurnCompletion
 	feedbackStorageWarnings
 	feedbackUnknownSettings
+	feedbackRemovedSubagentSettings
 	feedbackUnknownSettingsClearedByEscape
 	feedbackBesideQueuedMessages
 	feedbackTallAnswer
@@ -13376,6 +13377,7 @@ func TestGoldenFeedbackDrawsEveryVisibleState(t *testing.T) {
 		"turn completion clears it":         feedbackClearedByTurnCompletion,
 		"combined storage warnings":         feedbackStorageWarnings,
 		"settings nothing reads":            feedbackUnknownSettings,
+		"removed subagent model settings":   feedbackRemovedSubagentSettings,
 		"escape clears unknown settings":    feedbackUnknownSettingsClearedByEscape,
 		"a warning beside queued messages":  feedbackBesideQueuedMessages,
 		"tall answer stays untouched":       feedbackTallAnswer,
@@ -13628,6 +13630,19 @@ func feedbackStream(t *testing.T, scenario feedbackScenario) string {
 			reports[i] = "config.toml: unknown: " + unknown
 		}
 		reports = append(reports, "oh.toml: unknown: bar.top.center.loudly")
+		self.notifyUnknownSettings(reports)
+		self.show(inputLine)
+	case feedbackRemovedSubagentSettings:
+		settings := configFrom(t, `[subagent]
+			model = "missing/model"
+			round_robin = "missing.models"
+			concurrency = 2
+		`)
+		reports := settings.UnknownSettings()
+		for i, report := range reports {
+			_, unknown, _ := strings.Cut(report, ": unknown: ")
+			reports[i] = "config.toml: unknown: " + unknown
+		}
 		self.notifyUnknownSettings(reports)
 		self.show(inputLine)
 	case feedbackUnknownSettingsClearedByEscape:

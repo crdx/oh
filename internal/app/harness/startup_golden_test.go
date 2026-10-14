@@ -486,7 +486,7 @@ func withoutMachineDependentTools(text string) string {
 }
 
 func TestGoldenAHeadlessSessionOffersOnlyTheToolsThatWorkAlone(t *testing.T) {
-	const everythingElse = "[experimental]\nwait_tool = true\n\n[subagent]\nmodel = \"opencode-go/fake\"\n\n" +
+	const everythingElse = "[experimental]\nwait_tool = true\n\n" +
 		"[tools.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\npermission = \"allow\"\ngroup = \"a\"\n"
 	compareWithGolden(t, "headless-tools", ".txt", map[string]func() string{
 		"a headless session beside every other kind of tool": func() string {
