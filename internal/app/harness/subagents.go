@@ -34,21 +34,21 @@ import (
 )
 
 type childOptions struct {
-	parentChoice    model.Choice
-	endpoints       backend.EndpointSettings
-	workspace       *work.Space
-	settings        config.Config
-	sessionName     string
-	sessionsDir     string
-	scratchParent   string
-	runner          sandbox.Runner
-	ensurePersisted func() error
-	isYolo          bool
-	recordsWire     bool
-	parentFiles     *file.Root
-	parentWritable  func() []string
-	parentCaps      func() caps.Set
-	userHome        string
+	parentChoice       model.Choice
+	endpoints          backend.EndpointSettings
+	workspace          *work.Space
+	settings           config.Config
+	sessionName        string
+	sessionsDir        string
+	scratchParent      string
+	runner             sandbox.Runner
+	ensurePersisted    func() error
+	isParentUnconfined bool
+	recordsWire        bool
+	parentFiles        *file.Root
+	parentWritable     func() []string
+	parentCaps         func() caps.Set
+	userHome           string
 }
 
 func userHome() string {
@@ -83,7 +83,6 @@ func prepareChildManager(options childOptions, choices []model.Choice, isPrintin
 		Concurrency: rotation.Concurrency,
 		Meta: store.Meta{
 			WorkspaceDir:   options.workspace.GetDir(),
-			Yolo:           options.isYolo,
 			ShouldSkipWire: !options.recordsWire,
 		},
 		Factory:      newChildFactory(options),
@@ -92,9 +91,6 @@ func prepareChildManager(options childOptions, choices []model.Choice, isPrintin
 		Workspace:    childWorkspace(options),
 		ScratchNote:  childScratchNote(options),
 		Caps: func() caps.Set {
-			if options.isYolo {
-				return caps.Unconfined()
-			}
 			return options.parentCaps() & (caps.Read | caps.Shell)
 		},
 	})
@@ -146,7 +142,7 @@ func newChildFactory(options childOptions) subagents.Factory {
 		}
 		files := file.New(workspace.GetRoot(), caps.RefuseWrite(mode))
 		paths := childPaths(options.settings.Sandbox)
-		access, err := shell.NewPathAccessForMode(files, mode, paths, options.isYolo)
+		access, err := shell.NewPathAccessForMode(files, mode, paths, false)
 		if err != nil {
 			_ = workspace.Close()
 			return subagents.Worker{}, err
@@ -158,16 +154,8 @@ func newChildFactory(options childOptions) subagents.Factory {
 			return subagents.Worker{}, err
 		}
 		files.Mount(home, file.New(homeDirectoryRoot, func(string) error { return nil }))
-		var tmpRoots []*file.Root
-		if options.isYolo {
-			tmpRoots = shell.MountHostTemporaryDirectory(files, child.Scratch)
-		} else {
-			files.MountVirtual(sandbox.TmpDir, file.New(child.ScratchRoot, func(string) error { return nil }))
-		}
+		files.MountVirtual(sandbox.TmpDir, file.New(child.ScratchRoot, func(string) error { return nil }))
 		closeChild := func() {
-			for _, root := range tmpRoots {
-				_ = root.Close()
-			}
 			_ = homeDirectoryRoot.Close()
 			access.Close()
 			_ = workspace.Close()
@@ -176,18 +164,14 @@ func newChildFactory(options childOptions) subagents.Factory {
 			closeChild()
 			return subagents.Worker{}, err
 		}
-		runner := options.runner
-		if options.isYolo {
-			runner = sandbox.Direct()
-		}
-		tools := toolbox.RummageWithRunner(files, file.NewSnapshots(), grepRunner(options.isYolo))
+		tools := toolbox.RummageWithRunner(files, file.NewSnapshots(), grepRunner(false))
 		tools = append(tools, shell.NewForSubagent(
 			workspace.GetDir(), home, child.Scratch, shell.Parent{Scratch: options.scratchParent, Writable: options.parentWritable},
-			access, mode, files, options.isYolo,
+			access, mode, files, false,
 			func(context.Context, string, string) error {
 				return errors.New("host network is not available to this subagent")
 			},
-			runner,
+			options.runner,
 		))
 		prompt := child.SystemPrompt
 		if prompt == "" {
@@ -245,18 +229,12 @@ func childPrompt(options childOptions, workspace *work.Space, child subagents.Ch
 		"Report your findings in your final answer. " +
 		"Your parent may send you messages while you work, and follow-ups after you answer."
 	var circumstances, whereabouts string
-	switch {
-	case options.isYolo:
-		circumstances = "You run without a sandbox, including for shell commands. " +
-			"/tmp is the host's shared /tmp. You can change host files and use the host network. " +
-			"Do not claim read-only confinement."
-		whereabouts = "TMPDIR is " + child.Scratch + "."
-	case child.Caps.Has(caps.Shell):
-		circumstances = "Your workspace is read-only. You have shell execution, but not host networking. " +
+	if child.Caps.Has(caps.Shell) {
+		circumstances = "Your workspace is read-only. You have shell execution, but only a private loopback network. " +
 			"/tmp is your private writable scratch, and it outlives your answer. " +
-			parentScratchView(child.Name) + "\n\n" + reachable(options, true)
+			parentScratchView(options, child.Name) + "\n\n" + reachable(options, true)
 		whereabouts = "/tmp is at " + child.Scratch + " on the host. HOME is " + home + "."
-	default:
+	} else {
 		circumstances = "Your workspace is read-only. " +
 			"You have no shell execution, so bash refuses every command; read, search and list files instead.\n\n" +
 			reachable(options, false)
@@ -277,15 +255,21 @@ func childPrompt(options childOptions, workspace *work.Space, child subagents.Ch
 func childPaths(parentPaths shell.Paths) shell.Paths {
 	return shell.Paths{
 		Deny: parentPaths.Deny,
-		Read: parentPaths.Read,
-		Exec: parentPaths.Exec,
-		Path: parentPaths.Path,
-		Home: parentPaths.Home,
+		Read: outsideHostTmp(parentPaths.Read),
+		Exec: outsideHostTmp(parentPaths.Exec),
+		Path: outsideHostTmp(parentPaths.Path),
+		Home: outsideHostTmp(parentPaths.Home),
 	}
 }
 
+func outsideHostTmp(paths []string) []string {
+	return slices.DeleteFunc(slices.Clone(paths), func(path string) bool {
+		return shell.RefuseHostTmpPath(path) != nil
+	})
+}
+
 func reachable(options childOptions, hasShell bool) string {
-	sandboxPaths := options.settings.Sandbox
+	sandboxPaths := childPaths(options.settings.Sandbox)
 	readable := "You can read your workspace, /tmp, HOME, and the read-only system and executable search paths"
 	searchPaths := slices.Concat(sandboxPaths.Exec, sandboxPaths.Path)
 	if len(searchPaths) > 0 {
@@ -343,13 +327,20 @@ func toolNames(tools []tool.Tool) string {
 	return strings.Join(names, ", ")
 }
 
-func parentScratchPath(name string) string {
+func parentScratchPath(options childOptions, name string) string {
+	if options.isParentUnconfined {
+		return filepath.Join(options.scratchParent, subagents.ScratchName, name)
+	}
 	return filepath.Join(sandbox.TmpDir, subagents.ScratchName, name)
 }
 
-func parentScratchView(name string) string {
-	parentPath := parentScratchPath(name)
-	return "Your parent has its own separate /tmp, where your /tmp appears as " + parentPath + ". " +
+func parentScratchView(options childOptions, name string) string {
+	parentPath := parentScratchPath(options, name)
+	parentTmp := "Your parent has its own separate /tmp, where your /tmp appears as " + parentPath + ". "
+	if options.isParentUnconfined {
+		parentTmp = "Your parent sees the host's /tmp, and your /tmp as " + parentPath + ". "
+	}
+	return parentTmp +
 		"Whenever you give your parent a path under /tmp, including one you ask it to write to, " +
 		"give only the path as your parent sees it: write " +
 		filepath.Join(parentPath, "notes.txt") + ", never /tmp/notes.txt, even labelled as your side. " +
@@ -363,10 +354,11 @@ const unverifiedNote = "unverified: check what matters before relying on it; "
 
 func childScratchNote(options childOptions) func(string) string {
 	return func(name string) string {
-		if options.isYolo {
-			return unverifiedNote + "its TMPDIR is " + filepath.Join(options.scratchParent, subagents.ScratchName, name)
+		owner := "your "
+		if options.isParentUnconfined {
+			owner = ""
 		}
-		return unverifiedNote + "its /tmp is your " + parentScratchPath(name) + ", so read any /tmp path it reports as beneath that"
+		return unverifiedNote + "its /tmp is " + owner + parentScratchPath(options, name) + ", so read any /tmp path it reports as beneath that"
 	}
 }
 
@@ -379,7 +371,7 @@ func childWorkspace(options childOptions) func(string) (string, error) {
 		if !filepath.IsAbs(directory) {
 			directory = filepath.Join(parentWorkspace, directory)
 		}
-		if options.isYolo {
+		if options.isParentUnconfined {
 			return hostDirectory(directory)
 		}
 		hostPath, err := readableDirectory(options.parentFiles, directory)
@@ -414,6 +406,9 @@ func hostDirectory(directory string) (string, error) {
 	}
 	if !info.IsDir() {
 		return "", fmt.Errorf("%s is not a directory", directory)
+	}
+	if work.IsShadowed(resolvedPath) {
+		return "", fmt.Errorf("%s leads into the host's /tmp, which no subagent can read", directory)
 	}
 	return resolvedPath, nil
 }

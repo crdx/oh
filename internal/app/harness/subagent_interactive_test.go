@@ -2,13 +2,11 @@ package harness
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"regexp"
 	"slices"
-	"strconv"
 	"strings"
 	"testing"
 
@@ -33,7 +31,6 @@ const (
 	firstChildAnswer   = "The README says hello."
 	secondChildAnswer  = "There are two TODO items."
 	followUpChildReply = "hello hello"
-	scratchProbe       = "scratch-is-private"
 	childIdentity      = "Your identity is "
 	secondWorkspace    = "docs"
 )
@@ -68,7 +65,7 @@ func withFakePager(t *testing.T, rig *interactiveRig) {
 }
 
 var (
-	childScratch = regexp.MustCompile(`at (\S+) on the host|TMPDIR is (\S+?)\.(?:\s|$)`)
+	childScratch = regexp.MustCompile(`at (\S+) on the host`)
 	readmeReader = regexp.MustCompile(`(\S+) done(?: \([^)]*\))?: ` + regexp.QuoteMeta(firstChildAnswer))
 )
 
@@ -227,7 +224,7 @@ func requireChildScratchKept(t *testing.T, child *store.Session) {
 	if found == nil {
 		t.Fatalf("the child prompt names no scratch: %q", child.Meta.SystemPrompt)
 	}
-	scratch := found[1] + found[2]
+	scratch := found[1]
 	if !strings.Contains(scratch, filepath.Join(subagents.ScratchName, child.Name)) {
 		t.Fatalf("the child scratch %q is not its own", scratch)
 	}
@@ -301,41 +298,6 @@ func TestSubagentsReportBackThroughTheBinaryAndAreListed(t *testing.T) {
 	if got := len(endpoint.Requests()); got != asked {
 		t.Errorf("resuming asked the model %d more times, want delivered completions left alone", got-asked)
 	}
-}
-
-func TestAConfinedSubagentKeepsItsScratchPrivateAndTheWorkspaceReadOnly(t *testing.T) {
-	if err := sandbox.Supported(t.Context()); err != nil {
-		t.Skipf("this machine cannot confine a subagent: %v", err)
-	}
-	probe := "oh-subagent-probe-" + strconv.Itoa(os.Getpid())
-	command := "printf " + scratchProbe + " > /tmp/" + probe + " && cat /tmp/" + probe +
-		"; echo changed >> README.md || echo refused; : > created.txt || echo refused"
-	bashCall := encodedArguments(map[string]string{"command": command, "intent": "Probing the confined child scratch"})
-	rig, _ := newRespondingRig(t, delegatingResponder(sim.Call{Name: "bash", Arguments: bashCall}))
-	writeSubagentWorkspace(t, rig)
-
-	session := rig.start("-c", "rxs", "-m", "opencode-go/deepseek-v4.1-flash", delegatingPrompt)
-	session.waitFor(followedUpAnswer)
-	session.quit()
-
-	reader := onlyStoredFamily(t, rig).childWithTask(t, "Read the README")
-	results := childEventsOf(reader, agent.ToolCallResultEvent)
-	if len(results) != 1 {
-		t.Fatalf("%s ran %+v, want one command", reader.Name, results)
-	}
-	if !strings.Contains(results[0].Text, scratchProbe) || strings.Count(results[0].Text, "refused") != 2 {
-		t.Errorf("the confined child saw %q, want its own scratch and a refused workspace write", results[0].Text)
-	}
-	if contents, err := os.ReadFile(filepath.Join(rig.workspace, "README.md")); err != nil || string(contents) != "hello\n" {
-		t.Errorf("the confined child changed the workspace: %q, %v", contents, err)
-	}
-	if _, err := os.Stat(filepath.Join(rig.workspace, "created.txt")); !errors.Is(err, os.ErrNotExist) {
-		t.Errorf("the confined child created a file in the workspace: %v", err)
-	}
-	if _, err := os.Stat(filepath.Join("/tmp", probe)); err == nil {
-		t.Error("the confined child wrote into the host's /tmp")
-	}
-	requireChildScratchKept(t, reader)
 }
 
 const (
@@ -467,7 +429,7 @@ func TestAnUnconfinedParentReadsHostTmpThroughTheBinary(t *testing.T) {
 	}
 }
 
-func TestAnUnconfinedChildReadsHostTmpThroughTheBinary(t *testing.T) {
+func TestAChildOfAnUnconfinedParentCannotReadHostTmpThroughTheBinary(t *testing.T) {
 	hostDirectory := hostTmpRigFixture(t)
 	hostFile := filepath.Join(hostDirectory, "note")
 	if err := os.WriteFile(hostFile, []byte("host-tmp-is-real\n"), 0o600); err != nil {
@@ -498,9 +460,12 @@ func TestAnUnconfinedChildReadsHostTmpThroughTheBinary(t *testing.T) {
 
 	family := onlyStoredFamily(t, rig)
 	reader := family.childWithTask(t, "Read "+hostFile)
+	if reader.Meta.Yolo {
+		t.Error("a child of an unconfined parent was stored as unconfined")
+	}
 	results := childEventsOf(reader, agent.ToolCallResultEvent)
-	if len(results) != 1 || results[0].Status != agent.SuccessStatus || !strings.Contains(results[0].Text, "host-tmp-is-real") {
-		t.Errorf("child read of host tmp got %+v", results)
+	if len(results) != 1 || results[0].Status == agent.SuccessStatus || strings.Contains(results[0].Text, "host-tmp-is-real") {
+		t.Errorf("a child of an unconfined parent read the host's /tmp: %+v", results)
 	}
 }
 

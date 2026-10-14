@@ -16,6 +16,7 @@ import (
 	"crdx.org/oh/internal/app/toolset"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/file"
+	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/pkg/tool"
 )
 
@@ -26,7 +27,7 @@ type childWorkspaceFixture struct {
 	resolve   func(string) (string, error)
 }
 
-func newChildWorkspaceFixture(t *testing.T, isYolo bool) childWorkspaceFixture {
+func newChildWorkspaceFixture(t *testing.T, isParentUnconfined bool) childWorkspaceFixture {
 	t.Helper()
 
 	fixture := childWorkspaceFixture{
@@ -62,7 +63,7 @@ func newChildWorkspaceFixture(t *testing.T, isYolo bool) childWorkspaceFixture {
 	t.Cleanup(func() { _ = workspace.Close() })
 	files := file.New(workspace.GetRoot(), func(string) error { return file.ErrReadOnly })
 	shell.MountTemporaryDirectory(files, fixture.scratch)
-	fixture.resolve = childWorkspace(childOptions{workspace: workspace, parentFiles: files, isYolo: isYolo})
+	fixture.resolve = childWorkspace(childOptions{workspace: workspace, parentFiles: files, isParentUnconfined: isParentUnconfined})
 	return fixture
 }
 
@@ -98,13 +99,17 @@ func TestAChildNeverWorksWhereItsParentCannotRead(t *testing.T) {
 	}
 }
 
-func TestAnUnconfinedChildWorksInAnyHostDirectory(t *testing.T) {
+func TestAChildOfAnUnconfinedParentWorksInAnyHostDirectoryOutsideHostTmp(t *testing.T) {
 	fixture := newChildWorkspaceFixture(t, true)
 	if got, err := fixture.resolve(fixture.outside); err != nil || got != fixture.outside {
-		t.Errorf("an unconfined child could not work in %s: %q, %v", fixture.outside, got, err)
+		t.Errorf("a child of an unconfined parent could not work in %s: %q, %v", fixture.outside, got, err)
 	}
 	if _, err := fixture.resolve(filepath.Join(fixture.workspace, "README.md")); err == nil {
-		t.Error("an unconfined child was given a file as its workspace")
+		t.Error("a child of an unconfined parent was given a file as its workspace")
+	}
+	hostDirectory := hostTmpRigFixture(t)
+	if got, err := fixture.resolve(hostDirectory); err == nil || !strings.Contains(err.Error(), "leads into the host's /tmp") {
+		t.Errorf("a child of an unconfined parent was given %q, %v as its workspace in the host's /tmp", got, err)
 	}
 }
 
@@ -141,7 +146,7 @@ func TestGoldenAChildIsToldWhatItCanDo(t *testing.T) {
 			func(struct{}) tool.CallRendering { return tool.CallRendering{} },
 		).Plain(func(context.Context, struct{}) (string, error) { return "", nil }))
 	}
-	prompt := func(isYolo bool, childCaps caps.Set, sharedPrompt string, options ...childOptions) func() string {
+	prompt := func(isParentUnconfined bool, childCaps caps.Set, sharedPrompt string, options ...childOptions) func() string {
 		return func() string {
 			child := subagents.Child{
 				Name:         "tame-adder",
@@ -150,11 +155,11 @@ func TestGoldenAChildIsToldWhatItCanDo(t *testing.T) {
 				Scratch:      "/state/farm/tame-impala/subagents/tame-adder",
 				SharedPrompt: sharedPrompt,
 			}
-			promptOptions := childOptions{userHome: "/users/person", settings: childPromptSettings}
+			promptOptions := childOptions{userHome: "/users/person", settings: childPromptSettings, scratchParent: "/state/farm/tame-impala"}
 			if len(options) > 0 {
 				promptOptions = options[0]
 			}
-			promptOptions.sessionName, promptOptions.isYolo = goldenSessionName, isYolo
+			promptOptions.sessionName, promptOptions.isParentUnconfined = goldenSessionName, isParentUnconfined
 			drawn := childPrompt(
 				promptOptions, workspace, child,
 				"/state/farm/tame-impala/subagents/tame-adder/home", tools,
@@ -168,7 +173,7 @@ func TestGoldenAChildIsToldWhatItCanDo(t *testing.T) {
 	compareWithGolden(t, "subagent-prompt", ".txt", map[string]func() string{
 		"confined with a shell":                     prompt(false, caps.Read|caps.Shell, ""),
 		"confined without a shell":                  prompt(false, caps.Read, ""),
-		"unconfined":                                prompt(true, caps.Unconfined(), ""),
+		"confined under an unconfined parent":       prompt(true, caps.Read|caps.Shell, ""),
 		"with shared instructions":                  prompt(false, caps.Read|caps.Shell, "Answer in one sentence."),
 		"with nothing configured and no known home": prompt(false, caps.Read|caps.Shell, "", childOptions{}),
 	})
@@ -227,8 +232,8 @@ func TestAChildsReportIsMarkedUnverifiedAndItsScratchNamedAsItsParentSeesIt(t *t
 	if note := confined("tame-adder"); note != "unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that" {
 		t.Errorf("a confined parent was told %q", note)
 	}
-	unconfined := childScratchNote(childOptions{scratchParent: "/state/farm/tame-impala", isYolo: true})
-	if note := unconfined("tame-adder"); note != "unverified: check what matters before relying on it; its TMPDIR is /state/farm/tame-impala/subagents/tame-adder" {
+	unconfined := childScratchNote(childOptions{scratchParent: "/state/farm/tame-impala", isParentUnconfined: true})
+	if note := unconfined("tame-adder"); note != "unverified: check what matters before relying on it; its /tmp is /state/farm/tame-impala/subagents/tame-adder, so read any /tmp path it reports as beneath that" {
 		t.Errorf("an unconfined parent was told %q", note)
 	}
 }
@@ -247,5 +252,9 @@ func TestAChildIsGivenEveryReadablePathItsParentIsConfiguredWith(t *testing.T) {
 	want.Write = nil
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("a child was given %+v, want everything but the writable paths: %+v", got, want)
+	}
+	configured.Read = append(configured.Read, filepath.Join(sandbox.TmpDir, "notes"))
+	if got := childPaths(configured); !reflect.DeepEqual(got, want) {
+		t.Errorf("a child was given %+v, want the host's /tmp left out: %+v", got, want)
 	}
 }

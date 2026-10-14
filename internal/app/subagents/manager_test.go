@@ -1043,7 +1043,6 @@ func TestAReportSaysWhatTheHarnessHeldItsChildTo(t *testing.T) {
 	}{
 		{caps.Read, "write nothing"},
 		{caps.Read | caps.Shell, "write only its own scratch"},
-		{caps.Unconfined(), "confinement: none"},
 	} {
 		manager := newTestFamily(t).manager(t, waiting())
 		manager.mutex.Lock()

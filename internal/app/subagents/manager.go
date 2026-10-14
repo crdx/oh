@@ -1228,8 +1228,6 @@ func (self *Manager) attestation(name string) string {
 	switch {
 	case current == nil || current.caps == 0:
 		return ""
-	case current.caps.Has(caps.Write):
-		return "confinement: none, so nothing limited what it changed or reached"
 	case current.caps.Has(caps.Shell):
 		return "confinement: the harness let it write only its own scratch and kept it off the host network"
 	}

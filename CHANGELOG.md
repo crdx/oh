@@ -2,6 +2,10 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+### Changes
+
+- Confine subagents even under `--yolo`
+
 ## [0.17.0] - 2026-10-13
 
 ### Changes
