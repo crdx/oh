@@ -2,6 +2,8 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+## [0.17.1] - 2026-10-14
+
 ### Changes
 
 - Remove `subagent.{model,round_robin}` configuration keys
