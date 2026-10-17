@@ -785,7 +785,10 @@ func waitingForUserSection(data harnessContextTemplateData) string {
 		"- Before ending your turn, start a job watcher when completion can be detected through the filesystem.",
 		"- Note that this will not work with /grant, as it needs to be accessible already to be watchable.",
 		"- Use a continuous `inotifywait --monitor` if available; otherwise poll every 2s",
-		"- With inotifywait, end the turn only after it prints \"Watches established\"",
+		"- With inotifywait, omit `-q`, and end the turn only after the job output shows \"Watches established\"",
+		"- The job must exit once the condition holds; an `exit` inside `inotifywait … | while read` ends only the loop's subshell, so the job never ends",
+		"- Feed the loop by process substitution instead, break on success, then kill inotifywait:",
+		"    - `while read -r _; do done_yet && break; done < <(inotifywait --monitor …); kill \"$!\"`",
 		"- When the job ends, continue where you stopped",
 	}, "\n") + "\n\n"
 }

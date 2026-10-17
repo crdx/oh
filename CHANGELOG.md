@@ -5,6 +5,7 @@
 ### Changes
 
 - Add Google's Generate Content protocol
+- Clarify patch watch instructions to model
 
 ## [0.17.1] - 2026-10-14
 

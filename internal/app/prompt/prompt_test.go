@@ -1055,7 +1055,9 @@ func TestWaitingForTheUserFollowsJobAvailability(t *testing.T) {
 				"Note that this will not work with /grant",
 				"it needs to be accessible already to be watchable",
 				"Use a continuous `inotifywait --monitor` if available",
-				"With inotifywait, end the turn only after it prints \"Watches established\"",
+				"With inotifywait, omit `-q`, and end the turn only after the job output shows \"Watches established\"",
+				"The job must exit once the condition holds",
+				"done < <(inotifywait --monitor …); kill \"$!\"",
 				"otherwise poll every 2s",
 				"When the job ends, continue",
 			} {
