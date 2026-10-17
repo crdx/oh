@@ -8,11 +8,11 @@
 The loader is in config.go; the parser report will follow.\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🐍 Subagent tame-adder interjects:                                                                 \e[0m\r
+\e[48;2;48;58;67m 🐍 Subagent tame-adder has finished:                                                               \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    The config loader is in config.go.                                                              \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🦙 Subagent tame-alpaca interjects:                                                                \e[0m\r
+\e[48;2;48;58;67m 🦙 Subagent tame-alpaca has finished:                                                              \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    The parser is in parse.go.                                                                      \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r

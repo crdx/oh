@@ -7,11 +7,11 @@
 Two subagents are working on it.\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🐍 Subagent tame-adder interjects:                                                                 \e[0m\r
+\e[48;2;48;58;67m 🐍 Subagent tame-adder has finished:                                                               \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    The parser starts at parse.go.                                                                  \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🦙 Subagent tame-alpaca interjects:                                                                \e[0m\r
+\e[48;2;48;58;67m 🦙 Subagent tame-alpaca has finished:                                                              \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m    There are three open TODO items.                                                                \e[0m\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r

@@ -10252,7 +10252,7 @@ func TestAWindowedSubagentReportKeepsItsBackground(t *testing.T) {
 			continue
 		}
 		switch {
-		case strings.Contains(row, "Subagent tame-adder interjects"):
+		case strings.Contains(row, "Subagent tame-adder has finished"):
 			panelStyle = played.rows[index][0].styles
 		case strings.Contains(row, "more lines"):
 			noticeStyle = played.rows[index][0].styles
@@ -24139,6 +24139,12 @@ func TestGoldenADoubleReturnFlushesPendingNoticesWithoutTheNudge(t *testing.T) {
 			self.refreshPendingMessages()
 		}
 	}
+	restoreAMessage := func(self *App) {
+		self.children.directory = t.TempDir()
+		self.recordedEvents = append(self.recordedEvents, subagentrecord.ReceivedEvent("tame-adder", "Halfway there."))
+		self.restoreChildren(self.recordedEvents)
+		self.refreshPendingMessages()
+	}
 	endOneJob := func(self *App) {
 		self.jobs = jobState{manager: jobs.New(nil)}
 		self.jobEnded(jobs.Conclusion{
@@ -24177,6 +24183,8 @@ func TestGoldenADoubleReturnFlushesPendingNoticesWithoutTheNudge(t *testing.T) {
 		"subagent 3 restored and flushed":                  drawnAt(restoreSubagents("tame-adder"), 2),
 		"subagents 4 restored together and standing":       drawnAt(restoreSubagents("tame-adder", "tame-alpaca"), 0),
 		"subagents 5 restored together and flushed":        drawnAt(restoreSubagents("tame-adder", "tame-alpaca"), 2),
+		"subagent 6 a restored message standing":           drawnAt(restoreAMessage, 0),
+		"subagent 7 a restored message flushed":            drawnAt(restoreAMessage, 2),
 	}
 
 	compareWithGolden(t, "pending-notices", ".ansi", passes)

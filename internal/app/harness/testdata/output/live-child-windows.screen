@@ -81,7 +81,7 @@ l
 === grouped panel and tool at 100 columns by 12 lines ===
 lookup query 0
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 37 more lines
     A line of verified detail.
     A line of verified detail.
@@ -97,7 +97,7 @@ lookup query 0
 === grouped panel and tool at 100 columns by 24 lines ===
 lookup query 0
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 25 more lines
     A line of verified detail.
     A line of verified detail.
@@ -152,7 +152,7 @@ lookup query 0
 === grouped panel and tool at 100 columns by 8 lines ===
 lookup query 0
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 41 more lines
     A line of verified detail.
 
@@ -162,7 +162,7 @@ lookup query 0
 lookup quer…
 
  🤖 Subagen
-⋮ 203 more …
+⋮ 204 more …
     A line
     of
     verifie
@@ -178,7 +178,7 @@ lookup quer…
 lookup quer…
 
  🤖 Subagen
-⋮ 191 more …
+⋮ 192 more …
     d
     detail.
     A line
@@ -210,13 +210,13 @@ lookup quer…
 >
 === grouped panel and tool at 12 columns by 5 lines ===
 lookup quer…
-⋮ 209 more …
+⋮ 210 more …
     detail.
 
 >
 === grouped panel and tool at 12 columns by 6 lines ===
 lookup quer…
-⋮ 209 more …
+⋮ 210 more …
     detail.
 
 
@@ -224,7 +224,7 @@ lookup quer…
 === grouped panel and tool at 12 columns by 7 lines ===
 lookup quer…
 
-⋮ 208 more …
+⋮ 209 more …
     detail.
 
 
@@ -233,7 +233,7 @@ lookup quer…
 lookup quer…
 
  🤖 Subagen
-⋮ 207 more …
+⋮ 208 more …
     detail.
 
 
@@ -241,7 +241,7 @@ lookup quer…
 === grouped panel and tool at 40 columns by 12 lines ===
 lookup query 0
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 37 more lines
     A line of verified detail.
     A line of verified detail.
@@ -257,7 +257,7 @@ lookup query 0
 === grouped panel and tool at 40 columns by 24 lines ===
 lookup query 0
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 25 more lines
     A line of verified detail.
     A line of verified detail.
@@ -312,7 +312,7 @@ lookup query 0
 === grouped panel and tool at 40 columns by 8 lines ===
 lookup query 0
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 41 more lines
     A line of verified detail.
 
@@ -402,7 +402,7 @@ l
 lookup query 0
 
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 38 more lines
     A line of verified detail.
     A line of verified detail.
@@ -418,7 +418,7 @@ lookup query 0
 lookup query 0
 
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 26 more lines
     A line of verified detail.
     A line of verified detail.
@@ -483,7 +483,7 @@ lookup quer…
 
 
  🤖 Subagen
-⋮ 204 more …
+⋮ 205 more …
     of
     verifie
     d
@@ -499,7 +499,7 @@ lookup quer…
 
 
  🤖 Subagen
-⋮ 192 more …
+⋮ 193 more …
     detail.
     A line
     of
@@ -531,20 +531,20 @@ lookup quer…
 === one call and long report at 12 columns by 5 lines ===
 lookup quer…
 
-⋮ 210 more …
+⋮ 211 more …
 
 >
 === one call and long report at 12 columns by 6 lines ===
 lookup quer…
 
-⋮ 209 more …
+⋮ 210 more …
     detail.
 
 >
 === one call and long report at 12 columns by 7 lines ===
 lookup quer…
 
-⋮ 209 more …
+⋮ 210 more …
     detail.
 
 
@@ -553,7 +553,7 @@ lookup quer…
 lookup quer…
 
 
-⋮ 208 more …
+⋮ 209 more …
     detail.
 
 
@@ -562,7 +562,7 @@ lookup quer…
 lookup query 0
 
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 38 more lines
     A line of verified detail.
     A line of verified detail.
@@ -578,7 +578,7 @@ lookup query 0
 lookup query 0
 
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 26 more lines
     A line of verified detail.
     A line of verified detail.
@@ -722,7 +722,7 @@ l
 lookup query 0
 
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 
     Report 0
     A line of verified detail.
@@ -736,7 +736,7 @@ lookup query 0
 lookup query 0
 
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 
     Report 0
     A line of verified detail.
@@ -787,7 +787,7 @@ lookup quer…
 
 
  🤖 Subagen
-⋮ 9 more li…
+⋮ 10 more l…
     of
     verifie
     d
@@ -806,8 +806,9 @@ lookup quer…
     t
     tame-ad
     der-0
-    interje
-    cts:
+    has
+    finishe
+    d:
 
     Report
     0
@@ -831,20 +832,20 @@ lookup quer…
 === one call and short report at 12 columns by 5 lines ===
 lookup quer…
 
-⋮ 15 more l…
+⋮ 16 more l…
 
 >
 === one call and short report at 12 columns by 6 lines ===
 lookup quer…
 
-⋮ 14 more l…
+⋮ 15 more l…
     detail.
 
 >
 === one call and short report at 12 columns by 7 lines ===
 lookup quer…
 
-⋮ 14 more l…
+⋮ 15 more l…
     detail.
 
 
@@ -853,7 +854,7 @@ lookup quer…
 lookup quer…
 
 
-⋮ 13 more l…
+⋮ 14 more l…
     detail.
 
 
@@ -862,7 +863,7 @@ lookup quer…
 lookup query 0
 
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 
     Report 0
     A line of verified detail.
@@ -876,7 +877,7 @@ lookup query 0
 lookup query 0
 
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 
     Report 0
     A line of verified detail.
@@ -1006,7 +1007,7 @@ e
 lookup query 0
 
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 40 more lines
     A line of verified detail.
     A line of verified detail.
@@ -1022,7 +1023,7 @@ lookup query 0
 lookup query 0
 
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 28 more lines
     A line of verified detail.
     A line of verified detail.
@@ -1086,7 +1087,7 @@ a separate harness notice
 lookup quer…
 
 
-⋮ 208 more …
+⋮ 209 more …
     detail.
 
 
@@ -1103,7 +1104,7 @@ lookup quer…
 
 
  🤖 Subagen
-⋮ 196 more …
+⋮ 197 more …
     d
     detail.
     A line
@@ -1134,13 +1135,13 @@ lookup quer…
 >
 === one call report and notice at 12 columns by 5 lines ===
 lookup quer…
-⋮ 210 more …
+⋮ 211 more …
 ⋮ 1 more bl…
 
 >
 === one call report and notice at 12 columns by 6 lines ===
 lookup quer…
-⋮ 209 more …
+⋮ 210 more …
     detail.
 ⋮ 3 more li…
 
@@ -1148,7 +1149,7 @@ lookup quer…
 === one call report and notice at 12 columns by 7 lines ===
 lookup quer…
 
-⋮ 210 more …
+⋮ 211 more …
 
 ⋮ 3 more li…
 
@@ -1156,7 +1157,7 @@ lookup quer…
 === one call report and notice at 12 columns by 8 lines ===
 lookup quer…
 
-⋮ 209 more …
+⋮ 210 more …
     detail.
 
 ⋮ 3 more li…
@@ -1166,7 +1167,7 @@ lookup quer…
 lookup query 0
 
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 40 more lines
     A line of verified detail.
     A line of verified detail.
@@ -1182,7 +1183,7 @@ lookup query 0
 lookup query 0
 
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 28 more lines
     A line of verified detail.
     A line of verified detail.
@@ -1403,7 +1404,7 @@ l
 
 >
 === only one long report at 12 columns by 12 lines ===
-⋮ 202 more …
+⋮ 203 more …
     verifie
     d
     detail.
@@ -1419,7 +1420,7 @@ l
     detail.
 >
 === only one long report at 12 columns by 24 lines ===
-⋮ 190 more …
+⋮ 191 more …
     A line
     of
     verifie
@@ -1448,25 +1449,25 @@ l
 
 >
 === only one long report at 12 columns by 4 lines ===
-⋮ 209 more …
+⋮ 210 more …
     detail.
 
 >
 === only one long report at 12 columns by 5 lines ===
-⋮ 209 more …
+⋮ 210 more …
     detail.
 
 
 >
 === only one long report at 12 columns by 6 lines ===
-⋮ 208 more …
+⋮ 209 more …
     d
     detail.
 
 
 >
 === only one long report at 12 columns by 7 lines ===
-⋮ 207 more …
+⋮ 208 more …
     verifie
     d
     detail.
@@ -1474,7 +1475,7 @@ l
 
 >
 === only one long report at 12 columns by 8 lines ===
-⋮ 206 more …
+⋮ 207 more …
     of
     verifie
     d
@@ -1840,7 +1841,7 @@ lookup query 1
 lookup query 2
 
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 40 more lines
     A line of verified detail.
     A line of verified detail.
@@ -1856,7 +1857,7 @@ lookup query 1
 lookup query 2
 
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 28 more lines
     A line of verified detail.
     A line of verified detail.
@@ -1921,7 +1922,7 @@ lookup quer…
 
 
  🤖 Subagen
-⋮ 206 more …
+⋮ 207 more …
     d
     detail.
 
@@ -1937,7 +1938,7 @@ lookup quer…
 
 
  🤖 Subagen
-⋮ 194 more …
+⋮ 195 more …
     of
     verifie
     d
@@ -1967,14 +1968,14 @@ lookup quer…
 === three calls and long report at 12 columns by 5 lines ===
 lookup quer…
 
-⋮ 210 more …
+⋮ 211 more …
 
 >
 === three calls and long report at 12 columns by 6 lines ===
 ⋮ 2 more li…
 lookup quer…
 
-⋮ 210 more …
+⋮ 211 more …
 
 >
 === three calls and long report at 12 columns by 7 lines ===
@@ -1982,7 +1983,7 @@ lookup quer…
 lookup quer…
 lookup quer…
 
-⋮ 210 more …
+⋮ 211 more …
 
 >
 === three calls and long report at 12 columns by 8 lines ===
@@ -1990,7 +1991,7 @@ lookup quer…
 lookup quer…
 lookup quer…
 
-⋮ 209 more …
+⋮ 210 more …
     detail.
 
 >
@@ -2000,7 +2001,7 @@ lookup query 1
 lookup query 2
 
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 40 more lines
     A line of verified detail.
     A line of verified detail.
@@ -2016,7 +2017,7 @@ lookup query 1
 lookup query 2
 
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 28 more lines
     A line of verified detail.
     A line of verified detail.
@@ -2160,7 +2161,7 @@ lookup query 1
 lookup query 2
 
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 40 more lines
     A line of verified detail.
     A line of verified detail.
@@ -2176,7 +2177,7 @@ lookup query 1
 lookup query 2
 
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 28 more lines
     A line of verified detail.
     A line of verified detail.
@@ -2241,7 +2242,7 @@ lookup quer…
 
 
  🤖 Subagen
-⋮ 196 more …
+⋮ 198 more …
     d
     detail.
 
@@ -2257,7 +2258,7 @@ lookup quer…
 
 
  🤖 Subagen
-⋮ 184 more …
+⋮ 186 more …
     of
     verifie
     d
@@ -2287,14 +2288,14 @@ lookup quer…
 === three calls and two reports at 12 columns by 5 lines ===
 lookup quer…
 
-⋮ 200 more …
+⋮ 202 more …
 
 >
 === three calls and two reports at 12 columns by 6 lines ===
 ⋮ 2 more li…
 lookup quer…
 
-⋮ 200 more …
+⋮ 202 more …
 
 >
 === three calls and two reports at 12 columns by 7 lines ===
@@ -2302,7 +2303,7 @@ lookup quer…
 lookup quer…
 lookup quer…
 
-⋮ 200 more …
+⋮ 202 more …
 
 >
 === three calls and two reports at 12 columns by 8 lines ===
@@ -2310,7 +2311,7 @@ lookup quer…
 lookup quer…
 lookup quer…
 
-⋮ 199 more …
+⋮ 201 more …
     detail.
 
 >
@@ -2320,7 +2321,7 @@ lookup query 1
 lookup query 2
 
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 40 more lines
     A line of verified detail.
     A line of verified detail.
@@ -2336,7 +2337,7 @@ lookup query 1
 lookup query 2
 
 
- 🤖 Subagent tame-adder-0 interjects:
+ 🤖 Subagent tame-adder-0 has finished:
 ⋮ 28 more lines
     A line of verified detail.
     A line of verified detail.

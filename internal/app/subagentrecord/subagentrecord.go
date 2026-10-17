@@ -12,6 +12,7 @@ import (
 const (
 	Started             agent.Kind = "subagent_started"
 	Sent                agent.Kind = "subagent_message_sent"
+	Received            agent.Kind = "subagent_message_received"
 	Finished            agent.Kind = "subagent_finished"
 	ReportsDelivered    agent.Kind = "subagent_completion_submitted"
 	AccessWithdrawnStop agent.Kind = "subagent_access_stop"
@@ -68,6 +69,14 @@ func DecodeOrigin(event agent.Event) (Origin, bool) {
 
 func SentEvent(name string, message string) agent.Event {
 	return agent.Event{Kind: Sent, Subagent: name, Text: message}
+}
+
+func ReceivedEvent(name string, message string) agent.Event {
+	return agent.Event{Kind: Received, Subagent: name, Text: message}
+}
+
+func MessageHeading(name string) string {
+	return "Subagent " + name + " interjects:"
 }
 
 type Outcome struct {
@@ -166,9 +175,10 @@ func namedSubagents(names string) string {
 
 type Report struct {
 	Name    string `json:"name"`
-	State   State  `json:"state"`
+	State   State  `json:"state,omitempty"`
 	Answer  string `json:"answer,omitempty"`
 	Failure string `json:"failure,omitempty"`
+	Message string `json:"message,omitempty"`
 }
 
 type delivery struct {
@@ -191,7 +201,14 @@ func ReportsOf(event agent.Event) ([]Report, bool) {
 	return record.Reports, true
 }
 
+func (self Report) IsMessage() bool {
+	return self.State == ""
+}
+
 func (self Report) Notice() string {
+	if self.IsMessage() {
+		return MessageHeading(self.Name) + "\n\n" + self.Message
+	}
 	var parts []string
 	if self.Answer != "" {
 		parts = append(parts, self.Answer)
@@ -203,5 +220,5 @@ func (self Report) Notice() string {
 	case self.Answer == "":
 		parts = append(parts, state+" without an answer.")
 	}
-	return "Subagent " + self.Name + " interjects:\n\n" + strings.Join(parts, "\n\n")
+	return "Subagent " + self.Name + " has finished:\n\n" + strings.Join(parts, "\n\n")
 }

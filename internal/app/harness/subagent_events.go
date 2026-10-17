@@ -23,7 +23,7 @@ type childState struct {
 	manager            *subagents.Manager
 	rotate             func(config.Subagent, model.Defaults) (subagents.Rotation, error)
 	directory          string
-	reportsDue         []string
+	reportsDue         []agent.Event
 	deliveryAt         time.Time
 	spend              spendLedger
 	viewedConversation string
@@ -101,13 +101,18 @@ func (self *App) subagentActivity() <-chan struct{} {
 
 func (self *App) subagentEvent(event agent.Event) {
 	self.recordChildFact(event)
-	if event.Kind != subagentrecord.Finished || event.Name == string(subagentrecord.Stopped) {
+	if !isReported(event) {
 		return
 	}
 	if len(self.children.reportsDue) == 0 {
 		self.children.deliveryAt = self.getNow().Add(childDebounce)
 	}
-	self.children.reportsDue = append(self.children.reportsDue, event.Subagent)
+	self.children.reportsDue = append(self.children.reportsDue, event)
+}
+
+func isReported(event agent.Event) bool {
+	return event.Kind == subagentrecord.Received ||
+		event.Kind == subagentrecord.Finished && event.Name != string(subagentrecord.Stopped)
 }
 
 func (self *App) recordChildFact(event agent.Event) {
@@ -134,45 +139,54 @@ func (self *App) queueReadyChildCompletions() bool {
 	if len(self.children.reportsDue) == 0 || self.getNow().Before(self.children.deliveryAt) {
 		return false
 	}
-	names := self.children.reportsDue
+	due := self.children.reportsDue
 	self.children.reportsDue = nil
 	self.children.deliveryAt = time.Time{}
-	return self.holdNotice(self.childDelivery(names))
+	return self.holdNotice(self.childDelivery(due))
 }
 
-func (self *App) childDelivery(names []string) agent.Event {
-	message := completionMessage(self.recordedEvents, names, self.children.manager.ScratchNote)
-	return subagentrecord.DeliveryEvent(names, message, completionReports(self.recordedEvents, names))
-}
-
-func completionMessage(events []agent.Event, names []string, scratchNote func(string) string) string {
-	var results []string
-	for _, name := range names {
-		var answer, state, failure string
-		for _, event := range events {
-			if event.Kind == subagentrecord.Finished && event.Subagent == name {
-				answer = event.Text
-				state = event.Name
-				failure = subagentrecord.FailureOf(event)
-			}
+func (self *App) childDelivery(due []agent.Event) agent.Event {
+	var names []string
+	for _, event := range due {
+		if !slices.Contains(names, event.Subagent) {
+			names = append(names, event.Subagent)
 		}
-		results = append(results, describeCompletion(name, state+scratchNote(name), answer, failure))
 	}
-	return subagentrecord.CompletionHeading(names) + "\n\n" + strings.Join(results, "\n\n")
+	message := completionMessage(due, self.children.manager.ScratchNote)
+	return subagentrecord.DeliveryEvent(names, message, completionReports(due))
 }
 
-func completionReports(events []agent.Event, names []string) []subagentrecord.Report {
-	var reports []subagentrecord.Report
-	for _, name := range names {
-		report := subagentrecord.Report{Name: name}
-		for _, event := range events {
-			if event.Kind == subagentrecord.Finished && event.Subagent == name {
-				report.State = subagentrecord.State(event.Name)
-				report.Answer = event.Text
-				report.Failure = subagentrecord.FailureOf(event)
-			}
+func completionMessage(due []agent.Event, scratchNote func(string) string) string {
+	var sections, finishedNames, results []string
+	for _, event := range due {
+		if event.Kind == subagentrecord.Received {
+			sections = append(sections, subagentrecord.MessageHeading(event.Subagent)+"\n\n"+event.Text)
+			continue
 		}
-		reports = append(reports, report)
+		finishedNames = append(finishedNames, event.Subagent)
+		results = append(results, describeCompletion(
+			event.Subagent, event.Name+scratchNote(event.Subagent), event.Text, subagentrecord.FailureOf(event),
+		))
+	}
+	if len(finishedNames) > 0 {
+		sections = append(sections, subagentrecord.CompletionHeading(finishedNames)+"\n\n"+strings.Join(results, "\n\n"))
+	}
+	return strings.Join(sections, "\n\n")
+}
+
+func completionReports(due []agent.Event) []subagentrecord.Report {
+	reports := make([]subagentrecord.Report, len(due))
+	for index, event := range due {
+		if event.Kind == subagentrecord.Received {
+			reports[index] = subagentrecord.Report{Name: event.Subagent, Message: event.Text}
+			continue
+		}
+		reports[index] = subagentrecord.Report{
+			Name:    event.Subagent,
+			State:   subagentrecord.State(event.Name),
+			Answer:  event.Text,
+			Failure: subagentrecord.FailureOf(event),
+		}
 	}
 	return reports
 }
@@ -218,24 +232,36 @@ func (self *App) restoreChildren(events []agent.Event) {
 }
 
 func (self *App) queueUndeliveredReports(events []agent.Event) {
-	pendingChildren := map[string]bool{}
-	var order []string
+	var pendingReports []agent.Event
 	for _, event := range events {
-		if event.Kind == subagentrecord.Finished && event.Name != string(subagentrecord.Stopped) {
-			pendingChildren[event.Subagent] = true
-			order = append(order, event.Subagent)
+		if isReported(event) {
+			pendingReports = append(pendingReports, event)
 		}
 		if event.Kind == subagentrecord.ReportsDelivered {
-			for name := range strings.SplitSeq(event.Name, ",") {
-				delete(pendingChildren, name)
-			}
+			pendingReports = withoutDelivered(pendingReports, event)
 		}
 	}
-	for _, name := range order {
-		if pendingChildren[name] && !slices.Contains(self.children.reportsDue, name) {
-			self.children.reportsDue = append(self.children.reportsDue, name)
+	self.children.reportsDue = append(self.children.reportsDue, pendingReports...)
+}
+
+func withoutDelivered(pendingReports []agent.Event, delivery agent.Event) []agent.Event {
+	names := strings.Split(delivery.Name, ",")
+	pendingReports = slices.DeleteFunc(pendingReports, func(event agent.Event) bool {
+		return event.Kind == subagentrecord.Finished && slices.Contains(names, event.Subagent)
+	})
+	reports, _ := subagentrecord.ReportsOf(delivery)
+	for _, report := range reports {
+		if !report.IsMessage() {
+			continue
+		}
+		index := slices.IndexFunc(pendingReports, func(event agent.Event) bool {
+			return event.Kind == subagentrecord.Received && event.Subagent == report.Name
+		})
+		if index >= 0 {
+			pendingReports = slices.Delete(pendingReports, index, index+1)
 		}
 	}
+	return pendingReports
 }
 
 func (self childState) reconfigure(live config.LiveConfig) error {

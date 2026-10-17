@@ -24,6 +24,7 @@ import (
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/toolbox/messageparent"
 	"crdx.org/oh/pkg/toolbox/subagent"
 )
 
@@ -48,6 +49,7 @@ type Child struct {
 	SystemPrompt    string
 	Observer        req.Observer
 	EnsurePersisted func() error
+	MessageParent   messageparent.Parent
 }
 
 type Worker struct {
@@ -874,6 +876,9 @@ func (self *Manager) converse(ctx context.Context, current *child, writer *store
 		SystemPrompt:    systemPrompt,
 		Observer:        writer.Observer(),
 		EnsurePersisted: writer.EnsurePersisted,
+		MessageParent: func(_ context.Context, message string) error {
+			return self.messageParent(current, message)
+		},
 	})
 	if err != nil {
 		return "", err
@@ -1168,6 +1173,19 @@ func (self *Manager) queue(name string, message string) (bool, <-chan struct{}) 
 	self.mutex.Unlock()
 	self.events <- subagentrecord.SentEvent(name, message)
 	return true, nil
+}
+
+func (self *Manager) messageParent(current *child, message string) error {
+	self.eventMutex.Lock()
+	defer self.eventMutex.Unlock()
+	self.mutex.Lock()
+	isRunning := !self.closed && current.State == subagentrecord.Running
+	self.mutex.Unlock()
+	if !isRunning {
+		return errors.New("you are being stopped, so your parent cannot take a message")
+	}
+	self.events <- subagentrecord.ReceivedEvent(current.Name, message)
+	return nil
 }
 
 func (self *Manager) takeQueued(current *child) (string, bool) {

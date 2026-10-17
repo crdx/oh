@@ -1,0 +1,50 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[subagent]]
+name = "tame-adder"
+
+[[subagent.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-11","type":"function_call","call_id":"toolu_21","name":"message_parent","arguments":"{\"message\":\"Halfway through the logs.\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed","usage":{"input_tokens":1200,"output_tokens":30,"input_tokens_details":{"cached_tokens":0,"cache_write_tokens":0}}}}''',
+]
+
+[[subagent.response]]
+wait-for-cancellation = true
+
+[first]
+prompt = "start a subagent to read the logs"
+settle-subagents-after-turn = true
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-12","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Read every log\",\"intent\":\"Reading the logs from the start\"}]}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-13","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"It is reading."}''',
+    '''{"type":"response.output_text.done","text":"It is reading."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"It is reading."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-13","type":"message","role":"assistant","content":[{"type":"output_text","text":"It is reading."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-14","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"It got halfway before the last session ended."}''',
+    '''{"type":"response.output_text.done","text":"It got halfway before the last session ended."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"It got halfway before the last session ended."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-14","type":"message","role":"assistant","content":[{"type":"output_text","text":"It got halfway before the last session ended."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

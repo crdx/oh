@@ -5,7 +5,7 @@
 spawn 3 subagents · anthropic/claude-opus-5@medium, anthropic/claude-opus-5@medium, anthropic/claud…
 
 
- 🐍 Subagent tame-adder interjects:
+ 🐍 Subagent tame-adder has finished:
 
     The readme is one heading.
 
@@ -15,13 +15,13 @@ send all
 The two still running have the message.
 
 
- 🦙 Subagent tame-alpaca interjects:
+ 🦙 Subagent tame-alpaca has finished:
 
     The loader is in config.go.
 
     It reads YAML.
 
- 🐟 Subagent tame-anchovy interjects:
+ 🐟 Subagent tame-anchovy has finished:
 
     The parser is in parse.go.
 

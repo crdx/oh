@@ -83,7 +83,7 @@ func New(manager Manager, isAllowed func() bool) tool.Tool {
 			"miss part of its task, or describe checks it never ran, " +
 			"so before you act on it or pass it on, verify what matters yourself, " +
 			"such as by opening files it reports, rerunning key commands, or reading the code it cites; " +
-			"a finished subagent's answer reaches you on its own, between your tool calls while you work " +
+			"a finished subagent's answer, and any message a running one sends you, reaches you on its own, between your tool calls while you work " +
 			"or by waking you once you have ended your turn, so carry on or end your turn rather than waiting or polling for it",
 		Schema: tool.Schema{
 			tool.Enum("action", "what to do", Start, Send, Status, Output, Stop, List, Models),

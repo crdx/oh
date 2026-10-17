@@ -11,7 +11,7 @@ spawn subagent · anthropic/claude-haiku-5-5@medium (Reviewing the parser for mi
 I chose the listed model explicitly.
 
 
- 🐍 Subagent tame-adder interjects:
+ 🐍 Subagent tame-adder has finished:
 
     The explicit model reviewed the parser.
 

@@ -5,6 +5,7 @@
 ### Changes
 
 - Remove the experimental `wait` tool
+- Let subagents message their parent
 
 ## [0.18.0] - 2026-10-17
 

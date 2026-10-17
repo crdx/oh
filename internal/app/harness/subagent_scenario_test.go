@@ -23,6 +23,7 @@ import (
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/toolbox/messageparent"
 	"crdx.org/oh/pkg/toolbox/subagent"
 )
 
@@ -218,7 +219,7 @@ func (self *sessionGoldenChildren) manager(
 				prompt += "\n\n" + child.SharedPrompt
 			}
 		}
-		tools := childTools()
+		tools := append(childTools(), messageparent.New(child.MessageParent))
 		worker := agent.New(
 			prompt,
 			sessionGoldenProviderFor(self.t, self.scenario, self.endpoint+sessionGoldenSubagentPath+child.Name, "", child.Name),
@@ -266,6 +267,10 @@ func (self *sessionGoldenChildren) withTool(tools []tool.Tool, manager *subagent
 	}
 	tools = append(tools, subagent.New(sessionGoldenMessagingManager{Manager: manager, children: self}, func() bool { return getCaps().Has(caps.Subagents) }))
 	return tools
+}
+
+func isSameReport(first agent.Event, second agent.Event) bool {
+	return first.Kind == second.Kind && first.Subagent == second.Subagent && first.Name == second.Name && first.Text == second.Text
 }
 
 func isStarted(manager *subagents.Manager, name string) bool {
@@ -519,7 +524,7 @@ func requireDrawnWithoutChildren(
 	spentWith, isPricedWith := withChildren.childSpend()
 	spentWithout, isPricedWithout := withoutChildren.childSpend()
 	if spentWith != spentWithout || isPricedWith != isPricedWithout ||
-		!slices.Equal(withChildren.children.reportsDue, withoutChildren.children.reportsDue) {
+		!slices.EqualFunc(withChildren.children.reportsDue, withoutChildren.children.reportsDue, isSameReport) {
 		t.Errorf("the session counts its subagents differently once they are gone: %v %t, then %v %t",
 			spentWith, isPricedWith, spentWithout, isPricedWithout)
 	}

@@ -59,13 +59,13 @@ func TestGoldenSubagentBarSummarisesEveryState(t *testing.T) {
 }
 
 func TestGoldenSubagentEventsDrawCompactlyAndReplay(t *testing.T) {
-	passes := map[string]func() string{
-		"live": func() string {
+	live := func(events []agent.Event) func() string {
+		return func() string {
 			var drawn bytes.Buffer
 			conversation := testConversation(t, &drawn)
 			conversation.screen = output.NewTerminalOfSize(&drawn, replayColumns, replayLines)
 			conversation.currentTurn = Turn{painter: conversation.newPainter(true)}
-			for _, event := range childFixtureEvents() {
+			for _, event := range events {
 				if event.Subagent != "" {
 					conversation.subagentEvent(event)
 					continue
@@ -75,26 +75,48 @@ func TestGoldenSubagentEventsDrawCompactlyAndReplay(t *testing.T) {
 			conversation.currentTurn.painter.Close(dynamic.Done)
 			conversation.screen.End()
 			return drawn.String()
-		},
-		"replay": func() string {
+		}
+	}
+	replayed := func(events []agent.Event) func() string {
+		return func() string {
 			var drawn bytes.Buffer
 			conversation := testConversation(t, &drawn)
 			conversation.screen = output.NewTerminalOfSize(&drawn, replayColumns, replayLines)
-			conversation.recordedEvents = childFixtureEvents()
+			conversation.recordedEvents = events
 			conversation.replay()
 			return drawn.String()
-		},
-		"restored pending": func() string {
+		}
+	}
+	restoredPending := func(events ...agent.Event) func() string {
+		return func() string {
 			var drawn bytes.Buffer
 			conversation := testConversation(t, &drawn)
 			conversation.screen = output.NewTerminalOfSize(&drawn, replayColumns, replayLines)
 			conversation.children.directory = t.TempDir()
-			conversation.recordedEvents = []agent.Event{finished("tame-adder", "The README says hello.")}
+			conversation.recordedEvents = events
 			conversation.restoreChildren(conversation.recordedEvents)
 			conversation.replay()
 			conversation.refreshPendingMessages()
 			return drawn.String()
-		},
+		}
+	}
+	passes := map[string]func() string{
+		"message live":   live(childMessageFixtureEvents()),
+		"message replay": replayed(childMessageFixtureEvents()),
+		"restored pending message": restoredPending(
+			subagentrecord.ReceivedEvent("tame-adder", "Halfway through the README."),
+			finished("tame-adder", "The README says hello."),
+		),
+		"restored pending message already delivered": restoredPending(
+			subagentrecord.ReceivedEvent("tame-adder", "Halfway through the README."),
+			subagentrecord.DeliveryEvent([]string{"tame-adder"}, "Subagent tame-adder interjects:\n\nHalfway through the README.", []subagentrecord.Report{
+				{Name: "tame-adder", Message: "Halfway through the README."},
+			}),
+			finished("tame-adder", "The README says hello."),
+		),
+		"live":             live(childFixtureEvents()),
+		"replay":           replayed(childFixtureEvents()),
+		"restored pending": restoredPending(finished("tame-adder", "The README says hello.")),
 	}
 	compareWithGolden(t, "subagent-timeline", ".ansi", passes)
 	compareWithGolden(t, "subagent-timeline", ".screen", shownPasses(t, passes))
@@ -111,6 +133,22 @@ func childFixtureEvents() []agent.Event {
 		subagentrecord.DeliveryEvent([]string{"tame-adder"}, "Subagent tame-adder finished:\n\ntame-adder done: The README says hello.", []subagentrecord.Report{
 			{Name: "tame-adder", State: subagentrecord.Done, Answer: "The README says hello."},
 		}),
+	}
+}
+
+func childMessageFixtureEvents() []agent.Event {
+	return []agent.Event{
+		subagentrecord.StartedEvent("tame-adder", "child-1", "Find the issue", subagentrecord.Origin{Workspace: sessionGoldenWorkspace}),
+		subagentrecord.ReceivedEvent("tame-adder", "Halfway through the README."),
+		subagentrecord.FinishedEvent("tame-adder", subagentrecord.Done, "The README says hello.", nil, &agent.Usage{InputTokens: 10}),
+		subagentrecord.DeliveryEvent(
+			[]string{"tame-adder"},
+			"Subagent tame-adder interjects:\n\nHalfway through the README.\n\nSubagent tame-adder finished:\n\ntame-adder done: The README says hello.",
+			[]subagentrecord.Report{
+				{Name: "tame-adder", Message: "Halfway through the README."},
+				{Name: "tame-adder", State: subagentrecord.Done, Answer: "The README says hello."},
+			},
+		),
 	}
 }
 
@@ -160,7 +198,7 @@ func TestReadyChildrenJoinTheNextUserTurn(t *testing.T) {
 	current := time.Date(2026, time.October, 8, 10, 0, 0, 0, time.UTC)
 	conversation.now = func() time.Time { return current }
 	conversation.recordedEvents = []agent.Event{finished("tame-adder", "child answer")}
-	conversation.children.reportsDue = []string{"tame-adder"}
+	conversation.children.reportsDue = conversation.recordedEvents
 	conversation.children.deliveryAt = current
 	conversation.start("new question")
 	for report := range conversation.currentTurn.Events() {
@@ -215,7 +253,7 @@ func TestARestoredSubagentReportWaitsForTheNextTurn(t *testing.T) {
 
 func TestSubagentCompletionBatchesDistinctResults(t *testing.T) {
 	first := []agent.Event{finished("tame-adder", "first answer"), finished("tame-alpaca", "second answer")}
-	message := completionMessage(first, []string{"tame-adder", "tame-alpaca"}, func(name string) string { return " (scratch of " + name + ")" })
+	message := completionMessage(first, func(name string) string { return " (scratch of " + name + ")" })
 	if !strings.Contains(message, "tame-adder done (scratch of tame-adder): first answer") || !strings.Contains(message, "second answer") {
 		t.Fatalf("batch omitted a result: %q", message)
 	}
@@ -229,6 +267,40 @@ func TestSubagentCompletionBatchesDistinctResults(t *testing.T) {
 	conversation.queueUndeliveredReports(first)
 	if len(conversation.children.reportsDue) != 0 {
 		t.Errorf("submitted completions replayed: %v", conversation.children.reportsDue)
+	}
+}
+
+func TestAMidRunMessageJoinsTheBatchAheadOfTheFinishes(t *testing.T) {
+	due := []agent.Event{
+		subagentrecord.ReceivedEvent("tame-adder", "Is the parser in scope?"),
+		finished("tame-alpaca", "second answer"),
+	}
+	message := completionMessage(due, func(string) string { return "" })
+	want := "Subagent tame-adder interjects:\n\nIs the parser in scope?\n\n" +
+		"Subagent tame-alpaca finished:\n\ntame-alpaca done: second answer"
+	if message != want {
+		t.Errorf("told the parent %q, want %q", message, want)
+	}
+	reports := completionReports(due)
+	if len(reports) != 2 || !reports[0].IsMessage() || reports[0].Message != "Is the parser in scope?" || reports[1].IsMessage() {
+		t.Errorf("reported %+v", reports)
+	}
+	if notice := reports[0].Notice(); notice != "Subagent tame-adder interjects:\n\nIs the parser in scope?" {
+		t.Errorf("drew %q", notice)
+	}
+}
+
+func TestOnlyTheMessagesADeliveryCarriedCountAsDelivered(t *testing.T) {
+	firstMessage := subagentrecord.ReceivedEvent("tame-adder", "first")
+	secondMessage := subagentrecord.ReceivedEvent("tame-adder", "second")
+	delivery := subagentrecord.DeliveryEvent([]string{"tame-adder"}, "Subagent tame-adder interjects:\n\nfirst", []subagentrecord.Report{
+		{Name: "tame-adder", Message: "first"},
+	})
+	conversation := &App{now: time.Now}
+	conversation.queueUndeliveredReports([]agent.Event{firstMessage, secondMessage, delivery, finished("tame-adder", "answer")})
+	due := conversation.children.reportsDue
+	if len(due) != 2 || due[0].Text != "second" || due[1].Kind != subagentrecord.Finished {
+		t.Errorf("left due %+v", due)
 	}
 }
 

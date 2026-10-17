@@ -8,11 +8,11 @@ cat tame-adder 4L ~100t (Finding where the config loads)
 The loader is in config.go; the parser report will follow.
 
 
- 🐍 Subagent tame-adder interjects:
+ 🐍 Subagent tame-adder has finished:
 
     The config loader is in config.go.
 
- 🦙 Subagent tame-alpaca interjects:
+ 🦙 Subagent tame-alpaca has finished:
 
     The parser is in parse.go.
 

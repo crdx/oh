@@ -7,7 +7,7 @@ spawn subagent · anthropic/claude-opus-5@medium (Finding where the config loads
 A subagent is looking in internal.
 
 
- 🐍 Subagent tame-adder interjects:
+ 🐍 Subagent tame-adder has finished:
 
     The loader is in config.go.
 
@@ -23,7 +23,7 @@ send tame-adder (Finding where the config loads)
 I asked it again.
 
 
- 🐍 Subagent tame-adder interjects:
+ 🐍 Subagent tame-adder has finished:
 
     Its tests are in config_test.go.
 

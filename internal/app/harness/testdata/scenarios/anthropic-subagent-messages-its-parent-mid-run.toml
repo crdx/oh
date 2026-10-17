@@ -1,0 +1,110 @@
+provider = "anthropic"
+model = "claude-opus-5"
+effort = "medium"
+
+[[tool]]
+name = "probe"
+outputs = ["first probe"]
+
+[[subagent]]
+name = "tame-adder"
+
+[[subagent.response]]
+event = [
+    '''{"type":"message_start","message":{"usage":{"input_tokens":1200,"output_tokens":1}}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_21","name":"message_parent","input":{}}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"message\":\"The parser is in parse.go. Should I check its tests too?\"}"}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"tool_use"},"usage":{"output_tokens":40}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[[subagent.response]]
+wait-for-message = true
+event = [
+    '''{"type":"message_start","message":{"usage":{"input_tokens":1300,"output_tokens":1}}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_22","name":"message_parent","input":{}}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"message\":\"Checking the tests now.\"}"}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"tool_use"},"usage":{"output_tokens":30}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[[subagent.response]]
+event = [
+    '''{"type":"message_start","message":{"usage":{"input_tokens":1500,"output_tokens":1}}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"The parser is in parse.go, and its tests are in parse_test.go."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"},"usage":{"output_tokens":20}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[first]
+prompt = "start a subagent and keep working"
+settle-subagents-after-tool-result = 2
+settle-subagents-after-turn = true
+subagent-debounce-passes = true
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_1","name":"subagent","input":{}}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"action\":\"start\",\"subagents\":[{\"model\":\"anthropic/claude-opus-5@medium\",\"prompt\":\"Find the parser\",\"intent\":\"Finding where the parser lives\"}]}"}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"tool_use"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_2","name":"probe","input":{}}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{}"}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"tool_use"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_3","name":"subagent","input":{}}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"action\":\"send\",\"name\":\"tame-adder\",\"message\":\"Yes, check its tests too\"}"}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"tool_use"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Asked it to check the tests too."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"The tests are in parse_test.go."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
+    '''{"type":"message_stop"}''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"type":"message_start","message":{}}''',
+    '''{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}''',
+    '''{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Carrying on."}}''',
+    '''{"type":"content_block_stop","index":0}''',
+    '''{"type":"message_delta","delta":{"stop_reason":"end_turn"}}''',
+    '''{"type":"message_stop"}''',
+]

@@ -31,6 +31,7 @@ import (
 	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox"
+	"crdx.org/oh/pkg/toolbox/messageparent"
 )
 
 type childOptions struct {
@@ -172,7 +173,7 @@ func newChildFactory(options childOptions) subagents.Factory {
 				return errors.New("host network is not available to this subagent")
 			},
 			options.runner,
-		))
+		), messageparent.New(child.MessageParent))
 		prompt := child.SystemPrompt
 		if prompt == "" {
 			prompt = childPrompt(options, workspace, child, home, tools)

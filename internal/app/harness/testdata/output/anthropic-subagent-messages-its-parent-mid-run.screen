@@ -1,0 +1,34 @@
+
+ start a subagent and keep working
+
+
+spawn subagent · anthropic/claude-opus-5@medium (Finding where the parser lives)
+probe probe 1L
+
+
+ 🐍 Subagent tame-adder interjects:
+
+    The parser is in parse.go. Should I check its tests too?
+
+
+send tame-adder (Finding where the parser lives)
+
+Asked it to check the tests too.
+
+
+ 🐍 Subagent tame-adder interjects:
+
+    Checking the tests now.
+
+ 🐍 Subagent tame-adder has finished:
+
+    The parser is in parse.go, and its tests are in parse_test.go.
+
+
+The tests are in parse_test.go.
+
+
+ carry on
+
+
+Carrying on.

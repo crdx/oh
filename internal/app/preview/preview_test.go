@@ -20,6 +20,7 @@ import (
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/toolbox/job"
+	"crdx.org/oh/pkg/toolbox/messageparent"
 )
 
 var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")
@@ -66,6 +67,23 @@ func conversation() []agent.Event {
 			Kind: agent.ToolCallResultEvent, ID: "call-3", Name: "subagent", Status: agent.SuccessStatus,
 			Text: "started tame-adder, tame-alpaca; 2/5 subagents running",
 		},
+	}
+}
+
+func childConversation() []agent.Event {
+	message := "The parser is in parse.go, beside the lexer it reads from. Should I check its tests too?"
+	request := agent.Event{
+		Kind:      agent.ToolCallRequestEvent,
+		ID:        "call-1",
+		Name:      messageparent.Name,
+		Arguments: `{"message":"` + message + `"}`,
+	}
+	request.SetRendering(messageparent.Describe(messageparent.Args{Message: message}))
+	return []agent.Event{
+		{Kind: agent.UserMessageEvent, Text: "Find the parser"},
+		request,
+		{Kind: agent.ToolCallResultEvent, ID: "call-1", Name: messageparent.Name, Status: agent.SuccessStatus, Text: messageparent.Result},
+		{Kind: agent.ModelMessageEvent, Text: "The parser is in parse.go."},
 	}
 }
 
@@ -151,6 +169,10 @@ func TestGoldenWhatAConversationLooksLikeBeforeItIsOpenedMatchesTheGolden(t *tes
 		}
 		fmt.Fprintf(&drawn, "=== %d columns, the context window filled ===\n", room)
 		for _, row := range Draw(contextExceeded(), painter.Tariff{}, nil, room) {
+			fmt.Fprintln(&drawn, row)
+		}
+		fmt.Fprintf(&drawn, "=== %d columns, a subagent messaging its parent ===\n", room)
+		for _, row := range Draw(childConversation(), painter.Tariff{}, nil, room) {
 			fmt.Fprintln(&drawn, row)
 		}
 	}

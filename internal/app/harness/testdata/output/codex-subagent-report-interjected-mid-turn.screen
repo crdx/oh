@@ -6,7 +6,7 @@ spawn subagent · codex/gpt-5.6-sol@medium (Finding where the parser lives)
 probe probe 1L
 
 
- 🐍 Subagent tame-adder interjects:
+ 🐍 Subagent tame-adder has finished:
 
     The parser is in parse.go.
 

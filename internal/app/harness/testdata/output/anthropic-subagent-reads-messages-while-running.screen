@@ -9,11 +9,11 @@ send tame-alpaca (Finding where the config loads)
 Both are working.
 
 
- 🐍 Subagent tame-adder interjects:
+ 🐍 Subagent tame-adder has finished:
 
     The largest file is big.go, at 900 lines.
 
- 🦙 Subagent tame-alpaca interjects:
+ 🦙 Subagent tame-alpaca has finished:
 
     The loader is in config.go.
 

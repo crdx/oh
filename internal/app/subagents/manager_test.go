@@ -21,6 +21,7 @@ import (
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/toolbox/messageparent"
 	"crdx.org/oh/pkg/toolbox/subagent"
 )
 
@@ -1339,5 +1340,65 @@ func TestSubagentsNeverSelectFastMode(t *testing.T) {
 	selectedModels, err := manager.selectModels([]subagent.Task{{Model: "codex/gpt-6-luna@high"}})
 	if err != nil || len(selectedModels) != 1 || selectedModels[0].Selection.IsFast {
 		t.Errorf("inherited fast mode reached a subagent: %+v, %v", selectedModels, err)
+	}
+}
+
+type messagingProvider struct {
+	isSent bool
+}
+
+func (self *messagingProvider) Configure(string, []tool.Definition)   {}
+func (self *messagingProvider) AddUserMessage(string)                 {}
+func (self *messagingProvider) AddToolResults([]agent.ToolCallResult) {}
+
+func (self *messagingProvider) Send(_ context.Context, yield agent.Yield) (agent.Reply, error) {
+	if !self.isSent {
+		self.isSent = true
+		return agent.Reply{Calls: []agent.ToolCall{{ID: "message-1", Name: messageparent.Name, Arguments: `{"message":"halfway there"}`}}}, nil
+	}
+	yield(agent.Output{Kind: agent.ModelMessageEvent, Text: "all done"})
+	yield(agent.Output{Kind: agent.ModelMessageEvent, Done: true})
+	return agent.Reply{}, nil
+}
+
+func TestAChildMessagesItsParentBeforeItFinishes(t *testing.T) {
+	manager := newTestFamily(t).manager(t, func(_ context.Context, child Child) (Worker, error) {
+		tools := []tool.Tool{messageparent.New(child.MessageParent)}
+		return Worker{Agent: agent.New("child", &messagingProvider{}, tools), Tools: tools, Close: func() {}}, nil
+	})
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "work"}}); err != nil {
+		t.Fatal(err)
+	}
+	events := untilFinished(t, manager, 1)
+	var kinds []agent.Kind
+	for _, event := range events {
+		kinds = append(kinds, event.Kind)
+	}
+	if want := []agent.Kind{subagentrecord.Started, subagentrecord.Received, subagentrecord.Finished}; !slices.Equal(kinds, want) {
+		t.Fatalf("the parent recorded %v, want %v", kinds, want)
+	}
+	if events[1].Text != "halfway there" || events[1].Subagent != events[0].Subagent {
+		t.Errorf("the parent received %+v", events[1])
+	}
+	if events[2].Text != "all done" {
+		t.Errorf("the message joined the answer: %q", events[2].Text)
+	}
+}
+
+func TestAStoppingChildCannotMessageItsParent(t *testing.T) {
+	children := make(chan Child, 1)
+	manager := newTestFamily(t).manager(t, func(ctx context.Context, child Child) (Worker, error) {
+		children <- child
+		return waiting()(ctx, child)
+	})
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "wait"}}); err != nil {
+		t.Fatal(err)
+	}
+	child := <-children
+	if _, err := manager.Stop(nil); err != nil {
+		t.Fatal(err)
+	}
+	if err := child.MessageParent(t.Context(), "too late"); err == nil {
+		t.Error("a stopping child reached its parent")
 	}
 }

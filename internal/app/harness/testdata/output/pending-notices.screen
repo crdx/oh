@@ -120,7 +120,7 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === subagent 1 restored and standing ===
 
- ⏳ Subagent tame-adder interjects:
+ ⏳ Subagent tame-adder has finished:
 
     2+2 = 4
                                                                                double-enter to send
@@ -130,7 +130,7 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === subagent 2 restored after one return ===
 
- ⏳ Subagent tame-adder interjects:
+ ⏳ Subagent tame-adder has finished:
 
     2+2 = 4
                                                                                double-enter to send
@@ -140,7 +140,7 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === subagent 3 restored and flushed ===
 
- 🐍 Subagent tame-adder interjects:
+ 🐍 Subagent tame-adder has finished:
 
     2+2 = 4
 
@@ -150,13 +150,35 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 
 ────────────────────────────────────────────────────────────────────────────────────────────────────
-=== subagents 4 restored together and standing ===
+=== subagent 6 a restored message standing ===
 
  ⏳ Subagent tame-adder interjects:
 
+    Halfway there.
+                                                                               double-enter to send
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== subagent 7 a restored message flushed ===
+
+ 🐍 Subagent tame-adder interjects:
+
+    Halfway there.
+
+
+Model returned no reply.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+=== subagents 4 restored together and standing ===
+
+ ⏳ Subagent tame-adder has finished:
+
     2+2 = 4
 
- ⏳ Subagent tame-alpaca interjects:
+ ⏳ Subagent tame-alpaca has finished:
 
     2+2 = 4
                                                                                double-enter to send
@@ -166,11 +188,11 @@ Model returned no reply.
 ────────────────────────────────────────────────────────────────────────────────────────────────────
 === subagents 5 restored together and flushed ===
 
- 🐍 Subagent tame-adder interjects:
+ 🐍 Subagent tame-adder has finished:
 
     2+2 = 4
 
- 🦙 Subagent tame-alpaca interjects:
+ 🦙 Subagent tame-alpaca has finished:
 
     2+2 = 4
 

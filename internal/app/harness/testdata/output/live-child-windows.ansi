@@ -1,7 +1,7 @@
 === grouped panel and tool at 40 columns by 12 lines ===
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;129;162;190mlookup\e[0m \e[38;2;192;128;80mquery 0\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[48;2;48;58;67m                                        \e[0m\r
-\e[48;2;48;58;67m 🤖 Subagent tame-adder-0 interjects:   \e[0m\r
+\e[48;2;48;58;67m 🤖 Subagent tame-adder-0 has finished: \e[0m\r
 \e[48;2;48;58;67m\e[38;2;150;152;150m⋮ 35 more lines\e[0m\e[48;2;48;58;67m                         \e[0m\r
 \e[48;2;48;58;67m    A line of verified detail.          \e[0m\r
 \e[48;2;48;58;67m    A line of verified detail.          \e[0m\r
@@ -15,7 +15,7 @@
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;129;162;190mlookup\e[0m \e[38;2;192;128;80mquery 0\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[48;2;48;58;67m                                        \e[0m\r
-\e[48;2;48;58;67m 🤖 Subagent tame-adder-0 interjects:   \e[0m\r
+\e[48;2;48;58;67m 🤖 Subagent tame-adder-0 has finished: \e[0m\r
 \e[48;2;48;58;67m\e[38;2;150;152;150m⋮ 36 more lines\e[0m\e[48;2;48;58;67m                         \e[0m\r
 \e[48;2;48;58;67m    A line of verified detail.          \e[0m\r
 \e[48;2;48;58;67m    A line of verified detail.          \e[0m\r
@@ -41,7 +41,7 @@
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;129;162;190mlookup\e[0m \e[38;2;192;128;80mquery 0\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[48;2;48;58;67m                                        \e[0m\r
-\e[48;2;48;58;67m 🤖 Subagent tame-adder-0 interjects:   \e[0m\r
+\e[48;2;48;58;67m 🤖 Subagent tame-adder-0 has finished: \e[0m\r
 \e[48;2;48;58;67m\e[38;2;150;152;150m⋮ 36 more lines\e[0m\e[48;2;48;58;67m                         \e[0m\r
 \e[48;2;48;58;67m    A line of verified detail.          \e[0m\r
 \e[48;2;48;58;67m    A line of verified detail.          \e[0m\r
@@ -54,7 +54,7 @@
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;188;220;255mlookup\e[0m \e[38;2;255;196;154mquery 0\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[48;2;66;75;82m                                        \e[0m\r
-\e[48;2;66;75;82m 🤖 Subagent tame-adder-0 interjects:   \e[0m\r
+\e[48;2;66;75;82m 🤖 Subagent tame-adder-0 has finished: \e[0m\r
 \e[48;2;66;75;82m\e[38;2;207;207;207m⋮ 36 more lines\e[0m\e[48;2;66;75;82m                         \e[0m\r
 \e[48;2;66;75;82m    A line of verified detail.          \e[0m\r
 \e[48;2;66;75;82m    A line of verified detail.          \e[0m\r
@@ -67,7 +67,7 @@
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;28;61;99mlookup\e[0m \e[38;2;106;50;16mquery 0\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[48;2;190;200;208m                                        \e[0m\r
-\e[48;2;190;200;208m 🤖 Subagent tame-adder-0 interjects:   \e[0m\r
+\e[48;2;190;200;208m 🤖 Subagent tame-adder-0 has finished: \e[0m\r
 \e[48;2;190;200;208m\e[38;2;56;59;62m⋮ 36 more lines\e[0m\e[48;2;190;200;208m                         \e[0m\r
 \e[48;2;190;200;208m    A line of verified detail.          \e[0m\r
 \e[48;2;190;200;208m    A line of verified detail.          \e[0m\r
@@ -80,7 +80,7 @@
 \e[?2026h\e[?25l\e[?7l\r\e[38;2;61;109;154mlookup\e[0m \e[38;2;166;93;46mquery 0\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[48;2;226;234;240m                                        \e[0m\r
-\e[48;2;226;234;240m 🤖 Subagent tame-adder-0 interjects:   \e[0m\r
+\e[48;2;226;234;240m 🤖 Subagent tame-adder-0 has finished: \e[0m\r
 \e[48;2;226;234;240m\e[38;2;110;113;117m⋮ 36 more lines\e[0m\e[48;2;226;234;240m                         \e[0m\r
 \e[48;2;226;234;240m    A line of verified detail.          \e[0m\r
 \e[48;2;226;234;240m    A line of verified detail.          \e[0m\r
@@ -95,7 +95,7 @@
 \e[38;2;129;162;190mlookup\e[0m \e[38;2;192;128;80mquery 2\e[0m\e[K\r\e[14C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[48;2;48;58;67m                                        \e[0m\r
-\e[48;2;48;58;67m 🤖 Subagent tame-adder-0 interjects:   \e[0m\r
+\e[48;2;48;58;67m 🤖 Subagent tame-adder-0 has finished: \e[0m\r
 \e[48;2;48;58;67m\e[38;2;150;152;150m⋮ 16 more lines\e[0m\e[48;2;48;58;67m                         \e[0m\r
 \e[48;2;48;58;67m    A line of verified detail.          \e[0m\r
 \e[48;2;48;58;67m    A line of verified detail.          \e[0m\r

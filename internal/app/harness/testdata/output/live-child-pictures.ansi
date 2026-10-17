@@ -13,7 +13,7 @@
 \e[38;2;129;162;190mlookup\e[0m \e[38;2;192;128;80mRFC 8620\e[0m\e[K\r\e[15C\e[?25h\e[?2026l\e[?2026h\e[?25l\r
 \e[K\r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
-\e[48;2;48;58;67m 🐍 Subagent tame-adder interjects:                                                                 \e[0m\r
+\e[48;2;48;58;67m 🐍 Subagent tame-adder has finished:                                                               \e[0m\r
 \e[48;2;48;58;67m\e[38;2;150;152;150m⋮ 24 more lines\e[0m\e[48;2;48;58;67m                                                                                     \e[0m\r
 \e[48;2;48;58;67m    A line of verified detail.                                                                      \e[0m\r
 \e[48;2;48;58;67m    A line of verified detail.                                                                      \e[0m\r

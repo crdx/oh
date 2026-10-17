@@ -41,6 +41,14 @@ The spinner is redrawn on every beat, which is why it stutters while a tool hold
 
 \e[38;2;204;102;102mRequest (264481 tokens) exceeds the available context size (262144 tokens)\e[0m
 \e[38;2;207;173;0mContext window full.\e[0m
+=== 100 columns, a subagent messaging its parent ===
+\e[48;2;52;53;65m                                                                                                    \e[0m
+\e[48;2;52;53;65m Find the parser                                                                                    \e[0m
+\e[48;2;52;53;65m                                                                                                    \e[0m
+
+\e[38;2;207;173;0mmessage_parent\e[0m \e[38;2;192;128;80mThe parser is in parse.go, beside the lexer it reads from. Should I check its tests …\e[0m
+
+The parser is in parse.go.
 === 46 columns ===
 \e[48;2;52;53;65m                                              \e[0m
 \e[48;2;52;53;65m why does the spinner stutter when a tool     \e[0m
@@ -91,3 +99,11 @@ why it stutters while a tool holds the line.
 \e[38;2;204;102;102mRequest (264481 tokens) exceeds the available\e[0m
 \e[38;2;204;102;102mcontext size (262144 tokens)\e[0m
 \e[38;2;207;173;0mContext window full.\e[0m
+=== 46 columns, a subagent messaging its parent ===
+\e[48;2;52;53;65m                                              \e[0m
+\e[48;2;52;53;65m Find the parser                              \e[0m
+\e[48;2;52;53;65m                                              \e[0m
+
+\e[38;2;207;173;0mmessage_parent\e[0m \e[38;2;192;128;80mThe parser is in parse.go, bes…\e[0m
+
+The parser is in parse.go.

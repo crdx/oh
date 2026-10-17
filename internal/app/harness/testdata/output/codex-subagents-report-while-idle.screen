@@ -7,11 +7,11 @@ spawn 2 subagents · codex/gpt-5.6-sol@medium, codex/gpt-5.6-sol@medium
 Two subagents are working on it.
 
 
- 🐍 Subagent tame-adder interjects:
+ 🐍 Subagent tame-adder has finished:
 
     The parser starts at parse.go.
 
- 🦙 Subagent tame-alpaca interjects:
+ 🦙 Subagent tame-alpaca has finished:
 
     There are three open TODO items.
 

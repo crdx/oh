@@ -7,7 +7,7 @@ spawn subagent · anthropic/claude-opus-5@medium (Watching the build until stopp
 It is running.
 
 
- 🐍 Subagent tame-adder interjects:
+ 🐍 Subagent tame-adder has finished:
 
     Ended: parent process ended before the subagent completed.
 

@@ -1,18 +1,58 @@
 === live ===
 
  🤖 Subagent tame-alpaca stopped because shell execution was withdrawn.
+ 🐍 Subagent tame-adder has finished:
+
+    The README says hello.
+=== message live ===
+
  🐍 Subagent tame-adder interjects:
+
+    Halfway through the README.
+
+ 🐍 Subagent tame-adder has finished:
+
+    The README says hello.
+=== message replay ===
+
+ 🐍 Subagent tame-adder interjects:
+
+    Halfway through the README.
+
+ 🐍 Subagent tame-adder has finished:
 
     The README says hello.
 === replay ===
 
  🤖 Subagent tame-alpaca stopped because shell execution was withdrawn.
- 🐍 Subagent tame-adder interjects:
+ 🐍 Subagent tame-adder has finished:
 
     The README says hello.
 === restored pending ===
 
+ ⏳ Subagent tame-adder has finished:
+
+    The README says hello.
+                                                                               double-enter to send
+=== restored pending message ===
+
  ⏳ Subagent tame-adder interjects:
+
+    Halfway through the README.
+
+ ⏳ Subagent tame-adder has finished:
+
+    The README says hello.
+                                                                               double-enter to send
+=== restored pending message already delivered ===
+
+ 🐍 Subagent tame-adder interjects:
+
+    Halfway through the README.
+
+
+
+ ⏳ Subagent tame-adder has finished:
 
     The README says hello.
                                                                                double-enter to send

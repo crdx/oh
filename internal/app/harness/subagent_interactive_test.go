@@ -8,6 +8,7 @@ import (
 	"regexp"
 	"slices"
 	"strings"
+	"sync"
 	"testing"
 
 	"crdx.org/oh/internal/app/backend"
@@ -19,6 +20,7 @@ import (
 	"crdx.org/oh/internal/sim"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
+	"crdx.org/oh/pkg/toolbox/messageparent"
 	"crdx.org/oh/pkg/toolbox/subagent"
 )
 
@@ -528,5 +530,99 @@ func TestANewSessionOffersSubagentsWithoutAConfiguredRotation(t *testing.T) {
 				t.Errorf("opened in %s (recorded: %t), want %s", got.Flags(), found, test.want.Flags())
 			}
 		})
+	}
+}
+
+const (
+	messagingPrompt     = "have a subagent check the README"
+	childQuestion       = "The README is short. Should I quote it?"
+	parentReply         = "Yes, quote it"
+	childQuotedAnswer   = "It says hello."
+	parentStartedAnswer = "It is checking."
+	parentRepliedAnswer = "Replied to it."
+	parentFinalAnswer   = "It quoted the README."
+)
+
+var interjector = regexp.MustCompile(`Subagent (\S+) interjects:`)
+
+func messagingResponder() sim.Responder {
+	start := encodedArguments(subagent.Args{Action: subagent.Start, Subagents: []subagent.Task{
+		{Model: "opencode-go/deepseek-v4.1-flash@low", Prompt: "Check the README", Intent: "Checking what the README says"},
+	}})
+	ask := encodedArguments(map[string]string{"message": childQuestion})
+	read := encodedArguments(map[string]string{"path": "README.md"})
+	replied := make(chan struct{})
+	var once sync.Once
+	return func(request sim.Request) sim.Turn {
+		if strings.Contains(request.Instructions, childIdentity) {
+			switch {
+			case mentions(request, parentReply):
+				return sim.Turn{Say: childQuotedAnswer}
+			case hasCallOutput(request):
+				<-replied
+				return sim.Turn{Calls: []sim.Call{{Name: "read", Arguments: read}}}
+			}
+			return sim.Turn{Calls: []sim.Call{{Name: messageparent.Name, Arguments: ask}}}
+		}
+		switch {
+		case mentions(request, childQuotedAnswer):
+			return sim.Turn{Say: parentFinalAnswer}
+		case mentions(request, "queued for "):
+			once.Do(func() { close(replied) })
+			return sim.Turn{Say: parentRepliedAnswer}
+		case mentions(request, childQuestion):
+			var name string
+			for _, entry := range request.Input {
+				if found := interjector.FindStringSubmatch(entry.Content); found != nil {
+					name = found[1]
+				}
+			}
+			send := encodedArguments(subagent.Args{Action: subagent.Send, Name: name, Message: parentReply})
+			return sim.Turn{Calls: []sim.Call{{Name: subagent.Name, Arguments: send}}}
+		case hasCallOutput(request):
+			return sim.Turn{Say: parentStartedAnswer}
+		}
+		return sim.Turn{Calls: []sim.Call{{Name: subagent.Name, Arguments: start}}}
+	}
+}
+
+func TestASubagentMessagesItsParentMidRunThroughTheBinary(t *testing.T) {
+	rig, endpoint := newRespondingRig(t, messagingResponder())
+	writeSubagentWorkspace(t, rig)
+
+	session := rig.start("--yolo", "-c", "s", "-m", "opencode-go/deepseek-v4.1-flash", messagingPrompt)
+	session.waitFor(parentStartedAnswer)
+	session.waitFor(childQuestion)
+	session.requireShown("interjects:")
+	session.waitFor(parentRepliedAnswer)
+	session.waitFor(parentFinalAnswer)
+	session.requireShown("has finished:")
+	session.requireShown(childQuotedAnswer)
+	session.quit()
+
+	family := onlyStoredFamily(t, rig)
+	child := family.childWithTask(t, "Check the README")
+	if !slices.Contains(child.Meta.Tools, messageparent.Name) {
+		t.Errorf("%s was offered %v, without %s", child.Name, child.Meta.Tools, messageparent.Name)
+	}
+	results := childEventsOf(child, agent.ToolCallResultEvent)
+	if len(results) != 2 || results[0].Name != messageparent.Name || results[0].Text != messageparent.Result {
+		t.Errorf("%s's calls came back %+v, want its message sent", child.Name, results)
+	}
+	received := parentFacts(family.parent.Events, child.Name, subagentrecord.Received)
+	if len(received) != 1 || received[0].Text != childQuestion {
+		t.Errorf("the parent recorded %+v, want the question once", received)
+	}
+	deliveries := slices.DeleteFunc(slices.Clone(family.parent.Events), func(event agent.Event) bool {
+		return event.Kind != subagentrecord.ReportsDelivered
+	})
+	if len(deliveries) != 2 || !strings.Contains(deliveries[0].Text, childQuestion) || !strings.Contains(deliveries[1].Text, childQuotedAnswer) {
+		t.Errorf("delivered %+v, want the question and then the answer", deliveries)
+	}
+	for _, request := range endpoint.Requests() {
+		isChild := strings.Contains(request.Instructions, childIdentity)
+		if isChild != slices.Contains(request.Tools, messageparent.Name) {
+			t.Errorf("a request offered %v, want %s for the child alone", request.Tools, messageparent.Name)
+		}
 	}
 }

@@ -1,0 +1,21 @@
+
+ start a subagent and stop it once it reports
+
+
+spawn subagent · anthropic/claude-opus-5@medium (Finding the slowest database query)
+
+
+ 🐍 Subagent tame-adder interjects:
+
+    Found two candidates; narrowing down.
+
+
+stop tame-adder (Finding the slowest database query)
+
+Stopped it after its update.
+
+
+ carry on
+
+
+Carrying on.

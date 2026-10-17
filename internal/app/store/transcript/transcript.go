@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -149,7 +150,7 @@ func (self *Recorder) Event(at time.Time, event agent.Event) error {
 	case subagentrecord.Started:
 		output.markdown(event.Text)
 		output.paragraph("Transcript: `" + path.Join(session.ChildrenDirectoryName, event.Subagent, FileName) + "`")
-	case subagentrecord.Sent:
+	case subagentrecord.Sent, subagentrecord.Received:
 		output.markdown(event.Text)
 	case subagentrecord.Finished:
 		if event.Text != "" {
@@ -267,7 +268,7 @@ func heading(event agent.Event) []string {
 	case portgrant.ForwardChange:
 		summary, _ := portgrant.ForwardSummary(event)
 		return []string{name, summary, prefixed("changed port ", event.Name)}
-	case subagentrecord.Started, subagentrecord.Sent:
+	case subagentrecord.Started, subagentrecord.Sent, subagentrecord.Received:
 		return []string{name, event.Subagent}
 	case subagentrecord.Finished:
 		return []string{name, event.Subagent, event.Name}
@@ -390,8 +391,10 @@ func (self *Recorder) Close() error {
 	return errors.Join(flushError, closeError)
 }
 
+var heldKinds = []agent.Kind{subagentrecord.Started, subagentrecord.Sent, subagentrecord.Received, subagentrecord.Finished}
+
 func (self *Recorder) isHeldSection(event agent.Event) bool {
-	return (event.Kind == subagentrecord.Started || event.Kind == subagentrecord.Sent || event.Kind == subagentrecord.Finished) && len(self.callByID) > 0
+	return slices.Contains(heldKinds, event.Kind) && len(self.callByID) > 0
 }
 
 func (self *Recorder) write(section string, isHeld bool) error {
@@ -492,6 +495,8 @@ func title(kind agent.Kind) string {
 		return "Subagent started"
 	case subagentrecord.Sent:
 		return "Subagent message"
+	case subagentrecord.Received:
+		return "Message from subagent"
 	case subagentrecord.Finished:
 		return "Subagent finished"
 	case agent.UserMessageEvent:

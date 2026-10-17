@@ -1,0 +1,68 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[subagent]]
+name = "tame-adder"
+
+[[subagent.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-11","type":"function_call","call_id":"toolu_21","name":"message_parent","arguments":"{\"message\":\" \"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed","usage":{"input_tokens":1200,"output_tokens":20,"input_tokens_details":{"cached_tokens":0,"cache_write_tokens":0}}}}''',
+]
+
+[[subagent.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-12","type":"function_call","call_id":"toolu_22","name":"message_parent","arguments":"{\"message\":\"The build uses just; watching it now.\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed","usage":{"input_tokens":1300,"output_tokens":30,"input_tokens_details":{"cached_tokens":0,"cache_write_tokens":0}}}}''',
+]
+
+[[subagent.response]]
+wait-for-cancellation = true
+
+[first]
+prompt = "start a subagent to watch the build"
+settle-subagents-after-turn = true
+subagent-debounce-passes = true
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-13","type":"function_call","call_id":"toolu_1","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Watch the build forever\",\"intent\":\"Watching the build until stopped\"}]}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-14","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"It is watching."}''',
+    '''{"type":"response.output_text.done","text":"It is watching."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"It is watching."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-14","type":"message","role":"assistant","content":[{"type":"output_text","text":"It is watching."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-15","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"It says the build uses just."}''',
+    '''{"type":"response.output_text.done","text":"It says the build uses just."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"It says the build uses just."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-15","type":"message","role":"assistant","content":[{"type":"output_text","text":"It says the build uses just."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-16","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The subagent ended with the last session."}''',
+    '''{"type":"response.output_text.done","text":"The subagent ended with the last session."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The subagent ended with the last session."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-16","type":"message","role":"assistant","content":[{"type":"output_text","text":"The subagent ended with the last session."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

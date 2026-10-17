@@ -5,7 +5,7 @@
 spawn subagent · anthropic/claude-opus-5@medium (Finding where the config loads)
 
 
- 🐍 Subagent tame-adder interjects:
+ 🐍 Subagent tame-adder has finished:
 
     The config loader is in config.go.
 
