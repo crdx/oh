@@ -20,6 +20,7 @@ var wiresByPackage = map[string]agent.Wire{
 	"@ai-sdk/openai-compatible": agent.CompletionsWire,
 	"@ai-sdk/openai":            agent.ResponsesWire,
 	"@ai-sdk/anthropic":         agent.MessagesWire,
+	"@ai-sdk/google":            agent.GenerateContentWire,
 }
 
 func wireOf(packageName string) agent.Wire {

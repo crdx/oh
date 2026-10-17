@@ -7798,6 +7798,7 @@ func TestOpenCodeRequestsCarryTheKeyAndTheStoredSessionIdentifier(t *testing.T) 
 		{sim.Completions, "/v1/chat/completions", "Authorization", "Bearer stand-in"},
 		{sim.Responses, "/v1/responses", "Authorization", "Bearer stand-in"},
 		{sim.Messages, "/v1/messages", "X-Api-Key", "stand-in"},
+		{sim.GenerateContent, "/google/v1beta/models/fake:streamGenerateContent", "X-Goog-Api-Key", "stand-in"},
 	} {
 		t.Run(test.wire, func(t *testing.T) {
 			endpoint := sim.New(&sim.Scenario{
@@ -7874,6 +7875,7 @@ func TestAnOpenCodeModelTakingNoEffortIsAskedToThinkAndResumedWithoutOne(t *test
 	}{
 		{sim.Messages, "/messages", requireThinkingWithoutAnEffort},
 		{sim.Responses, "/responses", requireAReasoningSummaryWithoutAnEffort},
+		{sim.GenerateContent, ":streamGenerateContent", requireThoughtsWithoutAThinkingLevel},
 	} {
 		t.Run(test.wire, func(t *testing.T) {
 			endpoint := sim.New(&sim.Scenario{
@@ -7973,6 +7975,16 @@ func requireAReasoningSummaryWithoutAnEffort(t *testing.T, request int, body map
 	reasoning, _ := body["reasoning"].(map[string]any)
 	if _, isSent := reasoning["effort"]; isSent || reasoning["summary"] != "auto" {
 		t.Errorf("request %d asked for reasoning %v", request, body["reasoning"])
+	}
+}
+
+func requireThoughtsWithoutAThinkingLevel(t *testing.T, request int, body map[string]any) {
+	t.Helper()
+
+	settings, _ := body["generationConfig"].(map[string]any)
+	thinking, _ := settings["thinkingConfig"].(map[string]any)
+	if _, isSent := thinking["thinkingLevel"]; isSent || thinking["includeThoughts"] != true {
+		t.Errorf("request %d asked for thinking %v", request, settings["thinkingConfig"])
 	}
 }
 
@@ -25499,6 +25511,7 @@ func TestEveryProviderTagsItsNotesTheWayItsOwnHarnessDoes(t *testing.T) {
 		{"opencode-go/fake", sim.Completions, sim.Completions, "/chat/completions", agent.SystemReminders},
 		{"opencode-go/fake-responses", sim.Completions, sim.Responses, "/responses", agent.SystemReminders},
 		{"opencode-go/fake-messages", sim.Completions, sim.Messages, "/messages", agent.SystemReminders},
+		{"opencode-go/fake-gemini", sim.Completions, sim.GenerateContent, ":streamGenerateContent", agent.SystemReminders},
 		{"ollama/fake", sim.Completions, "", "/chat/completions", agent.SystemReminders},
 	} {
 		t.Run(test.model, func(t *testing.T) {

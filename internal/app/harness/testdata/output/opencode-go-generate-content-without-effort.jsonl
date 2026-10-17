@@ -1,0 +1,21 @@
+{"kind":"head","version":22,"meta":{"model":"gemini-9-flash","workspaceDir":"","provider":"opencode-go","system_prompt":"You are a test assistant.","tools":["alpha","beta"],"tool_definitions":[{"name":"alpha","description":"A deterministic scenario tool.","revision":"1"},{"name":"beta","description":"A deterministic scenario tool.","revision":"1"}]}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
+{"kind":"event","event":{"kind":"user_message","text":"reason, then call two tools at once"}}
+{"kind":"event","event":{"kind":"model_reasoning","text":"Use both tools.","usage":{"input_tokens":300,"output_tokens":60,"cache":{"read_tokens":0}}}}
+{"kind":"event","event":{"render":"alpha","kind":"tool_call_request","id":"call_1_1","name":"alpha","arguments":"{}"}}
+{"kind":"event","event":{"render":"beta","kind":"tool_call_request","id":"call_1_2","name":"beta","arguments":"{}"}}
+{"kind":"event","event":{"kind":"state_change","id":"call_1_1","name":"alpha-count","state":1}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"alpha result","id":"call_1_1","name":"alpha","status":"success","stats":{"kind":"output","lines":1,"bytes":12}}}
+{"kind":"event","event":{"kind":"state_change","id":"call_1_2","name":"beta-count","state":1}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"beta result","id":"call_1_2","name":"beta","status":"success","stats":{"kind":"output","lines":1,"bytes":11}}}
+{"kind":"event","event":{"kind":"model_message","text":"Tools done.","usage":{"input_tokens":360,"output_tokens":5,"cache":{"read_tokens":0}}}}
+{"kind":"item","payload":{"role":"user","parts":[{"text":"reason, then call two tools at once"}]}}
+{"kind":"item","payload":{"role":"model","parts":[{"text":"Use both tools.","thought":true},{"functionCall":{"name":"alpha","args":{}},"thoughtSignature":"c2VhbC0z"},{"functionCall":{"name":"beta","args":{}}}]}}
+{"kind":"item","payload":{"role":"user","parts":[{"functionResponse":{"name":"alpha","response":{"output":"alpha result"}}},{"functionResponse":{"name":"beta","response":{"output":"beta result"}}}]}}
+{"kind":"item","payload":{"role":"model","parts":[{"text":"Tools done."}]}}
+{"kind":"turn_completion","turn":{"input_tokens":360}}
+{"kind":"event","event":{"kind":"user_message","text":"continue after both tool results"}}
+{"kind":"event","event":{"kind":"model_message","text":"Resumed.","usage":{"input_tokens":380,"output_tokens":5,"cache":{"read_tokens":0}}}}
+{"kind":"item","payload":{"role":"user","parts":[{"text":"continue after both tool results"}]}}
+{"kind":"item","payload":{"role":"model","parts":[{"text":"Resumed."}]}}
+{"kind":"turn_completion","turn":{"input_tokens":380}}

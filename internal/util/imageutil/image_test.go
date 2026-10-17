@@ -164,6 +164,32 @@ func TestAnOversizedGIFBecomesAPNG(t *testing.T) {
 	}
 }
 
+func TestASmallGIFCanBeCarriedAsAPNG(t *testing.T) {
+	var encoded bytes.Buffer
+	if err := gif.Encode(&encoded, filled(12, 7, color.NRGBA{R: 40, G: 200, B: 40, A: 255}), nil); err != nil {
+		t.Fatalf("could not encode the test image: %v", err)
+	}
+
+	converted := imageutil.AsPNG(tool.Image{MediaType: "image/gif", Data: encoded.Bytes()})
+	if converted.MediaType != "image/png" {
+		t.Errorf("expected a PNG, got %q", converted.MediaType)
+	}
+	if width, height, ok := imageutil.Dimensions(converted.Data); !ok || width != 12 || height != 7 {
+		t.Errorf("expected the same 12x7 picture, got %dx%d", width, height)
+	}
+}
+
+func TestAPNGOrAnUnreadableImageIsLeftAsItIsWhenAskedForAPNG(t *testing.T) {
+	for _, subject := range []tool.Image{
+		pngOf(t, filled(3, 3, color.NRGBA{A: 255})),
+		{MediaType: "image/gif", Data: []byte("not a picture")},
+	} {
+		if converted := imageutil.AsPNG(subject); converted.MediaType != subject.MediaType || !bytes.Equal(converted.Data, subject.Data) {
+			t.Errorf("expected %s to be left alone, got %s", subject.MediaType, converted.MediaType)
+		}
+	}
+}
+
 func TestAnImageThatCannotBeDecodedIsCarriedAsItIs(t *testing.T) {
 	subject := tool.Image{MediaType: "image/webp", Data: webP(1600, 800)}
 

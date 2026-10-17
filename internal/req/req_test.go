@@ -60,6 +60,21 @@ func TestANumericCodeStillYieldsTheEndpointsOwnMessage(t *testing.T) {
 	}
 }
 
+func TestANumericCodeIsReadPastToTheStatusNameGoogleGives(t *testing.T) {
+	url := refusingServer(t, http.StatusTooManyRequests,
+		`{"error":{"code":429,"message":"Resource has been exhausted.","status":"RESOURCE_EXHAUSTED"}}`)
+
+	_, _, err := req.New(time.Second).Stream(t.Context(), url, map[string]string{}, nil)
+	if err == nil {
+		t.Fatal("expected the refusal to be reported")
+	}
+
+	failure := agent.FailureFrom(err)
+	if failure == nil || failure.Code != "RESOURCE_EXHAUSTED" || failure.Message != "Resource has been exhausted." {
+		t.Errorf("expected the status name and the message, got %+v", failure)
+	}
+}
+
 func TestAQuotedCodeIsPreferredOverTheType(t *testing.T) {
 	url := refusingServer(t, http.StatusTooManyRequests,
 		`{"error":{"code":"rate_limit_exceeded","message":"slow down","type":"requests"}}`)

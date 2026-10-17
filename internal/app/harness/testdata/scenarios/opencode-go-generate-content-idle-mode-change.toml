@@ -1,0 +1,21 @@
+provider = "opencode-go"
+model = "gemini-9-pro"
+wire = "generate-content"
+effort = "high"
+toggle-before-first = "w"
+
+[first]
+prompt = "continue with the new mode"
+
+[[first.response]]
+event = [
+    '''{"candidates":[{"content":{"role":"model","parts":[{"text":"The workspace is read-only."}]},"finishReason":"STOP","index":0}]}''',
+]
+
+[resume]
+prompt = "continue"
+
+[[resume.response]]
+event = [
+    '''{"candidates":[{"content":{"role":"model","parts":[{"text":"Continued."}]},"finishReason":"STOP","index":0}]}''',
+]

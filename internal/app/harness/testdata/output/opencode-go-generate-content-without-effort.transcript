@@ -1,0 +1,33 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gemini-9-flash`
+- **Provider:** `opencode-go`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwsngl · +0s
+
+## User · +0s
+
+reason, then call two tools at once
+
+## Tool calls · +0s
+
+```
+alpha: alpha [ok, 1 line, 12B, call_1_1]
+beta: beta [ok, 1 line, 11B, call_1_2]
+```
+
+## Assistant · +0s
+
+Tools done.
+
+## User · +0s
+
+continue after both tool results
+
+## Assistant · +0s
+
+Resumed.

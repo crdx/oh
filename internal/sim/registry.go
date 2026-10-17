@@ -50,9 +50,10 @@ var providerPackages = map[string]string{
 }
 
 var wirePackages = map[string]string{
-	Completions: compatiblePackage,
-	Responses:   "@ai-sdk/openai",
-	Messages:    "@ai-sdk/anthropic",
+	Completions:     compatiblePackage,
+	Responses:       "@ai-sdk/openai",
+	Messages:        "@ai-sdk/anthropic",
+	GenerateContent: "@ai-sdk/google",
 }
 
 func packageOf(providerName string) string {

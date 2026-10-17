@@ -7,9 +7,10 @@ import (
 )
 
 const (
-	Responses   = "responses"
-	Completions = "completions"
-	Messages    = "messages"
+	Responses       = "responses"
+	Completions     = "completions"
+	Messages        = "messages"
+	GenerateContent = "generate-content"
 )
 
 type Dialect interface {
@@ -27,7 +28,7 @@ type Dialect interface {
 }
 
 func Dialects() []Dialect {
-	return []Dialect{responsesDialect{}, completionsDialect{}, messagesDialect{}}
+	return []Dialect{responsesDialect{}, completionsDialect{}, messagesDialect{}, generateContentDialect{}}
 }
 
 type Stream struct {

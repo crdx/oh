@@ -31,9 +31,10 @@ type State interface {
 type Wire string
 
 const (
-	CompletionsWire Wire = "completions"
-	ResponsesWire   Wire = "responses"
-	MessagesWire    Wire = "messages"
+	CompletionsWire     Wire = "completions"
+	ResponsesWire       Wire = "responses"
+	MessagesWire        Wire = "messages"
+	GenerateContentWire Wire = "generate-content"
 )
 
 type Model struct {

@@ -14,6 +14,7 @@ import (
 	"crdx.org/oh/pkg/provider/opencodego"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/wire/anthropic/messages"
+	"crdx.org/oh/pkg/wire/google/generatecontent"
 	"crdx.org/oh/pkg/wire/openai/chatcompletions"
 	"crdx.org/oh/pkg/wire/openai/responses"
 )
@@ -184,6 +185,34 @@ func TestAMessagesModelIsAskedThroughMessagesWithoutClaudeCodesClothes(t *testin
 	}
 }
 
+const finishedContent = "data: {\"candidates\":[{\"content\":{\"role\":\"model\",\"parts\":[{\"text\":\"Hi.\"}]}," +
+	"\"finishReason\":\"STOP\"}],\"usageMetadata\":{\"promptTokenCount\":1,\"candidatesTokenCount\":1}}\n\n"
+
+func TestAGoogleModelIsAskedThroughGenerateContentBesideTheVersionedAddress(t *testing.T) {
+	server, sent := recordingServer(t, finishedContent)
+
+	client, err := opencodego.New(server.URL+"/v1/chat/completions", "secret", "gemini-9", agent.GenerateContentWire, "high", 131_072)
+	if err != nil {
+		t.Fatal(err)
+	}
+	sendOnce(t, client)
+
+	if sent.path != "/google/v1beta/models/gemini-9:streamGenerateContent" {
+		t.Errorf("got path %q", sent.path)
+	}
+	settings, _ := sent.body["generationConfig"].(map[string]any)
+	thinking, _ := settings["thinkingConfig"].(map[string]any)
+	if settings["maxOutputTokens"] != float64(32_000) || thinking["thinkingLevel"] != "high" || thinking["includeThoughts"] != true {
+		t.Errorf("expected the capped output limit, the effort, and the thoughts, got %v", sent.body["generationConfig"])
+	}
+	if instruction, _ := sent.body["systemInstruction"].(map[string]any); fmt.Sprint(instruction["parts"]) != "[map[text:Be brief.]]" {
+		t.Errorf("expected the instructions as the system instruction, got %v", sent.body["systemInstruction"])
+	}
+	if sent.header.Get("X-Goog-Api-Key") != "secret" || sent.header.Get("X-Opencode-Session") != "0123456789ABCDEFGHIJKL" {
+		t.Errorf("expected an authorised, scoped request, got %v", sent.header)
+	}
+}
+
 func TestEachWireCarriesTheKeyWhereItsEndpointReadsIt(t *testing.T) {
 	tests := []struct {
 		wire       agent.Wire
@@ -195,6 +224,7 @@ func TestEachWireCarriesTheKeyWhereItsEndpointReadsIt(t *testing.T) {
 		{agent.CompletionsWire, "data: [DONE]\n\n", "Authorization", "Bearer secret", "X-Api-Key"},
 		{agent.ResponsesWire, completedResponse, "Authorization", "Bearer secret", "X-Api-Key"},
 		{agent.MessagesWire, stoppedMessage, "X-Api-Key", "secret", "Authorization"},
+		{agent.GenerateContentWire, finishedContent, "X-Goog-Api-Key", "secret", "Authorization"},
 	}
 
 	for _, test := range tests {
@@ -316,9 +346,10 @@ func TestToolsAreMeasuredInTheWireFormatTheModelIsAskedThrough(t *testing.T) {
 	tools := []tool.Tool{weather()}
 
 	for wire, want := range map[agent.Wire]int{
-		agent.CompletionsWire: chatcompletions.ToolsSize(tools),
-		agent.ResponsesWire:   responses.ToolsSize(tools),
-		agent.MessagesWire:    messages.ToolsSize(tools),
+		agent.CompletionsWire:     chatcompletions.ToolsSize(tools),
+		agent.ResponsesWire:       responses.ToolsSize(tools),
+		agent.MessagesWire:        messages.ToolsSize(tools),
+		agent.GenerateContentWire: generatecontent.ToolsSize(tools),
 	} {
 		client, err := opencodego.New("http://somewhere/v1/chat/completions", "secret", "model", wire, "high", 64_000)
 		if err != nil {
@@ -387,8 +418,9 @@ func TestNewPreservesSettingValidation(t *testing.T) {
 		{"max tokens", "http://somewhere", "secret", "deepseek-v4-pro", agent.CompletionsWire, 0, "chat: MaxOutputTokens is 0"},
 		{"responses max tokens", "http://somewhere", "secret", "muse-spark-1.3-contributor", agent.ResponsesWire, 0, "responses: MaxOutputTokens is 0"},
 		{"messages max tokens", "http://somewhere", "secret", "qwen3.8-max", agent.MessagesWire, 0, "anthropic: MaxOutputTokens is 0"},
+		{"generate content max tokens", "http://somewhere", "secret", "gemini-9", agent.GenerateContentWire, 0, "google: MaxOutputTokens is 0"},
 		{"no wire", "http://somewhere", "secret", "claude-haiku-5-5", "", 128_000, "no wire protocol is known for claude-haiku-5-5"},
-		{"unknown wire", "http://somewhere", "secret", "gemini-9", "generative-language", 128_000, "no wire protocol is known for gemini-9"},
+		{"unknown wire", "http://somewhere", "secret", "titan-9", "converse", 128_000, "no wire protocol is known for titan-9"},
 	}
 
 	for _, test := range tests {

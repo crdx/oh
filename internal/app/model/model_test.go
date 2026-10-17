@@ -221,8 +221,9 @@ func TestOpenCodeGoOffersOnlyTheModelsWhoseWireIsKnown(t *testing.T) {
 		{ID: "minimax-m3", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000, Wire: agent.MessagesWire},
 		{ID: "muse-spark-1.2-contributor", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000, Wire: agent.ResponsesWire},
 		{ID: "mimo-v2-omni", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000, Wire: agent.CompletionsWire},
+		{ID: "gemini-9", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000, Wire: agent.GenerateContentWire},
 		{ID: "claude-haiku-5-5", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000},
-		{ID: "gemini-9", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000, Wire: "generative-language"},
+		{ID: "titan-9", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000, Wire: "converse"},
 	}
 
 	offered := map[string]agent.Wire{}
@@ -234,12 +235,13 @@ func TestOpenCodeGoOffersOnlyTheModelsWhoseWireIsKnown(t *testing.T) {
 		"minimax-m3":                 agent.MessagesWire,
 		"muse-spark-1.2-contributor": agent.ResponsesWire,
 		"mimo-v2-omni":               agent.CompletionsWire,
+		"gemini-9":                   agent.GenerateContentWire,
 	}
 	if !maps.Equal(offered, want) {
 		t.Errorf("offered %v, want %v", offered, want)
 	}
 
-	for _, model := range models[3:] {
+	for _, model := range models[4:] {
 		if got := unselectableReason(opencodeGoProvider, model); got != "unknown wire protocol" {
 			t.Errorf("%s: got reason %q, want an unknown wire protocol", model.ID, got)
 		}

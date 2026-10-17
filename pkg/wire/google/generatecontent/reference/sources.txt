@@ -1,0 +1,5 @@
+generate-content.md    https://ai.google.dev/api/generate-content.md.txt
+function-calling.md    https://ai.google.dev/gemini-api/docs/function-calling.md.txt
+thinking.md            https://ai.google.dev/gemini-api/docs/thinking.md.txt
+thought-signatures.md  https://ai.google.dev/gemini-api/docs/thought-signatures.md.txt
+caching.md             https://ai.google.dev/gemini-api/docs/caching.md.txt

@@ -569,6 +569,12 @@ const opencodeGoRegistry = `{
 			"provider": {"npm": "@ai-sdk/google"},
 			"reasoning_options": [{"type": "effort", "values": ["high"]}],
 			"limit": {"context": 1000000, "output": 64000}
+		},
+		"titan-9": {
+			"id": "titan-9", "name": "Titan 9", "reasoning": true,
+			"provider": {"npm": "@ai-sdk/amazon-bedrock"},
+			"reasoning_options": [{"type": "effort", "values": ["high"]}],
+			"limit": {"context": 1000000, "output": 64000}
 		}
 	}}
 }`
@@ -576,7 +582,7 @@ const opencodeGoRegistry = `{
 func TestGoldenOpenCodeGoSpeaksToEachModelOverTheWireTheRegistryNames(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 
-	listedIDs := []string{"glm-5.3", "qwen3.8-max", "muse-spark-1.3-contributor", "minimax-m3", "gemini-9", "omen-alpha"}
+	listedIDs := []string{"glm-5.3", "qwen3.8-max", "muse-spark-1.3-contributor", "minimax-m3", "gemini-9", "titan-9", "omen-alpha"}
 	lister := func(ctx context.Context, providerName string) ([]agent.Model, error) {
 		if providerName != OpencodeGoProvider {
 			return unreachableProviders(ctx, providerName)

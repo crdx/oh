@@ -12,6 +12,7 @@ import (
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/wire/anthropic/messages"
+	"crdx.org/oh/pkg/wire/google/generatecontent"
 	"crdx.org/oh/pkg/wire/openai/chatcompletions"
 	"crdx.org/oh/pkg/wire/openai/responses"
 )
@@ -24,6 +25,8 @@ const (
 	completionsSuffix = "/chat/completions"
 	responsesSuffix   = "/responses"
 	messagesSuffix    = "/messages"
+	versionSuffix     = "/v1"
+	googleBase        = "/google/v1beta"
 )
 
 type conversation interface {
@@ -78,6 +81,8 @@ func New(
 		return newMessagesClient(url, token, model, effort, maxOutputTokens)
 	case agent.CompletionsWire:
 		return newCompletionsClient(url, token, model, effort, maxOutputTokens)
+	case agent.GenerateContentWire:
+		return newGenerateContentClient(url, token, model, effort, maxOutputTokens)
 	}
 
 	return nil, fmt.Errorf("chat: no wire protocol is known for %s: run with -u to update the model list", model)
@@ -85,7 +90,7 @@ func New(
 
 func Speaks(wire agent.Wire) bool {
 	switch wire {
-	case agent.ResponsesWire, agent.MessagesWire, agent.CompletionsWire:
+	case agent.ResponsesWire, agent.MessagesWire, agent.CompletionsWire, agent.GenerateContentWire:
 		return true
 	default:
 		return false
@@ -136,8 +141,27 @@ func newMessagesClient(url string, token string, model string, effort string, ma
 	return &Client{conversation: conversation, Token: token, toolsSize: messages.ToolsSize}, nil
 }
 
+func newGenerateContentClient(url string, token string, model string, effort string, maxOutputTokens int) (*Client, error) {
+	conversation, err := generatecontent.New(
+		googleAddress(url),
+		googleHeaders(token),
+		model,
+		effort,
+		maxOutputTokens,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &Client{conversation: conversation, Token: token, toolsSize: generatecontent.ToolsSize}, nil
+}
+
 func besideCompletions(completionsAddress string, suffix string) string {
 	return strings.TrimSuffix(completionsAddress, completionsSuffix) + suffix
+}
+
+func googleAddress(completionsAddress string) string {
+	return strings.TrimSuffix(strings.TrimSuffix(completionsAddress, completionsSuffix), versionSuffix) + googleBase
 }
 
 func (self *Client) UseSession(id string) {
@@ -175,6 +199,10 @@ func requestHeaders(token string) http.Header {
 
 func messagesHeaders(token string) http.Header {
 	return identifiedHeaders("X-Api-Key", token)
+}
+
+func googleHeaders(token string) http.Header {
+	return identifiedHeaders("X-Goog-Api-Key", token)
 }
 
 func identifiedHeaders(keyName string, keyValue string) http.Header {

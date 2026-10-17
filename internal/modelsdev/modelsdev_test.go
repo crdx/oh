@@ -162,7 +162,8 @@ func TestFetchTakesEachModelsWireFromThePackageItsProviderOrItselfNames(t *testi
 				"inherits": {},
 				"messages": {"provider": {"npm": "@ai-sdk/anthropic"}},
 				"responses": {"provider": {"npm": "@ai-sdk/openai"}},
-				"foreign": {"provider": {"npm": "@ai-sdk/google"}},
+				"google": {"provider": {"npm": "@ai-sdk/google"}},
+				"foreign": {"provider": {"npm": "@ai-sdk/amazon-bedrock"}},
 				"blank": {"provider": {}}
 			}},
 			"elsewhere": {"npm": "@ai-sdk/mistral", "models": {
@@ -189,6 +190,7 @@ func TestFetchTakesEachModelsWireFromThePackageItsProviderOrItselfNames(t *testi
 		{"opencode-go", "inherits", agent.CompletionsWire},
 		{"opencode-go", "messages", agent.MessagesWire},
 		{"opencode-go", "responses", agent.ResponsesWire},
+		{"opencode-go", "google", agent.GenerateContentWire},
 		{"opencode-go", "foreign", ""},
 		{"opencode-go", "blank", agent.CompletionsWire},
 		{"elsewhere", "inherits-the-unknown", ""},

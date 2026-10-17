@@ -46,6 +46,16 @@
       "high"
     ],
     "context": 1000000,
+    "output": 64000,
+    "wire": "generate-content"
+  },
+  {
+    "id": "titan-9",
+    "name": "Titan 9",
+    "efforts": [
+      "high"
+    ],
+    "context": 1000000,
     "output": 64000
   },
   {

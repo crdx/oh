@@ -130,7 +130,7 @@ func (self *Endpoint) ServeHTTP(writer http.ResponseWriter, request *http.Reques
 
 func (self *Endpoint) dialectFor(requestPath string) (Dialect, bool) {
 	for _, dialect := range self.dialects {
-		if path.Base(requestPath) == path.Base(dialect.Path()) {
+		if strings.HasSuffix(path.Base(requestPath), path.Base(dialect.Path())) {
 			return dialect, true
 		}
 	}

@@ -67,6 +67,7 @@ go run crdx.org/oh@latest --demo
 - `pkg/simulator`: scripted provider endpoint for tests
 - `pkg/session`: session saving and resumption as an append-only journal
 - `pkg/wire/anthropic/messages`: the Anthropic Messages protocol
+- `pkg/wire/google/generatecontent`: the Google Gemini Generate Content protocol
 - `pkg/wire/openai/chatcompletions`: the OpenAI-compatible Chat Completions protocol
 - `pkg/wire/openai/responses`: the OpenAI Responses protocol
 - `pkg/provider/anthropic`: the Claude subscription service

@@ -1,0 +1,2 @@
+{"contents":[{"parts":[{"text":"reach the OpenCode Go usage limit"}],"role":"user"}],"generationConfig":{"maxOutputTokens":32000,"thinkingConfig":{"includeThoughts":true,"thinkingLevel":"high"}},"systemInstruction":{"parts":[{"text":"You are a test assistant."}]}}
+{"contents":[{"parts":[{"text":"reach the OpenCode Go usage limit"},{"text":"continue after the early reset"}],"role":"user"}],"generationConfig":{"maxOutputTokens":32000,"thinkingConfig":{"includeThoughts":true,"thinkingLevel":"high"}},"systemInstruction":{"parts":[{"text":"You are a test assistant."}]}}

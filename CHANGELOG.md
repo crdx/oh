@@ -2,6 +2,10 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+### Changes
+
+- Add Google's Generate Content protocol
+
 ## [0.17.1] - 2026-10-14
 
 ### Changes

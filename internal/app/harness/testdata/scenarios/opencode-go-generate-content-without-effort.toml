@@ -1,0 +1,35 @@
+provider = "opencode-go"
+model = "gemini-9-flash"
+wire = "generate-content"
+
+[[tool]]
+name = "alpha"
+outputs = ["alpha result"]
+state-key = "alpha-count"
+
+[[tool]]
+name = "beta"
+outputs = ["beta result"]
+state-key = "beta-count"
+
+[first]
+prompt = "reason, then call two tools at once"
+
+[[first.response]]
+event = [
+    '''{"candidates":[{"content":{"role":"model","parts":[{"text":"Use both tools.","thought":true}]},"index":0}]}''',
+    '''{"candidates":[{"content":{"role":"model","parts":[{"functionCall":{"name":"alpha","args":{}},"thoughtSignature":"c2VhbC0z"},{"functionCall":{"name":"beta","args":{}}}]},"finishReason":"STOP","index":0}],"usageMetadata":{"promptTokenCount":300,"candidatesTokenCount":20,"thoughtsTokenCount":40,"totalTokenCount":360}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"candidates":[{"content":{"role":"model","parts":[{"text":"Tools done."}]},"finishReason":"STOP","index":0}],"usageMetadata":{"promptTokenCount":360,"candidatesTokenCount":5,"totalTokenCount":365}}''',
+]
+
+[resume]
+prompt = "continue after both tool results"
+
+[[resume.response]]
+event = [
+    '''{"candidates":[{"content":{"role":"model","parts":[{"text":"Resumed."}]},"finishReason":"STOP","index":0}],"usageMetadata":{"promptTokenCount":380,"candidatesTokenCount":5,"totalTokenCount":385}}''',
+]

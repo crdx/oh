@@ -1,0 +1,14 @@
+{"kind":"head","version":22,"meta":{"model":"gemini-9-pro","workspaceDir":"","provider":"opencode-go","effort":"high","system_prompt":"You are a test assistant."}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
+{"kind":"event","event":{"kind":"mode_change","name":"w","state":"rxsngl"}}
+{"kind":"event","event":{"kind":"user_message","text":"continue with the new mode"}}
+{"kind":"event","event":{"kind":"model_message","text":"The workspace is read-only."}}
+{"kind":"item","payload":{"role":"user","parts":[{"text":"\u003csystem-reminder\u003e\nThe workspace is now read-only.\n\u003c/system-reminder\u003e"}]}}
+{"kind":"item","payload":{"role":"user","parts":[{"text":"continue with the new mode"}]}}
+{"kind":"item","payload":{"role":"model","parts":[{"text":"The workspace is read-only."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"continue"}}
+{"kind":"event","event":{"kind":"model_message","text":"Continued."}}
+{"kind":"item","payload":{"role":"user","parts":[{"text":"continue"}]}}
+{"kind":"item","payload":{"role":"model","parts":[{"text":"Continued."}]}}
+{"kind":"turn_completion","turn":{}}

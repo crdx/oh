@@ -66,6 +66,24 @@ func Bound(img tool.Image) tool.Image {
 	return boundedCache.store(key, scaledImage)
 }
 
+func AsPNG(img tool.Image) tool.Image {
+	if img.MediaType == mediaTypePNG {
+		return img
+	}
+
+	decodedImage, _, err := image.Decode(bytes.NewReader(img.Data))
+	if err != nil {
+		return img
+	}
+
+	convertedImage, err := encode(decodedImage, "")
+	if err != nil {
+		return img
+	}
+
+	return convertedImage
+}
+
 const (
 	maxBoundedImageCacheBytes   = 128 * 1024 * 1024
 	maxBoundedImageCacheEntries = 256

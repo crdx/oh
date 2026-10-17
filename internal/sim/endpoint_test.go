@@ -43,6 +43,7 @@ type speaker struct {
 	name                 string
 	format               string
 	hasModelCapabilities bool
+	isUnlisted           bool
 	connect              func(t *testing.T, address string) agent.Provider
 }
 
@@ -90,6 +91,21 @@ func providers() []speaker {
 					t.Fatal(err)
 				}
 				client.URL = address
+
+				return client
+			},
+		},
+		{
+			name:       "generate-content",
+			format:     sim.Completions,
+			isUnlisted: true,
+			connect: func(t *testing.T, address string) agent.Provider {
+				t.Helper()
+
+				client, err := opencodego.New(address, "token", "fake", agent.GenerateContentWire, "high", 128_000)
+				if err != nil {
+					t.Fatal(err)
+				}
 
 				return client
 			},
@@ -424,6 +440,10 @@ func TestARefusedStatusIsReported(t *testing.T) {
 
 func TestAModelListingAnswersEveryProvider(t *testing.T) {
 	for _, provider := range providers() {
+		if provider.isUnlisted {
+			continue
+		}
+
 		t.Run(provider.name, func(t *testing.T) {
 			_, address := standUp(t, conversation, provider)
 
@@ -573,39 +593,47 @@ func TestAnAddressThatNoApiAnswersAtIsRefused(t *testing.T) {
 }
 
 func TestEachApiIsAnsweredWhereverItsPathStands(t *testing.T) {
-	scenario := &sim.Scenario{
-		Model: "muse-spark-1.3-contributor",
-		Wire:  sim.Responses,
-		Turns: []sim.Turn{{Say: "Hello."}},
-	}
-	endpoint := sim.New(scenario)
-	server := httptest.NewServer(endpoint)
+	for model, wire := range map[string]string{
+		"muse-spark-1.3-contributor": sim.Responses,
+		"gemini-9":                   sim.GenerateContent,
+	} {
+		t.Run(wire, func(t *testing.T) {
+			scenario := &sim.Scenario{
+				Model:  model,
+				Wire:   wire,
+				Strict: true,
+				Turns:  []sim.Turn{{Say: "Hello."}},
+			}
+			endpoint := sim.New(scenario)
+			server := httptest.NewServer(endpoint)
 
-	t.Cleanup(server.Close)
+			t.Cleanup(server.Close)
 
-	client, err := opencodego.New(
-		endpoint.Addresses(server.URL)[sim.Completions],
-		"token",
-		scenario.Model,
-		agent.Wire(scenario.Wire),
-		"high",
-		128_000,
-	)
-	if err != nil {
-		t.Fatal(err)
-	}
+			client, err := opencodego.New(
+				endpoint.Addresses(server.URL)[sim.Completions],
+				"token",
+				scenario.Model,
+				agent.Wire(scenario.Wire),
+				"high",
+				128_000,
+			)
+			if err != nil {
+				t.Fatal(err)
+			}
 
-	answer, err := agent.New("You are a helpful assistant", client, nil).Send(t.Context(), "hello")
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+			answer, err := agent.New("You are a helpful assistant", client, nil).Send(t.Context(), "hello")
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
 
-	if answer != "Hello." {
-		t.Errorf("expected the scenario's answer, got %q", answer)
-	}
+			if answer != "Hello." {
+				t.Errorf("expected the scenario's answer, got %q", answer)
+			}
 
-	if askedRequests := endpoint.Requests(); len(askedRequests) != 1 || askedRequests[0].API != sim.Responses {
-		t.Errorf("expected one request through the Responses API, got %+v", askedRequests)
+			if askedRequests := endpoint.Requests(); len(askedRequests) != 1 || askedRequests[0].API != wire {
+				t.Errorf("expected one request through %s, got %+v", wire, askedRequests)
+			}
+		})
 	}
 }
 
@@ -623,6 +651,10 @@ func TestAStrictEndpointRefusesARequestNoRealOneWouldTake(t *testing.T) {
 	server := httptest.NewServer(sim.New(conversation))
 	t.Cleanup(server.Close)
 	addresses := sim.New(conversation).Addresses(server.URL)
+	addresses[sim.GenerateContent] = server.URL + "/google/v1beta/models/fake:streamGenerateContent?alt=sse"
+	addresses["unstreamed"] = server.URL + "/google/v1beta/models/fake:streamGenerateContent"
+	addresses["another model"] = server.URL + "/google/v1beta/models/other:streamGenerateContent?alt=sse"
+	instruction := `"systemInstruction":{"parts":[{"text":"You are a helpful assistant"}]}`
 
 	system := `[{"role":"system","content":"You are a helpful assistant"}]`
 	for name, testCase := range map[string]struct {
@@ -679,6 +711,28 @@ func TestAStrictEndpointRefusesARequestNoRealOneWouldTake(t *testing.T) {
 			dialect: sim.Responses,
 			body:    `{"model":"fake","stream":true}`,
 			want:    "the request carried no instructions",
+		},
+		"generate content without streaming": {
+			dialect: "unstreamed",
+			body:    `{` + instruction + `}`,
+			want:    "only streaming responses are supported",
+		},
+		"generate content without instructions": {
+			dialect: sim.GenerateContent,
+			body:    `{}`,
+			want:    "the request carried no instructions",
+		},
+		"generate content for another model": {
+			dialect: "another model",
+			body:    `{` + instruction + `}`,
+			want:    `the model "other" is not available`,
+		},
+		"generate content with a call unanswered": {
+			dialect: sim.GenerateContent,
+			body: `{` + instruction + `,"contents":[{"role":"user","parts":[{"text":"hi"}]},` +
+				`{"role":"model","parts":[{"functionCall":{"id":"call_1","name":"weather","args":{}}}]},` +
+				`{"role":"user","parts":[{"text":"well?"}]}]}`,
+			want: "No function response found for function call call_1.",
 		},
 		"responses for another model": {
 			dialect: sim.Responses,

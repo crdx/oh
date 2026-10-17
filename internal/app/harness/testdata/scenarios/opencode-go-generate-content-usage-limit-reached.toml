@@ -1,0 +1,20 @@
+provider = "opencode-go"
+model = "gemini-9-pro"
+wire = "generate-content"
+effort = "high"
+
+[first]
+prompt = "reach the OpenCode Go usage limit"
+
+[[first.response]]
+status = 429
+body = '''{"type":"error","error":{"type":"GoUsageLimitError","message":"Monthly usage limit reached. Resets in 1 day. To continue using this model now, enable usage from your available balance: https://opencode.ai/workspace/workspace-1/go"},"metadata":{"workspace":"workspace-1","limitName":"monthly"}}'''
+headers = { Content-Type = "text/plain;charset=UTF-8", Retry-After = "165899" }
+
+[resume]
+prompt = "continue after the early reset"
+
+[[resume.response]]
+event = [
+    '''{"candidates":[{"content":{"role":"model","parts":[{"text":"Available after the reset."}]},"finishReason":"STOP","index":0}],"usageMetadata":{"promptTokenCount":10,"candidatesTokenCount":5,"totalTokenCount":15}}''',
+]

@@ -370,6 +370,7 @@ func refusal(response *http.Response) error {
 			Message string          `json:"message"`
 			Code    json.RawMessage `json:"code"`
 			Type    string          `json:"type"`
+			Status  string          `json:"status"`
 		} `json:"error"`
 
 		Detail string `json:"detail"`
@@ -378,9 +379,10 @@ func refusal(response *http.Response) error {
 	_ = json.Unmarshal(body, &payload)
 
 	refusedRequest.Code = util.JSONScalar(payload.Error.Code)
-	if payload.Error.Type != "" &&
-		(refusedRequest.Code == "" || refusedRequest.Code == strconv.Itoa(refusedRequest.Status)) {
-		refusedRequest.Code = payload.Error.Type
+	for _, name := range []string{payload.Error.Type, payload.Error.Status} {
+		if name != "" && (refusedRequest.Code == "" || refusedRequest.Code == strconv.Itoa(refusedRequest.Status)) {
+			refusedRequest.Code = name
+		}
 	}
 
 	for _, sentence := range []string{payload.Error.Message, payload.Detail} {
