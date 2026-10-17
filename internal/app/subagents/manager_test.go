@@ -22,7 +22,6 @@ import (
 	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/subagent"
-	"crdx.org/oh/pkg/toolbox/wait"
 )
 
 const parentName = "frugal-ladybird"
@@ -274,7 +273,9 @@ func TestRevokingShellStopsOnlyLiveChildren(t *testing.T) {
 	if again := manager.StopLosing(caps.Shell); len(again) != 0 {
 		t.Fatalf("stopped them again: %v", again)
 	}
-	waitOn(t, manager, wait.All, 60, names...)
+	for _, name := range names {
+		untilSettled(t, manager, name)
+	}
 	for _, snapshot := range manager.ListSnapshots() {
 		if snapshot.State != subagentrecord.Stopped {
 			t.Errorf("%s remains %s", snapshot.Name, snapshot.State)
@@ -599,21 +600,6 @@ func TestTheBarIsNeverHeldUpByAStartDoingIO(t *testing.T) {
 	close(release)
 	if err := <-started; err != nil {
 		t.Fatal(err)
-	}
-}
-
-func TestAWaitThatGivesUpSaysWhichSubagentsAreStillRunning(t *testing.T) {
-	manager := newTestFamily(t).manager(t, waiting())
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "wait", Intent: "Watching the build"}}); err != nil {
-		t.Fatal(err)
-	}
-	name := manager.ListSnapshots()[0].Name
-	report := waitOn(t, manager, wait.Any, 1, name)
-	if want := name + ": running\n\nnote: the wait gave up after 1s, and " + name + " is still running."; report != want {
-		t.Errorf("the report %q does not say %q", report, want)
-	}
-	if intent := manager.ListSnapshots()[0].Intent; intent != "Watching the build" {
-		t.Errorf("the child kept its intent as %q", intent)
 	}
 }
 

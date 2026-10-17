@@ -16,7 +16,6 @@ import (
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/job"
-	"crdx.org/oh/pkg/toolbox/wait"
 )
 
 func label() call.Label {
@@ -301,19 +300,6 @@ func TestAContinuedShellCallUsesTheShellLabel(t *testing.T) {
 	}
 }
 
-func TestAWaitPaintsWhatItWaitsForAsItsSubject(t *testing.T) {
-	label := call.LabelForRendering(wait.Describe(nil, wait.Args{
-		Names:   []string{"build", "lint"},
-		Until:   wait.All,
-		Seconds: 20,
-	}))
-	want := style.Call("wait") + " " + style.Subject("build && lint") + " " + style.Qualifier("for up to 20s")
-
-	if got := label.Render(); got != want {
-		t.Errorf("got %q, want %q", got, want)
-	}
-}
-
 func TestRenderingCarriesItsPathLineIntoTheLabel(t *testing.T) {
 	workspace := t.TempDir()
 	if err := os.WriteFile(filepath.Join(workspace, "main.go"), nil, 0o600); err != nil {
@@ -333,16 +319,25 @@ func TestRenderingCarriesItsPathLineIntoTheLabel(t *testing.T) {
 }
 
 func TestALabelCarriesTheTimeTheCallGaveItself(t *testing.T) {
-	waitEvent := agent.Event{Name: "wait", Arguments: `{"names":["check"],"seconds":20}`}
+	type pauseArgs struct {
+		Seconds int `json:"seconds"`
+	}
+	pause := tool.Implement(
+		tool.Definition{Name: "pause", Description: "pause", Schema: tool.Schema{tool.Integer("seconds", "how long")}},
+		func(pauseArgs) tool.CallRendering { return tool.CallRendering{} },
+	).
+		TakesAtMost(func(args pauseArgs) time.Duration { return time.Duration(args.Seconds) * time.Second }).
+		Plain(func(context.Context, pauseArgs) (string, error) { return "", nil })
+	pauseEvent := agent.Event{Name: "pause", Arguments: `{"seconds":20}`}
 	getTool := func(name string) (tool.Tool, bool) {
-		if name == "wait" {
-			return wait.New([]wait.Source{job.WaitSource(jobs.New(nil))}, nil), true
+		if name == "pause" {
+			return pause, true
 		}
 		return job.New(jobs.New(nil), nil, nil, nil), true
 	}
 
-	if got := call.LabelFor(waitEvent, getTool, nil).TimeLimit; got != 20*time.Second {
-		t.Errorf("got %s, want the wait to declare the time it gave itself", got)
+	if got := call.LabelFor(pauseEvent, getTool, nil).TimeLimit; got != 20*time.Second {
+		t.Errorf("got %s, want the call to declare the time it gave itself", got)
 	}
 
 	statusEvent := agent.Event{Name: "job", Arguments: `{"intent":"see how the check is doing","action":"status","name":"check"}`}

@@ -2,11 +2,9 @@ package jobs
 
 import (
 	"context"
-	"errors"
 	"strings"
 	"syscall"
 	"testing"
-	"testing/synctest"
 	"time"
 
 	"crdx.org/oh/internal/sandbox"
@@ -117,46 +115,5 @@ func TestAJobStoppedFromTheKeyboardAnnouncesNothing(t *testing.T) {
 	case conclusion := <-manager.Conclusions():
 		t.Errorf("got %#v, want a stopped job to announce nothing", conclusion)
 	default:
-	}
-}
-
-func TestAHeldJobAnnouncesNothingAndAReleasedOneDoes(t *testing.T) {
-	synctest.Test(t, func(t *testing.T) {
-		for _, isReleased := range []bool{false, true} {
-			runner := newHeldRunner(sandbox.Result{})
-			manager := New(runner)
-
-			if _, err := manager.Start(t.Context(), "build", t.TempDir(), "just build", sandbox.Policy{}); err != nil {
-				t.Fatal(err)
-			}
-			over, release, err := manager.Hold("build")
-			if err != nil {
-				t.Fatal(err)
-			}
-			if isReleased {
-				release()
-			}
-
-			close(runner.release)
-			<-over
-			synctest.Wait()
-
-			select {
-			case conclusion := <-manager.Conclusions():
-				if !isReleased {
-					t.Errorf("got %#v, want a held job to announce nothing", conclusion)
-				}
-			default:
-				if isReleased {
-					t.Error("a released job announced nothing")
-				}
-			}
-		}
-	})
-}
-
-func TestHoldingAnUnknownJobSaysSo(t *testing.T) {
-	if _, _, err := New(nil).Hold("ghost"); !errors.Is(err, ErrNotFound) {
-		t.Errorf("got %v, want the job to be unknown", err)
 	}
 }

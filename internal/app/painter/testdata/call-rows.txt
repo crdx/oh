@@ -598,48 +598,6 @@ cat docs 2L
 stop docs
 discard docs
 
-── waits reminded of every job · 120 columns
-start docs $ just docs (Serving the documentation locally)
-start build $ just build (Building every package)
-wait docs || build 1L (Serving the documentation locally; Building every package)
-wait docs && build for up to 20s 2L (Serving the documentation locally; Building every package)
-wait docs || other 1L (Serving the documentation locally)
-
-── waits reminded of every job · 80 columns
-start docs $ just docs (Serving the documentation locally)
-start build $ just build (Building every package)
-wait docs || build 1L
-wait docs && build for up to 20s 2L
-wait docs || other 1L (Serving the documentation locally)
-
-── waits reminded of every job · 60 columns
-start docs $ just docs (Serving the documentation locally)
-start build $ just build (Building every package)
-wait docs || build 1L
-wait docs && build for up to 20s 2L
-wait docs || other 1L (Serving the documentation locally)
-
-── waits reminded of every job · 44 columns
-start docs $ just docs
-start build $ just build
-wait docs || build 1L
-wait docs && build for up to 20s 2L
-wait docs || other 1L
-
-── waits reminded of every job · 30 columns
-start docs $ just docs
-start build $ just build
-wait docs || build 1L
-wait docs && build for up … 2L
-wait docs || other 1L
-
-── waits reminded of every job · 16 columns
-start docs $ ju…
-start build $ j…
-wait docs ||… 1L
-wait docs &&… 2L
-wait docs ||… 1L
-
 ── job reminded of its newest start · 120 columns
 start docs $ just docs (Serving the documentation locally)
 status docs (Serving the documentation locally)
@@ -705,30 +663,6 @@ prune jobs
 start docs $ ju…
 list jobs 2L
 prune jobs
-
-── wait stopped by the user · 120 columns
-start check $ just check (Running the full check)
-wait check for up to 4m 30s – stopped because the user pressed escape (Running the full check)
-
-── wait stopped by the user · 80 columns
-start check $ just check (Running the full check)
-wait check for up to 4m 30s – stopped because the user pressed escape
-
-── wait stopped by the user · 60 columns
-start check $ just check (Running the full check)
-wait check for up to 4m 30s – stopped because the user pres…
-
-── wait stopped by the user · 44 columns
-start check $ just check
-wait check for up t… – stopped because the …
-
-── wait stopped by the user · 30 columns
-start check $ just check
-wait check f… – stopped becau…
-
-── wait stopped by the user · 16 columns
-start check $ j…
-wait … – stoppe…
 
 ── job call with an unknown action · 120 columns
 job explode docs ✗ action must be start, status, output, stop, discard, prune, or list

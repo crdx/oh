@@ -154,12 +154,10 @@ type job struct {
 	output         *spool
 	runningCommand sandbox.Command
 	over           chan struct{}
-	holds          int
 	run            int
 	respawn        Respawn
 	quickRuns      int
 	launch         func(sandbox.Output) (sandbox.Command, error)
-	previous       *Conclusion
 }
 
 type Manager struct {
@@ -300,41 +298,6 @@ func (self *Manager) Output(name string) (string, Snapshot, error) {
 	}
 
 	return found.output.String(), self.describe(found), nil
-}
-
-func (self *Manager) Ended(name string) (string, Snapshot, error) {
-	self.mutex.Lock()
-	defer self.mutex.Unlock()
-
-	found, isKnown := self.jobs[name]
-	if !isKnown {
-		return "", Snapshot{}, ErrNotFound
-	}
-
-	if isLive(found.state) && found.previous != nil {
-		return found.previous.Output, found.previous.Snapshot, nil
-	}
-
-	return found.output.String(), self.describe(found), nil
-}
-
-func (self *Manager) Hold(name string) (<-chan struct{}, func(), error) {
-	self.mutex.Lock()
-	defer self.mutex.Unlock()
-
-	found, isKnown := self.jobs[name]
-	if !isKnown {
-		return nil, nil, ErrNotFound
-	}
-
-	found.holds++
-	release := func() {
-		self.mutex.Lock()
-		defer self.mutex.Unlock()
-		found.holds--
-	}
-
-	return found.over, release, nil
 }
 
 func (self *Manager) List() []Snapshot {
@@ -591,11 +554,9 @@ func (self *Manager) settle(endingJob *job, natural State, code int, failure str
 	}
 
 	conclusion := self.conclusion(endingJob)
-	isAnnounced := endingJob.holds == 0 &&
-		(endingJob.state == StateComplete || endingJob.state == StateFailed)
+	isAnnounced := endingJob.state == StateComplete || endingJob.state == StateFailed
 
 	if isRespawned {
-		endingJob.previous = &conclusion
 		endingJob.run++
 		endingJob.state = StateStarting
 		endingJob.startedAt = time.Now()

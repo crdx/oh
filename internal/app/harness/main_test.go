@@ -12108,11 +12108,11 @@ func TestTheReloadConfirmationNamesEveryFileAndWhatItChanged(t *testing.T) {
 		},
 		"an experiment read once at startup": {
 			changes: []config.SourceChange{
-				{Path: "config.toml", Settings: []string{"experimental.reply_command", "experimental.shared_history", "experimental.wait_tool"}},
+				{Path: "config.toml", Settings: []string{"experimental.reply_command", "experimental.shared_history"}},
 			},
 			want: "Configuration reloaded automatically\n" +
-				"config.toml: experimental.reply_command, experimental.shared_history, experimental.wait_tool\n" +
-				"applies when oh next starts: experimental.reply_command, experimental.wait_tool",
+				"config.toml: experimental.reply_command, experimental.shared_history\n" +
+				"applies when oh next starts: experimental.reply_command",
 		},
 		"one setting named by two files is said once": {
 			changes: []config.SourceChange{
@@ -19087,7 +19087,6 @@ type sessionGoldenScenario struct {
 	Tools                 []sessionGoldenTool       `toml:"tool"`
 	Subagents             []sessionGoldenSubagent   `toml:"subagent"`
 	SubagentsKilled       bool                      `toml:"subagents-killed-with-session"`
-	HasWaitTool           bool                      `toml:"with-wait-tool"`
 	FirstTurn             sessionGoldenTurn         `toml:"first"`
 	ResumeTurn            sessionGoldenTurn         `toml:"resume"`
 	CredentialsPath       string                    `toml:"-"`
@@ -19643,8 +19642,6 @@ func newSessionGoldenLargeReadTool(t *testing.T, scratchDirectory string) tool.T
 	return read.New(root, file.NewSnapshots())
 }
 
-var sessionGoldenRunningJobs sync.Map
-
 func newSessionGoldenRunningJobTool(t *testing.T, ports *portgrant.Forwards) tool.Tool {
 	t.Helper()
 
@@ -19656,8 +19653,6 @@ func newSessionGoldenRunningJobTool(t *testing.T, ports *portgrant.Forwards) too
 
 	manager := jobs.New(stoppableRunner{})
 	t.Cleanup(func() { _ = manager.Close() })
-	sessionGoldenRunningJobs.Store(t, manager)
-	t.Cleanup(func() { sessionGoldenRunningJobs.Delete(t) })
 
 	return job.New(
 		manager,
@@ -21045,12 +21040,15 @@ func restoreSessionGoldenRunningJobs(
 func settleSessionGoldenJob(t *testing.T, testHarness *App, name string) {
 	t.Helper()
 
-	over, release, err := testHarness.jobs.manager.Hold(name)
-	if err != nil {
-		t.Fatalf("the stopped job never settled: %v", err)
+	deadline := time.Now().Add(5 * time.Second)
+	for slices.ContainsFunc(testHarness.jobs.manager.List(), func(snapshot jobs.Snapshot) bool {
+		return snapshot.Name == name && snapshot.IsLive()
+	}) {
+		if time.Now().After(deadline) {
+			t.Fatalf("the stopped job %s never settled", name)
+		}
+		time.Sleep(time.Millisecond)
 	}
-	<-over
-	release()
 
 	testHarness.jobs.manager.PruneFinished()
 }

@@ -25,7 +25,6 @@ var settingReaches = map[string]Reach{
 	"debug.wire":                 ReachNextSession,
 	"defaults.tool_output":       ReachLive,
 	"experimental.reply_command": ReachNextRun,
-	"experimental.wait_tool":     ReachNextRun,
 }
 
 func ReachOf(setting string) Reach {

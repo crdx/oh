@@ -24,7 +24,6 @@ import (
 	"crdx.org/oh/pkg/toolbox/notify"
 	"crdx.org/oh/pkg/toolbox/read"
 	"crdx.org/oh/pkg/toolbox/title"
-	"crdx.org/oh/pkg/toolbox/wait"
 	"crdx.org/oh/pkg/toolbox/write"
 )
 
@@ -225,42 +224,6 @@ func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
 			name: "job with invalid name",
 			exchange: resultExchange("job", job.Args{Action: "start", Name: "way-too-long", Command: "true"}, agent.ErrorStatus,
 				invalidJobNameError(t, "way-too-long")),
-		},
-		{
-			name: "wait on a job that finished",
-			exchange: resultExchange("wait", wait.Args{Names: []string{"check"}}, agent.SuccessStatus,
-				"check: complete after 37s\nok  crdx.org/oh\nlint1  \u2713\n"),
-		},
-		{
-			name: "wait until any of several ends",
-			exchange: resultExchange("wait", wait.Args{Names: []string{"build", "lint"}}, agent.SuccessStatus,
-				"lint: complete after 22s\nall checks passed\n"),
-		},
-		{
-			name: "wait for any that reached its limit",
-			exchange: resultExchange("wait", wait.Args{Names: []string{"build", "lint"}}, agent.SuccessStatus,
-				"build: running for 5m 5s\n\n"+
-					"lint: running for 5m 1s\n\n"+
-					"note: the wait gave up after 10m, and build, lint are still running."),
-		},
-		{
-			name: "wait until every job and subagent ends",
-			exchange: resultExchange("wait", wait.Args{Names: []string{"build", "subagent:tame-adder"}, Until: wait.All}, agent.SuccessStatus,
-				"build: complete after 37s\nok  crdx.org/oh\n\n"+
-					"tame-adder: done\nThe parser is in parse.go."),
-		},
-		{
-			name: "wait for all that reached its limit",
-			exchange: resultExchange("wait", wait.Args{Names: []string{"build", "lint"}, Until: wait.All, Seconds: 300}, agent.SuccessStatus,
-				"build: complete after 37s\n\n"+
-					"lint: running for 5m 5s\n\n"+
-					"note: the wait gave up after 5m, and lint is still running."),
-		},
-		{
-			name: "wait ended early by a message",
-			exchange: resultExchange("wait", wait.Args{Names: []string{"docs"}}, agent.SuccessStatus,
-				"docs: running for 1m 5s\nServing HTTP on localhost port 8080 ...\n\n"+
-					"note: the user sent a message, so the wait ended early, and docs is still running."),
 		},
 		{
 			name: "title",

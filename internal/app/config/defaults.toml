@@ -120,9 +120,6 @@ output = { name = "cat", paint = "normal" }
 list = { paint = "normal" }
 models = { name = "list", paint = "normal" }
 
-[ui.theme.tool.wait]
-default = { name = "wait", paint = "normal" }
-
 [ui.theme.tool.forward]
 default = { name = "forward", paint = "status_warning" }
 add = { name = "forward" }
@@ -145,7 +142,6 @@ enter_interrupts = false
 redraw_timing_feedback = false
 reply_command = false
 shared_history = false
-wait_tool = false
 
 [debug]
 stalls = false

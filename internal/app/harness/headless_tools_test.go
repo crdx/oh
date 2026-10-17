@@ -10,7 +10,6 @@ import (
 
 func TestAHeadlessSessionOffersOnlyTheToolsThatWorkAlone(t *testing.T) {
 	rig := newInteractiveRig(t, "Noted.")
-	writeRigConfig(t, rig, "[experimental]\nwait_tool = true\n")
 	runTestBinary(t, rig.binary, rig.workspace, rig.environment, "-p", "--yolo", "-m", "opencode-go/fake", "which tools do you have?")
 
 	storedSessions := rig.storedSessions()

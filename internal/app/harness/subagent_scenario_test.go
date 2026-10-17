@@ -20,13 +20,10 @@ import (
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/internal/app/subagents"
-	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tool"
-	"crdx.org/oh/pkg/toolbox/job"
 	"crdx.org/oh/pkg/toolbox/subagent"
-	"crdx.org/oh/pkg/toolbox/wait"
 )
 
 var sessionGoldenChildClock = time.Date(2026, time.January, 2, 3, 4, 5, 0, time.UTC)
@@ -268,15 +265,6 @@ func (self *sessionGoldenChildren) withTool(tools []tool.Tool, manager *subagent
 		return tools
 	}
 	tools = append(tools, subagent.New(sessionGoldenMessagingManager{Manager: manager, children: self}, func() bool { return getCaps().Has(caps.Subagents) }))
-	if self.scenario.HasWaitTool {
-		var sources []wait.Source
-		if stored, isStored := sessionGoldenRunningJobs.Load(self.t); isStored {
-			if runningJobs, isManager := stored.(*jobs.Manager); isManager {
-				sources = append(sources, job.WaitSource(runningJobs))
-			}
-		}
-		tools = append(tools, wait.New(append(sources, manager.WaitSource()), agent.MessageArrival))
-	}
 	return tools
 }
 

@@ -22,7 +22,6 @@ func TestReachOfNamesWhenASettingLands(t *testing.T) {
 		"debug.wire":                    ReachNextSession,
 		"subagent.concurrency":          ReachLive,
 		"experimental.reply_command":    ReachNextRun,
-		"experimental.wait_tool":        ReachNextRun,
 		"experimental.shared_history":   ReachLive,
 		"experimental.enter_interrupts": ReachLive,
 		"ui.currency":                   ReachLive,

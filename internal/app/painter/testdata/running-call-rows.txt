@@ -69,39 +69,3 @@ start golden $ cd repo/oh && …
 
 ── job starting · 16 columns
 start golden $ …
-
-── waiting with a limit · 120 columns
-wait golden for up to 20s
-
-── waiting with a limit · 80 columns
-wait golden for up to 20s
-
-── waiting with a limit · 60 columns
-wait golden for up to 20s
-
-── waiting with a limit · 44 columns
-wait golden for up to 20s
-
-── waiting with a limit · 30 columns
-wait golden for up to 20s
-
-── waiting with a limit · 16 columns
-wait golden for…
-
-── waiting on several · 120 columns
-wait docs && build
-
-── waiting on several · 80 columns
-wait docs && build
-
-── waiting on several · 60 columns
-wait docs && build
-
-── waiting on several · 44 columns
-wait docs && build
-
-── waiting on several · 30 columns
-wait docs && build
-
-── waiting on several · 16 columns
-wait docs && bu…

@@ -69,39 +69,3 @@
 
 ── job starting · 16 columns
 [38;2;207;173;0mstart[0m [38;2;192;128;80mgolden[0m [38;2;129;162;190m$[0m [38;2;129;162;190m…[0m
-
-── waiting with a limit · 120 columns
-wait [38;2;192;128;80mgolden[0m [38;2;150;152;150mfor up to 20s[0m
-
-── waiting with a limit · 80 columns
-wait [38;2;192;128;80mgolden[0m [38;2;150;152;150mfor up to 20s[0m
-
-── waiting with a limit · 60 columns
-wait [38;2;192;128;80mgolden[0m [38;2;150;152;150mfor up to 20s[0m
-
-── waiting with a limit · 44 columns
-wait [38;2;192;128;80mgolden[0m [38;2;150;152;150mfor up to 20s[0m
-
-── waiting with a limit · 30 columns
-wait [38;2;192;128;80mgolden[0m [38;2;150;152;150mfor up to 20s[0m
-
-── waiting with a limit · 16 columns
-wait [38;2;192;128;80mgolden[0m [38;2;150;152;150mfor…[0m
-
-── waiting on several · 120 columns
-wait [38;2;192;128;80mdocs && build[0m
-
-── waiting on several · 80 columns
-wait [38;2;192;128;80mdocs && build[0m
-
-── waiting on several · 60 columns
-wait [38;2;192;128;80mdocs && build[0m
-
-── waiting on several · 44 columns
-wait [38;2;192;128;80mdocs && build[0m
-
-── waiting on several · 30 columns
-wait [38;2;192;128;80mdocs && build[0m
-
-── waiting on several · 16 columns
-wait [38;2;192;128;80mdocs && bu…[0m

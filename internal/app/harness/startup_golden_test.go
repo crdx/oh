@@ -486,8 +486,7 @@ func withoutMachineDependentTools(text string) string {
 }
 
 func TestGoldenAHeadlessSessionOffersOnlyTheToolsThatWorkAlone(t *testing.T) {
-	const everythingElse = "[experimental]\nwait_tool = true\n\n" +
-		"[tools.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\npermission = \"allow\"\ngroup = \"a\"\n"
+	const everythingElse = "[tools.weather]\ndescription = \"report the weather\"\ncommand = [\"true\"]\npermission = \"allow\"\ngroup = \"a\"\n"
 	compareWithGolden(t, "headless-tools", ".txt", map[string]func() string{
 		"a headless session beside every other kind of tool": func() string {
 			run := newStartupRun(t, everythingElse, "Headless answer.")
@@ -499,7 +498,7 @@ func TestGoldenAHeadlessSessionOffersOnlyTheToolsThatWorkAlone(t *testing.T) {
 		},
 		"a headless session naming tools that need somebody there": func() string {
 			run := newStartupRun(t, everythingElse)
-			return run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "-t", "read", "-t", "job", "-t", "weather", "-t", "wait", "a question") +
+			return run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "-t", "read", "-t", "job", "-t", "weather", "a question") +
 				run.sessionTools(t)
 		},
 		"an interactive session resumed headless": func() string {

@@ -240,7 +240,6 @@ func TestObservationalActionsUseNormalPaintWithinToolsThatMayChangeThings(t *tes
 	for _, kind := range []string{
 		"job_status",
 		"job_output",
-		"wait",
 		"job_list",
 		"forward_list",
 	} {
@@ -566,7 +565,6 @@ func TestEveryBuiltInToolKindKeepsItsNameAndPaint(t *testing.T) {
 		"job_prune":         {Name: "prune", Paint: "status_warning"},
 		"job_status":        {Name: "status", Paint: "normal"},
 		"job_output":        {Name: "cat", Paint: "normal"},
-		"wait":              {Name: "wait", Paint: "normal"},
 		"job_list":          {Name: "list", Paint: "normal"},
 		"forward":           {Name: "forward", Paint: "status_warning"},
 		"forward_add":       {Name: "forward", Paint: "status_warning"},

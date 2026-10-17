@@ -299,35 +299,3 @@ func TestARestoredRespawningJobNoLongerRespawns(t *testing.T) {
 		t.Errorf("got %q, want %q", got, want)
 	}
 }
-
-func TestAHeldRespawningJobReportsTheRunThatEnded(t *testing.T) {
-	synctest.Test(t, func(t *testing.T) {
-		runner := &scriptedRunner{runs: []scriptedRun{{lasts: 5 * time.Second, printed: "changed: a.go\n"}}}
-		manager := New(runner)
-		defer func() { _ = manager.Close() }()
-
-		if _, err := manager.StartRespawning(t.Context(), "watch", t.TempDir(), "inotifywait .", sandbox.Policy{}); err != nil {
-			t.Fatal(err)
-		}
-
-		over, release, err := manager.Hold("watch")
-		if err != nil {
-			t.Fatal(err)
-		}
-		<-over
-		release()
-
-		output, snapshot, err := manager.Ended("watch")
-		if err != nil {
-			t.Fatal(err)
-		}
-		if got, want := snapshot.Describe(), "watch: complete after 5s, run 1, respawned"; got != want {
-			t.Errorf("got %q, want %q", got, want)
-		}
-		if output != "changed: a.go\n" {
-			t.Errorf("got %q, want the ended run's output", output)
-		}
-
-		requireNoConclusion(t, manager)
-	})
-}

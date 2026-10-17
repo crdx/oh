@@ -27,8 +27,8 @@ oh -r <session>
 session tools: read, bash
 
 === a headless session naming tools that need somebody there ===
-$ oh -p --yolo -m opencode-go/fake -t read -t job -t weather -t wait a question
-✗ A headless session offers only read, ls, find, grep, bash, write, edit, so it cannot offer job, weather, wait
+$ oh -p --yolo -m opencode-go/fake -t read -t job -t weather a question
+✗ A headless session offers only read, ls, find, grep, bash, write, edit, so it cannot offer job, weather
 [exit 1]
 
 === a headless session resumed interactively ===
@@ -47,7 +47,6 @@ Interactive answer.
  🤖 The lookup tool needs somebody there, so it is disabled while this session is headless.
  🤖 The subagent tool needs somebody there, so it is disabled while this session is headless.
  🤖 The title tool needs somebody there, so it is disabled while this session is headless.
- 🤖 The wait tool needs somebody there, so it is disabled while this session is headless.
  🤖 The weather tool needs somebody there, so it is disabled while this session is headless.
 
 
@@ -57,7 +56,7 @@ Headless answer.
 
 oh -r <session>
 [exit 0]
-session tools: read, ls, find, grep, write, edit, subagent, bash, job, wait, title, lookup, fetch, weather
+session tools: read, ls, find, grep, write, edit, subagent, bash, job, title, lookup, fetch, weather
   bash: available
   edit: available
   fetch: available
@@ -69,7 +68,6 @@ session tools: read, ls, find, grep, write, edit, subagent, bash, job, wait, tit
   read: available
   subagent: available
   title: available
-  wait: available
   weather: available
   write: available
 
@@ -89,7 +87,6 @@ Interactive answer.
  🤖 The lookup tool needs somebody there, so it is disabled while this session is headless.
  🤖 The subagent tool needs somebody there, so it is disabled while this session is headless.
  🤖 The title tool needs somebody there, so it is disabled while this session is headless.
- 🤖 The wait tool needs somebody there, so it is disabled while this session is headless.
  🤖 The weather tool needs somebody there, so it is disabled while this session is headless.
 
 
@@ -99,7 +96,7 @@ Resumed answer.
 
 oh -r <session>
 [exit 0]
-session tools: read, ls, find, grep, write, edit, subagent, bash, job, wait, title, lookup, fetch, weather
+session tools: read, ls, find, grep, write, edit, subagent, bash, job, title, lookup, fetch, weather
   bash: available
   edit: available
   fetch: withheld
@@ -111,6 +108,5 @@ session tools: read, ls, find, grep, write, edit, subagent, bash, job, wait, tit
   read: available
   subagent: withheld
   title: withheld
-  wait: withheld
   weather: withheld
   write: available

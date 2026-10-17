@@ -206,7 +206,6 @@ var defaultTheme = Theme{
 				"models": {Name: "list", Paint: "normal"},
 			},
 		},
-		"wait": {Default: ToolAppearance{Name: "wait", Paint: "normal"}},
 		"forward": {
 			Default: ToolAppearance{Name: "forward", Paint: "status_warning"},
 			Actions: map[string]ToolAppearance{

@@ -512,7 +512,7 @@ func (self *Manager) Progress() []Progress {
 }
 
 func (self *Manager) ListSnapshots() []Snapshot {
-	snapshots, _, _ := self.snapshots(nil)
+	snapshots, _ := self.snapshots(nil)
 	return snapshots
 }
 
@@ -656,7 +656,7 @@ func (self *child) modelName() string {
 }
 
 func (self *Manager) Output(names []string) (string, error) {
-	snapshots, _, err := self.snapshots(names)
+	snapshots, err := self.snapshots(names)
 	if err != nil {
 		return "", err
 	}
@@ -1020,22 +1020,20 @@ func (self *Manager) requireKnown(names []string) error {
 	return nil
 }
 
-func (self *Manager) snapshots(names []string) ([]Snapshot, []<-chan struct{}, error) {
+func (self *Manager) snapshots(names []string) ([]Snapshot, error) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 	if err := self.requireKnown(names); err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 	var found []Snapshot
-	var overs []<-chan struct{}
 	for _, childName := range self.order {
 		current := self.children[childName]
 		if len(names) == 0 || slices.Contains(names, current.Name) {
 			found = append(found, current.Snapshot)
-			overs = append(overs, current.over)
 		}
 	}
-	return found, overs, nil
+	return found, nil
 }
 
 func tellModeChange(worker *agent.Agent, recorder *record.Recorder, events []agent.Event, currentCaps caps.Set) error {

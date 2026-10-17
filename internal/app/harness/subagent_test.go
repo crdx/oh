@@ -453,11 +453,6 @@ func TestAReportIsInterjectedIntoARunningTurnEvenOnceItWasRead(t *testing.T) {
 	if _, err := manager.Output(names[:1]); err != nil {
 		t.Fatal(err)
 	}
-	if _, release, err := manager.WaitSource().Hold(names[1]); err != nil {
-		t.Fatal(err)
-	} else {
-		defer release()
-	}
 	conversation.currentTurn = Turn{painter: conversation.newPainter(true), Stream: testRunningTurnStreamWithCancel(nil)}
 	current = conversation.children.deliveryAt
 	conversation.deliverChildCompletions()
