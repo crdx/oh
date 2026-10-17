@@ -2,6 +2,8 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+## [0.18.0] - 2026-10-17
+
 ### Changes
 
 - Add Google's Generate Content protocol
