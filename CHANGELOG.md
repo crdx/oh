@@ -2,6 +2,8 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+## [0.19.0] - 2026-10-18
+
 ### Changes
 
 - Remove the experimental `wait` tool
