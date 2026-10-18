@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"path/filepath"
+	"regexp"
 	"slices"
 	"strings"
 	"testing"
@@ -189,6 +190,80 @@ func TestCompletionsOpenOneFixedWindowAndWakeOneTurn(t *testing.T) {
 	}
 	if len(submitted) != 1 || submitted[0].Name != "tame-adder,tame-alpaca" {
 		t.Errorf("wrote %d completion batches: %+v", len(submitted), submitted)
+	}
+}
+
+var progressReport = regexp.MustCompile(`\x1b\]9;4;[0-9]\x1b\\`)
+
+func progressReports(drawn string) []string {
+	return progressReport.FindAllString(drawn, -1)
+}
+
+func TestTheTerminalStaysBusyUntilEveryChildIsDoneAndReported(t *testing.T) {
+	const (
+		busy = "\x1b]9;4;3\x1b\\"
+		idle = "\x1b]9;4;0\x1b\\"
+	)
+	var drawn bytes.Buffer
+	conversation := testConversation(t, &drawn)
+	var screenOutput strings.Builder
+	conversation.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
+	current := time.Date(2026, time.October, 8, 10, 0, 0, 0, time.UTC)
+	conversation.now = func() time.Time { return current }
+
+	completeTurn(conversation)
+	if got, want := progressReports(screenOutput.String()), []string{busy, idle}; !slices.Equal(got, want) {
+		t.Fatalf("a turn without children reported %q, want %q", got, want)
+	}
+	screenOutput.Reset()
+
+	conversation.start("watch the build and the tests")
+	conversation.subagentEvent(subagentrecord.StartedEvent("tame-adder", "adder", "Watch the build", subagentrecord.Origin{}))
+	conversation.subagentEvent(subagentrecord.StartedEvent("tame-alpaca", "alpaca", "Watch the tests", subagentrecord.Origin{}))
+	for report := range conversation.currentTurn.Events() {
+		conversation.takeTurn(report)
+	}
+	conversation.finish()
+	if got, want := progressReports(screenOutput.String()), []string{busy}; !slices.Equal(got, want) {
+		t.Fatalf("a turn ending with children running reported %q, want %q", got, want)
+	}
+
+	conversation.subagentEvent(subagentrecord.FinishedEvent("tame-alpaca", subagentrecord.Stopped, "", nil, &agent.Usage{}))
+	conversation.subagentEvent(finished("tame-adder", "the build passed"))
+	if got, want := progressReports(screenOutput.String()), []string{busy}; !slices.Equal(got, want) {
+		t.Fatalf("a report waiting for delivery reported %q, want %q", got, want)
+	}
+
+	current = conversation.children.deliveryAt
+	conversation.deliverChildCompletions()
+	if !conversation.currentTurn.Running() {
+		t.Fatal("the report did not start a turn")
+	}
+	for report := range conversation.currentTurn.Events() {
+		conversation.takeTurn(report)
+	}
+	conversation.finish()
+	if got, want := progressReports(screenOutput.String()), []string{busy, idle}; !slices.Equal(got, want) {
+		t.Fatalf("the delivered report reported %q, want %q", got, want)
+	}
+}
+
+func TestAStoppedChildEndsTheBusyStatusOfAnIdleParent(t *testing.T) {
+	var drawn bytes.Buffer
+	conversation := testConversation(t, &drawn)
+	var screenOutput strings.Builder
+	conversation.screen = output.NewTerminalOfSize(&screenOutput, replayColumns, replayLines)
+
+	conversation.start("watch the build")
+	conversation.subagentEvent(subagentrecord.StartedEvent("tame-adder", "adder", "Watch the build", subagentrecord.Origin{}))
+	for report := range conversation.currentTurn.Events() {
+		conversation.takeTurn(report)
+	}
+	conversation.finish()
+	conversation.subagentEvent(subagentrecord.SentEvent("tame-adder", "carry on"))
+	conversation.subagentEvent(subagentrecord.FinishedEvent("tame-adder", subagentrecord.Stopped, "", nil, &agent.Usage{}))
+	if got, want := progressReports(screenOutput.String()), []string{"\x1b]9;4;3\x1b\\", "\x1b]9;4;0\x1b\\"}; !slices.Equal(got, want) {
+		t.Fatalf("stopping the last child reported %q, want %q", got, want)
 	}
 }
 

@@ -25,6 +25,7 @@ type childState struct {
 	directory          string
 	reportsDue         []agent.Event
 	deliveryAt         time.Time
+	runningNames       []string
 	spend              spendLedger
 	viewedConversation string
 }
@@ -101,13 +102,32 @@ func (self *App) subagentActivity() <-chan struct{} {
 
 func (self *App) subagentEvent(event agent.Event) {
 	self.recordChildFact(event)
-	if !isReported(event) {
+	if isReported(event) {
+		if len(self.children.reportsDue) == 0 {
+			self.children.deliveryAt = self.getNow().Add(childDebounce)
+		}
+		self.children.reportsDue = append(self.children.reportsDue, event)
+	}
+	self.reportProgress()
+}
+
+func (self *App) reportProgress() {
+	self.screen.ReportProgress(self.currentTurn.Running() || self.children.isBusy())
+}
+
+func (self childState) isBusy() bool {
+	return len(self.runningNames) > 0 || len(self.reportsDue) > 0
+}
+
+func (self *App) trackRunningChild(event agent.Event) {
+	if event.Kind == subagentrecord.Finished {
+		self.children.runningNames = slices.DeleteFunc(self.children.runningNames, func(name string) bool { return name == event.Subagent })
 		return
 	}
-	if len(self.children.reportsDue) == 0 {
-		self.children.deliveryAt = self.getNow().Add(childDebounce)
+	isOpening := event.Kind == subagentrecord.Started || event.Kind == subagentrecord.Sent
+	if isOpening && !slices.Contains(self.children.runningNames, event.Subagent) {
+		self.children.runningNames = append(self.children.runningNames, event.Subagent)
 	}
-	self.children.reportsDue = append(self.children.reportsDue, event)
 }
 
 func isReported(event agent.Event) bool {
@@ -118,6 +138,7 @@ func isReported(event agent.Event) bool {
 func (self *App) recordChildFact(event agent.Event) {
 	painter.IntroduceSubagent(self.introductions, event)
 	self.children.spend.record(event)
+	self.trackRunningChild(event)
 	self.recordedEvents = append(self.recordedEvents, event)
 	self.storeEvent(event)
 }
@@ -133,6 +154,7 @@ func (self *App) deliverChildCompletions() {
 	if self.queueReadyChildCompletions() {
 		self.startTurn()
 	}
+	self.reportProgress()
 }
 
 func (self *App) queueReadyChildCompletions() bool {

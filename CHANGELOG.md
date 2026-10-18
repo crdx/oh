@@ -2,6 +2,10 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+### Changes
+
+- Maintain terminal busy status while subagents run
+
 ## [0.19.0] - 2026-10-18
 
 ### Changes

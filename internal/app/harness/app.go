@@ -2297,7 +2297,7 @@ func (self *App) wasPoked() bool {
 func (self *App) finish() {
 	self.drainForwardChanges()
 	self.currentTurn.MarkFinished(time.Now())
-	self.screen.ReportProgress(false)
+	self.screen.ReportProgress(self.children.isBusy())
 
 	var turnError error
 	if self.currentTurn.Cancelled() {
