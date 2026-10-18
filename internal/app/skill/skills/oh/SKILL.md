@@ -50,6 +50,7 @@ Where `~/.config/org.crdx/oh/` is a symlink into a dotfiles repository, edit the
 - `[bar.top]`, `[bar.bottom]` — status bar segments, each naming a `segment` and its options
 - `[input]` — `nudge`, defaulting to `"continue"`, is sent by double-enter on an empty input; `speed_dial`, defaulting to `["yes"]`, places messages there through successive tab presses until the input is edited
 - `[editor]`, `[ports]` — editor command, forwarded-port hostname
+- `[experimental]` — `image_attachment_limit`, `audio_attachment_limit`, `video_attachment_limit`, and `pdf_attachment_limit` set the largest file of each kind `read` hands a model, as sizes such as `"5M"`; images default to `"20M"` and are scaled down before sending, the others to `"5M"`. They reload live
 - A setting left out is worked out for you, and an empty one is refused rather than read as "work it out": leave out `ui.currency` to count in dollars, `ports.hostname` to use the numeric address, and `editor.command` to find an editor
 - With no `editor.command`, oh takes `subl` when a display is set, then `$VISUAL`, `$EDITOR`, `vim`, then whichever of `code`, `zed` (both only with a display), `nvim`, `hx`, `micro`, `nano`, `emacs`, `kak`, `ne`, `joe`, `mcedit`, and `vi` comes first. A terminal editor takes over the terminal until it exits. `/conf`, `/edit`, ctrl+g, which edits the input and opens it where the cursor stands, and, under `experimental.reply_command`, `/reply` and ctrl+., which open the last answer quoted for an inline reply, all use it
 
@@ -98,6 +99,10 @@ The decorations are `bold`, `faint`, `italic`, `underline`, `blink`, `reverse`, 
 | `syntax_operator` | operators in highlighted code                    |
 | `syntax_keyword`  | keywords in highlighted code                     |
 | `skill`           | skill names in a tool call                       |
+| `media_image`     | the `I` image input flag in the model picker     |
+| `media_audio`     | the `A` audio input flag in the model picker     |
+| `media_video`     | the `V` video input flag in the model picker     |
+| `media_pdf`       | the `P` PDF input flag in the model picker       |
 
 | Key               | `dark`    | `grey-dark` | `grey-light` | `light`   |
 |-------------------|-----------|-------------|--------------|-----------|
@@ -115,6 +120,10 @@ The decorations are `bold`, `faint`, `italic`, `underline`, `blink`, `reverse`, 
 | `syntax_operator` | `#8abeb7` | `#b0f4ea`   | `#0e4741`    | `#2c7870` |
 | `syntax_keyword`  | `#c9a6d4` | `#f2d0ff`   | `#562670`    | `#8a4fa3` |
 | `skill`           | `#c9a6d4` | `#f2d0ff`   | `#562670`    | `#8a4fa3` |
+| `media_image`     | `#7cc4e8` | `#b8e2f8`   | `#0f4a66`    | `#2a7aa6` |
+| `media_audio`     | `#b294d6` | `#dcc8f8`   | `#45266e`    | `#6e4aa8` |
+| `media_video`     | `#e0995e` | `#ffcfa0`   | `#6b3a0c`    | `#b0601c` |
+| `media_pdf`       | `#e06c75` | `#ffb0b8`   | `#7a1824`    | `#b8343f` |
 
 `user` and `harness` paint backgrounds; keep both near the darkness or lightness of their palette's defaults, since the text on them is the terminal's own. Every other key is a foreground. A decoration reaches every role the key paints, so `dim = "#969896 italic"` italicises tool results as well as reasoning.
 

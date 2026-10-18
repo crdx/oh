@@ -32,6 +32,10 @@ type Palette struct {
 	SyntaxOperator Paint `toml:"syntax_operator"`
 	SyntaxKeyword  Paint `toml:"syntax_keyword"`
 	Skill          Paint `toml:"skill"`
+	MediaImage     Paint `toml:"media_image"`
+	MediaAudio     Paint `toml:"media_audio"`
+	MediaVideo     Paint `toml:"media_video"`
+	MediaPDF       Paint `toml:"media_pdf"`
 	User           Paint `toml:"user"`
 	Harness        Paint `toml:"harness"`
 }
@@ -116,6 +120,10 @@ var defaultTheme = Theme{
 		SyntaxOperator: "#8abeb7",
 		SyntaxKeyword:  "#c9a6d4",
 		Skill:          "#c9a6d4",
+		MediaImage:     "#7cc4e8",
+		MediaAudio:     "#b294d6",
+		MediaVideo:     "#e0995e",
+		MediaPDF:       "#e06c75",
 		User:           "#343541",
 		Harness:        "#303a43",
 	},
@@ -132,6 +140,10 @@ var defaultTheme = Theme{
 		SyntaxOperator: "#b0f4ea",
 		SyntaxKeyword:  "#f2d0ff",
 		Skill:          "#f2d0ff",
+		MediaImage:     "#b8e2f8",
+		MediaAudio:     "#dcc8f8",
+		MediaVideo:     "#ffcfa0",
+		MediaPDF:       "#ffb0b8",
 		User:           "#46464e",
 		Harness:        "#424b52",
 	},
@@ -148,6 +160,10 @@ var defaultTheme = Theme{
 		SyntaxOperator: "#0e4741",
 		SyntaxKeyword:  "#562670",
 		Skill:          "#562670",
+		MediaImage:     "#0f4a66",
+		MediaAudio:     "#45266e",
+		MediaVideo:     "#6b3a0c",
+		MediaPDF:       "#7a1824",
 		User:           "#c4c4cc",
 		Harness:        "#bec8d0",
 	},
@@ -164,6 +180,10 @@ var defaultTheme = Theme{
 		SyntaxOperator: "#2c7870",
 		SyntaxKeyword:  "#8a4fa3",
 		Skill:          "#8a4fa3",
+		MediaImage:     "#2a7aa6",
+		MediaAudio:     "#6e4aa8",
+		MediaVideo:     "#b0601c",
+		MediaPDF:       "#b8343f",
 		User:           "#e8e8ef",
 		Harness:        "#e2eaf0",
 	},
@@ -247,6 +267,10 @@ type compiledTheme struct {
 	syntaxOperator string
 	syntaxKeyword  string
 	skill          string
+	mediaImage     string
+	mediaAudio     string
+	mediaVideo     string
+	mediaPDF       string
 	user           string
 	harness        string
 	tool           map[string]compiledToolAppearance
@@ -341,6 +365,10 @@ func compileTheme(theme Theme, background Background) *compiledTheme {
 		syntaxOperator:      foregroundSequence(palette.SyntaxOperator),
 		syntaxKeyword:       foregroundSequence(palette.SyntaxKeyword),
 		skill:               foregroundSequence(palette.Skill),
+		mediaImage:          foregroundSequence(palette.MediaImage),
+		mediaAudio:          foregroundSequence(palette.MediaAudio),
+		mediaVideo:          foregroundSequence(palette.MediaVideo),
+		mediaPDF:            foregroundSequence(palette.MediaPDF),
 		user:                backgroundSequence(palette.User),
 		harness:             backgroundSequence(palette.Harness),
 		dimColour:           dimColour,

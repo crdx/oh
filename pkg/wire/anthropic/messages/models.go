@@ -109,8 +109,32 @@ type listedModel struct {
 	MaxTokens      int    `json:"max_tokens"`
 
 	Capabilities struct {
-		Effort effortCapability `json:"effort"`
+		Effort     effortCapability `json:"effort"`
+		ImageInput *inputCapability `json:"image_input"`
+		PDFInput   *inputCapability `json:"pdf_input"`
 	} `json:"capabilities"`
+}
+
+type inputCapability struct {
+	IsSupported bool `json:"supported"`
+}
+
+func (self listedModel) inputModalities() []agent.Modality {
+	imageInput := self.Capabilities.ImageInput
+	pdfInput := self.Capabilities.PDFInput
+	if imageInput == nil && pdfInput == nil {
+		return nil
+	}
+
+	inputModalities := []agent.Modality{agent.TextModality}
+	if imageInput != nil && imageInput.IsSupported {
+		inputModalities = append(inputModalities, agent.ImageModality)
+	}
+	if pdfInput != nil && pdfInput.IsSupported {
+		inputModalities = append(inputModalities, agent.PDFModality)
+	}
+
+	return inputModalities
 }
 
 func (self *Client) Models(ctx context.Context) ([]agent.Model, error) {
@@ -146,6 +170,7 @@ func (self *Client) Models(ctx context.Context) ([]agent.Model, error) {
 			EffortLevels:        listedModel.Capabilities.Effort.levels(),
 			ContextWindowTokens: listedModel.MaxInputTokens,
 			MaxOutputTokens:     listedModel.MaxTokens,
+			InputModalities:     listedModel.inputModalities(),
 		})
 	}
 

@@ -15,6 +15,7 @@ import (
 	"crdx.org/oh/internal/req"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/wire/internal/attachmentbudget"
 )
 
 const (
@@ -63,6 +64,7 @@ type Client struct {
 	toolNames        []string
 	history          []json.RawMessage
 	requestHistory   imageHistory
+	attachments      attachmentbudget.Budget
 	prefix           prefixwatch.Watcher
 	rewrite          string
 	requests         *req.Client
@@ -187,6 +189,7 @@ func (self *Client) Dump() []json.RawMessage {
 func (self *Client) Load(items []json.RawMessage) {
 	self.history = slices.Clone(items)
 	self.requestHistory.reset()
+	self.attachments.Reset()
 }
 
 func encodeItem(item any) json.RawMessage {
@@ -304,6 +307,12 @@ func (self *Client) post(ctx context.Context, yield agent.Yield) (reply, error) 
 	}
 
 	stream, responseHeader, err := self.requests.Stream(ctx, self.URL, self.requestBody(), self.headers(token))
+	if restore, isRefused := self.attachments.Refuse(self.history, attachmentbudget.Messages, err); isRefused {
+		stream, responseHeader, err = self.requests.Stream(ctx, self.URL, self.requestBody(), self.headers(token))
+		if err != nil {
+			restore()
+		}
+	}
 	if err != nil {
 		if isUsageLimited(responseHeader) {
 			return reply{}, &agent.UsageLimitError{Cause: err, Windows: responseUsageWindows(responseHeader)}
@@ -346,7 +355,7 @@ func (self *Client) body() request {
 		Tools:           self.tools,
 		Thinking:        self.requestedThinking(),
 		Output:          self.outputConfig(),
-		Messages:        encodeMessages(merged(self.requestHistory.prepare(self.history))),
+		Messages:        encodeMessages(merged(self.attachments.Trim(self.requestHistory.prepare(self.history), attachmentbudget.Messages))),
 	}
 }
 
@@ -442,15 +451,22 @@ type toolResult struct {
 }
 
 type imageBlock struct {
-	Type   string      `json:"type"`
-	Source imageSource `json:"source"`
+	Type   string       `json:"type"`
+	Source base64Source `json:"source"`
 }
 
-type imageSource struct {
+type documentBlock struct {
+	Type   string       `json:"type"`
+	Source base64Source `json:"source"`
+}
+
+type base64Source struct {
 	Type      string `json:"type"`
 	MediaType string `json:"media_type"`
 	Data      string `json:"data"`
 }
+
+var AttachableModalities = []agent.Modality{agent.ImageModality, agent.PDFModality}
 
 const (
 	attachmentNotice  = "Image attached."
@@ -462,20 +478,38 @@ func encodeToolOutput(result agent.ToolCallResult) any {
 	if text == "" {
 		text = emptyOutputNotice
 	}
-	if result.Image.MediaType == "" || len(result.Image.Data) == 0 {
+	hasImage := result.Image.MediaType != "" && len(result.Image.Data) > 0
+	if !hasImage && !result.Attachment.IsPresent() {
 		return text
 	}
 
-	return []any{
-		textBlock{Type: "text", Text: text},
-		textBlock{Type: "text", Text: attachmentNotice},
-		imageBlock{
-			Type: "image",
-			Source: imageSource{
-				Type:      "base64",
-				MediaType: result.Image.MediaType,
-				Data:      base64.StdEncoding.EncodeToString(result.Image.Data),
+	blocks := []any{textBlock{Type: "text", Text: text}}
+	if hasImage {
+		blocks = append(blocks,
+			textBlock{Type: "text", Text: attachmentNotice},
+			imageBlock{
+				Type: "image",
+				Source: base64Source{
+					Type:      "base64",
+					MediaType: result.Image.MediaType,
+					Data:      base64.StdEncoding.EncodeToString(result.Image.Data),
+				},
 			},
-		},
+		)
 	}
+	if result.Attachment.IsPresent() && agent.ModalityOf(result.Attachment.MediaType) == agent.PDFModality {
+		blocks = append(blocks,
+			textBlock{Type: "text", Text: agent.AttachmentNotice(result.Attachment.MediaType)},
+			documentBlock{
+				Type: "document",
+				Source: base64Source{
+					Type:      "base64",
+					MediaType: result.Attachment.MediaType,
+					Data:      base64.StdEncoding.EncodeToString(result.Attachment.Data),
+				},
+			},
+		)
+	}
+
+	return blocks
 }

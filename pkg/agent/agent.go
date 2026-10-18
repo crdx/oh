@@ -792,10 +792,11 @@ func (self *Agent) runBatch(
 			}
 
 			results[i] = ToolCallResult{
-				ID:      item.rawToolCall.ID,
-				Output:  executionResult.Output,
-				Image:   executionResult.Image,
-				IsError: !ok,
+				ID:         item.rawToolCall.ID,
+				Output:     executionResult.Output,
+				Image:      executionResult.Image,
+				Attachment: executionResult.Attachment,
+				IsError:    !ok,
 			}
 
 			if item.parsedToolCall != nil && executionResult.Metrics.Kind == "" {

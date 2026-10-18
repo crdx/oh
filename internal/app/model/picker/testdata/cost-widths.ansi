@@ -18,23 +18,43 @@
   Anthropic     Opus 5                        high          200K      [38;2;204;102;102m$35.05[0m  [38;2;150;152;150mclaude-opus-5[0m
   Codex         Sol Pro                       medium        272K    [38;2;204;102;102m$2595.18[0m  [38;2;150;152;150mgpt-5.3-sol-pro[0m
   Ollama        Qwen Coder 3 30B              medium           —           [38;2;150;152;150m—[0m  [38;2;150;152;150mqwen3-coder:30b[0m
---- 127 columns ---
+--- 104 columns ---
 [4m[38;2;150;152;150m  Provider      Model                         Effort     Context      Cost ↑  Identifier[0m[0m
   OpenCode Go   Step Preview Free 5           high          256K           [38;2;76;154;44m—[0m  [38;2;150;152;150mstep-5-preview-free[0m
-  OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       [38;2;129;162;190m$1.30[0m  [38;2;150;152;150mdeepseek-v4-flash-vision-exp[0m
+  OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       [38;2;129;162;190m$1.30[0m  [38;2;150;152;150mdeepseek-v4-flash-vision-…[0m
   Codex         Codex 5.3                     medium ⚡     272K       [38;2;129;162;190m$3.01[0m  [38;2;150;152;150mgpt-5.3-codex[0m
   OpenCode Go   MiniMax M3                    —               1M       [38;2;207;173;0m$5.19[0m  [38;2;150;152;150mminimax-m3[0m
   Anthropic     Sonnet 5                      medium        200K       [38;2;207;173;0m$7.01[0m  [38;2;150;152;150mclaude-sonnet-5[0m
   Anthropic     Opus 5                        high          200K      [38;2;204;102;102m$35.05[0m  [38;2;150;152;150mclaude-opus-5[0m
   Codex         Sol Pro                       medium        272K    [38;2;204;102;102m$2595.18[0m  [38;2;150;152;150mgpt-5.3-sol-pro[0m
   Ollama        Qwen Coder 3 30B              medium           —           [38;2;150;152;150m—[0m  [38;2;150;152;150mqwen3-coder:30b[0m
---- 128 columns ---
-[4m[38;2;150;152;150m  Provider      Model                         Effort     Context      Cost ↑      Input     Output  Identifier[0m[0m
-  OpenCode Go   Step Preview Free 5           high          256K           [38;2;76;154;44m—[0m      $0.00      $0.00  [38;2;150;152;150mstep-5-preview-free[0m
-  OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M       [38;2;129;162;190m$1.30[0m      $0.08      $0.30  [38;2;150;152;150mdeepseek-v4-flash-vision-exp[0m
-  Codex         Codex 5.3                     medium ⚡     272K       [38;2;129;162;190m$3.01[0m      $1.25     $10.00  [38;2;150;152;150mgpt-5.3-codex[0m
-  OpenCode Go   MiniMax M3                    —               1M       [38;2;207;173;0m$5.19[0m      $0.30      $1.20  [38;2;150;152;150mminimax-m3[0m
-  Anthropic     Sonnet 5                      medium        200K       [38;2;207;173;0m$7.01[0m      $3.00     $15.00  [38;2;150;152;150mclaude-sonnet-5[0m
-  Anthropic     Opus 5                        high          200K      [38;2;204;102;102m$35.05[0m     $15.00     $75.00  [38;2;150;152;150mclaude-opus-5[0m
-  Codex         Sol Pro                       medium        272K    [38;2;204;102;102m$2595.18[0m    $150.00    $600.00  [38;2;150;152;150mgpt-5.3-sol-pro[0m
-  Ollama        Qwen Coder 3 30B              medium           —           [38;2;150;152;150m—[0m          —          —  [38;2;150;152;150mqwen3-coder:30b[0m
+--- 105 columns ---
+[4m[38;2;150;152;150m  Provider      Model                         Effort     Context  Media      Cost ↑  Identifier[0m[0m
+  OpenCode Go   Step Preview Free 5           high          256K  [38;2;150;152;150m—[0m               [38;2;76;154;44m—[0m  [38;2;150;152;150mstep-5-preview-free[0m
+  OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M  [38;2;124;196;232mI[0m[38;2;150;152;150mV[0m          [38;2;129;162;190m$1.30[0m  [38;2;150;152;150mdeepseek-v4-flash-v…[0m
+  Codex         Codex 5.3                     medium ⚡     272K  [38;2;124;196;232mI[0m           [38;2;129;162;190m$3.01[0m  [38;2;150;152;150mgpt-5.3-codex[0m
+  OpenCode Go   MiniMax M3                    —               1M              [38;2;207;173;0m$5.19[0m  [38;2;150;152;150mminimax-m3[0m
+  Anthropic     Sonnet 5                      medium        200K  [38;2;124;196;232mI[0m[38;2;224;108;117mP[0m          [38;2;207;173;0m$7.01[0m  [38;2;150;152;150mclaude-sonnet-5[0m
+  Anthropic     Opus 5                        high          200K  [38;2;124;196;232mI[0m[38;2;224;108;117mP[0m         [38;2;204;102;102m$35.05[0m  [38;2;150;152;150mclaude-opus-5[0m
+  Codex         Sol Pro                       medium        272K  [38;2;124;196;232mI[0m[38;2;150;152;150mA[0m[38;2;150;152;150mV[0m[38;2;150;152;150mP[0m     [38;2;204;102;102m$2595.18[0m  [38;2;150;152;150mgpt-5.3-sol-pro[0m
+  Ollama        Qwen Coder 3 30B              medium           —  [38;2;124;196;232mI[0m               [38;2;150;152;150m—[0m  [38;2;150;152;150mqwen3-coder:30b[0m
+--- 134 columns ---
+[4m[38;2;150;152;150m  Provider      Model                         Effort     Context  Media      Cost ↑  Identifier[0m[0m
+  OpenCode Go   Step Preview Free 5           high          256K  [38;2;150;152;150m—[0m               [38;2;76;154;44m—[0m  [38;2;150;152;150mstep-5-preview-free[0m
+  OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M  [38;2;124;196;232mI[0m[38;2;150;152;150mV[0m          [38;2;129;162;190m$1.30[0m  [38;2;150;152;150mdeepseek-v4-flash-vision-exp[0m
+  Codex         Codex 5.3                     medium ⚡     272K  [38;2;124;196;232mI[0m           [38;2;129;162;190m$3.01[0m  [38;2;150;152;150mgpt-5.3-codex[0m
+  OpenCode Go   MiniMax M3                    —               1M              [38;2;207;173;0m$5.19[0m  [38;2;150;152;150mminimax-m3[0m
+  Anthropic     Sonnet 5                      medium        200K  [38;2;124;196;232mI[0m[38;2;224;108;117mP[0m          [38;2;207;173;0m$7.01[0m  [38;2;150;152;150mclaude-sonnet-5[0m
+  Anthropic     Opus 5                        high          200K  [38;2;124;196;232mI[0m[38;2;224;108;117mP[0m         [38;2;204;102;102m$35.05[0m  [38;2;150;152;150mclaude-opus-5[0m
+  Codex         Sol Pro                       medium        272K  [38;2;124;196;232mI[0m[38;2;150;152;150mA[0m[38;2;150;152;150mV[0m[38;2;150;152;150mP[0m     [38;2;204;102;102m$2595.18[0m  [38;2;150;152;150mgpt-5.3-sol-pro[0m
+  Ollama        Qwen Coder 3 30B              medium           —  [38;2;124;196;232mI[0m               [38;2;150;152;150m—[0m  [38;2;150;152;150mqwen3-coder:30b[0m
+--- 135 columns ---
+[4m[38;2;150;152;150m  Provider      Model                         Effort     Context  Media      Cost ↑      Input     Output  Identifier[0m[0m
+  OpenCode Go   Step Preview Free 5           high          256K  [38;2;150;152;150m—[0m               [38;2;76;154;44m—[0m      $0.00      $0.00  [38;2;150;152;150mstep-5-preview-free[0m
+  OpenCode Go   DeepSeek Flash Vision Exp 4   high            1M  [38;2;124;196;232mI[0m[38;2;150;152;150mV[0m          [38;2;129;162;190m$1.30[0m      $0.08      $0.30  [38;2;150;152;150mdeepseek-v4-flash-vision-exp[0m
+  Codex         Codex 5.3                     medium ⚡     272K  [38;2;124;196;232mI[0m           [38;2;129;162;190m$3.01[0m      $1.25     $10.00  [38;2;150;152;150mgpt-5.3-codex[0m
+  OpenCode Go   MiniMax M3                    —               1M              [38;2;207;173;0m$5.19[0m      $0.30      $1.20  [38;2;150;152;150mminimax-m3[0m
+  Anthropic     Sonnet 5                      medium        200K  [38;2;124;196;232mI[0m[38;2;224;108;117mP[0m          [38;2;207;173;0m$7.01[0m      $3.00     $15.00  [38;2;150;152;150mclaude-sonnet-5[0m
+  Anthropic     Opus 5                        high          200K  [38;2;124;196;232mI[0m[38;2;224;108;117mP[0m         [38;2;204;102;102m$35.05[0m     $15.00     $75.00  [38;2;150;152;150mclaude-opus-5[0m
+  Codex         Sol Pro                       medium        272K  [38;2;124;196;232mI[0m[38;2;150;152;150mA[0m[38;2;150;152;150mV[0m[38;2;150;152;150mP[0m     [38;2;204;102;102m$2595.18[0m    $150.00    $600.00  [38;2;150;152;150mgpt-5.3-sol-pro[0m
+  Ollama        Qwen Coder 3 30B              medium           —  [38;2;124;196;232mI[0m               [38;2;150;152;150m—[0m          —          —  [38;2;150;152;150mqwen3-coder:30b[0m

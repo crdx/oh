@@ -3,6 +3,7 @@ package modelsdev
 import (
 	"net/http"
 	"net/http/httptest"
+	"slices"
 	"testing"
 
 	"crdx.org/oh/pkg/agent"
@@ -71,6 +72,36 @@ func TestFetchTakesTheContextWindowFromTheInputShareOfTheBudget(t *testing.T) {
 	}
 	if got := openai["split-budget"].MaxOutputTokens; got != 128_000 {
 		t.Errorf("got %d, want the output limit 128000", got)
+	}
+}
+
+func TestFetchTakesTheInputsEachModelAccepts(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, _ *http.Request) {
+		writer.Header().Set("Content-Type", "application/json")
+		_, _ = writer.Write([]byte(`{
+			"google": {"models": {
+				"everything": {"modalities": {"input": ["pdf", "video", "text", "audio", "image"], "output": ["text"]}},
+				"textual": {"modalities": {"input": ["text"], "output": ["text"]}},
+				"unsaid": {}
+			}}
+		}`))
+	}))
+	defer server.Close()
+
+	registry, err := Fetch(t.Context(), server.URL, nil)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	google := registry.Provider("google")
+	for id, want := range map[string][]agent.Modality{
+		"everything": agent.Modalities,
+		"textual":    {agent.TextModality},
+		"unsaid":     nil,
+	} {
+		if got := google[id].InputModalities; !slices.Equal(got, want) {
+			t.Errorf("%s: got input modalities %v, want %v", id, got, want)
+		}
 	}
 }
 

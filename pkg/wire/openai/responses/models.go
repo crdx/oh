@@ -38,6 +38,7 @@ type listedModel struct {
 	Visibility    string           `json:"visibility"`
 	ContextWindow int              `json:"context_window"`
 	Levels        []reasoningLevel `json:"supported_reasoning_levels"`
+	Modalities    []string         `json:"input_modalities"`
 }
 
 func (self listedModel) isPickable() bool {
@@ -97,6 +98,7 @@ func (self *Client) Models(ctx context.Context) ([]agent.Model, error) {
 				Name:                model.DisplayName,
 				EffortLevels:        model.efforts(),
 				ContextWindowTokens: model.ContextWindow,
+				InputModalities:     agent.InputModalitiesOf(model.Modalities),
 			})
 		}
 	}

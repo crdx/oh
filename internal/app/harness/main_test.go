@@ -9262,20 +9262,21 @@ func compareSystemPromptWithGolden(t *testing.T, name string, shape promptGolden
 	}
 
 	got, _, err := prompt.Load(prompt.Config{
-		GlobalPath:     globalPath,
-		Workspace:      workspace,
-		SessionName:    "tame-impala",
-		SessionsDir:    "/state/sessions",
-		SessionDir:     "/state/sessions/tame-impala",
-		ConfigFile:     "/config/config.toml",
-		TmpDir:         "/state/farm/tame-impala",
-		HomeDir:        "/state/home",
-		CurrentCaps:    currentCaps,
-		ExtraPaths:     extraPaths,
-		DropsDirectory: dropsDirectory,
-		Skills:         discoveredSkills,
-		OfferedTools:   offeredTools,
-		ToolGroups:     toolGroups,
+		GlobalPath:        globalPath,
+		Workspace:         workspace,
+		SessionName:       "tame-impala",
+		SessionsDir:       "/state/sessions",
+		SessionDir:        "/state/sessions/tame-impala",
+		ConfigFile:        "/config/config.toml",
+		TmpDir:            "/state/farm/tame-impala",
+		HomeDir:           "/state/home",
+		CurrentCaps:       currentCaps,
+		ExtraPaths:        extraPaths,
+		DropsDirectory:    dropsDirectory,
+		IsImageAttachable: true,
+		Skills:            discoveredSkills,
+		OfferedTools:      offeredTools,
+		ToolGroups:        toolGroups,
 		Conditions: conditions.Conditions{
 			UnixSockets: !shape.hasNoSockets,
 			IPv6:        !shape.hasNoSockets,
@@ -19019,6 +19020,7 @@ type sessionGoldenTool struct {
 	Outputs               []string      `toml:"outputs"`
 	Image                 string        `toml:"image"`
 	ImageByteCount        int64         `toml:"image-bytes"`
+	Attachment            string        `toml:"attachment"`
 	StateKey              string        `toml:"state-key"`
 	ShellWithheld         bool          `toml:"shell-withheld"`
 	ShouldWithholdNetwork bool          `toml:"network-withheld"`
@@ -19590,6 +19592,10 @@ func newSessionGoldenTools(
 			})
 		}
 		attachment, attachmentMetrics := sessionGoldenImage(t, specification.Image, specification.ImageByteCount)
+		mediaAttachment, mediaMetrics := sessionGoldenAttachment(specification.Attachment)
+		if mediaAttachment.IsPresent() {
+			attachmentMetrics = mediaMetrics
+		}
 		tools = append(tools, builder.Run(func(context.Context, struct{}) (tool.ToolCallResult, error) {
 			if callCount >= len(specification.Outputs) {
 				return tool.ToolCallResult{}, fmt.Errorf("tool %s has no output for call %d", specification.Name, callCount+1)
@@ -19601,7 +19607,13 @@ func newSessionGoldenTools(
 			if err != nil {
 				return tool.ToolCallResult{}, err
 			}
-			return tool.ToolCallResult{Output: output, Image: attachment, Metrics: attachmentMetrics, State: state}, nil
+			return tool.ToolCallResult{
+				Output:     output,
+				Image:      attachment,
+				Attachment: mediaAttachment,
+				Metrics:    attachmentMetrics,
+				State:      state,
+			}, nil
 		}))
 	}
 	return tools
@@ -19745,6 +19757,18 @@ func sessionGoldenImage(t *testing.T, size string, byteCount int64) (tool.Image,
 	}
 
 	return tool.Image{MediaType: "image/png", Data: encoded.Bytes()}, imageMetrics
+}
+
+func sessionGoldenAttachment(name string) (tool.Attachment, tool.ToolCallMetrics) {
+	if name == "" {
+		return tool.Attachment{}, tool.ToolCallMetrics{}
+	}
+
+	mediaTypes := map[string]string{".pdf": "application/pdf", ".mp3": "audio/mp3", ".mp4": "video/mp4"}
+	data := []byte("scenario attachment " + name)
+	attachment := tool.Attachment{Name: name, MediaType: mediaTypes[filepath.Ext(name)], Data: data}
+
+	return attachment, tool.ToolCallMetrics{Kind: tool.MetricAttachment, Bytes: int64(len(data))}
 }
 
 var errSessionGoldenToolStopped = errors.New("the tool was stopped")

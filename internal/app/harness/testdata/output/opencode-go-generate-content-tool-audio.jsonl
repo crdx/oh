@@ -1,0 +1,18 @@
+{"kind":"head","version":22,"meta":{"model":"gemini-9-pro","workspaceDir":"","provider":"opencode-go","effort":"high","system_prompt":"You are a test assistant.","tools":["recording"],"tool_definitions":[{"name":"recording","description":"A deterministic scenario tool.","revision":"1"}]}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
+{"kind":"event","event":{"kind":"user_message","text":"listen to the recording"}}
+{"kind":"event","event":{"kind":"model_reasoning","text":"Working it out.","usage":{"input_tokens":6300,"output_tokens":140,"cache":{"read_tokens":6000}}}}
+{"kind":"event","event":{"render":"recording","kind":"tool_call_request","id":"fc-1","name":"recording","arguments":"{}"}}
+{"kind":"event","event":{"kind":"state_change","id":"fc-1","state":1}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"audio/mp3, 28B","id":"fc-1","name":"recording","status":"success","stats":{"kind":"attachment","bytes":28}}}
+{"kind":"event","event":{"kind":"model_message","text":"The recording is a short talk.","usage":{"input_tokens":6720,"output_tokens":60,"cache":{"read_tokens":6400}}}}
+{"kind":"item","payload":{"role":"user","parts":[{"text":"listen to the recording"}]}}
+{"kind":"item","payload":{"role":"model","parts":[{"text":"Working it out.","thought":true},{"functionCall":{"id":"fc-1","name":"recording","args":{}},"thoughtSignature":"c2VhbC0x"}]}}
+{"kind":"item","payload":{"role":"user","parts":[{"functionResponse":{"id":"fc-1","name":"recording","response":{"output":"audio/mp3, 28B\n\nAudio attached."}}},{"inlineData":{"mimeType":"audio/mp3","data":"c2NlbmFyaW8gYXR0YWNobWVudCB0YWxrLm1wMw=="}}]}}
+{"kind":"item","payload":{"role":"model","parts":[{"text":"The recording is a short talk."},{"text":"","thoughtSignature":"c2VhbC0y"}]}}
+{"kind":"turn_completion","turn":{"input_tokens":6720}}
+{"kind":"event","event":{"kind":"user_message","text":"carry on"}}
+{"kind":"event","event":{"kind":"model_message","text":"Carrying on.","usage":{"input_tokens":7140,"output_tokens":40,"cache":{"read_tokens":6800}}}}
+{"kind":"item","payload":{"role":"user","parts":[{"text":"carry on"}]}}
+{"kind":"item","payload":{"role":"model","parts":[{"text":"Carrying on."}]}}
+{"kind":"turn_completion","turn":{"input_tokens":7140}}

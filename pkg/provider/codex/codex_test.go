@@ -506,6 +506,39 @@ func TestAnImageReturnedByAToolIsSentForTheModelToInspect(t *testing.T) {
 	}
 }
 
+func TestAPDFReturnedByAToolIsSentAsAFile(t *testing.T) {
+	server, bodies := turns(
+		t,
+		events(call("open", `{}`), completed),
+		events(answer("I have read it."), completed),
+	)
+
+	type nothing struct{}
+	openTool := tool.Implement(
+		tool.Definition{Name: "open", Description: "open a PDF", Schema: tool.Schema{}},
+		func(nothing) tool.CallRendering {
+			return tool.CallRendering{Subject: "paper.pdf"}
+		},
+	).Run(func(context.Context, nothing) (tool.ToolCallResult, error) {
+		return tool.ToolCallResult{
+			Output:     "application/pdf, 3B",
+			Attachment: tool.Attachment{Name: "paper.pdf", MediaType: "application/pdf", Data: []byte{1, 2, 3}},
+		}, nil
+	})
+
+	assistant := newAgent(t, server.URL, []tool.Tool{openTool})
+	if _, err := assistant.Send(t.Context(), "read the paper"); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	want := `"output":[{"type":"input_text","text":"application/pdf, 3B"},` +
+		`{"type":"input_text","text":"PDF attached."},` +
+		`{"type":"input_file","filename":"paper.pdf","file_data":"data:application/pdf;base64,AQID"}]`
+	if !strings.Contains((*bodies)[1], want) {
+		t.Errorf("expected the tool output to carry the PDF as a file, got %s", (*bodies)[1])
+	}
+}
+
 func TestNoOutputCeilingIsSent(t *testing.T) {
 	server, bodies := turns(t, events(answer("Hello."), completed))
 

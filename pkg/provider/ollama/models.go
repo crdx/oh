@@ -51,11 +51,17 @@ func (self *Client) Models(ctx context.Context) ([]agent.Model, error) {
 			effortLevels = slices.Clone(Efforts)
 		}
 
+		inputModalities := []agent.Modality{agent.TextModality}
+		if slices.Contains(listedModel.Capabilities, "vision") {
+			inputModalities = append(inputModalities, agent.ImageModality)
+		}
+
 		models = append(models, agent.Model{
 			ID:                  listedModel.Name,
 			EffortLevels:        effortLevels,
 			ContextWindowTokens: contextWindowTokens,
 			MaxOutputTokens:     maxOutputTokens(contextWindowTokens),
+			InputModalities:     inputModalities,
 		})
 	}
 

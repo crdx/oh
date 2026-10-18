@@ -17,6 +17,7 @@ type Choice struct {
 	EffortLevels        []string           `json:"efforts,omitempty"`
 	ContextWindowTokens int                `json:"context,omitempty"`
 	MaxOutputTokens     int                `json:"output,omitempty"`
+	InputModalities     []agent.Modality   `json:"inputs,omitempty"`
 	Prices              *agent.TokenPrices `json:"prices,omitempty"`
 	Wire                agent.Wire         `json:"wire,omitempty"`
 }

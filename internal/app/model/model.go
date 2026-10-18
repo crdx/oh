@@ -194,6 +194,11 @@ func supplemented(providerName string, model agent.Model, knownModel agent.Model
 	if providerName == CodexProvider && knownModel.ContextWindowTokens > 0 {
 		model.ContextWindowTokens = knownModel.ContextWindowTokens
 	}
+	if providerName == CodexProvider && len(model.InputModalities) > 0 &&
+		slices.Contains(knownModel.InputModalities, agent.PDFModality) &&
+		!slices.Contains(model.InputModalities, agent.PDFModality) {
+		model.InputModalities = append(slices.Clone(model.InputModalities), agent.PDFModality)
+	}
 
 	return filledFrom(model, knownModel)
 }
@@ -211,6 +216,9 @@ func filledFrom(model agent.Model, knownModel agent.Model) agent.Model {
 	}
 	if model.MaxOutputTokens == 0 {
 		model.MaxOutputTokens = knownModel.MaxOutputTokens
+	}
+	if len(model.InputModalities) == 0 {
+		model.InputModalities = slices.Clone(knownModel.InputModalities)
 	}
 	if model.Prices == nil && knownModel.Prices != nil {
 		prices := *knownModel.Prices
@@ -491,6 +499,7 @@ func choicesFor(providerName string, models []agent.Model) []Choice {
 			EffortLevels:        model.EffortLevels,
 			ContextWindowTokens: model.ContextWindowTokens,
 			MaxOutputTokens:     model.MaxOutputTokens,
+			InputModalities:     model.InputModalities,
 			Prices:              model.Prices,
 			Wire:                model.Wire,
 		})

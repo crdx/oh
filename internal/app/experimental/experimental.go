@@ -5,17 +5,23 @@ import (
 	"maps"
 	"slices"
 	"sync/atomic"
+
+	"crdx.org/oh/internal/util"
 )
 
 type Name string
 
 const (
+	AudioAttachmentLimit Name = "audio_attachment_limit"
 	CacheMissNotices     Name = "cache_miss_notices"
 	CommandStartsTurn    Name = "command_starts_turn"
 	EnterInterrupts      Name = "enter_interrupts"
+	ImageAttachmentLimit Name = "image_attachment_limit"
+	PDFAttachmentLimit   Name = "pdf_attachment_limit"
 	RedrawTimingFeedback Name = "redraw_timing_feedback"
 	ReplyCommand         Name = "reply_command"
 	SharedHistory        Name = "shared_history"
+	VideoAttachmentLimit Name = "video_attachment_limit"
 )
 
 type Kind int
@@ -25,6 +31,7 @@ const (
 	TextKind
 	WholeNumberKind
 	DecimalNumberKind
+	SizeKind
 )
 
 func (self Kind) String() string {
@@ -37,17 +44,23 @@ func (self Kind) String() string {
 		return "a whole number"
 	case DecimalNumberKind:
 		return "a number"
+	case SizeKind:
+		return "a size such as \"5M\""
 	}
 	return "a value"
 }
 
 var toggleKinds = map[Name]Kind{
+	AudioAttachmentLimit: SizeKind,
 	CacheMissNotices:     BooleanKind,
 	CommandStartsTurn:    BooleanKind,
 	EnterInterrupts:      BooleanKind,
+	ImageAttachmentLimit: SizeKind,
+	PDFAttachmentLimit:   SizeKind,
 	RedrawTimingFeedback: BooleanKind,
 	ReplyCommand:         BooleanKind,
 	SharedHistory:        BooleanKind,
+	VideoAttachmentLimit: SizeKind,
 }
 
 type Complaint struct {
@@ -96,6 +109,10 @@ func (self Kind) accepts(value any) bool {
 	case DecimalNumberKind:
 		_, isDecimalNumber := value.(float64)
 		return isDecimalNumber
+	case SizeKind:
+		text, isText := value.(string)
+		_, err := util.ParseSize(text)
+		return isText && err == nil
 	}
 	return false
 }
@@ -130,6 +147,15 @@ func (self *Toggles) GetText(name Name, fallback string) string {
 func (self *Toggles) GetWholeNumber(name Name, fallback int) int {
 	if value, exists := read[int64](self, name); exists {
 		return int(value)
+	}
+	return fallback
+}
+
+func (self *Toggles) GetSize(name Name, fallback int) int {
+	if text, exists := read[string](self, name); exists {
+		if size, err := util.ParseSize(text); err == nil {
+			return size
+		}
 	}
 	return fallback
 }

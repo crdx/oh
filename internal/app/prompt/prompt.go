@@ -134,6 +134,7 @@ type harnessContextTemplateData struct {
 	HomeDir           string
 	ExtraPaths        shell.Paths
 	DropsDirectory    string
+	IsImageAttachable bool
 	SharesSkills      bool
 	ShellOffered      bool
 	TitleOffered      bool
@@ -173,26 +174,27 @@ type File struct {
 }
 
 type Config struct {
-	GlobalPath     string
-	Workspace      *work.Space
-	SessionName    string
-	SessionsDir    string
-	SessionDir     string
-	ConfigFile     string
-	TmpDir         string
-	HomeDir        string
-	CurrentCaps    caps.Set
-	ExtraPaths     shell.Paths
-	DropsDirectory string
-	OfferedTools   []string
-	Skills         []skill.Skill
-	Conditions     conditions.Conditions
-	JobsGranted    bool
-	NetworkGranted bool
-	ToolGroups     caps.ToolGroups
-	GroupStatus    caps.GroupStatus
-	Yolo           bool
-	Notes          agent.NoteFormat
+	GlobalPath        string
+	Workspace         *work.Space
+	SessionName       string
+	SessionsDir       string
+	SessionDir        string
+	ConfigFile        string
+	TmpDir            string
+	HomeDir           string
+	CurrentCaps       caps.Set
+	ExtraPaths        shell.Paths
+	DropsDirectory    string
+	IsImageAttachable bool
+	OfferedTools      []string
+	Skills            []skill.Skill
+	Conditions        conditions.Conditions
+	JobsGranted       bool
+	NetworkGranted    bool
+	ToolGroups        caps.ToolGroups
+	GroupStatus       caps.GroupStatus
+	Yolo              bool
+	Notes             agent.NoteFormat
 }
 
 func Load(config Config) (string, []File, error) {
@@ -289,6 +291,7 @@ func harnessContext(config Config) string {
 		HomeDir:           config.HomeDir,
 		ExtraPaths:        config.ExtraPaths,
 		DropsDirectory:    config.DropsDirectory,
+		IsImageAttachable: config.IsImageAttachable,
 		SharesSkills:      len(skill.GlobalDirectories(config.Skills)) > 0,
 		ShellOffered:      toolset.Offers(config.OfferedTools, shellToolName),
 		TitleOffered:      toolset.Offers(config.OfferedTools, titleToolName),
@@ -327,8 +330,8 @@ func noteRule(notes agent.NoteFormat) string {
 	return notes.Rule()
 }
 
-func WithDropsDirectory(systemPrompt string, dropsDirectory string) string {
-	if dropsDirectory == "" {
+func WithDropsDirectory(systemPrompt string, dropsDirectory string, isImageAttachable bool) string {
+	if dropsDirectory == "" || !isImageAttachable {
 		return systemPrompt
 	}
 	rule := dropsRule(dropsDirectory)
@@ -391,7 +394,9 @@ func scopeRules(data harnessContextTemplateData) string {
 	}
 
 	if dropsDirectory != "" {
-		lines = append(lines, "- "+dropsRule(dropsDirectory))
+		if data.IsImageAttachable {
+			lines = append(lines, "- "+dropsRule(dropsDirectory))
+		}
 		lines = append(lines, "- "+untrustedDropsRule(dropsDirectory))
 	}
 	if !data.Yolo {

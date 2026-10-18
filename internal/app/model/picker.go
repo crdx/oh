@@ -129,14 +129,16 @@ func offered(choices []Choice, defaults Defaults) []*picker.Model {
 		}
 
 		models = append(models, &picker.Model{
-			Provider:            ProviderName(choice.Provider),
-			ProviderID:          choice.Provider,
-			Name:                strings.Join(DisplayName(choice.ID), " "),
-			ID:                  choice.ID,
-			EffortLevels:        effortLadder(efforts, SupportsFastMode(choice.Provider)),
-			Effort:              picker.Effort{Level: effort, IsFast: defaults.IsFastFor(choice.Provider)},
-			ContextWindowTokens: choice.ContextWindowTokens,
-			Prices:              prices,
+			Provider:             ProviderName(choice.Provider),
+			ProviderID:           choice.Provider,
+			Name:                 strings.Join(DisplayName(choice.ID), " "),
+			ID:                   choice.ID,
+			EffortLevels:         effortLadder(efforts, SupportsFastMode(choice.Provider)),
+			Effort:               picker.Effort{Level: effort, IsFast: defaults.IsFastFor(choice.Provider)},
+			ContextWindowTokens:  choice.ContextWindowTokens,
+			InputModalities:      choice.InputModalities,
+			AttachableModalities: choice.AttachableModalities(),
+			Prices:               prices,
 		})
 	}
 

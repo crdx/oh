@@ -707,3 +707,48 @@ func TestTheEndpointListsNothingOfItsOwn(t *testing.T) {
 		t.Errorf("expected no listing, got %v", err)
 	}
 }
+
+func TestAPDFIsAnsweredWithItsResultWhileAudioFollowsTheAnswers(t *testing.T) {
+	server, script := serve(t, []string{signedCall}, []string{said("Heard."), finished})
+
+	client := newClient(t, server.URL, "")
+	client.AddUserMessage("listen")
+	if _, err := client.Send(t.Context(), ignore); err != nil {
+		t.Fatal(err)
+	}
+
+	client.AddToolResults([]agent.ToolCallResult{
+		{ID: "fc-1", Output: "application/pdf, 3B", Attachment: tool.Attachment{
+			Name: "paper.pdf", MediaType: "application/pdf", Data: []byte{1, 2, 3},
+		}},
+		{ID: "call_1_1", Output: "audio/mp3, 3B", Attachment: tool.Attachment{
+			Name: "talk.mp3", MediaType: "audio/mp3", Data: []byte{4, 5, 6},
+		}},
+	})
+	if _, err := client.Send(t.Context(), ignore); err != nil {
+		t.Fatal(err)
+	}
+
+	var body struct {
+		Contents []struct {
+			Parts []json.RawMessage `json:"parts"`
+		} `json:"contents"`
+	}
+	if err := json.Unmarshal([]byte(script.request(t, 1).raw), &body); err != nil {
+		t.Fatal(err)
+	}
+
+	answers := body.Contents[len(body.Contents)-1].Parts
+	if len(answers) != 3 {
+		t.Fatalf("expected two answers and the audio after them, got %s", script.request(t, 1).raw)
+	}
+	for index, want := range []string{
+		`"parts":[{"inlineData":{"mimeType":"application/pdf","data":"AQID"}}]`,
+		`"output":"audio/mp3, 3B\n\nAudio attached."`,
+		`{"inlineData":{"mimeType":"audio/mp3","data":"BAUG"}}`,
+	} {
+		if !strings.Contains(string(answers[index]), want) {
+			t.Errorf("part %d: expected %s, got %s", index, want, answers[index])
+		}
+	}
+}

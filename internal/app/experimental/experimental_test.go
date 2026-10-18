@@ -189,3 +189,23 @@ func TestEveryKindSaysWhatAToggleOfItHolds(t *testing.T) {
 		}
 	}
 }
+
+func TestAttachmentLimitsAreSizes(t *testing.T) {
+	if complaints := Check(map[string]any{string(PDFAttachmentLimit): "8M"}); len(complaints) != 0 {
+		t.Errorf("got complaints %v", complaints)
+	}
+	for _, value := range []any{"lots", int64(8)} {
+		complaints := Check(map[string]any{string(VideoAttachmentLimit): value})
+		if len(complaints) != 1 || !strings.Contains(complaints[0].Reason, `a size such as "5M"`) {
+			t.Errorf("%v: got complaints %v, want the toggle to require a size", value, complaints)
+		}
+	}
+
+	toggles := New(map[string]any{string(AudioAttachmentLimit): "2M", string(ImageAttachmentLimit): "lots"})
+	if got := toggles.GetSize(AudioAttachmentLimit, 1); got != 2<<20 {
+		t.Errorf("got audio limit %d", got)
+	}
+	if got := toggles.GetSize(ImageAttachmentLimit, 7); got != 7 {
+		t.Errorf("expected an unreadable size to fall back, got %d", got)
+	}
+}

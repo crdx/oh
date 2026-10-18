@@ -12,6 +12,7 @@ import (
 	"crdx.org/oh/internal/req"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/wire/internal/attachmentbudget"
 	"crdx.org/oh/pkg/wire/openai/internal/imagehistory"
 )
 
@@ -34,6 +35,7 @@ type Client struct {
 	tools          []functionTool
 	history        []json.RawMessage
 	requestHistory imagehistory.Cache
+	attachments    attachmentbudget.Budget
 	requests       *req.Client
 	observer       req.Observer
 }
@@ -93,6 +95,7 @@ func (self *Client) AddUserMessage(text string) {
 
 func (self *Client) AddToolResults(results []agent.ToolCallResult) {
 	var images []contentPart
+	var files []attachedFile
 
 	for _, result := range results {
 		self.history = append(self.history, encode(message{
@@ -104,10 +107,20 @@ func (self *Client) AddToolResults(results []agent.ToolCallResult) {
 		if part, isCarried := imagePart(result); isCarried {
 			images = append(images, part)
 		}
+		if part, isCarried := filePart(result); isCarried {
+			files = append(files, part)
+		}
 	}
 
+	var parts []contentPart
 	if len(images) > 0 {
-		parts := append([]contentPart{{Type: "text", Text: attachmentNotice}}, images...)
+		parts = append(parts, contentPart{Type: "text", Text: attachmentNotice})
+		parts = append(parts, images...)
+	}
+	for _, file := range files {
+		parts = append(parts, contentPart{Type: "text", Text: agent.AttachmentNotice(file.mediaType)}, file.part)
+	}
+	if len(parts) > 0 {
 		self.history = append(self.history, encode(partedMessage{Role: "user", Content: parts}))
 	}
 }
@@ -119,10 +132,17 @@ func (self *Client) Dump() []json.RawMessage {
 func (self *Client) Load(messages []json.RawMessage) {
 	self.history = slices.Clone(messages)
 	self.requestHistory.Reset()
+	self.attachments.Reset()
 }
 
 func (self *Client) Send(ctx context.Context, yield agent.Yield) (agent.Reply, error) {
 	stream, _, err := self.requests.Stream(ctx, self.URL, self.requestBody(), self.headers("text/event-stream"))
+	if restore, isRefused := self.attachments.Refuse(self.history, attachmentbudget.Completions, err); isRefused {
+		stream, _, err = self.requests.Stream(ctx, self.URL, self.requestBody(), self.headers("text/event-stream"))
+		if err != nil {
+			restore()
+		}
+	}
 	if err != nil {
 		return agent.Reply{}, err
 	}
@@ -178,7 +198,7 @@ func (self *Client) requestBody() request {
 	if self.instructions != "" {
 		messages = append(messages, encode(message{Role: "system", Content: self.instructions}))
 	}
-	messages = append(messages, self.requestHistory.Prepare(self.history)...)
+	messages = append(messages, self.attachments.Trim(self.requestHistory.Prepare(self.history), attachmentbudget.Completions)...)
 
 	body := request{
 		Model:           self.Model,
@@ -241,9 +261,93 @@ type partedMessage struct {
 }
 
 type contentPart struct {
-	Type     string    `json:"type"`
-	Text     string    `json:"text,omitempty"`
-	ImageURL *imageURL `json:"image_url,omitempty"`
+	Type       string        `json:"type"`
+	Text       string        `json:"text,omitempty"`
+	ImageURL   *imageURL     `json:"image_url,omitempty"`
+	File       *filePayload  `json:"file,omitempty"`
+	InputAudio *audioPayload `json:"input_audio,omitempty"`
+	VideoURL   *imageURL     `json:"video_url,omitempty"`
+}
+
+type audioPayload struct {
+	Data   string `json:"data"`
+	Format string `json:"format"`
+}
+
+type filePayload struct {
+	Filename string `json:"filename"`
+	FileData string `json:"file_data"`
+}
+
+type attachedFile struct {
+	part      contentPart
+	mediaType string
+}
+
+var AttachableModalities = []agent.Modality{
+	agent.ImageModality,
+	agent.AudioModality,
+	agent.VideoModality,
+	agent.PDFModality,
+}
+
+var audioFormats = map[string]string{
+	"audio/mp3": "mp3",
+	"audio/wav": "wav",
+}
+
+func CanAttach(mediaType string) bool {
+	if agent.ModalityOf(mediaType) != agent.AudioModality {
+		return true
+	}
+
+	_, isFormatKnown := audioFormats[mediaType]
+
+	return isFormatKnown
+}
+
+func attachmentPart(attachment tool.Attachment) (contentPart, bool) {
+	switch agent.ModalityOf(attachment.MediaType) {
+	case agent.PDFModality:
+		return contentPart{
+			Type: "file",
+			File: &filePayload{
+				Filename: attachment.Name,
+				FileData: agent.DataURL(attachment.MediaType, attachment.Data),
+			},
+		}, true
+	case agent.AudioModality:
+		return contentPart{
+			Type: "input_audio",
+			InputAudio: &audioPayload{
+				Data:   base64.StdEncoding.EncodeToString(attachment.Data),
+				Format: audioFormats[attachment.MediaType],
+			},
+		}, true
+	case agent.VideoModality:
+		return contentPart{
+			Type:     "video_url",
+			VideoURL: &imageURL{URL: agent.DataURL(attachment.MediaType, attachment.Data)},
+		}, true
+	case agent.TextModality, agent.ImageModality:
+		return contentPart{}, false
+	}
+
+	return contentPart{}, false
+}
+
+func filePart(result agent.ToolCallResult) (attachedFile, bool) {
+	attachment := result.Attachment
+	if !attachment.IsPresent() || !CanAttach(attachment.MediaType) {
+		return attachedFile{}, false
+	}
+
+	part, isCarried := attachmentPart(attachment)
+	if !isCarried {
+		return attachedFile{}, false
+	}
+
+	return attachedFile{part: part, mediaType: attachment.MediaType}, true
 }
 
 type imageURL struct {

@@ -1,0 +1,34 @@
+provider = "opencode-go"
+model = "gemini-9-pro"
+wire = "generate-content"
+effort = "high"
+
+[[tool]]
+name = "recording"
+outputs = ["audio/mp3, 28B"]
+attachment = "talk.mp3"
+
+[first]
+prompt = "listen to the recording"
+
+[[first.response]]
+event = [
+    '''{"candidates":[{"content":{"role":"model","parts":[{"text":"Working ","thought":true}]},"index":0}]}''',
+    '''{"candidates":[{"content":{"role":"model","parts":[{"text":"it out.","thought":true}]},"index":0}]}''',
+    '''{"candidates":[{"content":{"role":"model","parts":[{"functionCall":{"id":"fc-1","name":"recording","args":{}},"thoughtSignature":"c2VhbC0x"}]},"finishReason":"STOP","index":0}],"usageMetadata":{"promptTokenCount":6300,"cachedContentTokenCount":6000,"candidatesTokenCount":20,"thoughtsTokenCount":120,"totalTokenCount":6440}}''',
+]
+
+[[first.response]]
+event = [
+    '''{"candidates":[{"content":{"role":"model","parts":[{"text":"The recording "}]},"index":0}]}''',
+    '''{"candidates":[{"content":{"role":"model","parts":[{"text":"is a short talk."}]},"index":0}]}''',
+    '''{"candidates":[{"content":{"role":"model","parts":[{"text":"","thoughtSignature":"c2VhbC0y"}]},"finishReason":"STOP","index":0}],"usageMetadata":{"promptTokenCount":6720,"cachedContentTokenCount":6400,"candidatesTokenCount":60,"totalTokenCount":6780}}''',
+]
+
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"candidates":[{"content":{"role":"model","parts":[{"text":"Carrying on."}]},"finishReason":"STOP","index":0}],"usageMetadata":{"promptTokenCount":7140,"cachedContentTokenCount":6800,"candidatesTokenCount":40,"totalTokenCount":7180}}''',
+]

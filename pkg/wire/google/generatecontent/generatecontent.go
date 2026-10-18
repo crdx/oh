@@ -15,6 +15,7 @@ import (
 	"crdx.org/oh/internal/req"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/wire/internal/attachmentbudget"
 )
 
 const (
@@ -44,6 +45,7 @@ type Client struct {
 	tools          []functionDeclaration
 	history        []json.RawMessage
 	requestHistory imageHistory
+	attachments    attachmentbudget.Budget
 	requests       *req.Client
 }
 
@@ -106,15 +108,26 @@ func (self *Client) AddUserMessage(text string) {
 func (self *Client) AddToolResults(results []agent.ToolCallResult) {
 	parts := make([]json.RawMessage, 0, len(results))
 
+	var media []json.RawMessage
+
 	for _, result := range results {
 		call := self.callNamed(result.ID)
 		parts = append(parts, encode(functionResponsePart{FunctionResponse: functionResponse{
 			ID:       call.wireID,
 			Name:     call.name,
 			Response: responseOf(result),
-			Parts:    imageOf(result),
+			Parts:    respondedParts(result),
 		}}))
+
+		if isMediaPart(result.Attachment) {
+			media = append(media, encode(inlineDataPart{InlineData: blob{
+				MediaType: result.Attachment.MediaType,
+				Data:      base64.StdEncoding.EncodeToString(result.Attachment.Data),
+			}}))
+		}
 	}
+
+	parts = append(parts, media...)
 
 	self.history = append(self.history, encode(content{Role: userRole, Parts: parts}))
 }
@@ -126,6 +139,7 @@ func (self *Client) Dump() []json.RawMessage {
 func (self *Client) Load(items []json.RawMessage) {
 	self.history = slices.Clone(items)
 	self.requestHistory.reset()
+	self.attachments.Reset()
 }
 
 func (self *Client) Send(ctx context.Context, yield agent.Yield) (agent.Reply, error) {
@@ -134,6 +148,12 @@ func (self *Client) Send(ctx context.Context, yield agent.Yield) (agent.Reply, e
 	}
 
 	stream, _, err := self.requests.Stream(ctx, self.address(), self.requestBody(), self.headers())
+	if restore, isRefused := self.attachments.Refuse(self.history, attachmentbudget.GenerateContent, err); isRefused {
+		stream, _, err = self.requests.Stream(ctx, self.address(), self.requestBody(), self.headers())
+		if err != nil {
+			restore()
+		}
+	}
 	if err != nil {
 		return agent.Reply{}, err
 	}
@@ -210,7 +230,7 @@ func (self *Client) callNamed(id string) call {
 
 func (self *Client) requestBody() request {
 	body := request{
-		Contents: merged(self.requestHistory.prepare(self.history)),
+		Contents: merged(self.attachments.Trim(self.requestHistory.prepare(self.history), attachmentbudget.GenerateContent)),
 		GenerationConfig: generationConfig{
 			MaxOutputTokens: self.MaxOutputTokens,
 			ThinkingConfig:  thinkingConfig{IncludeThoughts: true, ThinkingLevel: self.Effort},
@@ -299,17 +319,40 @@ func responseOf(result agent.ToolCallResult) responseBody {
 	if result.IsError {
 		return responseBody{Error: text}
 	}
+	if isMediaPart(result.Attachment) {
+		text += followingTextSeparator + agent.AttachmentNotice(result.Attachment.MediaType)
+	}
 
 	return responseBody{Output: text}
 }
 
-func imageOf(result agent.ToolCallResult) []inlineDataPart {
-	if result.Image.MediaType == "" || len(result.Image.Data) == 0 {
-		return nil
+var AttachableModalities = []agent.Modality{
+	agent.ImageModality,
+	agent.AudioModality,
+	agent.VideoModality,
+	agent.PDFModality,
+}
+
+func respondedParts(result agent.ToolCallResult) []inlineDataPart {
+	var parts []inlineDataPart
+	if result.Image.MediaType != "" && len(result.Image.Data) > 0 {
+		parts = append(parts, inlineDataPart{InlineData: blob{
+			MediaType: result.Image.MediaType,
+			Data:      base64.StdEncoding.EncodeToString(result.Image.Data),
+		}})
+	}
+	if result.Attachment.IsPresent() && agent.ModalityOf(result.Attachment.MediaType) == agent.PDFModality {
+		parts = append(parts, inlineDataPart{InlineData: blob{
+			MediaType: result.Attachment.MediaType,
+			Data:      base64.StdEncoding.EncodeToString(result.Attachment.Data),
+		}})
 	}
 
-	return []inlineDataPart{{InlineData: blob{
-		MediaType: result.Image.MediaType,
-		Data:      base64.StdEncoding.EncodeToString(result.Image.Data),
-	}}}
+	return parts
+}
+
+func isMediaPart(attachment tool.Attachment) bool {
+	modality := agent.ModalityOf(attachment.MediaType)
+
+	return attachment.IsPresent() && (modality == agent.AudioModality || modality == agent.VideoModality)
 }

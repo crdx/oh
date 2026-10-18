@@ -2,6 +2,17 @@
 
 ## [N.N.N] - XXXX-XX-XX
 
+### Changes
+
+- Show the inputs each model accepts as `IAVP` flags in the model picker, dimming any oh cannot send it
+- Read PDF, audio and video files for models and wires that take them
+- Refuse to send images to models that cannot take them
+- Send audio and video over Chat Completions to models that take them
+- Leave older PDF, audio and video out of a request once they pass 15 MB, keeping the newest
+- Send a request refused over an attachment again without it, telling the model why
+- Add `experimental.*_attachment_limit` settings for the largest file of each kind read sends
+- Mention pasted images only to models that can see them
+
 ## [0.19.0] - 2026-10-18
 
 ### Changes

@@ -1,0 +1,34 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwsngl · +0s
+
+## User · +0s
+
+read the paper and show me the picture
+
+## Tool calls · +0s
+
+```
+paper: paper [ok, 29B, toolu_1]
+snapshot: snapshot [ok, 8.76K, ~500t, toolu_2]
+```
+
+## Assistant · +0s
+
+The paper describes the picture.
+
+## User · +0s
+
+what does the paper say
+
+## Assistant · +0s
+
+It says the field is blue.

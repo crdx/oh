@@ -47,6 +47,28 @@ func TestAModelIsOfferedAtTheEffortNearestTheOneWanted(t *testing.T) {
 	}
 }
 
+func TestTheInputsAModelTakesReachThePicker(t *testing.T) {
+	inputModalities := []agent.Modality{agent.TextModality, agent.ImageModality, agent.PDFModality}
+	choices := choicesFor(AnthropicProvider, []agent.Model{{
+		ID:              "claude-opus-5",
+		EffortLevels:    []string{"high"},
+		MaxOutputTokens: 64_000,
+		InputModalities: inputModalities,
+	}})
+	if len(choices) != 1 {
+		t.Fatalf("expected one choice, got %v", choices)
+	}
+
+	offers := offered(choices, Defaults{})
+	if !slices.Equal(offers[0].InputModalities, inputModalities) {
+		t.Errorf("got input modalities %v, want %v", offers[0].InputModalities, inputModalities)
+	}
+	attachable := []agent.Modality{agent.ImageModality, agent.PDFModality}
+	if !slices.Equal(offers[0].AttachableModalities, attachable) {
+		t.Errorf("got attachable modalities %v, want %v", offers[0].AttachableModalities, attachable)
+	}
+}
+
 func TestFreeGoModelsCarryZeroPricesWithoutMakingUnquotedModelsFree(t *testing.T) {
 	free := &agent.TokenPrices{}
 	paid := &agent.TokenPrices{Input: 1}

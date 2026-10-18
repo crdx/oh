@@ -372,7 +372,7 @@ func TestFilesAboveTheReadLimitAreRefusedBeforeTheirContentsAreLoaded(t *testing
 			name:      "image",
 			header:    "\x89PNG\r\n\x1a\n",
 			arguments: `{"path":"large"}`,
-			failure:   "image exceeds the 20M limit",
+			failure:   "image exceeds the 20M limit; resize or compress it and read the smaller copy",
 		},
 		{
 			name:      "image range",

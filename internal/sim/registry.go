@@ -13,6 +13,10 @@ type registryEntry struct {
 
 	ReasoningOptions []registryReasoning `json:"reasoning_options"`
 
+	Modalities struct {
+		Input []string `json:"input"`
+	} `json:"modalities"`
+
 	Limit struct {
 		Context int `json:"context"`
 		Output  int `json:"output"`
@@ -73,6 +77,7 @@ func (self *Endpoint) serveRegistry(writer http.ResponseWriter, request *http.Re
 		},
 	}
 
+	entry.Modalities.Input = simulatedInputs
 	entry.Limit.Context = simulatedContext
 	entry.Limit.Output = simulatedOutput
 	entry.Cost.Input = simulatedPrices.Input

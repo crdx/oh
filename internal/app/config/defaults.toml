@@ -33,6 +33,10 @@ syntax_literal = "#b5bd68"
 syntax_operator = "#8abeb7"
 syntax_keyword = "#c9a6d4"
 skill = "#c9a6d4"
+media_image = "#7cc4e8"
+media_audio = "#b294d6"
+media_video = "#e0995e"
+media_pdf = "#e06c75"
 
 [ui.theme.grey-dark]
 normal = "default"
@@ -49,6 +53,10 @@ syntax_literal = "#e2f0a0"
 syntax_operator = "#b0f4ea"
 syntax_keyword = "#f2d0ff"
 skill = "#f2d0ff"
+media_image = "#b8e2f8"
+media_audio = "#dcc8f8"
+media_video = "#ffcfa0"
+media_pdf = "#ffb0b8"
 
 [ui.theme.grey-light]
 normal = "default"
@@ -65,6 +73,10 @@ syntax_literal = "#3a4700"
 syntax_operator = "#0e4741"
 syntax_keyword = "#562670"
 skill = "#562670"
+media_image = "#0f4a66"
+media_audio = "#45266e"
+media_video = "#6b3a0c"
+media_pdf = "#7a1824"
 
 [ui.theme.light]
 normal = "default"
@@ -81,6 +93,10 @@ syntax_literal = "#5f7300"
 syntax_operator = "#2c7870"
 syntax_keyword = "#8a4fa3"
 skill = "#8a4fa3"
+media_image = "#2a7aa6"
+media_audio = "#6e4aa8"
+media_video = "#b0601c"
+media_pdf = "#b8343f"
 
 [ui.theme.tool]
 read.default = { name = "read" }
@@ -136,12 +152,16 @@ lookup = "allow"
 [tools]
 
 [experimental]
+audio_attachment_limit = "5M"
 cache_miss_notices = false
 command_starts_turn = true
 enter_interrupts = false
+image_attachment_limit = "20M"
+pdf_attachment_limit = "5M"
 redraw_timing_feedback = false
 reply_command = false
 shared_history = false
+video_attachment_limit = "5M"
 
 [debug]
 stalls = false

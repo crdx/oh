@@ -12,6 +12,7 @@ import (
 	"io/fs"
 	"net/http"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"crdx.org/oh/internal/file"
@@ -19,6 +20,7 @@ import (
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/imageutil"
 	"crdx.org/oh/internal/util/strutil"
+	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tool"
 )
 
@@ -49,6 +51,11 @@ type Args struct {
 }
 
 func New(root *file.Root, snapshots *file.Snapshots) tool.Tool {
+	return NewAccepting(root, snapshots, DefaultAttachable)
+}
+
+func NewAccepting(root *file.Root, snapshots *file.Snapshots, attachable Attachable) tool.Tool {
+	attachable.Modalities = slices.Clone(attachable.Modalities)
 	restoreReadState := func(payload json.RawMessage) error {
 		return snapshots.RestoreReadState(root, payload)
 	}
@@ -56,7 +63,7 @@ func New(root *file.Root, snapshots *file.Snapshots) tool.Tool {
 	return tool.Implement(
 		tool.Definition{
 			Name:        "read",
-			Description: "read a text or image file",
+			Description: description(attachable.Modalities),
 			Schema: tool.Schema{
 				tool.String("path", "file"),
 				tool.Integer("offset", "first line, 1-indexed").Optional(),
@@ -70,7 +77,7 @@ func New(root *file.Root, snapshots *file.Snapshots) tool.Tool {
 		IsEmbarrassinglyParallel().
 		ChangesNothing().
 		Run(func(ctx context.Context, args Args) (tool.ToolCallResult, error) {
-			return exec(ctx, root, args)
+			return exec(ctx, root, args, attachable)
 		})
 }
 
@@ -124,7 +131,7 @@ func span(offset int, limit int) string {
 	}
 }
 
-func exec(ctx context.Context, root *file.Root, args Args) (tool.ToolCallResult, error) {
+func exec(ctx context.Context, root *file.Root, args Args, attachable Attachable) (tool.ToolCallResult, error) {
 	if args.Path == "" {
 		return tool.ToolCallResult{}, errors.New("path is required")
 	}
@@ -134,10 +141,16 @@ func exec(ctx context.Context, root *file.Root, args Args) (tool.ToolCallResult,
 		return tool.ToolCallResult{}, err
 	}
 
-	loadedFile, err := load(root, name)
+	loadedFile, err := load(root, name, maxFileBytes)
 	metrics := tool.ToolCallMetrics{Kind: tool.MetricRead, Bytes: loadedFile.size}
 	if errors.Is(err, errFileTooLarge) {
-		return oversizedResult(ctx, root, name, args, loadedFile.mediaType, metrics)
+		mediaType, isMedia := mediaTypeOf(name, loadedFile.mediaType)
+		limit := attachable.limit(agent.ModalityOf(mediaType))
+		isWithinLimit := isMedia && loadedFile.size <= int64(limit) && attachable.refusal(mediaType) == nil
+		if !isWithinLimit || args.Offset > 0 || args.Limit > 0 {
+			return oversizedResult(ctx, root, name, args, loadedFile.mediaType, attachable, metrics)
+		}
+		loadedFile, err = load(root, name, limit)
 	}
 	if err != nil {
 		return tool.ToolCallResult{}, readFailure(args.Path, err)
@@ -146,8 +159,14 @@ func exec(ctx context.Context, root *file.Root, args Args) (tool.ToolCallResult,
 	data := loadedFile.data
 	mediaType := loadedFile.mediaType
 	if imageutil.IsSupported(mediaType) {
+		if !attachable.takes(agent.ImageModality) {
+			return tool.ToolCallResult{Metrics: metrics}, refusal(agent.ImageModality)
+		}
 		if args.Offset > 0 || args.Limit > 0 {
 			return tool.ToolCallResult{Metrics: metrics}, errors.New("images do not support line ranges")
+		}
+		if len(data) > attachable.limit(agent.ImageModality) {
+			return tool.ToolCallResult{Metrics: metrics}, attachable.tooLarge(agent.ImageModality)
 		}
 
 		metrics.Kind = tool.MetricImage
@@ -162,6 +181,10 @@ func exec(ctx context.Context, root *file.Root, args Args) (tool.ToolCallResult,
 			tool.Image{MediaType: mediaType, Data: data},
 			metrics,
 		), nil
+	}
+
+	if attachedType, isAttachment := attachmentType(name, mediaType); isAttachment {
+		return attachedResult(args, name, data, attachedType, attachable, metrics)
 	}
 
 	lines := strutil.Lines(string(data))
@@ -205,10 +228,27 @@ func oversizedResult(
 	name string,
 	args Args,
 	mediaType string,
+	attachable Attachable,
 	metrics tool.ToolCallMetrics,
 ) (tool.ToolCallResult, error) {
 	isRange := args.Offset > 0 || args.Limit > 0
 	isImage := imageutil.IsSupported(mediaType)
+	if attachedType, isAttachment := attachmentType(name, mediaType); isAttachment {
+		modality := agent.ModalityOf(attachedType)
+		if err := attachable.refusal(attachedType); err != nil {
+			return tool.ToolCallResult{Metrics: metrics}, err
+		}
+		if isRange {
+			return tool.ToolCallResult{Metrics: metrics}, fmt.Errorf("%s files do not support line ranges", modalityNouns[modality])
+		}
+		return tool.ToolCallResult{Metrics: metrics}, attachable.tooLarge(modality)
+	}
+	if isImage && !isRange {
+		if !attachable.takes(agent.ImageModality) {
+			return tool.ToolCallResult{Metrics: metrics}, refusal(agent.ImageModality)
+		}
+		return tool.ToolCallResult{Metrics: metrics}, attachable.tooLarge(agent.ImageModality)
+	}
 	if !isRange {
 		noun := "file"
 		if isImage {
@@ -315,7 +355,7 @@ func loadRange(ctx context.Context, root *file.Root, name string, args Args) (lo
 	return result, nil
 }
 
-func load(root *file.Root, name string) (loadedFile, error) {
+func load(root *file.Root, name string, capBytes int) (loadedFile, error) {
 	openedFile, err := root.Open(name)
 	if err != nil {
 		return loadedFile{}, err
@@ -326,7 +366,7 @@ func load(root *file.Root, name string) (loadedFile, error) {
 	if err != nil {
 		return loadedFile{}, err
 	}
-	if info.Size() > maxFileBytes {
+	if info.Size() > int64(capBytes) {
 		header, err := io.ReadAll(io.LimitReader(openedFile, 512))
 		if err != nil {
 			return loadedFile{}, err
@@ -337,12 +377,12 @@ func load(root *file.Root, name string) (loadedFile, error) {
 		}, errFileTooLarge
 	}
 
-	data, err := io.ReadAll(io.LimitReader(openedFile, maxFileBytes+1))
+	data, err := io.ReadAll(io.LimitReader(openedFile, int64(capBytes)+1))
 	if err != nil {
 		return loadedFile{}, err
 	}
 	mediaType := http.DetectContentType(data)
-	if len(data) > maxFileBytes {
+	if len(data) > capBytes {
 		return loadedFile{
 			mediaType: mediaType,
 			size:      max(info.Size(), int64(len(data))),
@@ -350,6 +390,38 @@ func load(root *file.Root, name string) (loadedFile, error) {
 	}
 
 	return loadedFile{data: data, mediaType: mediaType, size: int64(len(data))}, nil
+}
+
+func attachedResult(
+	args Args,
+	name string,
+	data []byte,
+	mediaType string,
+	attachable Attachable,
+	metrics tool.ToolCallMetrics,
+) (tool.ToolCallResult, error) {
+	noun := modalityNouns[agent.ModalityOf(mediaType)]
+	if err := attachable.refusal(mediaType); err != nil {
+		return tool.ToolCallResult{Metrics: metrics}, err
+	}
+	switch {
+	case args.Offset > 0 || args.Limit > 0:
+		return tool.ToolCallResult{Metrics: metrics}, fmt.Errorf("%s files do not support line ranges", noun)
+	case len(data) > attachable.limit(agent.ModalityOf(mediaType)):
+		return tool.ToolCallResult{Metrics: metrics}, attachable.tooLarge(agent.ModalityOf(mediaType))
+	}
+
+	metrics.Kind = tool.MetricAttachment
+	result := successfulResult(
+		args.Path,
+		data,
+		fmt.Sprintf("%s, %s", mediaType, util.FormatBytes(len(data), bytePrecision)),
+		tool.Image{},
+		metrics,
+	)
+	result.Attachment = tool.Attachment{Name: filepath.Base(name), MediaType: mediaType, Data: data}
+
+	return result, nil
 }
 
 func successfulResult(

@@ -100,7 +100,7 @@ func getImageSource(t *testing.T, payload []byte) (string, []byte) {
 	t.Helper()
 
 	var stored struct {
-		Source imageSource `json:"source"`
+		Source base64Source `json:"source"`
 	}
 	if err := json.Unmarshal(payload, &stored); err != nil {
 		t.Fatal(err)

@@ -328,7 +328,7 @@ func TestOllamaModelsAreSelectableWithoutARegistryEntry(t *testing.T) {
 
 func TestTheRegistryFillsInWhatAListingLeftOut(t *testing.T) {
 	listed := []agent.Model{
-		{ID: "claude-opus-5", EffortLevels: []string{"high"}},
+		{ID: "claude-opus-5", EffortLevels: []string{"high"}, InputModalities: []agent.Modality{agent.TextModality}},
 		{ID: "claude-sonnet-5"},
 		{ID: "unknown-model"},
 	}
@@ -340,16 +340,27 @@ func TestTheRegistryFillsInWhatAListingLeftOut(t *testing.T) {
 			EffortLevels:        []string{"low", "medium", "high", "xhigh", "max"},
 			ContextWindowTokens: 274_000,
 			MaxOutputTokens:     128_000,
+			InputModalities:     []agent.Modality{agent.TextModality, agent.ImageModality},
 		},
 		"claude-sonnet-5": {
-			ID:           "claude-sonnet-5",
-			Name:         "Claude Sonnet 5",
-			EffortLevels: []string{"low", "high"},
-			Prices:       &agent.TokenPrices{Input: 3, Output: 15},
+			ID:              "claude-sonnet-5",
+			Name:            "Claude Sonnet 5",
+			EffortLevels:    []string{"low", "high"},
+			InputModalities: []agent.Modality{agent.TextModality, agent.ImageModality, agent.PDFModality},
+			Prices:          &agent.TokenPrices{Input: 3, Output: 15},
 		},
 	}
 
 	supplemented := supplement(AnthropicProvider, listed, registered)
+
+	if !slices.Equal(supplemented[0].InputModalities, []agent.Modality{agent.TextModality}) {
+		t.Errorf("expected the inputs the endpoint named to stand, got %v", supplemented[0].InputModalities)
+	}
+
+	wantedInputs := []agent.Modality{agent.TextModality, agent.ImageModality, agent.PDFModality}
+	if !slices.Equal(supplemented[1].InputModalities, wantedInputs) {
+		t.Errorf("expected the registry to supply the missing inputs, got %v", supplemented[1].InputModalities)
+	}
 
 	if supplemented[0].Name != "Claude Opus 5" || supplemented[0].ContextWindowTokens != 274_000 ||
 		supplemented[0].MaxOutputTokens != 128_000 {
@@ -395,6 +406,36 @@ func TestTheRegistrySaysWhenAListedModelTakesNoEffort(t *testing.T) {
 		if supplemented[i].IsEffortless != want {
 			t.Errorf("%s: effortless is %t, want %t", supplemented[i].ID, supplemented[i].IsEffortless, want)
 		}
+	}
+}
+
+func TestTheRegistrySaysWhenACodexModelTakesPDFsItsCatalogueCannotName(t *testing.T) {
+	textAndImages := []agent.Modality{agent.TextModality, agent.ImageModality}
+	listed := []agent.Model{
+		{ID: "gpt-6.1-sol", InputModalities: textAndImages},
+		{ID: "gpt-6.1-terra", InputModalities: textAndImages},
+		{ID: "gpt-6.1-luna"},
+	}
+	registered := map[string]agent.Model{
+		"gpt-6.1-sol":   {ID: "gpt-6.1-sol", InputModalities: []agent.Modality{agent.TextModality, agent.ImageModality, agent.PDFModality}},
+		"gpt-6.1-terra": {ID: "gpt-6.1-terra", InputModalities: []agent.Modality{agent.TextModality}},
+		"gpt-6.1-luna":  {ID: "gpt-6.1-luna", InputModalities: []agent.Modality{agent.TextModality, agent.PDFModality}},
+	}
+
+	codexModels := supplement(CodexProvider, listed, registered)
+	for index, want := range [][]agent.Modality{
+		{agent.TextModality, agent.ImageModality, agent.PDFModality},
+		textAndImages,
+		{agent.TextModality, agent.PDFModality},
+	} {
+		if !slices.Equal(codexModels[index].InputModalities, want) {
+			t.Errorf("%s: got %v, want %v", codexModels[index].ID, codexModels[index].InputModalities, want)
+		}
+	}
+
+	anthropicModels := supplement(AnthropicProvider, listed[:1], registered)
+	if !slices.Equal(anthropicModels[0].InputModalities, textAndImages) {
+		t.Errorf("expected another provider's listing to stand, got %v", anthropicModels[0].InputModalities)
 	}
 }
 

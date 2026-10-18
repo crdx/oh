@@ -17,6 +17,7 @@ import (
 	"crdx.org/oh/internal/req"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/wire/internal/attachmentbudget"
 	"crdx.org/oh/pkg/wire/openai/internal/imagehistory"
 )
 
@@ -68,6 +69,7 @@ type Client struct {
 	session          string
 	history          []json.RawMessage
 	requestHistory   imagehistory.Cache
+	attachments      attachmentbudget.Budget
 	requests         *req.Client
 	observer         req.Observer
 
@@ -189,6 +191,7 @@ func (self *Client) Dump() []json.RawMessage {
 func (self *Client) Load(items []json.RawMessage) {
 	self.history = slices.Clone(items)
 	self.requestHistory.Reset()
+	self.attachments.Reset()
 }
 
 func encodeItem(item any) json.RawMessage {
@@ -226,6 +229,12 @@ func (self *Client) post(ctx context.Context, yield agent.Yield) (reply, error) 
 	}
 
 	stream, responseHeader, err := self.requests.Stream(ctx, self.URL, self.requestBody(), self.headers(token))
+	if restore, isRefused := self.attachments.Refuse(self.history, attachmentbudget.Responses, err); isRefused {
+		stream, responseHeader, err = self.requests.Stream(ctx, self.URL, self.requestBody(), self.headers(token))
+		if err != nil {
+			restore()
+		}
+	}
 	isUsageLimited := usageLimitReached(err)
 	windows := self.recordUsageWindows(responseHeader, time.Now(), isUsageLimited)
 	if err != nil {
@@ -281,7 +290,7 @@ func (self *Client) requestBody() request {
 		MaxOutputTokens:   self.MaxOutputTokens,
 		Store:             false,
 		Stream:            true,
-		Input:             self.requestHistory.Prepare(self.history),
+		Input:             self.attachments.Trim(self.requestHistory.Prepare(self.history), attachmentbudget.Responses),
 		Reasoning:         reasoning{Effort: self.Effort, Summary: Summary},
 		Include:           []string{"reasoning.encrypted_content"},
 		PromptCacheKey:    self.session,
@@ -348,7 +357,11 @@ type inputContent struct {
 	Text     string `json:"text,omitempty"`
 	ImageURL string `json:"image_url,omitempty"`
 	Detail   string `json:"detail,omitempty"`
+	Filename string `json:"filename,omitempty"`
+	FileData string `json:"file_data,omitempty"`
 }
+
+var AttachableModalities = []agent.Modality{agent.ImageModality, agent.PDFModality}
 
 const (
 	imageDetail       = "high"
@@ -361,23 +374,36 @@ func encodeToolOutput(result agent.ToolCallResult) any {
 	if text == "" {
 		text = emptyOutputNotice
 	}
-	if result.Image.MediaType == "" || len(result.Image.Data) == 0 {
+	hasImage := result.Image.MediaType != "" && len(result.Image.Data) > 0
+	if !hasImage && !result.Attachment.IsPresent() {
 		return text
 	}
 
-	content := []inputContent{
-		{Type: "input_text", Text: text},
-		{Type: "input_text", Text: attachmentNotice},
+	content := []inputContent{{Type: "input_text", Text: text}}
+	if hasImage {
+		content = append(content,
+			inputContent{Type: "input_text", Text: attachmentNotice},
+			inputContent{
+				Type: "input_image",
+				ImageURL: fmt.Sprintf(
+					"data:%s;base64,%s",
+					result.Image.MediaType,
+					base64.StdEncoding.EncodeToString(result.Image.Data),
+				),
+				Detail: imageDetail,
+			},
+		)
 	}
-	content = append(content, inputContent{
-		Type: "input_image",
-		ImageURL: fmt.Sprintf(
-			"data:%s;base64,%s",
-			result.Image.MediaType,
-			base64.StdEncoding.EncodeToString(result.Image.Data),
-		),
-		Detail: imageDetail,
-	})
+	if result.Attachment.IsPresent() && agent.ModalityOf(result.Attachment.MediaType) == agent.PDFModality {
+		content = append(content,
+			inputContent{Type: "input_text", Text: agent.AttachmentNotice(result.Attachment.MediaType)},
+			inputContent{
+				Type:     "input_file",
+				Filename: result.Attachment.Name,
+				FileData: agent.DataURL(result.Attachment.MediaType, result.Attachment.Data),
+			},
+		)
+	}
 
 	return content
 }

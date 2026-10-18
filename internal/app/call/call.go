@@ -366,6 +366,8 @@ func Measurements(metrics *tool.ToolCallMetrics) string {
 		return listMetricsText(metrics)
 	case tool.MetricImage:
 		return imageMetricsText(metrics)
+	case tool.MetricAttachment:
+		return attachmentMetricsText(metrics)
 	case tool.MetricWrite:
 		return writeMetricsText(metrics)
 	case tool.MetricDiff:
@@ -408,6 +410,8 @@ func resourcesMetricsText(metrics *tool.ToolCallMetrics) string {
 	return style.Subtle.Join(cpuTime, outputMeasure(metrics), peakMemory)
 }
 
+const attachmentPrecision = 3
+
 func readMetricsText(metrics *tool.ToolCallMetrics) string {
 	return style.Subtle.Join(strconv.FormatInt(metrics.Lines, 10)+"L", tokenEstimate(metrics))
 }
@@ -418,6 +422,10 @@ func listMetricsText(metrics *tool.ToolCallMetrics) string {
 
 func imageMetricsText(metrics *tool.ToolCallMetrics) string {
 	return style.Subtle(util.FormatEstimatedTokens(metrics.EstimatedTokens))
+}
+
+func attachmentMetricsText(metrics *tool.ToolCallMetrics) string {
+	return style.Subtle(util.FormatBytes(metrics.Bytes, attachmentPrecision))
 }
 
 func writeMetricsText(metrics *tool.ToolCallMetrics) string {

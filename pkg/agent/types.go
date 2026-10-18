@@ -2,9 +2,11 @@ package agent
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"slices"
+	"strings"
 	"time"
 
 	"crdx.org/oh/pkg/tool"
@@ -44,8 +46,79 @@ type Model struct {
 	IsEffortless        bool         `json:"effortless,omitempty"`
 	ContextWindowTokens int          `json:"context,omitempty"`
 	MaxOutputTokens     int          `json:"output,omitempty"`
+	InputModalities     []Modality   `json:"inputs,omitempty"`
 	Prices              *TokenPrices `json:"prices,omitempty"`
 	Wire                Wire         `json:"wire,omitempty"`
+}
+
+type Modality string
+
+const (
+	TextModality  Modality = "text"
+	ImageModality Modality = "image"
+	AudioModality Modality = "audio"
+	VideoModality Modality = "video"
+	PDFModality   Modality = "pdf"
+)
+
+var Modalities = []Modality{TextModality, ImageModality, AudioModality, VideoModality, PDFModality}
+
+func InputModalitiesOf(names []string) []Modality {
+	var inputModalities []Modality
+	for _, modality := range Modalities {
+		if slices.Contains(names, string(modality)) {
+			inputModalities = append(inputModalities, modality)
+		}
+	}
+
+	return inputModalities
+}
+
+var attachmentNotices = map[Modality]string{
+	ImageModality: "Image attached.",
+	AudioModality: "Audio attached.",
+	VideoModality: "Video attached.",
+	PDFModality:   "PDF attached.",
+}
+
+func AttachmentNotice(mediaType string) string {
+	return attachmentNotices[ModalityOf(mediaType)]
+}
+
+var removedAttachmentNouns = map[Modality]string{
+	ImageModality: "image",
+	AudioModality: "audio file",
+	VideoModality: "video file",
+	PDFModality:   "PDF",
+}
+
+func RemovedAttachmentNotice(mediaType string) string {
+	return "The " + removedAttachmentNouns[ModalityOf(mediaType)] + " attached here was left out of this request " +
+		"to keep it within the endpoint's size limit; read the file again if it is still needed."
+}
+
+func RefusedAttachmentNotice(mediaType string, reason string) string {
+	return "The endpoint refused the request carrying the " + removedAttachmentNouns[ModalityOf(mediaType)] +
+		" attached here (" + reason + "), so it was left out; read a smaller part of the file if it is still needed."
+}
+
+func DataURL(mediaType string, data []byte) string {
+	return "data:" + mediaType + ";base64," + base64.StdEncoding.EncodeToString(data)
+}
+
+func ModalityOf(mediaType string) Modality {
+	switch {
+	case mediaType == "application/pdf":
+		return PDFModality
+	case strings.HasPrefix(mediaType, "image/"):
+		return ImageModality
+	case strings.HasPrefix(mediaType, "audio/"):
+		return AudioModality
+	case strings.HasPrefix(mediaType, "video/"):
+		return VideoModality
+	default:
+		return TextModality
+	}
 }
 
 type TokenPrices struct {
@@ -186,10 +259,11 @@ type ToolCall struct {
 }
 
 type ToolCallResult struct {
-	ID      string
-	Output  string
-	Image   tool.Image
-	IsError bool
+	ID         string
+	Output     string
+	Image      tool.Image
+	Attachment tool.Attachment
+	IsError    bool
 }
 
 type Kind string

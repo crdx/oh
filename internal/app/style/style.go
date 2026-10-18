@@ -75,6 +75,11 @@ var (
 
 	Skill Style = skill()
 
+	MediaImage Style = mediaImage()
+	MediaAudio Style = mediaAudio()
+	MediaVideo Style = mediaVideo()
+	MediaPDF   Style = mediaPDF()
+
 	Subject Style = accent()
 	Spinner Style = accent()
 	Prompt  Style = accent()
@@ -333,6 +338,22 @@ func normal() Style {
 
 func dim() Style {
 	return themedForeground(func(theme *compiledTheme) string { return theme.dim })
+}
+
+func mediaImage() Style {
+	return themedForeground(func(theme *compiledTheme) string { return theme.mediaImage })
+}
+
+func mediaAudio() Style {
+	return themedForeground(func(theme *compiledTheme) string { return theme.mediaAudio })
+}
+
+func mediaVideo() Style {
+	return themedForeground(func(theme *compiledTheme) string { return theme.mediaVideo })
+}
+
+func mediaPDF() Style {
+	return themedForeground(func(theme *compiledTheme) string { return theme.mediaPDF })
 }
 
 func accent() Style {

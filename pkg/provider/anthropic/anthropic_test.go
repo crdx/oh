@@ -428,6 +428,42 @@ func TestTheModelListingFollowsTheEndpointItWasGiven(t *testing.T) {
 	}
 }
 
+func TestTheModelListingSaysWhichInputsAModelTakes(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(
+		func(writer http.ResponseWriter, _ *http.Request) {
+			writer.Header().Set("Content-Type", "application/json")
+			_, _ = fmt.Fprint(writer, `{"data":[`+
+				`{"type":"model","id":"claude-opus-5","capabilities":{`+
+				`"image_input":{"supported":true},"pdf_input":{"supported":true}}},`+
+				`{"type":"model","id":"claude-sightless-5","capabilities":{`+
+				`"image_input":{"supported":false},"pdf_input":{"supported":false}}},`+
+				`{"type":"model","id":"claude-unsaid-5","capabilities":{}}`+
+				`]}`)
+		},
+	))
+
+	t.Cleanup(server.Close)
+
+	models, err := newClient(t, server.URL+"/v1/messages").Models(t.Context())
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if len(models) != 3 {
+		t.Fatalf("expected three models, got %v", models)
+	}
+
+	for index, want := range [][]agent.Modality{
+		{agent.TextModality, agent.ImageModality, agent.PDFModality},
+		{agent.TextModality},
+		nil,
+	} {
+		if !slices.Equal(models[index].InputModalities, want) {
+			t.Errorf("%s: got input modalities %v, want %v", models[index].ID, models[index].InputModalities, want)
+		}
+	}
+}
+
 func TestWhichModelsAreTakenToThinkAdaptively(t *testing.T) {
 	for id, want := range map[string]bool{
 		"claude-opus-5":              true,
@@ -1176,6 +1212,46 @@ func TestAnImageReturnedByAToolIsSentForTheModelToInspect(t *testing.T) {
 	if blocks[2].Type != "image" || blocks[2].Source.Type != "base64" ||
 		blocks[2].Source.MediaType != "image/png" || blocks[2].Source.Data != "AQID" {
 		t.Errorf("expected the image to be carried as base64, got %+v", blocks[2])
+	}
+}
+
+func TestAPDFReturnedByAToolIsSentAsADocument(t *testing.T) {
+	server, bodies := turns(
+		t,
+		script(
+			[]string{messageStart},
+			toolTurn(0, "toolu_1", "open", `{}`),
+			[]string{stop("tool_use"), messageStop},
+		),
+		script(answer("I have read it.")),
+	)
+
+	openTool := tool.Implement(
+		tool.Definition{Name: "open", Description: "open a PDF", Schema: tool.Schema{}},
+		func(nothing) tool.CallRendering {
+			return tool.CallRendering{Subject: "paper.pdf"}
+		},
+	).Run(func(context.Context, nothing) (tool.ToolCallResult, error) {
+		return tool.ToolCallResult{
+			Output:     "application/pdf, 3B",
+			Attachment: tool.Attachment{Name: "paper.pdf", MediaType: "application/pdf", Data: []byte{1, 2, 3}},
+		}, nil
+	})
+
+	assistant := newAgent(t, server.URL, []tool.Tool{openTool})
+	if _, err := assistant.Send(t.Context(), "read the paper"); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	results := toolResults(t, (*bodies)[1])
+	if len(results) != 1 {
+		t.Fatalf("expected one result, got %v", results)
+	}
+
+	want := `[{"type":"text","text":"application/pdf, 3B"},{"type":"text","text":"PDF attached."},` +
+		`{"type":"document","source":{"type":"base64","media_type":"application/pdf","data":"AQID"}}]`
+	if string(results[0].Content) != want {
+		t.Errorf("expected the PDF as a document block, got %s", results[0].Content)
 	}
 }
 

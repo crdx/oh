@@ -37,6 +37,10 @@ type entry struct {
 
 	IsReasoning bool `json:"reasoning"`
 
+	Modalities struct {
+		Input []string `json:"input"`
+	} `json:"modalities"`
+
 	ReasoningOptions []struct {
 		Type   string   `json:"type"`
 		Values []string `json:"values"`
@@ -117,6 +121,7 @@ func (self entry) model(name string, providerPackage string) agent.Model {
 		IsEffortless:        self.IsReasoning && len(self.getEffortLevels()) == 0,
 		ContextWindowTokens: self.getContextWindowTokens(),
 		MaxOutputTokens:     self.Limit.MaxOutputTokens,
+		InputModalities:     agent.InputModalitiesOf(self.Modalities.Input),
 		Prices:              self.getPrices(),
 		Wire:                self.getWire(providerPackage),
 	}

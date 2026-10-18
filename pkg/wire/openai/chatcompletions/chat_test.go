@@ -692,3 +692,92 @@ func TestALongStreamIsGatheredWithoutCopyingEverythingBeforeEachDelta(t *testing
 		t.Errorf("expected gathering %d deltas to allocate under %d bytes, allocated %d", 3*deltas, allocationCeiling, allocated)
 	}
 }
+
+func TestAPDFReturnedByAToolFollowsItAsAFilePart(t *testing.T) {
+	var bodies []string
+	server := scriptedServer(t, &bodies,
+		`{"choices":[{"delta":{"content":"read"}}]}`, "[DONE]")
+
+	client := newClient(t, server.URL)
+	client.AddToolResults([]agent.ToolCallResult{{
+		ID:         "call-1",
+		Output:     "application/pdf, 3B",
+		Attachment: tool.Attachment{Name: "paper.pdf", MediaType: "application/pdf", Data: []byte{1, 2, 3}},
+	}})
+
+	if _, err := client.Send(t.Context(), func(agent.Output) bool { return true }); err != nil {
+		t.Fatal(err)
+	}
+
+	want := `{"role":"user","content":[{"type":"text","text":"PDF attached."},` +
+		`{"type":"file","file":{"filename":"paper.pdf","file_data":"data:application/pdf;base64,AQID"}}]}`
+	if !strings.Contains(bodies[0], want) {
+		t.Errorf("expected the PDF to follow its result as a file part, got %s", bodies[0])
+	}
+}
+
+func TestAudioAndVideoReturnedByAToolFollowItInTheirOwnParts(t *testing.T) {
+	var bodies []string
+	server := scriptedServer(t, &bodies,
+		`{"choices":[{"delta":{"content":"heard"}}]}`, "[DONE]")
+
+	client := newClient(t, server.URL)
+	client.AddToolResults([]agent.ToolCallResult{
+		{ID: "call-1", Output: "audio/mp3, 3B", Attachment: tool.Attachment{Name: "talk.mp3", MediaType: "audio/mp3", Data: []byte{1, 2, 3}}},
+		{ID: "call-2", Output: "video/mp4, 3B", Attachment: tool.Attachment{Name: "clip.mp4", MediaType: "video/mp4", Data: []byte{4, 5, 6}}},
+		{ID: "call-3", Output: "audio/flac, 3B", Attachment: tool.Attachment{Name: "song.flac", MediaType: "audio/flac", Data: []byte{7, 8, 9}}},
+	})
+
+	if _, err := client.Send(t.Context(), func(agent.Output) bool { return true }); err != nil {
+		t.Fatal(err)
+	}
+
+	want := `{"role":"user","content":[{"type":"text","text":"Audio attached."},` +
+		`{"type":"input_audio","input_audio":{"data":"AQID","format":"mp3"}},` +
+		`{"type":"text","text":"Video attached."},` +
+		`{"type":"video_url","video_url":{"url":"data:video/mp4;base64,BAUG"}}]}`
+	if !strings.Contains(bodies[0], want) {
+		t.Errorf("expected the audio and video in their own parts, and no FLAC, got %s", bodies[0])
+	}
+}
+
+func TestARequestRefusedOverAnAttachmentIsSentAgainWithoutIt(t *testing.T) {
+	var bodies []string
+	server := httptest.NewServer(http.HandlerFunc(
+		func(writer http.ResponseWriter, request *http.Request) {
+			body, _ := io.ReadAll(request.Body)
+			bodies = append(bodies, string(body))
+			if strings.Contains(string(body), `"file_data"`) {
+				writer.Header().Set("Content-Type", "application/json")
+				writer.WriteHeader(http.StatusBadRequest)
+				_, _ = fmt.Fprint(writer, `{"error":{"message":"PDF has too many pages"}}`)
+				return
+			}
+
+			writer.Header().Set("Content-Type", "text/event-stream")
+			_, _ = fmt.Fprint(writer, "data: {\"choices\":[{\"delta\":{\"content\":\"too long\"}}]}\n\ndata: [DONE]\n\n")
+		},
+	))
+	t.Cleanup(server.Close)
+
+	client := newClient(t, server.URL)
+	client.AddToolResults([]agent.ToolCallResult{{
+		ID:         "call-1",
+		Output:     "application/pdf, 3B",
+		Attachment: tool.Attachment{Name: "book.pdf", MediaType: "application/pdf", Data: []byte{1, 2, 3}},
+	}})
+
+	if _, err := client.Send(t.Context(), func(agent.Output) bool { return true }); err != nil {
+		t.Fatalf("expected the request to succeed without the PDF, got %v", err)
+	}
+
+	if len(bodies) != 2 {
+		t.Fatalf("expected the refused request and one without the PDF, got %d requests", len(bodies))
+	}
+	if !strings.Contains(bodies[1], "The endpoint refused the request carrying the PDF attached here (HTTP 400: PDF has too many pages)") {
+		t.Errorf("expected the model to be told why the PDF was left out, got %s", bodies[1])
+	}
+	if stored := string(client.Dump()[1]); !strings.Contains(stored, `"file_data"`) {
+		t.Errorf("expected the stored history to keep the PDF, got %s", stored)
+	}
+}

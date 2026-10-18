@@ -62,6 +62,28 @@ func TestModelsComeFromTheCodexCatalogue(t *testing.T) {
 	}
 }
 
+func TestTheCodexCatalogueSaysWhichInputsAModelTakes(t *testing.T) {
+	models, _ := listModels(t, `{"models":[
+		{"slug":"sighted","display_name":"Sighted","visibility":"list","input_modalities":["text","image"]},
+		{"slug":"textual","display_name":"Textual","visibility":"list","input_modalities":["text"]},
+		{"slug":"unsaid","display_name":"Unsaid","visibility":"list"}
+	]}`)
+
+	if len(models) != 3 {
+		t.Fatalf("got models %+v", models)
+	}
+
+	for index, want := range [][]agent.Modality{
+		{agent.TextModality, agent.ImageModality},
+		{agent.TextModality},
+		nil,
+	} {
+		if !slices.Equal(models[index].InputModalities, want) {
+			t.Errorf("%s: got input modalities %v, want %v", models[index].ID, models[index].InputModalities, want)
+		}
+	}
+}
+
 func TestTheCodexDelegationModeIsNotOfferedAsAnEffort(t *testing.T) {
 	models, _ := listModels(t, `{"models":[
 		{"slug":"first","display_name":"First","visibility":"list",
@@ -102,7 +124,7 @@ func TestModelsLeavesUnlistedCapabilitiesUnknown(t *testing.T) {
 		t.Fatalf("got models %+v", models)
 	}
 
-	if models[0].EffortLevels != nil || models[0].ContextWindowTokens != 0 {
+	if models[0].EffortLevels != nil || models[0].ContextWindowTokens != 0 || models[0].InputModalities != nil {
 		t.Errorf("the listing claimed capabilities it did not report: %+v", models)
 	}
 }

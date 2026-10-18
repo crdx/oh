@@ -13,12 +13,17 @@ import (
 )
 
 func Rummage(root *file.Root, snapshots *file.Snapshots) []tool.Tool {
-	return RummageWithRunner(root, snapshots, sandbox.DirectArgv())
+	return RummageWithRunner(root, snapshots, sandbox.DirectArgv(), read.DefaultAttachable)
 }
 
-func RummageWithRunner(root *file.Root, snapshots *file.Snapshots, runner sandbox.ArgvRunner) []tool.Tool {
+func RummageWithRunner(
+	root *file.Root,
+	snapshots *file.Snapshots,
+	runner sandbox.ArgvRunner,
+	attachable read.Attachable,
+) []tool.Tool {
 	return []tool.Tool{
-		read.New(root, snapshots),
+		read.NewAccepting(root, snapshots, attachable),
 		ls.New(root),
 		find.New(root),
 		grep.NewWithRunner(root, snapshots, runner),

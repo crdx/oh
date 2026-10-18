@@ -1,0 +1,33 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `gemini-9-pro`
+- **Effort:** `high`
+- **Provider:** `opencode-go`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwsngl · +0s
+
+## User · +0s
+
+listen to the recording
+
+## Tool calls · +0s
+
+```
+recording: recording [ok, 28B, fc-1]
+```
+
+## Assistant · +0s
+
+The recording is a short talk.
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+Carrying on.

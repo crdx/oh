@@ -14,6 +14,8 @@ const (
 
 var simulatedEfforts = []string{"none", "minimal", "low", "medium", "high", "xhigh", "max"}
 
+var simulatedInputs = []string{"text", "image", "pdf"}
+
 var simulatedPrices = agent.TokenPrices{
 	Input:      3,
 	Output:     15,
@@ -30,6 +32,7 @@ func OfferedModel(name string) agent.Model {
 		EffortLevels:        simulatedEfforts,
 		ContextWindowTokens: simulatedContext,
 		MaxOutputTokens:     simulatedOutput,
+		InputModalities:     agent.InputModalitiesOf(simulatedInputs),
 		Prices:              &prices,
 	}
 }
@@ -46,7 +49,9 @@ type listedModel struct {
 	MaxTokens      int    `json:"max_tokens"`
 
 	Capabilities struct {
-		Effort effortCapability `json:"effort"`
+		Effort     effortCapability `json:"effort"`
+		ImageInput levelSupported   `json:"image_input"`
+		PDFInput   levelSupported   `json:"pdf_input"`
 	} `json:"capabilities"`
 }
 
@@ -80,6 +85,8 @@ func (self *Endpoint) serveListing(writer http.ResponseWriter) {
 		XHigh:       levelSupported{IsSupported: true},
 		Max:         levelSupported{IsSupported: true},
 	}
+	offeredModel.Capabilities.ImageInput = levelSupported{IsSupported: true}
+	offeredModel.Capabilities.PDFInput = levelSupported{IsSupported: true}
 
 	respond(writer, listing{Data: []listedModel{offeredModel}})
 }
@@ -94,6 +101,7 @@ type codexListedModel struct {
 	Visibility    string                `json:"visibility"`
 	ContextWindow int                   `json:"context_window"`
 	Levels        []codexReasoningLevel `json:"supported_reasoning_levels"`
+	Modalities    []string              `json:"input_modalities"`
 }
 
 type codexReasoningLevel struct {
@@ -119,6 +127,7 @@ func (self *Endpoint) serveCodexListing(writer http.ResponseWriter) {
 				Visibility:    "list",
 				ContextWindow: simulatedContext,
 				Levels:        levels,
+				Modalities:    []string{"text", "image"},
 			},
 			{
 				Slug:          self.scenario.Model + "-unlisted",
@@ -126,6 +135,7 @@ func (self *Endpoint) serveCodexListing(writer http.ResponseWriter) {
 				Visibility:    "none",
 				ContextWindow: simulatedContext,
 				Levels:        levels,
+				Modalities:    []string{"text", "image"},
 			},
 		},
 	})
@@ -146,7 +156,7 @@ type ollamaListedModel struct {
 func (self *Endpoint) serveOllamaListing(writer http.ResponseWriter) {
 	offeredModel := ollamaListedModel{
 		Name:         self.scenario.Model,
-		Capabilities: []string{"completion", "thinking", "tools"},
+		Capabilities: []string{"completion", "thinking", "tools", "vision"},
 	}
 	offeredModel.Details.ContextWindowTokens = simulatedContext
 

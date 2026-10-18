@@ -24,6 +24,7 @@ const (
 	nameColumn       = 28
 	effortColumn     = 9
 	contextColumn    = 7
+	mediaColumn      = 5
 	inputColumn      = 9
 	outputColumn     = 9
 	identifierColumn = 28
@@ -31,7 +32,7 @@ const (
 
 const (
 	costGaps            = 6
-	rateGaps            = 7
+	rateGaps            = 8
 	shortenedIdentifier = 18
 )
 
@@ -41,7 +42,8 @@ const (
 	costColumn       = 10
 	costRoom         = markWidth + providerColumn + nameColumn + effortColumn +
 		contextColumn + costColumn + shortenedIdentifier + costGaps*table.Gap
-	rateRoom = markWidth + providerColumn + nameColumn + effortColumn + contextColumn +
+	mediaRoom = costRoom + mediaColumn + table.Gap
+	rateRoom  = markWidth + providerColumn + nameColumn + effortColumn + contextColumn + mediaColumn +
 		costColumn + inputColumn + outputColumn + identifierColumn + rateGaps*table.Gap
 )
 
@@ -65,14 +67,16 @@ func (self Effort) String() string {
 }
 
 type Model struct {
-	Provider            string
-	ProviderID          string
-	Name                string
-	ID                  string
-	EffortLevels        []Effort
-	Effort              Effort
-	ContextWindowTokens int
-	Prices              *agent.TokenPrices
+	Provider             string
+	ProviderID           string
+	Name                 string
+	ID                   string
+	EffortLevels         []Effort
+	Effort               Effort
+	ContextWindowTokens  int
+	InputModalities      []agent.Modality
+	AttachableModalities []agent.Modality
+	Prices               *agent.TokenPrices
 }
 
 func Choose(
@@ -234,6 +238,7 @@ func modelTable(order sortOrder) *table.Table {
 		table.Column{Title: "Model", Width: nameColumn},
 		table.Column{Title: "Effort", Width: effortColumn},
 		table.Column{Title: "Context", Width: contextColumn, Align: table.Right},
+		table.Column{Title: "Media", Width: mediaColumn, MinRoom: mediaRoom},
 		table.Column{Title: title, Width: costColumn, Align: table.Right, MinRoom: costRoom},
 		table.Column{Title: "Input", Width: inputColumn, Align: table.Right, MinRoom: rateRoom},
 		table.Column{Title: "Output", Width: outputColumn, Align: table.Right, MinRoom: rateRoom},
@@ -247,6 +252,7 @@ func modelRow(model *Model, currency money.Currency, isChosen bool, room int) st
 		model.Name,
 		strutil.OrDash(model.Effort.String()),
 		contextWindow(model.ContextWindowTokens),
+		mediaFlags(model.InputModalities, model.AttachableModalities),
 		estimatedCost(model.Prices, currency),
 		price(model.Prices, currency, inputRate),
 		price(model.Prices, currency, outputRate),
@@ -262,6 +268,38 @@ func contextWindow(tokens int) string {
 	}
 
 	return util.FormatWholeThousands(tokens)
+}
+
+type mediaFlag struct {
+	Modality agent.Modality
+	Letter   string
+	Style    style.Style
+}
+
+var mediaFlagOrder = []mediaFlag{
+	{Modality: agent.ImageModality, Letter: "I", Style: style.MediaImage},
+	{Modality: agent.AudioModality, Letter: "A", Style: style.MediaAudio},
+	{Modality: agent.VideoModality, Letter: "V", Style: style.MediaVideo},
+	{Modality: agent.PDFModality, Letter: "P", Style: style.MediaPDF},
+}
+
+func mediaFlags(inputModalities []agent.Modality, attachableModalities []agent.Modality) string {
+	if len(inputModalities) == 0 {
+		return style.Subtle(unknownQuantity)
+	}
+
+	var flags strings.Builder
+	for _, flag := range mediaFlagOrder {
+		switch {
+		case !slices.Contains(inputModalities, flag.Modality):
+		case slices.Contains(attachableModalities, flag.Modality):
+			flags.WriteString(flag.Style(flag.Letter))
+		default:
+			flags.WriteString(style.Subtle(flag.Letter))
+		}
+	}
+
+	return flags.String()
 }
 
 func estimatedCost(prices *agent.TokenPrices, currency money.Currency) string {

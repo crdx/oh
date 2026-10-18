@@ -1,0 +1,20 @@
+{"kind":"head","version":22,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant.","tools":["paper","snapshot"],"tool_definitions":[{"name":"paper","description":"A deterministic scenario tool.","revision":"1"},{"name":"snapshot","description":"A deterministic scenario tool.","revision":"1"}]}}
+{"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
+{"kind":"event","event":{"kind":"user_message","text":"read the paper and show me the picture"}}
+{"kind":"event","event":{"render":"paper","kind":"tool_call_request","id":"toolu_1","name":"paper","arguments":"{}"}}
+{"kind":"event","event":{"render":"snapshot","kind":"tool_call_request","id":"toolu_2","name":"snapshot","arguments":"{}"}}
+{"kind":"event","event":{"kind":"state_change","id":"toolu_1","name":"paper-count","state":1}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"application/pdf, 29B","id":"toolu_1","name":"paper","status":"success","stats":{"kind":"attachment","bytes":29}}}
+{"kind":"event","event":{"kind":"state_change","id":"toolu_2","name":"snapshot-count","state":1}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"snapshot.png","id":"toolu_2","name":"snapshot","status":"success","stats":{"kind":"image","bytes":8973,"estimated_tokens":475}}}
+{"kind":"event","event":{"kind":"model_message","text":"The paper describes the picture."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"read the paper and show me the picture"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"paper","input":{}},{"type":"tool_use","id":"toolu_2","name":"snapshot","input":{}}]}}
+{"kind":"item","payload":{"content":[{"content":[{"text":"application/pdf, 29B","type":"text"},{"text":"PDF attached.","type":"text"},{"source":{"data":"c2NlbmFyaW8gYXR0YWNobWVudCBwYXBlci5wZGY=","media_type":"application/pdf","type":"base64"},"type":"document"}],"tool_use_id":"toolu_1","type":"tool_result"},{"content":[{"text":"snapshot.png","type":"text"},{"text":"Image attached.","type":"text"},{"source":{"data":"[image/png 800x600]","media_type":"image/png","type":"base64"},"type":"image"}],"tool_use_id":"toolu_2","type":"tool_result"}],"role":"user"}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The paper describes the picture."}]}}
+{"kind":"turn_completion","turn":{}}
+{"kind":"event","event":{"kind":"user_message","text":"what does the paper say"}}
+{"kind":"event","event":{"kind":"model_message","text":"It says the field is blue."}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"what does the paper say"}]}}
+{"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"It says the field is blue."}]}}
+{"kind":"turn_completion","turn":{}}

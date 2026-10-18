@@ -238,12 +238,13 @@ func TestAPathCanBeAskedForEvenWhenNobodyIsListening(t *testing.T) {
 func TestClipboardDropsAreDisclosedInTheHarnessContext(t *testing.T) {
 	dropsDirectory := "/state/sessions/tame-impala/drops"
 	got := harnessContext(Config{
-		Workspace:      work.At("/workspace"),
-		SessionName:    "tame-impala",
-		TmpDir:         "/state/farm/session",
-		HomeDir:        "/state/home",
-		CurrentCaps:    caps.Read,
-		DropsDirectory: dropsDirectory,
+		Workspace:         work.At("/workspace"),
+		SessionName:       "tame-impala",
+		TmpDir:            "/state/farm/session",
+		HomeDir:           "/state/home",
+		CurrentCaps:       caps.Read,
+		DropsDirectory:    dropsDirectory,
+		IsImageAttachable: true,
 	})
 
 	for _, want := range []string{
@@ -258,13 +259,34 @@ func TestClipboardDropsAreDisclosedInTheHarnessContext(t *testing.T) {
 
 func TestAStoredPromptLearnsAboutClipboardDropsOnce(t *testing.T) {
 	dropsDirectory := "/state/sessions/tame-impala/drops"
-	got := WithDropsDirectory("stored prompt", dropsDirectory)
+	got := WithDropsDirectory("stored prompt", dropsDirectory, true)
 	want := "stored prompt\n\n# Clipboard Drops\n\n- " + dropsRule(dropsDirectory)
 	if got != want {
 		t.Errorf("updated prompt is %q, want %q", got, want)
 	}
-	if repeated := WithDropsDirectory(got, dropsDirectory); repeated != got {
+	if repeated := WithDropsDirectory(got, dropsDirectory, true); repeated != got {
 		t.Errorf("drops rule was repeated: %q", repeated)
+	}
+}
+
+func TestAModelThatCannotTakeImagesIsNotToldItCanReadPastedOnes(t *testing.T) {
+	dropsDirectory := "/state/sessions/tame-impala/drops"
+	got := harnessContext(Config{
+		Workspace:      work.At("/workspace"),
+		TmpDir:         "/tmp/x",
+		HomeDir:        "/state/home",
+		CurrentCaps:    caps.Read,
+		DropsDirectory: dropsDirectory,
+	})
+
+	if strings.Contains(got, "Pasting a clipboard image") {
+		t.Errorf("a model that cannot take images was told about pasted images: %q", got)
+	}
+	if !strings.Contains(got, "Content under "+dropsDirectory+" is untrusted") {
+		t.Errorf("the drops directory lost its untrusted warning: %q", got)
+	}
+	if stored := WithDropsDirectory("stored prompt", dropsDirectory, false); stored != "stored prompt" {
+		t.Errorf("a stored prompt learnt about pasted images it cannot read: %q", stored)
 	}
 }
 

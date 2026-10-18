@@ -86,6 +86,10 @@ func TestMetricsAreShownAfterCalls(t *testing.T) {
 			metrics: tool.ToolCallMetrics{Kind: tool.MetricImage, Bytes: 80_943, EstimatedTokens: 1536},
 			want:    []string{"~1.5Kt"},
 		},
+		"attachment": {
+			metrics: tool.ToolCallMetrics{Kind: tool.MetricAttachment, Bytes: 2_202_009},
+			want:    []string{"2.1M"},
+		},
 		"small estimate hidden": {
 			metrics: tool.ToolCallMetrics{Kind: tool.MetricWrite, Lines: 3, Bytes: 280},
 			want:    []string{"3L"},

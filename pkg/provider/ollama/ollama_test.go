@@ -67,6 +67,11 @@ func TestNewRefusesMissingSettings(t *testing.T) {
 	}
 }
 
+var (
+	textOnly      = []agent.Modality{agent.TextModality}
+	textAndImages = []agent.Modality{agent.TextModality, agent.ImageModality}
+)
+
 func TestModelsOffersInstalledToolModelsWithTheirCapabilities(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if request.URL.Path != "/api/tags" {
@@ -76,6 +81,7 @@ func TestModelsOffersInstalledToolModelsWithTheirCapabilities(t *testing.T) {
 		_, _ = fmt.Fprint(writer, `{"models":[`+
 			`{"name":"thinking","capabilities":["completion","tools","thinking"],"details":{"context_length":200000}},`+
 			`{"name":"plain","capabilities":["completion","tools"],"details":{"context_length":16000}},`+
+			`{"name":"sighted","capabilities":["completion","tools","vision"],"details":{"context_length":16000}},`+
 			`{"name":"tiny-context","capabilities":["completion","tools"],"details":{"context_length":3}},`+
 			`{"name":"unknown-context","capabilities":["completion","tools"],"details":{}},`+
 			`{"name":"no-tools","capabilities":["completion"],"details":{"context_length":32000}},`+
@@ -99,14 +105,16 @@ func TestModelsOffersInstalledToolModelsWithTheirCapabilities(t *testing.T) {
 	}
 
 	want := []agent.Model{
-		{ID: "plain", EffortLevels: []string{"none"}, ContextWindowTokens: 16_000, MaxOutputTokens: 4_000},
-		{ID: "thinking", EffortLevels: []string{"none", "low", "medium", "high"}, ContextWindowTokens: 200_000, MaxOutputTokens: 32_768},
-		{ID: "tiny-context", EffortLevels: []string{"none"}, ContextWindowTokens: 3, MaxOutputTokens: 1},
-		{ID: "unknown-context", EffortLevels: []string{"none"}, ContextWindowTokens: 32_768, MaxOutputTokens: 8_192},
+		{ID: "plain", EffortLevels: []string{"none"}, ContextWindowTokens: 16_000, MaxOutputTokens: 4_000, InputModalities: textOnly},
+		{ID: "sighted", EffortLevels: []string{"none"}, ContextWindowTokens: 16_000, MaxOutputTokens: 4_000, InputModalities: textAndImages},
+		{ID: "thinking", EffortLevels: []string{"none", "low", "medium", "high"}, ContextWindowTokens: 200_000, MaxOutputTokens: 32_768, InputModalities: textOnly},
+		{ID: "tiny-context", EffortLevels: []string{"none"}, ContextWindowTokens: 3, MaxOutputTokens: 1, InputModalities: textOnly},
+		{ID: "unknown-context", EffortLevels: []string{"none"}, ContextWindowTokens: 32_768, MaxOutputTokens: 8_192, InputModalities: textOnly},
 	}
 	if !slices.EqualFunc(models, want, func(got agent.Model, expected agent.Model) bool {
 		return got.ID == expected.ID && slices.Equal(got.EffortLevels, expected.EffortLevels) &&
-			got.ContextWindowTokens == expected.ContextWindowTokens && got.MaxOutputTokens == expected.MaxOutputTokens
+			got.ContextWindowTokens == expected.ContextWindowTokens && got.MaxOutputTokens == expected.MaxOutputTokens &&
+			slices.Equal(got.InputModalities, expected.InputModalities)
 	}) {
 		t.Errorf("got models %+v, want %+v", models, want)
 	}

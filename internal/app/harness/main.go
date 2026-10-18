@@ -1135,32 +1135,37 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		}
 	} else {
 		systemPrompt, contextFiles, err = prompt.Load(prompt.Config{
-			GlobalPath:     location.GetGlobalContextPath(),
-			Workspace:      workspace,
-			SessionName:    log.Name(),
-			SessionsDir:    sessionsDir,
-			SessionDir:     filepath.Join(sessionsDir, log.Name()),
-			ConfigFile:     location.GetConfigFile(),
-			TmpDir:         tmpDir,
-			HomeDir:        homeDir,
-			CurrentCaps:    args.Caps,
-			ExtraPaths:     settings.Sandbox,
-			DropsDirectory: dropKeeper.GetDirectory(),
-			Skills:         availableSkills,
-			OfferedTools:   args.Tools,
-			Conditions:     currentConditions,
-			JobsGranted:    jobManager != nil,
-			NetworkGranted: args.Caps.Has(caps.Network),
-			ToolGroups:     activeToolGroups,
-			GroupStatus:    mode.Groups(),
-			Yolo:           args.Yolo,
-			Notes:          agent.NoteFormatOf(client.Client),
+			GlobalPath:        location.GetGlobalContextPath(),
+			Workspace:         workspace,
+			SessionName:       log.Name(),
+			SessionsDir:       sessionsDir,
+			SessionDir:        filepath.Join(sessionsDir, log.Name()),
+			ConfigFile:        location.GetConfigFile(),
+			TmpDir:            tmpDir,
+			HomeDir:           homeDir,
+			CurrentCaps:       args.Caps,
+			ExtraPaths:        settings.Sandbox,
+			DropsDirectory:    dropKeeper.GetDirectory(),
+			IsImageAttachable: slices.Contains(choice.AttachableModalities(), agent.ImageModality),
+			Skills:            availableSkills,
+			OfferedTools:      args.Tools,
+			Conditions:        currentConditions,
+			JobsGranted:       jobManager != nil,
+			NetworkGranted:    args.Caps.Has(caps.Network),
+			ToolGroups:        activeToolGroups,
+			GroupStatus:       mode.Groups(),
+			Yolo:              args.Yolo,
+			Notes:             agent.NoteFormatOf(client.Client),
 		})
 		if err != nil {
 			return "", err
 		}
 	}
-	systemPrompt = prompt.WithDropsDirectory(systemPrompt, dropKeeper.GetDirectory())
+	systemPrompt = prompt.WithDropsDirectory(
+		systemPrompt,
+		dropKeeper.GetDirectory(),
+		slices.Contains(choice.AttachableModalities(), agent.ImageModality),
+	)
 	if resumedSession == nil {
 		fixedContextSources = identifyStaticContextSources(systemPrompt, contextFiles, availableSkills)
 	}
@@ -1224,6 +1229,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		parentFiles:        files,
 		parentCaps:         mode.Current,
 		userHome:           userHome(),
+		experimental:       experimentalToggles,
 		parentWritable: func() []string {
 			return slices.Concat([]string{workspace.GetDir(), homeDir, tmpDir}, pathAccess.GetPaths().Write)
 		},
@@ -1237,7 +1243,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	}
 
 	snapshots := file.NewSnapshots()
-	toolboxTools := toolbox.RummageWithRunner(files, snapshots, grepRunner(args.Yolo))
+	toolboxTools := toolbox.RummageWithRunner(files, snapshots, grepRunner(args.Yolo), attachableFor(choice, experimentalToggles))
 	if childManager != nil {
 		toolboxTools = append(toolboxTools, subagent.New(childManager, func() bool { return mode.Current().Has(caps.Subagents) }))
 	}

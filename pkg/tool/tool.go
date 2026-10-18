@@ -76,11 +76,12 @@ func (self CallRendering) HasArguments() bool {
 }
 
 type ToolCallResult struct {
-	Output    string
-	Image     Image
-	Metrics   ToolCallMetrics
-	State     json.RawMessage
-	FileLines FileLines
+	Output     string
+	Image      Image
+	Attachment Attachment
+	Metrics    ToolCallMetrics
+	State      json.RawMessage
+	FileLines  FileLines
 }
 
 type FileLines struct {
@@ -102,14 +103,15 @@ type ToolCallMetrics struct {
 }
 
 const (
-	MetricOutput    = "output"
-	MetricResources = "resources"
-	MetricRead      = "read"
-	MetricList      = "list"
-	MetricImage     = "image"
-	MetricWrite     = "write"
-	MetricDiff      = "diff"
-	MetricSearch    = "search"
+	MetricOutput     = "output"
+	MetricResources  = "resources"
+	MetricRead       = "read"
+	MetricList       = "list"
+	MetricImage      = "image"
+	MetricAttachment = "attachment"
+	MetricWrite      = "write"
+	MetricDiff       = "diff"
+	MetricSearch     = "search"
 )
 
 func GetMetrics(output string) ToolCallMetrics {

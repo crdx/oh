@@ -14,6 +14,7 @@ import (
 	"crdx.org/oh/internal/app/backend"
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/config"
+	"crdx.org/oh/internal/app/experimental"
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/pictures"
@@ -50,6 +51,7 @@ type childOptions struct {
 	parentWritable     func() []string
 	parentCaps         func() caps.Set
 	userHome           string
+	experimental       *experimental.Toggles
 }
 
 func userHome() string {
@@ -165,7 +167,12 @@ func newChildFactory(options childOptions) subagents.Factory {
 			closeChild()
 			return subagents.Worker{}, err
 		}
-		tools := toolbox.RummageWithRunner(files, file.NewSnapshots(), grepRunner(false))
+		tools := toolbox.RummageWithRunner(
+			files,
+			file.NewSnapshots(),
+			grepRunner(false),
+			attachableFor(child.Choice, options.experimental),
+		)
 		tools = append(tools, shell.NewForSubagent(
 			workspace.GetDir(), home, child.Scratch, shell.Parent{Scratch: options.scratchParent, Writable: options.parentWritable},
 			access, mode, files, false,
