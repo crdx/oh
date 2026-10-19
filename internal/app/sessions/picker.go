@@ -58,7 +58,7 @@ func Choose(directory string, workspace *work.Space, currency money.Currency, te
 				return err
 			}
 
-			return os.RemoveAll(location.GetTmpDir(storedSession.Name))
+			return diskutil.RemoveAll(location.GetTmpDir(storedSession.Name))
 		},
 		Read: func(storedSession *picker.Session, room int) ([]string, error) {
 			return preview.Read(directory, storedSession.Name, work.At(storedSession.WorkspaceDir), currency, room)

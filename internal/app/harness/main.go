@@ -21,6 +21,7 @@ import (
 	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/internal/sandbox/keeper"
 	"crdx.org/oh/internal/util"
+	"crdx.org/oh/internal/util/diskutil"
 	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
@@ -1066,7 +1067,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 
 	defer func() {
 		if !log.IsPersisted() {
-			_ = os.RemoveAll(tmpDir)
+			_ = diskutil.RemoveAll(tmpDir)
 		}
 	}()
 
