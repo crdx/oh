@@ -17,7 +17,7 @@ ask two subagents and read the first
 ## Tool calls · +0s
 
 ```
-subagent start: 2 subagents · codex/gpt-5.6-sol@medium, codex/gpt-5.6-sol@medium [ok, 1 line, 54B, toolu_1]
+subagent start: 2 subagents · 2× codex/gpt-5.6-sol@medium [ok, 1 line, 54B, toolu_1]
 ```
 
 ## Subagent started · tame-adder · +0s

@@ -2,7 +2,7 @@
  split the review between two subagents
 
 
-spawn 2 subagents · anthropic/claude-opus-5@medium, anthropic/claude-opus-5@medium
+spawn 2 subagents · 2× anthropic/claude-opus-5@medium
 
 Two subagents are working on it.
 

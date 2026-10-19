@@ -2,7 +2,7 @@
  split the review between two subagents
 
 
-spawn 2 subagents · codex/gpt-5.6-sol@medium, codex/gpt-5.6-sol@medium
+spawn 2 subagents · 2× codex/gpt-5.6-sol@medium
 
 Two subagents are working on it.
 

@@ -10,6 +10,7 @@
 - List ignored models with `-lI` and `--ctl models -I`
 - Some models like to name subagents, so let 'em
 - Remove read-only Go modcaches when deleting a session
+- Count repeated selections on subagent spawn rows
 
 ## [0.19.0] - 2026-10-18
 

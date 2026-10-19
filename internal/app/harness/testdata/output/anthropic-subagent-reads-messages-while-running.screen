@@ -2,7 +2,7 @@
  start two subagents and steer them while they run
 
 
-spawn 2 subagents · anthropic/claude-opus-5@medium, anthropic/claude-opus-5@medium
+spawn 2 subagents · 2× anthropic/claude-opus-5@medium
 send tame-adder (Finding the largest workspace file)
 send tame-alpaca (Finding where the config loads)
 

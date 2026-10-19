@@ -187,16 +187,33 @@ func startSubject(args Args) string {
 	if len(args.Subagents) == 0 {
 		return subject
 	}
-	var selections []string
-	for _, task := range args.Subagents {
-		if task.Model != "" {
-			selections = append(selections, task.Model)
-		}
-	}
-	if len(selections) > 0 {
+	if selections := groupedSelections(args.Subagents); len(selections) > 0 {
 		subject += " · " + strings.Join(selections, ", ")
 	}
 	return subject
+}
+
+func groupedSelections(tasks []Task) []string {
+	var models []string
+	counts := map[string]int{}
+	for _, task := range tasks {
+		if task.Model == "" {
+			continue
+		}
+		if counts[task.Model] == 0 {
+			models = append(models, task.Model)
+		}
+		counts[task.Model]++
+	}
+	selections := make([]string, 0, len(models))
+	for _, model := range models {
+		if counts[model] > 1 {
+			selections = append(selections, fmt.Sprintf("%d× %s", counts[model], model))
+			continue
+		}
+		selections = append(selections, model)
+	}
+	return selections
 }
 
 func startIntent(args Args) string {

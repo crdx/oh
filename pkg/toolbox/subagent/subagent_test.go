@@ -281,7 +281,7 @@ func TestAStartRowShowsSelectionsApartFromItsIntents(t *testing.T) {
 	}{
 		{
 			`{"action":"start","subagents":[{"model":"anthropic/claude-opus-5","prompt":"x","intent":"reading the readme"},{"model":"anthropic/claude-opus-5","prompt":"y","intent":"Finding the parser"}]}`,
-			"2 subagents · anthropic/claude-opus-5, anthropic/claude-opus-5",
+			"2 subagents · 2× anthropic/claude-opus-5",
 			"Reading the readme; Finding the parser",
 		},
 		{`{"action":"start","subagents":[{"model":"anthropic/claude-opus-5","prompt":"x","intent":"Reading the readme"}]}`, "subagent · anthropic/claude-opus-5", "Reading the readme"},
@@ -338,5 +338,21 @@ func TestABatchedStartShowsEveryChosenSelection(t *testing.T) {
 	}
 	if rendering.Intent != "Reviewing the parser; Checking the tests" {
 		t.Errorf("batch intended %q", rendering.Intent)
+	}
+}
+
+func TestABatchedStartCountsRepeatedSelectionsInFirstChosenOrder(t *testing.T) {
+	rendering := Describe(Args{Action: Start, Subagents: []Task{
+		{Model: "opencode-go/beam-free@high"},
+		{Model: "opencode-go/longcat-2.5-preview-free"},
+		{Model: "opencode-go/beam-free@xhigh"},
+		{Model: "opencode-go/longcat-2.5-preview-free"},
+		{Model: "opencode-go/beam-free@high"},
+		{},
+		{Model: "opencode-go/longcat-2.5-preview-free"},
+	}})
+	want := "7 subagents · 2× opencode-go/beam-free@high, 3× opencode-go/longcat-2.5-preview-free, opencode-go/beam-free@xhigh"
+	if rendering.Subject != want {
+		t.Errorf("batch rendered %q, want %q", rendering.Subject, want)
 	}
 }

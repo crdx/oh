@@ -2,7 +2,7 @@
 \e[48;2;52;53;65m start three subagents, then tell every running one to name the format                              \e[0m\r
 \e[48;2;52;53;65m                                                                                                    \e[0m\r
 \r
-\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80m3 subagents · anthropic/claude-opus-5@medium, anthropic/claude-opus-5@medium, anthropic/claud…\e[0m\r
+\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\\e[38;2;207;173;0mspawn\e[0m\e]8;;\e\\ \e[38;2;192;128;80m3 subagents · 3× anthropic/claude-opus-5@medium\e[0m\r
 \r
 \e[48;2;48;58;67m                                                                                                    \e[0m\r
 \e[48;2;48;58;67m 🐍 Subagent tame-adder has finished:                                                               \e[0m\r
