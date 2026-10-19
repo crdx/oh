@@ -460,7 +460,10 @@ type sessionModelRequest struct {
 func chooseSessionModel(request sessionModelRequest) (model.Selection, model.Choice, error) {
 	settings := request.settings
 	configuredModels, err := model.ParseRoundRobin(
-		request.modelChoices, configuredRotation(settings, request.isSimulated), settings.Defaults.ForSelections(),
+		request.modelChoices,
+		request.seenModelsPath,
+		configuredRotation(settings, request.isSimulated),
+		settings.Defaults.ForSelections(),
 	)
 	if err != nil {
 		return model.Selection{}, model.Choice{}, fmt.Errorf("%s: %w", settings.Agent.Setting(), err)
@@ -819,6 +822,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	}
 	args, err := inputArgs.Parse(
 		modelChoices,
+		seenModelsPath,
 		settings.Defaults.ForSelections(),
 		configuredToolGroups.CustomFlags(),
 	)

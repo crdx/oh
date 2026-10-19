@@ -78,11 +78,16 @@ func ReserveAvailableRoundRobin(
 	return selectedModel, err
 }
 
-func ParseRoundRobin(choices []Choice, writtenSelections []string, defaults Defaults) ([]Selection, error) {
+func ParseRoundRobin(
+	choices []Choice,
+	seenPath string,
+	writtenSelections []string,
+	defaults Defaults,
+) ([]Selection, error) {
 	selections := make([]Selection, 0, len(writtenSelections))
 
 	for _, writtenSelection := range writtenSelections {
-		selection, err := ParseSelection(choices, writtenSelection, defaults)
+		selection, err := ParseWrittenSelection(choices, seenPath, writtenSelection, defaults)
 		if err != nil {
 			return nil, fmt.Errorf("%q: %w", writtenSelection, err)
 		}

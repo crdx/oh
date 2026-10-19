@@ -155,6 +155,7 @@ func (self Options) StartingFromSession() bool {
 
 func (self Input) Parse(
 	choices []model.Choice,
+	seenModelsPath string,
 	defaults model.Defaults,
 	customGroupFlags ...string,
 ) (Options, error) {
@@ -168,7 +169,7 @@ func (self Input) Parse(
 	}
 
 	if self.Model != "" {
-		selection, err := model.ParseSelection(choices, self.Model, defaults)
+		selection, err := model.ParseWrittenSelection(choices, seenModelsPath, self.Model, defaults)
 		if err != nil {
 			return options, err
 		}

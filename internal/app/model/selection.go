@@ -140,6 +140,35 @@ func ParseSelection(choices []Choice, writtenSelection string, defaults Defaults
 	return Selection{Provider: choice.Provider, Model: choice.ID, Effort: effort, IsFast: isFast}, nil
 }
 
+func ParseWrittenSelection(
+	choices []Choice,
+	seenPath string,
+	writtenSelection string,
+	defaults Defaults,
+) (Selection, error) {
+	modelQuery := writtenModelQuery(writtenSelection)
+	if len(matchingModels(modelQuery, choices, isExactly)) > 0 {
+		return ParseSelection(choices, writtenSelection, defaults)
+	}
+
+	seen, err := seenChoices(seenPath)
+	if err != nil && format.IsOlder(err) {
+		return Selection{}, fmt.Errorf("looking for %s among the models seen before: %w", modelQuery, err)
+	}
+	if seenMatches := matchingModels(modelQuery, seen, isExactly); len(seenMatches) == 1 {
+		return ParseSelection(seenMatches, writtenSelection, defaults)
+	}
+
+	return ParseSelection(choices, writtenSelection, defaults)
+}
+
+func writtenModelQuery(writtenSelection string) string {
+	selectionQuery, _, _ := strings.Cut(writtenSelection, "+")
+	modelQuery, _, _ := strings.Cut(selectionQuery, "@")
+
+	return modelQuery
+}
+
 func ResolveQuery(query string, choices []Choice, defaults Defaults) (Selection, error) {
 	selectionQuery, isFast, err := splitFastMode(query)
 	if err != nil {
@@ -391,8 +420,12 @@ func ResolveEffort(name string) string {
 
 type matcher func(candidate string, query string) bool
 
+func isExactly(candidate string, query string) bool {
+	return candidate == query
+}
+
 var matchTiers = []matcher{
-	func(candidate string, query string) bool { return candidate == query },
+	isExactly,
 	strings.HasPrefix,
 	strings.Contains,
 	holdsInOrder,

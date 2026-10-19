@@ -14,7 +14,7 @@ import (
 func TestRoundRobinSelectionsResolveEveryEntry(t *testing.T) {
 	useCachedModels(t)
 
-	selections, err := ParseRoundRobin(Choices(modelCachePath()), []string{
+	selections, err := ParseRoundRobin(Choices(modelCachePath()), seenModelsPath(), []string{
 		"opencode/deepseek@hi",
 		"anth/opus-5@max",
 	}, Defaults{})
@@ -33,10 +33,42 @@ func TestRoundRobinSelectionsResolveEveryEntry(t *testing.T) {
 	}
 }
 
+func TestRoundRobinSelectionsNameASupersededModelExactly(t *testing.T) {
+	useCachedModels(t)
+
+	if err := recordSeenModels(seenModelsPath(), map[string][]agent.Model{CodexProvider: {
+		{ID: "gpt-5.5-sol", EffortLevels: []string{"low", "medium", "high", "xhigh"}, MaxOutputTokens: 128_000},
+	}}); err != nil {
+		t.Fatal(err)
+	}
+
+	selections, err := ParseRoundRobin(Choices(modelCachePath()), seenModelsPath(), []string{
+		"codex/gpt-5.5-sol@high",
+		"opencode/deepseek@hi",
+	}, Defaults{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	wanted := []string{
+		"codex/gpt-5.5-sol@high",
+		"opencode-go/deepseek-v4-pro@high",
+	}
+	for i, selection := range selections {
+		if selection.String() != wanted[i] {
+			t.Errorf("selection %d is %s, want %s", i, selection, wanted[i])
+		}
+	}
+
+	if _, err := ParseRoundRobin(Choices(modelCachePath()), seenModelsPath(), []string{"gpt-5.5"}, Defaults{}); err == nil {
+		t.Error("expected a superseded model named in part to be refused")
+	}
+}
+
 func TestRoundRobinSelectionsKeepCanonicalDuplicates(t *testing.T) {
 	useCachedModels(t)
 
-	selections, err := ParseRoundRobin(Choices(modelCachePath()), []string{
+	selections, err := ParseRoundRobin(Choices(modelCachePath()), seenModelsPath(), []string{
 		"opencode-go/deepseek-v4-pro@high",
 		"opencode/deepseek@hi",
 	}, Defaults{})
@@ -116,7 +148,7 @@ func TestARotationWithNothingAvailableKeepsItsOrdinaryPosition(t *testing.T) {
 func TestNormalAndFastRoundRobinSelectionsAreDistinct(t *testing.T) {
 	useCachedModels(t)
 
-	selections, err := ParseRoundRobin(Choices(modelCachePath()), []string{"sol@high", "sol@high+fast"}, Defaults{})
+	selections, err := ParseRoundRobin(Choices(modelCachePath()), seenModelsPath(), []string{"sol@high", "sol@high+fast"}, Defaults{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -178,7 +210,7 @@ func TestConcurrentRoundRobinReservationsShareTheStateLock(t *testing.T) {
 func TestRoundRobinSelectionsValidateEntriesThatAreNotFirst(t *testing.T) {
 	useCachedModels(t)
 
-	_, err := ParseRoundRobin(Choices(modelCachePath()), []string{
+	_, err := ParseRoundRobin(Choices(modelCachePath()), seenModelsPath(), []string{
 		"sol@high",
 		"nothing-like-this@high",
 	}, Defaults{})
@@ -216,7 +248,7 @@ func TestARotationTakesTurnsWithAnEffortlessModel(t *testing.T) {
 		},
 	})
 
-	selections, err := ParseRoundRobin(Choices(modelCachePath()), []string{"minimax", "deepseek@max"}, Defaults{})
+	selections, err := ParseRoundRobin(Choices(modelCachePath()), seenModelsPath(), []string{"minimax", "deepseek@max"}, Defaults{})
 	if err != nil {
 		t.Fatal(err)
 	}

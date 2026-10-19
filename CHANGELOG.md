@@ -6,6 +6,7 @@
 
 - Maintain terminal busy status while subagents run
 - Cache tool call renderings
+- Use a superseded model with an exact match
 
 ## [0.19.0] - 2026-10-18
 

@@ -8462,7 +8462,7 @@ func TestForkingAStoredSessionOpensANewOneCarryingItsTranscript(t *testing.T) {
 
 func TestAnEffortWrittenAsAnAliasInTheConfigIsResolved(t *testing.T) {
 	modelCachePath := useRoundRobinModelCache(t)
-	selections, err := model.ParseRoundRobin(model.Choices(modelCachePath), []string{"sol@off"}, model.Defaults{})
+	selections, err := model.ParseRoundRobin(model.Choices(modelCachePath), location.GetSeenModelsPath(), []string{"sol@off"}, model.Defaults{})
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -8517,7 +8517,7 @@ func reopenSessionOptions(t *testing.T) string {
 
 		arguments := append(cli.InheritedOptions(test.currentArguments, transition), transition.Arguments...)
 		os.Args = append([]string{"oh"}, arguments...)
-		parsed, err := cli.Bind().Parse(model.Choices(path), model.Defaults{}, "a")
+		parsed, err := cli.Bind().Parse(model.Choices(path), location.GetSeenModelsPath(), model.Defaults{}, "a")
 		fmt.Fprintf(&written, "%+v from %q\n  %s\n", test.options, test.currentArguments, strings.Join(append([]string{"oh"}, arguments...), " "))
 		if err != nil {
 			fmt.Fprintf(&written, "  error: %v\n", err)
