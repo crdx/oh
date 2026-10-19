@@ -5,7 +5,6 @@ import (
 	"debug/buildinfo"
 	"fmt"
 	"io"
-	"io/fs"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -45,7 +44,6 @@ const (
 	homeLabel      = "home"
 	sweepsPerCPU   = 4
 	minimumSweeps  = 32
-	ownerPerm      = 0o700
 	executablePerm = 0o111
 )
 
@@ -321,7 +319,7 @@ func take(next root, choice options) result {
 	for _, found := range caches {
 		removedBytes, err := diskutil.Occupied(found.path)
 		if err == nil && !choice.isDryRun {
-			err = remove(found.path)
+			err = diskutil.RemoveAll(found.path)
 		}
 		if err != nil {
 			outcome.failures = append(outcome.failures, found.name+": "+err.Error())
@@ -336,53 +334,6 @@ func take(next root, choice options) result {
 	}
 
 	return outcome
-}
-
-func remove(path string) error {
-	err := os.RemoveAll(path)
-	if err == nil || !os.IsPermission(err) {
-		return err
-	}
-
-	if err := unlock(path); err != nil {
-		return err
-	}
-
-	return os.RemoveAll(path)
-}
-
-func unlock(root string) error {
-	var lockedDirectories []string
-
-	err := filepath.WalkDir(root, func(path string, entry fs.DirEntry, err error) error {
-		if err != nil {
-			return skip(entry)
-		}
-		if !entry.IsDir() {
-			return nil
-		}
-
-		info, err := entry.Info()
-		if err != nil {
-			return skip(entry)
-		}
-		if info.Mode().Perm()&ownerPerm != ownerPerm {
-			lockedDirectories = append(lockedDirectories, path)
-		}
-
-		return nil
-	})
-	if err != nil {
-		return err
-	}
-
-	for _, path := range lockedDirectories {
-		if err := os.Chmod(path, ownerPerm); err != nil {
-			return err
-		}
-	}
-
-	return nil
 }
 
 func find(next root, isAggressive bool) ([]cache, error) {
@@ -617,12 +568,4 @@ func summary(count int, emptyCount int, reclaimedBytes int64, runningCount int, 
 	}
 
 	return text
-}
-
-func skip(entry fs.DirEntry) error {
-	if entry != nil && entry.IsDir() {
-		return fs.SkipDir
-	}
-
-	return nil
 }
