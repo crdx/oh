@@ -46,6 +46,7 @@ type Picasso struct {
 	rows              map[string]int
 	labels            map[string]call.Label
 	introductions     *Introductions
+	describer         *call.Describer
 	answer            liveText
 	answerRenderer    markdown.IncrementalRenderer
 	reasoning         liveText
@@ -67,7 +68,6 @@ type Picasso struct {
 	tariff                Tariff
 	cacheMissNotices      *experimental.Toggles
 
-	getTool       func(string) (tool.Tool, bool)
 	workspace     *work.Space
 	pictures      pictures.Display
 	pictureDrawer markdown.PictureDrawer
@@ -103,9 +103,9 @@ func New(
 ) *Picasso {
 	self := &Picasso{
 		introductions: NewIntroductions(),
+		describer:     call.NewDescriber(getTool, workspace),
 		screen:        screen,
 		isRunning:     isRunning,
-		getTool:       getTool,
 		workspace:     workspace,
 		streamingMode: streamingMode,
 	}
@@ -118,6 +118,10 @@ func New(
 
 func (self *Picasso) RememberIntroductionsIn(introductions *Introductions) {
 	self.introductions = introductions
+}
+
+func (self *Picasso) DescribeCallsWith(describer *call.Describer) {
+	self.describer = describer
 }
 
 func (self *Picasso) RenderReasoningAs(rendering output.ReasoningRendering) {
@@ -212,7 +216,7 @@ func (self *Picasso) DrawEvent(event agent.Event) {
 		}
 
 		roots := self.linkRoots()
-		label := call.LabelFor(event, self.getTool, self.workspace).WithHostPathAliases(roots)
+		label := self.describer.LabelFor(event).WithHostPathAliases(roots)
 		self.introductions.note(label)
 		label.Aside = self.introductions.recall(label.Mentions)
 		if self.screen.IsTerminal() {

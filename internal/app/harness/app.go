@@ -15,6 +15,7 @@ import (
 
 	"crdx.org/oh/internal/app/access"
 	"crdx.org/oh/internal/app/bar"
+	"crdx.org/oh/internal/app/call"
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/conditions"
 	"crdx.org/oh/internal/app/config"
@@ -208,6 +209,7 @@ type App struct {
 	agent           *agent.Agent
 	recordedEvents  []agent.Event
 	introductions   *painter.Introductions
+	describer       *call.Describer
 	openingEvents   []agent.Event
 	screen          *output.Screen
 	recorder        *record.Recorder
@@ -1868,6 +1870,10 @@ func (self *App) newPainter(isRunning bool) *painter.Picasso {
 		self.introductions = painter.NewIntroductions()
 	}
 	picasso.RememberIntroductionsIn(self.introductions)
+	if self.describer == nil {
+		self.describer = call.NewDescriber(self.agent.Tool, self.workspace)
+	}
+	picasso.DescribeCallsWith(self.describer)
 	picasso.RenderReasoningAs(self.display.reasoningRendering)
 	if self.screen.IsTerminal() && self.recorder != nil {
 		picasso.LinkToolResults(self.recorder.Name())

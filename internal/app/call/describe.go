@@ -108,9 +108,13 @@ func printableCallRendering(rendering tool.CallRendering) tool.CallRendering {
 
 func LabelFor(event agent.Event, getTool ToolLookup, workspace *work.Space) Label {
 	rendering, timeLimit := describe(event, getTool, workspace)
+	return labelFrom(event.Name, rendering, timeLimit)
+}
+
+func labelFrom(name string, rendering agent.FallbackRendering, timeLimit time.Duration) Label {
 	renderingKind := rendering.RenderingKind
 	if renderingKind == "" {
-		renderingKind = event.Name
+		renderingKind = name
 	}
 	label := getLabel(tool.CallRendering{
 		Kind:       renderingKind,
@@ -119,12 +123,12 @@ func LabelFor(event agent.Event, getTool ToolLookup, workspace *work.Space) Labe
 		PathLine:   rendering.PathLine,
 		Emphasis:   rendering.Emphasis,
 		ShowOutput: rendering.ShowOutput,
-	}, event.Name, rendering.ReadOnly)
+	}, name, rendering.ReadOnly)
 	label.TimeLimit = timeLimit
 	label.Intent = rendering.Intent
 	label.IntentLeads = bash.IsRenderingKind(renderingKind)
 	label.Introduces = rendering.Introduces
-	label.Mentions = rendering.Mentions
+	label.Mentions = slices.Clone(rendering.Mentions)
 	label.MarksSuccess = rendering.MarksSuccess
 	label.ReportsStatus = rendering.ReportsStatus
 	label.lineRange = rendering.PathLine

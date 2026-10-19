@@ -5,6 +5,7 @@
 ### Changes
 
 - Maintain terminal busy status while subagents run
+- Cache tool call renderings
 
 ## [0.19.0] - 2026-10-18
 
