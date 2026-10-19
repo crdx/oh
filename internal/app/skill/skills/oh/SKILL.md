@@ -368,7 +368,7 @@ A skill is a directory holding `SKILL.md`, and the directory name is the skill's
 
 This one is built in, written to `<state>/skills/oh/SKILL.md` at startup and rewritten when the binary's content differs; `<state>` is `OH_STATE_DIR` or `~/.local/state/org.crdx/oh`. Change it at `internal/app/skill/skills/oh/SKILL.md` in the repository; the next startup overwrites any edit to the copy.
 
-Project skills live in `<workspace>/.agents/skills/<name>/SKILL.md`, discovered automatically. A workflow confined to one repository belongs here.
+Project skills live in `<workspace>/.agents/skills/<name>/SKILL.md`, discovered automatically. A workflow confined to one repository belongs here. `<workspace>/.agents.local/skills/` is scanned the same way, after `.agents/skills`, for project skills kept out of version control.
 
 Global skills live in `~/.config/org.crdx/oh/skills/`, always scanned, plus every directory in `skills.include`. Roots deduplicate by resolved symlink.
 

@@ -72,6 +72,31 @@ func TestDiscoverReadsProjectAndGlobalDirectories(t *testing.T) {
 	}
 }
 
+func TestDiscoverReadsLocalProjectSkillsAfterTrackedOnes(t *testing.T) {
+	project := t.TempDir()
+	localPath := writeSkill(t, filepath.Join(project, ".agents.local", "skills"), "add-cmd", "---\nname: add-cmd\ndescription: Add a command.\n---\nBody")
+	trackedPath := writeSkill(t, projectSkills(project), "review", "---\nname: review\ndescription: Review this project.\n---\nBody")
+
+	discoveredSkills, err := Discover(project, nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	locations := make([]string, 0, len(discoveredSkills))
+	for _, discoveredSkill := range discoveredSkills {
+		locations = append(locations, discoveredSkill.Location)
+	}
+	if want := []string{trackedPath, localPath}; !slices.Equal(locations, want) {
+		t.Errorf("got locations %v, want %v", locations, want)
+	}
+	projectCount, globalCount := Counts(discoveredSkills)
+	if projectCount != 2 || globalCount != 0 {
+		t.Errorf("got %d project and %d global skills, want 2 and 0", projectCount, globalCount)
+	}
+	if name, isSkill := NameFromPath(localPath); name != "add-cmd" || !isSkill {
+		t.Errorf("got name %q and %v for the local skill path", name, isSkill)
+	}
+}
+
 func TestExcludeGlobalMatchesAbsoluteDirectories(t *testing.T) {
 	project := t.TempDir()
 	globalDirectory := t.TempDir()

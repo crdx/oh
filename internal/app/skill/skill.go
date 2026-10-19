@@ -25,6 +25,8 @@ const (
 	DirectoryName = "skills"
 )
 
+var agentDirectoryNames = []string{".agents", ".agents.local"}
+
 type Skill struct {
 	Name        string
 	Description string
@@ -137,12 +139,15 @@ func LoadedSkillSources(events []agent.Event) []contextsource.Source {
 }
 
 func Discover(project string, globalDirectories []string, warnings io.Writer) ([]Skill, error) {
-	projectSkills, err := discover(filepath.Join(project, ".agents", DirectoryName), false, warnings)
-	if err != nil {
-		return nil, err
+	var discoveredSkills []Skill
+	for _, name := range agentDirectoryNames {
+		projectSkills, err := discover(filepath.Join(project, name, DirectoryName), false, warnings)
+		if err != nil {
+			return nil, err
+		}
+		discoveredSkills = append(discoveredSkills, projectSkills...)
 	}
 
-	discoveredSkills := projectSkills
 	seenDirectories := make(map[string]struct{}, len(globalDirectories))
 	for _, directory := range globalDirectories {
 		if directory == "" {
