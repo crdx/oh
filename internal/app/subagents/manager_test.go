@@ -1402,3 +1402,88 @@ func TestAStoppingChildCannotMessageItsParent(t *testing.T) {
 		t.Error("a stopping child reached its parent")
 	}
 }
+
+func TestNoChildIsLaterNamedAfterAnEarlierAlias(t *testing.T) {
+	probe := newTestFamily(t).manager(t, waiting())
+	if _, err := probe.Start(t.Context(), "", slices.Repeat([]subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "wait"}}, 2)); err != nil {
+		t.Fatal(err)
+	}
+	secondName := probe.ListSnapshots()[1].Name
+	manager := newTestFamily(t).manager(t, waiting())
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "first", Alias: secondName}}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "second"}}); err != nil {
+		t.Fatal(err)
+	}
+	for _, snapshot := range manager.ListSnapshots() {
+		if snapshot.Name == secondName {
+			t.Errorf("a later child took the name an earlier one answers to: %+v", manager.ListSnapshots())
+		}
+	}
+}
+
+func TestAChildAnswersToTheAliasItsTaskGaveIt(t *testing.T) {
+	family := newTestFamily(t)
+	manager := family.manager(t, answering(func() agent.Provider { return &answeringProvider{} }))
+	result, err := manager.Start(t.Context(), "", []subagent.Task{
+		{Model: "anthropic/claude-opus-5", Prompt: "first", Alias: "core"},
+		{Model: "anthropic/claude-opus-5", Prompt: "second"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	events := untilFinished(t, manager, 2)
+	var names []string
+	for _, event := range events {
+		if event.Kind != subagentrecord.Started {
+			continue
+		}
+		names = append(names, event.Subagent)
+		origin, _ := subagentrecord.DecodeOrigin(event)
+		if want := map[bool]string{true: "core"}[len(names) == 1]; origin.Alias != want {
+			t.Errorf("%s was recorded with the alias %q, want %q", event.Subagent, origin.Alias, want)
+		}
+	}
+	for _, name := range names {
+		untilSettled(t, manager, name)
+	}
+	if want := "started " + names[0] + " (core), " + names[1] + ";"; !strings.HasPrefix(result, want) {
+		t.Errorf("the start said %q, want it to open %q", result, want)
+	}
+	for _, task := range []subagent.Task{
+		{Model: "anthropic/claude-opus-5", Prompt: "third", Alias: "core"},
+		{Model: "anthropic/claude-opus-5", Prompt: "third", Alias: names[1]},
+	} {
+		if _, err := manager.Start(t.Context(), "", []subagent.Task{task}); err == nil || !strings.Contains(err.Error(), "already taken") {
+			t.Errorf("the alias %q was given twice: %v", task.Alias, err)
+		}
+	}
+	status, err := manager.Status([]string{"core"})
+	if err != nil || !strings.HasPrefix(status, names[0]+" (core): done") {
+		t.Errorf("the status by alias said %q, %v", status, err)
+	}
+	output, err := manager.Output([]string{"core"})
+	if err != nil || !strings.Contains(output, "\nfirst") {
+		t.Errorf("the output by alias said %q, %v", output, err)
+	}
+	if sent, err := manager.Send(t.Context(), "core", "again"); err != nil || sent != "sent to "+names[0] {
+		t.Fatalf("the follow-up by alias said %q, %v", sent, err)
+	}
+	if followUp := untilFinished(t, manager, 1); followUp[len(followUp)-1].Text != "first then again" {
+		t.Errorf("the follow-up by alias answered %q", followUp[len(followUp)-1].Text)
+	}
+	untilSettled(t, manager, names[0])
+
+	restored := family.manager(t, waiting())
+	restored.Restore(events)
+	if status, err := restored.Status([]string{"core"}); err != nil || !strings.HasPrefix(status, names[0]+" (core)") {
+		t.Errorf("a restored child no longer answered to its alias: %q, %v", status, err)
+	}
+	if _, err := restored.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5", Prompt: "wait", Alias: "slow"}}); err != nil {
+		t.Fatal(err)
+	}
+	if stopped, err := restored.Stop([]string{"slow"}); err != nil || !strings.HasPrefix(stopped, "stopping frugal-") {
+		t.Errorf("stopping by alias said %q, %v", stopped, err)
+	}
+}

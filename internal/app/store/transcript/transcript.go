@@ -268,7 +268,10 @@ func heading(event agent.Event) []string {
 	case portgrant.ForwardChange:
 		summary, _ := portgrant.ForwardSummary(event)
 		return []string{name, summary, prefixed("changed port ", event.Name)}
-	case subagentrecord.Started, subagentrecord.Sent, subagentrecord.Received:
+	case subagentrecord.Started:
+		origin, _ := subagentrecord.DecodeOrigin(event)
+		return []string{name, subagentrecord.Title(event.Subagent, origin.Alias)}
+	case subagentrecord.Sent, subagentrecord.Received:
 		return []string{name, event.Subagent}
 	case subagentrecord.Finished:
 		return []string{name, event.Subagent, event.Name}

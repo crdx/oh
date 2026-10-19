@@ -238,13 +238,19 @@ type Notice struct {
 	Mark string
 }
 
-func DrawnNotices(event agent.Event) ([]Notice, bool) {
+func DrawnNotices(event agent.Event, introductions *Introductions) ([]Notice, bool) {
 	if reports, isReported := subagentrecord.ReportsOf(event); isReported {
 		notices := make([]Notice, len(reports))
 		for index, report := range reports {
-			notices[index] = Notice{Text: report.Notice(), Mark: session.Emoji(report.Name)}
+			notices[index] = Notice{Text: report.Notice(introductions.SubagentAlias(report.Name)), Mark: session.Emoji(report.Name)}
 		}
 		return notices, true
+	}
+	if event.Kind == subagentrecord.AccessWithdrawnStop {
+		if notice, isSaid := subagentrecord.AccessWithdrawnStopNoticeTitled(event, introductions.SubagentTitle); isSaid {
+			return []Notice{{Text: notice}}, true
+		}
+		return nil, false
 	}
 	texts, areSaid := HarnessNotices(event)
 	notices := make([]Notice, len(texts))

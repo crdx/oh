@@ -86,6 +86,7 @@ type Options struct {
 
 type Snapshot struct {
 	Name       string
+	Alias      string
 	Task       string
 	Intent     string
 	Workspace  string
@@ -327,7 +328,7 @@ func (self *Manager) Start(ctx context.Context, sharedPrompt string, tasks []sub
 	self.launchMutex.Lock()
 	defer self.launchMutex.Unlock()
 	self.mutex.Lock()
-	isClosed, liveCount, siblings, concurrency := self.closed, self.liveCount(), slices.Clone(self.order), self.rotation.Concurrency
+	isClosed, liveCount, siblings, concurrency := self.closed, self.liveCount(), self.takenNames(), self.rotation.Concurrency
 	self.mutex.Unlock()
 	if isClosed {
 		return "", errors.New("subagent manager is closed")
@@ -338,6 +339,14 @@ func (self *Manager) Start(ctx context.Context, sharedPrompt string, tasks []sub
 	selectedModels, err := self.selectModels(tasks)
 	if err != nil {
 		return "", err
+	}
+	if err := self.refuseTakenAliases(tasks); err != nil {
+		return "", err
+	}
+	for _, task := range tasks {
+		if task.Alias != "" {
+			siblings = append(siblings, task.Alias)
+		}
 	}
 	if self.options.EnsureParent != nil {
 		if err := self.options.EnsureParent(); err != nil {
@@ -374,7 +383,7 @@ func (self *Manager) Start(ctx context.Context, sharedPrompt string, tasks []sub
 			return "", err
 		}
 		current := &child{choice: childModel.Choice, selection: childModel.Selection, Snapshot: Snapshot{
-			Name: name, Task: task.Prompt, Intent: task.Intent, Workspace: workspace, SessionID: writer.ID(), State: subagentrecord.Running, StartedAt: self.options.Now(),
+			Name: name, Alias: task.Alias, Task: task.Prompt, Intent: task.Intent, Workspace: workspace, SessionID: writer.ID(), State: subagentrecord.Running, StartedAt: self.options.Now(),
 		}}
 		childContext := self.prepare(ctx, current)
 		reservations = append(reservations, reservation{writer: writer, current: current, start: func() {
@@ -386,13 +395,13 @@ func (self *Manager) Start(ctx context.Context, sharedPrompt string, tasks []sub
 	for _, place := range reservations {
 		self.children[place.current.Name] = place.current
 		self.order = append(self.order, place.current.Name)
-		names = append(names, place.current.Name)
+		names = append(names, place.current.title())
 	}
 	self.mutex.Unlock()
 	for _, place := range reservations {
 		current := place.current
 		self.events <- subagentrecord.StartedEvent(current.Name, current.SessionID, current.Task, subagentrecord.Origin{
-			Choice: current.choice, Workspace: current.Workspace, Intent: current.Intent,
+			Choice: current.choice, Workspace: current.Workspace, Intent: current.Intent, Alias: current.Alias,
 		})
 		place.start()
 	}
@@ -405,6 +414,9 @@ func (self *Manager) Send(ctx context.Context, name string, message string) (str
 	}
 	self.launchMutex.Lock()
 	defer self.launchMutex.Unlock()
+	self.mutex.Lock()
+	name = self.resolve(name)
+	self.mutex.Unlock()
 	if isQueued, over := self.queue(name, message); isQueued {
 		return "queued for " + name, nil
 	} else if over != nil {
@@ -525,6 +537,18 @@ func (self *Manager) ScratchNote(name string) string {
 	return " (" + self.options.ScratchNote(name) + ")"
 }
 
+func (self *Manager) Alias(name string) string {
+	if self == nil {
+		return ""
+	}
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+	if current := self.children[name]; current != nil {
+		return current.Alias
+	}
+	return ""
+}
+
 func (self *Manager) Concurrency() int {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
@@ -597,8 +621,12 @@ func (self *Manager) LiveSpend() (float64, bool) {
 	return spend, isPriced
 }
 
+func (self Snapshot) title() string {
+	return subagentrecord.Title(self.Name, self.Alias)
+}
+
 func describe(snapshot Snapshot) string {
-	result := snapshot.Name + ": " + string(snapshot.State)
+	result := snapshot.title() + ": " + string(snapshot.State)
 	if snapshot.Failure != "" {
 		result += " — " + snapshot.Failure
 	}
@@ -621,6 +649,7 @@ func (self *Manager) List() string { return describeAll(self.ListSnapshots()) }
 func (self *Manager) Status(names []string) (string, error) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
+	names = self.resolveAll(names)
 	if err := self.requireKnown(names); err != nil {
 		return "", err
 	}
@@ -679,6 +708,7 @@ func (self *Manager) Output(names []string) (string, error) {
 func (self *Manager) Stop(names []string) (string, error) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
+	names = self.resolveAll(names)
 	if err := self.requireKnown(names); err != nil {
 		return "", err
 	}
@@ -776,7 +806,7 @@ func (self *Manager) restoreStart(event agent.Event) {
 	}
 	origin, _ := subagentrecord.DecodeOrigin(event)
 	self.children[event.Subagent] = &child{choice: origin.Choice, Snapshot: Snapshot{
-		Name: event.Subagent, Task: event.Text, Intent: origin.Intent, Workspace: origin.Workspace, SessionID: event.ID, State: subagentrecord.Running,
+		Name: event.Subagent, Alias: origin.Alias, Task: event.Text, Intent: origin.Intent, Workspace: origin.Workspace, SessionID: event.ID, State: subagentrecord.Running,
 	}, over: closedOver()}
 	self.order = append(self.order, event.Subagent)
 }
@@ -1016,6 +1046,54 @@ func (self *Manager) recordOutcome(writer *store.Writer, current *child, state s
 	}
 }
 
+func (self *Manager) resolve(name string) string {
+	if self.children[name] != nil {
+		return name
+	}
+	for _, childName := range self.order {
+		if alias := self.children[childName].Alias; alias != "" && alias == name {
+			return childName
+		}
+	}
+	return name
+}
+
+func (self *Manager) resolveAll(names []string) []string {
+	if len(names) == 0 {
+		return names
+	}
+	childNames := make([]string, 0, len(names))
+	for _, name := range names {
+		childNames = append(childNames, self.resolve(name))
+	}
+	return childNames
+}
+
+func (self *Manager) takenNames() []string {
+	names := slices.Clone(self.order)
+	for _, childName := range self.order {
+		if alias := self.children[childName].Alias; alias != "" {
+			names = append(names, alias)
+		}
+	}
+	return names
+}
+
+func (self *Manager) refuseTakenAliases(tasks []subagent.Task) error {
+	self.mutex.Lock()
+	defer self.mutex.Unlock()
+	storedNames, _ := session.AllNames(self.options.Directory)
+	for index, task := range tasks {
+		if task.Alias == "" {
+			continue
+		}
+		if self.children[self.resolve(task.Alias)] != nil || slices.Contains(storedNames, task.Alias) {
+			return fmt.Errorf("subagents[%d].name %q is already taken in this session; choose another or leave it out", index, task.Alias)
+		}
+	}
+	return nil
+}
+
 func (self *Manager) requireKnown(names []string) error {
 	for _, name := range names {
 		if self.children[name] == nil {
@@ -1028,6 +1106,7 @@ func (self *Manager) requireKnown(names []string) error {
 func (self *Manager) snapshots(names []string) ([]Snapshot, error) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
+	names = self.resolveAll(names)
 	if err := self.requireKnown(names); err != nil {
 		return nil, err
 	}

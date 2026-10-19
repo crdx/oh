@@ -8,8 +8,8 @@ Both are running.
 
 
  🤖 The subagent tool is now refused.
- 🤖 Subagent tame-adder stopped because subagents were withdrawn.
- 🦙 Subagent tame-alpaca has finished:
+ 🤖 Subagent tame-adder (watcher) stopped because subagents were withdrawn.
+ 🦙 Subagent tame-alpaca (finder) has finished:
 
     The build tool is just.
 

@@ -17,20 +17,20 @@ start two subagents
 ## Tool calls · +0s
 
 ```
-subagent start: 2 subagents · anthropic/claude-opus-5@medium, anthropic/claude-opus-5@medium [ok, 1 line, 54B, toolu_1]
+subagent start: 2 subagents · anthropic/claude-opus-5@medium, anthropic/claude-opus-5@medium [ok, 1 line, 73B, toolu_1]
 ```
 
 ## Assistant · +0s
 
 Both are running.
 
-## Subagent started · tame-adder · +0s
+## Subagent started · tame-adder (watcher) · +0s
 
 Watch the build forever
 
 Transcript: `subagents/tame-adder/chat.md`
 
-## Subagent started · tame-alpaca · +0s
+## Subagent started · tame-alpaca (finder) · +0s
 
 Name the build tool
 
@@ -57,7 +57,7 @@ Subagent tame-adder stopped because subagents were withdrawn.
 ## Subagent reports · +0s
 
 ```
-Subagent tame-alpaca finished:
+Subagent tame-alpaca (finder) finished:
 
 tame-alpaca done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-alpaca, so read any /tmp path it reports as beneath that): The build tool is just.
 ```

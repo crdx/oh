@@ -40,6 +40,7 @@ func (self *App) subagentProgress() []commands.SubagentProgress {
 	for _, child := range self.children.manager.Progress() {
 		progress = append(progress, commands.SubagentProgress{
 			Name:       child.Name,
+			Alias:      child.Alias,
 			State:      string(child.State),
 			IsLive:     child.State.IsLive(),
 			Model:      child.Model,

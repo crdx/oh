@@ -174,24 +174,25 @@ func (self *App) childDelivery(due []agent.Event) agent.Event {
 			names = append(names, event.Subagent)
 		}
 	}
-	message := completionMessage(due, self.children.manager.ScratchNote)
+	message := completionMessage(due, self.children.manager.ScratchNote, self.children.manager.Alias)
 	return subagentrecord.DeliveryEvent(names, message, completionReports(due))
 }
 
-func completionMessage(due []agent.Event, scratchNote func(string) string) string {
-	var sections, finishedNames, results []string
+func completionMessage(due []agent.Event, scratchNote func(string) string, aliasOf func(string) string) string {
+	var sections, finishedTitles, results []string
 	for _, event := range due {
+		title := subagentrecord.Title(event.Subagent, aliasOf(event.Subagent))
 		if event.Kind == subagentrecord.Received {
-			sections = append(sections, subagentrecord.MessageHeading(event.Subagent)+"\n\n"+event.Text)
+			sections = append(sections, subagentrecord.MessageHeading(title)+"\n\n"+event.Text)
 			continue
 		}
-		finishedNames = append(finishedNames, event.Subagent)
+		finishedTitles = append(finishedTitles, title)
 		results = append(results, describeCompletion(
 			event.Subagent, event.Name+scratchNote(event.Subagent), event.Text, subagentrecord.FailureOf(event),
 		))
 	}
-	if len(finishedNames) > 0 {
-		sections = append(sections, subagentrecord.CompletionHeading(finishedNames)+"\n\n"+strings.Join(results, "\n\n"))
+	if len(finishedTitles) > 0 {
+		sections = append(sections, subagentrecord.CompletionHeading(finishedTitles)+"\n\n"+strings.Join(results, "\n\n"))
 	}
 	return strings.Join(sections, "\n\n")
 }

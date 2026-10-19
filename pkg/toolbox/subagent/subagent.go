@@ -33,6 +33,7 @@ type Task struct {
 	Prompt    string `json:"prompt"`
 	Intent    string `json:"intent"`
 	Workspace string `json:"workspace,omitempty"`
+	Alias     string `json:"name,omitempty"`
 }
 
 func Mention(name string) string {
@@ -65,7 +66,7 @@ func New(manager Manager, isAllowed func() bool) tool.Tool {
 		Description: "start independent subagents with a shared optional system prompt and individual tasks, " +
 			"send one a message, which a running subagent reads once its current step finishes and a finished one takes as a follow-up, " +
 			"or send every running subagent the same message by leaving out the name, " +
-			"and inspect or control them by name; " +
+			"and inspect or control them by name, or by the alias a task gave its subagent; " +
 			"call models to list valid models and their supported efforts, " +
 			"then give every task an explicit provider/model@effort selection from that list; use provider/model when no efforts are listed; " +
 			"a follow-up keeps the model the subagent started on; " +
@@ -87,8 +88,8 @@ func New(manager Manager, isAllowed func() bool) tool.Tool {
 			"or by waking you once you have ended your turn, so carry on or end your turn rather than waiting or polling for it",
 		Schema: tool.Schema{
 			tool.Enum("action", "what to do", Start, Send, Status, Output, Stop, List, Models),
-			tool.StringArray("names", "the subagents for status, output, or stop; empty means all of them").Optional(),
-			tool.String("name", "the subagent to send a message to (for send); absent means every running subagent").Optional(),
+			tool.StringArray("names", "the subagents for status, output, or stop, by name or alias; empty means all of them").Optional(),
+			tool.String("name", "the subagent to send a message to, by name or alias (for send); absent means every running subagent").Optional(),
 			tool.String("message", "the message to send (for send)").Optional(),
 			tool.String("system_prompt", "the only instructions every subagent shares, beside a short description of its sandbox (for start)").Optional(),
 			tool.ObjectArray("subagents", "one task per independent subagent (for start)", tool.Schema{
@@ -96,6 +97,7 @@ func New(manager Manager, isAllowed func() bool) tool.Tool {
 				tool.String("prompt", "the whole task for this subagent, with whatever context it needs"),
 				tool.String("intent", "what this subagent is for, as a 5 to 7 word phrase opening with a capitalised -ing verb, such as \"Reviewing the parser for missed errors\""),
 				tool.String("workspace", "the subagent's read-only workspace, any directory you can read; absent means yours").Optional(),
+				tool.String("name", "an optional alias of your own for this subagent, unique in this session, which works anywhere its given name does").Optional(),
 			}).Optional(),
 		},
 	}
@@ -110,6 +112,7 @@ func act(ctx context.Context, manager Manager, args Args) (string, error) {
 		tasks := slices.Clone(args.Subagents)
 		for index := range tasks {
 			tasks[index].Intent = bash.SpokenIntent(tasks[index].Intent)
+			tasks[index].Alias = strings.TrimSpace(tasks[index].Alias)
 		}
 		return manager.Start(ctx, args.SystemPrompt, tasks)
 	case Send:
@@ -242,7 +245,14 @@ func validate(args Args) error {
 		if len(args.Subagents) == 0 {
 			return errors.New("start requires a nonempty subagents list")
 		}
+		var aliases []string
 		for index, task := range args.Subagents {
+			if alias := strings.TrimSpace(task.Alias); alias != "" {
+				if slices.Contains(aliases, alias) {
+					return fmt.Errorf("subagents[%d].name %q is given to another subagent", index, alias)
+				}
+				aliases = append(aliases, alias)
+			}
 			if strings.TrimSpace(task.Model) == "" {
 				return fmt.Errorf("subagents[%d].model is required; call action=models for valid selections", index)
 			}

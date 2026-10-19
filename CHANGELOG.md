@@ -8,6 +8,7 @@
 - Cache tool call renderings
 - Use a superseded model with an exact match
 - List ignored models with `-lI` and `--ctl models -I`
+- Some models like to name subagents, so let 'em
 
 ## [0.19.0] - 2026-10-18
 

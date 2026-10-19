@@ -328,7 +328,7 @@ func TestARestoredSubagentReportWaitsForTheNextTurn(t *testing.T) {
 
 func TestSubagentCompletionBatchesDistinctResults(t *testing.T) {
 	first := []agent.Event{finished("tame-adder", "first answer"), finished("tame-alpaca", "second answer")}
-	message := completionMessage(first, func(name string) string { return " (scratch of " + name + ")" })
+	message := completionMessage(first, func(name string) string { return " (scratch of " + name + ")" }, noAlias)
 	if !strings.Contains(message, "tame-adder done (scratch of tame-adder): first answer") || !strings.Contains(message, "second answer") {
 		t.Fatalf("batch omitted a result: %q", message)
 	}
@@ -350,7 +350,7 @@ func TestAMidRunMessageJoinsTheBatchAheadOfTheFinishes(t *testing.T) {
 		subagentrecord.ReceivedEvent("tame-adder", "Is the parser in scope?"),
 		finished("tame-alpaca", "second answer"),
 	}
-	message := completionMessage(due, func(string) string { return "" })
+	message := completionMessage(due, func(string) string { return "" }, noAlias)
 	want := "Subagent tame-adder interjects:\n\nIs the parser in scope?\n\n" +
 		"Subagent tame-alpaca finished:\n\ntame-alpaca done: second answer"
 	if message != want {
@@ -360,8 +360,35 @@ func TestAMidRunMessageJoinsTheBatchAheadOfTheFinishes(t *testing.T) {
 	if len(reports) != 2 || !reports[0].IsMessage() || reports[0].Message != "Is the parser in scope?" || reports[1].IsMessage() {
 		t.Errorf("reported %+v", reports)
 	}
-	if notice := reports[0].Notice(); notice != "Subagent tame-adder interjects:\n\nIs the parser in scope?" {
+	if notice := reports[0].Notice(""); notice != "Subagent tame-adder interjects:\n\nIs the parser in scope?" {
 		t.Errorf("drew %q", notice)
+	}
+}
+
+func noAlias(string) string { return "" }
+
+func TestAnAliasedChildIsHeadedByItsNameAndAlias(t *testing.T) {
+	aliasOf := func(name string) string { return map[string]string{"tame-adder": "core"}[name] }
+	due := []agent.Event{
+		subagentrecord.ReceivedEvent("tame-adder", "Is the parser in scope?"),
+		finished("tame-adder", "first answer"),
+		finished("tame-alpaca", "second answer"),
+	}
+	message := completionMessage(due, func(string) string { return "" }, aliasOf)
+	want := "Subagent tame-adder (core) interjects:\n\nIs the parser in scope?\n\n" +
+		"Subagents tame-adder (core), tame-alpaca finished:\n\ntame-adder done: first answer\n\ntame-alpaca done: second answer"
+	if message != want {
+		t.Errorf("told the parent %q, want %q", message, want)
+	}
+	reports := completionReports(due)
+	for index, want := range []string{
+		"Subagent tame-adder (core) interjects:\n\nIs the parser in scope?",
+		"Subagent tame-adder (core) has finished:\n\nfirst answer",
+		"Subagent tame-alpaca has finished:\n\nsecond answer",
+	} {
+		if notice := reports[index].Notice(aliasOf(reports[index].Name)); notice != want {
+			t.Errorf("drew %q, want %q", notice, want)
+		}
 	}
 }
 

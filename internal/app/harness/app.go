@@ -117,10 +117,10 @@ func (self *pendingNotices) notices() []string {
 	return notices
 }
 
-func (self *pendingNotices) drawnNotices() []painter.Notice {
+func (self *pendingNotices) drawnNotices(introductions *painter.Introductions) []painter.Notice {
 	var notices []painter.Notice
 	for _, item := range self.items {
-		if itemNotices, areSaid := painter.DrawnNotices(item.state); areSaid {
+		if itemNotices, areSaid := painter.DrawnNotices(item.state, introductions); areSaid {
 			notices = append(notices, itemNotices...)
 		}
 	}
@@ -989,7 +989,7 @@ func (self *App) refreshPendingMessages() {
 		return
 	}
 
-	messages := self.pendingNotices.drawnNotices()
+	messages := self.pendingNotices.drawnNotices(self.introductions)
 	if self.pendingNotices.renderer == nil {
 		self.pendingNotices.renderer = painter.NewPendingMessages(
 			messages,

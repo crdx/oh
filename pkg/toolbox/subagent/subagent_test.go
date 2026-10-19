@@ -111,6 +111,20 @@ func TestStartTakesIndependentObjectPrompts(t *testing.T) {
 	}
 }
 
+func TestATaskNamedByTheModelHandsOnItsAlias(t *testing.T) {
+	manager := &fakeManager{}
+	parsed, err := New(manager, isGranted).Parse(`{"action":"start","subagents":[{"name":" core ","model":"anthropic/claude-opus-5","prompt":"x","intent":"Doing x"},{"model":"anthropic/claude-opus-5","prompt":"y","intent":"Doing y"}]}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := parsed.Exec(t.Context()); err != nil {
+		t.Fatal(err)
+	}
+	if manager.tasks[0].Alias != "core" || manager.tasks[1].Alias != "" {
+		t.Errorf("aliases were handed on as %q and %q", manager.tasks[0].Alias, manager.tasks[1].Alias)
+	}
+}
+
 func TestNamesSelectAgentsAndNoNamesMeansAll(t *testing.T) {
 	manager := &fakeManager{}
 	built := New(manager, isGranted)
@@ -213,6 +227,8 @@ func TestInvalidChildArgumentsAreRefused(t *testing.T) {
 		`{"action":"list","names":["frugal-otter"]}`,
 		`{"action":"wait","name":"frugal-otter"}`,
 		`{"action":"wait"}`,
+		`{"action":"start","subagents":[{"model":"anthropic/claude-opus-5","prompt":"x","intent":"Doing x","name":"core"},{"model":"anthropic/claude-opus-5","prompt":"y","intent":"Doing y","name":" core "}]}`,
+		`{"action":"start","subagents":[{"model":"anthropic/claude-opus-5","prompt":"x","intent":"Doing x","label":"core"}]}`,
 	} {
 		if _, err := built.Parse(input); err == nil {
 			t.Errorf("accepted %s", input)

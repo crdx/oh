@@ -1,0 +1,61 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwsngl · +0s
+
+## User · +0s
+
+start a subagent under a name of your own and address it by that name
+
+## Tool calls · +0s
+
+```
+subagent start: subagent · anthropic/claude-opus-5@medium [ok, 1 line, 51B, toolu_1]
+```
+
+## Subagent started · tame-adder (watcher) · +0s
+
+Watch the build forever
+
+Transcript: `subagents/tame-adder/chat.md`
+
+## Tool calls · +0s
+
+```
+subagent status: tame-adder [ok, 1 line, 85B, toolu_2]
+subagent status: watcher [ok, 1 line, 85B, toolu_3]
+subagent send: watcher [ok, 1 line, 21B, toolu_4]
+subagent start: subagent · anthropic/claude-opus-5@medium [error, 1 line, 92B, toolu_5]
+subagent stop: watcher [ok, 1 line, 19B, toolu_6]
+```
+
+## Assistant · +0s
+
+The watcher answered to its alias.
+
+## Subagent message · tame-adder · +0s
+
+Stop watching
+
+## Subagent finished · tame-adder · stopped · +0s
+
+## User · +0s
+
+carry on
+
+## Tool calls · +0s
+
+```
+subagent output: watcher [ok, 2 lines, 250B, toolu_7]
+```
+
+## Assistant · +0s
+
+Carrying on.

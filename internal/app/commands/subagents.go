@@ -8,6 +8,7 @@ import (
 
 	"crdx.org/oh/internal/app/slash"
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/internal/app/table"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/strutil"
@@ -21,6 +22,7 @@ type Subagents struct {
 
 type SubagentProgress struct {
 	Name       string
+	Alias      string
 	State      string
 	IsLive     bool
 	Model      string
@@ -158,7 +160,7 @@ func subagentRows(children []SubagentProgress) []string {
 	rows := make([][]string, len(children))
 	for index, child := range children {
 		rows[index] = []string{
-			style.Subject(strutil.Flatten(child.Name)),
+			style.Subject(strutil.Flatten(subagentrecord.Title(child.Name, child.Alias))),
 			style.Normal(subagentOutcome(child)),
 			style.Dim(strutil.Flatten(child.Model)),
 			style.Reasoning(strutil.Flatten(child.Intent)),

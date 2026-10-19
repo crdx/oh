@@ -578,6 +578,10 @@ var childFactKinds = []agent.Kind{subagentrecord.Started, subagentrecord.Sent, s
 func IntroduceSubagent(introductions *Introductions, event agent.Event) {
 	if origin, isDecoded := subagentrecord.DecodeOrigin(event); isDecoded && introductions != nil {
 		introductions.Introduce(subagent.Mention(event.Subagent), origin.Intent)
+		introductions.introduceAlias(subagent.Mention(event.Subagent), origin.Alias)
+		if origin.Alias != "" {
+			introductions.Introduce(subagent.Mention(origin.Alias), origin.Intent)
+		}
 	}
 }
 
@@ -601,7 +605,7 @@ func (self *Picasso) isTooCheapToNotice(event agent.Event) bool {
 }
 
 func (self *Picasso) drawNotices(event agent.Event, draw func(submittedMessage)) {
-	notices, areSaid := DrawnNotices(event)
+	notices, areSaid := DrawnNotices(event, self.introductions)
 	if !areSaid {
 		return
 	}

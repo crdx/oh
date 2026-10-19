@@ -1,0 +1,20 @@
+
+ start a subagent under a name of your own and address it by that name
+
+
+spawn subagent · anthropic/claude-opus-5@medium (Watching the build until stopped)
+status tame-adder (watcher: Watching the build until stopped)
+status watcher (Watching the build until stopped)
+send watcher (Watching the build until stopped)
+spawn subagent · anthropic/claude-opus-5@medium ✗ subagents[0].name "watcher" is already taken in t…
+stop watcher (Watching the build until stopped)
+
+The watcher answered to its alias.
+
+
+ carry on
+
+
+cat watcher 2L (Watching the build until stopped)
+
+Carrying on.

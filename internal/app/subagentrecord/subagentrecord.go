@@ -49,6 +49,7 @@ type Origin struct {
 	Choice    model.Choice `json:"choice"`
 	Workspace string       `json:"workspace"`
 	Intent    string       `json:"intent,omitempty"`
+	Alias     string       `json:"alias,omitempty"`
 }
 
 func StartedEvent(name string, sessionID string, task string, origin Origin) agent.Event {
@@ -75,8 +76,15 @@ func ReceivedEvent(name string, message string) agent.Event {
 	return agent.Event{Kind: Received, Subagent: name, Text: message}
 }
 
-func MessageHeading(name string) string {
-	return "Subagent " + name + " interjects:"
+func Title(name string, alias string) string {
+	if alias == "" {
+		return name
+	}
+	return name + " (" + alias + ")"
+}
+
+func MessageHeading(title string) string {
+	return "Subagent " + title + " interjects:"
 }
 
 type Outcome struct {
@@ -136,6 +144,10 @@ func AccessWithdrawnStopEvent(names []string, withdrawnCaps caps.Set) agent.Even
 }
 
 func AccessWithdrawnStopNotice(event agent.Event) (string, bool) {
+	return AccessWithdrawnStopNoticeTitled(event, func(name string) string { return name })
+}
+
+func AccessWithdrawnStopNoticeTitled(event agent.Event, titleOf func(string) string) (string, bool) {
 	if event.Kind != AccessWithdrawnStop || event.Name == "" {
 		return "", false
 	}
@@ -148,7 +160,11 @@ func AccessWithdrawnStopNotice(event agent.Event) (string, bool) {
 	if !isKnown || reason == "" {
 		return "", false
 	}
-	return namedSubagents(event.Name) + " stopped because " + reason + ".", true
+	var titles []string
+	for name := range strings.SplitSeq(event.Name, ",") {
+		titles = append(titles, titleOf(name))
+	}
+	return namedSubagents(titles) + " stopped because " + reason + ".", true
 }
 
 func Withdrawal(withdrawnCaps caps.Set) string {
@@ -162,15 +178,15 @@ func Withdrawal(withdrawnCaps caps.Set) string {
 	}
 }
 
-func CompletionHeading(names []string) string {
-	return namedSubagents(strings.Join(names, ",")) + " finished:"
+func CompletionHeading(titles []string) string {
+	return namedSubagents(titles) + " finished:"
 }
 
-func namedSubagents(names string) string {
-	if strings.Contains(names, ",") {
-		return "Subagents " + strings.ReplaceAll(names, ",", ", ")
+func namedSubagents(titles []string) string {
+	if len(titles) > 1 {
+		return "Subagents " + strings.Join(titles, ", ")
 	}
-	return "Subagent " + names
+	return "Subagent " + strings.Join(titles, "")
 }
 
 type Report struct {
@@ -205,9 +221,9 @@ func (self Report) IsMessage() bool {
 	return self.State == ""
 }
 
-func (self Report) Notice() string {
+func (self Report) Notice(alias string) string {
 	if self.IsMessage() {
-		return MessageHeading(self.Name) + "\n\n" + self.Message
+		return MessageHeading(Title(self.Name, alias)) + "\n\n" + self.Message
 	}
 	var parts []string
 	if self.Answer != "" {
@@ -220,5 +236,5 @@ func (self Report) Notice() string {
 	case self.Answer == "":
 		parts = append(parts, state+" without an answer.")
 	}
-	return "Subagent " + self.Name + " has finished:\n\n" + strings.Join(parts, "\n\n")
+	return "Subagent " + Title(self.Name, alias) + " has finished:\n\n" + strings.Join(parts, "\n\n")
 }

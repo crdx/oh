@@ -135,7 +135,7 @@ func TestGoldenSubagentsListsRunningAndLatestFinishedChildren(t *testing.T) {
 	listing := []SubagentListing{{Name: "frugal-otter"}, {Name: "frugal-heron", IsMissing: true}}
 	running := []SubagentProgress{
 		{
-			Name: "frugal-otter", State: "running", IsLive: true, IsTimed: true, Duration: 90 * time.Second, Model: "Claude Haiku@med",
+			Name: "frugal-otter", Alias: "parser", State: "running", IsLive: true, IsTimed: true, Duration: 90 * time.Second, Model: "Claude Haiku@med",
 			Intent: "Finding where the parser lives", ToolCalls: 12, LastIntent: "Reading the parser",
 		},
 		{Name: "frugal-lynx", State: "running", IsLive: true, IsTimed: true, Duration: 4 * time.Second, Model: "DeepSeek V4.1 Flash@max", Intent: "Checking the build"},
@@ -145,7 +145,7 @@ func TestGoldenSubagentsListsRunningAndLatestFinishedChildren(t *testing.T) {
 		},
 	}
 	finished := []SubagentProgress{
-		{Name: "frugal-heron", State: "done", IsTimed: true, Duration: time.Minute, Model: "Claude Haiku@med", Intent: "Reading the readme", ToolCalls: 4},
+		{Name: "frugal-heron", Alias: "readme", State: "done", IsTimed: true, Duration: time.Minute, Model: "Claude Haiku@med", Intent: "Reading the readme", ToolCalls: 4},
 		{Name: "frugal-wren", State: "failed", IsTimed: true, Duration: 3 * time.Second, Model: "DeepSeek V4.1 Flash@max", Intent: "Counting the TODOs", ToolCalls: 1},
 		{Name: "frugal-ibis", State: "stopped", IsTimed: true, Duration: 2 * time.Minute, Model: "Claude Haiku@med", Intent: "Watching the build", ToolCalls: 9},
 	}
