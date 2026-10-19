@@ -2,6 +2,7 @@ Usage:
     oh [options] [-t <tool>]... [<prompt>...]
     oh --login [<provider>]
     oh --usage [--json]
+    oh --list [--ignored]
     oh --update [--ignored]
     oh --ctl <command> [<args>...]
 

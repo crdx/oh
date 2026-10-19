@@ -7757,6 +7757,22 @@ func TestModelListDispatchRunsThroughTheBinary(t *testing.T) {
 		strings.Contains(output, "gpt-cli") || strings.Contains(output, "\x1b") {
 		t.Errorf("got %q", output)
 	}
+
+	seen := `{"version":2,"providers":{"ollama":[{"id":"local-cli-old","efforts":["high"],"output":128000}]}}`
+	if err := os.WriteFile(filepath.Join(filepath.Dir(cachePath), "seen_models.json"), []byte(seen), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(runTestBinary(t, binary, reachableWorkspaceDir(t), testBinaryEnvironment(t, stateDirectory), "-l"), "local-cli-old") {
+		t.Error("an ignored model was listed without -I")
+	}
+	ignoredOutput := runTestBinary(t, binary, reachableWorkspaceDir(t), testBinaryEnvironment(t, stateDirectory), "-lI")
+	if !strings.Contains(ignoredOutput, "local-cli\n") || !strings.Contains(ignoredOutput, "local-cli-old\n") {
+		t.Errorf("ignored listing got %q", ignoredOutput)
+	}
+	ignoredQualified := runTestBinary(t, binary, reachableWorkspaceDir(t), testBinaryEnvironment(t, stateDirectory), "--ctl", "models", "-I")
+	if ignoredQualified != "ollama/local-cli\nollama/local-cli-old\n" {
+		t.Errorf("ignored qualified listing got %q", ignoredQualified)
+	}
 }
 
 func TestModelUpdateDispatchRunsThroughTheBinary(t *testing.T) {

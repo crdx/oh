@@ -1,0 +1,6 @@
+\e[4m\e[38;2;150;152;150m  Provider      Model                         Effort     Context      Cost ↑      Input     Output  Identifier\e[0m\e[0m
+  Codex         GPT Sol 5.6                   max              —           \e[38;2;150;152;150m—\e[0m          —          —  \e[38;2;150;152;150mgpt-5.6-sol\e[0m
+  OpenCode Go   DeepSeek Pro 4                max              —           \e[38;2;150;152;150m—\e[0m          —          —  \e[38;2;150;152;150mdeepseek-v4-pro\e[0m
+  Anthropic     Opus 5                        max              —           \e[38;2;150;152;150m—\e[0m          —          —  \e[38;2;150;152;150mclaude-opus-5\e[0m
+\e[38;2;150;152;150m  Codex         GPT Sol 5.5                   xhigh            —           \e[38;2;150;152;150m—\e[0m\e[38;2;150;152;150m          —          —  \e[38;2;150;152;150mgpt-5.5-sol\e[0m
+\e[38;2;150;152;150m  OpenCode Go   DeepSeek Pro 3                max              —           \e[38;2;150;152;150m—\e[0m\e[38;2;150;152;150m          —          —  \e[38;2;150;152;150mdeepseek-v3-pro\e[0m

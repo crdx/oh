@@ -7,6 +7,7 @@
 - Maintain terminal busy status while subagents run
 - Cache tool call renderings
 - Use a superseded model with an exact match
+- List ignored models with `-lI` and `--ctl models -I`
 
 ## [0.19.0] - 2026-10-18
 

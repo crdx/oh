@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/app/style"
+	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/state"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
@@ -32,7 +33,7 @@ func TestGoldenQualifiedModelListMatchesTheFormerListing(t *testing.T) {
 	useCachedModels(t)
 
 	var output bytes.Buffer
-	if err := ListNames(&output, modelCachePath(), func(string) bool { return true }); err != nil {
+	if err := ListNames(&output, modelCachePath(), nil, func(string) bool { return true }); err != nil {
 		t.Fatal(err)
 	}
 	assertGolden(t, "qualified-list.txt", output.String())
@@ -280,6 +281,72 @@ func updateOverStoredModels(t *testing.T, output io.Writer, isShowingIgnored boo
 	if err := Update(output, endpoint, modelCachePath(), seenModelsPath(), lister, isShowingIgnored); err != nil {
 		t.Fatal(err)
 	}
+}
+
+func useIgnoredModels(t *testing.T) []Choice {
+	t.Helper()
+
+	useCachedModels(t)
+
+	if err := recordSeenModels(seenModelsPath(), map[string][]agent.Model{
+		CodexProvider: {
+			{ID: "gpt-5.5-sol", EffortLevels: []string{"low", "medium", "high", "xhigh"}, MaxOutputTokens: 128_000},
+			{ID: "gpt-5.6-sol", EffortLevels: []string{"high"}, MaxOutputTokens: 128_000},
+		},
+		AnthropicProvider: {
+			{ID: "claude-opus-4-5", EffortLevels: []string{"high"}, MaxOutputTokens: 32_000},
+		},
+		OpencodeGoProvider: {
+			{ID: "deepseek-v3-pro", EffortLevels: []string{"high", "max"}, MaxOutputTokens: 128_000, Wire: agent.CompletionsWire},
+			{ID: "deepseek-v2-pro", MaxOutputTokens: 64_000, Wire: agent.CompletionsWire},
+		},
+	}); err != nil {
+		t.Fatal(err)
+	}
+
+	ignoredChoices, err := IgnoredChoices(modelCachePath(), seenModelsPath())
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return ignoredChoices
+}
+
+func TestGoldenQualifiedModelListAddsIgnoredModels(t *testing.T) {
+	ignoredChoices := useIgnoredModels(t)
+
+	var output bytes.Buffer
+	if err := ListNames(&output, modelCachePath(), ignoredChoices, func(string) bool { return true }); err != nil {
+		t.Fatal(err)
+	}
+	assertGolden(t, "qualified-list-ignored.txt", output.String())
+}
+
+const ignoredListingColumns = 140
+
+func TestGoldenListingDrawsIgnoredModelsDim(t *testing.T) {
+	ignoredChoices := useIgnoredModels(t)
+
+	var output bytes.Buffer
+	err := List(&output, modelCachePath(), ignoredChoices, money.Dollar(), func(string) bool { return true }, Defaults{}, ignoredListingColumns)
+	if err != nil {
+		t.Fatal(err)
+	}
+	assertGolden(t, "list-ignored.ansi", report(t, output.String()))
+}
+
+func TestGoldenListingIgnoredModelsWithoutColourKeepsTheirColumns(t *testing.T) {
+	ignoredChoices := useIgnoredModels(t)
+
+	var output bytes.Buffer
+	restoreStyle := style.Init(&output)
+	defer restoreStyle()
+
+	err := List(&output, modelCachePath(), ignoredChoices, money.Dollar(), func(string) bool { return true }, Defaults{}, ignoredListingColumns)
+	if err != nil {
+		t.Fatal(err)
+	}
+	assertGolden(t, "list-ignored-plain.txt", report(t, output.String()))
 }
 
 func TestGoldenAnUpdateDrawsWhatChangedBesideWhatItIgnored(t *testing.T) {

@@ -19,6 +19,7 @@ var ErrNotLoggedIn = errors.New("not logged in to any provider: run oh -L to sig
 func List(
 	output io.Writer,
 	path string,
+	ignoredChoices []Choice,
 	currency money.Currency,
 	isLoggedIn func(providerName string) bool,
 	defaults Defaults,
@@ -29,21 +30,46 @@ func List(
 		return err
 	}
 
-	return picker.Print(output, offered(choices, defaults), currency, columns)
+	models := offered(choices, defaults)
+	for _, model := range offered(signedInto(ignoredChoices, isLoggedIn), defaults) {
+		model.IsIgnored = true
+		models = append(models, model)
+	}
+
+	return picker.Print(output, models, currency, columns)
 }
 
-func ListNames(output io.Writer, path string, isLoggedIn func(providerName string) bool) error {
+func ListNames(
+	output io.Writer,
+	path string,
+	ignoredChoices []Choice,
+	isLoggedIn func(providerName string) bool,
+) error {
 	choices, err := selectableChoices(path, isLoggedIn)
 	if err != nil {
 		return err
 	}
 
-	for _, choice := range choices {
+	for _, choice := range append(choices, signedInto(ignoredChoices, isLoggedIn)...) {
 		if _, err := fmt.Fprintf(output, "%s/%s\n", choice.Provider, choice.ID); err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+func IgnoredChoices(path string, seenPath string) ([]Choice, error) {
+	seen, err := seenChoices(seenPath)
+	if err != nil {
+		return nil, fmt.Errorf("read the models seen before: %w", err)
+	}
+
+	choices := Choices(path)
+
+	return slices.DeleteFunc(seen, func(seenChoice Choice) bool {
+		_, isListed := chosenAmong(choices, seenChoice.Provider, seenChoice.ID)
+		return isListed
+	}), nil
 }
 
 func selectableChoices(path string, isLoggedIn func(providerName string) bool) ([]Choice, error) {

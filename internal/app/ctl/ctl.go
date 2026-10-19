@@ -27,7 +27,7 @@ Usage:
     oh --ctl regenerate [<session>...]
     oh --ctl migrate [options] [<session>...]
     oh --ctl gc [options]
-    oh --ctl models
+    oh --ctl models [-I]
 
 Commands:
     sessions      List or delete stored sessions

@@ -509,6 +509,14 @@ func chooseSessionModel(request sessionModelRequest) (model.Selection, model.Cho
 	return selection, choice, nil
 }
 
+func listedIgnoredChoices(isShowingIgnored bool, modelCachePath string, seenModelsPath string) ([]model.Choice, error) {
+	if !isShowingIgnored {
+		return nil, nil
+	}
+
+	return model.IgnoredChoices(modelCachePath, seenModelsPath)
+}
+
 func applyDefaultCaps(options *cli.Options, settings config.Config) error {
 	if options.WereCapsChosen {
 		return nil
@@ -699,8 +707,12 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 			columns, _, _ = term.GetSize(int(os.Stdout.Fd()))
 		}
 		endpoints := backend.EndpointSettings{OverrideURL: endpointURL, OllamaHost: settings.Provider.Ollama.Host}
+		ignoredChoices, err := listedIgnoredChoices(inputArgs.IsShowingIgnored, modelCachePath, seenModelsPath)
+		if err != nil {
+			return "", err
+		}
 		return "", model.List(
-			os.Stdout, modelCachePath,
+			os.Stdout, modelCachePath, ignoredChoices,
 			money.Load(location.GetExchangeRateCachePath(), currencyCode(settings.Ui.Currency)),
 			func(providerName string) bool { return backend.IsAvailable(providerName, endpoints) },
 			settings.Defaults.ForSelections(), columns,

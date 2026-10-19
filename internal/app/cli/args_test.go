@@ -343,6 +343,15 @@ func TestTheIgnoredModelsAreAskedForAlongsideAnUpdate(t *testing.T) {
 	}
 }
 
+func TestTheIgnoredModelsAreAskedForAlongsideTheList(t *testing.T) {
+	for _, arguments := range [][]string{{"-lI"}, {"-l", "-I"}, {"--list", "--ignored"}} {
+		if input := bind(t, arguments...); !input.List || !input.IsShowingIgnored {
+			t.Errorf("%v: expected both flags to be read, got List=%v IsShowingIgnored=%v",
+				arguments, input.List, input.IsShowingIgnored)
+		}
+	}
+}
+
 func TestWhateverIsLeftOverIsTheFirstThingSaid(t *testing.T) {
 	parsedOptions := parseOptions(t, "why", "does", "the", "spinner", "stutter")
 

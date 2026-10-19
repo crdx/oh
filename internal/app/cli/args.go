@@ -27,6 +27,7 @@ Usage:
     $0 [options] [-t <tool>]... [<prompt>...]
     $0 --login [<provider>]
     $0 --usage [--json]
+    $0 --list [--ignored]
     $0 --update [--ignored]
     $0 --ctl <command> [<args>...]
 

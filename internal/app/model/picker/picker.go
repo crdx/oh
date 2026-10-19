@@ -73,6 +73,7 @@ type Model struct {
 	Effort              Effort
 	ContextWindowTokens int
 	Prices              *agent.TokenPrices
+	IsIgnored           bool
 }
 
 func Choose(
@@ -204,7 +205,12 @@ func (self *modelList) ColumnHeader(room int) string {
 }
 
 func (self *modelList) Row(index int, isChosen bool, room int) string {
-	return style.Answer.Over(modelRow(self.models[index], self.currency, isChosen, room))
+	model := self.models[index]
+	if model.IsIgnored {
+		return style.Subtle.Over(modelRow(model, self.currency, isChosen, room))
+	}
+
+	return style.Answer.Over(modelRow(model, self.currency, isChosen, room))
 }
 
 func (self *modelList) sortLabel() string {

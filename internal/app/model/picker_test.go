@@ -98,7 +98,7 @@ func TestListingPutsANamedFreeGoModelBeforePaidAndUnpricedModels(t *testing.T) {
 	}
 
 	var output strings.Builder
-	if err := List(&output, path, money.In("GBP", 0.8), everyoneSignedIn, Defaults{}, 0); err != nil {
+	if err := List(&output, path, nil, money.In("GBP", 0.8), everyoneSignedIn, Defaults{}, 0); err != nil {
 		t.Fatal(err)
 	}
 	text := output.String()

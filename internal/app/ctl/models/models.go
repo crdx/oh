@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"crdx.org/duckopt/v2"
-
 	"crdx.org/oh/internal/app/backend"
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/app/model"
@@ -13,21 +12,33 @@ import (
 const Usage = `oh --ctl models — print the qualified names of usable models
 
 Usage:
-    $0 --ctl models
+    $0 --ctl models [-I]
 
 Options:
-    -h, --help    Show this help
+    -I, --ignored    Include ignored models
+    -h, --help       Show this help
 `
 
 type inputOpts struct {
-	IsControlling bool `docopt:"--ctl"`
-	Models        bool `docopt:"models"`
+	IsControlling    bool `docopt:"--ctl"`
+	Models           bool `docopt:"models"`
+	IsShowingIgnored bool `docopt:"--ignored"`
 }
 
 func Run() error {
-	duckopt.MustBind[inputOpts](Usage, "$0")
+	options := duckopt.MustBind[inputOpts](Usage, "$0")
 	endpoints := backend.EndpointSettings{OverrideURL: os.Getenv(backend.EndpointVariable)}
-	return model.ListNames(os.Stdout, location.GetModelCachePath(), func(providerName string) bool {
+
+	var ignoredChoices []model.Choice
+	if options.IsShowingIgnored {
+		var err error
+		ignoredChoices, err = model.IgnoredChoices(location.GetModelCachePath(), location.GetSeenModelsPath())
+		if err != nil {
+			return err
+		}
+	}
+
+	return model.ListNames(os.Stdout, location.GetModelCachePath(), ignoredChoices, func(providerName string) bool {
 		return backend.IsAvailable(providerName, endpoints)
 	})
 }

@@ -97,7 +97,7 @@ func TestListingModelsPrintsTheSameOffersAsThePicker(t *testing.T) {
 	useCachedModels(t)
 
 	var output bytes.Buffer
-	if err := List(&output, modelCachePath(), money.Dollar(), func(string) bool { return true }, Defaults{Effort: "high", IsFast: true}, 0); err != nil {
+	if err := List(&output, modelCachePath(), nil, money.Dollar(), func(string) bool { return true }, Defaults{Effort: "high", IsFast: true}, 0); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
@@ -122,7 +122,7 @@ func TestQualifiedListingOmitsUnavailableProviders(t *testing.T) {
 	useCachedModels(t)
 
 	var output bytes.Buffer
-	err := ListNames(&output, modelCachePath(), func(providerName string) bool {
+	err := ListNames(&output, modelCachePath(), nil, func(providerName string) bool {
 		return providerName == AnthropicProvider
 	})
 	if err != nil {
@@ -136,7 +136,7 @@ func TestQualifiedListingOmitsUnavailableProviders(t *testing.T) {
 func TestQualifiedListingReturnsWriterFailures(t *testing.T) {
 	useCachedModels(t)
 
-	err := ListNames(failingWriter{}, modelCachePath(), func(string) bool { return true })
+	err := ListNames(failingWriter{}, modelCachePath(), nil, func(string) bool { return true })
 	if err == nil || !strings.Contains(err.Error(), "writer failed") {
 		t.Errorf("got %v", err)
 	}
@@ -145,10 +145,10 @@ func TestQualifiedListingReturnsWriterFailures(t *testing.T) {
 func TestQualifiedListingRefusesWithoutModelsOrLogin(t *testing.T) {
 	useCachedModels(t)
 
-	if err := ListNames(&bytes.Buffer{}, modelCachePath(), func(string) bool { return false }); !errors.Is(err, ErrNotLoggedIn) {
+	if err := ListNames(&bytes.Buffer{}, modelCachePath(), nil, func(string) bool { return false }); !errors.Is(err, ErrNotLoggedIn) {
 		t.Errorf("expected a login refusal, got %v", err)
 	}
-	if err := ListNames(&bytes.Buffer{}, t.TempDir()+"/models.json", func(string) bool { return true }); err == nil || !strings.Contains(err.Error(), "-u") {
+	if err := ListNames(&bytes.Buffer{}, t.TempDir()+"/models.json", nil, func(string) bool { return true }); err == nil || !strings.Contains(err.Error(), "-u") {
 		t.Errorf("expected an update hint, got %v", err)
 	}
 }
@@ -162,7 +162,7 @@ func (failingWriter) Write([]byte) (int, error) {
 func TestListingModelsReturnsWriterFailures(t *testing.T) {
 	useCachedModels(t)
 
-	err := List(failingWriter{}, modelCachePath(), money.Dollar(), func(string) bool { return true }, Defaults{}, 0)
+	err := List(failingWriter{}, modelCachePath(), nil, money.Dollar(), func(string) bool { return true }, Defaults{}, 0)
 	if err == nil || !strings.Contains(err.Error(), "writer failed") {
 		t.Errorf("got %v", err)
 	}
@@ -172,7 +172,7 @@ func TestListingModelsOmitsProvidersThatAreNotAvailable(t *testing.T) {
 	useCachedModels(t)
 
 	var output bytes.Buffer
-	err := List(&output, modelCachePath(), money.Dollar(), func(providerName string) bool {
+	err := List(&output, modelCachePath(), nil, money.Dollar(), func(providerName string) bool {
 		return providerName != OpencodeGoProvider
 	}, Defaults{}, 0)
 	if err != nil {
@@ -189,7 +189,7 @@ func TestListingModelsOmitsProvidersThatAreNotAvailable(t *testing.T) {
 func TestListingModelsRefusesWhenNoKnownProviderIsAvailable(t *testing.T) {
 	useCachedModels(t)
 
-	err := List(&bytes.Buffer{}, modelCachePath(), money.Dollar(), func(string) bool { return false }, Defaults{}, 0)
+	err := List(&bytes.Buffer{}, modelCachePath(), nil, money.Dollar(), func(string) bool { return false }, Defaults{}, 0)
 	if !errors.Is(err, ErrNotLoggedIn) {
 		t.Errorf("expected the listing to advise signing in, got %v", err)
 	}
@@ -198,7 +198,7 @@ func TestListingModelsRefusesWhenNoKnownProviderIsAvailable(t *testing.T) {
 func TestListingModelsWithoutACacheSaysHowToFetchThem(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", t.TempDir())
 
-	if err := List(&bytes.Buffer{}, modelCachePath(), money.Dollar(), func(string) bool { return true }, Defaults{}, 0); err == nil || !strings.Contains(err.Error(), "-u") {
+	if err := List(&bytes.Buffer{}, modelCachePath(), nil, money.Dollar(), func(string) bool { return true }, Defaults{}, 0); err == nil || !strings.Contains(err.Error(), "-u") {
 		t.Errorf("expected the empty listing to say how to fetch models, got %v", err)
 	}
 }

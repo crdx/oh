@@ -1,0 +1,6 @@
+  Provider      Model                         Effort     Context      Cost ↑      Input     Output  Identifier
+  Codex         GPT Sol 5.6                   max              —           —          —          —  gpt-5.6-sol
+  OpenCode Go   DeepSeek Pro 4                max              —           —          —          —  deepseek-v4-pro
+  Anthropic     Opus 5                        max              —           —          —          —  claude-opus-5
+  Codex         GPT Sol 5.5                   xhigh            —           —          —          —  gpt-5.5-sol
+  OpenCode Go   DeepSeek Pro 3                max              —           —          —          —  deepseek-v3-pro
