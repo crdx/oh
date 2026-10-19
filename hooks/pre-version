@@ -3,7 +3,12 @@ set -euo pipefail
 
 NEW_VERSION=$1
 
-sed -i "s/^## \[N\.N\.N\] - XXXX-XX-XX\$/&\n\n## [${NEW_VERSION}] - $(date +%F)/" CHANGELOG.md
+if ! grep -q '^## \[Next\]$' CHANGELOG.md; then
+    echo "CHANGELOG.md has no ## [Next] section" >&2
+    exit 1
+fi
+
+sed -i "s/^## \[Next\]\$/&\n\n## [${NEW_VERSION}] - $(date +%F)/" CHANGELOG.md
 
 git add CHANGELOG.md
 

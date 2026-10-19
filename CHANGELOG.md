@@ -1,6 +1,6 @@
 # Changelog
 
-## [N.N.N] - XXXX-XX-XX
+## [Next]
 
 ### Changes
 
