@@ -477,11 +477,6 @@ func TestCommandArgumentsAreCompletedFromTheSessionItself(t *testing.T) {
 	session.typeAndSettle(pressEscape)
 	session.typeAndSettle(clearInput)
 
-	session.typeAndSettle("/fork -f ")
-	session.requireShown("› able-dolphin")
-	session.typeAndSettle(pressEscape)
-	session.typeAndSettle(clearInput)
-
 	session.typeAndSettle("/!")
 	session.requireHidden("no matching commands")
 	session.requireHidden("› ")

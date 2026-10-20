@@ -487,16 +487,6 @@ func slashCommandScenarios(t *testing.T) map[string]pathRefScenario {
 				rig.t.Error("the dropdown stayed open after choosing a session")
 			}
 		}),
-		"82 the source option takes its short form": sessionCommanding(false, func(rig *pathRefRig) {
-			typing("/new -f")(rig)
-			rig.press(tabKey)
-			if got := rig.input.Text(); got != "/new -f " {
-				rig.t.Errorf("tab left %q in the input", got)
-			}
-			if !rig.app.completer.IsOpen() {
-				rig.t.Error("the dropdown closed over the stored sessions")
-			}
-		}),
 	}
 }
 

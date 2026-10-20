@@ -312,7 +312,7 @@ see /co
   -c      configure access rights
   -t      replace current toolbox
   --yolo  run outside the sandbox
-  -f      fork a previous session
+  --from  fork a previous session
 
 
 
@@ -348,9 +348,9 @@ see /co
 === 57 an option already given is not offered again ===
 ────────────────────────────────────────────────────────────
 /fork -m sonnet --yolo -
-› -c  configure access rights
-  -t  replace current toolbox
-  -f  fork a previous session
+› -c      configure access rights
+  -t      replace current toolbox
+  --from  fork a previous session
 ────────────────────────────────────────────────────────────
 === 58 a capability option lists capabilities ===
 ────────────────────────────────────────────────────────────
@@ -379,10 +379,10 @@ see /co
 === 60 a waived sandbox does not offer itself again ===
 ────────────────────────────────────────────────────────────
 /new -
-› -m  pick which model to use
-  -c  configure access rights
-  -t  replace current toolbox
-  -f  fork a previous session
+› -m      pick which model to use
+  -c      configure access rights
+  -t      replace current toolbox
+  --from  fork a previous session
 
 
 
@@ -400,7 +400,7 @@ see /co
 › -c      configure access rights
   -t      replace current toolbox
   --yolo  run outside the sandbox
-  -f      fork a previous session
+  --from  fork a previous session
 
 
 
@@ -488,7 +488,7 @@ see /co
 › -c      configure access rights
   -t      replace current toolbox
   --yolo  run outside the sandbox
-  -f      fork a previous session
+  --from  fork a previous session
 ────────────────────────────────────────────────────────────
 === 76 enter on a bare model beside -m shows the usage ===
  ╭────────────────────────────────────────────────────────╮
@@ -503,7 +503,7 @@ see /co
 › -m      pick which model to use
   -c      configure access rights
   --yolo  run outside the sandbox
-  -f      fork a previous session
+  --from  fork a previous session
 ────────────────────────────────────────────────────────────
 === 78 a tool option given after every tool lists nothing ===
 ────────────────────────────────────────────────────────────
@@ -528,16 +528,4 @@ see /co
 === 81 choosing a source session completes it ===
 ────────────────────────────────────────────────────────────
 /fork --from able-dolphin
-────────────────────────────────────────────────────────────
-=== 82 the source option takes its short form ===
-────────────────────────────────────────────────────────────
-/new -f
-› able-dolphin
-  agile-turtle
-  wise-otter
-
-
-
-
-
 ────────────────────────────────────────────────────────────

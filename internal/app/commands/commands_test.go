@@ -236,8 +236,6 @@ func TestCommandsRunWithoutStoppingTheHarness(t *testing.T) {
 		"/fork --caps l -m sonnet":  "fork:tame-impala:sonnet:caps=l",
 		"/new --from able-dolphin":  "fork:able-dolphin:",
 		"/fork --from able-dolphin": "fork:able-dolphin:",
-		"/new -f able-dolphin":      "fork:able-dolphin:",
-		"/fork -f able-dolphin":     "fork:able-dolphin:",
 		"/fork --from able-dolphin -m sonnet --yolo": "fork:able-dolphin:sonnet:yolo",
 		"/open config-dir":                           "open:" + configDirectory,
 		"/open workspace-dir":                        "open:" + workspaceDirectory,
@@ -584,7 +582,7 @@ func TestAnInheritedWaiverIsNeitherOfferedAgainNorWidenedByCapabilities(t *testi
 	for _, completion := range commands.Completions("/new -") {
 		options = append(options, completion.Label)
 	}
-	if want := []string{"-m", "-c", "-t", "-f"}; !slices.Equal(options, want) {
+	if want := []string{"-m", "-c", "-t", "--from"}; !slices.Equal(options, want) {
 		t.Errorf("got options %v, want %v", options, want)
 	}
 
@@ -609,7 +607,7 @@ func TestTheSourceOptionListsTheStoredSessions(t *testing.T) {
 		t.Errorf("got %v, want %v", names, want)
 	}
 
-	for _, prefix := range []string{"/new --from ", "/fork --from ", "/new -f ", "/fork -f "} {
+	for _, prefix := range []string{"/new --from ", "/fork --from "} {
 		var labels []string
 		for _, completion := range commands.Completions(prefix) {
 			labels = append(labels, completion.Label)

@@ -36,7 +36,7 @@ var sessionOptions = []sessionOption{
 	{kind: capsOption, names: []string{"-c", "--caps"}},
 	{kind: toolOption, names: []string{"-t", "--tool"}},
 	{kind: yoloOption, names: []string{"--yolo"}},
-	{kind: sourceOption, names: []string{"-f", "--from"}},
+	{kind: sourceOption, names: []string{"--from"}},
 }
 
 func (self sessionOption) takesValue() bool {
