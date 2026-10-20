@@ -2,16 +2,22 @@
 
 ## [Next]
 
-### Changes
+### Sessions
 
-- Maintain terminal busy status while subagents run
-- Cache tool call renderings
+- Remove read-only Go modcaches when deleting a session
+
+### Models
+
 - Use a superseded model with an exact match
 - List ignored models with `-lI` and `--ctl models -I`
 - Some models like to name subagents, so let 'em
-- Remove read-only Go modcaches when deleting a session
-- Add `.agents.local` as an additional directory
-- Count repeated selections on subagent spawn rows
+- Count repeated model selections on subagent spawn rows
+
+### Misc
+
+- Cache tool call renderings
+- Maintain terminal busy status while subagents run
+- Add `.agents.local` as an additional lookup directory
 
 ## [0.19.0] - 2026-10-18
 
