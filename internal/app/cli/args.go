@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"regexp"
 	"slices"
 	"strings"
 
@@ -99,7 +100,7 @@ type Options struct {
 
 func Bind() *Input {
 	originalArgs := os.Args
-	arguments := append([]string(nil), os.Args...)
+	arguments := splitShortFlagGroups(os.Args)
 	isSessionPicker := false
 	isModelPicker := false
 	for i := 1; i < len(arguments); i++ {
@@ -130,6 +131,63 @@ func Bind() *Input {
 	parsedFlags.Message = promptWithoutOptionTerminator(parsedFlags.Message)
 	parsedFlags.Message = promptAfterStdinMarker(parsedFlags.Message)
 	return &Input{inputFlags: *parsedFlags}
+}
+
+var shortOption = regexp.MustCompile(`(?m)^\s+-([A-Za-z]), --[a-z-]+( \[?<)?`)
+
+func splitShortFlagGroups(arguments []string) []string {
+	withoutValue, withOptionalValue := shortFlagsByValue()
+	split := []string{arguments[0]}
+	for index, argument := range arguments[1:] {
+		if argument == optionTerminator {
+			return append(split, arguments[index+1:]...)
+		}
+
+		letters, isShort := strings.CutPrefix(argument, "-")
+		if !isShort || len(letters) < 2 || strings.HasPrefix(letters, "-") {
+			split = append(split, argument)
+			continue
+		}
+
+		flags := make([]string, 0, len(letters))
+		valueFlag := ""
+		isGroup := true
+		for _, letter := range letters {
+			switch {
+			case strings.ContainsRune(withoutValue, letter):
+				flags = append(flags, "-"+string(letter))
+			case strings.ContainsRune(withOptionalValue, letter) && valueFlag == "":
+				valueFlag = "-" + string(letter)
+			default:
+				isGroup = false
+			}
+		}
+		if !isGroup {
+			split = append(split, argument)
+			continue
+		}
+
+		split = append(split, flags...)
+		if valueFlag != "" {
+			split = append(split, valueFlag)
+		}
+	}
+
+	return split
+}
+
+func shortFlagsByValue() (string, string) {
+	var withoutValue, withOptionalValue strings.Builder
+	for _, match := range shortOption.FindAllStringSubmatch(usage, -1) {
+		switch match[2] {
+		case "":
+			withoutValue.WriteString(match[1])
+		case " [<":
+			withOptionalValue.WriteString(match[1])
+		}
+	}
+
+	return withoutValue.String(), withOptionalValue.String()
 }
 
 func promptWithoutOptionTerminator(words []string) []string {

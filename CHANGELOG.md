@@ -30,6 +30,7 @@
 - Cache tool call renderings
 - Maintain terminal busy status while subagents run
 - Add `.agents.local` as an additional lookup directory
+- Accept grouped short flags such as `-rf` in any order
 
 ## [0.19.0] - 2026-10-18
 

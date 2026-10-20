@@ -540,3 +540,39 @@ func TestAHeadlessSessionNamesOnlyToolsThatWorkAlone(t *testing.T) {
 		t.Errorf("an interactive session refused a job: %v", err)
 	}
 }
+
+func TestAShortFlagGroupResumesWhicheverOrderItsFlagsTake(t *testing.T) {
+	for _, arguments := range [][]string{
+		{"-fr", "chosen-lobster"},
+		{"-rf", "chosen-lobster"},
+		{"-f", "-r", "chosen-lobster"},
+		{"-r", "chosen-lobster", "-f"},
+	} {
+		input := bind(t, arguments...)
+		if input.Session != "chosen-lobster" || !input.IsForced || input.IsSessionPicker || len(input.Message) > 0 {
+			t.Errorf("%v resumed %q, forced %t, picker %t, prompt %q", arguments, input.Session, input.IsForced, input.IsSessionPicker, input.Message)
+		}
+	}
+
+	printed := bind(t, "-prf", "chosen-lobster", "carry", "on")
+	if !printed.IsPrinting || !printed.IsForced || printed.Session != "chosen-lobster" || strings.Join(printed.Message, " ") != "carry on" {
+		t.Errorf("a printed forced resume bound as %+v", printed.inputFlags)
+	}
+
+	if picked := bind(t, "-fr"); !picked.IsSessionPicker || !picked.IsForced {
+		t.Errorf("a group ending in -r opened no picker: %+v", picked.inputFlags)
+	} else if err := picked.Check(false); err == nil {
+		t.Error("expected forcing the picker to be refused")
+	}
+}
+
+func TestAShortFlagGroupWithAValueIsLeftWhole(t *testing.T) {
+	parsedOptions := parseOptions(t, "-crx", "hello")
+	if parsedOptions.Caps.Flags() != "rx" || parsedOptions.Message != "hello" {
+		t.Errorf("caps %q and prompt %q", parsedOptions.Caps.Flags(), parsedOptions.Message)
+	}
+
+	if got := splitShortFlagGroups([]string{"oh", "-rm", "--", "-fr"}); !slices.Equal(got, []string{"oh", "-rm", "--", "-fr"}) {
+		t.Errorf("got %q", got)
+	}
+}
