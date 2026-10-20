@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strconv"
 	"strings"
 	"syscall"
@@ -326,6 +327,96 @@ func TestAUserMessageAfterAnExtraCompletionIsStillIncomplete(t *testing.T) {
 	}
 	if !storedSession.HasIncompleteTurn {
 		t.Error("unfinished message was masked by an earlier completion")
+	}
+}
+
+func TestAbandoningATurnDropsOnlyItsUncommittedProviderItems(t *testing.T) {
+	directory := t.TempDir()
+	writer, err := session.Create(directory, nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := writer.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "completed"}); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Item(json.RawMessage(`{"turn":"completed"}`)); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := writer.Event(agent.Event{
+		Kind:  agent.ModelMessageEvent,
+		Usage: &agent.Usage{Cache: &agent.CacheUsage{ReadTokens: 10}},
+	}); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.CompleteTurn(session.TurnSummary{}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := writer.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "abandoned"}); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Item(json.RawMessage(`{"turn":"abandoned"}`)); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := writer.Event(agent.Event{
+		Kind:  agent.ModelMessageEvent,
+		Usage: &agent.Usage{Cache: &agent.CacheUsage{ReadTokens: 20}},
+	}); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.AbandonTurn(); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	storedSession, err := session.Read(directory, writer.Name())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if storedSession.HasIncompleteTurn || !storedSession.HasAbandonedTurn {
+		t.Errorf("unexpected recovery state: %+v", storedSession)
+	}
+	if len(storedSession.Events) != 4 {
+		t.Errorf("abandonment discarded visible events: %+v", storedSession.Events)
+	}
+	if storedSession.CacheReading.ReadTokens != 10 {
+		t.Errorf("restored cache reading %+v from the abandoned turn", storedSession.CacheReading)
+	}
+	if len(storedSession.Items) != 1 || string(storedSession.Items[0]) != `{"turn":"completed"}` {
+		t.Errorf("got provider items %s", storedSession.Items)
+	}
+
+	resumed, err := session.Open(directory, writer.Name())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := resumed.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "resumed"}); err != nil {
+		t.Fatal(err)
+	}
+	if err := resumed.Item(json.RawMessage(`{"turn":"resumed"}`)); err != nil {
+		t.Fatal(err)
+	}
+	if err := resumed.CompleteTurn(session.TurnSummary{}); err != nil {
+		t.Fatal(err)
+	}
+	if err := resumed.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	storedSession, err = session.Read(directory, writer.Name())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if storedSession.HasIncompleteTurn || storedSession.HasAbandonedTurn {
+		t.Errorf("resumed turn did not complete recovery: %+v", storedSession)
+	}
+	wantItems := []json.RawMessage{json.RawMessage(`{"turn":"completed"}`), json.RawMessage(`{"turn":"resumed"}`)}
+	if !reflect.DeepEqual(storedSession.Items, wantItems) {
+		t.Errorf("got provider items %s, want %s", storedSession.Items, wantItems)
+	}
+	if err := session.Check(directory, writer.Name()); err != nil {
+		t.Errorf("recovered journal failed its check: %v", err)
 	}
 }
 

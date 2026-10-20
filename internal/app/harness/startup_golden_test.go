@@ -191,6 +191,17 @@ func TestGoldenStartupResolvesTheModelToUse(t *testing.T) {
 			run := newStartupRun(t, "[agent]\nround_robin = [\"opencode-go/fake\"]\n", "Rotated answer.")
 			return run.run(t, "-p", "--yolo", "a question") + run.sessionModels(t)
 		},
+		"an archived session resumes by name only when forced": func() string {
+			run := newStartupRun(t, "", "First answer.", "Resumed answer.")
+			first := run.run(t, "-p", "--yolo", "-m", "opencode-go/fake", "a question")
+			name := run.onlySessionName(t)
+			if err := session.Archive(run.statePath("sessions"), name); err != nil {
+				t.Fatal(err)
+			}
+			refused := run.run(t, "-p", "-r", name, "another question")
+			resumed := run.run(t, "-p", "-r", name, "-f", "another question")
+			return strings.ReplaceAll(first+refused+resumed, name, "<session>")
+		},
 		"a rotation naming a model nobody offers": func() string {
 			run := newStartupRun(t, "[agent]\nround_robin = [\"opencode-go/fake\", \"opencode-go/nonesuch\"]\n")
 			return run.run(t, "-p", "--yolo", "a question") + run.sessionModels(t)
@@ -200,8 +211,9 @@ func TestGoldenStartupResolvesTheModelToUse(t *testing.T) {
 			first := run.run(t, "-p", "--yolo", "-m", "opencode-go/fake@low", "a question")
 			name := run.onlySessionName(t)
 			run.writeConfig(t, "[agent]\nround_robin = [\"opencode-go/fake@high\"]\n")
-			resumed := run.run(t, "-p", "-r", name, "another question")
-			return strings.ReplaceAll(first+resumed, name, "<session>") + run.sessionModels(t)
+			refused := run.run(t, "-p", "-r", name, "another question")
+			resumed := run.run(t, "-p", "-r", name, "-f", "another question")
+			return strings.ReplaceAll(first+refused+resumed, name, "<session>") + run.sessionModels(t)
 		},
 		"a stale model list refreshed before choosing": func() string {
 			run := newStartupRun(t, "", "First answer.", "Refreshed answer.")

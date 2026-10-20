@@ -866,7 +866,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		args.Caps, args.GroupFlags, args.WereCapsChosen, configuredToolGroups.CustomFlags(), forkSource,
 	)
 
-	resumedSession, err := sessions.LoadForResume(sessionsDir, workspace, args.Session)
+	resumedSession, err := sessions.LoadForResume(sessionsDir, workspace, args.Session, args.IsForced)
 	if err != nil {
 		return "", err
 	}

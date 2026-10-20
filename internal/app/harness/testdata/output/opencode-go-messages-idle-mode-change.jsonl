@@ -1,4 +1,4 @@
-{"kind":"head","version":22,"meta":{"model":"qwen3.8-max","workspaceDir":"","provider":"opencode-go","effort":"medium","system_prompt":"You are a test assistant."}}
+{"kind":"head","version":23,"meta":{"model":"qwen3.8-max","workspaceDir":"","provider":"opencode-go","effort":"medium","system_prompt":"You are a test assistant."}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"mode_change","name":"w","state":"rxsngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"continue with the new mode"}}

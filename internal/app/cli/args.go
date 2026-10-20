@@ -33,11 +33,11 @@ Usage:
 
 Options:
     -r, --resume [<session>]    Resume a stored session
-    -f, --from <session>        Fork a previous session
     -m, --model [<model>]       Pick which model to use
     -c, --caps <flags>          Configure access rights
     -t, --tool <tool>           Replace current toolbox
     -p, --print                 Stream in headless mode
+        --from <session>        Fork a previous session
         --ctl                   Run maintenance command
         --demo                  Follow the white rabbit
         --yolo                  Run outside the sandbox
@@ -46,6 +46,7 @@ Options:
     -L, --login                 Control provider logins
     -U, --usage                 View subscription usage
     -I, --ignored               Display ignored entries
+    -f, --force                 Forcibly carry out task
     -J, --json                  Format output into JSON
     -v, --version               Print this version info
     -h, --help                  Print this help message
@@ -60,6 +61,7 @@ type inputFlags struct {
 	Provider         string   `docopt:"<provider>"`
 	Session          string   `docopt:"--resume"`
 	IsSessionPicker  bool     `docopt:"-r"`
+	IsForced         bool     `docopt:"--force"`
 	SourceSession    string   `docopt:"--from"`
 	Model            string   `docopt:"--model"`
 	IsModelPicker    bool     `docopt:"-m"`
@@ -83,6 +85,7 @@ type Input struct {
 type Options struct {
 	Message        string
 	Session        string
+	IsForced       bool
 	SourceSession  string
 	Selection      model.Selection
 	Caps           caps.Set
@@ -163,6 +166,7 @@ func (self Input) Parse(
 	options := Options{
 		Message:       strings.Join(self.Message, " "),
 		Session:       self.Session,
+		IsForced:      self.IsForced,
 		SourceSession: self.SourceSession,
 		Tools:         self.Tools,
 		Yolo:          self.Yolo,
@@ -230,6 +234,10 @@ func (self Input) Check(isPromptPiped bool) error {
 		return errors.New(
 			"a resumed conversation preserves its model; start a new session to choose another",
 		)
+	}
+
+	if self.IsForced && self.Session == "" {
+		return errors.New("--force restores an archived session, so it needs one named by --resume")
 	}
 
 	if self.isResuming() && len(self.Tools) > 0 {

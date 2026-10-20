@@ -130,7 +130,7 @@ func ForkedCaps(
 	return lastCaps, groups.String()
 }
 
-func LoadForResume(directory string, workspace *work.Space, name string) (*store.Session, error) {
+func LoadForResume(directory string, workspace *work.Space, name string, isForced bool) (*store.Session, error) {
 	if name == "" {
 		return nil, nil //nolint:nilnil // no name means no fork was asked for
 	}
@@ -142,6 +142,9 @@ func LoadForResume(directory string, workspace *work.Space, name string) (*store
 	if isRunning {
 		return nil, fmt.Errorf("session %s is running", name)
 	}
+	if session.IsArchived(directory, name) && !isForced {
+		return nil, fmt.Errorf("session %s is archived; pass -f to restore and resume", name)
+	}
 
 	storedSession, err := store.Read(directory, name)
 	if err != nil {
@@ -150,11 +153,24 @@ func LoadForResume(directory string, workspace *work.Space, name string) (*store
 	if err := requireWorkspace(storedSession, workspace); err != nil {
 		return nil, err
 	}
+	if session.IsArchived(directory, name) {
+		if err := session.Restore(directory, name); err != nil {
+			return nil, err
+		}
+	}
 	if !storedSession.CanResume() {
-		return nil, fmt.Errorf("session %s did not finish every turn and cannot be resumed safely (yet)", name)
+		return recoverIncompleteTurn(directory, storedSession)
 	}
 
 	return storedSession, nil
+}
+
+func recoverIncompleteTurn(directory string, storedSession *store.Session) (*store.Session, error) {
+	recoveredSession, err := store.AbandonIncompleteTurn(directory, storedSession.Name, nil)
+	if errors.Is(err, session.ErrInUse) {
+		return nil, fmt.Errorf("session %s is running", storedSession.Name)
+	}
+	return recoveredSession, err
 }
 
 func requireWorkspace(storedSession *store.Session, workspace *work.Space) error {

@@ -4531,6 +4531,10 @@ func TestGoldenCompletionProtocolMatchesTheGolden(t *testing.T) {
 	}
 	writeStoredSession(t, directory, workspaceDir, "older-badger", "2024-01-01T00:00:00Z")
 	writeStoredSession(t, directory, workspaceDir, "newer-jaguar", "2025-01-01T00:00:00Z")
+	writeStoredSession(t, directory, workspaceDir, "archived-ibis", "2026-01-01T00:00:00Z")
+	if err := session.Archive(directory, "archived-ibis"); err != nil {
+		t.Fatal(err)
+	}
 	sources := cli.Sources{
 		ModelCachePath: cachePath,
 		SessionsDir:    directory,
@@ -4552,7 +4556,8 @@ func TestGoldenCompletionProtocolMatchesTheGolden(t *testing.T) {
 		{name: "providers", args: []string{"--complete", "provider", ""}},
 		{name: "capabilities", args: []string{"--complete", "caps", "rxw"}},
 		{name: "tools", args: []string{"--complete", "tool", ""}},
-		{name: "sessions", args: []string{"--complete", "session", ""}},
+		{name: "stored sessions", args: []string{"--complete", "stored-session", ""}},
+		{name: "any sessions", args: []string{"--complete", "any-session", ""}},
 	}
 
 	var output strings.Builder
@@ -6063,6 +6068,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"question-over-call":       {".screen"},
 		"footer-over-calls":        {".screen"},
 		"frame-edges":              {".screen"},
+		"recovered-session":        {".screen"},
 		"redraw-feedback":          {".ansi", ".screen"},
 		"submitted-message-redraw": {".ansi", ".screen"},
 		"readline-bindings":        {".ansi", ".screen"},
@@ -7515,6 +7521,7 @@ var optionsThatExitEarly = map[string][]string{
 
 var optionsThatOpenASession = []string{
 	"--resume",
+	"--force",
 	"--from",
 	"--model",
 	"--caps",
@@ -22962,6 +22969,46 @@ func TestTheSessionTitleReachesTheTerminalLiveAndOnResume(t *testing.T) {
 
 	if got := self.terminal.GetSessionTitle(); got != "give sessions a title" {
 		t.Errorf("a retitled session went by %q", got)
+	}
+}
+
+func TestGoldenRecoveringAnAbandonedTurnExplainsWhyItStopped(t *testing.T) {
+	compareWithGolden(t, "recovered-session", ".screen", map[string]func() string{
+		"replayed interrupted turn": func() string {
+			var screenOutput bytes.Buffer
+			self := testConversation(t, &screenOutput)
+			self.restore(&store.Session{
+				Events: []agent.Event{
+					{Kind: agent.UserMessageEvent, Text: "finish the implementation"},
+					{Kind: agent.ModelReasoningEvent, Text: "Checking the remaining tests"},
+					interrupt.Event(interrupt.ProcessExit),
+				},
+				HasAbandonedTurn: true,
+			})
+			return shown(t, screenOutput.String(), replayColumns)
+		},
+	})
+}
+
+func TestRecoveringAnAbandonedTurnTellsTheModelToReadItsTranscript(t *testing.T) {
+	var screenOutput bytes.Buffer
+	self := testConversation(t, &screenOutput)
+	provider := &plainTurnProvider{}
+	self.agent = agent.New("", provider, nil)
+
+	self.restore(&store.Session{
+		Items:            []json.RawMessage{json.RawMessage(`{"role":"user","content":"before"}`)},
+		HasAbandonedTurn: true,
+	})
+
+	if len(provider.items) != 2 {
+		t.Fatalf("provider got %d items, want the stored item and recovery note", len(provider.items))
+	}
+	recoveryItem := string(provider.items[1])
+	for _, want := range []string{"ended unexpectedly", "provider state was discarded", "chat.md"} {
+		if !strings.Contains(recoveryItem, want) {
+			t.Errorf("recovery note omitted %q: %s", want, recoveryItem)
+		}
 	}
 }
 

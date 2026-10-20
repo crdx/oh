@@ -125,30 +125,45 @@ func NamesInWorkspace(directory string, workspace *work.Space) ([]string, error)
 		return nil, err
 	}
 
-	sessions := make([]*picker.Session, 0, len(storedNames))
-	for _, name := range storedNames {
-		storedMeta, metaError := session.ReadMeta(directory, name)
-		if metaError != nil {
+	return namesInWorkspace(directory, workspace, metadataKeys(storedNames, false)), nil
+}
+
+func AllNamesInWorkspace(directory string, workspace *work.Space) ([]string, error) {
+	storedNames, archivedNames, err := session.ListNames(directory)
+	if err != nil {
+		return nil, err
+	}
+
+	keys := append(metadataKeys(storedNames, false), metadataKeys(archivedNames, true)...)
+	return namesInWorkspace(directory, workspace, keys), nil
+}
+
+func namesInWorkspace(directory string, workspace *work.Space, keys []metadataKey) []string {
+	readResults := readMetadata(directory, keys)
+	listedSessions := make([]*picker.Session, 0, len(keys))
+	for _, key := range keys {
+		result := readResults[key]
+		if result.err != nil {
 			continue
 		}
 
-		listing, isDescribed := describe(storedMeta)
+		listing, isDescribed := describe(result.metadata)
 		if !isDescribed {
 			continue
 		}
 
-		sessions = append(sessions, listing)
+		listedSessions = append(listedSessions, listing)
 	}
 
-	newestFirst(sessions)
+	newestFirst(listedSessions)
 
-	chosenSessions := InWorkspace(sessions, workspace)
-	names := make([]string, 0, len(chosenSessions))
+	chosenSessions := InWorkspace(listedSessions, workspace)
+	chosenNames := make([]string, 0, len(chosenSessions))
 	for _, chosenSession := range chosenSessions {
-		names = append(names, chosenSession.Name)
+		chosenNames = append(chosenNames, chosenSession.Name)
 	}
 
-	return names, nil
+	return chosenNames
 }
 
 type metadataKey struct {

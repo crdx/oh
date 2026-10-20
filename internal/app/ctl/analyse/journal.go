@@ -141,7 +141,7 @@ func (self *journalTally) record(line session.Line) error {
 		if line.Event != nil {
 			self.recordEvent(*line.Event)
 		}
-	case session.Item:
+	case session.Item, session.TurnAbandonment:
 	}
 
 	return nil

@@ -57,7 +57,7 @@ func TestCompletionRequestReadsTheKindAndWord(t *testing.T) {
 func TestOptionCompletionsComeFromTheUsage(t *testing.T) {
 	options := strutil.OptionNames(usage)
 
-	for _, wanted := range []string{"-L", "--login", "-r", "--resume", "-f", "--from", "-m", "--model", "-t", "--tool", "-l", "--list", "-h", "--help", "-U", "--usage", "-J", "--json"} {
+	for _, wanted := range []string{"-L", "--login", "-r", "--resume", "-f", "--force", "--from", "-m", "--model", "-t", "--tool", "-l", "--list", "-h", "--help", "-U", "--usage", "-J", "--json"} {
 		if !slices.Contains(options, wanted) {
 			t.Errorf("expected %q among %v", wanted, options)
 		}
@@ -252,18 +252,35 @@ func TestSessionCompletionsNameTheWorkspaceNewestFirst(t *testing.T) {
 	t.Chdir(workspaceDir)
 	writeStoredSession(t, directory, workspaceDir, "older-badger", "2024-01-01T00:00:00Z")
 	writeStoredSession(t, directory, workspaceDir, "newer-jaguar", "2025-01-01T00:00:00Z")
-	writeStoredSession(t, directory, t.TempDir(), "elsewhere-otter", "2026-01-01T00:00:00Z")
+	writeStoredSession(t, directory, workspaceDir, "archived-ibis", "2026-01-01T00:00:00Z")
+	writeStoredSession(t, directory, t.TempDir(), "elsewhere-otter", "2027-01-01T00:00:00Z")
+	if err := session.Archive(directory, "archived-ibis"); err != nil {
+		t.Fatal(err)
+	}
 
-	names := sessionNames(directory)
+	names := storedSessionNames(directory)
 	if !slices.Equal(names, []string{"newer-jaguar", "older-badger"}) {
-		t.Errorf("got %v", names)
+		t.Errorf("got stored names %v", names)
 	}
 
 	if names := withPrefix("old", names); !slices.Equal(names, []string{"older-badger"}) {
-		t.Errorf("got %v", names)
+		t.Errorf("got prefixed names %v", names)
 	}
 
-	if names := sessionNames(filepath.Join(directory, "missing")); len(names) > 0 {
+	anyNames := anySessionNames(directory)
+	if !slices.Equal(anyNames, []string{"archived-ibis", "newer-jaguar", "older-badger"}) {
+		t.Errorf("got any session names %v", anyNames)
+	}
+	anyCompletions, isWanted := Complete([]string{completeFlag, completeAnySession, "arch"}, Sources{SessionsDir: directory})
+	if !isWanted || !slices.Equal(anyCompletions, []string{"archived-ibis"}) {
+		t.Errorf("got any session completions %v and wanted %t", anyCompletions, isWanted)
+	}
+
+	missingDirectory := filepath.Join(directory, "missing")
+	if names := storedSessionNames(missingDirectory); len(names) > 0 {
 		t.Errorf("expected no names for a missing directory, got %v", names)
+	}
+	if names := anySessionNames(missingDirectory); len(names) > 0 {
+		t.Errorf("expected no session names of any kind for a missing directory, got %v", names)
 	}
 }

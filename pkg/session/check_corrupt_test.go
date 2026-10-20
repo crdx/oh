@@ -96,6 +96,16 @@ func TestTheHealthCheckRejectsMalformedArchiveEntries(t *testing.T) {
 			want: "session.jsonl\"",
 		},
 		{
+			name: "metadata is a directory",
+			makeEntries: func(name string, journal []byte, _ []byte) []archiveEntry {
+				return []archiveEntry{
+					{name: name + "/session.jsonl", body: journal, kind: tar.TypeReg},
+					{name: name + "/meta.json", kind: tar.TypeDir},
+				}
+			},
+			want: "meta.json\"",
+		},
+		{
 			name: "no metadata",
 			makeEntries: func(name string, journal []byte, meta []byte) []archiveEntry {
 				return []archiveEntry{{name: name + "/session.jsonl", body: journal, kind: tar.TypeReg}}

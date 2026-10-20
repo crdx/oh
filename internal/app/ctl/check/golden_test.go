@@ -25,7 +25,7 @@ func TestGoldenUsageMatchesTheGolden(t *testing.T) {
 
 func TestGoldenAHealthyEmptyStoreMatchesTheGolden(t *testing.T) {
 	var screen, failure strings.Builder
-	err := run(paths{sessionsDir: filepath.Join(t.TempDir(), "sessions")}, nil, console.Output{
+	err := run(paths{sessionsDir: filepath.Join(t.TempDir(), "sessions")}, nil, options{}, console.Output{
 		Screen:  &screen,
 		Failure: &failure,
 	})
@@ -47,7 +47,7 @@ func TestGoldenAnInvalidConfigurationMatchesTheGolden(t *testing.T) {
 	err := run(paths{
 		configSources: []config.Source{{Path: configPath}},
 		sessionsDir:   filepath.Join(directory, "sessions"),
-	}, nil, console.Output{Screen: &screen, Failure: &failure})
+	}, nil, options{}, console.Output{Screen: &screen, Failure: &failure})
 	if err == nil {
 		t.Fatal("expected the invalid configuration to fail the check")
 	}
@@ -100,7 +100,7 @@ func TestGoldenSessionProblemsMatchTheGolden(t *testing.T) {
 	}
 
 	var screen, failure strings.Builder
-	err = run(paths{sessionsDir: directory}, nil, console.Output{Screen: &screen, Failure: &failure})
+	err = run(paths{sessionsDir: directory}, nil, options{}, console.Output{Screen: &screen, Failure: &failure})
 	if err == nil {
 		t.Fatal("expected the unhealthy sessions to fail the check")
 	}
@@ -126,7 +126,7 @@ func TestOnlyTheNamedSessionsAreChecked(t *testing.T) {
 	}
 
 	var screen, failure strings.Builder
-	if err := run(paths{sessionsDir: directory}, []string{healthyName}, console.Output{
+	if err := run(paths{sessionsDir: directory}, []string{healthyName}, options{}, console.Output{
 		Screen: &screen, Failure: &failure,
 	}); err != nil {
 		t.Fatal(err)
@@ -134,6 +134,295 @@ func TestOnlyTheNamedSessionsAreChecked(t *testing.T) {
 	if strings.Contains(failure.String(), brokenName) {
 		t.Errorf("the unrequested session was checked: %s", failure.String())
 	}
+}
+
+func TestGoldenRecoverableAndFixedSessionsMatchTheGolden(t *testing.T) {
+	directory := t.TempDir()
+	warningName := unfinishedSession(t, directory)
+
+	var warningScreen, warningFailure strings.Builder
+	warningError := run(paths{sessionsDir: directory}, []string{warningName}, options{}, console.Output{
+		Screen: &warningScreen, Failure: &warningFailure,
+	})
+	warning := strings.ReplaceAll(report(warningScreen.String(), warningFailure.String(), warningError), warningName, "recoverable-otter")
+	assertGolden(t, "recoverable.txt", warning)
+
+	fixName := unfinishedSession(t, directory)
+	bundle := session.Dir(directory, fixName)
+	if err := os.WriteFile(filepath.Join(bundle, "meta.json"), nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Remove(filepath.Join(bundle, "chat.md")); err != nil {
+		t.Fatal(err)
+	}
+	journal, err := os.OpenFile(filepath.Join(bundle, "session.jsonl"), os.O_APPEND|os.O_WRONLY, 0o600) //nolint:gosec // the test's own journal
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := journal.WriteString(`{"kind":"event"`); err != nil {
+		t.Fatal(err)
+	}
+	if err := journal.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	var dryScreen, dryFailure strings.Builder
+	dryError := run(paths{sessionsDir: directory}, []string{fixName}, options{isFixing: true, isDryRun: true}, console.Output{
+		Screen: &dryScreen, Failure: &dryFailure,
+	})
+	var fixedScreen, fixedFailure strings.Builder
+	fixedError := run(paths{sessionsDir: directory}, []string{fixName}, options{isFixing: true}, console.Output{
+		Screen: &fixedScreen, Failure: &fixedFailure,
+	})
+	drawn := "=== dry run ===\n" + report(dryScreen.String(), dryFailure.String(), dryError) +
+		"=== fix ===\n" + report(fixedScreen.String(), fixedFailure.String(), fixedError)
+	drawn = strings.ReplaceAll(drawn, fixName, "repairable-newt")
+	drawn = strings.ReplaceAll(drawn, directory, "/state/sessions")
+	assertGolden(t, "fix.txt", drawn)
+}
+
+func TestAnUnfinishedTurnIsARecoverableWarning(t *testing.T) {
+	directory := t.TempDir()
+	name := unfinishedSession(t, directory)
+
+	var screen, failure strings.Builder
+	err := run(paths{sessionsDir: directory}, []string{name}, options{}, console.Output{Screen: &screen, Failure: &failure})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(screen.String(), "warning") || !strings.Contains(screen.String(), "unfinished turn is recoverable") {
+		t.Errorf("recovery warning was not shown: %q", screen.String())
+	}
+	if failure.Len() != 0 {
+		t.Errorf("recoverable session failed the check: %q", failure.String())
+	}
+}
+
+func TestFixRecoversAnUnfinishedTurnAndKeepsACopy(t *testing.T) {
+	directory := t.TempDir()
+	name := unfinishedSession(t, directory)
+
+	var screen, failure strings.Builder
+	err := run(paths{sessionsDir: directory}, []string{name}, options{isFixing: true}, console.Output{Screen: &screen, Failure: &failure})
+	if err != nil {
+		t.Fatalf("fix failed: %v\n%s", err, failure.String())
+	}
+	stored, err := store.Read(directory, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !stored.CanResume() || !stored.HasAbandonedTurn {
+		t.Errorf("unexpected recovered session: %+v", stored)
+	}
+	if _, err := os.Stat(filepath.Join(directory+"_pre_check", name, "session.jsonl")); err != nil {
+		t.Errorf("no backup was kept: %v", err)
+	}
+	if !strings.Contains(screen.String(), "fixed") || !strings.Contains(screen.String(), "abandon an unfinished turn") {
+		t.Errorf("fix was not reported: %q", screen.String())
+	}
+}
+
+func TestDryRunReportsButDoesNotRepair(t *testing.T) {
+	directory := t.TempDir()
+	name := unfinishedSession(t, directory)
+
+	var screen, failure strings.Builder
+	err := run(paths{sessionsDir: directory}, []string{name}, options{isFixing: true, isDryRun: true}, console.Output{Screen: &screen, Failure: &failure})
+	if err != nil {
+		t.Fatalf("dry run failed a session that the check only warns about: %v", err)
+	}
+	stored, err := store.Read(directory, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if stored.CanResume() {
+		t.Error("dry run repaired the session")
+	}
+	if _, err := os.Stat(directory + "_pre_check"); !os.IsNotExist(err) {
+		t.Errorf("dry run created a backup: %v", err)
+	}
+	if !strings.Contains(screen.String(), "would fix") {
+		t.Errorf("dry run did not report the repair: %q", screen.String())
+	}
+}
+
+func TestFixRepairsDerivedFilesAndAnIncompleteTail(t *testing.T) {
+	directory := t.TempDir()
+	name := storedSession(t, directory)
+	bundle := session.Dir(directory, name)
+	if err := os.WriteFile(filepath.Join(bundle, "meta.json"), nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Remove(filepath.Join(bundle, "chat.md")); err != nil {
+		t.Fatal(err)
+	}
+	journal, err := os.OpenFile(filepath.Join(bundle, "session.jsonl"), os.O_APPEND|os.O_WRONLY, 0o600) //nolint:gosec // the test's own journal
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := journal.WriteString(`{"kind":"event"`); err != nil {
+		t.Fatal(err)
+	}
+	if err := journal.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	var screen, failure strings.Builder
+	if err := run(paths{sessionsDir: directory}, []string{name}, options{isFixing: true}, console.Output{Screen: &screen, Failure: &failure}); err != nil {
+		t.Fatalf("fix failed: %v\n%s", err, failure.String())
+	}
+	if err := session.Check(directory, name); err != nil {
+		t.Errorf("session remains unhealthy: %v", err)
+	}
+	if _, err := os.Stat(filepath.Join(bundle, "chat.md")); err != nil {
+		t.Errorf("transcript was not rebuilt: %v", err)
+	}
+	for _, want := range []string{"incomplete final journal record", "listing metadata", "transcript"} {
+		if !strings.Contains(screen.String(), want) {
+			t.Errorf("fix output omitted %q: %s", want, screen.String())
+		}
+	}
+}
+
+func TestFixSkipsASessionThatIsInUse(t *testing.T) {
+	directory := t.TempDir()
+	name := unfinishedSession(t, directory)
+	writer, err := store.Open(directory, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = writer.Close() }()
+
+	var screen, failure strings.Builder
+	if err := run(paths{sessionsDir: directory}, []string{name}, options{isFixing: true}, console.Output{Screen: &screen, Failure: &failure}); err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(screen.String(), "skipped") || !strings.Contains(screen.String(), "in use") {
+		t.Errorf("running session was not skipped: %q", screen.String())
+	}
+	if _, err := os.Stat(directory + "_pre_check"); !os.IsNotExist(err) {
+		t.Errorf("skipped session was backed up: %v", err)
+	}
+}
+
+func TestFixRefusesToReplaceAnEarlierBackup(t *testing.T) {
+	directory := t.TempDir()
+	name := unfinishedSession(t, directory)
+	backup := filepath.Join(directory+"_pre_check", name)
+	if err := os.MkdirAll(backup, 0o700); err != nil {
+		t.Fatal(err)
+	}
+
+	var screen, failure strings.Builder
+	err := run(paths{sessionsDir: directory}, []string{name}, options{isFixing: true}, console.Output{Screen: &screen, Failure: &failure})
+	if err == nil {
+		t.Fatal("fix replaced an earlier backup")
+	}
+	if !strings.Contains(failure.String(), "a copy is already kept") {
+		t.Errorf("backup collision was not explained: %q", failure.String())
+	}
+	stored, err := store.Read(directory, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if stored.CanResume() {
+		t.Error("session was repaired despite the backup collision")
+	}
+}
+
+func TestFixRefusesToMutateAnArchivedSession(t *testing.T) {
+	directory := t.TempDir()
+	name := unfinishedSession(t, directory)
+	if err := session.Archive(directory, name); err != nil {
+		t.Fatal(err)
+	}
+	archivePath := session.ArchivePath(directory, name)
+	before, err := os.ReadFile(archivePath) //nolint:gosec // the test's own archive
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var screen, failure strings.Builder
+	err = run(paths{sessionsDir: directory}, []string{name}, options{isFixing: true}, console.Output{
+		Screen: &screen, Failure: &failure,
+	})
+	if err == nil || !strings.Contains(failure.String(), "restore the archived session") {
+		t.Fatalf("archived repair returned %v and %q", err, failure.String())
+	}
+	after, err := os.ReadFile(archivePath) //nolint:gosec // the test's own archive
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(after) != string(before) {
+		t.Error("refused archived repair changed the archive")
+	}
+	if _, err := os.Stat(directory + "_pre_check"); !os.IsNotExist(err) {
+		t.Errorf("refused archived repair created a backup: %v", err)
+	}
+}
+
+func TestFixRecoversAnUnfinishedTurnWhoseFinalRecordLostItsNewline(t *testing.T) {
+	directory := t.TempDir()
+	name := unfinishedSession(t, directory)
+	journalPath := filepath.Join(directory, name, "session.jsonl")
+	journal, err := os.ReadFile(journalPath) //nolint:gosec // the test's own session
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(journalPath, journal[:len(journal)-1], 0o600); err != nil { //nolint:gosec // the test's own session
+		t.Fatal(err)
+	}
+
+	var screen, failure strings.Builder
+	err = run(paths{sessionsDir: directory}, []string{name}, options{isFixing: true}, console.Output{Screen: &screen, Failure: &failure})
+	if err != nil {
+		t.Fatalf("fix failed: %v\n%s", err, failure.String())
+	}
+	stored, err := store.Read(directory, name)
+	if err != nil {
+		t.Fatalf("fix left an unreadable journal: %v", err)
+	}
+	if !stored.CanResume() || !stored.HasAbandonedTurn {
+		t.Errorf("unexpected recovered session: %+v", stored)
+	}
+}
+
+func TestANewerListingIsRefusedRatherThanRebuilt(t *testing.T) {
+	directory := t.TempDir()
+	name := storedSession(t, directory)
+	metaPath := filepath.Join(directory, name, "meta.json")
+	newerMeta := []byte(`{"version":99,"name":"` + name + `"}`)
+	if err := os.WriteFile(metaPath, newerMeta, 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	var screen, failure strings.Builder
+	err := run(paths{sessionsDir: directory}, []string{name}, options{isFixing: true}, console.Output{Screen: &screen, Failure: &failure})
+	if err == nil || !strings.Contains(failure.String(), "newer build") {
+		t.Errorf("expected the newer listing to be refused, got %v: %q", err, failure.String())
+	}
+	kept, err := os.ReadFile(metaPath) //nolint:gosec // the test's own session
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(kept) != string(newerMeta) {
+		t.Errorf("the newer listing was rewritten as %s", kept)
+	}
+}
+
+func unfinishedSession(t *testing.T, directory string) string {
+	t.Helper()
+	writer, err := store.Create(directory, store.Meta{WorkspaceDir: "/workspace", Model: "gpt-5.6-sol"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "unfinished"}); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+	return writer.Name()
 }
 
 func storedSession(t *testing.T, directory string) string {
@@ -144,6 +433,9 @@ func storedSession(t *testing.T, directory string) string {
 		t.Fatal(err)
 	}
 	if err := writer.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "hello"}); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.CompleteTurn(session.TurnSummary{}); err != nil {
 		t.Fatal(err)
 	}
 	if err := writer.Close(); err != nil {

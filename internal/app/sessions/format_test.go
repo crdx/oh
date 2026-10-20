@@ -27,7 +27,7 @@ func TestGoldenASessionInAnOlderFormatIsRefusedWhereverItIsRead(t *testing.T) {
 			heading = "archived"
 		}
 
-		_, resumeError := LoadForResume(directory, workspace, "able-dolphin")
+		_, resumeError := LoadForResume(directory, workspace, "able-dolphin", true)
 		_, forkError := GetForkSource(directory, workspace, "able-dolphin", "")
 		var listed strings.Builder
 		listingError := RefreshListing(directory, &listed, "able-dolphin")
@@ -46,7 +46,7 @@ func TestGoldenASessionInAnOlderFormatIsRefusedWhereverItIsRead(t *testing.T) {
 
 	directory := t.TempDir()
 	writeJournalInFormat(t, directory, "able-dolphin", session.JournalFormat+1)
-	_, aheadError := LoadForResume(directory, work.At(t.TempDir()), "able-dolphin")
+	_, aheadError := LoadForResume(directory, work.At(t.TempDir()), "able-dolphin", false)
 	if aheadError == nil {
 		t.Fatal("expected a session in a newer format to be refused")
 	}
@@ -77,7 +77,7 @@ func TestASessionInAnOlderFormatLeavesEveryOtherSessionAlone(t *testing.T) {
 	if err := RefreshListing(directory, io.Discard, writer.Name()); err != nil {
 		t.Errorf("expected the current session's listing to refresh, got %v", err)
 	}
-	if _, err := LoadForResume(directory, work.At(workspaceDir), writer.Name()); err != nil {
+	if _, err := LoadForResume(directory, work.At(workspaceDir), writer.Name(), false); err != nil {
 		t.Errorf("expected the current session to resume, got %v", err)
 	}
 	if _, err := GetForkSource(directory, work.At(workspaceDir), writer.Name(), ""); err != nil {

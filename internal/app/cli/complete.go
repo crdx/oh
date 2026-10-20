@@ -16,13 +16,14 @@ import (
 const completeFlag = "--complete"
 
 const (
-	completeOption   = "option"
-	completeModel    = "model"
-	completeEffort   = "effort"
-	completeSession  = "session"
-	completeProvider = "provider"
-	completeCaps     = "caps"
-	completeTool     = "tool"
+	completeOption        = "option"
+	completeModel         = "model"
+	completeEffort        = "effort"
+	completeStoredSession = "stored-session"
+	completeAnySession    = "any-session"
+	completeProvider      = "provider"
+	completeCaps          = "caps"
+	completeTool          = "tool"
 )
 
 func completionRequest(args []string) (string, string, bool) {
@@ -79,8 +80,10 @@ func completions(kind string, word string, sources Sources) []string {
 		return model.SelectionsMatching(word, model.SignedInChoices(sources.ModelCachePath, sources.IsLoggedIn))
 	case completeEffort:
 		return effortCompletions(word, model.SignedInChoices(sources.ModelCachePath, sources.IsLoggedIn))
-	case completeSession:
-		return withPrefix(word, sessionNames(sources.SessionsDir))
+	case completeStoredSession:
+		return withPrefix(word, storedSessionNames(sources.SessionsDir))
+	case completeAnySession:
+		return withPrefix(word, anySessionNames(sources.SessionsDir))
 	case completeProvider:
 		return withPrefix(word, model.LoginProviderNames())
 	case completeCaps:
@@ -128,13 +131,27 @@ func effortCompletions(word string, choices []model.Choice) []string {
 	return efforts
 }
 
-func sessionNames(directory string) []string {
+func storedSessionNames(directory string) []string {
 	workspace, err := work.Current()
 	if err != nil {
 		return nil
 	}
 
 	names, err := sessions.NamesInWorkspace(directory, workspace)
+	if err != nil {
+		return nil
+	}
+
+	return names
+}
+
+func anySessionNames(directory string) []string {
+	workspace, err := work.Current()
+	if err != nil {
+		return nil
+	}
+
+	names, err := sessions.AllNamesInWorkspace(directory, workspace)
 	if err != nil {
 		return nil
 	}

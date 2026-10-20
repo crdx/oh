@@ -51,6 +51,7 @@ var steps = map[int]step{
 	19: {migrateLine: wiresJoinModelChoices},
 	20: {migrateJournal: subagentsBecomeACapability},
 	21: {beforeWrite: moveWireTranscript},
+	22: {},
 }
 
 var legacyGrantAccess = map[string]string{

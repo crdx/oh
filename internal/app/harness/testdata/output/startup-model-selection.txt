@@ -65,6 +65,26 @@ Resumed answer.
 
 oh -r <session>
 [exit 0]
+$ oh -p -r <session> -f another question
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+First answer.
+
+
+ another question
+
+Resumed answer.
+
+
+ another question
+
+The scenario has nothing more to say.
+
+oh -r <session>
+[exit 0]
 session model: opencode-go/fake@low
 
 === a rotation naming a model nobody offers ===
@@ -145,3 +165,34 @@ oh -r <session>
 [exit 0]
 session model: opencode-go/fake@high
 session model: opencode-go/fake@high
+
+=== an archived session resumes by name only when forced ===
+$ oh -p --yolo -m opencode-go/fake a question
+Refreshing the model list...
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+First answer.
+
+oh -r <session>
+[exit 0]
+$ oh -p -r <session> another question
+✗ Session <session> is archived; pass -f to restore and resume
+[exit 1]
+$ oh -p -r <session> -f another question
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+First answer.
+
+
+ another question
+
+Resumed answer.
+
+oh -r <session>
+[exit 0]

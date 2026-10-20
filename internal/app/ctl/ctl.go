@@ -22,7 +22,7 @@ const usage = `oh --ctl — oh control
 Usage:
     oh --ctl sessions [-j] [-w <dir>] [-r] [-a] [<filter>]
     oh --ctl sessions (-d | --delete) <label>
-    oh --ctl check [<session>...]
+    oh --ctl check [options] [<session>...]
     oh --ctl analyse [options] [<session>...]
     oh --ctl regenerate [<session>...]
     oh --ctl migrate [options] [<session>...]

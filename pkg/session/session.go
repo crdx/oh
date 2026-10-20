@@ -22,20 +22,41 @@ import (
 	"crdx.org/oh/pkg/agent"
 )
 
+const journalTailChunk = 64 << 10
+
 const (
-	JournalFormat = 22
+	JournalFormat = 23
 	MetaFormat    = 3
 )
 
 var ErrMetaOutOfDate = errors.New("listing metadata is in another format")
 
+type metaFormatError struct {
+	storedFormat int
+}
+
+func (self metaFormatError) Error() string {
+	if self.storedFormat > MetaFormat {
+		return fmt.Sprintf("%s: %s", ErrMetaOutOfDate, format.Check(self.storedFormat, MetaFormat))
+	}
+	return fmt.Sprintf("%s (format %d, not %d)", ErrMetaOutOfDate, self.storedFormat, MetaFormat)
+}
+
+func (self metaFormatError) Unwrap() []error {
+	if self.storedFormat > MetaFormat {
+		return []error{ErrMetaOutOfDate, format.ErrNewer}
+	}
+	return []error{ErrMetaOutOfDate}
+}
+
 type Kind string
 
 const (
-	Head           Kind = "head"
-	Event          Kind = "event"
-	Item           Kind = "item"
-	TurnCompletion Kind = "turn_completion"
+	Head            Kind = "head"
+	Event           Kind = "event"
+	Item            Kind = "item"
+	TurnCompletion  Kind = "turn_completion"
+	TurnAbandonment Kind = "turn_abandonment"
 )
 
 type Line struct {
@@ -107,7 +128,7 @@ func openSessionDir(directory string, name string) (*os.File, error) {
 
 func missing(directory string, name string) error {
 	if IsArchived(directory, name) {
-		return fmt.Errorf("%w %q, so restore it from the session picker: oh -r", ErrArchived, name)
+		return fmt.Errorf("%w %q, so restore it with oh -r %s --force", ErrArchived, name, name)
 	}
 	return fmt.Errorf("%w %q", ErrNotFound, name)
 }
@@ -206,6 +227,10 @@ func Open(directory string, name string) (*Writer, error) {
 		_ = heldLock.Release()
 		return nil, err
 	}
+	if _, err := endJournalCleanly(journalPath(directory, name), heldLock.journalFile); err != nil {
+		_ = heldLock.Release()
+		return nil, fmt.Errorf("session %s: %w", name, err)
+	}
 
 	listingMeta, err := ReadMeta(directory, name)
 	if err != nil {
@@ -273,12 +298,15 @@ func (self *Writer) CompleteTurn(summary TurnSummary) error {
 	if err != nil {
 		return err
 	}
-	if err := self.file.Sync(); err != nil {
-		return fmt.Errorf("sync session journal: %w", err)
-	}
+	return self.commitTurn(writtenAt)
+}
 
-	self.listingMeta.TouchedAt = writtenAt
-	return writeMeta(self.directory, self.listingMeta)
+func (self *Writer) AbandonTurn() error {
+	writtenAt, err := self.write(Line{Kind: TurnAbandonment})
+	if err != nil {
+		return err
+	}
+	return self.commitTurn(writtenAt)
 }
 
 func (self *Writer) Name() string                 { return self.name }
@@ -297,6 +325,15 @@ func (self *Writer) Close() error {
 	}
 
 	return self.lock.Release()
+}
+
+func (self *Writer) commitTurn(writtenAt time.Time) error {
+	if err := self.file.Sync(); err != nil {
+		return fmt.Errorf("sync session journal: %w", err)
+	}
+
+	self.listingMeta.TouchedAt = writtenAt
+	return writeMeta(self.directory, self.listingMeta)
 }
 
 func (self *Writer) write(line Line) (time.Time, error) {
@@ -402,7 +439,11 @@ type Session struct {
 	TurnCompletions   int
 	Turns             []TurnSummary
 	HasIncompleteTurn bool
+	HasAbandonedTurn  bool
 	CacheReading      agent.CacheReading
+
+	committedItems        int
+	committedCacheReading agent.CacheReading
 }
 
 func Read(directory string, name string) (*Session, error) {
@@ -431,14 +472,24 @@ func records(directory string, name string, allowsIncompleteTail bool, visit fun
 	}
 	defer func() { _ = file.Close() }()
 
-	reader := bufio.NewReaderSize(file, 8192)
+	_, err = readRecords(name, file, allowsIncompleteTail, visit)
+	return err
+}
+
+func readRecords(
+	name string,
+	source io.Reader,
+	allowsIncompleteTail bool,
+	visit func(Line) error,
+) (bool, error) {
+	reader := bufio.NewReaderSize(source, 8192)
 	hasSeenHead := false
 	lineNumber := 0
 
 	for {
 		encodedLine, readErr := reader.ReadBytes('\n')
 		if readErr != nil && !errors.Is(readErr, io.EOF) {
-			return fmt.Errorf("session %s: could not read journal line %d: %w", name, lineNumber+1, readErr)
+			return false, fmt.Errorf("session %s: could not read journal line %d: %w", name, lineNumber+1, readErr)
 		}
 		if len(encodedLine) == 0 && errors.Is(readErr, io.EOF) {
 			break
@@ -451,26 +502,29 @@ func records(directory string, name string, allowsIncompleteTail bool, visit fun
 		var line Line
 		err := json.Unmarshal(encodedLine, &line)
 		if err != nil && allowsIncompleteTail && errors.Is(readErr, io.EOF) && !hasTrailingNewline && isIncompleteJSON(encodedLine) {
-			break
+			if !hasSeenHead {
+				return false, errors.New("session has no complete head")
+			}
+			return true, nil
 		}
 		if err != nil {
-			return fmt.Errorf("session %s: malformed journal line %d: %w", name, lineNumber, err)
+			return false, fmt.Errorf("session %s: malformed journal line %d: %w", name, lineNumber, err)
 		}
 
 		if !hasSeenHead {
 			if line.Kind != Head {
-				return errors.New("session does not start with a head")
+				return false, errors.New("session does not start with a head")
 			}
 			if err := format.Require(formatOf(line), JournalFormat); err != nil {
-				return fmt.Errorf("session %s: journal %w", name, err)
+				return false, fmt.Errorf("session %s: journal %w", name, err)
 			}
 			hasSeenHead = true
 		} else if line.Kind == Head {
-			return errors.New("session contains more than one head")
+			return false, errors.New("session contains more than one head")
 		}
 
 		if err := visit(line); err != nil {
-			return err
+			return false, err
 		}
 		if errors.Is(readErr, io.EOF) {
 			break
@@ -478,9 +532,9 @@ func records(directory string, name string, allowsIncompleteTail bool, visit fun
 	}
 
 	if !hasSeenHead {
-		return errors.New("session has no complete head")
+		return false, errors.New("session has no complete head")
 	}
-	return nil
+	return false, nil
 }
 
 func isIncompleteJSON(data []byte) bool {
@@ -502,20 +556,42 @@ func (self *Session) take(line Line) {
 	case Event:
 		if line.Event != nil {
 			self.Events = append(self.Events, *line.Event)
-			if line.Event.Kind == agent.UserMessageEvent {
+			if belongsToTurn(line.Event.Kind) {
 				self.HasIncompleteTurn = true
 			}
 			self.takeCacheReading(*line.Event, line.Time)
 		}
 	case Item:
 		self.Items = append(self.Items, line.Payload)
+		self.HasIncompleteTurn = true
 	case TurnCompletion:
 		self.TurnCompletions++
+		self.committedItems = len(self.Items)
+		self.committedCacheReading = self.CacheReading
 		self.HasIncompleteTurn = false
+		self.HasAbandonedTurn = false
 		if line.Turn != nil {
 			self.Turns = append(self.Turns, *line.Turn)
 		}
+	case TurnAbandonment:
+		self.Items = self.Items[:self.committedItems]
+		self.CacheReading = self.committedCacheReading
+		self.HasIncompleteTurn = false
+		self.HasAbandonedTurn = true
 	}
+}
+
+func belongsToTurn(kind agent.Kind) bool {
+	switch kind {
+	case agent.UserMessageEvent, agent.SilentTurnEvent, agent.PrefixRewriteEvent, agent.CacheRebuildEvent,
+		agent.ModelReasoningEvent, agent.ModelMessageEvent, agent.ToolCallRequestEvent,
+		agent.ToolCallResultEvent, agent.InterruptionEvent, agent.RetryingEvent, agent.FailureEvent:
+		return true
+	case agent.StartupEvent, agent.StateChangeEvent:
+		return false
+	}
+
+	return false
 }
 
 func (self *Session) takeCacheReading(event agent.Event, writtenAt time.Time) {
@@ -581,9 +657,7 @@ func decodeMeta(encodedMeta []byte, name string) (*Meta, error) {
 		return nil, err
 	}
 	if storedFormat != MetaFormat {
-		return nil, fmt.Errorf(
-			"%w (format %d, not %d)", ErrMetaOutOfDate, storedFormat, MetaFormat,
-		)
+		return nil, metaFormatError{storedFormat: storedFormat}
 	}
 
 	var meta Meta
@@ -626,6 +700,10 @@ func ReadMetaFromJournal(directory string, name string, listingData json.RawMess
 		return nil, err
 	}
 
+	return MetaFromSession(storedSession, listingData), nil
+}
+
+func MetaFromSession(storedSession *Session, listingData json.RawMessage) *Meta {
 	meta := Meta{
 		Version:   MetaFormat,
 		Name:      storedSession.Name,
@@ -637,15 +715,19 @@ func ReadMetaFromJournal(directory string, name string, listingData json.RawMess
 		meta.takeEvent(event, storedSession.TouchedAt)
 	}
 
-	return &meta, nil
+	return &meta
 }
 
 func RebuildMeta(directory string, name string, listingData json.RawMessage) error {
-	meta, err := ReadMetaFromJournal(directory, name, listingData)
+	storedSession, err := Read(directory, name)
 	if err != nil {
 		return err
 	}
-	return writeMeta(directory, *meta)
+	return RebuildMetaFromSession(directory, storedSession, listingData)
+}
+
+func RebuildMetaFromSession(directory string, storedSession *Session, listingData json.RawMessage) error {
+	return writeMeta(directory, *MetaFromSession(storedSession, listingData))
 }
 
 func writeMeta(directory string, meta Meta) error {
@@ -980,4 +1062,75 @@ func encode(id [16]byte) string {
 		out[position] = digits[carry]
 	}
 	return string(out[:])
+}
+
+func RepairJournalTail(directory string, name string) (bool, error) {
+	if err := validateName(name); err != nil {
+		return false, err
+	}
+
+	path := journalPath(directory, name)
+	file, err := os.OpenFile(path, os.O_WRONLY|os.O_APPEND, 0o600) //nolint:gosec // a path built from a validated session name
+	if err != nil {
+		return false, err
+	}
+	isChanged, repairError := endJournalCleanly(path, file)
+	return isChanged, errors.Join(repairError, file.Close())
+}
+
+func endJournalCleanly(path string, journalFile *os.File) (bool, error) {
+	tail, tailStart, err := journalTail(path)
+	if err != nil || tail == nil {
+		return false, err
+	}
+
+	switch {
+	case json.Valid(tail):
+		_, err = journalFile.Write([]byte{'\n'})
+	case isIncompleteJSON(tail):
+		err = journalFile.Truncate(tailStart)
+	default:
+		return false, errors.New("the final journal record is malformed rather than incomplete")
+	}
+	if err == nil {
+		err = journalFile.Sync()
+	}
+	return err == nil, err
+}
+
+func journalTail(path string) ([]byte, int64, error) {
+	file, err := os.Open(path) //nolint:gosec // a path built from a validated session name
+	if err != nil {
+		return nil, 0, err
+	}
+	defer func() { _ = file.Close() }()
+
+	info, err := file.Stat()
+	if err != nil {
+		return nil, 0, err
+	}
+
+	var tail []byte
+	end := info.Size()
+	for end > 0 {
+		start := max(end-journalTailChunk, 0)
+		chunk := make([]byte, end-start)
+		if _, err := file.ReadAt(chunk, start); err != nil {
+			return nil, 0, err
+		}
+		if lastNewline := bytes.LastIndexByte(chunk, '\n'); lastNewline >= 0 {
+			tail = slices.Concat(chunk[lastNewline+1:], tail)
+			if len(tail) == 0 {
+				return nil, 0, nil
+			}
+			return tail, start + int64(lastNewline) + 1, nil
+		}
+		tail = slices.Concat(chunk, tail)
+		end = start
+	}
+
+	if len(tail) == 0 {
+		return nil, 0, nil
+	}
+	return tail, 0, nil
 }

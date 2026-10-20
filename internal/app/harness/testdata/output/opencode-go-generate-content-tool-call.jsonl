@@ -1,4 +1,4 @@
-{"kind":"head","version":22,"meta":{"model":"gemini-9-pro","workspaceDir":"","provider":"opencode-go","effort":"high","system_prompt":"You are a test assistant.","tools":["work"],"tool_definitions":[{"name":"work","description":"A deterministic scenario tool.","revision":"1"}]}}
+{"kind":"head","version":23,"meta":{"model":"gemini-9-pro","workspaceDir":"","provider":"opencode-go","effort":"high","system_prompt":"You are a test assistant.","tools":["work"],"tool_definitions":[{"name":"work","description":"A deterministic scenario tool.","revision":"1"}]}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"count what a call cost"}}
 {"kind":"event","event":{"kind":"model_reasoning","text":"Working it out.","usage":{"input_tokens":6300,"output_tokens":140,"cache":{"read_tokens":6000}}}}

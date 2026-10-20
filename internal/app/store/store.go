@@ -19,6 +19,7 @@ import (
 	"crdx.org/oh/internal/app/diagnostics"
 	"crdx.org/oh/internal/app/environment"
 	"crdx.org/oh/internal/app/hostcommand"
+	"crdx.org/oh/internal/app/interrupt"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/store/transcript"
 	"crdx.org/oh/internal/app/store/wire"
@@ -92,6 +93,7 @@ type canonicalAppender interface {
 	Event(event agent.Event) (time.Time, error)
 	Item(item json.RawMessage) error
 	CompleteTurn(summary session.TurnSummary) error
+	AbandonTurn() error
 }
 
 type canonicalSession interface {
@@ -156,6 +158,57 @@ func create(
 	}, nil
 }
 
+func AbandonIncompleteTurn(directory string, name string, check func() error) (*Session, error) {
+	log, err := Open(directory, name)
+	if err != nil {
+		return nil, err
+	}
+	if check != nil {
+		if err := check(); err != nil {
+			_ = log.Close()
+			return nil, err
+		}
+	}
+
+	storedSession, err := Read(directory, name)
+	if err != nil {
+		_ = log.Close()
+		return nil, err
+	}
+	if !storedSession.HasIncompleteTurn {
+		if err := log.Close(); err != nil {
+			return nil, err
+		}
+		return storedSession, nil
+	}
+
+	isLastEventRecovery := len(storedSession.Events) > 0 &&
+		storedSession.Events[len(storedSession.Events)-1].Kind == agent.InterruptionEvent &&
+		storedSession.Events[len(storedSession.Events)-1].Name == string(interrupt.ProcessExit)
+	if !isLastEventRecovery {
+		if err := log.Event(interrupt.Event(interrupt.ProcessExit)); err != nil {
+			_ = log.Close()
+			return nil, fmt.Errorf("record interrupted session recovery: %w", err)
+		}
+	}
+	if err := log.AbandonTurn(); err != nil {
+		_ = log.Close()
+		return nil, fmt.Errorf("recover interrupted session: %w", err)
+	}
+	if err := log.Close(); err != nil {
+		return nil, err
+	}
+
+	recoveredSession, err := Read(directory, name)
+	if err != nil {
+		return nil, err
+	}
+	if !recoveredSession.CanResume() || !recoveredSession.HasAbandonedTurn {
+		return nil, fmt.Errorf("session %s could not recover its interrupted turn", name)
+	}
+	return recoveredSession, nil
+}
+
 func Open(directory string, name string) (*Writer, error) {
 	innerWriter, err := session.Open(directory, name)
 	if err != nil {
@@ -206,6 +259,12 @@ func (self *Writer) CompleteTurn(summary session.TurnSummary) error {
 	self.writerMutex.Lock()
 	defer self.writerMutex.Unlock()
 	return self.innerWriter.CompleteTurn(summary)
+}
+
+func (self *Writer) AbandonTurn() error {
+	self.writerMutex.Lock()
+	defer self.writerMutex.Unlock()
+	return self.innerWriter.AbandonTurn()
 }
 
 func (self *Writer) Name() string { return self.innerWriter.Name() }
@@ -407,6 +466,7 @@ type Session struct {
 	TurnCompletions   int
 	Turns             []session.TurnSummary
 	HasIncompleteTurn bool
+	HasAbandonedTurn  bool
 	CacheReading      agent.CacheReading
 }
 
@@ -453,6 +513,7 @@ func decode(storedSession *session.Session) (*Session, error) {
 		TurnCompletions:   storedSession.TurnCompletions,
 		Turns:             storedSession.Turns,
 		HasIncompleteTurn: storedSession.HasIncompleteTurn,
+		HasAbandonedTurn:  storedSession.HasAbandonedTurn,
 		CacheReading:      storedSession.CacheReading,
 	}, nil
 }
@@ -491,27 +552,39 @@ func listingDataOf(storedSession *Session) (json.RawMessage, error) {
 }
 
 func GetListingMeta(directory string, name string) (*session.Meta, error) {
-	storedSession, err := Read(directory, name)
+	storedSession, err := session.Read(directory, name)
 	if err != nil {
 		return nil, err
 	}
-	data, err := listingDataOf(storedSession)
+	return ListingMetaOf(storedSession)
+}
+
+func ListingMetaOf(storedSession *session.Session) (*session.Meta, error) {
+	decodedSession, err := decode(storedSession)
 	if err != nil {
 		return nil, err
 	}
-	return session.ReadMetaFromJournal(directory, name, data)
+	data, err := listingDataOf(decodedSession)
+	if err != nil {
+		return nil, err
+	}
+	return session.MetaFromSession(storedSession, data), nil
 }
 
 func RebuildMeta(directory string, name string) error {
-	storedSession, err := Read(directory, name)
+	storedSession, err := session.Read(directory, name)
 	if err != nil {
 		return err
 	}
-	data, err := listingDataOf(storedSession)
+	decodedSession, err := decode(storedSession)
 	if err != nil {
 		return err
 	}
-	return session.RebuildMeta(directory, name, data)
+	data, err := listingDataOf(decodedSession)
+	if err != nil {
+		return err
+	}
+	return session.RebuildMetaFromSession(directory, storedSession, data)
 }
 
 func RebuildMetaIfIdle(directory string, name string) (bool, error) {

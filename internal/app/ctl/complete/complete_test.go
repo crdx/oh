@@ -53,7 +53,7 @@ func TestEveryCommandOffersItsOwnOptions(t *testing.T) {
 	if got := completions(kindOption, "--del", "sessions"); !slices.Equal(got, []string{"--delete"}) {
 		t.Errorf("expected the --delete flag, got %v", got)
 	}
-	if got := completions(kindOption, "-", "check"); !slices.Equal(got, []string{"--help", "-h"}) {
+	if got := completions(kindOption, "-", "check"); !slices.Equal(got, []string{"--dry-run", "--fix", "--help", "-f", "-h", "-n"}) {
 		t.Errorf("expected the check flags, got %v", got)
 	}
 	if got := completions(kindOption, "-", "nonsense"); got != nil {

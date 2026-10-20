@@ -11,6 +11,10 @@
 
 ### Sessions
 
+- Check and repair sessions in one pass
+- Restore and complete archived sessions with `-f`
+- Drop `-f` as the short form of `--from`
+- Recover corrupted sessions on attempted resume
 - Preview archived sessions in the session picker
 - Remove read-only Go modcaches when deleting a session
 

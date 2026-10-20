@@ -2,6 +2,7 @@
 --caps
 --ctl
 --demo
+--force
 --from
 --help
 --ignored
@@ -49,6 +50,10 @@ notify
 title
 lookup
 fetch
-=== sessions ===
+=== stored sessions ===
+newer-jaguar
+older-badger
+=== any sessions ===
+archived-ibis
 newer-jaguar
 older-badger

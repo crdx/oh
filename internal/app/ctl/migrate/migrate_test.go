@@ -127,6 +127,30 @@ func TestAJournalWithoutAVersionIsMigratedFromTheFirstFormat(t *testing.T) {
 	}
 }
 
+func TestFormatTwentyTwoMigrationChangesOnlyTheVersion(t *testing.T) {
+	directory, name := storedJournal(
+		t,
+		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":22,"id":"one","name":"tame-impala"}`,
+		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"user_message","text":"unfinished"}}`,
+	)
+
+	from, err := migrate.Session(options(directory), name)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if from != 22 {
+		t.Errorf("migrated from format %d, want 22", from)
+	}
+
+	lines := journalLines(t, directory, name)
+	if got := string(lines[0]["version"]); got != strconv.Itoa(session.JournalFormat) {
+		t.Errorf("head has version %s, want %d", got, session.JournalFormat)
+	}
+	if got := string(lines[1]["event"]); got != `{"kind":"user_message","text":"unfinished"}` {
+		t.Errorf("migration changed the event to %s", got)
+	}
+}
+
 func TestAJournalAlreadyCurrentIsLeftAlone(t *testing.T) {
 	head := fmt.Sprintf(`{"kind":"head","time":"2026-08-01T00:00:00Z","version":%d,"id":"one","name":"tame-impala"}`, session.JournalFormat)
 	directory, name := storedJournal(t, head)

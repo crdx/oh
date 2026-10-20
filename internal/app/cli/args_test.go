@@ -190,17 +190,33 @@ func TestModelSelectionRequiresModelAndEffort(t *testing.T) {
 }
 
 func TestANewConversationMayStartFromASession(t *testing.T) {
-	for _, argument := range []string{"-f", "--from"} {
-		parsedOptions := parseOptions(t, argument, "chosen-lobster", "carry", "on")
+	parsedOptions := parseOptions(t, "--from", "chosen-lobster", "carry", "on")
 
-		if !parsedOptions.StartingFromSession() || parsedOptions.SourceSession != "chosen-lobster" {
-			t.Errorf("expected %s to name the source session, got %q", argument, parsedOptions.SourceSession)
+	if !parsedOptions.StartingFromSession() || parsedOptions.SourceSession != "chosen-lobster" {
+		t.Errorf("expected --from to name the source session, got %q", parsedOptions.SourceSession)
+	}
+	if parsedOptions.Resuming() {
+		t.Error("expected starting from a session not to count as resuming")
+	}
+	if parsedOptions.Message != "carry on" {
+		t.Errorf("expected the prompt beside --from, got %q", parsedOptions.Message)
+	}
+}
+
+func TestForceRestoresOnlyANamedSession(t *testing.T) {
+	for _, argument := range []string{"-f", "--force"} {
+		parsedOptions := parseOptions(t, "-r", "chosen-lobster", argument)
+		if !parsedOptions.IsForced || parsedOptions.Session != "chosen-lobster" {
+			t.Errorf("expected %s to force resuming the named session, got %+v", argument, parsedOptions)
 		}
-		if parsedOptions.Resuming() {
-			t.Errorf("expected %s starting from a session not to count as resuming", argument)
+		if err := bind(t, "-r", "chosen-lobster", argument).Check(false); err != nil {
+			t.Errorf("expected %s beside a named session to pass, got %v", argument, err)
 		}
-		if parsedOptions.Message != "carry on" {
-			t.Errorf("expected the prompt beside %s, got %q", argument, parsedOptions.Message)
+	}
+
+	for _, arguments := range [][]string{{"-f"}, {"-r", "-f"}, {"--from", "chosen-lobster", "-f"}} {
+		if err := bind(t, arguments...).Check(false); err == nil || !strings.Contains(err.Error(), "--force restores an archived session") {
+			t.Errorf("expected %v to be refused, got %v", arguments, err)
 		}
 	}
 }

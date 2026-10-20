@@ -13,6 +13,7 @@ import (
 
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/drops"
+	"crdx.org/oh/internal/app/interrupt"
 	"crdx.org/oh/internal/app/model"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/work"
@@ -155,17 +156,72 @@ func TestAResumedConversationCannotBeAskedForAnotherMode(t *testing.T) {
 	}
 }
 
-func TestLoadingACrashedSessionIsRefusedWithoutChangingItsJournal(t *testing.T) {
+func TestLoadingASessionThatCrashedMidWriteKeepsItsJournalReadable(t *testing.T) {
 	directory := t.TempDir()
 	workspaceDir := t.TempDir()
 	writer, err := store.Create(directory, store.Meta{WorkspaceDir: workspaceDir})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := writer.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "begin"}); err != nil {
+	if err := writer.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "completed"}); err != nil {
 		t.Fatal(err)
 	}
-	if err := writer.Event(agent.Event{Kind: agent.ModelMessageEvent, Text: "looks complete"}); err != nil {
+	if err := writer.CompleteTurn(session.TurnSummary{}); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "unfinished"}); err != nil {
+		t.Fatal(err)
+	}
+	name := writer.Name()
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+	journal, err := os.OpenFile(filepath.Join(directory, name, "session.jsonl"), os.O_APPEND|os.O_WRONLY, 0o600) //nolint:gosec // the test's own session
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := journal.WriteString(`{"kind":"item","payl`); err != nil {
+		t.Fatal(err)
+	}
+	if err := journal.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := LoadForResume(directory, work.At(workspaceDir), name, false); err != nil {
+		t.Fatalf("expected the session to recover, got %v", err)
+	}
+	recovered, err := store.Read(directory, name)
+	if err != nil {
+		t.Fatalf("recovery left an unreadable journal: %v", err)
+	}
+	if !recovered.HasAbandonedTurn || recovered.HasIncompleteTurn {
+		t.Errorf("unexpected recovery state: %+v", recovered)
+	}
+}
+
+func TestLoadingACrashedSessionAbandonsOnlyItsUncommittedProviderState(t *testing.T) {
+	directory := t.TempDir()
+	workspaceDir := t.TempDir()
+	writer, err := store.Create(directory, store.Meta{WorkspaceDir: workspaceDir})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "completed"}); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Item(json.RawMessage(`{"turn":"completed"}`)); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.CompleteTurn(session.TurnSummary{}); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "unfinished"}); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Event(agent.Event{Kind: agent.ModelMessageEvent, Text: "partial answer"}); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Item(json.RawMessage(`{"turn":"unfinished"}`)); err != nil {
 		t.Fatal(err)
 	}
 	name := writer.Name()
@@ -173,20 +229,30 @@ func TestLoadingACrashedSessionIsRefusedWithoutChangingItsJournal(t *testing.T) 
 		t.Fatal(err)
 	}
 
-	path := filepath.Join(directory, name, "session.jsonl")
-	before, err := os.ReadFile(path) //nolint:gosec // the test's own session
+	recovered, err := LoadForResume(directory, work.At(workspaceDir), name, false)
+	if err != nil {
+		t.Fatalf("expected the crashed session to recover, got %v", err)
+	}
+	if !recovered.CanResume() || !recovered.HasAbandonedTurn {
+		t.Errorf("unexpected recovery state: %+v", recovered)
+	}
+	if len(recovered.Items) != 1 || string(recovered.Items[0]) != `{"turn":"completed"}` {
+		t.Errorf("got provider items %s", recovered.Items)
+	}
+	if len(recovered.Events) != 4 {
+		t.Fatalf("got recovered events %+v", recovered.Events)
+	}
+	lastEvent := recovered.Events[len(recovered.Events)-1]
+	if lastEvent.Kind != agent.InterruptionEvent || interrupt.Reason(lastEvent) != "the previous oh process ended unexpectedly" {
+		t.Errorf("got recovery event %+v", lastEvent)
+	}
+
+	again, err := LoadForResume(directory, work.At(workspaceDir), name, false)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := LoadForResume(directory, work.At(workspaceDir), name); err == nil || !strings.Contains(err.Error(), "did not finish every turn") {
-		t.Fatalf("expected the crashed session to be refused, got %v", err)
-	}
-	match, err := os.ReadFile(path) //nolint:gosec // the test's own session
-	if err != nil {
-		t.Fatal(err)
-	}
-	if string(match) != string(before) {
-		t.Error("refusing the crashed session changed its journal")
+	if len(again.Events) != len(recovered.Events) {
+		t.Errorf("a second load recorded recovery again: %+v", again.Events)
 	}
 }
 
@@ -283,7 +349,7 @@ func TestLoadingARunningSessionReportsThatItIsRunning(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if _, err := LoadForResume(directory, work.At(workspaceDir), writer.Name()); err == nil || !strings.Contains(err.Error(), "is running") {
+	if _, err := LoadForResume(directory, work.At(workspaceDir), writer.Name(), false); err == nil || !strings.Contains(err.Error(), "is running") {
 		t.Fatalf("expected the running session to be identified, got %v", err)
 	}
 }
@@ -308,13 +374,69 @@ func TestLoadingACompletedSessionSucceeds(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if _, err := LoadForResume(directory, work.At(workspaceDir), writer.Name()); err != nil {
+	if _, err := LoadForResume(directory, work.At(workspaceDir), writer.Name(), false); err != nil {
 		t.Fatalf("expected the completed session to load: %v", err)
 	}
 
-	if _, err := LoadForResume(directory, work.At(t.TempDir()), writer.Name()); err == nil ||
+	if _, err := LoadForResume(directory, work.At(t.TempDir()), writer.Name(), false); err == nil ||
 		!strings.Contains(err.Error(), "can only be opened there") {
 		t.Fatalf("expected a session of another workspace to be refused, got %v", err)
+	}
+}
+
+func TestLoadingAnArchivedSessionRestoresItOnlyWhenForced(t *testing.T) {
+	directory := t.TempDir()
+	workspaceDir := t.TempDir()
+	writer, err := store.Create(directory, store.Meta{WorkspaceDir: workspaceDir})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "begin"}); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Item(json.RawMessage(`{"role":"user"}`)); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.CompleteTurn(session.TurnSummary{}); err != nil {
+		t.Fatal(err)
+	}
+	name := writer.Name()
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if err := session.Archive(directory, name); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := LoadForResume(directory, work.At(workspaceDir), name, false); err == nil ||
+		!strings.Contains(err.Error(), "is archived; pass -f to restore and resume") {
+		t.Fatalf("expected an archived session to be refused without --force, got %v", err)
+	}
+	if !session.IsArchived(directory, name) {
+		t.Fatal("a resume without --force restored the archived session")
+	}
+
+	if _, err := LoadForResume(directory, work.At(t.TempDir()), name, true); err == nil ||
+		!strings.Contains(err.Error(), "can only be opened there") {
+		t.Fatalf("expected a session of another workspace to be refused, got %v", err)
+	}
+	if !session.IsArchived(directory, name) {
+		t.Fatal("a refused resume restored the archived session")
+	}
+
+	resumedSession, err := LoadForResume(directory, work.At(workspaceDir), name, true)
+	if err != nil {
+		t.Fatalf("expected the archived session to load: %v", err)
+	}
+	if session.IsArchived(directory, name) {
+		t.Fatal("the loaded session is still archived")
+	}
+	resumedWriter, err := OpenWriter(directory, resumedSession, store.Meta{})
+	if err != nil {
+		t.Fatalf("expected the restored session to open: %v", err)
+	}
+	if err := resumedWriter.Close(); err != nil {
+		t.Fatal(err)
 	}
 }
 
@@ -343,7 +465,7 @@ func TestASessionRecordedThroughALinkResumesInTheWorkspaceItNames(t *testing.T) 
 		t.Fatal(err)
 	}
 
-	if _, err := LoadForResume(directory, work.At(workspaceDir), writer.Name()); err != nil {
+	if _, err := LoadForResume(directory, work.At(workspaceDir), writer.Name(), false); err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
@@ -371,7 +493,7 @@ func TestAForkSourceOfAnotherWorkspaceIsRefused(t *testing.T) {
 }
 
 func TestNamingNoSessionResumesNothing(t *testing.T) {
-	resumedSession, err := LoadForResume(t.TempDir(), work.At(t.TempDir()), "")
+	resumedSession, err := LoadForResume(t.TempDir(), work.At(t.TempDir()), "", false)
 	if err != nil || resumedSession != nil {
 		t.Errorf("expected nothing to resume, got %v and %v", resumedSession, err)
 	}

@@ -1,9 +1,11 @@
 function _oh {
-    local LINE WORD PREVIOUS KIND
-    local -a TOKENS
+    local LINE WORD PREVIOUS KIND TOKEN
+    local FLAG_GROUP='^-[fpluUIJvh]*[rmL]?[fpluUIJvh]*$'
+    local -a TOKENS LINE_TOKENS
 
     LINE=${COMP_LINE:0:COMP_POINT}
     read -ra TOKENS <<< "$LINE"
+    read -ra LINE_TOKENS <<< "$COMP_LINE"
 
     if [[ -z $LINE || $LINE == *[[:space:]] ]]; then
         WORD=
@@ -33,9 +35,20 @@ function _oh {
         return
     fi
 
+    if [[ $PREVIOUS =~ $FLAG_GROUP && $PREVIOUS == *r* ]]; then
+        PREVIOUS=-r
+    fi
+
     case $PREVIOUS in
-        -r | --resume) KIND=session ;;
-        -f | --from) KIND=session ;;
+        -r | --resume)
+            KIND=stored-session
+            for TOKEN in "${LINE_TOKENS[@]}"; do
+                if [[ $TOKEN == --force || ( $TOKEN =~ $FLAG_GROUP && $TOKEN == *f* ) ]]; then
+                    KIND=any-session
+                fi
+            done
+            ;;
+        --from) KIND=stored-session ;;
         -L | --login) KIND=provider ;;
         -c | --caps) KIND=caps ;;
         -t | --tool) KIND=tool ;;

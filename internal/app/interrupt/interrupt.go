@@ -16,6 +16,7 @@ const (
 	AccessChange    Cause = "access_change"
 	SessionClose    Cause = "session_close"
 	SignalInterrupt Cause = "signal_interrupt"
+	ProcessExit     Cause = "process_exit"
 )
 
 var sentences = map[Cause]string{
@@ -25,6 +26,7 @@ var sentences = map[Cause]string{
 	AccessChange:    "access changed",
 	SessionClose:    "the session closed",
 	SignalInterrupt: "the process received SIGINT",
+	ProcessExit:     "the previous oh process ended unexpectedly",
 }
 
 func Sentence(cause Cause) string {
@@ -77,7 +79,7 @@ func IsAnnounced(event agent.Event) bool {
 	switch Cause(event.Name) {
 	case Replacement, AccessChange, SessionClose:
 		return false
-	case Escape, ControlD, SignalInterrupt:
+	case Escape, ControlD, SignalInterrupt, ProcessExit:
 		return true
 	}
 
@@ -85,6 +87,9 @@ func IsAnnounced(event agent.Event) bool {
 }
 
 func Notice(event agent.Event) string {
+	if Cause(event.Name) == ProcessExit {
+		return "The previous oh process ended unexpectedly."
+	}
 	if reason := Reason(event); reason != "" {
 		return "Turn stopped because " + reason + "."
 	}

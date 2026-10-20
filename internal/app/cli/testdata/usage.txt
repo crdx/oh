@@ -8,11 +8,11 @@ Usage:
 
 Options:
     -r, --resume [<session>]    Resume a stored session
-    -f, --from <session>        Fork a previous session
     -m, --model [<model>]       Pick which model to use
     -c, --caps <flags>          Configure access rights
     -t, --tool <tool>           Replace current toolbox
     -p, --print                 Stream in headless mode
+        --from <session>        Fork a previous session
         --ctl                   Run maintenance command
         --demo                  Follow the white rabbit
         --yolo                  Run outside the sandbox
@@ -21,6 +21,7 @@ Options:
     -L, --login                 Control provider logins
     -U, --usage                 View subscription usage
     -I, --ignored               Display ignored entries
+    -f, --force                 Forcibly carry out task
     -J, --json                  Format output into JSON
     -v, --version               Print this version info
     -h, --help                  Print this help message

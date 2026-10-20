@@ -35,5 +35,9 @@ tame-impala
 === sessions options beginning with a word ===
 --delete
 === check options beginning with a dash ===
+--dry-run
+--fix
 --help
+-f
 -h
+-n

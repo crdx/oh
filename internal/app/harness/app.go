@@ -1850,6 +1850,9 @@ func (self *App) restore(storedSession *store.Session) {
 	}
 
 	self.recorder.Resume(len(storedSession.Items))
+	if storedSession.HasAbandonedTurn {
+		self.agent.AddNotes([]agent.Note{{Kind: agent.InterruptionNote, Text: interruptedSessionNote}})
+	}
 	self.recordedEvents = append(self.recordedEvents, storedSession.Events...)
 
 	for _, event := range storedSession.Events {
@@ -2047,7 +2050,12 @@ func (self *App) titleReminder() agent.Reminder {
 	}
 }
 
-const untitledSessionNote = "The session is still untitled. Use the " + title.Name + " tool to set a title."
+const (
+	untitledSessionNote    = "The session is still untitled. Use the " + title.Name + " tool to set a title."
+	interruptedSessionNote = "The previous oh process ended unexpectedly. " +
+		"Its visible events were preserved, but its unfinished turn's provider state was discarded. " +
+		"Read this session's chat.md before continuing."
+)
 
 func (self *App) isUntitled() bool {
 	if !self.agent.IsToolEnabled(title.Name) {

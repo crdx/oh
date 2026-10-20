@@ -1,4 +1,4 @@
-{"kind":"head","version":22,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant.","environment":{"sandbox":{"write":["/reference"]},"is_repository":false,"port_hostname":""}}}
+{"kind":"head","version":23,"meta":{"model":"claude-opus-5","workspaceDir":"","provider":"anthropic","effort":"medium","system_prompt":"You are a test assistant.","environment":{"sandbox":{"write":["/reference"]},"is_repository":false,"port_hostname":""}}}
 {"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"mode_change","name":"g","state":"rxwsnl"}}
 {"kind":"event","event":{"kind":"job_stop","name":"docs","state":"g"}}
