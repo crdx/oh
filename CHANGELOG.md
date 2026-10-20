@@ -32,28 +32,28 @@
 - Add `.agents.local` as an additional lookup directory
 - Accept grouped short flags such as `-rf` in any order
 
-## [0.19.0] - 2026-10-18
+## [0.19.0] — 2026-10-18
 
 ### Changes
 
 - Remove the experimental `wait` tool
 - Let subagents message their parent
 
-## [0.18.0] - 2026-10-17
+## [0.18.0] — 2026-10-17
 
 ### Changes
 
 - Add Google's Generate Content protocol
 - Clarify patch watch instructions to model
 
-## [0.17.1] - 2026-10-14
+## [0.17.1] — 2026-10-14
 
 ### Changes
 
 - Remove `subagent.{model,round_robin}` configuration keys
 - Confine subagents even under `--yolo`
 
-## [0.17.0] - 2026-10-13
+## [0.17.0] — 2026-10-13
 
 ### Changes
 
@@ -63,7 +63,7 @@
 - Stop counting sessions stopped or refused before first response as legacy
 - Show the legacy session count out of all sessions in analyse
 
-## [0.16.0] - 2026-10-13
+## [0.16.0] — 2026-10-13
 
 ### Changes
 
@@ -81,19 +81,19 @@
 - Show chosen subagent selections on spawn rows
 - Show job and subagent intents after the call in parentheses
 
-## [0.15.3] - 2026-10-13
+## [0.15.3] — 2026-10-13
 
 ### Changes
 
 - Add GPT 6.1 Sol
 
-## [0.15.1] - 2026-10-13
+## [0.15.1] — 2026-10-13
 
 ### Changes
 
 - Use the latest OpenCode Go endpoint
 
-## [0.15.0] - 2026-10-13
+## [0.15.0] — 2026-10-13
 
 ### Security
 
@@ -146,7 +146,7 @@
 - Don't allocate tons of memory when streaming long replies
 - Speed up the session picker by caching archive metadata
 
-## [0.14.0] - 2026-10-11
+## [0.14.0] — 2026-10-11
 
 ### Subagents
 
@@ -250,7 +250,7 @@
 - Correctly record a stopped turn's notice
 - Title every notice in the readable transcript
 
-## [0.13.0] - 2026-10-07
+## [0.13.0] — 2026-10-07
 
 ### Changes
 
@@ -266,13 +266,13 @@
 - Edit in an external editor with ctrl+g
 - Show editor failures as feedback
 
-## [0.12.1] - 2026-10-03
+## [0.12.1] — 2026-10-03
 
 ### Commands
 
 - Start a new turn when a `/!` command finishes
 
-## [0.12.0] - 2026-10-03
+## [0.12.0] — 2026-10-03
 
 ### Theme
 
@@ -380,7 +380,7 @@
 - Explain how to get a refused lookup or fetch tool granted
 - Keep git from finding the wrong repository for its patches
 
-## [0.11.0] - 2026-09-29
+## [0.11.0] — 2026-09-29
 
 ### Completion and input
 
@@ -490,7 +490,7 @@
 - Give the model accurate grant docs
 - Document the supported Mermaid syntax and features
 
-## [0.10.0] - 2026-09-25
+## [0.10.0] — 2026-09-25
 
 ### Changes
 
@@ -507,7 +507,7 @@
 - Let `oh -L` sign out of a provider or remove its key
 - Limit `oh -l` to usable models
 
-## [0.9.0] - 2026-09-22
+## [0.9.0] — 2026-09-22
 
 ### Changes
 
@@ -529,25 +529,25 @@
 - Heed X-Should-Retry header's wishes
 - Speed up deny path discovery
 
-## [0.8.0] - 2026-09-20
+## [0.8.0] — 2026-09-20
 
 ### Changes
 
 - Rename the Go module to `crdx.org/oh`
 
-## [0.7.2] - 2026-09-20
+## [0.7.2] — 2026-09-20
 
 ### Changes
 
 - Suppress desktop notifications while the terminal is focused
 
-## [0.7.1] - 2026-09-19
+## [0.7.1] — 2026-09-19
 
 ### Changes
 
 - Tweak the simulator
 
-## [0.7.0] - 2026-09-19
+## [0.7.0] — 2026-09-19
 
 ### Interface
 
@@ -628,7 +628,7 @@
 
 - Run the demo unsandboxed since it's safe
 
-## [0.6.0] - 2026-09-18
+## [0.6.0] — 2026-09-18
 
 ### Theme
 
@@ -727,7 +727,7 @@
 - Only look at valid journals
 - Draw a markdown heading above each table
 
-## [0.5.0] - 2026-09-10
+## [0.5.0] — 2026-09-10
 
 ### Changes
 
@@ -740,7 +740,7 @@
 - Linkify paths in tool calls, reasoning, notices, everything!
 - Prevent sub usage flashing on refresh
 
-## [0.4.0] - 2026-09-10
+## [0.4.0] — 2026-09-10
 
 ### Changes
 
@@ -749,7 +749,7 @@
 - Restore the cache properly on resume
 - Fix linkification of paths ending in dots
 
-## [0.3.0] - 2026-09-10
+## [0.3.0] — 2026-09-10
 
 ### Changes
 
@@ -770,7 +770,7 @@
 - Shorten notices and format token counts consistently
 - Remove the superfluous space before the image address
 
-## [0.2.0] - 2026-09-09
+## [0.2.0] — 2026-09-09
 
 ### Wire Protocols
 
@@ -986,7 +986,7 @@
 - `receivername`
 - `stdstream`
 
-## [0.1.0] - 2026-08-17
+## [0.1.0] — 2026-08-17
 
 Initial release.
 
