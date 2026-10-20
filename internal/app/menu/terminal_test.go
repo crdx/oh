@@ -17,6 +17,8 @@ const (
 	pressEnd   = "\x1b[F"
 	pressLeft  = "\x1b[D"
 	pressEnter = "\r"
+	pasteStart = "\x1b[200~"
+	pasteEnd   = "\x1b[201~"
 
 	choiceDeadline = 5 * time.Second
 )
@@ -114,6 +116,31 @@ func TestAListOverATerminalChoosesTheRowTheCursorReaches(t *testing.T) {
 
 	if got.err != nil || got.index != 2 {
 		t.Errorf("got %d, %v; want the third row", got.index, got.err)
+	}
+}
+
+func TestAListOverATerminalIsAbandonedByQ(t *testing.T) {
+	rows := &fakeList{rows: []string{"alpha", "beta"}}
+
+	got := chooseOverATerminal(t, 24, "q", func(terminal *os.File) (int, error) {
+		return Choose(rows, terminal, terminal)
+	})
+
+	if !errors.Is(got.err, ErrCancelled) {
+		t.Errorf("got %d, %v; want the choice abandoned", got.index, got.err)
+	}
+}
+
+func TestAListOverATerminalAcceptsABracketedFilterPaste(t *testing.T) {
+	rows := &fakeList{rows: []string{"alpha", "beta", "gamma"}}
+	typed := "/" + pasteStart + "beta" + pasteEnd + pressEnter
+
+	got := chooseOverATerminal(t, 24, typed, func(terminal *os.File) (int, error) {
+		return Choose(rows, terminal, terminal)
+	})
+
+	if got.err != nil || got.index != 1 {
+		t.Errorf("got %d, %v; want the pasted filter to choose the second row", got.index, got.err)
 	}
 }
 

@@ -2,8 +2,16 @@
 
 ## [Next]
 
+### Picker
+
+- Allow pasting into filter field
+- Switch filtering system to slash-triggered
+- Remove ctrl-prefix from shortcuts
+- Quit pickers with `q`
+
 ### Sessions
 
+- Preview archived sessions in the session picker
 - Remove read-only Go modcaches when deleting a session
 
 ### Models

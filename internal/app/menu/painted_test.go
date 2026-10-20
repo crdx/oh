@@ -90,8 +90,9 @@ func TestGoldenWhatAMenuPaintsMatchesTheGolden(t *testing.T) {
 }
 
 func TestGoldenTheCompleteMenuLifecycleMatchesTheGolden(t *testing.T) {
-	keys := make(chan key.Key, 3)
+	keys := make(chan key.Key, 4)
 	keys <- key.Key{Code: key.Down}
+	keys <- key.Key{Code: key.Rune, Value: '/'}
 	keys <- key.Key{Code: key.Rune, Value: 'f'}
 	keys <- key.Key{Code: key.Enter}
 	close(keys)
@@ -266,7 +267,7 @@ func TestGoldenTheCompletePreviewLifecycleMatchesTheGolden(t *testing.T) {
 		{Code: key.Up},
 		{Code: key.PageDown},
 		{Code: key.Home},
-		{Code: key.Escape},
+		{Code: key.Rune, Value: 'q'},
 		{Code: key.Enter},
 		{Code: key.Enter},
 	}

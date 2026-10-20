@@ -166,18 +166,18 @@ func (self *modelList) IsChoosable(int) bool { return true }
 func (self *modelList) KeyboardHelp(room int) []menu.Shortcut {
 	if room < sortHelpRoom {
 		return []menu.Shortcut{
-			{Key: "ctrl+s", Description: "sort: " + self.sortLabel()},
+			{Key: "s", Description: "sort: " + self.sortLabel()},
 			{Key: "enter", Description: "choose"},
-			{Key: "esc", Description: "close"},
+			{Key: "q", Description: "quit"},
 		}
 	}
 
 	return []menu.Shortcut{
 		{Key: "↑↓", Description: "move"},
 		{Key: "← →", Description: "effort"},
-		{Key: "ctrl+s", Description: "sort: " + self.sortLabel()},
+		{Key: "s", Description: "sort: " + self.sortLabel()},
 		{Key: "enter", Description: "choose"},
-		{Key: "esc", Description: "close"},
+		{Key: "q", Description: "quit"},
 	}
 }
 

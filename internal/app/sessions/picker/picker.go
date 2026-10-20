@@ -97,7 +97,7 @@ func (self *sessionList) IsChoosable(index int) bool {
 }
 
 func (self *sessionList) IsReachable(index int) bool {
-	return self.IsChoosable(index) || self.canRead(index)
+	return self.IsChoosable(index) || self.canRead()
 }
 
 func (self *sessionList) Adjust(int, int) {}
@@ -117,8 +117,9 @@ func (self *sessionList) KeyboardHelp(int) []menu.Shortcut {
 		{Key: "tab", Description: "scope"},
 		{Key: "← →", Description: "view"},
 		{Key: "enter", Description: "preview"},
-		{Key: "ctrl+a", Description: "archive/restore"},
+		{Key: "a", Description: "archive/restore"},
 		{Key: "del", Description: "delete"},
+		{Key: "q", Description: "quit"},
 	}
 }
 
@@ -150,15 +151,16 @@ func (self *sessionList) Removal(index int, keypress key.Key) (menu.Removal, boo
 }
 
 func (self *sessionList) Preview(index int, keypress key.Key) (menu.Preview, bool) {
-	if keypress.Code != key.Enter || !self.canRead(index) {
+	if keypress.Code != key.Enter || !self.canRead() {
 		return menu.Preview{}, false
 	}
 
 	readSession := self.at(index)
 
 	preview := menu.Preview{
-		Title: previewTitle(readSession),
-		Read:  func(room int) ([]string, error) { return self.store.Read(readSession, room) },
+		Title:               previewTitle(readSession),
+		Read:                func(room int) ([]string, error) { return self.store.Read(readSession, room) },
+		RequiresRestoration: readSession.IsArchived,
 	}
 	if readSession.IsOtherWorkspace {
 		preview.UnavailableLabel = "other workspace"
@@ -173,7 +175,7 @@ func previewTitle(readSession *Session) string {
 }
 
 func isArchiveKey(keypress key.Key) bool {
-	return keypress.Code == key.Rune && keypress.Value == archiveKey && keypress.Mod.Has(key.Ctrl)
+	return menu.IsShortcut(keypress, archiveKey)
 }
 
 func isDeleteKey(keypress key.Key) bool {
@@ -244,8 +246,8 @@ func (self *sessionList) measure(storedSession *Session, room int) {
 	self.sizeMeasurements[storedSession] = struct{}{}
 }
 
-func (self *sessionList) canRead(index int) bool {
-	return self.store.Read != nil && !self.at(index).IsArchived
+func (self *sessionList) canRead() bool {
+	return self.store.Read != nil
 }
 
 func (self *sessionList) archival(movedSession *Session) (menu.Removal, bool) {
@@ -257,7 +259,7 @@ func (self *sessionList) archival(movedSession *Session) (menu.Removal, bool) {
 		var restoredBytes int64
 
 		return menu.Removal{
-			Prompt:   "Press ctrl+a again to restore " + movedSession.Name,
+			Prompt:   "Press a again to restore " + movedSession.Name,
 			Progress: "Restoring…",
 			Perform: func() error {
 				bytes, err := self.store.Restore(movedSession)
@@ -275,7 +277,7 @@ func (self *sessionList) archival(movedSession *Session) (menu.Removal, bool) {
 	var archivedBytes int64
 
 	return menu.Removal{
-		Prompt:   "Press ctrl+a again to archive " + movedSession.Name,
+		Prompt:   "Press a again to archive " + movedSession.Name,
 		Progress: "Archiving…",
 		Perform: func() error {
 			bytes, err := self.store.Archive(movedSession)

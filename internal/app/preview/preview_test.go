@@ -19,6 +19,7 @@ import (
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/toolbox/job"
 	"crdx.org/oh/pkg/toolbox/messageparent"
 )
@@ -203,8 +204,8 @@ func TestGoldenAConversationOnEveryOtherBackgroundMatchesTheGolden(t *testing.T)
 	compareWithGolden(t, "conversation-backgrounds.ansi", strutil.VisibleEscapes(drawn.String()))
 }
 
-func TestAStoredConversationIsReadFromItsJournal(t *testing.T) {
-	directory := t.TempDir()
+func storedConversation(t *testing.T, directory string) string {
+	t.Helper()
 
 	log, err := store.Create(directory, store.Meta{})
 	if err != nil {
@@ -219,13 +220,43 @@ func TestAStoredConversationIsReadFromItsJournal(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	rows, err := Read(directory, log.Name(), nil, money.Dollar(), 100)
+	return log.Name()
+}
+
+func TestAStoredConversationIsReadFromItsJournal(t *testing.T) {
+	directory := t.TempDir()
+	name := storedConversation(t, directory)
+
+	rows, err := Read(directory, name, nil, money.Dollar(), 100)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	if want := Draw(conversation(), painter.Tariff{}, nil, 100); !slices.Equal(rows, want) {
 		t.Errorf("the stored conversation was read as %q, want %q", rows, want)
+	}
+}
+
+func TestAnArchivedConversationIsReadWithoutBeingRestored(t *testing.T) {
+	directory := t.TempDir()
+	name := storedConversation(t, directory)
+	if err := session.Archive(directory, name); err != nil {
+		t.Fatal(err)
+	}
+
+	rows, err := Read(directory, name, nil, money.Dollar(), 100)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if want := Draw(conversation(), painter.Tariff{}, nil, 100); !slices.Equal(rows, want) {
+		t.Errorf("the archived conversation was read as %q, want %q", rows, want)
+	}
+	if !session.IsArchived(directory, name) {
+		t.Error("expected reading an archived conversation to leave it archived")
+	}
+	if _, err := os.Stat(session.Dir(directory, name)); err == nil {
+		t.Error("expected reading an archived conversation to unpack nothing")
 	}
 }
 

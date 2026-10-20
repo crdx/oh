@@ -151,7 +151,7 @@ func TestAModelChosenFromThePickerAnswersTheConversation(t *testing.T) {
 
 	session := rig.start("--yolo", "-m")
 	session.waitFor("fake")
-	session.typeAndSettle("opencode")
+	session.typeAndSettle("/opencode")
 	session.typeText(pressEnter)
 	session.waitFor(readyBanner)
 	session.typeText("a question" + pressEnter)

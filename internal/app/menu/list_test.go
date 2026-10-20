@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"crdx.org/oh/internal/app/key"
+	"crdx.org/oh/internal/app/paste"
 	"crdx.org/oh/internal/app/style"
 )
 
@@ -92,6 +93,7 @@ func TestEveryWayOfAbandoningTheChoice(t *testing.T) {
 		"escape":       {Code: key.Escape},
 		"csi-u escape": {Code: key.Escape, Mod: key.Ctrl},
 		"ctrl+c":       {Code: key.Rune, Value: 'c', Mod: key.Ctrl},
+		"q":            {Code: key.Rune, Value: 'q'},
 	} {
 		if got := defaultState().apply(keypress); got != choiceCancelled {
 			t.Errorf("%s: expected the choice to be abandoned, got %v", name, got)
@@ -105,10 +107,14 @@ func TestAnUnrecognisedSequenceChangesNothing(t *testing.T) {
 	}
 }
 
-func TestPlainLettersAreNotACancellation(t *testing.T) {
-	for _, value := range []rune{'a', 'c', 'q', 'Q'} {
-		if got := defaultState().apply(key.Key{Code: key.Rune, Value: value}); got != continuePicking {
+func TestPlainLettersDoNotFilterOrCancel(t *testing.T) {
+	for _, value := range []rune{'a', 'c', 'x', 'Q'} {
+		self := defaultState()
+		if got := self.apply(key.Key{Code: key.Rune, Value: value}); got != continuePicking {
 			t.Errorf("%q: expected nothing to happen, got %v", value, got)
+		}
+		if self.query != "" || len(self.matches) != 3 {
+			t.Errorf("%q: expected no filter, got %q and %v", value, self.query, self.matches)
 		}
 	}
 }
@@ -168,12 +174,17 @@ func TestARowThatCannotBeChosenIsNotChosen(t *testing.T) {
 	}
 }
 
-func TestTypingNarrowsTheListToWhatWasTyped(t *testing.T) {
+func TestSlashStartsFilteringAndTypingNarrowsTheList(t *testing.T) {
 	self := listState(rowsNamed(
 		"chewy-sardine why the spinner stutters",
 		"thick-poodle reasoning traces",
 		"funny-badger the spinner again",
 	), 0)
+
+	self.apply(key.Key{Code: key.Rune, Value: '/'})
+	if !self.isFiltering || self.query != "" {
+		t.Fatalf("expected slash to enter an empty filter, got filtering=%t query=%q", self.isFiltering, self.query)
+	}
 
 	for _, value := range []rune{'s', 'p', 'i', 'n'} {
 		self.apply(key.Key{Code: key.Rune, Value: value})
@@ -229,12 +240,86 @@ func TestAFilterThatMatchesNothingLeavesNothingToChoose(t *testing.T) {
 	}
 }
 
-func TestTakingBackWhatWasNeverTypedIsNothing(t *testing.T) {
+func TestBackspaceOnlyEditsAnActiveFilter(t *testing.T) {
 	self := listState(rowsNamed("chewy-sardine"), 0)
 	self.apply(key.Key{Code: key.Backspace})
+	if self.query != "" || self.isFiltering {
+		t.Errorf("expected backspace to do nothing outside filtering, got %q", self.query)
+	}
 
-	if self.query != "" {
-		t.Errorf("expected an empty filter, got %q", self.query)
+	self.apply(key.Key{Code: key.Rune, Value: '/'})
+	self.apply(key.Key{Code: key.Backspace})
+	if self.isFiltering {
+		t.Error("expected backspace on an empty filter to return to shortcuts")
+	}
+}
+
+func TestEscapeClearsTheFilterBeforeItCancelsThePicker(t *testing.T) {
+	self := defaultState()
+	self.apply(key.Key{Code: key.Rune, Value: '/'})
+	self.apply(key.Key{Code: key.Rune, Value: 's'})
+
+	if got := self.apply(key.Key{Code: key.Escape}); got != continuePicking {
+		t.Fatalf("expected escape to leave filtering, got %v", got)
+	}
+	if self.isFiltering || self.query != "" || len(self.matches) != 3 {
+		t.Errorf("expected the full list and shortcuts, got filtering=%t query=%q matches=%v", self.isFiltering, self.query, self.matches)
+	}
+	if got := self.apply(key.Key{Code: key.Escape}); got != choiceCancelled {
+		t.Errorf("expected the second escape to cancel, got %v", got)
+	}
+}
+
+func TestQIsFilterTextWhileFiltering(t *testing.T) {
+	self := listState(rowsNamed("quiet", "loud"), 0)
+	self.apply(key.Key{Code: key.Rune, Value: '/'})
+
+	if got := self.apply(key.Key{Code: key.Rune, Value: 'q'}); got != continuePicking {
+		t.Fatalf("expected q to keep filtering, got %v", got)
+	}
+	if self.query != "q" || !slices.Equal(self.matches, []int{0}) {
+		t.Errorf("expected q in the filter, got query=%q matches=%v", self.query, self.matches)
+	}
+}
+
+func TestClipboardTextIsPastedIntoTheFilter(t *testing.T) {
+	self := listState(rowsNamed("opencode flash", "codex"), 0)
+	var output strings.Builder
+	self.screen = &output
+	self.apply(key.Key{Code: key.Rune, Value: '/'})
+
+	for _, report := range []*key.ClipboardReport{
+		{Status: key.ClipboardOpened},
+		{Status: key.ClipboardChunk, MediaType: key.MediaTypeList, Payload: []byte(paste.TextMediaType)},
+		{Status: key.ClipboardChunk, MediaType: paste.TextMediaType, Payload: []byte("opencode\x1b[31m\nflash")},
+		{Status: key.ClipboardClosed},
+	} {
+		self.apply(key.Key{Code: key.Clipboard, Clipboard: report})
+	}
+
+	if !strings.Contains(output.String(), key.ClipboardCode) {
+		t.Error("expected the terminal to be asked for clipboard text")
+	}
+	if self.query != "opencode flash" || !slices.Equal(self.matches, []int{0}) {
+		t.Errorf("expected pasted text to filter the rows, got query=%q matches=%v", self.query, self.matches)
+	}
+}
+
+func TestBracketedTextIsPastedIntoTheFilter(t *testing.T) {
+	self := listState(rowsNamed("open q model", "codex"), 0)
+	self.apply(key.Key{Code: key.Rune, Value: '/'})
+	self.apply(key.Key{Code: key.PasteStart})
+	for _, value := range "open" {
+		self.apply(key.Key{Code: key.Rune, Value: value})
+	}
+	self.apply(key.Key{Code: key.Enter})
+	if got := self.apply(key.Key{Code: key.Rune, Value: 'q'}); got != continuePicking {
+		t.Fatalf("expected q in a paste not to quit, got %v", got)
+	}
+	self.apply(key.Key{Code: key.PasteEnd})
+
+	if self.query != "open q" || !slices.Equal(self.matches, []int{0}) {
+		t.Errorf("expected bracketed text to filter the rows, got query=%q matches=%v", self.query, self.matches)
 	}
 }
 
@@ -263,9 +348,21 @@ func (self *sortableList) Sort(indexes []int) {
 	}
 }
 
+func TestBareSSortsOutsideFiltering(t *testing.T) {
+	rows := &sortableList{fakeList: rowsNamed("pear", "apple")}
+	self := listState(rows, 0)
+
+	self.apply(key.Key{Code: key.Rune, Value: 's'})
+
+	if !rows.isReverse || !slices.Equal(self.matches, []int{1, 0}) {
+		t.Errorf("expected s to cycle the sort, got reverse=%t matches=%v", rows.isReverse, self.matches)
+	}
+}
+
 func TestSortingKeepsTheFilterAndTheChosenRow(t *testing.T) {
 	rows := &sortableList{fakeList: rowsNamed("pear", "plum", "apple", "apricot")}
 	self := listState(rows, 0)
+	self.isFiltering = true
 	self.narrow("ap")
 	if self.chosen() != 2 {
 		t.Fatalf("got chosen row %d", self.chosen())
@@ -289,6 +386,18 @@ func TestSortingKeepsTheFilterAndTheChosenRow(t *testing.T) {
 	self.apply(keypress)
 	if !slices.Equal(self.matches, []int{2, 3}) || self.chosen() != 3 {
 		t.Errorf("restoring the order lost the choice: %v, choice %d", self.matches, self.chosen())
+	}
+}
+
+func TestLettersAreFilterTextRatherThanShortcutsWhileFiltering(t *testing.T) {
+	rows := &sortableList{fakeList: rowsNamed("sand", "apple")}
+	self := listState(rows, 0)
+
+	self.apply(key.Key{Code: key.Rune, Value: '/'})
+	self.apply(key.Key{Code: key.Rune, Value: 's'})
+
+	if rows.isReverse || self.query != "s" || !slices.Equal(self.matches, []int{0}) {
+		t.Errorf("expected s to filter without sorting, got reverse=%t query=%q matches=%v", rows.isReverse, self.query, self.matches)
 	}
 }
 
@@ -424,12 +533,12 @@ type removableList struct {
 }
 
 func (self *removableList) Removal(index int, keypress key.Key) (Removal, bool) {
-	if !self.IsChoosable(index) || keypress != archiveKey() {
+	if !self.IsChoosable(index) || !IsShortcut(keypress, 'a') {
 		return Removal{}, false
 	}
 
 	return Removal{
-		Prompt:   "Press ctrl+a again to archive",
+		Prompt:   "Press a again to archive",
 		Progress: "Archiving…",
 		Perform:  func() error { return self.perform(index) },
 		Apply:    func() { self.apply(index) },
@@ -467,6 +576,10 @@ func (self *switchableList) Switch(int) bool {
 }
 
 func archiveKey() key.Key {
+	return key.Key{Code: key.Rune, Value: 'a'}
+}
+
+func controlArchiveKey() key.Key {
 	return key.Key{Code: key.Rune, Value: 'a', Mod: key.Ctrl}
 }
 
@@ -505,6 +618,39 @@ func TestARowIsRemovedOnlyOnASecondPress(t *testing.T) {
 	}
 }
 
+func TestQQuitsFromARemovalConfirmation(t *testing.T) {
+	self := listState(removableRows("first"), 0)
+	self.apply(archiveKey())
+
+	if got := self.apply(key.Key{Code: key.Rune, Value: 'q'}); got != choiceCancelled {
+		t.Errorf("expected q to quit from the confirmation, got %v", got)
+	}
+}
+
+func TestControlArchiveRemainsACompatibleAlias(t *testing.T) {
+	rows := removableRows("first")
+	self := listState(rows, 0)
+
+	self.apply(controlArchiveKey())
+	self.apply(controlArchiveKey())
+
+	if !slices.Equal(rows.removed, []string{"first"}) {
+		t.Errorf("expected ctrl+a to remove the row, got %v", rows.removed)
+	}
+}
+
+func TestArchiveLetterIsFilterTextWhileFiltering(t *testing.T) {
+	rows := removableRows("apple", "pear")
+	self := listState(rows, 0)
+
+	self.apply(key.Key{Code: key.Rune, Value: '/'})
+	self.apply(archiveKey())
+
+	if self.removalState.index != -1 || self.query != "a" || !slices.Equal(self.matches, []int{0, 1}) {
+		t.Errorf("expected a to filter without archiving, got removal=%d query=%q matches=%v", self.removalState.index, self.query, self.matches)
+	}
+}
+
 func TestRemovingTheLastRowLeavesTheCursorOnTheOneBefore(t *testing.T) {
 	rows := removableRows("first", "second")
 	self := listState(rows, 1)
@@ -535,7 +681,7 @@ func TestARowThatCannotBeRemovedIsNotAskedAbout(t *testing.T) {
 	}
 }
 
-func TestAFailedRemovalIsReportedInPlaceOfTheFilter(t *testing.T) {
+func TestAFailedRemovalIsReportedInPlaceOfTheShortcuts(t *testing.T) {
 	rows := removableRows("first", "second")
 	rows.failure = errors.New("the session is already open elsewhere")
 	self := listState(rows, 0)
@@ -548,8 +694,8 @@ func TestAFailedRemovalIsReportedInPlaceOfTheFilter(t *testing.T) {
 	}
 
 	self.apply(key.Key{Code: key.Down})
-	if !strings.Contains(self.promptLine(80), filterPrompt) {
-		t.Errorf("expected the filter back on the prompt line, got %q", self.promptLine(80))
+	if !strings.Contains(style.Plain(self.promptLine(80)), "/ filter") {
+		t.Errorf("expected the shortcuts back on the prompt line, got %q", self.promptLine(80))
 	}
 }
 
@@ -580,13 +726,19 @@ func TestTabSwitchesScopeAndRefilters(t *testing.T) {
 	}
 }
 
-func TestKeyboardHelpKeepsRoomForAFilter(t *testing.T) {
+func TestKeyboardHelpOffersFilteringUntilItStarts(t *testing.T) {
 	self := defaultState()
-	if got := style.Plain(self.filterLine(80)); !strings.Contains(got, "↑↓ move") {
-		t.Errorf("expected keyboard help in a wide menu, got %q", got)
+	if got := style.Plain(self.promptLine(80)); !strings.Contains(got, "/ filter") || !strings.Contains(got, "↑↓ move") {
+		t.Errorf("expected filtering and movement shortcuts in a wide menu, got %q", got)
 	}
-	if got := style.Plain(self.filterLine(46)); got != filterPrompt {
-		t.Errorf("expected a narrow menu to leave room for filtering, got %q", got)
+
+	if got := style.Plain(self.promptLine(4)); got != "/ f…" {
+		t.Errorf("expected narrow shortcut help to fit, got %q", got)
+	}
+
+	self.apply(key.Key{Code: key.Rune, Value: '/'})
+	if got := style.Plain(self.promptLine(80)); got != filterPrompt {
+		t.Errorf("expected only the active filter, got %q", got)
 	}
 }
 
@@ -917,24 +1069,31 @@ func TestBrowsingPastARowThatCannotBePreviewedStaysPut(t *testing.T) {
 	}
 }
 
-func TestAPreviewIsClosedByEscapeAndByQ(t *testing.T) {
-	for _, keypress := range []key.Key{{Code: key.Escape}, {Code: key.Rune, Value: 'q'}} {
-		rows := previewableRows("first", "second")
-		self := listState(rows, 0)
-		self.measure = func() (int, int) { return 40, 6 }
+func TestAPreviewIsClosedByEscape(t *testing.T) {
+	rows := previewableRows("first", "second")
+	self := listState(rows, 0)
+	self.measure = func() (int, int) { return 40, 6 }
 
-		self.apply(key.Key{Code: key.Enter})
-		self.draw()
+	self.apply(key.Key{Code: key.Enter})
+	self.draw()
 
-		if action := self.apply(keypress); action != continuePicking {
-			t.Errorf("expected %v to close the preview alone, got the action %v", keypress, action)
-		}
-		if self.preview.isOpen {
-			t.Errorf("expected %v to close the preview", keypress)
-		}
-		if self.query != "" {
-			t.Errorf("expected the key that closed the preview to be swallowed, got %q", self.query)
-		}
+	if action := self.apply(key.Key{Code: key.Escape}); action != continuePicking {
+		t.Errorf("expected escape to close the preview alone, got the action %v", action)
+	}
+	if self.preview.isOpen {
+		t.Error("expected escape to close the preview")
+	}
+}
+
+func TestQClosesAPreview(t *testing.T) {
+	self := listState(previewableRows("first", "second"), 0)
+	self.apply(key.Key{Code: key.Enter})
+
+	if action := self.apply(key.Key{Code: key.Rune, Value: 'q'}); action != continuePicking {
+		t.Errorf("expected q to close the preview alone, got the action %v", action)
+	}
+	if self.preview.isOpen {
+		t.Error("expected q to close the preview")
 	}
 }
 
@@ -1163,7 +1322,7 @@ func TestAPreviewedRowIsRemovedOnASecondPressAndTheRowsReturn(t *testing.T) {
 	if self.removalState.index != 1 || !self.preview.isOpen {
 		t.Fatalf("expected the preview to ask about its row, got %d", self.removalState.index)
 	}
-	if !strings.Contains(self.previewHint(40), "Press ctrl+a again") {
+	if !strings.Contains(self.previewHint(40), "Press a again") {
 		t.Errorf("expected the question in place of the hint, got %q", self.previewHint(40))
 	}
 

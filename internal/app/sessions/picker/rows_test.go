@@ -248,7 +248,7 @@ func TestGoldenWhatTheSessionPickerPaintsMatchesTheGolden(t *testing.T) {
 		{name: "the conversation read with the terminal too short for it", room: 120, height: 8, cursor: 1, keypress: new(openKeypress()), read: reading()},
 		{name: "a conversation read in a narrow terminal", room: 46, height: 12, cursor: 1, keypress: new(openKeypress()), read: reading()},
 		{name: "a conversation that could not be read", room: 120, height: 12, cursor: 1, keypress: new(openKeypress()), read: unreadable()},
-		{name: "an archived session, which is opened rather than read", room: 120, height: 24, cursor: 1, isArchivedView: true, keypress: new(openKeypress()), read: reading()},
+		{name: "an archived conversation read before it is restored", room: 120, height: 24, cursor: 1, isArchivedView: true, keypress: new(openKeypress()), read: reading()},
 		{name: "a session picker with nothing to read from", room: 120, height: 24, cursor: 1, keypress: new(openKeypress())},
 		{name: "the conversation of a running session, which cannot be opened", room: 120, height: 12, cursor: 0, keypress: new(openKeypress()), read: reading()},
 		{name: "a session archived here, drawn at the size of its archive", room: 120, height: 24, cursor: 0, isArchivedView: true, movedIndex: new(2)},

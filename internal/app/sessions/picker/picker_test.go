@@ -62,7 +62,7 @@ func TestAChosenSessionFromAnotherWorkspaceLeavesSelectionColourToTheMenu(t *tes
 }
 
 func archiveKeypress() key.Key {
-	return key.Key{Code: key.Rune, Value: 'a', Mod: key.Ctrl}
+	return key.Key{Code: key.Rune, Value: 'a'}
 }
 
 func deleteKeypress() key.Key {
@@ -105,7 +105,7 @@ func TestOnlyASessionThatIsNotRunningCanBeArchived(t *testing.T) {
 	if _, isBound := self.Removal(0, archiveKeypress()); isBound {
 		t.Error("expected a running session to be left alone")
 	}
-	if got, isBound := self.Removal(1, archiveKeypress()); !isBound || got.Prompt != "Press ctrl+a again to archive thick-poodle" {
+	if got, isBound := self.Removal(1, archiveKeypress()); !isBound || got.Prompt != "Press a again to archive thick-poodle" {
 		t.Errorf("unexpected archival: %q and %t", got.Prompt, isBound)
 	}
 
@@ -246,7 +246,7 @@ func TestTheViewSwitchesBetweenTheStoredSessionsAndTheArchivedOnes(t *testing.T)
 	if got := self.ColumnHeader(120); !strings.Contains(got, "Agent (archived)") {
 		t.Errorf("expected the archived header, got %q", got)
 	}
-	if got, _ := self.Removal(0, archiveKeypress()); got.Prompt != "Press ctrl+a again to restore tame-impala" {
+	if got, _ := self.Removal(0, archiveKeypress()); got.Prompt != "Press a again to restore tame-impala" {
 		t.Errorf("unexpected prompt: %q", got.Prompt)
 	}
 
@@ -393,8 +393,8 @@ func TestAnUnboundKeyAsksForNothing(t *testing.T) {
 		Delete:   func(*Session) error { return nil },
 	}}
 
-	if _, isBound := self.Removal(0, key.Key{Code: key.Rune, Value: 'a'}); isBound {
-		t.Error("expected a bare letter to be left to the filter")
+	if _, isBound := self.Removal(0, key.Key{Code: key.Rune, Value: 'x'}); isBound {
+		t.Error("expected an unbound letter to be left alone")
 	}
 	if _, isBound := self.Removal(0, key.Key{Code: key.Enter}); isBound {
 		t.Error("expected enter to be left alone")
@@ -429,7 +429,7 @@ func TestASessionCannotBeReadWithoutSomethingToReadItWith(t *testing.T) {
 	}
 }
 
-func TestAnArchivedSessionIsOpenedRatherThanRead(t *testing.T) {
+func TestAnArchivedSessionIsReadBeforeItIsRestored(t *testing.T) {
 	self := &sessionList{
 		store: Store{
 			ArchivedSessions: []*Session{{Name: "tame-impala", IsArchived: true}},
@@ -438,8 +438,19 @@ func TestAnArchivedSessionIsOpenedRatherThanRead(t *testing.T) {
 		isArchivedView: true,
 	}
 
-	if _, isBound := self.Preview(0, key.Key{Code: key.Enter}); isBound {
-		t.Error("expected an archived session to be opened rather than read")
+	preview, isBound := self.Preview(0, key.Key{Code: key.Enter})
+	if !isBound {
+		t.Fatal("expected an archived session to be read")
+	}
+	if !preview.RequiresRestoration {
+		t.Error("expected an archived session preview to require restoration")
+	}
+	rows, err := preview.Read(80)
+	if err != nil || !slices.Equal(rows, []string{"a line"}) {
+		t.Errorf("expected the archived conversation, got %q and %v", rows, err)
+	}
+	if !self.store.ArchivedSessions[0].IsArchived {
+		t.Error("expected reading an archived session to leave it archived")
 	}
 	if !self.IsReachable(0) {
 		t.Error("expected an archived session to stay reachable")

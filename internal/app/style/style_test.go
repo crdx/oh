@@ -148,6 +148,7 @@ func TestEveryStyleFollowsItsOwnPaletteRole(t *testing.T) {
 			"dirty tree":           DirtyTree,
 			"heading":              Heading,
 			"high price":           HighPrice,
+			"preview restore hint": PreviewRestoreHint,
 			"preview running hint": PreviewRunningHint,
 			"stopped turn":         StoppedTurn,
 			"warning":              Warning,

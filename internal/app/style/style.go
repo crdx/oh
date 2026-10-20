@@ -30,6 +30,7 @@ var (
 	TypedInput Style = Normal
 
 	PreviewLoadHint       Style = decorate(col.Italic, decorate(col.Dim, Success))
+	PreviewRestoreHint    Style = decorate(col.Italic, decorate(col.Dim, Warning))
 	PreviewRunningHint    Style = decorate(col.Italic, decorate(col.Dim, Change))
 	Reasoning             Style = decorate(col.Italic, Dim)
 	RunningSession        Style = decorate(col.Italic, Dim)

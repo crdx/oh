@@ -15,6 +15,7 @@ import (
 	"crdx.org/oh/internal/app/ansi"
 	"crdx.org/oh/internal/app/interaction"
 	"crdx.org/oh/internal/app/key"
+	"crdx.org/oh/internal/app/paste"
 	"crdx.org/oh/internal/app/spinner"
 	"crdx.org/oh/internal/app/style"
 	"crdx.org/oh/internal/app/tty"
@@ -33,13 +34,15 @@ const (
 const EffortColumn = 8
 
 const (
-	minimumGap        = 2
-	minimumFilterRoom = 20
-	defaultColumns    = 80
-	defaultRows       = 24
+	minimumGap     = 2
+	defaultColumns = 80
+	defaultRows    = 24
 )
 
-const filterPrompt = "Filter: "
+const (
+	filterPrompt = "Filter: "
+	quitKey      = 'q'
+)
 
 var ErrCancelled = errors.New("cancelled")
 
@@ -94,10 +97,11 @@ type Previewable interface {
 }
 
 type Preview struct {
-	Title              string
-	Read               func(room int) ([]string, error)
-	UnavailableLabel   string
-	UnavailableMessage string
+	Title               string
+	Read                func(room int) ([]string, error)
+	UnavailableLabel    string
+	UnavailableMessage  string
+	RequiresRestoration bool
 }
 
 func Choose(rows List, terminal *os.File, screen io.Writer) (int, error) {
@@ -163,11 +167,15 @@ type state struct {
 
 	startWork func(func())
 
-	query   string
-	matches []int
-	cursor  int
-	offset  int
-	window  int
+	query         string
+	isFiltering   bool
+	isPasting     bool
+	pastedText    strings.Builder
+	pasteExchange paste.Exchange
+	matches       []int
+	cursor        int
+	offset        int
+	window        int
 
 	removalState removalState
 	preview      previewState
@@ -240,18 +248,29 @@ func (self *state) apply(keypress key.Key) action {
 	}
 
 	if self.removalState.index >= 0 {
+		if isQuitKey(keypress) {
+			return choiceCancelled
+		}
 		self.answerRemoval(keypress)
 		return continuePicking
 	}
 
 	self.removalState.failure = ""
 
-	if self.askToRemove(keypress) {
+	if self.preview.isOpen {
+		if self.askToRemove(keypress) {
+			return continuePicking
+		}
+
+		return self.readPreview(keypress)
+	}
+
+	if self.applyFilter(keypress) {
 		return continuePicking
 	}
 
-	if self.preview.isOpen {
-		return self.readPreview(keypress)
+	if self.askToRemove(keypress) {
+		return continuePicking
 	}
 
 	if self.askToPreview(keypress) {
@@ -281,13 +300,11 @@ func (self *state) apply(keypress key.Key) action {
 		}
 	case key.Escape:
 		return choiceCancelled
-	case key.Backspace:
-		self.narrow(trimLastRune(self.query))
 	case key.Rune:
-		if keypress.Value == 'c' && keypress.Mod.Has(key.Ctrl) {
+		if (keypress.Value == 'c' && keypress.Mod.Has(key.Ctrl)) || isQuitKey(keypress) {
 			return choiceCancelled
 		}
-		if keypress.Value == 's' && keypress.Mod.Has(key.Ctrl) {
+		if IsShortcut(keypress, 's') {
 			self.cycleSort()
 			return continuePicking
 		}
@@ -295,13 +312,101 @@ func (self *state) apply(keypress key.Key) action {
 			self.switchScope()
 			return continuePicking
 		}
-		if isTypeable(keypress) {
-			self.narrow(self.query + string(keypress.Value))
-		}
-	case key.Delete, key.PasteStart, key.PasteEnd, key.Clipboard, key.FocusIn, key.FocusOut, key.Unknown:
+	case key.Backspace, key.Delete, key.PasteStart, key.PasteEnd, key.Clipboard, key.FocusIn, key.FocusOut, key.Unknown:
 	}
 
 	return continuePicking
+}
+
+func (self *state) applyFilter(keypress key.Key) bool {
+	if !self.isFiltering {
+		if keypress.Code == key.Rune && keypress.Value == '/' && keypress.Mod == 0 {
+			self.isFiltering = true
+			return true
+		}
+
+		return false
+	}
+
+	if self.isPasting {
+		self.applyPastedKey(keypress)
+		return true
+	}
+
+	switch keypress.Code {
+	case key.Escape:
+		self.isFiltering = false
+		self.narrow("")
+		return true
+	case key.Backspace:
+		if self.query == "" {
+			self.isFiltering = false
+			return true
+		}
+		self.narrow(trimLastRune(self.query))
+		return true
+	case key.Rune:
+		if isTypeable(keypress) {
+			self.narrow(self.query + string(keypress.Value))
+			return true
+		}
+	case key.PasteStart:
+		self.isPasting = true
+		self.pastedText.Reset()
+		return true
+	case key.Clipboard:
+		self.applyClipboard(keypress.Clipboard)
+		return true
+	case key.Enter, key.Delete, key.Left, key.Right, key.Up, key.Down, key.Home, key.End,
+		key.PageUp, key.PageDown, key.PasteEnd, key.FocusIn, key.FocusOut, key.Unknown:
+	}
+
+	return false
+}
+
+func (self *state) applyPastedKey(keypress key.Key) {
+	switch keypress.Code {
+	case key.PasteEnd:
+		self.isPasting = false
+		self.appendPastedText(self.pastedText.String())
+		self.pastedText.Reset()
+	case key.Enter:
+		self.pastedText.WriteRune('\n')
+	case key.Rune:
+		if keypress.Mod == 0 {
+			self.pastedText.WriteRune(keypress.Value)
+		}
+	case key.Unknown:
+		self.pastedText.WriteRune(' ')
+	case key.Backspace, key.Delete, key.Left, key.Right, key.Up, key.Down, key.Home, key.End,
+		key.PageUp, key.PageDown, key.Escape, key.PasteStart, key.Clipboard, key.FocusIn,
+		key.FocusOut:
+	}
+}
+
+func (self *state) applyClipboard(report *key.ClipboardReport) {
+	result := self.pasteExchange.Receive(report)
+
+	switch result.Kind {
+	case paste.Requested:
+		write(self.screen, result.Sequence)
+	case paste.Text:
+		self.appendPastedText(result.Text)
+	case paste.Image, paste.Failed, paste.Ignored:
+	}
+}
+
+func (self *state) appendPastedText(text string) {
+	self.narrow(self.query + strutil.Printable(text))
+}
+
+func isQuitKey(keypress key.Key) bool {
+	return keypress.Code == key.Rune && keypress.Value == quitKey && keypress.Mod == 0
+}
+
+func IsShortcut(keypress key.Key, value rune) bool {
+	return keypress.Code == key.Rune && keypress.Value == value &&
+		(keypress.Mod == 0 || keypress.Mod == key.Ctrl)
 }
 
 func (self *state) spinnerTicks() <-chan time.Time {
@@ -564,6 +669,7 @@ func paint(rows List, room int, height int, cursor int, query string, keypress *
 	var screen strings.Builder
 
 	self := newState(rows)
+	self.isFiltering = query != ""
 	self.narrow(query)
 	self.cursor = cursor
 	self.screen = &screen
@@ -636,7 +742,11 @@ func (self *state) promptLine(room int) string {
 		return line
 	}
 
-	return self.filterLine(room)
+	if self.isFiltering {
+		return self.filterLine(room)
+	}
+
+	return self.shortcutLine(room)
 }
 
 func (self *state) removalLine(room int) (string, bool) {
@@ -654,11 +764,15 @@ func (self *state) removalLine(room int) (string, bool) {
 }
 
 func (self *state) filterLine(room int) string {
-	filter := style.Subtle(Clip(filterPrompt, room)) + style.Answer(Clip(self.query, room-len(filterPrompt)))
+	return style.Subtle(Clip(filterPrompt, room)) + style.Answer(Clip(self.query, max(room-len(filterPrompt), 0)))
+}
+
+func (self *state) shortcutLine(room int) string {
+	filter := renderKeyboardHelp([]Shortcut{{Key: "/", Description: "filter"}})
 	shortcuts := []Shortcut{
 		{Key: "↑↓", Description: "move"},
 		{Key: "enter", Description: "choose"},
-		{Key: "esc", Description: "close"},
+		{Key: "q", Description: "quit"},
 	}
 	if rows, hasKeyboardHelp := self.list.(KeyboardHelp); hasKeyboardHelp {
 		shortcuts = rows.KeyboardHelp(room)
@@ -666,8 +780,8 @@ func (self *state) filterLine(room int) string {
 	help := renderKeyboardHelp(shortcuts)
 
 	gap := room - width.Of(filter) - width.Of(help)
-	if help == "" || gap < minimumGap || room-width.Of(help)-len(filterPrompt) < minimumFilterRoom {
-		return filter
+	if help == "" || gap < minimumGap {
+		return Clip(filter, room)
 	}
 
 	return filter + strings.Repeat(" ", gap) + help

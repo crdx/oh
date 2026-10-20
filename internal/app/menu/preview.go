@@ -13,30 +13,31 @@ import (
 )
 
 const (
-	previewKeysHint         = " · esc return · ↑↓ scroll · ←→ browse"
+	previewKeysHint         = " · esc/q return · ↑↓ scroll · ←→ browse"
 	openablePreviewHint     = "enter to open" + previewKeysHint
 	runningPreviewHint      = "running" + previewKeysHint
-	closePreviewKey         = 'q'
 	previewRule             = "─"
 	previewHeaderRows       = 3
 	previewFooterRows       = 4
 	previewLoadInputHint    = "Press enter to load..."
+	previewRestoreInputHint = "Press enter to restore and load..."
 	previewRunningInputHint = "Session is running..."
 )
 
 type previewState struct {
-	title              string
-	read               func(room int) ([]string, error)
-	unavailableLabel   string
-	unavailableMessage string
-	rows               []string
-	room               int
-	offset             int
-	failure            string
-	openedBy           key.Key
-	isOpen             bool
-	isOpenable         bool
-	isTailWanted       bool
+	title               string
+	read                func(room int) ([]string, error)
+	unavailableLabel    string
+	unavailableMessage  string
+	requiresRestoration bool
+	rows                []string
+	room                int
+	offset              int
+	failure             string
+	openedBy            key.Key
+	isOpen              bool
+	isOpenable          bool
+	isTailWanted        bool
 }
 
 func (self *state) askToPreview(keypress key.Key) bool {
@@ -51,14 +52,15 @@ func (self *state) askToPreview(keypress key.Key) bool {
 	}
 
 	self.preview = previewState{
-		title:              work.Title,
-		read:               work.Read,
-		unavailableLabel:   work.UnavailableLabel,
-		unavailableMessage: work.UnavailableMessage,
-		openedBy:           keypress,
-		isOpen:             true,
-		isOpenable:         self.list.IsChoosable(self.chosen()),
-		isTailWanted:       true,
+		title:               work.Title,
+		read:                work.Read,
+		unavailableLabel:    work.UnavailableLabel,
+		unavailableMessage:  work.UnavailableMessage,
+		requiresRestoration: work.RequiresRestoration,
+		openedBy:            keypress,
+		isOpen:              true,
+		isOpenable:          self.list.IsChoosable(self.chosen()),
+		isTailWanted:        true,
 	}
 
 	return true
@@ -90,7 +92,7 @@ func (self *state) readPreview(keypress key.Key) action {
 		if keypress.Value == 'c' && keypress.Mod.Has(key.Ctrl) {
 			return choiceCancelled
 		}
-		if keypress.Value == closePreviewKey && !keypress.Mod.Has(key.Ctrl) {
+		if isQuitKey(keypress) {
 			self.preview = previewState{}
 		}
 	case key.Left:
@@ -182,6 +184,9 @@ func (self *state) drawPreview(room int, height int) string {
 	}
 	if self.preview.isOpenable {
 		inputHint = style.PreviewLoadHint(Clip(previewLoadInputHint, room))
+		if self.preview.requiresRestoration {
+			inputHint = style.PreviewRestoreHint(Clip(previewRestoreInputHint, room))
+		}
 	}
 	inputRows, _, _ := input.Block{
 		Input: edit.Frame{Rows: []string{inputHint}},
