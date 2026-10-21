@@ -1,0 +1,7 @@
+=== screen ===
+[38;2;76;154;44mok[0m configuration
+[38;2;76;154;44mfixed[0m duplicate-otter: abandon an unfinished turn[38;2;150;152;150m; copy kept in /state/sessions_pre_check/duplicate-otter[0m
+[38;2;76;154;44mfixed[0m 1 of 1 session
+=== failure ===
+=== error ===
+<nil>

@@ -136,6 +136,31 @@ func TestOnlyTheNamedSessionsAreChecked(t *testing.T) {
 	}
 }
 
+func TestGoldenNamedSessionsAreDeduplicatedBeforeFixingMatchesTheGolden(t *testing.T) {
+	directory := t.TempDir()
+	name := unfinishedSession(t, directory)
+	candidates, err := sessionCandidates(directory, []string{name, name})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(candidates) != 1 || candidates[0].name != name {
+		t.Fatalf("got duplicate candidates %+v", candidates)
+	}
+
+	var screen, failure strings.Builder
+	runError := run(paths{sessionsDir: directory}, []string{name, name}, options{isFixing: true}, console.Output{
+		Screen: &screen, Failure: &failure,
+	})
+	if runError != nil {
+		t.Fatalf("duplicate requested session failed its fix: %v\n%s", runError, failure.String())
+	}
+	drawn := strings.NewReplacer(
+		name, "duplicate-otter",
+		directory, "/state/sessions",
+	).Replace(report(screen.String(), failure.String(), runError))
+	assertGolden(t, "duplicate-fix.txt", drawn)
+}
+
 func TestGoldenRecoverableAndFixedSessionsMatchTheGolden(t *testing.T) {
 	directory := t.TempDir()
 	warningName := unfinishedSession(t, directory)

@@ -197,7 +197,12 @@ func handleResult(directory string, settings options, output console.Output, ses
 func sessionCandidates(directory string, requestedNames []string) ([]candidate, error) {
 	if len(requestedNames) > 0 {
 		candidates := make([]candidate, 0, len(requestedNames))
+		seen := make(map[string]struct{}, len(requestedNames))
 		for _, name := range requestedNames {
+			if _, exists := seen[name]; exists {
+				continue
+			}
+			seen[name] = struct{}{}
 			candidates = append(candidates, candidate{name: name, target: name})
 		}
 		return candidates, nil
