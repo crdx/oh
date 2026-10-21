@@ -77,3 +77,41 @@ func TestARelativeStateDirectoryIsIgnored(t *testing.T) {
 		t.Errorf("got %q, want %q", got, want)
 	}
 }
+
+func TestTheConfigDirectoryFollowsTheHomeDirectoryByDefault(t *testing.T) {
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+	t.Setenv("XDG_CONFIG_HOME", "")
+	t.Setenv(location.ConfigDirVariable, "")
+
+	want := filepath.Join(home, ".config", "org.crdx", "oh", "config.toml")
+	if got := location.GetConfigFile(); got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
+func TestAnAbsoluteConfigDirectoryIsTakenOverXDG(t *testing.T) {
+	root := t.TempDir()
+	t.Setenv("HOME", t.TempDir())
+	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
+	t.Setenv(location.ConfigDirVariable, root)
+
+	if got, want := location.GetConfigFile(), filepath.Join(root, "config.toml"); got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+	if got, want := location.GetGlobalContextPath(), filepath.Join(root, "SYSTEM.md"); got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
+func TestARelativeConfigDirectoryIsIgnored(t *testing.T) {
+	configHome := t.TempDir()
+	t.Setenv("HOME", t.TempDir())
+	t.Setenv("XDG_CONFIG_HOME", configHome)
+	t.Setenv(location.ConfigDirVariable, filepath.Join("inside", "workspace"))
+
+	want := filepath.Join(configHome, "org.crdx", "oh", "config.toml")
+	if got := location.GetConfigFile(); got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}

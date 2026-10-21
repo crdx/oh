@@ -2,9 +2,10 @@
 
 ## [Next]
 
-### Hyperlinks
+### Changes
 
 - Stop linking paths joined to other text by a colon
+- Add OH_CONFIG_DIR for setting the config directory
 
 ## [0.20.1] — 2026-10-21
 

@@ -11,19 +11,24 @@ const (
 	namespace = "org.crdx"
 	app       = "oh"
 
-	StateDirVariable = "OH_STATE_DIR"
+	StateDirVariable  = "OH_STATE_DIR"
+	ConfigDirVariable = "OH_CONFIG_DIR"
 )
 
 func GetStateDir(parts ...string) string {
-	if root := os.Getenv(StateDirVariable); filepath.IsAbs(root) {
-		return filepath.Join(append([]string{root}, parts...)...)
-	}
-
-	return xdg.StatePath(append([]string{namespace, app}, parts...)...)
+	return resolve(StateDirVariable, xdg.StatePath, parts)
 }
 
 func GetConfigDir(parts ...string) string {
-	return xdg.ConfigPath(append([]string{namespace, app}, parts...)...)
+	return resolve(ConfigDirVariable, xdg.ConfigPath, parts)
+}
+
+func resolve(variable string, fallback func(...string) string, parts []string) string {
+	if root := os.Getenv(variable); filepath.IsAbs(root) {
+		return filepath.Join(append([]string{root}, parts...)...)
+	}
+
+	return fallback(append([]string{namespace, app}, parts...)...)
 }
 
 func GetConfigFile() string {
