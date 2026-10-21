@@ -6100,6 +6100,8 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		claimFixtureName(t, expected, "special replay", name, extensions)
 	}
 
+	claimFixtureName(t, expected, "special replay", "recovered-missing-transcript", []string{".transcript"})
+
 	outputDirectory := filepath.Join("testdata", "output")
 	entries, err := os.ReadDir(outputDirectory)
 	if err != nil {
@@ -22986,6 +22988,56 @@ func TestGoldenRecoveringAnAbandonedTurnExplainsWhyItStopped(t *testing.T) {
 				HasAbandonedTurn: true,
 			})
 			return shown(t, screenOutput.String(), replayColumns)
+		},
+	})
+}
+
+func TestGoldenRecoveringAnAbandonedTurnRebuildsAMissingTranscript(t *testing.T) {
+	compareWithGolden(t, "recovered-missing-transcript", ".transcript", map[string]func() string{
+		"rebuilt missing transcript": func() string {
+			directory := t.TempDir()
+			writer, err := store.Create(directory, store.Meta{
+				Model:        "gpt-5.6-sol",
+				Provider:     "codex",
+				WorkspaceDir: "/workspace",
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err := writer.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "completed message"}); err != nil {
+				t.Fatal(err)
+			}
+			if err := writer.CompleteTurn(session.TurnSummary{}); err != nil {
+				t.Fatal(err)
+			}
+			if err := writer.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "unfinished message"}); err != nil {
+				t.Fatal(err)
+			}
+			if err := writer.Event(agent.Event{Kind: agent.ModelReasoningEvent, Text: "Partial reasoning"}); err != nil {
+				t.Fatal(err)
+			}
+			name := writer.Name()
+			if err := writer.Close(); err != nil {
+				t.Fatal(err)
+			}
+			transcriptPath := filepath.Join(directory, name, "chat.md")
+			if err := os.Remove(transcriptPath); err != nil {
+				t.Fatal(err)
+			}
+			if _, err := store.AbandonIncompleteTurn(directory, name, nil); err != nil {
+				t.Fatal(err)
+			}
+			transcript, err := os.ReadFile(transcriptPath) //nolint:gosec // the test's own transcript
+			if err != nil {
+				t.Fatal(err)
+			}
+			lines := strings.Split(strings.ReplaceAll(string(transcript), name, "recovered-otter"), "\n")
+			for index, line := range lines {
+				if strings.HasPrefix(line, "- **Started:**") {
+					lines[index] = "- **Started:** `2026-01-01T00:00:00Z`"
+				}
+			}
+			return strings.Join(lines, "\n")
 		},
 	})
 }

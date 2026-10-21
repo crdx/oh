@@ -159,7 +159,7 @@ func create(
 }
 
 func AbandonIncompleteTurn(directory string, name string, check func() error) (*Session, error) {
-	log, err := Open(directory, name)
+	log, err := open(directory, name, false)
 	if err != nil {
 		return nil, err
 	}
@@ -181,6 +181,21 @@ func AbandonIncompleteTurn(directory string, name string, check func() error) (*
 		}
 		return storedSession, nil
 	}
+
+	transcriptPath := filepath.Join(directory, name, transcriptName)
+	_, transcriptError := os.Lstat(transcriptPath)
+	isTranscriptMissing := os.IsNotExist(transcriptError)
+	if transcriptError != nil && !isTranscriptMissing {
+		_ = log.Close()
+		return nil, transcriptError
+	}
+	if isTranscriptMissing {
+		if err := rebuildTranscript(directory, name); err != nil {
+			_ = log.Close()
+			return nil, fmt.Errorf("rebuild missing transcript: %w", err)
+		}
+	}
+	log.startRecorders()
 
 	isLastEventRecovery := len(storedSession.Events) > 0 &&
 		storedSession.Events[len(storedSession.Events)-1].Kind == agent.InterruptionEvent &&
@@ -210,6 +225,10 @@ func AbandonIncompleteTurn(directory string, name string, check func() error) (*
 }
 
 func Open(directory string, name string) (*Writer, error) {
+	return open(directory, name, true)
+}
+
+func open(directory string, name string, shouldStartRecorders bool) (*Writer, error) {
 	innerWriter, err := session.Open(directory, name)
 	if err != nil {
 		return nil, err
@@ -230,7 +249,9 @@ func Open(directory string, name string) (*Writer, error) {
 		transcriptLoggingEnabled: true,
 		wireRecordingEnabled:     !meta.ShouldSkipWire,
 	}
-	writer.startRecorders()
+	if shouldStartRecorders {
+		writer.startRecorders()
+	}
 	return writer, nil
 }
 

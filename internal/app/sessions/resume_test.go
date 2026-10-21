@@ -199,6 +199,45 @@ func TestLoadingASessionThatCrashedMidWriteKeepsItsJournalReadable(t *testing.T)
 	}
 }
 
+func TestLoadingACrashedSessionRebuildsAMissingTranscriptBeforeRecovery(t *testing.T) {
+	directory := t.TempDir()
+	workspaceDirectory := t.TempDir()
+	writer, err := store.Create(directory, store.Meta{WorkspaceDir: workspaceDirectory})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "completed message"}); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.CompleteTurn(session.TurnSummary{}); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "unfinished message"}); err != nil {
+		t.Fatal(err)
+	}
+	name := writer.Name()
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+	transcriptPath := filepath.Join(directory, name, "chat.md")
+	if err := os.Remove(transcriptPath); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := LoadForResume(directory, work.At(workspaceDirectory), name, false); err != nil {
+		t.Fatal(err)
+	}
+	transcript, err := os.ReadFile(transcriptPath) //nolint:gosec // the test's own transcript
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, wanted := range []string{"completed message", "unfinished message", "previous oh process ended unexpectedly"} {
+		if !strings.Contains(string(transcript), wanted) {
+			t.Errorf("rebuilt transcript omitted %q:\n%s", wanted, transcript)
+		}
+	}
+}
+
 func TestLoadingACrashedSessionAbandonsOnlyItsUncommittedProviderState(t *testing.T) {
 	directory := t.TempDir()
 	workspaceDir := t.TempDir()

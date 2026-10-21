@@ -1,0 +1,21 @@
+=== rebuilt missing transcript ===
+# Conversation
+
+- **Session:** `recovered-otter`
+- **Started:** `2026-01-01T00:00:00Z`
+- **Model:** `gpt-5.6-sol`
+- **Provider:** `codex`
+- **Workspace:** `/workspace`
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## User · +0s
+
+completed message
+
+## User · +0s
+
+unfinished message
+
+## Interrupted · +0s
+
+The previous oh process ended unexpectedly.

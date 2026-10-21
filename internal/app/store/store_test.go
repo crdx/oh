@@ -716,6 +716,40 @@ func TestOpeningABundleAppendsToTheMarkdownTranscript(t *testing.T) {
 	}
 }
 
+func TestARefusedRecoveryDoesNotCreateAMissingTranscript(t *testing.T) {
+	directory := t.TempDir()
+	writer, err := store.Create(directory, store.Meta{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Event(agent.Event{Kind: agent.UserMessageEvent, Text: "unfinished"}); err != nil {
+		t.Fatal(err)
+	}
+	name := writer.Name()
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+	transcriptPath := filepath.Join(directory, name, "chat.md")
+	if err := os.Remove(transcriptPath); err != nil {
+		t.Fatal(err)
+	}
+
+	refusal := errors.New("session changed")
+	if _, err := store.AbandonIncompleteTurn(directory, name, func() error { return refusal }); !errors.Is(err, refusal) {
+		t.Fatalf("got %v, want the check refusal", err)
+	}
+	if _, err := os.Stat(transcriptPath); !os.IsNotExist(err) {
+		t.Errorf("refused recovery created a transcript: %v", err)
+	}
+	storedSession, err := store.Read(directory, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if storedSession.CanResume() {
+		t.Error("refused recovery abandoned the incomplete turn")
+	}
+}
+
 func TestAnOpenSessionIsRefusedToASecondWriter(t *testing.T) {
 	directory := t.TempDir()
 	id := write(t, directory)
