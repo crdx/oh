@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.20.2] — 2026-10-21
+
 ### Changes
 
 - Stop linking paths joined to other text by a colon
