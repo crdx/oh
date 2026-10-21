@@ -151,6 +151,249 @@ func TestFormatTwentyTwoMigrationChangesOnlyTheVersion(t *testing.T) {
 	}
 }
 
+func TestFormatTwentyTwoMigrationDropsATornTailAfterKeepingItInTheCopy(t *testing.T) {
+	directory, name := storedJournal(
+		t,
+		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":22,"id":"one","name":"tame-impala"}`,
+		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"user_message","text":"unfinished"}}`,
+	)
+	journalPath := filepath.Join(directory, name, "session.jsonl")
+	journal, err := os.OpenFile(journalPath, os.O_APPEND|os.O_WRONLY, 0o600) //nolint:gosec // the test's own journal
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := journal.WriteString(`{"kind":"item"`); err != nil {
+		t.Fatal(err)
+	}
+	if err := journal.Close(); err != nil {
+		t.Fatal(err)
+	}
+	before, err := os.ReadFile(journalPath) //nolint:gosec // the test's own journal
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	held := options(directory)
+	from, err := migrate.Session(held, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if from != 22 {
+		t.Errorf("migrated from format %d, want 22", from)
+	}
+	lines := journalLines(t, directory, name)
+	if len(lines) != 2 {
+		t.Fatalf("migration kept torn journal data: %+v", lines)
+	}
+	if got := string(lines[0]["version"]); got != strconv.Itoa(session.JournalFormat) {
+		t.Errorf("head has version %s, want %d", got, session.JournalFormat)
+	}
+	kept, err := os.ReadFile(filepath.Join(held.BackupDir, name, "session.jsonl")) //nolint:gosec // the test's own copy
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(kept) != string(before) {
+		t.Errorf("copy holds %q, want %q", kept, before)
+	}
+}
+
+func TestDryRunLeavesAFormatTwentyTwoTornTailUntouched(t *testing.T) {
+	directory, name := storedJournal(
+		t,
+		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":22,"id":"one","name":"tame-impala"}`,
+	)
+	journalPath := filepath.Join(directory, name, "session.jsonl")
+	journal, err := os.OpenFile(journalPath, os.O_APPEND|os.O_WRONLY, 0o600) //nolint:gosec // the test's own journal
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := journal.WriteString(`{"kind":"event"`); err != nil {
+		t.Fatal(err)
+	}
+	if err := journal.Close(); err != nil {
+		t.Fatal(err)
+	}
+	before, err := os.ReadFile(journalPath) //nolint:gosec // the test's own journal
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := migrate.Session(dryRun(directory), name); err != nil {
+		t.Fatal(err)
+	}
+	after, err := os.ReadFile(journalPath) //nolint:gosec // the test's own journal
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(after) != string(before) {
+		t.Errorf("dry run changed the journal from %q to %q", before, after)
+	}
+}
+
+func TestACurrentJournalWithATornTailIsNotTreatedAsAMigration(t *testing.T) {
+	head := fmt.Sprintf(`{"kind":"head","time":"2026-08-01T00:00:00Z","version":%d,"id":"one","name":"tame-impala"}`, session.JournalFormat)
+	directory, name := storedJournal(t, head)
+	journalPath := filepath.Join(directory, name, "session.jsonl")
+	journal, err := os.OpenFile(journalPath, os.O_APPEND|os.O_WRONLY, 0o600) //nolint:gosec // the test's own journal
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := journal.WriteString(`{"kind":"event"`); err != nil {
+		t.Fatal(err)
+	}
+	if err := journal.Close(); err != nil {
+		t.Fatal(err)
+	}
+	before, err := os.ReadFile(journalPath) //nolint:gosec // the test's own journal
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := migrate.Session(options(directory), name); err == nil {
+		t.Fatal("current torn journal was accepted as a migration")
+	}
+	after, err := os.ReadFile(journalPath) //nolint:gosec // the test's own journal
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(after) != string(before) {
+		t.Errorf("refused migration changed the journal from %q to %q", before, after)
+	}
+}
+
+func TestFormatTwentyTwoMigrationRejectsMalformedRecordsWithoutWriting(t *testing.T) {
+	tests := []struct {
+		name   string
+		suffix string
+	}{
+		{name: "terminated incomplete final record", suffix: "{\"kind\":\"event\"\n"},
+		{name: "malformed final record", suffix: "not-json\n"},
+		{name: "malformed interior record", suffix: "not-json\n{}\n"},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			directory, name := storedJournal(
+				t,
+				`{"kind":"head","time":"2026-08-01T00:00:00Z","version":22,"id":"one","name":"tame-impala"}`,
+			)
+			journalPath := filepath.Join(directory, name, "session.jsonl")
+			journal, err := os.OpenFile(journalPath, os.O_APPEND|os.O_WRONLY, 0o600) //nolint:gosec // the test's own journal
+			if err != nil {
+				t.Fatal(err)
+			}
+			if _, err := journal.WriteString(test.suffix); err != nil {
+				t.Fatal(err)
+			}
+			if err := journal.Close(); err != nil {
+				t.Fatal(err)
+			}
+			before, err := os.ReadFile(journalPath) //nolint:gosec // the test's own journal
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if _, err := migrate.Session(options(directory), name); err == nil {
+				t.Fatal("malformed journal was migrated")
+			}
+			after, err := os.ReadFile(journalPath) //nolint:gosec // the test's own journal
+			if err != nil {
+				t.Fatal(err)
+			}
+			if string(after) != string(before) {
+				t.Errorf("refused migration changed the journal from %q to %q", before, after)
+			}
+			if _, err := os.Stat(options(directory).BackupDir); !os.IsNotExist(err) {
+				t.Errorf("refused migration kept a copy: %v", err)
+			}
+		})
+	}
+}
+
+func TestFormatTwentyTwoMigrationPreservesACompleteFinalRecordWithoutANewline(t *testing.T) {
+	directory, name := storedJournal(
+		t,
+		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":22,"id":"one","name":"tame-impala"}`,
+	)
+	journalPath := filepath.Join(directory, name, "session.jsonl")
+	journal, err := os.OpenFile(journalPath, os.O_APPEND|os.O_WRONLY, 0o600) //nolint:gosec // the test's own journal
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := journal.WriteString(`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"user_message","text":"kept"}}`); err != nil {
+		t.Fatal(err)
+	}
+	if err := journal.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := migrate.Session(options(directory), name); err != nil {
+		t.Fatal(err)
+	}
+	lines := journalLines(t, directory, name)
+	if len(lines) != 2 || !strings.Contains(string(lines[1]["event"]), `"text":"kept"`) {
+		t.Errorf("migration did not preserve the complete final record: %+v", lines)
+	}
+}
+
+func TestAnIncompleteJournalHeadIsRefusedWithoutWriting(t *testing.T) {
+	directory := t.TempDir()
+	name := "tame-impala"
+	bundle := filepath.Join(directory, name)
+	if err := os.MkdirAll(bundle, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	journalPath := filepath.Join(bundle, "session.jsonl")
+	before := []byte(`{"kind":"head"`)
+	if err := os.WriteFile(journalPath, before, 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := migrate.Session(options(directory), name); err == nil {
+		t.Fatal("incomplete head was migrated")
+	}
+	after, err := os.ReadFile(journalPath) //nolint:gosec // the test's own journal
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(after) != string(before) {
+		t.Errorf("refused migration changed the journal from %q to %q", before, after)
+	}
+}
+
+func TestANewerTornJournalIsRefusedWithoutWriting(t *testing.T) {
+	directory, name := storedJournal(
+		t,
+		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":99,"id":"one","name":"tame-impala"}`,
+	)
+	journalPath := filepath.Join(directory, name, "session.jsonl")
+	journal, err := os.OpenFile(journalPath, os.O_APPEND|os.O_WRONLY, 0o600) //nolint:gosec // the test's own journal
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := journal.WriteString(`{"kind":"event"`); err != nil {
+		t.Fatal(err)
+	}
+	if err := journal.Close(); err != nil {
+		t.Fatal(err)
+	}
+	before, err := os.ReadFile(journalPath) //nolint:gosec // the test's own journal
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, migrateError := migrate.Session(options(directory), name)
+	if migrateError == nil || !strings.Contains(migrateError.Error(), "upgrade oh") {
+		t.Fatalf("got %v, want the newer torn journal refused", migrateError)
+	}
+	after, err := os.ReadFile(journalPath) //nolint:gosec // the test's own journal
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(after) != string(before) {
+		t.Errorf("refused migration changed the journal from %q to %q", before, after)
+	}
+}
+
 func TestAJournalAlreadyCurrentIsLeftAlone(t *testing.T) {
 	head := fmt.Sprintf(`{"kind":"head","time":"2026-08-01T00:00:00Z","version":%d,"id":"one","name":"tame-impala"}`, session.JournalFormat)
 	directory, name := storedJournal(t, head)

@@ -2,6 +2,7 @@ package migrate
 
 import (
 	"bufio"
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -297,7 +298,7 @@ func migrateJournal(directory string, isDryRun bool, name string, keep func() er
 		defer func() { _ = heldLock.Release() }()
 	}
 
-	lines, fromFormat, err := readJournal(directory, name)
+	lines, fromFormat, hasIncompleteTail, err := readJournal(directory, name)
 	if err != nil {
 		return 0, err
 	}
@@ -307,6 +308,9 @@ func migrateJournal(directory string, isDryRun bool, name string, keep func() er
 	}
 
 	if fromFormat == session.JournalFormat {
+		if hasIncompleteTail {
+			return fromFormat, fmt.Errorf("line %d could not be read: %w", len(lines)+1, io.ErrUnexpectedEOF)
+		}
 		return fromFormat, nil
 	}
 
@@ -442,35 +446,52 @@ func backupDir(directory string) string {
 	return fmt.Sprintf("%s_pre_v%d", directory, session.JournalFormat)
 }
 
-func readJournal(directory string, name string) ([]map[string]json.RawMessage, int, error) {
+func readJournal(directory string, name string) ([]map[string]json.RawMessage, int, bool, error) {
 	file, err := session.OpenJournal(directory, name)
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, false, err
 	}
 
 	defer func() { _ = file.Close() }()
 
 	var lines []map[string]json.RawMessage
-	decoder := json.NewDecoder(bufio.NewReaderSize(file, 8192))
-
+	reader := bufio.NewReaderSize(file, 8192)
 	for {
-		var line map[string]json.RawMessage
-		err := decoder.Decode(&line)
-		if errors.Is(err, io.EOF) {
+		encodedLine, readErr := reader.ReadBytes('\n')
+		if readErr != nil && !errors.Is(readErr, io.EOF) {
+			return nil, 0, false, fmt.Errorf("line %d could not be read: %w", len(lines)+1, readErr)
+		}
+		if len(encodedLine) == 0 && errors.Is(readErr, io.EOF) {
 			break
 		}
-		if err != nil {
-			return nil, 0, fmt.Errorf("line %d could not be read: %w", len(lines)+1, err)
-		}
 
+		hasTrailingNewline := encodedLine[len(encodedLine)-1] == '\n'
+		encodedLine = bytes.TrimSuffix(encodedLine, []byte{'\n'})
+		var line map[string]json.RawMessage
+		lineError := json.Unmarshal(encodedLine, &line)
+		if lineError != nil && len(lines) > 0 && errors.Is(readErr, io.EOF) && !hasTrailingNewline && isIncompleteJSON(encodedLine) {
+			return lines, formatOf(lines[0]), true, nil
+		}
+		if lineError != nil {
+			return nil, 0, false, fmt.Errorf("line %d could not be read: %w", len(lines)+1, lineError)
+		}
 		lines = append(lines, line)
+		if errors.Is(readErr, io.EOF) {
+			break
+		}
 	}
 
 	if len(lines) == 0 {
-		return nil, 0, errors.New("the journal is empty")
+		return nil, 0, false, errors.New("the journal is empty")
 	}
 
-	return lines, formatOf(lines[0]), nil
+	return lines, formatOf(lines[0]), false, nil
+}
+
+func isIncompleteJSON(data []byte) bool {
+	var value json.RawMessage
+	err := json.NewDecoder(bytes.NewReader(data)).Decode(&value)
+	return errors.Is(err, io.ErrUnexpectedEOF)
 }
 
 func formatOf(head map[string]json.RawMessage) int {

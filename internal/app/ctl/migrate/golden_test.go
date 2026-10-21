@@ -43,6 +43,31 @@ func TestGoldenAMigrationMatchesTheGolden(t *testing.T) {
 	}
 }
 
+func TestGoldenATornFormatTwentyTwoJournalMigratesMatchesTheGolden(t *testing.T) {
+	directory := goldenTornSession(t, 22)
+
+	assertGolden(t, "torn-tail.txt", migration(t, directory, &inputOpts{Sessions: []string{goldenName}}))
+}
+
+func TestGoldenATornFormatTwentyTwoJournalDryRunMatchesTheGolden(t *testing.T) {
+	directory := goldenTornSession(t, 22)
+
+	assertGolden(t, "torn-tail-dry-run.txt", migration(t, directory, &inputOpts{DryRun: true, Sessions: []string{goldenName}}))
+}
+
+func TestGoldenACurrentTornJournalIsRefusedMatchesTheGolden(t *testing.T) {
+	directory := goldenTornSession(t, session.JournalFormat)
+	var screen, failure strings.Builder
+	err := run(&inputOpts{Sessions: []string{goldenName}}, console.Output{Screen: &screen, Failure: &failure})
+	if err == nil {
+		t.Fatal("current torn journal was accepted")
+	}
+
+	drawn := fmt.Sprintf("=== screen ===\n%s=== failure ===\n%s=== error ===\n%v\n", screen.String(), failure.String(), err)
+	drawn = strings.ReplaceAll(drawn, filepath.Dir(directory), goldenStateDir)
+	assertGolden(t, "current-torn-tail.txt", drawn)
+}
+
 func TestGoldenASessionInUseMatchesTheGolden(t *testing.T) {
 	directory := goldenSessions(t, oldJournal())
 
@@ -175,6 +200,33 @@ func goldenSessions(t *testing.T, lines ...string) string {
 		t.Fatal(err)
 	}
 
+	return directory
+}
+
+func goldenTornSession(t *testing.T, journalFormat int) string {
+	t.Helper()
+
+	head := fmt.Sprintf(
+		`{"kind":"head","time":"2026-08-01T00:00:00Z","version":%d,"id":"one","name":%q,"meta":{"workspaceDir":"/workspace"}}`,
+		journalFormat,
+		goldenName,
+	)
+	directory := goldenSessions(
+		t,
+		head,
+		`{"kind":"event","time":"2026-08-01T00:00:01Z","event":{"kind":"user_message","text":"unfinished"}}`,
+	)
+	journal, err := os.OpenFile(filepath.Join(directory, goldenName, "session.jsonl"), os.O_APPEND|os.O_WRONLY, 0o600) //nolint:gosec // the test's own journal
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := journal.WriteString(`{"kind":"item"`); err != nil {
+		_ = journal.Close()
+		t.Fatal(err)
+	}
+	if err := journal.Close(); err != nil {
+		t.Fatal(err)
+	}
 	return directory
 }
 
