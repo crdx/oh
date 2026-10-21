@@ -10,6 +10,7 @@ import (
 	"sync"
 	"unicode/utf8"
 
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tool"
@@ -70,7 +71,10 @@ type titles struct {
 	current string
 }
 
-func (self *titles) exec(_ context.Context, args Args) (tool.ToolCallResult, error) {
+func (self *titles) exec(ctx context.Context, args Args) (tool.ToolCallResult, error) {
+	if ctx.Err() != nil {
+		return tool.ToolCallResult{}, stop.Error(ctx, "the title change")
+	}
 	title := normalise(args)
 
 	self.mutex.Lock()
@@ -78,12 +82,18 @@ func (self *titles) exec(_ context.Context, args Args) (tool.ToolCallResult, err
 	self.mutex.Unlock()
 
 	if isUnchanged {
+		if ctx.Err() != nil {
+			return tool.ToolCallResult{}, stop.Error(ctx, "the title change")
+		}
 		return tool.ToolCallResult{Output: "title unchanged: " + strconv.Quote(title)}, nil
 	}
 
 	state, err := json.Marshal(agent.TitleState{Title: title})
 	if err != nil {
 		return tool.ToolCallResult{}, err
+	}
+	if ctx.Err() != nil {
+		return tool.ToolCallResult{}, stop.Error(ctx, "the title change")
 	}
 
 	return tool.ToolCallResult{

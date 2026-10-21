@@ -141,7 +141,7 @@ func TestACommandStoppedByItsTimeoutSaysSo(t *testing.T) {
 
 	result, err := stoppedResult(ctx, Policy{Timeout: time.Minute + 2*time.Second}, Result{Output: "partial"}, time.Now())
 
-	if err == nil || !strings.Contains(err.Error(), "did not finish within 1m 2s") {
+	if err == nil || !strings.Contains(err.Error(), "reached its 1m 2s time limit") {
 		t.Errorf("got %v, want a complaint about the timeout", err)
 	}
 	if result.Output != "partial" {
@@ -155,7 +155,7 @@ func TestACommandStoppedByItsCallerDoesNotBlameTheTimeout(t *testing.T) {
 
 	_, err := stoppedResult(ctx, Policy{Timeout: time.Hour}, Result{}, time.Now())
 
-	if err == nil || !strings.HasPrefix(err.Error(), "the command was stopped after ") {
+	if err == nil || !strings.HasPrefix(err.Error(), "the command stopped. The command ran for ") {
 		t.Errorf("got %v, want a plain stop", err)
 	}
 	if strings.Contains(err.Error(), "because") {
@@ -169,7 +169,7 @@ func TestACommandStoppedForAReasonRepeatsIt(t *testing.T) {
 
 	result, err := stoppedResult(ctx, Policy{}, Result{Output: "partial"}, time.Now().Add(-12*time.Second))
 
-	want := "the command was stopped after 12s because the user pressed escape"
+	want := "the command stopped because the user pressed escape. The command ran for 12s"
 	if err == nil || err.Error() != want {
 		t.Errorf("got %v, want %q", err, want)
 	}
@@ -224,7 +224,7 @@ func TestAYoloCommandIsStoppedWhenItRunsOutOfTime(t *testing.T) {
 		"sleep 30",
 		Policy{Yolo: true, Env: []string{"PATH"}, Timeout: 100 * time.Millisecond},
 	)
-	if err == nil || !strings.Contains(err.Error(), "did not finish within") {
+	if err == nil || !strings.Contains(err.Error(), "reached its 0.1s time limit") {
 		t.Fatalf("got %v and %v, want the command stopped at its deadline", result, err)
 	}
 }

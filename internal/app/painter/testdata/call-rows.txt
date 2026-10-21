@@ -53,13 +53,13 @@ Building every package once… ✗
 Building ever… ✗
 
 ── shell stopped by the user · 120 columns
-Waiting for the server to settle $ sleep 10 – the command was stopped because the user pressed escape
+Waiting for the server to settle $ sleep 10 – the command stopped because the user pressed escape
 
 ── shell stopped by the user · 80 columns
-Waiting for the server to settle $ sleep 10 – the command was stopped because t…
+Waiting for the server to settle $ sleep 10 – the command stopped because the u…
 
 ── shell stopped by the user · 60 columns
-Waiting for the server to settle $ sleep 10 – the command w…
+Waiting for the server to settle $ sleep 10 – the command s…
 
 ── shell stopped by the user · 44 columns
 Waiting for the server to settle $ s… – the…
@@ -70,14 +70,32 @@ Waiting for the server to s… –
 ── shell stopped by the user · 16 columns
 Waiting for t… –
 
+── shell stopped with partial output · 120 columns
+Running the whole test suite $ just test – test started note: the command stopped because the user pressed escape. The …
+
+── shell stopped with partial output · 80 columns
+Running the whole test suite $ just test – test started note: the command stopp…
+
+── shell stopped with partial output · 60 columns
+Running the whole test suite $ just test – test started not…
+
+── shell stopped with partial output · 44 columns
+Running the whole test suite $ jus… – test …
+
+── shell stopped with partial output · 30 columns
+Running the whole test suite –
+
+── shell stopped with partial output · 16 columns
+Running the w… –
+
 ── shell stopped by its time limit · 120 columns
-Running the whole test suite $ just test – the command was stopped after 2m because it ran out of time
+Running the whole test suite $ just test – the command reached its 2m time limit
 
 ── shell stopped by its time limit · 80 columns
-Running the whole test suite $ just test – the command was stopped after 2m bec…
+Running the whole test suite $ just test – the command reached its 2m time limit
 
 ── shell stopped by its time limit · 60 columns
-Running the whole test suite $ just test – the command was …
+Running the whole test suite $ just test – the command reac…
 
 ── shell stopped by its time limit · 44 columns
 Running the whole test suite $ jus… – the c…
@@ -361,17 +379,17 @@ $ {"c… ✗ could …
 ── several shell calls in one round · 120 columns
 Checking the working tree state $ git status --short ✓ 0.2s 1L 28M M a.go
 Vetting every package $ go vet ./... ✗ 2L 30M exit(1): vet: a.go:3: unreachable code
-Pausing for the build cache $ sleep 5 – the command was stopped because the user pressed escape
+Pausing for the build cache $ sleep 5 – the command stopped because the user pressed escape
 
 ── several shell calls in one round · 80 columns
 Checking the working tree state $ git status --short ✓ 0.2s 1L 28M M a.go
 Vetting every package $ go vet ./... ✗ 2L 30M exit(1): vet: a.go:3: unreachable…
-Pausing for the build cache $ sleep 5 – the command was stopped because the use…
+Pausing for the build cache $ sleep 5 – the command stopped because the user pr…
 
 ── several shell calls in one round · 60 columns
 Checking the working tree state $ git status … ✓ 0.2s 1L 28M
 Vetting every package $ go vet ./... ✗ 2L 30M exit(1): vet:…
-Pausing for the build cache $ sleep 5 – the command was sto…
+Pausing for the build cache $ sleep 5 – the command stopped…
 
 ── several shell calls in one round · 44 columns
 Checking the working tree state $ git sta… ✓

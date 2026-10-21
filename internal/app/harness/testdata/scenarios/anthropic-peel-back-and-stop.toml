@@ -5,7 +5,7 @@ effort = "medium"
 [[tool]]
 name = "work"
 blocks = true
-stopped-output = "the call was stopped after 4s because the user pressed ctrl+d"
+stopped-output = "the call stopped because the user pressed ctrl+d. The call ran for 4s"
 
 [first]
 prompt = "queue two messages, take them back, then stop the turn"

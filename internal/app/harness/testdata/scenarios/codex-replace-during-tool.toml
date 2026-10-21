@@ -5,7 +5,7 @@ effort = "high"
 [[tool]]
 name = "work"
 blocks = true
-stopped-output = "the call was stopped after 3s because the user sent another message"
+stopped-output = "the call stopped because the user sent another message. The call ran for 3s"
 
 [first]
 prompt = "send another message while the tool is working"

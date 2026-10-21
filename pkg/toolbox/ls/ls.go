@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"crdx.org/oh/internal/file"
-
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/tool"
 )
 
@@ -28,8 +28,19 @@ func New(root *file.Root) tool.Tool {
 		FocusPath().
 		IsEmbarrassinglyParallel().
 		ChangesNothing().
-		Plain(func(_ context.Context, args Args) (string, error) {
-			return exec(root, args)
+		Plain(func(ctx context.Context, args Args) (string, error) {
+			if ctx.Err() != nil {
+				return "", stop.Error(ctx, "the listing")
+			}
+			output, err := exec(root, args)
+			if err != nil {
+				return output, stop.ErrorFrom(ctx, "the listing", err)
+			}
+			if ctx.Err() != nil {
+				failure := stop.Error(ctx, "the listing")
+				return stop.Report(output, failure), failure
+			}
+			return output, nil
 		})
 }
 

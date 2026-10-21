@@ -2,7 +2,7 @@
  queue two messages, take them back, then stop the turn
 
 
-work work – the call was stopped after 4s because the user pressed ctrl+d
+work work – the call stopped because the user pressed ctrl+d. The call ran for 4s
 
 Turn stopped because the user pressed escape.
 

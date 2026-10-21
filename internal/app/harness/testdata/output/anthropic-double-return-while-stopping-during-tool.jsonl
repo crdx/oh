@@ -2,11 +2,11 @@
 {"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"press escape and then return twice while the tool is working"}}
 {"kind":"event","event":{"render":"work","kind":"tool_call_request","id":"toolu_1","name":"work","arguments":"{}"}}
-{"kind":"event","event":{"kind":"tool_call_result","text":"the call was stopped after 4s because the user pressed escape","id":"toolu_1","name":"work","status":"cancelled","stats":{"kind":"output","lines":1,"bytes":61}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"the call stopped because the user pressed escape. The call ran for 4s","id":"toolu_1","name":"work","status":"cancelled","stats":{"kind":"output","lines":1,"bytes":69}}}
 {"kind":"event","event":{"kind":"turn_interruption","name":"escape"}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"press escape and then return twice while the tool is working"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"work","input":{}}]}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"the call was stopped after 4s because the user pressed escape","is_error":true}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"the call stopped because the user pressed escape. The call ran for 4s","is_error":true}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTurn stopped because the user pressed escape.\n\u003c/system-reminder\u003e"}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"carry on"}}

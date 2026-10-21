@@ -17,7 +17,7 @@ roast something slowly
 ## Tool calls · +0s
 
 ```
-kitchen: slow-roasted onions [error, 3 lines, 74B, toolu_1]
+kitchen: slow-roasted onions [error, 3 lines, 88B, toolu_1]
 ```
 
 ## Assistant · +0s

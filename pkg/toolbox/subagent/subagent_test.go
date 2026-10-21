@@ -9,6 +9,7 @@ import (
 	"strings"
 	"testing"
 
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/tool"
 )
 
@@ -58,6 +59,27 @@ func (self *fakeManager) List() string { return "frugal-otter" }
 func (self *fakeManager) Models() string { return "- anthropic/claude-haiku-5@high" }
 
 func isGranted() bool { return true }
+
+func TestACancelledSubagentRequestStopsBeforeTheManager(t *testing.T) {
+	manager := &fakeManager{}
+	call, err := New(manager, isGranted).Parse(`{"action":"status"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithCancelCause(t.Context())
+	cancel(stop.Because("the user pressed escape"))
+
+	_, err = call.Exec(ctx)
+	if !errors.Is(err, context.Canceled) {
+		t.Errorf("got %v, want a cancellation", err)
+	}
+	if want := "the subagent request stopped because the user pressed escape"; err.Error() != want {
+		t.Errorf("got %q, want %q", err, want)
+	}
+	if manager.names != nil {
+		t.Errorf("the manager received names after cancellation: %v", manager.names)
+	}
+}
 
 func TestEveryActionIsRefusedWithoutSubagentAccess(t *testing.T) {
 	for _, arguments := range []string{

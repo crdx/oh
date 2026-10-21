@@ -3,6 +3,7 @@ package stop
 import (
 	"context"
 	"errors"
+	"strings"
 )
 
 type stopError struct {
@@ -40,8 +41,24 @@ func Error(ctx context.Context, subject string) error {
 	}
 
 	if errors.Is(ctx.Err(), context.DeadlineExceeded) {
-		return stopError{sentence: prefix + "ran out of time", cause: context.DeadlineExceeded}
+		return stopError{sentence: prefix + "reached its time limit", cause: context.DeadlineExceeded}
 	}
 
 	return stopError{sentence: prefix + "stopped" + Phrase(ctx), cause: context.Canceled}
+}
+
+func ErrorFrom(ctx context.Context, subject string, err error) error {
+	if err != nil && ctx.Err() != nil {
+		return Error(ctx, subject)
+	}
+
+	return err
+}
+
+func Report(output string, err error) string {
+	if strings.TrimSpace(output) == "" {
+		return err.Error()
+	}
+
+	return strings.TrimRight(output, "\n") + "\nnote: " + strings.TrimSuffix(err.Error(), ".") + "."
 }

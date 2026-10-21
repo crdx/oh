@@ -615,7 +615,7 @@ func (self *Agent) Send(ctx context.Context, message string) (string, error) {
 	return answer.String(), failure
 }
 
-const CancelledOutput = "the call was cancelled"
+const CancelledOutput = "the call stopped"
 
 func resultStatus(ctx context.Context, ok bool) Status {
 	switch {

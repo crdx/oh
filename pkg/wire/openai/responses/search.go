@@ -139,7 +139,7 @@ func readSearchReply(reader io.Reader) (string, error) {
 		return event.Type == "response.completed", nil
 	})
 	if err != nil {
-		return "", fmt.Errorf("could not read the web search response: %w", err)
+		return output.String(), fmt.Errorf("could not read the web search response: %w", err)
 	}
 	if output.Len() == 0 {
 		return "", errors.New("web search returned no answer")

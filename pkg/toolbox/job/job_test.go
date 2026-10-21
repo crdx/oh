@@ -16,6 +16,7 @@ import (
 	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/bash"
 	"crdx.org/oh/pkg/toolbox/forward"
@@ -135,6 +136,24 @@ func callJob(t *testing.T, built tool.Tool, arguments string) (tool.ToolCallResu
 	}
 
 	return call.Exec(t.Context())
+}
+
+func TestACancelledJobRequestStopsBeforeTheManager(t *testing.T) {
+	built := newJobTool(t, jobs.New(nil), nil)
+	call, err := built.Parse(`{"action":"list"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithCancelCause(t.Context())
+	cancel(stop.Because("the user pressed escape"))
+
+	_, err = call.Exec(ctx)
+	if !errors.Is(err, context.Canceled) {
+		t.Errorf("got %v, want a cancellation", err)
+	}
+	if want := "the job request stopped because the user pressed escape"; err.Error() != want {
+		t.Errorf("got %q, want %q", err, want)
+	}
 }
 
 func TestPruningNamesWhatItRemoved(t *testing.T) {

@@ -6,7 +6,7 @@
  give it back while the tool is working
 
 
-work work – the call was stopped after 4s because the user changed what the harness is allowed to do
+work work – the call stopped because the user changed what the harness is allowed to do. The call r…
 
 
  🤖 The workspace is now read-write.

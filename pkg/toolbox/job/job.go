@@ -11,6 +11,7 @@ import (
 	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/bash"
@@ -216,9 +217,12 @@ func run(
 	ports forward.Ports,
 	args Args,
 ) (string, tool.ToolCallMetrics, error) {
+	if ctx.Err() != nil {
+		return "", tool.ToolCallMetrics{}, stop.Error(ctx, "the job request")
+	}
 	report, err := act(ctx, manager, root, buildPolicy, ports, args)
 	if err != nil {
-		return report, tool.ToolCallMetrics{}, err
+		return report, tool.ToolCallMetrics{}, stop.ErrorFrom(ctx, "the job request", err)
 	}
 
 	return report, tool.GetMetrics(report), nil

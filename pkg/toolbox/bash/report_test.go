@@ -13,7 +13,7 @@ import (
 )
 
 func TestAnUnfinishedCommandKeepsItsOutputAndSaysWhyItEnded(t *testing.T) {
-	stopped := errors.New("the command was stopped after 12s because the user pressed escape")
+	stopped := errors.New("the command stopped because the user pressed escape. The command ran for 12s")
 
 	tests := map[string]struct {
 		output string
@@ -23,17 +23,17 @@ func TestAnUnfinishedCommandKeepsItsOutputAndSaysWhyItEnded(t *testing.T) {
 		"output and a stop": {
 			output: "compiling\n",
 			err:    stopped,
-			want:   "compiling\nnote: the command was stopped after 12s because the user pressed escape.",
+			want:   "compiling\nnote: the command stopped because the user pressed escape. The command ran for 12s.",
 		},
 		"trailing blank lines": {
 			output: "compiling\n\n\n",
 			err:    stopped,
-			want:   "compiling\nnote: the command was stopped after 12s because the user pressed escape.",
+			want:   "compiling\nnote: the command stopped because the user pressed escape. The command ran for 12s.",
 		},
 		"a timeout": {
 			output: "compiling\n",
-			err:    errors.New("the command did not finish within 2m"),
-			want:   "compiling\nnote: the command did not finish within 2m.",
+			err:    errors.New("the command reached its 2m time limit"),
+			want:   "compiling\nnote: the command reached its 2m time limit.",
 		},
 		"nothing written": {
 			output: "",
@@ -99,7 +99,7 @@ func TestACommandKilledForItsProcessorTimeIsToldTheLimitAndWhatItUsed(t *testing
 	got := report(result, killTestPolicy())
 
 	for _, want := range []string{
-		"killed by SIGKILL",
+		"SIGKILL stopped a process",
 		"each process 1h of processor time",
 		"counted across every thread it runs",
 		"after 5m of wall clock",
@@ -116,7 +116,7 @@ func TestACommandKilledForWritingTooMuchIsToldTheFileLimit(t *testing.T) {
 
 	got := report(result, killTestPolicy())
 
-	if !strings.Contains(got, "killed by SIGXFSZ") || !strings.Contains(got, "no more than 1G") {
+	if !strings.Contains(got, "SIGXFSZ stopped a process") || !strings.Contains(got, "no more than 1G") {
 		t.Errorf("got %q, want the signal and the file size limit named", got)
 	}
 	if strings.Contains(got, "using too much") {
@@ -127,7 +127,7 @@ func TestACommandKilledForWritingTooMuchIsToldTheFileLimit(t *testing.T) {
 func TestAKillIsReportedEvenWhereTheOutputLooksLikeADenial(t *testing.T) {
 	result := sandbox.Result{ExitCode: 137, Output: "cp: cannot open 'x': Permission denied"}
 
-	if got := report(result, killTestPolicy()); !strings.Contains(got, "killed by SIGKILL") {
+	if got := report(result, killTestPolicy()); !strings.Contains(got, "SIGKILL stopped a process") {
 		t.Errorf("got %q, want a kill reported whatever else the output says", got)
 	}
 }
@@ -154,7 +154,7 @@ func TestASignalTheCommandItselfDiedOfIsReportedWithoutHedging(t *testing.T) {
 
 	got := report(result, killTestPolicy())
 
-	if !strings.Contains(got, "note: the command was killed by SIGKILL.") {
+	if !strings.Contains(got, "note: SIGKILL stopped the command.") {
 		t.Errorf("got %q, want an observed kill stated outright", got)
 	}
 	if strings.Contains(got, "the shell reports") {
@@ -170,7 +170,7 @@ func TestASignalOnlyTheShellSawIsReportedAsSuch(t *testing.T) {
 
 	got := report(result, killTestPolicy())
 
-	if !strings.Contains(got, "note: the shell reports that a process was killed by SIGKILL.") {
+	if !strings.Contains(got, "note: the shell reports that SIGKILL stopped a process.") {
 		t.Errorf("got %q, want an inferred kill attributed to the shell", got)
 	}
 }
@@ -180,7 +180,7 @@ func TestAnObservedSignalIsPreferredToTheExitStatus(t *testing.T) {
 
 	got := report(result, killTestPolicy())
 
-	if !strings.Contains(got, "killed by SIGXFSZ") || strings.Contains(got, "SIGSEGV") {
+	if !strings.Contains(got, "SIGXFSZ stopped the command") || strings.Contains(got, "SIGSEGV") {
 		t.Errorf("got %q, want what was seen rather than what the status implies", got)
 	}
 }
@@ -190,7 +190,7 @@ func TestAKillUnderNoProcessorLimitNamesTheSignalAlone(t *testing.T) {
 
 	got := report(result, sandbox.Policy{Timeout: time.Minute})
 
-	if !strings.Contains(got, "killed by SIGKILL") {
+	if !strings.Contains(got, "SIGKILL stopped a process") {
 		t.Errorf("got %q, want the signal named", got)
 	}
 	if strings.Contains(got, "processor time") {

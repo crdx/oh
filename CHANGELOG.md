@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Use consistent messaging across tools
 - Store context so the find tool can be killed
 
 ## [0.20.2] — 2026-10-21

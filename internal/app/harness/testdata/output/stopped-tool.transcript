@@ -20,7 +20,7 @@ Building now.
 ## Tool calls · +2s
 
 ```
-bash: just build [cancelled, 3 lines, 96B, 11s CPU, 40M peak, call_1]
+bash: just build [cancelled, 3 lines, 123B, 11s CPU, 40M peak, call_1]
 ```
 
 ## Interrupted · +4s

@@ -17,7 +17,7 @@ stop the kitchen while it works
 ## Tool calls · +0s
 
 ```
-kitchen: julienned carrots [cancelled, 3 lines, 56B, toolu_1]
+kitchen: julienned carrots [cancelled, 3 lines, 104B, toolu_1]
 ```
 
 ## Interrupted · +0s

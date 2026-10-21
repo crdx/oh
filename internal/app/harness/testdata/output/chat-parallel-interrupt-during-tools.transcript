@@ -18,7 +18,7 @@ call two tools and interrupt while the second is working
 
 ```
 alpha: alpha [ok, 1 line, 12B, call-1]
-beta: beta [cancelled, 1 line, 20B, call-2]
+beta: beta [cancelled, 1 line, 16B, call-2]
 ```
 
 ## Interrupted · +0s

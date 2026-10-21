@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"crdx.org/oh/internal/file"
-
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/tool"
 )
@@ -29,8 +29,15 @@ func New(root *file.Root, snapshots *file.Snapshots) tool.Tool {
 			},
 		},
 		Describe,
-	).FocusPath().Exec(func(_ context.Context, args Args) (string, tool.ToolCallMetrics, error) {
-		return exec(root, snapshots, args)
+	).FocusPath().Exec(func(ctx context.Context, args Args) (string, tool.ToolCallMetrics, error) {
+		if ctx.Err() != nil {
+			return "", tool.ToolCallMetrics{}, stop.Error(ctx, "the edit")
+		}
+		output, metrics, err := exec(ctx, root, snapshots, args)
+		if err != nil {
+			return output, metrics, stop.ErrorFrom(ctx, "the edit", err)
+		}
+		return output, metrics, nil
 	})
 }
 
@@ -38,7 +45,7 @@ func Describe(args Args) tool.CallRendering {
 	return tool.CallRendering{Subject: args.Path}
 }
 
-func exec(root *file.Root, snapshots *file.Snapshots, args Args) (string, tool.ToolCallMetrics, error) {
+func exec(ctx context.Context, root *file.Root, snapshots *file.Snapshots, args Args) (string, tool.ToolCallMetrics, error) {
 	switch {
 	case args.Path == "":
 		return "", tool.ToolCallMetrics{}, errors.New("path is required")
@@ -82,6 +89,9 @@ func exec(root *file.Root, snapshots *file.Snapshots, args Args) (string, tool.T
 
 	updatedContent := strings.Replace(content, args.OldText, args.NewText, 1)
 
+	if ctx.Err() != nil {
+		return "", tool.ToolCallMetrics{}, stop.Error(ctx, "the edit")
+	}
 	updatedData := []byte(updatedContent)
 	if err := root.WriteFile(name, updatedData, info.Mode()); err != nil {
 		return "", tool.ToolCallMetrics{}, err

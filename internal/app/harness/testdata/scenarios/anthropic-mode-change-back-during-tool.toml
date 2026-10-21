@@ -6,7 +6,7 @@ toggle-before-first = "w"
 [[tool]]
 name = "work"
 blocks = true
-stopped-output = "the call was stopped after 4s because the user changed what the harness is allowed to do"
+stopped-output = "the call stopped because the user changed what the harness is allowed to do. The call ran for 4s"
 
 [first]
 prompt = "give it back while the tool is working"

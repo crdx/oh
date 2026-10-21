@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"crdx.org/oh/internal/jobs"
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/tool"
 )
 
@@ -54,8 +55,15 @@ func New(ports Ports) tool.Tool {
 		Describe,
 	).
 		Validate(validate).
-		Exec(func(_ context.Context, args Args) (string, tool.ToolCallMetrics, error) {
-			return run(ports, args)
+		Exec(func(ctx context.Context, args Args) (string, tool.ToolCallMetrics, error) {
+			if ctx.Err() != nil {
+				return "", tool.ToolCallMetrics{}, stop.Error(ctx, "the port request")
+			}
+			output, err := run(ports, args)
+			if err != nil {
+				return output, tool.ToolCallMetrics{}, stop.ErrorFrom(ctx, "the port request", err)
+			}
+			return output, tool.ToolCallMetrics{}, nil
 		})
 }
 
@@ -103,27 +111,26 @@ func validate(args Args) error {
 	return nil
 }
 
-func run(ports Ports, args Args) (string, tool.ToolCallMetrics, error) {
+func run(ports Ports, args Args) (string, error) {
 	port, err := portOf(args)
 	if err != nil {
-		return "", tool.ToolCallMetrics{}, err
+		return "", err
 	}
 
 	switch args.Action {
 	case actionAdd:
-		report, err := Publish(ports, port, args.JobName)
-		return report, tool.ToolCallMetrics{}, err
+		return Publish(ports, port, args.JobName)
 	case actionRemove:
 		if err := ports.Revoke(port); err != nil {
-			return "", tool.ToolCallMetrics{}, err
+			return "", err
 		}
 
-		return "Forward removed.", tool.ToolCallMetrics{}, nil
+		return "Forward removed.", nil
 	case actionList:
-		return list(ports), tool.ToolCallMetrics{}, nil
+		return list(ports), nil
 	}
 
-	return "", tool.ToolCallMetrics{}, fmt.Errorf("unknown action %q", args.Action)
+	return "", fmt.Errorf("unknown action %q", args.Action)
 }
 
 func Publish(ports Ports, port uint16, jobName string) (string, error) {

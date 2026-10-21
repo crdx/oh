@@ -10,6 +10,7 @@ import (
 	"slices"
 	"strings"
 
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/bash"
 )
@@ -102,7 +103,14 @@ func New(manager Manager, isAllowed func() bool) tool.Tool {
 		},
 	}
 	return tool.Implement(definition, Describe).Decode(decode).Validate(validate).Requires(isAllowed, ErrWithheld).Plain(func(ctx context.Context, args Args) (string, error) {
-		return act(ctx, manager, args)
+		if ctx.Err() != nil {
+			return "", stop.Error(ctx, "the subagent request")
+		}
+		output, err := act(ctx, manager, args)
+		if err != nil {
+			return output, stop.ErrorFrom(ctx, "the subagent request", err)
+		}
+		return output, nil
 	})
 }
 

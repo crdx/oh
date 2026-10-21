@@ -2,7 +2,7 @@
  roast something slowly
 
 
-kitchen slow-roasted onions ✗ stopped after its limit of 2s, and killed by SIGKILL after ignoring S…
+kitchen slow-roasted onions ✗ warming the oven note: the command reached its 2s time limit. The com…
 
 The oven ran out of time and had to be killed.
 

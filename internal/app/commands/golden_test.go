@@ -628,7 +628,7 @@ func TestGoldenJobListingMatchesGolden(t *testing.T) {
 			snapshot := finishedJob(name, command)
 			snapshot.State = jobs.StateStopped
 			snapshot.ExitCode = -1
-			snapshot.Failure = "the command was stopped after 22m 46s\nnote: the command was killed by SIGKILL."
+			snapshot.Failure = "the command stopped. The command ran for 22m 46s\nnote: SIGKILL stopped the command."
 			return snapshot
 		}
 
@@ -753,7 +753,7 @@ func TestGoldenJobOutputMatchesGolden(t *testing.T) {
 			Name:     "build",
 			State:    jobs.StateFailed,
 			ExitCode: 2,
-			Failure:  "note: the command was killed by SIGKILL.",
+			Failure:  "note: SIGKILL stopped the command.",
 		}},
 		{label: "from a respawned run", output: "built in 3s\n", snapshot: jobs.Snapshot{
 			Name:  "watch",

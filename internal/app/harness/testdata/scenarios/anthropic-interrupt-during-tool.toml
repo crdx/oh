@@ -7,7 +7,7 @@ name = "work"
 blocks = true
 stopped-output = """
 compiling agent
-note: the command was stopped after 12s because the user pressed escape."""
+note: the command stopped because the user pressed escape. The command ran for 12s."""
 
 [first]
 prompt = "interrupt while the tool is working"

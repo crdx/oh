@@ -2,11 +2,11 @@
 {"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"stop the kitchen while it works"}}
 {"kind":"event","event":{"render":"julienned carrots","marks_success":true,"kind":"tool_call_request","id":"toolu_1","name":"kitchen","arguments":"{\"dish\":\"julienned carrots\"}"}}
-{"kind":"event","event":{"kind":"tool_call_result","text":"exit(143):\nsharpening the knives\nputting the knives away","id":"toolu_1","name":"kitchen","status":"cancelled","stats":{"kind":"output","lines":3,"bytes":56}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"sharpening the knives\nputting the knives away\nnote: the command stopped because the user pressed escape.","id":"toolu_1","name":"kitchen","status":"cancelled","stats":{"kind":"output","lines":3,"bytes":104}}}
 {"kind":"event","event":{"kind":"turn_interruption","name":"escape"}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"stop the kitchen while it works"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"kitchen","input":{"dish":"julienned carrots"}}]}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"exit(143):\nsharpening the knives\nputting the knives away","is_error":true}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"sharpening the knives\nputting the knives away\nnote: the command stopped because the user pressed escape.","is_error":true}]}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"\u003csystem-reminder\u003e\nTurn stopped because the user pressed escape.\n\u003c/system-reminder\u003e"}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"what did it manage to do"}}

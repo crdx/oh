@@ -5,7 +5,7 @@ effort = "medium"
 [[tool]]
 name = "work"
 blocks = true
-stopped-output = "the call was stopped after 4s because the user pressed escape"
+stopped-output = "the call stopped because the user pressed escape. The call ran for 4s"
 
 [first]
 prompt = "change what I am allowed to do, then stop the turn"

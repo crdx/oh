@@ -244,12 +244,12 @@ func validatePolicy(ctx context.Context, policy Policy) error {
 
 func stoppedResult(ctx context.Context, policy Policy, result Result, startedAt time.Time) (Result, error) {
 	if errors.Is(ctx.Err(), context.DeadlineExceeded) {
-		return result, fmt.Errorf("the command did not finish within %s", util.CompactDuration(policy.Timeout))
+		return result, fmt.Errorf("the command reached its %s time limit", util.CompactDuration(policy.Timeout))
 	}
 
 	return result, fmt.Errorf(
-		"the command was stopped after %s%s",
-		util.CompactDuration(time.Since(startedAt).Round(100*time.Millisecond)),
+		"the command stopped%s. The command ran for %s",
 		stop.Phrase(ctx),
+		util.CompactDuration(time.Since(startedAt).Round(100*time.Millisecond)),
 	)
 }

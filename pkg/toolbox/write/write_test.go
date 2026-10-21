@@ -1,6 +1,7 @@
 package write_test
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"os"
@@ -9,6 +10,7 @@ import (
 	"testing"
 
 	"crdx.org/oh/internal/file"
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/toolbox/write"
 )
 
@@ -50,6 +52,27 @@ func exec(t *testing.T, root *file.Root, arguments string) (string, error) {
 
 	result, err := call.Exec(t.Context())
 	return result.Output, err
+}
+
+func TestACancelledWriteChangesNothing(t *testing.T) {
+	root, directory := testRoot(t)
+	call, err := write.New(root, file.NewSnapshots()).Parse(`{"path":"deep/a.txt","content":"hello\n"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithCancelCause(t.Context())
+	cancel(stop.Because("the user pressed escape"))
+
+	_, err = call.Exec(ctx)
+	if !errors.Is(err, context.Canceled) {
+		t.Errorf("got %v, want a cancellation", err)
+	}
+	if want := "the write stopped because the user pressed escape"; err.Error() != want {
+		t.Errorf("got %q, want %q", err, want)
+	}
+	if _, err := os.Stat(filepath.Join(directory, "deep")); !errors.Is(err, os.ErrNotExist) {
+		t.Errorf("got %v, want no directory created", err)
+	}
 }
 
 func TestAFileIsWrittenWithItsParentDirectories(t *testing.T) {

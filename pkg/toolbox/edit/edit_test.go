@@ -1,6 +1,7 @@
 package edit_test
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"os"
@@ -9,6 +10,7 @@ import (
 	"testing"
 
 	"crdx.org/oh/internal/file"
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/edit"
 )
@@ -55,6 +57,34 @@ func exec(t *testing.T, root *file.Root, arguments string) error {
 
 	_, err = call.Exec(t.Context())
 	return err
+}
+
+func TestACancelledEditChangesNothing(t *testing.T) {
+	root, directory := testRoot(t, "one\ntwo\n")
+	snapshots := file.NewSnapshots()
+	data, err := root.ReadFile("a.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+	snapshots.Record(root, "a.txt", data)
+	call, err := edit.New(root, snapshots).Parse(`{"path":"a.txt","old_text":"two","new_text":"2"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithCancelCause(t.Context())
+	cancel(stop.Because("the user pressed escape"))
+
+	_, err = call.Exec(ctx)
+	if !errors.Is(err, context.Canceled) {
+		t.Errorf("got %v, want a cancellation", err)
+	}
+	if want := "the edit stopped because the user pressed escape"; err.Error() != want {
+		t.Errorf("got %q, want %q", err, want)
+	}
+	unchanged, readErr := os.ReadFile(filepath.Join(directory, "a.txt")) //nolint:gosec // a path this test made itself
+	if readErr != nil || string(unchanged) != "one\ntwo\n" {
+		t.Errorf("got %q and %v, want the original file", unchanged, readErr)
+	}
 }
 
 func TestTheTextIsReplacedWhereItAppearsOnce(t *testing.T) {

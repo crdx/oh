@@ -11,45 +11,45 @@ exit(2)
 
 === a kill the sandbox saw itself ===
 exit(-1)
-note: the command was killed by SIGKILL.
+note: SIGKILL stopped the command.
 the sandbox gives each process 1h of processor time, counted across every thread it runs, and stops the whole command after 5m of wall clock.
 every process this command started used 1h 30m of processor time between them.
 
 === a kill only the shell saw ===
 exit(137):
 error: recipe `lint` was terminated on line 104 by signal 9
-note: the shell reports that a process was killed by SIGKILL.
+note: the shell reports that SIGKILL stopped a process.
 the sandbox gives each process 1h of processor time, counted across every thread it runs, and stops the whole command after 5m of wall clock.
 every process this command started used 1h 1m of processor time between them.
 
 === a processor limit only the shell saw ===
 exit(152):
 /workspace/script: line 3:  41 Cpu time limit exceeded  ./spin
-note: the shell reports that a process was killed by SIGXCPU.
+note: the shell reports that SIGXCPU stopped a process.
 the sandbox gives each process 1h of processor time, counted across every thread it runs, and stops the whole command after 5m of wall clock.
 every process this command started used 59m 58s of processor time between them.
 
 === a processor limit the sandbox saw itself ===
 exit(-1)
-note: the command was killed by SIGXCPU.
+note: SIGXCPU stopped the command.
 the sandbox gives each process 1h of processor time, counted across every thread it runs, and stops the whole command after 5m of wall clock.
 every process this command started used 1h of processor time between them.
 
 === a kill for writing too large a file ===
 exit(153):
 dd: writing 'big': File size limit exceeded
-note: the shell reports that a process was killed by SIGXFSZ.
+note: the shell reports that SIGXFSZ stopped a process.
 the sandbox lets a command write no more than 1G to a single file.
 
 === a kill for writing too large a file under a policy that sets no size ===
 exit(153):
 dd: writing 'big': File size limit exceeded
-note: the shell reports that a process was killed by SIGXFSZ.
+note: the shell reports that SIGXFSZ stopped a process.
 
 === a fault with no limit behind it ===
 exit(-1):
 Segmentation fault
-note: the command was killed by SIGSEGV.
+note: SIGSEGV stopped the command.
 
 === a status above 128 that names no signal ===
 exit(200):
@@ -58,7 +58,7 @@ the command chose its own status
 === a kill under a policy that sets no processor limit ===
 exit(137):
 Killed
-note: the shell reports that a process was killed by SIGKILL.
+note: the shell reports that SIGKILL stopped a process.
 
 === a refusal the sandbox made ===
 exit(1):
@@ -82,7 +82,7 @@ writable: /workspace
 === a refusal that reads like a kill ===
 exit(137):
 cp: cannot open 'x': Permission denied
-note: the shell reports that a process was killed by SIGKILL.
+note: the shell reports that SIGKILL stopped a process.
 the sandbox gives each process 1h of processor time, counted across every thread it runs, and stops the whole command after 5m of wall clock.
 every process this command started used 3s of processor time between them.
 
@@ -128,4 +128,4 @@ cp: cannot create regular file '/etc/hosts': Permission denied
 
 === a kill with no sandbox limit behind it ===
 exit(-1)
-note: the command was killed by SIGKILL.
+note: SIGKILL stopped the command.

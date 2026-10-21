@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strings"
 
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/tool"
 )
 
@@ -40,13 +41,31 @@ func New(
 		ChangesNothing().
 		Requires(isAllowed, ErrWithheld).
 		Exec(func(ctx context.Context, args Args) (string, tool.ToolCallMetrics, error) {
+			if ctx.Err() != nil {
+				return "", tool.ToolCallMetrics{}, stop.Error(ctx, "the search")
+			}
 			if err := approve(ctx, args.Query); err != nil {
-				return "", tool.ToolCallMetrics{}, err
+				return "", tool.ToolCallMetrics{}, stop.ErrorFrom(ctx, "the search", err)
 			}
 
 			output, err := searcher.Search(ctx, args.Query)
 			if err != nil {
-				return "", tool.ToolCallMetrics{}, err
+				err = stop.ErrorFrom(ctx, "the search", err)
+				if output == "" {
+					return "", tool.ToolCallMetrics{}, err
+				}
+				output = tool.MarkUntrusted(fmt.Sprintf("a web search for %q", args.Query), output)
+				output = stop.Report(output, err)
+				return output, tool.GetMetrics(output), err
+			}
+			if ctx.Err() != nil {
+				failure := stop.Error(ctx, "the search")
+				if output == "" {
+					return "", tool.ToolCallMetrics{}, failure
+				}
+				output = tool.MarkUntrusted(fmt.Sprintf("a web search for %q", args.Query), output)
+				output = stop.Report(output, failure)
+				return output, tool.GetMetrics(output), failure
 			}
 			if output == "" {
 				return "", tool.ToolCallMetrics{}, errors.New("lookup returned no content")

@@ -15,6 +15,7 @@ import (
 
 	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/tool"
@@ -90,12 +91,12 @@ func New(
 			isHostNetwork := hasNetworkChoice && args.Network == HostNetwork
 			if isHostNetwork {
 				if err := approveNetwork(ctx, args.Command, SpokenIntent(args.Intent)); err != nil {
-					return "", tool.ToolCallMetrics{}, err
+					return "", tool.ToolCallMetrics{}, stop.ErrorFrom(ctx, "the command", err)
 				}
 			}
 			policy, err := buildPolicy(ctx)
 			if err != nil {
-				return "", tool.ToolCallMetrics{}, err
+				return "", tool.ToolCallMetrics{}, stop.ErrorFrom(ctx, "the command", err)
 			}
 			policy.Network = isHostNetwork
 			return exec(ctx, runner, root, policy, args)

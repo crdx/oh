@@ -2,7 +2,7 @@
  queue a message and then push it out at once
 
 
-work work – the call was stopped after 4s because the user sent another message
+work work – the call stopped because the user sent another message. The call ran for 4s
 
 
  stop and do this instead

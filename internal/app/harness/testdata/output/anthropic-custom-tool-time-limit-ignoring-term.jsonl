@@ -2,11 +2,11 @@
 {"kind":"event","event":{"kind":"mode_change","state":"rxwsngl"}}
 {"kind":"event","event":{"kind":"user_message","text":"roast something slowly"}}
 {"kind":"event","event":{"render":"slow-roasted onions","marks_success":true,"kind":"tool_call_request","id":"toolu_1","name":"kitchen","arguments":"{\"dish\":\"slow-roasted onions\"}"}}
-{"kind":"event","event":{"kind":"tool_call_result","text":"stopped after its limit of 2s, and killed by SIGKILL after ignoring SIGTERM for 2s:\nwarming the oven","id":"toolu_1","name":"kitchen","status":"error","stats":{"kind":"output","lines":2,"bytes":100}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"warming the oven\nnote: the command reached its 2s time limit. The command did not stop after SIGTERM. SIGKILL stopped the command after 2s.","id":"toolu_1","name":"kitchen","status":"error","stats":{"kind":"output","lines":2,"bytes":139}}}
 {"kind":"event","event":{"kind":"model_message","text":"The oven ran out of time and had to be killed."}}
 {"kind":"item","payload":{"role":"user","content":[{"type":"text","text":"roast something slowly"}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"tool_use","id":"toolu_1","name":"kitchen","input":{"dish":"slow-roasted onions"}}]}}
-{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"stopped after its limit of 2s, and killed by SIGKILL after ignoring SIGTERM for 2s:\nwarming the oven","is_error":true}]}}
+{"kind":"item","payload":{"role":"user","content":[{"type":"tool_result","tool_use_id":"toolu_1","content":"warming the oven\nnote: the command reached its 2s time limit. The command did not stop after SIGTERM. SIGKILL stopped the command after 2s.","is_error":true}]}}
 {"kind":"item","payload":{"role":"assistant","content":[{"type":"text","text":"The oven ran out of time and had to be killed."}]}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"carry on"}}

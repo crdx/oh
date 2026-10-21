@@ -23,7 +23,7 @@ give it back while the tool is working
 ## Tool calls · +0s
 
 ```
-work: work [cancelled, 1 line, 88B, call-1]
+work: work [cancelled, 1 line, 96B, call-1]
 ```
 
 ## Interrupted · +0s

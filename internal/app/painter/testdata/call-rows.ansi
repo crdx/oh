@@ -53,13 +53,13 @@
 [3m[38;2;150;152;150mBuilding ever…[0m[0m [38;2;204;102;102m✗[0m
 
 ── shell stopped by the user · 120 columns
-[3m[38;2;150;152;150mWaiting for the server to settle[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190msleep[0m[38;2;150;152;150m [0m[38;2;129;162;190m10[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command was stopped because the user pressed escape[0m
+[3m[38;2;150;152;150mWaiting for the server to settle[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190msleep[0m[38;2;150;152;150m [0m[38;2;129;162;190m10[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command stopped because the user pressed escape[0m
 
 ── shell stopped by the user · 80 columns
-[3m[38;2;150;152;150mWaiting for the server to settle[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190msleep[0m[38;2;150;152;150m [0m[38;2;129;162;190m10[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command was stopped because t…[0m
+[3m[38;2;150;152;150mWaiting for the server to settle[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190msleep[0m[38;2;150;152;150m [0m[38;2;129;162;190m10[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command stopped because the u…[0m
 
 ── shell stopped by the user · 60 columns
-[3m[38;2;150;152;150mWaiting for the server to settle[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190msleep[0m[38;2;150;152;150m [0m[38;2;129;162;190m10[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command w…[0m
+[3m[38;2;150;152;150mWaiting for the server to settle[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190msleep[0m[38;2;150;152;150m [0m[38;2;129;162;190m10[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command s…[0m
 
 ── shell stopped by the user · 44 columns
 [3m[38;2;150;152;150mWaiting for the server to settle[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190ms[0m[38;2;129;162;190m…[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe…[0m
@@ -70,14 +70,32 @@
 ── shell stopped by the user · 16 columns
 [3m[38;2;150;152;150mWaiting for t…[0m[0m [38;2;150;152;150m–[0m
 
+── shell stopped with partial output · 120 columns
+[3m[38;2;150;152;150mRunning the whole test suite[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mtest[0m [38;2;150;152;150m–[0m [38;2;150;152;150mtest started note: the command stopped because the user pressed escape. The …[0m
+
+── shell stopped with partial output · 80 columns
+[3m[38;2;150;152;150mRunning the whole test suite[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mtest[0m [38;2;150;152;150m–[0m [38;2;150;152;150mtest started note: the command stopp…[0m
+
+── shell stopped with partial output · 60 columns
+[3m[38;2;150;152;150mRunning the whole test suite[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mtest[0m [38;2;150;152;150m–[0m [38;2;150;152;150mtest started not…[0m
+
+── shell stopped with partial output · 44 columns
+[3m[38;2;150;152;150mRunning the whole test suite[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mjus[0m[38;2;129;162;190m…[0m [38;2;150;152;150m–[0m [38;2;150;152;150mtest …[0m
+
+── shell stopped with partial output · 30 columns
+[3m[38;2;150;152;150mRunning the whole test suite[0m[0m [38;2;150;152;150m–[0m
+
+── shell stopped with partial output · 16 columns
+[3m[38;2;150;152;150mRunning the w…[0m[0m [38;2;150;152;150m–[0m
+
 ── shell stopped by its time limit · 120 columns
-[3m[38;2;150;152;150mRunning the whole test suite[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mtest[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command was stopped after 2m because it ran out of time[0m
+[3m[38;2;150;152;150mRunning the whole test suite[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mtest[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command reached its 2m time limit[0m
 
 ── shell stopped by its time limit · 80 columns
-[3m[38;2;150;152;150mRunning the whole test suite[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mtest[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command was stopped after 2m bec…[0m
+[3m[38;2;150;152;150mRunning the whole test suite[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mtest[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command reached its 2m time limit[0m
 
 ── shell stopped by its time limit · 60 columns
-[3m[38;2;150;152;150mRunning the whole test suite[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mtest[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command was …[0m
+[3m[38;2;150;152;150mRunning the whole test suite[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mjust[0m[38;2;150;152;150m [0m[38;2;129;162;190mtest[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command reac…[0m
 
 ── shell stopped by its time limit · 44 columns
 [3m[38;2;150;152;150mRunning the whole test suite[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mjus[0m[38;2;129;162;190m…[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe c…[0m
@@ -361,17 +379,17 @@
 ── several shell calls in one round · 120 columns
 [3m[38;2;150;152;150mChecking the working tree state[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgit[0m[38;2;150;152;150m [0m[38;2;129;162;190mstatus[0m[38;2;150;152;150m --short[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m [38;2;150;152;150mM a.go[0m
 [3m[38;2;150;152;150mVetting every package[0m[0m ]8;;oh://tool-result?call=call-2&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgo[0m[38;2;150;152;150m [0m[38;2;129;162;190mvet[0m[38;2;150;152;150m ./...[0m [38;2;204;102;102m✗[0m [38;2;150;152;150m2L 30M[0m [38;2;204;102;102mexit(1): vet: a.go:3: unreachable code[0m
-[3m[38;2;150;152;150mPausing for the build cache[0m[0m ]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190msleep[0m[38;2;150;152;150m [0m[38;2;129;162;190m5[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command was stopped because the user pressed escape[0m
+[3m[38;2;150;152;150mPausing for the build cache[0m[0m ]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190msleep[0m[38;2;150;152;150m [0m[38;2;129;162;190m5[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command stopped because the user pressed escape[0m
 
 ── several shell calls in one round · 80 columns
 [3m[38;2;150;152;150mChecking the working tree state[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgit[0m[38;2;150;152;150m [0m[38;2;129;162;190mstatus[0m[38;2;150;152;150m --short[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m [38;2;150;152;150mM a.go[0m
 [3m[38;2;150;152;150mVetting every package[0m[0m ]8;;oh://tool-result?call=call-2&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgo[0m[38;2;150;152;150m [0m[38;2;129;162;190mvet[0m[38;2;150;152;150m ./...[0m [38;2;204;102;102m✗[0m [38;2;150;152;150m2L 30M[0m [38;2;204;102;102mexit(1): vet: a.go:3: unreachable…[0m
-[3m[38;2;150;152;150mPausing for the build cache[0m[0m ]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190msleep[0m[38;2;150;152;150m [0m[38;2;129;162;190m5[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command was stopped because the use…[0m
+[3m[38;2;150;152;150mPausing for the build cache[0m[0m ]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190msleep[0m[38;2;150;152;150m [0m[38;2;129;162;190m5[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command stopped because the user pr…[0m
 
 ── several shell calls in one round · 60 columns
 [3m[38;2;150;152;150mChecking the working tree state[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgit[0m[38;2;150;152;150m [0m[38;2;129;162;190mstatus[0m[38;2;150;152;150m [0m[38;2;150;152;150m…[0m [38;2;76;154;44m✓[0m [38;2;150;152;150m0.2s 1L 28M[0m
 [3m[38;2;150;152;150mVetting every package[0m[0m ]8;;oh://tool-result?call=call-2&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgo[0m[38;2;150;152;150m [0m[38;2;129;162;190mvet[0m[38;2;150;152;150m ./...[0m [38;2;204;102;102m✗[0m [38;2;150;152;150m2L 30M[0m [38;2;204;102;102mexit(1): vet:…[0m
-[3m[38;2;150;152;150mPausing for the build cache[0m[0m ]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190msleep[0m[38;2;150;152;150m [0m[38;2;129;162;190m5[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command was sto…[0m
+[3m[38;2;150;152;150mPausing for the build cache[0m[0m ]8;;oh://tool-result?call=call-3&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190msleep[0m[38;2;150;152;150m [0m[38;2;129;162;190m5[0m [38;2;150;152;150m–[0m [38;2;150;152;150mthe command stopped…[0m
 
 ── several shell calls in one round · 44 columns
 [3m[38;2;150;152;150mChecking the working tree state[0m[0m ]8;;oh://tool-result?call=call-1&session=tame-impala\[38;2;129;162;190m$[0m]8;;\ [38;2;129;162;190mgit[0m[38;2;150;152;150m [0m[38;2;129;162;190msta[0m[38;2;129;162;190m…[0m [38;2;76;154;44m✓[0m

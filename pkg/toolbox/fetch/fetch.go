@@ -14,6 +14,7 @@ import (
 	"golang.org/x/net/html"
 
 	"crdx.org/oh/internal/html2md"
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/pkg/tool"
 )
@@ -73,42 +74,68 @@ func newTool(
 		ChangesNothing().
 		Requires(isAllowed, ErrWithheld).
 		Exec(func(ctx context.Context, args Args) (string, tool.ToolCallMetrics, error) {
+			if ctx.Err() != nil {
+				return "", tool.ToolCallMetrics{}, stop.Error(ctx, "the fetch")
+			}
 			if err := approve(ctx, args.URL); err != nil {
-				return "", tool.ToolCallMetrics{}, err
+				return "", tool.ToolCallMetrics{}, stop.ErrorFrom(ctx, "the fetch", err)
 			}
 
 			page, err := fetchPage(ctx, client, args.URL)
 			if err != nil {
-				return "", tool.ToolCallMetrics{}, err
+				return "", tool.ToolCallMetrics{}, stop.ErrorFrom(ctx, "the fetch", err)
+			}
+			if ctx.Err() != nil {
+				return "", tool.ToolCallMetrics{}, stop.Error(ctx, "the fetch")
 			}
 			rawHTMLPath, err := saveRawHTML(page.rawHTML)
 			if err != nil {
-				return "", tool.ToolCallMetrics{}, fmt.Errorf("save raw HTML: %w", err)
+				failure := fmt.Errorf("save raw HTML: %w", err)
+				return "", tool.ToolCallMetrics{}, stop.ErrorFrom(ctx, "the fetch", failure)
 			}
 			if page.statusCode < http.StatusOK || page.statusCode >= http.StatusMultipleChoices {
-				return "", tool.ToolCallMetrics{}, fmt.Errorf(
-					"fetch returned HTTP %d (raw HTML saved to %s)\n\n%s",
-					page.statusCode,
-					rawHTMLPath,
-					tool.MarkUntrusted(origin(args.URL), strings.TrimSpace(string(page.rawHTML))),
-				)
+				body := tool.MarkUntrusted(origin(args.URL), strings.TrimSpace(string(page.rawHTML)))
+				failure := fmt.Errorf("fetch returned HTTP %d (raw HTML saved to %s)\n\n%s", page.statusCode, rawHTMLPath, body)
+				return fetchFailureAfterSave(ctx, rawHTMLPath, body, failure)
 			}
 
 			output, err := renderPage(page.rawHTML, args.Type)
 			if err != nil {
-				return "", tool.ToolCallMetrics{}, fmt.Errorf(
-					"render fetched page (raw HTML saved to %s): %w", rawHTMLPath, err,
-				)
+				failure := fmt.Errorf("render fetched page (raw HTML saved to %s): %w", rawHTMLPath, err)
+				return fetchFailureAfterSave(ctx, rawHTMLPath, "", failure)
 			}
 			if output == "" {
-				return "", tool.ToolCallMetrics{}, fmt.Errorf(
-					"fetch returned no content (raw HTML saved to %s)", rawHTMLPath,
-				)
+				failure := fmt.Errorf("fetch returned no content (raw HTML saved to %s)", rawHTMLPath)
+				return fetchFailureAfterSave(ctx, rawHTMLPath, "", failure)
 			}
 			output = fmt.Sprintf(rawHTMLPathNotice, rawHTMLPath) + "\n\n" + tool.MarkUntrusted(origin(args.URL), output)
+			if ctx.Err() != nil {
+				failure := stop.Error(ctx, "the fetch")
+				output = stop.Report(output, failure)
+				return output, tool.GetMetrics(output), failure
+			}
 
 			return output, tool.GetMetrics(output), nil
 		})
+}
+
+func fetchFailureAfterSave(
+	ctx context.Context,
+	rawHTMLPath string,
+	partialOutput string,
+	failure error,
+) (string, tool.ToolCallMetrics, error) {
+	failure = stop.ErrorFrom(ctx, "the fetch", failure)
+	if ctx.Err() == nil {
+		return "", tool.ToolCallMetrics{}, failure
+	}
+
+	output := fmt.Sprintf(rawHTMLPathNotice, rawHTMLPath)
+	if partialOutput != "" {
+		output += "\n\n" + partialOutput
+	}
+	output = stop.Report(output, failure)
+	return output, tool.GetMetrics(output), failure
 }
 
 func Describe(args Args) tool.CallRendering {

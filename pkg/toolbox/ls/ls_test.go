@@ -1,11 +1,14 @@
 package ls_test
 
 import (
+	"context"
+	"errors"
 	"os"
 	"path/filepath"
 	"testing"
 
 	"crdx.org/oh/internal/file"
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/toolbox/ls"
 )
 
@@ -54,6 +57,24 @@ func TestADirectoryIsMarkedWithASlash(t *testing.T) {
 
 	if output != "a.txt\ninner/" {
 		t.Errorf("expected the entries sorted with the directory marked, got %q", output)
+	}
+}
+
+func TestACancelledListingStopsBeforeItStarts(t *testing.T) {
+	root, _ := testRoot(t)
+	call, err := ls.New(root).Parse(`{}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithCancelCause(t.Context())
+	cancel(stop.Because("the user pressed escape"))
+
+	_, err = call.Exec(ctx)
+	if !errors.Is(err, context.Canceled) {
+		t.Errorf("got %v, want a cancellation", err)
+	}
+	if want := "the listing stopped because the user pressed escape"; err.Error() != want {
+		t.Errorf("got %q, want %q", err, want)
 	}
 }
 

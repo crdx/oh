@@ -86,16 +86,58 @@ func TestUnexplainedStoppedWorkSaysOnlyThat(t *testing.T) {
 	}
 }
 
-func TestWorkThatRanOutOfTimeSaysSo(t *testing.T) {
+func TestWorkThatReachesItsTimeLimitSaysSo(t *testing.T) {
 	ctx, cancel := context.WithTimeout(t.Context(), 0)
 	defer cancel()
 	<-ctx.Done()
 
 	err := stop.Error(ctx, "the search")
-	if err.Error() != "the search ran out of time" {
+	if err.Error() != "the search reached its time limit" {
 		t.Errorf("got %q", err.Error())
 	}
 	if !errors.Is(err, context.DeadlineExceeded) {
 		t.Error("expected the prose to answer as a deadline")
+	}
+}
+
+func TestAnErrorFromStoppedWorkUsesTheStopReason(t *testing.T) {
+	ctx, cancel := context.WithCancelCause(t.Context())
+	cancel(stop.Because("the user pressed escape"))
+
+	err := stop.ErrorFrom(ctx, "the fetch", errors.New("Get: context canceled"))
+	if got, want := err.Error(), "the fetch stopped because the user pressed escape"; got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+	if !errors.Is(err, context.Canceled) {
+		t.Error("expected the prose to answer as a cancellation")
+	}
+}
+
+func TestAnErrorFromLiveWorkStaysUnchanged(t *testing.T) {
+	failure := errors.New("connection refused")
+
+	if got := stop.ErrorFrom(t.Context(), "the fetch", failure); !errors.Is(got, failure) {
+		t.Errorf("got %v, want the original error", got)
+	}
+}
+
+func TestSuccessfulWorkStaysSuccessfulAfterCancellation(t *testing.T) {
+	ctx, cancel := context.WithCancel(t.Context())
+	cancel()
+
+	if err := stop.ErrorFrom(ctx, "the fetch", nil); err != nil {
+		t.Errorf("got %v, want no error", err)
+	}
+}
+
+func TestAStopReportKeepsPartialOutput(t *testing.T) {
+	failure := errors.New("the command stopped because the user pressed escape")
+	want := "partial output\nnote: the command stopped because the user pressed escape."
+
+	if got := stop.Report("partial output\n", failure); got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+	if got := stop.Report("", failure); got != failure.Error() {
+		t.Errorf("got %q, want only the failure", got)
 	}
 }

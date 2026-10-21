@@ -5,12 +5,12 @@
 {"kind":"event","event":{"render":"beta","kind":"tool_call_request","id":"call-2","name":"beta","arguments":"{}"}}
 {"kind":"event","event":{"kind":"state_change","id":"call-1","name":"alpha-count","state":1}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"alpha result","id":"call-1","name":"alpha","status":"success","stats":{"kind":"output","lines":1,"bytes":12}}}
-{"kind":"event","event":{"kind":"tool_call_result","text":"the tool was stopped","id":"call-2","name":"beta","status":"cancelled","stats":{"kind":"output","lines":1,"bytes":20}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"the tool stopped","id":"call-2","name":"beta","status":"cancelled","stats":{"kind":"output","lines":1,"bytes":16}}}
 {"kind":"event","event":{"kind":"turn_interruption","name":"escape"}}
 {"kind":"item","payload":{"role":"user","content":"call two tools and interrupt while the second is working"}}
 {"kind":"item","payload":{"role":"assistant","content":"","tool_calls":[{"id":"call-1","type":"function","function":{"name":"alpha","arguments":"{}"}},{"id":"call-2","type":"function","function":{"name":"beta","arguments":"{}"}}]}}
 {"kind":"item","payload":{"role":"tool","content":"alpha result","tool_call_id":"call-1"}}
-{"kind":"item","payload":{"role":"tool","content":"the tool was stopped","tool_call_id":"call-2"}}
+{"kind":"item","payload":{"role":"tool","content":"the tool stopped","tool_call_id":"call-2"}}
 {"kind":"item","payload":{"role":"user","content":"\u003csystem-reminder\u003e\nTurn stopped because the user pressed escape.\n\u003c/system-reminder\u003e"}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"what happened to the second one"}}

@@ -8,6 +8,7 @@ import (
 	"strings"
 	"testing"
 
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/tool"
 )
 
@@ -27,6 +28,54 @@ func allowFetch(context.Context, string) error { return nil }
 
 func saveTestHTML([]byte) (string, error) {
 	return "/session/drops/fetch-test.html", nil
+}
+
+func TestACancelledFetchStopsBeforeTheRequest(t *testing.T) {
+	wasReached := false
+	server := httptest.NewServer(http.HandlerFunc(func(http.ResponseWriter, *http.Request) {
+		wasReached = true
+	}))
+	defer server.Close()
+	call, err := newTool(func() bool { return true }, allowFetch, saveTestHTML, server.Client()).
+		Parse(`{"url":"` + server.URL + `","type":"text"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithCancelCause(t.Context())
+	cancel(stop.Because("the user pressed escape"))
+
+	_, err = call.Exec(ctx)
+	if !errors.Is(err, context.Canceled) {
+		t.Errorf("got %v, want a cancellation", err)
+	}
+	if want := "the fetch stopped because the user pressed escape"; err.Error() != want {
+		t.Errorf("got %q, want %q", err, want)
+	}
+	if wasReached {
+		t.Error("the cancelled fetch reached the server")
+	}
+}
+
+func TestACancelledFetchKeepsSavedOutput(t *testing.T) {
+	ctx, cancel := context.WithCancelCause(t.Context())
+	cancel(stop.Because("the user pressed escape"))
+
+	output, metrics, err := fetchFailureAfterSave(ctx, "/session/drops/partial.html", "partial page", errors.New("read failed"))
+	if !errors.Is(err, context.Canceled) {
+		t.Errorf("got %v, want a cancellation", err)
+	}
+	for _, want := range []string{
+		"[raw HTML saved to /session/drops/partial.html]",
+		"partial page",
+		"note: the fetch stopped because the user pressed escape.",
+	} {
+		if !strings.Contains(output, want) {
+			t.Errorf("got %q, want %q", output, want)
+		}
+	}
+	if metrics.Bytes != int64(len(output)) {
+		t.Errorf("measured %d bytes, want %d", metrics.Bytes, len(output))
+	}
 }
 
 func TestFetchReturnsEverySupportedFormat(t *testing.T) {

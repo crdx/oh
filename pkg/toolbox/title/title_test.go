@@ -1,10 +1,13 @@
 package title_test
 
 import (
+	"context"
 	"encoding/json"
+	"errors"
 	"strings"
 	"testing"
 
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/title"
@@ -35,6 +38,27 @@ func titleOf(t *testing.T, state json.RawMessage) string {
 	}
 
 	return decoded.Title
+}
+
+func TestACancelledTitleChangeRecordsNothing(t *testing.T) {
+	titleTool := title.New()
+	call, err := titleTool.Parse(`{"title":"fix picker clipping"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithCancelCause(t.Context())
+	cancel(stop.Because("the user pressed escape"))
+
+	result, err := call.Exec(ctx)
+	if !errors.Is(err, context.Canceled) {
+		t.Errorf("got %v, want a cancellation", err)
+	}
+	if want := "the title change stopped because the user pressed escape"; err.Error() != want {
+		t.Errorf("got %q, want %q", err, want)
+	}
+	if len(result.State) != 0 {
+		t.Errorf("recorded state after cancellation: %s", result.State)
+	}
 }
 
 func TestTitlingASessionRecordsDurableState(t *testing.T) {

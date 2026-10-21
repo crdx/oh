@@ -18,7 +18,7 @@ read both of those files, then wait for check
 ```
 read: one.txt [ok, 1 line, 4B, call_1]
 read: two.txt [cancelled, call_2]
-job wait: check [cancelled, 1 line, 39B, call_3]
+job wait: check [cancelled, 1 line, 55B, call_3]
 ```
 
 ## Interrupted · +7s

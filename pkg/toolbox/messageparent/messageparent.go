@@ -5,6 +5,7 @@ import (
 	"errors"
 	"strings"
 
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/tool"
 )
@@ -35,8 +36,11 @@ func New(parent Parent) tool.Tool {
 	).
 		Validate(validate).
 		Plain(func(ctx context.Context, args Args) (string, error) {
+			if ctx.Err() != nil {
+				return "", stop.Error(ctx, "the message")
+			}
 			if err := parent(ctx, strings.TrimSpace(args.Message)); err != nil {
-				return "", err
+				return "", stop.ErrorFrom(ctx, "the message", err)
 			}
 			return Result, nil
 		})

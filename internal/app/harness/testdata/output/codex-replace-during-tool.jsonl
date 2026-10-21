@@ -3,11 +3,11 @@
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"send another message while the tool is working"}}
 {"kind":"event","event":{"render":"work","kind":"tool_call_request","id":"call-1","name":"work","arguments":"{}"}}
-{"kind":"event","event":{"kind":"tool_call_result","text":"the call was stopped after 3s because the user sent another message","id":"call-1","name":"work","status":"cancelled","stats":{"kind":"output","lines":1,"bytes":67}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"the call stopped because the user sent another message. The call ran for 3s","id":"call-1","name":"work","status":"cancelled","stats":{"kind":"output","lines":1,"bytes":75}}}
 {"kind":"event","event":{"kind":"turn_interruption","name":"replacement"}}
 {"kind":"item","payload":{"role":"user","content":"send another message while the tool is working"}}
 {"kind":"item","payload":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"work","arguments":"{}"}}
-{"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"the call was stopped after 3s because the user sent another message"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"the call stopped because the user sent another message. The call ran for 3s"}}
 {"kind":"item","payload":{"role":"user","content":"\u003cturn_aborted\u003e\nTurn stopped because the user sent another message.\n\u003c/turn_aborted\u003e"}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"user_message","text":"stop that and read the file instead"}}

@@ -5,7 +5,7 @@ effort = "high"
 [[tool]]
 name = "work"
 blocks = true
-stopped-output = "the call was stopped after 3s because the user changed what the harness is allowed to do"
+stopped-output = "the call stopped because the user changed what the harness is allowed to do. The call ran for 3s"
 
 [first]
 prompt = "send another message and change what I am allowed to do"

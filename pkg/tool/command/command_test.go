@@ -11,6 +11,7 @@ import (
 	"testing"
 	"time"
 
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/tool/command"
 )
@@ -681,7 +682,7 @@ wait
 		t.Fatal(err)
 	}
 
-	ctx, cancel := context.WithCancel(t.Context())
+	ctx, cancel := context.WithCancelCause(t.Context())
 	finished := make(chan string, 1)
 	go func() {
 		result, _ := parsed.Exec(ctx)
@@ -689,7 +690,7 @@ wait
 	}()
 
 	child := readPid(t, filepath.Join(state, "child"))
-	cancel()
+	cancel(stop.Because("the user pressed escape"))
 
 	select {
 	case output := <-finished:
@@ -701,11 +702,42 @@ wait
 	return child, ""
 }
 
+func TestACancelledCallDoesNotStartItsCommand(t *testing.T) {
+	state := t.TempDir()
+	declaration := command.Declaration{
+		Name:        "build",
+		Description: "build remotely",
+		Command:     []string{writeScript(t, `touch "$1/started"`), state},
+	}
+	subject, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	parsed, err := subject.Parse(`{}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithCancelCause(t.Context())
+	cancel(stop.Because("the user pressed escape"))
+
+	_, err = parsed.Exec(ctx)
+	if !errors.Is(err, context.Canceled) {
+		t.Errorf("got %v, want a cancellation", err)
+	}
+	if want := "the command stopped because the user pressed escape"; err.Error() != want {
+		t.Errorf("got %q, want %q", err, want)
+	}
+	if _, err := os.Stat(filepath.Join(state, "started")); !errors.Is(err, os.ErrNotExist) {
+		t.Errorf("got %v, want the command not to start", err)
+	}
+}
+
 func TestStoppingACallStopsEveryProcessItStarted(t *testing.T) {
-	child, output := stopOnceItHasAChild(t, "")
+	child, output := stopOnceItHasAChild(t, "echo started")
 	requireGone(t, child)
-	if output != "killed by SIGTERM" {
-		t.Errorf("got %q", output)
+	want := "started\nnote: the command stopped because the user pressed escape."
+	if output != want {
+		t.Errorf("got %q, want %q", output, want)
 	}
 }
 
@@ -778,8 +810,9 @@ echo done
 func TestACallThatIgnoresTheRequestToEndIsKilled(t *testing.T) {
 	child, output := stopOnceItHasAChild(t, "trap '' TERM")
 	requireGone(t, child)
-	if output != "killed by SIGKILL after ignoring SIGTERM for 2s" {
-		t.Errorf("got %q", output)
+	want := "the command stopped because the user pressed escape. The command did not stop after SIGTERM. SIGKILL stopped the command after 2s"
+	if output != want {
+		t.Errorf("got %q, want %q", output, want)
 	}
 }
 
@@ -799,7 +832,7 @@ func TestACallThatIgnoresItsLimitSaysItWasKilledForIt(t *testing.T) {
 	if !errors.Is(err, command.ErrCommandFailed) {
 		t.Fatalf("got %v", err)
 	}
-	want := "stopped after its limit of 100ms, and killed by SIGKILL after ignoring SIGTERM for 2s:\nstarted"
+	want := "started\nnote: the command reached its 100ms time limit. The command did not stop after SIGTERM. SIGKILL stopped the command after 2s."
 	if output != want {
 		t.Errorf("got %q, want %q", output, want)
 	}
@@ -820,7 +853,7 @@ func TestACallKilledByASignalNamesIt(t *testing.T) {
 	if !errors.Is(err, command.ErrCommandFailed) {
 		t.Fatalf("got %v", err)
 	}
-	if output != "killed by SIGKILL:\nstarted" {
+	if output != "started\nnote: SIGKILL stopped the command." {
 		t.Errorf("got %q", output)
 	}
 }

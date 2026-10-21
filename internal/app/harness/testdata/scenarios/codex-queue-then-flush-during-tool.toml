@@ -5,7 +5,7 @@ effort = "medium"
 [[tool]]
 name = "work"
 blocks = true
-stopped-output = "the call was stopped after 4s because the user sent another message"
+stopped-output = "the call stopped because the user sent another message. The call ran for 4s"
 
 [first]
 prompt = "queue a message and then push it out at once"

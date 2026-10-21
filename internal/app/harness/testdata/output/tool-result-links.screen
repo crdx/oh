@@ -148,7 +148,7 @@ g
 read README.md 1L
 grep [ ✗ regex parse error: [ ^ error: unclosed character class
 ls 0L
-Running this command for the test $ sleep 10 – the command was stopped because the user pressed esc…
+Running this command for the test $ sleep 10 – the command stopped because the user pressed escape
 Running this command for the test $ touch marker ✓ no output
 
 Every finished call has a result link, whether or not it returned anything.
@@ -182,7 +182,7 @@ anything.
 read README.md 1L
 grep [ ✗ regex parse error: [ ^ error: unclosed character class
 ls 0L
-Running this command for the test $ sleep 10 – the command was stopped because the user pressed esc…
+Running this command for the test $ sleep 10 – the command stopped because the user pressed escape
 Running this command for the test $ touch marker ✓ no output
 
 Every finished call has a result link, whether or not it returned anything.

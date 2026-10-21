@@ -6,24 +6,75 @@ import (
 	"strings"
 	"testing"
 
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/tool"
 )
 
 type searchStub struct {
-	query   string
-	queries int
-	output  string
-	err     error
+	query        string
+	queries      int
+	output       string
+	err          error
+	beforeReturn func()
 }
 
 func (self *searchStub) Search(_ context.Context, query string) (string, error) {
 	self.query = query
 	self.queries++
+	if self.beforeReturn != nil {
+		self.beforeReturn()
+	}
 
 	return self.output, self.err
 }
 
 func allowLookup(context.Context, string) error { return nil }
+
+func TestACancelledLookupStopsBeforeItSearches(t *testing.T) {
+	searcher := &searchStub{output: "cited answer"}
+	call, err := New(func() bool { return true }, allowLookup, searcher).Parse(`{"query":"weather"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithCancelCause(t.Context())
+	cancel(stop.Because("the user pressed escape"))
+
+	_, err = call.Exec(ctx)
+	if !errors.Is(err, context.Canceled) {
+		t.Errorf("got %v, want a cancellation", err)
+	}
+	if want := "the search stopped because the user pressed escape"; err.Error() != want {
+		t.Errorf("got %q, want %q", err, want)
+	}
+	if searcher.queries != 0 {
+		t.Errorf("searched %d times after cancellation", searcher.queries)
+	}
+}
+
+func TestACancelledLookupKeepsPartialOutput(t *testing.T) {
+	ctx, cancel := context.WithCancelCause(t.Context())
+	searcher := &searchStub{
+		output:       "partial answer",
+		err:          context.Canceled,
+		beforeReturn: func() { cancel(stop.Because("the user pressed escape")) },
+	}
+	call, err := New(func() bool { return true }, allowLookup, searcher).Parse(`{"query":"weather"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	result, err := call.Exec(ctx)
+	if !errors.Is(err, context.Canceled) {
+		t.Errorf("got %v, want a cancellation", err)
+	}
+	if !strings.Contains(result.Output, "partial answer") {
+		t.Errorf("lost partial output: %q", result.Output)
+	}
+	wantNote := "note: the search stopped because the user pressed escape."
+	if !strings.Contains(result.Output, wantNote) {
+		t.Errorf("got %q, want %q", result.Output, wantNote)
+	}
+}
 
 func TestLookupDelegatesToTheConfiguredSearcher(t *testing.T) {
 	searcher := &searchStub{output: "cited answer"}

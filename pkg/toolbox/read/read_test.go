@@ -16,6 +16,7 @@ import (
 	"testing"
 
 	"crdx.org/oh/internal/file"
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/tool/middleware/truncate"
 	"crdx.org/oh/pkg/toolbox/read"
@@ -313,12 +314,15 @@ func TestARangeOfALargeFileCanBeCancelled(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	ctx, cancel := context.WithCancel(t.Context())
-	cancel()
+	ctx, cancel := context.WithCancelCause(t.Context())
+	cancel(stop.Because("the user pressed escape"))
 
 	_, err = call.Exec(ctx)
 	if !errors.Is(err, context.Canceled) {
 		t.Errorf("got %v, want a cancellation", err)
+	}
+	if want := "the read stopped because the user pressed escape"; err.Error() != want {
+		t.Errorf("got %q, want %q", err, want)
 	}
 }
 

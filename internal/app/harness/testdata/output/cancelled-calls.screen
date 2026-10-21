@@ -5,8 +5,8 @@
 
 
 read one.txt 1L
-read two.txt – the call was cancelled b…
-job wait check Ha… – stopped because th…
+read two.txt – the call stopped because…
+job wait check Ha… – the job request st…
 
 Turn stopped.
 
@@ -146,8 +146,8 @@ d
 
 
 read one.txt 1L
-read two.txt – the call was cancelled because the user pressed escape
-job wait check Handling this job for the test – stopped because the user pressed escape
+read two.txt – the call stopped because the user pressed escape
+job wait check Handling this job for the test – the job request stopped because the user pressed es…
 
 Turn stopped.
 
@@ -164,7 +164,7 @@ Turn stopped.
 
 read one… 1L
 read – the …
-job – stop…
+job – the …
 
 Turn
 stopped.
@@ -179,8 +179,8 @@ stopped.
 
 
 read one.txt 1L
-read two.txt – the call was cancelled because the user pressed escape
-job wait check Handling this job for the test – stopped because the user pressed escape
+read two.txt – the call stopped because the user pressed escape
+job wait check Handling this job for the test – the job request stopped because the user pressed es…
 
 Turn stopped.
 

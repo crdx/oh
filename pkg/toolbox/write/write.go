@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"crdx.org/oh/internal/file"
-
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/pkg/tool"
 )
@@ -29,8 +29,15 @@ func New(root *file.Root, snapshots *file.Snapshots) tool.Tool {
 			},
 		},
 		Describe,
-	).FocusPath().Exec(func(_ context.Context, args Args) (string, tool.ToolCallMetrics, error) {
-		return exec(root, snapshots, args)
+	).FocusPath().Exec(func(ctx context.Context, args Args) (string, tool.ToolCallMetrics, error) {
+		if ctx.Err() != nil {
+			return "", tool.ToolCallMetrics{}, stop.Error(ctx, "the write")
+		}
+		output, metrics, err := exec(ctx, root, snapshots, args)
+		if err != nil {
+			return output, metrics, stop.ErrorFrom(ctx, "the write", err)
+		}
+		return output, metrics, nil
 	})
 }
 
@@ -41,7 +48,7 @@ func Describe(args Args) tool.CallRendering {
 	}
 }
 
-func exec(root *file.Root, snapshots *file.Snapshots, args Args) (string, tool.ToolCallMetrics, error) {
+func exec(ctx context.Context, root *file.Root, snapshots *file.Snapshots, args Args) (string, tool.ToolCallMetrics, error) {
 	if args.Path == "" {
 		return "", tool.ToolCallMetrics{}, errors.New("path is required")
 	}
@@ -64,10 +71,16 @@ func exec(root *file.Root, snapshots *file.Snapshots, args Args) (string, tool.T
 		return "", tool.ToolCallMetrics{}, err
 	}
 
+	if ctx.Err() != nil {
+		return "", tool.ToolCallMetrics{}, stop.Error(ctx, "the write")
+	}
 	if directory := filepath.Dir(name); directory != "." {
 		if err := root.MkdirAll(directory, 0o755); err != nil {
 			return "", tool.ToolCallMetrics{}, err
 		}
+	}
+	if ctx.Err() != nil {
+		return "", tool.ToolCallMetrics{}, stop.Error(ctx, "the write")
 	}
 
 	writtenContent := []byte(args.Content)

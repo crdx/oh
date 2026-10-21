@@ -1,6 +1,7 @@
 package forward
 
 import (
+	"context"
 	"errors"
 	"reflect"
 	"slices"
@@ -8,6 +9,7 @@ import (
 	"strings"
 	"testing"
 
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/tool"
 )
 
@@ -43,10 +45,31 @@ func (self *recordedPorts) List() []Publication {
 	return publications
 }
 
+func TestACancelledPortRequestChangesNothing(t *testing.T) {
+	ports := &recordedPorts{}
+	call, err := New(ports).Parse(`{"action":"add","port":8080}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithCancelCause(t.Context())
+	cancel(stop.Because("the user pressed escape"))
+
+	_, err = call.Exec(ctx)
+	if !errors.Is(err, context.Canceled) {
+		t.Errorf("got %v, want a cancellation", err)
+	}
+	if want := "the port request stopped because the user pressed escape"; err.Error() != want {
+		t.Errorf("got %q, want %q", err, want)
+	}
+	if len(ports.open) != 0 {
+		t.Errorf("forwarded ports after cancellation: %v", ports.open)
+	}
+}
+
 func TestForwardingSaysWhereTheUserCanOpenIt(t *testing.T) {
 	ports := &recordedPorts{}
 
-	said, _, err := run(ports, Args{Action: actionAdd, Port: 8080})
+	said, err := run(ports, Args{Action: actionAdd, Port: 8080})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -65,7 +88,7 @@ func TestForwardingSaysWhereTheUserCanOpenIt(t *testing.T) {
 func TestForwardingCanAssociateThePortWithAJob(t *testing.T) {
 	ports := &recordedPorts{}
 
-	if _, _, err := run(ports, Args{Action: actionAdd, Port: 8080, JobName: "docs"}); err != nil {
+	if _, err := run(ports, Args{Action: actionAdd, Port: 8080, JobName: "docs"}); err != nil {
 		t.Fatal(err)
 	}
 	if len(ports.open) != 1 || ports.open[0] != (Publication{Port: 8080, JobName: "docs"}) {
@@ -76,7 +99,7 @@ func TestForwardingCanAssociateThePortWithAJob(t *testing.T) {
 func TestRevokingClosesThePortAndSaysSo(t *testing.T) {
 	ports := &recordedPorts{open: []Publication{{Port: 8080}}}
 
-	said, _, err := run(ports, Args{Action: actionRemove, Port: 8080})
+	said, err := run(ports, Args{Action: actionRemove, Port: 8080})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -89,7 +112,7 @@ func TestRevokingClosesThePortAndSaysSo(t *testing.T) {
 }
 
 func TestListingSaysWhatIsOpenOrThatNothingIs(t *testing.T) {
-	said, _, err := run(&recordedPorts{}, Args{Action: actionList})
+	said, err := run(&recordedPorts{}, Args{Action: actionList})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -97,7 +120,7 @@ func TestListingSaysWhatIsOpenOrThatNothingIs(t *testing.T) {
 		t.Errorf("got %q", said)
 	}
 
-	said, _, err = run(&recordedPorts{open: []Publication{{Port: 3000}, {Port: 8080, JobName: "docs"}}}, Args{Action: actionList})
+	said, err = run(&recordedPorts{open: []Publication{{Port: 3000}, {Port: 8080, JobName: "docs"}}}, Args{Action: actionList})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -112,10 +135,10 @@ func TestARefusalFromTheHarnessReachesTheModel(t *testing.T) {
 	refused := errors.New("port 8080 is already forwarded")
 	ports := &recordedPorts{refusal: refused}
 
-	if _, _, err := run(ports, Args{Action: actionAdd, Port: 8080}); !errors.Is(err, refused) {
+	if _, err := run(ports, Args{Action: actionAdd, Port: 8080}); !errors.Is(err, refused) {
 		t.Errorf("got %v, want the harness's reason", err)
 	}
-	if _, _, err := run(ports, Args{Action: actionRemove, Port: 8080}); !errors.Is(err, refused) {
+	if _, err := run(ports, Args{Action: actionRemove, Port: 8080}); !errors.Is(err, refused) {
 		t.Errorf("got %v, want the harness's reason", err)
 	}
 }
@@ -182,7 +205,7 @@ func TestACallIsRenderedByItsAction(t *testing.T) {
 }
 
 func TestAPortOutOfRangeIsRefusedEvenWhereValidationWasSkipped(t *testing.T) {
-	if _, _, err := run(&recordedPorts{}, Args{Action: actionAdd, Port: 70000}); err == nil {
+	if _, err := run(&recordedPorts{}, Args{Action: actionAdd, Port: 70000}); err == nil {
 		t.Error("a port beyond 65535 was forwarded")
 	}
 }

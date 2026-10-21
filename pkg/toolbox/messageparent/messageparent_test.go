@@ -5,8 +5,33 @@ import (
 	"errors"
 	"testing"
 
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/toolbox/messageparent"
 )
+
+func TestACancelledMessageDoesNotReachTheParent(t *testing.T) {
+	wasReached := false
+	call, err := messageparent.New(func(context.Context, string) error {
+		wasReached = true
+		return nil
+	}).Parse(`{"message":"halfway there"}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithCancelCause(t.Context())
+	cancel(stop.Because("the user pressed escape"))
+
+	_, err = call.Exec(ctx)
+	if !errors.Is(err, context.Canceled) {
+		t.Errorf("got %v, want a cancellation", err)
+	}
+	if want := "the message stopped because the user pressed escape"; err.Error() != want {
+		t.Errorf("got %q, want %q", err, want)
+	}
+	if wasReached {
+		t.Error("the cancelled message reached the parent")
+	}
+}
 
 func TestAMessageReachesTheParentTrimmed(t *testing.T) {
 	var received []string

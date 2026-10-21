@@ -40,9 +40,9 @@ func KillNotice(result Result, policy Policy) string {
 		return ""
 	}
 
-	openingNote := fmt.Sprintf("note: the shell reports that a process was killed by %s.", name)
+	openingNote := fmt.Sprintf("note: the shell reports that %s stopped a process.", name)
 	if isObserved {
-		openingNote = fmt.Sprintf("note: the command was killed by %s.", name)
+		openingNote = fmt.Sprintf("note: %s stopped the command.", name)
 	}
 
 	lines := []string{openingNote}

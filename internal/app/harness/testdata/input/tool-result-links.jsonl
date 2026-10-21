@@ -7,6 +7,6 @@
 {"event":{"kind":"tool_call_result","status":"success","text":"# Workspace\n","id":"call/a?&","name":"read","stats":{"kind":"read","lines":1,"bytes":12}}}
 {"event":{"kind":"tool_call_result","status":"error","text":"regex parse error:\n    [\n    ^\nerror: unclosed character class","id":"call_2","name":"grep"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"","id":"call_3","name":"ls","stats":{"kind":"list","lines":0}}}
-{"event":{"kind":"tool_call_result","status":"cancelled","text":"the command was stopped because the user pressed escape","id":"call_4","name":"bash"}}
+{"event":{"kind":"tool_call_result","status":"cancelled","text":"the command stopped because the user pressed escape","id":"call_4","name":"bash"}}
 {"event":{"kind":"tool_call_result","status":"success","text":"","id":"call_5","name":"bash","stats":{"kind":"resources","lines":0,"bytes":0}}}
 {"event":{"kind":"model_message","text":"Every finished call has a result link, whether or not it returned anything."}}

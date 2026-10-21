@@ -19819,7 +19819,7 @@ func sessionGoldenImage(t *testing.T, size string, byteCount int64) (tool.Image,
 	return tool.Image{MediaType: "image/png", Data: encoded.Bytes()}, imageMetrics
 }
 
-var errSessionGoldenToolStopped = errors.New("the tool was stopped")
+var errSessionGoldenToolStopped = errors.New("the tool stopped")
 
 type sessionGoldenRevision struct {
 	tool.Tool

@@ -3,11 +3,11 @@
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"change what I am allowed to do while the tool is working"}}
 {"kind":"event","event":{"render":"work","kind":"tool_call_request","id":"call-1","name":"work","arguments":"{}"}}
-{"kind":"event","event":{"kind":"tool_call_result","text":"the call was stopped after 4s because the user changed what the harness is allowed to do","id":"call-1","name":"work","status":"cancelled","stats":{"kind":"output","lines":1,"bytes":88}}}
+{"kind":"event","event":{"kind":"tool_call_result","text":"the call stopped because the user changed what the harness is allowed to do. The call ran for 4s","id":"call-1","name":"work","status":"cancelled","stats":{"kind":"output","lines":1,"bytes":96}}}
 {"kind":"event","event":{"kind":"turn_interruption","name":"access_change"}}
 {"kind":"item","payload":{"role":"user","content":"change what I am allowed to do while the tool is working"}}
 {"kind":"item","payload":{"id":"call-item-1","type":"function_call","call_id":"call-1","name":"work","arguments":"{}"}}
-{"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"the call was stopped after 4s because the user changed what the harness is allowed to do"}}
+{"kind":"item","payload":{"type":"function_call_output","call_id":"call-1","output":"the call stopped because the user changed what the harness is allowed to do. The call ran for 4s"}}
 {"kind":"item","payload":{"role":"user","content":"\u003cturn_aborted\u003e\nTurn stopped because access changed.\n\u003c/turn_aborted\u003e"}}
 {"kind":"turn_completion","turn":{}}
 {"kind":"event","event":{"kind":"mode_change","name":"w","state":"rxsngl"}}

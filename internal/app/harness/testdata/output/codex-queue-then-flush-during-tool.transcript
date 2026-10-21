@@ -17,7 +17,7 @@ queue a message and then push it out at once
 ## Tool calls · +0s
 
 ```
-work: work [cancelled, 1 line, 67B, call-1]
+work: work [cancelled, 1 line, 75B, call-1]
 ```
 
 ## Interrupted · +0s

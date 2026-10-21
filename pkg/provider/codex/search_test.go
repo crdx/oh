@@ -97,7 +97,7 @@ func TestSearchUsesTheCodexBackendAndAuthHeaders(t *testing.T) {
 func TestSearchReportsStreamFailures(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, _ *http.Request) {
 		writer.Header().Set("Content-Type", "text/event-stream")
-		_, _ = fmt.Fprint(writer, events(`{"type":"error","error":{"message":"quota gone"}}`))
+		_, _ = fmt.Fprint(writer, events(answer("partial answer"), `{"type":"error","error":{"message":"quota gone"}}`))
 	}))
 	defer server.Close()
 
@@ -107,8 +107,12 @@ func TestSearchReportsStreamFailures(t *testing.T) {
 	}
 	client.URL = server.URL
 
-	if _, err := client.Search(t.Context(), "weather"); err == nil || !strings.Contains(err.Error(), "quota gone") {
+	output, err := client.Search(t.Context(), "weather")
+	if err == nil || !strings.Contains(err.Error(), "quota gone") {
 		t.Errorf("got %v", err)
+	}
+	if output != "partial answer" {
+		t.Errorf("got %q, want the partial answer", output)
 	}
 }
 

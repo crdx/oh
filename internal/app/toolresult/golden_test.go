@@ -13,6 +13,7 @@ import (
 	internaltoolresult "crdx.org/oh/internal/toolresult"
 	"crdx.org/oh/internal/util/strutil"
 	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/bash"
 	"crdx.org/oh/pkg/toolbox/edit"
 	"crdx.org/oh/pkg/toolbox/fetch"
@@ -48,6 +49,16 @@ func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
 				"missing.go: no such file or directory"),
 		},
 		{
+			name: "call stopped before running",
+			exchange: resultExchange("read", read.Args{Path: "main.go"}, agent.CancelledStatus,
+				"the call stopped because the user pressed escape"),
+		},
+		{
+			name: "read stopped",
+			exchange: resultExchange("read", read.Args{Path: "main.go"}, agent.CancelledStatus,
+				"the read stopped because the user pressed escape"),
+		},
+		{
 			name: "write file",
 			exchange: resultExchange("write", write.Args{Path: "config.yaml", Content: "name: dove\nenabled: true\n"}, agent.SuccessStatus,
 				"wrote 25B to config.yaml"),
@@ -56,6 +67,11 @@ func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
 			name: "write failure",
 			exchange: resultExchange("write", write.Args{Path: "config.yaml", Content: "enabled: false\n"}, agent.ErrorStatus,
 				"the filesystem is read-only"),
+		},
+		{
+			name: "write stopped",
+			exchange: resultExchange("write", write.Args{Path: "config.yaml", Content: "enabled: false\n"}, agent.CancelledStatus,
+				"the write stopped because the user pressed escape"),
 		},
 		{
 			name: "write unread file",
@@ -79,6 +95,11 @@ func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
 			name: "edit failure",
 			exchange: resultExchange("edit", edit.Args{Path: "main.go", OldText: "old", NewText: "new"}, agent.ErrorStatus,
 				"old_text not found"),
+		},
+		{
+			name: "edit stopped",
+			exchange: resultExchange("edit", edit.Args{Path: "main.go", OldText: "old", NewText: "new"}, agent.CancelledStatus,
+				"the edit stopped because the user pressed escape"),
 		},
 		{
 			name: "shell success",
@@ -119,6 +140,11 @@ func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
 			exchange: resultExchange("ls", ls.Args{Path: "empty"}, agent.SuccessStatus, "(empty)"),
 		},
 		{
+			name: "listing stopped",
+			exchange: resultExchange("ls", ls.Args{Path: "cmd"}, agent.CancelledStatus,
+				"the listing stopped because the user pressed escape"),
+		},
+		{
 			name: "find files",
 			exchange: resultExchange("find", find.Args{Pattern: "**/*.go", Path: "cmd"}, agent.SuccessStatus,
 				"cmd/oh/main.go\ncmd/oh/ctl/ctl.go\n"),
@@ -126,6 +152,11 @@ func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
 		{
 			name:     "find without matches",
 			exchange: resultExchange("find", find.Args{Pattern: "**/*.cobol"}, agent.SuccessStatus, "(no matches)"),
+		},
+		{
+			name: "search stopped",
+			exchange: resultExchange("find", find.Args{Pattern: "**/*.go"}, agent.CancelledStatus,
+				"the search stopped because the user pressed escape"),
 		},
 		{
 			name: "grep source",
@@ -160,6 +191,16 @@ func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
 			name: "lookup approval unavailable",
 			exchange: resultExchange("lookup", lookup.Args{Query: "modern Go release"}, agent.ErrorStatus,
 				"approval unavailable; lookup did not run"),
+		},
+		{
+			name: "lookup stopped",
+			exchange: resultExchange("lookup", lookup.Args{Query: "modern Go release"}, agent.CancelledStatus,
+				"the search stopped because the user pressed escape"),
+		},
+		{
+			name: "lookup stopped with partial output",
+			exchange: resultExchange("lookup", lookup.Args{Query: "modern Go release"}, agent.CancelledStatus,
+				tool.MarkUntrusted(`a web search for "modern Go release"`, "Partial answer.")+"\n\nnote: the search stopped because the user pressed escape."),
 		},
 		{
 			name: "fetch markdown",
@@ -211,6 +252,16 @@ func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
 				"fetch refused; fetch did not run"),
 		},
 		{
+			name: "fetch stopped",
+			exchange: resultExchange("fetch", fetch.Args{URL: "https://example.test/article", Type: "markdown"}, agent.CancelledStatus,
+				"the fetch stopped because the user pressed escape"),
+		},
+		{
+			name: "fetch reached its time limit",
+			exchange: resultExchange("fetch", fetch.Args{URL: "https://example.test/article", Type: "markdown"}, agent.CancelledStatus,
+				"the fetch reached its time limit"),
+		},
+		{
 			name: "fetch approval timed out",
 			exchange: resultExchange("fetch", fetch.Args{URL: "https://example.test/article", Type: "markdown"}, agent.ErrorStatus,
 				"approval timed out after 1m; fetch did not run"),
@@ -226,14 +277,44 @@ func TestGoldenToolResultsRenderForTheUser(t *testing.T) {
 				invalidJobNameError(t, "way-too-long")),
 		},
 		{
+			name: "job request stopped",
+			exchange: resultExchange("job", job.Args{Action: "list"}, agent.CancelledStatus,
+				"the job request stopped because the user pressed escape"),
+		},
+		{
 			name: "title",
 			exchange: resultExchange("title", title.Args{Title: "render-useful-results"}, agent.SuccessStatus,
 				"session titled \"render-useful-results\""),
 		},
 		{
+			name: "title change stopped",
+			exchange: resultExchange("title", title.Args{Title: "render-useful-results"}, agent.CancelledStatus,
+				"the title change stopped because the user pressed escape"),
+		},
+		{
 			name: "notification",
 			exchange: resultExchange("notify", notify.Args{Title: "Checks passed", Message: "Everything is green", Icon: "success"}, agent.SuccessStatus,
 				"notification sent"),
+		},
+		{
+			name: "notification stopped",
+			exchange: resultExchange("notify", notify.Args{Title: "Checks passed", Message: "Everything is green", Icon: "success"}, agent.CancelledStatus,
+				"the notification stopped because the user pressed escape"),
+		},
+		{
+			name: "port request stopped",
+			exchange: resultExchange("forward", map[string]any{"action": "add", "port": 8080}, agent.CancelledStatus,
+				"the port request stopped because the user pressed escape"),
+		},
+		{
+			name: "subagent request stopped",
+			exchange: resultExchange("subagent", map[string]any{"action": "status"}, agent.CancelledStatus,
+				"the subagent request stopped because the user pressed escape"),
+		},
+		{
+			name: "parent message stopped",
+			exchange: resultExchange("message_parent", map[string]any{"message": "halfway there"}, agent.CancelledStatus,
+				"the message stopped because the user pressed escape"),
 		},
 		{
 			name: "unknown tool",

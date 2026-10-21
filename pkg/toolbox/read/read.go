@@ -15,7 +15,7 @@ import (
 	"strings"
 
 	"crdx.org/oh/internal/file"
-
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/internal/util/imageutil"
 	"crdx.org/oh/internal/util/strutil"
@@ -70,7 +70,19 @@ func New(root *file.Root, snapshots *file.Snapshots) tool.Tool {
 		IsEmbarrassinglyParallel().
 		ChangesNothing().
 		Run(func(ctx context.Context, args Args) (tool.ToolCallResult, error) {
-			return exec(ctx, root, args)
+			if ctx.Err() != nil {
+				return tool.ToolCallResult{}, stop.Error(ctx, "the read")
+			}
+			result, err := exec(ctx, root, args)
+			if err != nil {
+				return result, stop.ErrorFrom(ctx, "the read", err)
+			}
+			if ctx.Err() != nil {
+				failure := stop.Error(ctx, "the read")
+				result.Output = stop.Report(result.Output, failure)
+				return result, failure
+			}
+			return result, nil
 		})
 }
 
