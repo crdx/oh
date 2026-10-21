@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.21.0] — 2026-10-22
+
 ### Changes
 
 - Use consistent messaging across tools
