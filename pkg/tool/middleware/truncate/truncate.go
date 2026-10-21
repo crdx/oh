@@ -15,7 +15,6 @@ type Saver func(output string) (string, error)
 
 type Limit struct {
 	bytes atomic.Int64
-	save  atomic.Pointer[Saver]
 }
 
 func NewLimit(bytes int) *Limit {
@@ -32,36 +31,25 @@ func (self *Limit) Replace(bytes int) {
 	self.bytes.Store(int64(bytes))
 }
 
-func (self *Limit) SaveOverflowWith(save Saver) {
-	self.save.Store(&save)
-}
-
-func (self *Limit) getSaver() Saver {
-	if save := self.save.Load(); save != nil {
-		return *save
-	}
-
-	return nil
-}
-
-func Tools(subjects []tool.Tool, limit *Limit) []tool.Tool {
+func Tools(subjects []tool.Tool, limit *Limit, save Saver) []tool.Tool {
 	wrappedTools := make([]tool.Tool, len(subjects))
 
 	for i, subject := range subjects {
-		wrappedTools[i] = truncatedTool{Tool: subject, limit: limit}
+		wrappedTools[i] = Tool(subject, limit, save)
 	}
 
 	return wrappedTools
 }
 
-func Tool(inner tool.Tool, limit *Limit) tool.Tool {
-	return truncatedTool{Tool: inner, limit: limit}
+func Tool(inner tool.Tool, limit *Limit, save Saver) tool.Tool {
+	return truncatedTool{Tool: inner, limit: limit, save: save}
 }
 
 type truncatedTool struct {
 	tool.Tool
 
 	limit *Limit
+	save  Saver
 }
 
 func (self truncatedTool) CompatibleWith(revision string) bool {
@@ -89,7 +77,7 @@ func (self truncatedTool) truncated(call tool.ToolCall, err error) (tool.ToolCal
 		return nil, err
 	}
 
-	return truncatedToolCall{ToolCall: call, limit: self.limit.GetBytes(), save: self.limit.getSaver()}, nil
+	return truncatedToolCall{ToolCall: call, limit: self.limit.GetBytes(), save: self.save}, nil
 }
 
 type truncatedToolCall struct {
@@ -113,8 +101,8 @@ func (self truncatedToolCall) Exec(ctx context.Context) (tool.ToolCallResult, er
 	return result, err
 }
 
-func Output(output string, limit *Limit) string {
-	cappedOutput, _, _ := outputWithSizes(output, limit.GetBytes(), limit.getSaver(), tool.FileLines{})
+func Output(output string, limit *Limit, save Saver) string {
+	cappedOutput, _, _ := outputWithSizes(output, limit.GetBytes(), save, tool.FileLines{})
 	return cappedOutput
 }
 

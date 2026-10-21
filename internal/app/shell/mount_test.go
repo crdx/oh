@@ -1014,7 +1014,7 @@ func TestHomeMappingsAreReadableByFileToolsBeforeAShellRuns(t *testing.T) {
 	tmp := t.TempDir()
 	paths := Paths{Home: []string{source}}
 	mode := caps.NewMode(caps.Read)
-	if err := PrepareHomeMappings(workspace, privateHome, tmp, paths, mode.Current()); err != nil {
+	if err := PrepareHomeMappings(workspace, testPlaces(t, privateHome, tmp), paths, mode.Current()); err != nil {
 		t.Fatal(err)
 	}
 

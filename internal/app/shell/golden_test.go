@@ -145,8 +145,7 @@ func temporaryGrantGolden(t *testing.T, grantedAccess Access, isAvailable bool) 
 	policy, err := createPolicyWithSupportProbe(
 		context.Background(),
 		workspace,
-		t.TempDir(),
-		t.TempDir(),
+		testPlaces(t, t.TempDir(), t.TempDir()),
 		extraPaths,
 		optionalPaths,
 		currentCaps,
@@ -191,8 +190,7 @@ func configuredPathGolden(t *testing.T) string {
 	policy, err := createPolicyWithSupportProbe(
 		context.Background(),
 		workspace,
-		t.TempDir(),
-		t.TempDir(),
+		testPlaces(t, t.TempDir(), t.TempDir()),
 		extraPaths,
 		optionalPaths,
 		currentCaps,
@@ -508,7 +506,7 @@ func workspaceWriteGrantGolden(t *testing.T) string {
 		t.Fatal(err)
 	}
 	paths, optional := access.getPaths()
-	policy, err := createPolicyWithSupportProbe(context.Background(), workspace, t.TempDir(), t.TempDir(), paths, optional,
+	policy, err := createPolicyWithSupportProbe(context.Background(), workspace, testPlaces(t, t.TempDir(), t.TempDir()), paths, optional,
 		mode.Current(), func(context.Context) error { return nil })
 	if err != nil {
 		t.Fatal(err)

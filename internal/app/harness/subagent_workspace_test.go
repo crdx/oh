@@ -2,21 +2,26 @@ package harness
 
 import (
 	"context"
+	"io"
 	"os"
 	"path/filepath"
 	"reflect"
+	"slices"
 	"strings"
 	"testing"
 
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/shell"
+	"crdx.org/oh/internal/app/skill"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/subagents"
 	"crdx.org/oh/internal/app/toolset"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/sandbox"
+	"crdx.org/oh/pkg/agent"
+	"crdx.org/oh/pkg/provider/codex"
 	"crdx.org/oh/pkg/tool"
 )
 
@@ -146,7 +151,39 @@ func TestGoldenAChildIsToldWhatItCanDo(t *testing.T) {
 			func(struct{}) tool.CallRendering { return tool.CallRendering{} },
 		).Plain(func(context.Context, struct{}) (string, error) { return "", nil }))
 	}
-	prompt := func(isParentUnconfined bool, childCaps caps.Set, sharedPrompt string, options ...childOptions) func() string {
+	globalSkills := filepath.Join(configDirectory, "skills")
+	for directory, description := range map[string]string{
+		filepath.Join(globalSkills, "probe"):                                "Probe a child. Use when probing.",
+		filepath.Join(workspaceDirectory, ".agents", "skills", "workspace"): "Work in the workspace. Use when working.",
+	} {
+		if err := os.MkdirAll(directory, 0o700); err != nil {
+			t.Fatal(err)
+		}
+		contents := "---\nname: " + filepath.Base(directory) + "\ndescription: " + description + "\n---\n\nBody.\n"
+		if err := os.WriteFile(filepath.Join(directory, "SKILL.md"), []byte(contents), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	skills, err := discoverSkills(workspaceDirectory, []string{globalSkills}, nil, io.Discard)
+	if err != nil {
+		t.Fatal(err)
+	}
+	workspaceSkills := slices.DeleteFunc(slices.Clone(skills), func(found skill.Skill) bool { return found.Name != "workspace" })
+	plainBrief := childBrief{
+		dropsDirectory: "/state/sessions/tame-impala/subagents/tame-adder/drops",
+		notes:          agent.SystemReminders,
+	}
+	skilledBrief, workspaceSkilledBrief, codexBrief := plainBrief, plainBrief, plainBrief
+	skilledBrief.skills = skills
+	workspaceSkilledBrief.skills = workspaceSkills
+	codexBrief.notes = codex.Notes
+	prompt := func(
+		isParentUnconfined bool,
+		childCaps caps.Set,
+		sharedPrompt string,
+		brief childBrief,
+		options ...childOptions,
+	) func() string {
 		return func() string {
 			child := subagents.Child{
 				Name:         "tame-adder",
@@ -162,20 +199,25 @@ func TestGoldenAChildIsToldWhatItCanDo(t *testing.T) {
 			promptOptions.sessionName, promptOptions.isParentUnconfined = goldenSessionName, isParentUnconfined
 			drawn := childPrompt(
 				promptOptions, workspace, child,
-				"/state/farm/tame-impala/subagents/tame-adder/home", tools,
+				"/state/farm/tame-impala/subagents/tame-adder/home", tools, brief,
 			)
 			if strings.Contains(drawn, "Global rules.") || strings.Contains(drawn, "Workspace rules.") {
 				t.Errorf("a child was handed its parent's context files: %q", drawn)
 			}
+			drawn = strings.ReplaceAll(drawn, configDirectory, "/config")
 			return strings.ReplaceAll(drawn, workspaceDirectory, sessionGoldenWorkspace) + "\n"
 		}
 	}
 	compareWithGolden(t, "subagent-prompt", ".txt", map[string]func() string{
-		"confined with a shell":                     prompt(false, caps.Read|caps.Shell, ""),
-		"confined without a shell":                  prompt(false, caps.Read, ""),
-		"confined under an unconfined parent":       prompt(true, caps.Read|caps.Shell, ""),
-		"with shared instructions":                  prompt(false, caps.Read|caps.Shell, "Answer in one sentence."),
-		"with nothing configured and no known home": prompt(false, caps.Read|caps.Shell, "", childOptions{}),
+		"confined with a shell":                     prompt(false, caps.Read|caps.Shell, "", plainBrief),
+		"confined without a shell":                  prompt(false, caps.Read, "", plainBrief),
+		"confined under an unconfined parent":       prompt(true, caps.Read|caps.Shell, "", plainBrief),
+		"with shared instructions":                  prompt(false, caps.Read|caps.Shell, "Answer in one sentence.", plainBrief),
+		"with nothing configured and no known home": prompt(false, caps.Read|caps.Shell, "", plainBrief, childOptions{}),
+		"with skills and a shell":                   prompt(false, caps.Read|caps.Shell, "Use the skills.", skilledBrief),
+		"with skills and no shell":                  prompt(false, caps.Read, "Use the skills.", skilledBrief),
+		"with only workspace skills and a shell":    prompt(false, caps.Read|caps.Shell, "", workspaceSkilledBrief),
+		"on a provider with its own note format":    prompt(false, caps.Read|caps.Shell, "", codexBrief),
 	})
 }
 

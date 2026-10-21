@@ -47,12 +47,12 @@ func TestGoldenATruncatedReadNamesWhereToContinue(t *testing.T) {
 		root := testRoot(t, "notes.txt", test.content)
 		limit := truncate.NewLimit(outputLimit)
 		savedOutputs := 0
-		limit.SaveOverflowWith(func(string) (string, error) {
+		save := func(string) (string, error) {
 			savedOutputs++
 			return "/state/sessions/tame-impala/drops/output.txt", nil
-		})
+		}
 
-		subject := truncate.Tool(read.New(root, file.NewSnapshots()), limit)
+		subject := truncate.Tool(read.New(root, file.NewSnapshots()), limit, save)
 		call, err := subject.Parse(test.arguments)
 		if err != nil {
 			t.Fatal(err)

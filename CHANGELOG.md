@@ -6,6 +6,11 @@
 
 - Use consistent messaging across tools
 - Store context so the find tool can be killed
+- Cap subagent tool output at the parent's limit
+- Give skills to subagents as well
+- Don't tell the agent about user key bindings
+- Give more information to subagents
+- Prepare the shell home securely
 - Refuse binary files with read tool
 
 ## [0.20.2] — 2026-10-21

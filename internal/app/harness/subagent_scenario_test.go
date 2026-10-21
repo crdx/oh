@@ -20,9 +20,11 @@ import (
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/subagentrecord"
 	"crdx.org/oh/internal/app/subagents"
+	"crdx.org/oh/internal/sandbox"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tool"
+	"crdx.org/oh/pkg/tool/middleware/truncate"
 	"crdx.org/oh/pkg/toolbox/messageparent"
 	"crdx.org/oh/pkg/toolbox/subagent"
 )
@@ -200,6 +202,7 @@ func (self *sessionGoldenChildren) manager(
 	childrenDirectory string,
 	childTools func() []tool.Tool,
 	parentCaps func() caps.Set,
+	parentLimit *truncate.Limit,
 ) *subagents.Manager {
 	self.t.Helper()
 
@@ -219,14 +222,26 @@ func (self *sessionGoldenChildren) manager(
 				prompt += "\n\n" + child.SharedPrompt
 			}
 		}
-		tools := append(childTools(), messageparent.New(child.MessageParent))
+		state, err := buildChildState(
+			childOptions{scratchParent: self.scratch, toolOutputLimit: parentLimit}, child, openSessionGoldenWorkspace(self.t), nil,
+		)
+		if err != nil {
+			return subagents.Worker{}, err
+		}
+		scenarioTools := childTools()
+		for index, scenarioTool := range scenarioTools {
+			if scenarioTool.Name() == shellToolName && !child.Caps.Has(caps.Shell) {
+				scenarioTools[index] = state.shell(nil, sandbox.Direct())
+			}
+		}
+		tools := sessionGoldenCapped(self.t, state, append(scenarioTools, messageparent.New(child.MessageParent)))
 		worker := agent.New(
 			prompt,
 			sessionGoldenProviderFor(self.t, self.scenario, self.endpoint+sessionGoldenSubagentPath+child.Name, "", child.Name),
 			tools,
 		)
 		worker.TakeRetryWaitsAtOnce()
-		return subagents.Worker{Agent: worker, Tools: tools, SystemPrompt: prompt, Close: func() {}}, nil
+		return subagents.Worker{Agent: worker, Tools: tools, SystemPrompt: prompt, Close: state.Close}, nil
 	}
 	manager, err := subagents.New(subagents.Options{
 		Directory: childrenDirectory,

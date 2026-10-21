@@ -5345,7 +5345,7 @@ func TestAStoredCallIsShownTheWayItsToolShowsItNow(t *testing.T) {
 
 	current := truncate.Tool(buildSlowTool(
 		slowToolBuilder("read").Focuses(func(tool.CallRendering) string { return "one.go" }),
-	), truncate.NewLimit(12*1024))
+	), truncate.NewLimit(12*1024), nil)
 	testConversation := &App{
 		agent:  agent.New("", quietProvider{}, []tool.Tool{current}),
 		screen: output.New(&screenOutput),
@@ -19049,6 +19049,8 @@ const jobToolName = "job"
 
 const grepToolName = "grep"
 
+const shellToolName = "bash"
+
 const notifyToolName = "notify"
 
 const printedSessionIsImpossible = "this scenario drives the interface, which a headless session has none of\n"
@@ -19159,6 +19161,7 @@ type sessionGoldenScenario struct {
 	Tools                 []sessionGoldenTool       `toml:"tool"`
 	Subagents             []sessionGoldenSubagent   `toml:"subagent"`
 	SubagentsKilled       bool                      `toml:"subagents-killed-with-session"`
+	ToolOutputBytes       int                       `toml:"tool-output-bytes"`
 	FirstTurn             sessionGoldenTurn         `toml:"first"`
 	ResumeTurn            sessionGoldenTurn         `toml:"resume"`
 	CredentialsPath       string                    `toml:"-"`
@@ -19250,6 +19253,79 @@ type sessionGoldenPrices struct {
 	Output     float64 `toml:"output"`
 	CacheRead  float64 `toml:"cache_read"`
 	CacheWrite float64 `toml:"cache_write"`
+}
+
+const sessionGoldenDirectoryLength = 200
+
+func fixedLengthDirectory(t *testing.T) string {
+	t.Helper()
+
+	base := t.TempDir()
+	padding := sessionGoldenDirectoryLength - len(base) - 1
+	if padding < 1 {
+		t.Fatalf("the temporary directory %s is too long to pad to %d characters", base, sessionGoldenDirectoryLength)
+	}
+	directory := filepath.Join(base, strings.Repeat("d", padding))
+	if err := os.Mkdir(directory, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	return directory
+}
+
+func (self sessionGoldenScenario) outputLimit(t *testing.T) *truncate.Limit {
+	t.Helper()
+
+	if self.ToolOutputBytes > 0 {
+		return truncate.NewLimit(self.ToolOutputBytes)
+	}
+	return truncate.NewLimit(builtInConfig(t).Defaults.ToolOutput.Bytes)
+}
+
+func openSessionGoldenWorkspace(t *testing.T) *work.Space {
+	t.Helper()
+
+	workspace := work.At(t.TempDir())
+	if err := workspace.Open(); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = workspace.Close() })
+	return workspace
+}
+
+func buildSessionGoldenAgentState(
+	t *testing.T,
+	sessionDirectory string,
+	ensurePersisted func() error,
+	outputLimit *truncate.Limit,
+) *agentState {
+	t.Helper()
+
+	home, scratch := t.TempDir(), t.TempDir()
+	state, err := buildAgentState(agentOptions{
+		workspace:        openSessionGoldenWorkspace(t),
+		mode:             caps.NewMode(caps.Read),
+		roots:            openTestRoots(t, home, scratch),
+		home:             shell.ScratchRoot(home),
+		scratch:          shell.ScratchRoot(scratch),
+		sessionDirectory: sessionDirectory,
+		ensurePersisted:  ensurePersisted,
+		outputLimit:      outputLimit,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(state.Close)
+	return state
+}
+
+func sessionGoldenCapped(t *testing.T, state *agentState, tools []tool.Tool) []tool.Tool {
+	t.Helper()
+
+	capped, err := state.capped(tools, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return capped
 }
 
 func (self sessionGoldenScenario) prices() *agent.TokenPrices {
@@ -19988,7 +20064,7 @@ func newSessionGoldenShell(t *testing.T, grantedCaps caps.Set, isYolo bool) tool
 	t.Cleanup(pathAccess.Close)
 
 	return shell.New(
-		workspace, t.TempDir(), t.TempDir(), pathAccess, mode, files, isYolo,
+		workspace, openTestRoots(t, t.TempDir(), t.TempDir()), shell.Parent{}, pathAccess, mode, files, isYolo,
 		func(context.Context, string, string) error { return nil }, sandbox.Direct(),
 	)
 }
@@ -20037,7 +20113,7 @@ func newSessionGoldenRefusingShell(t *testing.T) tool.Tool {
 	t.Cleanup(pathAccess.Close)
 
 	return shell.New(
-		workspace, t.TempDir(), t.TempDir(), pathAccess, mode, files, false,
+		workspace, openTestRoots(t, t.TempDir(), t.TempDir()), shell.Parent{}, pathAccess, mode, files, false,
 		func(ctx context.Context, command string, intent string) error {
 			return approveHostNetwork(ctx, broker, permission.Setting{Rule: permission.Ask}, command, intent)
 		},
@@ -20403,7 +20479,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	}))
 	defer server.Close()
 
-	directory := t.TempDir()
+	directory := fixedLengthDirectory(t)
 	firstConditions := sessionGoldenConditions(t, scenario.Conditions)
 	firstEnvironment := firstEnvironmentOf(scenario)
 	meta := store.Meta{
@@ -20422,22 +20498,24 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	if scenario.Environment != nil || scenario.EnvironmentOnResume != nil {
 		meta.Environment = &firstEnvironment
 	}
-	log, err := store.Create(directory, meta)
+	log, err := store.CreateNamed(directory, goldenSessionName, meta)
 	if err != nil {
 		t.Fatal(err)
 	}
 	goldenPorts := newSessionGoldenPorts(goldenSessionName, scenario.Hostname)
 	toolDirectory := t.TempDir()
+	firstOutputLimit := scenario.outputLimit(t)
+	firstState := buildSessionGoldenAgentState(t, session.Dir(directory, log.Name()), log.EnsurePersisted, firstOutputLimit)
 	var firstHarness *App
 	var firstChildManager *subagents.Manager
 	if children != nil {
 		firstChildManager = children.manager(server.URL, session.ChildrenDir(directory, log.Name()), func() []tool.Tool {
 			return newSessionGoldenTools(t, scenario.Tools, goldenPorts, scenario.ScratchDirectory, t.TempDir())
-		}, func() caps.Set { return firstHarness.mode.Current() })
+		}, func() caps.Set { return firstHarness.mode.Current() }, firstOutputLimit)
 	}
-	firstTools := children.withTool(newSessionGoldenTools(
+	firstTools := sessionGoldenCapped(t, firstState, children.withTool(newSessionGoldenTools(
 		t, scenario.Tools, goldenPorts, scenario.ScratchDirectory, toolDirectory,
-	), firstChildManager, func() caps.Set { return firstHarness.mode.Current() })
+	), firstChildManager, func() caps.Set { return firstHarness.mode.Current() }))
 	meta.ToolDefinitions = store.FreezeTools(firstTools)
 	meta.Tools = toolset.Names(firstTools)
 	if err := log.SetMeta(meta); err != nil {
@@ -20548,17 +20626,21 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	if err != nil {
 		t.Fatal(err)
 	}
+	resumedOutputLimit := scenario.outputLimit(t)
+	resumedState := buildSessionGoldenAgentState(
+		t, session.Dir(directory, sessionName), func() error { return nil }, resumedOutputLimit,
+	)
 	var resumedHarness *App
 	var resumedChildManager *subagents.Manager
 	if children != nil {
 		resumedChildManager = children.manager(server.URL, session.ChildrenDir(directory, sessionName), func() []tool.Tool {
 			return newSessionGoldenTools(t, scenario.Tools, goldenPorts, scenario.ScratchDirectory, t.TempDir(), true)
-		}, func() caps.Set { return resumedHarness.mode.Current() })
+		}, func() caps.Set { return resumedHarness.mode.Current() }, resumedOutputLimit)
 		defer resumedChildManager.Close()
 	}
-	currentTools := children.withTool(newSessionGoldenTools(
+	currentTools := sessionGoldenCapped(t, resumedState, children.withTool(newSessionGoldenTools(
 		t, scenario.Tools, goldenPorts, scenario.ScratchDirectory, toolDirectory, true,
-	), resumedChildManager, func() caps.Set { return resumedHarness.mode.Current() })
+	), resumedChildManager, func() caps.Set { return resumedHarness.mode.Current() }))
 	restoredTools := toolset.Restore(currentTools, store.RestoreTools(storedSession.Meta.ToolDefinitions), nil)
 	availabilityRestoration, err := toolset.RestoreAvailability(
 		storedSession.Events,
@@ -20731,6 +20813,7 @@ func runSessionGoldenScenario(t *testing.T, scenario sessionGoldenScenario) map[
 	}
 
 	for extension, drawn := range outputs {
+		drawn = strings.ReplaceAll(drawn, directory, "/state/sessions")
 		drawn = strings.ReplaceAll(drawn, sessionName, "tame-impala")
 		if scenario.ScratchDirectory != "" {
 			drawn = strings.ReplaceAll(drawn, scenario.ScratchDirectory, "/state/farm/tame-impala")
@@ -24105,6 +24188,7 @@ func TestAHostCommandsOutputIsCappedTheWayAToolCallIs(t *testing.T) {
 	limitedOutput := truncate.Output(
 		strings.Repeat("every line of a very talkative command\n", 200),
 		truncate.NewLimit(1024),
+		nil,
 	)
 
 	notice, isSaid := hostcommand.Notice(hostcommand.RanEvent(hostcommand.Result{

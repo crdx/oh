@@ -1,0 +1,80 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+tool-output-bytes = 1024
+
+[[tool]]
+name = "dump"
+outputs = ["""line 01 of the dump, long enough that forty of them pass the cap\nline 02 of the dump, long enough that forty of them pass the cap\nline 03 of the dump, long enough that forty of them pass the cap\nline 04 of the dump, long enough that forty of them pass the cap\nline 05 of the dump, long enough that forty of them pass the cap\nline 06 of the dump, long enough that forty of them pass the cap\nline 07 of the dump, long enough that forty of them pass the cap\nline 08 of the dump, long enough that forty of them pass the cap\nline 09 of the dump, long enough that forty of them pass the cap\nline 10 of the dump, long enough that forty of them pass the cap\nline 11 of the dump, long enough that forty of them pass the cap\nline 12 of the dump, long enough that forty of them pass the cap\nline 13 of the dump, long enough that forty of them pass the cap\nline 14 of the dump, long enough that forty of them pass the cap\nline 15 of the dump, long enough that forty of them pass the cap\nline 16 of the dump, long enough that forty of them pass the cap\nline 17 of the dump, long enough that forty of them pass the cap\nline 18 of the dump, long enough that forty of them pass the cap\nline 19 of the dump, long enough that forty of them pass the cap\nline 20 of the dump, long enough that forty of them pass the cap\nline 21 of the dump, long enough that forty of them pass the cap\nline 22 of the dump, long enough that forty of them pass the cap\nline 23 of the dump, long enough that forty of them pass the cap\nline 24 of the dump, long enough that forty of them pass the cap\nline 25 of the dump, long enough that forty of them pass the cap\nline 26 of the dump, long enough that forty of them pass the cap\nline 27 of the dump, long enough that forty of them pass the cap\nline 28 of the dump, long enough that forty of them pass the cap\nline 29 of the dump, long enough that forty of them pass the cap\nline 30 of the dump, long enough that forty of them pass the cap\nline 31 of the dump, long enough that forty of them pass the cap\nline 32 of the dump, long enough that forty of them pass the cap\nline 33 of the dump, long enough that forty of them pass the cap\nline 34 of the dump, long enough that forty of them pass the cap\nline 35 of the dump, long enough that forty of them pass the cap\nline 36 of the dump, long enough that forty of them pass the cap\nline 37 of the dump, long enough that forty of them pass the cap\nline 38 of the dump, long enough that forty of them pass the cap\nline 39 of the dump, long enough that forty of them pass the cap\nline 40 of the dump, long enough that forty of them pass the cap\n"""]
+
+[[subagent]]
+name = "tame-adder"
+
+[[subagent.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-41","type":"function_call","call_id":"toolu_21","name":"dump","arguments":"{}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+[[subagent.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-42","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"The dump was cut short and the rest saved."}''',
+    '''{"type":"response.output_text.done","text":"The dump was cut short and the rest saved."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"The dump was cut short and the rest saved."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-42","type":"message","role":"assistant","content":[{"type":"output_text","text":"The dump was cut short and the rest saved."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+[first]
+prompt = "dump the log here and in a subagent"
+settle-subagents-after-turn = true
+subagent-debounce-passes = true
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-43","type":"function_call","call_id":"toolu_1","name":"dump","arguments":"{}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-44","type":"function_call","call_id":"toolu_2","name":"subagent","arguments":"{\"action\":\"start\",\"subagents\":[{\"model\":\"codex/gpt-5.6-sol@medium\",\"prompt\":\"Dump the log\",\"intent\":\"Dumping the whole log\"}]}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-45","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"A subagent is dumping it too."}''',
+    '''{"type":"response.output_text.done","text":"A subagent is dumping it too."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"A subagent is dumping it too."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-45","type":"message","role":"assistant","content":[{"type":"output_text","text":"A subagent is dumping it too."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-46","type":"function_call","call_id":"toolu_90","name":"subagent","arguments":"{\"action\":\"output\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-47","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Both dumps were cut short and saved."}''',
+    '''{"type":"response.output_text.done","text":"Both dumps were cut short and saved."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Both dumps were cut short and saved."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-47","type":"message","role":"assistant","content":[{"type":"output_text","text":"Both dumps were cut short and saved."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
+[resume]
+prompt = "carry on"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_item.added","item":{"id":"message-48","type":"message","role":"assistant","content":[]}}''',
+    '''{"type":"response.content_part.added","part":{"type":"output_text","text":""}}''',
+    '''{"type":"response.output_text.delta","delta":"Carrying on."}''',
+    '''{"type":"response.output_text.done","text":"Carrying on."}''',
+    '''{"type":"response.content_part.done","part":{"type":"output_text","text":"Carrying on."}}''',
+    '''{"type":"response.output_item.done","item":{"id":"message-48","type":"message","role":"assistant","content":[{"type":"output_text","text":"Carrying on."}]}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]

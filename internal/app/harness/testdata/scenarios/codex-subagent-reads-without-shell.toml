@@ -3,8 +3,18 @@ model = "gpt-5.6-sol"
 effort = "medium"
 toggle-before-first = "x"
 
+[[tool]]
+name = "bash"
+shell-withheld = true
+
 [[subagent]]
 name = "tame-adder"
+
+[[subagent.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"id":"call-item-21","type":"function_call","call_id":"toolu_21","name":"bash","arguments":"{\"command\":\"ls\",\"intent\":\"Listing the log files\"}"}}''',
+    '''{"type":"response.completed","response":{"status":"completed"}}''',
+]
 
 [[subagent.response]]
 event = [

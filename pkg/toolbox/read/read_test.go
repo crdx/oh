@@ -158,7 +158,7 @@ func TestAReadCutShortContinuesFromTheOffsetItNames(t *testing.T) {
 		fmt.Fprintf(&whole, "line %d\n", number)
 	}
 	root := testRoot(t, "long.txt", whole.String())
-	subject := truncate.Tool(read.New(root, file.NewSnapshots()), truncate.NewLimit(12*1024))
+	subject := truncate.Tool(read.New(root, file.NewSnapshots()), truncate.NewLimit(12*1024), nil)
 
 	var pieces []string
 	arguments := `{"path":"long.txt"}`

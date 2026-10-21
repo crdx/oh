@@ -84,7 +84,7 @@ func isBeneathAnyPath(path string, roots []string) bool {
 	return false
 }
 
-func furnish(homeDir string, sources []string, writableRoots []string) ([]string, error) {
+func furnish(roots Roots, sources []string, writableRoots []string) ([]string, error) {
 	grantedPaths := make([]string, 0, len(sources))
 
 	for _, source := range sources {
@@ -93,21 +93,21 @@ func furnish(homeDir string, sources []string, writableRoots []string) ([]string
 			continue
 		}
 
-		target := filepath.Join(homeDir, relative)
-		homeSafetyRoots := append(slices.Clone(writableRoots), homeDir)
+		target := filepath.Join(roots.HomeDirectory, relative)
+		homeSafetyRoots := append(slices.Clone(writableRoots), roots.HomeDirectory)
 		if link, redirects := sandbox.FirstSymlinkBeneath(filepath.Dir(target), homeSafetyRoots); redirects {
 			return nil, fmt.Errorf("the shell home at %s passes through the symbolic link %s", target, link)
 		}
 
-		if err := os.MkdirAll(filepath.Dir(target), 0o700); err != nil {
+		if err := roots.Home.MkdirAll(filepath.Dir(relative), 0o700); err != nil {
 			return nil, err
 		}
 
-		if err := os.Remove(target); err != nil && !errors.Is(err, fs.ErrNotExist) {
+		if err := roots.Home.Remove(relative); err != nil && !errors.Is(err, fs.ErrNotExist) {
 			return nil, err
 		}
 
-		if err := os.Symlink(source, target); err != nil {
+		if err := roots.Home.Symlink(source, relative); err != nil {
 			return nil, err
 		}
 
@@ -119,21 +119,20 @@ func furnish(homeDir string, sources []string, writableRoots []string) ([]string
 
 func PrepareHomeMappings(
 	workspaceDir string,
-	homeDir string,
-	tmpDir string,
+	roots Roots,
 	paths Paths,
 	currentCaps caps.Set,
 ) error {
-	cacheDir := filepath.Join(homeDir, ".cache")
-	writablePaths := allWritablePaths(workspaceDir, homeDir, paths.Write, currentCaps)
-	writableRoots := slices.Concat(writablePaths, []string{cacheDir, tmpDir})
-	if link, redirects := sandbox.FirstSymlinkBeneath(cacheDir, append(slices.Clone(writableRoots), homeDir)); redirects {
+	cacheDir := HomeCacheDirectory(roots.HomeDirectory)
+	writablePaths := allWritablePaths(workspaceDir, roots.HomeDirectory, paths.Write, currentCaps)
+	writableRoots := slices.Concat(writablePaths, []string{cacheDir, roots.ScratchDirectory})
+	if link, redirects := sandbox.FirstSymlinkBeneath(cacheDir, append(slices.Clone(writableRoots), roots.HomeDirectory)); redirects {
 		return fmt.Errorf("the shell cache at %s passes through the symbolic link %s", cacheDir, link)
 	}
-	if err := os.MkdirAll(cacheDir, 0o700); err != nil {
+	if err := roots.Home.MkdirAll(homeCacheName, 0o700); err != nil {
 		return fmt.Errorf("could not prepare the shared cache: %w", err)
 	}
-	if _, err := furnish(homeDir, paths.Home, writableRoots); err != nil {
+	if _, err := furnish(roots, paths.Home, writableRoots); err != nil {
 		return fmt.Errorf("could not furnish the shell home: %w", err)
 	}
 	return nil
@@ -141,12 +140,12 @@ func PrepareHomeMappings(
 
 type supportProbe func(context.Context) error
 
-func prepareSessionCache(tmpDir string, relativePath string, description string, writableRoots []string) error {
-	hostPath := filepath.Join(tmpDir, relativePath)
+func prepareSessionCache(roots Roots, relativePath string, description string, writableRoots []string) error {
+	hostPath := filepath.Join(roots.ScratchDirectory, relativePath)
 	if link, redirects := sandbox.FirstSymlinkBeneath(hostPath, writableRoots); redirects {
 		return fmt.Errorf("the shell %s cache at %s passes through the symbolic link %s", description, hostPath, link)
 	}
-	if err := os.MkdirAll(hostPath, 0o700); err != nil {
+	if err := roots.Scratch.MkdirAll(relativePath, 0o700); err != nil {
 		return fmt.Errorf("could not prepare the shell %s cache: %w", description, err)
 	}
 	return nil
@@ -176,8 +175,7 @@ func omitUnavailableOptionalPaths(paths Paths, optionalPaths []string) (Paths, [
 func createPolicyWithOptionalPaths(
 	ctx context.Context,
 	workspaceDir string,
-	homeDir string,
-	tmpDir string,
+	roots Roots,
 	extraPaths Paths,
 	optionalPaths []string,
 	currentCaps caps.Set,
@@ -185,8 +183,7 @@ func createPolicyWithOptionalPaths(
 	return createPolicyWithSupportProbe(
 		ctx,
 		workspaceDir,
-		homeDir,
-		tmpDir,
+		roots,
 		extraPaths,
 		optionalPaths,
 		currentCaps,
@@ -197,36 +194,36 @@ func createPolicyWithOptionalPaths(
 func createPolicyWithSupportProbe(
 	ctx context.Context,
 	workspaceDir string,
-	homeDir string,
-	tmpDir string,
+	roots Roots,
 	extraPaths Paths,
 	optionalPaths []string,
 	currentCaps caps.Set,
 	supportedProbe supportProbe,
 ) (sandbox.Policy, error) {
+	homeDir, tmpDir := roots.HomeDirectory, roots.ScratchDirectory
 	extraPaths, optionalPaths = omitUnavailableOptionalPaths(extraPaths, optionalPaths)
-	cacheDir := filepath.Join(homeDir, ".cache")
+	cacheDir := HomeCacheDirectory(homeDir)
 	writablePaths := allWritablePaths(workspaceDir, homeDir, extraPaths.Write, currentCaps)
 	writableRoots := slices.Concat(writablePaths, []string{cacheDir, tmpDir})
 
 	if link, redirects := sandbox.FirstSymlinkBeneath(cacheDir, append(slices.Clone(writableRoots), homeDir)); redirects {
 		return sandbox.Policy{}, fmt.Errorf("the shell cache at %s passes through the symbolic link %s", cacheDir, link)
 	}
-	if err := os.MkdirAll(cacheDir, 0o700); err != nil {
+	if err := roots.Home.MkdirAll(homeCacheName, 0o700); err != nil {
 		return sandbox.Policy{}, fmt.Errorf("could not prepare the shell cache: %w", err)
 	}
 
 	buildCachePath := filepath.Join(".cache", goBuildCacheDir)
-	if err := prepareSessionCache(tmpDir, buildCachePath, "build", writableRoots); err != nil {
+	if err := prepareSessionCache(roots, buildCachePath, "build", writableRoots); err != nil {
 		return sandbox.Policy{}, err
 	}
 
 	lintCachePath := filepath.Join(".cache", goLintCacheDir)
-	if err := prepareSessionCache(tmpDir, lintCachePath, "lint", writableRoots); err != nil {
+	if err := prepareSessionCache(roots, lintCachePath, "lint", writableRoots); err != nil {
 		return sandbox.Policy{}, err
 	}
 
-	mappedPaths, err := furnish(homeDir, extraPaths.Home, writableRoots)
+	mappedPaths, err := furnish(roots, extraPaths.Home, writableRoots)
 	if err != nil {
 		return sandbox.Policy{}, fmt.Errorf("could not furnish the shell home: %w", err)
 	}
@@ -415,6 +412,12 @@ var (
 	ErrNetworkWithheld = errors.New(
 		"host network unavailable; ctrl+x n grants it",
 	)
+	ErrSubagentWithheld = errors.New(
+		"shell access unavailable to a subagent",
+	)
+	ErrSubagentNetworkWithheld = errors.New(
+		"host network unavailable to a subagent",
+	)
 )
 
 func RequireSandbox(ctx context.Context) error {
@@ -458,23 +461,26 @@ func YoloPolicy(homeDir string, tmpDir string) sandbox.Policy {
 	}
 }
 
-func New(
-	workspaceDir string,
-	homeDir string,
-	tmpDir string,
-	pathAccess *PathAccess,
-	mode *caps.Mode,
-	files *file.Root,
-	isYolo bool,
-	approveNetwork func(ctx context.Context, command string, intent string) error,
-	runner sandbox.Runner,
-) tool.Tool {
-	return newShell(workspaceDir, homeDir, tmpDir, Parent{}, pathAccess, mode, files, isYolo, approveNetwork, runner)
-}
-
 type Parent struct {
 	Scratch  string
 	Writable func() []string
+}
+
+func (self Parent) isLinked() bool {
+	return self.Scratch != ""
+}
+
+func (self Parent) withheld(err error) error {
+	if !self.isLinked() {
+		return err
+	}
+	if errors.Is(err, ErrWithheld) {
+		return ErrSubagentWithheld
+	}
+	if errors.Is(err, ErrNetworkWithheld) {
+		return ErrSubagentNetworkWithheld
+	}
+	return err
 }
 
 func (self Parent) confine(policy sandbox.Policy) sandbox.Policy {
@@ -485,25 +491,9 @@ func (self Parent) confine(policy sandbox.Policy) sandbox.Policy {
 	return policy
 }
 
-func NewForSubagent(
+func New(
 	workspaceDir string,
-	homeDir string,
-	tmpDir string,
-	parent Parent,
-	pathAccess *PathAccess,
-	mode *caps.Mode,
-	files *file.Root,
-	isYolo bool,
-	approveNetwork func(ctx context.Context, command string, intent string) error,
-	runner sandbox.Runner,
-) tool.Tool {
-	return newShell(workspaceDir, homeDir, tmpDir, parent, pathAccess, mode, files, isYolo, approveNetwork, runner)
-}
-
-func newShell(
-	workspaceDir string,
-	homeDir string,
-	tmpDir string,
+	roots Roots,
 	parent Parent,
 	pathAccess *PathAccess,
 	mode *caps.Mode,
@@ -513,15 +503,15 @@ func newShell(
 	runner sandbox.Runner,
 ) tool.Tool {
 	fresh := func(ctx context.Context) (sandbox.Policy, error) {
-		policy, err := freshPolicy(ctx, workspaceDir, homeDir, tmpDir, pathAccess, mode, isYolo)
+		policy, err := freshPolicy(ctx, workspaceDir, roots, pathAccess, mode, isYolo)
 		if err == nil && !isYolo {
 			policy = parent.confine(policy)
 		}
-		return policy, err
+		return policy, parent.withheld(err)
 	}
 	networkApproval := func(ctx context.Context, command string, intent string) error {
-		if !mode.Current().Has(caps.Network) {
-			return ErrNetworkWithheld
+		if !mode.Current().Has(caps.Network) || approveNetwork == nil {
+			return parent.withheld(ErrNetworkWithheld)
 		}
 
 		return approveNetwork(ctx, command, intent)
@@ -533,8 +523,7 @@ func newShell(
 func NewJob(
 	manager *jobs.Manager,
 	workspaceDir string,
-	homeDir string,
-	tmpDir string,
+	roots Roots,
 	pathAccess *PathAccess,
 	mode *caps.Mode,
 	files *file.Root,
@@ -542,7 +531,7 @@ func NewJob(
 	ports forward.Ports,
 ) tool.Tool {
 	fresh := func(ctx context.Context) (sandbox.Policy, error) {
-		policy, err := freshPolicy(ctx, workspaceDir, homeDir, tmpDir, pathAccess, mode, isYolo)
+		policy, err := freshPolicy(ctx, workspaceDir, roots, pathAccess, mode, isYolo)
 		if err != nil {
 			return policy, err
 		}
@@ -611,8 +600,7 @@ func StoppedByPath(path string) func(sandbox.Policy) bool {
 func freshPolicy(
 	ctx context.Context,
 	workspaceDir string,
-	homeDir string,
-	tmpDir string,
+	roots Roots,
 	pathAccess *PathAccess,
 	mode *caps.Mode,
 	isYolo bool,
@@ -624,15 +612,14 @@ func freshPolicy(
 	}
 
 	if isYolo {
-		return YoloPolicy(homeDir, tmpDir), nil
+		return YoloPolicy(roots.HomeDirectory, roots.ScratchDirectory), nil
 	}
 
 	extraPaths, optionalPaths := pathAccess.getPaths()
 	policy, err := createPolicyWithOptionalPaths(
 		ctx,
 		workspaceDir,
-		homeDir,
-		tmpDir,
+		roots,
 		extraPaths,
 		optionalPaths,
 		currentCaps,

@@ -1,0 +1,62 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `claude-opus-5`
+- **Effort:** `medium`
+- **Provider:** `anthropic`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwsngl · +0s
+
+## User · +0s
+
+dump the log here and in a subagent
+
+## Tool calls · +0s
+
+```
+dump: dump [ok, 17 lines, 1.24K, toolu_1]
+subagent start: subagent · anthropic/claude-opus-5@medium [ok, 1 line, 41B, toolu_2]
+```
+
+## Assistant · +0s
+
+A subagent is dumping it too.
+
+## Subagent started · tame-adder · +0s
+
+Dump the log
+
+Transcript: `subagents/tame-adder/chat.md`
+
+## Subagent finished · tame-adder · done · +0s
+
+The dump was cut short and the rest saved.
+
+## Subagent reports · +0s
+
+```
+Subagent tame-adder finished:
+
+tame-adder done (unverified: check what matters before relying on it; its /tmp is your /tmp/subagents/tame-adder, so read any /tmp path it reports as beneath that): The dump was cut short and the rest saved.
+```
+
+## Tool calls · +0s
+
+```
+subagent output: all [ok, 4 lines, 371B, toolu_90]
+```
+
+## Assistant · +0s
+
+Both dumps were cut short and saved.
+
+## User · +0s
+
+carry on
+
+## Assistant · +0s
+
+Carrying on.

@@ -69,13 +69,23 @@ func createTestPolicyWithOptionalPaths(
 	return createPolicyWithSupportProbe(
 		t.Context(),
 		workspaceDir,
-		homeDir,
-		tmpDir,
+		testPlaces(t, homeDir, tmpDir),
 		extraPaths,
 		optionalPaths,
 		currentCaps,
 		func(context.Context) error { return nil },
 	)
+}
+
+func testPlaces(t *testing.T, homeDirectory string, scratchDirectory string) Roots {
+	t.Helper()
+
+	places, err := OpenRoots(homeDirectory, scratchDirectory)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = places.Close() })
+	return places
 }
 
 func newTestPathAccess(t *testing.T, files *file.Root, mode *caps.Mode) *PathAccess {
@@ -131,7 +141,7 @@ func TestAWithheldShellIsStillOfferedAndTurnsCommandsAway(t *testing.T) {
 	files := file.New(workspaceRoot, func(string) error { return file.ErrReadOnly })
 	mode := caps.NewMode(caps.Read)
 	pathAccess := newTestPathAccess(t, files, mode)
-	shell := New(t.TempDir(), t.TempDir(), t.TempDir(), pathAccess, mode, files, false, allowNetworking, sandbox.Direct())
+	shell := New(t.TempDir(), testPlaces(t, t.TempDir(), t.TempDir()), Parent{}, pathAccess, mode, files, false, allowNetworking, sandbox.Direct())
 
 	if shell.Name() != "bash" {
 		t.Errorf("expected the shell to be offered as bash, got %q", shell.Name())
@@ -144,6 +154,35 @@ func TestAWithheldShellIsStillOfferedAndTurnsCommandsAway(t *testing.T) {
 
 	if _, err := call.Exec(t.Context()); !errors.Is(err, ErrWithheld) {
 		t.Errorf("expected the command to be turned away, got %v", err)
+	}
+}
+
+func TestASubagentsShellRefusesWithoutPointingAtKeysItCannotPress(t *testing.T) {
+	workspaceRoot, err := os.OpenRoot(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = workspaceRoot.Close() }()
+
+	files := file.New(workspaceRoot, func(string) error { return file.ErrReadOnly })
+	linked := Parent{Scratch: t.TempDir()}
+	for _, test := range []struct {
+		granted   caps.Set
+		arguments string
+		want      error
+	}{
+		{caps.Read, `{"intent":"try it","command":"true"}`, ErrSubagentWithheld},
+		{caps.Read | caps.Shell, `{"intent":"try it","command":"true","network":"host"}`, ErrSubagentNetworkWithheld},
+	} {
+		mode := caps.NewMode(test.granted)
+		shell := New(t.TempDir(), testPlaces(t, t.TempDir(), t.TempDir()), linked, newTestPathAccess(t, files, mode), mode, files, false, nil, sandbox.Direct())
+		call, err := shell.Parse(test.arguments)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if _, err := call.Exec(t.Context()); !errors.Is(err, test.want) || strings.Contains(err.Error(), "ctrl+x") {
+			t.Errorf("%s under %q gave %v, want %v", test.arguments, test.granted.Flags(), err, test.want)
+		}
 	}
 }
 
@@ -161,8 +200,8 @@ func TestHostNetworkingRequiresItsCapability(t *testing.T) {
 	approvalCount := 0
 	shell := New(
 		t.TempDir(),
-		t.TempDir(),
-		t.TempDir(),
+		testPlaces(t, t.TempDir(), t.TempDir()),
+		Parent{},
 		pathAccess,
 		mode,
 		files,
@@ -372,8 +411,7 @@ func TestAnUnsupportedWritablePolicyIsRefusedRatherThanQuietlyMadeReadOnly(t *te
 	policy, err := createPolicyWithSupportProbe(
 		t.Context(),
 		workspace,
-		homeDir,
-		t.TempDir(),
+		testPlaces(t, homeDir, t.TempDir()),
 		Paths{},
 		nil,
 		caps.Write,
@@ -393,8 +431,7 @@ func TestAnUnsupportedReadOnlyPolicyIsRejected(t *testing.T) {
 	_, err := createPolicyWithSupportProbe(
 		t.Context(),
 		t.TempDir(),
-		t.TempDir(),
-		t.TempDir(),
+		testPlaces(t, t.TempDir(), t.TempDir()),
 		Paths{},
 		nil,
 		0,
@@ -1023,7 +1060,7 @@ func TestAMappedPathIsReadableAtTheSamePlaceInTheShellHome(t *testing.T) {
 	source := userHomeFile(t, filepath.Join(".config", "git", "ignore"), "*.tmp\n")
 	shellHome := t.TempDir()
 
-	granted, err := furnish(shellHome, []string{source}, nil)
+	granted, err := furnish(testPlaces(t, shellHome, t.TempDir()), []string{source}, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1041,10 +1078,62 @@ func TestAMappedPathIsReadableAtTheSamePlaceInTheShellHome(t *testing.T) {
 	}
 }
 
+func TestAShellHomeSwappedForALinkAfterItWasOpenedIsNeverWrittenThrough(t *testing.T) {
+	source := userHomeFile(t, filepath.Join(".config", "git", "ignore"), "*.tmp\n")
+	base := t.TempDir()
+	shellHome := filepath.Join(base, "home")
+	shellScratch := filepath.Join(base, "scratch")
+	for _, directory := range []string{shellHome, shellScratch} {
+		if err := os.Mkdir(directory, 0o700); err != nil {
+			t.Fatal(err)
+		}
+	}
+	places := testPlaces(t, shellHome, shellScratch)
+
+	outside := t.TempDir()
+	precious := filepath.Join(outside, ".config", "git", "ignore")
+	if err := os.MkdirAll(filepath.Dir(precious), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(precious, []byte("precious\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	for _, swapped := range []string{shellHome, shellScratch} {
+		if err := os.Rename(swapped, swapped+".opened"); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.Symlink(outside, swapped); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	if err := PrepareHomeMappings(t.TempDir(), places, Paths{Home: []string{source}}, caps.Read); err != nil {
+		t.Fatal(err)
+	}
+	if err := prepareSessionCache(places, filepath.Join(".cache", goBuildCacheDir), "build", nil); err != nil {
+		t.Fatal(err)
+	}
+
+	content, err := os.ReadFile(precious) //nolint:gosec // a file this test made
+	if err != nil || string(content) != "precious\n" {
+		t.Errorf("a file outside the shell home became %q, %v", content, err)
+	}
+	if _, err := os.Lstat(filepath.Join(outside, ".cache")); !errors.Is(err, fs.ErrNotExist) {
+		t.Errorf("a cache was created outside the shell home and scratch: %v", err)
+	}
+	link, err := os.Readlink(filepath.Join(shellHome+".opened", ".config", "git", "ignore"))
+	if err != nil || link != source {
+		t.Errorf("the opened shell home links %q, %v; want %q", link, err, source)
+	}
+	if _, err := os.Stat(filepath.Join(shellScratch+".opened", ".cache", goBuildCacheDir)); err != nil {
+		t.Errorf("the opened scratch has no build cache: %v", err)
+	}
+}
+
 func TestNothingMappedLeavesTheShellHomeAlone(t *testing.T) {
 	shellHome := t.TempDir()
 
-	granted, err := furnish(shellHome, nil, nil)
+	granted, err := furnish(testPlaces(t, shellHome, t.TempDir()), nil, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1070,7 +1159,7 @@ func TestAStaleLinkInTheShellHomeIsReplaced(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if _, err := furnish(shellHome, []string{source}, nil); err != nil {
+	if _, err := furnish(testPlaces(t, shellHome, t.TempDir()), []string{source}, nil); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1182,7 +1271,7 @@ func TestASymlinkedCacheIsReportedToWhoeverAskedForTheCommand(t *testing.T) {
 	files := file.New(workspaceRoot, func(string) error { return file.ErrReadOnly })
 	mode := caps.NewMode(caps.Write | caps.Shell)
 	pathAccess := newTestPathAccess(t, files, mode)
-	shell := New(workspace, home, t.TempDir(), pathAccess, mode, files, false, allowNetworking, sandbox.Direct())
+	shell := New(workspace, testPlaces(t, home, t.TempDir()), Parent{}, pathAccess, mode, files, false, allowNetworking, sandbox.Direct())
 
 	call, err := shell.Parse(`{"intent":"try it","command":"echo one"}`)
 	if err != nil {
@@ -1210,7 +1299,7 @@ func TestAWaivedSandboxStillWithholdsAnUngrantedShell(t *testing.T) {
 
 	files := file.New(workspaceRoot, func(string) error { return file.ErrReadOnly })
 	mode := caps.NewMode(caps.Read)
-	shell := New(t.TempDir(), t.TempDir(), t.TempDir(), newTestPathAccess(t, files, mode), mode, files, true, allowNetworking, sandbox.Direct())
+	shell := New(t.TempDir(), testPlaces(t, t.TempDir(), t.TempDir()), Parent{}, newTestPathAccess(t, files, mode), mode, files, true, allowNetworking, sandbox.Direct())
 
 	call, err := shell.Parse(`{"intent":"try it","command":"echo one"}`)
 	if err != nil {
@@ -1234,7 +1323,7 @@ func TestAWaivedSandboxRunsACommandWhereTheSandboxCouldNot(t *testing.T) {
 
 	files := file.New(workspaceRoot, func(string) error { return file.ErrReadOnly })
 	mode := caps.NewMode(caps.Read | caps.Shell)
-	shell := New(workspace, home, tmp, newTestPathAccess(t, files, mode), mode, files, true, allowNetworking, sandbox.Direct())
+	shell := New(workspace, testPlaces(t, home, tmp), Parent{}, newTestPathAccess(t, files, mode), mode, files, true, allowNetworking, sandbox.Direct())
 
 	call, err := shell.Parse(`{"intent":"try it","command":"printf %s \"$HOME:$TMPDIR\""}`)
 	if err != nil {
@@ -1354,7 +1443,7 @@ func TestPreparingHomeMappingsRefusesASymlinkedCache(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err := PrepareHomeMappings(t.TempDir(), home, t.TempDir(), Paths{}, caps.Read)
+	err := PrepareHomeMappings(t.TempDir(), testPlaces(t, home, t.TempDir()), Paths{}, caps.Read)
 	if err == nil || !strings.Contains(err.Error(), planted) {
 		t.Errorf("got %v, want the planted cache link named", err)
 	}
@@ -1399,7 +1488,7 @@ func TestPreparingHomeMappingsRefusesAStaleSymlinkAtEveryWriteState(t *testing.T
 			}
 
 			err := PrepareHomeMappings(
-				t.TempDir(), home, t.TempDir(), Paths{Home: []string{source}}, currentCaps,
+				t.TempDir(), testPlaces(t, home, t.TempDir()), Paths{Home: []string{source}}, currentCaps,
 			)
 			if err == nil || !strings.Contains(err.Error(), planted) {
 				t.Errorf("got %v, want the planted home link named", err)

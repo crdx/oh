@@ -66,6 +66,10 @@ func EnabledDirectories(skills []Skill) []string {
 	return directories
 }
 
+func HasGlobal(skills []Skill) bool {
+	return len(GlobalDirectories(skills)) > 0
+}
+
 func GlobalDirectories(skills []Skill) []string {
 	var directories []string
 	for _, foundSkill := range skills {

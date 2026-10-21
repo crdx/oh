@@ -4,33 +4,30 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"math/rand/v2"
 	"os"
 	"path/filepath"
 	"slices"
-	"strings"
-	"time"
 
 	"crdx.org/oh/internal/app/backend"
 	"crdx.org/oh/internal/app/caps"
 	"crdx.org/oh/internal/app/config"
 	"crdx.org/oh/internal/app/location"
 	"crdx.org/oh/internal/app/model"
-	"crdx.org/oh/internal/app/pictures"
+	"crdx.org/oh/internal/app/prompt"
 	"crdx.org/oh/internal/app/shell"
+	"crdx.org/oh/internal/app/skill"
 	"crdx.org/oh/internal/app/store"
 	"crdx.org/oh/internal/app/subagents"
 	"crdx.org/oh/internal/app/toolset"
-	"crdx.org/oh/internal/app/usage"
 	"crdx.org/oh/internal/app/work"
 	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/sandbox"
-	"crdx.org/oh/internal/util"
-	"crdx.org/oh/internal/util/pathutil"
 	"crdx.org/oh/pkg/agent"
 	"crdx.org/oh/pkg/session"
 	"crdx.org/oh/pkg/tool"
-	"crdx.org/oh/pkg/toolbox"
+	"crdx.org/oh/pkg/tool/middleware/truncate"
 	"crdx.org/oh/pkg/toolbox/messageparent"
 )
 
@@ -50,6 +47,14 @@ type childOptions struct {
 	parentWritable     func() []string
 	parentCaps         func() caps.Set
 	userHome           string
+	toolOutputLimit    *truncate.Limit
+	skillDirectories   []string
+}
+
+type childBrief struct {
+	skills         []skill.Skill
+	dropsDirectory string
+	notes          agent.NoteFormat
 }
 
 func userHome() string {
@@ -132,125 +137,144 @@ func childRotationOf(
 
 func newChildFactory(options childOptions) subagents.Factory {
 	return func(ctx context.Context, child subagents.Child) (subagents.Worker, error) {
-		home := filepath.Join(child.Scratch, subagents.HomeName)
-		if err := child.ScratchRoot.Mkdir(subagents.HomeName, 0o700); err != nil && !errors.Is(err, os.ErrExist) {
-			return subagents.Worker{}, err
-		}
-		mode := caps.NewMode(child.Caps)
 		workspace := work.At(child.Workspace)
 		if err := workspace.Open(); err != nil {
 			return subagents.Worker{}, err
 		}
-		files := file.New(workspace.GetRoot(), caps.RefuseWrite(mode))
-		paths := childPaths(options.settings.Sandbox)
-		access, err := shell.NewPathAccessForMode(files, mode, paths, false)
+		skills, err := discoverSkills(workspace.GetDir(), options.skillDirectories, options.settings.Skills.Exclude, io.Discard)
 		if err != nil {
 			_ = workspace.Close()
 			return subagents.Worker{}, err
 		}
-		homeDirectoryRoot, err := child.ScratchRoot.OpenRoot(subagents.HomeName)
+		state, err := buildChildState(options, child, workspace, skills)
 		if err != nil {
-			access.Close()
 			_ = workspace.Close()
 			return subagents.Worker{}, err
 		}
-		files.Mount(home, file.New(homeDirectoryRoot, func(string) error { return nil }))
-		files.MountVirtual(sandbox.TmpDir, file.New(child.ScratchRoot, func(string) error { return nil }))
 		closeChild := func() {
-			_ = homeDirectoryRoot.Close()
-			access.Close()
+			state.Close()
 			_ = workspace.Close()
 		}
-		if err := shell.PrepareHomeMappings(workspace.GetDir(), home, child.Scratch, paths, child.Caps); err != nil {
+
+		tools, err := state.tools(state.shell(nil, options.runner), agentFeatures{
+			afterShell: []tool.Tool{messageparent.New(child.MessageParent)},
+		})
+		if err != nil {
 			closeChild()
 			return subagents.Worker{}, err
-		}
-		tools := toolbox.RummageWithRunner(files, file.NewSnapshots(), grepRunner(false))
-		tools = append(tools, shell.NewForSubagent(
-			workspace.GetDir(), home, child.Scratch, shell.Parent{Scratch: options.scratchParent, Writable: options.parentWritable},
-			access, mode, files, false,
-			func(context.Context, string, string) error {
-				return errors.New("host network is not available to this subagent")
-			},
-			options.runner,
-		), messageparent.New(child.MessageParent))
-		prompt := child.SystemPrompt
-		if prompt == "" {
-			prompt = childPrompt(options, workspace, child, home, tools)
 		}
 		connection, err := backend.Connect(child.Choice, child.Selection, options.endpoints)
 		if err != nil {
 			closeChild()
 			return subagents.Worker{}, err
 		}
+		systemPrompt := child.SystemPrompt
+		if systemPrompt == "" {
+			systemPrompt = childPrompt(options, workspace, child, state.options.roots.HomeDirectory, tools, childBrief{
+				skills:         skills,
+				dropsDirectory: state.drops.GetDirectory(),
+				notes:          agent.NoteFormatOf(connection.Client),
+			})
+		}
 		connection.UseSession(options.sessionName + "-" + child.Name)
 		connection.ObserveHTTP(child.Observer)
-		provider := usage.Guard(ctx, connection.Client, usage.GuardSettings{
-			ProviderName:        model.ProviderName(child.Selection.Provider),
-			ModelName:           child.Selection.Model,
-			CachePath:           location.GetUsageCachePath(child.Selection.Provider, options.endpoints.OverrideURL != ""),
-			Now:                 time.Now,
-			IsQuotaExempt:       child.Choice.IsGoQuotaExempt(),
-			CanRetryLimitedSend: child.Selection.Provider == model.OpencodeGoProvider,
-		})
-		worker, changes, err := childAgent(prompt, provider, tools, child)
+		provider := guardUsage(
+			ctx,
+			connection.Client,
+			child.Choice,
+			child.Selection,
+			location.GetUsageCachePath(child.Selection.Provider, options.endpoints.OverrideURL != ""),
+		)
+		worker, changes, err := childAgent(systemPrompt, provider, tools, child)
 		if err != nil {
 			closeChild()
 			return subagents.Worker{}, err
 		}
-		worker.StorePicturesWith(func(picture tool.Image) *agent.Picture {
-			reference, storeError := pictures.Store(child.Directory, child.EnsurePersisted, picture)
-			if storeError != nil {
-				return nil
-			}
-			return reference
-		})
-		return subagents.Worker{Agent: worker, Tools: tools, SystemPrompt: prompt, Changes: changes, Close: closeChild}, nil
+		state.storePictures(worker)
+		return subagents.Worker{Agent: worker, Tools: tools, SystemPrompt: systemPrompt, Changes: changes, Close: closeChild}, nil
 	}
+}
+
+func buildChildState(
+	options childOptions,
+	child subagents.Child,
+	workspace *work.Space,
+	skills []skill.Skill,
+) (*agentState, error) {
+	if err := child.ScratchRoot.Mkdir(subagents.HomeName, 0o700); err != nil && !errors.Is(err, os.ErrExist) {
+		return nil, err
+	}
+	home, err := child.ScratchRoot.OpenRoot(subagents.HomeName)
+	if err != nil {
+		return nil, err
+	}
+	closeHome := func() { _ = home.Close() }
+	state, err := buildAgentState(agentOptions{
+		workspace: workspace,
+		mode:      caps.NewMode(child.Caps),
+		paths:     childPaths(options.settings.Sandbox),
+		roots: shell.Roots{
+			HomeDirectory:    filepath.Join(child.Scratch, subagents.HomeName),
+			Home:             home,
+			ScratchDirectory: child.Scratch,
+			Scratch:          child.ScratchRoot,
+		},
+		home:             file.New(home, func(string) error { return nil }),
+		scratch:          file.New(child.ScratchRoot, func(string) error { return nil }),
+		parent:           shell.Parent{Scratch: options.scratchParent, Writable: options.parentWritable},
+		skills:           skills,
+		sessionDirectory: child.Directory,
+		ensurePersisted:  child.EnsurePersisted,
+		outputLimit:      options.toolOutputLimit,
+	})
+	if err != nil {
+		closeHome()
+		return nil, err
+	}
+	state.closers = append([]func(){closeHome}, state.closers...)
+	return state, nil
 }
 
 func childAgent(prompt string, provider agent.Provider, tools []tool.Tool, child subagents.Child) (*agent.Agent, []agent.Event, error) {
 	if len(child.FrozenTools) == 0 {
 		return agent.New(prompt, provider, tools), nil, nil
 	}
-	frozenSet := toolset.Restore(tools, store.RestoreTools(child.FrozenTools), nil)
-	availability, err := toolset.RestoreAvailability(child.History, frozenSet.Availability, frozenSet.VersionChanges)
+	frozenToolbox, err := prepareFrozenTools(child.FrozenTools, child.History, tools, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 	var changes []agent.Event
-	if availability.IsChanged {
-		changes = append(changes, availability.Change)
+	if frozenToolbox.availabilityRestoration.IsChanged {
+		changes = append(changes, frozenToolbox.availabilityRestoration.Change)
 	}
-	return agent.NewWithEnabledTools(prompt, provider, frozenSet.RegisteredTools, frozenSet.OfferedTools), changes, nil
+	return agent.NewWithEnabledTools(prompt, provider, frozenToolbox.registeredTools, frozenToolbox.offeredTools), changes, nil
 }
 
-func childPrompt(options childOptions, workspace *work.Space, child subagents.Child, home string, tools []tool.Tool) string {
-	commonGround := "You are a subagent of session " + options.sessionName + ". " +
-		"Report your findings in your final answer. " +
-		"Your parent may send you messages while you work, and follow-ups after you answer."
-	var circumstances, whereabouts string
-	if child.Caps.Has(caps.Shell) {
-		circumstances = "Your workspace is read-only. You have shell execution, but only a private loopback network. " +
-			"/tmp is your private writable scratch, and it outlives your answer. " +
-			parentScratchView(options, child.Name) + "\n\n" + reachable(options, true)
-		whereabouts = "/tmp is at " + child.Scratch + " on the host. HOME is " + home + "."
-	} else {
-		circumstances = "Your workspace is read-only. " +
-			"You have no shell execution, so bash refuses every command; read, search and list files instead.\n\n" +
-			reachable(options, false)
-		whereabouts = "HOME is " + home + "."
-	}
-	parts := []string{commonGround + " " + circumstances}
-	if child.SharedPrompt != "" {
-		parts = append(parts, child.SharedPrompt)
-	}
-	own := "Your identity is " + child.Name + ". Your workspace is " + workspace.GetDir() + ". "
-	if whereabouts != "" {
-		own += whereabouts + " "
-	}
-	own += "Your tools are: " + toolNames(tools) + "."
-	return strings.Join(append(parts, own), "\n\n")
+func childPrompt(
+	options childOptions,
+	workspace *work.Space,
+	child subagents.Child,
+	home string,
+	tools []tool.Tool,
+	brief childBrief,
+) string {
+	return prompt.Subagent(prompt.SubagentConfig{
+		SessionName:        options.sessionName,
+		Name:               child.Name,
+		WorkspaceDir:       workspace.GetDir(),
+		HomeDir:            home,
+		ScratchDir:         child.Scratch,
+		ParentScratchDir:   parentScratchPath(options, child.Name),
+		IsParentUnconfined: options.isParentUnconfined,
+		HasShell:           child.Caps.Has(caps.Shell),
+		UserHome:           options.userHome,
+		Paths:              childPaths(options.settings.Sandbox),
+		Skills:             brief.skills,
+		ToolNames:          toolset.Names(tools),
+		DropsDirectory:     brief.dropsDirectory,
+		SharedPrompt:       child.SharedPrompt,
+		Notes:              brief.notes,
+	})
 }
 
 func childPaths(parentPaths shell.Paths) shell.Paths {
@@ -269,86 +293,11 @@ func outsideHostTmp(paths []string) []string {
 	})
 }
 
-func reachable(options childOptions, hasShell bool) string {
-	sandboxPaths := childPaths(options.settings.Sandbox)
-	readable := "You can read your workspace, /tmp, HOME, and the read-only system and executable search paths"
-	searchPaths := slices.Concat(sandboxPaths.Exec, sandboxPaths.Path)
-	if len(searchPaths) > 0 {
-		readable += ", including " + strings.Join(searchPaths, ", ")
-	}
-	sentences := []string{readable + "."}
-	alsoReadable := slices.Clone(sandboxPaths.Read)
-	var homeViews []string
-	for _, path := range sandboxPaths.Home {
-		if relative, isHomePath := pathutil.RelativeTo(options.userHome, path); options.userHome != "" && isHomePath {
-			homeViews = append(homeViews, path+" appears read-only at HOME/"+relative+".")
-			continue
-		}
-		alsoReadable = append(alsoReadable, path)
-	}
-	if len(alsoReadable) > 0 {
-		sentences = append(sentences, "You can also read "+strings.Join(alsoReadable, ", ")+".")
-	}
-	sentences = append(sentences, homeViews...)
-	if hasShell {
-		sentences = append(
-			sentences,
-			"You can write only /tmp and HOME. "+
-				"The shell can execute files under system directories, the executable search paths, the workspace, HOME, and /tmp.",
-		)
-	} else {
-		sentences = append(sentences, "You can write nothing.")
-	}
-	if names := util.DenyNamePatterns(sandboxPaths.Deny); len(names) > 0 {
-		sentences = append(sentences, "A file or directory named "+strings.Join(names, ", ")+" is hidden from you.")
-	}
-	for _, entry := range sandboxPaths.Deny {
-		if filepath.IsAbs(entry) {
-			sentences = append(sentences, "The path "+entry+" is hidden from you.")
-		}
-	}
-	home := "HOME and ~ are your own, not the user's"
-	if options.userHome != "" {
-		home += ", whose home is " + options.userHome + "; write paths there in full"
-	}
-	sentences = append(
-		sentences,
-		home+".",
-		"The sandbox hides everything else rather than refusing it, so a path outside what you can reach looks absent. "+
-			"Its absence is no evidence that it is missing: report it as out of your reach, not as missing or broken.",
-	)
-	return strings.Join(sentences, " ")
-}
-
-func toolNames(tools []tool.Tool) string {
-	var names []string
-	for _, current := range tools {
-		names = append(names, current.Name())
-	}
-	return strings.Join(names, ", ")
-}
-
 func parentScratchPath(options childOptions, name string) string {
 	if options.isParentUnconfined {
 		return filepath.Join(options.scratchParent, subagents.ScratchName, name)
 	}
 	return filepath.Join(sandbox.TmpDir, subagents.ScratchName, name)
-}
-
-func parentScratchView(options childOptions, name string) string {
-	parentPath := parentScratchPath(options, name)
-	parentTmp := "Your parent has its own separate /tmp, where your /tmp appears as " + parentPath + ". "
-	if options.isParentUnconfined {
-		parentTmp = "Your parent sees the host's /tmp, and your /tmp as " + parentPath + ". "
-	}
-	return parentTmp +
-		"Whenever you give your parent a path under /tmp, including one you ask it to write to, " +
-		"give only the path as your parent sees it: write " +
-		filepath.Join(parentPath, "notes.txt") + ", never /tmp/notes.txt, even labelled as your side. " +
-		"You cannot see your parent's /tmp or any other subagent's scratch, " +
-		"but your parent can write files into your /tmp for you. " +
-		"If a /tmp path your parent mentions is missing from your /tmp, it is in your parent's: " +
-		"ask your parent to paste its contents or to copy it to " + filepath.Join(parentPath, "<file>") + "."
 }
 
 const unverifiedNote = "unverified: check what matters before relying on it; "

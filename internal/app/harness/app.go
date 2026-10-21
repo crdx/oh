@@ -231,6 +231,7 @@ type App struct {
 	terminal        terminal.Terminal
 	metrics         metrics.Tracker
 	toolOutputLimit *truncate.Limit
+	saveOverflow    truncate.Saver
 	experimental    *experimental.Toggles
 	isReplyOffered  bool
 	permissions     *permission.Live
@@ -1457,7 +1458,7 @@ func (self *App) withinToolOutputLimit(output string) string {
 		return output
 	}
 
-	return truncate.Output(output, self.toolOutputLimit)
+	return truncate.Output(output, self.toolOutputLimit, self.saveOverflow)
 }
 
 func (self *App) stopJobsHoldingPath(path string) {

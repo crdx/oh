@@ -15,7 +15,6 @@ import (
 
 	"golang.org/x/term"
 
-	"crdx.org/oh/internal/file"
 	"crdx.org/oh/internal/jobs"
 	"crdx.org/oh/internal/money"
 	"crdx.org/oh/internal/sandbox"
@@ -28,7 +27,6 @@ import (
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/tool/command"
 	"crdx.org/oh/pkg/tool/middleware/truncate"
-	"crdx.org/oh/pkg/toolbox"
 	"crdx.org/oh/pkg/toolbox/bash"
 	"crdx.org/oh/pkg/toolbox/fetch"
 	"crdx.org/oh/pkg/toolbox/forward"
@@ -50,7 +48,6 @@ import (
 	"crdx.org/oh/internal/app/cycle"
 	"crdx.org/oh/internal/app/demo"
 	"crdx.org/oh/internal/app/diagnostics"
-	"crdx.org/oh/internal/app/drops"
 	"crdx.org/oh/internal/app/editor"
 	"crdx.org/oh/internal/app/environment"
 	"crdx.org/oh/internal/app/experimental"
@@ -541,17 +538,14 @@ type preparedTools struct {
 }
 
 func prepareFrozenTools(
-	resumedSession *store.Session,
+	definitions []store.ToolDefinition,
+	history []agent.Event,
 	toolboxTools []tool.Tool,
 	withheldTools []string,
 ) (preparedTools, error) {
-	restoredTools := toolset.Restore(
-		toolboxTools,
-		store.RestoreTools(resumedSession.Meta.ToolDefinitions),
-		withheldTools,
-	)
+	restoredTools := toolset.Restore(toolboxTools, store.RestoreTools(definitions), withheldTools)
 	availabilityRestoration, err := toolset.RestoreAvailability(
-		resumedSession.Events,
+		history,
 		restoredTools.Availability,
 		restoredTools.VersionChanges,
 	)
@@ -965,19 +959,10 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 
 	mode := caps.NewModeWithGroups(args.Caps, args.GroupFlags, frozenToolGroups, activeToolGroups)
 
-	files := file.New(workspace.GetRoot(), caps.RefuseWrite(mode))
-	homeRoot := shell.MountHomeDirectory(files, homeDir, mode)
-	defer func() { _ = homeRoot.Close() }()
-
 	settings.Sandbox, err = shell.PreparePathsForMode(settings.Sandbox, os.Stderr, args.Yolo)
 	if err != nil {
 		return "", err
 	}
-	pathAccess, err := shell.NewPathAccessForMode(files, mode, settings.Sandbox, args.Yolo)
-	if err != nil {
-		return "", err
-	}
-	defer pathAccess.Close()
 
 	builtinSkillDir := location.GetStateDir(skill.DirectoryName)
 	if err := skill.Materialise(builtinSkillDir); err != nil {
@@ -989,16 +974,10 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		[]string{builtinSkillDir, location.GetConfigDir(skill.DirectoryName)},
 		settings.Skills.Include...,
 	)
-	availableSkills, err := skill.Discover(workspace.GetDir(), globalSkillDirs, os.Stderr)
+	availableSkills, err := discoverSkills(workspace.GetDir(), globalSkillDirs, settings.Skills.Exclude, os.Stderr)
 	if err != nil {
 		return "", err
 	}
-
-	availableSkills = skill.ExcludeGlobal(availableSkills, settings.Skills.Exclude)
-
-	skillRoots := skill.MountGlobalSkills(files, availableSkills)
-	defer skill.Close(skillRoots)
-	pathAccess.ShareSkills(skill.GlobalDirectories(availableSkills))
 
 	client, err := backend.Connect(choice, selection, endpoints)
 	if err != nil {
@@ -1051,25 +1030,41 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		return "", err
 	}
 
-	if err := shell.PrepareHomeMappings(
-		workspace.GetDir(), homeDir, tmpDir, settings.Sandbox, mode.Current(),
-	); err != nil {
-		return "", err
-	}
-	cacheRoot := shell.MountHomeCache(files, homeDir)
-	defer func() { _ = cacheRoot.Close() }()
-
-	dropKeeper, err := drops.Open(files, sessionInfo.Directory, log.EnsurePersisted)
-	if err != nil {
-		return "", err
-	}
-	defer func() { _ = dropKeeper.Close() }()
-
+	var state *agentState
+	var roots shell.Roots
 	defer func() {
+		if state != nil {
+			state.Close()
+		}
+		if roots.Home != nil {
+			_ = roots.Close()
+		}
 		if !log.IsPersisted() {
 			_ = diskutil.RemoveAll(tmpDir)
 		}
 	}()
+	roots, err = shell.OpenRoots(homeDir, tmpDir)
+	if err != nil {
+		return "", err
+	}
+	state, err = buildAgentState(agentOptions{
+		workspace:        workspace,
+		mode:             mode,
+		paths:            settings.Sandbox,
+		isUnconfined:     args.Yolo,
+		roots:            roots,
+		home:             shell.HomeRoot(homeDir, mode),
+		homeCache:        shell.HomeCacheRoot(homeDir),
+		scratch:          shell.ScratchRoot(tmpDir),
+		skills:           availableSkills,
+		sessionDirectory: sessionInfo.Directory,
+		ensurePersisted:  log.EnsurePersisted,
+		outputLimit:      toolOutputLimit,
+	})
+	if err != nil {
+		return "", err
+	}
+	files, pathAccess, dropKeeper := state.files, state.access, state.drops
 
 	if isPromptPiped {
 		pipedPrompt, err := startup.ReadPipedPrompt(os.Stdin)
@@ -1182,18 +1177,6 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		fixedContextSources = identifyStaticContextSources(systemPrompt, contextFiles, availableSkills)
 	}
 
-	var tmpRoots []*file.Root
-	if args.Yolo {
-		tmpRoots = shell.MountHostTemporaryDirectory(files, tmpDir)
-	} else {
-		tmpRoots = []*file.Root{shell.MountTemporaryDirectory(files, tmpDir)}
-	}
-	defer func() {
-		for _, root := range tmpRoots {
-			_ = root.Close()
-		}
-	}()
-
 	pathGrants := pathgrant.New(workspace, pathAccess)
 	var pathGrantRestoreResult pathgrant.RestoreResult
 	if resumedSession != nil {
@@ -1241,6 +1224,8 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		parentFiles:        files,
 		parentCaps:         mode.Current,
 		userHome:           userHome(),
+		toolOutputLimit:    toolOutputLimit,
+		skillDirectories:   globalSkillDirs,
 		parentWritable: func() []string {
 			return slices.Concat([]string{workspace.GetDir(), homeDir, tmpDir}, pathAccess.GetPaths().Write)
 		},
@@ -1253,10 +1238,9 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		defer childManager.Close()
 	}
 
-	snapshots := file.NewSnapshots()
-	toolboxTools := toolbox.RummageWithRunner(files, snapshots, grepRunner(args.Yolo))
+	var toolsBeforeShell []tool.Tool
 	if childManager != nil {
-		toolboxTools = append(toolboxTools, subagent.New(childManager, func() bool { return mode.Current().Has(caps.Subagents) }))
+		toolsBeforeShell = append(toolsBeforeShell, subagent.New(childManager, func() bool { return mode.Current().Has(caps.Subagents) }))
 	}
 	askBroker := ask.New()
 	permissionSet, err := settings.BuildPermissions()
@@ -1267,20 +1251,16 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	approveNetwork := func(ctx context.Context, command string, intent string) error {
 		return approveHostNetwork(ctx, askBroker, permissions.Network(), command, intent)
 	}
-	shellTool := shell.New(
-		workspace.GetDir(), homeDir, tmpDir, pathAccess, mode, files, args.Yolo, approveNetwork, sandboxRunner,
-	)
-
-	toolboxTools = append(toolboxTools, shellTool)
+	shellTool := state.shell(approveNetwork, sandboxRunner)
 
 	doesWake := !args.IsPrinting
 
+	var toolsAfterShell []tool.Tool
 	if jobManager != nil {
-		toolboxTools = append(toolboxTools, shell.NewJob(
+		toolsAfterShell = append(toolsAfterShell, shell.NewJob(
 			jobManager,
 			workspace.GetDir(),
-			homeDir,
-			tmpDir,
+			roots,
 			pathAccess,
 			mode,
 			files,
@@ -1289,14 +1269,14 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		))
 	}
 	if keeperProcess != nil {
-		toolboxTools = append(toolboxTools, forward.New(forwards.ForModel()))
+		toolsAfterShell = append(toolsAfterShell, forward.New(forwards.ForModel()))
 	}
 	if notify.IsAvailable() {
-		toolboxTools = append(toolboxTools, notify.New(screen.WriteEscape, isTerminalFocused))
+		toolsAfterShell = append(toolsAfterShell, notify.New(screen.WriteEscape, isTerminalFocused))
 	}
-	toolboxTools = append(toolboxTools, title.New())
-	toolboxTools = append(
-		toolboxTools,
+	toolsAfterShell = append(toolsAfterShell, title.New())
+	toolsAfterShell = append(
+		toolsAfterShell,
 		lookup.New(
 			func() bool { return mode.Current().Has(caps.Lookup) },
 			func(ctx context.Context, query string) error {
@@ -1329,11 +1309,14 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	if err != nil {
 		return "", err
 	}
-	if toolboxTools, err = toolset.Combine(toolboxTools, customTools); err != nil {
+	toolboxTools, err := state.tools(shellTool, agentFeatures{
+		beforeShell: toolsBeforeShell,
+		afterShell:  toolsAfterShell,
+		custom:      customTools,
+	})
+	if err != nil {
 		return "", err
 	}
-
-	toolboxTools = truncate.Tools(toolboxTools, toolOutputLimit)
 	var withheldTools []string
 	if args.IsPrinting {
 		withheldTools = append(toolset.WithheldFromHeadless(toolboxTools), subagent.Name)
@@ -1343,7 +1326,9 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	var preparedToolbox preparedTools
 	hasFrozenDefinitions := resumedSession != nil && len(resumedSession.Meta.ToolDefinitions) > 0
 	if hasFrozenDefinitions {
-		preparedToolbox, err = prepareFrozenTools(resumedSession, toolboxTools, withheldTools)
+		preparedToolbox, err = prepareFrozenTools(
+			resumedSession.Meta.ToolDefinitions, resumedSession.Events, toolboxTools, withheldTools,
+		)
 	} else {
 		preparedToolbox, err = prepareLegacyTools(resumedSession, toolboxTools, args.Tools, notices)
 	}
@@ -1508,14 +1493,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 	}
 
 	usageCachePath := location.GetUsageCachePath(selection.Provider, endpointURL != "")
-	providerClient := usage.Guard(ctx, client.Client, usage.GuardSettings{
-		ProviderName:        model.ProviderName(selection.Provider),
-		ModelName:           selection.Model,
-		CachePath:           usageCachePath,
-		Now:                 time.Now,
-		IsQuotaExempt:       choice.IsGoQuotaExempt(),
-		CanRetryLimitedSend: selection.Provider == model.OpencodeGoProvider,
-	})
+	providerClient := guardUsage(ctx, client.Client, choice, selection, usageCachePath)
 
 	app = &App{
 		agent:    agent.NewWithEnabledTools(systemPrompt, providerClient, registeredTools, offeredTools),
@@ -1533,6 +1511,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		},
 		editorConfig:    editorConfiguration,
 		toolOutputLimit: toolOutputLimit,
+		saveOverflow:    dropKeeper.SaveOutput,
 		experimental:    experimentalToggles,
 		isReplyOffered:  isReplyOffered(experimentalToggles),
 		workspace:       workspace,
@@ -1587,7 +1566,6 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 		defer stallWatchdog.Close()
 		app.watchStalls = stallWatchdog.Begin
 	}
-	toolOutputLimit.SaveOverflowWith(dropKeeper.SaveOutput)
 
 	cellWidth, cellHeight, hasGraphics := graphics.Detect(keyboard, os.Stdout)
 	if hasGraphics {
@@ -1599,14 +1577,7 @@ func run(hooks *cycle.Hooks, requestedTransition *cycle.Transition, initial init
 			IsLocal:          isTerminalLocal(),
 		}
 
-		app.agent.StorePicturesWith(func(picture tool.Image) *agent.Picture {
-			reference, err := pictures.Store(sessionInfo.Directory, log.EnsurePersisted, picture)
-			if err != nil {
-				return nil
-			}
-
-			return reference
-		})
+		state.storePictures(app.agent)
 	}
 
 	usageReporter, _ := client.Client.(agent.UsageReporter)
