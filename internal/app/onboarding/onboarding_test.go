@@ -25,6 +25,13 @@ import (
 
 var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")
 
+func TestMain(testingMain *testing.M) {
+	if err := os.Unsetenv(location.ConfigDirVariable); err != nil {
+		panic(err)
+	}
+	os.Exit(testingMain.Run())
+}
+
 func TestGoldenFirstRunOnboardingMatchesTheGolden(t *testing.T) {
 	var output bytes.Buffer
 	restoreStyle := style.Init(&output)

@@ -6253,7 +6253,7 @@ func TestTestdataContainsNoPersonalOrSecretMaterial(t *testing.T) {
 
 func TestMain(testingMain *testing.M) {
 	sandbox.Init()
-	unsetInheritedStateDirectory()
+	unsetInheritedDirectories()
 
 	status := testingMain.Run()
 
@@ -6264,9 +6264,11 @@ func TestMain(testingMain *testing.M) {
 	os.Exit(status)
 }
 
-func unsetInheritedStateDirectory() {
-	if err := os.Unsetenv(location.StateDirVariable); err != nil {
-		panic(err)
+func unsetInheritedDirectories() {
+	for _, variable := range []string{location.ConfigDirVariable, location.StateDirVariable} {
+		if err := os.Unsetenv(variable); err != nil {
+			panic(err)
+		}
 	}
 }
 

@@ -23,6 +23,13 @@ const (
 
 var updateGoldens = flag.Bool("update", false, "write what was drawn back to the golden files")
 
+func TestMain(testingMain *testing.M) {
+	if err := os.Unsetenv(location.ConfigDirVariable); err != nil {
+		panic(err)
+	}
+	os.Exit(testingMain.Run())
+}
+
 func TestGoldenUsageMatchesTheGolden(t *testing.T) {
 	assertGolden(t, "usage.txt", strings.ReplaceAll(Usage, "$0", "oh"))
 }
