@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-NEW_VERSION=$1
+NEW_VERSION="$1"
 
 if ! awk '
     /^## \[Next\]$/ { sections++; in_next = 1; next }
@@ -16,7 +16,6 @@ fi
 sed -i "s/^## \[Next\]\$/&\n\n## [${NEW_VERSION}] — $(date +%F)/" CHANGELOG.md
 
 git add CHANGELOG.md
-
 if git diff --cached --quiet; then
     echo "Nothing to commit (files already committed)."
 else
