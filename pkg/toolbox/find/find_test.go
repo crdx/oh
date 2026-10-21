@@ -1,6 +1,8 @@
 package find_test
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -8,6 +10,7 @@ import (
 	"testing"
 
 	"crdx.org/oh/internal/file"
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/pkg/tool"
 	"crdx.org/oh/pkg/toolbox/find"
 )
@@ -120,6 +123,24 @@ func TestASearchThatFindsNothingSaysSo(t *testing.T) {
 	}
 	if metrics.Lines != 0 {
 		t.Errorf("got %d lines, want the placeholder left uncounted", metrics.Lines)
+	}
+}
+
+func TestACancelledContextStopsTheSearch(t *testing.T) {
+	root := testRoot(t, "main.go")
+	call, err := find.New(root).Parse(`{"pattern":"**/*.go"}`)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	ctx, cancel := context.WithCancelCause(t.Context())
+	cancel(stop.Because("the user pressed escape"))
+
+	_, err = call.Exec(ctx)
+	if !errors.Is(err, context.Canceled) {
+		t.Errorf("expected context cancellation, got %v", err)
+	}
+	if want := "the search stopped because the user pressed escape"; err.Error() != want {
+		t.Errorf("got %q, want %q", err, want)
 	}
 }
 

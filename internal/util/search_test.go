@@ -1,7 +1,11 @@
 package util_test
 
 import (
+	"context"
+	"errors"
+	"io/fs"
 	"testing"
+	"testing/fstest"
 
 	"crdx.org/oh/internal/util"
 )
@@ -28,5 +32,29 @@ func TestASearchLeavesPathDisplayProcessingToThePainter(t *testing.T) {
 func TestTheWorkingDirectoryGoesWithoutSaying(t *testing.T) {
 	if _, qualifier := util.DescribeSearch("func New", ".", ""); qualifier != "" {
 		t.Errorf("got qualifier %q, want nothing said about the working directory", qualifier)
+	}
+}
+
+func TestACancelledWalkStopsBeforeTheNextEntry(t *testing.T) {
+	filesystem := fstest.MapFS{
+		"first.txt":  &fstest.MapFile{Data: []byte("first")},
+		"second.txt": &fstest.MapFile{Data: []byte("second")},
+	}
+	ctx, cancel := context.WithCancel(t.Context())
+	visitedFiles := 0
+
+	err := util.Walk(ctx, filesystem, ".", func(_ string, entry fs.DirEntry) error {
+		if entry.IsDir() {
+			return nil
+		}
+		visitedFiles++
+		cancel()
+		return nil
+	})
+	if !errors.Is(err, context.Canceled) {
+		t.Errorf("got %v, want a cancellation", err)
+	}
+	if visitedFiles != 1 {
+		t.Errorf("visited %d files, want only the file that cancelled the walk", visitedFiles)
 	}
 }

@@ -1,6 +1,7 @@
 package util
 
 import (
+	"context"
 	"fmt"
 	"io/fs"
 	"path/filepath"
@@ -43,8 +44,16 @@ func SearchPath(rendering tool.CallRendering) string {
 	return filepath.Base(qualifier)
 }
 
-func Walk(filesystem fs.FS, root string, visit func(path string, entry fs.DirEntry) error) error {
+func Walk(
+	ctx context.Context,
+	filesystem fs.FS,
+	root string,
+	visit func(path string, entry fs.DirEntry) error,
+) error {
 	return fs.WalkDir(filesystem, root, func(path string, entry fs.DirEntry, err error) error {
+		if contextErr := ctx.Err(); contextErr != nil {
+			return contextErr
+		}
 		if err != nil {
 			if path == root {
 				return err

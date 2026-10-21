@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 
 	"crdx.org/oh/internal/file"
+	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/internal/util"
 	"crdx.org/oh/pkg/tool"
 )
@@ -34,8 +35,8 @@ func New(root *file.Root) tool.Tool {
 		Focuses(util.SearchPath).
 		IsEmbarrassinglyParallel().
 		ChangesNothing().
-		Exec(func(_ context.Context, args Args) (string, tool.ToolCallMetrics, error) {
-			return exec(root, args)
+		Exec(func(ctx context.Context, args Args) (string, tool.ToolCallMetrics, error) {
+			return exec(ctx, root, args)
 		})
 }
 
@@ -44,7 +45,7 @@ func Describe(args Args) tool.CallRendering {
 	return tool.CallRendering{Subject: subject, Qualifier: qualifier}
 }
 
-func exec(root *file.Root, args Args) (string, tool.ToolCallMetrics, error) {
+func exec(ctx context.Context, root *file.Root, args Args) (string, tool.ToolCallMetrics, error) {
 	if args.Pattern == "" {
 		return "", tool.ToolCallMetrics{}, errors.New("pattern is required")
 	}
@@ -58,7 +59,7 @@ func exec(root *file.Root, args Args) (string, tool.ToolCallMetrics, error) {
 	returnedBytes := int64(0)
 	isTruncated := false
 
-	err = util.Walk(root.FS(), name, func(path string, entry fs.DirEntry) error {
+	err = util.Walk(ctx, root.FS(), name, func(path string, entry fs.DirEntry) error {
 		if entry.IsDir() {
 			return nil
 		}
@@ -79,6 +80,9 @@ func exec(root *file.Root, args Args) (string, tool.ToolCallMetrics, error) {
 
 		return nil
 	})
+	if ctx.Err() != nil {
+		return "", tool.ToolCallMetrics{}, stop.Error(ctx, "the search")
+	}
 	if err != nil {
 		return "", tool.ToolCallMetrics{}, err
 	}
