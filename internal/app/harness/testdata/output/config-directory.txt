@@ -1,0 +1,82 @@
+=== a broken config in an absolute OH_CONFIG_DIR is named by its path ===
+$ oh -p --yolo a question
+✗ <relocated-config>/config.toml: toml: line 1 (last key "not"): expected value but found '=' instead
+[exit 1]
+
+=== a relative OH_CONFIG_DIR is ignored ===
+$ oh -p --yolo a question
+Refreshing the model list...
+Agent <session> ready with 2 skills ⧸ 2 snippets ⧸ <context>.
+
+
+ a question
+
+Relative answer.
+
+oh -r <session>
+[exit 0]
+session model: opencode-go/fake@low
+instructions carry: The XDG config speaks.
+instructions carry: xdg-skill
+
+=== an absolute OH_CONFIG_DIR replaces the XDG config ===
+$ oh -p --yolo a question
+Refreshing the model list...
+Agent <session> ready with 2 skills ⧸ 3 snippets ⧸ <context>.
+
+
+ a question
+
+Relocated answer.
+
+oh -r <session>
+[exit 0]
+session model: opencode-go/fake@high
+instructions carry: The relocated config speaks.
+instructions carry: relocated-skill
+
+=== an absolute OH_CONFIG_DIR with nothing in it takes nothing from the XDG config ===
+$ oh -p --yolo -m opencode-go/fake@medium a question
+Refreshing the model list...
+Agent <session> ready with 1 skill ⧸ 0 snippets ⧸ <context>.
+
+
+ a question
+
+Bare answer.
+
+oh -r <session>
+[exit 0]
+session model: opencode-go/fake@medium
+
+=== the XDG config when OH_CONFIG_DIR is empty ===
+$ oh -p --yolo a question
+Refreshing the model list...
+Agent <session> ready with 2 skills ⧸ 2 snippets ⧸ <context>.
+
+
+ a question
+
+Empty answer.
+
+oh -r <session>
+[exit 0]
+session model: opencode-go/fake@low
+instructions carry: The XDG config speaks.
+instructions carry: xdg-skill
+
+=== the XDG config when OH_CONFIG_DIR is unset ===
+$ oh -p --yolo a question
+Refreshing the model list...
+Agent <session> ready with 2 skills ⧸ 2 snippets ⧸ <context>.
+
+
+ a question
+
+XDG answer.
+
+oh -r <session>
+[exit 0]
+session model: opencode-go/fake@low
+instructions carry: The XDG config speaks.
+instructions carry: xdg-skill

@@ -47,6 +47,7 @@ func scrubStartup(text string) string {
 
 type startupRun struct {
 	rig              *interactiveRig
+	endpoint         *sim.Endpoint
 	isRefusingModels atomic.Bool
 }
 
@@ -59,7 +60,7 @@ func newStartupRun(t *testing.T, configBody string, answers ...string) *startupR
 	}
 	endpoint := sim.New(&sim.Scenario{Model: "fake", Turns: turns})
 
-	self := &startupRun{}
+	self := &startupRun{endpoint: endpoint}
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if self.isRefusingModels.Load() && !strings.HasSuffix(request.URL.Path, "/chat/completions") {
 			http.Error(writer, "listings are down", http.StatusServiceUnavailable)
