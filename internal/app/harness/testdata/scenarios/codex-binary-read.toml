@@ -1,0 +1,45 @@
+provider = "codex"
+model = "gpt-5.6-sol"
+effort = "medium"
+
+[[tool]]
+name = "read"
+large-read = true
+
+[first]
+prompt = "read the binary file whole, a line of the large binary, then lines two and three of the large text file"
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"type":"function_call","call_id":"call-1","name":"read","arguments":"{\"path\":\"/tmp/io/cmd/oh/output/region.bin\"}"}}''',
+    '''{"type":"response.completed"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"type":"function_call","call_id":"call-2","name":"read","arguments":"{\"path\":\"/tmp/io/cmd/oh/output/region.large.bin\",\"offset\":2,\"limit\":1}"}}''',
+    '''{"type":"response.completed"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_item.done","item":{"type":"function_call","call_id":"call-3","name":"read","arguments":"{\"path\":\"/tmp/io/cmd/oh/output/region.go\",\"offset\":2,\"limit\":2}"}}''',
+    '''{"type":"response.completed"}''',
+]
+
+[[first.response]]
+event = [
+    '''{"type":"response.output_text.delta","delta":"Both binaries were refused and the text was read."}''',
+    '''{"type":"response.output_item.done","item":{"type":"message","role":"assistant","content":[{"type":"output_text","text":"Both binaries were refused and the text was read."}]}}''',
+    '''{"type":"response.completed"}''',
+]
+
+[resume]
+prompt = "finish"
+
+[[resume.response]]
+event = [
+    '''{"type":"response.output_text.delta","delta":"Done."}''',
+    '''{"type":"response.output_item.done","item":{"type":"message","role":"assistant","content":[{"type":"output_text","text":"Done."}]}}''',
+    '''{"type":"response.completed"}''',
+]

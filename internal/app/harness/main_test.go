@@ -19696,7 +19696,7 @@ func newSessionGoldenLargeReadTool(t *testing.T, scratchDirectory string) tool.T
 	if err != nil {
 		t.Fatal(err)
 	}
-	content := "before\nselected one\nselected two\n" + strings.Repeat("padding\n", 64)
+	content := "before\nselected one\nselected two\n" + strings.Repeat("padding\n", 1024)
 	if _, err := openedFile.WriteString(content); err != nil {
 		_ = openedFile.Close()
 		t.Fatal(err)
@@ -19706,6 +19706,25 @@ func newSessionGoldenLargeReadTool(t *testing.T, scratchDirectory string) tool.T
 		t.Fatal(err)
 	}
 	if err := openedFile.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := rootHandle.WriteFile("io/cmd/oh/output/region.bin", []byte("\x7fELF\x02\x01\x01\x00\nselected one\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	largeBinary, err := rootHandle.OpenFile("io/cmd/oh/output/region.large.bin", os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0o600)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := largeBinary.WriteString("\x7fELF\x02\x01\x01\x00\nselected one\n"); err != nil {
+		_ = largeBinary.Close()
+		t.Fatal(err)
+	}
+	if err := largeBinary.Truncate(20*1024*1024 + 1); err != nil {
+		_ = largeBinary.Close()
+		t.Fatal(err)
+	}
+	if err := largeBinary.Close(); err != nil {
 		t.Fatal(err)
 	}
 

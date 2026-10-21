@@ -443,6 +443,64 @@ func TestFilesAboveTheReadLimitAreRefusedBeforeTheirContentsAreLoaded(t *testing
 	}
 }
 
+func TestABinaryFileIsRefusedWholeAndInRanges(t *testing.T) {
+	root := testRoot(t, "program", "\x7fELF\x02\x01\x01\x00\x00\x00\nmore\n")
+
+	for _, arguments := range []string{`{"path":"program"}`, `{"path":"program","offset":2,"limit":1}`} {
+		output, err := exec(t, root, arguments)
+		if err == nil || err.Error() != "program: file is binary and cannot be read as text" || output != "" {
+			t.Errorf("%s gave %q, %v; want a binary refusal", arguments, output, err)
+		}
+	}
+}
+
+func TestOnlyANulByteInTheFirst8000BytesMakesAFileBinary(t *testing.T) {
+	early := strings.Repeat("a", 7999) + "\x00\n"
+	late := strings.Repeat("a", 8000) + "\x00\n"
+
+	if _, err := exec(t, testRoot(t, "early", early), `{"path":"early"}`); err == nil || err.Error() != "early: file is binary and cannot be read as text" {
+		t.Errorf("a NUL byte at offset 7999 gave %v, want a binary refusal", err)
+	}
+	if output, err := exec(t, testRoot(t, "late", late), `{"path":"late"}`); err != nil || output != late {
+		t.Errorf("a NUL byte at offset 8000 gave %v, want the file read as text", err)
+	}
+}
+
+func TestTextWithoutANulByteIsNeverRefusedAsBinary(t *testing.T) {
+	for _, test := range []struct{ name, content string }{
+		{"latin1.txt", "caf\xe9 cr\xe8me\n"},
+		{"colours.txt", "\x1b[31mred\x1b[0m\n"},
+		{"controls.txt", "bell\x07 form\x0c feed\x01\n"},
+		{"empty.txt", ""},
+	} {
+		output, err := exec(t, testRoot(t, test.name, test.content), fmt.Sprintf(`{"path":%q}`, test.name))
+		if err != nil || output != test.content {
+			t.Errorf("%s gave %q, %v; want it back whole", test.name, output, err)
+		}
+	}
+}
+
+func TestARangeOfALargeBinaryFileIsRefused(t *testing.T) {
+	directory := t.TempDir()
+	path := filepath.Join(directory, "large")
+	if err := os.WriteFile(path, []byte("a first line\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Truncate(path, 20*1024*1024+1); err != nil {
+		t.Fatal(err)
+	}
+	rootHandle, err := os.OpenRoot(directory)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = rootHandle.Close() })
+
+	output, err := exec(t, file.New(rootHandle, allowAll), `{"path":"large","limit":1}`)
+	if err == nil || err.Error() != "large: file is binary and cannot be read as text" || output != "" {
+		t.Errorf("got %q, %v; want a binary refusal", output, err)
+	}
+}
+
 func TestAMissingFileDoesNotExposeHowItWasOpened(t *testing.T) {
 	root := testRoot(t, "notes.txt", "one\n")
 

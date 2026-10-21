@@ -1,0 +1,16 @@
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m read the binary file whole, a line of the large binary, then lines two and three of the large text \e[0m\r
+\e[48;2;52;53;65m file                                                                                               \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\r
+\e]8;;oh://tool-result?call=toolu_1&session=tame-impala\e\\read\e]8;;\e\\ \e[3m\e[38;2;129;162;190m\e]8;;file:///state/farm/tame-impala/io/cmd/oh/output/region.bin\e\\<s>\e[0m\e[0m\e[38;2;150;152;150m/io/cmd/oh/output/\e[0m\e[38;2;192;128;80mregion.bin\e]8;;\e\\\e[0m \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102m/tmp/io/cmd/oh/output/region.bin: file is binary and cannot …\e[0m\r
+\e]8;;oh://tool-result?call=toolu_2&session=tame-impala\e\\read\e]8;;\e\\ \e]8;;file:///state/farm/tame-impala/io/cmd/oh/output/region.large.bin#2\e\\\e[3m\e[38;2;129;162;190m<s>\e[0m\e[0m\e[38;2;150;152;150m/io/cmd/oh/output/\e[0m\e[38;2;192;128;80mregion.large.bin\e[0m \e[38;2;150;152;150m2-2\e[0m\e]8;;\e\\ \e[38;2;204;102;102m✗\e[0m \e[38;2;204;102;102m/tmp/io/cmd/oh/output/region.large.bin: file is bi…\e[0m\r
+\e]8;;oh://tool-result?call=toolu_3&session=tame-impala\e\\read\e]8;;\e\\ \e]8;;file:///state/farm/tame-impala/io/cmd/oh/output/region.go#2\e\\\e[3m\e[38;2;129;162;190m<s>\e[0m\e[0m\e[38;2;150;152;150m/io/cmd/oh/output/\e[0m\e[38;2;192;128;80mregion.go\e[0m \e[38;2;150;152;150m2-3\e[0m\e]8;;\e\\ \e[38;2;150;152;150m2L\e[0m\r
+\r
+Both binaries were refused and the text was read.\e[?25h\e[?2026l\r
+\r
+\e]133;A\e\\\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[48;2;52;53;65m finish                                                                                             \e[0m\r
+\e[48;2;52;53;65m                                                                                                    \e[0m\r
+\e[?2026h\e[?25l\e[?7l\r\e[K\r
+Done.\e[K\r\e[5C\e[?25h\e[?2026l\e[?2026h\e[?25l\r\e[5C\e[?25h\e[?2026l\r

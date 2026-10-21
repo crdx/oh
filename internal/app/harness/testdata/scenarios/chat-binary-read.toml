@@ -1,0 +1,48 @@
+provider = "chat"
+model = "deepseek-v4-pro"
+effort = "high"
+
+[[tool]]
+name = "read"
+large-read = true
+
+[first]
+prompt = "read the binary file whole, a line of the large binary, then lines two and three of the large text file"
+
+[[first.response]]
+event = [
+    '''{"choices":[{"delta":{"tool_calls":[{"index":0,"id":"call-1","type":"function","function":{"name":"read","arguments":"{\"path\":\"/tmp/io/cmd/oh/output/region.bin\"}"}}]}}]}''',
+    '''{"choices":[{"delta":{},"finish_reason":"tool_calls"}]}''',
+    '''[DONE]''',
+]
+
+[[first.response]]
+event = [
+    '''{"choices":[{"delta":{"tool_calls":[{"index":0,"id":"call-2","type":"function","function":{"name":"read","arguments":"{\"path\":\"/tmp/io/cmd/oh/output/region.large.bin\",\"offset\":2,\"limit\":1}"}}]}}]}''',
+    '''{"choices":[{"delta":{},"finish_reason":"tool_calls"}]}''',
+    '''[DONE]''',
+]
+
+[[first.response]]
+event = [
+    '''{"choices":[{"delta":{"tool_calls":[{"index":0,"id":"call-3","type":"function","function":{"name":"read","arguments":"{\"path\":\"/tmp/io/cmd/oh/output/region.go\",\"offset\":2,\"limit\":2}"}}]}}]}''',
+    '''{"choices":[{"delta":{},"finish_reason":"tool_calls"}]}''',
+    '''[DONE]''',
+]
+
+[[first.response]]
+event = [
+    '''{"choices":[{"delta":{"content":"Both binaries were refused and the text was read."}}]}''',
+    '''{"choices":[{"delta":{},"finish_reason":"stop"}]}''',
+    '''[DONE]''',
+]
+
+[resume]
+prompt = "finish"
+
+[[resume.response]]
+event = [
+    '''{"choices":[{"delta":{"content":"Done."}}]}''',
+    '''{"choices":[{"delta":{},"finish_reason":"stop"}]}''',
+    '''[DONE]''',
+]

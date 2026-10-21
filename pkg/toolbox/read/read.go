@@ -2,6 +2,7 @@ package read
 
 import (
 	"bufio"
+	"bytes"
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
@@ -23,11 +24,15 @@ import (
 )
 
 const (
-	maxFileBytes  = 20 * 1024 * 1024
-	bytePrecision = 3
+	maxFileBytes     = 20 * 1024 * 1024
+	bytePrecision    = 3
+	binaryProbeBytes = 8000
 )
 
-var errFileTooLarge = errors.New("file is too large to read")
+var (
+	errFileTooLarge = errors.New("file is too large to read")
+	errBinaryFile   = errors.New("file is binary and cannot be read as text")
+)
 
 type loadedFile struct {
 	data      []byte
@@ -176,6 +181,10 @@ func exec(ctx context.Context, root *file.Root, args Args) (tool.ToolCallResult,
 		), nil
 	}
 
+	if isBinary(data) {
+		return tool.ToolCallResult{}, binaryFailure(args.Path)
+	}
+
 	lines := strutil.Lines(string(data))
 	metrics.Lines = int64(len(lines))
 
@@ -233,6 +242,9 @@ func oversizedResult(
 	}
 
 	loadedRange, err := loadRange(ctx, root, name, args)
+	if errors.Is(err, errBinaryFile) {
+		return tool.ToolCallResult{}, err
+	}
 	if err != nil {
 		return tool.ToolCallResult{Metrics: metrics}, readFailure(args.Path, err)
 	}
@@ -267,6 +279,7 @@ func loadRange(ctx context.Context, root *file.Root, name string, args Args) (lo
 	isLineStart := true
 	var output strings.Builder
 	var result loadedRange
+	probedBytes := 0
 
 	for {
 		if err := ctx.Err(); err != nil {
@@ -276,6 +289,12 @@ func loadRange(ctx context.Context, root *file.Root, name string, args Args) (lo
 		fragment, readErr := reader.ReadSlice('\n')
 		if len(fragment) > 0 {
 			_, _ = contentHasher.Write(fragment)
+		}
+		if probedBytes < binaryProbeBytes {
+			if isBinary(fragment[:min(len(fragment), binaryProbeBytes-probedBytes)]) {
+				return loadedRange{}, binaryFailure(args.Path)
+			}
+			probedBytes += len(fragment)
 		}
 
 		hasLine := len(fragment) > 0 && (readErr == nil || errors.Is(readErr, io.EOF))
@@ -325,6 +344,14 @@ func loadRange(ctx context.Context, root *file.Root, name string, args Args) (lo
 	result.contentHash = hex.EncodeToString(contentHasher.Sum(nil))
 	result.output = output.String()
 	return result, nil
+}
+
+func binaryFailure(path string) error {
+	return fmt.Errorf("%s: %w", path, errBinaryFile)
+}
+
+func isBinary(data []byte) bool {
+	return bytes.IndexByte(data[:min(len(data), binaryProbeBytes)], 0) >= 0
 }
 
 func load(root *file.Root, name string) (loadedFile, error) {

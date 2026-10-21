@@ -6,6 +6,7 @@
 
 - Use consistent messaging across tools
 - Store context so the find tool can be killed
+- Refuse binary files with read tool
 
 ## [0.20.2] — 2026-10-21
 

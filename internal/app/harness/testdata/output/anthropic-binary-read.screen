@@ -1,0 +1,16 @@
+
+ read the binary file whole, a line of the large binary, then lines two and three of the large text
+ file
+
+
+read <s>/io/cmd/oh/output/region.bin ✗ /tmp/io/cmd/oh/output/region.bin: file is binary and cannot …
+read <s>/io/cmd/oh/output/region.large.bin 2-2 ✗ /tmp/io/cmd/oh/output/region.large.bin: file is bi…
+read <s>/io/cmd/oh/output/region.go 2-3 2L
+
+Both binaries were refused and the text was read.
+
+
+ finish
+
+
+Done.

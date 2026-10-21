@@ -1,0 +1,35 @@
+# Conversation
+
+- **Session:** `tame-impala`
+- **Started:** `2001-01-01T00:00:00Z`
+- **Model:** `deepseek-v4-pro`
+- **Effort:** `high`
+- **Provider:** `chat`
+- **Workspace:** ``
+- **Tool detail:** `jq 'select(.event.id == "<id>")' session.jsonl`, for the `[id]` of any call
+
+## Mode · rxwsngl · +0s
+
+## User · +0s
+
+read the binary file whole, a line of the large binary, then lines two and three of the large text file
+
+## Tool calls · +0s
+
+```
+read: /tmp/io/cmd/oh/output/region.bin [error, 1 line, 75B, call-1]
+read: /tmp/io/cmd/oh/output/region.large.bin [error, 1 line, 81B, call-2]
+read: /tmp/io/cmd/oh/output/region.go [ok, 2 lines, 25B, call-3]
+```
+
+## Assistant · +0s
+
+Both binaries were refused and the text was read.
+
+## User · +0s
+
+finish
+
+## Assistant · +0s
+
+Done.

@@ -3,7 +3,7 @@
 {"kind":"event","event":{"kind":"state_change","name":"fast-mode","state":{"fast":false}}}
 {"kind":"event","event":{"kind":"user_message","text":"read lines two and three from the large file"}}
 {"kind":"event","event":{"render":"/tmp/io/cmd/oh/output/region.go","detail":"2-3","path_line":"2-3","emphasis":{"kind":"focus","value":"region.go"},"read_only":true,"kind":"tool_call_request","id":"call-1","name":"read","arguments":"{\"path\":\"/tmp/io/cmd/oh/output/region.go\",\"offset\":2,\"limit\":2}"}}
-{"kind":"event","event":{"kind":"state_change","id":"call-1","name":"file_read","state":{"files":[{"path":"/tmp/io/cmd/oh/output/region.go","sha256":"1dc7274477ea539f7f7b865df9f769f60122b4aa79be51ecd27bfebd0c17d7d9"}]}}}
+{"kind":"event","event":{"kind":"state_change","id":"call-1","name":"file_read","state":{"files":[{"path":"/tmp/io/cmd/oh/output/region.go","sha256":"7444a7a1cce730bc55ba9a7a6d319b9f7f2da2c2304741797ccdfa44200da76b"}]}}}
 {"kind":"event","event":{"kind":"tool_call_result","text":"selected one\nselected two","id":"call-1","name":"read","status":"success","stats":{"kind":"read","lines":2,"bytes":25}}}
 {"kind":"event","event":{"kind":"model_message","text":"The ranged read succeeded."}}
 {"kind":"item","payload":{"role":"user","content":"read lines two and three from the large file"}}

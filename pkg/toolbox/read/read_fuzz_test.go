@@ -33,6 +33,8 @@ func FuzzRangedReadMatchesInMemorySelection(fuzzer *testing.F) {
 		{"one\ntwo\nthree\n", -1, 2},
 		{strings.Repeat("x", 8192) + "\n" + "tail\n", 1, 2},
 		{strings.Repeat("no newline at all", 500), 1, 1},
+		{"text\n\x00binary\n", 1, 1},
+		{strings.Repeat("y", 8000) + "\x00\n", 1, 1},
 	} {
 		fuzzer.Add(seed.content, seed.offset, seed.limit)
 	}
@@ -44,11 +46,13 @@ func FuzzRangedReadMatchesInMemorySelection(fuzzer *testing.F) {
 		if offset <= 0 && limit <= 0 {
 			t.Skip("loadRange is only ever called with a real offset or limit")
 		}
-
 		wantOutput, wantSelectedLines, wantErr := referenceRangeSelect(content, offset, limit)
 
 		root, name := fuzzRangeRoot(t, content)
-		got, err := loadRange(t.Context(), root, name, Args{Offset: offset, Limit: limit})
+		if isBinary([]byte(content)) {
+			wantErr = binaryFailure(name)
+		}
+		got, err := loadRange(t.Context(), root, name, Args{Path: name, Offset: offset, Limit: limit})
 
 		switch {
 		case wantErr != nil:
