@@ -227,15 +227,18 @@ func Open(directory string, name string) (*Writer, error) {
 		_ = heldLock.Release()
 		return nil, err
 	}
-	if _, err := endJournalCleanly(journalPath(directory, name), heldLock.journalFile); err != nil {
+	if err := format.Require(formatOf(head), JournalFormat); err != nil {
 		_ = heldLock.Release()
-		return nil, fmt.Errorf("session %s: %w", name, err)
+		return nil, fmt.Errorf("session %s: journal %w", name, err)
 	}
-
 	listingMeta, err := ReadMeta(directory, name)
 	if err != nil {
 		_ = heldLock.Release()
 		return nil, err
+	}
+	if _, err := endJournalCleanly(journalPath(directory, name), heldLock.journalFile); err != nil {
+		_ = heldLock.Release()
+		return nil, fmt.Errorf("session %s: %w", name, err)
 	}
 
 	return &Writer{

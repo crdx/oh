@@ -857,6 +857,160 @@ func TestMetadataInAnotherFormatIsNamedAsSuch(t *testing.T) {
 	}
 }
 
+func TestOpeningWithUnreadableMetadataLeavesAnIncompleteTailUntouched(t *testing.T) {
+	for _, metadata := range []string{"missing", "malformed", "newer"} {
+		t.Run(metadata, func(t *testing.T) {
+			directory := t.TempDir()
+			writer, err := session.Create(directory, nil, nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err := writer.EnsurePersisted(); err != nil {
+				t.Fatal(err)
+			}
+			name := writer.Name()
+			if err := writer.Close(); err != nil {
+				t.Fatal(err)
+			}
+
+			journalPath := filepath.Join(directory, name, "session.jsonl")
+			journal, err := os.OpenFile(journalPath, os.O_APPEND|os.O_WRONLY, 0o600) //nolint:gosec // the test's own journal
+			if err != nil {
+				t.Fatal(err)
+			}
+			if _, err := journal.WriteString(`{"kind":"event"`); err != nil {
+				t.Fatal(err)
+			}
+			if err := journal.Close(); err != nil {
+				t.Fatal(err)
+			}
+			before, err := os.ReadFile(journalPath) //nolint:gosec // the test's own journal
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			metaPath := filepath.Join(directory, name, "meta.json")
+			switch metadata {
+			case "missing":
+				if err := os.Remove(metaPath); err != nil {
+					t.Fatal(err)
+				}
+			case "malformed":
+				if err := os.WriteFile(metaPath, []byte(`{"version":`), 0o600); err != nil {
+					t.Fatal(err)
+				}
+			case "newer":
+				encodedMeta := fmt.Sprintf(`{"version":%d,"name":%q}`, session.MetaFormat+1, name)
+				if err := os.WriteFile(metaPath, []byte(encodedMeta), 0o600); err != nil {
+					t.Fatal(err)
+				}
+			}
+
+			opened, openError := session.Open(directory, name)
+			if opened != nil {
+				_ = opened.Close()
+			}
+			if openError == nil {
+				t.Fatal("session with unreadable metadata opened")
+			}
+			after, err := os.ReadFile(journalPath) //nolint:gosec // the test's own journal
+			if err != nil {
+				t.Fatal(err)
+			}
+			if string(after) != string(before) {
+				t.Errorf("failed open changed the journal from %q to %q", before, after)
+			}
+			heldLock, err := session.AcquireLock(directory, name)
+			if err != nil {
+				t.Fatalf("failed open kept the session locked: %v", err)
+			}
+			if err := heldLock.Release(); err != nil {
+				t.Fatal(err)
+			}
+		})
+	}
+}
+
+func TestOpeningANewerJournalLeavesAnIncompleteTailUntouched(t *testing.T) {
+	directory := t.TempDir()
+	writer, err := session.Create(directory, nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.EnsurePersisted(); err != nil {
+		t.Fatal(err)
+	}
+	name := writer.Name()
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	journalPath := filepath.Join(directory, name, "session.jsonl")
+	journal, err := os.ReadFile(journalPath) //nolint:gosec // the test's own journal
+	if err != nil {
+		t.Fatal(err)
+	}
+	currentVersion := fmt.Sprintf(`"version":%d`, session.JournalFormat)
+	newerVersion := fmt.Sprintf(`"version":%d`, session.JournalFormat+1)
+	journal = []byte(strings.Replace(string(journal), currentVersion, newerVersion, 1) + `{"kind":"event"`)
+	if err := os.WriteFile(journalPath, journal, 0o600); err != nil { //nolint:gosec // the test's own journal
+		t.Fatal(err)
+	}
+
+	opened, openError := session.Open(directory, name)
+	if opened != nil {
+		_ = opened.Close()
+	}
+	if openError == nil || !strings.Contains(openError.Error(), "newer build") {
+		t.Fatalf("got %v, want the newer journal refused", openError)
+	}
+	after, err := os.ReadFile(journalPath) //nolint:gosec // the test's own journal
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(after) != string(journal) {
+		t.Errorf("failed open changed the journal from %q to %q", journal, after)
+	}
+}
+
+func TestOpeningWithReadableMetadataRepairsAnIncompleteTail(t *testing.T) {
+	directory := t.TempDir()
+	writer, err := session.Create(directory, nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.EnsurePersisted(); err != nil {
+		t.Fatal(err)
+	}
+	name := writer.Name()
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	journalPath := filepath.Join(directory, name, "session.jsonl")
+	journal, err := os.OpenFile(journalPath, os.O_APPEND|os.O_WRONLY, 0o600) //nolint:gosec // the test's own journal
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := journal.WriteString(`{"kind":"event"`); err != nil {
+		t.Fatal(err)
+	}
+	if err := journal.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	opened, err := session.Open(directory, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := opened.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := session.Read(directory, name); err != nil {
+		t.Fatalf("opening left the journal unreadable: %v", err)
+	}
+}
+
 func titleState(t *testing.T, name string) json.RawMessage {
 	t.Helper()
 
