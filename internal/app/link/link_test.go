@@ -618,3 +618,42 @@ func TestAPathOutsideTmpIsStillFoundUnderTheWorkspace(t *testing.T) {
 		t.Errorf("got %q, want the workspace path linked", got)
 	}
 }
+
+func TestAPathJoinedToOtherTextByAColonStaysPlain(t *testing.T) {
+	workspace := t.TempDir()
+	first := prepareFile(t, workspace, "first.patch")
+	second := prepareFile(t, workspace, "second.patch")
+
+	for _, text := range []string{
+		first + "::" + second,
+		"PATH=" + first + ":" + second,
+		"host:" + first,
+		"error:" + first,
+		first + ":notes",
+	} {
+		if got := Render(text, Roots{Workspace: workspace}); got != text {
+			t.Errorf("got %q, want %q unlinked", got, text)
+		}
+	}
+}
+
+func TestAPathBesideAColonThatEndsItsWordIsStillLinked(t *testing.T) {
+	workspace := t.TempDir()
+	path := prepareFile(t, workspace, "main.go")
+
+	for _, text := range []string{
+		path + ": the entry point",
+		path + ":12: unused variable",
+		path + ":12:3: unused variable",
+		"see " + path + ":",
+		"PATCH=" + path,
+	} {
+		got := Render(text, Roots{Workspace: workspace})
+		if address := linkAddress(t, got); address.Path != filepath.ToSlash(path) {
+			t.Errorf("%q: got address %q", text, address)
+		}
+		if stripEscapes(got) != text {
+			t.Errorf("%q: expected the visible text unchanged, got %q", text, stripEscapes(got))
+		}
+	}
+}

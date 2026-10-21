@@ -203,6 +203,9 @@ func locations(text string, roots Roots) []location {
 		if !exists || found.begin < lastEnd || overlapsAny(addresses, found.begin, found.end) {
 			continue
 		}
+		if isJoinedByColon(text, found.begin, found.end) {
+			continue
+		}
 
 		foundLocations = append(foundLocations, found)
 		lastEnd = found.end
@@ -573,6 +576,14 @@ func spannedStart(text string, segmentBegin int, begin int) int {
 	}
 
 	return segmentBegin
+}
+
+func isJoinedByColon(text string, begin int, end int) bool {
+	if begin > 0 && text[begin-1] == ':' {
+		return true
+	}
+
+	return end+1 < len(text) && text[end] == ':' && !isSpace(text[end+1]) && !isPathBoundary(text[end+1])
 }
 
 func isPathBoundary(character byte) bool {

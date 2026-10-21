@@ -2,6 +2,10 @@
 
 ## [Next]
 
+### Hyperlinks
+
+- Stop linking paths joined to other text by a colon
+
 ## [0.20.1] — 2026-10-21
 
 ### Sessions

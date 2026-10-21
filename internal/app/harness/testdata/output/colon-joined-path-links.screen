@@ -1,0 +1,12 @@
+=== colon joined path links ===
+
+ • joined: repository/main.go::changes.patch and PATH=repository/main.go:changes.patch and error:changes.patch stay plain
+ • spaced: repository/main.go and changes.patch link
+ • located: repository/main.go:12:3: unused links
+ • labelled: changes.patch: the fix links
+
+
+• joined: repository/main.go::changes.patch and PATH=repository/main.go:changes.patch and error:changes.patch stay plain
+• spaced: repository/main.go and changes.patch link
+• located: repository/main.go:12:3: unused links
+• labelled: changes.patch: the fix links

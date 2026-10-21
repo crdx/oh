@@ -5994,6 +5994,7 @@ func TestGoldenFixtureOutputsAreCompleteAndOwned(t *testing.T) {
 		"editing-reply":            {".ansi", ".screen"},
 		"elided-path-links":        {".ansi", ".screen"},
 		"spaced-path-links":        {".ansi", ".screen"},
+		"colon-joined-path-links":  {".ansi", ".screen"},
 		"environment-change":       {".ansi", ".screen"},
 		"feedback":                 {".ansi", ".screen", ".txt"},
 		"feedback-frame":           {".ansi", ".screen"},
@@ -13201,6 +13202,49 @@ func drawSpacedPathLinks(t *testing.T) string {
 		)
 	}
 	rig.chat.recordedEvents = append(rig.chat.recordedEvents, agent.Event{Kind: agent.ModelMessageEvent, Text: sentences})
+	rig.chat.replay()
+
+	return rig.drawn()
+}
+
+func TestGoldenPathsJoinedByAColonStayPlain(t *testing.T) {
+	passes := map[string]func() string{
+		"colon joined path links": func() string { return drawColonJoinedPathLinks(t) },
+	}
+	screenPasses := map[string]func() string{
+		"colon joined path links": func() string { return shown(t, drawColonJoinedPathLinks(t), spacedPathColumns) },
+	}
+
+	compareWithGolden(t, "colon-joined-path-links", ".ansi", passes)
+	compareWithGolden(t, "colon-joined-path-links", ".screen", screenPasses)
+}
+
+func drawColonJoinedPathLinks(t *testing.T) string {
+	t.Helper()
+
+	rig := newReplayRig(t, spacedPathColumns)
+	workspace := rig.workspace.GetDir()
+	for _, name := range []string{"repository/main.go", "changes.patch"} {
+		path := filepath.Join(workspace, name)
+		if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, nil, 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	sentences := strings.Join([]string{
+		"- joined: repository/main.go::changes.patch and PATH=repository/main.go:changes.patch and error:changes.patch stay plain",
+		"- spaced: repository/main.go and changes.patch link",
+		"- located: repository/main.go:12:3: unused links",
+		"- labelled: changes.patch: the fix links",
+	}, "\n")
+
+	rig.chat.recordedEvents = []agent.Event{
+		{Kind: agent.UserMessageEvent, Text: sentences},
+		{Kind: agent.ModelMessageEvent, Text: sentences},
+	}
 	rig.chat.replay()
 
 	return rig.drawn()

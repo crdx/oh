@@ -1,0 +1,13 @@
+=== colon joined path links ===
+\e[?2026h\e[?25l\e]133;A\e\\\e[48;2;52;53;65m                                                                                                                                                                                                        \e[0m\r
+\e[48;2;52;53;65m \e[38;2;192;128;80m• \e[0m\e[48;2;52;53;65mjoined: repository/main.go::changes.patch and PATH=repository/main.go:changes.patch and error:changes.patch stay plain                                                                               \e[0m\r
+\e[48;2;52;53;65m \e[38;2;192;128;80m• \e[0m\e[48;2;52;53;65mspaced: \e]8;;file:///workspace/repository/main.go\e\\repository/main.go\e]8;;\e\\ and \e]8;;file:///workspace/changes.patch\e\\changes.patch\e]8;;\e\\ link                                                                                                                                                    \e[0m\r
+\e[48;2;52;53;65m \e[38;2;192;128;80m• \e[0m\e[48;2;52;53;65mlocated: \e]8;;file:///workspace/repository/main.go#12:3\e\\repository/main.go:12:3\e]8;;\e\\: unused links                                                                                                                                                       \e[0m\r
+\e[48;2;52;53;65m \e[38;2;192;128;80m• \e[0m\e[48;2;52;53;65mlabelled: \e]8;;file:///workspace/changes.patch\e\\changes.patch\e]8;;\e\\: the fix links                                                                                                                                                               \e[0m\r
+\e[48;2;52;53;65m                                                                                                                                                                                                        \e[0m\r
+\r
+\e[38;2;192;128;80m• \e[0mjoined: repository/main.go::changes.patch and PATH=repository/main.go:changes.patch and error:changes.patch stay plain\r
+\e[38;2;192;128;80m• \e[0mspaced: \e]8;;file:///workspace/repository/main.go\e\\repository/main.go\e]8;;\e\\ and \e]8;;file:///workspace/changes.patch\e\\changes.patch\e]8;;\e\\ link\r
+\e[38;2;192;128;80m• \e[0mlocated: \e]8;;file:///workspace/repository/main.go#12:3\e\\repository/main.go:12:3\e]8;;\e\\: unused links\r
+\e[38;2;192;128;80m• \e[0mlabelled: \e]8;;file:///workspace/changes.patch\e\\changes.patch\e]8;;\e\\: the fix links\r
+\e[?25h\e[?2026l
