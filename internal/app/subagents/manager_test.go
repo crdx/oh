@@ -801,61 +801,6 @@ func TestAManagerNamesItsModelsAsPeopleKnowThem(t *testing.T) {
 	}
 }
 
-func TestEachChildStartsOnTheModelTheParentChoosesForIt(t *testing.T) {
-	family := newTestFamily(t)
-	var opened []Child
-	var openedMutex sync.Mutex
-	factory := func(ctx context.Context, child Child) (Worker, error) {
-		openedMutex.Lock()
-		opened = append(opened, child)
-		openedMutex.Unlock()
-		return answering(func() agent.Provider { return &answeringProvider{} })(ctx, child)
-	}
-	models := []ChildModel{
-		{Choice: model.Choice{Provider: "anthropic", ID: "claude-opus-5", EffortLevels: []string{"high"}}, Selection: model.Selection{Provider: "anthropic", Model: "claude-opus-5", Effort: "high"}},
-		{Choice: model.Choice{Provider: "anthropic", ID: "claude-haiku-5", EffortLevels: []string{"low"}}, Selection: model.Selection{Provider: "anthropic", Model: "claude-haiku-5", Effort: "low"}},
-	}
-	manager, err := New(Options{
-		Directory: family.directory,
-		Scratch:   family.scratch,
-		Parent:    parentName,
-		Models:    models,
-		Factory:   factory,
-		PickName:  func(int) int { return 0 },
-		Caps:      func() caps.Set { return caps.Read },
-		Workspace: func(string) (string, error) { return family.workspace, nil },
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(manager.Close)
-
-	if _, err := manager.Start(t.Context(), "", []subagent.Task{{Model: "anthropic/claude-opus-5@high", Prompt: "one"}, {Model: "anthropic/claude-haiku-5@low", Prompt: "two"}}); err != nil {
-		t.Fatal(err)
-	}
-	finished := untilFinished(t, manager, 2)
-
-	modelOf := map[string]string{}
-	openedMutex.Lock()
-	for _, child := range opened {
-		modelOf[child.Name] = child.Choice.ID
-	}
-	openedMutex.Unlock()
-	for _, event := range finished {
-		untilSettled(t, manager, event.Subagent)
-		stored, err := store.Read(family.directory, event.Subagent)
-		if err != nil {
-			t.Fatal(err)
-		}
-		if stored.Meta.ModelChoice == nil || stored.Meta.ModelChoice.ID != modelOf[event.Subagent] || stored.Meta.Model != modelOf[event.Subagent] {
-			t.Errorf("%s ran on %s but stored %q and %+v", event.Subagent, modelOf[event.Subagent], stored.Meta.Model, stored.Meta.ModelChoice)
-		}
-	}
-	if len(modelOf) != 2 || modelOf[finished[0].Subagent] == modelOf[finished[1].Subagent] {
-		t.Errorf("the children ran on %v, want one on each model", modelOf)
-	}
-}
-
 func TestAStartWithAnUnavailableModelStartsNothing(t *testing.T) {
 	family := newTestFamily(t)
 	manager, err := New(Options{

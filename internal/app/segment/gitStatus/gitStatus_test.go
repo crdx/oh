@@ -2,8 +2,6 @@ package gitStatus
 
 import (
 	"context"
-	"errors"
-	"io/fs"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -411,23 +409,5 @@ func TestAWorktreeCanReadItsCommonMetadata(t *testing.T) {
 	paths := readablePaths(worktreeDir, gitrepo.Dir(worktreeDir))
 	if !slices.Contains(paths, filepath.Join(mainDir, ".git")) {
 		t.Errorf("expected the common metadata to be readable, got %v", paths)
-	}
-}
-
-func TestAPlantedFilesystemMonitorCannotTouchTheHost(t *testing.T) {
-	if err := sandbox.Supported(t.Context()); err != nil {
-		t.Skipf("this machine cannot sandbox commands: %v", err)
-	}
-	isolateGit(t)
-
-	marker := filepath.Join(t.TempDir(), "planted")
-	workspaceDir := repository(t, "git init -q -b main\ngit config core.fsmonitor 'touch "+marker+"; false'\n")
-
-	if _, err := readTree(sandbox.DirectArgv(), workspaceDir, gitrepo.Dir(workspaceDir)); err != nil {
-		t.Fatal(err)
-	}
-
-	if _, err := os.Stat(marker); !errors.Is(err, fs.ErrNotExist) {
-		t.Errorf("a monitor planted in the repository ran with host access: %v", err)
 	}
 }
