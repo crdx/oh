@@ -1,11 +1,10 @@
 function _oh {
     local LINE WORD PREVIOUS KIND TOKEN
     local FLAG_GROUP='^-[fpluUIJvh]*[rmL]?[fpluUIJvh]*$'
-    local -a TOKENS LINE_TOKENS
+    local -a TOKENS
 
     LINE=${COMP_LINE:0:COMP_POINT}
     read -ra TOKENS <<< "$LINE"
-    read -ra LINE_TOKENS <<< "$COMP_LINE"
 
     if [[ -z $LINE || $LINE == *[[:space:]] ]]; then
         WORD=
@@ -20,7 +19,7 @@ function _oh {
         COMMAND=${TOKENS[2]-}
 
         if [[ -z $COMMAND || ( ${#TOKENS[@]} -eq 3 && -n $WORD ) ]]; then
-            KIND=command
+            KIND='command'
         elif [[ $WORD == -* ]]; then
             KIND=option
         elif [[ $COMMAND == analyse || $COMMAND == regenerate || $COMMAND == migrate ]]; then
@@ -37,12 +36,19 @@ function _oh {
 
     if [[ $PREVIOUS =~ $FLAG_GROUP && $PREVIOUS == *r* ]]; then
         PREVIOUS=-r
+    elif [[ $PREVIOUS == --force || ( $PREVIOUS =~ $FLAG_GROUP && $PREVIOUS == *f* ) ]]; then
+        for TOKEN in "${TOKENS[@]}"; do
+            if [[ $TOKEN == --resume || ( $TOKEN =~ $FLAG_GROUP && $TOKEN == *r* ) ]]; then
+                PREVIOUS=-r
+                break
+            fi
+        done
     fi
 
     case $PREVIOUS in
         -r | --resume)
             KIND=stored-session
-            for TOKEN in "${LINE_TOKENS[@]}"; do
+            for TOKEN in "${TOKENS[@]}"; do
                 if [[ $TOKEN == --force || ( $TOKEN =~ $FLAG_GROUP && $TOKEN == *f* ) ]]; then
                     KIND=any-session
                 fi

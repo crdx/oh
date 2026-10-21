@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"slices"
+	"strings"
 	"testing"
 
 	"crdx.org/oh/internal/app/model"
@@ -282,5 +284,125 @@ func TestSessionCompletionsNameTheWorkspaceNewestFirst(t *testing.T) {
 	}
 	if names := anySessionNames(missingDirectory); len(names) > 0 {
 		t.Errorf("expected no session names of any kind for a missing directory, got %v", names)
+	}
+}
+
+func TestGoldenBashCompletionRecognisesEveryForcedResumeFormAndCursorPosition(t *testing.T) {
+	completionPath, err := filepath.Abs(filepath.Join("..", "..", "..", "completion", "oh.bash"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	callsPath := filepath.Join(t.TempDir(), "calls")
+	repliesPath := filepath.Join(t.TempDir(), "replies")
+	binaryPath := filepath.Join(t.TempDir(), "oh")
+	binary := `#!/bin/bash
+set -euo pipefail
+printf '%s\n' "$*" > "$CALLS"
+case "$2" in
+    stored-session) printf '%s\n' stored-ibis ;;
+    any-session) printf '%s\n' archived-otter stored-ibis ;;
+    option) printf '%s\n' --force ;;
+esac
+`
+	if err := os.WriteFile(binaryPath, []byte(binary), 0o700); err != nil { //nolint:gosec // the test executes this stand-in
+		t.Fatal(err)
+	}
+
+	tests := []struct {
+		name   string
+		line   string
+		cursor string
+		kind   string
+		word   string
+	}{
+		{name: "short resume", line: "-r ", cursor: "-r ", kind: completeStoredSession},
+		{name: "long resume", line: "--resume ", cursor: "--resume ", kind: completeStoredSession},
+		{name: "short force after short resume", line: "-r -f ", cursor: "-r -f ", kind: completeAnySession},
+		{name: "long force after long resume", line: "--resume --force ", cursor: "--resume --force ", kind: completeAnySession},
+		{name: "long force after short resume", line: "-r --force ", cursor: "-r --force ", kind: completeAnySession},
+		{name: "short force after long resume", line: "--resume -f ", cursor: "--resume -f ", kind: completeAnySession},
+		{name: "short force before short resume", line: "-f -r ", cursor: "-f -r ", kind: completeAnySession},
+		{name: "long force before long resume", line: "--force --resume ", cursor: "--force --resume ", kind: completeAnySession},
+		{name: "long force before short resume", line: "--force -r ", cursor: "--force -r ", kind: completeAnySession},
+		{name: "short force before long resume", line: "-f --resume ", cursor: "-f --resume ", kind: completeAnySession},
+		{name: "resume then force group", line: "-rf ", cursor: "-rf ", kind: completeAnySession},
+		{name: "force then resume group", line: "-fr ", cursor: "-fr ", kind: completeAnySession},
+		{name: "force group after resume", line: "-r -pf ", cursor: "-r -pf ", kind: completeAnySession},
+		{name: "later resume ignored", line: "-f --resume ", cursor: "-f ", kind: completeOption},
+		{name: "later force ignored", line: "-r -f ", cursor: "-r ", kind: completeStoredSession},
+		{name: "stored session prefix", line: "-r archived", cursor: "-r archived", kind: completeStoredSession, word: "archived"},
+		{name: "forced session prefix", line: "-r -f arch", cursor: "-r -f arch", kind: completeAnySession, word: "arch"},
+		{name: "fork source", line: "--from ", cursor: "--from ", kind: completeStoredSession},
+	}
+	var golden strings.Builder
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			command := exec.CommandContext(t.Context(), "bash", "-c", `
+source "$COMPLETION"
+COMP_WORDS=("$OH")
+COMP_LINE="$OH $LINE_INPUT"
+POINT_LINE="$OH $CURSOR_INPUT"
+COMP_POINT=${#POINT_LINE}
+_oh
+printf '%s\n' "${COMPREPLY[@]}" > "$REPLIES"
+`)
+			command.Env = append(
+				os.Environ(),
+				"CALLS="+callsPath,
+				"COMPLETION="+completionPath,
+				"CURSOR_INPUT="+test.cursor,
+				"LINE_INPUT="+test.line,
+				"OH="+binaryPath,
+				"REPLIES="+repliesPath,
+			)
+			if output, err := command.CombinedOutput(); err != nil {
+				t.Fatalf("bash completion failed: %v\n%s", err, output)
+			}
+			called, err := os.ReadFile(callsPath) //nolint:gosec // the test's own call log
+			if err != nil {
+				t.Fatal(err)
+			}
+			want := "--complete " + test.kind
+			if test.word != "" {
+				want += " " + test.word
+			}
+			request := strings.TrimSpace(string(called))
+			if request != want {
+				t.Errorf("completion called %q, want %q", request, want)
+			}
+			replies, err := os.ReadFile(repliesPath) //nolint:gosec // the test's own completion log
+			if err != nil {
+				t.Fatal(err)
+			}
+			_, _ = fmt.Fprintf(
+				&golden,
+				"%s\n  line: %q\n  cursor: %q\n  request: %q\n  replies: %q\n\n",
+				test.name,
+				test.line,
+				test.cursor,
+				request,
+				strings.Fields(string(replies)),
+			)
+		})
+	}
+	assertCLIGolden(t, "bash-completion.txt", strings.TrimRight(golden.String(), "\n")+"\n")
+}
+
+func assertCLIGolden(t *testing.T, name string, drawn string) {
+	t.Helper()
+
+	goldenPath := filepath.Join("testdata", name)
+	if *updateGoldens {
+		if err := os.WriteFile(goldenPath, []byte(drawn), 0o600); err != nil {
+			t.Fatal(err)
+		}
+		return
+	}
+	want, err := os.ReadFile(goldenPath) //nolint:gosec // fixed testdata path
+	if err != nil {
+		t.Fatal(err)
+	}
+	if drawn != string(want) {
+		t.Errorf("output differs from %s\n--- got ---\n%s--- want ---\n%s", goldenPath, drawn, want)
 	}
 }

@@ -1,0 +1,107 @@
+short resume
+  line: "-r "
+  cursor: "-r "
+  request: "--complete stored-session"
+  replies: ["stored-ibis"]
+
+long resume
+  line: "--resume "
+  cursor: "--resume "
+  request: "--complete stored-session"
+  replies: ["stored-ibis"]
+
+short force after short resume
+  line: "-r -f "
+  cursor: "-r -f "
+  request: "--complete any-session"
+  replies: ["archived-otter" "stored-ibis"]
+
+long force after long resume
+  line: "--resume --force "
+  cursor: "--resume --force "
+  request: "--complete any-session"
+  replies: ["archived-otter" "stored-ibis"]
+
+long force after short resume
+  line: "-r --force "
+  cursor: "-r --force "
+  request: "--complete any-session"
+  replies: ["archived-otter" "stored-ibis"]
+
+short force after long resume
+  line: "--resume -f "
+  cursor: "--resume -f "
+  request: "--complete any-session"
+  replies: ["archived-otter" "stored-ibis"]
+
+short force before short resume
+  line: "-f -r "
+  cursor: "-f -r "
+  request: "--complete any-session"
+  replies: ["archived-otter" "stored-ibis"]
+
+long force before long resume
+  line: "--force --resume "
+  cursor: "--force --resume "
+  request: "--complete any-session"
+  replies: ["archived-otter" "stored-ibis"]
+
+long force before short resume
+  line: "--force -r "
+  cursor: "--force -r "
+  request: "--complete any-session"
+  replies: ["archived-otter" "stored-ibis"]
+
+short force before long resume
+  line: "-f --resume "
+  cursor: "-f --resume "
+  request: "--complete any-session"
+  replies: ["archived-otter" "stored-ibis"]
+
+resume then force group
+  line: "-rf "
+  cursor: "-rf "
+  request: "--complete any-session"
+  replies: ["archived-otter" "stored-ibis"]
+
+force then resume group
+  line: "-fr "
+  cursor: "-fr "
+  request: "--complete any-session"
+  replies: ["archived-otter" "stored-ibis"]
+
+force group after resume
+  line: "-r -pf "
+  cursor: "-r -pf "
+  request: "--complete any-session"
+  replies: ["archived-otter" "stored-ibis"]
+
+later resume ignored
+  line: "-f --resume "
+  cursor: "-f "
+  request: "--complete option"
+  replies: ["--force"]
+
+later force ignored
+  line: "-r -f "
+  cursor: "-r "
+  request: "--complete stored-session"
+  replies: ["stored-ibis"]
+
+stored session prefix
+  line: "-r archived"
+  cursor: "-r archived"
+  request: "--complete stored-session archived"
+  replies: ["stored-ibis"]
+
+forced session prefix
+  line: "-r -f arch"
+  cursor: "-r -f arch"
+  request: "--complete any-session arch"
+  replies: ["archived-otter" "stored-ibis"]
+
+fork source
+  line: "--from "
+  cursor: "--from "
+  request: "--complete stored-session"
+  replies: ["stored-ibis"]
