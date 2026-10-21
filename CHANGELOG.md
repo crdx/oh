@@ -2,6 +2,16 @@
 
 ## [Next]
 
+## [0.20.1] — 2026-10-21
+
+### Sessions
+
+- Leave incompatible session journals untouched
+- Migrate journals with incomplete final writes
+- Rebuild missing transcripts during interrupted-session recovery
+- Deduplicate explicitly named session repairs
+- Complete stored and archived session names properly
+
 ## [0.20.0] — 2026-10-21
 
 ### Picker
