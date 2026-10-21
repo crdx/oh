@@ -2,6 +2,8 @@
 
 ## [Next]
 
+## [0.20.0] — 2026-10-21
+
 ### Picker
 
 - Allow pasting into filter field
