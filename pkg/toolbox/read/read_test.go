@@ -241,6 +241,27 @@ func TestAnOffsetPastTheEndSaysHowLongTheFileIs(t *testing.T) {
 	}
 }
 
+func TestAReadWithAnOffsetAndAHugeLimitReadsTheRestWithoutPanicking(t *testing.T) {
+	root := testRoot(t, "notes.txt", "one\ntwo\nthree\n")
+
+	for _, test := range []struct {
+		arguments string
+		want      string
+	}{
+		{`{"path":"notes.txt","offset":2,"limit":9223372036854775807}`, "two\nthree"},
+		{`{"path":"notes.txt","offset":3,"limit":9223372036854775807}`, "three"},
+	} {
+		output, err := exec(t, root, test.arguments)
+		if err != nil {
+			t.Errorf("a huge limit with %s got %v, want a successful read", test.arguments, err)
+			continue
+		}
+		if output != test.want {
+			t.Errorf("a huge limit with %s got %q, want %q", test.arguments, output, test.want)
+		}
+	}
+}
+
 func TestAHugeFileIsNotCutShort(t *testing.T) {
 	content := strings.Repeat("a line of text\n", 8000)
 	root := testRoot(t, "big.txt", content)
@@ -619,6 +640,14 @@ func TestRenderLeavesAnOpenRangeOpen(t *testing.T) {
 
 	if qualifier != "10+" {
 		t.Errorf("expected an open range, got %q", qualifier)
+	}
+}
+
+func TestRenderLeavesAnOverflowingRangeOpen(t *testing.T) {
+	qualifier := read.Describe(read.Args{Path: "notes.txt", Offset: 2, Limit: 9223372036854775807}).Qualifier
+
+	if qualifier != "2+" {
+		t.Errorf("expected an overflowing range to stay open, got %q", qualifier)
 	}
 }
 

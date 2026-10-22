@@ -131,7 +131,11 @@ func skillNameFromPath(path string) (string, bool) {
 func span(offset int, limit int) string {
 	switch {
 	case offset > 0 && limit > 0:
-		return fmt.Sprintf("%d-%d", offset, offset+limit-1)
+		end := offset + limit - 1
+		if end < offset {
+			return fmt.Sprintf("%d+", offset)
+		}
+		return fmt.Sprintf("%d-%d", offset, end)
 	case offset > 0:
 		return fmt.Sprintf("%d+", offset)
 	case limit > 0:
@@ -208,7 +212,7 @@ func exec(ctx context.Context, root *file.Root, args Args) (tool.ToolCallResult,
 	}
 
 	end := len(lines)
-	if args.Limit > 0 && start+args.Limit < end {
+	if args.Limit > 0 && args.Limit < end-start {
 		end = start + args.Limit
 	}
 

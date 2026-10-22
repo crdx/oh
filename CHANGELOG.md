@@ -5,6 +5,7 @@
 ### Changes
 
 - Refuse a swapped symlink on an exact-file grant
+- Stop the read tool panicking on a huge line limit
 ## [0.21.0] — 2026-10-22
 
 ### Changes
