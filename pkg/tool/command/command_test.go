@@ -862,6 +862,65 @@ func TestACallKilledByASignalNamesIt(t *testing.T) {
 	}
 }
 
+func TestARunningCustomCommandPublishesOutputBeforeItEnds(t *testing.T) {
+	declaration := command.Declaration{
+		Name:        "progress",
+		Description: "report live progress",
+		Command:     []string{writeScript(t, "printf 'first phase\\n'; sleep 30")},
+	}
+	subject, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	call, err := subject.Parse(`{}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var output tool.OutputBuffer
+	ctx, cancel := context.WithCancel(tool.WithOutput(t.Context(), &output))
+	defer cancel()
+	finished := make(chan tool.ToolCallResult, 1)
+	go func() {
+		result, _ := call.Exec(ctx)
+		finished <- result
+	}()
+	deadline := time.Now().Add(5 * time.Second)
+	for !strings.Contains(output.String(), "first phase") && time.Now().Before(deadline) {
+		time.Sleep(10 * time.Millisecond)
+	}
+	if !strings.Contains(output.String(), "first phase") {
+		t.Error("running custom command did not expose collected output")
+	}
+	select {
+	case result := <-finished:
+		t.Fatalf("the custom command finished before its live output was read: %+v", result)
+	default:
+	}
+	cancel()
+	if result := <-finished; !strings.Contains(result.Output, "first phase") {
+		t.Errorf("final command output lost its live prefix: %+v", result)
+	}
+}
+
+func TestAForegroundCustomCommandBoundsOutputBeforePresentation(t *testing.T) {
+	declaration := command.Declaration{
+		Name:        "large",
+		Description: "emit a large foreground result",
+		Command:     []string{writeScript(t, `printf '%1048576s' ' ' | tr ' ' x`)},
+	}
+	subject, err := command.New(declaration, command.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	output, err := call(t, subject, `{}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(output) > (256<<10)+100 || !strings.Contains(output, "earlier output bytes") {
+		t.Errorf("foreground command retained %d bytes without a bounded-output notice", len(output))
+	}
+}
+
 func TestACustomCommandRunsAtLowerPriority(t *testing.T) {
 	own, err := unix.Getpriority(unix.PRIO_PROCESS, os.Getpid())
 	if err != nil {

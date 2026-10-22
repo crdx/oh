@@ -12,6 +12,7 @@
 - Verify the workspace path before bash, grep and job run
 - Sweep inherited descriptors before a confined command starts
 - Run agent commands at lower CPU priority
+- Bound custom tool output during execution
 
 ## [0.21.0] — 2026-10-22
 

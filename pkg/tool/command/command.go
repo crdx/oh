@@ -417,11 +417,14 @@ func runGroup(ctx context.Context, process *exec.Cmd) (string, bool, bool, error
 		return "", false, false, err
 	}
 
-	var output strings.Builder
+	output := tool.LiveOutput(ctx)
+	if output == nil {
+		output = &tool.OutputBuffer{}
+	}
 	endOfOutput := make(chan struct{})
 	go func() {
 		defer close(endOfOutput)
-		_, _ = io.Copy(&output, reader)
+		_, _ = io.Copy(output, reader)
 	}()
 
 	group := -process.Process.Pid
@@ -457,7 +460,7 @@ func runGroup(ctx context.Context, process *exec.Cmd) (string, bool, bool, error
 	}
 	_ = reader.Close()
 
-	return output.String(), hasEscalated, wasStopped, err
+	return output.Report(), hasEscalated, wasStopped, err
 }
 
 func status(output string, note string) string {
