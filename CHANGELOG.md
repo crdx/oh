@@ -11,35 +11,47 @@
 
 ## [0.22.0] — 2026-10-22
 
-### Changes
+### Tasks
 
-- Remove the built-in kitty-specific notify tool
-- Remove built-in tool overrides and check timeouts
-- Keep call rendering when async options are invalid
+- Replace jobs with tasks, and make all tools asyncable
 - Keep the respawn-limit reason in task status
-- Stop subagent activity duplicating running call rows
 - Improve messaging about stopped tasks
-- Keep both ends of output too long to return
-- State the exit status or signal when a command fails
 - Stop announcing discarded tasks and show earlier runs
 - Wake the conversation for a task ending with a turn
 - Never reuse a task ID after a resume
-- Improve task guidance in tool descriptions
 - Stop a fork announcing a discarded task
-- Refuse a swapped symlink on an exact-file grant
+- Run commands at nicer CPU priority
+
+### Tools
+
+- Remove the built-in kitty-specific notify tool
+- Remove built-in tool overrides and check timeouts
+- Keep both ends of output too long to return
+- State the exit status or signal when a command fails
+- Improve task guidance in tool descriptions
 - Stop the read tool panicking on a huge line limit
-- Revoke a grant whose path was replaced by a symlink
-- Refuse duplicate subagent aliases in one call
-- Refuse a child workspace inside the parent's scratch
-- Verify the workspace path before bash, grep and job run
-- Sweep inherited descriptors before a confined command starts
-- Unify tool settings in config file, and singularise key name
-- Replace jobs with tasks, and make all tools asyncable
 - Let a custom tool override the built-in limit
 - Run bash, grep, lookup async, and allow custom tools to opt in
-- Run agent commands at lower CPU priority
-- Refuse a subagent follow-up after its workspace grant is revoked
 - Bound custom tool output during execution
+- Keep call rendering when async options are invalid
+- Unify tool settings in config file, and singularise key name
+
+### Subagents
+
+- Refuse duplicate subagent aliases in one call
+- Refuse a child workspace inside the parent's scratch
+- Refuse a subagent follow-up after its workspace grant is revoked
+- Stop subagent activity duplicating running call rows
+
+### Security
+
+- Refuse a swapped symlink on an exact-file grant
+- Revoke a grant whose path was replaced by a symlink
+- Verify the workspace path before bash, grep and job run
+- Sweep inherited descriptors before a confined command starts
+
+### Configuration
+
 - Singularise config tables and move the forwarding hostname
 - Retire the deprecated permissions config key
 
