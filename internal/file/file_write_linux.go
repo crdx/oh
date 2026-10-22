@@ -19,12 +19,51 @@ func writeRootFileSafely(root *os.Root, name string, data []byte, permission os.
 }
 
 func writeExactFileSafely(path string, data []byte, permission os.FileMode) error {
-	directory, err := os.OpenRoot(filepath.Dir(path))
+	descriptor, err := syscall.Open(
+		path,
+		syscall.O_WRONLY|syscall.O_CREAT|syscall.O_NOFOLLOW|syscall.O_CLOEXEC,
+		uint32(permission.Perm()),
+	)
+	if errors.Is(err, syscall.ELOOP) {
+		return ErrOutsideRoot
+	}
+	if err != nil {
+		return err
+	}
+	file := os.NewFile(uintptr(descriptor), filepath.Base(path))
+	defer func() { _ = file.Close() }()
+	return writeOpenedFileSafely(file, data)
+}
+
+func writeRootFileNoSymlink(root *os.Root, name string, data []byte, permission os.FileMode) error {
+	return writeRootFileWithoutSymlinks(root, name, data, permission, ErrOutsideRoot)
+}
+
+func writeRootFileWithoutSymlinks(root *os.Root, name string, data []byte, permission os.FileMode, symlinkError error) error {
+	if !filepath.IsLocal(name) {
+		return ErrOutsideRoot
+	}
+	directory, err := openDirectoryWithoutSymlinks(root, filepath.Dir(name))
 	if err != nil {
 		return err
 	}
 	defer func() { _ = directory.Close() }()
-	return writeRootFileSafely(directory, filepath.Base(path), data, permission)
+
+	descriptor, err := syscall.Openat(
+		int(directory.Fd()),
+		filepath.Base(name),
+		syscall.O_WRONLY|syscall.O_CREAT|syscall.O_NOFOLLOW|syscall.O_CLOEXEC,
+		uint32(permission.Perm()),
+	)
+	if errors.Is(err, syscall.ELOOP) {
+		return symlinkError
+	}
+	if err != nil {
+		return err
+	}
+	file := os.NewFile(uintptr(descriptor), name)
+	defer func() { _ = file.Close() }()
+	return writeOpenedFileSafely(file, data)
 }
 
 func writeOpenedFileSafely(file *os.File, data []byte) error {
@@ -43,25 +82,7 @@ func writeOpenedFileSafely(file *os.File, data []byte) error {
 }
 
 func writeWithoutSymlinks(root *os.Root, name string, data []byte, permission os.FileMode) error {
-	if !filepath.IsLocal(name) {
-		return ErrOutsideRoot
-	}
-	directory, err := openDirectoryWithoutSymlinks(root, filepath.Dir(name))
-	if err != nil {
-		return err
-	}
-	defer func() { _ = directory.Close() }()
-
-	descriptor, err := syscall.Openat(int(directory.Fd()), filepath.Base(name), syscall.O_WRONLY|syscall.O_CREAT|syscall.O_NOFOLLOW|syscall.O_CLOEXEC, uint32(permission.Perm()))
-	if errors.Is(err, syscall.ELOOP) {
-		return ErrGitDir
-	}
-	if err != nil {
-		return err
-	}
-	file := os.NewFile(uintptr(descriptor), name)
-	defer func() { _ = file.Close() }()
-	return writeOpenedFileSafely(file, data)
+	return writeRootFileWithoutSymlinks(root, name, data, permission, ErrGitDir)
 }
 
 func openDirectoryWithoutSymlinks(root *os.Root, name string) (*os.File, error) {

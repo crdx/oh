@@ -107,6 +107,9 @@ func (self *Root) MountFile(path string, root *Root, name string) {
 	if root != self {
 		root.SetGitWriteAllowed(self.gitWriteAllowed)
 	}
+	if root.exactPath == "" {
+		root.exactName = name
+	}
 	self.mounts[filepath.Clean(path)] = mountedRoot{root: root, name: name, isExact: true}
 }
 
@@ -245,11 +248,14 @@ func (self *Root) Open(name string) (*os.File, error) {
 		return nil, err
 	}
 	if self.exactPath != "" {
-		return os.Open(self.exactPath)
+		return openExactFileNoSymlink(self.exactPath)
 	}
 	root, err := self.getRoot()
 	if err != nil {
 		return nil, err
+	}
+	if self.exactName != "" {
+		return openRootFileNoSymlink(root, name, syscall.O_RDONLY, 0)
 	}
 	return root.Open(name)
 }
@@ -262,11 +268,14 @@ func (self *Root) ReadFile(name string) ([]byte, error) {
 		return nil, err
 	}
 	if self.exactPath != "" {
-		return os.ReadFile(self.exactPath)
+		return readExactFileNoSymlink(self.exactPath)
 	}
 	root, err := self.getRoot()
 	if err != nil {
 		return nil, err
+	}
+	if self.exactName != "" {
+		return readRootFileNoSymlink(root, name)
 	}
 	return root.ReadFile(name)
 }
@@ -279,11 +288,14 @@ func (self *Root) Stat(name string) (os.FileInfo, error) {
 		return nil, err
 	}
 	if self.exactPath != "" {
-		return os.Stat(self.exactPath)
+		return os.Lstat(self.exactPath)
 	}
 	root, err := self.getRoot()
 	if err != nil {
 		return nil, err
+	}
+	if self.exactName != "" {
+		return root.Lstat(name)
 	}
 	return root.Stat(name)
 }
@@ -320,6 +332,9 @@ func (self *Root) WriteFile(name string, data []byte, perm os.FileMode) error {
 	root, err := self.getRoot()
 	if err != nil {
 		return err
+	}
+	if self.exactName != "" {
+		return writeRootFileNoSymlink(root, name, data, perm)
 	}
 	if (self.gitWriteAllowed != nil && !self.gitWriteAllowed()) || (self.gitOnly != nil && self.gitOnly()) {
 		return writeWithoutSymlinks(root, name, data, perm)

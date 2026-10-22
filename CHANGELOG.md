@@ -2,6 +2,9 @@
 
 ## [Next]
 
+### Changes
+
+- Refuse a swapped symlink on an exact-file grant
 ## [0.21.0] — 2026-10-22
 
 ### Changes

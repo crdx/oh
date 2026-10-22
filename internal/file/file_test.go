@@ -471,6 +471,47 @@ func TestAWritableExactFileRootStillRefusesSiblingsAndDirectories(t *testing.T) 
 	}
 }
 
+func TestAnExactFileRootRefusesASymlinkSwappedOntoItsFile(t *testing.T) {
+	directory := t.TempDir()
+	exactPath := filepath.Join(directory, "exact")
+	siblingPath := filepath.Join(directory, "sibling")
+	const canary = "canary-secret-4d7c11"
+	if err := os.WriteFile(exactPath, []byte("before"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(siblingPath, []byte(canary), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	root := file.NewExactFile(exactPath, func(string) error { return nil })
+
+	if err := os.Remove(exactPath); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink("sibling", exactPath); err != nil {
+		t.Fatal(err)
+	}
+
+	if data, err := root.ReadFile("exact"); !errors.Is(err, file.ErrOutsideRoot) {
+		t.Errorf("read got %q and %v, want an outside-the-root refusal", data, err)
+	}
+	if _, err := root.Open("exact"); !errors.Is(err, file.ErrOutsideRoot) {
+		t.Errorf("open got %v, want an outside-the-root refusal", err)
+	}
+	if info, err := root.Stat("exact"); err != nil || info.Mode()&os.ModeSymlink == 0 {
+		t.Errorf("stat got %v and %v, want the symlink itself", info, err)
+	}
+	if err := root.WriteFile("exact", []byte("tampered"), 0o600); !errors.Is(err, file.ErrOutsideRoot) {
+		t.Errorf("write got %v, want an outside-the-root refusal", err)
+	}
+	after, err := os.ReadFile(siblingPath) //nolint:gosec // a path this test made itself
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(after) != canary {
+		t.Errorf("sibling changed to %q", after)
+	}
+}
+
 func TestALazyRootOpensItsDirectoryOnlyWhenFirstUsed(t *testing.T) {
 	directory := filepath.Join(t.TempDir(), "later")
 

@@ -1705,3 +1705,125 @@ func TestTemporaryMountIsWritableBeneathAConfiguredReadPath(t *testing.T) {
 		t.Fatalf("write: %v", err)
 	}
 }
+
+func TestAConfiguredExactFileCannotBeRedirectedToASiblingByASymlinkSwap(t *testing.T) {
+	for name, git := range map[string]bool{"without git": false, "with git": true} {
+		t.Run(name, func(t *testing.T) {
+			mode := caps.NewMode(caps.Read | caps.Write)
+			if git {
+				mode.Toggle(caps.Git)
+			}
+			files := configuredPathTestRoot(t, mode)
+			directory := t.TempDir()
+			grantedPath := filepath.Join(directory, "granted")
+			siblingPath := filepath.Join(directory, "private")
+			const canary = "canary-secret-9f3a71"
+
+			if err := os.WriteFile(grantedPath, []byte("granted-content"), 0o600); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.WriteFile(siblingPath, []byte(canary), 0o600); err != nil {
+				t.Fatal(err)
+			}
+
+			access, err := NewPathAccess(files, mode, Paths{
+				Read:  []string{grantedPath},
+				Write: []string{grantedPath},
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer access.Close()
+
+			if err := os.Remove(grantedPath); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.Symlink("private", grantedPath); err != nil {
+				t.Fatal(err)
+			}
+
+			readRoot, name, err := files.Resolve(grantedPath)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if data, readErr := readRoot.ReadFile(name); !errors.Is(readErr, file.ErrOutsideRoot) {
+				t.Errorf("read got %q and %v, want an outside-the-root refusal", data, readErr)
+			}
+
+			writeRoot, writeName, err := files.Resolve(grantedPath)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if writeErr := writeRoot.WriteFile(writeName, []byte("tampered"), 0o600); !errors.Is(writeErr, file.ErrOutsideRoot) {
+				t.Errorf("write got %v, want an outside-the-root refusal", writeErr)
+			}
+			after, err := os.ReadFile(siblingPath) //nolint:gosec // a path this test made itself
+			if err != nil {
+				t.Fatal(err)
+			}
+			if string(after) != canary {
+				t.Errorf("write changed the sibling to %q", after)
+			}
+		})
+	}
+}
+
+func TestAHomeMappedExactFileCannotBeRedirectedToASiblingByASymlinkSwap(t *testing.T) {
+	mode := caps.NewMode(caps.Read)
+	workspace := t.TempDir()
+	workspaceRoot, err := os.OpenRoot(workspace)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = workspaceRoot.Close() }()
+
+	realHome := t.TempDir()
+	t.Setenv("HOME", realHome)
+	relative := filepath.Join(".config", "secrets", "token")
+	source := filepath.Join(realHome, relative)
+	if err := os.MkdirAll(filepath.Dir(source), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(source, []byte("granted-content"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	sibling := filepath.Join(filepath.Dir(source), "private")
+	const canary = "canary-secret-77c2b0"
+	if err := os.WriteFile(sibling, []byte(canary), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	privateHome := t.TempDir()
+	paths := Paths{Home: []string{source}}
+	if err := PrepareHomeMappings(workspace, testPlaces(t, privateHome, t.TempDir()), paths, mode.Current()); err != nil {
+		t.Fatal(err)
+	}
+
+	files := file.New(workspaceRoot, caps.RefuseWrite(mode))
+	homeRoot := file.NewLazy(privateHome, RefuseHomeWrite(mode))
+	files.Mount(privateHome, homeRoot)
+	defer func() { _ = homeRoot.Close() }()
+
+	access, err := NewPathAccess(files, mode, paths)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer access.Close()
+	access.MountHomeMappings(privateHome)
+
+	if err := os.Remove(source); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink("private", source); err != nil {
+		t.Fatal(err)
+	}
+
+	mapped := filepath.Join(privateHome, relative)
+	mountedRoot, name, err := files.Resolve(mapped)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if data, readErr := mountedRoot.ReadFile(name); readErr == nil {
+		t.Errorf("home-mapped read followed the swapped symlink and returned %q, want a refusal", data)
+	}
+}
