@@ -17625,6 +17625,7 @@ const (
 	pathGrantRepeated
 	pathGrantUnclosedQuote
 	pathGrantAllMissing
+	pathGrantRevokedAfterSwap
 )
 
 func TestGoldenPathGrantLifecycleDrawsEveryVisibleState(t *testing.T) {
@@ -17644,6 +17645,9 @@ func TestGoldenPathGrantLifecycleDrawsEveryVisibleState(t *testing.T) {
 		"restoration correction pending": func() string { return pathGrantGoldenStream(t, pathGrantRestorePending) },
 		"restoration correction settled": func() string { return pathGrantGoldenStream(t, pathGrantRestoreSettled) },
 		"revoke without grant rejected":  func() string { return pathGrantGoldenStream(t, pathGrantRevokeMissing) },
+		"revoked after its path was swapped": func() string {
+			return pathGrantGoldenStream(t, pathGrantRevokedAfterSwap)
+		},
 		"several granted at once":        func() string { return pathGrantGoldenStream(t, pathGrantSeveral) },
 		"several settled into next turn": func() string { return pathGrantGoldenStream(t, pathGrantSeveralSettled) },
 		"quoted path with a space":       func() string { return pathGrantGoldenStream(t, pathGrantQuoted) },
@@ -18110,6 +18114,8 @@ func pathGrantGoldenStream(t *testing.T, scenario pathGrantGoldenScenario) strin
 		self.handleCommand("/grant r " + referencePath + ` "` + homePath)
 	case pathGrantAllMissing:
 		self.handleCommand("/grant r " + missingPath + " " + filepath.Join(missingPath, "deeper"))
+	case pathGrantRevokedAfterSwap:
+		revokeAfterSwappedPath(t, self, referencePath, homePath)
 	case pathGrantRevokeSeveral:
 		self.handleCommand("/grant r " + referencePath)
 		self.handleCommand("/grant r " + homePath)
@@ -18201,6 +18207,25 @@ func stableGoldenGrantPath(t *testing.T, label string, shouldExist bool) string 
 		t.Fatal(err)
 	}
 	return path
+}
+
+func revokeAfterSwappedPath(t *testing.T, self *App, referencePath string, homePath string) {
+	t.Helper()
+
+	self.handleCommand("/grant r " + referencePath)
+	if err := os.RemoveAll(referencePath); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(homePath, referencePath); err != nil {
+		t.Fatal(err)
+	}
+	self.handleCommand("/revoke " + referencePath)
+	if err := os.Remove(referencePath); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.MkdirAll(referencePath, 0o700); err != nil {
+		t.Fatal(err)
+	}
 }
 
 func stableGoldenGrantText(text string, parent string) string {

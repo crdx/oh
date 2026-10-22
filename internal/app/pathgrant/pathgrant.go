@@ -153,21 +153,43 @@ func (self *Grants) Revoke(path string) (agent.Event, error) {
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 
+	writtenPath := strings.TrimSpace(path)
+	if writtenPath == "" {
+		return agent.Event{}, errors.New("path is empty")
+	}
+	expandedPath, err := pathutil.Expand(writtenPath)
+	if err != nil {
+		return agent.Event{}, fmt.Errorf("could not expand %s: %w", writtenPath, err)
+	}
+	if !filepath.IsAbs(expandedPath) {
+		expandedPath = filepath.Join(self.workspace.GetResolvedDir(), expandedPath)
+	}
+	cleanPath := filepath.Clean(expandedPath)
+
+	current := self.state.GetCurrent()
+	if matchedGrant, found := findGrant(current, cleanPath); found {
+		return self.revoke(current, matchedGrant)
+	}
+
 	canonicalPath, err := self.canonicalPath(path, false)
 	if err != nil {
 		return agent.Event{}, err
 	}
-	current := self.state.GetCurrent()
-	if _, found := findGrant(current, canonicalPath); !found {
+	matchedGrant, found := findGrant(current, canonicalPath)
+	if !found {
 		return agent.Event{}, fmt.Errorf("%s has no temporary grant", pathutil.Shorten(canonicalPath))
 	}
-	if !self.pathAccess.Revoke(canonicalPath) {
+	return self.revoke(current, matchedGrant)
+}
+
+func (self *Grants) revoke(current []Grant, matchedGrant Grant) (agent.Event, error) {
+	if !self.pathAccess.Revoke(matchedGrant.Path) {
 		return agent.Event{}, errors.New("temporary path access was lost before it could be revoked")
 	}
 
-	current = slices.DeleteFunc(current, func(grant Grant) bool { return grant.Path == canonicalPath })
+	current = slices.DeleteFunc(current, func(grant Grant) bool { return grant.Path == matchedGrant.Path })
 	self.state.Replace(current)
-	return ChangeEvent(canonicalPath, current)
+	return ChangeEvent(matchedGrant.Path, current)
 }
 
 func (self *Grants) canonicalPath(path string, mustExist bool) (string, error) {

@@ -192,6 +192,36 @@ func TestRevokingAGrantRemovesItFromTheFileTools(t *testing.T) {
 	}
 }
 
+func TestRevokingStillWorksWhenTheGrantedFileWasReplacedByASymlink(t *testing.T) {
+	grants, files, _ := newTestGrants(t)
+	directory := t.TempDir()
+	grantedPath := filepath.Join(directory, "granted")
+	siblingPath := filepath.Join(directory, "sibling")
+	if err := os.WriteFile(grantedPath, []byte("granted"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(siblingPath, []byte("private"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := grants.Grant(grantedPath, ReadAccess); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := os.Remove(grantedPath); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink("sibling", grantedPath); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := grants.Revoke(grantedPath); err != nil {
+		t.Fatalf("revoking a swapped grant: %v", err)
+	}
+	if _, _, err := files.Resolve(grantedPath); !errors.Is(err, file.ErrOutsideRoot) {
+		t.Errorf("revoked swapped path resolved with %v", err)
+	}
+}
+
 func TestAnExactFileGrantDoesNotExposeItsSiblings(t *testing.T) {
 	grants, files, _ := newTestGrants(t)
 	directory := t.TempDir()
