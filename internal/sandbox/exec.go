@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math"
 	"os"
 	"os/exec"
 	"runtime"
@@ -17,6 +18,8 @@ import (
 	"crdx.org/oh/internal/sandbox/keeper"
 	"crdx.org/oh/internal/stop"
 	"crdx.org/oh/internal/util"
+
+	"golang.org/x/sys/unix"
 )
 
 const (
@@ -121,12 +124,18 @@ func execSandboxed(encodedPolicy string, command string, encodedArguments string
 		return err
 	}
 
+	sweepInheritedDescriptors()
+
 	//nolint:gosec // running the command is the point, and the sandbox is why that is safe to do
 	if err := syscall.Exec(program, arguments, environment); err != nil {
 		return fmt.Errorf("could not start %s: %w", program, err)
 	}
 
 	return nil
+}
+
+func sweepInheritedDescriptors() {
+	_ = unix.CloseRange(3, math.MaxUint32, unix.CLOSE_RANGE_CLOEXEC)
 }
 
 func requireShell(path string) error {

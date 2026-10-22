@@ -149,6 +149,24 @@ func TestACommandStoppedByItsTimeoutSaysSo(t *testing.T) {
 	}
 }
 
+func TestAConfinedCommandActuallyRuns(t *testing.T) {
+	result, err := Run(
+		t.Context(),
+		t.TempDir(),
+		"printf hello",
+		Policy{Read: []string{"/usr"}, Env: []string{"PATH"}, Timeout: time.Minute},
+	)
+	if err != nil {
+		if strings.Contains(err.Error(), "namespaces") {
+			t.Skipf("this machine refuses the sandbox its namespaces: %v", err)
+		}
+		t.Fatalf("a confined command could not run: %v", err)
+	}
+	if result.ExitCode != 0 || result.Output != "hello" {
+		t.Errorf("got exit %d and %q, want the command's own output", result.ExitCode, result.Output)
+	}
+}
+
 func TestACommandStoppedByItsCallerDoesNotBlameTheTimeout(t *testing.T) {
 	ctx, cancel := context.WithCancel(t.Context())
 	cancel()
