@@ -44,6 +44,10 @@ func (self *Completer) IsOpen() bool {
 	return self.dropdown.IsOpen()
 }
 
+func (self *Completer) Close() {
+	self.close()
+}
+
 func (self *Completer) Selected() (Result, bool) {
 	index, isSelected := self.dropdown.Selected()
 	if !isSelected {

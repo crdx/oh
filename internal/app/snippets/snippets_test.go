@@ -31,6 +31,27 @@ func (self *snippetContext) PlainNoticeIndented(string, int) {}
 func (self *snippetContext) PlainNoticeListing(string)       {}
 func (self *snippetContext) Success(string)                  {}
 
+func TestSnippetExpandsItsConfiguredPrompt(t *testing.T) {
+	invocation := getInvocation(t, map[string]snippets.Definition{
+		"review": {
+			Prompt:    "Review {{.Arg}}.\n\nKeep the answer concise.",
+			Arguments: snippets.ArgumentsRequired,
+		},
+	}, "//review the current changes")
+
+	expansion, isExpandable, err := invocation.Expand()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !isExpandable {
+		t.Fatal("the snippet is not expandable")
+	}
+	want := "Review the current changes.\n\nKeep the answer concise."
+	if expansion != want {
+		t.Errorf("expanded to %q, want %q", expansion, want)
+	}
+}
+
 func TestSnippetSendsItsConfiguredPrompt(t *testing.T) {
 	invocation := getInvocation(t, map[string]snippets.Definition{
 		"review": {

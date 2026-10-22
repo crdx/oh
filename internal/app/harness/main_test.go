@@ -18797,6 +18797,92 @@ func TestTabCompletionKeepsCommandNamespacesSeparate(t *testing.T) {
 	}
 }
 
+func TestTabExpandsAnExactSnippetInline(t *testing.T) {
+	for name, test := range map[string]struct {
+		definition snippets.Definition
+		input      string
+		want       string
+	}{
+		"without arguments": {
+			definition: snippets.Definition{Prompt: "Review the current changes.", Arguments: snippets.ArgumentsNone},
+			input:      "//review",
+			want:       "Review the current changes.",
+		},
+		"with arguments": {
+			definition: snippets.Definition{Prompt: "Review {{.Arg}}.", Arguments: snippets.ArgumentsRequired},
+			input:      "//review these files",
+			want:       "Review these files.",
+		},
+		"to another trigger": {
+			definition: snippets.Definition{Prompt: "//review", Arguments: snippets.ArgumentsNone},
+			input:      "//review",
+			want:       "//review",
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			self := slashCommandFixture(t, caps.Read)
+			self.commands = fixtureSnippetRegistry(t, map[string]snippets.Definition{"review": test.definition})
+			withSlashCompleter(self)
+			inputLine := edit.NewInput(nil)
+			for _, value := range test.input {
+				self.apply(inputLine, nil, key.Key{Code: key.Rune, Value: value})
+			}
+
+			self.apply(inputLine, nil, tabKey)
+
+			if got := inputLine.Text(); got != test.want {
+				t.Errorf("expanded to %q, want %q", got, test.want)
+			}
+			if self.completer.IsOpen() {
+				t.Error("the completion dropdown stayed open")
+			}
+			if len(self.recordedEvents) != 0 {
+				t.Errorf("expansion entered conversation events: %+v", self.recordedEvents)
+			}
+		})
+	}
+}
+
+func TestTabLeavesAnUnexpandableSnippetInPlace(t *testing.T) {
+	self := slashCommandFixture(t, caps.Read)
+	self.commands = fixtureSnippetRegistry(t, map[string]snippets.Definition{
+		"review": {Prompt: "Review {{.Arg}}.", Arguments: snippets.ArgumentsRequired},
+	})
+	withSlashCompleter(self)
+	inputLine := edit.NewInput(nil)
+	for _, value := range "//review" {
+		self.apply(inputLine, nil, key.Key{Code: key.Rune, Value: value})
+	}
+
+	self.apply(inputLine, nil, tabKey)
+
+	if got := inputLine.Text(); got != "//review" {
+		t.Errorf("tab changed the input to %q", got)
+	}
+	if got := self.feedback.Message(); got.Text != "Usage: //review <args>" || got.Status != agent.ErrorStatus {
+		t.Errorf("got feedback %+v", got)
+	}
+}
+
+func TestTabDoesNotExpandASnippetBeforeTheCursor(t *testing.T) {
+	self := slashCommandFixture(t, caps.Read)
+	self.commands = fixtureSnippetRegistry(t, map[string]snippets.Definition{
+		"review": {Prompt: "Review the current changes.", Arguments: snippets.ArgumentsNone},
+	})
+	withSlashCompleter(self)
+	inputLine := edit.NewInput(nil)
+	for _, value := range "//review" {
+		self.apply(inputLine, nil, key.Key{Code: key.Rune, Value: value})
+	}
+	self.apply(inputLine, nil, key.Key{Code: key.Left})
+
+	self.apply(inputLine, nil, tabKey)
+
+	if got := inputLine.Text(); got != "//review" {
+		t.Errorf("tab changed the input to %q", got)
+	}
+}
+
 func TestTabOpensThenChoosesAUniqueSlashCommand(t *testing.T) {
 	self := slashCommandFixture(t, caps.Read)
 	self.commands = fixtureCommandRegistry(

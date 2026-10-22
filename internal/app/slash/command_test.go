@@ -437,6 +437,33 @@ func TestArgumentUsageSummarisesArgumentsThatStillComplete(t *testing.T) {
 	assertCompletions(t, registry, "/open s", []string{"/open session-dir"})
 }
 
+func TestAnInvocationExpandsOnlyWhenItsCommandCan(t *testing.T) {
+	expandable := slash.Command{Name: "expand", Run: commandHandler}.
+		WithExpansion(func(arguments slash.Arguments) (string, error) {
+			return "expanded " + arguments.Text, nil
+		})
+	invocation := slash.Invocation{Command: &expandable, Arguments: slash.Arguments{Text: "this"}}
+
+	expansion, isExpandable, err := invocation.Expand()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if expansion != "expanded this" || !isExpandable {
+		t.Errorf("expanded to %q with availability %v", expansion, isExpandable)
+	}
+
+	ordinary := slash.Command{Name: "ordinary", Run: commandHandler}
+	for name, invocation := range map[string]slash.Invocation{
+		"ordinary command": {Command: &ordinary},
+		"empty invocation": {},
+	} {
+		expansion, isExpandable, err = invocation.Expand()
+		if expansion != "" || isExpandable || err != nil {
+			t.Errorf("%s expanded to %q with availability %v and error %v", name, expansion, isExpandable, err)
+		}
+	}
+}
+
 func TestUsageErrorIsRecognised(t *testing.T) {
 	err := slash.Usage()
 	if !slash.IsUsageError(err) {

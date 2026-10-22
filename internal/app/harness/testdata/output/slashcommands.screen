@@ -199,9 +199,9 @@ see /co
 ────────────────────────────────────────────────────────────
 /copy anything
 ────────────────────────────────────────────────────────────
-=== 34 tab within a snippet is swallowed ===
+=== 34 tab expands a snippet inline ===
 ────────────────────────────────────────────────────────────
-//review the tests
+Run the tests.
 ────────────────────────────────────────────────────────────
 === 35 tab after a grant path lists another ===
 ────────────────────────────────────────────────────────────
@@ -528,4 +528,37 @@ see /co
 === 81 choosing a source session completes it ===
 ────────────────────────────────────────────────────────────
 /fork --from able-dolphin
+────────────────────────────────────────────────────────────
+=== 82 tab expands a snippet with arguments ===
+────────────────────────────────────────────────────────────
+Review this package.
+────────────────────────────────────────────────────────────
+=== 83 tab keeps a snippet missing required arguments ===
+ ╭────────────────────────────────────────────────────────╮
+ │ Usage: //review <args>                                 │
+─┴────────────────────────────────────────────────────────┴─
+//review
+› //review <args>  Review the named scope.
+
+
+
+
+
+────────────────────────────────────────────────────────────
+=== 84 tab keeps a snippet whose template fails ===
+ ╭────────────────────────────────────────────────────────╮
+ │ //broken: Could not render template: template:         │
+ │ broken:1:2: executing "broken" at <index .Args 2>:     │
+ │ error calling index: index out of range: 2             │
+─┴────────────────────────────────────────────────────────┴─
+//broken
+› //broken [<args>]
+
+────────────────────────────────────────────────────────────
+=== 85 tab expands a multiline snippet ===
+────────────────────────────────────────────────────────────
+Check all of these:
+
+- tests
+- documentation
 ────────────────────────────────────────────────────────────

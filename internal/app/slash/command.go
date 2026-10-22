@@ -56,6 +56,7 @@ type Command struct {
 	Name                  string
 	Description           string
 	Run                   func(Context, Arguments) error
+	expand                func(Arguments) (string, error)
 	listArguments         func() []string
 	completeArgument      func(writtenArguments []string, partial string) []ArgumentChoice
 	isPathArgumentAfter   func(string) bool
@@ -68,6 +69,11 @@ type Command struct {
 func (self Command) WithAttachedArgument(usage string) Command {
 	self.takesAttachedArgument = true
 	self.argumentUsage = usage
+	return self
+}
+
+func (self Command) WithExpansion(expand func(Arguments) (string, error)) Command {
+	self.expand = expand
 	return self
 }
 
@@ -164,6 +170,15 @@ type Invocation struct {
 	Usage     string
 	Command   *Command
 	Arguments Arguments
+}
+
+func (self Invocation) Expand() (string, bool, error) {
+	if self.Command == nil || self.Command.expand == nil {
+		return "", false, nil
+	}
+
+	expansion, err := self.Command.expand(self.Arguments)
+	return expansion, true, err
 }
 
 type CommandSet struct {

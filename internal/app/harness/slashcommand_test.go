@@ -63,6 +63,17 @@ func slashCommandScenarios(t *testing.T) map[string]pathRefScenario {
 	sessionCommanding := func(isYoloInherited bool, steps func(rig *pathRefRig)) pathRefScenario {
 		return pathRefScenario{columns: 60, lines: 24, commands: sessionCommandsGoldenRegistry(isYoloInherited), steps: steps}
 	}
+	snippetCommanding := func(definitions map[string]snippets.Definition, steps func(rig *pathRefRig)) pathRefScenario {
+		return pathRefScenario{
+			columns: 60,
+			lines:   24,
+			commands: func(t *testing.T) slash.Registry {
+				t.Helper()
+				return fixtureSnippetRegistry(t, definitions)
+			},
+			steps: steps,
+		}
+	}
 
 	return map[string]pathRefScenario{
 		"01 a slash lists the commands with what they do": commanding(typing("/")),
@@ -265,11 +276,11 @@ func slashCommandScenarios(t *testing.T) map[string]pathRefScenario {
 				rig.t.Errorf("got input %q, want %q", got, want)
 			}
 		}),
-		"34 tab within a snippet is swallowed": commanding(func(rig *pathRefRig) {
-			typing("//review the tests")(rig)
+		"34 tab expands a snippet inline": commanding(func(rig *pathRefRig) {
+			typing("//test")(rig)
 			rig.press(tabKey)
-			if got := rig.input.Text(); got != "//review the tests" {
-				rig.t.Errorf("tab changed the input to %q", got)
+			if got, want := rig.input.Text(), "Run the tests."; got != want {
+				rig.t.Errorf("got input %q, want %q", got, want)
 			}
 		}),
 		"40 choosing a command goes on to the arguments it completes": {
@@ -487,6 +498,51 @@ func slashCommandScenarios(t *testing.T) map[string]pathRefScenario {
 				rig.t.Error("the dropdown stayed open after choosing a session")
 			}
 		}),
+		"82 tab expands a snippet with arguments": commanding(func(rig *pathRefRig) {
+			typing("//review this package")(rig)
+			rig.press(tabKey)
+			if got, want := rig.input.Text(), "Review this package."; got != want {
+				rig.t.Errorf("got input %q, want %q", got, want)
+			}
+		}),
+		"83 tab keeps a snippet missing required arguments": commanding(func(rig *pathRefRig) {
+			typing("//review")(rig)
+			rig.press(tabKey)
+			if got, want := rig.input.Text(), "//review"; got != want {
+				rig.t.Errorf("got input %q, want %q", got, want)
+			}
+		}),
+		"84 tab keeps a snippet whose template fails": snippetCommanding(
+			map[string]snippets.Definition{
+				"broken": {
+					Prompt:    "{{index .Args 2}}",
+					Arguments: snippets.ArgumentsOptional,
+				},
+			},
+			func(rig *pathRefRig) {
+				typing("//broken")(rig)
+				rig.press(tabKey)
+				if got, want := rig.input.Text(), "//broken"; got != want {
+					rig.t.Errorf("got input %q, want %q", got, want)
+				}
+			},
+		),
+		"85 tab expands a multiline snippet": snippetCommanding(
+			map[string]snippets.Definition{
+				"check": {
+					Prompt:    "Check all of these:\n\n- tests\n- documentation",
+					Arguments: snippets.ArgumentsNone,
+				},
+			},
+			func(rig *pathRefRig) {
+				typing("//check")(rig)
+				rig.press(tabKey)
+				want := "Check all of these:\n\n- tests\n- documentation"
+				if got := rig.input.Text(); got != want {
+					rig.t.Errorf("got input %q, want %q", got, want)
+				}
+			},
+		),
 	}
 }
 

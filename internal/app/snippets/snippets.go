@@ -53,40 +53,47 @@ func New(configuredDefinitions map[string]Definition) (slash.CommandSet, error) 
 		if argumentPolicy != ArgumentsRequired && argumentPolicy != ArgumentsOptional && argumentPolicy != ArgumentsNone {
 			return slash.CommandSet{}, fmt.Errorf("%s: invalid argument policy %q", subject, argumentPolicy)
 		}
+		expand := func(arguments slash.Arguments) (string, error) {
+			switch argumentPolicy {
+			case ArgumentsRequired:
+				if len(arguments.Fields) == 0 {
+					return "", slash.Usage()
+				}
+			case ArgumentsNone:
+				if len(arguments.Fields) != 0 {
+					return "", slash.Usage()
+				}
+			case ArgumentsOptional:
+			}
+
+			var renderedText strings.Builder
+			data := map[string]any{
+				argumentFieldName:  arguments.Text,
+				argumentsFieldName: arguments.Fields,
+			}
+			if argumentName != "" {
+				data[argumentName] = arguments.Text
+			}
+			if err := promptTemplate.Execute(&renderedText, data); err != nil {
+				return "", fmt.Errorf("could not render template: %w", err)
+			}
+			if strings.TrimSpace(renderedText.String()) == "" {
+				return "", errors.New("template rendered an empty prompt")
+			}
+			return renderedText.String(), nil
+		}
 		command := slash.Command{
 			Name:        name,
 			Description: definition.Description,
 			Run: func(context slash.Context, arguments slash.Arguments) error {
-				switch argumentPolicy {
-				case ArgumentsRequired:
-					if len(arguments.Fields) == 0 {
-						return slash.Usage()
-					}
-				case ArgumentsNone:
-					if len(arguments.Fields) != 0 {
-						return slash.Usage()
-					}
-				case ArgumentsOptional:
+				expansion, err := expand(arguments)
+				if err != nil {
+					return err
 				}
-
-				var renderedText strings.Builder
-				data := map[string]any{
-					argumentFieldName:  arguments.Text,
-					argumentsFieldName: arguments.Fields,
-				}
-				if argumentName != "" {
-					data[argumentName] = arguments.Text
-				}
-				if err := promptTemplate.Execute(&renderedText, data); err != nil {
-					return fmt.Errorf("could not render template: %w", err)
-				}
-				if strings.TrimSpace(renderedText.String()) == "" {
-					return errors.New("template rendered an empty prompt")
-				}
-				context.Send(renderedText.String())
+				context.Send(expansion)
 				return nil
 			},
-		}
+		}.WithExpansion(expand)
 		placeholder := getPlaceholder(argumentName)
 		switch argumentPolicy {
 		case ArgumentsRequired:

@@ -5,6 +5,7 @@
 ### Changes
 
 - Archive, restore and delete sessions from any workspace
+- Expand snippets inline with tab
 
 ## [0.22.0] — 2026-10-22
 
