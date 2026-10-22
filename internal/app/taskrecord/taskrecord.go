@@ -83,11 +83,13 @@ func PendingNotices(events []agent.Event) []agent.Event {
 			}
 		}
 	}
+	listing, isListingRecorded := LastRecorded(events)
 	var notices []agent.Event
 	var stoppedNames []string
 	for _, reference := range order {
 		completion, isPending := pendingCompletions[reference]
-		if !isPending {
+		isRemoved := isListingRecorded && !slices.ContainsFunc(listing, func(snapshot tasks.Snapshot) bool { return snapshot.ID == reference.name })
+		if !isPending || isRemoved {
 			continue
 		}
 		delete(pendingCompletions, reference)

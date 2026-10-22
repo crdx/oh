@@ -118,3 +118,18 @@ func TestAFailedTaskNoticeSaysWhyItFailed(t *testing.T) {
 		t.Errorf("got %q (%t), want %q", notice, isSaid, want)
 	}
 }
+
+func TestARemovedTaskLeavesNoPendingNotice(t *testing.T) {
+	built := tasks.Snapshot{ID: "build", ToolName: "bash", Run: 1, State: tasks.Done, Output: "built ok\n"}
+	tested := tasks.Snapshot{ID: "test", ToolName: "bash", Run: 1, State: tasks.Done, Output: "tests passed\n"}
+	pending := taskrecord.PendingNotices([]agent.Event{
+		taskrecord.FinishedEvent(tasks.Conclusion{Snapshot: built, IsFinal: true}),
+		taskrecord.FinishedEvent(tasks.Conclusion{Snapshot: tested, IsFinal: true}),
+		taskrecord.ListingEvent([]tasks.Snapshot{built, tested}),
+		taskrecord.ListingEvent([]tasks.Snapshot{tested}),
+	})
+
+	if len(pending) != 1 || pending[0].Name != "test" {
+		t.Errorf("got %+v, want only the listed task's notice", pending)
+	}
+}

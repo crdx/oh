@@ -2265,10 +2265,7 @@ func (self *App) restoreTasks(events []agent.Event) {
 		self.pendingNotices.add(taskrecord.EndedWithSessionEvent(taskNames))
 	}
 	for _, notice := range taskrecord.PendingNotices(events) {
-		isListed := slices.ContainsFunc(snapshots, func(snapshot tasks.Snapshot) bool { return snapshot.ID == notice.Name })
-		if notice.Kind != taskrecord.RunEnded || isListed {
-			self.pendingNotices.add(notice)
-		}
+		self.pendingNotices.add(notice)
 	}
 }
 
